@@ -6,7 +6,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -27,7 +27,7 @@ Solar::autoload('Solar_Valid');
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 */
 

@@ -1,4 +1,23 @@
 <?php
+
+/**
+* 
+* Sets up the environment for all controller action scripts.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
 // get the shared user object
 $user = Solar::shared('user');
 
@@ -17,4 +36,5 @@ $tpl->addPath(
 $bugs = Solar::object('Solar_Cell_Bugs');
 $talk = Solar::object('Solar_Cell_Talk');
 $form = Solar::object('Solar_Form');
+
 ?>

@@ -1,3 +1,23 @@
+<?php
+/**
+* 
+* Savant3 template for the user authentication form.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+?>
+
 <div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">
 	<?php if (Solar::$shared->user->auth->status_code == 'VALID'): ?>
 		<p><?php echo Solar::locale('Solar', 'TEXT_AUTH_USERNAME') ?><br /><strong><?php echo Solar::$shared->user->auth->username ?></strong></p>

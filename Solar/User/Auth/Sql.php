@@ -6,15 +6,13 @@
 *
 * @category Solar
 * 
-* @package Solar_User
-* 
-* @subpackage Solar_User_Auth
+* @pacakge Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.net>
 * 
 * @license LGPL
 * 
-* @version $Id: Sql.php,v 1.11 2005/02/08 03:02:58 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -24,9 +22,7 @@
 *
 * @category Solar
 * 
-* @package Solar_User
-* 
-* @subpackage Solar_User_Auth
+* @pacakge Solar
 * 
 */
 

@@ -6,7 +6,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -70,7 +70,7 @@ require_once 'Solar/Sql/Result.php';
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 */
 

@@ -6,9 +6,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Sql
-* 
-* @subpackage Solar_Sql
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 

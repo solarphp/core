@@ -1,3 +1,22 @@
+<?php
+/**
+* 
+* Savant3 template for showing a list of reports.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+?>
 <?php include $this->template('header.php') ?>
 
 <?php if (is_array($this->list)): ?>

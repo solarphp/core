@@ -6,13 +6,13 @@
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id: Reserved.php,v 1.3 2005/02/01 01:53:27 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -22,7 +22,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Sql
+* @package Solar
 * 
 */
 

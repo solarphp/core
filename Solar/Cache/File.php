@@ -6,13 +6,13 @@
 * 
 * @category Solar
 * 
-* @package Solar_Cache
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id: File.php,v 1.8 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -22,7 +22,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Cache
+* @package Solar
 * 
 */
 

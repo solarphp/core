@@ -6,7 +6,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Debug
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -22,7 +22,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_Debug
+* @package Solar
 * 
 */
 

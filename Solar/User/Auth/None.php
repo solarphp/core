@@ -6,9 +6,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_User
-* 
-* @subpackage Solar_User_Auth
+* @pacakge Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.net>
 * 
@@ -24,9 +22,7 @@
 * 
 * @category Solar
 * 
-* @package Solar_User
-* 
-* @subpackage Solar_User_Auth
+* @pacakge Solar
 * 
 */
 

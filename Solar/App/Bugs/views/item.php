@@ -1,3 +1,22 @@
+<?php
+/**
+* 
+* Savant3 template for showing a single bug report.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+?>
 <?php include $this->template('header.php') ?>
 
 <h2><?php echo Solar::locale('Solar_App_Bugs', 'BUG_REPORT') . ' ' . $this->item['id']['value'] ?></h2>

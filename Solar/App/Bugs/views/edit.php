@@ -1,7 +1,7 @@
 <?php include $this->template('header.php') ?>
 
 <h2>Bug Report <?php echo $this->formdata->elements['bugs[id]']['value'] ?></h2>
-[ <a href="?action=list_open">Back to list</a> ]
+[ <a href="?action=listOpen">Back to list</a> ]
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>

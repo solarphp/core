@@ -2,7 +2,7 @@
 
 <h2>Bug Report <?php echo $this->item['id']['value'] ?></h2>
 
-<p>[ <a href="?action=list_open">Back to list</a> ]</p>
+<p>[ <a href="?action=listOpen">Back to list</a> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>

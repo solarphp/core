@@ -33,8 +33,8 @@
 	<p>No bugs in the system.</p>
 <?php endif ?>
 
-<p><?php echo $this->ahref('?action=list_open', 'List only "open" bugs.') ?></p>
-<p><?php echo $this->ahref('?action=list_all', 'List all bugs (both open and closed).') ?></p>
+<p><?php echo $this->ahref('?action=listOpen', 'List only "open" bugs.') ?></p>
+<p><?php echo $this->ahref('?action=listAll', 'List all bugs (both open and closed).') ?></p>
 <p><?php echo $this->ahref('?action=edit&id=0', 'Report a new bug.') ?></p>
 
 <?php include $this->template('footer.php') ?>

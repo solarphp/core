@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Talk.php 66 2005-03-25 17:29:54Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -36,7 +36,7 @@ Solar::autoload('Solar_Sql_Entity');
 * 
 */
 
-class Solar_Cell_Tags extends Solar_Sql_Entity {
+class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
@@ -127,6 +127,20 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 			'require'  => false,
 		);
 		
+		// tags (a la del.icio.us)
+		$schema['col']['tags'] = array(
+			'type'     => 'varchar',
+			'size'     => 255,
+			'require'  => false,
+			'validate' => array(
+				array(
+					'regex',
+					$this->locale('VALID_TAGS'),
+					'/[A-Za-z0-9_ ]*/'
+				)
+			),
+		);
+		
 		
 		// -------------------------------------------------------------
 		// 
@@ -137,6 +151,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 			'id'      => 'unique',
 			'user_id' => 'normal',
 			'uri'     => 'normal',
+			'tags'    => 'normal',
 		);
 		
 		
@@ -147,16 +162,14 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		
 		// list of bookmarks with tags
 		$schema['qry']['list'] = array(
-			'select' => '*, sc_tags.tags AS tags',
-			'join'   => "sc_tags ON sc_tags.tbl = 'sc_bookmarks' AND sc_tags.tbl_id = sc_bookmarks.id",
+			'select' => '*',
 			'order'  => 'ts_new DESC',
 			'fetch'  => 'All'
 		);
 		
 		// one bookmark item; same as list, just with different fetch
 		$schema['qry']['item'] = array(
-			'select' => '*, sc_tags.tags AS tags',
-			'join'   => "sc_tags ON sc_tags.tbl = 'sc_bookmarks' AND sc_tags.tbl_id = sc_bookmarks.id",
+			'select' => '*',
 			'where'  => 'id = :id',
 			'fetch'  => 'Row'
 		);
@@ -164,19 +177,84 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		return $schema;
 	}
 	
-	public function fetchItem($id)
+	
+	/**
+	* 
+	* Fetch a bookmark item by ID.
+	* 
+	* @access public
+	* 
+	* @param int $id The bookmark ID.
+	* 
+	* @return array The bookmark item array.
+	* 
+	*/
+	
+	public function item($id)
 	{
 		return $this->selectFetch('item', array('id' => $id));
 	}
 	
 	
-	public function fetchUser($user_id, $order = null, $page = null)
+	/**
+	* 
+	* Fetch a a generic list of bookmarks.
+	* 
+	*/
+	
+	public function list($where = null, $order = null, $page = null)
 	{
 		$where = 'user_id = ' . $this->quote($user_id);
 		return $this->selectFetch('list', $where, $order, $page);
 	}
 	
-	public function fetchTags($tags, $user_id = null, $order = null, $page = null)
+	
+	/**
+	* 
+	* Fetch all the bookmarks for a specific user_id.
+	* 
+	* @access public
+	* 
+	* @param string $user_id The user_id to look up.
+	* 
+	* @param string $order A custom ORDER clause.
+	* 
+	* @param int $page The page number to return.
+	* 
+	* @return array The list of bookmarks.
+	* 
+	*/
+	
+	public function user($user_id, $order = null, $page = null)
+	{
+		$where = 'user_id = ' . $this->quote($user_id);
+		return $this->list($where, $order, $page);
+	}
+	
+	
+	/**
+	* 
+	* Fetch all the bookmarks with a specific tagset.
+	* 
+	* Optionally, you can limit to a specific username as well.
+	* 
+	* @access public
+	* 
+	* @param string|array $tags The tags to look up; may be a space-separated
+	* string of tags.  Will "AND" these for an intersection of tags.
+	* 
+	* @param string $user_id The optional user_id to look up; if null, will
+	* look at all users.
+	* 
+	* @param string $order A custom ORDER clause.
+	* 
+	* @param int $page The page number to return.
+	* 
+	* @return array The list of bookmarks.
+	* 
+	*/
+	
+	public function tags($tags, $user_id = null, $order = null, $page = null)
 	{
 		// build a base where clause ...
 		if ($user_id) {
@@ -195,14 +273,22 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		// finish the where clause with tags ANDed together
 		$tmp = array();
 		foreach ($tags as $tag) {
-			$tmp[] = "tags LIKE '% $tag %'";
+			if (trim($tag) != '') {
+				$tmp[] = "tags LIKE " . $this->quote('% $tag %');
+			}
 		}
 		$where .= ' AND ' . implode(' AND ', $tmp);
 		
 		// done!
-		return $this->selectFetch('list', $where, $order, $page);
+		return $this->list($where, $order, $page);
 	}
 	
+	
+	/**
+	* 
+	* Pre-insert data manipulation.
+	* 
+	*/
 	
 	protected function preInsert(&$data)
 	{
@@ -215,6 +301,13 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		$data['ts_mod'] = $now;
 	}
 	
+	
+	/**
+	* 
+	* Pre-update data manipulation.
+	* 
+	*/
+	
 	protected function preUpdate(&$data)
 	{
 		if (isset($data['tags'])) {
@@ -224,21 +317,30 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		$data['ts_mod'] = $this->timestamp();
 	}
 	
+	
+	/**
+	* 
+	* Fixes tag arrays and strings for the database.
+	* 
+	*/
+	
 	protected function fixTags($tags)
 	{
-		// trim, then convert to array for easy processing
-		$data['tags'] = trim($data['tags']);
-		$tmp = explode(' ', $data['tags']);
+		// convert to array from string?
+		if (! is_array($tags)) {
+			// trim all surrounging spaces (and extra spaces)
+			$tags = trim($tags);
+			$tags = preg_replace('/[ ]{2,}/', ' ', $tags);
+			
+			// convert to array for easy processing
+			$tmp = explode(' ', $tags);
+		}
 		
 		// make sure each tag is unique (no double-entries)
 		$tmp = array_unique($tmp);
 		
-		// convert back to text, with a space in front and behind
-		$data['tags'] = ' ' . implode(' ', $tmp) . ' ';
-		
-		// remove all extra spaces, and done.
-		$data['tags'] = preg_replace('/[ ]{2,}/', ' ', $data['tags']);
-		return $tags;
+		// return as text, with a space in front and behind
+		return ' ' . implode(' ', $tmp) . ' ';
 	}
 }
 ?>

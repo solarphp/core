@@ -133,7 +133,7 @@ class Solar_User_Role extends Solar_Base {
 	public function fetch($username)
 	{
 		// make sure we have a session value
-		if (! isset('Solar_User_Role', $_SESSION)) {
+		if (! isset($_SESSION['Solar_User_Role'])) {
 			$_SESSION['Solar_User_Role'] = null;
 		}
 		

@@ -18,59 +18,134 @@
 		<maintainer>
 			<user>pmjones</user>
 			<name>Paul M. Jones</name>
-			<email>pmjones@ciaweb.net</email>
+			<email>pmjones@solarphp.com</email>
 			<role>lead</role>
 		</maintainer>
 	</maintainers>
 	<release>
-		<version>0.0.2</version>
-		<date>2005-02-14</date>
+		<version>0.0.3</version>
+		<date>2005-02-15</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
 			* This is a public development release; the API is unstable.
-			* Converted all 'Hive' references to 'Solar'
-			* Converted all 'conf' references to 'config'
-			* Changed Hive_User_Auth_File to Hive_User_Auth_Htpasswd.
-			* Added Hive_User_Auth_Ini container (to support Subversion style user files).
+			* Converted all __hive() calls to __solar() instead.
+			* Added email and initial description to Solar_Cell_Bugs columns, removed reference to Solar_Cell_Talk (should be handled by the application object, not the bugs entity)
+			* Converted all 'dt' (date-time) abbreviations to 'ts' (timestamp) for consistency with Solar_Sql_Entity column type naming
 		</notes>
-		<file role="php" name="Solar.php" />
-		<file role="php" name="Solar/Base.php" />
-		<file role="php" name="Solar/Cache.php" />
-		<file role="php" name="Solar/Cache/File.php" />
-		<file role="php" name="Solar/Cache/Mem.php" />
-		<file role="php" name="Solar/Cell/Bugs.php" />
-		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" />
-		<file role="php" name="Solar/Cell/Talk.php" />
-		<file role="php" name="Solar/Cell/Talk/Locale/en_US.php" />
-		<file role="php" name="Solar/Cell/Talk/Rules.php" />
-		<file role="php" name="Solar/Debug/Timer.php" />
-		<file role="php" name="Solar/Error.php" />
-		<file role="php" name="Solar/Locale/en_US.php" />
-		<file role="php" name="Solar/Sql.php" />
-		<file role="php" name="Solar/Sql/Driver.php" />
-		<file role="php" name="Solar/Sql/Driver/Fbsql.php" />
-		<file role="php" name="Solar/Sql/Driver/Locale/en_US.php" />
-		<file role="php" name="Solar/Sql/Driver/Mssql.php" />
-		<file role="php" name="Solar/Sql/Driver/Mysql.php" />
-		<file role="php" name="Solar/Sql/Driver/Oci.php" />
-		<file role="php" name="Solar/Sql/Driver/Pgsql.php" />
-		<file role="php" name="Solar/Sql/Driver/Sqlite.php" />
-		<file role="php" name="Solar/Sql/Entity.php" />
-		<file role="php" name="Solar/Sql/Reserved.php" />
-		<file role="php" name="Solar/Sql/Result.php" />
-		<file role="php" name="Solar/User.php" />
-		<file role="php" name="Solar/User/Auth.php" />
-		<file role="php" name="Solar/User/Auth/Htpasswd.php" />
-		<file role="php" name="Solar/User/Auth/Ini.php" />
-		<file role="php" name="Solar/User/Auth/Ldap.php" />
-		<file role="php" name="Solar/User/Auth/Mail.php" />
-		<file role="php" name="Solar/User/Auth/Sql.php" />
-		<file role="php" name="Solar/User/Locale/en_US.php" />
-		<file role="php" name="Solar/User/Role.php" />
-		<file role="php" name="Solar/User/Role/File.php" />
-		<file role="php" name="Solar/User/Role/Ldap.php" />
-		<file role="php" name="Solar/User/Role/Sql.php" />
-		<file role="php" name="Solar/Valid.php" />
+		<file role="php" name="Solar.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Base.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cache.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cache/File.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cache/Mem.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Bugs.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Talk.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Talk/Locale/en_US.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Talk/Rules.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Debug/Timer.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Error.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Locale/en_US.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Fbsql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Locale/en_US.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Mssql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Mysql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Oci.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Pgsql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Driver/Sqlite.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Entity.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Reserved.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Sql/Result.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth/Htpasswd.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth/Ini.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth/Ldap.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth/Mail.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Auth/Sql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Locale/en_US.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Role.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Role/File.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Role/Ldap.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Role/Sql.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Valid.php" >
+			<replace from="@package_version@" to="0.0.3" type="package-info" />
+		</file>
 	</release>
 </package>

@@ -42,6 +42,8 @@ require_once 'Solar/Error.php';
 * 
 * @package Solar
 * 
+* @version @package_version@
+* 
 */
 
 class Solar {

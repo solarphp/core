@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<package version="1.0">
+	<name>Solar</name>
+	<summary>Simple object library and application repository.</summary>
+	<description>
+		Solar is a class library and application component suite for rapid
+		application development in PHP5. Solar provides simple, easy-to-
+		comprehend classes and reusable components for the common aspects
+		of web applications.
+		
+		Solar is designed for developers who want to distribute their
+		applications to the whole world.  This means the database driver
+		functions work exactly the same way for each supported database.  It
+		also means that localization support is built in from the start.
+		
+		Please visit http://solarphp.com/ for more information.
+	</description>
+	<maintainers>
+		<maintainer>
+			<user>pmjones</user>
+			<name>Paul M. Jones</name>
+			<email>pmjones@ciaweb.net</email>
+			<role>lead</role>
+		</maintainer>
+	</maintainers>
+	<release>
+		<version>0.0.2</version>
+		<date>2005-02-14</date>
+		<license>LGPL</license>
+		<state>devel</state>
+		<notes>
+			* public development release
+		</notes>
+		<file role="php" name="Solar.php" />
+		<file role="php" name="Solar/Base.php" />
+		<file role="php" name="Solar/Cache.php" />
+		<file role="php" name="Solar/Cache/File.php" />
+		<file role="php" name="Solar/Cache/Mem.php" />
+		<file role="php" name="Solar/Cell/Bugs.php" />
+		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" />
+		<file role="php" name="Solar/Cell/Talk.php" />
+		<file role="php" name="Solar/Cell/Talk/Locale/en_US.php" />
+		<file role="php" name="Solar/Cell/Talk/Rules.php" />
+		<file role="php" name="Solar/Debug/Timer.php" />
+		<file role="php" name="Solar/Error.php" />
+		<file role="php" name="Solar/Locale/en_US.php" />
+		<file role="php" name="Solar/Sql.php" />
+		<file role="php" name="Solar/Sql/Driver.php" />
+		<file role="php" name="Solar/Sql/Driver/Fbsql.php" />
+		<file role="php" name="Solar/Sql/Driver/Locale/en_US.php" />
+		<file role="php" name="Solar/Sql/Driver/Mssql.php" />
+		<file role="php" name="Solar/Sql/Driver/Mysql.php" />
+		<file role="php" name="Solar/Sql/Driver/Oci.php" />
+		<file role="php" name="Solar/Sql/Driver/Pgsql.php" />
+		<file role="php" name="Solar/Sql/Driver/Sqlite.php" />
+		<file role="php" name="Solar/Sql/Entity.php" />
+		<file role="php" name="Solar/Sql/Reserved.php" />
+		<file role="php" name="Solar/Sql/Result.php" />
+		<file role="php" name="Solar/User.php" />
+		<file role="php" name="Solar/User/Auth.php" />
+		<file role="php" name="Solar/User/Auth/Htaccess.php" />
+		<file role="php" name="Solar/User/Auth/Ini.php" />
+		<file role="php" name="Solar/User/Auth/Ldap.php" />
+		<file role="php" name="Solar/User/Auth/Mail.php" />
+		<file role="php" name="Solar/User/Auth/Sql.php" />
+		<file role="php" name="Solar/User/Locale/en_US.php" />
+		<file role="php" name="Solar/User/Role.php" />
+		<file role="php" name="Solar/User/Role/File.php" />
+		<file role="php" name="Solar/User/Role/Ldap.php" />
+		<file role="php" name="Solar/User/Role/Sql.php" />
+		<file role="php" name="Solar/Valid.php" />
+	</release>
+</package>

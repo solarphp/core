@@ -37,7 +37,9 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* refresh => (bool) Whether or not to refresh the groups on every load.
 	* 
-	* class => (string|array) The 
+	* class => (string) The driver class to use.
+	* 
+	* options => (array) Config options for constructing the driver class.
 	* 
 	* @access protected
 	* 

@@ -111,6 +111,9 @@ abstract class Solar_App extends Solar_Base {
 		$this->automap('views');
 		$this->automap('controllers');
 		$this->automap('helpers');
+		
+		// load the locale strings
+		$this->locale('');
 	}
 	
 	

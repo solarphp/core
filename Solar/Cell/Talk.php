@@ -116,7 +116,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch a list of all comments in a specific forum and queue.
+	* Fetch a list of all comments related to a specific table and ID.
 	* 
 	* @access public
 	* 
@@ -124,13 +124,13 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function fetchQueue($forum, $queue, $order = null, $page = null)
+	public function fetchQueue($tbl, $tbl_id, $order = null, $page = null)
 	{
 		return $this->selectFetch(
 			'queue',
 			array(
-				'forum' => $forum,
-				'queue' => $queue,
+				'tbl' => $tbl,
+				'tbl_id' => $tbl_id,
 			),
 			$order,
 			$page
@@ -215,16 +215,15 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'default' => array(array('self','defaultCol'), 'ip_addr'),
 		);
 		
-		// which forum this is related to (typically a table name, e.g. 'sc_bugs')
-		$schema['col']['forum'] = array(
+		// which table this is related to (e.g., 'sc_bugs')
+		$schema['col']['tbl'] = array(
 			'type'    => 'varchar',
-			'size'    => 255,
+			'size'    => 64,
 		);
 		
-		// which "queue" this is in the forum; page name, id, etc
-		$schema['col']['queue'] = array(
-			'type'    => 'varchar',
-			'size'    => 255,
+		// which ID in the related table
+		$schema['col']['tbl_id'] = array(
+			'type'    => 'int',
 		);
 		
 		// username of the poster.
@@ -348,25 +347,10 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'fetch'  => 'Row'
 		);
 		
-		// list of all forums
-		$schema['qry']['forumList'] = array(
-			'select' => 'DISTINCT forum',
-			'order'  => 'forum',
-			'fetch'  => 'Col'
-		);
-				
-		// list of all queues in a given forum
-		$schema['qry']['queueList'] = array(
-			'select' => 'DISTINCT queue',
-			'where'  => 'forum = :forum',
-			'order'  => 'forum, queue',
-			'fetch'  => 'Col'
-		);
-		
-		// list of entries in a given forum and queue
+		// list of entries for a related table and id
 		$schema['qry']['queue'] = array(
 			'select' => '*',
-			'where' => 'forum = :forum AND queue = :queue',
+			'where' => 'tbl = :tbl AND tbl_id = :tbl_id',
 			'order' => 'ts',
 			'fetch' => 'All'
 		);

@@ -72,9 +72,6 @@
 		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/Cell/Bugs/Log.php" >
-			<replace from="@package_version@" to="version" type="package-info" />
-		</file>
 		<file role="php" name="Solar/Cell/Talk.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Role.php,v 1.5 2005/02/08 01:42:27 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -51,21 +51,15 @@ class Solar_User_Role extends Solar_Base {
 	
 	public $config = array(
 		'refresh' => false,
-		'drivers' => array()
+		'drivers' => array('Solar_User_Role_None')
 	);
-	
-	// ----------------------------------------------------------------
-	// 
-	// Public properties.
-	// 
-	// ----------------------------------------------------------------
 	
 	
 	/**
 	* 
 	* An array of driver object instances.
 	* 
-	* @access private
+	* @access protected
 	* 
 	* @var array
 	* 
@@ -74,11 +68,17 @@ class Solar_User_Role extends Solar_Base {
 	protected $driver = array();
 	
 	
-	// ----------------------------------------------------------------
-	// 
-	// Public methods.
-	// 
-	// ----------------------------------------------------------------
+	/**
+	* 
+	* A convenient reference to $_SESSION['Solar_User_Role'].
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
+	public $list = null;
 	
 	
 	/**
@@ -98,11 +98,14 @@ class Solar_User_Role extends Solar_Base {
 		// basic config option settings
 		parent::__construct($config);
 		
+		// make sure the drivers config is an array
+		settype($this->config['drivers'], 'array');
+		
 		// instantiate the driver objects
 		foreach ($this->config['drivers'] as $key => $info) {
 			
-			// is the driver an array (custom configs)
-			// or a string (default configs)?
+			// is the driver value an array (for custom configs)
+			// or a string (for default configs)?
 			if (is_array($info)) {
 				$class = $info[0];
 				$opts = $info[1];
@@ -130,22 +133,22 @@ class Solar_User_Role extends Solar_Base {
 	public function fetch($username)
 	{
 		// make sure we have a session value
-		if (! array_key_exists('Solar_User_Role', $_SESSION)) {
+		if (! isset('Solar_User_Role', $_SESSION)) {
 			$_SESSION['Solar_User_Role'] = null;
 		}
 		
-		// keep a reference to the session array
-		$this->list =& $_SESSION['Solar_User_Role'];
-
 		// does the session array already exist?
 		// if so, and if we're not forcing refreshes,
 		// the we don't need to do anything.
-		if (is_array($this->list) && ! $this->config['refresh']) {
-			return $this->list;
+		if (is_array($_SESSION['Solar_User_Role']) &&
+			! $this->config['refresh']) {
+			return $_SESSION['Solar_User_Role'];
 		}
 		
-		// loop through the role objects and add their results to the list
-		$this->list = array();
+		// reset the roles list
+		$_SESSION['Solar_User_Role'] = array();
+		
+		// loop through all the drivers and collect roles
 		foreach ($this->driver as $obj) {
 		
 			// fetch the role list
@@ -154,13 +157,15 @@ class Solar_User_Role extends Solar_Base {
 			// let errors go silently from here
 			if (! Solar::isError($result) && $result !== false) {
 				// merge the results into the common list
-				settype($result, 'array');
-				$this->list = array_merge($this->list, $result);
+				$_SESSION['Solar_User_Role'] = array_merge(
+					$_SESSION['Solar_User_Role'],
+					(array) $result
+				);
 			}
 		}
 		
 		// return the results
-		return $this->list;
+		return $_SESSION['Solar_User_Role'];
 	}
 	
 	
@@ -168,11 +173,15 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* Resets the role list to nothing.
 	* 
+	* @access public
+	* 
+	* @return void
+	* 
 	*/
 	
 	public function reset()
 	{
-		$this->list = null;
+		$_SESSION['Solar_User_Role'] = null;
 	}
 	
 	
@@ -180,11 +189,17 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* Check to see if a user is in a role.
 	* 
+	* @access public
+	* 
+	* @param string $role The role to check.
+	* 
+	* @return void
+	* 
 	*/
 	
 	public function in($role = null)
 	{
-		return in_array($role, $this->list);
+		return in_array($role, $_SESSION['Solar_User_Role']);
 	}
 	
 	
@@ -192,21 +207,27 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* Check to see if a user is in any of the listed roles.
 	* 
+	* @access public
+	* 
+	* @param string|array $roles The role(s) to check.
+	* 
+	* @return boolean True if the user is in any of the listed roles (a
+	* logical 'or'), false if not.
+	* 
 	*/
 	
-	public function inAny()
+	public function inAny($roles = array())
 	{
-		if (is_array(func_get_arg(0))) {
-			$roles = func_get_arg(0);
-		} else {
-			$roles = func_get_args();
-		}
-		
-		foreach ($roles as $role) {
-			if (in_array($role, $this->list)) {
+		// loop through all of the roles, returning 'true' the first
+		// time we find a matching role.
+		foreach ((array) $roles as $role) {
+			if (in_array($role, $_SESSION['Solar_User_Role'])) {
 				return true;
 			}
 		}
+		
+		// we got through the whole array without finding a match.
+		// therefore, user was not in any of the roles.
 		return false;
 	}
 	
@@ -215,21 +236,27 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* Check to see if a user is in all of the listed roles.
 	* 
+	* @access public
+	* 
+	* @param string|array $roles The role(s) to check.
+	* 
+	* @return boolean True if the user is in all of the listed roles (a
+	* logical 'and'), false if not.
+	* 
 	*/
 	
-	public function inAll($roles = null)
+	public function inAll($roles = array())
 	{
-		if (is_array(func_get_arg(0))) {
-			$roles = func_get_arg(0);
-		} else {
-			$roles = func_get_args();
-		}
-		
-		foreach ($roles as $role) {
-			if (! in_array($role, $this->list)) {
+		// loop through all of the roles, returning 'false' the first
+		// time we find the user is not in one of the roles.
+		foreach ((array) $roles as $role) {
+			if (! in_array($role, $_SESSION['Solar_User_Role'])) {
 				return false;
 			}
 		}
+		
+		// we got through the whole list; therefore, the user is in all
+		// of the noted roles.
 		return true;
 	}
 }

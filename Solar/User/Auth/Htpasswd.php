@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: File.php,v 1.13 2005/02/08 01:42:27 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -72,7 +72,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	
 	function valid($user, $pass)
 	{
-		// force the full, real path to the CVS file
+		// force the full, real path to the file
 		$file = realpath($this->config['file']);
 		
 		// does the file exist?

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Auth.php,v 1.19 2005/02/08 01:42:27 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -34,7 +34,7 @@
 * $auth = Solar::object('Solar_User_Auth', $opts);
 * $auth->start();
 * 
-* Solar::dump($auth->statusCode);
+* Solar::dump($auth->status_code);
 * 
 * </code type="php>
 * 
@@ -59,23 +59,28 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	* options => (array) Options for the authentication driver.
 	* 
-	* expire => (int) Authentication lifetime in seconds; zero is forever.
+	* expire => (int) Authentication lifetime in seconds; zero is
+	* forever.
 	* 
-	* idle => (int) Maximum allowed idle time in seconds; zero is forever.
+	* idle => (int) Maximum allowed idle time in seconds; zero is
+	* forever.
 	* 
 	* allow => (bool) Whether or not to allow automatic login/logout.
 	* 
-	* post_action => (string) Login/logout action key in $_POST array.
+	* post_action => (string) Login/logout action key in $_POST array,
+	* e.g. 'op'.
 	* 
 	* post_username => (string) Password key in $_POST array.
 	* 
 	* post_password => (string) Username key in $_POST array.
 	* 
-	* action_login => (string) The $_POST['action'] value to indicate a login attempt.
+	* action_login => (string) The action-key value to indicate a
+	* login attempt.
 	* 
-	* action_logout => (string) The $postAction value to indicate a logout attempt.
+	* action_logout => (string) The action-key value to indicate a
+	* logout attempt.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var array
 	* 
@@ -83,7 +88,7 @@ class Solar_User_Auth extends Solar_Base {
 	
 	public $config = array(
 		'locale'        => 'Solar/User/Locale/',
-		'class'         => null,
+		'class'         => 'Solar_User_Auth_None',
 		'options'       => null,
 		'expire'        => 0,
 		'idle'          => 0,
@@ -124,7 +129,7 @@ class Solar_User_Auth extends Solar_Base {
 	
 	/**
 	* 
-	* Convenience reference to $_SESSION['Solar_User_Auth']['lastActive'].
+	* Convenience reference to $_SESSION['Solar_User_Auth']['last_active'].
 	* 
 	* This is the Unix time at which the authenticated username was last
 	* valid().
@@ -137,12 +142,12 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	*/
 	
-	public $lastActive;
+	public $last_active;
 	
 	
 	/**
 	* 
-	* Convenience reference to $_SESSION['Solar_User_Auth']['loginTime'].
+	* Convenience reference to $_SESSION['Solar_User_Auth']['login_time'].
 	* 
 	* This is the Unix time at which the username was authenticated.
 	* 
@@ -152,12 +157,12 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	*/
 	
-	public $loginTime;
+	public $login_time;
 	
 	
 	/**
 	* 
-	* Convenience reference to $_SESSION['Solar_User_Auth']['statusCode'].
+	* Convenience reference to $_SESSION['Solar_User_Auth']['status_code'].
 	* 
 	* This is the status code of the current authentication; it maps to a
 	* class constant ('VALID', 'IDLED', etc).
@@ -168,12 +173,12 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	*/
 	
-	public $statusCode;
+	public $status_code;
 	
 	
 	/**
 	* 
-	* Convenience reference to $_SESSION['Solar_User_Auth']['statusText'].
+	* Convenience reference to $_SESSION['Solar_User_Auth']['status_text'].
 	* 
 	* This is message text related to the status code of the current
 	* authentication.
@@ -184,7 +189,7 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	*/
 	
-	public $statusText;
+	public $status_text;
 	
 	
 	/**
@@ -254,20 +259,20 @@ class Solar_User_Auth extends Solar_Base {
 			! is_array($_SESSION['Solar_User_Auth'])) {
 			
 			$_SESSION['Solar_User_Auth'] = array(
-				'statusCode' => 'ANON',
-				'statusText' => $this->locale('AUTH_ANON'),
+				'status_code' => 'ANON',
+				'status_text' => $this->locale('ANON'),
 				'username' => null,
-				'loginTime' => null,
-				'lastActive' => null
+				'login_time' => null,
+				'last_active' => null
 			);
 		}
 		
 		// add convenience references to the session array keys
-		$this->statusCode =& $_SESSION['Solar_User_Auth']['statusCode'];
-		$this->statusText =& $_SESSION['Solar_User_Auth']['statusText'];
-		$this->username   =& $_SESSION['Solar_User_Auth']['username'];
-		$this->loginTime  =& $_SESSION['Solar_User_Auth']['loginTime'];
-		$this->lastActive =& $_SESSION['Solar_User_Auth']['lastActive'];
+		$this->status_code =& $_SESSION['Solar_User_Auth']['status_code'];
+		$this->status_text =& $_SESSION['Solar_User_Auth']['status_text'];
+		$this->username    =& $_SESSION['Solar_User_Auth']['username'];
+		$this->login_time  =& $_SESSION['Solar_User_Auth']['login_time'];
+		$this->last_active =& $_SESSION['Solar_User_Auth']['last_active'];
 		
 		// update any current authentication (including idle and expire).
 		$this->valid();
@@ -291,11 +296,11 @@ class Solar_User_Auth extends Solar_Base {
 				// true, as it may have returned a Solar error).
 				if ($result === true) {
 					// login attempt succeeded.
-					$this->statusCode = 'VALID';
-					$this->statusText = $this->locale('AUTH_VALID');
-					$this->username = $username;
-					$this->loginTime = time();
-					$this->lastActive = time();
+					$this->status_code = 'VALID';
+					$this->status_text = $this->locale('VALID');
+					$this->username    = $username;
+					$this->login_time  = time();
+					$this->last_active = time();
 				} else {
 					// login attempt failed.
 					$this->reset('WRONG');
@@ -319,7 +324,7 @@ class Solar_User_Auth extends Solar_Base {
 	* that multiple calls to valid() may result in the authentication
 	* expiring in the middle of the script.  As such, if you only need
 	* to check that the user is logged in, look at the value of
-	* $this->statusCode.
+	* $this->status_code.
 	* 
 	* @access public
 	* 
@@ -330,10 +335,10 @@ class Solar_User_Auth extends Solar_Base {
 	public function valid()
 	{
 		// is the current user already authenticated?
-		if ($this->statusCode == 'VALID') {
+		if ($this->status_code == 'VALID') {
 			
 			// Check if session authentication has expired
-			$tmp = $this->loginTime + $this->config['expire'];
+			$tmp = $this->login_time + $this->config['expire'];
 			if ($this->config['expire'] > 0 && $tmp < time()) {
 				// past the expiration time
 				$this->reset('EXPIRED');
@@ -341,15 +346,15 @@ class Solar_User_Auth extends Solar_Base {
 			}
 	
 			// Check if session has been idle for too long
-			$tmp = $this->lastActive + $this->config['idle'];
+			$tmp = $this->last_active + $this->config['idle'];
 			if ($this->config['idle'] > 0 && $tmp < time()) {
 				// past the idle time
 				$this->reset('IDLED');
 				return false;
 			}
 			
-			// not expired, not idled, so update the lastActive time
-			$this->lastActive = time();
+			// not expired, not idled, so update the last_active time
+			$this->last_active = time();
 			return true;
 			
 		} else {
@@ -367,21 +372,21 @@ class Solar_User_Auth extends Solar_Base {
 	*
 	* @access public
 	* 
-	* @param int $statusCode A Solar_User_Auth status constant; default is
-	* 'ANON'.
+	* @param string $status_code A Solar_User_Auth status constant;
+	* default is 'ANON'.
 	* 
 	* @return void
 	* 
 	*/
 	
-	public function reset($statusCode = 'ANON')
+	public function reset($status_code = 'ANON')
 	{
-		$statusCode = strtoupper($statusCode);
-		$this->statusCode = $statusCode;
-		$this->statusText = $this->locale("AUTH_$statusCode");
+		$status_code = strtoupper($status_code);
+		$this->status_code = $status_code;
+		$this->status_text = $this->locale($status_code);
 		$this->username = null;
-		$this->loginTime = null;
-		$this->lastActive = null;
+		$this->login_time = null;
+		$this->last_active = null;
 	}
 }
 ?>

@@ -38,7 +38,7 @@ require_once 'Solar/Sql/Result.php';
 * <code>
 * 
 * $opts = array(
-* 	'driver' => 'Solar_Sql_Driver_Mysql',
+* 	'class' => 'Solar_Sql_Driver_Mysql',
 * 	'host'   => 'localhost',
 * 	'user'   => 'pmjones',
 * 	'pass'   => '********',

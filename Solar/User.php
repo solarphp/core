@@ -16,14 +16,6 @@
 * 
 * @version $Id$
 * 
-* @todo Write convenience interface methods to get user, role, pref,
-* and perm values from objects, even if those objects don't exist.
-* This will save the developer from having to check if the object
-* exists and then try to retrieve data (at least one less layer of
-* complexity).  Alternatively, write a "None" object for each that
-* has only blank methods; that will help avoid weird logic in this
-* class.
-* 
 */
 
 /**
@@ -114,6 +106,12 @@ class Solar_User extends Solar_Base
 	* 
 	* Constructor.
 	* 
+	* @access public
+	* 
+	* @param array $config User-provided configuration options.
+	* 
+	* @return void
+	* 
 	*/
 	
 	public function __construct($config = null)
@@ -121,34 +119,23 @@ class Solar_User extends Solar_Base
 		// construction
 		parent::__construct($config);
 		
-		// always set up an authentication object.
-		$opts = null;
-		// is the driver an array of custom configs?
-		if (is_array($this->config['auth'])) {
-			// yes, use the custom configs
-			$opts = $this->config['auth'];
-		}
-		// instantiate the auth object
-		$this->auth = Solar::object('Solar_User_Auth', $opts);
+		// set up an authentication object.
+		$this->auth = Solar::object('Solar_User_Auth', $this->config['auth']);
 		
-		// is there a configuration for a roles object?
-		if (! empty($this->config['role'])) {
-			// set up the roles object.
-			// is the driver an array of custom configs?
-			$opts = null;
-			if (is_array($this->config['role'])) {
-				// yes, use the custom configs
-				$opts = $this->config['role'];
-			}
-			// instantiate the role object
-			$this->role = Solar::object('Solar_User_Role', $opts);
-		}
+		// set up the roles object.
+		$this->role = Solar::object('Solar_User_Role', $this->config['role']);
 	}
 	
 	
 	/**
 	* 
 	* Solar hooks.
+	* 
+	* @access public
+	* 
+	* @param string $hook The hook to execute (e.g., 'start' or 'stop').
+	* 
+	* @return void
 	* 
 	*/
 	
@@ -161,18 +148,14 @@ class Solar_User extends Solar_Base
 			$this->auth->start();
 			
 			// is this a valid authenticated user?
-			if ($this->auth->statusCode == 'VALID') {
-				// user is not valid
-				if (is_object($this->role)) {
-					// loop through role objects and load roles
-					$this->role->fetch($this->auth->username);
-				}
+			if ($this->auth->status_code == 'VALID') {
+				// yes, the user is authenticated as valid.
+				// load up any roles for the user.
+				$this->role->fetch($this->auth->username);
 			} else {
-				// user is not valid
-				if (is_object($this->role)) {
-					// clear out any roles
-					$this->role->reset();
-				}
+				// no, user is not valid.  
+				// clear out any previous roles.
+				$this->role->reset();
 			}
 			
 			

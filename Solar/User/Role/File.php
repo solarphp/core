@@ -2,7 +2,7 @@
 
 /**
 * 
-* Get roles from a simple file.
+* Get roles from a Unix-style groups file.
 * 
 * @category Solar
 * 
@@ -16,21 +16,20 @@
 * 
 * @version $Id$
 * 
-* @todo Convert to look through Unix-style group files, not the 
-* custom version noted in the comments.
+* @todo rename to Unix, add Ini file handler as well
 * 
 */
 
 /**
 * 
-* Get roles from a simple file.
+* Get roles from a Unix-style groups file.
 * 
-* The file format is "username:group,group,group\n".  Example:
+* The file format is "group:user1,user2,user3\n".  Example:
 * 
 * <code>
-* pmjones:sysadmin
-* boshag:writer
-* agtsmith:staff,writer,editor,approver
+* sysadmin:pmjones
+* writer:pmjones,boshag,agtsmith
+* editor:pmjones,agtsmith
 * </code>
 * 
 * @category Solar
@@ -72,8 +71,7 @@ class Solar_User_Role_File extends Solar_Base {
 	
 	function fetch($user)
 	{
-		
-		// force the full, real path to the CVS file
+		// force the full, real path to the file
 		$file = realpath($this->config['file']);
 		
 		// does the file exist?
@@ -85,49 +83,29 @@ class Solar_User_Role_File extends Solar_Base {
 			);
 		}
 		
-		// open the file
-		$fp = @fopen($file, 'r');
-		if (! $fp) {
-			return $this->error(
-				'ERR_FILE_OPEN',
-				array('file' => $file),
-				E_USER_ERROR
-			);
-		}
+		// load the file as an array of lines
+		$lines = file($file);
 		
-		// find the user's line in the file
-		$len = strlen($user) + 1;
-		$ok = false;
-		while ($line = fgets($fp)) {
-			if (substr($line, 0, $len) == "$user:") {
-				// found the line, leave the loop
-				$ok = true;
-				break;
-			}
-		}
-		
-		// close the file
-		fclose($fp);
-		
-		// did we find the username?
-		if (! $ok) {
-			// username not in the file
-			return false;
-		}
-		
-		// get the text after the "$user:" part.
-		// $len was set when finding the user's line in the file.
-		$tmp = substr($line, $len);
-		
-		// break up the line into pieces, then capture the comma-separate
-		// group names into an array.
-		$tmp = explode(',', trim($tmp));
+		// the list of roles
 		$list = array();
-		foreach ($tmp as $key => $val) {
-			// no empty groups allowed
-			$val = trim($val);
-			if ($val) {
-				$list[] = $val;
+		
+		// loop through each line, find the group, then see if the user
+		// is on the line anywhere
+		foreach ($lines as $line) {
+		
+			// break apart at first ':'
+			$pos = strpos(':', $line);
+			
+			// the group name is the part before the ':'
+			$group = substr($line, 0, $pos);
+			
+			// the list of users comes after
+			$tmp = substr($line, $pos+1);
+			$users = explode(',', $tmp);
+			
+			// is the user part of the group?
+			if (in_array($user, $users)) {
+				$list[] = $group;
 			}
 		}
 		

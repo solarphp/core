@@ -4,7 +4,7 @@ $user = Solar::shared('user');
 
 // get the shared template object and add the path for Bugs templates
 $tpl = Solar::shared('template');
-$tpl->addPath('template', $this->config['views']);
+$tpl->addPath('template', $this->dir['views']);
 
 // add any additional template paths (for theming)
 $tpl->addPath(

@@ -8,9 +8,10 @@
 		common aspects of web-based rapid application development.
 		
 		Solar is designed for developers who intend to distribute their
-		applications to the whole world.  This means the database driver
-		functions work exactly the same way for each supported database.  It
-		also means that localization support is built in from the start.
+		applications to the whole world.  This means, for example, the
+		database driver functions work exactly the same way for each
+		supported database.  It also means that localization support is
+		built in from the start.
 		
 		Please visit http://solarphp.com/ for more information.
 
@@ -25,18 +26,30 @@
 		</maintainer>
 	</maintainers>
 	<release>
-		<version>0.0.3</version>
-		<date>2005-02-21</date>
+		<version>0.0.4</version>
+		<date>2005-03-06</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
-			* This is a public development release; the API is unstable.
-			* Converted all __hive() calls to __solar() instead.
-			* Added email and initial description to Solar_Cell_Bugs columns, removed reference to Solar_Cell_Talk (should be handled by the application object, not the bugs entity)
-			* Converted all 'dt' (date-time) abbreviations to 'ts' (timestamp) for consistency with Solar_Sql_Entity column type naming
-			* Multiple changes to Solar_Sql_Entity array keys ('ent' ==&gt; 'tbl', 'seqname' ==&gt; 'sequence', 'valid' ==&gt; 'validate', 'message' ==&gt; 'feedback'
-			* Added Solar_Form class (aggregates element-building instructions and validation)
-			* Added &quot;None.php&quot; drivers for Solar_User_Auth and Solar_User_Role (to facilitate having no backend for those services)
+			* This is a public development release, and is not yet stable.
+			* Added Solar_Form class (Solar/Form.php) for form element collation and input validation (not for output or rendering)
+			* Added Solar_Locale class (Solar/Locale.php)
+			* Solar.php:
+			 * Modified locale() method signature
+			 * Added public static $locale object
+			 * Removed Solar::setLocale()
+			 * Properties $config and $shared are now public
+			* Solar_Base: modified to use new locale structure
+			* Solar_Sql:
+			 * dropped support for Oracle (30-char limit on names is just too strict)
+			 * max table name is now 30 chars, max col/idx name is now 27 chars
+			 * double underscores not allowed in table, index, or column names (to prevent name collisions)
+			 * indexes now suffixed with '__idx', sequences with '__seq'
+			 * in index names, the table/index separator is now '__'
+			 * Converted fetch(), fetchNum(), and free() methods to static (now there's no need to pass a reference to the driver into the result class)
+			* Solar_Sql_Result: modified to make static calls to Solar_Sql for free(), fetch(), and fetchNum()
+			* Various modifications to the Solar_Cell classes for Bugs and Talk to go with Solar_Sql changes
+			* Various schema changes to the Solar_Cell classes for Bugs and Talk
 		</notes>
 		<file role="php" name="Solar.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
@@ -59,6 +72,9 @@
 		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
+		<file role="php" name="Solar/Cell/Bugs/Log.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
 		<file role="php" name="Solar/Cell/Talk.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
@@ -75,6 +91,9 @@
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Form.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Locale.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Locale/en_US.php" >
@@ -96,9 +115,6 @@
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Mysql.php" >
-			<replace from="@package_version@" to="version" type="package-info" />
-		</file>
-		<file role="php" name="Solar/Sql/Driver/Oci.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Pgsql.php" >

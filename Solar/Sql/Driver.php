@@ -14,8 +14,6 @@
 * 
 * @version $Id$
 * 
-* @todo Change separator to __, change _idx to __idx, change _seq to
-* __seq, drop Oracle, set table max len to 30, set field name to 27
 */
 
 /**

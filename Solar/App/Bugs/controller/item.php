@@ -7,7 +7,7 @@ $data = $bugs->fetchItem($id);
 
 // does the report exist?
 if (Solar::isError($data)) {
-	$tpl->setTemplate('error.tpl.php');
+	$tpl->setTemplate('error.php');
 	$tpl->error = $data;
 	echo $tpl;
 	exit;
@@ -81,6 +81,6 @@ $ok_role = $user->role->inAny(
 $tpl->can_edit = $ok_user || $ok_role;
 
 // display
-$tpl->setTemplate('item.tpl.php');
+$tpl->setTemplate('item.php');
 echo $tpl;
 ?>

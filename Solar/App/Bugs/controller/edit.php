@@ -17,7 +17,7 @@ $ok_role = $user->role->inAny(
 
 // die if not OK
 if (! $ok_user && ! $ok_role) {
-	echo "NOT ADMIN";
+	echo Solar::locale('Solar_App_Bugs', 'ERR_NOT_ADMIN');
 	Solar::stop();
 	die();
 }
@@ -32,7 +32,8 @@ if (! $ok_user && ! $ok_role) {
 $formtype = '';
 
 // get the inital form values from the table, or as a new report?
-$id = Solar::get('id');
+$id = (int) Solar::get('id', 0);
+
 if ($id) {
 	
 	// it's an edit form
@@ -167,6 +168,6 @@ $tpl->comments = $talk->fetchQueue("sc_bugs://$id");
 $tpl->formdata = $form;
 
 // display output
-$tpl->setTemplate('edit.tpl.php');
+$tpl->setTemplate('edit.php');
 echo $tpl;
 ?>

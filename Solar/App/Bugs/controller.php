@@ -1,15 +1,15 @@
 <?php
 
 // load locale strings for the application
-Solar::$shared->locale->load('Solar_App_Bugs', 'Solar/App/Bugs/inc/locale/');
+Solar::$shared->locale->load('Solar_App_Bugs', 'Solar/App/Bugs/helper/locale/');
 
 // get the shared user object
 $user = Solar::shared('user');
 
 // get the shared template object and add the path for Bugs templates
-// (defaults to 'Solar/App/Bugs/tpl/')
+// (defaults to 'Solar/App/Bugs/view/')
 $tpl = Solar::shared('template');
-$tpl->addPath('template', 'Solar/App/Bugs/tpl/');
+$tpl->addPath('template', 'Solar/App/Bugs/view/');
 
 // add any additional template paths (for theming)
 $tpl->addPath(
@@ -27,16 +27,16 @@ $form = Solar::object('Solar_Form');
 switch(strtolower(Solar::get('action'))) {
 
 case 'item':
-	include 'Solar/App/Bugs/act/item.act.php';
+	include 'Solar/App/Bugs/controller/item.php';
 	break;
 
 case 'edit':
-	include 'Solar/App/Bugs/act/edit.act.php';
+	include 'Solar/App/Bugs/controller/edit.php';
 	break;
 	
 case 'list':
 default:
-	include 'Solar/App/Bugs/act/list.act.php';
+	include 'Solar/App/Bugs/controller/list.php';
 	break;
 }
 

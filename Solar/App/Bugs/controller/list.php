@@ -16,6 +16,6 @@ default:
 }
 
 // display
-$tpl->setTemplate('list.tpl.php');
+$tpl->setTemplate('list.php');
 echo $tpl;
 ?>

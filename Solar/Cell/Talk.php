@@ -430,7 +430,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		switch ($col) {
 		
 		case 'ip_addr':
-			return Solar::super('server', 'REMOTE_ADDR');
+			return Solar::$super->fetch('server', 'REMOTE_ADDR');
 			break;
 		
 		case 'ts':
@@ -438,7 +438,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			break;
 		
 		case 'queue':
-			return $_SERVER['REQUEST_URI'];
+			return Solar::$super->fetch('server', 'REQUEST_URI');
 			break;
 			
 		default:
@@ -464,7 +464,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	{
 		// make sure we're using the current username
 		if (empty($data['user_id'])) {
-			$auth = Solar::super('session', 'Solar_User_Auth', array());
+			$auth = Solar::session('Solar_User_Auth', array());
 			if (empty($auth['username'])) {
 				$data['user_id'] = '';
 			} else {

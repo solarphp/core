@@ -44,8 +44,6 @@ require_once 'Solar/Error.php';
 * 
 * @version @package_version@
 * 
-* @todo Add a cookie() getter.
-* 
 */
 
 class Solar {

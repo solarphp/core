@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Cache
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
@@ -24,7 +26,7 @@
 * 
 * @package Solar
 * 
-* @author Paul M. Jones <pmjones@solarphp.com>
+* @subpackage Solar_Cache
 * 
 */
 

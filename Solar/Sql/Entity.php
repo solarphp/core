@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Sql
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
@@ -28,6 +30,8 @@ Solar::autoload('Solar_Valid');
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_Sql
 * 
 */
 

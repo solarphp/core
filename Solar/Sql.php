@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Sql
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
@@ -71,6 +73,8 @@ require_once 'Solar/Sql/Result.php';
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_Sql
 * 
 */
 

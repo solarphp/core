@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Sql.php,v 1.19 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -773,7 +773,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function createSequence($name, $start = 1)
 	{
-		$name .= '_seq';
+		$name .= '__seq';
 		return $this->driver->createSequence($name, $start);
 	}
 	
@@ -794,7 +794,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropSequence($name)
 	{
-		$name .= '_seq';
+		$name .= '__seq';
 		return $this->driver->dropSequence($name);
 	}
 	
@@ -808,7 +808,7 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string &$name The sequence name; defaults to 'hive_seq'.
+	* @param string &$name The sequence name.
 	* 
 	* @return int The next sequence number.
 	* 
@@ -816,7 +816,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function nextSequence($name)
 	{
-		$name .= '_seq';
+		$name .= '__seq';
 		return $this->driver->nextSequence($name);
 	}
 }

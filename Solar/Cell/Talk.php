@@ -116,7 +116,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch a list of all comments in a specific forum.
+	* Fetch a list of all comments in a specific queue.
 	* 
 	* @access public
 	* 
@@ -124,9 +124,9 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function fetchForum($forum, $order = null, $page = null)
+	public function fetchQueue($queue, $order = null, $page = null)
 	{
-		return $this->selectFetch('forum', array('forum' => $forum),
+		return $this->selectFetch('queue', array('queue' => $queue),
 			$order, $page);
 	}
 	
@@ -208,11 +208,11 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'default' => array(array('self','defaultCol'), 'ip_addr'),
 		);
 		
-		// which "forum" this is attached to, whether a URL or a wiki page, or whatever
-		$schema['col']['forum'] = array(
+		// which "queue" this is attached to, whether a URL or a wiki page, or whatever
+		$schema['col']['queue'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
-			'default' => array(array('self','defaultCol'), 'forum'),
+			'default' => array(array('self','defaultCol'), 'queue'),
 		);
 		
 		// username of the poster.
@@ -336,18 +336,18 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'fetch'  => 'Row'
 		);
 		
-		// list of entries in a given forum
-		$schema['qry']['forum'] = array(
+		// list of entries in a given queue
+		$schema['qry']['queue'] = array(
 			'select' => '*',
-			'where' => 'forum = :forum',
+			'where' => 'queue = :queue',
 			'order' => 'ts',
 			'fetch' => 'All'
 		);
 		
-		// list of all forums
-		$schema['qry']['forumList'] = array(
-			'select' => 'DISTINCT forum',
-			'order'  => 'forum',
+		// list of all queues
+		$schema['qry']['queueList'] = array(
+			'select' => 'DISTINCT queue',
+			'order'  => 'queue',
 			'fetch'  => 'Col'
 		);
 		
@@ -437,7 +437,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			return $this->timestamp();
 			break;
 		
-		case 'forum':
+		case 'queue':
 			return $_SERVER['REQUEST_URI'];
 			break;
 			

@@ -1,4 +1,4 @@
-<h3>Commentary</h3>
+<h3><?php echo Solar::locale('Solar_App_Bugs', 'USER_COMMENTS') ?></h3>
 
 <?php if ($this->comments): ?>
 

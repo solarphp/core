@@ -30,11 +30,11 @@
 		<?php endforeach ?>
 	</table>
 <?php else: ?>
-	<p>No bugs in the system.</p>
+	<p><?php echo Solar::locale('Solar_App_Bugs', 'NO_BUGS_LISTED') ?></p>
 <?php endif ?>
 
-<p><?php echo $this->ahref('?action=listOpen', 'List only "open" bugs.') ?></p>
-<p><?php echo $this->ahref('?action=listAll', 'List all bugs (both open and closed).') ?></p>
-<p><?php echo $this->ahref('?action=edit&id=0', 'Report a new bug.') ?></p>
+<p><?php echo $this->ahref('?action=listOpen', Solar::locale('Solar_App_Bugs', 'SHOW_OPEN_BUGS')) ?></p>
+<p><?php echo $this->ahref('?action=listAll', Solar::locale('Solar_App_Bugs', 'SHOW_ALL_BUGS')) ?></p>
+<p><?php echo $this->ahref('?action=edit&id=0', Solar::locale('Solar_App_Bugs', 'REPORT_NEW_BUG')) ?></p>
 
 <?php include $this->template('footer.php') ?>

@@ -9,10 +9,12 @@
 			th.Savant3 { background: #bcd; text-align: right; vertical-align: top; padding: 4px; }
 			td.Savant3 { background: #eee; text-align: left; vertical-align: top;  padding: 4px; }
 			select, option { font-family: "Lucida Sans", Verdana; font-size: 12px; }
-			input[type="text"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 12px;}
+			input[type="text"], input[type="password"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 12px;}
 		</style>
 	</head>
 	<body>
 	
+	<?php $this->form('set', 'class', 'Savant3') ?>
 	<?php include $this->template('auth.php') ?>
+	
 	

@@ -1,8 +1,8 @@
 <?php include $this->template('header.php') ?>
 
-<h2>Bug Report <?php echo $this->item['id']['value'] ?></h2>
+<h2><?php echo Solar::locale('Solar_App_Bugs', 'BUG_REPORT') . ' ' . $this->item['id']['value'] ?></h2>
 
-<p>[ <a href="?action=listOpen">Back to list</a> ]</p>
+<p>[ <?php echo $this->ahref('?action=listOpen', Solar::locale('Solar_App_Bugs', 'BACK_TO_LIST')) ?> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>
@@ -20,7 +20,7 @@
 </td><tr></table>
 
 <?php if ($this->can_edit): ?>
-	<p><?php echo $this->ahref('?action=edit&id=' . $this->item['id']['value'], "Edit Bug Report") ?></p>
+	<p><?php echo $this->ahref('?action=edit&id=' . $this->item['id']['value'], Solar::locale('Solar_App_Bugs', 'EDIT_BUG_REPORT')) ?></p>
 <?php endif; ?>
 
 <?php include $this->template('comments.php') ?>
@@ -37,7 +37,7 @@
 	
 	<?php
 		echo $this->form('begin');
-		echo $this->form('block', 'begin', 'Add Comment');
+		echo $this->form('block', 'begin', Solar::locale('Solar_App_Bugs', 'ADD_COMMENT'));
 		echo $this->form('hidden', 'action', Solar::locale('Solar', 'OP_SAVE'));
 		echo $this->form('fullauto', $this->formdata->elements);
 		echo $this->form('group', 'begin');

@@ -1,7 +1,7 @@
 <?php include $this->template('header.php') ?>
 
-<h2>Bug Report <?php echo $this->formdata->elements['bugs[id]']['value'] ?></h2>
-[ <a href="?action=listOpen">Back to list</a> ]
+<h2><?php echo Solar::locale('Solar_App_Bugs', 'BUG_REPORT') . ' ' . $this->formdata->elements['bugs[id]']['value'] ?></h2>
+<p>[ <?php echo $this->ahref('?action=listOpen', Solar::locale('Solar_App_Bugs', 'BACK_TO_LIST')) ?> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>

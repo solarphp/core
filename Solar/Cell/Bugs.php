@@ -38,12 +38,22 @@ Solar::autoload('Solar_Sql_Entity');
 
 class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	
+	/**
+	* 
+	* User-supplied configuration values.
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
 	public $config = array(
 		
-		// locale strings
+		// directory for local strings
 		'locale' => 'Solar/Cell/Bugs/Locale/',
 		
-		// component parts to report on (default is blank)
+		// software packages or parts to report on (default is blank)
 		'pack' => array(''),
 		
 		// report type codes
@@ -54,7 +64,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'feature',
 		),
 			
-		// status codes
+		// work progress status codes
 		'status' => array(
 			'new',
 			'accept',
@@ -67,10 +77,10 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'reopen',
 		),
 		
-		// which statuses are open?
+		// which status codes are logically open?
 		'status_open' => array('new', 'accept', 'feedback', 'reopen'),
 		
-		// which statuses are closed?
+		// which status codes are logically closed?
 		'status_closed' => array('fixed', 'dupe', 'bogus', 'fixed', 'suspend'),
 	);
 	
@@ -108,6 +118,10 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* 
 	* @access public
 	* 
+	* @param string $order An ORDER clause to override the default order.
+	* 
+	* @param int $page Which page number to show; by default, shows all.
+	* 
 	* @return array An array of bug reports.
 	* 
 	*/
@@ -128,6 +142,15 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* Fetch a list of all bug reports (open and closed).
 	* 
 	* @access public
+	* 
+	* @param string|array An added WHERE clause to further filter the results.
+	* If an assoc array, the keys are treated as field names and the values as
+	* "equals" values, to be ANDed together to make a WHERE clause.  If null,
+	* no filtering is applied.
+	* 
+	* @param string $order An ORDER clause to override the default order.
+	* 
+	* @param int $page Which page number to show; by default, shows all.
 	* 
 	* @return array An array of bug reports.
 	* 
@@ -152,6 +175,13 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* Updates one bug report by ID.
 	* 
 	* @access public
+	* 
+	* @param array $data An associative array of data where the key is a 
+	* column name and the value is updated value.
+	* 
+	* @param int $id The row ID to update.
+	* 
+	* @return mixed
 	* 
 	*/
 	

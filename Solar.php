@@ -44,6 +44,8 @@ require_once 'Solar/Error.php';
 * 
 * @version @package_version@
 * 
+* @todo Add a cookie() getter.
+* 
 */
 
 class Solar {
@@ -223,7 +225,7 @@ class Solar {
 	
 	public static function apiVersion() 
 	{
-		return '0.0.1dev1';
+		return '@package_version@';
 	}
 	
 	
@@ -269,6 +271,20 @@ class Solar {
 	/**
 	* 
 	* Gets/sets locale strings for a class.
+	* 
+	* <code>
+	* // get all locale strings by class as an assoc array
+	* $array = Solar::locale('Class');
+	* 
+	* // get one locale string by class and key
+	* $string = Solar::locale('Class', 'key');
+	* 
+	* // set all locale strings and keys for a class
+	* Solar::locale('Class', null, $array);
+	* 
+	* // set one locale string for a class and key
+	* Solar::locale('Class', 'key', 'string');
+	* </code>
 	* 
 	* @access public
 	* 
@@ -325,6 +341,10 @@ class Solar {
 	* all instances of '_' in the class name to DIRECTORY_SEPARATOR
 	* (i.e., '/' on Unix and '\' on Windows).
 	* 
+	* @todo Should this be 'load' (vice 'autoload')?  It's not automatic...
+	* 
+	* @todo Add localization for errors
+	* 
 	* @access public
 	* 
 	* @param string $class A Solar (or other) class name.
@@ -366,9 +386,20 @@ class Solar {
 			
 		}
 		
-		// finally, include the file.
+		// include the file.
 		include_once $file;
-	}	
+		
+		// if the class was not in the file, we have a problem.
+		if (class_exists($class)) {
+			return Solar::error(
+				'Solar', // class
+				'class_not_found', // code
+				'class not found in autoload file', // text
+				null, // no info
+				E_USER_ERROR // level
+			);
+		}
+	}
 	
 	
 	/**
@@ -424,6 +455,8 @@ class Solar {
 	* @param string $class The class name.
 	* 
 	* @return object A singleton instance of the requested Solar class.
+	* 
+	* @todo Localize these errors.
 	* 
 	*/
 	
@@ -554,7 +587,6 @@ class Solar {
 	* 
 	* Automatically checks if the element is set; if not, returns a
 	* default value. Strips slashes and HTML tags automatically.
-	* 
 	* 
 	* @todo Allow a config group to specify the scrubbers?
 	* 

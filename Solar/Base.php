@@ -78,6 +78,9 @@ abstract class Solar_Base {
 	* 
 	* Reports the API version for this class.
 	* 
+	* If you don't override this method, your classes will use the same
+	* API version string as the Solar package itself.
+	* 
 	* @access public
 	* 
 	* @return string A PHP-standard version number.
@@ -154,6 +157,10 @@ abstract class Solar_Base {
 	/**
 	* 
 	* Looks up locale strings based on a key.
+	* 
+	* Uses the locale strings in the directory noted by $conf['locale'];
+	* if no such key exists, falls back to the strings for the parent
+	* class, and finally falls back to the Solar/Locale strings.
 	* 
 	* @access public
 	* 

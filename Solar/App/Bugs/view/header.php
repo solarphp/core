@@ -14,5 +14,5 @@
 	</head>
 	<body>
 	
-	<?php include $this->template('auth.tpl.php') ?>
+	<?php include $this->template('auth.php') ?>
 	

@@ -1,8 +1,8 @@
-<?php include $this->template('header.tpl.php') ?>
+<?php include $this->template('header.php') ?>
 
 <h2>Bug Report <?php echo $this->item['id']['value'] ?></h2>
 
-<p>[ <a href="index.php">Back to list</a> ]</p>
+<p>[ <a href="?action=list_open">Back to list</a> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>
@@ -20,10 +20,10 @@
 </td><tr></table>
 
 <?php if ($this->can_edit): ?>
-	<p><?php echo $this->ahref('edit.php?id=' . $this->item['id']['value'], "Edit Bug Report") ?></p>
+	<p><?php echo $this->ahref('?action=edit&id=' . $this->item['id']['value'], "Edit Bug Report") ?></p>
 <?php endif; ?>
 
-<?php include $this->template('comments.tpl.php') ?>
+<?php include $this->template('comments.php') ?>
 
 <table><tr><td>
 
@@ -49,4 +49,4 @@
 
 </td><tr></table>
 
-<?php include $this->template('footer.tpl.php') ?>
+<?php include $this->template('footer.php') ?>

@@ -1,6 +1,7 @@
-<?php include $this->template('header.tpl.php') ?>
+<?php include $this->template('header.php') ?>
 
-<?php if (is_array($this->list) && $count = count($this->list)): ?>
+<?php if (is_array($this->list)): ?>
+	<?php $count = count($this->list) ?>
 	<p><?php echo $count ?> bugs listed.</p>
 	<table border="1" cellspacing="0" cellpadding="4">
 		<tr>
@@ -21,7 +22,7 @@
 			<td valign="top"><?php echo $bug['queue'] ?></td>
 			<td valign="top"><?php echo $bug['type'] ?></td>
 			<td valign="top"><?php echo $this->ahref(
-				'view.php?id=' . $bug['id'],
+				'?action=item&id=' . $bug['id'],
 				$this->scrub($bug['summ'])
 			) ?></td>
 			<td valign="top"><?php echo $bug['status'] ?></td>
@@ -32,8 +33,8 @@
 	<p>No bugs in the system.</p>
 <?php endif ?>
 
-<p><a href="?">List open bugs.</a></p>
-<p><a href="?action=list">List all bugs</a> (both open and closed).</p>
-<p><a href="?action=edit&id=0">Report a new bug.</a></p>
+<p><?php echo $this->ahref('?action=list_open', 'List only "open" bugs.') ?></p>
+<p><?php echo $this->ahref('?action=list_all', 'List all bugs (both open and closed).') ?></p>
+<p><?php echo $this->ahref('?action=edit&id=0', 'Report a new bug.') ?></p>
 
-<?php include $this->template('footer.tpl.php') ?>
+<?php include $this->template('footer.php') ?>

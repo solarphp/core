@@ -1,4 +1,4 @@
-<?php include $this->template('header.tpl.php') ?>
+<?php include $this->template('header.php') ?>
 
 <div style="color: red;">
 <?php while ($err = $this->error->pop()): ?>
@@ -6,4 +6,4 @@
 <?php endwhile; ?>
 </div>
 
-<?php include $this->template('footer.tpl.php') ?>
+<?php include $this->template('footer.php') ?>

@@ -1,21 +1,23 @@
 <?php
 // what operation are we performing?
-$op = Solar::get('op', 'open');
+$action = Solar::get('action', 'list_open');
 
 // operations
-switch (strtolower($op)) {
+switch (strtolower($action)) {
 
-case 'list':
+// list all bugs regardless of open or closed
+case 'list_all':
 	$tpl->list = $bugs->fetchList();
 	break;
 	
-case 'open':
+// list only open bugs
+case 'list_open':
 default:
 	$tpl->list = $bugs->fetchOpen();
 	break;
 }
 
 // display
-$tpl->setTemplate('list.php');
-echo $tpl;
+$output = $tpl->fetch('list.php');
+echo $output;
 ?>

@@ -70,6 +70,19 @@ class Solar_User_Role extends Solar_Base {
 	
 	/**
 	* 
+	* Have we attempted to load the list of roles yet?
+	* 
+	* @access protected
+	* 
+	* @var bool
+	* 
+	*/
+	
+	protected $loaded = false;
+	
+	
+	/**
+	* 
 	* A convenient reference to $_SESSION['Solar_User_Role'].
 	* 
 	* @access public
@@ -78,7 +91,7 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	*/
 	
-	public $list = null;
+	public $list;
 	
 	
 	/**
@@ -117,6 +130,12 @@ class Solar_User_Role extends Solar_Base {
 			$this->driver[] = Solar::object($class, $opts);
 		}
 		
+		// make a reference to the
+		// make sure we have a session value
+		if (! isset($this->list)) {
+			$_SESSION['Solar_User_Role'] = array();
+			$this->list =& $_SESSION['Solar_User_Role'];
+		}
 	}
 	
 	
@@ -132,21 +151,15 @@ class Solar_User_Role extends Solar_Base {
 	
 	public function fetch($username)
 	{
-		// make sure we have a session value
-		if (! isset($_SESSION['Solar_User_Role'])) {
-			$_SESSION['Solar_User_Role'] = null;
-		}
-		
-		// does the session array already exist?
-		// if so, and if we're not forcing refreshes,
-		// the we don't need to do anything.
-		if (is_array($_SESSION['Solar_User_Role']) &&
-			! $this->config['refresh']) {
-			return $_SESSION['Solar_User_Role'];
+		// have we loaded roles for the first time yet? if so, and if
+		// we're not forcing refreshes, the we don't need to do
+		// anything, jsut return the list as it is right now.
+		if ($this->loaded && ! $this->config['refresh']) {
+			return $this->list;
 		}
 		
 		// reset the roles list
-		$_SESSION['Solar_User_Role'] = array();
+		$this->list = array();
 		
 		// loop through all the drivers and collect roles
 		foreach ($this->driver as $obj) {
@@ -157,15 +170,18 @@ class Solar_User_Role extends Solar_Base {
 			// let errors go silently from here
 			if (! Solar::isError($result) && $result !== false) {
 				// merge the results into the common list
-				$_SESSION['Solar_User_Role'] = array_merge(
-					$_SESSION['Solar_User_Role'],
+				$this->list = array_merge(
+					$this->list,
 					(array) $result
 				);
 			}
 		}
 		
+		// OK, we've loaded what we can.
+		$this->loaded = true;
+		
 		// return the results
-		return $_SESSION['Solar_User_Role'];
+		return $this->list;
 	}
 	
 	
@@ -181,7 +197,8 @@ class Solar_User_Role extends Solar_Base {
 	
 	public function reset()
 	{
-		$_SESSION['Solar_User_Role'] = null;
+		$this->loaded = false;
+		$this->list = array();
 	}
 	
 	
@@ -199,7 +216,7 @@ class Solar_User_Role extends Solar_Base {
 	
 	public function in($role = null)
 	{
-		return in_array($role, $_SESSION['Solar_User_Role']);
+		return in_array($role, $this->list);
 	}
 	
 	
@@ -221,7 +238,7 @@ class Solar_User_Role extends Solar_Base {
 		// loop through all of the roles, returning 'true' the first
 		// time we find a matching role.
 		foreach ((array) $roles as $role) {
-			if (in_array($role, $_SESSION['Solar_User_Role'])) {
+			if (in_array($role, $this->list)) {
 				return true;
 			}
 		}
@@ -250,7 +267,7 @@ class Solar_User_Role extends Solar_Base {
 		// loop through all of the roles, returning 'false' the first
 		// time we find the user is not in one of the roles.
 		foreach ((array) $roles as $role) {
-			if (! in_array($role, $_SESSION['Solar_User_Role'])) {
+			if (! in_array($role, $this->list)) {
 				return false;
 			}
 		}

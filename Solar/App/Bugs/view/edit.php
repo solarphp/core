@@ -1,7 +1,7 @@
-<?php include $this->template('header.tpl.php') ?>
+<?php include $this->template('header.php') ?>
 
 <h2>Bug Report <?php echo $this->formdata->elements['bugs[id]']['value'] ?></h2>
-[ <a href="index.php">Back to list</a> ]
+[ <a href="?action=list_open">Back to list</a> ]
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>
@@ -28,6 +28,6 @@
 	
 </td><tr></table>
 
-<?php include $this->template('comments.tpl.php') ?>
+<?php include $this->template('comments.php') ?>
 
-<?php include $this->template('footer.tpl.php') ?>
+<?php include $this->template('footer.php') ?>

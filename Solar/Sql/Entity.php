@@ -95,8 +95,8 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	*     'require' => true|false,
 	*     'default' => default value, // if array, a PHP function callback
 	*     'primary' => true/false, // if true, cannot update field
-	*     'seqname' => '',// use this sequence name to get a value on insert
-	*     'valid'   => array(
+	*     'sequence' => '',// use this sequence name to get a value on insert
+	*     'validate'   => array(
 	*       array('nonBlank', message),
 	*       array('custom', message, callback, arg, arg, arg...),
 	*       array(...),
@@ -487,9 +487,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		// forcibly add sequential values
 		foreach ($this->schema['col'] as $field => $info) {
 			// does this field use a sequence?
-			if (! empty($info['seqname'])) {
+			if (! empty($info['sequence'])) {
 				// yes, override any given values
-				$data[$field] = $this->sql->nextSequence($info['seqname']);
+				$data[$field] = $this->sql->nextSequence($info['sequence']);
 			}
 		}
 		
@@ -699,7 +699,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Returns an array of "hints" for how to build a form.
+	* Returns an array of element "hints" for how to build a form.
+	* 
+	* Primarily for use with Solar_Form.
 	* 
 	* @access public
 	* 
@@ -714,7 +716,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	public function formHints($name, $data = null, $msg = null)
+	public function formElements($name, $data = null, $msg = null)
 	{
 		// the basic form hints
 		if (empty($this->schema['frm'][$name])) {
@@ -724,7 +726,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				E_USER_WARNING
 			);
 		} else {
-			$hints = $this->schema['frm'][$name];
+			$elements = $this->schema['frm'][$name];
 		}
 		
 		// make sure we have data for all fields, even if blank.
@@ -732,7 +734,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		$data = array_merge($this->defaultRow(true), $data);
 		
 		// loop through each of the hints
-		foreach ($hints as $field => $info) {
+		foreach ($elements as $field => $info) {
 			
 			// make sure there are keys for all info.
 			$val = (isset($data[$field])) ? $data[$field] : null;
@@ -745,7 +747,8 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				'disable' => false,
 				'options' => array(),
 				'attribs' => array(),
-				'message' => array(),
+				'feedback' => array(),
+				'validate' => array(),
 			);
 			$info = array_merge($tmp, $info);
 			
@@ -753,7 +756,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			// the form element must be for something other than the
 			// table entity.
 			if (! isset($this->schema['col'][$field])) {
-				$hints[$field] = $info;
+				$elements[$field] = $info;
 				continue;
 			}
 			
@@ -766,7 +769,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 					// hide primary keys but keep them in the form
 					$info['type'] = 'hidden';
 					
-				} elseif (! empty($this->schema['col'][$field]['seqname'])) {
+				} elseif (! empty($this->schema['col'][$field]['sequence'])) {
 					
 					// don't allow entry of sequential values
 					$info['type'] = 'static';
@@ -820,9 +823,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 					$info['require'] = $this->schema['col'][$field]['require'];
 				}
 				
-				if (! empty($this->schema['col'][$field]['valid'])) {
+				if (! empty($this->schema['col'][$field]['validate'])) {
 					// look for a 'require' validation
-					foreach ($this->schema['col'][$field]['valid'] as $val) {
+					foreach ($this->schema['col'][$field]['validate'] as $val) {
 						if ($val[0] == 'require') {
 							$info['require'] == true;
 							break;
@@ -861,7 +864,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				count($info['options']) == 0) {
 				
 				// look for an  'inlist' validation
-				foreach ($this->schema['col'][$field]['valid'] as $val) {
+				foreach ($this->schema['col'][$field]['validate'] as $val) {
 					if ($val[0] == 'inList') {
 						// found one, add it as the 'opts' array
 						foreach ($val[2] as $v) {
@@ -873,19 +876,21 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				}
 			}
 			
-			// add validation notes, if any
+			// add validation callbacks, if any
+			
+			// add feedback messages, if any
 			if (isset($msg[$field])) {
 				// always add as an array
 				settype($msg[$field], 'array');
-				$info['message'] = $msg[$field];
+				$info['feedback'] = $msg[$field];
 			}
 			
 			// done with this element, store it back into the hints
-			$hints[$field] = $info;
+			$elements[$field] = $info;
 		}
 		
 		// done building form hints
-		return $hints;
+		return $elements;
 	}
 	
 	
@@ -1248,12 +1253,12 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			// 
 			
 			// add validation placeholder array if needed
-			if (! isset($this->schema['col'][$field]['valid'])) {
-				$this->schema['col'][$field]['valid'] = array();
+			if (! isset($this->schema['col'][$field]['validate'])) {
+				$this->schema['col'][$field]['validate'] = array();
 			}
 			
 			// loop through each validation rule
-			foreach ($this->schema['col'][$field]['valid'] as $args) {
+			foreach ($this->schema['col'][$field]['validate'] as $args) {
 				
 				// the name of the Solar_Valid method
 				$method = array_shift($args);
@@ -1261,7 +1266,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				// the text of the error message
 				$text = array_shift($args);
 				if (is_null($text)) {
-					$text = 'not valid';
+					$text = Solar::locale('Solar', 'ERR_INVALID');
 				}
 				
 				// config is now the remaining arguments,

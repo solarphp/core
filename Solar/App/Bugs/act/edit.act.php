@@ -133,9 +133,8 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 				$talk->insert($data);
 			}
 			
-			// redirect to 'view'
-			// THIS WILL NOT WORK UNDER MVC!!!
-			header('Location: view.php?id=' . $id);
+			// redirect to 'view item'
+			header('Location: ?action=item&id=' . $id);
 			exit;
 			
 			/*
@@ -157,7 +156,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-	header('Location: index.php');
+	header('Location: ?action=list');
 }
 
 // get comments about the bug

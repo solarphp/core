@@ -82,7 +82,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* The name of the entity table:
 	* 
-	* $this->schema['ent'] = 'table_name';
+	* $this->schema['tbl'] = 'table_name';
 	*
 	* The field specification array for all columns in this entity table:
 	* 
@@ -175,7 +175,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	*/
 
 	protected $schema = array(
-		'ent' => null,
+		'tbl' => null,
 		'col' => null,
 		'idx' => null,
 		'rel' => null,
@@ -248,7 +248,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	protected function getSchema()
 	{
 		return array(
-			'ent' => null,
+			'tbl' => null,
 			'col' => null,
 			'idx' => null,
 			'rel' => null,
@@ -506,7 +506,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// attempt the insert.
-		$result = $this->sql->insert($this->schema['ent'], $data);
+		$result = $this->sql->insert($this->schema['tbl'], $data);
 		if (Solar::isError($result)) {
 			return $result;
 		}
@@ -587,7 +587,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// attempt the update
-		$result = $this->sql->update($this->schema['ent'], $data, $where);
+		$result = $this->sql->update($this->schema['tbl'], $data, $where);
 		if (Solar::isError($result)) {
 			return $result;
 		}
@@ -635,7 +635,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	public function delete($where)
 	{
-		return $this->sql->delete($this->schema['ent'], $where);
+		return $this->sql->delete($this->schema['tbl'], $where);
 	}
 	
 	
@@ -742,6 +742,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				'label'   => null,
 				'value'   => $val,
 				'require' => null,
+				'disable' => false,
 				'options' => array(),
 				'attribs' => array(),
 				'message' => array(),
@@ -907,7 +908,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	{
 		// is a table with the same name already there?
 		$tmp = $this->sql->listTables();
-		$here = strtolower($this->schema['ent']);
+		$here = strtolower($this->schema['tbl']);
 		foreach ($tmp as $there) {
 			if ($here == strtolower($there)) {
 				// table already exists
@@ -917,7 +918,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		
 		// create the table itself
 		$result = $this->sql->createTable(
-			$this->schema['ent'],
+			$this->schema['tbl'],
 			$this->schema['col']
 		);
 		
@@ -929,7 +930,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				get_class($this),
 				'ERR_TABLE_NOT_CREATED',
 				'ERR_TABLE_NOT_CREATED',
-				array('table' => $this->schema['ent']),
+				array('table' => $this->schema['tbl']),
 				E_USER_ERROR
 			);
 			
@@ -941,20 +942,20 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		foreach ($this->schema['idx'] as $name => $info) {
 		
 			// create this index
-			$result = $this->sql->createIndex($this->schema['ent'], $name, $info);
+			$result = $this->sql->createIndex($this->schema['tbl'], $name, $info);
 			
 			// was there a problem creating the index?
 			if (Solar::isError($result)) {
 			
 				// cancel the whole deal.
-				$this->sql->dropTable($this->schema['ent']);
+				$this->sql->dropTable($this->schema['tbl']);
 				
 				// add another error on top of it.
 				$result->push(
 					get_class($this),
 					'ERR_TABLE_NOT_CREATED',
 					'ERR_TABLE_NOT_CREATED',
-					array('table' => $this->schema['ent']),
+					array('table' => $this->schema['tbl']),
 					E_USER_ERROR
 				);
 				
@@ -1002,7 +1003,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		// the SQL clause parts and their default values
 		$part = array(
 			'select' => '*',
-			'from'   => $this->schema['ent'],
+			'from'   => $this->schema['tbl'],
 			'join'   => null,
 			'where'  => null,
 			'group'  => null,
@@ -1072,7 +1073,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		    if (is_array($part['join'])) {
 				foreach ($part['join'] as $key => $val) {
 				    $rel = $this->schema['rel'];
-					$stmt .= "\nJOIN $rel[2] ON {$this->schema['ent']}.$rel[1] = $rel[2].$rel[3]";
+					$stmt .= "\nJOIN $rel[2] ON {$this->schema['tbl']}.$rel[1] = $rel[2].$rel[3]";
 				}
 		    } else {
 		        $stmt .= "\n{$part['join']}";

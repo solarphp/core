@@ -39,8 +39,7 @@ abstract class Solar_App extends Solar_Base {
 	*/
 	
 	public $config = array(
-		'locale'      => null,
-		'get_var'     => 'action',
+		'locale'     => null,
 	);
 	
 	
@@ -83,15 +82,41 @@ abstract class Solar_App extends Solar_Base {
 	
 	/**
 	* 
-	* The default controller action name to use.
+	* The Solar method to use for finding the action (get, post, pathinfo).
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var string
 	* 
 	*/
 	
-	protected $default_controller = null;
+	protected $action_src = 'get';
+	
+	
+	/**
+	* 
+	* The action variable name from the action source.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $action_var = 'action';
+	
+	
+	/**
+	* 
+	* The default action to perform.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $action_default = null;
 	
 	
 	/**
@@ -188,9 +213,10 @@ abstract class Solar_App extends Solar_Base {
 	{
 		if (is_null($action)) {
 			// find the requested action
-			$action = Solar::get(
-				$this->config['get_var'],
-				$this->default_controller
+			$action = call_user_func(
+				array('Solar', $this->action_src),
+				$this->action_var,
+				$this->action_default
 			);
 		}
 		
@@ -199,7 +225,7 @@ abstract class Solar_App extends Solar_Base {
 			$file = $this->controller($action);
 		} else {
 			// unknown action, revert to default controller action
-			$file = $this->controller($this->default_controller);
+			$file = $this->controller($this->action_default);
 		}
 		
 		// return the output

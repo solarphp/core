@@ -16,6 +16,18 @@
 * @version $Id$
 * 
 */
+
+/**
+* 
+* Savant3 template for showing a list of reports.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
 ?>
 <?php include $this->template('header.php') ?>
 

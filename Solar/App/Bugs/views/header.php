@@ -16,6 +16,18 @@
 * @version $Id$
 * 
 */
+
+/**
+* 
+* Savant3 template for the header portion of every page in the app.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">

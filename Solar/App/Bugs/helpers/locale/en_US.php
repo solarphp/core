@@ -18,6 +18,18 @@
 * 
 */
 
+/**
+* 
+* Provides localization strings for the application.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
+
 return array(
 	'NO_COMMENTS'     => 'No comments posted.',
 	'ERR_NOT_ADMIN'   => 'You are not an administrator.',

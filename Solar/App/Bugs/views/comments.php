@@ -16,6 +16,18 @@
 * @version $Id$
 * 
 */
+
+/**
+* 
+* Savant3 template for user comments on a report.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
 ?>
 
 <h3><?php echo Solar::locale('Solar_App_Bugs', 'USER_COMMENTS') ?></h3>

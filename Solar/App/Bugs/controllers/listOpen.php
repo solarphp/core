@@ -18,6 +18,18 @@
 * 
 */
 
+/**
+* 
+* Controller action script for viewing a list of all "open" reports.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
+
 // prepend for all controllers
 include $this->helper('prepend');
 

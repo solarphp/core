@@ -16,6 +16,18 @@
 * @version $Id$
 * 
 */
+
+/**
+* 
+* Savant3 template for the user authentication form.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bugs
+* 
+*/
 ?>
 
 <div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">

@@ -70,7 +70,8 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 		$values = $form->values();
 		
 		// add required elements
-		$values['talk']['queue'] = "sc_bugs://$id";
+		$values['talk']['forum'] = 'sc_bugs';
+		$values['talk']['queue'] = $id;
 		$values['talk']['subj'] = $data['summ'];
 		
 		// attempt the insert
@@ -98,7 +99,7 @@ $tpl->item = $bugs->formElements('edit', $data);
 $tpl->formdata = $form;
 
 // add the existing comments
-$tpl->comments = $talk->fetchQueue("sc_bugs://$id");
+$tpl->comments = $talk->fetchQueue('sc_bugs', $id);
 
 // are we allowing edits?
 $user = Solar::shared('user');

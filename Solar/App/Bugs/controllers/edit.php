@@ -158,10 +158,11 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			// $id was set when up updated the report above.
 			if (trim($values['talk']['body']) != '') {
 				$data = array(
-					'queue' => "sc_bugs://$id",
+					'forum' => 'sc_bugs',
+					'queue' => $id,
 					'email' => $values['talk']['email'],
-					'subj' => $values['bugs']['summ'],
-					'body' => $values['talk']['body']
+					'subj'  => $values['bugs']['summ'],
+					'body'  => $values['talk']['body']
 				);
 				$talk->insert($data);
 			}
@@ -186,7 +187,7 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 
 // get comments about the bug
 $id = $form->elements['bugs[id]']['value'];
-$tpl->comments = $talk->fetchQueue("sc_bugs://$id");
+$tpl->comments = $talk->fetchQueue('sc_bugs', $id);
 
 // assign the form object
 $tpl->formdata = $form;

@@ -178,7 +178,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// table name
 		// 
 		
-		$schema['ent'] = 'sc_talk';
+		$schema['tbl'] = 'sc_talk';
 		
 		
 		// -------------------------------------------------------------

@@ -209,7 +209,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// table name
 		// 
 		
-		$schema['ent'] = 'sc_bugs';
+		$schema['tbl'] = 'sc_bugs';
 		
 		
 		// -------------------------------------------------------------
@@ -412,8 +412,8 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// combine the package options (keys same as values)
 		$pack_opts = array_combine($this->config['pack'], $this->config['pack']);
 		
-		// full editor
-		$schema['frm']['edit'] = array(
+		// new report
+		$schema['frm']['new'] = array(
 			'id'     => array(
 				'type'    => 'hidden',
 			),
@@ -422,14 +422,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'label'   => $this->locale('LABEL_SUMM'),
 				'attribs' => array('size' => '60'),
 				'require' => true,
-			),
-			'ts_new' => array(
-				'type'    => 'readonly',
-				'label'   => $this->locale('LABEL_TS_NEW'),
-			),
-			'ts_mod' => array(
-				'type'    => 'readonly',
-				'label'   => $this->locale('LABEL_TS_MOD'),
 			),
 			'type' => array(
 				'type'    => 'select',
@@ -453,16 +445,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'label'   => $this->locale('LABEL_VER'),
 				'require' => true,
 			),
-			'user_id' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_USER_ID'),
-			),
-			'status' => array(
-				'type'    => 'select',
-				'label'   => $this->locale('LABEL_STATUS'),
-				'options' => $status_opts,
-				'require' => true,
-			),
 			'email' => array(
 				'type'    => 'text',
 				'label'   => $this->locale('LABEL_EMAIL'),
@@ -474,6 +456,73 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'require' => true,
 				'attribs' => array('rows' => 15, 'cols' => '60'),
 			)
+		);
+		
+		// full editor
+		$schema['frm']['edit'] = array(
+			'id'     => array(
+				'type'    => 'hidden',
+			),
+			'summ' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_SUMM'),
+				'attribs' => array('size' => '60'),
+				'disable' => true,
+			),
+			'ts_new' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_TS_NEW'),
+				'disable' => true,
+			),
+			'ts_mod' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_TS_MOD'),
+				'disable' => true,
+			),
+			'type' => array(
+				'type'    => 'select',
+				'label'   => $this->locale('LABEL_TYPE'),
+				'options' => $type_opts,
+				'disable' => true,
+			),
+			'pack' => array(
+				'type'    => 'select',
+				'label'   => $this->locale('LABEL_PACK'),
+				'options' => $pack_opts,
+				'disable' => true,
+			),
+			'os' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_OS'),
+				'disable' => true,
+			),
+			'ver' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_VER'),
+				'disable' => true,
+			),
+			'email' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_EMAIL'),
+				'require' => true,
+				'disable' => true,
+			),
+			'descr' => array(
+				'type'    => 'textarea',
+				'label'   => $this->locale('LABEL_DESCR'),
+				'attribs' => array('rows' => 15, 'cols' => 60),
+				'disable' => true,
+			),
+			'user_id' => array(
+				'type'    => 'text',
+				'label'   => $this->locale('LABEL_USER_ID'),
+			),
+			'status' => array(
+				'type'    => 'select',
+				'label'   => $this->locale('LABEL_STATUS'),
+				'options' => $status_opts,
+				'require' => true,
+			),
 		);
 		
 		return $schema;

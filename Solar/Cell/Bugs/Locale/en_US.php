@@ -61,7 +61,7 @@ return array(
 	'LABEL_OS'        => 'Operating system',
 	'LABEL_VER'       => 'PHP version',
 	'LABEL_USER_ID'   => 'Assigned to',
-	'LABEL_EMAIL'     => 'Your email',
+	'LABEL_EMAIL'     => 'Reporter\'s email',
 	'LABEL_DESCR'     => 'Description',
 );
 ?>

@@ -27,7 +27,7 @@
 	</maintainers>
 	<release>
 		<version>0.0.5</version>
-		<date>2005-03-27</date>
+		<date>2005-03-28</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
@@ -35,9 +35,10 @@
 			* Added Solar_Super class for retrieving superglobals, modified Solar.php to use it
 			* Added Solar::cookie() method for retrieving cookie values.
 			* Added Solar::session() method for retrieving session data.
-			* Solar_Base now automatically loads locale strings at construction time
-			* Started new Solar_App standard directory structure, using an MVC architecture inspired by Ruby-on-Rails
-			* Added Solar_App_Bugs proof-of-concept application
+			* Added new Solar_App application controlle class (with standard directory structure using an MVC architecture inspired by Ruby-on-Rails)
+			* Solar_User_Auth 'action*' keys and values renamed to 'op*' (Solar_App now owns the 'action' keyword)
+			* Added validation for 'new' and 'edit' forms in Solar_Cell_Bugs
+			* Added Solar_App_Bugs proof-of-concept application based on Solar_App
 		</notes>
 		<file role="php" name="Solar.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
@@ -54,7 +55,10 @@
 		<file role="php" name="Solar/App/Bugs/controllers/item.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/controllers/list.php" >
+		<file role="php" name="Solar/App/Bugs/controllers/listAll.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/controllers/listOpen.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/App/Bugs/helpers/locale/en_US.php" >

@@ -45,7 +45,9 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	protected $native = array(
         'bool'      => 'DECIMAL(1,0)',
+        // 'char' => 'CHAR(%s) BINARY',
         'char'      => 'CHAR',
+        // 'varchar' => 'VARCHAR(%s) BINARY',
         'varchar'   => 'VARCHAR',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',

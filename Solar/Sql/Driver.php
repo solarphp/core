@@ -416,6 +416,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 					false
 				);
 			} else {
+				// @todo sprintf($this->native[$type], $size);
 				$declare = $this->native[$type] . "($size)";
 			}
 			break;

@@ -5,7 +5,7 @@
 * Application component module for bug tracking.
 * 
 * This only tracks the state of the bug; use the Talk module for
-* recording the report and comments about the bug.
+* recording the report narrative and comments about the bug.
 * 
 * @category Solar
 * 
@@ -18,6 +18,8 @@
 * @license LGPL
 * 
 * @version $Id$
+* 
+* @todo Add a Solar_Cell_Bugs_Log module to track changes?
 * 
 */
 
@@ -53,13 +55,12 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// directory for local strings
 		'locale' => 'Solar/Cell/Bugs/Locale/',
 		
-		// software packages or parts to report on (default is blank)
-		'pack' => array(''),
+		// queues to report on (default is blank)
+		'queue' => array(''),
 		
 		// report type codes
 		'type' => array(
 			'bug',
-			'critical',
 			'example',
 			'feature',
 		),
@@ -67,21 +68,22 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// work progress status codes
 		'status' => array(
 			'new',
-			'accept',
+			'confirmed',
+			'assigned',
 			'feedback',
-			'fixed',
-			'dupe',
+			'resolved',
+			'duplicate',
 			'bogus',
 			'wontfix',
-			'suspend',
-			'reopen',
+			'suspended',
+			'reopened',
 		),
 		
 		// which status codes are logically open?
-		'status_open' => array('new', 'accept', 'feedback', 'reopen'),
+		'status_open' => array('new', 'confirmed', 'assigned', 'feedback', 'reopened'),
 		
 		// which status codes are logically closed?
-		'status_closed' => array('fixed', 'dupe', 'bogus', 'fixed', 'suspend'),
+		'status_closed' => array('duplicate', 'bogus', 'resolved', 'suspended', 'wontfix'),
 	);
 	
 	
@@ -110,7 +112,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			return $data;
 		}
 	}
-	
 	
 	/**
 	* 
@@ -267,41 +268,24 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		);
 		
 		// the affected component part
-		$schema['col']['pack'] = array(
+		$schema['col']['queue'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
 			'require' => true,
 			'validate'   => array(
 				array(
 					'inList',
-					$this->locale('VALID_PACK'),
-					$this->config['pack']
+					$this->locale('VALID_QUEUE'),
+					$this->config['queue']
 				)
 			),
 		);
 		
-		// operating system
-		$schema['col']['os'] = array(
-			'type'    => 'varchar',
-			'size'    => 16,
-			'validate'   => array(
-				array(
-					'notBlank',
-					$this->locale('VALID_OS')
-				)
-			),
-		);
-		
-		// version number, typically a PHP version number
-		$schema['col']['ver'] = array(
-			'type'    => 'varchar',
-			'size'    => 16,
-			'validate'   => array(
-				array(
-					'notBlank',
-					$this->locale('VALID_VER')
-				)
-			),
+		// priority (0 is lowest, 9 is highest)
+		$schema['col']['priority'] = array(
+			'type'    => 'numeric',
+			'size'    => 1,
+			'scope'   => 0,
 		);
 		
 		// assigned to this user_id
@@ -324,38 +308,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			),
 		);
 		
-		// email of initial reporter
-		$schema['col']['email'] = array(
-			'type'    => 'varchar',
-			'size'    => 128,
-			'require' => true,
-			'validate'   => array(
-				array(
-					'email',
-					$this->locale('VALID_EMAIL')
-				)
-			)
-		);
-		
-		// one-time password for the report
-		$schema['col']['passwd'] = array(
-			'type'    => 'varchar',
-			'size'    => 32,
-		);
-		
-		// initial description of the bug
-		$schema['col']['descr'] = array(
-			'type'    => 'clob',
-			'require' => 'true',
-			'validate'   => array(
-				array(
-					'notBlank',
-					$this->locale('VALID_DESCR')
-				)
-			)
-		);
-		
-		
 		// -------------------------------------------------------------
 		// 
 		// indexes
@@ -366,7 +318,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'ts_new'  => 'normal',
 			'ts_mod'  => 'normal',
 			'type'    => 'normal',
-			'pack'    => 'normal',
+			'queue'    => 'normal',
 			'user_id' => 'normal',
 			'status'  => 'normal',
 		);
@@ -409,8 +361,8 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			$status_opts[$val] = $this->locale('STATUS_' . strtoupper($val));
 		}
 		
-		// combine the package options (keys same as values)
-		$pack_opts = array_combine($this->config['pack'], $this->config['pack']);
+		// combine the queue options (keys same as values)
+		$queue_opts = array_combine($this->config['queue'], $this->config['queue']);
 		
 		// new report
 		$schema['frm']['new'] = array(
@@ -429,33 +381,12 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'options' => $type_opts,
 				'require' => true,
 			),
-			'pack' => array(
+			'queue' => array(
 				'type'    => 'select',
-				'label'   => $this->locale('LABEL_PACK'),
-				'options' => $pack_opts,
+				'label'   => $this->locale('LABEL_QUEUE'),
+				'options' => $queue_opts,
 				'require' => true,
 			),
-			'os' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_OS'),
-				'require' => true,
-			),
-			'ver' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_VER'),
-				'require' => true,
-			),
-			'email' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_EMAIL'),
-				'require' => true,
-			),
-			'descr' => array(
-				'type'    => 'textarea',
-				'label'   => $this->locale('LABEL_DESCR'),
-				'require' => true,
-				'attribs' => array('rows' => 15, 'cols' => '60'),
-			)
 		);
 		
 		// full editor
@@ -485,32 +416,10 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'options' => $type_opts,
 				'disable' => true,
 			),
-			'pack' => array(
+			'queue' => array(
 				'type'    => 'select',
-				'label'   => $this->locale('LABEL_PACK'),
-				'options' => $pack_opts,
-				'disable' => true,
-			),
-			'os' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_OS'),
-				'disable' => true,
-			),
-			'ver' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_VER'),
-				'disable' => true,
-			),
-			'email' => array(
-				'type'    => 'text',
-				'label'   => $this->locale('LABEL_EMAIL'),
-				'require' => true,
-				'disable' => true,
-			),
-			'descr' => array(
-				'type'    => 'textarea',
-				'label'   => $this->locale('LABEL_DESCR'),
-				'attribs' => array('rows' => 15, 'cols' => 60),
+				'label'   => $this->locale('LABEL_QUEUE'),
+				'options' => $queue_opts,
 				'disable' => true,
 			),
 			'user_id' => array(
@@ -574,11 +483,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// force to the current date and time
 		$data['ts_new'] = $this->defaultCol('ts_new');
 		$data['ts_mod'] = $data['ts_new'];
-		
-		// hash the password
-		if (isset($data['passwd'])) {
-			$data['passwd'] = md5($data['passwd']);
-		}
 	}
 
 

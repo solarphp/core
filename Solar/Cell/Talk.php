@@ -116,7 +116,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch a list of all comments in a specific queue.
+	* Fetch a list of all comments in a specific forum and queue.
 	* 
 	* @access public
 	* 
@@ -124,10 +124,17 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function fetchQueue($queue, $order = null, $page = null)
+	public function fetchQueue($forum, $queue, $order = null, $page = null)
 	{
-		return $this->selectFetch('queue', array('queue' => $queue),
-			$order, $page);
+		return $this->selectFetch(
+			'queue',
+			array(
+				'forum' => $forum,
+				'queue' => $queue,
+			),
+			$order,
+			$page
+		);
 	}
 	
 	
@@ -208,11 +215,16 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'default' => array(array('self','defaultCol'), 'ip_addr'),
 		);
 		
-		// which "queue" this is attached to, whether a URL or a wiki page, or whatever
+		// which forum this is related to (typically a table name, e.g. 'sc_bugs')
+		$schema['col']['forum'] = array(
+			'type'    => 'varchar',
+			'size'    => 255,
+		);
+		
+		// which "queue" this is in the forum; page name, id, etc
 		$schema['col']['queue'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
-			'default' => array(array('self','defaultCol'), 'queue'),
 		);
 		
 		// username of the poster.
@@ -336,19 +348,27 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'fetch'  => 'Row'
 		);
 		
-		// list of entries in a given queue
-		$schema['qry']['queue'] = array(
-			'select' => '*',
-			'where' => 'queue = :queue',
-			'order' => 'ts',
-			'fetch' => 'All'
+		// list of all forums
+		$schema['qry']['forumList'] = array(
+			'select' => 'DISTINCT forum',
+			'order'  => 'forum',
+			'fetch'  => 'Col'
 		);
-		
-		// list of all queues
+				
+		// list of all queues in a given forum
 		$schema['qry']['queueList'] = array(
 			'select' => 'DISTINCT queue',
-			'order'  => 'queue',
+			'where'  => 'forum = :forum',
+			'order'  => 'forum, queue',
 			'fetch'  => 'Col'
+		);
+		
+		// list of entries in a given forum and queue
+		$schema['qry']['queue'] = array(
+			'select' => '*',
+			'where' => 'forum = :forum AND queue = :queue',
+			'order' => 'ts',
+			'fetch' => 'All'
 		);
 		
 		
@@ -437,10 +457,6 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			return $this->timestamp();
 			break;
 		
-		case 'queue':
-			return Solar::super('server', 'REQUEST_URI');
-			break;
-			
 		default:
 			return parent::defaultCol($col);
 			break;

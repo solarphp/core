@@ -55,39 +55,39 @@ class Solar {
 	* 
 	* The values read in from the configuration file.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var array
 	* 
 	*/
 	
-	protected static $config = array();
+	public static $config = array();
 	
 	
 	/**
 	* 
-	* Locale strings.
+	* Static locale object.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var array
 	* 
 	*/
 	
-	protected static $locale = array();
+	public static $locale = null;
 	
 	
 	/**
 	* 
 	* Shared singleton objects are properties of the $shared object.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var array
 	* 
 	*/
 	
-	protected static $shared = null;
+	public static $shared = null;
 	
 	
 	/**
@@ -133,18 +133,15 @@ class Solar {
 		// property.
 		Solar::$config = Solar::run(SOLAR_CONFIG_PATH);
 		
-		// make sure we have a locale code
-		if (! isset(Solar::$config['Solar']['locale_code'])) {
-			Solar::$config['Solar']['locale_code'] = 'en_US';
-		}
-		
-		// build the baseline locale strings
-		Solar::localeCode(Solar::$config['Solar']['locale_code']);
-		
 		// process ini settings
 		foreach (Solar::config('Solar', 'ini_set', array()) as $key => $val) {
 			ini_set($key, $val);
 		}
+		
+		// build the common locale object and load strings
+		// for the baseline Solar translations.
+		Solar::$locale = Solar::object('Solar_Locale');
+		//Solar::$locale->load('Solar', 'Solar/Locale');
 		
 		// load all autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
@@ -231,103 +228,17 @@ class Solar {
 	
 	/**
 	* 
-	* Gets/sets the locale code.
+	* Gets translated locale string for a class and key.
 	* 
 	* @access public
 	* 
-	* @param string $code Leave null to get the current locale code, or 
-	* specify a code to set the locale.
-	* 
-	* @return string The current locale code.
+	* @return string A translated locale string.
 	* 
 	*/
 	
-	public static function localeCode($code = null)
+	public static function locale($class, $key, $num = 1)
 	{
-		if (! is_null($code)) {
-			
-			// find the baseline strings file and load it
-			$file = Solar::fixdir('Solar/Locale/') . "$code.php";
-			$strings = Solar::run($file);
-			
-			// were there strings loaded?
-			if ($strings) {
-				// yes, reset to the new code and save the strings
-				Solar::$config['Solar']['locale_code'] = $code;
-				Solar::$locale = array(
-					'Solar' => $strings
-				);
-			} else {
-				// no new strings
-				return false;
-			}
-		}
-		
-		// the default action: return the current code.
-		return Solar::$config['Solar']['locale_code'];
-	}
-	
-	
-	/**
-	* 
-	* Gets/sets locale strings for a class.
-	* 
-	* <code>
-	* // get all locale strings by class as an assoc array
-	* $array = Solar::locale('Class');
-	* 
-	* // get one locale string by class and key
-	* $string = Solar::locale('Class', 'key');
-	* 
-	* // set all locale strings and keys for a class
-	* Solar::locale('Class', null, $array);
-	* 
-	* // set one locale string for a class and key
-	* Solar::locale('Class', 'key', 'string');
-	* </code>
-	* 
-	* @access public
-	* 
-	* @return mixed A locale string, or void when setting values.
-	* 
-	*/
-	
-	public static function locale($class, $key = null, $val = null)
-	{
-		// the normal case: return one locale string
-		if (! is_null($key) && is_null($val)) {
-			if (isset(Solar::$locale[$class][$key])) {
-				// there is a locale string
-				return Solar::$locale[$class][$key];
-			} else {
-				// no locale string, return the key
-				return $key;
-			}
-		}
-		
-		// get all locale strings for a class
-		if (is_null($key) && is_null($val)) {
-			if (isset(Solar::$locale[$class])) {
-				return Solar::$locale[$class];
-			} else {
-				return array();
-			}
-		}
-			
-		// set the value of all keys for a class
-		if (is_null($key) && is_array($val)) {
-			Solar::$locale[$class] = $val;
-			return true;
-		}
-		
-		// set the value of one key
-		if ($key && ! is_null($val)) {
-			Solar::$locale[$class][$key] = $val;
-			return true;
-		}
-		
-		// something wrong
-		return false;
+		return Solar::$locale->string($class, $key, $num);
 	}
 	
 	

@@ -28,19 +28,30 @@
 
 class Solar_Locale extends Solar_Base {
 	
+	
 	/**
 	* 
-	* User-provided configuration keys.
-	* 
-	* @access public
-	* 
-	* @var array
+	* User-provided configuration values.
 	* 
 	*/
 	
 	public $config = array(
 		'locale' => 'Solar/Locale/',
+		'code'   => 'en_US',
 	);
+	
+	
+	/**
+	* 
+	* The current locale code.
+	* 
+	* @access protected
+	* 
+	* @var array
+	* 
+	*/
+	
+	protected $code = null;
 	
 	
 	/**
@@ -58,15 +69,23 @@ class Solar_Locale extends Solar_Base {
 	
 	/**
 	* 
-	* The current locale code.
+	* Constructor.
 	* 
-	* @access protected
-	* 
-	* @var array
+	* @access public
 	* 
 	*/
 	
-	protected $code = 'en_US';
+	public function __construct($config = null)
+	{
+		// basic construction
+		parent::__construct();
+		
+		// set the locale code
+		$this->setCode($this->config['code']);
+		
+		// load the baseline Solar translation strings
+		$this->load('Solar', $this->config['locale']);
+	}
 	
 	
 	/**
@@ -85,7 +104,6 @@ class Solar_Locale extends Solar_Base {
 	{
 		$this->string = array();
 		$this->code = $code;
-		setlocale($code);
 	}
 	
 	
@@ -103,7 +121,7 @@ class Solar_Locale extends Solar_Base {
 	{
 		return $this->code;
 	}
-
+	
 	
 	/**
 	* 
@@ -212,7 +230,7 @@ class Solar_Locale extends Solar_Base {
 	{
 		// if the key does not exist for the class,
 		// return the key itself.
-		if (! isset($this->string[$class][$key]) {
+		if (! isset($this->string[$class][$key])) {
 			return $key;
 		}
 		

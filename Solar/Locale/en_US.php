@@ -22,10 +22,8 @@ return array(
 	'FORMAT_LANGUAGE'   => 'English',
 	'FORMAT_COUNTRY'    => 'United States',
 	'FORMAT_CURRENCY'   => '$%s', // printf()
-	'FORMAT_DATE'       => '%b %d, %Y', // strftime(): Mar 03, 2005
+	'FORMAT_DATE'       => '%b %d, %Y', // strftime(): Mar 19, 2005
 	'FORMAT_TIME'       => '%r', // strftime: 12-hour am/pm
-	'FORMAT_NUMBER_SEP' => ',', // 1000s separator
-	'FORMAT_NUMBER_DEC' => '.', // decmial separator
 	
 	// operation actions
 	'OP_SAVE'       => 'Save',

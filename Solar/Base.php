@@ -68,9 +68,6 @@ abstract class Solar_Base {
 		
 		// ... and merge with the class defaults.
 		$this->config = array_merge($this->config, $config);
-		
-		// forcibly load locale strings.
-		$this->locale();
 	}
 	
 	
@@ -166,77 +163,36 @@ abstract class Solar_Base {
 	* 
 	* @param string $key The key to get a locale string for.
 	* 
+	* @param string $num If 1, returns a singular string; otherwise, returns
+	* a plural string (if one exists).
+	* 
 	* @return string The locale string, or the original $key if no
 	* string found.
 	* 
 	*/
 	
-	public function locale($key = null)
+	public function locale($key, $num = 1)
 	{
 		// is a locale directory specified?
 		if (empty($this->config['locale'])) {
 			// use the generic Solar locale strings
-			return Solar::locale('Solar', $key);
+			return Solar::$locale->string('Solar', $key, $num);
 		}
 		
-		// otherwise, use the class-specific strings.
-		// find the current class.
+		// get a translation for the current class
 		$class = get_class($this);
+		$string = Solar::$locale->string($class, $key, $num);
 		
-		// load the strings if needed
-		if (! Solar::locale($class)) {
-			
-			// create the file name
-			$dir = Solar::fixdir($this->config['locale']);
-			$file = $dir . Solar::localeCode() . '.php';
-			
-			// load and set the strings
-			$strings = (array) Solar::run($file);
-			Solar::locale($class, null, (array) $strings);
-		}
-		
-		// try to read the string
-		$string = Solar::locale($class, $key);
-		
-		// if it's the same as the key, there was no string ...
-		if ($string == $key) {
-			// ... so try the parent class.  this is kind of weak,
-			// becuase if the parent hasn't loaded strings, it will
-			// still fail.
-			$class = get_parent_class($this);
-			$string = Solar::locale($class, $key);
-		}
-		
-		// return whatever we have at this point.
-		return $string;
-	}
-	
-	public function locale2($key, $num = 1)
-	{
-		// is a locale directory specified?
-		if (empty($this->config['locale'])) {
-			// use the generic Solar locale strings
-			return Solar::locale('Solar', $key, $num);
-		}
-		
-		// the current class
-		$class = get_class($this);
-		
-		// get a translation.
-		$string = Solar::locale($class, $key, $num);
-		
-		// is the translation same as the key?  if not, 
-		// we're doing good.
+		// is the translation same as the key?  if not, we're done.
 		if ($string != $key) {
 			return $string;
 		}
 		
-		// key and string were the same, which means there
-		// was no available translation.  make sure we have
-		// a translation file loaded, then return whatever
-		// we get at that point.
+		// key and string were the same, which means there was no
+		// available translation.  make sure we have a translation file
+		// loaded, then return whatever we get afterwards.
 		Solar::$locale->load($class, $this->config['locale']);
-		return Solar::locale($class, $key, $num);
+		return Solar::$locale->string($class, $key, $num);
 	}
 }
 ?>

@@ -7,6 +7,9 @@ include $this->helper('prepend');
 // preliminaries: permission checks
 // 
 
+// get the bug report ID (0 means a new report)
+$id = (int) Solar::get('id', 0);
+
 // is user ok by username?
 $ok_user = in_array(
 	$user->auth->username,
@@ -18,11 +21,9 @@ $ok_role = $user->role->inAny(
 	Solar::config('Solar_App_Bugs', 'admin_role')
 );
 
-// die if not OK
-if (! $ok_user && ! $ok_role) {
-	echo Solar::locale('Solar_App_Bugs', 'ERR_NOT_ADMIN');
-	Solar::stop();
-	die();
+// return if not OK (anyone is allowed to edit $id = 0, that's a new report)
+if (! $ok_user && ! $ok_role && $id != 0) {
+	return Solar::locale('Solar_App_Bugs', 'ERR_NOT_ADMIN');
 }
 
 
@@ -33,9 +34,6 @@ if (! $ok_user && ! $ok_role) {
 
 // the form type to use
 $formtype = '';
-
-// get the inital form values from the table, or as a new report?
-$id = (int) Solar::get('id', 0);
 
 if ($id) {
 	
@@ -139,28 +137,20 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			
 			// redirect to 'view item'
 			header('Location: ?action=item&id=' . $id);
-			exit;
-			
-			/*
-			// re-get the template values from the database.
-			$form->setElements(
-				$bugs->formElements('edit', $bugs->fetchItem($id)),
-				'bugs'
-			);
-			
-			// clear out the talk portion.
-			$form->setElements(
-				$talk->formElements('mini', $talk->defaultRow()),
-				'talk'
-			);
-			*/
+			return;
 		}
 	}
 }
 
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-	header('Location: ?action=list');
+	if ($id == 0) {
+		$location = '?action=listOpen';
+	} else {
+		$location = "?action=item&id=$id";
+	}
+	header("Location: $location");
+	return;
 }
 
 // get comments about the bug

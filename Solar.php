@@ -513,7 +513,8 @@ class Solar {
 	* 
 	* Safely get the value of an element from the $_GET array.
 	* 
-	* @todo Allow a config group to specify the scrubbers?
+	* Automatically checks if the element is set; if not, returns a
+	* default value.  Applies scrubbers automatically.
 	* 
 	* @access public
 	* 
@@ -537,6 +538,9 @@ class Solar {
 	/**
 	* 
 	* Safely get the value of an element from the $_POST array.
+	* 
+	* Automatically checks if the element is set; if not, returns a
+	* default value.  Applies scrubbers automatically.
 	* 
 	* @access public
 	* 
@@ -582,10 +586,33 @@ class Solar {
 	
 	/**
 	* 
+	* Safely get the value of an element from the $_SESSION array.
+	* 
+	* @access public
+	* 
+	* @param string $key The array element; if null, returns the whole
+	* array.
+	* 
+	* @param mixed $default If the requested array element is
+	* not set, return this value.
+	* 
+	* @return mixed The array element value (if set), or the
+	* $default value (if not).
+	* 
+	*/
+	
+	public static function session($key = null, $default = null)
+	{
+		return Solar::$super->fetch('session', $key, $default);
+	}
+	
+	
+	/**
+	* 
 	* Safely gets the value of $_SERVER['PATH_INFO'] element.
 	* 
 	* Automatically checks if the element is set; if not, returns a
-	* default value. Strips slashes and HTML tags automatically.
+	* default value.  Applies scrubbers automatically.
 	* 
 	* @access public
 	* 

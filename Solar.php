@@ -617,7 +617,7 @@ class Solar {
 	
 	public static function session($key = null, $default = null)
 	{
-		return Solar::$super->fetch('session', $key, $default);
+		return Solar::$shared->super->fetch('session', $key, $default);
 	}
 	
 	

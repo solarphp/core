@@ -99,7 +99,22 @@ class Solar_Form extends Solar_Base {
 	
 	protected $validate = array();
 	
+	
+	/**
+	* 
+	* Array of submitted values.
+	* 
+	* Populated on the first call to submitValue() using Solar::get() or
+	* Solar::post(), depending on the value of $this->config['method'].
+	* 
+	* @access protected
+	* 
+	* @var array
+	* 
+	*/
+	
 	protected $submit = null;
+	
 	
 	/**
 	* 
@@ -122,37 +137,6 @@ class Solar_Form extends Solar_Base {
 		'attribs'  => array(),
 		'feedback' => array(),
 	);
-	
-	
-	/**
-	* 
-	* Clears an element from the form (including validations).
-	* 
-	* If no element specified, clears all elements.
-	* 
-	* @access public
-	* 
-	* @param string $name The element name to clear; if null, clears all
-	* elements.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function clear($name = null)
-	{
-		if (! is_null($name)) {
-			if (array_key_exists($this->elements, $name)) {
-				unset($this->elements[$name]);
-			}
-			if (array_key_exists($this->validate, $name)) {
-				unset($this->validate[$name]);
-			}
-		} else {
-			$this->elements = array();
-			$this->validate = array();
-		}
-	}
 	
 	
 	/**
@@ -219,13 +203,6 @@ class Solar_Form extends Solar_Base {
 				);
 			}
 		}
-		
-		// override the initial value with a submitted value, 
-		// if one exists
-		$value = $this->submitValue($name);
-		if (! is_null($value)) {
-			$this->elements[$name]['value'] = $value;
-		}
 	}
 	
 	
@@ -253,33 +230,28 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a Solar_Valid method callback as a validation for an element.
+	* Populates form elements with submitted values.
 	* 
-	* @access protected
+	* @access public
 	* 
-	* @param string $name The element name.
+	* @param array $list Element information as array(name => info).
 	* 
-	* @param string $method The Solar_Valid callback method.
-	* 
-	* @param string $message The message to use if validation fails.
+	* @param string $array Name the element as a key in this array.
 	* 
 	* @return void
 	* 
 	*/
 	
-	protected function addValidate($name, $method, $message)
+	public function populate()
 	{
-		// get the arguments, drop the element name
-		$args = func_get_args();
-		array_shift($args);
-		
-		// add a default validation message
-		if (trim($args[1] == '')) {
-			$args[1] = Solar::locale('Solar', 'ERR_INVALID');
+		foreach ($this->elements as $name => $info) {
+			// override the initial value with a submitted value, 
+			// if one exists
+			$value = $this->submitValue($name);
+			if (! is_null($value)) {
+				$this->elements[$name]['value'] = $value;
+			}
 		}
-		
-		// add to the validation array
-		$this->validate[$name][] = $args;
 	}
 	
 	
@@ -304,7 +276,7 @@ class Solar_Form extends Solar_Base {
 			
 			// loop through each validation for the element
 			foreach ($list as $args) {
-			
+				
 				// the name of the Solar_Valid method
 				$method = array_shift($args);
 				
@@ -313,7 +285,7 @@ class Solar_Form extends Solar_Base {
 				
 				// config is now the remaining arguments,
 				// put the value on top of it.
-				array_unshift($args, $this->element[$name]['value']);
+				array_unshift($args, $this->elements[$name]['value']);
 				
 				// call the appropriate Solar_Valid method
 				$result = call_user_func_array(
@@ -338,11 +310,11 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Extracts the form element values.
+	* Returns the form element values.
 	* 
 	* @access public
 	* 
-	* @return array An associative array of form values.
+	* @return array An associative array of element values.
 	* 
 	*/
 	
@@ -384,6 +356,45 @@ class Solar_Form extends Solar_Base {
 	}
 	
 	
+	// -----------------------------------------------------------------
+	//
+	// Support methods.
+	//
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Adds a Solar_Valid method callback as a validation for an element.
+	* 
+	* @access protected
+	* 
+	* @param string $name The element name.
+	* 
+	* @param string $method The Solar_Valid callback method.
+	* 
+	* @param string $message The message to use if validation fails.
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function addValidate($name, $method, $message)
+	{
+		// get the arguments, drop the element name
+		$args = func_get_args();
+		$name = array_shift($args);
+		
+		// add a default validation message (args0 is the method)
+		if (trim($args[1] == '')) {
+			$args[1] = Solar::locale('Solar', 'ERR_INVALID');
+		}
+		
+		// add to the validation array
+		$this->validate[$name][] = $args;
+	}
+	
+	
 	/**
 	* 
 	* Returns the submitted value for a named element.
@@ -394,7 +405,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	public function submitValue($name)
+	protected function submitValue($name)
 	{
 		// do we have to retrieve the submitted values?
 		// (only need to do it once.)
@@ -413,6 +424,9 @@ class Solar_Form extends Solar_Base {
 		
 		} else {
 				
+			// there are brackets in the name. convert to an array
+			// element. taken from HTML_QuickForm, element.php.
+			
 			// this converts, e.g., "arrayname[key1][key2]" to
 			// "arrayname']['key1']['key2".  the opening and closing
 			// brackets and quotes will be added when we build the

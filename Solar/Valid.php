@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Valid.php,v 1.8 2005/02/03 14:09:55 pmjones Exp $
+* @version $Id$
 * 
 * @todo Try to pull more from regexlib.com site?
 * 

@@ -398,6 +398,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 				'type'  => 'text',
 				'label' => $this->locale('LABEL_EMAIL'),
 				'attribs'  => array('size' => 64),
+				'validate' => $schema['col']['email']['validate'],
 			),
 			'body' => array(
 				'type'  => 'textarea',

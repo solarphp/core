@@ -46,14 +46,15 @@ class Solar_User_Role extends Solar_Base {
 	*/
 	
 	public $config = array(
+		'class' => 'Solar_User_Role_None',
+		'options' => null,
 		'refresh' => false,
-		'drivers' => array('Solar_User_Role_None')
 	);
 	
 	
 	/**
 	* 
-	* An array of driver object instances.
+	* The driver instance.
 	* 
 	* @access protected
 	* 
@@ -107,27 +108,7 @@ class Solar_User_Role extends Solar_Base {
 		// basic config option settings
 		parent::__construct($config);
 		
-		// make sure the drivers config is an array
-		settype($this->config['drivers'], 'array');
-		
-		// instantiate the driver objects
-		foreach ($this->config['drivers'] as $key => $info) {
-			
-			// is the driver value an array (for custom configs)
-			// or a string (for default configs)?
-			if (is_array($info)) {
-				$class = $info[0];
-				$opts = $info[1];
-			} else {
-				$class = $info;
-				$opts = null;
-			}
-			
-			$this->driver[] = Solar::object($class, $opts);
-		}
-		
-		// make a reference to the
-		// make sure we have a session value
+		// make sure we have a session value and reference to it.
 		if (! isset($this->list)) {
 			$_SESSION['Solar_User_Role'] = array();
 			$this->list =& $_SESSION['Solar_User_Role'];
@@ -157,20 +138,16 @@ class Solar_User_Role extends Solar_Base {
 		// reset the roles list
 		$this->list = array();
 		
-		// loop through all the drivers and collect roles
-		foreach ($this->driver as $obj) {
-		
-			// fetch the role list
-			$result = $obj->fetch($username);
+		// fetch the role list
+		$result = $this->driver->fetch($username);
 			
-			// let errors go silently from here
-			if (! Solar::isError($result) && $result !== false) {
-				// merge the results into the common list
-				$this->list = array_merge(
-					$this->list,
-					(array) $result
-				);
-			}
+		// let errors go silently from here
+		if (! Solar::isError($result) && $result !== false) {
+			// merge the results into the common list
+			$this->list = array_merge(
+				$this->list,
+				(array) $result
+			);
 		}
 		
 		// OK, we've loaded what we can.

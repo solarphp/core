@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Result.php,v 1.12 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -37,7 +37,7 @@ class Solar_Sql_Result extends Solar_Base {
 	* 
 	* rsrc => (resource) Query result resource.
 	* 
-	* driver => (object) The source SQL driver object.
+	* class => (string) The SQL driver class name.
 	* 
 	* @access protected
 	* 
@@ -46,8 +46,8 @@ class Solar_Sql_Result extends Solar_Base {
 	*/
 	
 	public $config = array(
-		'rsrc'   => null,
-		'driver' => null
+		'rsrc'  => null,
+		'class' => null
 	);
 	
 	
@@ -63,7 +63,11 @@ class Solar_Sql_Result extends Solar_Base {
 	
 	public function __destruct()
 	{
-		$this->config['driver']->free($this->config['rsrc']);
+		// make a static call to the free() method from the driver
+		call_user_func(
+			array($this->config['class'], 'free'),
+			$this->config['rsrc']
+		);
 	}
 	
 	
@@ -82,7 +86,11 @@ class Solar_Sql_Result extends Solar_Base {
 	
 	public function fetch()
 	{
-		$row = $this->config['driver']->fetch($this->config['rsrc']);
+		// make a static call to the fetch() method from the driver
+		$row = call_user_func(
+			array($this->config['class'], 'fetch'),
+			$this->config['rsrc']
+		);
 		
 		if (is_array($row)) {
 			array_change_key_case($row, CASE_LOWER);
@@ -105,7 +113,11 @@ class Solar_Sql_Result extends Solar_Base {
 	
 	public function fetchNum()
 	{
-		return $this->config['driver']->fetchNum($this->config['rsrc']);
+		// make a static call to the fetchNum() method from the driver
+		return call_user_func(
+			array($this->config['class'], 'fetchNum'),
+			$this->config['rsrc']
+		);
 	}
 }
 ?>

@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Mssql.php,v 1.17 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -183,7 +183,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 			
 			// build the result object and return it.
 			$opts = array(
-				'driver' => $this,
+				'class'  => __CLASS__,
 				'rsrc'   => $result
 			);
 			return new Solar_Sql_Result($opts);
@@ -225,7 +225,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetch(&$rsrc)
+	public static function fetch(&$rsrc)
 	{
 		return @mssql_fetch_assoc($rsrc);
 	}
@@ -244,7 +244,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetchNum(&$rsrc)
+	public static function fetchNum(&$rsrc)
 	{
 		return @mssql_fetch_row($rsrc);
 	}
@@ -262,7 +262,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function free(&$rsrc)
+	public static function free(&$rsrc)
 	{
 		return @mssql_free_result($rsrc);
 	}

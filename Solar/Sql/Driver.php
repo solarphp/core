@@ -12,8 +12,10 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Driver.php,v 1.20 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
+* @todo Change separator to __, change _idx to __idx, change _seq to
+* __seq, drop Oracle, set table max len to 30, set field name to 27
 */
 
 /**
@@ -104,6 +106,23 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	* 
+	* Max word lengths for table, column, and index names.
+	* 
+	* @access protected
+	* 
+	* @var resource
+	* 
+	*/
+	
+	protected $len = array(
+		'tbl' => 30,
+		'col' => 27,
+		'idx' => 27
+	);
+	
+	
+	/**
+	* 
 	* Provides the proper escaping for enquoted values.
 	* 
 	* @access public
@@ -165,7 +184,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* 
 	*/
 	
-	public function fetch(&$rsrc)
+	public static function fetch(&$rsrc)
 	{
 	}
 	
@@ -183,7 +202,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* 
 	*/
 	
-	public function fetchNum(&$rsrc)
+	public static function fetchNum(&$rsrc)
 	{
 	}
 	
@@ -200,7 +219,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* 
 	*/
 	
-	public function free(&$rsrc)
+	public static function free(&$rsrc)
 	{
 	}
 	
@@ -326,9 +345,9 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function columnDeclaration($name, $info)
 	{
-		// validate column name length (1-10 chars)
+		// validate column name length
 		$len = strlen($name);
-		if ($len < 1 || $len > 10) {
+		if ($len < 1 || $len > $this->len['col']) {
 			return $this->error(
 				'ERR_COL_LEN',
 				array('name' => $name),
@@ -468,9 +487,9 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function createTable($table, $cols)
 	{
-		// table name can only be 15 chars
+		// table name can only be so many chars
 		$len = strlen($table);
-		if ($len < 1 || $len > 15) {
+		if ($len < 1 || $len > $this->len['tbl']) {
 			return $this->error(
 				'ERR_TABLE_LEN',
 				array('table' => $table),
@@ -479,8 +498,8 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		}
 		
 		// table name must be a valid word, and cannot end in
-		// "_seq" (this is to prevent sequence table collisions)
-		if (! $this->validWord($table) || substr($table, -4) == "_seq") {
+		// "__seq" (this is to prevent sequence table collisions)
+		if (! $this->validWord($table) || substr($table, -5) == "__seq") {
 			return $this->error(
 				'ERR_TABLE_WORD',
 				array('table' => $table),
@@ -529,13 +548,13 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* 
 	* The type may be 'normal' or 'unique'.
 	* 
-	* Indexes are automatically renamed to "tablename_indexname_idx".
+	* Indexes are automatically renamed to "tablename__indexname__idx".
 	* 
 	* @access public
 	* 
-	* @param string $table The name of the table for the index (1-15 chars).
+	* @param string $table The name of the table for the index (1-30 chars).
 	* 
-	* @param string $name The name of the index (1-10 chars).
+	* @param string $name The name of the index (1-27 chars).
 	* 
 	* @param string|array $info Information about the index.
 	* 
@@ -545,9 +564,9 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function createIndex($table, $name, $info)
 	{
-		// check the table name length (1-15 chars)
+		// check the table name length
 		$len = strlen($table);
-		if ($len < 1 || $len > 15) {
+		if ($len < 1 || $len > $this->len['tbl']) {
 			return $this->error(
 				'ERR_TABLE_LEN',
 				array('table' => $table),
@@ -557,7 +576,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		
 		// check the index name length
 		$len = strlen($name);
-		if ($len < 1 || $len > 10) {
+		if ($len < 1 || $len > $this->len['idx']) {
 			return $this->error(
 				'ERR_IDX_LEN',
 				array('table' => $table, 'name' => $name),
@@ -566,12 +585,15 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		}
 		
 		// we prefix all index names with the table name,
-		// and suffix all index names with '_idx'.  this
+		// and suffix all index names with '__idx'.  this
 		// is to soothe PostgreSQL, which demands that index
 		// names not collide, even when they indexes are on
 		// different tables.
-		$fullname = $table . '_' . $name . '_idx';
+		$fullname = $table . '__' . $name . '__idx';
 		
+		/*
+		// REMOVED because we have double-unders in the final name.
+		// shouldn't matter, no reserved words in __idx anyway.
 		// full index name cannot be a reserved keyword
 		if (! $this->validWord($fullname)) {
 			return $this->error(
@@ -580,6 +602,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 				E_USER_WARNING
 			);
 		}
+		*/
 		
 		// build up the index information for type and columns
 		$type = null;
@@ -648,6 +671,11 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		// only a-z, 0-9, and _ are allowed in words.
 		// must start with a letter, not a number or underscore.
 		if (! preg_match('/^[a-z][a-z0-9_]*$/', $word)) {
+			return false;
+		}
+		
+		// must not have two or more underscores in a row
+		if (strpos($word, '__') !== false) {
 			return false;
 		}
 		

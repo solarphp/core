@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Mysql.php,v 1.16 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -148,7 +148,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 		
 			// fetchable success
 			$opts = array(
-				'driver' => $this,
+				'class'  => __CLASS__,
 				'rsrc'   => $result
 			);
 			return new Solar_Sql_Result($opts);
@@ -187,7 +187,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetch(&$rsrc)
+	public static function fetch(&$rsrc)
 	{
 		return @mysql_fetch_assoc($rsrc);
 	}
@@ -206,7 +206,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetchNum(&$rsrc)
+	public static function fetchNum(&$rsrc)
 	{
 		return @mysql_fetch_row($rsrc);
 	}
@@ -224,7 +224,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function free(&$rsrc)
+	public static function free(&$rsrc)
 	{
 		return @mysql_free_result($rsrc);
 	}

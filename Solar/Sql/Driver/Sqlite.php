@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Sqlite.php,v 1.17 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -131,7 +131,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 		
 			// fetchable success
 			$opts = array(
-				'driver' => $this,
+				'class'  => __CLASS__,
 				'rsrc'   => $result
 			);
 			return new Solar_Sql_Result($opts);
@@ -171,7 +171,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetch(&$rsrc)
+	public static function fetch(&$rsrc)
 	{
 		return @sqlite_fetch_array($rsrc, SQLITE_ASSOC);
 	}
@@ -190,7 +190,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetchNum(&$rsrc)
+	public static function fetchNum(&$rsrc)
 	{
 		return @sqlite_fetch_array($rsrc, SQLITE_NUM);
 	}

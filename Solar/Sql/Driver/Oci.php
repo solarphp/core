@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Oci.php,v 1.17 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -147,7 +147,7 @@ class Solar_Sql_Driver_Oci extends Solar_Sql_Driver {
 			// fetchable success.  note that the prepared statement
 			// is used as the resource, not the query result.
 			$opts = array(
-				'driver' => $this,
+				'class'  => __CLASS__,
 				'rsrc'   => $prepStmt
 			);
 			
@@ -175,7 +175,7 @@ class Solar_Sql_Driver_Oci extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetch(&$rsrc)
+	public static function fetch(&$rsrc)
 	{
 		return @oci_fetch_assoc($rsrc);
 	}
@@ -194,7 +194,7 @@ class Solar_Sql_Driver_Oci extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function fetchNum(&$rsrc)
+	public static function fetchNum(&$rsrc)
 	{
 		return @oci_fetch_row($rsrc);
 	}
@@ -212,7 +212,7 @@ class Solar_Sql_Driver_Oci extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function free(&$rsrc)
+	public static function free(&$rsrc)
 	{
 		return @oci_free_statement($rsrc);
 	}
@@ -244,6 +244,7 @@ class Solar_Sql_Driver_Oci extends Solar_Sql_Driver {
 			} else {
 				$stmt = "SELECT * FROM ($stmt) WHERE ROWNUM <= $count";
 			}
+		}
 	}
 	
 	

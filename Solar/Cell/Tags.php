@@ -89,17 +89,15 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		);
 			
 		// broad source identifier
-		$schema['col']['src'] = array(
+		$schema['col']['tbl'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
 			'require' => true,
 		);
 		
 		// id in the broad source
-		$schema['col']['src_id'] = array(
-			'type'    => 'varchar',
-			'size'    => 255,
-			'require' => true,
+		$schema['col']['tbl_id'] = array(
+			'type'    => 'int',
 		);
 		
 		// the "owner" for this tag (so we can see what user have which tags)
@@ -127,8 +125,8 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		
 		$schema['idx'] = array(
 			'id'      => 'unique',
-			'src'     => 'normal',
-			'src_id'  => 'normal',
+			'tbl'     => 'normal',
+			'tbl_id'  => 'normal',
 			'user_id' => 'normal',
 			'tags'    => 'normal',
 		);
@@ -150,7 +148,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		// tags for a resource
 		$schema['qry']['userItem'] = array(
 			'select' => 'tags',
-			'where'  => 'user_id = :user_id AND src = :src AND src_id = :src_id',
+			'where'  => 'user_id = :user_id AND tbl = :tbl AND tbl_id = :tbl_id',
 			'fetch'  => 'One'
 		);
 		

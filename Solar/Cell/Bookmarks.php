@@ -95,7 +95,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		);
 		
 		// timestamp when last modified
-		$schema['col']['ts_new'] = array(
+		$schema['col']['ts_mod'] = array(
 			'type'    => 'timestamp',
 			'require' => true,
 		);
@@ -109,6 +109,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 				array(
 					'uri',
 					$this->locale('VALID_URI'),
+				)
 			)
 		);
 		
@@ -135,31 +136,8 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		$schema['idx'] = array(
 			'id'      => 'unique',
 			'user_id' => 'normal',
-			'uri'    => 'normal',
+			'uri'     => 'normal',
 		);
-		
-		
-		// -------------------------------------------------------------
-		// 
-		// relationships (to the 'tags' table)
-		//
-		
-		// relationship when looking up tags for a user and uri
-		$schema['rel']['userTags'] = "sc_tags ON " . 
-			// match user_id values
-			"sc_bookmarks.user_id = sc_tags.user_id AND " .
-			// make sure the tag source is "sc_bookmarks"
-			"sc_tags.src = 'sc_bookmarks' AND " .
-			// match URI values
-			"sc_bookmarks.uri = sc_tags.src_id";
-		
-		
-		// relationship when looking up tags for a uri regardless of user
-		$schema['rel']['uriTags'] = "sc_tags ON " . 
-			// make sure the tag source is "sc_bookmarks"
-			"sc_tags.src = 'sc_bookmarks' AND " .
-			// match URI values
-			"sc_bookmarks.uri = sc_tags.src_id";
 		
 		
 		// -------------------------------------------------------------
@@ -167,82 +145,74 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		// queries
 		// 
 		
-		// list of entries for a user
+		// list of bookmarks with tags
 		$schema['qry']['list'] = array(
-			'select' => '*',
-			'order'  => '',
-			'join'   => $schema['rel']['userTags'],
-			'fetch'  => 'All',
-			'count'  => 'id',
+			'select' => '*, sc_tags.tags AS tags',
+			'join'   => "sc_tags ON sc_tags.tbl = 'sc_bookmarks' AND sc_tags.tbl_id = sc_bookmarks.id",
+			'order'  => 'ts_new DESC',
+			'fetch'  => 'All'
 		);
 		
-		// bookmarks for a user
+		// one bookmark item; same as list, just with different fetch
 		$schema['qry']['item'] = array(
-			'select' => '*',
-			
-			'where'  => 'user_id = :user_id AND src = :src AND src_id = :src_id',
-			'fetch'  => 'One'
+			'select' => '*, sc_tags.tags AS tags',
+			'join'   => "sc_tags ON sc_tags.tbl = 'sc_bookmarks' AND sc_tags.tbl_id = sc_bookmarks.id",
+			'where'  => 'id = :id',
+			'fetch'  => 'Row'
 		);
-		
-		// all tags for a specific user
-		$schema['qry']['userTaglist'] = array(
-			'select' => 'DISTINCT tags',
-			'where' => 'user_id = :user_id',
-			'order' => 'tags',
-			'fetch' => 'Col'
-		);
-		
 		
 		return $schema;
 	}
 	
-	public function userItem($user_id, $src, $src_id)
+	public function fetchItem($id)
 	{
-		$result = $this->selectFetch(
-			'userItem',
-			array('user_id' => $user_id, 'src' => $src, 'src_id' => $src_id)
-		);
-		
-		if (! Solar::isError($result)) {
-			// trim off extra spaces
-			$result = trim($result);
-			// return as an array
-			$result = explode(' ', $result);
-		}
-		
-		return $result;
+		return $this->selectFetch('item', array('id' => $id));
 	}
 	
-	public function userTaglist($user_id)
+	
+	public function fetchUser($user_id, $order = null, $page = null)
 	{
-		// get the list of tag sets
-		$result = $this->selectFetch(
-			'userTaglist', 
-			array('user_id' => $user_id)
-		);
-		
-		// was it an error? if so, return.
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
-		// create an array of all unique tags
-		$list = array();
-		foreach ($result as $key => $val) {
-			$tmp = explode(' ', $val['tags']);
-			$list = array_merge($list, $tmp);
-		}
-		
-		// sort it and return
-		asort($list);
-		return $list;
+		$where = 'user_id = ' . $this->quote($user_id);
+		return $this->selectFetch('list', $where, $order, $page);
 	}
+	
+	public function fetchTags($tags, $user_id = null, $order = null, $page = null)
+	{
+		// build a base where clause ...
+		if ($user_id) {
+			// ... to find a given user
+			$where = 'user_id = ' . $this->quote('user_id');
+		} else {
+			// ... for all users
+			$where = '1=1';
+		}
+		
+		// convert $tags to array
+		if (! is_array($tags)) {
+			$tags = explode(' ', trim($tags));
+		}
+		
+		// finish the where clause with tags ANDed together
+		$tmp = array();
+		foreach ($tags as $tag) {
+			$tmp[] = "tags LIKE '% $tag %'";
+		}
+		$where .= ' AND ' . implode(' AND ', $tmp);
+		
+		// done!
+		return $this->selectFetch('list', $where, $order, $page);
+	}
+	
 	
 	protected function preInsert(&$data)
 	{
 		if (isset($data['tags'])) {
 			$data['tags'] = $this->fixTags($data['tags']);
 		}
+		
+		$now = $this->timestamp();
+		$data['ts_new'] = $now;
+		$data['ts_mod'] = $now;
 	}
 	
 	protected function preUpdate(&$data)
@@ -250,6 +220,8 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		if (isset($data['tags'])) {
 			$data['tags'] = $this->fixTags($data['tags']);
 		}
+		
+		$data['ts_mod'] = $this->timestamp();
 	}
 	
 	protected function fixTags($tags)

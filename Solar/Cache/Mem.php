@@ -73,9 +73,9 @@ class Solar_Cache_Mem extends Solar_Base {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
-		parent::__construct($conf);
+		parent::__construct($config);
 		$this->memcache = new Memcache;
 		$this->memcache->connect($this->config['host'], $this->config['port']);
 	}

@@ -104,6 +104,7 @@ class Solar_Cache_File extends Solar_Base {
 				if ($this->config['lock']) {
 					flock($fp, LOCK_UN);
 				}
+				
 				fclose($fp);
 				
 				// check for serializing

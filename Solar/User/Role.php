@@ -87,16 +87,16 @@ class Solar_User_Role extends Solar_Base {
 	*
 	* @access public
 	* 
-	* @param array $conf The config options.
+	* @param array $config The config options.
 	* 
 	* @return object
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic config option settings
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// instantiate the driver objects
 		foreach ($this->config['drivers'] as $key => $info) {

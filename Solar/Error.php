@@ -114,10 +114,10 @@ class Solar_Error extends Solar_Base {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		$this->config['push_callback'] = array($this, 'defaultPushCallback');
-		parent::__construct($conf);
+		parent::__construct($config);
 	}
 	
 	

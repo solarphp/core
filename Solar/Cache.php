@@ -41,7 +41,7 @@ class Solar_Cache extends Solar_Base {
 	* 
 	* driver  => (string) the cache driver to use
 	* 
-	* options => (array) array of conf options for the driver
+	* options => (array) array of config options for the driver
 	* 
 	* @access protected
 	* 
@@ -88,14 +88,14 @@ class Solar_Cache extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param array $conf An array of configuration options.
+	* @param array $config An array of configuration options.
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic config option settings
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// set activity flag
 		$this->active = $this->config['active'];

@@ -18,6 +18,9 @@
 * 
 */
 
+/**
+* Have the Entity class available for extension.
+*/
 Solar::autoload('Solar_Sql_Entity');
 
 

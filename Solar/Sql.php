@@ -137,20 +137,20 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param array $conf An array of configuration options.
+	* @param array $config An array of configuration options.
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic construction
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// get the driver class
 		$class = $this->config['class'];
 		
 		// set up the driver config array
-		$opts = $this->conf;
+		$opts = $this->config;
 		
 		// don't override these in the driver
 		unset($opts['class']);

@@ -63,11 +63,11 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		
 		// basic construction
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		/** @todo Add the port specification */
 		// try to connect

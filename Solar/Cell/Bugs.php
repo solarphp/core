@@ -92,9 +92,9 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
-		parent::__construct($conf);
+		parent::__construct($config);
 		$this->talk = Solar::object(
 			'Solar_Cell_Talk',
 			$this->config['Solar_Cell_Talk']

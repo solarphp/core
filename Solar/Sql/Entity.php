@@ -190,16 +190,16 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
-		// default values for reserved $conf keys
+		// default values for reserved $config keys
 		$default = array(
 			'sql'           => 'sql',
 			'auto_create'   => true,
 			'rows_per_page' => 10
 		);
 		
-		// make sure we have default values for the reserved $conf keys
+		// make sure we have default values for the reserved $config keys
 		foreach ($default as $key => $val) {
 			if (! isset($this->config[$key])) {
 				$this->config[$key] = $val;
@@ -207,7 +207,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// now override with any values from the constructor
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// set up the schema property
 		$this->schema = array_merge($this->schema, $this->getSchema());

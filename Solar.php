@@ -17,23 +17,22 @@
 */
 
 /**
-* Where the Solar.conf.php file is located.
+* Where the Solar.config.php file is located.
 */
 if (! defined('SOLAR_CONFIG_PATH')) {
-	define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . '/Solar.conf.php');
+	define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . '/Solar.config.php');
 }
 
 /**
 * The base for all Solar classes (except Solar itself ;-).
 */
-
 require_once 'Solar/Base.php';
 
 /**
 * The Solar_Error class, needed for Solar::isError().
 */
-
 require_once 'Solar/Error.php';
+
 
 /**
 * 
@@ -121,14 +120,14 @@ class Solar {
 		Solar::$shared = new StdClass;
 		
 		// by default, show all the errors. you can reduce this later in
-		// the conf file.
+		// the config file.
 		ini_set('error_reporting', E_ALL|E_STRICT);
 		ini_set('display_errors', true);
 		
-		// load the config file values. note that we use $conf here, not
-		// conf(), because we are setting the value of the static
+		// load the config file values. note that we use $config here, not
+		// config(), because we are setting the value of the static
 		// property.
-		Solar::$conf = Solar::run(SOLAR_CONFIG_PATH);
+		Solar::$config = Solar::run(SOLAR_CONFIG_PATH);
 		
 		// make sure we have a locale code
 		if (! isset(Solar::$config['Solar']['locale_code'])) {
@@ -396,19 +395,19 @@ class Solar {
 	* 
 	* @param string $class The class name.
 	* 
-	* @param array $conf The configuration array for the class.
+	* @param array $config The configuration array for the class.
 	* 
 	* @return object A new instance of the requested Solar class.
 	* 
 	*/
 	
-	public static function object($class, $conf = null) 
+	public static function object($class, $config = null) 
 	{
 		$result = Solar::autoload($class);
 		if (Solar::isError($result)) {
 			return $result;
 		} else {
-			$obj = new $class($conf);
+			$obj = new $class($config);
 			return $obj;
 		}
 	}
@@ -444,10 +443,10 @@ class Solar {
 				$class = $info[0];
 				
 				// get the config, if it exists.
-				$conf = array_key_exists(1, $info) ? $info[1] : null;
+				$config = array_key_exists(1, $info) ? $info[1] : null;
 				
 				// instantiate.
-				Solar::$shared->$name = Solar::object($class, $conf);
+				Solar::$shared->$name = Solar::object($class, $config);
 				
 			} else {
 			

@@ -63,10 +63,10 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic construction
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// try to connect
 		$this->conn = @sqlite_open($this->config['name'], $this->config['mode']);

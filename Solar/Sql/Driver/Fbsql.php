@@ -63,10 +63,10 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic construction
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// try to connect
 		$this->conn = @fbsql_connect($this->config['host'], $this->config['user'], $this->config['pass']);

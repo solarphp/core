@@ -51,23 +51,23 @@ abstract class Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param array $conf Is merged with the default $conf property array
-	* and any defaults from Solar.conf.php.
+	* @param array $config Is merged with the default $config property array
+	* and any defaults from Solar.config.php.
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
-		// get the user conf from the Solar.conf.php file, if any.
+		// get the user config from the Solar.config.php file, if any.
 		$class = get_class($this);
 		$default = Solar::config($class, null, array());
 		
-		// ... then merge the passed user conf ...
-		settype($conf, 'array');
-		$conf = array_merge($default, $conf);
+		// ... then merge the passed user config ...
+		settype($config, 'array');
+		$config = array_merge($default, $config);
 		
 		// ... and merge with the class defaults.
-		$this->conf = array_merge($this->conf, $conf);
+		$this->config = array_merge($this->config, $config);
 		
 		// forcibly load locale strings.
 		$this->locale();

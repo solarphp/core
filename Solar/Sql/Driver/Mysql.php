@@ -63,9 +63,9 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// try to connect.
 		$this->conn = @mysql_connect(

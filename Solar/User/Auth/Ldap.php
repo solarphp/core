@@ -62,7 +62,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($conf = null)
+	function __construct($config = null)
 	{
 		// make sure we have LDAP available
 		if (! extension_loaded('ldap')) {
@@ -74,7 +74,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 		}
 		
 		// continue construction
-		parent::__construct($conf);
+		parent::__construct($config);
 	}
 
 
@@ -93,7 +93,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 		if (! $conn) {
 			return $this->error(
 				'ERR_CONNECT',
-				array($this->conf),
+				array($this->config),
 				E_USER_ERROR
 			);
 		}
@@ -114,7 +114,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 				get_class($this), // class name
 				@ldap_errno($conn), // error number
 				@ldap_error($conn), // error text
-				array($this->conf), // other info
+				array($this->config), // other info
 				E_USER_NOTICE // error level
 			);
 		} else {

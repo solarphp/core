@@ -59,7 +59,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($conf = null)
+	function __construct($config = null)
 	{
 		
 		// make sure the IMAP extension is available
@@ -72,7 +72,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
 		}
 		
 		// continue construction
-		parent::__construct($conf);
+		parent::__construct($config);
 	}
 
 

@@ -28,7 +28,7 @@
 *
 * $opts = array(
 *     'class'  => 'Solar_User_Auth_File',
-*     'options' => array('file' => '/conf/htpasswd')
+*     'options' => array('file' => '/config/htpasswd')
 * );
 * 
 * $auth = Solar::object('Solar_User_Auth', $opts);
@@ -215,16 +215,16 @@ class Solar_User_Auth extends Solar_Base {
 	*
 	* @access public
 	* 
-	* @param array $conf The config options.
+	* @param array $config The config options.
 	* 
 	* @return object
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// basic config option settings
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// instantiate a driver object
 		$this->driver = Solar::object(

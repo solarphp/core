@@ -116,10 +116,10 @@ class Solar_User extends Solar_Base
 	* 
 	*/
 	
-	public function __construct($conf = null)
+	public function __construct($config = null)
 	{
 		// construction
-		parent::__construct($conf);
+		parent::__construct($config);
 		
 		// always set up an authentication object.
 		$opts = null;

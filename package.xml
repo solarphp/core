@@ -24,7 +24,7 @@
 	</maintainers>
 	<release>
 		<version>0.0.3</version>
-		<date>2005-02-15</date>
+		<date>2005-02-16</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
@@ -34,118 +34,118 @@
 			* Converted all 'dt' (date-time) abbreviations to 'ts' (timestamp) for consistency with Solar_Sql_Entity column type naming
 		</notes>
 		<file role="php" name="Solar.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Base.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cache.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cache/File.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cache/Mem.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Bugs.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Talk.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Talk/Locale/en_US.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Talk/Rules.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Debug/Timer.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Error.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Locale/en_US.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Fbsql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Locale/en_US.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Mssql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Mysql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Oci.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Pgsql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Driver/Sqlite.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Entity.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Reserved.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Result.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth/Htpasswd.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth/Ini.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth/Ldap.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth/Mail.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Auth/Sql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Locale/en_US.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role/File.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role/Ldap.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role/Sql.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Valid.php" >
-			<replace from="@package_version@" to="0.0.3" type="package-info" />
+			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 	</release>
 </package>

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: prepend.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -45,7 +45,6 @@ $tpl->addPath(
 
 // get standalone objects
 $bookmarks = Solar::object('Solar_Cell_Bookmarks');
-$tags = Solar::object('Solar_Cell_Tags');
 $form = Solar::object('Solar_Form');
 
 ?>

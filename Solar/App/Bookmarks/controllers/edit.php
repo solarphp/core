@@ -2,7 +2,7 @@
 
 /**
 * 
-* Controller action script for editing a bug report.
+* Controller action script for editing a bookmark.
 * 
 * @category Solar
 * 
@@ -14,13 +14,13 @@
 * 
 * @license LGPL
 * 
-* @version $Id: edit.php 124 2005-04-01 19:00:28Z pmjones $
+* @version $Id$
 * 
 */
 
 /**
 * 
-* Controller action script for editing a bug report.
+* Controller action script for editing a bookmark.
 * 
 * @category Solar
 * 
@@ -43,7 +43,7 @@ if ($user->auth->status_code != 'VALID') {
 	return 'Not logged in.';
 }
 
-// get the bookmark ID (0 means a new report)
+// get the bookmark ID (0 means a new bookmark)
 $id = (int) Solar::get('id', 0);
 
 // get the bookmark entry
@@ -74,12 +74,6 @@ $form->setElements(
 	'bookmarks'
 );
 
-// add elements from $tags in an array called 'tags'
-$form->setElements(
-	$tags->formElements('mini', $item),
-	'tags'
-);
-
 // bring in the submitted values to the form
 $form->populate();
 
@@ -97,11 +91,11 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	
 		$values = $form->values();
 		
-		// new report, or modify old report?
+		// new bookmark, or modify old bookmark?
 		if ($values['bookmarks']['id']) {
 		
-			// modify old report
-			$result = $bookmarks->updateItem(
+			// modify old bookmark
+			$result = $bookmarks->update(
 				$values['bookmarks'], // the data
 				$values['bookmarks']['id'] // the ID number
 			);
@@ -110,7 +104,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			
 		} else {
 		
-			// add new report. force the status to 'new'
+			// add new bookmark.
 			$result = $bookmarks->insert($values['bookmarks']);
 			$id = $result;
 		}
@@ -128,40 +122,16 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			// it worked!  $result is the new ID number.
 			$form->feedback[] = Solar::locale('Solar', 'OK_SAVED');
 			
-			// now add the comment, if there was one.
-			// $id was set when up updated the report above.
-			if (trim($values['tags']['body']) != '') {
-				$data = array(
-					'tbl'    => 'sc_bookmarks',
-					'tbl_id' => $id,
-					'email'  => $values['tags']['email'],
-					'subj'   => $values['bookmarks']['summ'],
-					'body'   => $values['tags']['body']
-				);
-				$tags->insert($data);
-			}
-			
-			// redirect to 'view item'
-			header('Location: ?action=item&id=' . $id);
-			return;
 		}
 	}
 }
 
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-	if ($id == 0) {
-		$location = '?action=listOpen';
-	} else {
-		$location = "?action=item&id=$id";
-	}
-	header("Location: $location");
+	$self = Solar::server('PHP_SELF');
+	header("Location: $self");
 	return;
 }
-
-// get comments about the bug
-$id = $form->elements['bookmarks[id]']['value'];
-$tpl->comments = $tags->fetchQueue('sc_bookmarks', $id);
 
 // assign the form object
 $tpl->formdata = $form;

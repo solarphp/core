@@ -66,32 +66,6 @@ class Solar {
 	
 	/**
 	* 
-	* Static locale object.
-	* 
-	* @access public
-	* 
-	* @var object
-	* 
-	*/
-	
-	public static $locale = null;
-	
-	
-	/**
-	* 
-	* Static superglobal data retrieval object.
-	* 
-	* @access public
-	* 
-	* @var object
-	* 
-	*/
-	
-	public static $super = null;
-	
-	
-	/**
-	* 
 	* Shared singleton objects are properties of the $shared object.
 	* 
 	* @access public

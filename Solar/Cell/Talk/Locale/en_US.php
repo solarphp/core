@@ -25,6 +25,7 @@ return array(
 	'VALID_SUBJ'      => 'Please enter a subject.',
 	'VALID_BODY'      => 'Please enter a message.',
 	'LABEL_NAME'      => 'Name',
+	'LABEL_TS'        => 'Timestamp',
 	'LABEL_EMAIL'     => 'Email',
 	'LABEL_EMAIL_PUB' => 'Show email?',
 	'LABEL_WEBSITE'   => 'Website',

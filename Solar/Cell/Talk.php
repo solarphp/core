@@ -89,6 +89,50 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
+	* Fetch one talk comment.
+	* 
+	* @access public
+	* 
+	* @param int $id The comment ID number.
+	* 
+	* @return array An array of info about the comment.
+	* 
+	*/
+	
+	public function fetchItem($id)
+	{
+		$data = $this->selectFetch('item', array('id' => $id));
+		if (! $data) {
+			return $this->error(
+				'ERR_ID',
+				array('id' => $id),
+				E_USER_NOTICE
+			);
+		} else {
+			return $data;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Fetch a list of all comments in a specific forum.
+	* 
+	* @access public
+	* 
+	* @return array An array of comments.
+	* 
+	*/
+	
+	public function fetchForum($forum, $order = null, $page = null)
+	{
+		return $this->selectFetch('forum', array('forum' => $forum),
+			$order, $page);
+	}
+	
+	
+	/**
+	* 
 	* Search for messages with a specific word.
 	* 
 	* @todo Searches for one word now, should search for multiple.
@@ -339,6 +383,21 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 				'label' => $this->locale('LABEL_SUBJ'),
 				'attribs'  => array('size' => 64),
 				'require'  => true,
+			),
+			'body' => array(
+				'type'  => 'textarea',
+				'label' => $this->locale('LABEL_BODY'),
+				'attribs'  => array('rows' => '16', 'cols' => '64'),
+				'require'  => true,
+			),
+		);
+		
+		// minimal new post; you'll need to add a lot of stuff yourself
+		$schema['frm']['mini'] = array(
+			'email' => array(
+				'type'  => 'text',
+				'label' => $this->locale('LABEL_EMAIL'),
+				'attribs'  => array('size' => 64),
 			),
 			'body' => array(
 				'type'  => 'textarea',

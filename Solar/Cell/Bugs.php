@@ -133,9 +133,32 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function fetchList($order = null, $page = null)
+	public function fetchList($where = null, $order = null, $page = null)
 	{
+		if (is_array($where)) {
+			$tmp = array();
+			foreach ($where as $key => $val) {
+				$tmp = "$key = " . $this->quote($val);
+			}
+			$where = implode(' AND ' . $where);
+		}
+		
 		return $this->selectFetch('list', null, $order, $page);
+	}
+	
+	
+	/**
+	* 
+	* Updates one bug report by ID.
+	* 
+	* @access public
+	* 
+	*/
+	
+	public function updateItem($data, $id)
+	{
+		$where = 'id = ' . $this->quote($id);
+		return $this->update($data, $where);
 	}
 	
 	
@@ -372,11 +395,11 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			),
 			'ts_new' => array(
 				'type'    => 'readonly',
-				'label'   => $this->locale('LABEL_DT_NEW'),
+				'label'   => $this->locale('LABEL_TS_NEW'),
 			),
 			'ts_mod' => array(
 				'type'    => 'readonly',
-				'label'   => $this->locale('LABEL_DT_MOD'),
+				'label'   => $this->locale('LABEL_TS_MOD'),
 			),
 			'type' => array(
 				'type'    => 'select',

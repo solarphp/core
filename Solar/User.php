@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: User.php,v 1.18 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 * @todo Write convenience interface methods to get user, role, pref,
 * and perm values from objects, even if those objects don't exist.
@@ -152,7 +152,7 @@ class Solar_User extends Solar_Base
 	* 
 	*/
 	
-	public function __hive($hook)
+	public function __solar($hook)
 	{
 		switch ($hook) {
 		

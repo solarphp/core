@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Timer.php,v 1.9 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -86,7 +86,7 @@ class Solar_Debug_Timer extends Solar_Base {
 	* 
 	*/
 	
-	public function __hive($hook)
+	public function __solar($hook)
 	{
 		switch ($hook) {
 		case 'start':

@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Base.php,v 1.16 2005/02/08 01:42:25 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -138,7 +138,7 @@ abstract class Solar_Base {
 	* 
 	*/
 	
-	public function __hive($hook)
+	public function __solar($hook)
 	{
 		switch ($hook) {
 		case 'start':

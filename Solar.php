@@ -148,7 +148,7 @@ class Solar {
 			Solar::shared($name);
 		}
 		
-		// ... and then run their __hive('start') methods.
+		// ... and then run their __solar('start') methods.
 		// (we load and run in separate loops because some 
 		// objects may depend on others).
 		foreach ($list as $name) {
@@ -156,8 +156,8 @@ class Solar {
 			// object instance, but it works fine with just
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
-			if (is_callable($class, '__hive')) {
-				Solar::$shared->$name->__hive('start');
+			if (is_callable($class, '__solar')) {
+				Solar::$shared->$name->__solar('start');
 			}
 		}
 		
@@ -188,7 +188,7 @@ class Solar {
 			Solar::run($file);
 		}
 		
-		// find the __hive('stop') hook in each auto-shared
+		// find the __solar('stop') hook in each auto-shared
 		// object ...
 		$list = Solar::config('Solar', 'autoshare', array());
 		
@@ -199,8 +199,8 @@ class Solar {
 			// object instance, but it works fine with just
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
-			if (is_callable($class, '__hive')) {
-				Solar::$shared->$name->__hive('stop');
+			if (is_callable($class, '__solar')) {
+				Solar::$shared->$name->__solar('stop');
 			}
 		}
 		

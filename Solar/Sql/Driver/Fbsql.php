@@ -45,12 +45,12 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	
 	protected $native = array(
         'bool'      => 'DECIMAL(1,0)',
-        'char'      => 'CHAR',
-        'varchar'   => 'VARCHAR',
+        'char'      => 'CHAR(:size)',
+        'varchar'   => 'VARCHAR(:size)',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'LONGINT',
-        'numeric'   => 'DECIMAL',
+        'numeric'   => 'DECIMAL(:size,:scope)',
         'float'     => 'DOUBLE PRECISION',
         'clob'      => 'CLOB',
         'date'      => 'CHAR(10)',

@@ -45,12 +45,12 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	protected $native = array(
         'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR',
-        'varchar'   => 'VARCHAR',
+        'char'      => 'CHAR(:size)',
+        'varchar'   => 'VARCHAR(:size)',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC',
+        'numeric'   => 'NUMERIC(:size,:scope)',
         'float'     => 'DOUBLE',
         'clob'      => 'CLOB',
         'date'      => 'DATE',

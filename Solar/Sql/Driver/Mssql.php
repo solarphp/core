@@ -44,13 +44,13 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'DECIMAL(1,0)',
-        'char'      => 'CHAR',
-        'varchar'   => 'VARCHAR',
+        'bool'      => 'BIT',
+        'char'      => 'BINARY(:size)',
+        'varchar'   => 'VARBINARY(:size)',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'DECIMAL',
+        'numeric'   => 'DECIMAL(:size,:scope)',
         'float'     => 'FLOAT',
         'clob'      => 'TEXT',
         'date'      => 'CHAR(10)',

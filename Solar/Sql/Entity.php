@@ -1353,7 +1353,8 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @return string The current ISO-standard date (e.g., '12:34:56').
+	* @return string The current ISO-standard timestamp (e.g.,
+	* '1979-11-07T12:34:56').
 	* 
 	*/
 	

@@ -416,8 +416,8 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 					false
 				);
 			} else {
-				// @todo sprintf($this->native[$type], $size);
-				$declare = $this->native[$type] . "($size)";
+				// replace the 'size' placeholder
+				$declare = str_replace(':size', $size, $this->native[$type]);
 			}
 			break;
 		
@@ -441,7 +441,13 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 				);
 			}
 			
-			$declare = $this->native[$type] . "($size,$scope)";
+			// replace the 'size' and 'scope' placeholders
+			$declare = str_replace(
+				array(':size', ':scope'),
+				array($size, $scope),
+				$this->native[$type]
+			);
+			
 			break;
 		
 		default:

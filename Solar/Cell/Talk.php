@@ -188,10 +188,10 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		
 		// sequential id
 		$schema['col']['id'] = array(
-			'type'    => 'int',
-			'seqname' => 'sc_talk',
-			'primary' => true,
-			'require' => true,
+			'type'     => 'int',
+			'sequence' => 'sc_talk',
+			'primary'  => true,
+			'require'  => true,
 		);
 			
 		// timestamp of message
@@ -231,7 +231,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'size'    => '4',
 			'require' => false,
 			'default' => 'show',
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'inList',
 					$this->locale('VALID_STATUS'),
@@ -250,7 +250,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		$schema['col']['email'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
-			'valid'   => array(
+			'validate'   => array(
 				// we allow blank emails here
 				array(
 					'email',
@@ -270,7 +270,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		$schema['col']['website'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
-			'valid'   => array(
+			'validate'   => array(
 				// we allow blank website here
 				array(
 					'uri',
@@ -285,7 +285,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		$schema['col']['subj'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
-			'valid'   => array(
+			'validate'   => array(
 				array('notBlank', $this->locale('VALID_SUBJ')),
 			),
 		);
@@ -293,7 +293,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// body of the message
 		$schema['col']['body'] = array(
 			'type'    => 'clob',
-			'valid'   => array(
+			'validate'   => array(
 				array('notBlank', $this->locale('VALID_BODY')),
 			),
 		);
@@ -392,7 +392,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			),
 		);
 		
-		// minimal new post; you'll need to add a lot of stuff yourself
+		// minimal new post; designed for plugging into other forms.
 		$schema['frm']['mini'] = array(
 			'email' => array(
 				'type'  => 'text',

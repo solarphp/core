@@ -220,7 +220,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// sequential id
 		$schema['col']['id'] = array(
 			'type'    => 'int',
-			'seqname' => 'sc_bugs',
+			'sequence' => 'sc_bugs',
 			'primary' => true,
 			'require' => true,
 		);
@@ -244,7 +244,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'type'    => 'varchar',
 			'size'    => 255,
 			'require' => true,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'notBlank',
 					$this->locale('VALID_SUMM')
@@ -257,7 +257,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'type'    => 'varchar',
 			'size'    => 16,
 			'require' => true,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'inList',
 					$this->locale('VALID_TYPE'),
@@ -271,7 +271,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'type'    => 'varchar',
 			'size'    => 255,
 			'require' => true,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'inList',
 					$this->locale('VALID_PACK'),
@@ -284,7 +284,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		$schema['col']['os'] = array(
 			'type'    => 'varchar',
 			'size'    => 16,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'notBlank',
 					$this->locale('VALID_OS')
@@ -296,7 +296,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		$schema['col']['ver'] = array(
 			'type'    => 'varchar',
 			'size'    => 16,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'notBlank',
 					$this->locale('VALID_VER')
@@ -315,7 +315,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'type'    => 'varchar',
 			'size'    => 16,
 			'require' => true,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'inList',
 					$this->locale('VALID_STATUS'),
@@ -329,7 +329,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'type'    => 'varchar',
 			'size'    => 128,
 			'require' => true,
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'email',
 					$this->locale('VALID_EMAIL')
@@ -347,7 +347,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		$schema['col']['descr'] = array(
 			'type'    => 'clob',
 			'require' => 'true',
-			'valid'   => array(
+			'validate'   => array(
 				array(
 					'notBlank',
 					$this->locale('VALID_DESCR')

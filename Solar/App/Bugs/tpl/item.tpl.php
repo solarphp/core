@@ -1,11 +1,4 @@
-<style>
-	body, p, div, td, th, .Savant3 {font-family: "Lucida Sans", Verdana; font-size: 12px;}
-	table.Savant3 { border-spacing: 1px; }
-	th.Savant3 { background: #bcd; text-align: right; vertical-align: top; padding: 4px; }
-	td.Savant3 { background: #eee; text-align: left; vertical-align: top;  padding: 4px; }
-	select, option { font-family: "Lucida Sans", Verdana; font-size: 12px; }
-	input[type="text"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 12px;}
-</style>
+<?php include $this->template('header.tpl.php') ?>
 
 <h2>Bug Report <?php echo $this->item['id']['value'] ?></h2>
 
@@ -55,3 +48,5 @@
 	?>
 
 </td><tr></table>
+
+<?php include $this->template('footer.tpl.php') ?>

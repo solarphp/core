@@ -1,17 +1,4 @@
 <?php
-// startup
-require_once 'Solar.php';
-Solar::start();
-
-// get a shared template object
-$tpl = Solar::shared('template');
-$tpl->addPath('template', './tpl/');
-
-// get standalone objects
-$bugs = Solar::object('Solar_Cell_Bugs');
-$talk = Solar::object('Solar_Cell_Talk');
-$form = Solar::object('Solar_Form');
-
 // get the bug ID to view
 $id = Solar::get('id');
 
@@ -94,9 +81,6 @@ $ok_role = $user->role->inAny(
 $tpl->can_edit = $ok_user || $ok_role;
 
 // display
-$tpl->setTemplate('view.tpl.php');
+$tpl->setTemplate('item.tpl.php');
 echo $tpl;
-
-// shutdown
-Solar::stop();
 ?>

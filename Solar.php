@@ -151,12 +151,26 @@ class Solar {
 			ini_set($key, $val);
 		}
 		
-		// build the common locale object and load strings
-		// for the baseline Solar translations.
-		Solar::$locale = Solar::object('Solar_Locale');
+		// make sure the baseline set of shared objects is in place,
+		// ready to be called when needed.
+		$baseline = array(
+			'sql'    => 'Solar_Sql',
+			'user'   => 'Solar_User',
+			'locale' => 'Solar_Locale',
+			'super'  => 'Solar_Super',
+		);
 		
-		// build the common superglobal data retriever.
-		Solar::$super = Solar::object('Solar_Super');
+		foreach ($baseline as $name => $class) {
+			if (! isset(Solar::$config['shared'][$name])) {
+				Solar::$config['shared'][$name] = $class;
+			}
+		}
+		
+		// build the shared locale object
+		Solar::shared('locale');
+		
+		// build the shared superglobal data retriever
+		Solar::shared('super');
 		
 		// load all autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
@@ -253,7 +267,7 @@ class Solar {
 	
 	public static function locale($class, $key, $num = 1)
 	{
-		return Solar::$locale->string($class, $key, $num);
+		return Solar::$shared->locale->string($class, $key, $num);
 	}
 	
 	
@@ -531,7 +545,7 @@ class Solar {
 	
 	public static function get($key = null, $default = null)
 	{
-		return Solar::$super->fetch('get', $key, $default);
+		return Solar::$shared->super->fetch('get', $key, $default);
 	}
 	
 	
@@ -557,7 +571,7 @@ class Solar {
 	
 	public static function post($key = null, $default = null)
 	{
-		return Solar::$super->fetch('post', $key, $default);
+		return Solar::$shared->super->fetch('post', $key, $default);
 	}
 	
 	
@@ -580,7 +594,7 @@ class Solar {
 	
 	public static function cookie($key = null, $default = null)
 	{
-		return Solar::$super->fetch('cookie', $key, $default);
+		return Solar::$shared->super->fetch('cookie', $key, $default);
 	}
 	
 	
@@ -609,6 +623,32 @@ class Solar {
 	
 	/**
 	* 
+	* Convenience method referring to Solar::$shared->super->fetch().
+	* 
+	* @access public
+	* 
+	* @param string $type The superglobal array to work with, e.g. 'server'
+	* or 'env'.
+	* 
+	* @param string $key The array element; if null, returns the whole
+	* array.
+	* 
+	* @param mixed $default If the requested array element is
+	* not set, return this value.
+	* 
+	* @return mixed The array element value (if set), or the
+	* $default value (if not).
+	* 
+	*/
+	
+	public static function super($type, $key = null, $default = null)
+	{
+		return Solar::$shared->super->fetch($type, $key, $default);
+	}
+	
+	
+	/**
+	* 
 	* Safely gets the value of $_SERVER['PATH_INFO'] element.
 	* 
 	* Automatically checks if the element is set; if not, returns a
@@ -630,7 +670,7 @@ class Solar {
 	public static function pathinfo($key = null, $default = null)
 	{
 		// get the pathinfo as passed
-		$info = Solar::$super('server', 'PATH_INFO', '');
+		$info = Solar::$shared->super('server', 'PATH_INFO', '');
 		
 		// explode into its elements
 		$elem = explode('/', $info);

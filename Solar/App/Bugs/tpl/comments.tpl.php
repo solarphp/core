@@ -1,6 +1,7 @@
 <h3>Commentary</h3>
 
 <?php if ($this->comments): ?>
+
 	<table cellspacing="0" cellpadding="0">
 	<?php foreach ($this->comments as $val): ?>
 		<tr>
@@ -20,4 +21,9 @@
 		<tr><td><br /></td></tr>
 	<?php endforeach ?>
 	</table>
-<?php endif ?>
+	
+<?php else: ?>
+
+	<p><?php echo Solar::locale('Solar_App_Bugs', 'NO_COMMENTS') ?></p>
+	
+<?php endif; ?>

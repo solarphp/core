@@ -430,7 +430,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		switch ($col) {
 		
 		case 'ip_addr':
-			return Solar::$super->fetch('server', 'REMOTE_ADDR');
+			return Solar::super('server', 'REMOTE_ADDR');
 			break;
 		
 		case 'ts':
@@ -438,7 +438,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			break;
 		
 		case 'queue':
-			return Solar::$super->fetch('server', 'REQUEST_URI');
+			return Solar::super('server', 'REQUEST_URI');
 			break;
 			
 		default:

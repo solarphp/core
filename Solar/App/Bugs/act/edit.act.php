@@ -1,16 +1,8 @@
 <?php
-
-// startup
-require_once 'Solar.php';
-Solar::start();
-
 // ---------------------------------------------------------------------
 // 
 // preliminaries: permission checks
 // 
-
-// get the shared user object
-$user = Solar::shared('user');
 
 // is user ok by username?
 $ok_user = in_array(
@@ -35,15 +27,6 @@ if (! $ok_user && ! $ok_role) {
 // 
 // main section
 // 
-
-// get a shared template object
-$tpl = Solar::shared('template');
-$tpl->addPath('template', './tpl/');
-
-// get other standalone objects
-$bugs = Solar::object('Solar_Cell_Bugs');
-$talk = Solar::object('Solar_Cell_Talk');
-$form = Solar::object('Solar_Form');
 
 // the form type to use
 $formtype = '';
@@ -151,6 +134,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			}
 			
 			// redirect to 'view'
+			// THIS WILL NOT WORK UNDER MVC!!!
 			header('Location: view.php?id=' . $id);
 			exit;
 			
@@ -186,7 +170,4 @@ $tpl->formdata = $form;
 // display output
 $tpl->setTemplate('edit.tpl.php');
 echo $tpl;
-
-// shutdown
-Solar::stop();
 ?>

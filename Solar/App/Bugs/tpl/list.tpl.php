@@ -1,3 +1,5 @@
+<?php include $this->template('header.tpl.php') ?>
+
 <?php if (is_array($this->list) && $count = count($this->list)): ?>
 	<p><?php echo $count ?> bugs listed.</p>
 	<table border="1" cellspacing="0" cellpadding="4">
@@ -20,7 +22,7 @@
 			<td valign="top"><?php echo $bug['type'] ?></td>
 			<td valign="top"><?php echo $this->ahref(
 				'view.php?id=' . $bug['id'],
-				htmlspecialchars($bug['summ'])
+				$this->scrub($bug['summ'])
 			) ?></td>
 			<td valign="top"><?php echo $bug['status'] ?></td>
 		</tr>
@@ -30,6 +32,8 @@
 	<p>No bugs in the system.</p>
 <?php endif ?>
 
-<p><a href="index.php">List open bugs.</a></p>
-<p><a href="index.php?op=list">List all bugs</a> (both open and closed).</p>
-<p><a href="edit.php?id=0">Report a new bug.</a></p>
+<p><a href="?">List open bugs.</a></p>
+<p><a href="?action=list">List all bugs</a> (both open and closed).</p>
+<p><a href="?action=edit&id=0">Report a new bug.</a></p>
+
+<?php include $this->template('footer.tpl.php') ?>

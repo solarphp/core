@@ -14,21 +14,13 @@
 * 
 * @license LGPL
 * 
-* @version $Id: File.php 8 2005-02-14 22:44:41Z pmjones $
+* @version $Id$
 * 
 */
 
 /**
 * 
 * No role source; always returns an empty array.
-* 
-* The file format is "username:group,group,group\n".  Example:
-* 
-* <code>
-* pmjones:sysadmin
-* boshag:writer
-* agtsmith:staff,writer,editor,approver
-* </code>
 * 
 * @category Solar
 * 
@@ -38,7 +30,7 @@
 * 
 */
 
-class Solar_User_Role_File extends Solar_Base {
+class Solar_User_Role_None extends Solar_Base {
 	
 	
 	/**

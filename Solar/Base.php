@@ -210,5 +210,33 @@ abstract class Solar_Base {
 		// return whatever we have at this point.
 		return $string;
 	}
+	
+	public function locale2($key, $num = 1)
+	{
+		// is a locale directory specified?
+		if (empty($this->config['locale'])) {
+			// use the generic Solar locale strings
+			return Solar::locale('Solar', $key, $num);
+		}
+		
+		// the current class
+		$class = get_class($this);
+		
+		// get a translation.
+		$string = Solar::locale($class, $key, $num);
+		
+		// is the translation same as the key?  if not, 
+		// we're doing good.
+		if ($string != $key) {
+			return $string;
+		}
+		
+		// key and string were the same, which means there
+		// was no available translation.  make sure we have
+		// a translation file loaded, then return whatever
+		// we get at that point.
+		Solar::$locale->load($class, $this->config['locale']);
+		return Solar::locale($class, $key, $num);
+	}
 }
 ?>

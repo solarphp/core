@@ -17,7 +17,16 @@
 */
 
 return array(
-
+	
+	// formatting codes and information
+	'FORMAT_LANGUAGE'   => 'English',
+	'FORMAT_COUNTRY'    => 'United States',
+	'FORMAT_CURRENCY'   => '$%s', // printf()
+	'FORMAT_DATE'       => '%b %d, %Y', // strftime(): Mar 03, 2005
+	'FORMAT_TIME'       => '%r', // strftime: 12-hour am/pm
+	'FORMAT_NUMBER_SEP' => ',', // 1000s separator
+	'FORMAT_NUMBER_DEC' => '.', // decmial separator
+	
 	// operation actions
 	'OP_SAVE'       => 'Save',
 	'OP_PREVIEW'    => 'Preview',
@@ -28,7 +37,7 @@ return array(
 	'OP_SEARCH'     => 'Search',
 	'OP_GO'         => 'Go!',
 	
-	// process errors
+	// error messages
 	'ERR_FORM'      => 'Please correct the noted errors.',
 	'ERR_FILE_FIND' => 'Cannot find file.',
 	'ERR_FILE_OPEN' => 'Cannot open file.',

@@ -485,6 +485,7 @@ class Solar {
 	* // get an element, or a blank string if the group and
 	* // element does not exist
 	* $result = Solar::config('group', 'elem', '')
+	* </code>
 	* 
 	* @access public
 	* 

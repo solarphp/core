@@ -27,7 +27,7 @@
 	</maintainers>
 	<release>
 		<version>0.0.5</version>
-		<date>2005-03-26</date>
+		<date>2005-03-27</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
@@ -35,52 +35,59 @@
 			* Added Solar_Super class for retrieving superglobals, modified Solar.php to use it
 			* Added Solar::cookie() method for retrieving cookie values.
 			* Added Solar::session() method for retrieving session data.
-			* Started new Solar_App standard directory structure, using an MVC architecture inspired by Ruby-on-Rails.
+			* Solar_Base now automatically loads locale strings at construction time
+			* Started new Solar_App standard directory structure, using an MVC architecture inspired by Ruby-on-Rails
 			* Added Solar_App_Bugs proof-of-concept application
 		</notes>
 		<file role="php" name="Solar.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/controller.php" >
+		<file role="php" name="Solar/App.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/controller/edit.php" >
+		<file role="php" name="Solar/App/Bugs.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/controller/item.php" >
+		<file role="php" name="Solar/App/Bugs/controllers/edit.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/controller/list.php" >
+		<file role="php" name="Solar/App/Bugs/controllers/item.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/helper/locale/en_US.php" >
+		<file role="php" name="Solar/App/Bugs/controllers/list.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/helpers/locale/en_US.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/helpers/prepend.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/App/Bugs/index.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/auth.php" >
+		<file role="php" name="Solar/App/Bugs/views/auth.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/comments.php" >
+		<file role="php" name="Solar/App/Bugs/views/comments.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/edit.php" >
+		<file role="php" name="Solar/App/Bugs/views/edit.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/error.php" >
+		<file role="php" name="Solar/App/Bugs/views/error.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/footer.php" >
+		<file role="php" name="Solar/App/Bugs/views/footer.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/header.php" >
+		<file role="php" name="Solar/App/Bugs/views/header.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/item.php" >
+		<file role="php" name="Solar/App/Bugs/views/item.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/App/Bugs/view/list.php" >
+		<file role="php" name="Solar/App/Bugs/views/list.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Base.php" >

@@ -1,4 +1,8 @@
 <?php
+
+// prepend for all controllers
+$this->helper('prepend');
+
 // ---------------------------------------------------------------------
 // 
 // preliminaries: permission checks
@@ -168,6 +172,5 @@ $tpl->comments = $talk->fetchQueue("sc_bugs://$id");
 $tpl->formdata = $form;
 
 // display output
-$tpl->setTemplate('edit.php');
-echo $tpl;
+return $tpl->fetch('edit.php');
 ?>

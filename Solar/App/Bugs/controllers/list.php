@@ -1,6 +1,6 @@
 <?php
-// what operation are we performing?
-$action = Solar::get('action', 'list_open');
+// prepend for all controllers
+$this->helper('prepend');
 
 // operations
 switch (strtolower($action)) {
@@ -18,6 +18,5 @@ default:
 }
 
 // display
-$output = $tpl->fetch('list.php');
-echo $output;
+return $tpl->fetch('list.php');
 ?>

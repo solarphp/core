@@ -1,12 +1,10 @@
 <?php
-
 // get the shared user object
 $user = Solar::shared('user');
 
 // get the shared template object and add the path for Bugs templates
-// (defaults to 'Solar/App/Bugs/view/')
 $tpl = Solar::shared('template');
-$tpl->addPath('template', dirname(__FILE__) . '/Views/');
+$tpl->addPath('template', $this->config['views']);
 
 // add any additional template paths (for theming)
 $tpl->addPath(
@@ -19,27 +17,4 @@ $tpl->addPath(
 $bugs = Solar::object('Solar_Cell_Bugs');
 $talk = Solar::object('Solar_Cell_Talk');
 $form = Solar::object('Solar_Form');
-
-// pick the right action script
-switch(strtolower(Solar::get('action'))) {
-
-// view one bug report
-case 'item':
-	include 'Solar/App/Bugs/controller/item.php';
-	break;
-
-// edit a bug report
-case 'edit':
-	include 'Solar/App/Bugs/controller/edit.php';
-	break;
-
-// view a list of bug reports (all, or only open)
-case 'list_all':
-case 'list_open':
-default:
-	include 'Solar/App/Bugs/controller/list.php';
-	break;
-}
-
-// done!
 ?>

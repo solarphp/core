@@ -1,4 +1,7 @@
 <?php
+// prepend for all controllers
+$this->helper('prepend');
+
 // get the bug ID to view
 $id = Solar::get('id');
 
@@ -81,6 +84,5 @@ $ok_role = $user->role->inAny(
 $tpl->can_edit = $ok_user || $ok_role;
 
 // display
-$tpl->setTemplate('item.php');
-echo $tpl;
+return $tpl->fetch('item.php');
 ?>

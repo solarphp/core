@@ -365,7 +365,7 @@ class Solar {
 				'Solar', // class
 				'no_autoload_class', // code
 				'no class named for autoload', // text
-				null, // no info
+				array('class' => null), // info
 				E_USER_ERROR // level
 			);
 		}
@@ -390,12 +390,12 @@ class Solar {
 		include_once $file;
 		
 		// if the class was not in the file, we have a problem.
-		if (class_exists($class)) {
+		if (! class_exists($class)) {
 			return Solar::error(
 				'Solar', // class
 				'class_not_found', // code
 				'class not found in autoload file', // text
-				null, // no info
+				array('class' => $class, 'file' => $file), // info
 				E_USER_ERROR // level
 			);
 		}
@@ -489,7 +489,9 @@ class Solar {
 				Solar::$shared->$name = Solar::error(
 					'Solar',
 					'shared_object_name_wrong',
-					"shared object name $name not in config file under ['Solar']['shared']"
+					"shared object name $name not in config file under ['Solar']['shared']", 
+					array(),
+					E_USER_ERROR
 				);
 				
 			}

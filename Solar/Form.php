@@ -44,6 +44,11 @@ class Solar_Form extends Solar_Base {
 	* 
 	* User-provided configuration.
 	* 
+	* Each key corresponds directly with a valid <form> tag
+	* attribute; you can add or remove as you wish.  Note that
+	* although 'action' defaults to null, it will be replaced
+	* in the constructor with $_SERVER['REQUEST_URI'].
+	* 
 	* @access public
 	* 
 	* @var array
@@ -59,23 +64,6 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Constructor.
-	* 
-	* @access public
-	* 
-	* @var array
-	* 
-	*/
-	
-	public function __construct($config = null)
-	{
-		$this->config['action'] = $_SERVER['REQUEST_URI'];
-		parent::__construct($config);
-	}
-	
-	
-	/**
-	* 
 	* The array of elements in this form.
 	* 
 	* @access public
@@ -85,6 +73,21 @@ class Solar_Form extends Solar_Base {
 	*/
 	
 	public $elements = array();
+	
+	
+	/**
+	* 
+	* An overall message about the state of the form.
+	* 
+	* E.g., "Saved successfully." or "Please correct the noted errors."
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $message = array();
 	
 	
 	/**
@@ -141,6 +144,23 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
+	* Constructor.
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
+	public function __construct($config = null)
+	{
+		$this->config['action'] = $_SERVER['REQUEST_URI'];
+		parent::__construct($config);
+	}
+	
+	
+	/**
+	* 
 	* Sets one element in the form.  Appends if element does not exist.
 	* 
 	* @access public
@@ -159,21 +179,7 @@ class Solar_Form extends Solar_Base {
 	public function setElement($name, $info, $array = null)
 	{
 		// prepare the name as an array key?
-		if ($array) {
-			$pos = strpos($name, '[');
-			if ($pos === false) {
-				// name is not itself an array.
-				// e.g., 'field' becomes 'array[field]
-				$name = $array . "[$name]";
-			} else {
-				// the name already has array keys, e.g.
-				// 'field[0]'. make the name just another key
-				// in the array, e.g. 'array[field][0]'.
-				$name = $array . '[' .
-					substr($name, 0, $pos) . ']' .
-					substr($name, $pos);
-			}
-		}
+		$name = $this->prepName($name, $array);
 		
 		// prepare the element info
 		$info = array_merge($this->default, $info);
@@ -201,6 +207,39 @@ class Solar_Form extends Solar_Base {
 					array($this, 'addValidate'),
 					$args
 				);
+			}
+		}
+	}
+	
+	// prepares a name as an array key, if needed
+	protected function prepName($name, $array = null, $quote = false)
+	{
+		if ($array) {
+			$pos = strpos($name, '[');
+			if ($pos === false) {
+				// name is not itself an array.
+				// e.g., 'field' becomes 'array[field]'
+				$name = $array . "[$name]";
+			} else {
+				// the name already has array keys, e.g.
+				// 'field[0]'. make the name just another key
+				// in the array, e.g. 'array[field][0]'.
+				$name = $array . '[' .
+					substr($name, 0, $pos) . ']' .
+					substr($name, $pos);
+			}
+		}
+		return $name;
+	}
+	
+	// adds multiple feedback messages
+	public function addFeedback($list, $array = null)
+	{
+		foreach ($list as $name => $feedback) {
+			$name = $this->prepName($name, $array);
+			settype($feedback, 'array');
+			foreach ($feedback as $text) {
+				$this->elements[$name]['feedback'][] = $text;
 			}
 		}
 	}

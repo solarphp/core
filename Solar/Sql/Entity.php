@@ -1085,7 +1085,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 					$stmt .= "\nJOIN $rel[2] ON {$this->schema['tbl']}.$rel[1] = $rel[2].$rel[3]";
 				}
 		    } else {
-		        $stmt .= "\n{$part['join']}";
+		        $stmt .= "\nJOIN {$part['join']}";
 		    }
 		}
 		

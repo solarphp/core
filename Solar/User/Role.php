@@ -2,7 +2,7 @@
 
 /**
 * 
-* Class for reading user roles (groups) from multiple sources.
+* Class for reading user roles and groups.
 * 
 * @category Solar
 * 
@@ -18,7 +18,7 @@
 
 /**
 * 
-* Class for reading user roles (groups) from multiple sources.
+* Class for reading user roles and groups.
 * 
 * @category Solar
 * 
@@ -37,7 +37,7 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	* refresh => (bool) Whether or not to refresh the groups on every load.
 	* 
-	* drivers => (array) The array of driver classes and optional configs.
+	* class => (string|array) The 
 	* 
 	* @access protected
 	* 
@@ -46,7 +46,7 @@ class Solar_User_Role extends Solar_Base {
 	*/
 	
 	public $config = array(
-		'class' => 'Solar_User_Role_None',
+		'class'   => 'Solar_User_Role_None',
 		'options' => null,
 		'refresh' => false,
 	);
@@ -108,6 +108,12 @@ class Solar_User_Role extends Solar_Base {
 		// basic config option settings
 		parent::__construct($config);
 		
+		// instantiate a driver object
+		$this->driver = Solar::object(
+			$this->config['class'],
+			$this->config['options']
+		);
+		
 		// make sure we have a session value and reference to it.
 		if (! isset($this->list)) {
 			$_SESSION['Solar_User_Role'] = array();
@@ -136,7 +142,7 @@ class Solar_User_Role extends Solar_Base {
 		}
 		
 		// reset the roles list
-		$this->list = array();
+		$this->reset();
 		
 		// fetch the role list
 		$result = $this->driver->fetch($username);

@@ -86,7 +86,7 @@ abstract class Solar_Base {
 	
 	public function apiVersion()
 	{
-		return '0.0.1dev1';
+		return '@package_version@';
 	}
 	
 	

@@ -48,7 +48,7 @@ $id = (int) Solar::get('id', 0);
 
 // get the bookmark entry
 if ($id) {
-	$item = $bookmarks->item($id);
+	$item = $bookmarks->fetchItem($id);
 } else {
 	$item = $bookmarks->defaultRow();
 	$item['uri'] = Solar::get('uri');
@@ -90,6 +90,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	} else {
 	
 		$values = $form->values();
+		$values['bookmarks']['user_id'] = Solar::$shared->user->auth->username;
 		
 		// new bookmark, or modify old bookmark?
 		if ($values['bookmarks']['id']) {

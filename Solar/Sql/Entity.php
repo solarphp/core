@@ -1311,15 +1311,47 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	}
 	
 	
-	function date()
+	/**
+	* 
+	* Returns the current ISO-standard date (e.g., '1979-11-07').
+	* 
+	* @access public
+	* 
+	* @return string The current ISO-standard date (e.g., '1979-11-07').
+	* 
+	*/
+	
+	public function date()
 	{
 		return date('Y-m-d');
 	}
 	
-	function time()
+	
+	/**
+	* 
+	* Returns the current ISO-standard time (e.g., '12:34:56').
+	* 
+	* @access public
+	* 
+	* @return string The current ISO-standard date (e.g., '12:34:56').
+	* 
+	*/
+	
+	public function time()
 	{
 		return date('H:i:s');
 	}
+	
+	
+	/**
+	* 
+	* Returns the current ISO-standard timestamp (e.g., '1979-11-07T12:34:56').
+	* 
+	* @access public
+	* 
+	* @return string The current ISO-standard date (e.g., '12:34:56').
+	* 
+	*/
 	
 	function timestamp()
 	{

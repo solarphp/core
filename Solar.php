@@ -161,8 +161,8 @@ class Solar {
 		);
 		
 		foreach ($baseline as $name => $class) {
-			if (! isset(Solar::$config['shared'][$name])) {
-				Solar::$config['shared'][$name] = $class;
+			if (! isset(Solar::$config['Solar']['shared'][$name])) {
+				Solar::$config['Solar']['shared'][$name] = $class;
 			}
 		}
 		

@@ -405,6 +405,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 				'label' => $this->locale('LABEL_BODY'),
 				'attribs'  => array('rows' => '16', 'cols' => '64'),
 				'require'  => true,
+				'validate' => $schema['col']['body']['validate'],
 			),
 		);
 		

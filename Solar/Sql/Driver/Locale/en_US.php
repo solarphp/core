@@ -1,4 +1,23 @@
 <?php
+
+/**
+* 
+* Locale file.  Returns the strings for a specific language.
+* 
+* @category Solar
+* 
+* @package Solar_Sql
+* 
+* @subpackage Solar_Sql
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
 return array(
 	// general
 	'ERR_CONNECT'    => 'Could not connect to server',

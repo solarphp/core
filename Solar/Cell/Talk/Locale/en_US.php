@@ -1,4 +1,23 @@
 <?php
+
+/**
+* 
+* Locale file.  Returns the strings for a specific language.
+* 
+* @category Solar
+* 
+* @package Solar_Cell
+* 
+* @subpackage Solar_Cell_Talk
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
 return array(
 	'VALID_STATUS'    => 'Please use a valid status.',
 	'VALID_EMAIL'     => 'Please use a valid email address.',

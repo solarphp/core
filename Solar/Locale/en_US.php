@@ -1,5 +1,21 @@
 <?php
-// generic locale strings
+
+/**
+* 
+* Locale file.  Returns the strings for a specific language.
+* 
+* @category Solar
+* 
+* @package Solar
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
 return array(
 
 	// operation actions

@@ -44,12 +44,12 @@ $id = (int) Solar::get('id', 0);
 // is user ok by username?
 $ok_user = in_array(
 	$user->auth->username,
-	Solar::config('Solar_App_Bugs', 'admin_user')
+	Solar::config('Solar_App_Bugs', 'admin_user', array())
 );
 
 // is user ok by role?
 $ok_role = $user->role->inAny(
-	Solar::config('Solar_App_Bugs', 'admin_role')
+	Solar::config('Solar_App_Bugs', 'admin_role', array())
 );
 
 // return if not OK (anyone is allowed to edit $id = 0, that's a new report)

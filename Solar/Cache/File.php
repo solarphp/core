@@ -28,6 +28,10 @@
 * 
 * @subpackage Solar_Cache
 * 
+* @todo Add 'checksum' to check for cache corruptions and use CRC32?
+* 
+* @todo Force use of '.serial' (i.e., not a config option)?
+* 
 */
 
 class Solar_Cache_File extends Solar_Base {

@@ -77,17 +77,20 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* An overall message about the state of the form.
+	* Overall feedback about the state of the form.
 	* 
 	* E.g., "Saved successfully." or "Please correct the noted errors."
 	* 
+	* If you like, you can set this to an array and add multiple
+	* feeback messages.
+	* 
 	* @access public
 	* 
-	* @var string
+	* @var string|array
 	* 
 	*/
 	
-	public $message = array();
+	public $feedback = null;
 	
 	
 	/**
@@ -147,8 +150,6 @@ class Solar_Form extends Solar_Base {
 	* Constructor.
 	* 
 	* @access public
-	* 
-	* @var array
 	* 
 	*/
 	
@@ -211,28 +212,13 @@ class Solar_Form extends Solar_Base {
 		}
 	}
 	
-	// prepares a name as an array key, if needed
-	protected function prepName($name, $array = null, $quote = false)
-	{
-		if ($array) {
-			$pos = strpos($name, '[');
-			if ($pos === false) {
-				// name is not itself an array.
-				// e.g., 'field' becomes 'array[field]'
-				$name = $array . "[$name]";
-			} else {
-				// the name already has array keys, e.g.
-				// 'field[0]'. make the name just another key
-				// in the array, e.g. 'array[field][0]'.
-				$name = $array . '[' .
-					substr($name, 0, $pos) . ']' .
-					substr($name, $pos);
-			}
-		}
-		return $name;
-	}
 	
-	// adds multiple feedback messages
+	/**
+	* 
+	* Adds multiple feedback messages to elements.
+	* 
+	*/
+	
 	public function addFeedback($list, $array = null)
 	{
 		foreach ($list as $name => $feedback) {
@@ -404,6 +390,41 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
+	* Prepares a name as an array key, if needed.
+	* 
+	* @access protected
+	* 
+	* @param $name The element name.
+	* 
+	* @param $array The array name, if any, into which the place the element.
+	* 
+	* @return string The prepared element name.
+	* 
+	*/
+	
+	protected function prepName($name, $array = null)
+	{
+		if ($array) {
+			$pos = strpos($name, '[');
+			if ($pos === false) {
+				// name is not itself an array.
+				// e.g., 'field' becomes 'array[field]'
+				$name = $array . "[$name]";
+			} else {
+				// the name already has array keys, e.g.
+				// 'field[0]'. make the name just another key
+				// in the array, e.g. 'array[field][0]'.
+				$name = $array . '[' .
+					substr($name, 0, $pos) . ']' .
+					substr($name, $pos);
+			}
+		}
+		return $name;
+	}
+	
+	
+	/**
+	* 
 	* Adds a Solar_Valid method callback as a validation for an element.
 	* 
 	* @access protected
@@ -451,7 +472,7 @@ class Solar_Form extends Solar_Base {
 		if (is_null($this->submit)) {
 			// $this->config['method'] should be 'get' or 'post'
 			$callback = array('Solar', $this->config['method']);
-			// get all submitted values
+			// get all submitted values via Solar::get or Solar::post
 			$this->submit = call_user_func($callback);
 		}
 		

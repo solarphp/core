@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Ini.php 8 2005-02-14 22:44:41Z pmjones $
+* @version $Id$
 * 
 */
 

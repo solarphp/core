@@ -39,12 +39,27 @@ abstract class Solar_App extends Solar_Base {
 	*/
 	
 	public $config = array(
+		'locale'      => null,
+		'get_var'     => 'action',
+	);
+	
+	
+	/**
+	* 
+	* Where the component type directories are located.
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
+	protected $dir = array(
+		'base'        => null,
 		'models'      => null,
 		'views'       => null,
 		'controllers' => null,
-		'helpers'     => null,
-		'locale'      => null,
-		'get_var'     => 'action',
+		'helpers'     => null
 	);
 	
 	
@@ -89,28 +104,43 @@ abstract class Solar_App extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		// get the application class name, minus the 'Solar_App_'
-		// prefix.
-		$app = substr(get_class($this), 10);
+		// define the base directory for this application class
+		// (if not already specified)
+		if (is_null($this->dir['base'])) {
+			// get the application class name, minus the 'Solar_App_'
+			// prefix.
+			$app = substr(get_class($this), 10);
+			
+			// get the default app directory
+			$this->dir['base'] = dirname(__FILE__) . "/App/$app";
+		}
 		
-		// get the baseline app directory
-		$dir = dirname(__FILE__) . "/App/$app";
+		// the component type directories and maps
+		$types = array('models', 'views', 'controllers', 'helpers');
 		
 		// set up the default directory path properties
-		$this->config['models'] = Solar::fixdir("$dir/models/");
-		$this->config['views'] = Solar::fixdir("$dir/views/");
-		$this->config['controllers'] = Solar::fixdir("$dir/controllers/");
-		$this->config['helpers'] = Solar::fixdir("$dir/helpers/");
-		$this->config['locale'] = Solar::fixdir("$dir/helpers/locale/");
+		// (if they are not already specified)
+		$base = $this->dir['base'];
+		foreach ($types as $type) {
+			if (is_null($this->dir[$type])) {
+				$this->dir[$type] = Solar::fixdir("$base/$type/");
+			}
+		}
+		
+		// set up the default locale path
+		if (is_null($this->config['locale'])) {
+			$this->config['locale'] = Solar::fixdir(
+				$this->dir['helpers'] . 'locale/'
+			);
+		}
 		
 		// now do the "real" construction
 		parent::__construct($config);
 		
 		// build the map of models, controllers, views, and helpers
-		$this->automap('models');
-		$this->automap('views');
-		$this->automap('controllers');
-		$this->automap('helpers');
+		foreach ($types as $type) {
+			$this->automap($type);
+		}
 		
 		// load the locale strings
 		$this->locale('');
@@ -119,7 +149,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	/**
 	* 
-	* Builds $this-map for a given type (model, view, etc).
+	* Builds $this->map for a given type (model, view, etc).
 	* 
 	* @access protected
 	* 
@@ -131,7 +161,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function automap($type)
 	{
-		$files = scandir($this->config[$type]);
+		$files = scandir($this->dir[$type]);
 		foreach ($files as $file) {
 			// look for *.php files (no dotfiles)
 			if (substr($file, 0, 1) != '.' && substr($file, -4) == '.php') {
@@ -209,7 +239,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function model($name)
 	{
-		return $this->config['models'] . "$name.php";
+		return $this->dir['models'] . "$name.php";
 	}
 	
 	
@@ -227,7 +257,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function view($name)
 	{
-		return $this->config['views'] . "$name.php";
+		return $this->dir['views'] . "$name.php";
 	}
 	
 	
@@ -245,7 +275,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function controller($name)
 	{
-		return $this->config['controllers'] . "$name.php";
+		return $this->dir['controllers'] . "$name.php";
 	}
 	
 	
@@ -263,7 +293,7 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function helper($name)
 	{
-		return $this->config['helpers'] . "$name.php";
+		return $this->dir['helpers'] . "$name.php";
 	}
 }
 

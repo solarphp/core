@@ -373,18 +373,21 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'label'   => $this->locale('LABEL_SUMM'),
 				'attribs' => array('size' => '60'),
 				'require' => true,
+				'validate' => $schema['col']['summ']['validate'],
 			),
 			'type' => array(
 				'type'    => 'select',
 				'label'   => $this->locale('LABEL_TYPE'),
 				'options' => $type_opts,
 				'require' => true,
+				'validate' => $schema['col']['type']['validate'],
 			),
 			'queue' => array(
 				'type'    => 'select',
 				'label'   => $this->locale('LABEL_QUEUE'),
 				'options' => $queue_opts,
 				'require' => true,
+				'validate' => $schema['col']['queue']['validate'],
 			),
 		);
 		
@@ -413,13 +416,12 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'type'    => 'select',
 				'label'   => $this->locale('LABEL_TYPE'),
 				'options' => $type_opts,
-				'disable' => true,
 			),
 			'queue' => array(
 				'type'    => 'select',
 				'label'   => $this->locale('LABEL_QUEUE'),
 				'options' => $queue_opts,
-				'disable' => true,
+				'validate' => $schema['col']['queue']['validate'],
 			),
 			'user_id' => array(
 				'type'    => 'text',
@@ -430,6 +432,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'label'   => $this->locale('LABEL_STATUS'),
 				'options' => $status_opts,
 				'require' => true,
+				'validate' => $schema['col']['status']['validate'],
 			),
 		);
 		

@@ -26,32 +26,61 @@
 		</maintainer>
 	</maintainers>
 	<release>
-		<version>0.0.4</version>
-		<date>2005-03-06</date>
+		<version>0.0.5</version>
+		<date>2005-03-26</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
 			* This is a public development release, and is not yet stable.
-			* Added Solar_Form class (Solar/Form.php) for form element collation and input validation (not for output or rendering)
-			* Added Solar_Locale class (Solar/Locale.php)
-			* Solar.php:
-			 * Modified locale() method signature
-			 * Added public static $locale object
-			 * Removed Solar::setLocale()
-			 * Properties $config and $shared are now public
-			* Solar_Base: modified to use new locale structure
-			* Solar_Sql:
-			 * dropped support for Oracle (30-char limit on names is just too strict)
-			 * max table name is now 30 chars, max col/idx name is now 27 chars
-			 * double underscores not allowed in table, index, or column names (to prevent name collisions)
-			 * indexes now suffixed with '__idx', sequences with '__seq'
-			 * in index names, the table/index separator is now '__'
-			 * Converted fetch(), fetchNum(), and free() methods to static (now there's no need to pass a reference to the driver into the result class)
-			* Solar_Sql_Result: modified to make static calls to Solar_Sql for free(), fetch(), and fetchNum()
-			* Various modifications to the Solar_Cell classes for Bugs and Talk to go with Solar_Sql changes
-			* Various schema changes to the Solar_Cell classes for Bugs and Talk
+			* Added Solar_Super class for retrieving superglobals, modified Solar.php to use it
+			* Added Solar::cookie() method for retrieving cookie values.
+			* Added Solar::session() method for retrieving session data.
+			* Started new Solar_App standard directory structure, using an MVC architecture inspired by Ruby-on-Rails.
+			* Added Solar_App_Bugs proof-of-concept application
 		</notes>
 		<file role="php" name="Solar.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/controller.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/controller/edit.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/controller/item.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/controller/list.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/helper/locale/en_US.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/index.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/auth.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/comments.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/edit.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/error.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/footer.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/header.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/item.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bugs/view/list.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Base.php" >
@@ -127,6 +156,9 @@
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Sql/Result.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Super.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User.php" >

@@ -70,8 +70,8 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 		$values = $form->values();
 		
 		// add required elements
-		$values['talk']['forum'] = 'sc_bugs';
-		$values['talk']['queue'] = $id;
+		$values['talk']['tbl'] = 'sc_bugs';
+		$values['talk']['tbl_id'] = $id;
 		$values['talk']['subj'] = $data['summ'];
 		
 		// attempt the insert

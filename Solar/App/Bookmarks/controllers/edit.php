@@ -8,13 +8,13 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id$
+* @version $Id: edit.php 124 2005-04-01 19:00:28Z pmjones $
 * 
 */
 
@@ -26,7 +26,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 */
 
@@ -38,23 +38,28 @@ include $this->helper('prepend');
 // preliminaries: permission checks
 // 
 
-// get the bug report ID (0 means a new report)
+// must be logged in to proceed
+if ($user->auth->status_code != 'VALID') {
+	return 'Not logged in.';
+}
+
+// get the bookmark ID (0 means a new report)
 $id = (int) Solar::get('id', 0);
 
-// is user ok by username?
-$ok_user = in_array(
-	$user->auth->username,
-	Solar::config('Solar_App_Bugs', 'admin_user', array())
-);
+// get the bookmark entry
+if ($id) {
+	$item = $bookmarks->item($id);
+} else {
+	$item = $bookmarks->defaultRow();
+	$item['uri'] = Solar::get('uri');
+	$item['title'] = Solar::get('title');
+	$item['user_id'] = $user->auth->username;
+	$item['tags'] = '';
+}
 
-// is user ok by role?
-$ok_role = $user->role->inAny(
-	Solar::config('Solar_App_Bugs', 'admin_role', array())
-);
-
-// return if not OK (anyone is allowed to edit $id = 0, that's a new report)
-if (! $ok_user && ! $ok_role && $id != 0) {
-	return Solar::locale('Solar_App_Bugs', 'ERR_NOT_ADMIN');
+// must be the item owner to edit it
+if ($user->auth->username != $item['user_id']) {
+	return 'You do not own this bookmark, or it does not exist.';
 }
 
 
@@ -63,47 +68,16 @@ if (! $ok_user && ! $ok_role && $id != 0) {
 // main section
 // 
 
-// the form type to use
-$formtype = '';
-
-if ($id) {
-	
-	// it's an edit form
-	$formtype = 'edit';
-	
-	// get from existing report.
-	$form->setElements(
-		$bugs->formElements('edit', $bugs->fetchItem($id)),
-		'bugs'
-	);
-	
-} else {
-	
-	// it's a new-entry form
-	$formtype = 'new';
-	
-	// new bug report.
-	$data = $bugs->defaultRow();
-
-	// allow fields to pre-fill from GET vars.
-	foreach ($data as $key => $val) {
-		$tmp = Solar::get($key);
-		if ($tmp) {
-			$data[$key] = $tmp;
-		}
-	}
-	
-	// add elements from the default row to the form
-	$form->setElements(
-		$bugs->formElements('new', $data),
-		'bugs'
-	);
-}
-
-// add elements from $talk in an array called 'talk'
+// build the basic form
 $form->setElements(
-	$talk->formElements('mini', $talk->defaultRow()),
-	'talk'
+	$bookmarks->formElements('edit', $item),
+	'bookmarks'
+);
+
+// add elements from $tags in an array called 'tags'
+$form->setElements(
+	$tags->formElements('mini', $item),
+	'tags'
 );
 
 // bring in the submitted values to the form
@@ -124,20 +98,20 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 		$values = $form->values();
 		
 		// new report, or modify old report?
-		if ($values['bugs']['id']) {
+		if ($values['bookmarks']['id']) {
 		
 			// modify old report
-			$result = $bugs->updateItem(
-				$values['bugs'], // the data
-				$values['bugs']['id'] // the ID number
+			$result = $bookmarks->updateItem(
+				$values['bookmarks'], // the data
+				$values['bookmarks']['id'] // the ID number
 			);
-			$id = $values['bugs']['id'];
+			
+			$id = $values['bookmarks']['id'];
 			
 		} else {
 		
 			// add new report. force the status to 'new'
-			$values['bugs']['status'] = 'new';
-			$result = $bugs->insert($values['bugs']);
+			$result = $bookmarks->insert($values['bookmarks']);
 			$id = $result;
 		}
 		
@@ -156,15 +130,15 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			
 			// now add the comment, if there was one.
 			// $id was set when up updated the report above.
-			if (trim($values['talk']['body']) != '') {
+			if (trim($values['tags']['body']) != '') {
 				$data = array(
-					'tbl'    => 'sc_bugs',
+					'tbl'    => 'sc_bookmarks',
 					'tbl_id' => $id,
-					'email'  => $values['talk']['email'],
-					'subj'   => $values['bugs']['summ'],
-					'body'   => $values['talk']['body']
+					'email'  => $values['tags']['email'],
+					'subj'   => $values['bookmarks']['summ'],
+					'body'   => $values['tags']['body']
 				);
-				$talk->insert($data);
+				$tags->insert($data);
 			}
 			
 			// redirect to 'view item'
@@ -186,8 +160,8 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 }
 
 // get comments about the bug
-$id = $form->elements['bugs[id]']['value'];
-$tpl->comments = $talk->fetchQueue('sc_bugs', $id);
+$id = $form->elements['bookmarks[id]']['value'];
+$tpl->comments = $tags->fetchQueue('sc_bookmarks', $id);
 
 // assign the form object
 $tpl->formdata = $form;

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Ldap.php,v 1.6 2005/02/08 01:42:27 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -96,7 +96,7 @@ class Solar_User_Role_Ldap extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $user The username.
+	* @param string $user Username to get roles for.
 	* 
 	* @return array An array of roles discovered in LDAP.
 	* 

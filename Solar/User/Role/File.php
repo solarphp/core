@@ -14,7 +14,10 @@
 * 
 * @license LGPL
 * 
-* @version $Id: File.php,v 1.5 2005/02/08 01:42:27 pmjones Exp $
+* @version $Id$
+* 
+* @todo Convert to look through Unix-style group files, not the 
+* custom version noted in the comments.
 * 
 */
 
@@ -60,7 +63,7 @@ class Solar_User_Role_File extends Solar_Base {
 	* 
 	* Fetch the roles.
 	*
-	* @param string $user Username to authenticate.
+	* @param string $user Username to get roles for.
 	* 
 	* @return mixed An array of discovered roles, or a Solar_Error object
 	* if there was a file error.

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Sql.php,v 1.5 2005/02/08 03:02:58 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -33,72 +33,54 @@
 class Solar_User_Role_Sql extends Solar_Base {
 	
 	/**
-	* @todo CONVERT TO $CONFIG ARRAY!!!
-	*/
-	
-	/**
 	* 
-	* How to get the SQL object.
+	* User-supplied configuration values.
 	* 
-	* If a string, is treated as a Solar::shared() object name.
+	* Keys are:
 	* 
-	* Otherwise, is treated as the config for a new Solar_Sql object.
+	* 'sql' => (string|array) A string Solar::shared() object name, or a 
+	* Solar::object() config array.
 	* 
-	* @var mixed
+	* 'table' => (string) The table where roles are stored.
 	* 
-	*/
-	
-	protected $sql = null;
-	
-	
-	/**
+	* 'username_col' => (string) The column of usernames.
 	* 
-	* Name of the table holding role data.
+	* 'rolename_col' => (string) The column of roles.
 	* 
-	* @var string
+	* @access public
+	* 
+	* @var array
 	* 
 	*/
 	
-	protected $table = 'sc_user_role';
-	
-	
-	/**
-	* 
-	* Name of the column with the username.
-	* 
-	* @var string
-	* 
-	*/
-	
-	protected $usernameCol = 'user_id';
-	
-	
-	/**
-	* 
-	* Name of the column with the role value.
-	* 
-	* @var string
-	* 
-	*/
-	
-	protected $rolenameCol = 'role';
-	
+	public $config = array(
+		'sql' => null,
+		'table' => 'sc_user_role',
+		'username_col' => 'user_id',
+		'rolename_col' => 'role',
+	);
 	
 	/**
 	* 
 	* Get the roles for a user.
 	* 
+	* @access public
+	* 
+	* @param string $user Username to get roles for.
+	* 
+	* @return array An array of roles discovered in LDAP.
+	* 
 	*/
 	
 	public function fetch($username)
 	{
-		// get the SQL object
-		if (is_string($this->sql)) {
+		// get or create the SQL object
+		if (is_string($this->config['sql'])) {
 			// use a shared object.
-			$obj = Solar::shared($this->sql);
+			$obj = Solar::shared($this->config['sql']);
 		} else {
 			// instantiate a new object.
-			$obj = Solar::object('Solar_Sql', $this->sql);
+			$obj = Solar::object('Solar_Sql', $this->config['sql']);
 		}
 		
 		// if there were errors, return.
@@ -107,9 +89,10 @@ class Solar_User_Role_Sql extends Solar_Base {
 		}
 		
 		// build the SQL statement
-		$stmt =  "SELECT $this->rolenameCol";
-		$stmt .= " FROM $this->table";
-		$stmt .= " WHERE $this->usernameCol = :username";
+		$stmt =  "SELECT " . $this->config['rolename_col'];
+		$stmt .= " FROM " . $this->config['table'];
+		$stmt .= " WHERE " .  . $this->config['username_col'];
+		$stmt .= " = :username";
 		
 		// build the placeholder data
 		$data = array(

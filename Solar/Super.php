@@ -2,11 +2,11 @@
 
 /**
 * 
-* Methods for fetching and scrubbing superglobal data.
+* Methods for fetching scrubbed superglobal data.
 * 
 * @category Solar
 * 
-* @package Solar_Scrub
+* @package Solar
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -18,11 +18,11 @@
 
 /**
 * 
-* Methods for retrieving and scrubbing superglobal data.
+* Methods for fetching scrubbed superglobal data.
 * 
 * @category Solar
 * 
-* @package Solar_Valid
+* @package Solar
 * 
 */
 
@@ -31,9 +31,9 @@ class Solar_Super {
 	
 	/**
 	* 
-	* Default scrubber callbacks for various superglobal elements.
+	* User-defined configuration values.
 	* 
-	* @todo Allow a config group to specify the scrubbers?
+	* These are the default scrubber callbacks for various superglobal types.
 	* 
 	* @access public
 	* 
@@ -48,31 +48,58 @@ class Solar_Super {
 		
 		// $_GET keys
 		'get' => array(
-			array('Solar_Super', 'unquote'),
+			array('Solar_Super', 'magicStripslashes'),
 			'strip_tags',
 		),
 		
 		// $_POST keys
 		'post' => array(
-			array('Solar_Super', 'unquote'),
+			array('Solar_Super', 'magicStripslashes'),
 		),
 		
 		// $_COOKIE keys
 		'cookie' => array(
-			array('Solar_Super', 'unquote'),
+			array('Solar_Super', 'magicStripslashes'),
 		),
 		
 		// $_SERVER keys
 		'server' => array(
-			array('Solar_Super', 'unquote'),
+			array('Solar_Super', 'magicStripslashes'),
 			'strip_tags',
 		),
 		
+		// $_SESSION keys
+		'session' => array(),
+		
 		// $_FILES keys
 		'files' => array(
-			array('Solar_Super', 'unquote'),
+			array('Solar_Super', 'magicStripslashes'),
 		),
 	);
+	
+	
+	/**
+	* 
+	* Fetches a superglobal value by key, or a default value.
+	* 
+	* Automatically and recursively applies the scrubber callbacks to
+	* the value.
+	* 
+	* @access public
+	* 
+	* @param $type string The superglobal variable name to fetch from;
+	* e.g., 'server' for $_SERVER or 'get' for $_GET.
+	* 
+	* @param $key string The superglobal array key to retrieve; if null,
+	* will return the entire superglobal array for that type.
+	* 
+	* @param $default mixed If the requested superglobal array key does
+	* not exist, return this value instead.
+	* 
+	* @return mixed The value of the superglobal type array key, or the
+	* default value if the key did not exist.
+	* 
+	*/
 	
 	public function fetch($type, $key = null, $default = null)
 	{
@@ -101,7 +128,22 @@ class Solar_Super {
 		}
 	}
 	
-	public static function unquote($var)
+	
+	/**
+	* 
+	* Strips slashes from a value, but only if magic_quotes_gpc is turned on.
+	* 
+	* @access public
+	* 
+	* @param $value mixed Strips slashes from this value if
+	* magic_quotes_gpc is turned on; does nothing if magic_quotes_gpc is
+	* off.
+	* 
+	* @return mixed The value after stripslashes().
+	* 
+	*/
+	
+	public static function magicStripslashes($value)
 	{
 		// discover if magic quotes are turned on
 		static $quotes;
@@ -111,11 +153,11 @@ class Solar_Super {
 		
 		// if magic quotes are turned on, unquote the value.
 		if ($quotes) {
-			$var = stripslashes($var);
+			$value = stripslashes($value);
 		}
 		
 		// done!
-		return $var;
+		return $value;
 	}
 	
 }

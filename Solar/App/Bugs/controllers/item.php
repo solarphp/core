@@ -1,6 +1,6 @@
 <?php
 // prepend for all controllers
-$this->helper('prepend');
+include $this->helper('prepend');
 
 // get the bug ID to view
 $id = Solar::get('id');

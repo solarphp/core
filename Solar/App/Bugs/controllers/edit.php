@@ -1,7 +1,6 @@
 <?php
-
 // prepend for all controllers
-$this->helper('prepend');
+include $this->helper('prepend');
 
 // ---------------------------------------------------------------------
 // 

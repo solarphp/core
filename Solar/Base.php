@@ -68,6 +68,9 @@ abstract class Solar_Base {
 		
 		// ... and merge with the class defaults.
 		$this->config = array_merge($this->config, $config);
+		
+		// forcibly load the locale strings
+		$this->locale('');
 	}
 	
 	

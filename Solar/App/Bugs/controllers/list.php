@@ -1,6 +1,8 @@
 <?php
 // prepend for all controllers
-$this->helper('prepend');
+include $this->helper('prepend');
+
+$action = Solar::get('action');
 
 // operations
 switch (strtolower($action)) {

@@ -21,17 +21,13 @@
 return array(
 	
 	// validation messages
-	'VALID_SUMM'   => 'Please enter a short summary of the report.',
-	'VALID_EMAIL'  => 'Please use a valid email address.',
-	'VALID_TYPE'   => 'Please select a valid bug type.',
-	'VALID_PACK'   => 'Please select a valid package for the bug.',
-	'VALID_STATUS' => 'Please select a valid progress status.',
-	'VALID_DESCR'  => 'Please enter a full description.',
-	'VALID_OS'     => 'Please enter an operating system.',
-	'VALID_VER'    => 'Please type in the PHP version.',
+	'VALID_SUMM'      => 'Please enter a short summary of the report.',
+	'VALID_TYPE'      => 'Please select a valid bug type.',
+	'VALID_QUEUE'     => 'Please select a valid queue for the bug.',
+	'VALID_STATUS'    => 'Please select a valid progress status.',
 	
-	// process errors,
-	'ERR_ID'       => 'Requested ID does not exist.',
+	// processing errors
+	'ERR_ID'          => 'Requested ID does not exist.',
 	
 	// report types
 	'TYPE_BUG'        => 'Bug report',
@@ -40,28 +36,26 @@ return array(
 	'TYPE_FEATURE'    => 'Request for feature',
 	
 	// status codes
-	'STATUS_NEW'      => 'New',
-	'STATUS_ACCEPT'   => 'Accepted/verified',
-	'STATUS_FEEDBACK' => 'Feedback request',
-	'STATUS_FIXED'    => 'Fixed',
-	'STATUS_DUPE'     => 'Duplicate',
-	'STATUS_BOGUS'    => 'Bogus',
-	'STATUS_WONTFIX'  => 'Will not fix',
-	'STATUS_SUSPEND'  => 'Suspended',
-	'STATUS_REOPEN'   => 'Re-opened',
+	'STATUS_NEW'       => 'New',
+	'STATUS_CONFIRMED' => 'Confirmed',
+	'STATUS_ASSIGNED'  => 'Assigned',
+	'STATUS_FEEDBACK'  => 'Feedback requested',
+	'STATUS_RESOLVED'  => 'Resolved',
+	'STATUS_DUPLICATE' => 'Duplicate',
+	'STATUS_BOGUS'     => 'Bogus',
+	'STATUS_WONTFIX'   => 'Will not fix',
+	'STATUS_SUSPENDED' => 'Suspended',
+	'STATUS_REOPENED'  => 'Re-opened',
 	
 	// form labels
-	'LABEL_ID'        => 'Bug ID',
-	'LABEL_SUMM'      => 'Short summary',
+	'LABEL_ID'        => 'Report ID',
 	'LABEL_TS_NEW'    => 'First reported',
 	'LABEL_TS_MOD'    => 'Last modified',
+	'LABEL_SUMM'      => 'Short summary',
 	'LABEL_TYPE'      => 'Report type',
-	'LABEL_STATUS'    => 'Progress status',
-	'LABEL_PACK'      => 'Class/package',
-	'LABEL_OS'        => 'Operating system',
-	'LABEL_VER'       => 'PHP version',
+	'LABEL_QUEUE'     => 'Queue',
+	'LABEL_PRIORITY'  => 'Priority',
 	'LABEL_USER_ID'   => 'Assigned to',
-	'LABEL_EMAIL'     => 'Reporter\'s email',
-	'LABEL_DESCR'     => 'Description',
+	'LABEL_STATUS'    => 'Progress status',
 );
 ?>

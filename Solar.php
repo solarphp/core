@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Solar.php,v 1.24 2005/02/09 03:00:50 pmjones Exp $
+* @version $Id$
 * 
 */
 

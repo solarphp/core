@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <package version="1.0">
 	<name>Solar</name>
-	<summary>Simple object library and application repository.</summary>
+	<summary>Simple object library and application repository for PHP.</summary>
 	<description>
-		Solar is a class library and application component suite for rapid
-		application development in PHP5. Solar provides simple, easy-to-
-		comprehend classes and reusable components for the common aspects
-		of web applications.
+		Solar is a class library and application component suite for PHP5. Solar
+		provides simple, easy-to-comprehend classes and components for the
+		common aspects of web-based rapid application development.
 		
-		Solar is designed for developers who want to distribute their
+		Solar is designed for developers who intend to distribute their
 		applications to the whole world.  This means the database driver
 		functions work exactly the same way for each supported database.  It
 		also means that localization support is built in from the start.
@@ -29,7 +28,11 @@
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
-			* public development release
+			* This is a public development release; the API is unstable.
+			* Converted all 'Hive' references to 'Solar'
+			* Converted all 'conf' references to 'config'
+			* Changed Hive_User_Auth_File to Hive_User_Auth_Htpasswd.
+			* Added Hive_User_Auth_Ini container (to support Subversion style user files).
 		</notes>
 		<file role="php" name="Solar.php" />
 		<file role="php" name="Solar/Base.php" />
@@ -58,7 +61,7 @@
 		<file role="php" name="Solar/Sql/Result.php" />
 		<file role="php" name="Solar/User.php" />
 		<file role="php" name="Solar/User/Auth.php" />
-		<file role="php" name="Solar/User/Auth/Htaccess.php" />
+		<file role="php" name="Solar/User/Auth/Htpasswd.php" />
 		<file role="php" name="Solar/User/Auth/Ini.php" />
 		<file role="php" name="Solar/User/Auth/Ldap.php" />
 		<file role="php" name="Solar/User/Auth/Mail.php" />

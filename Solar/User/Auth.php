@@ -93,11 +93,11 @@ class Solar_User_Auth extends Solar_Base {
 		'expire'        => 0,
 		'idle'          => 0,
 		'allow'         => true,
-		'post_action'   => 'action',
+		'post_op'       => 'op',
 		'post_password' => 'password',
 		'post_username' => 'username',
-		'action_login'  => 'login',
-		'action_logout' => 'logout',
+		'op_login'      => 'login',
+		'op_logout'     => 'logout',
 	);
 	
 	
@@ -281,12 +281,12 @@ class Solar_User_Auth extends Solar_Base {
 		if ($this->allow) {
 		
 			// get the action and credentials
-			$action   = Solar::post($this->config['post_action']);
+			$action   = Solar::post($this->config['post_op']);
 			$username = Solar::post($this->config['post_username']);
 			$password = Solar::post($this->config['post_password']);
 			
 			// check for a login request.
-			if ($action == $this->config['action_login']) {
+			if ($action == $this->config['op_login']) {
 				
 				// check the storage driver to see if the username
 				// and password credentials are valid.
@@ -308,7 +308,7 @@ class Solar_User_Auth extends Solar_Base {
 			}
 			
 			// check for a logout request.
-			if ($action == $this->config['action_logout']) {
+			if ($action == $this->config['op_logout']) {
 				// reset the authentication data
 				$this->reset('LOGOUT');
 			}

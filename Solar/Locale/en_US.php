@@ -46,5 +46,10 @@ return array(
 	
 	// success messages
 	'OK_SAVED'      => 'Saved.',
+	
+	// generic text
+	'TEXT_LOGIN'         => 'Sign In',
+	'TEXT_LOGOUT'        => 'Sign Out',
+	'TEXT_AUTH_USERNAME' => 'Signed in as',
 );
 ?>

@@ -70,11 +70,24 @@ class Solar {
 	* 
 	* @access public
 	* 
-	* @var array
+	* @var object
 	* 
 	*/
 	
 	public static $locale = null;
+	
+	
+	/**
+	* 
+	* Static superglobal data retrieval object.
+	* 
+	* @access public
+	* 
+	* @var object
+	* 
+	*/
+	
+	public static $super = null;
 	
 	
 	/**
@@ -105,7 +118,7 @@ class Solar {
 	
 	/**
 	* 
-	* Start the Solar: get config, load shared objects, run start scripts.
+	* Start Solar: get config, load shared objects, run start scripts.
 	* 
 	* @access public
 	* 
@@ -141,7 +154,9 @@ class Solar {
 		// build the common locale object and load strings
 		// for the baseline Solar translations.
 		Solar::$locale = Solar::object('Solar_Locale');
-		//Solar::$locale->load('Solar', 'Solar/Locale');
+		
+		// build the common superglobal data retriever.
+		Solar::$super = Solar::object('Solar_Super');
 		
 		// load all autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
@@ -174,7 +189,7 @@ class Solar {
 	
 	/**
 	* 
-	* Stop the Solar: run stop scripts and shared object "stop" hooks.
+	* Stop Solar: run stop scripts and shared object "stop" hooks.
 	* 
 	* @access public
 	* 
@@ -220,7 +235,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function apiVersion() 
+	public static function apiVersion()
 	{
 		return '@package_version@';
 	}
@@ -264,7 +279,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function autoload($class) 
+	public static function autoload($class)
 	{
 		// pre-empt searching for the class
 		if (class_exists($class)) {
@@ -325,7 +340,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function run() 
+	public static function run()
 	{
 		return include(func_get_arg(0));
 	}
@@ -345,7 +360,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function object($class, $config = null) 
+	public static function object($class, $config = null)
 	{
 		$result = Solar::autoload($class);
 		if (Solar::isError($result)) {
@@ -371,7 +386,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function shared($name) 
+	public static function shared($name)
 	{
 		// has the shared object already been loaded?
 		if (! isset(Solar::$shared->$name)) {
@@ -450,7 +465,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function config($group, $elem = null) 
+	public static function config($group, $elem = null)
 	{
 		// was a default fallback value passed?  we do it this way
 		// instead of defining a parameter because we need to return
@@ -498,9 +513,6 @@ class Solar {
 	* 
 	* Safely get the value of an element from the $_GET array.
 	* 
-	* Automatically checks if the element is set; if not, returns a
-	* default value. Strips slashes and HTML tags automatically.
-	* 
 	* @todo Allow a config group to specify the scrubbers?
 	* 
 	* @access public
@@ -516,30 +528,9 @@ class Solar {
 	* 
 	*/
 	
-	public static function get($key = null, $default = null, $scrub = null) 
+	public static function get($key = null, $default = null)
 	{
-		// what scrubber callbacks should we use?
-		if (is_null($scrub)) {
-			// if no callbacks, at least strip tags
-			$scrub = Solar::config('Solar', 'scrub_get', array('strip_tags'));
-		}
-		
-		if (is_null($key) && isset($_GET)) {
-		
-			// no key selected, return the whole $_GET array
-			return Solar::scrub($_GET, $scrub);
-			
-		} elseif (isset($_GET[$key])) {
-		
-			// looking for a specific key
-			return Solar::scrub($_GET[$key], $scrub);
-			
-		} else {
-		
-			// specified key does not exist
-			return $default;
-			
-		}
+		return Solar::$super->fetch('get', $key, $default);
 	}
 	
 	
@@ -547,9 +538,6 @@ class Solar {
 	* 
 	* Safely get the value of an element from the $_POST array.
 	* 
-	* Automatically checks if the element is set; if not, returns a
-	* default value. Strips slashes (but not HTML tags) automatically.
-	* 
 	* @access public
 	* 
 	* @param string $key The array element; if null, returns the whole
@@ -563,44 +551,17 @@ class Solar {
 	* 
 	*/
 	
-	public static function post($key = null, $default = null, $scrub = null) 
+	public static function post($key = null, $default = null)
 	{
-		// what scrubber callbacks should we use?
-		if (is_null($scrub)) {
-			// if no callbacks, don't add any
-			$scrub = Solar::config('Solar', 'scrub_post', null);
-		}
-		
-		if (is_null($key) && isset($_POST)) {
-		
-			// no key selected, return the whole $_POST array
-			return Solar::scrub($_POST);
-			
-		} elseif (isset($_POST[$key])) {
-		
-			// looking for a specific key
-			return Solar::scrub($_POST[$key]);
-			
-		} else {
-		
-			// specified key does not exist
-			return $default;
-			
-		}
+		return Solar::$super->fetch('post', $key, $default);
 	}
 	
 	
 	/**
 	* 
-	* Get the value of any element from any superglobal array.
-	* 
-	* Automatically checks if the element is set; if not, returns a
-	* default value. Does not scrub at all.
+	* Safely get the value of an element from the $_COOKIE array.
 	* 
 	* @access public
-	* 
-	* @param string $type The superglobal type: 'server', 'cookie',
-	* 'env', and so on.
 	* 
 	* @param string $key The array element; if null, returns the whole
 	* array.
@@ -613,38 +574,9 @@ class Solar {
 	* 
 	*/
 	
-	public static function super($type, $key = null, $default = null,
-		$scrub = null) 
+	public static function cookie($key = null, $default = null)
 	{
-		// what scrubber callbacks should we use?
-		if (is_null($scrub)) {
-			// if none set, don't add any
-			$scrub = Solar::config('Solar', 'scrub_super', null);
-		}
-		
-		// convert 'name' to '_NAME'
-		$type = strtoupper($type);
-		if (substr($type, 0, 1) != '_') {
-			$type = '_' . $type;
-		}
-		
-		// get the whole superglobal, or just one key?
-		if (is_null($key) && isset($GLOBALS[$type])) {
-		
-			// no key selected, return the whole array
-			return Solar::scrub($GLOBALS[$type], scrub);
-			
-		} elseif (isset($GLOBALS[$type][$key])) {
-		
-			// looking for a specific key
-			return Solar::scrub($GLOBALS[$type][$key], $scrub);
-			
-		} else {
-		
-			// specified key does not exist
-			return $default;
-			
-		}
+		return Solar::$super->fetch('cookie', $key, $default);
 	}
 	
 	
@@ -657,7 +589,7 @@ class Solar {
 	* 
 	* @access public
 	* 
-	* @param string $key The array element; if null, returns the whole
+	* @param int $key The array element; if null, returns the whole
 	* array.
 	* 
 	* @param mixed $default If the requested array element is
@@ -668,17 +600,15 @@ class Solar {
 	* 
 	*/
 	
-	public static function pathinfo($key = null, $default = null, $scrub = null) 
+	public static function pathinfo($key = null, $default = null)
 	{
-		// what scrubber callbacks should we use?
-		if (is_null($scrub)) {
-			// if no callbacks, at least strip tags
-			$scrub = Solar::config('Solar', 'scrub_pathinfo', array('strip_tags'));
-		}
+		// get the pathinfo as passed
+		$info = Solar::$super('server', 'PATH_INFO', '');
 		
-		$info = Solar::super('_SERVER', 'PATH_INFO', '', $scrub);
+		// explode into its elements
 		$elem = explode('/', $info);
 		
+		// look for the requested element number
 		if (is_null($key)) {
 		
 			// no key selected, return the whole $elem array
@@ -702,9 +632,6 @@ class Solar {
 	* 
 	* Scrub a user-supplied value; if an array, do so recursively.
 	* 
-	* Always strips slashes if magic_quotes_gpc is turned on. Also
-	* applies an array of requested functions.
-	*
 	* @access public
 	* 
 	* @param string $var The variable to scrub.
@@ -717,40 +644,26 @@ class Solar {
 	* 
 	*/
 	
-	public static function scrub($var, $callbacks = null) 
+	public static function scrub($var, $callbacks = null)
 	{
-		// discover if magic quotes are turned on
-		static $magicQuotes;
-		if (! isset($magicQuotes)) {
-			$magicQuotes = get_magic_quotes_gpc();
+		// pre-empt scrubbing if there are no callbacks
+		if (! $callbacks) {
+			return $var;
 		}
 		
-		// if magic quotes enabled, or a function list is given,
-		// continue to process the variable.
-		if ($magicQuotes || $callbacks) {
+		// is the variable an array?
+		if (is_array($var)) {
 		
-			// is the array a variable?
-			if (is_array($var)) {
+			// is an array, so recursively scrub each element.
+			foreach ($var as $k => $v) {
+				$var[$k] = Solar::scrub($v, $callbacks);
+			}
 			
-				// is an array, so recursively scrub each element.
-				foreach ($var as $k => $v) {
-					$var[$k] = Solar::scrub($v, $callbacks);
-				}
-				
-			} else {
-			
-				// not an array, scrub the value.
-				// first, dispel magic quotes ...
-				if ($magicQuotes) {
-					$var = stripslashes($var);
-				}
-				
-				// ... then apply additional functions.
-				if ($callbacks) {
-					foreach ($callbacks as $call) {
-						$var = call_user_func($call, $var);
-					}
-				}
+		} else {
+		
+			// not an array, scrub the value.
+			foreach ($callbacks as $call) {
+				$var = call_user_func($call, $var);
 			}
 		}
 		
@@ -801,7 +714,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function isError($obj) 
+	public static function isError($obj)
 	{
 		// it has to at least be an object
 		if (! is_object($obj)) {
@@ -831,7 +744,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function dump(&$var, $label = null) 
+	public static function dump(&$var, $label = null)
 	{
 		echo '<pre>';
 		if ($label) {

@@ -298,7 +298,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		$schema['col']['status'] = array(
 			'type'    => 'varchar',
 			'size'    => 16,
-			'require' => true,
 			'validate'   => array(
 				array(
 					'inList',

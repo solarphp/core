@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Talk.php,v 1.3 2005/02/08 02:06:30 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -150,11 +150,11 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			'require' => true,
 		);
 			
-		// date-time of message
-		$schema['col']['dt'] = array(
+		// timestamp of message
+		$schema['col']['ts'] = array(
 			'type'    => 'timestamp',
 			'require' => true,
-			'default' => array(array('self','defaultCol'), 'dt'),
+			'default' => array(array('self','defaultCol'), 'ts'),
 		);
 		
 		// logged IP address of the poster
@@ -267,7 +267,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		
 		$schema['idx'] = array(
 			'id'     => 'unique',
-			'dt'     => 'normal',
+			'ts'     => 'normal',
 			'status' => 'normal',
 		);
 		
@@ -280,7 +280,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// generic list of entries
 		$schema['qry']['list'] = array(
 			'select' => '*',
-			'order'  => 'dt',
+			'order'  => 'ts',
 			'fetch'  => 'All',
 			'count'  => 'id',
 		);
@@ -296,7 +296,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		$schema['qry']['forum'] = array(
 			'select' => '*',
 			'where' => 'forum = :forum',
-			'order' => 'dt',
+			'order' => 'ts',
 			'fetch' => 'All'
 		);
 		
@@ -372,8 +372,8 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			return Solar::super('server', 'REMOTE_ADDR');
 			break;
 		
-		case 'dt':
-			return substr(date('c'), 0, 19);
+		case 'ts':
+			return $this->timestamp();
 			break;
 		
 		case 'forum':
@@ -443,8 +443,8 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		
 		}
 		
-		// force to the current date and time
-		$data['dt'] = $this->defaultCol('dt');
+		// force to the current timestamp
+		$data['ts'] = $this->defaultCol('ts');
 	}
 	
 	
@@ -524,13 +524,13 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 			$body = implode(
 				"\n\n",
 				array(
-					"Date:    {$data['dt']}",
-					"IP:      {$data['ip_addr']}",
-					"Status:  {$data['status']}",
-					"Name:    {$data['name']}",
-					"Email:   {$data['email']}",
-					"Website: {$data['web']}",
-					"Subject: {$data['subj']}",
+					"Timestamp: {$data['ts']}",
+					"IP:        {$data['ip_addr']}",
+					"Status:    {$data['status']}",
+					"Name:      {$data['name']}",
+					"Email:     {$data['email']}",
+					"Website:   {$data['web']}",
+					"Subject:   {$data['subj']}",
 					"Message:",
 					$data['body']
 				)

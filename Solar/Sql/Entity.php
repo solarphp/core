@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Entity.php,v 1.17 2005/02/08 01:42:26 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -1302,6 +1302,22 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				false // no backtrace
 			);
 		}
+	}
+	
+	
+	function date()
+	{
+		return date('Y-m-d');
+	}
+	
+	function time()
+	{
+		return date('H:i:s');
+	}
+	
+	function timestamp()
+	{
+		return substr(date('c'), 0, 19);
 	}
 }
 ?>

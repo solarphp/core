@@ -17,7 +17,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Bugs.php,v 1.5 2005/02/08 03:02:58 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -38,15 +38,10 @@ Solar::autoload('Solar_Sql_Entity');
 
 class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	
-	protected $talk;
-	
 	public $config = array(
 		
 		// locale strings
 		'locale' => 'Solar/Cell/Bugs/Locale/',
-		
-		// options for Solar_Cell_Talk
-		'Solar_Cell_Talk' => null,
 		
 		// component parts to report on (default is blank)
 		'pack' => array(''),
@@ -82,29 +77,13 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Constructor.
-	* 
-	* Sets up a Solar_Cell_Talk object.
+	* Fetch one bug report.
 	* 
 	* @access public
 	* 
-	* @var object
+	* @param int $id The bug report ID number.
 	* 
-	*/
-	
-	public function __construct($config = null)
-	{
-		parent::__construct($config);
-		$this->talk = Solar::object(
-			'Solar_Cell_Talk',
-			$this->config['Solar_Cell_Talk']
-		);
-	}
-	
-	
-	/**
-	* 
-	* Get one bug report.
+	* @return array An array of info about the bug report.
 	* 
 	*/
 	
@@ -122,12 +101,16 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		}
 	}
 	
-	public function fetchComments($id)
-	{
-		$filter = array('forum' => "sc_bugs://$id");
-		$order = 'dt DESC';
-		return $this->talk->selectFetch('forum', $filter);
-	}
+	
+	/**
+	* 
+	* Fetch a list of open bug reports.
+	* 
+	* @access public
+	* 
+	* @return array An array of bug reports.
+	* 
+	*/
 	
 	public function fetchOpen($order = null, $page = null)
 	{
@@ -139,11 +122,32 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		return $this->selectFetch('list', $where, $order, $page);
 	}
 	
+	
+	/**
+	* 
+	* Fetch a list of all bug reports (open and closed).
+	* 
+	* @access public
+	* 
+	* @return array An array of bug reports.
+	* 
+	*/
+	
 	public function fetchList($order = null, $page = null)
 	{
 		return $this->selectFetch('list', null, $order, $page);
 	}
 	
+	
+	/**
+	* 
+	* Returns the $schema array for this object.
+	* 
+	* @access protected
+	* 
+	* @return array An entity schema array.
+	* 
+	*/
 	
 	protected function getSchema()
 	{
@@ -169,28 +173,28 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		);
 			
 		// date-time when first reported
-		$schema['col']['dt_new'] = array(
+		$schema['col']['ts_new'] = array(
 			'type'    => 'timestamp',
 			'require' => true,
-			'default' => array(array('self','defaultCol'), 'dt_new'),
+			'default' => array(array('self','defaultCol'), 'ts_new'),
 		);
 		
 		// date-time when last modified
-		$schema['col']['dt_mod'] = array(
+		$schema['col']['ts_mod'] = array(
 			'type'    => 'timestamp',
 			'require' => true,
-			'default' => array(array('self','defaultCol'), 'dt_mod'),
+			'default' => array(array('self','defaultCol'), 'ts_mod'),
 		);
 		
-		// short description
-		$schema['col']['descr'] = array(
+		// short summary of the bug
+		$schema['col']['summ'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
 			'require' => true,
 			'valid'   => array(
 				array(
 					'notBlank',
-					$this->locale('VALID_DESCR')
+					$this->locale('VALID_SUMM')
 				)
 			),
 		);
@@ -267,6 +271,37 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			),
 		);
 		
+		// email of initial reporter
+		$schema['col']['email'] = array(
+			'type'    => 'varchar',
+			'size'    => 128,
+			'require' => true,
+			'valid'   => array(
+				array(
+					'email',
+					$this->locale('VALID_EMAIL')
+				)
+			)
+		);
+		
+		// one-time password for the report
+		$schema['col']['passwd'] = array(
+			'type'    => 'varchar',
+			'size'    => 32,
+		);
+		
+		// initial description of the bug
+		$schema['col']['descr'] = array(
+			'type'    => 'clob',
+			'require' => 'true',
+			'valid'   => array(
+				array(
+					'notBlank',
+					$this->locale('VALID_DESCR')
+				)
+			)
+		);
+		
 		
 		// -------------------------------------------------------------
 		// 
@@ -275,8 +310,8 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		
 		$schema['idx'] = array(
 			'id'      => 'unique',
-			'dt_new'  => 'normal',
-			'dt_mod'  => 'normal',
+			'ts_new'  => 'normal',
+			'ts_mod'  => 'normal',
 			'type'    => 'normal',
 			'pack'    => 'normal',
 			'user_id' => 'normal',
@@ -289,10 +324,10 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// queries
 		// 
 		
-		// generic list of bugs
+		// list of bugs
 		$schema['qry']['list'] = array(
 			'select' => '*',
-			'order'  => 'dt_new DESC',
+			'order'  => 'ts_new DESC',
 			'fetch'  => 'All',
 			'count'  => 'id',
 		);
@@ -329,17 +364,17 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'id'     => array(
 				'type'    => 'hidden',
 			),
-			'descr' => array(
+			'summ' => array(
 				'type'    => 'text',
-				'label'   => $this->locale('LABEL_DESCR'),
+				'label'   => $this->locale('LABEL_SUMM'),
 				'attribs' => array('size' => '60'),
 				'require' => true,
 			),
-			'dt_new' => array(
+			'ts_new' => array(
 				'type'    => 'readonly',
 				'label'   => $this->locale('LABEL_DT_NEW'),
 			),
-			'dt_mod' => array(
+			'ts_mod' => array(
 				'type'    => 'readonly',
 				'label'   => $this->locale('LABEL_DT_MOD'),
 			),
@@ -375,15 +410,14 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'options' => $status_opts,
 				'require' => true,
 			),
-			// these two will go to Solar_Cell_Talk
 			'email' => array(
 				'type'    => 'text',
 				'label'   => $this->locale('LABEL_EMAIL'),
 				'require' => true,
 			),
-			'body' => array(
+			'descr' => array(
 				'type'    => 'textarea',
-				'label'   => $this->locale('LABEL_BODY'),
+				'label'   => $this->locale('LABEL_DESCR'),
 				'require' => true,
 				'attribs' => array('rows' => 15, 'cols' => '60'),
 			)
@@ -409,9 +443,9 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	{
 		switch ($col) {
 		
-		case 'dt_new':
-		case 'dt_mod':
-			return substr(date('c'), 0, 19);
+		case 'ts_new':
+		case 'ts_mod':
+			return $this->timestamp();
 			break;
 		
 		default:
@@ -436,8 +470,13 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	protected function preInsert(&$data)
 	{
 		// force to the current date and time
-		$data['dt_new'] = $this->defaultCol('dt_new');
-		$data['dt_mod'] = $data['dt_new'];
+		$data['ts_new'] = $this->defaultCol('ts_new');
+		$data['ts_mod'] = $data['ts_new'];
+		
+		// hash the password
+		if (isset($data['passwd'])) {
+			$data['passwd'] = md5($data['passwd']);
+		}
 	}
 
 
@@ -456,99 +495,12 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	protected function preUpdate(&$data)
 	{
 		// force to the current date and time
-		$data['dt_mod'] = $this->defaultCol('dt_mod');
-	}
-	
-	
-	/**
-	* 
-	* Add a new bug report.
-	* 
-	* @access public
-	* 
-	* @param array &$data The data to be inserted.
-	* 
-	* @return void
-	* 
-	*/
-
-	public function newReport(&$data)
-	{
-		// attempt the bug-report insert
-		$result = $this->insert($data);
+		$data['ts_mod'] = $this->defaultCol('ts_mod');
 		
-		// was it an error?
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
-		// retain the bug id
-		$id = $result;
-		
-		// add the related comment
-		$result = $this->addComment($id, $data['email'], $data['descr'],
-			$data['body']);
-		
-		// did the comment go OK?
-		if (Solar::isError($result)) {
-			/**
-			* @todo If the comment part failed, we should report just
-			* the 'email' and 'body' errors.  Also, delete the bug report
-			* itself so that we have to continue entry.
-			*/
-			return $result;
-		} else {
-			return $id;
+		// hash the password
+		if (isset($data['passwd'])) {
+			$data['passwd'] = md5($data['passwd']);
 		}
 	}
-	
-	
-	/**
-	* 
-	* Modify an existing bug report (e.g., add comment or change status).
-	* 
-	*/
-	
-	public function modReport(&$data, $id)
-	{
-		// update the report itself
-		$where = 'id = ' . $this->quote($id);
-		$result = $this->update($data, $where);
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
-		// is there a comment to be added?
-		if (trim($data['body']) != '') {
-			// there is some comment text, add it in
-			$result = $this->addComment($id, $data['email'],
-				$data['descr'], $data['body']);
-				
-			if (Solar::isError($result)) {
-				return $result;
-			}
-		}
-	}
-	
-	/**
-	* 
-	* Adds a comment to an existing bug report.
-	* 
-	*/
-	
-	protected function addComment($id, $email, $subj, $body)
-	{
-		$data = array(
-			'forum'     => "sc_bugs://$id",
-			'name'      => $email,
-			'email'     => $email,
-			'email_pub' => 1,
-			'subj'      => $subj,
-			'body'      => $body
-		);
-		return $this->talk->insert($data);
-	}
-	
-	
 }
 ?>

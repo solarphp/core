@@ -566,14 +566,18 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	public function update($data, $where)
 	{
+		// retain primary key data in this array for post-update tasks
+		$retain = array();
+		
 		// disallow the changing of primary key data
 		foreach (array_keys($data) as $field) {
 			// get the 'primary' flag
 			$primary = isset($this->schema['col'][$field]['primary'])
 				? $this->schema['col'][$field]['primary']
 				: false;
-			// unset if primary
+			// retain and unset if primary
 			if ($primary) {
+				$retain[$field] = $data[$field];
 				unset($data[$field]);
 			}
 		}
@@ -595,6 +599,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		if (Solar::isError($result)) {
 			return $result;
 		}
+		
+		// restore retained primary data (for use in post-update tasks)
+		$data = array_merge($data, $retain);
 		
 		// post-update tasks
 		return $this->postUpdate($data);
@@ -1054,11 +1061,13 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		
 		// get the SELECT field list
 		$tmp = array();
-		foreach ( (array) $part['select'] as $key => $val) {
+		foreach ((array) $part['select'] as $key => $val) {
 			if (is_int($key)) {
-				// the key is numeric, so the value is the field
+				// the key is numeric, so the value is the field name.
 				$tmp[] = $val;
 			} else {
+				// the key is not numeric; the value is the field name,
+				// and the key is the alias name.
 				$tmp[] = "$val AS $key";
 			}
 		}
@@ -1077,15 +1086,22 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		$stmt .= "\nFROM " . implode(', ', $tmp);
 		
-		// add the JOIN tables, if any
+		// add the JOIN relationships, if any.
+		// define them in $this->schema['rel'], then add them by name.
 		if (! empty($part['join'])) {
-		    if (is_array($part['join'])) {
-				foreach ($part['join'] as $key => $val) {
-				    $rel = $this->schema['rel'];
-					$stmt .= "\nJOIN $rel[2] ON {$this->schema['tbl']}.$rel[1] = $rel[2].$rel[3]";
+			foreach ((array) $part['join'] as $name) {
+			    $rel = $this->schema['rel'][$name];
+			    if (is_array($rel)) {
+			    	// the relation is defined by standard array
+					$this_tbl = $this->schema['tbl'];
+					$this_col = $rel[0];
+					$that_tbl = $rel[1];
+					$that_col = $rel[2];
+					$stmt .= "\nJOIN $that_tbl ON $this_tbl.$this_col = $that_tbl.$that_col";
+				} else {
+					// the relation is custom-defined
+					$stmt .= "\nJOIN $rel";
 				}
-		    } else {
-		        $stmt .= "\nJOIN {$part['join']}";
 		    }
 		}
 		

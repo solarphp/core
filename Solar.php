@@ -642,10 +642,13 @@ class Solar {
 	public static function pathinfo($key = null, $default = null)
 	{
 		// get the pathinfo as passed
-		$info = Solar::$shared->super('server', 'PATH_INFO', '');
+		$info = Solar::$shared->super->fetch('server', 'PATH_INFO', '');
 		
 		// explode into its elements
 		$elem = explode('/', $info);
+		
+		// drop off the first element (it's always blank)
+		array_shift($elem);
 		
 		// look for the requested element number
 		if (is_null($key)) {

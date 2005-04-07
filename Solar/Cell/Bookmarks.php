@@ -48,6 +48,15 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		'locale'         => 'Solar/Cell/Bookmarks/Locale/',
 	);
 	
+	// object for tag searches
+	protected $tags;
+	
+	public function __construct($config = null)
+	{
+		parent::__construct($config);
+		$this->tags = Solar::object('Solar_Cell_Bookmarks_Tags');
+	}
+	
 	
 	/**
 	* 
@@ -174,6 +183,36 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			'fetch'  => 'Row'
 		);
 		
+		// -------------------------------------------------------------
+		// 
+		// forms
+		// 
+		
+		$schema['frm']['edit'] = array(
+			'id' => array('type' => 'hidden'),
+			'title' => array(
+				'validate' => array(
+					array('notBlank', 'Please enter a bookmark title.'),
+				)
+			),
+			'uri' => array(
+				'validate' => array(
+					array('uri', 'Please enter a valid URI.'),
+				),
+			),
+			'descr' => array(),
+			'tags' => array(
+				'validate' => array(
+					array('regex', 'Please use valid tags.', '/^[A-Za-z0-9_ ]*$/'),
+				),
+			),
+		);
+		
+		// -------------------------------------------------------------
+		// 
+		// done!
+		// 
+		
 		return $schema;
 	}
 	
@@ -190,7 +229,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function item($id)
+	public function fetchItem($id)
 	{
 		return $this->selectFetch('item', array('id' => $id));
 	}
@@ -202,9 +241,8 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function list($where = null, $order = null, $page = null)
+	public function fetchList($where = null, $order = null, $page = null)
 	{
-		$where = 'user_id = ' . $this->quote($user_id);
 		return $this->selectFetch('list', $where, $order, $page);
 	}
 	
@@ -225,10 +263,10 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function user($user_id, $order = null, $page = null)
+	public function forUser($user_id, $order = null, $page = null)
 	{
 		$where = 'user_id = ' . $this->quote($user_id);
-		return $this->list($where, $order, $page);
+		return $this->fetchList($where, $order, $page);
 	}
 	
 	
@@ -237,6 +275,9 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* Fetch all the bookmarks with a specific tagset.
 	* 
 	* Optionally, you can limit to a specific username as well.
+	* 
+	* Technically, the method searches the sc_bookmarks_tags table, which joins
+	* itself back to this table (sc_bookmarks) for the "real" info.
 	* 
 	* @access public
 	* 
@@ -254,7 +295,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function tags($tags, $user_id = null, $order = null, $page = null)
+	public function withTags($tags, $user_id = null, $order = null, $page = null)
 	{
 		// build a base where clause ...
 		if ($user_id) {
@@ -274,15 +315,23 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		$tmp = array();
 		foreach ($tags as $tag) {
 			if (trim($tag) != '') {
-				$tmp[] = "tags LIKE " . $this->quote('% $tag %');
+				$tmp[] = 'tag = ' . $this->quote($tag);
 			}
 		}
-		$where .= ' AND ' . implode(' AND ', $tmp);
+		if ($tmp) {
+			$where .= ' AND ' . implode(' AND ', $tmp);
+		}
 		
 		// done!
-		return $this->list($where, $order, $page);
+		return $this->tags->fetchList($where, $order, $page);
 	}
 	
+	
+	public function update($data, $id)
+	{
+		$where = 'id = ' . $this->quote($id);
+		return parent::update($data, $where);
+	}
 	
 	/**
 	* 
@@ -293,12 +342,26 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	protected function preInsert(&$data)
 	{
 		if (isset($data['tags'])) {
-			$data['tags'] = $this->fixTags($data['tags']);
+			$data['tags'] = $this->tags->fixString($data['tags']);
 		}
 		
 		$now = $this->timestamp();
 		$data['ts_new'] = $now;
 		$data['ts_mod'] = $now;
+	}
+	
+	
+	/**
+	* 
+	* Post-insert operations; we add to the tags table.
+	* 
+	*/
+	
+	protected function postInsert(&$data)
+	{
+		if (isset($data['tags'])) {
+			return $this->tags->refresh($data['id'], $data['tags']);
+		}
 	}
 	
 	
@@ -311,7 +374,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	protected function preUpdate(&$data)
 	{
 		if (isset($data['tags'])) {
-			$data['tags'] = $this->fixTags($data['tags']);
+			$data['tags'] = $this->tags->fixString($data['tags']);
 		}
 		
 		$data['ts_mod'] = $this->timestamp();
@@ -320,27 +383,15 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fixes tag arrays and strings for the database.
+	* Post-update operations; refresh the searchable tags table.
 	* 
 	*/
 	
-	protected function fixTags($tags)
+	protected function postUpdate(&$data)
 	{
-		// convert to array from string?
-		if (! is_array($tags)) {
-			// trim all surrounging spaces (and extra spaces)
-			$tags = trim($tags);
-			$tags = preg_replace('/[ ]{2,}/', ' ', $tags);
-			
-			// convert to array for easy processing
-			$tmp = explode(' ', $tags);
+		if (isset($data['tags'])) {
+			return $this->tags->refresh($data['id'], $data['tags']);
 		}
-		
-		// make sure each tag is unique (no double-entries)
-		$tmp = array_unique($tmp);
-		
-		// return as text, with a space in front and behind
-		return ' ' . implode(' ', $tmp) . ' ';
 	}
 }
 ?>

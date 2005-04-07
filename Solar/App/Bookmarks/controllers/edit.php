@@ -40,7 +40,8 @@ include $this->helper('prepend');
 
 // must be logged in to proceed
 if ($user->auth->status_code != 'VALID') {
-	return 'Not logged in.';
+	$tpl->err[] = 'You are not logged in.';
+	return $tpl->fetch('error.php');
 }
 
 // get the bookmark ID (0 means a new bookmark)
@@ -59,7 +60,8 @@ if ($id) {
 
 // must be the item owner to edit it
 if ($user->auth->username != $item['user_id']) {
-	return 'You do not own this bookmark, or it does not exist.';
+	$tpl->err[] = 'You do not own this bookmark, or it does not exist.';
+	return $tpl->fetch('error.php');
 }
 
 
@@ -129,7 +131,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-	$self = Solar::server('PHP_SELF');
+	$self = $_SERVER['PHP_SELF'];
 	header("Location: $self");
 	return;
 }

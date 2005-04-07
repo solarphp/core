@@ -31,7 +31,7 @@ if ($rss) {
 $tpl->user_id = $user_id; // requested user_id
 $tpl->tags = $tags; // requested tags
 $tpl->user_tags = null; // all tags for this user
-$tpl->list = $bookmarks->tags($tags, $user_id, $order, $page); // results
+$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page); // results
 
 return $tpl->fetch();
 ?>

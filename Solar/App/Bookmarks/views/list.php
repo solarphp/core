@@ -14,19 +14,20 @@
 <?php if (count($this->list)): ?>
 	<?php foreach ($this->list as $item): ?>
 		<p>
-			<?php echo $this->ahref($item['uri'], $item['title']) ?><br />
-			to <?php
+			<span style="font-size: 120%; font-weight: bold;"><?php echo $this->ahref($item['uri'], $item['title']) ?></span>
+			<br /><span style="font-size: 90%;"><?php echo $this->scrub($item['uri']) ?></span>
+			<br />to<?php
 				$tags = explode(' ', $item['tags']);
 				foreach ($tags as $tag) {
-					echo $this->ahref($self . "tag/$tag", $tag) . '&nbsp;';
+					echo '&nbsp;' . $this->ahref($self . "tag/$tag", $tag);
 				}
-			?>
-			... by <?php echo $this->ahref($self . "user/{$item['user_id']}", $item['user_id']) ?>
-			... on <?php echo $this->date($item['ts_new']) ?>
+			?> by <?php echo $this->ahref($self . "user/{$item['user_id']}", $item['user_id']);
+			?> on <?php echo $this->date($item['ts_new']) ?>
 			<?php
 				if (Solar::$shared->user->auth->username == $item['user_id']) {
 					echo '... ';
 					echo $this->ahref($self . "edit?id={$item['id']}", 'edit');
+					echo ' (' . $item['id'] . ')';
 				}
 			?>
 		</p>
@@ -35,5 +36,8 @@
 	<p>No bookmarks found.</p>
 <?php endif ?>
 
-<p><?php echo $this->ahref($self . "edit?id=0", 'Add new bookmark') ?></p>
+<?php if (Solar::$shared->user->auth->status_code == 'VALID'): ?>
+	<p><?php echo $this->ahref($self . "edit?id=0", 'Add new bookmark') ?></p>
+<?php endif ?>
+
 <?php include $this->template('footer.php') ?>

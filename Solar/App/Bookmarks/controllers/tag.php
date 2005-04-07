@@ -1,6 +1,7 @@
 <?php
 
 /*
+http://example.com/bookmarks.php/tag/tag+tag+tag?order=title&page=1&rss=0
 http://example.com/bookmarks.php/tag+tag+tag?order=title&page=1&rss=0
 */
 
@@ -11,7 +12,7 @@ include $this->helper('prepend');
 $user_id = null;
 
 // what tags are we looking for?
-$tags = Solar::pathinfo(1);
+$tags = trim(Solar::pathinfo(1));
 
 // the requested ordering of list results
 $order = $this->getOrder();
@@ -27,11 +28,18 @@ if ($rss) {
 	$tpl->setTemplate('list.php');
 }
 
-// assign, and done!
+// get the list of results
+if (! $tags) {
+	// no tags requested
+	$tpl->list = $bookmarks->fetchList();
+} else {
+	// some tags requested
+	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page);
+};
+
+// assign everything else and display
 $tpl->user_id = null; // requested user_id
 $tpl->tags = $tags; // requested tags
 $tpl->user_tags = null; // all tags for this user
-$tpl->list = $bookmarks->tags($tags, $user_id, $order, $page); // results
-
 return $tpl->fetch();
 ?>

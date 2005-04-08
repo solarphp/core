@@ -13,7 +13,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: header.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -35,12 +35,23 @@
 	<head>
 		<title>Solar_App_Bookmarks</title>
 		<style>
+		
 			body, p, div, td, th, .Savant3 {font-family: "Lucida Sans", Verdana; font-size: 12px;}
+
+			h1 {font-size: 200%};
+			h2 {font-size: 160%};
+			h3 {font-size: 180%};
+			h4 {font-size: 140%};
+			h5 {font-size: 120%};
+			h6 {font-size: 100%};
+			
 			table.Savant3 { border-spacing: 1px; }
 			th.Savant3 { background: #bcd; text-align: right; vertical-align: top; padding: 4px; }
 			td.Savant3 { background: #eee; text-align: left; vertical-align: top;  padding: 4px; }
-			select, option { font-family: "Lucida Sans", Verdana; font-size: 12px; }
-			input[type="text"], input[type="password"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 12px;}
+			
+			select, option { font-family: "Lucida Sans", Verdana; font-size: 100%; }
+			input[type="text"], input[type="password"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 100%;}
+			
 		</style>
 	</head>
 	<body>

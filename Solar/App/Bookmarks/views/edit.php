@@ -13,7 +13,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: edit.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -31,10 +31,19 @@
 ?>
 
 <?php include $this->template('header.php') ?>
-<?php $self = $_SERVER['PHP_SELF'] ?>
+<?php $link = Solar::object('Solar_Uri') ?>
 
 <h2><?php echo Solar::locale('Solar_App_Bookmarks', 'BOOKMARK') ?></h2>
-<p>[ <?php echo $this->ahref($self, Solar::locale('Solar_App_Bookmarks', 'BACK_TO_LIST')) ?> ]</p>
+<p>[ <?php
+	$link->clearInfo();
+	$link->clearQuery();
+	$link->info('set', 0, 'user');
+	$link->info('set', 1, Solar::$shared->user->auth->username);
+	echo $this->ahref(
+		$link->export(),
+		Solar::locale('Solar_App_Bookmarks', 'BACK_TO_LIST')
+	);
+?> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>

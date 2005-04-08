@@ -169,8 +169,8 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// relationships
 		// 
 		
-		$schema['rel']['bookmark_tags'] = "sc_tags ON sc_tags.rel = 'sc_bookmarks'" .
-			' AND sc_tags.rel_id = sc_bookmarks.id';
+		$schema['rel']['search_tags'] = "sc_tags_bundle ON sc_tags_bundle.rel = 'sc_bookmarks'" .
+			' AND sc_tags_bundle.rel_id = sc_bookmarks.id';
 			
 		// -------------------------------------------------------------
 		// 
@@ -193,8 +193,8 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		
 		// lookup by tag name(s)
 		$schema['qry']['tags'] = array(
-			'select' => '*, sc_tags.tag AS tag',
-			'join'   => 'bookmark_tags',
+			'select' => 'sc_bookmarks.*',
+			'join'   => 'search_tags',
 			'fetch'  => 'All'
 		);
 		
@@ -315,7 +315,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// build a base where clause ...
 		if ($user_id) {
 			// ... to find a given user
-			$where = 'user_id = ' . $this->quote('user_id');
+			$where = 'user_id = ' . $this->quote($user_id);
 		} else {
 			// ... for all users
 			$where = '1=1';
@@ -323,16 +323,19 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		
 		// convert $tags to array
 		if (! is_array($tags)) {
-			$tags = explode(' ', trim($tags));
+			$tags = $this->tags->fixString($tags);
+			$tags = explode(' ', $tags);
 		}
 		
 		// finish the where clause with tags ANDed together
 		$tmp = array();
 		foreach ($tags as $tag) {
 			if (trim($tag) != '') {
-				$tmp[] = 'sc_tags.tag = ' . $this->quote($tag);
+				// add to the query
+				$tmp[] = 'sc_tags_bundle.tags LIKE ' . $this->quote("%+$tag+%");
 			}
 		}
+		
 		if ($tmp) {
 			$where .= ' AND ' . implode(' AND ', $tmp);
 		}

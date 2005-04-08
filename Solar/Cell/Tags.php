@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Bookmarks.php 136 2005-04-06 18:15:56Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -48,6 +48,14 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		'locale'         => 'Solar/Cell/Tags/Locale/',
 	);
 	
+	
+	public $bundle;
+	
+	public function __construct($config = null)
+	{
+		parent::__construct($config);
+		$this->bundle = Solar::object('Solar_Cell_Tags_Bundle');
+	}
 	
 	/**
 	* 
@@ -149,25 +157,24 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	
 	public function refresh($rel, $rel_id, $tags)
 	{
-		// make $tags an array
-		if (! is_array($tags)) {
-			$tags = $this->fixString($tags);
-			$tags = explode(' ', $tags);
-		}
-		
 		// error collection object
 		$err = Solar::object('Solar_Error');
 		
-		// get the original set of tags.
+		// fix up the tags param
+		$tags = $this->fixString($tags);
+		
+		// the new set of tags as an array
+		$new = explode(' ', $tags);
+		
+		// the old set of tags
 		$tmp = array(
 			'rel' => $rel,
 			'rel_id' => $rel_id
 		);
-		
-		$orig = $this->selectFetch('refresh', $tmp);
+		$old = $this->selectFetch('refresh', $tmp);
 		
 		// get a diff list so we can insert and delete.
-		$diff = $this->diff($orig, $tags);
+		$diff = $this->diff($old, $new);
 		
 		// are there tags to delete?
 		if ($diff['del']) {
@@ -214,6 +221,27 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 			}
 		}
 		
+		// now refresh the bundle (for searches) ... but only
+		// if the tags changed.
+		if ($diff['del'] || $diff['ins']) {
+			
+			// delete previous
+			$this->bundle->remove($rel, $rel_id);
+			
+			// build data
+			$data = array(
+				'rel'    => $rel,
+				'rel_id' => $rel_id,
+				'tags'   => $tags
+			);
+			
+			$result = $this->bundle->insert($data);
+			
+			if (Solar::isError($result)) {
+				$err->push($result);
+			}
+		}
+		
 		// done!
 		if ($err->count() > 0) {
 			return $err;
@@ -246,7 +274,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fixes tag strings for the database.
+	* Fixes tag strings for the queries.
 	* 
 	*/
 	
@@ -254,6 +282,10 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	{
 		// convert to array from string?
 		if (! is_array($tags)) {
+			
+			// convert all "+" to spaces
+			$tags = str_replace('+', ' ', $tags);
+			
 			// trim all surrounding spaces and extra spaces
 			$tags = trim($tags);
 			$tags = preg_replace('/[ ]{2,}/', ' ', $tags);
@@ -269,3 +301,4 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		return implode(' ', $tmp);
 	}
 }
+?>

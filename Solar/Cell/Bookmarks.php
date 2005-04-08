@@ -54,7 +54,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	public function __construct($config = null)
 	{
 		parent::__construct($config);
-		$this->tags = Solar::object('Solar_Cell_Bookmarks_Tags');
+		$this->tags = Solar::object('Solar_Cell_Tags');
 	}
 	
 	
@@ -166,21 +166,36 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		
 		// -------------------------------------------------------------
 		// 
+		// relationships
+		// 
+		
+		$schema['rel']['bookmark_tags'] = "sc_tags ON sc_tags.rel = 'sc_bookmarks'" .
+			' AND sc_tags.rel_id = sc_bookmarks.id';
+			
+		// -------------------------------------------------------------
+		// 
 		// queries
 		// 
 		
-		// list of bookmarks with tags
+		// list of bookmarks
 		$schema['qry']['list'] = array(
 			'select' => '*',
 			'order'  => 'ts_new DESC',
 			'fetch'  => 'All'
 		);
 		
-		// one bookmark item; same as list, just with different fetch
+		// one bookmark
 		$schema['qry']['item'] = array(
 			'select' => '*',
 			'where'  => 'id = :id',
 			'fetch'  => 'Row'
+		);
+		
+		// lookup by tag name(s)
+		$schema['qry']['tags'] = array(
+			'select' => '*, sc_tags.tag AS tag',
+			'join'   => 'bookmark_tags',
+			'fetch'  => 'All'
 		);
 		
 		// -------------------------------------------------------------
@@ -315,7 +330,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		$tmp = array();
 		foreach ($tags as $tag) {
 			if (trim($tag) != '') {
-				$tmp[] = 'tag = ' . $this->quote($tag);
+				$tmp[] = 'sc_tags.tag = ' . $this->quote($tag);
 			}
 		}
 		if ($tmp) {
@@ -323,7 +338,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		}
 		
 		// done!
-		return $this->tags->fetchList($where, $order, $page);
+		return $this->selectFetch('tags', $where, $order, $page);
 	}
 	
 	
@@ -360,7 +375,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	protected function postInsert(&$data)
 	{
 		if (isset($data['tags'])) {
-			return $this->tags->refresh($data['id'], $data['tags']);
+			return $this->tags->refresh('sc_bookmarks', $data['id'], $data['tags']);
 		}
 	}
 	
@@ -390,7 +405,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	protected function postUpdate(&$data)
 	{
 		if (isset($data['tags'])) {
-			return $this->tags->refresh($data['id'], $data['tags']);
+			return $this->tags->refresh('sc_bookmarks', $data['id'], $data['tags']);
 		}
 	}
 }

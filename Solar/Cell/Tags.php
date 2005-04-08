@@ -2,13 +2,13 @@
 
 /**
 * 
-* Application component module for a public shared bookmark list.
+* Component module to search for tags on related items.
 * 
 * @category Solar
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Bookmarks
+* @subpackage Solar_Cell_Tags
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -26,17 +26,17 @@ Solar::autoload('Solar_Sql_Entity');
 
 /**
 * 
-* Application component module for a public shared bookmark list.
+* Component module to search for tags on related items.
 * 
 * @category Solar
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Bookmarks
+* @subpackage Solar_Cell_Tags
 * 
 */
 
-class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
+class Solar_Cell_Tags extends Solar_Sql_Entity {
 	
 	/**
 	* 
@@ -45,7 +45,7 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 	*/
 	
 	public $config = array(
-		'locale'         => 'Solar/Cell/Bookmarks/Locale/',
+		'locale'         => 'Solar/Cell/Tags/Locale/',
 	);
 	
 	
@@ -66,7 +66,7 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		// table name
 		// 
 		
-		$schema['tbl'] = 'sc_bookmarks_tags';
+		$schema['tbl'] = 'sc_tags';
 		
 		
 		// -------------------------------------------------------------
@@ -74,12 +74,26 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		// columns
 		// 
 		
-		// the tag applies to this bookmark_id
-		$schema['col']['bookmark_id'] = array(
+		// the tag applies to an item in this related table
+		$schema['col']['rel'] = array(
+			'type'     => 'varchar',
+			'size'     => 64,
+			'require'  => true,
+			'validate' => array(
+				array(
+					'regex',
+					$this->locale('VALID_REL'),
+					'/^[a-z][a-z0-9_]*$/'
+				),
+			),
+		);
+		
+		// the tag applies to this ID in the related table
+		$schema['col']['rel_id'] = array(
 			'type'    => 'int',
 		);
 		
-		// a single tag
+		// a single tag for the related item
 		$schema['col']['tag'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
@@ -100,74 +114,23 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		// 
 		
 		$schema['idx'] = array(
-			'bookmark_id' => 'normal',
-			'tag'         => 'normal',
+			'rel'    => 'normal',
+			'rel_id' => 'normal',
+			'tag'    => 'normal',
 		);
 		
-		
-		// -------------------------------------------------------------
-		// 
-		// relationships; the format is:
-		// 
-		// keyword => array(this_col, that_tbl, that_col)
-		// 
-		// 
-		
-		$schema['rel'] = array(
-			'bookmark_info' => array('bookmark_id', 'sc_bookmarks', 'id'),
-		);
 		
 		// -------------------------------------------------------------
 		// 
 		// queries
 		// 
 		
-		// list of bookmarks with tags
-		$schema['qry']['list'] = array(
-			'select' => 'sc_bookmarks.*, sc_bookmarks_tags.tag',
-			'join'   => 'bookmark_info',
-			'order'  => 'ts_new DESC',
-			'fetch'  => 'All'
-		);
-		
-		$schema['qry']['tags'] = array(
+		$schema['qry']['refresh'] = array(
 			'select' => 'tag',
+			'where'  => 'rel = :rel AND rel_id = :rel_id',
 			'fetch'  => 'Col'
 		);
 		
-		/*
-		// one bookmark item; same as list, just with different fetch
-		$schema['qry']['item'] = array(
-			'select' => '*',
-			'where'  => 'id = :id',
-			'fetch'  => 'Row'
-		);
-		
-		// -------------------------------------------------------------
-		// 
-		// forms
-		// 
-		
-		$schema['frm']['edit'] = array(
-			'id' => array('type' => 'hidden'),
-			'title' => array(
-				'validate' => array(
-					array('notBlank', 'Please enter a bookmark title.'),
-				)
-			),
-			'uri' => array(
-				'validate' => array(
-					array('uri', 'Please enter a valid URI.'),
-				),
-			),
-			'descr' => array(),
-			'tags' => array(
-				'validate' => array(
-					array('regex', 'Please use valid tags.', '/^[A-Za-z0-9_ ]*$/'),
-				),
-			),
-		);
-		*/
 		
 		// -------------------------------------------------------------
 		// 
@@ -180,22 +143,11 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch a a generic list of tags.
+	* Refresh the tags stored for a related item.
 	* 
 	*/
 	
-	public function fetchList($where = null, $order = null, $page = null)
-	{
-		return $this->selectFetch('list', $where, $order, $page);
-	}
-	
-	public function forBookmark($bookmark_id, $order = null, $page = null)
-	{
-		$where = 'bookmark_id = ' . $this->quote($bookmark_id);
-		return $this->fetchList($where, $order, $page);
-	}
-	
-	public function refresh($bookmark_id, $tags)
+	public function refresh($rel, $rel_id, $tags)
 	{
 		// make $tags an array
 		if (! is_array($tags)) {
@@ -207,8 +159,12 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		$err = Solar::object('Solar_Error');
 		
 		// get the original set of tags.
-		$where = 'bookmark_id = ' . $this->quote($bookmark_id);
-		$orig = $this->selectFetch('tags', $where);
+		$tmp = array(
+			'rel' => $rel,
+			'rel_id' => $rel_id
+		);
+		
+		$orig = $this->selectFetch('refresh', $tmp);
 		
 		// get a diff list so we can insert and delete.
 		$diff = $this->diff($orig, $tags);
@@ -216,16 +172,17 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		// are there tags to delete?
 		if ($diff['del']) {
 		
-			// always look up by bookmark_id
-			$where = 'bookmark_id = ' . $this->quote($bookmark_id);
+			// always filter by related table and related id
+			$where = 'rel = ' . $this->quote($rel) . 
+				' AND rel_id = ' . $this->quote($rel_id);
 			
-			// create a list of quoted names
+			// create a list of quoted tag names from the diff deletes
 			$tmp = array();
 			foreach ($diff['del'] as $tag) {
 				$tmp[] = $this->quote($tag);
 			}
 			
-			// and delete the un-needed tags
+			// delete the un-needed tags
 			$where .= ' AND (tag = ' . implode(' OR tag = ', $tmp) . ')';
 			$result = $this->delete($where);
 			if (Solar::isError($result)) {
@@ -236,6 +193,7 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		// are there tags to insert?
 		if ($diff['ins']) {
 			foreach ($diff['ins'] as $tag) {
+			
 				// don't insert blanks
 				if (trim($tag) == '') {
 					continue;
@@ -243,10 +201,13 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 				
 				// ok, not a blank, insert it.
 				$data = array(
-					'bookmark_id' => $bookmark_id,
-					'tag' => $tag
+					'rel'    => $rel,
+					'rel_id' => $rel_id,
+					'tag'    => $tag
 				);
+				
 				$result = $this->insert($data);
+				
 				if (Solar::isError($result)) {
 					$err->push($result);
 				}
@@ -308,4 +269,3 @@ class Solar_Cell_Bookmarks_Tags extends Solar_Sql_Entity {
 		return implode(' ', $tmp);
 	}
 }
-?>

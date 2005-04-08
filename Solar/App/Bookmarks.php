@@ -61,11 +61,11 @@ class Solar_App_Bookmarks extends Solar_App {
 			
 		case 'title':
 		case 'title_asc':
-			$order = 'title ASC';
+			$order = 'LOWER(title) ASC';
 			break;
 		
 		case 'title_desc':
-			$order = 'title DESC';
+			$order = 'LOWER(title) DESC';
 			break;
 			
 		case 'user':

@@ -31,7 +31,7 @@ if ($rss) {
 // get the list of results
 if (! $tags) {
 	// no tags requested
-	$tpl->list = $bookmarks->fetchList();
+	$tpl->list = $bookmarks->fetchList(null, $order, $page);
 } else {
 	// some tags requested
 	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page);

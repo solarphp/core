@@ -67,6 +67,47 @@ if ($user->auth->username != $item['user_id']) {
 
 // ---------------------------------------------------------------------
 // 
+// build a link for header('Location: ') calls and the backlink.
+// 
+
+// if we came from a tag or user page, return there.
+// if we came from a quickmark, return to the originating page.
+// otherwise, return the list for the user.
+$link = Solar::object('Solar_Uri');
+
+// clear the current pathinfo and query
+$link->clearInfo();
+$link->clearQuery();
+
+// get any info and query set by the list view
+$info = Solar::get('info');
+$qstr = Solar::get('qstr');
+
+// get any uri set by a quickmark
+$uri = Solar::get('uri');
+
+// by default, no href is set
+$href = false;
+
+// do we have info or a qstr?
+if ($info || $qstr) {
+	// yes, return to a list of bookmarks
+	$link->info('setstr', $info);
+	$link->query('setstr', $qstr);
+	$href = $link->export();
+} elseif ($uri) {
+	// return to the quickmark uri
+	$href = $uri;
+} else {
+	// return to the user's list
+	$link->info('set', 0, 'user');
+	$link->info('set', 1, Solar::$shared->user->auth->username);
+	$href = $link->export();
+}
+
+
+// ---------------------------------------------------------------------
+// 
 // main section
 // 
 
@@ -125,19 +166,33 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			// it worked!  $result is the new ID number.
 			$form->feedback[] = Solar::locale('Solar', 'OK_SAVED');
 			
+			// if new, return to the backlink
+			if (Solar::get('id', 0) == 0) {
+				header("Location: $href");
+			}
+			
 		}
 	}
 }
 
+
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-	$self = $_SERVER['PHP_SELF'];
-	header("Location: $self");
+	header("Location: $href");
 	return;
+}
+
+// OP: Delete
+if ($op == Solar::locale('Solar', 'OP_DELETE')) {
+	$values = $form->values();
+	$where = 'id = ' . $bookmarks->quote($values['bookmarks']['id']);
+	$bookmarks->delete($where);
+	header("Location: $href");
 }
 
 // assign the form object
 $tpl->formdata = $form;
+$tpl->backlink = $href;
 
 // display output
 return $tpl->fetch('edit.php');

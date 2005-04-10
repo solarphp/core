@@ -19,6 +19,13 @@ $order = $this->getOrder();
 // what page-number of the results are we looking for?
 $page = Solar::get('page', 0);
 
+// get the list of entries
+if ($tags) {
+	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page); // results
+} else {
+	$tpl->list = $bookmarks->forUser($user_id, $order, $page);
+}
+
 // RSS or HTML?
 $rss = Solar::get('rss', false);
 if ($rss) {
@@ -28,15 +35,10 @@ if ($rss) {
 }
 
 // assign, and done!
+$tpl->rss['avail'] = true;
 $tpl->user_id = $user_id; // requested user_id
 $tpl->tags = $tags; // requested tags
-$tpl->user_tags = null; // all tags for this user
-
-if ($tags) {
-	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page); // results
-} else {
-	$tpl->list = $bookmarks->forUser($user_id, $order, $page);
-}
+$tpl->user_tags = $bookmarks->userTags($user_id); // all tags for this user
 
 return $tpl->fetch();
 ?>

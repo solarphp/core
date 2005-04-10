@@ -45,12 +45,14 @@ class Solar_App_Bookmarks extends Solar_App {
 	protected $action_default = 'tag';
 	
 	
+	// there are only some accepted orderings.
 	protected function getOrder()
 	{
-		// there are only some accepted orderings
 		$tmp = strtolower(Solar::get('order'));
+		
 		switch ($tmp) {
 		
+		// timestamp
 		case 'ts':
 		case 'ts_asc':
 			$order = 'ts_new ASC';
@@ -58,7 +60,9 @@ class Solar_App_Bookmarks extends Solar_App {
 		
 		case 'ts_desc':
 			$order = 'ts_new DESC';
+			break;
 			
+		// title
 		case 'title':
 		case 'title_asc':
 			$order = 'LOWER(title) ASC';
@@ -67,16 +71,41 @@ class Solar_App_Bookmarks extends Solar_App {
 		case 'title_desc':
 			$order = 'LOWER(title) DESC';
 			break;
+		
+		// tags
+		case 'tag':
+		case 'tag_asc':
+		case 'tags':
+		case 'tags_asc':
+			$order = 'LOWER(sc_bookmarks.tags) ASC';
+			break;
 			
+		case 'tag_desc':
+		case 'tags_desc':
+			$order = 'LOWER(sc_bookmarks.tags) DESC';
+			break;
+		
+		// rank
+		case 'rank':
+		case 'rank_asc':
+			$order = 'rank ASC';
+			break;
+		
+		case 'rank_desc':
+			$order = 'rank DESC';
+			break;
+		
+		// username
 		case 'user':
 		case 'user_asc':
-			$order = 'user_id ASC';
+			$order = 'LOWER(user_id) ASC';
 			break;
 			
 		case 'user_desc':
-			$order = 'user_id DESC';
+			$order = 'LOWER(user_id) DESC';
 			break;
-			
+		
+		// default (timestamp descending)
 		default:
 			$order = 'ts_new DESC';
 			break;

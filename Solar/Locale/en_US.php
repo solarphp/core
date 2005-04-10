@@ -29,6 +29,7 @@ return array(
 	'OP_SAVE'       => 'Save',
 	'OP_PREVIEW'    => 'Preview',
 	'OP_CANCEL'     => 'Cancel',
+	'OP_DELETE'     => 'Delete',
 	'OP_RESET'      => 'Reset',
 	'OP_NEXT'       => 'Next',
 	'OP_PREVIOUS'   => 'Previous',

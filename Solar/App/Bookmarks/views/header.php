@@ -53,6 +53,14 @@
 			input[type="text"], input[type="password"], textarea { font-family: "Lucida Sans Typewriter", monospace; font-size: 100%;}
 			
 		</style>
+		
+		<?php if ($this->rss['avail']) {
+			$link = Solar::object('Solar_Uri');
+			$link->query('add', 'rss', '1');
+			echo '<link rel="alternate" type="application/rss+xml" title="' . $this->rss['title'] . '" ';
+			echo 'href="' . $link->export() . '" />' . "\n";
+			unset($link);
+		} ?>
 	</head>
 	<body>
 	

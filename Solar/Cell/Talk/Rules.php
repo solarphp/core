@@ -8,13 +8,13 @@
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Talk
+* @subpackage Solar_Cell_Comments
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id: Rules.php,v 1.2 2005/02/08 02:04:51 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -26,11 +26,11 @@
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Talk
+* @subpackage Solar_Cell_Comments
 * 
 */
 
-class Solar_Cell_Talk_Rules extends Solar_Base {
+class Solar_Cell_Comments_Rules extends Solar_Base {
 	
 	
 	/**
@@ -77,7 +77,7 @@ class Solar_Cell_Talk_Rules extends Solar_Base {
 		// if calling statically, create a temporary local object.
 		if (! isset($this)) {
 			// we're static
-			$obj = Solar::object('Solar_Cell_Talk_Rules');
+			$obj = Solar::object('Solar_Cell_Comments_Rules');
 		} else {
 			// we're an instance
 			$obj = $this;

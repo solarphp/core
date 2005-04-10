@@ -8,7 +8,7 @@
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Talk
+* @subpackage Solar_Cell_Comments
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -32,11 +32,11 @@ Solar::autoload('Solar_Sql_Entity');
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Talk
+* @subpackage Solar_Cell_Comments
 * 
 */
 
-class Solar_Cell_Talk extends Solar_Sql_Entity {
+class Solar_Cell_Comments extends Solar_Sql_Entity {
 	
 	/**
 	* 
@@ -45,11 +45,11 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	*/
 	
 	public $config = array(
-		'locale'         => 'Solar/Cell/Talk/Locale/',
+		'locale'         => 'Solar/Cell/Comments/Locale/',
 		'notify_to'      => null,
 		'notify_from'    => null,
 		'notify_subj'    => null,
-		'rules_callback' => array('Solar_Cell_Talk_Rules', 'apply'),
+		'rules_callback' => array('Solar_Cell_Comments_Rules', 'apply'),
 	);
 	
 	
@@ -89,7 +89,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch one talk comment.
+	* Fetch one comment.
 	* 
 	* @access public
 	* 
@@ -116,7 +116,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch a list of all comments related to a specific table and ID.
+	* Fetch a queue of all comments related to a specific table and ID.
 	* 
 	* @access public
 	* 
@@ -124,13 +124,13 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public function fetchQueue($tbl, $tbl_id, $order = null, $page = null)
+	public function fetchQueue($rel, $rel_id, $order = null, $page = null)
 	{
 		return $this->selectFetch(
 			'queue',
 			array(
-				'tbl' => $tbl,
-				'tbl_id' => $tbl_id,
+				'rel' => $rel,
+				'rel_id' => $rel_id,
 			),
 			$order,
 			$page
@@ -185,7 +185,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// table name
 		// 
 		
-		$schema['tbl'] = 'sc_talk';
+		$schema['tbl'] = 'sc_comments';
 		
 		
 		// -------------------------------------------------------------
@@ -196,7 +196,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// sequential id
 		$schema['col']['id'] = array(
 			'type'     => 'int',
-			'sequence' => 'sc_talk',
+			'sequence' => 'sc_comments',
 			'primary'  => true,
 			'require'  => true,
 		);
@@ -216,13 +216,13 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		);
 		
 		// which table this is related to (e.g., 'sc_bugs')
-		$schema['col']['tbl'] = array(
+		$schema['col']['rel'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
 		);
 		
 		// which ID in the related table
-		$schema['col']['tbl_id'] = array(
+		$schema['col']['rel_id'] = array(
 			'type'    => 'int',
 		);
 		
@@ -350,7 +350,7 @@ class Solar_Cell_Talk extends Solar_Sql_Entity {
 		// list of entries for a related table and id
 		$schema['qry']['queue'] = array(
 			'select' => '*',
-			'where' => 'tbl = :tbl AND tbl_id = :tbl_id',
+			'where' => 'rel = :rel AND rel_id = :rel_id',
 			'order' => 'ts',
 			'fetch' => 'All'
 		);

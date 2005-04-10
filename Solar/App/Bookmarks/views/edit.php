@@ -31,16 +31,11 @@
 ?>
 
 <?php include $this->template('header.php') ?>
-<?php $link = Solar::object('Solar_Uri') ?>
 
 <h2><?php echo Solar::locale('Solar_App_Bookmarks', 'BOOKMARK') ?></h2>
 <p>[ <?php
-	$link->clearInfo();
-	$link->clearQuery();
-	$link->info('set', 0, 'user');
-	$link->info('set', 1, Solar::$shared->user->auth->username);
 	echo $this->ahref(
-		$link->export(),
+		$this->backlink,
 		Solar::locale('Solar_App_Bookmarks', 'BACK_TO_LIST')
 	);
 ?> ]</p>
@@ -64,6 +59,7 @@
 		echo $this->form('group', 'start');
 		echo $this->form('submit', 'op', Solar::locale('Solar', 'OP_SAVE'));
 		echo $this->form('submit', 'op', Solar::locale('Solar', 'OP_CANCEL'));
+		echo $this->form('submit', 'op', Solar::locale('Solar', 'OP_DELETE'));
 		echo $this->form('group', 'end');
 		echo $this->form('end');
 	?>

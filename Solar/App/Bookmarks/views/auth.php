@@ -13,7 +13,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: auth.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -46,7 +46,9 @@
 			echo $this->form('block', 'begin', null, 'row');
 			echo $this->form('hidden', 'op', 'login');
 			echo $this->form('text', 'username', '', 'Username:', array('size' => 10));
+			echo $this->form('block', 'split');
 			echo $this->form('password', 'password', '', 'Password:', array('size' => 10));
+			echo $this->form('block', 'split');
 			echo $this->form('submit', '', Solar::locale('Solar', 'TEXT_LOGIN'), '');
 			echo $this->form('end');
 		?>

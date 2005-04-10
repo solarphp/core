@@ -43,6 +43,15 @@ $tpl->addPath(
 	Solar::config('Solar_App_Bookmarks', 'template_path', '')
 );
 
+// RSS data for the page
+$tpl->rss = array(
+	'avail' => false,
+	'title' => Solar::super('server', 'PATH_INFO'),
+	'descr' => 'Solar_App_Bookmarks',
+	'date'  => date('c'), // should be latest mod date in the $tpl->list
+	'link' => Solar::super('server', 'REQUEST_URI'),
+);
+
 // get standalone objects
 $bookmarks = Solar::object('Solar_Cell_Bookmarks');
 $form = Solar::object('Solar_Form');

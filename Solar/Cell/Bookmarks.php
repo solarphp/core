@@ -310,6 +310,19 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		return $this->fetchList($where, $order, $page);
 	}
 	
+	
+	/**
+	* 
+	* Fetch all the tags used by a user_id.
+	* 
+	* @access public
+	* 
+	* @param string $user_id The user_id to look up.
+	* 
+	* @return array The list of tags from that user.
+	* 
+	*/
+	
 	public function userTags($user_id)
 	{
 		return $this->selectFetch('userTags', array('user_id' => $user_id));

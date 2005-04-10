@@ -122,6 +122,11 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			)
 		);
 		
+		// arbitrary rank value (order, sequence, popularity, etc)
+		$schema['col']['rank'] = array(
+			'type'     => 'int',
+		);
+		
 		// short title for the uri
 		$schema['col']['title'] = array(
 			'type'     => 'varchar',
@@ -160,6 +165,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			'id'      => 'unique',
 			'user_id' => 'normal',
 			'uri'     => 'normal',
+			'rank'    => 'normal',
 			'tags'    => 'normal',
 		);
 		
@@ -169,9 +175,10 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// relationships
 		// 
 		
-		$schema['rel']['search_tags'] = "sc_tags_bundle ON sc_tags_bundle.rel = 'sc_bookmarks'" .
-			' AND sc_tags_bundle.rel_id = sc_bookmarks.id';
-			
+		$schema['rel']['search_bundle'] = "sc_tags_bundle ON sc_tags_bundle.rel = 'sc_bookmarks' AND sc_tags_bundle.rel_id = sc_bookmarks.id";
+		
+		$schema['rel']['search_tags'] = "sc_tags ON sc_tags.rel = 'sc_bookmarks' AND sc_tags.rel_id = sc_bookmarks.id";
+		
 		// -------------------------------------------------------------
 		// 
 		// queries
@@ -194,8 +201,16 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// lookup by tag name(s)
 		$schema['qry']['tags'] = array(
 			'select' => 'sc_bookmarks.*',
-			'join'   => 'search_tags',
+			'join'   => 'search_bundle',
 			'fetch'  => 'All'
+		);
+		
+		$schema['qry']['userTags'] = array(
+			'select' => 'DISTINCT sc_tags.tag AS tag',
+			'join'   => 'search_tags',
+			'where'  => 'user_id = :user_id',
+			'order'  => 'LOWER(tag)',
+			'fetch'  => 'Col'
 		);
 		
 		// -------------------------------------------------------------
@@ -206,19 +221,30 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		$schema['frm']['edit'] = array(
 			'id' => array('type' => 'hidden'),
 			'title' => array(
+				'attribs' => array('size' => '60'),
 				'validate' => array(
-					array('notBlank', 'Please enter a bookmark title.'),
+					array('notBlank', 'Please enter a title.'),
 				)
 			),
 			'uri' => array(
+				'attribs' => array('size' => '60'),
 				'validate' => array(
 					array('uri', 'Please enter a valid URI.'),
 				),
 			),
-			'descr' => array(),
+			'descr' => array(
+				'attribs' => array('size' => '60'),
+			),
 			'tags' => array(
+				'attribs' => array('size' => '60'),
 				'validate' => array(
 					array('regex', 'Please use valid tags.', '/^[A-Za-z0-9_ ]*$/'),
+				),
+			),
+			'rank' => array(
+				'attribs' => array('size' => '5'),
+				'validate' => array(
+					array('integer', 'Please enter a whole number value.', Solar_Valid::OR_BLANK),
 				),
 			),
 		);
@@ -282,6 +308,11 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	{
 		$where = 'user_id = ' . $this->quote($user_id);
 		return $this->fetchList($where, $order, $page);
+	}
+	
+	public function userTags($user_id)
+	{
+		return $this->selectFetch('userTags', array('user_id' => $user_id));
 	}
 	
 	

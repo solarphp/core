@@ -244,6 +244,28 @@ class Solar_Valid {
 	
 	/**
 	* 
+	* Validate that a value represents an integer (+/-).
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function integer($value, $blank = self::NOT_BLANK)
+	{
+		if ($blank && self::blank($value)) {
+			return true;
+		}
+		$expr = '/^[\+\-]{0,1}[0-9]+$/';
+		return self::regex($value, $expr);
+	}
+	
+	
+	/**
+	* 
 	* Validate that a value is an ISO 8601 date string (yyyy-mm-dd format).
 	* 
 	* Also checks to see that the date itself is valid (e.g., no Feb 30).
@@ -447,7 +469,6 @@ class Solar_Valid {
 		
 		return (strlen($value) >= $min);
 	}
-	
 	
 	/**
 	* 

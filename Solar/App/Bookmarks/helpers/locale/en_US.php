@@ -1,1 +1,18 @@
-<?php return array() ?>
+<?php return array(
+	'ADD_NEW_BOOKMARK'   => 'Add new bookmark.',
+	'BACKLINK'           => 'Back',
+	'BOOKMARKS'          => 'Solar Bookmarking System',
+	'BY'                 => 'by',
+	'DRAG_THIS'          => 'Drag this link to your toolbar for quick bookmarking',
+	'EDIT_ITEM'          => 'Edit Bookmark',
+	'FROM'               => 'from',
+	'NO_BOOKMARKS_FOUND' => 'No bookmarks found.',
+	'ON'                 => 'on',
+	'ORDERED_BY'         => 'Ordered By',
+	'QUICKMARK'          => 'QuickMark',
+	'RANK'               => 'rank',
+	'TAG_LIST'           => 'Tags In Use',
+	'TAGGED'             => 'tagged',
+	'TAGS'               => 'Tags',
+	'USER'               => 'User',
+) ?>

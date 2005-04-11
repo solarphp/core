@@ -52,5 +52,9 @@ return array(
 	'TEXT_LOGIN'         => 'Sign In',
 	'TEXT_LOGOUT'        => 'Sign Out',
 	'TEXT_AUTH_USERNAME' => 'Signed in as',
+	
+	// generic labels
+	'LABEL_USERNAME'     => 'Username',
+	'LABEL_PASSWORD'     => 'Password',
 );
 ?>

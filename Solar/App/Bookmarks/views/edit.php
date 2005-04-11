@@ -32,11 +32,11 @@
 
 <?php include $this->template('header.php') ?>
 
-<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'BOOKMARK') ?></h2>
+<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'EDIT_ITEM') ?></h2>
 <p>[ <?php
 	echo $this->ahref(
 		$this->backlink,
-		Solar::locale('Solar_App_Bookmarks', 'BACK_TO_LIST')
+		Solar::locale('Solar_App_Bookmarks', 'BACKLINK')
 	);
 ?> ]</p>
 

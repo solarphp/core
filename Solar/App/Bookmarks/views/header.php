@@ -63,8 +63,9 @@
 		} ?>
 	</head>
 	<body>
-	
-	<?php $this->form('set', 'class', 'Savant3') ?>
-	<?php include $this->template('auth.php') ?>
+		
+		<h1><?php echo Solar::locale('Solar_App_Bookmarks', 'BOOKMARKS') ?></h1>
+		<?php $this->form('set', 'class', 'Savant3') ?>
+		<?php include $this->template('auth.php') ?>
 	
 	

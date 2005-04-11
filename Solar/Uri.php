@@ -172,6 +172,10 @@ class Solar_Uri extends Solar_Base {
 			$this->elem['query'][$key] = $val;
 			break;
 		
+		case 'setstr':
+			parse_str($key, $this->elem['query']);
+			break;
+			
 		case 'add':
 			if (isset($this->elem['query'][$key])) {
 				$this->elem['query'][$key][] = $val;
@@ -186,16 +190,23 @@ class Solar_Uri extends Solar_Base {
 		}
 	}
 	
-	public function info($act, $pos, $val = '')
+	public function info($act, $key, $val = '')
 	{
 		switch (strtolower($act)) {
 		
 		case 'set':
-			$this->elem['info'][$pos] = $val;
+			$this->elem['info'][$key] = $val;
 			break;
 		
+		case 'setstr':
+			$this->elem['info'] = explode('/', $key);
+			if (substr($key, 0, 1) == '/') {
+				array_shift($this->elem['info']);
+			}
+			break;
+			
 		case 'del':
-			unset($this->elem['info'][$pos]);
+			unset($this->elem['info'][$key]);
 			break;
 		}
 	}

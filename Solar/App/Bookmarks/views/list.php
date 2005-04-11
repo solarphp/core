@@ -3,8 +3,9 @@
 	$link = Solar::object('Solar_Uri');
 ?>
 <div>
+	<!-- ordering -->
 	<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-		<h2>Ordered By</h2>
+		<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'ORDERED_BY') ?></h2>
 		<p><?php
 			$tmp = array(
 				'rank'       => 'Rank',
@@ -35,7 +36,7 @@
 	<!-- the list of tags for this user (if one is selected) -->
 	<?php if (Solar::pathinfo(0) == 'user'): ?>
 		<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-			<h2>Tag</h2>
+			<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'TAG_LIST') ?></h2>
 			<p><?php
 				$link->import();
 				$tmp = array();
@@ -49,13 +50,14 @@
 		</div>
 	<?php endif ?>
 	
+	<!-- results -->
 	<div style="float: left;">
 		<!-- output the user_id and tag-search, if any -->
 		<?php if ($this->user_id || $this->tags): ?>
 			<h2><?php
-				if ($this->user_id) echo "User: " . $this->scrub($this->user_id);
+				if ($this->user_id) echo Solar::locale('Solar_App_Bookmarks', 'USER') . ': ' . $this->scrub($this->user_id);
 				if ($this->user_id && $this->tags) echo "<br />\n";
-				if ($this->tags) echo "Tags: " . $this->scrub($this->tags);
+				if ($this->tags) echo Solar::locale('Solar_App_Bookmarks', 'TAGS') . ': ' . $this->scrub($this->tags);
 			?></h2>
 		<?php endif ?>
 		
@@ -63,14 +65,21 @@
 		<?php if (count($this->list)): ?>
 			<?php foreach ($this->list as $item): ?>
 				<p>
-					<!-- title and rank -->
+					<!-- title -->
 					<span style="font-size: 120%; font-weight: bold;"><?php
 						echo $this->ahref($item['uri'], $item['title']);
 					?></span>
 					
+					<!-- description -->
+					<br /><?php echo nl2br(wordwrap($this->scrub($item['descr']), 72)) ?>
+					
 					<!-- rank and uri -->
-					<br /><span style="font-size: 90%;">rank <?php echo $this->scrub($item['rank']);
-					?> from <?php
+					<br /><span style="font-size: 90%;"><?php
+						// rank
+						echo Solar::locale('Solar_App_Bookmarks', 'RANK') . ' ' . $this->scrub($item['rank']);
+						
+						// from uri
+						echo ' ' . Solar::locale('Solar_App_Bookmarks', 'FROM') . ' ';
 						$cut = $item['uri'];
 						if (strlen($cut) > 72) {
 							// if longer than 72 chars, only show 64 chars, cut in the middle
@@ -80,8 +89,9 @@
 					?>
 					
 					<!-- date added by user -->
-					<br />on <?php echo $this->date($item['ts_new']) ?>
-					by <?php
+					<br /><?php
+						echo Solar::locale('Solar_App_Bookmarks', 'ON') . ' ' . $this->date($item['ts_new']) . ' ';
+						echo Solar::locale('Solar_App_Bookmarks', 'BY') . ' ';
 						$link->clearInfo();
 						$link->clearQuery();
 						$link->info('set', '0', 'user');
@@ -90,7 +100,8 @@
 					?></span>
 					
 					<!-- tags -->
-					<br />tagged<?php
+					<br /><?php
+						echo Solar::locale('Solar_App_Bookmarks', 'TAGGED') . ' ';
 						$tags = explode(' ', $item['tags']);
 						foreach ($tags as $tag) {
 							echo '&nbsp;';
@@ -117,7 +128,7 @@
 			<?php endforeach ?>
 			
 		<?php else: ?>
-			<p>No bookmarks found.</p>
+			<p><?php echo Solar::locale('Solar_App_Bookmarks', 'NO_BOOKMARKS_FOUND') ?></p>
 		<?php endif ?>
 		
 		<?php if (Solar::$shared->user->auth->status_code == 'VALID'): ?>
@@ -135,7 +146,8 @@
 				$host = $link->elem['host'];
 				$path = $link->elem['path'];
 				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)";
-				echo "Drag this to your toolbar for quick bookmarking: " . $this->ahref($js, "Quickmark");
+				echo Solar::locale('Solar_App_Bookmarks', 'DRAG_THIS'). ': ';
+				echo $this->ahref($js, Solar::locale('Solar_App_Bookmarks', 'QUICKMARK'));
 			?></p>
 		<?php endif ?>
 	</div>

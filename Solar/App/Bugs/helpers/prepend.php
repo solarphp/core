@@ -46,7 +46,7 @@ $tpl->addPath(
 // get standalone objects for the bug-tracking table, the comments table,
 // and a form builder
 $bugs = Solar::object('Solar_Cell_Bugs');
-$talk = Solar::object('Solar_Cell_Talk');
+$comments = Solar::object('Solar_Cell_Comments');
 $form = Solar::object('Solar_Form');
 
 ?>

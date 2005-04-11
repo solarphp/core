@@ -48,8 +48,8 @@ if (Solar::isError($data)) {
 }
 
 // get the comment form elements and set defaults
-// (put them in an array called 'talk')
-$form->setElements($talk->formElements('mini'), 'talk');
+// (put them in an array called 'comments')
+$form->setElements($comments->formElements('mini'), 'comments');
 
 // populate the form with submitted values
 $form->populate();
@@ -70,12 +70,12 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 		$values = $form->values();
 		
 		// add required elements
-		$values['talk']['tbl'] = 'sc_bugs';
-		$values['talk']['tbl_id'] = $id;
-		$values['talk']['subj'] = $data['summ'];
+		$values['comments']['rel'] = 'sc_bugs';
+		$values['comments']['rel_id'] = $id;
+		$values['comments']['subj'] = $data['summ'];
 		
 		// attempt the insert
-		$result = $talk->insert($values['talk']);
+		$result = $comments->insert($values['comments']);
 		
 		// did it work?
 		if (Solar::isError($result)) {
@@ -85,8 +85,8 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			Solar::dump($form);
 		} else {
 			// success! reset the form elements to their defaults.
-			// (put them in an array called 'talk')
-			$form->setElements($talk->formElements('mini'), 'talk');
+			// (put them in an array called 'comments')
+			$form->setElements($comments->formElements('mini'), 'comments');
 			$form->feedback[] = Solar::Locale('Solar', 'OK_SAVED');
 		}
 	}
@@ -99,7 +99,7 @@ $tpl->item = $bugs->formElements('edit', $data);
 $tpl->formdata = $form;
 
 // add the existing comments
-$tpl->comments = $talk->fetchQueue('sc_bugs', $id);
+$tpl->comments = $comments->fetchQueue('sc_bugs', $id);
 
 // are we allowing edits?
 $user = Solar::shared('user');

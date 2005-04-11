@@ -100,10 +100,10 @@ if ($id) {
 	);
 }
 
-// add elements from $talk in an array called 'talk'
+// add elements from $comments in an array called 'comments'
 $form->setElements(
-	$talk->formElements('mini', $talk->defaultRow()),
-	'talk'
+	$comments->formElements('mini', $comments->defaultRow()),
+	'comments'
 );
 
 // bring in the submitted values to the form
@@ -156,15 +156,15 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 			
 			// now add the comment, if there was one.
 			// $id was set when up updated the report above.
-			if (trim($values['talk']['body']) != '') {
+			if (trim($values['comments']['body']) != '') {
 				$data = array(
-					'tbl'    => 'sc_bugs',
-					'tbl_id' => $id,
-					'email'  => $values['talk']['email'],
+					'rel'    => 'sc_bugs',
+					'rel_id' => $id,
+					'email'  => $values['comments']['email'],
 					'subj'   => $values['bugs']['summ'],
-					'body'   => $values['talk']['body']
+					'body'   => $values['comments']['body']
 				);
-				$talk->insert($data);
+				$comments->insert($data);
 			}
 			
 			// redirect to 'view item'
@@ -187,7 +187,7 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 
 // get comments about the bug
 $id = $form->elements['bugs[id]']['value'];
-$tpl->comments = $talk->fetchQueue('sc_bugs', $id);
+$tpl->comments = $comments->fetchQueue('sc_bugs', $id);
 
 // assign the form object
 $tpl->formdata = $form;

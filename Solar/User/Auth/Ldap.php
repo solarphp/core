@@ -58,7 +58,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($config = null)
+	public function __construct($config = null)
 	{
 		// make sure we have LDAP available
 		if (! extension_loaded('ldap')) {

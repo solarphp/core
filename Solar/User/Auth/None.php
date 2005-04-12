@@ -41,7 +41,7 @@ class Solar_User_Auth_None extends Solar_Base {
 	* 
 	*/
 	
-	function valid($user, $pass)
+	public function valid($user, $pass)
 	{
 		return false;
 	}

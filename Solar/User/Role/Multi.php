@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: None.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -67,8 +67,11 @@ class Solar_User_Role_Multi extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($config = null)
+	public function __construct($config = null)
 	{
+		// basic config
+		parent::__construct($config);
+		
 		// make sure the drivers config is an array
 		settype($this->config['drivers'], 'array');
 		
@@ -101,7 +104,7 @@ class Solar_User_Role_Multi extends Solar_Base {
 	* 
 	*/
 	
-	function fetch($user)
+	public function fetch($user)
 	{
 		// the list of all roles
 		$list = array();

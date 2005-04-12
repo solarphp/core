@@ -55,9 +55,8 @@ class Solar_User_Auth_Mail extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($config = null)
+	public function __construct($config = null)
 	{
-		
 		// make sure the IMAP extension is available
 		if (! extension_loaded('imap')) {
 			return $this->error(
@@ -87,7 +86,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
 	* 
 	*/
 	
-	function valid($username, $password)
+	public function valid($username, $password)
 	{
 		$mailbox = '{' . $this->config['mailbox'] . '}';
 		$conn = @imap_open($mailbox, $username, $password, OP_HALFOPEN);

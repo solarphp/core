@@ -1374,7 +1374,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	function timestamp()
+	public function timestamp()
 	{
 		return substr(date('c'), 0, 19);
 	}

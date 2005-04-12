@@ -292,7 +292,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	function createSequence($name, $start = 1)
+	public function createSequence($name, $start = 1)
 	{
 		$start -= 1;
 		$result = $this->exec("CREATE TABLE $name (id INT NOT NULL)");
@@ -312,7 +312,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	*/
 	
-	function dropSequence($name)
+	public function dropSequence($name)
 	{
 		$this->exec("DROP TABLE $name");
 	}

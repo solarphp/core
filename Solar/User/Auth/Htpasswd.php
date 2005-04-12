@@ -66,7 +66,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	* 
 	*/
 	
-	function valid($user, $pass)
+	public function valid($user, $pass)
 	{
 		// force the full, real path to the file
 		$file = realpath($this->config['file']);

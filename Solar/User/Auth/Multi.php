@@ -68,7 +68,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
 	* 
 	*/
 	
-	function __construct($config = null)
+	public function __construct($config = null)
 	{
 		// basic construction
 		parent::__construct($config);
@@ -97,18 +97,21 @@ class Solar_User_Auth_Multi extends Solar_Base {
 	
 	/**
 	* 
-	* Check is user is valid in any of the given drivers.
+	* Validate a username and password.
+	*
+	* @param string $user Username to authenticate.
 	* 
-	* @param string $user Username to get roles for.
+	* @param string $pass The plain-text password to use.
 	* 
-	* @return mixed An array of discovered roles.
+	* @return boolean|Solar_Error True on success, false on failure,
+	* or a Solar_Error object if there was a file error.
 	* 
 	*/
 	
-	function valid($user)
+	public function valid($user, $pass)
 	{
 		foreach ($this->driver as $driver) {
-			if ($driver->valid($user)) {
+			if ($driver->valid($user, $pass)) {
 				return true;
 			}
 		}

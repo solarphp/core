@@ -40,7 +40,7 @@ class Solar_User_Role_None extends Solar_Base {
 	* 
 	*/
 	
-	function fetch($user)
+	public function fetch($user)
 	{
 		return array();
 	}

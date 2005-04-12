@@ -66,7 +66,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
 	* 
 	*/
 	
-	function valid($user, $pass)
+	public function valid($user, $pass)
 	{
 		// force the full, real path to the CVS file
 		$file = realpath($this->config['file']);

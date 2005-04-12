@@ -65,7 +65,7 @@ class Solar_User_Role_File extends Solar_Base {
 	* 
 	*/
 	
-	function fetch($user)
+	public function fetch($user)
 	{
 		// force the full, real path to the file
 		$file = realpath($this->config['file']);

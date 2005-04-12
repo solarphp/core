@@ -450,7 +450,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// retrieve the count results
-		return $this->selectFetch($count_key);
+		return $this->selectFetch($count_key, $filter);
 	}
 	
 	

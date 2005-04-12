@@ -56,10 +56,10 @@ class Solar_User_Auth extends Solar_Base {
 	* options => (array) Options for the authentication driver.
 	* 
 	* expire => (int) Authentication lifetime in seconds; zero is
-	* forever.
+	* forever.  Default is 14400 (4 hours).
 	* 
 	* idle => (int) Maximum allowed idle time in seconds; zero is
-	* forever.
+	* forever.  Default is 1800 (30 minutes).
 	* 
 	* allow => (bool) Whether or not to allow automatic login/logout.
 	* 
@@ -86,8 +86,8 @@ class Solar_User_Auth extends Solar_Base {
 		'locale'        => 'Solar/User/Locale/',
 		'class'         => 'Solar_User_Auth_None',
 		'options'       => null,
-		'expire'        => 0,
-		'idle'          => 0,
+		'expire'        => 14400,
+		'idle'          => 1800,
 		'allow'         => true,
 		'post_op'       => 'op',
 		'post_password' => 'password',

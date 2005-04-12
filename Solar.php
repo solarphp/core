@@ -138,13 +138,16 @@ class Solar {
 			}
 		}
 		
-		// build the shared locale object
-		Solar::shared('locale');
-		
 		// build the shared superglobal data retriever
 		Solar::shared('super');
 		
-		// load all autoshare objects ...
+		// build the shared locale object
+		Solar::shared('locale');
+		
+		// build the shared user object
+		Solar::shared('user');
+		
+		// load all other autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
 		foreach ($list as $name) {
 			Solar::shared($name);

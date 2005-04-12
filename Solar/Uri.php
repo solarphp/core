@@ -1,27 +1,174 @@
 <?php
 
-// @todo finish conversion from static to instance
+/**
+* 
+* Parses a URI string into its component parts for manipulation and export.
+* 
+* @category Solar
+* 
+* @package Solar
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
+/**
+* 
+* Parses a URI string into its component parts for manipulation and export.
+* 
+* @category Solar
+* 
+* @package Solar
+* 
+*/
 
 class Solar_Uri extends Solar_Base {
 	
-	// the parsed pieces of the the URI
-	public $elem = array(
-		'scheme'   => null,
-		'host'     => null,
-		'port'     => null,
-		'user'     => null,
-		'pass'     => null,
-		'path'     => null,
-		'info'     => array(),
-		'query'    => array(),
-		'fragment' => null // bug in php 5.0.3 does not find fragments!
-	);
+	
+	/**
+	* 
+	* The scheme (e.g. 'http' or 'https').
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $scheme = null;
+	
+	
+	/**
+	* 
+	* The host specification (e.g., 'example.com').
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $host = null;
+	
+	
+	/**
+	* 
+	* The port number (e.g., '80').
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $port = null;
+	
+	
+	/**
+	* 
+	* The username, if any.
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $user = null;
+	
+	
+	/**
+	* 
+	* The password, if any.
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $pass = null;
+	
+	
+	/**
+	* 
+	* The path portion (e.g., 'path/to/index.php').
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $path = null;
+	
+	
+	/**
+	* 
+	* Path info elements after the script name (from $_SERVER['PATH_INFO']).
+	* 
+	* This will not work when importing URIs from text, because there's
+	* no good way to know what portion of the path is the script, and
+	* what portion is the info.  The only time it works is when
+	* importing the current URI (i.e., when the only import() parameter
+	* is empty).
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
+	public $info = array();
+	
+	
+	/**
+	* 
+	* Query string elements split apart into an array.
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	*/
+	
+	public $query = array();
+	
+	
+	/**
+	* 
+	* The fragment portion (e.g., "#subsection").
+	* 
+	* @access public
+	* 
+	* @var string
+	* 
+	* @todo Bug in parse_url (PHP 5.0.3) does not find fragments.
+	*/
+	
+	public $fragment = null;
+	
+	
+	/**
+	* 
+	* Constructor.
+	* 
+	* @access public
+	* 
+	* @param array $config User-provided configuration values.
+	* 
+	*/
 	
 	public function __construct($config = null)
 	{
 		parent::__construct($config);
 		$this->import();
 	}
+	
 	
 	/**
 	* 
@@ -36,14 +183,22 @@ class Solar_Uri extends Solar_Base {
 	* 
 	*/
 	
-	public function import()
+	public function import($uri = null)
 	{
 		// build a default scheme (with '://' in it)
 		$ssl = Solar::super('server', 'HTTPS', 'off');
 		$scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
 		
-		// the current uri
-		$uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		// we'll parse the modified uri, not the original as passed.
+		$modified_uri = $uri;
+		
+		// force to the current uri?
+		if (! $uri) {
+			$modified_uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+		} elseif (strpos('://', $uri) === false) {
+			// add the scheme
+			$modified_uri = $scheme . $uri;
+		}
 		
 		// default elements
 		$elem = array(
@@ -59,25 +214,36 @@ class Solar_Uri extends Solar_Base {
 		);
 		
 		// parse the uri and merge with the defaults
-		$elem = array_merge($elem, parse_url($uri));
+		$elem = array_merge($elem, parse_url($modified_uri));
 		
-		// force the query string
-		$elem['query'] = Solar::get();
+		// touchup
+		if ($uri) {
 		
-		// force the path to the script
-		$elem['path'] = Solar::super('server', 'SCRIPT_NAME');
+			// a uri string was passed; parse query elements into an array.
+			parse_str($elem['query'], $elem['query']);
+			
+		} else {
 		
-		//  get path info
-		$elem['info'] = Solar::pathinfo();
+			// force the query string
+			$elem['query'] = Solar::get();
+			
+			// force the path to the script
+			$elem['path'] = Solar::super('server', 'SCRIPT_NAME');
+			
+			//  get path info
+			$elem['info'] = Solar::pathinfo();
+		}
 		
-		// done!
-		$this->elem = $elem;
+		// done, pass into the properties
+		foreach ($elem as $key => $val) {
+			$this->$key = $val;
+		}
 	}
 	
 	
 	/**
 	* 
-	* Builds an array of URI elements into a string.
+	* Builds the parsed URI elements into a string.
 	* 
 	* @access public
 	* 
@@ -87,26 +253,28 @@ class Solar_Uri extends Solar_Base {
 	
 	public function export()
 	{
-		// add the scheme
-		$uri = empty($this->elem['scheme']) ? '' : $this->elem['scheme'] . '://';
+		// build the uri as we go.
+		// add the scheme.
+		$uri = empty($this->scheme) ? '' : $this->scheme . '://';
 		
-		// add the username and password
-		if (! empty($this->elem['user'])) {
-			$uri .= $this->elem['user'];
-			if (isset($this->elem['pass'])) {
-				$uri .= ':' . $this->elem['pass'];
+		// add the username and password, if any.
+		if (! empty($this->user)) {
+			$uri .= $this->user;
+			if (! empty($this->pass)) {
+				$uri .= ':' . $this->pass;
 			}
 			$uri .= '@';
 		}
 		
-		// add the remaining pieces
-		$uri .= empty($this->elem['host'])     ? '' : $this->elem['host'];
-		$uri .= empty($this->elem['port'])     ? '' : ':' . $this->elem['port'];
-		$uri .= empty($this->elem['path'])     ? '' : $this->elem['path'];
-		$uri .= empty($this->elem['info'])     ? '' : '/' . implode('/', $this->elem['info']);
-		$uri .= empty($this->elem['query'])    ? '' :  '?' . self::query2str($this->elem['query']);
-		$uri .= empty($this->elem['fragment']) ? '' :  '#' . uriencode($this->elem['fragment']);
+		// add the remaining pieces.
+		$uri .= empty($this->host)     ? '' : $this->host;
+		$uri .= empty($this->port)     ? '' : ':' . $this->port;
+		$uri .= empty($this->path)     ? '' : $this->path;
+		$uri .= empty($this->info)     ? '' : '/' . implode('/', $this->info);
+		$uri .= empty($this->query)    ? '' :  '?' . self::query2str($this->query);
+		$uri .= empty($this->fragment) ? '' :  '#' . $this->fragment;
 		
+		// done!
 		return $uri;
 	}
 	
@@ -150,17 +318,24 @@ class Solar_Uri extends Solar_Base {
 	
 	/**
 	* 
-	* Changes the path_info values in the parsed URI.
+	* Changes the elements and values in the $this->query array.
 	* 
-	* With this method, you can 'set' or 'del' (delete) a value.
+	* With this method, you can 'add', 'set' or 'del' (delete) a value. 
+	* You can also use the 'setstr' action to set the query elements
+	* from a URI query string as the $key parameter.
+	* 
+	* When using 'add', the element will be converted to an array if 
+	* there is more than one value.
 	* 
 	* @access public
 	* 
-	* @param string $act The action to take: 'set' or 'del'.
+	* @param string $act The action to take: 'add', 'set', 'setstr', or 'del'.
 	* 
-	* @param string $pos The path-info position to work with.
+	* @param string $key The GET variable name to work with.
 	* 
 	* @param string $val The value to use.
+	* 
+	* @return void
 	* 
 	*/
 	
@@ -168,57 +343,100 @@ class Solar_Uri extends Solar_Base {
 	{
 		switch (strtolower($act)) {
 		
-		case 'set':
-			$this->elem['query'][$key] = $val;
-			break;
-		
-		case 'setstr':
-			parse_str($key, $this->elem['query']);
-			break;
-			
 		case 'add':
-			if (isset($this->elem['query'][$key])) {
-				$this->elem['query'][$key][] = $val;
+			if (isset($this->query[$key])) {
+				$this->query[$key][] = $val;
 			} else {
-				$this->elem['query'][$key] = $val;
+				$this->query[$key] = $val;
 			}
 			break;
 		
+		case 'set':
+			$this->query[$key] = $val;
+			break;
+		
+		case 'setstr':
+			parse_str($key, $this->query);
+			break;
+			
 		case 'del':
-			unset($this->elem['query'][$key]);
+			unset($this->query[$key]);
 			break;
 		}
 	}
+	
+	
+	/**
+	* 
+	* Changes the elements and values in the $this->info array.
+	* 
+	* With this method, you can 'set' or 'del' (delete) a value. 
+	* You can also use the 'setstr' action to set the path_info
+	* from a URI query string as the $key parameter.
+	* 
+	* @access public
+	* 
+	* @param string $act The action to take: 'add', 'setstr', or 'del'.
+	* 
+	* @param string $key The path_info position to work with.
+	* 
+	* @param string $val The value to use.
+	* 
+	* @return void
+	* 
+	*/
 	
 	public function info($act, $key, $val = '')
 	{
 		switch (strtolower($act)) {
 		
 		case 'set':
-			$this->elem['info'][$key] = $val;
+			$this->info[(int)$key] = $val;
 			break;
 		
 		case 'setstr':
-			$this->elem['info'] = explode('/', $key);
+			$this->info = explode('/', $key);
 			if (substr($key, 0, 1) == '/') {
-				array_shift($this->elem['info']);
+				array_shift($this->info);
 			}
 			break;
 			
 		case 'del':
-			unset($this->elem['info'][$key]);
+			unset($this->info[(int)$key]);
 			break;
 		}
 	}
 	
+	
+	/**
+	* 
+	* Clears (resets) $this->info to a blank array.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
 	public function clearInfo()
 	{
-		$this->elem['info'] = array();
+		$this->info = array();
 	}
+	
+	
+	/**
+	* 
+	* Clears (resets) $this->query to a blank array.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
 	
 	public function clearQuery()
 	{
-		$this->elem['query'] = array();
+		$this->query = array();
 	}
 }
 ?>

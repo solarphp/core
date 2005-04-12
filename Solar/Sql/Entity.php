@@ -294,7 +294,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	protected function pageLimit($page = null)
 	{
-		if ($page !== null && $page >= 0) {
+		if ($page > 0) {
 			$count  = $this->config['rows_per_page'];
 			$offset = $page * $count;
 		} else {
@@ -302,10 +302,12 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			$offset = null;
 		}
 		
-		return array(
+		$result = array(
 			'count'  => $count,
 			'offset' => $offset
 		);
+		
+		return $result;
 	}
 	
 	/**

@@ -101,7 +101,7 @@
 					
 					<!-- tags -->
 					<br /><?php
-						echo Solar::locale('Solar_App_Bookmarks', 'TAGGED') . ' ';
+						echo Solar::locale('Solar_App_Bookmarks', 'TAGGED');
 						$tags = explode(' ', $item['tags']);
 						foreach ($tags as $tag) {
 							echo '&nbsp;';
@@ -142,9 +142,9 @@
 			?></p>
 			
 			<p><?php
-				$scheme = $link->elem['scheme'];
-				$host = $link->elem['host'];
-				$path = $link->elem['path'];
+				$scheme = $link->scheme;
+				$host = $link->host;
+				$path = $link->path;
 				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)";
 				echo Solar::locale('Solar_App_Bookmarks', 'DRAG_THIS'). ': ';
 				echo $this->ahref($js, Solar::locale('Solar_App_Bookmarks', 'QUICKMARK'));

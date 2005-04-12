@@ -48,7 +48,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* auto_create => (bool)  Whether or not to auto-create the table.
 	* 
-	* per_page => (int) The number of rows to return per page.
+	* rows_per_page => (int) The number of rows to return per page.
 	* 
 	* Note that there is no locale key; to keep from messing up extended
 	* classes, we only return the error key as the localized string.
@@ -284,6 +284,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* Calculates the limit count and offset for a given page number.
 	* 
+	* Pages are 1-based; page 1 is records 1-10, page 2 is 11-20, and
+	* so on.  Page 0 is nonexistent, and will not set a limit.
+	* 
 	* @access protected
 	* 
 	* @param int $page The page number to get limits for.
@@ -294,20 +297,18 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	protected function pageLimit($page = null)
 	{
-		if ($page > 0) {
+		if ($page !== null && $page !== false && $page > 0) {
 			$count  = $this->config['rows_per_page'];
-			$offset = $page * $count;
+			$offset = $count * ($page - 1);
 		} else {
 			$count = null;
 			$offset = null;
 		}
 		
-		$result = array(
+		return array(
 			'count'  => $count,
 			'offset' => $offset
 		);
-		
-		return $result;
 	}
 	
 	/**
@@ -339,9 +340,12 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			return $stmt;
 		}
 		
-		// execute the statement and return the result object
+		// get the limit count and offset for the requested page
 		$limit = $this->pageLimit($page);
-		return $this->sql->exec($stmt, $limit['count'], $limit['offset']);
+		
+		// return the result object.  note that the second param
+		// is null, as we are not binding new data at this point.
+		return $this->sql->exec($stmt, null, $limit['count'], $limit['offset']);
 	}
 	
 	
@@ -381,9 +385,12 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			: 'All';
 		$fetch = 'fetch' . $fetch;
 		
-		// return the fetched results.
+		// get the limit count and offset for the requested page
 		$limit = $this->pageLimit($page);
-		return $this->sql->$fetch($stmt, $limit['count'], $limit['offset']);
+		
+		// return the fetched results.  note that the second param
+		// is null, as we are not binding new data at this point.
+		return $this->sql->$fetch($stmt, null, $limit['count'], $limit['offset']);
 	}
 	
 	
@@ -413,37 +420,37 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 				E_USER_WARNING
 			);
 		}
-        
-        // create a select key name for this count-query
-        $count_key = '__count__' . $name;
-        
-        // has a count-query for the SQL key already been created?
-        if (! isset($this->schema['qry'][$count_key])) {
-            
-            // we've not asked for a count on this query yet.
-            // get the elements of the query ...
-            $count_sql = $this->schema['qry'][$name];
-            
-            // is a count-field set for the query?
-            if (! isset($count_sql['count']) ||
-            	trim($count_sql['count']) == '') {
-                $count_sql['count'] = '*';
-            }
-            
-            // replace the fields with a COUNT() command
-            $count_sql['fields'] = array(
-            	'row_count' => "COUNT({$count_sql['count']})"
-            );
-            
-            // replace the 'fetch' key so we only get the one field
-            $count_sql['fetch'] = 'one';
-            
-            // create the new count-query in the $sql array
-            $this->schema['qry'][$count_key] = $count_sql;
-        }
-        
-        // retrieve the count results
-        return $this->selectFetch($count_key, $filter);
+		
+		// create a select key name for this count-query
+		$count_key = '__count__' . $name;
+		
+		// has a count-query for the SQL key already been created?
+		if (! isset($this->schema['qry'][$count_key])) {
+			
+			// we've not asked for a count on this query yet.
+			// get the elements of the query ...
+			$count_sql = $this->schema['qry'][$name];
+			
+			// is a count-field set for the query?
+			if (! isset($count_sql['count']) ||
+				trim($count_sql['count']) == '') {
+				$count_sql['count'] = '*';
+			}
+			
+			// replace the fields with a COUNT() command
+			$count_sql['fields'] = array(
+				'row_count' => "COUNT({$count_sql['count']})"
+			);
+			
+			// replace the 'fetch' key so we only get the one field
+			$count_sql['fetch'] = 'One';
+			
+			// create the new count-query in the $sql array
+			$this->schema['qry'][$count_key] = $count_sql;
+		}
+		
+		// retrieve the count results
+		return $this->selectFetch($count_key);
 	}
 	
 	

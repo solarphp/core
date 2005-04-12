@@ -44,18 +44,18 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
-        'smallint'  => 'SMALLINT',
-        'int'       => 'INTEGER',
-        'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC(:size,:scope)',
-        'float'     => 'DOUBLE PRECISION',
-        'clob'      => 'TEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+		'bool'      => 'BOOLEAN',
+		'char'      => 'CHAR(:size)',
+		'varchar'   => 'VARCHAR(:size)',
+		'smallint'  => 'SMALLINT',
+		'int'       => 'INTEGER',
+		'bigint'    => 'BIGINT',
+		'numeric'   => 'NUMERIC(:size,:scope)',
+		'float'     => 'DOUBLE PRECISION',
+		'clob'      => 'TEXT',
+		'date'      => 'CHAR(10)',
+		'time'      => 'CHAR(8)',
+		'timestamp' => 'CHAR(19)'
 	);
 	
 	

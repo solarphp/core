@@ -44,18 +44,18 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'DECIMAL(1,0)',
-        'char'      => 'CHAR(:size) BINARY',
-        'varchar'   => 'VARCHAR(:size) BINARY',
-        'smallint'  => 'SMALLINT',
-        'int'       => 'INTEGER',
-        'bigint'    => 'BIGINT',
-        'numeric'   => 'DECIMAL(:size,:scope)',
-        'float'     => 'DOUBLE',
-        'clob'      => 'LONGTEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+		'bool'      => 'DECIMAL(1,0)',
+		'char'      => 'CHAR(:size) BINARY',
+		'varchar'   => 'VARCHAR(:size) BINARY',
+		'smallint'  => 'SMALLINT',
+		'int'       => 'INTEGER',
+		'bigint'    => 'BIGINT',
+		'numeric'   => 'DECIMAL(:size,:scope)',
+		'float'     => 'DOUBLE',
+		'clob'      => 'LONGTEXT',
+		'date'      => 'CHAR(10)',
+		'time'      => 'CHAR(8)',
+		'timestamp' => 'CHAR(19)'
 	);
 	
 	

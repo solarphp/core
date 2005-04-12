@@ -44,18 +44,18 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'DECIMAL(1,0)',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
-        'smallint'  => 'SMALLINT',
-        'int'       => 'INTEGER',
-        'bigint'    => 'LONGINT',
-        'numeric'   => 'DECIMAL(:size,:scope)',
-        'float'     => 'DOUBLE PRECISION',
-        'clob'      => 'CLOB',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+		'bool'      => 'DECIMAL(1,0)',
+		'char'      => 'CHAR(:size)',
+		'varchar'   => 'VARCHAR(:size)',
+		'smallint'  => 'SMALLINT',
+		'int'       => 'INTEGER',
+		'bigint'    => 'LONGINT',
+		'numeric'   => 'DECIMAL(:size,:scope)',
+		'float'     => 'DOUBLE PRECISION',
+		'clob'      => 'CLOB',
+		'date'      => 'CHAR(10)',
+		'time'      => 'CHAR(8)',
+		'timestamp' => 'CHAR(19)'
 	);
 	
 	

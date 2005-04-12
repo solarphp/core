@@ -44,18 +44,18 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
-        'smallint'  => 'SMALLINT',
-        'int'       => 'INTEGER',
-        'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC(:size,:scope)',
-        'float'     => 'DOUBLE',
-        'clob'      => 'CLOB',
-        'date'      => 'DATE',
-        'time'      => 'TIME',
-        'timestamp' => 'TIMESTAMP'
+		'bool'      => 'BOOLEAN',
+		'char'      => 'CHAR(:size)',
+		'varchar'   => 'VARCHAR(:size)',
+		'smallint'  => 'SMALLINT',
+		'int'       => 'INTEGER',
+		'bigint'    => 'BIGINT',
+		'numeric'   => 'NUMERIC(:size,:scope)',
+		'float'     => 'DOUBLE',
+		'clob'      => 'CLOB',
+		'date'      => 'DATE',
+		'time'      => 'TIME',
+		'timestamp' => 'TIMESTAMP'
 	);
 	
 	

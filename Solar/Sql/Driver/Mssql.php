@@ -44,18 +44,18 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	*/
 	
 	protected $native = array(
-        'bool'      => 'BIT',
-        'char'      => 'BINARY(:size)',
-        'varchar'   => 'VARBINARY(:size)',
-        'smallint'  => 'SMALLINT',
-        'int'       => 'INTEGER',
-        'bigint'    => 'BIGINT',
-        'numeric'   => 'DECIMAL(:size,:scope)',
-        'float'     => 'FLOAT',
-        'clob'      => 'TEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+		'bool'      => 'BIT',
+		'char'      => 'BINARY(:size)',
+		'varchar'   => 'VARBINARY(:size)',
+		'smallint'  => 'SMALLINT',
+		'int'       => 'INTEGER',
+		'bigint'    => 'BIGINT',
+		'numeric'   => 'DECIMAL(:size,:scope)',
+		'float'     => 'FLOAT',
+		'clob'      => 'TEXT',
+		'date'      => 'CHAR(10)',
+		'time'      => 'CHAR(8)',
+		'timestamp' => 'CHAR(19)'
 	);
 	
 	

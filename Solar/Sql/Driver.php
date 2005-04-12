@@ -78,18 +78,18 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	*/
 	
 	protected $native = array(
-        'bool'      => null, // PHP is_bool()
-        'char'      => null, 
-        'varchar'   => null, 
-        'smallint'  => null,
-        'int'       => null, // PHP is_int()
-        'bigint'    => null,
-        'numeric'   => null, // PHP is_numeric(), treated as fixed-place decimal
-        'float'     => null, // PHP is_float(), treated as double decimal ... how big is a PHP float, anyway?
-        'clob'      => null,
-        'date'      => null,
-        'time'      => null,
-        'timestamp' => null
+		'bool'      => null, // PHP is_bool()
+		'char'      => null, 
+		'varchar'   => null, 
+		'smallint'  => null,
+		'int'       => null, // PHP is_int()
+		'bigint'    => null,
+		'numeric'   => null, // PHP is_numeric(), treated as fixed-place decimal
+		'float'     => null, // PHP is_float(), treated as double decimal ... how big is a PHP float, anyway?
+		'clob'      => null,
+		'date'      => null,
+		'time'      => null,
+		'timestamp' => null
 	);
 	
 	

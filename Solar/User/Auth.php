@@ -20,22 +20,6 @@
 * 
 * Class for checking user authentication credentials.
 * 
-* Usage:
-*
-* <code type="php">
-*
-* $opts = array(
-*     'class'  => 'Solar_User_Auth_File',
-*     'options' => array('file' => '/config/htpasswd')
-* );
-* 
-* $auth = Solar::object('Solar_User_Auth', $opts);
-* $auth->start();
-* 
-* Solar::dump($auth->status_code);
-* 
-* </code type="php>
-* 
 * @category Solar
 * 
 * @package Solar

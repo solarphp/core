@@ -132,7 +132,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* </code>
 	* 
 	* 
-	* An array of predefined SELECT query elements.
+	* An array of predefined query elements.
 	* 
 	* <code>
 	* $this->schema['qry'] = array(
@@ -313,7 +313,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Executes a predefined SELECT and returns a result object.
+	* Executes a predefined query and returns a result object.
 	* 
 	* @access public
 	* 
@@ -351,7 +351,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Executes a predefined SELECT and returns the fetched rows.
+	* Executes a predefined query and returns the fetched rows.
 	* 
 	* @access public
 	* 
@@ -396,7 +396,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Executes a predefined SELECT and returns the count of rows.
+	* Executes a predefined query and returns the count of rows.
 	* 
 	* @access public
 	* 
@@ -428,25 +428,23 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		if (! isset($this->schema['qry'][$count_key])) {
 			
 			// we've not asked for a count on this query yet.
-			// get the elements of the query ...
-			$count_sql = $this->schema['qry'][$name];
+			// get the elements of the original query ...
+			$count_qry = $this->schema['qry'][$name];
 			
 			// is a count-field set for the query?
-			if (! isset($count_sql['count']) ||
-				trim($count_sql['count']) == '') {
-				$count_sql['count'] = '*';
+			if (! isset($count_qry['count']) ||
+				trim($count_qry['count']) == '') {
+				$count_qry['count'] = '*';
 			}
 			
-			// replace the fields with a COUNT() command
-			$count_sql['fields'] = array(
-				'row_count' => "COUNT({$count_sql['count']})"
-			);
+			// select only a COUNT() column for the proper field.
+			$count_qry['select'] = "COUNT({$count_qry['count']})";
 			
 			// replace the 'fetch' key so we only get the one field
-			$count_sql['fetch'] = 'One';
+			$count_qry['fetch'] = 'One';
 			
 			// create the new count-query in the $sql array
-			$this->schema['qry'][$count_key] = $count_sql;
+			$this->schema['qry'][$count_key] = $count_qry;
 		}
 		
 		// retrieve the count results
@@ -456,7 +454,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Executes a predefined SELECT and returns the number of pages.
+	* Executes a predefined query and returns the number of pages.
 	* 
 	* @access public
 	* 

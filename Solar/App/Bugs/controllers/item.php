@@ -106,11 +106,11 @@ $user = Solar::shared('user');
 
 $ok_user = in_array(
 	$user->auth->username,
-	Solar::config('Solar_App_Bugs', 'admin_user')
+	Solar::config('Solar_App_Bugs', 'admin_user', array())
 );
 
 $ok_role = $user->role->inAny(
-	Solar::config('Solar_App_Bugs', 'admin_role')
+	Solar::config('Solar_App_Bugs', 'admin_role', array())
 );
 
 $tpl->can_edit = $ok_user || $ok_role;

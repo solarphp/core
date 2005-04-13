@@ -251,6 +251,20 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 			),
 		);
 		
+		// comment type: plain comment, trackback, pingback, etc
+		$schema['col']['type'] = array(
+			'type'    => 'varchar',
+			'size'    => 12,
+			'default' => 'comment',
+			'validate'   => array(
+				array(
+					'inList',
+					$this->locale('VALID_TYPE'),
+					array('comment', 'pingback', 'trackback'),
+				),
+			),
+		);
+		
 		// name of the person making the post
 		$schema['col']['name'] = array(
 			'type'    => 'varchar',
@@ -277,16 +291,16 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 			'default' => 0,
 		);
 		
-		// website of the poster
-		$schema['col']['website'] = array(
+		// website of the poster, or the trackback/pingback link
+		$schema['col']['uri'] = array(
 			'type'    => 'varchar',
-			'size'    => 64,
+			'size'    => 255,
 			'validate'   => array(
-				// we allow blank website here
+				// we allow blank URIs here
 				array(
 					'uri',
-					$this->locale('VALID_WEBSITE'),
-					'http',
+					$this->locale('VALID_URI'),
+					array('http', 'https'), // allowed schemes
 					Solar_Valid::OR_BLANK
 				)
 			),
@@ -377,9 +391,9 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 				'type'  => 'checkbox',
 				'label' => $this->locale('LABEL_EMAIL_PUB'),
 			),
-			'website' => array(
+			'uri' => array(
 				'type'  => 'text',
-				'label' => $this->locale('LABEL_WEBSITE'),
+				'label' => $this->locale('LABEL_URI'),
 				'attribs'  => array('size' => 64),
 			),
 			'subj' => array(
@@ -482,7 +496,7 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 					$data['ip_addr'],
 					$data['name'],
 					$data['email'],
-					$data['website'],
+					$data['uri'],
 					$data['subj'],
 					$data['body'],
 				)
@@ -588,9 +602,10 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 					"Timestamp: {$data['ts']}",
 					"IP:        {$data['ip_addr']}",
 					"Status:    {$data['status']}",
+					"Type:      {$data['type']}",
 					"Name:      {$data['name']}",
 					"Email:     {$data['email']}",
-					"Website:   {$data['web']}",
+					"URI:       {$data['uri']}",
 					"Subject:   {$data['subj']}",
 					"Message:",
 					$data['body']

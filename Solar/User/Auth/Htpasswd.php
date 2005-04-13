@@ -21,7 +21,13 @@
 * Authenticate against htpasswd or CVS pserver file.
 * 
 * Format for each line is "username:hashedpassword\n";
-*
+* 
+* SECURITY NOTE: The crypt() function will only check up to the first 8
+* characters of a password; chars after 8 are ignored.  This means that
+* if the real password is "atechars", the word "atecharsnine" would be
+* valid.  This is bad.  As a workaround, if the password provided by the
+* user is longer than 8 characters, this class will *not* validate it.
+* 
 * @category Solar
 * 
 * @package Solar
@@ -39,8 +45,6 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	* 
 	* file => (string) Path to password file.
 	* 
-	* salt => (string) A salt prefix to make cracking passwords harder.
-	* 
 	* @access protected
 	* 
 	* @var array
@@ -49,7 +53,6 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	
 	public $config = array(
 		'file' => null,
-		'salt' => null,
 	);
 
 
@@ -78,6 +81,18 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 				array('file' => $file),
 				E_USER_ERROR
 			);
+		}
+		
+		// Note that the crypt() function will only check up to the
+		// first 8 characters of a password; chars after 8 are ignored.
+		// This means that if the real password is "atechars", the word
+		// "atecharsnine" would be valid.  This is bad.  As a
+		// workaround, if the password provided by the user is longer
+		// than 8 characters, this class will *not* validate it.
+		//
+		// is the password longer than 8 characters?
+		if (strlen($pass) > 8) {
+			return false;
 		}
 		
 		// open the file
@@ -116,7 +131,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 		$real = $tmp[1];
 		
 		// check if the password hashes match.
-		return ($real == crypt($this->config['salt'] . $pass, $real));
+		return ($real == crypt($pass, $real));
 	}
 }
 ?>

@@ -68,7 +68,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
 	
 	public function valid($user, $pass)
 	{
-		// force the full, real path to the CVS file
+		// force the full, real path to the .ini file
 		$file = realpath($this->config['file']);
 		
 		// does the file exist?
@@ -80,10 +80,10 @@ class Solar_User_Auth_Ini extends Solar_Base {
 			);
 		}
 		
-		// it's an ini-style file
+		// parse the file into an array
 		$data = parse_ini_file($file, true);
 		
-		// find the [users] list
+		// get a list of users from the [users] group
 		$list = (array) $data[$this->config['group'];
 		
 		// by default the user is not valid
@@ -94,6 +94,8 @@ class Solar_User_Auth_Ini extends Solar_Base {
 		if (! empty($list[$user]) && $list[$user] = $pass) {
 			$valid = true;
 		}
+		
+		// done!
 		return $valid;
 	}
 }

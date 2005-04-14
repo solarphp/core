@@ -131,7 +131,8 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 		} elseif (substr($stored_hash, 0, 5) == '{SHA}') {
 		
 			// use SHA1 encryption.  pack SHA binary into hexadecimal,
-			// then encode into characters using base64.
+			// then encode into characters using base64. this is per
+			// Tomas V. V. Cox.
 			$hex = pack('H40', sha1($pass));
 			$computed_hash = '{SHA}' . base64_encode($hex);
 			

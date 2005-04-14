@@ -274,6 +274,10 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'require' => true,
 			'validate'   => array(
 				array(
+					'notBlank',
+					$this->locale('VALID_QUEUE')
+				),
+				array(
 					'inList',
 					$this->locale('VALID_QUEUE'),
 					$this->config['queue']
@@ -363,6 +367,12 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// combine the queue options (keys same as values)
 		$queue_opts = array_combine($this->config['queue'], $this->config['queue']);
 		
+		// create priority options
+		$priority_opts = array();
+		for ($i = 0; $i < 10; $i++) {
+			$priority_opts[$i] = $i;
+		}
+		
 		// new report
 		$schema['frm']['new'] = array(
 			'id'     => array(
@@ -388,6 +398,11 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'options' => $queue_opts,
 				'require' => true,
 				'validate' => $schema['col']['queue']['validate'],
+			),
+			'priority' => array(
+				'type'    => 'select',
+				'label'   => $this->locale('LABEL_PRIORITY'),
+				'options' => $priority_opts,
 			),
 		);
 		
@@ -422,6 +437,11 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'label'   => $this->locale('LABEL_QUEUE'),
 				'options' => $queue_opts,
 				'validate' => $schema['col']['queue']['validate'],
+			),
+			'priority' => array(
+				'type'    => 'select',
+				'label'   => $this->locale('LABEL_PRIORITY'),
+				'options' => $priority_opts,
 			),
 			'user_id' => array(
 				'type'    => 'text',

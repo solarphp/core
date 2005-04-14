@@ -26,24 +26,107 @@
 		</maintainer>
 	</maintainers>
 	<release>
-		<version>0.0.5</version>
-		<date>2005-03-28</date>
+		<version>0.0.6</version>
+		<date>2005-04-14</date>
 		<license>LGPL</license>
 		<state>devel</state>
 		<notes>
-			* This is a public development release, and is not yet stable.
-			* Added Solar_Super class for retrieving superglobals, modified Solar.php to use it
-			* Added Solar::cookie() method for retrieving cookie values.
-			* Added Solar::session() method for retrieving session data.
-			* Added new Solar_App application controlle class (with standard directory structure using an MVC architecture inspired by Ruby-on-Rails)
-			* Solar_User_Auth 'action*' keys and values renamed to 'op*' (Solar_App now owns the 'action' keyword)
-			* Added validation for 'new' and 'edit' forms in Solar_Cell_Bugs
-			* Added Solar_App_Bugs proof-of-concept application based on Solar_App
+			* WARNING: This is a public development release, and is not
+				yet stable.
+			
+			* WRNING: There are database schema changes in this release.
+			
+			* Fixed bug in Solar::pathinfo(); elements were all off by 1
+				(needed to shift off the first returned element, as it
+				is always blank).
+			
+			* In Solar_Sql_Entity::buildSchema(), the 'join' value must
+				now be a $schema['rel'] keyword.
+			
+			* Solar_Sql_Entity::update() now retains primary keys in a
+				separate array (instead of unsetting them entirely) and
+				restores them after the update process; this will help
+				with post-update tasks that need the primary key.
+			
+			* Solar_User_Auth_Htpasswd now rejects DES-encrypted
+				passwords longer than 8 characters due to a limitation
+				in crypt().  Have added support for SHA1 (thanks Tomas
+				Cox) and APR1-MD5 (thanks Mike Wallner) encrypted
+				passwords to offset this.
+			
+			* Added Solar_User_Auth_Multi to perform authentication
+				against multiple fallback sources.
+				
+			* Solar_User_Role now uses a single role driver class by
+				default.
+			
+			* Added Solar_User_Role_Multi to pull from multiple
+				group/role sources.
+			
+			* Renamed Solar_Cell_Talk to Solar_Cell_Comments for clarity
+				(this includes a set of schema changes as well as
+				in-place support for trackback and pingback storage).
+			
+			* Schema changes to Solar_Cell_Bugs.
+			
+			* Added Solar_Uri as a URI import/manipulate/export tool,
+				generally useful for building navigation links.  Works
+				with query elements as well as path_info elements.
+				
+			* Added Solar_Cell_Tags as a shared tag-search resource to
+				support ubiquitous tagging across all Solar applications.
+
+			* Added Solar_Cell_Bookmarks and Solar_App_Bookmarks for
+				bookmark management similar to the del.icio.us service.
+			
+			* Various minor locale string additions and modifications.
 		</notes>
 		<file role="php" name="Solar.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/App.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/controllers/edit.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/controllers/tag.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/controllers/user.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/helpers/locale/en_US.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/helpers/prepend.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/index.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/auth.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/edit.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/error.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/footer.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/header.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/list.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/App/Bookmarks/views/rss.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/App/Bugs.php" >
@@ -106,19 +189,34 @@
 		<file role="php" name="Solar/Cache/Mem.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
+		<file role="php" name="Solar/Cell/Bookmarks.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Bookmarks/Locale/en_US.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
 		<file role="php" name="Solar/Cell/Bugs.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Cell/Bugs/Locale/en_US.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/Cell/Talk.php" >
+		<file role="php" name="Solar/Cell/Comments.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/Cell/Talk/Locale/en_US.php" >
+		<file role="php" name="Solar/Cell/Comments/Locale/en_US.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
-		<file role="php" name="Solar/Cell/Talk/Rules.php" >
+		<file role="php" name="Solar/Cell/Comments/Rules.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Tags.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Tags/Bundle.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/Cell/Tags/Locale/en_US.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/Debug/Timer.php" >
@@ -172,6 +270,9 @@
 		<file role="php" name="Solar/Super.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
+		<file role="php" name="Solar/Uri.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
 		<file role="php" name="Solar/User.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
@@ -190,6 +291,9 @@
 		<file role="php" name="Solar/User/Auth/Mail.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
+		<file role="php" name="Solar/User/Auth/Multi.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
 		<file role="php" name="Solar/User/Auth/None.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
@@ -206,6 +310,9 @@
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role/Ldap.php" >
+			<replace from="@package_version@" to="version" type="package-info" />
+		</file>
+		<file role="php" name="Solar/User/Role/Multi.php" >
 			<replace from="@package_version@" to="version" type="package-info" />
 		</file>
 		<file role="php" name="Solar/User/Role/None.php" >

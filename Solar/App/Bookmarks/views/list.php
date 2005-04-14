@@ -64,6 +64,8 @@
 		<!-- output the list of results -->
 		<?php if (count($this->list)): ?>
 			<?php foreach ($this->list as $item): ?>
+			
+				<!-- NEW ITEM -->
 				<p>
 					<!-- title -->
 					<span style="font-size: 120%; font-weight: bold;"><?php
@@ -71,7 +73,10 @@
 					?></span>
 					
 					<!-- description -->
+					<?php if (trim($item['descr']) != ''): ?>
+					
 					<br /><?php echo nl2br(wordwrap($this->scrub($item['descr']), 72)) ?>
+					<?php endif ?>
 					
 					<!-- rank and uri -->
 					<br /><span style="font-size: 90%;"><?php

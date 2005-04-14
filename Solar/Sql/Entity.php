@@ -396,11 +396,11 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Executes a predefined query and returns the count of rows.
+	* Executes a predefined query, then returns the count of rows and pages.
 	* 
 	* @access public
 	* 
-	* @param string $name The name of the $select to use.
+	* @param string $name The $schema['qry'] key to use.
 	* 
 	* @param string $filter Additional query terms to add to the
 	* predefined WHERE portion of the $select.
@@ -409,7 +409,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	public function selectCount($name, $filter = null)
+	public function countPages($name, $filter = null)
 	{
 		// does the select key exist?
 		$tmp = array_keys($this->schema['qry']);
@@ -448,32 +448,24 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// retrieve the count results
-		return $this->selectFetch($count_key, $filter);
-	}
-	
-	
-	/**
-	* 
-	* Executes a predefined query and returns the number of pages.
-	* 
-	* @access public
-	* 
-	* @param string $name The name of the $select to use.
-	* 
-	* @param string $filter Additional query terms to add to the
-	* predefined WHERE portion of the $select.
-	* 
-	* @return int A numeric count of pages.
-	* 
-	*/
-	
-	public function selectPages($name, $filter = null)
-	{
-		$result = $this->selectCount($name, $filter);
-		if (! Solar::isError($result) && $result > 0) {
-			$result = ceil($result / $this->config['rows_per_page']);
+		$result = $this->selectFetch($count_key, $filter);
+		
+		// was there an error?
+		if (Solar::isError($result)) {
+			return $result;
 		}
-		return $result;
+		
+		// how many pages is it?
+		$pages = 0;
+		if ($result > 0) {
+			$pages = ceil($result / $this->config['rows_per_page']);
+		}
+		
+		// done!
+		return array(
+			'count' => $result,
+			'pages' => $pages
+		);
 	}
 	
 	

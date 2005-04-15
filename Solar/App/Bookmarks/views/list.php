@@ -41,7 +41,9 @@
 				$link->import();
 				$tmp = array();
 				foreach ($this->user_tags as $tag) {
+					// clear out pathinfo, but reset the page to 1
 					$link->clearInfo();
+					$link->query('set', 'page', 1);
 					$link->info('setstr', "user/{$this->user_id}/$tag");
 					$tmp[] = $this->ahref($link->export(), $tag);
 				}
@@ -132,6 +134,20 @@
 				</p>
 			<?php endforeach ?>
 			
+			<!-- previous / page-count / next -->
+			<hr />
+			<p><strong>[ <?php
+				$link->import();
+				$tmp = Solar::get('page', 1);
+				$link->query('set', 'page', $tmp - 1);
+				$prev = $link->export();
+				$link->query('set', 'page', $tmp + 1);
+				$next = $link->export();
+				if ($this->page > 1) echo $this->ahref($prev, Solar::locale('Solar', 'OP_PREVIOUS')) . ' | ';
+				echo "Page {$this->page} of {$this->pages}";
+				if ($this->page < $this->pages) echo ' | ' . $this->ahref($next, Solar::locale('Solar', 'OP_NEXT'));
+			?> ]</strong></p>
+			
 		<?php else: ?>
 			<p><?php echo Solar::locale('Solar_App_Bookmarks', 'NO_BOOKMARKS_FOUND') ?></p>
 		<?php endif ?>
@@ -143,7 +159,7 @@
 				$link->clearQuery();
 				$link->info('set', 0, 'edit');
 				$link->query('set', 'id', '0');
-				echo $this->ahref($link->export(), 'Add new bookmark')
+				echo $this->ahref($link->export(), Solar::locale('Solar_App_Bookmarks', 'ADD_NEW_BOOKMARK'))
 			?></p>
 			
 			<p><?php

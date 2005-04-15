@@ -18,11 +18,12 @@ $tags = trim(Solar::pathinfo(1));
 $order = $this->getOrder();
 
 // what page-number of the results are we looking for?
-$page = Solar::get('page', 0);
+// the same, regardless of RSS or HTML.
+$page = Solar::get('page', 1);
 
 // get the list of results
 if (! $tags) {
-	// no tags requested
+	// no tags requested, fetch everything
 	$tpl->list = $bookmarks->fetchList(null, $order, $page);
 } else {
 	// some tags requested
@@ -39,6 +40,9 @@ if ($rss) {
 
 // assign everything else and display
 $tpl->rss['avail'] = true;
+$tpl->count = $bookmarks->count;
+$tpl->pages = $bookmarks->pages;
+$tpl->page = $page;
 $tpl->user_id = null; // requested user_id
 $tpl->tags = $tags; // requested tags
 $tpl->user_tags = null; // all tags for this user

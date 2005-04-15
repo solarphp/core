@@ -51,6 +51,12 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	// object for tag searches
 	protected $tags;
 	
+	// count of last search
+	public $count = 0;
+	
+	// pages in last search
+	public $pages = 0;
+	
 	public function __construct($config = null)
 	{
 		parent::__construct($config);
@@ -272,7 +278,12 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	public function fetchItem($id)
 	{
-		return $this->selectFetch('item', array('id' => $id));
+		$result = $this->selectFetch('item', array('id' => $id));
+		if (! Solar::isError($result)) {
+			$this->count = 1;
+			$this->pages = 1;
+		}
+		return $result;
 	}
 	
 	
@@ -284,7 +295,13 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	public function fetchList($where = null, $order = null, $page = null)
 	{
-		return $this->selectFetch('list', $where, $order, $page);
+		$result = $this->selectFetch('list', $where, $order, $page);
+		if (! Solar::isError($result)) {
+			$tmp = $this->countPages('list', $where);
+			$this->count = $tmp['count'];
+			$this->pages = $tmp['pages'];
+		}
+		return $result;
 	}
 	
 	
@@ -384,8 +401,18 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			$where .= ' AND ' . implode(' AND ', $tmp);
 		}
 		
+		// get the results
+		$result = $this->selectFetch('tags', $where, $order, $page);
+		
+		// set up the count and pages
+		if (! Solar::isError($result)) {
+			$tmp = $this->countPages('tags', $where);
+			$this->count = $tmp['count'];
+			$this->pages = $tmp['pages'];
+		}
+		
 		// done!
-		return $this->selectFetch('tags', $where, $order, $page);
+		return $result;
 	}
 	
 	

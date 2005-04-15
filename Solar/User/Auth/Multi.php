@@ -8,11 +8,13 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_User
+* 
 * @author Paul M. Jones <pmjones@solarphp.net>
 * 
 * @license LGPL
 * 
-* @version $Id: Multi.php 144 2005-04-07 20:37:43Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -23,6 +25,8 @@
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_User
 * 
 */
 

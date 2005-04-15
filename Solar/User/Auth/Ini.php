@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_User
+* 
 * @author Paul M. Jones <pmjones@solarphp.net>
 * 
 * @license LGPL
@@ -25,6 +27,8 @@
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_User
 * 
 */
 

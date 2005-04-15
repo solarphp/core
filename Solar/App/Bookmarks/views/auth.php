@@ -7,7 +7,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -25,7 +25,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 */
 ?>
@@ -53,7 +53,7 @@
 			echo $this->form('end');
 		?>
 		<p><?php
-			echo Solar::$shared->user->auth->status_text;
+			echo nl2br(wordwrap(Solar::$shared->user->auth->status_text, 20));
 			Solar::$shared->user->auth->reset();
 		?></p>
 	<?php endif; ?>

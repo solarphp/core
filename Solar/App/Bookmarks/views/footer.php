@@ -7,13 +7,13 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id: footer.php 113 2005-03-28 17:54:33Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -25,7 +25,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 */
 ?>

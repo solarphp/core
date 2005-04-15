@@ -1,8 +1,35 @@
 <?php
 
-/*
-http://example.com/bookmarks.php/user/pmjones/tag+tag+tag?order=title&page=1&rss=0
+/**
+* 
+* Controller for viewing bookmarks by user (and optionally by tag).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
 */
+
+/**
+* 
+* Controller for viewing bookmarks by user (and optionally by tag).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+*/
+
 
 // helper for all controllers
 include $this->helper('prepend');
@@ -16,7 +43,8 @@ $tags = Solar::pathinfo(2);
 // the requested ordering of list results
 $order = $this->getOrder();
 
-// RSS or HTML? set up the page number accordingly.
+// RSS or HTML? set up the page number accordingly (by default, RSS gets
+// all bookmarks, not just one page).
 $rss = Solar::get('rss', false);
 if ($rss) {
 	$tpl->setTemplate('rss.php');
@@ -28,7 +56,7 @@ if ($rss) {
 
 // get the list of entries
 if ($tags) {
-	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page); // results
+	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page);
 } else {
 	$tpl->list = $bookmarks->forUser($user_id, $order, $page);
 }

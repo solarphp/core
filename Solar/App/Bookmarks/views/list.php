@@ -1,6 +1,36 @@
 <?php
-	include $this->template('header.php');
-	$link = Solar::object('Solar_Uri');
+/**
+* 
+* Savant3 template for lists of bookmarks (in XHTML).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
+/**
+* 
+* Savant3 template for lists of bookmarks (in XHTML).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+*/
+
+include $this->template('header.php');
+$link = Solar::object('Solar_Uri');
 ?>
 <div>
 	<!-- ordering -->

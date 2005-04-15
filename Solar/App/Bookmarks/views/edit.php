@@ -25,7 +25,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bookmakrs
+* @subpackage Solar_App_Bookmarks
 * 
 */
 ?>

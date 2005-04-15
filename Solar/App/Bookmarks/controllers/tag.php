@@ -1,9 +1,36 @@
 <?php
 
-/*
-http://example.com/bookmarks.php/tag/tag+tag+tag?order=title&page=1&rss=0
-http://example.com/bookmarks.php/tag+tag+tag?order=title&page=1&rss=0
+/**
+* 
+* Default controller; for viewing bookmarks by tag intersection.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
 */
+
+/**
+* 
+* Default controller; for viewing bookmarks by tag intersection.
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+*/
+
+
 
 // helper for all controllers
 include $this->helper('prepend');

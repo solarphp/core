@@ -45,13 +45,15 @@
 			echo $this->form('begin');
 			echo $this->form('block', 'begin', null, 'row');
 			echo $this->form('hidden', 'op', 'login');
-			echo $this->form('text', 'username', '', 'Username:', array('size' => 10));
-			echo $this->form('password', 'password', '', 'Password:', array('size' => 10));
+			echo $this->form('text', 'username', '', Solar::locale('Solar', 'LABEL_USERNAME'), array('size' => 10));
+			echo $this->form('block', 'split');
+			echo $this->form('password', 'password', '', Solar::locale('Solar', 'LABEL_PASSWORD'), array('size' => 10));
+			echo $this->form('block', 'split');
 			echo $this->form('submit', '', Solar::locale('Solar', 'TEXT_LOGIN'), '');
 			echo $this->form('end');
 		?>
 		<p><?php
-			echo Solar::$shared->user->auth->status_text;
+			echo nl2br(wordwrap(Solar::$shared->user->auth->status_text, 20));
 			Solar::$shared->user->auth->reset();
 		?></p>
 	<?php endif; ?>

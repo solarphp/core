@@ -7,7 +7,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
@@ -25,7 +25,7 @@
 * 
 * @package Solar_App
 * 
-* @subpackage Solar_App_Bugs
+* @subpackage Solar_App_Bookmarks
 * 
 */
 ?>

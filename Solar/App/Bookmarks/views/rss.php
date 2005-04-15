@@ -1,4 +1,34 @@
 <?php
+/**
+* 
+* Savant3 template for lists of bookmarks (in RSS).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id$
+* 
+*/
+
+/**
+* 
+* Savant3 template for lists of bookmarks (in RSS).
+* 
+* @category Solar
+* 
+* @package Solar_App
+* 
+* @subpackage Solar_App_Bookmarks
+* 
+*/
+
 // output the header this way so as not to let the XML
 // tags interfere with PHP
 header('Content-Type: text/xml; charset=iso-8859-1');

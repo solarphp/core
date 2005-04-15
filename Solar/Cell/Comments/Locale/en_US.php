@@ -8,7 +8,7 @@
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Talk
+* @subpackage Solar_Cell_Comments
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 

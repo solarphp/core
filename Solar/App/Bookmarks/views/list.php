@@ -136,8 +136,10 @@ $link = Solar::object('Solar_Uri');
 						echo $this->ahref($link->export(), $item['user_id']);
 					?></span>
 					
-					<!-- tags -->
+					<!-- tags and edit link -->
 					<br /><?php
+					
+						// tags
 						echo Solar::locale('Solar_App_Bookmarks', 'TAGGED');
 						$tags = explode(' ', $item['tags']);
 						foreach ($tags as $tag) {
@@ -149,6 +151,7 @@ $link = Solar::object('Solar_Uri');
 							echo $this->ahref($link->export(), $tag);
 						}
 						
+						// edit link
 						if (Solar::$shared->user->auth->username == $item['user_id']) {
 							$back_info = Solar::super('server', 'PATH_INFO');
 							$back_qstr = Solar::super('server', 'QUERY_STRING');
@@ -158,6 +161,7 @@ $link = Solar::object('Solar_Uri');
 							$link->query('set', 'id', $item['id']);
 							$link->query('set', 'info', $back_info);
 							$link->query('set', 'qstr', $back_qstr);
+							
 							echo '&nbsp;...&nbsp;' . $this->ahref($link->export(), 'edit');
 						}
 					?>

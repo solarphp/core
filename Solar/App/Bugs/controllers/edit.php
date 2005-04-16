@@ -161,10 +161,10 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 					'rel'    => 'sc_bugs',
 					'rel_id' => $id,
 					'email'  => $values['comments']['email'],
-					'subj'   => $values['bugs']['summ'],
 					'body'   => $values['comments']['body']
 				);
-				$comments->insert($data);
+				$result = $comments->insert($data);
+				Solar::dump($result);
 			}
 			
 			// redirect to 'view item'

@@ -72,17 +72,14 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 		// add required elements
 		$values['comments']['rel'] = 'sc_bugs';
 		$values['comments']['rel_id'] = $id;
-		$values['comments']['subj'] = $data['summ'];
 		
 		// attempt the insert
 		$result = $comments->insert($values['comments']);
 		
 		// did it work?
 		if (Solar::isError($result)) {
-			echo "FAILED";
 			$err = $result->pop();
 			$form->feedback[] = $err['class::code'] . ' -- ' . $err['text'];
-			Solar::dump($form);
 		} else {
 			// success! reset the form elements to their defaults.
 			// (put them in an array called 'comments')

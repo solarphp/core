@@ -144,16 +144,20 @@ class Solar {
 		// build the shared locale object
 		Solar::shared('locale');
 		
-		// build the shared user object
-		Solar::shared('user');
-		
-		// load all other autoshare objects ...
+		// load the autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
+		
+		// make sure 'user' is there somewhere (by default, at the top)
+		if (! in_array('user', $list)) {
+			array_unshift($list, 'user');
+		}
+		
+		// loop through each autoshare object and load it ...
 		foreach ($list as $name) {
 			Solar::shared($name);
 		}
 		
-		// ... and then run their __solar('start') methods.
+		// ... and then run each of the __solar('start') methods.
 		// (we load and run in separate loops because some 
 		// objects may depend on others).
 		foreach ($list as $name) {

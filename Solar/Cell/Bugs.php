@@ -415,7 +415,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				'type'    => 'text',
 				'label'   => $this->locale('LABEL_SUMM'),
 				'attribs' => array('size' => '60'),
-				'disable' => true,
 			),
 			'ts_new' => array(
 				'type'    => 'text',

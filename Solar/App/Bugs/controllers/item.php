@@ -98,18 +98,16 @@ $tpl->formdata = $form;
 // add the existing comments
 $tpl->comments = $comments->fetchQueue('sc_bugs', $id);
 
-// are we allowing edits?
+// get the shared user object
 $user = Solar::shared('user');
 
-$ok_user = in_array(
-	$user->auth->username,
-	Solar::config('Solar_App_Bugs', 'admin_user', array())
-);
+// is user allowed to edit?
+$ok_user = in_array($user->auth->username, $this->config['admin_user']);
 
-$ok_role = $user->role->inAny(
-	Solar::config('Solar_App_Bugs', 'admin_role', array())
-);
+// is user in an editing role?
+$ok_role = $user->role->inAny($this->config['admin_role']);
 
+// user may edit if allowed by name or role
 $tpl->can_edit = $ok_user || $ok_role;
 
 // display

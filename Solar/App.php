@@ -129,31 +129,44 @@ abstract class Solar_App extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		// define the base directory for this application class
-		// (if not already specified)
-		if (is_null($this->dir['base'])) {
-			// get the application class name, minus the 'Solar_App_'
-			// prefix.
-			$app = substr(get_class($this), 10);
+		// basic property setup
+		$this->setup();
+		
+		// is the base directory set?
+		if (empty($this->dir['base'])) {
 			
-			// get the default app directory
-			$this->dir['base'] = dirname(__FILE__) . "/App/$app";
+			// we need a base directory
+			$this->dir['base'] = dirname(__FILE__);
+			
+			// get the class name ...
+			$class = get_class($this);
+			
+			// ... is it a Solar_App class?
+			if (substr($class, 0, 10) == 'Solar_App_') {
+				// get the application class name, minus the
+				// 'Solar_App_' prefix, and set to the standard
+				// base directory location.
+				$app = substr($class, 10);
+				$this->dir['base'] .= "/App/$app";
+			}
 		}
 		
-		// the component type directories and maps
+		// the component type directories and maps (used for looping
+		// later)
 		$types = array('models', 'views', 'controllers', 'helpers');
 		
-		// set up the default directory path properties
-		// (if they are not already specified)
+		// set up the default directory path properties if they are not
+		// already specified
 		$base = $this->dir['base'];
 		foreach ($types as $type) {
-			if (is_null($this->dir[$type])) {
+			if (empty($this->dir[$type])) {
 				$this->dir[$type] = Solar::fixdir("$base/$type/");
 			}
 		}
 		
-		// set up the default locale path
-		if (is_null($this->config['locale'])) {
+		// set up the default locale path is one is not already
+		// specified
+		if (empty($this->config['locale'])) {
 			$this->config['locale'] = Solar::fixdir(
 				$this->dir['helpers'] . 'locale/'
 			);
@@ -162,13 +175,31 @@ abstract class Solar_App extends Solar_Base {
 		// now do the "real" construction
 		parent::__construct($config);
 		
-		// build the map of models, controllers, views, and helpers
+		// build the filename map of model, controller, view, and helper
+		// scripts
 		foreach ($types as $type) {
 			$this->automap($type);
 		}
 		
 		// load the locale strings
 		$this->locale('');
+	}
+	
+	
+	/**
+	* 
+	* Sets up class properties for extended classes.
+	* 
+	* We have a method for this so you can use functions and other logic
+	* for defining properties in extended classes.
+	* 
+	* @access public
+	* 
+	* @return void
+	*/
+	
+	protected function setup()
+	{
 	}
 	
 	

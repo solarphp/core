@@ -41,6 +41,7 @@
 			<th><?php echo Solar::locale('Solar_Cell_Bugs', 'LABEL_QUEUE') ?></th>
 			<th><?php echo Solar::locale('Solar_Cell_Bugs', 'LABEL_TYPE') ?></th>
 			<th><?php echo Solar::locale('Solar_Cell_Bugs', 'LABEL_SUMM') ?></th>
+			<th><?php echo Solar::locale('Solar_Cell_Bugs', 'LABEL_PRIORITY') ?></th>
 			<th><?php echo Solar::locale('Solar_Cell_Bugs', 'LABEL_STATUS') ?></th>
 		</tr>
 		<?php foreach ($this->list as $bug): ?>
@@ -56,6 +57,7 @@
 				'?action=item&id=' . $bug['id'],
 				$this->scrub($bug['summ'])
 			) ?></td>
+			<td valign="top"><?php echo $bug['priority'] ?></td>
 			<td valign="top"><?php echo $bug['status'] ?></td>
 		</tr>
 		<?php endforeach ?>

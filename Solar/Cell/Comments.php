@@ -46,9 +46,6 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 	
 	public $config = array(
 		'locale'         => 'Solar/Cell/Comments/Locale/',
-		'notify_to'      => null,
-		'notify_from'    => null,
-		'notify_subj'    => null,
 		'rules_callback' => array('Solar_Cell_Comments_Rules', 'apply'),
 	);
 	
@@ -555,82 +552,8 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 			$this->moderate($data['id'], $data['status']);
 		}
 		
-		// call notification
-		$this->notify($data);
-		
 		// done!
 		return $data['id'];
-	}
-	
-	
-	/**
-	* 
-	* Notify watchers by email.
-	* 
-	* @access protected
-	* 
-	* @param array &$data The data that was inserted.
-	* 
-	* @return void
-	* 
-	*/
-
-	protected function notify(&$data)
-	{
-		// are we doing notification?
-		if (! empty($this->config['notify_to'])) {
-		
-			// build the subject line
-			$subj = '';
-			
-			if (! empty($this->config['notify_subj'])) {
-				$subj .= '[' . $this->config['notify_subj'] . '] ';
-			}
-			
-			if ($data['status'] == 'show') {
-				$subj .= 'New comment: ';
-			} else {
-				$subj .= 'Please moderate: ';
-			}
-			
-			$subj .= $data['subj'];
-			
-			// build the body content
-			$body = implode(
-				"\n\n",
-				array(
-					"Timestamp: {$data['ts']}",
-					"IP:        {$data['ip_addr']}",
-					"Status:    {$data['status']}",
-					"Type:      {$data['type']}",
-					"Name:      {$data['name']}",
-					"Email:     {$data['email']}",
-					"URI:       {$data['uri']}",
-					"Subject:   {$data['subj']}",
-					"Message:",
-					$data['body']
-				)
-			);
-			
-			// set up the headers
-			$headers = '';
-			if (! empty($this->config['notify_from'])) {
-				$headers .= "From: " . $this->config['notify_from'] . "\r\n";
-			}
-			
-			if (! empty($data['email'])) {
-			    // try to make the reply address safe
-			    $reply = str_replace(
-					array("\r", "\n"),
-					array('', ''),
-					$data['email']
-				);
-				$headers .= "Reply-To: " . trim($reply) . "\r\n";
-			}
-			
-			// send the message
-			@mail($this->config['notify_to'], $subj, $body, $headers);
-		}
 	}
 }
 ?>

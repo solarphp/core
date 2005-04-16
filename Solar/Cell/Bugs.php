@@ -84,6 +84,20 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		
 		// which status codes are logically closed?
 		'status_closed' => array('duplicate', 'bogus', 'resolved', 'suspended', 'wontfix'),
+		
+		// priority descriptions
+		'priority' => array(
+			0 => 'Very low',
+			1 => 'Low',
+			2 => 'Moderate',
+			3 => 'High',
+			4 => 'Very high',
+			5 => 'Very high (security)',
+			6 => 'Severe',
+			7 => 'Severe (security)',
+			8 => 'Critical',
+			9 => 'Critical (security)',
+		),
 	);
 	
 	
@@ -370,7 +384,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 		// create priority options
 		$priority_opts = array();
 		for ($i = 0; $i < 10; $i++) {
-			$priority_opts[$i] = $i;
+			$priority_opts[$i] = $this->config['priority'][$i];
 		}
 		
 		// new report

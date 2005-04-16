@@ -57,5 +57,6 @@ return array(
 	'LABEL_PRIORITY'  => 'Priority',
 	'LABEL_USER_ID'   => 'Assigned to',
 	'LABEL_STATUS'    => 'Progress status',
+	
 );
 ?>

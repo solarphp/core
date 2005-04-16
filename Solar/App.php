@@ -186,13 +186,17 @@ abstract class Solar_App extends Solar_Base {
 	
 	protected function automap($type)
 	{
-		$files = scandir($this->dir[$type]);
-		foreach ($files as $file) {
-			// look for *.php files (no dotfiles)
-			if (substr($file, 0, 1) != '.' && substr($file, -4) == '.php') {
-				$name = substr($file, 0, -4);
-				$this->map[$type][] = $name;
+		if (is_dir($this->dir[$type])) {
+			$files = scandir($this->dir[$type]);
+			foreach ($files as $file) {
+				// look for *.php files (no dotfiles)
+				if (substr($file, 0, 1) != '.' && substr($file, -4) == '.php') {
+					$name = substr($file, 0, -4);
+					$this->map[$type][] = $name;
+				}
 			}
+		} else {
+			$this->map[$type] = array();
 		}
 	}
 	

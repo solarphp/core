@@ -270,7 +270,7 @@ class Solar_Uri extends Solar_Base {
 		$uri .= empty($this->host)     ? '' : $this->host;
 		$uri .= empty($this->port)     ? '' : ':' . $this->port;
 		$uri .= empty($this->path)     ? '' : $this->path;
-		$uri .= empty($this->info)     ? '' : '/' . implode('/', $this->info);
+		$uri .= empty($this->info)     ? '' : '/' . self::info2str($this->info);
 		$uri .= empty($this->query)    ? '' :  '?' . self::query2str($this->query);
 		$uri .= empty($this->fragment) ? '' :  '#' . $this->fragment;
 		
@@ -281,10 +281,10 @@ class Solar_Uri extends Solar_Base {
 	
 	/**
 	* 
-	* Builds an array of URI elements into a string.
+	* Converts an array of query elements into a string.
 	* 
 	* Modified from code written by nospam@fiderallalla.de, found at
-	* http://php.net/parse_str.
+	* http://php.net/parse_str.  Automatically urlencodes values.
 	* 
 	* @access public
 	* 
@@ -294,25 +294,52 @@ class Solar_Uri extends Solar_Base {
 	
 	public static function query2str($params)
 	{
+		// preempt if $params is not an array, or is empty
 		if (! is_array($params) || count($params) == 0 ) {
 			return '';
 		}
 		
 		$args = func_get_args();
+		
+		// is there an array key present?
 		$akey = (! isset($args[1])) ? false : $args[1];       
+		
+		// the array of generated query substrings
 		$out = array();
 		
 		foreach ($params as $key => $val) {
+		
 			if (is_array($val) ) {   
 				$out[] = self::query2str($val, $key);
 				continue;
 			}
 			
 			$thekey = (! $akey) ? $key : $akey.'['.$key.']';
-			$out[] = $thekey . '=' . $val;
+			$out[] = $thekey . '=' . urlencode($val);
 		}
 		
-		return implode('&', $out);   
+		return implode('&', $out);
+	}
+	
+	
+	/**
+	* 
+	* Converts an array of info elements into a string.
+	* 
+	* @access public
+	* 
+	* @return string A URI pathinfo string.
+	* 
+	*/
+	
+	public static function info2str($params)
+	{
+		settype($params, 'array');
+		$str = array();
+		foreach ($params as $val) {
+			$str[] = urlencode($val);
+		}
+		return implode('/', $str);
 	}
 	
 	

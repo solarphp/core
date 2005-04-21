@@ -126,10 +126,11 @@ class Solar {
 		// make sure the baseline set of shared objects is in place,
 		// ready to be called when needed.
 		$baseline = array(
-			'sql'    => 'Solar_Sql',
-			'user'   => 'Solar_User',
-			'locale' => 'Solar_Locale',
-			'super'  => 'Solar_Super',
+			'sql'      => 'Solar_Sql',
+			'user'     => 'Solar_User',
+			'locale'   => 'Solar_Locale',
+			'super'    => 'Solar_Super',
+			'template' => 'Solar_Template',
 		);
 		
 		foreach ($baseline as $name => $class) {
@@ -574,6 +575,29 @@ class Solar {
 	public static function cookie($key = null, $default = null)
 	{
 		return Solar::$shared->super->fetch('cookie', $key, $default);
+	}
+	
+	
+	/**
+	* 
+	* Safely get the value of an element from the $_SERVER array.
+	* 
+	* @access public
+	* 
+	* @param string $key The array element; if null, returns the whole
+	* array.
+	* 
+	* @param mixed $default If the requested array element is
+	* not set, return this value.
+	* 
+	* @return mixed The array element value (if set), or the
+	* $default value (if not).
+	* 
+	*/
+	
+	public static function server($key = null, $default = null)
+	{
+		return Solar::$shared->super->fetch('server', $key, $default);
 	}
 	
 	

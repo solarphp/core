@@ -2,7 +2,7 @@
 
 /**
 * 
-* Memcached cache controller.
+* Memcache cache controller.
 * 
 * @category Solar
 * 
@@ -20,7 +20,7 @@
 
 /**
 * 
-* Memcached cache controller.
+* Memcache cache controller.
 * 
 * @category Solar
 * 
@@ -30,7 +30,7 @@
 * 
 */
 
-class Solar_Cache_Mem extends Solar_Base {
+class Solar_Cache_Memcache extends Solar_Base {
 	
 	
 	/**

@@ -34,6 +34,7 @@
 
 class Solar_Cache_File extends Solar_Base {
 	
+	
 	/**
 	* 
 	* User-provided configuration.
@@ -62,10 +63,68 @@ class Solar_Cache_File extends Solar_Base {
 	);
 	
 	
-	protected $path;
-	protected $hash;
-	protected $lock;
-	protected $life;
+	/**
+	* 
+	* Path to the cache directory.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $path = '/tmp/Solar_Cache_File/';
+	
+	
+	/**
+	* 
+	* Whether or not to hash file names for obfuscatory purposes.
+	* 
+	* @access protected
+	* 
+	* @var bool
+	* 
+	*/
+	
+	protected $hash = true;
+	
+	
+	/**
+	* 
+	* Enable/disable file locking for reads and writes.
+	* 
+	* @access protected
+	* 
+	* @var bool
+	* 
+	*/
+	
+	protected $lock = true;
+	
+	
+	/**
+	* 
+	* Lifetime of each cache entry, in seconds.
+	* 
+	* @access protected
+	* 
+	* @var int
+	* 
+	*/
+	
+	protected $life = 3600;
+	
+	
+	/**
+	* 
+	* Constructor.
+	* 
+	* @access public
+	* 
+	* @param array $config An array of user-supplied configuration
+	* values.
+	* 
+	*/
 	
 	public function __construct($config = null)
 	{

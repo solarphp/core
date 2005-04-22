@@ -64,16 +64,38 @@ if ($user->auth->username != $item['user_id']) {
 	return $this->view('error');
 }
 
+// ---------------------------------------------------------------------
+// 
+// if this is a new-bookmark request, but the URI is already bookmarked
+// for the user, redirect to that bookmark ID.
+// 
+
+// get a link for backlinking
+$link = Solar::object('Solar_Uri');
+
+if (! $id) {
+	// if the ID was zero, and the user already has that URI,
+	// redirect to the edit page for that URI.
+	$existing_id = $bookmarks->userHasUri(
+		$user->auth->username,
+		Solar::get('uri')
+	);
+	
+	if ($existing_id) {
+		$link->query('set', 'id', $existing_id);
+		header('Location: ' . $link->export());
+	}
+
+}
 
 // ---------------------------------------------------------------------
 // 
 // build a link for header('Location: ') calls and the backlink.
 // 
-
 // if we came from a tag or user page, return there.
 // if we came from a quickmark, return to the originating page.
 // otherwise, return the list for the user.
-$link = Solar::object('Solar_Uri');
+//
 
 // clear the current pathinfo and query
 $link->clearInfo();
@@ -101,10 +123,9 @@ if ($info || $qstr) {
 } else {
 	// return to the user's list
 	$link->info('set', 0, 'user');
-	$link->info('set', 1, Solar::$shared->user->auth->username);
+	$link->info('set', 1, $user->auth->username);
 	$href = $link->export();
 }
-
 
 // ---------------------------------------------------------------------
 // 
@@ -190,10 +211,10 @@ if ($op == Solar::locale('Solar', 'OP_DELETE')) {
 	header("Location: $href");
 }
 
-// assign the form object
+// assign data to the view
 $this->view->formdata = $form;
 $this->view->backlink = $href;
 
-// display output
+// return the output
 return $this->view('edit');
 ?>

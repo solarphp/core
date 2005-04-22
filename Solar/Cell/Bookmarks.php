@@ -307,6 +307,37 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
+	* See if a user_id already has a uri in their bookmarks.
+	* 
+	* @access public
+	* 
+	* @param string $user_id The user_id to look up.
+	* 
+	* @param string $uri The URI to look up.
+	*
+	* @return mixed Boolean false if the user_id does not already
+	* have that URI, or a record ID number if he does have it.
+	* 
+	*/
+	
+	public function userHasUri($user_id, $uri)
+	{
+		$where = 'user_id = ' . $this->quote($user_id) . 
+			' AND uri = ' . $this->quote($uri);
+		
+		$result = $this->selectFetch('list', $where);
+		
+		if (Solar::isError($result)) {
+			return $result;
+		} elseif ($result) {
+			return $result[0]['id'];
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	* 
 	* Fetch all the bookmarks for a specific user_id.
 	* 
 	* @access public

@@ -41,7 +41,7 @@ class Solar_Cache extends Solar_Base {
 	* 
 	* active  => (bool) setting for $active
 	* 
-	* driver  => (string) the cache driver to use
+	* class  => (string) the cache driver to use
 	* 
 	* options => (array) array of config options for the driver
 	* 
@@ -112,11 +112,11 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Sets cached entity data.
+	* Sets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @param string $data The data to store.
 	* 
@@ -136,11 +136,11 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Gets cached entity data.
+	* Gets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return mixed Boolean false on failure, string on success.
 	* 
@@ -158,11 +158,11 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Deletes a cached entity.
+	* Deletes a cache entry.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return void
 	* 
@@ -178,11 +178,11 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Checks if a cached entity exists and is not past its lifetime.
+	* Checks if a cache entry exists and is not past its lifetime.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True if valid, false if not.
 	* 

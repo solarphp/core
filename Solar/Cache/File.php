@@ -30,8 +30,6 @@
 * 
 * @todo Add 'checksum' to check for cache corruptions and use CRC32?
 * 
-* @todo Force use of '.serial' (i.e., not a config option)?
-* 
 */
 
 class Solar_Cache_File extends Solar_Base {
@@ -48,11 +46,7 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	* lock => (bool) enable/disable file locking (both read and write)
 	* 
-	* prefix => (string) prefix for cache entity file names
-	* 
-	* serial => (string) suffix for marking serialized cache files
-	* 
-	* life => (int) lifetime in seconds for each cached entity
+	* life => (int) lifetime in seconds for each cache entry
 	* 
 	* @access protected
 	* 
@@ -61,22 +55,43 @@ class Solar_Cache_File extends Solar_Base {
 	*/
 	
 	public $config = array(
-		'path' => '/tmp/',
-		'hash' => true,
-		'lock' => true,
-		'prefix' => 'Solar_Cache_File_',
-		'serial' => '.serial',
-		'life' => 3600
+		'path'   => '/tmp/Solar_Cache_File/',
+		'hash'   => true,
+		'lock'   => true,
+		'life'   => 3600
 	);
+	
+	
+	protected $path;
+	protected $hash;
+	protected $lock;
+	protected $life;
+	
+	public function __construct($config = null)
+	{
+		// basic construction
+		parent::__construct($config);
+		
+		// keep local values so they can't be changed
+		$this->path = Solar::fixdir($this->config['path']);
+		$this->hash = $this->config['hash'];
+		$this->lock = $this->config['lock'];
+		$this->life = $this->config['life'];
+		
+		// make sure the cache directory is there
+		if (! dir($this->path)) {
+			mkdir($this->path);
+		}
+	}
 	
 	
 	/**
 	* 
-	* Gets cached entity data.
+	* Gets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return mixed Boolean false on failure, string on success.
 	* 
@@ -84,11 +99,11 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public function get($key)
 	{
-		// get the entity filename *before* validating;
+		// get the entry filename *before* validating;
 		// this avoids a race condition.
 		$file = $this->filename($key);
 		
-		// did we find a valid cache entity?
+		// did we find a valid cache entry?
 		if ($this->valid($key)) {
 			
 			// yes, open it for reading
@@ -103,20 +118,20 @@ class Solar_Cache_File extends Solar_Base {
 				$len = filesize($file);
 				
 				// lock for reading and read.
-				if ($this->config['lock']) {
+				if ($this->lock) {
 					flock($fp, LOCK_EX);
 				}
 				$data = fread($fp, $len);
 				
 				// unlock after reading and close.
-				if ($this->config['lock']) {
+				if ($this->lock) {
 					flock($fp, LOCK_UN);
 				}
 				
 				fclose($fp);
 				
 				// check for serializing
-				if (file_exists($file . $this->config['serial'])) {
+				if (file_exists($file . '.serial')) {
 					$data = unserialize($data);
 				}
 				
@@ -125,18 +140,18 @@ class Solar_Cache_File extends Solar_Base {
 			}
 		}
 		
-		// no valid cache entity, or could not read file.
+		// no valid cache entry, or could not read file.
 		return false;
 	}
 	
 	
 	/**
 	* 
-	* Sets cached entity data.
+	* Sets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True on success, false on failure.
 	* 
@@ -160,26 +175,31 @@ class Solar_Cache_File extends Solar_Base {
 		if ($fp) {
 			
 			// yes.  lock for writing and write
-			if ($this->config['lock']) {
+			if ($this->lock) {
 				flock($fp, LOCK_EX);
 			}
 			fwrite($fp, $data, strlen($data));
 			
 			// unlock after writing and close.
-			if ($this->config['lock']) {
+			if ($this->lock) {
 				flock($fp, LOCK_UN);
 			}
 			fclose($fp);
 			
 			// add a .serial file?
 			if ($serial) {
-				touch($file . $this->config['serial']);
+				touch($file . '.serial');
+			} else {
+				// make sure no serial file is there
+				// from a previous entry with the same
+				// name
+				@unlink($file . '.serial');
 			}
 			
 			// done!
 			return true;
 		}
-	
+		
 		// could not open the file for writing.
 		return false;
 	}
@@ -187,11 +207,11 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Deletes an entity from the cache.
+	* Deletes an entry from the cache.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return void
 	* 
@@ -201,17 +221,15 @@ class Solar_Cache_File extends Solar_Base {
 	{
 		$file = $this->filename($key);
 		unlink($file);
-		@unlink($file . $this->config['serial']);
+		@unlink($file . '.serial');
 	}
 	
 	
 	/**
 	* 
-	* Removes all entities from one cache group.
+	* Removes all entries from the cache.
 	* 
 	* @access public
-	* 
-	* @param string $group The entity group.
 	* 
 	* @return void
 	* 
@@ -220,26 +238,20 @@ class Solar_Cache_File extends Solar_Base {
 	public function clear()
 	{
 		// open the directory
-		$dir = dir($this->config['path']);
-		if ($dir) {
+		$dir = dir($this->path);
 		
-			// loop through the files in the directory
-			// and delete one-by-one, making sure they
-			// match the base filename.
-			$len = strlen($this->config['prefix']);
+		// did it exist?
+		if ($dir) {
 			
+			// delete each file in the cache directory.
 			// we use the "false !==" piece so that a file
 			// named '0' does not prematurely terminate the
 			// loop.
 			while (false !== ($file = $dir->read())) {
-				// only delete files that match the caching filename
-				// convention
-				if (substr($file, 0, $len) == $this->config['prefix']) {
-					// delete the file ...
-					unlink($this->config['path'] . $file);
-					// ... and any serial marker.
-					@unlink($file . $this->config['serial']);
-				}
+				// delete the file ...
+				unlink($this->path . $file);
+				// ... and any serial marker.
+				@unlink($file . '.serial');
 			}
 			
 			// done
@@ -250,16 +262,16 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Checks to see if a cached entity is valid.
+	* Checks to see if a cache entry is valid.
 	* 
-	* A cached entity is valid if its file exists, that file is readable,
+	* A cache entry is valid if its file exists, that file is readable,
 	* and the file has not passed the cache lifetime in seconds.
+	* 
+	* Removes the entry if it exists but is no longer valid.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
-	* 
-	* @param bool $remove If a file has expired, remove it.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True if valid, false if not.
 	* 
@@ -267,14 +279,14 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public function valid($key)
 	{
-		// get the entity filename
+		// get the entry filename
 		$file = $this->filename($key);
 		
 		// make sure the file exists and is readable,
 		if (file_exists($file) && is_readable($file)) {
 			
 			// has the file expired?
-			if (time() < filemtime($file) + $this->config['life']) {
+			if (time() < filemtime($file) + $this->life) {
 				// no, so it's valid!
 				return true;
 			} else {
@@ -290,11 +302,11 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Determines the filename for a cached entity.
+	* Determines the filename for a cache entry.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True if valid, false if not.
 	* 
@@ -302,16 +314,13 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public function filename($key)
 	{
-		// path and filename prefix
-		$file = $this->config['path'] . $this->config['prefix'];
-		
 		// are we hashing to obfuscate IDs?
-		if ($this->config['hash']) {
+		if ($this->hash) {
 			// yes, obfuscate
-			$file .= md5($key);
+			$file = $this->path . md5($key);
 		} else {
 			// no, use plaintext
-			$file .= $key;
+			$file = $this->path . $key;
 		}
 		
 		// done

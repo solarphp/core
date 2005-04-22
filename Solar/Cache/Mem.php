@@ -43,7 +43,7 @@ class Solar_Cache_Mem extends Solar_Base {
 	* 
 	* port => (string|int) the port on the server
 	* 
-	* life => (int) lifetime in seconds for each cached entity
+	* life => (int) lifetime in seconds for each cache entry
 	* 
 	* @access protected
 	* 
@@ -87,11 +87,11 @@ class Solar_Cache_Mem extends Solar_Base {
 	
 	/**
 	* 
-	* Sets cached entity data.
+	* Sets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True on success, false on failure.
 	* 
@@ -105,11 +105,11 @@ class Solar_Cache_Mem extends Solar_Base {
 	
 	/**
 	* 
-	* Gets cached entity data.
+	* Gets cache entry data.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return mixed Boolean false on failure, string on success.
 	* 
@@ -123,11 +123,11 @@ class Solar_Cache_Mem extends Solar_Base {
 	
 	/**
 	* 
-	* Deletes a cached entity.
+	* Deletes a cache entry.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
+	* @param string $key The entry ID.
 	* 
 	* @return void
 	* 
@@ -141,13 +141,11 @@ class Solar_Cache_Mem extends Solar_Base {
 	
 	/**
 	* 
-	* Checks if a cached entity exists and is not past its lifetime.
+	* Checks if a cache entry exists and is not past its lifetime.
 	* 
 	* @access public
 	* 
-	* @param string $key The entity ID.
-	* 
-	* @param bool $remove Enable/disable removal of invalid entities.
+	* @param string $key The entry ID.
 	* 
 	* @return bool True if valid, false if not.
 	* 
@@ -165,7 +163,7 @@ class Solar_Cache_Mem extends Solar_Base {
 	
 	/**
 	* 
-	* Removes all cache entities.
+	* Removes all cache entries.
 	* 
 	* @access public
 	* 

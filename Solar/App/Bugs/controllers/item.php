@@ -41,10 +41,8 @@ $data = $bugs->fetchItem($id);
 
 // does the report exist?
 if (Solar::isError($data)) {
-	$tpl->setTemplate('error.php');
-	$tpl->error = $data;
-	echo $tpl;
-	exit;
+	$this->view->error = $data;
+	return $this->view('error');
 }
 
 // get the comment form elements and set defaults
@@ -90,13 +88,13 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 }
 
 // get the item elements; this will be frozen on display
-$tpl->item = $bugs->formElements('edit', $data);
+$this->view->item = $bugs->formElements('edit', $data);
 
 // add the comment form
-$tpl->formdata = $form;
+$this->view->formdata = $form;
 
 // add the existing comments
-$tpl->comments = $comments->fetchQueue('sc_bugs', $id);
+$this->view->comments = $comments->fetchQueue('sc_bugs', $id);
 
 // get the shared user object
 $user = Solar::shared('user');
@@ -108,8 +106,8 @@ $ok_user = in_array($user->auth->username, $this->config['admin_user']);
 $ok_role = $user->role->inAny($this->config['admin_role']);
 
 // user may edit if allowed by name or role
-$tpl->can_edit = $ok_user || $ok_role;
+$this->view->can_edit = $ok_user || $ok_role;
 
 // display
-return $tpl->fetch('item.php');
+return $this->view('item');
 ?>

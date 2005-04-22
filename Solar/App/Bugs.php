@@ -42,9 +42,9 @@ class Solar_App_Bugs extends Solar_App {
 	protected function setup()
 	{
 		// controller action source and default
-		$this->action_src = 'get';
-		$this->action_var = 'action';
-		$this->action_default = 'listOpen';
+		$this->action['src']     = 'get';
+		$this->action['var']     = 'action';
+		$this->action['default'] = 'listOpen';
 		
 		// the list of users who are allowed admin privs
 		$this->config['admin_user'] = array();

@@ -33,22 +33,12 @@
 // get the shared user object
 $user = Solar::shared('user');
 
-// get the shared template object and add the path for local templates
-$tpl = Solar::shared('template');
-$tpl->addPath('template', $this->dir['views']);
-
-// add any additional template paths (for theming)
-$tpl->addPath(
-	'template',
-	Solar::config('Solar_App_Bookmarks', 'template_path', '')
-);
-
 // RSS data for the page
-$tpl->rss = array(
+$this->view->rss = array(
 	'avail' => false,
 	'title' => Solar::super('server', 'PATH_INFO'),
 	'descr' => 'Solar_App_Bookmarks',
-	'date'  => date('c'), // should be latest mod date in the $tpl->list
+	'date'  => date('c'), // should be latest mod date in the $this->view->list
 	'link' => Solar::super('server', 'REQUEST_URI'),
 );
 

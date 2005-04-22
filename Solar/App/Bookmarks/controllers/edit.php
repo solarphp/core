@@ -40,8 +40,8 @@ include $this->helper('prepend');
 
 // must be logged in to proceed
 if ($user->auth->status_code != 'VALID') {
-	$tpl->err[] = 'You are not logged in.';
-	return $tpl->fetch('error.php');
+	$this->view->err[] = 'You are not logged in.';
+	return $this->view('error');
 }
 
 // get the bookmark ID (0 means a new bookmark)
@@ -60,8 +60,8 @@ if ($id) {
 
 // must be the item owner to edit it
 if ($user->auth->username != $item['user_id']) {
-	$tpl->err[] = 'You do not own this bookmark, or it does not exist.';
-	return $tpl->fetch('error.php');
+	$this->view->err[] = 'You do not own this bookmark, or it does not exist.';
+	return $this->view('error');
 }
 
 
@@ -191,9 +191,9 @@ if ($op == Solar::locale('Solar', 'OP_DELETE')) {
 }
 
 // assign the form object
-$tpl->formdata = $form;
-$tpl->backlink = $href;
+$this->view->formdata = $form;
+$this->view->backlink = $href;
 
 // display output
-return $tpl->fetch('edit.php');
+return $this->view('edit');
 ?>

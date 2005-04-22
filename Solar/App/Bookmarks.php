@@ -39,11 +39,13 @@ require_once 'Solar/App.php';
 */
 
 class Solar_App_Bookmarks extends Solar_App {
-
-	protected $action_src = 'pathinfo';
-	protected $action_var = 0;
-	protected $action_default = 'tag';
 	
+	protected function setup()
+	{
+		 $this->action['src']     = 'pathinfo';
+		 $this->action['var']     = 0;
+		 $this->action['default'] = 'tag';
+	}
 	
 	// there are only some accepted orderings.
 	protected function getOrder()

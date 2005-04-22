@@ -34,8 +34,8 @@
 include $this->helper('prepend');
 
 // list only open bugs
-$tpl->list = $bugs->fetchOpen();
+$this->view->list = $bugs->fetchOpen();
 
 // display
-return $tpl->fetch('list.php');
+return $this->view('list');
 ?>

@@ -51,27 +51,28 @@ $page = Solar::get('page', 1);
 // get the list of results
 if (! $tags) {
 	// no tags requested, fetch everything
-	$tpl->list = $bookmarks->fetchList(null, $order, $page);
+	$this->view->list = $bookmarks->fetchList(null, $order, $page);
 } else {
 	// some tags requested
-	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page);
+	$this->view->list = $bookmarks->withTags($tags, $user_id, $order, $page);
 };
+
+// assign everything else
+$this->view->rss['avail'] = true;
+$this->view->count = $bookmarks->count;
+$this->view->pages = $bookmarks->pages;
+$this->view->page = $page;
+$this->view->user_id = null; // requested user_id
+$this->view->tags = $tags; // requested tags
+$this->view->user_tags = null; // all tags for this user
 
 // RSS or HTML?
 $rss = Solar::get('rss', false);
+
 if ($rss) {
-	$tpl->setTemplate('rss.php');
+	return $this->view('rss');
 } else {
-	$tpl->setTemplate('list.php');
+	return $this->view('list');
 }
 
-// assign everything else and display
-$tpl->rss['avail'] = true;
-$tpl->count = $bookmarks->count;
-$tpl->pages = $bookmarks->pages;
-$tpl->page = $page;
-$tpl->user_id = null; // requested user_id
-$tpl->tags = $tags; // requested tags
-$tpl->user_tags = null; // all tags for this user
-return $tpl->fetch();
 ?>

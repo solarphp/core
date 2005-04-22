@@ -182,11 +182,11 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 
 // get comments about the bug
 $id = $form->elements['bugs[id]']['value'];
-$tpl->comments = $comments->fetchQueue('sc_bugs', $id);
+$this->view->comments = $comments->fetchQueue('sc_bugs', $id);
 
 // assign the form object
-$tpl->formdata = $form;
+$this->view->formdata = $form;
 
 // display output
-return $tpl->fetch('edit.php');
+return $this->view('edit');
 ?>

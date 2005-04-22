@@ -47,28 +47,28 @@ $order = $this->getOrder();
 // all bookmarks, not just one page).
 $rss = Solar::get('rss', false);
 if ($rss) {
-	$tpl->setTemplate('rss.php');
+	$viewname = 'rss';
 	$page = Solar::get('page', 0);
 } else {
-	$tpl->setTemplate('list.php');
+	$viewname = 'list';
 	$page = Solar::get('page', 1);
 }
 
 // get the list of entries
 if ($tags) {
-	$tpl->list = $bookmarks->withTags($tags, $user_id, $order, $page);
+	$this->view->list = $bookmarks->withTags($tags, $user_id, $order, $page);
 } else {
-	$tpl->list = $bookmarks->forUser($user_id, $order, $page);
+	$this->view->list = $bookmarks->forUser($user_id, $order, $page);
 }
 
 // assign, and done!
-$tpl->rss['avail'] = true;
-$tpl->count = $bookmarks->count;
-$tpl->pages = $bookmarks->pages;
-$tpl->page = $page;
-$tpl->user_id = $user_id; // requested user_id
-$tpl->tags = $tags; // requested tags
-$tpl->user_tags = $bookmarks->userTags($user_id); // all tags for this user
+$this->view->rss['avail'] = true;
+$this->view->count = $bookmarks->count;
+$this->view->pages = $bookmarks->pages;
+$this->view->page = $page;
+$this->view->user_id = $user_id; // requested user_id
+$this->view->tags = $tags; // requested tags
+$this->view->user_tags = $bookmarks->userTags($user_id); // all tags for this user
 
-return $tpl->fetch();
+return $this->view($viewname);
 ?>

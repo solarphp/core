@@ -8,11 +8,13 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Locale
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id: Base.php 21 2005-02-18 01:12:42Z pmjones $
+* @version $Id$
 * 
 */
 

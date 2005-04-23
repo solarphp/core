@@ -1,6 +1,40 @@
 <?php
 
+/**
+* 
+* Default template system for Solar; extended from Savant3.
+* 
+* @category Solar
+* 
+* @package Solar
+* 
+* @subpackage Solar_Template
+* 
+* @author Paul M. Jones <pmjones@solarphp.com>
+* 
+* @license LGPL
+* 
+* @version $Id: Super.php 76 2005-03-26 21:08:37Z pmjones $
+* 
+*/
+
+/**
+* This class is extended from Savant3.
+* @link http://phpsavant.com/
+*/
 include_once 'Template/Savant3.php';
+
+/**
+* 
+* Default template system for Solar; extended from Savant3.
+* 
+* @category Solar
+* 
+* @package Solar
+* 
+* @subpackage Solar_Template
+* 
+*/
 
 class Solar_Template extends Savant3 {
 	
@@ -61,8 +95,7 @@ class Solar_Template extends Savant3 {
 	* 
 	* @param object &$obj The object to be tested.
 	* 
-	* @return boolean True if $obj is an error object of the type
-	* Savant3_Error, or is a subclass that Savant3_Error. False if not.
+	* @return boolean True if $obj is a Solar_Error.
 	*
 	*/
 	

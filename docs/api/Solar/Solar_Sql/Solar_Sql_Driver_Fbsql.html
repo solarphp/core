@@ -73,9 +73,9 @@
 			<div class="method-summary">
 								
 				<div class="method-definition">
-											<span class="method-result">Solar_Sql_Driver_Fbsql</span>
-										<a href="#__construct" title="details" class="method-name">__construct</a>
-											([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$config</span> = <span class="var-default">null</span>])
+											<span class="method-result">void</span>
+										<a href="#connect" title="details" class="method-name">connect</a>
+										()
 									</div>
 								
 				<div class="method-definition">
@@ -167,7 +167,7 @@
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Map of Solar generic columnt types to RDBMS native declarations.</p>
+<p class="short-description">Map of Solar generic column types to RDBMS native declarations.</p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -212,33 +212,33 @@
 		</div>
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
-<a name="method__construct" id="__construct"><!-- --></a>
+<a name="methodconnect" id="connect"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">70</span>)
+		<span class="method-title">connect</span> (line <span class="line-number">72</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Constructor.</p>
+<p class="short-description">Connects to the database.</p>
 	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
+				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">Solar_Sql_Driver_Fbsql</span>
+		<span class="method-result">void</span>
 		<span class="method-name">
-			__construct
+			connect
 		</span>
-					([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$config</span> = <span class="var-default">null</span>])
+				()
 			</div>
 	
 		
 			<hr class="separator" />
 		<div class="notes">Redefinition of:</div>
 		<dl>
-			<dt><a href="../../Solar/Solar_Base.html#method__construct">Solar_Base::__construct()</a></dt>
-						<dd>Constructor.</dd>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodconnect">Solar_Sql_Driver::connect()</a></dt>
+						<dd>Connects to the database.</dd>
 					</dl>
 		
 	</div>
@@ -246,7 +246,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">createSequence</span> (line <span class="line-number">307</span>)
+		<span class="method-title">createSequence</span> (line <span class="line-number">318</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -284,7 +284,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">dropSequence</span> (line <span class="line-number">331</span>)
+		<span class="method-title">dropSequence</span> (line <span class="line-number">342</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -319,7 +319,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">escape</span> (line <span class="line-number">108</span>)
+		<span class="method-title">escape</span> (line <span class="line-number">116</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -357,7 +357,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">exec</span> (line <span class="line-number">130</span>)
+		<span class="method-title">exec</span> (line <span class="line-number">138</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -399,7 +399,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">fetch</span> (line <span class="line-number">195</span>)
+		<span class="method-title">fetch</span> (line <span class="line-number">206</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -436,7 +436,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">fetchNum</span> (line <span class="line-number">214</span>)
+		<span class="method-title">fetchNum</span> (line <span class="line-number">225</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -473,7 +473,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">free</span> (line <span class="line-number">232</span>)
+		<span class="method-title">free</span> (line <span class="line-number">243</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -509,7 +509,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">limit</span> (line <span class="line-number">258</span>)
+		<span class="method-title">limit</span> (line <span class="line-number">269</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -552,7 +552,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">listTables</span> (line <span class="line-number">286</span>)
+		<span class="method-title">listTables</span> (line <span class="line-number">297</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -583,7 +583,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">nextSequence</span> (line <span class="line-number">349</span>)
+		<span class="method-title">nextSequence</span> (line <span class="line-number">360</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -621,6 +621,7 @@
 					<p>Inherited From <span class="classname"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html">Solar_Sql_Driver</a></span></p>
 					<blockquote>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodcolumnDeclaration">Solar_Sql_Driver::columnDeclaration()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodconnect">Solar_Sql_Driver::connect()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodcreateIndex">Solar_Sql_Driver::createIndex()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodcreateSequence">Solar_Sql_Driver::createSequence()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodcreateTable">Solar_Sql_Driver::createTable()</a></span><br>
@@ -650,7 +651,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 10:22:23 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Sat, 23 Apr 2005 14:23:55 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

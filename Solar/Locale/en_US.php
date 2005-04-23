@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Locale
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL

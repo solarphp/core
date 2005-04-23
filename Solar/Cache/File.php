@@ -138,7 +138,7 @@ class Solar_Cache_File extends Solar_Base {
 		$this->life = $this->config['life'];
 		
 		// make sure the cache directory is there
-		if (! dir($this->path)) {
+		if (! is_dir($this->path)) {
 			mkdir($this->path);
 		}
 	}

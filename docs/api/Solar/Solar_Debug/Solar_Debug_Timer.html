@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Solar_Debug_Timer</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Solar_Debug_Timer</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Class to track code execution times.</p>
+		<p class="notes">
+			Located in <a class="field" href="_Solar_Debug_Timer_php.html">/Solar/Debug/Timer.php</a> (line <span class="field">33</span>)
+		</p>
+		
+				
+		<pre><a href="../../Solar/Solar_Base.html">Solar_Base</a>
+   |
+   --Solar_Debug_Timer</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$config" title="details" class="var-name">$config</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$marks" title="details" class="var-name">$marks</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">boolean</span>
+					<a href="#$maxlen" title="details" class="var-name">$maxlen</a>
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+											<span class="method-result">float</span>
+										<a href="#diff" title="details" class="method-name">diff</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">'__start'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$end</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#display" title="details" class="method-name">display</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$html</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#mark" title="details" class="method-name">mark</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#profile" title="details" class="method-name">profile</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#start" title="details" class="method-name">start</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#stop" title="details" class="method-name">stop</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__solar" title="details" class="method-name">__solar</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$hook</span>)
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$config" id="$config"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$config</span>
+			 = <span class="var-default">array(<br />		'html' =&gt; true<br />	)</span>			(line <span class="line-number">50</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">User-provided configuration.</p>
+<p class="description"><p>Keys are:</p><p>html =&gt; (bool) enable/disable encoding output for HTML</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Base.html#var$config">Solar_Base::$config</a></dt>
+						<dd>User-provided configuration values.</dd>
+					</dl>
+		
+		
+
+</div>
+<a name="var$marks" id="$marks"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$marks</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">65</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Array of time marks.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$maxlen" id="$maxlen"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">boolean</span>
+			<span class="var-name">$maxlen</span>
+			 = <span class="var-default"> 0</span>			(line <span class="line-number">78</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">When we call profile(), what is the longest marker name length?</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methoddiff" id="diff"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">diff</span> (line <span class="line-number">168</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the time elapsed betweens two marks.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Time difference between $start and $end.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">float</span>
+		<span class="method-name">
+			diff
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">'__start'</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$end</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$start</span><span class="var-description">: Starting mark; defaults to &quot;__start&quot;.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$end</span><span class="var-description">: Ending mark; if not specified, defaults the the  current time.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methoddisplay" id="display"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">display</span> (line <span class="line-number">259</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Outputs the current profile.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			display
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$html</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$html</span><span class="var-description">: Whether or not to output encoded for HTML.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodmark" id="mark"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">mark</span> (line <span class="line-number">147</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Mark the time.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			mark
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: Name of the marker to be set</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodprofile" id="profile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">profile</span> (line <span class="line-number">198</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns profiling information as an array.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of profile information.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			profile
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodstart" id="start"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">start</span> (line <span class="line-number">114</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Resets the profile and marks a new starting time.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			start
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodstop" id="stop"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">stop</span> (line <span class="line-number">129</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Stop the timer.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			stop
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="method__solar" id="__solar"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">__solar</span> (line <span class="line-number">93</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Solar hooks.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__solar
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$hook</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$hook</span><span class="var-description">: The hook name to activate.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Base.html#method__solar">Solar_Base::__solar()</a></dt>
+						<dd>Provides hooks for Solar::start() and Solar::stop() on shared objects.</dd>
+					</dl>
+		
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../Solar/Solar_Base.html">Solar_Base</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__construct">Solar_Base::__construct()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodapiVersion">Solar_Base::apiVersion()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methoderror">Solar_Base::error()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodlocale">Solar_Base::locale()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__solar">Solar_Base::__solar()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 23 Apr 2005 10:23:10 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+	</p>
+	</div></body>
+</html>

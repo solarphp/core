@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Solar_Cell_Bugs</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Solar_Cell_Bugs</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Application component module for bug tracking.</p>
+		<p class="notes">
+			Located in <a class="field" href="_Solar_Cell_Bugs_php.html">/Solar/Cell/Bugs.php</a> (line <span class="field">41</span>)
+		</p>
+		
+				
+		<pre><a href="../../Solar/Solar_Base.html">Solar_Base</a>
+   |
+   --<a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html">Solar_Sql_Entity</a>
+      |
+      --Solar_Cell_Bugs</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$config" title="details" class="var-name">$config</a>
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#defaultCol" title="details" class="method-name">defaultCol</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$col</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#fetchItem" title="details" class="method-name">fetchItem</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#fetchList" title="details" class="method-name">fetchList</a>
+											([<span class="var-type">string|array</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#fetchOpen" title="details" class="method-name">fetchOpen</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getSchema" title="details" class="method-name">getSchema</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#preInsert" title="details" class="method-name">preInsert</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#preUpdate" title="details" class="method-name">preUpdate</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#updateItem" title="details" class="method-name">updateItem</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$config" id="$config"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$config</span>
+			 = <span class="var-default">array(<br />		<br />		// directory for local strings<br />		'locale' =&gt; 'Solar/Cell/Bugs/Locale/',<br />		<br />		// queues to report on (default is blank)<br />		'queue' =&gt; array(''),// report type codes<br />'type'=&gt;array('bug','example','feature',),// work progress status codes<br />'status'=&gt;array('new','confirmed','assigned','feedback','resolved','duplicate','bogus','wontfix','suspended','reopened',),// which status codes are logically open?<br />'status_open'=&gt;array('new','confirmed','assigned','feedback','reopened'),// which status codes are logically closed?<br />'status_closed'=&gt;array('duplicate','bogus','resolved','suspended','wontfix'),// priority descriptions<br />'priority'=&gt;array(0=&gt;'Very low',1=&gt;'Low',2=&gt;'Moderate',3=&gt;'High',4=&gt;'Very high',5=&gt;'Very high (security)',6=&gt;'Severe',7=&gt;'Severe (security)',8=&gt;'Critical',9=&gt;'Critical (security)',),)</span>			(line <span class="line-number">53</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">User-supplied configuration values.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#var$config">Solar_Sql_Entity::$config</a></dt>
+						<dd>User-provided configuration.</dd>
+					</dl>
+		
+		
+
+</div>
+							<h4>Inherited Variables</h4>
+				<A NAME='inherited_vars'><!-- --></A>
+									<p>Inherited from <span class="classname"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html">Solar_Sql_Entity</a></span></p>
+					<blockquote>
+													<span class="var-title">
+								<span class="var-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#var$schema">Solar_Sql_Entity::$schema</a></span><br>
+							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#var$sql">Solar_Sql_Entity::$sql</a></span><br>
+							</span>
+											</blockquote> 
+										
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methoddefaultCol" id="defaultCol"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">defaultCol</span> (line <span class="line-number">488</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the default value for a given column</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A value for the column.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			defaultCol
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$col</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$col</span><span class="var-description">: The column name to return a value for.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methoddefaultCol">Solar_Sql_Entity::defaultCol()</a></dt>
+						<dd>Override this to generate default field values.</dd>
+					</dl>
+		
+	</div>
+<a name="methodfetchItem" id="fetchItem"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchItem</span> (line <span class="line-number">116</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Fetch one bug report.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of info about the bug report.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			fetchItem
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: The bug report ID number.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodfetchList" id="fetchList"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchList</span> (line <span class="line-number">174</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Fetch a list of all bug reports (open and closed).</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of bug reports.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			fetchList
+		</span>
+					([<span class="var-type">string|array</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$order</span><span class="var-description">: An ORDER clause to override the default order.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$page</span><span class="var-description">: Which page number to show; by default, shows all.</span>			</li>
+					<li>
+				<span class="var-type">string|array</span>
+				<span class="var-name">$where</span><span class="var-description">: An added WHERE clause to further filter the results.  If an assoc array, the keys are treated as field names and the values as  &quot;equals&quot; values, to be ANDed together to make a WHERE clause.  If null,  no filtering is applied.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodfetchOpen" id="fetchOpen"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchOpen</span> (line <span class="line-number">144</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Fetch a list of open bug reports.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An array of bug reports.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			fetchOpen
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$order</span><span class="var-description">: An ORDER clause to override the default order.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$page</span><span class="var-description">: Which page number to show; by default, shows all.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodgetSchema" id="getSchema"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSchema</span> (line <span class="line-number">220</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the $schema array for this object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An entity schema array.</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getSchema
+		</span>
+				()
+			</div>
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodgetSchema">Solar_Sql_Entity::getSchema()</a></dt>
+						<dd>Build and return the entity schematic array.</dd>
+					</dl>
+		
+	</div>
+<a name="methodpreInsert" id="preInsert"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">preInsert</span> (line <span class="line-number">516</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Pre-insert data maniuplation.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			preInsert
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: The data to be inserted.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpreInsert">Solar_Sql_Entity::preInsert()</a></dt>
+						<dd>Custom pre-insert processing.</dd>
+					</dl>
+		
+	</div>
+<a name="methodpreUpdate" id="preUpdate"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">preUpdate</span> (line <span class="line-number">536</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Pre-update data maniuplation.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			preUpdate
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: The data to be inserted.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpreUpdate">Solar_Sql_Entity::preUpdate()</a></dt>
+						<dd>Custom pre-update processing.</dd>
+					</dl>
+		
+	</div>
+<a name="methodupdateItem" id="updateItem"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">updateItem</span> (line <span class="line-number">203</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Updates one bug report by ID.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			updateItem
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$id</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$data</span><span class="var-description">: An associative array of data where the key is a  column name and the value is updated value.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$id</span><span class="var-description">: The row ID to update.</span>			</li>
+				</ul>
+		
+		
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html">Solar_Sql_Entity</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#method__construct">Solar_Sql_Entity::__construct()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodbuildSelect">Solar_Sql_Entity::buildSelect()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodcountPages">Solar_Sql_Entity::countPages()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodcreateTable">Solar_Sql_Entity::createTable()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methoddate">Solar_Sql_Entity::date()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methoddefaultCol">Solar_Sql_Entity::defaultCol()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methoddefaultRow">Solar_Sql_Entity::defaultRow()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methoddelete">Solar_Sql_Entity::delete()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodformElements">Solar_Sql_Entity::formElements()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodgetSchema">Solar_Sql_Entity::getSchema()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodinsert">Solar_Sql_Entity::insert()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpageLimit">Solar_Sql_Entity::pageLimit()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpostInsert">Solar_Sql_Entity::postInsert()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpostUpdate">Solar_Sql_Entity::postUpdate()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpreInsert">Solar_Sql_Entity::preInsert()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodpreUpdate">Solar_Sql_Entity::preUpdate()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodquote">Solar_Sql_Entity::quote()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodselectFetch">Solar_Sql_Entity::selectFetch()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodselectResult">Solar_Sql_Entity::selectResult()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodtime">Solar_Sql_Entity::time()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodtimestamp">Solar_Sql_Entity::timestamp()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodupdate">Solar_Sql_Entity::update()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#methodvalidate">Solar_Sql_Entity::validate()</a></span><br>
+											</blockquote>
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../Solar/Solar_Base.html">Solar_Base</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__construct">Solar_Base::__construct()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodapiVersion">Solar_Base::apiVersion()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methoderror">Solar_Base::error()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodlocale">Solar_Base::locale()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__solar">Solar_Base::__solar()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 23 Apr 2005 10:22:09 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+	</p>
+	</div></body>
+</html>

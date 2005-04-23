@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Solar_Base</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Solar_Base</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|											<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Abstract base class for all Solar objects.</p>
+	<ul class="tags">
+				<li><span class="field">abstract:</span> </li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Solar_Base_php.html">/Solar/Base.php</a> (line <span class="field">29</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+								|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar_App/Solar_App.html">Solar_App</a></td>
+					<td>
+											Abstract application controller class for Solar.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Cache/Solar_Cache_File.html">Solar_Cache_File</a></td>
+					<td>
+											File-based cache controller.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Cache/Solar_Cache_Memcache.html">Solar_Cache_Memcache</a></td>
+					<td>
+											Memcache cache controller.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Cache/Solar_Cache.html">Solar_Cache</a></td>
+					<td>
+											Class for cache control.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments_Rules.html">Solar_Cell_Comments_Rules</a></td>
+					<td>
+											Applies filtering rules to posted messages.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Debug/Solar_Debug_Timer.html">Solar_Debug_Timer</a></td>
+					<td>
+											Class to track code execution times.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Error.html">Solar_Error</a></td>
+					<td>
+											Error class; returns one or more errors.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Form.html">Solar_Form</a></td>
+					<td>
+											Class for hinting how to build forms.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Locale.html">Solar_Locale</a></td>
+					<td>
+											Class to collect and return localization strings.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Sql/Solar_Sql_Driver.html">Solar_Sql_Driver</a></td>
+					<td>
+											Abstract class for connecting to SQL databases.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Sql/Solar_Sql_Entity.html">Solar_Sql_Entity</a></td>
+					<td>
+											Class for representing an entity (i.e., a table).
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Sql/Solar_Sql_Result.html">Solar_Sql_Result</a></td>
+					<td>
+											Class for iterating through selected row results.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Sql/Solar_Sql.html">Solar_Sql</a></td>
+					<td>
+											Class for connecting to SQL databases and performing common operations.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_Uri.html">Solar_Uri</a></td>
+					<td>
+											Parses a URI string into its component parts for manipulation and export.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Htpasswd.html">Solar_User_Auth_Htpasswd</a></td>
+					<td>
+											Authenticate against a file generated by htpasswd.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Ini.html">Solar_User_Auth_Ini</a></td>
+					<td>
+											Authenticate against .ini style files.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Ldap.html">Solar_User_Auth_Ldap</a></td>
+					<td>
+											Authenticate against an LDAP server.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Mail.html">Solar_User_Auth_Mail</a></td>
+					<td>
+											Authenticate against an IMAP or POP3 mail server.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Multi.html">Solar_User_Auth_Multi</a></td>
+					<td>
+											Authenticate against multiple sources, falling back as needed.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_None.html">Solar_User_Auth_None</a></td>
+					<td>
+											Authenticate against nothing; defaults all authentication to &quot;failed.&quot;
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth_Sql.html">Solar_User_Auth_Sql</a></td>
+					<td>
+											Authenticate against an SQL database table.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Auth.html">Solar_User_Auth</a></td>
+					<td>
+											Class for checking user authentication credentials.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role_File.html">Solar_User_Role_File</a></td>
+					<td>
+											Get roles from a Unix-style groups file.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role_Ldap.html">Solar_User_Role_Ldap</a></td>
+					<td>
+											Get roles (groups) from an LDAP server.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role_Multi.html">Solar_User_Role_Multi</a></td>
+					<td>
+											Get roles from multiple sources and return as a single list.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role_None.html">Solar_User_Role_None</a></td>
+					<td>
+											No role source; always returns an empty array.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role_Sql.html">Solar_User_Role_Sql</a></td>
+					<td>
+											Get user roles from an SQL database table.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User_Role.html">Solar_User_Role</a></td>
+					<td>
+											Class for reading user roles and groups.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Solar/Solar_User/Solar_User.html">Solar_User</a></td>
+					<td>
+											Meta-container for the current user to hold auth and roles.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$config" title="details" class="var-name">$config</a>
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+											<span class="method-result">Solar_Base</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$config</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#apiVersion" title="details" class="method-name">apiVersion</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">object A</span>
+										<a href="#error" title="details" class="method-name">error</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$info</span> = <span class="var-default">array()</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">null</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$trace</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#locale" title="details" class="method-name">locale</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$num</span> = <span class="var-default">1</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#__solar" title="details" class="method-name">__solar</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$hook</span>)
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$config" id="$config"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$config</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">45</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">User-provided configuration values.</p>
+<p class="description"><p>Keys are:</p><p>locale =&gt; The directory where locale string files live.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../Solar_App/Solar_App.html#var$config">Solar_App::$config</a>
+								: User-defined configuration array.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache_File.html#var$config">Solar_Cache_File::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache_Memcache.html#var$config">Solar_Cache_Memcache::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache.html#var$config">Solar_Cache::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments_Rules.html#var$config">Solar_Cell_Comments_Rules::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Debug/Solar_Debug_Timer.html#var$config">Solar_Debug_Timer::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Error.html#var$config">Solar_Error::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Form.html#var$config">Solar_Form::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Locale.html#var$config">Solar_Locale::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver.html#var$config">Solar_Sql_Driver::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Entity.html#var$config">Solar_Sql_Entity::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#var$config">Solar_Cell_Bookmarks::$config</a>
+								: Additional config keys and values.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Bugs/Solar_Cell_Bugs.html#var$config">Solar_Cell_Bugs::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments.html#var$config">Solar_Cell_Comments::$config</a>
+								: Additional config keys and values.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html#var$config">Solar_Cell_Tags_Bundle::$config</a>
+								: Additional config keys and values.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html#var$config">Solar_Cell_Tags::$config</a>
+								: Additional config keys and values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Result.html#var$config">Solar_Sql_Result::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql.html#var$config">Solar_Sql::$config</a>
+								: User-provided configuration.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Htpasswd.html#var$config">Solar_User_Auth_Htpasswd::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Ini.html#var$config">Solar_User_Auth_Ini::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Ldap.html#var$config">Solar_User_Auth_Ldap::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Mail.html#var$config">Solar_User_Auth_Mail::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Multi.html#var$config">Solar_User_Auth_Multi::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Sql.html#var$config">Solar_User_Auth_Sql::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth.html#var$config">Solar_User_Auth::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_File.html#var$config">Solar_User_Role_File::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_Ldap.html#var$config">Solar_User_Role_Ldap::$config</a>
+								: Array of user configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_Multi.html#var$config">Solar_User_Role_Multi::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_Sql.html#var$config">Solar_User_Role_Sql::$config</a>
+								: User-supplied configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role.html#var$config">Solar_User_Role::$config</a>
+								: User-provided configuration values.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User.html#var$config">Solar_User::$config</a>
+								: User-provided configuration values.
+							</li>
+				</ul>
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">59</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Solar_Base</span>
+		<span class="method-name">
+			__construct
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$config</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$config</span><span class="var-description">: Is merged with the default $config property array  and any defaults from Solar.config.php.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../Solar_App/Solar_App.html#method__construct">Solar_App::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache_File.html#method__construct">Solar_Cache_File::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache_Memcache.html#method__construct">Solar_Cache_Memcache::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Cache/Solar_Cache.html#method__construct">Solar_Cache::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Error.html#method__construct">Solar_Error::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Form.html#method__construct">Solar_Form::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Locale.html#method__construct">Solar_Locale::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#method__construct">Solar_Sql_Driver_Fbsql::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#method__construct">Solar_Sql_Driver_Mssql::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#method__construct">Solar_Sql_Driver_Mysql::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#method__construct">Solar_Sql_Driver_Pgsql::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#method__construct">Solar_Sql_Driver_Sqlite::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql_Entity.html#method__construct">Solar_Sql_Entity::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#method__construct">Solar_Cell_Bookmarks::__construct()</a>
+							</li>
+					<li>
+				<a href="../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html#method__construct">Solar_Cell_Tags::__construct()</a>
+							</li>
+					<li>
+				<a href="../Solar/Solar_Sql/Solar_Sql.html#method__construct">Solar_Sql::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_Uri.html#method__construct">Solar_Uri::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Ldap.html#method__construct">Solar_User_Auth_Ldap::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Mail.html#method__construct">Solar_User_Auth_Mail::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth_Multi.html#method__construct">Solar_User_Auth_Multi::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Auth.html#method__construct">Solar_User_Auth::__construct()</a>
+								: Constructor to set up the storage driver.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_Ldap.html#method__construct">Solar_User_Role_Ldap::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role_Multi.html#method__construct">Solar_User_Role_Multi::__construct()</a>
+								: Constructor.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User_Role.html#method__construct">Solar_User_Role::__construct()</a>
+								: Constructor to set up the storage driver.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User.html#method__construct">Solar_User::__construct()</a>
+								: Constructor.
+							</li>
+				</ul>
+	</div>
+<a name="methodapiVersion" id="apiVersion"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">apiVersion</span> (line <span class="line-number">90</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Reports the API version for this class.</p>
+<p class="description"><p>If you don't override this method, your classes will use the same  API version string as the Solar package itself.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A PHP-standard version number.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			apiVersion
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methoderror" id="error"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">error</span> (line <span class="line-number">114</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Convenience method for returning Solar::error() with localized text.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Solar_Error object.</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">object A</span>
+		<span class="method-name">
+			error
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$code</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$info</span> = <span class="var-default">array()</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">null</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$trace</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$code</span><span class="var-description">: The error code.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$info</span><span class="var-description">: An array of error-specific data.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$level</span><span class="var-description">: The error level constant, e.g. E_USER_NOTICE.</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$trace</span><span class="var-description">: Whether or not to generate a debug_backtrace().</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodlocale" id="locale"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">locale</span> (line <span class="line-number">177</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Looks up locale strings based on a key.</p>
+<p class="description"><p>Uses the locale strings in the directory noted by $conf['locale'];  if no such key exists, falls back to the strings for the parent  class, and finally falls back to the Solar/Locale strings.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The locale string, or the original $key if no  string found.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			locale
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$num</span> = <span class="var-default">1</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span><span class="var-description">: The key to get a locale string for.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$num</span><span class="var-description">: If 1, returns a singular string; otherwise, returns  a plural string (if one exists).</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="method__solar" id="__solar"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">__solar</span> (line <span class="line-number">144</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Provides hooks for Solar::start() and Solar::stop() on shared objects.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			__solar
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$hook</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$hook</span><span class="var-description">: The hook to activate, typically 'start' or 'stop'.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../Solar/Solar_Debug/Solar_Debug_Timer.html#method__solar">Solar_Debug_Timer::__solar()</a>
+								: Solar hooks.
+							</li>
+					<li>
+				<a href="../Solar/Solar_User/Solar_User.html#method__solar">Solar_User::__solar()</a>
+								: Solar hooks.
+							</li>
+				</ul>
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 23 Apr 2005 10:22:06 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+	</p>
+	</div></body>
+</html>

@@ -1,0 +1,1080 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Solar_Sql_Driver</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Solar_Sql_Driver</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|											<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Abstract class for connecting to SQL databases.</p>
+	<ul class="tags">
+				<li><span class="field">abstract:</span> </li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Solar_Sql_Driver_php.html">/Solar/Sql/Driver.php</a> (line <span class="field">33</span>)
+		</p>
+		
+				
+		<pre><a href="../../Solar/Solar_Base.html">Solar_Base</a>
+   |
+   --Solar_Sql_Driver</pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+								|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html">Solar_Sql_Driver_Fbsql</a></td>
+					<td>
+											Class for connecting to Frontbase SQL databases.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html">Solar_Sql_Driver_Mssql</a></td>
+					<td>
+											Class for connecting to Microsoft SQL databases.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html">Solar_Sql_Driver_Mysql</a></td>
+					<td>
+											Class for connecting to MySQL databases.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html">Solar_Sql_Driver_Pgsql</a></td>
+					<td>
+											Class for connecting to PostgreSQL databases.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html">Solar_Sql_Driver_Sqlite</a></td>
+					<td>
+											Class for connecting to SQLite databases.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$config" title="details" class="var-name">$config</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">resource</span>
+					<a href="#$conn" title="details" class="var-name">$conn</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">resource</span>
+					<a href="#$len" title="details" class="var-name">$len</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$native" title="details" class="var-name">$native</a>
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#columnDeclaration" title="details" class="method-name">columnDeclaration</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$info</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$column</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#createIndex" title="details" class="method-name">createIndex</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$table</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string|array</span>&nbsp;<span class="var-name">$info</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#createSequence" title="details" class="method-name">createSequence</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">1</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#createTable" title="details" class="method-name">createTable</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$table</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$cols</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#dropSequence" title="details" class="method-name">dropSequence</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#escape" title="details" class="method-name">escape</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$val</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$val
+</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">object A</span>
+										<a href="#exec" title="details" class="method-name">exec</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$stmt</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array|bool</span>
+										<a href="#fetch" title="details" class="method-name">fetch</a>
+											(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array|bool</span>
+										<a href="#fetchNum" title="details" class="method-name">fetchNum</a>
+											(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#free" title="details" class="method-name">free</a>
+											(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#limit" title="details" class="method-name">limit</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">&$stmt</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listTables" title="details" class="method-name">listTables</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#nextSequence" title="details" class="method-name">nextSequence</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#validWord" title="details" class="method-name">validWord</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$word</span>)
+									</div>
+							</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$config" id="$config"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$config</span>
+			 = <span class="var-default">array(<br />		'locale' =&gt; 'Solar/Sql/Driver/Locale/',<br />		'host'   =&gt; null,<br />		'port'   =&gt; null,<br />		'user'   =&gt; null,<br />		'pass'   =&gt; null,<br />		'name'   =&gt; null,<br />		'mode'   =&gt; null,<br />	)</span>			(line <span class="line-number">59</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">User-provided configuration.</p>
+<p class="description"><p>Keys are:</p><p>host  =&gt; (string) Host specification (typically 'localhost').</p><p>port  =&gt; (string) Port number for the host name.</p><p>user  =&gt; (string) Connect to the database as this username.</p><p>pass  =&gt; (string) Password associated with the username.</p><p>name  =&gt; (string) Database name (or file path, or TNS name).</p><p>mode  =&gt; (string) For SQLite, an octal file mode.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Base.html#var$config">Solar_Base::$config</a></dt>
+						<dd>User-provided configuration values.</dd>
+					</dl>
+		
+		
+
+</div>
+<a name="var$conn" id="$conn"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">resource</span>
+			<span class="var-name">$conn</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number">106</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Database connection resource.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$len" id="$len"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">resource</span>
+			<span class="var-name">$len</span>
+			 = <span class="var-default">array(<br />		'tbl' =&gt; 30,<br />		'col' =&gt; 27,<br />		'idx' =&gt; 27<br />	)</span>			(line <span class="line-number">119</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Max word lengths for table, column, and index names.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$native" id="$native"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$native</span>
+			 = <span class="var-default">array(<br />		'bool'      =&gt; null, // PHP is_bool()<br />		'char'      =&gt; null, <br />		'varchar'   =&gt; null, <br />		'smallint'  =&gt; null,<br />		'int'       =&gt; null, // PHP is_int()<br />		'bigint'    =&gt; null,<br />		'numeric'   =&gt; null, // PHP is_numeric(), treated as fixed-place decimal<br />		'float'     =&gt; null, // PHP is_float(), treated as double decimal ... how big is a PHP float, anyway?<br />		'clob'      =&gt; null,<br />		'date'      =&gt; null,<br />		'time'      =&gt; null,<br />		'timestamp' =&gt; null<br />	)</span>			(line <span class="line-number">80</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Map of Solar generic column types to RDBMS native declarations.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#var$native">Solar_Sql_Driver_Fbsql::$native</a>
+								: Map of Solar generic columnt types to RDBMS native declarations.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#var$native">Solar_Sql_Driver_Mssql::$native</a>
+								: Map of Solar generic columnt types to RDBMS native declarations.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#var$native">Solar_Sql_Driver_Mysql::$native</a>
+								: Map of Solar generic column types to RDBMS native declarations.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#var$native">Solar_Sql_Driver_Pgsql::$native</a>
+								: Map of Solar generic columnt types to RDBMS native declarations.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#var$native">Solar_Sql_Driver_Sqlite::$native</a>
+								: Map of Solar generic columnt types to RDBMS native declarations.
+							</li>
+				</ul>
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodcolumnDeclaration" id="columnDeclaration"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">columnDeclaration</span> (line <span class="line-number">348</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Get an SQL column declarartion string.</p>
+<p class="description"><p>The $info parameter should be in this format:</p><p>$info = array(    'type'    =&gt; bool|char|int|etc,    'size'    =&gt; total length for char|varchar|numeric    'scope'   =&gt; decimal places for numeric    'require' =&gt; true|false,    'default' =&gt; default value  );</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			columnDeclaration
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$info</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$column</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$column</span><span class="var-description">: The column name.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$info</span><span class="var-description">: The column information.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodcreateIndex" id="createIndex"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">createIndex</span> (line <span class="line-number">574</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the SQL statement to create an index.</p>
+<p class="description"><p>The $info parameter should be in this format:</p><p>$info = array('type', 'col'); // single-col</p><p>$info = array('type', array('col', 'col', 'col')), // multi-col</p><p>$info = 'type'; // shorthand for single-col named for $name</p><p>The type may be 'normal' or 'unique'.</p><p>Indexes are automatically renamed to &quot;tablename__indexname__idx&quot;.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An SQL string, or a Solar_Error.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			createIndex
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$table</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string|array</span>&nbsp;<span class="var-name">$info</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$table</span><span class="var-description">: The name of the table for the index (1-30 chars).</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The name of the index (1-27 chars).</span>			</li>
+					<li>
+				<span class="var-type">string|array</span>
+				<span class="var-name">$info</span><span class="var-description">: Information about the index.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodcreateSequence" id="createSequence"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">createSequence</span> (line <span class="line-number">270</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a sequence, optionally starting at a certain number.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			createSequence
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$start</span> = <span class="var-default">1</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The sequence name to create.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$start</span><span class="var-description">: The first sequence number to return.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodcreateSequence">Solar_Sql_Driver_Fbsql::createSequence()</a>
+								: Creates a sequence, optionally starting at a certain number.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodcreateSequence">Solar_Sql_Driver_Mssql::createSequence()</a>
+								: Creates a sequence, optionally starting at a certain number.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodcreateSequence">Solar_Sql_Driver_Mysql::createSequence()</a>
+								: Creates a sequence, optionally starting at a certain number.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodcreateSequence">Solar_Sql_Driver_Pgsql::createSequence()</a>
+								: Creates a sequence, optionally starting at a certain number.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodcreateSequence">Solar_Sql_Driver_Sqlite::createSequence()</a>
+								: Creates a sequence, optionally starting at a certain number.
+							</li>
+				</ul>
+	</div>
+<a name="methodcreateTable" id="createTable"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">createTable</span> (line <span class="line-number">497</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the SQL statement to create a table and its columns.</p>
+<p class="description"><p>The $cols parameter should be in this format:</p><p>$cols = array(    'fieldOne' =&gt; array(      'type'    =&gt; bool|char|int|etc,      'size'    =&gt; total length for char|varchar|numeric      'scope'   =&gt; decimal places for numeric      'require' =&gt; true|false,      'default' =&gt; default value    ),    'fieldTwo' =&gt; array(...)  );</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An SQL string, or a Solar_Error.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			createTable
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$table</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$cols</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$table</span><span class="var-description">: The name of the table to create.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$cols</span><span class="var-description">: Array of columns to create.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methoddropSequence" id="dropSequence"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">dropSequence</span> (line <span class="line-number">287</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Drops a sequence.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			dropSequence
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The sequence name to drop.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methoddropSequence">Solar_Sql_Driver_Fbsql::dropSequence()</a>
+								: Drops a sequence.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methoddropSequence">Solar_Sql_Driver_Mssql::dropSequence()</a>
+								: Drops a sequence.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methoddropSequence">Solar_Sql_Driver_Mysql::dropSequence()</a>
+								: Drops a sequence.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methoddropSequence">Solar_Sql_Driver_Pgsql::dropSequence()</a>
+								: Drops a sequence.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methoddropSequence">Solar_Sql_Driver_Sqlite::dropSequence()</a>
+								: Drops a sequence.
+							</li>
+				</ul>
+	</div>
+<a name="methodescape" id="escape"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">escape</span> (line <span class="line-number">138</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Provides the proper escaping for enquoted values.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An SQL-safe quoted value.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			escape
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$val</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$val
+</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$val
+</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodescape">Solar_Sql_Driver_Fbsql::escape()</a>
+								: Provides the proper escaping for enquoted values.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodescape">Solar_Sql_Driver_Mssql::escape()</a>
+								: Provides the proper escaping for enquoted values.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodescape">Solar_Sql_Driver_Mysql::escape()</a>
+								: Provides the proper escaping for enquoted values.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodescape">Solar_Sql_Driver_Pgsql::escape()</a>
+								: Provides the proper escaping for enquoted values.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodescape">Solar_Sql_Driver_Sqlite::escape()</a>
+								: Provides the proper escaping for enquoted values.
+							</li>
+				</ul>
+	</div>
+<a name="methodexec" id="exec"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">exec</span> (line <span class="line-number">159</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Executes an SQL statement and returns a result object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Solar_Sql_Result object.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">object A</span>
+		<span class="method-name">
+			exec
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$stmt</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$stmt</span><span class="var-description">: The SQL statement to execute.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$count</span><span class="var-description">: The number of records to SELECT.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$offset</span><span class="var-description">: The number of records to skip on SELECT.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodexec">Solar_Sql_Driver_Fbsql::exec()</a>
+								: Executes an SQL statement and returns a result object.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodexec">Solar_Sql_Driver_Mssql::exec()</a>
+								: Executes an SQL statement and returns a result object.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodexec">Solar_Sql_Driver_Mysql::exec()</a>
+								: Executes an SQL statement and returns a result object.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodexec">Solar_Sql_Driver_Pgsql::exec()</a>
+								: Executes an SQL statement and returns a result object.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodexec">Solar_Sql_Driver_Sqlite::exec()</a>
+								: Executes an SQL statement and returns a result object.
+							</li>
+				</ul>
+	</div>
+<a name="methodfetch" id="fetch"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetch</span> (line <span class="line-number">189</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Fetches the next row from a result resource as an associative array.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An associative array of the fetched row,  or boolean false when no more rows are available.</li>
+				<li><span class="field">static:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array|bool</span>
+		<span class="method-name">
+			fetch
+		</span>
+					(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">resource</span>
+				<span class="var-name">&$rsrc</span><span class="var-description">: An SQL result resource.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodfetch">Solar_Sql_Driver_Fbsql::fetch()</a>
+								: Fetches the next row from a result resource as an associative array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodfetch">Solar_Sql_Driver_Mssql::fetch()</a>
+								: Fetches the next row from a result resource as an associative array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodfetch">Solar_Sql_Driver_Mysql::fetch()</a>
+								: Fetches the next row from a result resource as an associative array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodfetch">Solar_Sql_Driver_Pgsql::fetch()</a>
+								: Fetches the next row from a result resource as an associative array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodfetch">Solar_Sql_Driver_Sqlite::fetch()</a>
+								: Fetches the next row from a result resource as an associative array.
+							</li>
+				</ul>
+	</div>
+<a name="methodfetchNum" id="fetchNum"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">fetchNum</span> (line <span class="line-number">207</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Fetches the next row from a result resource as a numeric array.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A numeric array of the fetched row,  or boolean false when no more rows are available.</li>
+				<li><span class="field">static:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array|bool</span>
+		<span class="method-name">
+			fetchNum
+		</span>
+					(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">resource</span>
+				<span class="var-name">&$rsrc</span><span class="var-description">: An SQL result resource.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodfetchNum">Solar_Sql_Driver_Fbsql::fetchNum()</a>
+								: Fetches the next row from a result resource as a numeric array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodfetchNum">Solar_Sql_Driver_Mssql::fetchNum()</a>
+								: Fetches the next row from a result resource as a numeric array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodfetchNum">Solar_Sql_Driver_Mysql::fetchNum()</a>
+								: Fetches the next row from a result resource as a numeric array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodfetchNum">Solar_Sql_Driver_Pgsql::fetchNum()</a>
+								: Fetches the next row from a result resource as a numeric array.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodfetchNum">Solar_Sql_Driver_Sqlite::fetchNum()</a>
+								: Fetches the next row from a result resource as a numeric array.
+							</li>
+				</ul>
+	</div>
+<a name="methodfree" id="free"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">free</span> (line <span class="line-number">224</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Frees a result resource.</p>
+	<ul class="tags">
+				<li><span class="field">static:</span> </li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			free
+		</span>
+					(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">resource</span>
+				<span class="var-name">&$rsrc</span><span class="var-description">: An SQL result resource.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodfree">Solar_Sql_Driver_Fbsql::free()</a>
+								: Frees a result resource.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodfree">Solar_Sql_Driver_Mssql::free()</a>
+								: Frees a result resource.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodfree">Solar_Sql_Driver_Mysql::free()</a>
+								: Frees a result resource.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodfree">Solar_Sql_Driver_Pgsql::free()</a>
+								: Frees a result resource.
+							</li>
+				</ul>
+	</div>
+<a name="methodlimit" id="limit"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">limit</span> (line <span class="line-number">251</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a LIMIT clause (or equivalent) to an SQL statement in-place.</p>
+<p class="description"><p>This method is dumb; it adds the clause to any kind of statement.  You should not call it directly; use exec() with the optional $count  and $offset parameters instead.</p><p>The code presented here works for Mysql, Pgsql, and Sqlite.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			limit
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">&$stmt</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$count</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">&$stmt</span><span class="var-description">: The SQL statement to modify.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$count</span><span class="var-description">: The number of records to SELECT.</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$offset</span><span class="var-description">: The number of records to skip on SELECT.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodlimit">Solar_Sql_Driver_Fbsql::limit()</a>
+								: Adds a LIMIT clause (or equivalent) to an SQL statement.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodlimit">Solar_Sql_Driver_Mssql::limit()</a>
+								: Adds a LIMIT clause (or equivalent) to an SQL statement.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodlimit">Solar_Sql_Driver_Mysql::limit()</a>
+								: Adds a LIMIT clause (or equivalent) to an SQL statement in-place.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodlimit">Solar_Sql_Driver_Pgsql::limit()</a>
+								: Adds a LIMIT clause (or equivalent) to an SQL statement in-place.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodlimit">Solar_Sql_Driver_Sqlite::limit()</a>
+								: Adds a LIMIT clause (or equivalent) to an SQL statement in-place.
+							</li>
+				</ul>
+	</div>
+<a name="methodlistTables" id="listTables"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTables</span> (line <span class="line-number">321</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the SQL statement to get a list of database tables.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A sequential array of table names in the database.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listTables
+		</span>
+				()
+			</div>
+	
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodlistTables">Solar_Sql_Driver_Fbsql::listTables()</a>
+								: Returns the SQL statement to get a list of database tables.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodlistTables">Solar_Sql_Driver_Mssql::listTables()</a>
+								: Returns the SQL statement to get a list of database tables.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodlistTables">Solar_Sql_Driver_Mysql::listTables()</a>
+								: Returns the SQL statement to get a list of database tables.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodlistTables">Solar_Sql_Driver_Pgsql::listTables()</a>
+								: Returns the SQL statement to get a list of database tables.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodlistTables">Solar_Sql_Driver_Sqlite::listTables()</a>
+								: Returns the SQL statement to get a list of database tables.
+							</li>
+				</ul>
+	</div>
+<a name="methodnextSequence" id="nextSequence"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">nextSequence</span> (line <span class="line-number">306</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the next sequence number; creates the sequence if needed.</p>
+<p class="description"><p>Technically, you only need one sequence for your entire database;  the number itself is not important, only that it is unique.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The next sequence number.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			nextSequence
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The sequence name to increment.</span>			</li>
+				</ul>
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodnextSequence">Solar_Sql_Driver_Fbsql::nextSequence()</a>
+								: Gets a sequence number; creates the sequence if it does not exist.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodnextSequence">Solar_Sql_Driver_Mssql::nextSequence()</a>
+								: Gets a sequence number; creates the sequence if it does not exist.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html#methodnextSequence">Solar_Sql_Driver_Mysql::nextSequence()</a>
+								: Gets a sequence number; creates the sequence if it does not exist.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html#methodnextSequence">Solar_Sql_Driver_Pgsql::nextSequence()</a>
+								: Gets a sequence number; creates the sequence if it does not exist.
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html#methodnextSequence">Solar_Sql_Driver_Sqlite::nextSequence()</a>
+								: Gets a sequence number; creates the sequence if it does not exist.
+							</li>
+				</ul>
+	</div>
+<a name="methodvalidWord" id="validWord"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">validWord</span> (line <span class="line-number">668</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Check if a table, column, or index name is a valid word.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True if valid, false if not.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			validWord
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$word</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$word</span><span class="var-description">: The word to check.</span>			</li>
+				</ul>
+		
+		
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../../Solar/Solar_Base.html">Solar_Base</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__construct">Solar_Base::__construct()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodapiVersion">Solar_Base::apiVersion()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methoderror">Solar_Base::error()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#methodlocale">Solar_Base::locale()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Base.html#method__solar">Solar_Base::__solar()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 23 Apr 2005 10:22:15 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+	</p>
+	</div></body>
+</html>

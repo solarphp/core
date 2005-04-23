@@ -1,0 +1,309 @@
+Overall:
+
+set up a decent default config file
+
+capitalize the reserved names for shared objects?
+
+Savant3:
+	make addPath take arrays and path-strings, not just dir strings
+	
+
+----
+
+Bookmarks
+
+In list headings, make 'user' clickable, make individual tags clickable
+
+Add support for &count=N (where N is rows_per_page)
+
+----
+
+Solar_Sql
+
+build portable functions
+
+check for 0-based vice 1-based  (1-BASED!)
+
+concat($args)
+substr($arg, $start, $count)
+
+-- are these the same everywhere?
+left($arg, $count)
+right($arg, $count)
+upper($arg)
+lower($arg)
+
+function year($arg)
+{
+	// 0123456789
+	// yyyy-mm-dd
+	return $this->substr($arg, 0, 4);
+}
+
+function month($arg)
+{
+	// 0123456789
+	// yyyy-mm-dd
+	return $this->substr($arg, 5, 2);
+}
+
+function day($arg)
+{
+	// 0123456789
+	// yyyy-mm-dd
+	return $this->substr($arg, 8, 2);
+}
+
+function hour($arg)
+{
+	// 01234567
+	// hh:ii:ss
+	return $this->substr($this->right($arg, 8), 0, 2);
+}
+
+function minute($arg)
+{
+	// 01234567
+	// hh:ii:ss
+	return $this->substr($this->right($arg, 8), 3, 2);
+}
+
+function second($arg)
+{
+	// 01234567
+	// hh:ii:ss
+	return $this->substr($this->right($arg, 8), 6, 2);
+}
+
+
+
+
+----
+
+Solar_Cell_Hits for hit tracking by URI (not by id, exactly)
+
+----
+
+Solar_Cell_Bugs
+
+List for a specific queue.
+
+----
+
+Solar_App_Bugs
+
+Need ordering and paging options.
+
+
+----
+
+Solar_Cell_Comments
+
+Need a 'remember me' function
+
+Need to separate Solar_Cell_Comments_Rules into a standalone content-filtering class
+... or add a file-based plugin mechanism?  or both?  Text_Bayes?  Text_Filter?
+
+
+----
+
+Text classes:
+
+Text/Bayes.php (tracks bayes filtering) -- would this be Solar_Cell_Bayes?
+Text/Csv.php (parse/build CSV/TSV/etc blocks)
+Text/Diff.php (get a diff on text)
+Text/Filter.php (report true/false if it passes a simple filter)
+Text/Markup.php (for wiki, bbcode, textile, markdown, email, etc)
+
+----
+
+Wiki parser (Text/Wiki.php)
+
+a way to do simple common stuff, then a way to do more complex stuff
+	- common regexes for URI, email, wikilink, freelink, interwiki
+	- common regexes for inline bold, italic, tt/code, etc
+
+----
+
+Wiki storage (really for anything)
+
+sc_wiki_areas (no notification, use RSS feeds)
+	name     -- unique name of the area (short form)
+	title    -- title for the area (long form)
+	tagline  -- 
+	talk     -- allow comments by default?
+	map_page -- name of the page with the area map, if any
+	map_data -- cached serialized area map array ... should this be via Solar_Cache?
+	
+sc_wiki_pages
+	id       -- unique sequential ID that stays the same across all edits
+	area     -- area name
+	page     -- page name
+	lock_by  -- locked by this user or IP address for editing (blank or null if not locked)
+	lock_ts  -- timestamp when last locked for editing
+
+sc_wiki_edits
+	page_id  -- from sc_wiki_pages.id
+	ts       -- timestamp of the edit
+	user_id  -- user ID of the editor
+	ip_addr  -- IP address of the editor
+	current  -- 0/1, most-current version
+	markup   -- the markup type (wiki, email, bbcode, textile, markdown, plain, etc)
+	talk     -- whether comments are allowed or not (should this be here? who gets to change it?)
+	title    -- don't always get from area map, need for blogs
+	body     -- the marked-up body
+	plain    -- the searchable plain text without markup (need for searching past versions)
+
+sc_wiki_links -- should this be by IDs instead?
+	id
+	src_area
+	src_page
+	tgt_area
+	tgt_page
+
+sc_wiki_pings -- who we have pinged for trackback
+
+sc_wiki_acl -- should we use a generic Solar_Cell_Acl instead?
+
+tags come from Solar_Cell_Tags based on the unique page id number (not the Area:Page string)
+
+To get most-recent wiki page:
+
+	SELECT sc_wiki_pages.*, sc_wiki_edits.*
+	FROM sc_wiki_pages
+	JOIN sc_wiki_edits ON sc_wiki_pages.id = sc_wiki_edits.page_id
+	WHERE
+		sc_wiki_pages.area = :area AND
+		sc_wiki_pages.page = :page AND
+		sc_wiki_edits.current = '1'
+	ORDER BY id DESC
+	LIMIT (count=1 offset=0)
+
+When inserting a new page:
+
+	first: INSERT INTO sc_wiki_edits (..., current) VALUES (..., '1');
+	then:  UPDATE sc_wiki_edits SET current = 0 WHERE ... AND ts < $ts;
+	
+
+
+----
+
+Blogging
+
+sc_blog_drafts
+	id
+	area
+	page
+	ts
+	user_id
+	talk (whether comments will be allowed or not)
+	tags (space-sep list, /[a-z0-9_]+/i) -- get dumped to sc_wiki_tags later
+	title
+	body
+
+sc_blog_links -- blogroll
+	id    -- unique ID
+	area  -- which wiki area
+	type  -- broad category
+	uri   -- URI
+	name  -- link text
+	descr -- short description
+	
+For blogging, you really just need a blog area and a reverse timestamp
+sort. The wiki itself takes care of everything else.
+
+Need a default page name (WebLog) and suffix (timestamp created).  You
+can change the title to anything else, of course.
+
+To get top 10 blog entries ...
+
+	SELECT *
+	FROM sc_wiki_pages
+	WHERE
+		current = '1' AND
+		page >= 'WebLog00010101T000000' AND
+		page <= 'WebLog99991231T235959' AND 
+		area = :area
+	ORDER BY page DESC
+	LIMIT (count=10 offset=0)
+
+Could we concatenate the combination of the title, categories, and post body
+for the entire page, and then cache that?  it would be faster than to cache
+each individual entry and re-get each one every time, right?
+
+----
+
+Permission settings (RBAC or ACL?)
+
+sc_perm
+	id      => unique row ID
+	user_id => who set this control
+	app     => related application
+	ord     => numeric order when sorting
+	type    => user or role
+	name    => user name or role name (user wildcards * for any/all, + for auth, group * for all)
+	priv    => name of privilege
+	flag    => true/false
+	info    => priv-specific information (varchar 255)
+
+how to set up "this implies that" lists?
+
+e.g.:
+
+allow page_view  implies nothing
+allow page_edit  implies allow page_view
+allow page_admin implies allow page_edit
+allow area_map   implies allow page_edit on all pages in area
+allow area_admin implies allow area_map on all pages in area
+allow wiki_admin implies allow area_admin on all areas
+
+must be set up programmatically?
+
+
+----
+
+Page attachments
+
+sc_file
+	id
+	name
+	title
+	descr
+	mime
+	data
+
+sc_wiki_file
+	id
+	area
+	page
+	nick (nickname for the file as related to this page)
+	file_id
+
+----
+
+Preferences
+
+sc_pref (whole application AND/OR user prefs, *must* support arrays?)
+	id       unique id
+	user_id  '_SOLAR_APP' for application prefs)
+	app      name of the app (64)
+	elem     name of the pref element (64)
+	value    the value of the pref element (255) (or CLOB?)
+	
+REALLY need to work out the preferences thing.
+
+Need to know if it's single-value keys only, or if multi-values per key are allowed.
+(Multi shoud be allowed).
+
+The return array should be like the Solar::config() arrays.
+
+SO, e.g, Solar_App_Talk prefs would look like:
+
+	spam => array(word, word, word, word)
+	autoFlag => 'spam'
+	
+And then you need a prefs object to tell you what keys go with what labels, etc.
+
+That by itself is a project.
+
+So for now, to get it off the ground, no prefs at all, just Solar::$config values.

@@ -28,7 +28,7 @@
 * 
 * @subpackage Solar_Cache
 * 
-* @todo Add 'checksum' to check for cache corruptions and use CRC32?
+* @todo Add CRC32 to check for cache corruption?
 * 
 */
 
@@ -43,8 +43,6 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	* path => (string) the directory path where cache files are stored
 	* 
-	* hash => (bool) enable/disable name hashing for obscurity
-	* 
 	* lock => (bool) enable/disable file locking (both read and write)
 	* 
 	* life => (int) lifetime in seconds for each cache entry
@@ -57,7 +55,6 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public $config = array(
 		'path'   => '/tmp/Solar_Cache_File/',
-		'hash'   => true,
 		'lock'   => true,
 		'life'   => 3600
 	);
@@ -65,7 +62,7 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Path to the cache directory.
+	* Path to the cache directory (should be read/write for the web server).
 	* 
 	* @access protected
 	* 
@@ -74,19 +71,6 @@ class Solar_Cache_File extends Solar_Base {
 	*/
 	
 	protected $path = '/tmp/Solar_Cache_File/';
-	
-	
-	/**
-	* 
-	* Whether or not to hash file names for obfuscatory purposes.
-	* 
-	* @access protected
-	* 
-	* @var bool
-	* 
-	*/
-	
-	protected $hash = true;
 	
 	
 	/**
@@ -133,7 +117,6 @@ class Solar_Cache_File extends Solar_Base {
 		
 		// keep local values so they can't be changed
 		$this->path = Solar::fixdir($this->config['path']);
-		$this->hash = $this->config['hash'];
 		$this->lock = $this->config['lock'];
 		$this->life = $this->config['life'];
 		
@@ -160,7 +143,7 @@ class Solar_Cache_File extends Solar_Base {
 	{
 		// get the entry filename *before* validating;
 		// this avoids a race condition.
-		$file = $this->filename($key);
+		$file = $this->entry($key);
 		
 		// did we find a valid cache entry?
 		if ($this->valid($key)) {
@@ -180,6 +163,7 @@ class Solar_Cache_File extends Solar_Base {
 				if ($this->lock) {
 					flock($fp, LOCK_EX);
 				}
+				
 				$data = fread($fp, $len);
 				
 				// unlock after reading and close.
@@ -227,7 +211,7 @@ class Solar_Cache_File extends Solar_Base {
 		}
 		
 		// open the file for over-writing
-		$file = $this->filename($key);
+		$file = $this->entry($key);
 		$fp = @fopen($file, 'wb');
 		
 		// was it opened?
@@ -278,7 +262,7 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public function del($key)
 	{
-		$file = $this->filename($key);
+		$file = $this->entry($key);
 		unlink($file);
 		@unlink($file . '.serial');
 	}
@@ -339,7 +323,7 @@ class Solar_Cache_File extends Solar_Base {
 	public function valid($key)
 	{
 		// get the entry filename
-		$file = $this->filename($key);
+		$file = $this->entry($key);
 		
 		// make sure the file exists and is readable,
 		if (file_exists($file) && is_readable($file)) {
@@ -361,29 +345,19 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Determines the filename for a cache entry.
+	* Returns the filename for the entry key.
 	* 
 	* @access public
 	* 
 	* @param string $key The entry ID.
 	* 
-	* @return bool True if valid, false if not.
+	* @return string The cache entry filename.
 	* 
 	*/
 	
-	public function filename($key)
+	public function entry($key)
 	{
-		// are we hashing to obfuscate IDs?
-		if ($this->hash) {
-			// yes, obfuscate
-			$file = $this->path . md5($key);
-		} else {
-			// no, use plaintext
-			$file = $this->path . $key;
-		}
-		
-		// done
-		return $file;
+		return $this->path . md5($key);
 	}
 } 
 

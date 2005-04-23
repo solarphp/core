@@ -191,6 +191,7 @@ abstract class Solar_App extends Solar_Base {
 	* @access public
 	* 
 	* @return void
+	* 
 	*/
 	
 	protected function setup()

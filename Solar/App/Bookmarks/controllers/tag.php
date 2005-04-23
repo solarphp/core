@@ -19,20 +19,8 @@
 */
 
 /**
-* 
-* Default controller; for viewing bookmarks by tag intersection.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
+* Prepend for all controllers.
 */
-
-
-
-// helper for all controllers
 include $this->helper('prepend');
 
 // the requested user_id

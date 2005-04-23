@@ -18,18 +18,6 @@
 * 
 */
 
-/**
-* 
-* Sets up the environment for all controller action scripts.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
-*/
-
 // get the shared user object
 $user = Solar::shared('user');
 

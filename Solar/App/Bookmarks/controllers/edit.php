@@ -19,18 +19,8 @@
 */
 
 /**
-* 
-* Controller action script for editing a bookmark.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
+* Prepend for all controllers.
 */
-
-// prepend for all controllers
 include $this->helper('prepend');
 
 // ---------------------------------------------------------------------
@@ -70,9 +60,6 @@ if ($user->auth->username != $item['user_id']) {
 // for the user, redirect to that bookmark ID.
 // 
 
-// get a link for backlinking
-$link = Solar::object('Solar_Uri');
-
 if (! $id) {
 	// if the ID was zero, and the user already has that URI,
 	// redirect to the edit page for that URI.
@@ -82,6 +69,7 @@ if (! $id) {
 	);
 	
 	if ($existing_id) {
+		$link = Solar::object('Solar_Uri');
 		$link->query('set', 'id', $existing_id);
 		header('Location: ' . $link->export());
 	}
@@ -96,6 +84,9 @@ if (! $id) {
 // if we came from a quickmark, return to the originating page.
 // otherwise, return the list for the user.
 //
+
+// get the current link (i.e., to this page)
+$link = Solar::object('Solar_Uri');
 
 // clear the current pathinfo and query
 $link->clearInfo();
@@ -127,9 +118,10 @@ if ($info || $qstr) {
 	$href = $link->export();
 }
 
+
 // ---------------------------------------------------------------------
 // 
-// main section
+// operations
 // 
 
 // build the basic form
@@ -154,7 +146,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	} else {
 	
 		$values = $form->values();
-		$values['bookmarks']['user_id'] = Solar::$shared->user->auth->username;
+		$values['bookmarks']['user_id'] = $user->auth->username;
 		
 		// new bookmark, or modify old bookmark?
 		if ($values['bookmarks']['id']) {
@@ -210,6 +202,11 @@ if ($op == Solar::locale('Solar', 'OP_DELETE')) {
 	$bookmarks->delete($where);
 	header("Location: $href");
 }
+
+// ---------------------------------------------------------------------
+// 
+// completion
+// 
 
 // assign data to the view
 $this->view->formdata = $form;

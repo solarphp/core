@@ -19,18 +19,8 @@
 */
 
 /**
-* 
-* Controller action script for viewing a single bug report.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bugs
-* 
+* Prepend for all controllers.
 */
-
-// prepend for all controllers
 include $this->helper('prepend');
 
 // get the bug ID to view

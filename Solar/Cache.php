@@ -216,24 +216,19 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Provides access to additional methods in the driver class.
+	* Returns the driver-specific name for the entry key.
 	* 
 	* @access public
 	* 
-	* @param string $method The driver method name.
+	* @param string $key The entry ID.
 	* 
-	* @param array $params Parameters passed to the driver method call.
-	* 
-	* @return mixed The return value of the driver method call.
+	* @return mixed The driver-specific name for the entry key.
 	* 
 	*/
 	
-	public function __call($method, $params)
+	public function entry($key)
 	{
-		return call_user_func_array(
-			array(&$this->driver, $method),
-			$params
-		);
+		return $key;
 	}
 }
 ?>

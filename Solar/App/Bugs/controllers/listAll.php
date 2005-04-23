@@ -19,18 +19,8 @@
 */
 
 /**
-* 
-* Controller action script for viewing a list of all reports (open and closed).
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bugs
-* 
+* Prepend for all controllers.
 */
-
-// prepend for all controllers
 include $this->helper('prepend');
 
 // list all bugs regardless of open or closed

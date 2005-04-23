@@ -61,16 +61,20 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Constructor.
+	* Connects to the database.
 	* 
-	* @access public
+	* @access protected
+	* 
+	* @return void
 	* 
 	*/
 	
-	public function __construct($config = null)
+	protected function connect()
 	{
-		// basic construction
-		parent::__construct($config);
+		// are we already connected?
+		if ($this->conn) {
+			return;
+		}
 		
 		// try to connect
 		$this->conn = @sqlite_open($this->config['name'], $this->config['mode']);
@@ -124,6 +128,9 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
+		// connect to the database if we have not already.
+		$this->connect();
+		
 		// no need to re-select a database, that's part
 		// of the connection parameters.
 		//

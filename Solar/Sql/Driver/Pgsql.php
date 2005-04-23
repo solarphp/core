@@ -61,17 +61,19 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Constructor.
+	* Connects to the database.
 	* 
-	* @access public
+	* @access protected
+	* 
+	* @return void
 	* 
 	*/
 	
-	public function __construct($config = null)
+	protected function connect()
 	{
-		
-		// basic construction
-		parent::__construct($config);
+		if ($this->conn) {
+			return;
+		}
 		
 		/** @todo Add the port specification */
 		// try to connect
@@ -134,6 +136,8 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
+		$this->connect();
+		
 		// no need to re-select a database, that's part
 		// of the connection parameters.
 		//

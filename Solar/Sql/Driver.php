@@ -125,6 +125,21 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	* 
+	* Connects to the database.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function connect()
+	{
+	}
+	
+	
+	/**
+	* 
 	* Provides the proper escaping for enquoted values.
 	* 
 	* @access public
@@ -158,6 +173,8 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
+		// 0. Connect to the database if not already.
+		// 
 		// 1. Re-select the proper database if needed (Fbsql, Mssql, Mysql).
 		// 
 		// 2. Execute the query and get a result.  Emulate autocommit if

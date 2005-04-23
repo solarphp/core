@@ -61,17 +61,22 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Constructor.
+	* Connects to the database.
 	* 
-	* @access public
+	* @access protected
+	* 
+	* @return void
 	* 
 	*/
 	
-	public function __construct($config = null)
+	protected function connect()
 	{
-		parent::__construct($config);
+		// are we already connected?
+		if ($this->conn) {
+			return;
+		}
 		
-		// try to connect.
+		// try to connect
 		$this->conn = @mysql_connect(
 			$this->config['host'],
 			$this->config['user'],
@@ -131,6 +136,9 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
+		// connect if needed
+		$this->connect();
+		
 		// always re-select the database; we may be re-using
 		// this connection for multiple databases. this is not
 		// a problem with some other drivers, as they select

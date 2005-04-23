@@ -61,19 +61,27 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Constructor.
+	* Connects to the database.
 	* 
-	* @access public
+	* @access protected
+	* 
+	* @return void
 	* 
 	*/
 	
-	public function __construct($config = null)
+	protected function connect()
 	{
-		// basic construction
-		parent::__construct($config);
+		// are we already connected?
+		if ($this->conn) {
+			return;
+		}
 		
 		// try to connect
-		$this->conn = @mssql_connect($this->config['host'], $this->config['user'], $this->config['pass']);
+		$this->conn = @mssql_connect(
+			$this->config['host'],
+			$this->config['user'],
+			$this->config['pass']
+		);
 		
 		// did it work?
 		if (! $this->conn) {
@@ -151,6 +159,9 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
+		// connect if needed
+		$this->connect();
+		
 		// always re-select the database; we may be re-using
 		// this connection for multiple databases. this is not
 		// a problem with some other drivers, as they select

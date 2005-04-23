@@ -35,7 +35,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Map of Solar generic columnt types to RDBMS native declarations.
+	* Map of Solar generic column types to RDBMS native declarations.
 	* 
 	* @access protected
 	* 
@@ -77,7 +77,10 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 		}
 		
 		// try to connect
-		$this->conn = @sqlite_open($this->config['name'], $this->config['mode']);
+		$this->conn = @sqlite_open(
+			$this->config['name'],
+			$this->config['mode']
+		);
 		
 		// did it work?
 		if (! $this->conn) {

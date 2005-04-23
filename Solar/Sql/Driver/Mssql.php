@@ -35,7 +35,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Map of Solar generic columnt types to RDBMS native declarations.
+	* Map of Solar generic column types to RDBMS native declarations.
 	* 
 	* @access protected
 	* 

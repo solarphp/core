@@ -7,6 +7,56 @@ capitalize the reserved names for shared objects?
 Savant3:
 	make addPath take arrays and path-strings, not just dir strings
 	
+YaWiki -- way to customize email subject prefix per-area
+
+Set up YaWiki at solarphp.com
+
+Convert solarphp.com svn from ssh to https
+
+----
+
+Tags
+
+More-optimized search algorithm from...
+
+	http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
+	http://www.petercooper.co.uk/archives/000648.html
+	http://www.bigbold.com/snippets/posts/show/32
+	
+SELECT
+	p.*
+FROM
+	posts_tags pt,
+	posts p,
+	tags t
+WHERE
+	pt.tag_id = t.id AND (
+		t.name = '" + tags.uniq.join ('\' OR t.name=\'') + "'
+	) AND p.id=pt.post_id
+GROUP BY
+	p.id
+HAVING
+	COUNT(p.id) = " + tags.uniq.length.to_s
+
+
+
+(intersection/and)
+
+SELECT *
+FROM sc_tags
+WHERE
+	rel = 'sc_bookmarks' 
+	AND tag IN ('this','that','other') -- count = 3
+GROUP BY
+	rel_id
+HAVING
+	COUNT(rel_id) = 3 -- count = 3
+
+
+(union/or: drop the HAVING clause)
+
+Bonus: does not change the schema.  Have to update the bookmarks SQL joins, though.
+
 
 ----
 
@@ -221,8 +271,8 @@ To get top 10 blog entries ...
 	FROM sc_wiki_pages
 	WHERE
 		current = '1' AND
-		page >= 'WebLog00010101T000000' AND
-		page <= 'WebLog99991231T235959' AND 
+		page >= 'WebLog_0001-01-01T00:00:00' AND
+		page <= 'WebLog_9999-12-31T23:59:59' AND 
 		area = :area
 	ORDER BY page DESC
 	LIMIT (count=10 offset=0)
@@ -230,6 +280,9 @@ To get top 10 blog entries ...
 Could we concatenate the combination of the title, categories, and post body
 for the entire page, and then cache that?  it would be faster than to cache
 each individual entry and re-get each one every time, right?
+
+Or would it be better to designate an entire area as a blog? Then you get "real" page 
+names, not "WebLog_...".
 
 ----
 

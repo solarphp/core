@@ -58,7 +58,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
 	*/
 	
 	public $config = array(
-		'sql'          => null,
+		'sql'          => 'sql',
 		'table'        => 'sc_user',
 		'username_col' => 'user_id',
 		'password_col' => 'passwd',
@@ -69,6 +69,14 @@ class Solar_User_Auth_Sql extends Solar_Base {
 	/**
 	* 
 	* Validate a username and password.
+	*
+	* @param string $user Username to authenticate.
+	* 
+	* @param string $pass The plain-text password to use.
+	* 
+	* @return boolean|Solar_Error True on success, false on failure,
+	* or a Solar_Error object if there was an SQL error.
+	* 
 	* 
 	*/
 	

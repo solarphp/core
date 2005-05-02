@@ -88,14 +88,14 @@ class Solar_User_Auth_Ini extends Solar_Base {
 		$data = parse_ini_file($file, true);
 		
 		// get a list of users from the [users] group
-		$list = (array) $data[$this->config['group'];
+		$list = (array) $data[$this->config['group']];
 		
 		// by default the user is not valid
 		$valid = false;
 		
 		// there must be an entry for the username,
 		// and the plain-text password must match.
-		if (! empty($list[$user]) && $list[$user] = $pass) {
+		if (! empty($list[$user]) && $list[$user] == $pass) {
 			$valid = true;
 		}
 		

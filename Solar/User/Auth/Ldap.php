@@ -82,6 +82,13 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 	* 
 	* Validate a username and password.
 	* 
+	* @param string $user Username to authenticate.
+	* 
+	* @param string $pass The plain-text password to use.
+	* 
+	* @return boolean|Solar_Error True on success, false on failure,
+	* or a Solar_Error object if there was a connection error.
+	* 
 	*/
 	
 	public function valid($username, $password)

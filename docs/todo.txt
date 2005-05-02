@@ -246,8 +246,8 @@ sc_blog_drafts
 	page
 	ts
 	user_id
-	talk (whether comments will be allowed or not)
-	tags (space-sep list, /[a-z0-9_]+/i) -- get dumped to sc_wiki_tags later
+	talk -- whether comments will be allowed or not
+	tags -- space-sep list, /[a-z0-9_]+/i) ... get dumped to sc_wiki_tags later
 	title
 	body
 
@@ -289,15 +289,15 @@ names, not "WebLog_...".
 Permission settings (RBAC or ACL?)
 
 sc_perm
-	id      => unique row ID
-	user_id => who set this control
-	app     => related application
-	ord     => numeric order when sorting
-	type    => user or role
-	name    => user name or role name (user wildcards * for any/all, + for auth, group * for all)
-	priv    => name of privilege
-	flag    => true/false
-	info    => priv-specific information (varchar 255)
+	id      -- unique row ID
+	user_id -- who set this control
+	app     -- related application
+	ord     -- numeric order when sorting
+	type    -- user or role
+	name    -- user name or role name (user wildcards * for any/all, + for auth, group * for all)
+	priv    -- name of privilege
+	flag    -- true/false
+	info    -- priv-specific information (varchar 255)
 
 how to set up "this implies that" lists?
 
@@ -331,6 +331,15 @@ sc_wiki_file
 	page
 	nick (nickname for the file as related to this page)
 	file_id
+
+----
+
+Simple user account table
+
+sc_users
+	user_id 
+	passwd
+
 
 ----
 

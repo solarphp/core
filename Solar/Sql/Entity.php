@@ -319,8 +319,11 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* @param string $name The name of the $select to use.
 	* 
-	* @param string $filter Additional query terms to add to the
+	* @param string $where Additional query terms to add to the
 	* predefined WHERE portion of the $select.
+	* 
+	* @param string $having Additional query terms to add to the
+	* predefined HAVING portion of the $select.
 	* 
 	* @param string $order Overrides the ORDER portion of the predefined
 	* $select.
@@ -331,11 +334,11 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	public function selectResult($name, $filter = null, $order = null,
-		$page = null)
+	public function selectResult($name, $where = null, $having = null,
+		$order = null, $page = null)
 	{
 		// get the base statement and check it
-		$stmt = $this->buildSelect($key, $filter, $order);
+		$stmt = $this->buildSelect($name, $where, $having, $order);
 		if (Solar::isError($stmt)) {
 			return $stmt;
 		}
@@ -357,7 +360,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* @param string $name The name of the $select to use.
 	* 
-	* @param string $filter Additional query terms to add to the
+	* @param string $where Additional query terms to add to the
 	* predefined WHERE portion of the $select.
 	* 
 	* @param string $order Overrides the ORDER portion of the predefined
@@ -370,11 +373,11 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	*/
 	
-	public function selectFetch($name, $filter = null, $order = null,
-		$page = null)
+	public function selectFetch($name, $where = null, $having = null,
+		$order = null, $page = null)
 	{
 		// get the base statement and check it
-		$stmt = $this->buildSelect($name, $filter, $order);
+		$stmt = $this->buildSelect($name, $where, $having, $order);
 		if (Solar::isError($stmt)) {
 			return $stmt;
 		}
@@ -402,14 +405,14 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* @param string $name The $schema['qry'] key to use.
 	* 
-	* @param string $filter Additional query terms to add to the
+	* @param string $where Additional query terms to add to the
 	* predefined WHERE portion of the $select.
 	* 
 	* @return string A numeric row count.
 	* 
 	*/
 	
-	public function countPages($name, $filter = null)
+	public function countPages($name, $where = null, $having = null)
 	{
 		// does the select key exist?
 		$tmp = array_keys($this->schema['qry']);
@@ -448,7 +451,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		
 		// retrieve the count results
-		$result = $this->selectFetch($count_key, $filter);
+		$result = $this->selectFetch($count_key, $where, $having);
 		
 		// was there an error?
 		if (Solar::isError($result)) {
@@ -990,20 +993,28 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* @access protected
 	* 
-	* @param string $name The name of the $select to use.
+	* @param string $name The name of the $schema['qry'] to use.
 	* 
-	* @param string $filter Additional query terms to add to the
-	* predefined WHERE portion of the $select.
+	* @param string|array $where Additional query terms to add to the
+	* predefined WHERE portion of the $schema['qry'].  If a string, adds
+	* them as-is; if an array, treats them as data to bind into the
+	* existing predefined WHERE clause.
+	* 
+	* @param string|array $having Additional query terms to add to the
+	* predefined HAVING portion of the $schema['qry'].  If a string,
+	* adds them as-is; if an array, treats them as data to bind into the
+	* existing predefined HAVING clause.
 	* 
 	* @param string $order Overrides the ORDER portion of the predefined
-	* $select.
+	* $schema['qry'].
 	* 
 	* @return string The SQL SELECT statement as built from the
-	* predefined $select.
+	* predefined $schema['qry'].
 	* 
 	*/
 	
-	protected function buildSelect($name, $filter = null, $order = null)
+	protected function buildSelect($name, $where = null, $having = null,
+		$order = null)
 	{
 		// does the select key exist?
 		$tmp = array_keys($this->schema['qry']);
@@ -1030,23 +1041,44 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		$part = array_merge($part, $this->schema['qry'][$name]);
 		
 		// add the filter to the WHERE part
-		if (is_string($filter)) {
+		if (is_string($where)) {
 			// if a string, we just tack it onto the end
 			if (! $part['where']) {
 				// no where there, use as the entire part
-				$part['where'] .= $filter;
+				$part['where'] .= $where;
 			} else {
 				// there's already a where, attach with 'AND'
-				$part['where'] .= " AND ($filter)";
+				$part['where'] .= " AND ($where)";
 			}
-		} elseif (is_array($filter)) {
+		} elseif (is_array($where)) {
 			// the filter is an array, treat it as a set of 
 			// data to bind into the 'where' part.  this
 			// lets you build fillable where clauses in the
 			// predefined queries.
 			$part['where'] = $this->sql->bind(
 				$part['where'],
-				$filter
+				$where
+			);
+		}
+		
+		// add the filter to the HAVING part
+		if (is_string($having)) {
+			// if a string, we just tack it onto the end
+			if (! $part['having']) {
+				// no having there, use as the entire part
+				$part['having'] .= $having;
+			} else {
+				// there's already a having, attach with 'AND'
+				$part['having'] .= " AND ($having)";
+			}
+		} elseif (is_array($having)) {
+			// the filter is an array, treat it as a set of 
+			// data to bind into the 'having' part.  this
+			// lets you build fillable having clauses in the
+			// predefined queries.
+			$part['having'] = $this->sql->bind(
+				$part['having'],
+				$having
 			);
 		}
 		
@@ -1085,11 +1117,12 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 		}
 		$stmt .= "\nFROM " . implode(', ', $tmp);
 		
+		/*
 		// add the JOIN relationships, if any.
 		// define them in $this->schema['rel'], then add them by name.
 		if (! empty($part['join'])) {
-			foreach ((array) $part['join'] as $name) {
-			    $rel = $this->schema['rel'][$name];
+			foreach ((array) $part['join'] as $key) {
+			    $rel = $this->schema['rel'][$key];
 			    if (is_array($rel)) {
 			    	// the relation is defined by standard array
 					$this_tbl = $this->schema['tbl'];
@@ -1102,6 +1135,53 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 					$stmt .= "\nJOIN $rel";
 				}
 		    }
+		}
+		*/
+		
+		// add the JOIN relationships, if any.
+		if (! empty($part['join'])) {
+		
+			// each 'join' entry is in fact a key in the $schema['rel'] array
+			foreach ((array) $part['join'] as $key) {
+				
+				// info for building the JOIN clause
+				$rel = $this->schema['rel'][$key];
+				
+				// the JOIN clause string
+				$join = "\n";
+				
+				// look for INNER, LEFT, OUTER, etc.
+				if (! empty($rel['type'])) {
+					$join .= strtoupper($rel['type']) . ' ';
+				}
+				
+				// add the JOIN keyword and table
+				$join .= "JOIN ";
+				
+				// is the table "itself" or "AS"?
+				if (is_array($rel['table'])) {
+					// we only care about the first element of the array
+					list($as_table, $real_table) = each($rel['table']);
+					$join .= "$real_table AS $as_table";
+				} else {
+					$real_table = $rel['table'];
+					$as_table = $rel['table'];
+					$join .= $rel['table'];
+				}
+				
+				// collect the JOIN requirements, prefixing with the
+				// "AS" name of the table.
+				$tmp = array();
+				foreach ($rel['on'] as $foreign_col => $value) {
+					$tmp[] = "$as_table.$foreign_col = $value";
+				}
+				
+				// ... then AND them together
+				$join .= " ON (" . implode(' AND ', $tmp) . ')';
+				
+				// add this JOIN to the statement
+				$stmt .= $join;
+			}
 		}
 		
 		// add the WHERE clause

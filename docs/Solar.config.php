@@ -21,7 +21,7 @@
 * Empty base array.
 */
 
-$conf = array();
+$config = array();
 
 
 /**

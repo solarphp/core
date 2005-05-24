@@ -60,6 +60,45 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	/**
 	* 
+	* The hostname where the memcache daemon lives.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $host;
+	
+	
+	/**
+	* 
+	* The port number on the host where the memcache daemon lives.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $port;
+	
+	
+	/**
+	* 
+	* The lifetime of each cache entry, in seconds.
+	* 
+	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $life;
+	
+	
+	/**
+	* 
 	* A memcache client object.
 	* 
 	* @access protected
@@ -80,8 +119,12 @@ class Solar_Cache_Memcache extends Solar_Base {
 	public function __construct($config = null)
 	{
 		parent::__construct($config);
+		$this->host = $this->config['host'];
+		$this->port = $this->config['port'];
+		$this->life = $this->config['life'];
+		
 		$this->memcache = new Memcache;
-		$this->memcache->connect($this->config['host'], $this->config['port']);
+		$this->memcache->connect($this->host, $this->port);
 	}
 	
 	
@@ -99,7 +142,7 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	public function set($key, $data)
 	{
-		return $this->memcache->set($key, $data, null, $this->config['life']);
+		return $this->memcache->set($key, $data, null, $this->life);
 	}
 	
 	

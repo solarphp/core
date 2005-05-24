@@ -96,11 +96,11 @@ class Solar_User_Auth_Sql extends Solar_Base {
 			return $obj;
 		}
 		
-		// build the SQL statement
-		$stmt  = "SELECT COUNT($this->username_col)";
-		$stmt .= " FROM $this->config['table']";
-		$stmt .= " WHERE $this->username_col = :username";
-		$stmt .= " AND $this->password_col = :password";
+        // build the SQL statement
+        $stmt  = "SELECT COUNT({$this->config['username_col']})";
+        $stmt .= " FROM {$this->config['table']}";
+        $stmt .= " WHERE {$this->config['username_col']} = :username";
+        $stmt .= " AND {$this->config['password_col']} = :password";
 		
 		// build the placeholder data
 		$data = array(

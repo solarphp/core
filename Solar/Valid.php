@@ -604,6 +604,9 @@ class Solar_Valid {
 	* 
 	* @return bool True if the value is a URI, false if not.
 	* 
+	* @todo Should the schemes default to a certain list, or should null
+	* indicate any text string matching the URI format?
+	* 
 	*/
 	
 	public static function uri($value, $schemes = null, $blank = self::NOT_BLANK)

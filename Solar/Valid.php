@@ -600,12 +600,10 @@ class Solar_Valid {
 	* @param mixed $value The value to validate.
 	* 
 	* @param array $schemes Allowed schemes for the URI; e.g., http,
-	* https, ftp.
+	* https, ftp.  If null, any scheme at all is allowed.
 	* 
-	* @return bool True if the value is a URI, false if not.
-	* 
-	* @todo Should the schemes default to a certain list, or should null
-	* indicate any text string matching the URI format?
+	* @return bool True if the value is a URI and is one of the allowed
+	* schemes, false if not.
 	* 
 	*/
 	
@@ -616,18 +614,6 @@ class Solar_Valid {
 			return true;
 		}
 		
-		// build a default set of acceptable schemes
-		if (is_null($schemes)) {
-			$schemes = array(
-				'http',
-				'https',
-				'news',
-				'ftp',
-				'gopher',
-				'mailto'
-			);
-		}
-		
 		// validate the general format. regex from PEAR Valid.
 		$expr = '!^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?!';
 		$result = preg_match($expr, $value, $matches);
@@ -635,6 +621,7 @@ class Solar_Valid {
 		// was it formatted as a URI?
 		if ($result) {
 			// yes, now check against the allowed schemes.
+			settype($schemes, 'array');
 			$scheme = $matches[2];
 			$result = in_array($scheme, (array) $schemes);
 		}

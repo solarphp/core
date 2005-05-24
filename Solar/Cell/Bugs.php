@@ -148,7 +148,8 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			$tmp[] = 'status = ' . $this->quote($val);
 		}
 		$where = implode(' OR ', $tmp);
-		return $this->selectFetch('list', $where, $order, $page);
+		$having = null;
+		return $this->selectFetch('list', $where, $having, $order, $page);
 	}
 	
 	
@@ -181,7 +182,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			$where = implode(' AND ' . $where);
 		}
 		
-		return $this->selectFetch('list', null, $order, $page);
+		return $this->selectFetch('list', null, null, $order, $page);
 	}
 	
 	

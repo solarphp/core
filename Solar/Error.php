@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Error.php,v 1.19 2005/02/08 01:42:25 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -61,6 +61,8 @@
 * @category Solar
 * 
 * @package Solar
+* 
+* @todo Make this object observable?
 * 
 */
 
@@ -236,7 +238,9 @@ class Solar_Error extends Solar_Base {
 	
 	/**
 	* 
-	* A naive push callback to die() on E_ERROR or E_USER_ERROR.
+	* A naive push callback.
+	* 
+	* Will print out WARNINGs and ERRORs, will die() on ERRORs.
 	* 
 	* @access public
 	* 
@@ -246,6 +250,13 @@ class Solar_Error extends Solar_Base {
 	
 	public function defaultPushCallback($err)
 	{
+		if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {
+			while (ob_get_level()) {
+				ob_end_flush();
+			}
+			Solar::dump($err);
+		}
+		
 		if ($err['level'] == E_USER_ERROR || $err['level'] == E_ERROR) {
 			while (ob_get_level()) {
 				ob_end_flush();

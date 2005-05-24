@@ -15,6 +15,30 @@ Convert solarphp.com svn from ssh to https
 
 ----
 
+Sql_Entity
+
+Really need a better JOIN setup.  Each relationship *has* to be an array, so we can
+have delete-support later.
+
+$schema['rel']['name'] = array(
+	'type'   => ['inner'|'outer'|'left'|...], // prefixed to JOIN, default none
+	'table'  => 'foreign_table', // required
+	'on'     => array( // must be an array of col => val
+		foreignCol0 => "'literal value'",
+		foreignCol1 => "row_name", 
+		foreignColN => valueN,
+	),
+	'delete' => ['cascade'|'nullify'|'restrict']
+);
+	
+THEN in buildSelect:
+	if the join is a string, it's a literal JOIN string
+	if it's an array, it's a rel array as above
+	
+When doing the qry['join'] use $schema['rel'][name].
+
+----
+
 Tags
 
 More-optimized search algorithm from...

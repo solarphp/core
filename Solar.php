@@ -324,19 +324,43 @@ class Solar {
 	
 	/**
 	* 
-	* Runs a script in an isolated space.
+	* Runs a script in an isolated scope.
 	* 
 	* @access public
 	* 
 	* @param string A script path and file name.
 	* 
-	* @return mixed The final return of the included file, if any.
+	* @return mixed The final return of the included file, if any, or a
+	* Solar_Error if the file could not be opened.
 	* 
 	*/
 	
-	public static function run()
+	public static function run($file)
 	{
-		return include(func_get_arg(0));
+		// this hack is the equivalent of is_readable(), but it also
+		// checks the include-path to see if the file exists.
+		$fp = @fopen($file, 'r', true);
+		$ok = ($fp) ? true : false;
+		@fclose($fp);
+		
+		// could we find the file?
+		if ($ok) {
+			// clean up the local scope
+			unset($file);
+			unset($fp);
+			unset($ok);
+			// include the file and return its results
+			return include(func_get_arg(0));
+		} else {
+			// could not open the file for reading
+			return Solar::error(
+				'Solar',
+				'ERR_FILE_OPEN',
+				'ERR_FILE_OPEN',
+				array('file' => $file),
+				E_USER_WARNING
+			);
+		}
 	}
 	
 	

@@ -51,11 +51,20 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	// object for tag searches
 	protected $tags;
 	
-	// count of last search
+	// count of records in last search
 	public $count = 0;
 	
-	// pages in last search
+	// number of pages in last search
 	public $pages = 0;
+	
+	
+	/**
+	* 
+	* Constructor.
+	* 
+	* @access public
+	* 
+	*/
 	
 	public function __construct($config = null)
 	{
@@ -181,9 +190,14 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// relationships
 		// 
 		
-		$schema['rel']['search_bundle'] = "sc_tags_bundle ON sc_tags_bundle.rel = 'sc_bookmarks' AND sc_tags_bundle.rel_id = sc_bookmarks.id";
+		$schema['rel']['search_tags'] = array(
+			'table' => 'sc_tags',
+			'on' => array(
+				'rel' =>    "'sc_bookmarks'", // note this is a literal string
+				'rel_id' => "sc_bookmarks.id",
+			),
+		);
 		
-		$schema['rel']['search_tags'] = "sc_tags ON sc_tags.rel = 'sc_bookmarks' AND sc_tags.rel_id = sc_bookmarks.id";
 		
 		// -------------------------------------------------------------
 		// 
@@ -204,13 +218,18 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			'fetch'  => 'Row'
 		);
 		
-		// lookup by tag name(s)
-		$schema['qry']['tags'] = array(
+		/*
+		// lookup by tags and optionally by user
+		$schema['qry']['withTags'] = array(
 			'select' => 'sc_bookmarks.*',
-			'join'   => 'search_bundle',
+			'join'   => 'search_tags',
+			'group'  => 'sc_bookmarks.id',
+			'having' => 'COUNT(sc_bookmarks.id) = :count',
 			'fetch'  => 'All'
 		);
+		*/
 		
+		// the list of tags from one user
 		$schema['qry']['userTags'] = array(
 			'select' => 'DISTINCT sc_tags.tag AS tag',
 			'join'   => 'search_tags',
@@ -224,18 +243,19 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		// forms
 		// 
 		
+		// edit form
 		$schema['frm']['edit'] = array(
 			'id' => array('type' => 'hidden'),
 			'title' => array(
 				'attribs' => array('size' => '60'),
 				'validate' => array(
-					array('notBlank', 'Please enter a title.'),
+					array('notBlank', $this->locale('ERR_TITLE')),
 				)
 			),
 			'uri' => array(
 				'attribs' => array('size' => '60'),
 				'validate' => array(
-					array('uri', 'Please enter a valid URI.'),
+					array('uri', $this->locale('ERR_URI')),
 				),
 			),
 			'descr' => array(
@@ -244,13 +264,13 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			'tags' => array(
 				'attribs' => array('size' => '60'),
 				'validate' => array(
-					array('regex', 'Please use valid tags.', '/^[A-Za-z0-9_ ]*$/'),
+					array('regex', $this->locale('ERR_TAGS'), '/^[A-Za-z0-9_ ]*$/'),
 				),
 			),
 			'rank' => array(
 				'attribs' => array('size' => '5'),
 				'validate' => array(
-					array('integer', 'Please enter a whole number value.', Solar_Valid::OR_BLANK),
+					array('integer',  $this->locale('ERR_RANK'), Solar_Valid::OR_BLANK),
 				),
 			),
 		);
@@ -295,7 +315,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	public function fetchList($where = null, $order = null, $page = null)
 	{
-		$result = $this->selectFetch('list', $where, $order, $page);
+		$result = $this->selectFetch('list', $where, null, $order, $page);
 		if (! Solar::isError($result)) {
 			$tmp = $this->countPages('list', $where);
 			$this->count = $tmp['count'];
@@ -379,7 +399,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Fetch all the bookmarks with a specific tagset.
+	* Fetch all the bookmarks with a specific tags.
 	* 
 	* Optionally, you can limit to a specific username as well.
 	* 
@@ -404,40 +424,23 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	public function withTags($tags, $user_id = null, $order = null, $page = null)
 	{
-		// build a base where clause ...
+		// build a where clause to find a given user?
 		if ($user_id) {
-			// ... to find a given user
+			// ... find a given user
 			$where = 'user_id = ' . $this->quote($user_id);
 		} else {
-			// ... for all users
-			$where = '1=1';
-		}
-		
-		// convert $tags to array
-		if (! is_array($tags)) {
-			$tags = $this->tags->fixString($tags);
-			$tags = explode(' ', $tags);
-		}
-		
-		// finish the where clause with tags ANDed together
-		$tmp = array();
-		foreach ($tags as $tag) {
-			if (trim($tag) != '') {
-				// add to the query
-				$tmp[] = 'sc_tags_bundle.tags LIKE ' . $this->quote("%+$tag+%");
-			}
-		}
-		
-		if ($tmp) {
-			$where .= ' AND ' . implode(' AND ', $tmp);
+			// ... find for all users
+			$where = null;
 		}
 		
 		// get the results
-		$result = $this->selectFetch('tags', $where, $order, $page);
+		$having = null;
+		$result = $this->tags->relatedFetch('sc_bookmarks', $tags, '*', $where,
+			$having, $order, $page);
 		
 		// set up the count and pages
 		if (! Solar::isError($result)) {
-			$tmp = $this->countPages('tags', $where);
+			$tmp = $this->tags->relatedCountPages($where, $having);
 			$this->count = $tmp['count'];
 			$this->pages = $tmp['pages'];
 		}
@@ -446,12 +449,6 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		return $result;
 	}
 	
-	
-	public function update($data, $id)
-	{
-		$where = 'id = ' . $this->quote($id);
-		return parent::update($data, $where);
-	}
 	
 	/**
 	* 
@@ -498,6 +495,19 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		}
 		
 		$data['ts_mod'] = $this->timestamp();
+	}
+	
+	
+	/**
+	* 
+	* Custom update method to update only one bookmark at a time.
+	* 
+	*/
+	
+	public function update($data, $id)
+	{
+		$where = 'id = ' . $this->quote($id);
+		return parent::update($data, $where);
 	}
 	
 	

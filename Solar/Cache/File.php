@@ -30,6 +30,8 @@
 * 
 * @todo Add CRC32 to check for cache corruption?
 * 
+* @todo Always do file locking?
+* 
 */
 
 class Solar_Cache_File extends Solar_Base {
@@ -161,7 +163,7 @@ class Solar_Cache_File extends Solar_Base {
 				
 				// lock for reading and read.
 				if ($this->lock) {
-					flock($fp, LOCK_EX);
+					flock($fp, LOCK_SH);
 				}
 				
 				$data = fread($fp, $len);

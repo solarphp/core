@@ -152,7 +152,7 @@ class Solar_Locale extends Solar_Base {
 	{
 		$this->string[$class][$key] = $val;
 	}
-
+	
 	
 	/**
 	* 

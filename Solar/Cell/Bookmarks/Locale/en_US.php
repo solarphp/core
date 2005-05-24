@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Locale file.  Returns the strings for a specific language.
@@ -14,10 +13,14 @@
 * 
 * @license LGPL
 * 
-* @version $Id: en_US.php 16 2005-02-16 19:09:39Z pmjones $
+* @version $Id$
 * 
 */
 
 return array(
+	'ERR_TAGS'  => 'Please use a valid space-separated tag list.',
+	'ERR_URI'   => 'Please use a valid URI.',
+	'ERR_RANK'  => 'Please use a whole number value, or leave blank.',
+	'ERR_TITLE' => 'Please enter a title for this bookmark.',
 );
 ?>

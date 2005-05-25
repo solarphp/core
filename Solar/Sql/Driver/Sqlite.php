@@ -109,7 +109,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	public function escape($val)
 	{
-		return @sqlite_escape_string($val);
+		return sqlite_escape_string($val);
 	}
 	
 	

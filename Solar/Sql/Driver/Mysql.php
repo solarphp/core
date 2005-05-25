@@ -113,7 +113,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	public function escape($val)
 	{
 		$this->connect();
-		return mysql_real_escape_string($val);
+		return mysql_real_escape_string($val, $this->conn);
 	}
 	
 	

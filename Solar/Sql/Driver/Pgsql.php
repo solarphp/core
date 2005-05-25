@@ -114,7 +114,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	
 	public function escape($val)
 	{
-		return @pg_escape_string($val);
+		return pg_escape_string($val);
 	}
 	
 	

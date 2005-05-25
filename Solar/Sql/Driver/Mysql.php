@@ -102,8 +102,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	* Provides the proper escaping for enquoted values.
 	* 
-	* The code presented here works for Fbsql, Mssql, and Oci.
-	* 
 	* @access public
 	* 
 	* @param mixed $val
@@ -114,7 +112,8 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	public function escape($val)
 	{
-		return @mysql_real_escape_string($val);
+		$this->connect();
+		return mysql_real_escape_string($val);
 	}
 	
 	

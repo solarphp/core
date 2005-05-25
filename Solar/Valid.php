@@ -619,7 +619,7 @@ class Solar_Valid {
 		$result = preg_match($expr, $value, $matches);
 		
 		// was it formatted as a URI?
-		if ($result) {
+		if ($result && ! empty($schemes)) {
 			// yes, now check against the allowed schemes.
 			settype($schemes, 'array');
 			$scheme = $matches[2];

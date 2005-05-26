@@ -12,6 +12,8 @@ YaWiki -- way to customize email subject prefix per-area
 Set up YaWiki at solarphp.com
 
 Convert solarphp.com svn from ssh to https
+	testing the conversion...can we commit?
+	
 
 ----
 

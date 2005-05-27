@@ -22,7 +22,7 @@
 * This class is extended from Savant3.
 * @link http://phpsavant.com/
 */
-include_once 'Template/Savant3.php';
+include_once dirname(__FILE__) . '/Template/Savant3.php';
 
 /**
 * 

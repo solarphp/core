@@ -11,9 +11,6 @@ YaWiki -- way to customize email subject prefix per-area
 
 Set up YaWiki at solarphp.com
 
-Convert solarphp.com svn from ssh to https
-	testing the conversion...can we commit?
-	
 
 ----
 
@@ -154,10 +151,8 @@ Sqlite: process results of ...
 
 Solar_Sql: Portable string and date functions
 
-check for 0-based vice 1-based  (1-BASED!)
-
 concat($args)
-substr($arg, $start, $count)
+substr($arg, $start, $count) -- 1-based
 
 -- are these the same everywhere?
 left($arg, $count)

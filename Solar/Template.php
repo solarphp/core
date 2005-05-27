@@ -94,13 +94,13 @@ class Solar_Template extends Savant3 {
 	* 
 	* @access public
 	* 
-	* @param object &$obj The object to be tested.
+	* @param object $obj The object to be tested.
 	* 
 	* @return boolean True if $obj is a Solar_Error.
 	*
 	*/
 	
-	public function isError(&$obj)
+	public function isError($obj)
 	{
 		return Solar::isError($obj);
 	}

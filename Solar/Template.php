@@ -76,7 +76,8 @@ class Solar_Template extends Savant3 {
 	* 
 	*/
 	
-	public function &error($code, $info = array(), $trace = true)
+	public function &error($code, $info = array(), $level = E_USER_ERROR,
+		$trace = true)
 	{
 		$class = get_class($this);
 		$text = Solar::locale($class, $code); // will this work?

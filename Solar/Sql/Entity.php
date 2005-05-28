@@ -126,8 +126,17 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* <code>
 	* $this->schema['rel'] = array(
-	*   'relName1' => array('col_here', 'that_table', 'col_there'),
-	*   'relName2' => array(...)
+	*   'relName1' => array(
+	*		'type'  => '', // LEFT, INNER, etc
+	*		'table' => 'foreign_table', // the table to join to
+	*		'on'    => array('foreign_column' => 'local_column')
+	*	),
+	*   'relName1' => array(
+	*		'type'  => '', // LEFT, INNER, etc
+	*		'table' => array('as_name' => 'foreign_table'),
+	*		'on'    => array('foreign_column' => 'local_column')
+	*	),
+	*	...
 	* );
 	* </code>
 	* 

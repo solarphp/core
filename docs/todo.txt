@@ -1,84 +1,8 @@
-Overall:
+Create an event dispatcher as a universal observer and notifier?
 
-set up a decent default config file
+In Valid, make multiple() a little more friendly
 
-capitalize the reserved names for shared objects?
-
-Savant3:
-	make addPath take arrays and path-strings, not just dir strings
-	
-YaWiki -- way to customize email subject prefix per-area
-
-Set up YaWiki at solarphp.com
-
-
-----
-
-Sql_Entity
-
-Really need a better JOIN setup.  Each relationship *has* to be an array, so we can
-have delete-support later.
-
-$schema['rel']['name'] = array(
-	'type'   => ['inner'|'outer'|'left'|...], // prefixed to JOIN, default none
-	'table'  => 'foreign_table', // required
-	'on'     => array( // must be an array of col => val
-		foreignCol0 => "'literal value'",
-		foreignCol1 => "row_name", 
-		foreignColN => valueN,
-	),
-	'delete' => ['cascade'|'nullify'|'restrict']
-);
-	
-THEN in buildSelect:
-	if the join is a string, it's a literal JOIN string
-	if it's an array, it's a rel array as above
-	
-When doing the qry['join'] use $schema['rel'][name].
-
-----
-
-Tags
-
-More-optimized search algorithm from...
-
-	http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
-	http://www.petercooper.co.uk/archives/000648.html
-	http://www.bigbold.com/snippets/posts/show/32
-	
-SELECT
-	p.*
-FROM
-	posts_tags pt,
-	posts p,
-	tags t
-WHERE
-	pt.tag_id = t.id AND (
-		t.name = '" + tags.uniq.join ('\' OR t.name=\'') + "'
-	) AND p.id=pt.post_id
-GROUP BY
-	p.id
-HAVING
-	COUNT(p.id) = " + tags.uniq.length.to_s
-
-
-
-(intersection/and)
-
-SELECT *
-FROM sc_tags
-WHERE
-	rel = 'sc_bookmarks' 
-	AND tag IN ('this','that','other') -- count = 3
-GROUP BY
-	rel_id
-HAVING
-	COUNT(rel_id) = 3 -- count = 3
-
-
-(union/or: drop the HAVING clause)
-
-Bonus: does not change the schema.  Have to update the bookmarks SQL joins, though.
+In Form, add a key for "tooltip" or "note" or "info" as a longer description of the element.
 
 
 ----
@@ -90,6 +14,92 @@ In list headings, make 'user' clickable, make individual tags clickable
 Add support for &count=N (where N is rows_per_page)
 
 RSS feeds for "user" should show all bookmarks
+
+Use a default tag if no tags given (e.g. "inbox" or "unfiled")
+
+
+----
+
+Solar_Cell_Tags
+
+Allow upper-case letters in tag names?
+
+/* THIS IS DONE!
+
+	More-optimized search algorithm from...
+	
+		http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
+		http://www.petercooper.co.uk/archives/000648.html
+		http://www.bigbold.com/snippets/posts/show/32
+		
+	SELECT
+		p.*
+	FROM
+		posts_tags pt,
+		posts p,
+		tags t
+	WHERE
+		pt.tag_id = t.id AND (
+			t.name = '" + tags.uniq.join ('\' OR t.name=\'') + "'
+		) AND p.id=pt.post_id
+	GROUP BY
+		p.id
+	HAVING
+		COUNT(p.id) = " + tags.uniq.length.to_s
+	
+	
+	
+	(intersection/and)
+	
+	SELECT *
+	FROM sc_tags
+	WHERE
+		rel = 'sc_bookmarks' 
+		AND tag IN ('this','that','other') -- count = 3
+	GROUP BY
+		rel_id
+	HAVING
+		COUNT(rel_id) = 3 -- count = 3
+	
+	
+	(union/or: drop the HAVING clause)
+	
+	Bonus: does not change the schema.  Have to update the bookmarks SQL joins, though.
+
+*/
+
+----
+
+Sql_Entity
+
+/* THIS IS DONE!
+
+	Really need a better JOIN setup.  Each relationship *has* to be an array, so we can
+	have delete-support later.
+	
+	$schema['rel']['name'] = array(
+		'type'   => ['inner'|'outer'|'left'|...], // prefixed to JOIN, default none
+		'table'  => 'foreign_table', // required
+		'on'     => array( // must be an array of col => val
+			foreignCol0 => "'literal value'",
+			foreignCol1 => "row_name", 
+			foreignColN => valueN,
+		),
+		'delete' => ['cascade'|'nullify'|'restrict']
+	);
+		
+	THEN in buildSelect:
+		if the join is a string, it's a literal JOIN string
+		if it's an array, it's a rel array as above
+		
+	When doing the qry['join'] use $schema['rel'][name].
+	
+*/
+
+
+----
+
+Tags
 
 
 ----

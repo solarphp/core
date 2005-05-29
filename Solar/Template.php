@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Super.php 76 2005-03-26 21:08:37Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -76,7 +76,7 @@ class Solar_Template extends Savant3 {
 	* 
 	*/
 	
-	public function &error($code, $info = array(), $level = E_USER_ERROR,
+	public function error($code, $info = array(), $level = E_USER_ERROR,
 		$trace = true)
 	{
 		$class = get_class($this);

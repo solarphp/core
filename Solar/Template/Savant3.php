@@ -19,7 +19,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3.php,v 1.21 2005/05/27 14:21:12 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -959,7 +959,7 @@ class Savant3 {
 	* 
 	*/
 	
-	public function &error($code, $info = array(), $level = E_USER_ERROR,
+	public function error($code, $info = array(), $level = E_USER_ERROR,
 		$trace = true)
 	{
 		// are we throwing exceptions?
@@ -1003,7 +1003,7 @@ class Savant3 {
 	*
 	*/
 	
-	public function isError(&$obj)
+	public function isError($obj)
 	{
 		// is the object a Savant3_Error?
 		if (! is_object($obj)) {

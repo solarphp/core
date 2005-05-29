@@ -149,7 +149,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 					'body'   => $values['comments']['body']
 				);
 				$result = $comments->insert($data);
-				Solar::dump($result);
+				//Solar::dump($result);
 			}
 			
 			// redirect to 'view item'

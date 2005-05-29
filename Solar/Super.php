@@ -12,7 +12,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Valid.php 32 2005-02-21 04:25:10Z pmjones $
+* @version $Id$
 * 
 */
 

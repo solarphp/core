@@ -1,9 +1,5 @@
 Create an event dispatcher as a universal observer and notifier?
 
-In Valid, make multiple() a little more friendly
-
-In Form, add a key for "tooltip" or "note" or "info" as a longer description of the element.
-
 
 ----
 

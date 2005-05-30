@@ -23,7 +23,7 @@
 * 
 */
 
-Solar::autoload('Solar_Sql_Entity');
+Solar::loadClass('Solar_Sql_Entity');
 
 
 /**
@@ -43,6 +43,27 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	/**
 	* 
 	* User-supplied configuration values.
+	* 
+	* Keys are:
+	* 
+	* locale => (string) Path to the locale files.
+	* 
+	* queue => (array) Sequential array of queue name strings.
+	* 
+	* type => (array) Sequential array of report type string (bug, example, feature,
+	* etc).
+	* 
+	* status => (array) Sequential array of work-progress status strings (new,
+	* in-progress, confirmed, etc).
+	* 
+	* status_open => (array) Sequential array naming which status strings are
+	* logically "open".
+	* 
+	* status_closed => (array) Sequential array naming which status strings are
+	* logically "closed".
+	* 
+	* priority => (array) Sequential array of priority strings in order from
+	* lowest to highest.
 	* 
 	* @access public
 	* 
@@ -504,7 +525,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 
 	/**
 	* 
-	* Pre-insert data maniuplation.
+	* Pre-insert data maniuplation to set timestamps.
 	* 
 	* @access protected
 	* 
@@ -524,7 +545,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 
 	/**
 	* 
-	* Pre-update data maniuplation.
+	* Pre-update data maniuplation to set timestamps.
 	* 
 	* @access protected
 	* 
@@ -538,11 +559,6 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	{
 		// force to the current date and time
 		$data['ts_mod'] = $this->defaultCol('ts_mod');
-		
-		// hash the password
-		if (isset($data['passwd'])) {
-			$data['passwd'] = md5($data['passwd']);
-		}
 	}
 }
 ?>

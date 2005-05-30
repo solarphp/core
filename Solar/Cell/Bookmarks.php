@@ -433,6 +433,10 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 			$where = null;
 		}
 		
+		// make sure the rows-per-page matches
+		$prev_rpp = $this->tags->config['rows_per_page'];
+		$this->tags->config['rows_per_page'] = $this->config['rows_per_page'];
+		
 		// get the results
 		$having = null;
 		$result = $this->tags->relatedFetch('sc_bookmarks', $tags, '*', $where,
@@ -446,6 +450,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		}
 		
 		// done!
+		$this->tags->config['rows_per_page'] = $prev_rpp;
 		return $result;
 	}
 	

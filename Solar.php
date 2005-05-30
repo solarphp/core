@@ -261,8 +261,6 @@ class Solar {
 	* all instances of '_' in the class name to DIRECTORY_SEPARATOR
 	* (i.e., '/' on Unix and '\' on Windows).
 	* 
-	* @todo Should this be 'load' (vice 'autoload')?  It's not automatic...
-	* 
 	* @todo Add localization for errors
 	* 
 	* @access public
@@ -273,7 +271,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function autoload($class)
+	public static function loadClass($class)
 	{
 		// pre-empt searching for the class
 		if (class_exists($class)) {
@@ -283,9 +281,9 @@ class Solar {
 		if (trim($class) == '') {
 			return Solar::error(
 				'Solar', // class
-				'no_autoload_class', // code
-				'no class named for autoload', // text
-				array('class' => null), // info
+				'ERR_LOADCLASS_EMPTY', // code
+				'No class named for loading', // text
+				array('class' => $class), // info
 				E_USER_ERROR // level
 			);
 		}
@@ -306,15 +304,18 @@ class Solar {
 			
 		}
 		
-		// include the file.
-		include_once $file;
+		// include the file and check for failure.
+		$result = Solar::run($file);
+		if (Solar::isError($result)) {
+			return $result;
+		}
 		
 		// if the class was not in the file, we have a problem.
 		if (! class_exists($class)) {
 			return Solar::error(
 				'Solar', // class
-				'class_not_found', // code
-				'class not found in autoload file', // text
+				'ERR_LOADCLASS_EXIST', // code
+				'Class does not exist in loaded file', // text
 				array('class' => $class, 'file' => $file), // info
 				E_USER_ERROR // level
 			);
@@ -380,7 +381,7 @@ class Solar {
 	
 	public static function object($class, $config = null)
 	{
-		$result = Solar::autoload($class);
+		$result = Solar::loadClass($class);
 		if (Solar::isError($result)) {
 			return $result;
 		} else {
@@ -432,9 +433,9 @@ class Solar {
 				// did not find the info.  that's an error.
 				Solar::$shared->$name = Solar::error(
 					'Solar',
-					'shared_object_name_wrong',
+					'ERR_SHARED_NAME',
 					"shared object name $name not in config file under ['Solar']['shared']", 
-					array(),
+					array('shared' => $name),
 					E_USER_ERROR
 				);
 				

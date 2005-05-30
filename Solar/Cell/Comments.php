@@ -21,7 +21,7 @@
 /**
 * Have the Entity class available for extension.
 */
-Solar::autoload('Solar_Sql_Entity');
+Solar::loadClass('Solar_Sql_Entity');
 
 
 /**
@@ -38,9 +38,21 @@ Solar::autoload('Solar_Sql_Entity');
 
 class Solar_Cell_Comments extends Solar_Sql_Entity {
 	
+	
 	/**
 	* 
-	* Additional config keys and values.
+	* User-provided config keys and values.
+	* 
+	* Keys are:
+	* 
+	* locale => (string) Path to locale files.
+	* 
+	* rules_callback => (string|array) A call_user_func() callback to
+	* apply rule filters to the comment.
+	* 
+	* @access public
+	* 
+	* @var array
 	* 
 	*/
 	
@@ -117,6 +129,14 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 	* 
 	* @access public
 	* 
+	* @param string $rel The related table, e.g. 'sc_bugs'.
+	* 
+	* @param int $rel_id The ID of the related item.
+	* 
+	* @param string $order An ORDER clause for SQL.
+	* 
+	* @param int $page The page-number of results to return.
+	* 
 	* @return array An array of comments.
 	* 
 	*/
@@ -139,11 +159,18 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 	* 
 	* Search for messages with a specific word.
 	* 
-	* @todo Searches for one word now, should search for multiple.
+	* @access public
 	* 
-	* @access protected
+	* @param string $word The word to search for.
+	* 
+	* @param string $type Search for 'any' or 'all' of the words.  Useless
+	* right now, always treated as 'any'.
+	* 
+	* @param book $exact Look for exactly the words as they are?
 	* 
 	* @return array
+	* 
+	* @todo Searches for one word now, should search for multiple.
 	* 
 	*/
 	
@@ -528,7 +555,7 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 	* 
 	* @param array &$data The data to be inserted.
 	* 
-	* @return void
+	* @return int The ID of the just-inserted row.
 	* 
 	*/
 
@@ -542,7 +569,7 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 			// make sure that class file is loaded.
 			if (is_array($this->config['rules_callback']) &&
 				is_string($this->config['rules_callback'][0])) {
-				Solar::autoload($this->config['rules_callback'][0]);
+				Solar::loadClass($this->config['rules_callback'][0]);
 			}
 			
 			// now call the filter

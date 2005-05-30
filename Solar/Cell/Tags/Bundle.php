@@ -14,14 +14,14 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Bookmarks.php 136 2005-04-06 18:15:56Z pmjones $
+* @version $Id$
 * 
 */
 
 /**
 * Have the Entity class available for extension.
 */
-Solar::autoload('Solar_Sql_Entity');
+Solar::loadClass('Solar_Sql_Entity');
 
 
 /**

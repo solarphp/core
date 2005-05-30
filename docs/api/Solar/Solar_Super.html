@@ -71,13 +71,13 @@
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#fetch" title="details" class="method-name">fetch</a>
-											(<span class="var-type">$type</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">$key</span>&nbsp;<span class="var-name">$key</span> = <span class="var-default">null</span>], [<span class="var-type">$default</span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#magicStripslashes" title="details" class="method-name">magicStripslashes</a>
-											(<span class="var-type">$value</span>&nbsp;<span class="var-name">$value</span>)
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
 									</div>
 							</div>
 		</div>
@@ -97,7 +97,7 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -135,7 +135,7 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodfetch" id="fetch"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">fetch</span> (line <span class="line-number">104</span>)
@@ -154,25 +154,25 @@
 		<span class="method-name">
 			fetch
 		</span>
-					(<span class="var-type">$type</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">$key</span>&nbsp;<span class="var-name">$key</span> = <span class="var-default">null</span>], [<span class="var-type">$default</span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$default</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
 					<li>
-				<span class="var-type">$type</span>
-				<span class="var-name">$type</span><span class="var-description">: string The superglobal variable name to fetch from;  e.g., 'server' for $_SERVER or 'get' for $_GET.</span>			</li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: The superglobal variable name to fetch from;  e.g., 'server' for $_SERVER or 'get' for $_GET.</span>			</li>
 					<li>
-				<span class="var-type">$key</span>
-				<span class="var-name">$key</span><span class="var-description">: string The superglobal array key to retrieve; if null,  will return the entire superglobal array for that type.</span>			</li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span><span class="var-description">: The superglobal array key to retrieve; if null,  will return the entire superglobal array for that type.</span>			</li>
 					<li>
-				<span class="var-type">$default</span>
-				<span class="var-name">$default</span><span class="var-description">: mixed If the requested superglobal array key does  not exist, return this value instead.</span>			</li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$default</span><span class="var-description">: If the requested superglobal array key does  not exist, return this value instead.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodmagicStripslashes" id="magicStripslashes"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">magicStripslashes</span> (line <span class="line-number">146</span>)
@@ -191,13 +191,13 @@
 		<span class="method-name">
 			magicStripslashes
 		</span>
-					(<span class="var-type">$value</span>&nbsp;<span class="var-name">$value</span>)
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
 			</div>
 	
 			<ul class="parameters">
 					<li>
-				<span class="var-type">$value</span>
-				<span class="var-name">$value</span><span class="var-description">: mixed Strips slashes from this value if  magic_quotes_gpc is turned on; does nothing if magic_quotes_gpc is  off.</span>			</li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: Strips slashes from this value if  magic_quotes_gpc is turned on; does nothing if magic_quotes_gpc is  off.</span>			</li>
 				</ul>
 		
 		
@@ -208,7 +208,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:24:33 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:58:46 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

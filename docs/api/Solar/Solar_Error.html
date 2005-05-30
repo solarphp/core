@@ -58,8 +58,11 @@
 <li>     <span class="src-key">die</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">;</span></li>
 <li> <span class="src-sym">}</span></li>
 </pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">todo:</span> Make this object observable?</li>
+			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_Solar_Error_php.html">/Solar/Error.php</a> (line <span class="field">67</span>)
+			Located in <a class="field" href="_Solar_Error_php.html">/Solar/Error.php</a> (line <span class="field">69</span>)
 		</p>
 		
 				
@@ -162,13 +165,13 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$config</span>
-			 = <span class="var-default">array(<br />		'push_callback' =&gt; null,<br />		'pop_callback'  =&gt; null,<br />		'trace' =&gt; true,<br />		'level' =&gt; E_USER_NOTICE<br />	)</span>			(line <span class="line-number">90</span>)
+			 = <span class="var-default">array(<br />		'push_callback' =&gt; null,<br />		'pop_callback'  =&gt; null,<br />		'trace' =&gt; true,<br />		'level' =&gt; E_USER_NOTICE<br />	)</span>			(line <span class="line-number">92</span>)
 		</span>
 	</div>
 
@@ -191,13 +194,13 @@
 
 </div>
 <a name="var$stack" id="$stack"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$stack</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">108</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">110</span>)
 		</span>
 	</div>
 
@@ -228,10 +231,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">117</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">119</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -258,10 +261,10 @@
 		
 	</div>
 <a name="methodcount" id="count"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">count</span> (line <span class="line-number">231</span>)
+		<span class="method-title">count</span> (line <span class="line-number">233</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -283,14 +286,15 @@
 		
 	</div>
 <a name="methoddefaultPushCallback" id="defaultPushCallback"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">defaultPushCallback</span> (line <span class="line-number">247</span>)
+		<span class="method-title">defaultPushCallback</span> (line <span class="line-number">251</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">A naive push callback to die() on E_ERROR or E_USER_ERROR.</p>
+<p class="short-description">A naive push callback.</p>
+<p class="description"><p>Will print out WARNINGs and ERRORs, will die() on ERRORs.</p></p>
 	<ul class="tags">
 				<li><span class="field">return:</span> The number of errors on the stack.</li>
 				<li><span class="field">access:</span> public</li>
@@ -308,10 +312,10 @@
 		
 	</div>
 <a name="methodpop" id="pop"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">pop</span> (line <span class="line-number">205</span>)
+		<span class="method-title">pop</span> (line <span class="line-number">207</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -333,10 +337,10 @@
 		
 	</div>
 <a name="methodpush" id="push"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">push</span> (line <span class="line-number">149</span>)
+		<span class="method-title">push</span> (line <span class="line-number">151</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -377,10 +381,10 @@
 		
 	</div>
 <a name="method__toString" id="__toString"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">__toString</span> (line <span class="line-number">265</span>)
+		<span class="method-title">__toString</span> (line <span class="line-number">276</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -417,7 +421,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:23:53 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:57:51 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

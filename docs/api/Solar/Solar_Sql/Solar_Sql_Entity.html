@@ -74,12 +74,6 @@
 										</td>
 				</tr>
 								<tr>
-					<td style="padding-right: 2em"><a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html">Solar_Cell_Tags_Bundle</a></td>
-					<td>
-											Component module to store tags on related items.
-										</td>
-				</tr>
-								<tr>
 					<td style="padding-right: 2em"><a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html">Solar_Cell_Tags</a></td>
 					<td>
 											Component module to search for tags on related items.
@@ -142,13 +136,13 @@
 				<div class="method-definition">
 											<span class="method-result">string</span>
 										<a href="#buildSelect" title="details" class="method-name">buildSelect</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string|array</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string|array</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">string</span>
 										<a href="#countPages" title="details" class="method-name">countPages</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -172,7 +166,7 @@
 				<div class="method-definition">
 											<span class="method-result">array</span>
 										<a href="#defaultRow" title="details" class="method-name">defaultRow</a>
-											([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$blank</span> = <span class="var-default">false</span>])
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$blank</span> = <span class="var-default">false</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -206,27 +200,27 @@
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">void</span>
+											<span class="method-result">mixed</span>
 										<a href="#postInsert" title="details" class="method-name">postInsert</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">void</span>
+											<span class="method-result">mixed</span>
 										<a href="#postUpdate" title="details" class="method-name">postUpdate</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">void</span>
+											<span class="method-result">mixed</span>
 										<a href="#preInsert" title="details" class="method-name">preInsert</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">void</span>
+											<span class="method-result">mixed</span>
 										<a href="#preUpdate" title="details" class="method-name">preUpdate</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -238,13 +232,13 @@
 				<div class="method-definition">
 											<span class="method-result">array|string</span>
 										<a href="#selectFetch" title="details" class="method-name">selectFetch</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">object A</span>
 										<a href="#selectResult" title="details" class="method-name">selectResult</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -289,7 +283,7 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -327,28 +321,24 @@
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments.html#var$config">Solar_Cell_Comments::$config</a>
-								: Additional config keys and values.
-							</li>
-					<li>
-				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html#var$config">Solar_Cell_Tags_Bundle::$config</a>
-								: Additional config keys and values.
+								: User-provided config keys and values.
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html#var$config">Solar_Cell_Tags::$config</a>
-								: Additional config keys and values.
+								: User-provided configuration values.
 							</li>
 				</ul>
 		
 
 </div>
 <a name="var$schema" id="$schema"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$schema</span>
-			 = <span class="var-default">array(<br />		'tbl' =&gt; null,<br />		'col' =&gt; null,<br />		'idx' =&gt; null,<br />		'rel' =&gt; null,<br />		'qry' =&gt; null,<br />		'frm' =&gt; null<br />	)</span>			(line <span class="line-number">181</span>)
+			 = <span class="var-default">array(<br />		'tbl' =&gt; null,<br />		'col' =&gt; null,<br />		'idx' =&gt; null,<br />		'rel' =&gt; null,<br />		'qry' =&gt; null,<br />		'frm' =&gt; null<br />	)</span>			(line <span class="line-number">190</span>)
 		</span>
 	</div>
 
@@ -377,8 +367,17 @@
 <li>   <span class="src-str">'field' </span>=&gt; <span class="src-str">'unique' </span><span class="src-comm">// shorthand single-col</span></li>
 <li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
 </pre></code></ol></pre></p><p>The list of related tables that this table can join to as an  equvalient JOIN (e.g., &quot;JOIN that_table ON us.col_here = them.col_there&quot;).</p><p><pre><ol><code><pre><li> <span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-id"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#var$schema">schema</a></span><span class="src-sym">[</span><span class="src-str">'rel'</span><span class="src-sym">] </span>= <span class="src-key">array</span><span class="src-sym">(</span></li>
-<li>   <span class="src-str">'relName1' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'col_here'</span><span class="src-sym">, </span><span class="src-str">'that_table'</span><span class="src-sym">, </span><span class="src-str">'col_there'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
-<li>   <span class="src-str">'relName2' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span>...<span class="src-sym">)</span></li>
+<li>   <span class="src-str">'relName1' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span></li>
+<li>        <span class="src-str">'type'  </span>=&gt; <span class="src-str">''</span><span class="src-sym">, </span><span class="src-comm">// LEFT, INNER, etc</span></li>
+<li>        <span class="src-str">'table' </span>=&gt; <span class="src-str">'foreign_table'</span><span class="src-sym">, </span><span class="src-comm">// the table to join to</span></li>
+<li>        <span class="src-str">'on'    </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'foreign_column' </span>=&gt; <span class="src-str">'local_column'</span><span class="src-sym">)</span></li>
+<li>    <span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>   <span class="src-str">'relName1' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span></li>
+<li>        <span class="src-str">'type'  </span>=&gt; <span class="src-str">''</span><span class="src-sym">, </span><span class="src-comm">// LEFT, INNER, etc</span></li>
+<li>        <span class="src-str">'table' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'as_name' </span>=&gt; <span class="src-str">'foreign_table'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>        <span class="src-str">'on'    </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'foreign_column' </span>=&gt; <span class="src-str">'local_column'</span><span class="src-sym">)</span></li>
+<li>    <span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>    ...</li>
 <li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
 </pre></code></ol></pre></p><p>An array of predefined query elements.</p><p><pre><ol><code><pre><li> <span class="src-var">$this</span><span class="src-sym">-&gt;</span><span class="src-id"><a href="../../Solar/Solar_Sql/Solar_Sql_Entity.html#var$schema">schema</a></span><span class="src-sym">[</span><span class="src-str">'qry'</span><span class="src-sym">] </span>= <span class="src-key">array</span><span class="src-sym">(</span></li>
 <li>   <span class="src-str">'name1' </span>=&gt; <span class="src-key">array</span><span class="src-sym">(</span></li>
@@ -417,7 +416,7 @@
 
 </div>
 <a name="var$sql" id="$sql"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -455,10 +454,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">197</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">206</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -488,23 +487,21 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#method__construct">Solar_Cell_Bookmarks::__construct()</a>
-							</li>
-					<li>
-				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html#method__construct">Solar_Cell_Tags::__construct()</a>
+								: Constructor.
 							</li>
 				</ul>
 	</div>
 <a name="methodbuildSelect" id="buildSelect"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">buildSelect</span> (line <span class="line-number">1006</span>)
+		<span class="method-title">buildSelect</span> (line <span class="line-number">1055</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Builds an SQL SELECT statement from a $this-&gt;schema['qry'] key.</p>
 	<ul class="tags">
-				<li><span class="field">return:</span> The SQL SELECT statement as built from the  predefined $select.</li>
+				<li><span class="field">return:</span> The SQL SELECT statement as built from the  predefined $schema['qry'].</li>
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
@@ -513,28 +510,31 @@
 		<span class="method-name">
 			buildSelect
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string|array</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string|array</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$name</span><span class="var-description">: The name of the $select to use.</span>			</li>
+				<span class="var-name">$name</span><span class="var-description">: The name of the $schema['qry'] to use.</span>			</li>
+					<li>
+				<span class="var-type">string|array</span>
+				<span class="var-name">$where</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $schema['qry'].  If a string, adds  them as-is; if an array, treats them as data to bind into the  existing predefined WHERE clause.</span>			</li>
+					<li>
+				<span class="var-type">string|array</span>
+				<span class="var-name">$having</span><span class="var-description">: Additional query terms to add to the  predefined HAVING portion of the $schema['qry'].  If a string,  adds them as-is; if an array, treats them as data to bind into the  existing predefined HAVING clause.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$filter</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$order</span><span class="var-description">: Overrides the ORDER portion of the predefined  $select.</span>			</li>
+				<span class="var-name">$order</span><span class="var-description">: Overrides the ORDER portion of the predefined  $schema['qry'].</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodcountPages" id="countPages"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">countPages</span> (line <span class="line-number">412</span>)
+		<span class="method-title">countPages</span> (line <span class="line-number">424</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -549,7 +549,7 @@
 		<span class="method-name">
 			countPages
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -558,16 +558,16 @@
 				<span class="var-name">$name</span><span class="var-description">: The $schema['qry'] key to use.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$filter</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
+				<span class="var-name">$where</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodcreateTable" id="createTable"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">createTable</span> (line <span class="line-number">922</span>)
+		<span class="method-title">createTable</span> (line <span class="line-number">964</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -590,10 +590,10 @@
 		
 	</div>
 <a name="methoddate" id="date"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">date</span> (line <span class="line-number">1343</span>)
+		<span class="method-title">date</span> (line <span class="line-number">1462</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -615,10 +615,10 @@
 		
 	</div>
 <a name="methoddefaultCol" id="defaultCol"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">defaultCol</span> (line <span class="line-number">704</span>)
+		<span class="method-title">defaultCol</span> (line <span class="line-number">746</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -657,10 +657,10 @@
 				</ul>
 	</div>
 <a name="methoddefaultRow" id="defaultRow"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">defaultRow</span> (line <span class="line-number">662</span>)
+		<span class="method-title">defaultRow</span> (line <span class="line-number">704</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -674,17 +674,22 @@
 		<span class="method-name">
 			defaultRow
 		</span>
-					([<span class="var-type">mixed</span>&nbsp;<span class="var-name">$blank</span> = <span class="var-default">false</span>])
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$blank</span> = <span class="var-default">false</span>])
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$blank</span><span class="var-description">: If true, return null values for all fields.</span>			</li>
+				</ul>
 		
 		
 	</div>
 <a name="methoddelete" id="delete"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">delete</span> (line <span class="line-number">646</span>)
+		<span class="method-title">delete</span> (line <span class="line-number">686</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -712,10 +717,10 @@
 		
 	</div>
 <a name="methodformElements" id="formElements"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">formElements</span> (line <span class="line-number">729</span>)
+		<span class="method-title">formElements</span> (line <span class="line-number">771</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -746,10 +751,10 @@
 		
 	</div>
 <a name="methodgetSchema" id="getSchema"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getSchema</span> (line <span class="line-number">252</span>)
+		<span class="method-title">getSchema</span> (line <span class="line-number">261</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -786,20 +791,16 @@
 								: Initialize the custom schema.
 							</li>
 					<li>
-				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html#methodgetSchema">Solar_Cell_Tags_Bundle::getSchema()</a>
-								: Initialize the custom schema.
-							</li>
-					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html#methodgetSchema">Solar_Cell_Tags::getSchema()</a>
 								: Initialize the custom schema.
 							</li>
 				</ul>
 	</div>
 <a name="methodinsert" id="insert"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">insert</span> (line <span class="line-number">485</span>)
+		<span class="method-title">insert</span> (line <span class="line-number">497</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -826,10 +827,10 @@
 		
 	</div>
 <a name="methodpageLimit" id="pageLimit"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">pageLimit</span> (line <span class="line-number">298</span>)
+		<span class="method-title">pageLimit</span> (line <span class="line-number">307</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -857,26 +858,32 @@
 		
 	</div>
 <a name="methodpostInsert" id="postInsert"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">postInsert</span> (line <span class="line-number">539</span>)
+		<span class="method-title">postInsert</span> (line <span class="line-number">565</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Custom post-insert processing.</p>
 	<ul class="tags">
+				<li><span class="field">return:</span> Void on success, Solar_Error object on failure.</li>
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">void</span>
+		<span class="method-result">mixed</span>
 		<span class="method-name">
 			postInsert
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: An associative array of data to be inserted, in  the format (field =&gt; value).</span>			</li>
+				</ul>
 		
 		
 			<hr class="separator" />
@@ -884,7 +891,7 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#methodpostInsert">Solar_Cell_Bookmarks::postInsert()</a>
-								: Post-insert operations; we add to the tags table.
+								: Custom post-insert processing to refresh the tags table.
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments.html#methodpostInsert">Solar_Cell_Comments::postInsert()</a>
@@ -893,26 +900,32 @@
 				</ul>
 	</div>
 <a name="methodpostUpdate" id="postUpdate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">postUpdate</span> (line <span class="line-number">627</span>)
+		<span class="method-title">postUpdate</span> (line <span class="line-number">667</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Custom pre-update processing.</p>
+<p class="short-description">Custom post-update processing.</p>
 	<ul class="tags">
+				<li><span class="field">return:</span> Void on success, Solar_Error object on failure.</li>
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">void</span>
+		<span class="method-result">mixed</span>
 		<span class="method-name">
 			postUpdate
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: An associative array of data to be updated, in  the format (field =&gt; value).</span>			</li>
+				</ul>
 		
 		
 			<hr class="separator" />
@@ -920,31 +933,37 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#methodpostUpdate">Solar_Cell_Bookmarks::postUpdate()</a>
-								: Post-update operations; refresh the searchable tags table.
+								: Custom post-update processing to refresh the tags table.
 							</li>
 				</ul>
 	</div>
 <a name="methodpreInsert" id="preInsert"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">preInsert</span> (line <span class="line-number">528</span>)
+		<span class="method-title">preInsert</span> (line <span class="line-number">547</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Custom pre-insert processing.</p>
 	<ul class="tags">
+				<li><span class="field">return:</span> Void on success, Solar_Error object on failure.</li>
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">void</span>
+		<span class="method-result">mixed</span>
 		<span class="method-name">
 			preInsert
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: An associative array of data to be inserted, in  the format (field =&gt; value).</span>			</li>
+				</ul>
 		
 		
 			<hr class="separator" />
@@ -952,42 +971,45 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#methodpreInsert">Solar_Cell_Bookmarks::preInsert()</a>
-								: Pre-insert data manipulation.
+								: Custom pre-insert processing to set timestamps and fix tags.
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bugs/Solar_Cell_Bugs.html#methodpreInsert">Solar_Cell_Bugs::preInsert()</a>
-								: Pre-insert data maniuplation.
+								: Pre-insert data maniuplation to set timestamps.
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments.html#methodpreInsert">Solar_Cell_Comments::preInsert()</a>
 								: Pre-insert data maniuplation.
 							</li>
-					<li>
-				<a href="../../Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html#methodpreInsert">Solar_Cell_Tags_Bundle::preInsert()</a>
-							</li>
 				</ul>
 	</div>
 <a name="methodpreUpdate" id="preUpdate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">preUpdate</span> (line <span class="line-number">616</span>)
+		<span class="method-title">preUpdate</span> (line <span class="line-number">649</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Custom pre-update processing.</p>
 	<ul class="tags">
+				<li><span class="field">return:</span> Void on success, Solar_Error object on failure.</li>
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		<span class="method-result">void</span>
+		<span class="method-result">mixed</span>
 		<span class="method-name">
 			preUpdate
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">&$data</span>)
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">&$data</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">&$data</span><span class="var-description">: An associative array of data to be updated, in  the format (field =&gt; value).</span>			</li>
+				</ul>
 		
 		
 			<hr class="separator" />
@@ -995,19 +1017,19 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#methodpreUpdate">Solar_Cell_Bookmarks::preUpdate()</a>
-								: Pre-update data manipulation.
+								: Custom pre-update processing to set timestamps and fix tags.
 							</li>
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bugs/Solar_Cell_Bugs.html#methodpreUpdate">Solar_Cell_Bugs::preUpdate()</a>
-								: Pre-update data maniuplation.
+								: Pre-update data maniuplation to set timestamps.
 							</li>
 				</ul>
 	</div>
 <a name="methodquote" id="quote"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">quote</span> (line <span class="line-number">277</span>)
+		<span class="method-title">quote</span> (line <span class="line-number">286</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1034,10 +1056,10 @@
 		
 	</div>
 <a name="methodselectFetch" id="selectFetch"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">selectFetch</span> (line <span class="line-number">373</span>)
+		<span class="method-title">selectFetch</span> (line <span class="line-number">385</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1052,7 +1074,7 @@
 		<span class="method-name">
 			selectFetch
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -1061,7 +1083,7 @@
 				<span class="var-name">$name</span><span class="var-description">: The name of the $select to use.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$filter</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
+				<span class="var-name">$where</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$order</span><span class="var-description">: Overrides the ORDER portion of the predefined  $select.</span>			</li>
@@ -1073,10 +1095,10 @@
 		
 	</div>
 <a name="methodselectResult" id="selectResult"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">selectResult</span> (line <span class="line-number">334</span>)
+		<span class="method-title">selectResult</span> (line <span class="line-number">346</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1091,7 +1113,7 @@
 		<span class="method-name">
 			selectResult
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$filter</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$where</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$having</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$page</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -1100,7 +1122,10 @@
 				<span class="var-name">$name</span><span class="var-description">: The name of the $select to use.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$filter</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
+				<span class="var-name">$where</span><span class="var-description">: Additional query terms to add to the  predefined WHERE portion of the $select.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$having</span><span class="var-description">: Additional query terms to add to the  predefined HAVING portion of the $select.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$order</span><span class="var-description">: Overrides the ORDER portion of the predefined  $select.</span>			</li>
@@ -1112,10 +1137,10 @@
 		
 	</div>
 <a name="methodtime" id="time"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">time</span> (line <span class="line-number">1359</span>)
+		<span class="method-title">time</span> (line <span class="line-number">1478</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1137,10 +1162,10 @@
 		
 	</div>
 <a name="methodtimestamp" id="timestamp"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">timestamp</span> (line <span class="line-number">1376</span>)
+		<span class="method-title">timestamp</span> (line <span class="line-number">1495</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1162,10 +1187,10 @@
 		
 	</div>
 <a name="methodupdate" id="update"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">update</span> (line <span class="line-number">566</span>)
+		<span class="method-title">update</span> (line <span class="line-number">592</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1198,14 +1223,15 @@
 		<ul class="redefinitions">
 					<li>
 				<a href="../../Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html#methodupdate">Solar_Cell_Bookmarks::update()</a>
+								: Updates one bookmark at a time by its ID.
 							</li>
 				</ul>
 	</div>
 <a name="methodvalidate" id="validate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">validate</span> (line <span class="line-number">1146</span>)
+		<span class="method-title">validate</span> (line <span class="line-number">1265</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1248,7 +1274,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:23:48 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:57:45 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

@@ -64,8 +64,8 @@
 								
 				<div class="method-definition">
 											<span class="method-result">string</span>
-										<a href="#_replace" title="details" class="method-name">_replace</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$search_str</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$replace</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">&$subject</span>)
+										<a href="#replace" title="details" class="method-name">replace</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$search</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$replace</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">&$buffer</span>)
 									</div>
 							</div>
 		</div>
@@ -111,12 +111,12 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">filter</span> (line <span class="line-number">54</span>)
+		<span class="method-title">filter</span> (line <span class="line-number">55</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Removes extra white space within the text.</p>
-<p class="description"><p>Trim leading white space and blank lines from template source after it  gets interpreted, cleaning up code and saving bandwidth. Does not  affect</p></p>
+<p class="description"><p>Trim leading white space and blank lines from template source  after it gets interpreted, cleaning up code and saving bandwidth.  Does not affect <pre></pre>, &lt;script&gt;&lt;/script&gt;, or  &lt;textarea&gt;&lt;/textarea&gt; blocks.</p></p>
 	<ul class="tags">
 				<li><span class="field">return:</span> The filtered text.</li>
 				<li><span class="field">static:</span> </li>
@@ -145,11 +145,11 @@
 					</dl>
 		
 	</div>
-<a name="method_replace" id="_replace"><!-- --></a>
+<a name="methodreplace" id="replace"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">_replace</span> (line <span class="line-number">128</span>)
+		<span class="method-title">replace</span> (line <span class="line-number">129</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -163,21 +163,21 @@
 	<div class="method-signature">
 		<span class="method-result">string</span>
 		<span class="method-name">
-			_replace
+			replace
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$search_str</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$replace</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">&$subject</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$search</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$replace</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">&$buffer</span>)
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$search_str</span><span class="var-description">: The string to search for.</span>			</li>
+				<span class="var-name">$search</span><span class="var-description">: The string to search for.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$replace</span><span class="var-description">: Replace with this text.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">&$subject</span><span class="var-description">: The source text.</span>			</li>
+				<span class="var-name">&$buffer</span><span class="var-description">: The source text.</span>			</li>
 				</ul>
 		
 		
@@ -196,7 +196,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:24:19 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:58:29 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

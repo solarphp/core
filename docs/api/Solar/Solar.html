@@ -86,12 +86,6 @@
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#autoload" title="details" class="method-name">autoload</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>)
-									</div>
-								
-				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#config" title="details" class="method-name">config</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$group</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$elem</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$default</span>)
@@ -134,6 +128,12 @@
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#loadClass" title="details" class="method-name">loadClass</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>)
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">string</span>
 										<a href="#locale" title="details" class="method-name">locale</a>
 											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$key</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$num</span> = <span class="var-default">1</span>])
@@ -160,7 +160,7 @@
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#run" title="details" class="method-name">run</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">0</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -331,44 +331,11 @@
 		
 		
 	</div>
-<a name="methodautoload" id="autoload"><!-- --></a>
+<a name="methodconfig" id="config"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">autoload</span> (line <span class="line-number">276</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">A &quot;sham&quot; method; __autoload() does not work with static calls.</p>
-<p class="description"><p>If the class name exists as a key in $config['Solar']['registry'],  that array element value will be used as the file path.  If not,  the class name will be turned into a file path by converting  all instances of '_' in the class name to DIRECTORY_SEPARATOR  (i.e., '/' on Unix and '\' on Windows).</p></p>
-	<ul class="tags">
-				<li><span class="field">static:</span> </li>
-				<li><span class="field">access:</span> public</li>
-				<li><span class="field">todo:</span> Should this be 'load' (vice 'autoload')?  It's not automatic...</li>
-				<li><span class="field">todo:</span> Add localization for errors</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			autoload
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$class</span><span class="var-description">: A Solar (or other) class name.</span>			</li>
-				</ul>
-		
-		
-	</div>
-<a name="methodconfig" id="config"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">config</span> (line <span class="line-number">462</span>)
+		<span class="method-title">config</span> (line <span class="line-number">487</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -418,10 +385,10 @@
 		
 	</div>
 <a name="methodcookie" id="cookie"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">cookie</span> (line <span class="line-number">575</span>)
+		<span class="method-title">cookie</span> (line <span class="line-number">600</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -452,10 +419,10 @@
 		
 	</div>
 <a name="methoddump" id="dump"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">dump</span> (line <span class="line-number">820</span>)
+		<span class="method-title">dump</span> (line <span class="line-number">845</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -486,10 +453,10 @@
 		
 	</div>
 <a name="methoderror" id="error"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">error</span> (line <span class="line-number">770</span>)
+		<span class="method-title">error</span> (line <span class="line-number">795</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -532,10 +499,10 @@
 		
 	</div>
 <a name="methodfixdir" id="fixdir"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">fixdir</span> (line <span class="line-number">850</span>)
+		<span class="method-title">fixdir</span> (line <span class="line-number">875</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -564,10 +531,10 @@
 		
 	</div>
 <a name="methodget" id="get"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">get</span> (line <span class="line-number">526</span>)
+		<span class="method-title">get</span> (line <span class="line-number">551</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -599,10 +566,10 @@
 		
 	</div>
 <a name="methodisError" id="isError"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">isError</span> (line <span class="line-number">790</span>)
+		<span class="method-title">isError</span> (line <span class="line-number">815</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -625,6 +592,38 @@
 					<li>
 				<span class="var-type">object</span>
 				<span class="var-name">$obj</span><span class="var-description">: Check this object to see if it is of, or is  descended from, the Solar_Error class.</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodloadClass" id="loadClass"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">loadClass</span> (line <span class="line-number">274</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">A &quot;sham&quot; method; __autoload() does not work with static calls.</p>
+<p class="description"><p>If the class name exists as a key in $config['Solar']['registry'],  that array element value will be used as the file path.  If not,  the class name will be turned into a file path by converting  all instances of '_' in the class name to DIRECTORY_SEPARATOR  (i.e., '/' on Unix and '\' on Windows).</p></p>
+	<ul class="tags">
+				<li><span class="field">static:</span> </li>
+				<li><span class="field">access:</span> public</li>
+				<li><span class="field">todo:</span> Add localization for errors</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			loadClass
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$class</span><span class="var-description">: A Solar (or other) class name.</span>			</li>
 				</ul>
 		
 		
@@ -659,7 +658,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">object</span> (line <span class="line-number">357</span>)
+		<span class="method-title">object</span> (line <span class="line-number">382</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -693,7 +692,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">pathinfo</span> (line <span class="line-number">673</span>)
+		<span class="method-title">pathinfo</span> (line <span class="line-number">698</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -728,7 +727,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">post</span> (line <span class="line-number">552</span>)
+		<span class="method-title">post</span> (line <span class="line-number">577</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -763,13 +762,13 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">run</span> (line <span class="line-number">337</span>)
+		<span class="method-title">run</span> (line <span class="line-number">339</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Runs a script in an isolated space.</p>
+<p class="short-description">Runs a script in an isolated scope.</p>
 	<ul class="tags">
-				<li><span class="field">return:</span> The final return of the included file, if any.</li>
+				<li><span class="field">return:</span> The final return of the included file, if any, or a  Solar_Error if the file could not be opened.</li>
 				<li><span class="field">static:</span> </li>
 				<li><span class="field">access:</span> public</li>
 			</ul>
@@ -779,13 +778,13 @@
 		<span class="method-name">
 			run
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">0</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">0</span><span class="var-description">: A script path and file name.</span>			</li>
+				<span class="var-name">$file</span><span class="var-description">: A script path and file name.</span>			</li>
 				</ul>
 		
 		
@@ -794,7 +793,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">scrub</span> (line <span class="line-number">720</span>)
+		<span class="method-title">scrub</span> (line <span class="line-number">745</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -828,7 +827,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">server</span> (line <span class="line-number">598</span>)
+		<span class="method-title">server</span> (line <span class="line-number">623</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -862,7 +861,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">session</span> (line <span class="line-number">621</span>)
+		<span class="method-title">session</span> (line <span class="line-number">646</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -896,7 +895,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">shared</span> (line <span class="line-number">383</span>)
+		<span class="method-title">shared</span> (line <span class="line-number">408</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -978,7 +977,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">super</span> (line <span class="line-number">647</span>)
+		<span class="method-title">super</span> (line <span class="line-number">672</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1017,7 +1016,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:24:25 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:58:37 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

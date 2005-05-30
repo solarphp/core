@@ -125,6 +125,16 @@ class Solar_Sql_Result extends Solar_Base {
 	}
 	
 	
+	/**
+	* 
+	* Returns the number of rows in the result set.
+	* 
+	* @access public
+	* 
+	* @return int The number of rows in the result set.
+	* 
+	*/
+	
 	public function numRows()
 	{
 		// make a static call to the numRows() method from the driver

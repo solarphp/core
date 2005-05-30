@@ -23,11 +23,6 @@
 <ul>
     <li>Bug in parse_url (PHP 5.0.3) does not find fragments.</li>
 </ul>
-<h3><a href="Solar/Solar.html#methodautoload">Solar::autoload()</a></h3>
-<ul>
-    <li>Add localization for errors</li>
-    <li>Should this be 'load' (vice 'autoload')?  It's not automatic...</li>
-</ul>
 <h3><a href="Solar/Solar_Sql/Solar_Sql_Entity.html#methoddelete">Solar_Sql_Entity::delete()</a></h3>
 <ul>
     <li>Needs to honor joined tables.</li>
@@ -40,13 +35,22 @@
 <ul>
     <li>rename to Unix, add Ini file handler as well</li>
 </ul>
+<h3><a href="Solar/Solar.html#methodloadClass">Solar::loadClass()</a></h3>
+<ul>
+    <li>Add localization for errors</li>
+</ul>
 <h3><a href="Solar/Solar.html#methodshared">Solar::shared()</a></h3>
 <ul>
     <li>Localize these errors.</li>
 </ul>
 <h3><a href="Solar/Solar_Cache/Solar_Cache_File.html">Solar_Cache_File</a></h3>
 <ul>
+    <li>Always do file locking?</li>
     <li>Add CRC32 to check for cache corruption?</li>
+</ul>
+<h3><a href="Solar/Solar_Error.html">Solar_Error</a></h3>
+<ul>
+    <li>Make this object observable?</li>
 </ul>
 <h3><a href="Solar/Solar_User/Solar_User_Auth_Mail.html#methodvalid">Solar_User_Auth_Mail::valid()</a></h3>
 <ul>
@@ -72,7 +76,7 @@
     <li>Add support for recursive scrubbing of arrays.</li>
 </ul>
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:24:39 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:58:58 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</body>
 </html>

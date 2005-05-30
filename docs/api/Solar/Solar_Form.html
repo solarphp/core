@@ -100,7 +100,7 @@
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#addFeedback" title="details" class="method-name">addFeedback</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$list</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$list</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -118,7 +118,7 @@
 				<div class="method-definition">
 											<span class="method-result">string</span>
 										<a href="#prepName" title="details" class="method-name">prepName</a>
-											(<span class="var-type">$name</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">$array</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -136,7 +136,7 @@
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#submitValue" title="details" class="method-name">submitValue</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$name</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -168,19 +168,19 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$config</span>
-			 = <span class="var-default">array(<br />		'action'  =&gt; null,<br />		'method'  =&gt; 'post',<br />		'enctype' =&gt; 'multipart/form-data',<br />	)</span>			(line <span class="line-number">58</span>)
+			 = <span class="var-default">array(<br />		'action'  =&gt; null,<br />		'method'  =&gt; 'post',<br />		'enctype' =&gt; 'multipart/form-data',<br />	)</span>			(line <span class="line-number">68</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">User-provided configuration.</p>
-<p class="description"><p>Each key corresponds directly with a valid &lt;form&gt; tag  attribute; you can add or remove as you wish.  Note that  although 'action' defaults to null, it will be replaced  in the constructor with $_SERVER['REQUEST_URI'].</p></p>
+<p class="description"><p>Each key corresponds directly with a valid &lt;form&gt; tag  attribute; you can add or remove as you wish.  Note that  although 'action' defaults to null, it will be replaced  in the constructor with $_SERVER['REQUEST_URI'].</p><p>Keys are:</p><p>action =&gt; (string) The form action attribute; defaults to null,  which is treated as $_SERVER['REQUEST_URI'].</p><p>method =&gt; (string) The form method attribute; defaults to 'post'.</p><p>enctype =&gt; (string) The form encoding type; defaults to  'multipart/form-data'.</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
 			</ul>
@@ -197,18 +197,19 @@
 
 </div>
 <a name="var$default" id="$default"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$default</span>
-			 = <span class="var-default">array(<br />		'name'     =&gt; null,<br />		'type'     =&gt; null,<br />		'label'    =&gt; null,<br />		'value'    =&gt; null,<br />		'require'  =&gt; false,<br />		'disable'  =&gt; false,<br />		'options'  =&gt; array(),'attribs'=&gt;array(),'feedback'=&gt;array(),)</span>			(line <span class="line-number">135</span>)
+			 = <span class="var-default">array(<br />		'name'     =&gt; null,<br />		'type'     =&gt; null,<br />		'label'    =&gt; null,<br />		'value'    =&gt; null,<br />		'descr'    =&gt; null,<br />		'require'  =&gt; false,<br />		'disable'  =&gt; false,<br />		'options'  =&gt; array(),'attribs'=&gt;array(),'feedback'=&gt;array(),)</span>			(line <span class="line-number">174</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Default values for each element.</p>
+<p class="description"><p>Keys are:</p><p>name =&gt; (string) The name attribute.</p><p>type =&gt; (string) The input or type attribute ('text', 'select', etc).</p><p>label =&gt; (string) A short label for the element.</p><p>value =&gt; (string) The default or selected value(s) for the element.</p><p>descr =&gt; (string) A longer description of the element, e.g. a tooltip  or help value.</p><p>require =&gt; (bool) Whether or not the element is required.</p><p>disable =&gt; (bool) If disabled, the element is read-only (but is still  submitted with other elements).</p><p>options =&gt; (array) The list of allowed values as options for this element  as an associative array in the form (value =&gt; label).</p><p>attribs =&gt; (array) Additional XHTML attributes for the element in the  form (attribute =&gt; value).</p><p>feedback =&gt; (array) An array of feedback messages for this element,  generally based on validation of previous user input.</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -219,13 +220,13 @@
 
 </div>
 <a name="var$elements" id="$elements"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$elements</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">75</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">85</span>)
 		</span>
 	</div>
 
@@ -241,13 +242,13 @@
 
 </div>
 <a name="var$feedback" id="$feedback"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">string|array</span>
 			<span class="var-name">$feedback</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">93</span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number">103</span>)
 		</span>
 	</div>
 
@@ -264,19 +265,19 @@
 
 </div>
 <a name="var$submit" id="$submit"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$submit</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">122</span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number">133</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Array of submitted values.</p>
-<p class="description"><p>Populated on the first call to submitValue() using Solar::get() or  Solar::post(), depending on the value of $this-&gt;config['method'].</p></p>
+<p class="description"><p>Populated on the first call to submitValue(), which itself uses  Solar::get() or Solar::post(), depending on the value of  $this-&gt;config['method'].</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -287,13 +288,13 @@
 
 </div>
 <a name="var$validate" id="$validate"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$validate</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">106</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">116</span>)
 		</span>
 	</div>
 
@@ -324,10 +325,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">156</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">196</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -354,10 +355,10 @@
 		
 	</div>
 <a name="methodaddFeedback" id="addFeedback"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">addFeedback</span> (line <span class="line-number">222</span>)
+		<span class="method-title">addFeedback</span> (line <span class="line-number">270</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -371,17 +372,25 @@
 		<span class="method-name">
 			addFeedback
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$list</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$list</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$list</span><span class="var-description">: An associative array where the key is an element  name and the value is a string or sequential array of feedback messages.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$array</span><span class="var-description">: Rename each element as a key in this array.</span>			</li>
+				</ul>
 		
 		
 	</div>
 <a name="methodaddValidate" id="addValidate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">addValidate</span> (line <span class="line-number">442</span>)
+		<span class="method-title">addValidate</span> (line <span class="line-number">490</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -413,10 +422,10 @@
 		
 	</div>
 <a name="methodpopulate" id="populate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">populate</span> (line <span class="line-number">270</span>)
+		<span class="method-title">populate</span> (line <span class="line-number">318</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -439,16 +448,16 @@
 				<span class="var-name">$list</span><span class="var-description">: Element information as array(name =&gt; info).</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$array</span><span class="var-description">: Name the element as a key in this array.</span>			</li>
+				<span class="var-name">$array</span><span class="var-description">: Rename the element as a key in this array.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodprepName" id="prepName"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">prepName</span> (line <span class="line-number">405</span>)
+		<span class="method-title">prepName</span> (line <span class="line-number">453</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -463,25 +472,25 @@
 		<span class="method-name">
 			prepName
 		</span>
-					(<span class="var-type">$name</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">$array</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
 					<li>
-				<span class="var-type">$name</span>
+				<span class="var-type">string</span>
 				<span class="var-name">$name</span><span class="var-description">: The element name.</span>			</li>
 					<li>
-				<span class="var-type">$array</span>
+				<span class="var-type">string</span>
 				<span class="var-name">$array</span><span class="var-description">: The array name, if any, into which the place the element.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodsetElement" id="setElement"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setElement</span> (line <span class="line-number">180</span>)
+		<span class="method-title">setElement</span> (line <span class="line-number">220</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -507,16 +516,16 @@
 				<span class="var-name">$info</span><span class="var-description">: Element information.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$array</span><span class="var-description">: Name the element as a key in this array.</span>			</li>
+				<span class="var-name">$array</span><span class="var-description">: Rename the element as a key in this array.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodsetElements" id="setElements"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setElements</span> (line <span class="line-number">248</span>)
+		<span class="method-title">setElements</span> (line <span class="line-number">296</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -539,16 +548,16 @@
 				<span class="var-name">$list</span><span class="var-description">: Element information as array(name =&gt; info).</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$array</span><span class="var-description">: Name the element as a key in this array.</span>			</li>
+				<span class="var-name">$array</span><span class="var-description">: Rename the element as a key in this array.</span>			</li>
 				</ul>
 		
 		
 	</div>
 <a name="methodsubmitValue" id="submitValue"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">submitValue</span> (line <span class="line-number">468</span>)
+		<span class="method-title">submitValue</span> (line <span class="line-number">518</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -563,22 +572,27 @@
 		<span class="method-name">
 			submitValue
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$name</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The element name from the form.</span>			</li>
+				</ul>
 		
 		
 	</div>
 <a name="methodvalidate" id="validate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">validate</span> (line <span class="line-number">295</span>)
+		<span class="method-title">validate</span> (line <span class="line-number">343</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Performs validation on each form element.</p>
-<p class="description"><p>Updates the feedback array for each element that fails validation.</p></p>
+<p class="description"><p>Updates the feedback keys for each element that fails validation.</p></p>
 	<ul class="tags">
 				<li><span class="field">return:</span> True if all elements are valid, false if not.</li>
 				<li><span class="field">access:</span> public</li>
@@ -596,10 +610,10 @@
 		
 	</div>
 <a name="methodvalues" id="values"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">values</span> (line <span class="line-number">346</span>)
+		<span class="method-title">values</span> (line <span class="line-number">394</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -637,7 +651,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:23:59 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:57:57 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

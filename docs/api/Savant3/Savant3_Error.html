@@ -16,8 +16,7 @@
 	<div class="info-box-title">Description</div>
 	<div class="nav-bar">
 					<span class="disabled">Description</span> |
-							<a href="#sec-descendents">Descendents</a>
-			|											<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
 						
 					</div>
@@ -37,49 +36,6 @@
 			</div>
 </div>
 
-	<a name="sec-descendents"></a>
-	<div class="info-box">
-		<div class="info-box-title">Direct descendents</div>
-		<div class="nav-bar">
-			<a href="#sec-description">Description</a> |
-			<span class="disabled">Descendents</span>
-			|												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
-								|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
-							
-								</div>
-		<div class="info-box-body">
-			<table cellpadding="2" cellspacing="0" class="class-table">
-				<tr>
-					<th class="class-table-header">Class</th>
-					<th class="class-table-header">Description</th>
-				</tr>
-								<tr>
-					<td style="padding-right: 2em"><a href="../Savant3/Savant3_Error_exception.html">Savant3_Error_exception</a></td>
-					<td>
-											Throws PHP5 exceptions for Savant.
-										</td>
-				</tr>
-								<tr>
-					<td style="padding-right: 2em"><a href="../Savant3/Savant3_Error_pear.html">Savant3_Error_pear</a></td>
-					<td>
-											Provides an interface to PEAR_Error class for Savant.
-										</td>
-				</tr>
-								<tr>
-					<td style="padding-right: 2em"><a href="../Savant3/Savant3_Error_solar.html">Savant3_Error_solar</a></td>
-					<td>
-											Provides an interface to Solar::error() method for Savant.
-										</td>
-				</tr>
-								<tr>
-					<td style="padding-right: 2em"><a href="../Savant3/Savant3_Error_stack.html">Savant3_Error_stack</a></td>
-					<td>
-											Provides an interface to PEAR_ErrorStack class for Savant.
-										</td>
-				</tr>
-							</table>
-		</div>
-	</div>
 
 
 	<a name="sec-var-summary"></a>
@@ -87,7 +43,6 @@
 		<div class="info-box-title">Variable Summary</span></div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-							<a href="#sec-descendents">Descendents</a> |
 						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
 							| 
 									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
@@ -104,8 +59,8 @@
 					<a href="#$info" title="details" class="var-name">$info</a>
 				</div>
 								<div class="var-title">
-					<span class="var-type">string</span>
-					<a href="#$text" title="details" class="var-name">$text</a>
+					<span class="var-type">int</span>
+					<a href="#$level" title="details" class="var-name">$level</a>
 				</div>
 								<div class="var-title">
 					<span class="var-type">array</span>
@@ -120,7 +75,6 @@
 		<div class="info-box-title">Method Summary</span></div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-							<a href="#sec-descendents">Descendents</a> |
 																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 				 
 				|
@@ -137,12 +91,6 @@
 								
 				<div class="method-definition">
 											<span class="method-result">void</span>
-										<a href="#error" title="details" class="method-name">error</a>
-										()
-									</div>
-								
-				<div class="method-definition">
-											<span class="method-result">void</span>
 										<a href="#__toString" title="details" class="method-name">__toString</a>
 										()
 									</div>
@@ -155,7 +103,6 @@
 		<div class="info-box-title">Variables</div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-							<a href="#sec-descendents">Descendents</a> |
 										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
 						
 			
@@ -208,19 +155,19 @@
 		
 
 </div>
-<a name="var$text" id="$text"><!-- --></A>
+<a name="var$level" id="$level"><!-- --></A>
 <div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
-			<span class="var-type">string</span>
-			<span class="var-name">$text</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">66</span>)
+			<span class="var-type">int</span>
+			<span class="var-name">$level</span>
+			 = <span class="var-default"> E_USER_ERROR</span>			(line <span class="line-number">66</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">The error message text.</p>
+<p class="short-description">The error severity level.</p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
 			</ul>
@@ -261,7 +208,6 @@
 		<div class="info-box-title">Methods</div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-							<a href="#sec-descendents">Descendents</a> |
 															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
 						
@@ -297,55 +243,11 @@
 		
 		
 	</div>
-<a name="methoderror" id="error"><!-- --></a>
+<a name="method__toString" id="__toString"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">error</span> (line <span class="line-number">139</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Stub method for extended behaviors.</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			error
-		</span>
-				()
-			</div>
-	
-		
-		
-			<hr class="separator" />
-		<div class="notes">Redefined in descendants as:</div>
-		<ul class="redefinitions">
-					<li>
-				<a href="../Savant3/Savant3_Error_exception.html#methoderror">Savant3_Error_exception::error()</a>
-								: Throws a Savant3_Exception in PHP5.
-							</li>
-					<li>
-				<a href="../Savant3/Savant3_Error_pear.html#methoderror">Savant3_Error_pear::error()</a>
-								: Extended behavior for PEAR_Error.
-							</li>
-					<li>
-				<a href="../Savant3/Savant3_Error_solar.html#methoderror">Savant3_Error_solar::error()</a>
-								: Extended behavior for Solar_Error.
-							</li>
-					<li>
-				<a href="../Savant3/Savant3_Error_stack.html#methoderror">Savant3_Error_stack::error()</a>
-								: Pushes an error onto the PEAR_ErrorStack.
-							</li>
-				</ul>
-	</div>
-<a name="method__toString" id="__toString"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">__toString</span> (line <span class="line-number">120</span>)
+		<span class="method-title">__toString</span> (line <span class="line-number">117</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -371,7 +273,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 23 Apr 2005 14:23:54 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Mon, 30 May 2005 15:57:52 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

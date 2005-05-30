@@ -21,7 +21,7 @@
 /**
 * Needed for data validation.
 */
-Solar::autoload('Solar_Valid');
+Solar::loadClass('Solar_Valid');
 
 /**
 * 
@@ -535,6 +535,13 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* Custom pre-insert processing.
 	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be inserted, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
+	* 
 	*/
 	
 	protected function preInsert(&$data)
@@ -545,6 +552,13 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	/**
 	* 
 	* Custom post-insert processing.
+	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be inserted, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
@@ -623,6 +637,13 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* 
 	* Custom pre-update processing.
 	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be updated, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
+	* 
 	*/
 	
 	protected function preUpdate(&$data)
@@ -632,7 +653,14 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	
 	/**
 	* 
-	* Custom pre-update processing.
+	* Custom post-update processing.
+	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be updated, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
@@ -666,6 +694,8 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	* Returns a data array with field keys and default values.
 	* 
 	* @access public
+	* 
+	* @param bool $blank If true, return null values for all fields.
 	* 
 	* @return array
 	* 

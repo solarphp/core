@@ -21,7 +21,7 @@
 /**
 * Have the Entity class available for extension.
 */
-Solar::autoload('Solar_Sql_Entity');
+Solar::loadClass('Solar_Sql_Entity');
 
 
 /**
@@ -38,9 +38,18 @@ Solar::autoload('Solar_Sql_Entity');
 
 class Solar_Cell_Tags extends Solar_Sql_Entity {
 	
+	
 	/**
 	* 
-	* Additional config keys and values.
+	* User-provided configuration values.
+	* 
+	* Keys are:
+	* 
+	* locale => (string) path to the locale files
+	* 
+	* @access public
+	* 
+	* @var array
 	* 
 	*/
 	
@@ -48,11 +57,6 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		'locale'         => 'Solar/Cell/Tags/Locale/',
 	);
 	
-	
-	public function __construct($config = null)
-	{
-		parent::__construct($config);
-	}
 	
 	/**
 	* 
@@ -154,6 +158,19 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	* 
 	* Refresh the tags stored for a related item.
 	* 
+	* Performs a diff on the existing tags so that only changes to the tag
+	* set are inserted and deleted.
+	* 
+	* @access public
+	* 
+	* @param string $rel The name of the related table, e.g. 'sc_bookmarks'.
+	* 
+	* @param int $rel_id The ID of the item in the related table.
+	* 
+	* @param string|array $tags The tags to be stored for the related item.
+	* 
+	* @return mixed Void on success, or a Solar_Error stack of errors.
+	* 
 	*/
 	
 	public function refresh($rel, $rel_id, $tags)
@@ -228,6 +245,35 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		}
 	}
 	
+	
+	/**
+	* 
+	* Determines the diff (delete/insert matrix) on two sets of tags.
+	* 
+	* <code>
+	* $old = array('a', 'b', 'c');
+	* $new = array('c', 'd', 'e');
+	* 
+	* $diff = $this->diff($old, $new);
+	* 
+	* // $diff['del'] == array('a', 'b');
+	* // $diff['ins'] == array('d', 'e');
+	* // 'c' doesn't show up becuase it's present in both sets
+	* </code>
+	* 
+	* @access protected
+	* 
+	* @param array $old The old (previous) set of tags.
+	* 
+	* @param array $new The new (current) set of tags.
+	* 
+	* @return array An associative array of two keys: 'del' (where the
+	* value is a sequential array of tags removed from the old set)
+	* and 'ins' (where the value is a sequential array of tags added to
+	* the new set).
+	* 
+	*/
+	
 	protected function diff($old, $new)
 	{
 		// find intersections first
@@ -256,8 +302,62 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	* 
 	* Does a lookup on the related table returning specified columns.
 	* 
-	* @todo Build a base 'lookup' query and then copy/edit it for
-	* customization, similar to countPages() in Entity.
+	* This more-optimized search algorithm is derived from...
+	* 
+	* 	http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
+	* 	http://www.petercooper.co.uk/archives/000648.html
+	* 	http://www.bigbold.com/snippets/posts/show/32
+	* 	
+	* SELECT
+	* 	p.*
+	* FROM
+	* 	posts_tags pt,
+	* 	posts p,
+	* 	tags t
+	* WHERE
+	* 	pt.tag_id = t.id AND (
+	* 		t.name = '" + tags.uniq.join ('\' OR t.name=\'') + "'
+	* 	) AND p.id=pt.post_id
+	* GROUP BY
+	* 	p.id
+	* HAVING
+	* 	COUNT(p.id) = " + tags.uniq.length.to_s
+	* 
+	* 
+	* 
+	* (intersection/and...)
+	* 
+	* SELECT *
+	* FROM sc_tags
+	* WHERE
+	* 	rel = 'sc_bookmarks' 
+	* 	AND tag IN ('this','that','other') -- count = 3
+	* GROUP BY
+	* 	rel_id
+	* HAVING
+	* 	COUNT(rel_id) = 3 -- count = 3
+	* 
+	* (union/or: drop the HAVING clause)
+	* 
+	* 
+	* @access public
+	* 
+	* @param string $rel The name of the related table, e.g. 'sc_bookmarks'.
+	* 
+	* @param string|array $tags Fetch related rows with all of these tags.
+	* This can be a space-separated list or a sequential array.
+	* 
+	* @param string|array $cols The columns to select from the related table.
+	* 
+	* @param string $where An additional WHERE filter.
+	* 
+	* @param string $having An additional HAVING filter.
+	* 
+	* @param string $order Order results by this ORDER clause.
+	* 
+	* @param int $page The page number to fetch.
+	* 
+	* @return array An array of rows with the requested tags.
 	* 
 	*/
 	
@@ -313,20 +413,49 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		// count only related IDs
 		$qry['count'] = "sc_tags.rel_id";
 		
+		// now build a special lookup-count query; can't use a normal
+		// countPages() because of the table relations.
+		$this->schema['qry']['lookup_count'] = $qry;
+		$this->schema['qry']['lookup_count']['select'] = 'COUNT(sc_tags.rel_id)';
+		
 		// done redefining the query. return the fetch results.
 		return $this->selectFetch('lookup', $where, $having, $order, $page);
 	}
 	
-	// dumb and lazy -- only works for the last relatedFetch()
+	// dumb and lazy -- only works for the last relatedFetch().
+	// DOES NOT WORK for multiple tags (returns count for OR, not AND).
 	public function relatedCountPages($where = null, $having = null)
 	{
-		return $this->countPages('lookup', $where, $having);
+		$result = $this->selectResult('lookup_count', $where, $having);
+		$count = $result->numRows();
+		unset($result);
+		
+		$pages = 0;
+		if ($count > 0) {
+			$pages = ceil($count / $this->config['rows_per_page']);
+		}
+		
+		// done!
+		return array(
+			'count' => $count,
+			'pages' => $pages
+		);
+		
 	}
 	
 	
 	/**
 	* 
-	* Fixes tag strings for the queries.
+	* Fixes tag strings for the queries so they're in proper format.
+	* 
+	* Converts + to space, trims extra space, and removes duplicate tags.
+	* 
+	* @access public
+	* 
+	* @param string|array A space-separated string of tags, or a sequential
+	* array of tags.
+	* 
+	* @return string A space-separated string of tags.
 	* 
 	*/
 	

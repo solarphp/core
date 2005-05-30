@@ -11,12 +11,6 @@ Bookmarks
 
 In list headings, make 'user' clickable, make individual tags clickable
 
-Add support for &rows_per_page=N (where N is rows_per_page)
-
-RSS feeds for "user" should show all bookmarks
-
-Use a default tag if no tags given (e.g. "inbox" or "unfiled")
-
 Search by URL, title, description
 
 Change all instances of tag X to tag Z

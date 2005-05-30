@@ -372,6 +372,7 @@ class Solar_Uri extends Solar_Base {
 		
 		case 'add':
 			if (isset($this->query[$key])) {
+				settype($this->query[$key], 'array');
 				$this->query[$key][] = $val;
 			} else {
 				$this->query[$key] = $val;

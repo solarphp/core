@@ -55,11 +55,8 @@
 		</style>
 		
 		<?php if ($this->rss['avail']) {
-			$link = Solar::object('Solar_Uri');
-			$link->query('add', 'rss', '1');
-			echo '<link rel="alternate" type="application/rss+xml" title="' . $this->rss['title'] . '" ';
-			echo 'href="' . $link->export() . '" />' . "\n";
-			unset($link);
+			echo '<link rel="alternate" type="application/rss+xml" title="' . $this->scrub($this->rss['title']) . '" ';
+			echo 'href="' . $this->scrub($this->rss['link']) . '" />' . "\n";
 		} ?>
 	</head>
 	<body>

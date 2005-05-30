@@ -21,7 +21,7 @@
 /**
 * Have the Entity class available for extension.
 */
-Solar::autoload('Solar_Sql_Entity');
+Solar::loadClass('Solar_Sql_Entity');
 
 
 /**
@@ -452,7 +452,14 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Pre-insert data manipulation.
+	* Custom pre-insert processing to set timestamps and fix tags.
+	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be inserted, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
@@ -470,21 +477,61 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Post-insert operations; we add to the tags table.
+	* Custom post-insert processing to refresh the tags table.
+	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be inserted, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
 	protected function postInsert(&$data)
 	{
 		if (isset($data['tags'])) {
-			return $this->tags->refresh('sc_bookmarks', $data['id'], $data['tags']);
+			return $this->tags->refresh(
+				'sc_bookmarks',
+				$data['id'],
+				$data['tags']
+			);
 		}
 	}
 	
 	
 	/**
 	* 
-	* Pre-update data manipulation.
+	* Updates one bookmark at a time by its ID.
+	* 
+	* @access public
+	* 
+	* @param array $data An associative array of data to be updated, in
+	* the format (field => value).
+	* 
+	* @param int $id The bookmark ID to update.
+	* 
+	* @return mixed Boolean true on success, Solar_Error object on failure.
+	* 
+	*/
+	
+	public function update($data, $id)
+	{
+		$where = 'id = ' . $this->quote($id);
+		return parent::update($data, $where);
+	}
+	
+	
+	/**
+	* 
+	* Custom pre-update processing to set timestamps and fix tags.
+	* 
+	* @access protected
+	* 
+	* @param array &$data An associative array of data to be updated, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
@@ -500,27 +547,25 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	
 	/**
 	* 
-	* Custom update method to update only one bookmark at a time.
+	* Custom post-update processing to refresh the tags table.
 	* 
-	*/
-	
-	public function update($data, $id)
-	{
-		$where = 'id = ' . $this->quote($id);
-		return parent::update($data, $where);
-	}
-	
-	
-	/**
+	* @access protected
 	* 
-	* Post-update operations; refresh the searchable tags table.
+	* @param array &$data An associative array of data to be updated, in
+	* the format (field => value).
+	* 
+	* @return mixed Void on success, Solar_Error object on failure.
 	* 
 	*/
 	
 	protected function postUpdate(&$data)
 	{
 		if (isset($data['tags'])) {
-			return $this->tags->refresh('sc_bookmarks', $data['id'], $data['tags']);
+			return $this->tags->refresh(
+				'sc_bookmarks',
+				$data['id'],
+				$data['tags']
+			);
 		}
 	}
 }

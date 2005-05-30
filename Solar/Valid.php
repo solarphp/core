@@ -474,13 +474,34 @@ class Solar_Valid {
 	* 
 	* Check the value against multiple validations.
 	* 
+	* <code>
+	* Solar::loadClass('Solar_Valid');
+	*
+	* $validations = array(
+	*     array('maxLength', 12),
+	*     array('regex', '/^\w+$/', Solar_Valid::OR_BLANK),
+	* );
+	* 
+	* // this will be valid
+	* $valid = Solar_Valid::multiple('something', $validations);
+	* 
+	* // this will not be valid (too long)
+	* $valid = Solar_Valid::multiple('somethingelse', $validations);
+	* 
+	* // this will not be valid (non-word character)
+	* $valid = Solar_Valid::multiple('some~thing', $validations);
+	* 
+	* // this will be valid (not too long, and OR_BLANK)
+	* $valid = Solar_Valid::multiple('', $validations);
+	* </code>
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
 	* 
 	* @param array $validations A sequential array of validations; each
 	* element can be a string method name, or an array where element 0 is
-	* the string method name and element 1 is an array of arguments for
+	* the string method name and elements 1-N is are the arguments for
 	* that method.  The method must be a Solar_Valid method.
 	* 
 	* @return bool True if the value passes all validations, false if not.
@@ -491,22 +512,16 @@ class Solar_Valid {
 	{
 		// loop through all the requested validations
 		settype($validations, 'array');
-		foreach ($validations as $info) {
+		foreach ($validations as $params) {
 			
-			// element 0 is the method,
-			// element 1 is the array of parameters (if any)
-			settype($info, 'array');
-			$method = $info[0];
-			if (! isset($info[1])) {
-				$params = array();
-			} else {
-				$params = (array) $info[1];
-			}
+			// the first element is the method name
+			settype($params, 'array');
+			$method = array_shift($params);
 			
-			// put the value at the top of the params.
+			// put the value at the top of the remaining parameters.
 			array_unshift($params, $value);
 			
-			// validate
+			// call the validation method
 			$result = call_user_func_array(
 				array('self', $method),
 				$params

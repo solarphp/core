@@ -17,9 +17,9 @@
 */
 
 /**
-* For validation.
+* Needed for performing validations.
 */
-Solar::autoload('Solar_Valid');
+Solar::loadClass('Solar_Valid');
 
 /**
 * 
@@ -48,6 +48,16 @@ class Solar_Form extends Solar_Base {
 	* attribute; you can add or remove as you wish.  Note that
 	* although 'action' defaults to null, it will be replaced
 	* in the constructor with $_SERVER['REQUEST_URI'].
+	* 
+	* Keys are:
+	* 
+	* action => (string) The form action attribute; defaults to null,
+	* which is treated as $_SERVER['REQUEST_URI'].
+	* 
+	* method => (string) The form method attribute; defaults to 'post'.
+	* 
+	* enctype => (string) The form encoding type; defaults to
+	* 'multipart/form-data'.
 	* 
 	* @access public
 	* 
@@ -155,7 +165,7 @@ class Solar_Form extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		$this->config['action'] = $_SERVER['REQUEST_URI'];
+		$this->config['action'] = Solar::server('REQUEST_URI');
 		parent::__construct($config);
 	}
 	
@@ -171,7 +181,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	* @param array $info Element information.
 	* 
-	* @param string $array Name the element as a key in this array.
+	* @param string $array Rename the element as a key in this array.
 	* 
 	* @return void
 	* 
@@ -217,6 +227,13 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Adds multiple feedback messages to elements.
 	* 
+	* @access public
+	* 
+	* @param array $list An associative array where the key is an element
+	* name and the value is a string or sequential array of feedback messages.
+	* 
+	* @param string $array Rename each element as a key in this array.
+	* 
 	*/
 	
 	public function addFeedback($list, $array = null)
@@ -239,7 +256,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	* @param array $list Element information as array(name => info).
 	* 
-	* @param string $array Name the element as a key in this array.
+	* @param string $array Rename the element as a key in this array.
 	* 
 	* @return void
 	* 
@@ -261,7 +278,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	* @param array $list Element information as array(name => info).
 	* 
-	* @param string $array Name the element as a key in this array.
+	* @param string $array Rename the element as a key in this array.
 	* 
 	* @return void
 	* 
@@ -284,7 +301,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Performs validation on each form element.
 	* 
-	* Updates the feedback array for each element that fails validation.
+	* Updates the feedback keys for each element that fails validation.
 	* 
 	* @access public
 	* 
@@ -359,7 +376,7 @@ class Solar_Form extends Solar_Base {
 			} else {
 			
 				// there are brackets in the name. convert to an array
-				// element. taken from HTML_QuickForm, element.php.
+				// element. taken from PEAR/HTML/QuickForm/element.php.
 				
 				// this converts, e.g., "arrayname[key1][key2]" to
 				// "arrayname']['key1']['key2".  the opening and closing
@@ -445,7 +462,7 @@ class Solar_Form extends Solar_Base {
 		$args = func_get_args();
 		$name = array_shift($args);
 		
-		// add a default validation message (args0 is the method)
+		// add a default validation message (args[0] is the method)
 		if (trim($args[1] == '')) {
 			$args[1] = Solar::locale('Solar', 'ERR_INVALID');
 		}
@@ -460,6 +477,8 @@ class Solar_Form extends Solar_Base {
 	* Returns the submitted value for a named element.
 	* 
 	* @access public
+	* 
+	* @param string $name The element name from the form.
 	* 
 	* @return mixed The submitted value for a named element.
 	* 
@@ -497,7 +516,7 @@ class Solar_Form extends Solar_Base {
 				$name
 			);
 			
-			// evaluate a PHP command that sets value. evil, slow, ugly hack.
+			// evaluate a PHP command that sets value. slow ugly eval() hack.
 			$tmp = "\$this->submit['" . $path . "']";
 			eval("\$value = isset($tmp) ? $tmp : null;");
 		}

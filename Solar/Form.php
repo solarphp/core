@@ -442,9 +442,9 @@ class Solar_Form extends Solar_Base {
 	* 
 	* @access protected
 	* 
-	* @param $name The element name.
+	* @param string $name The element name.
 	* 
-	* @param $array The array name, if any, into which the place the element.
+	* @param string $array The array name, if any, into which the place the element.
 	* 
 	* @return string The prepared element name.
 	* 

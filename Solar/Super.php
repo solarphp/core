@@ -87,13 +87,13 @@ class Solar_Super {
 	* 
 	* @access public
 	* 
-	* @param $type string The superglobal variable name to fetch from;
+	* @param string $type The superglobal variable name to fetch from;
 	* e.g., 'server' for $_SERVER or 'get' for $_GET.
 	* 
-	* @param $key string The superglobal array key to retrieve; if null,
+	* @param string $key The superglobal array key to retrieve; if null,
 	* will return the entire superglobal array for that type.
 	* 
-	* @param $default mixed If the requested superglobal array key does
+	* @param mixed $default If the requested superglobal array key does
 	* not exist, return this value instead.
 	* 
 	* @return mixed The value of the superglobal type array key, or the
@@ -135,7 +135,7 @@ class Solar_Super {
 	* 
 	* @access public
 	* 
-	* @param $value mixed Strips slashes from this value if
+	* @param mixed $value Strips slashes from this value if
 	* magic_quotes_gpc is turned on; does nothing if magic_quotes_gpc is
 	* off.
 	* 

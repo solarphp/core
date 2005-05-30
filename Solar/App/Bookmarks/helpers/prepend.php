@@ -21,17 +21,24 @@
 // get the shared user object
 $user = Solar::shared('user');
 
-// RSS data for the page
+// RSS data for the page (regardless of whether it's actually available)
+$link = Solar::object('Solar_Uri');
+$link->query('set', 'rss', '1');
+
 $this->view->rss = array(
 	'avail' => false,
-	'title' => Solar::super('server', 'PATH_INFO'),
+	'title' => Solar::server('PATH_INFO'),
 	'descr' => 'Solar_App_Bookmarks',
 	'date'  => date('c'), // should be latest mod date in the $this->view->list
-	'link' => Solar::super('server', 'REQUEST_URI'),
+	'link'  => $link->export(),
 );
+
+unset($link);
 
 // get standalone objects
 $bookmarks = Solar::object('Solar_Cell_Bookmarks');
 $form = Solar::object('Solar_Form');
 
+// allow user to set the "count" for each page
+$bookmarks->config['rows_per_page'] = (int) Solar::get('rows_per_page', 10);
 ?>

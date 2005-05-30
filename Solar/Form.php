@@ -120,8 +120,9 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Array of submitted values.
 	* 
-	* Populated on the first call to submitValue() using Solar::get() or
-	* Solar::post(), depending on the value of $this->config['method'].
+	* Populated on the first call to submitValue(), which itself uses
+	* Solar::get() or Solar::post(), depending on the value of
+	* $this->config['method'].
 	* 
 	* @access protected
 	* 
@@ -136,6 +137,34 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Default values for each element.
 	* 
+	* Keys are:
+	* 
+	* name => (string) The name attribute.
+	* 
+	* type => (string) The input or type attribute ('text', 'select', etc).
+	* 
+	* label => (string) A short label for the element.
+	* 
+	* value => (string) The default or selected value(s) for the element.
+	* 
+	* descr => (string) A longer description of the element, e.g. a tooltip
+	* or help value.
+	* 
+	* require => (bool) Whether or not the element is required.
+	* 
+	* disable => (bool) If disabled, the element is read-only (but is still
+	* submitted with other elements).
+	* 
+	* options => (array) The list of allowed values as options for this element
+	* as an associative array in the form (value => label).
+	* 
+	* attribs => (array) Additional XHTML attributes for the element in the
+	* form (attribute => value).
+	* 
+	* feedback => (array) An array of feedback messages for this element,
+	* generally based on validation of previous user input.
+	* 
+	
 	* @access protected
 	* 
 	* @var array
@@ -147,6 +176,7 @@ class Solar_Form extends Solar_Base {
 		'type'     => null,
 		'label'    => null,
 		'value'    => null,
+		'descr'    => null,
 		'require'  => false,
 		'disable'  => false,
 		'options'  => array(),
@@ -201,6 +231,7 @@ class Solar_Form extends Solar_Base {
 			'type'     => (string) $info['type'],
 			'label'    => (string) $info['label'],
 			'value'    =>          $info['value'], // mixed
+			'descr'    => (string) $info['descr'],
 			'require'  => (bool)   $info['require'],
 			'disable'  => (bool)   $info['disable'],
 			'options'  => (array)  $info['options'],

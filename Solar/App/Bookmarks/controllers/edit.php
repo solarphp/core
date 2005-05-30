@@ -139,6 +139,16 @@ $op = Solar::post('op');
 // OP: Save
 if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	
+	// force at least one tag
+	if (empty($form->elements['bookmarks[tags]']['value'])) {
+		$form->elements['bookmarks[tags]']['value'] = Solar::config(
+			'Solar_App_Bookmarks',
+			'default_tag',
+			'unfiled'
+		);
+	}
+	
+	// is the form data valid?
 	if (! $form->validate()) {
 	
 		$form->feedback[] = Solar::locale('Solar', 'ERR_FORM');
@@ -146,6 +156,8 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	} else {
 	
 		$values = $form->values();
+		
+		// force a user_id
 		$values['bookmarks']['user_id'] = $user->auth->username;
 		
 		// new bookmark, or modify old bookmark?

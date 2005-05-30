@@ -123,5 +123,15 @@ class Solar_Sql_Result extends Solar_Base {
 			$this->config['rsrc']
 		);
 	}
+	
+	
+	public function numRows()
+	{
+		// make a static call to the numRows() method from the driver
+		return call_user_func(
+			array($this->config['class'], 'numRows'),
+			$this->config['rsrc']
+		);
+	}
 }
 ?>

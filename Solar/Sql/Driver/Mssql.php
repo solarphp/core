@@ -229,6 +229,24 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	/**
 	* 
+	* Returns the number of rows in a result resource.
+	* 
+	* @access public
+	* 
+	* @param resource &$rsrc An SQL result resource.
+	* 
+	* @return int The number of rows in the resource.
+	* 
+	*/
+	
+	public static function numRows(&$rsrc)
+	{
+		return mssql_num_rows($rsrc);
+	}
+	
+	
+	/**
+	* 
 	* Fetches the next row from a result resource as an associative array.
 	* 
 	* @access public

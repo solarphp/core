@@ -121,6 +121,24 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	
 	/**
 	* 
+	* Returns the number of rows in a result resource.
+	* 
+	* @access public
+	* 
+	* @param resource &$rsrc An SQL result resource.
+	* 
+	* @return int The number of rows in the resource.
+	* 
+	*/
+	
+	public static function numRows(&$rsrc)
+	{
+		return fbsql_num_rows($rsrc);
+	}
+	
+	
+	/**
+	* 
 	* Executes an SQL statement and returns a result object.
 	* 
 	* @access public

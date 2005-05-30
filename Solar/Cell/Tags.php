@@ -54,7 +54,7 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	*/
 	
 	public $config = array(
-		'locale'         => 'Solar/Cell/Tags/Locale/',
+		'locale' => 'Solar/Cell/Tags/Locale/',
 	);
 	
 	
@@ -422,8 +422,25 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 		return $this->selectFetch('lookup', $where, $having, $order, $page);
 	}
 	
-	// dumb and lazy -- only works for the last relatedFetch().
-	// DOES NOT WORK for multiple tags (returns count for OR, not AND).
+	
+	/**
+	* 
+	* Gets a row-count and page-count of related items.
+	* 
+	* This method is lazy and dumb, it only counts on the most-recent
+	* relatedFetch().
+	* 
+	* @access public
+	* 
+	* @param string $where The WHERE clause filter.
+	* 
+	* @param string $having The HAVING clause filter.
+	* 
+	* @return array An associative array with keys 'count' (the number of related
+	* items) and 'pages' (the number of pages needed for the items).
+	* 
+	*/
+	
 	public function relatedCountPages($where = null, $having = null)
 	{
 		$result = $this->selectResult('lookup_count', $where, $having);

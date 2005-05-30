@@ -366,18 +366,18 @@ class Solar_Form extends Solar_Base {
 		$values = array();
 		
 		// loop through each of the values
-		foreach ($this->elements as $elem) {
-		
-			if (strpos($elem['name'], '[') === false) {
+		foreach ($this->elements as $name => $elem) {
+			
+			if (strpos($name, '[') === false) {
 				
 				// no brackets in the name, so it's a plain variable
-				$values[$elem['name']] = $elem['value'];
+				$values[$name] = $elem['value'];
 			
 			} else {
 			
 				// there are brackets in the name. convert to an array
 				// element. taken from PEAR/HTML/QuickForm/element.php.
-				
+				// 
 				// this converts, e.g., "arrayname[key1][key2]" to
 				// "arrayname']['key1']['key2".  the opening and closing
 				// brackets and quotes will be added when we build the
@@ -385,7 +385,7 @@ class Solar_Form extends Solar_Base {
 				$path = str_replace(
 					array(']', '['),
 					array('', "']['"),
-					$elem['name']
+					$name
 				);
 				
 				// evaluate a PHP command that sets the array path key

@@ -245,8 +245,11 @@ abstract class Solar_App extends Solar_Base {
 		if (is_null($action)) {
 			// find the requested action
 			$action = call_user_func(
+				// Solar::get(), Solar::post(), or Solar::pathinfo()
 				array('Solar', $this->action['src']),
+				// the requested action
 				$this->action['var'],
+				// the default action
 				$this->action['default']
 			);
 		}
@@ -284,13 +287,15 @@ abstract class Solar_App extends Solar_Base {
 	
 	/**
 	* 
-	* Returns the file path for a named model.
+	* Returns a new model object by name.
 	* 
 	* @access protected
 	* 
 	* @param string $name The model name.
 	* 
-	* @return string The path to the named model.
+	* @param array $config User-defined configuration for the model.
+	* 
+	* @return object The request model object.
 	* 
 	*/
 	
@@ -313,7 +318,7 @@ abstract class Solar_App extends Solar_Base {
 	* 
 	* @param string $name The view name.
 	* 
-	* @return string The path to the named view.
+	* @return string The output of the named view.
 	* 
 	*/
 	

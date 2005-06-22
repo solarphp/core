@@ -47,13 +47,13 @@ class Solar_Cell_Tags extends Solar_Sql_Entity {
 	* 
 	* locale => (string) path to the locale files
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale' => 'Solar/Cell/Tags/Locale/',
 	);
 	

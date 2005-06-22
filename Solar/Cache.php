@@ -51,24 +51,12 @@ class Solar_Cache extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'active'  => true,
+		'life'    => 3600,
 		'class'   => 'Solar_Cache_File',
 		'options' => array()
 	);
-	
-	
-	/**
-	* 
-	* Enable/disable caching.
-	* 
-	* @access public
-	* 
-	* @var bool
-	* 
-	*/
-	
-	public $active = true;
 	
 	
 	/**
@@ -100,13 +88,80 @@ class Solar_Cache extends Solar_Base {
 		parent::__construct($config);
 		
 		// set activity flag
-		$this->active = $this->config['active'];
+		$this->setActive($this->config['active']);
+		
+		// set cache lifetime
+		$this->setLife($this->config['life']);
 		
 		// instantiate a driver object
 		$this->driver = Solar::object(
 			$this->config['class'],
 			$this->config['options']
 		);
+	}
+	
+	
+	/**
+	* 
+	* Turns caching on and off.
+	* 
+	* @access public
+	* 
+	* @param bool $flag True to turn on, false to turn off.
+	* 
+	*/
+	
+	public function setActive($flag)
+	{
+		$this->config['active'] = (bool) $flag;
+	}
+	
+	
+	/**
+	* 
+	* Returns the current caching activity flag.
+	* 
+	* @access public
+	* 
+	* @return bool True if active, false if not.
+	* 
+	*/
+	
+	public function active()
+	{
+		return (bool) $this->config['active'];
+	}
+	
+	
+	/**
+	* 
+	* Sets the lifetime of the cache in seconds.
+	* 
+	* @access public
+	* 
+	* @param int $seconds The lifetime of the cache in seconds.
+	* 
+	*/
+	
+	public function setLife($seconds)
+	{
+		$this->config['life'] = (int) $seconds;
+	}
+	
+	
+	/**
+	* 
+	* Returns the cache lifetime.
+	* 
+	* @access public
+	* 
+	* @return int The lifetime of the cache in seconds.
+	* 
+	*/
+	
+	public function life()
+	{
+		return $this->config['life'];
 	}
 	
 	
@@ -126,7 +181,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function set($key, $data)
 	{
-		if ($this->active) {
+		if ($this->active()) {
 			return $this->driver->set($key, $data);
 		} else {
 			return false;
@@ -148,7 +203,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function get($key)
 	{
-		if ($this->active) {
+		if ($this->active()) {
 			return $this->driver->get($key);
 		} else {
 			return false;
@@ -170,7 +225,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function del($key)
 	{
-		if ($this->active) {
+		if ($this->active()) {
 			$this->driver->del($key);
 		}
 	}
@@ -190,7 +245,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function valid($key)
 	{
-		if ($this->active) {
+		if ($this->active()) {
 			return $this->driver->valid($key);
 		} else {
 			return false;

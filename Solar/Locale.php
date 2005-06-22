@@ -37,23 +37,10 @@ class Solar_Locale extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale' => 'Solar/Locale/',
 		'code'   => 'en_US',
 	);
-	
-	
-	/**
-	* 
-	* The current locale code.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $code = null;
 	
 	
 	/**
@@ -83,7 +70,7 @@ class Solar_Locale extends Solar_Base {
 		parent::__construct();
 		
 		// set the locale code
-		$this->setCode($this->config['code']);
+		$this->code($this->config['code']);
 		
 		// load the baseline Solar translation strings
 		$this->load('Solar', $this->config['locale']);
@@ -92,26 +79,24 @@ class Solar_Locale extends Solar_Base {
 	
 	/**
 	* 
-	* Resets the current locale code and strings, and calls setlocale().
+	* Sets a new locale code and clears current strings.
 	* 
 	* @access public
 	* 
-	* @param string $code A valid locale code, e.g. 'en_US'.
-	* 
-	* @return void
+	* @param $code string The new locale code.
 	* 
 	*/
 	
 	public function setCode($code)
 	{
 		$this->string = array();
-		$this->code = $code;
+		$this->config['code'] = $code;
 	}
 	
 	
 	/**
 	* 
-	* Returns the current locale code.
+	* Gets the locale code.
 	* 
 	* @access public
 	* 
@@ -121,7 +106,7 @@ class Solar_Locale extends Solar_Base {
 	
 	public function code()
 	{
-		return $this->code;
+		return $this->config['code'];
 	}
 	
 	
@@ -188,7 +173,7 @@ class Solar_Locale extends Solar_Base {
 	* 
 	* @param string $dir The directory where the translation PHP array files
 	* are located.  Will search this directory for a file named after the
-	* locale code, ending in '.php'.  E.g., if $this->code is 'en_US' and
+	* locale code, ending in '.php'.  E.g., if $this->config['code'] is 'en_US' and
 	* $dir is 'Solar/Locale/', load() will look for a file at the path
 	* 'Solar/Locale/en_US.php'.
 	* 
@@ -200,7 +185,7 @@ class Solar_Locale extends Solar_Base {
 	{
 		// create the file name
 		$dir = Solar::fixdir($dir);
-		$file = $dir . $this->code . '.php';
+		$file = $dir . $this->config['code'] . '.php';
 		
 		// load the strings and set them
 		$list = Solar::run($file);
@@ -215,7 +200,7 @@ class Solar_Locale extends Solar_Base {
 	* @access public
 	* 
 	* @param string $class The class for the translation key, e.g.
-	* 'Solar_Cell_Talk'.
+	* 'Solar_Cell_Comments'.
 	* 
 	* @param string $key The translation key to find.
 	* 

@@ -157,6 +157,30 @@ class Solar_Valid {
 	
 	/**
 	* 
+	* Validate that a value is a key in the list of of allowed options.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @param array $array An array of allowed options.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function inKeys($value, $array, $blank = self::NOT_BLANK)
+	{
+		if ($blank && self::blank($value)) {
+			return true;
+		}
+		
+		return array_key_exists($value, (array) $array);
+	}
+	
+	
+	/**
+	* 
 	* Validate that a value is in a list of allowed options.
 	* 
 	* @access public

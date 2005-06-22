@@ -35,13 +35,13 @@ class Solar_Super {
 	* 
 	* These are the default scrubber callbacks for various superglobal types.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 	
 		// $_ENV keys
 		'env' => array(),
@@ -60,6 +60,7 @@ class Solar_Super {
 		// $_COOKIE keys
 		'cookie' => array(
 			array('Solar_Super', 'magicStripslashes'),
+			'strip_tags',
 		),
 		
 		// $_SERVER keys

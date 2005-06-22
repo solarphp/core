@@ -54,7 +54,7 @@ class Solar_Cache extends Solar_Base {
 	protected $config = array(
 		'active'  => true,
 		'life'    => 3600,
-		'class'   => 'Solar_Cache_File',
+		'class'   => 'Solar_Cache_Driver_File',
 		'options' => array()
 	);
 	
@@ -167,7 +167,9 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Sets cache entry data.
+	* Inserts/updates cache entry data.
+	* 
+	* Does not replace if caching is not active.
 	* 
 	* @access public
 	* 
@@ -179,10 +181,10 @@ class Solar_Cache extends Solar_Base {
 	* 
 	*/
 	
-	public function set($key, $data)
+	public function replace($key, $data)
 	{
 		if ($this->active()) {
-			return $this->driver->set($key, $data);
+			return $this->driver->replace($key, $data);
 		} else {
 			return false;
 		}
@@ -191,7 +193,9 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Gets cache entry data.
+	* Fetches cache entry data.
+	* 
+	* No data is returned if caching is not active.
 	* 
 	* @access public
 	* 
@@ -201,10 +205,10 @@ class Solar_Cache extends Solar_Base {
 	* 
 	*/
 	
-	public function get($key)
+	public function fetch($key)
 	{
-		if ($this->active()) {
-			return $this->driver->get($key);
+		if ($this->active() && $this->valid($key)) {
+			return $this->driver->fetch($key);
 		} else {
 			return false;
 		}
@@ -223,10 +227,10 @@ class Solar_Cache extends Solar_Base {
 	* 
 	*/
 	
-	public function del($key)
+	public function delete($key)
 	{
 		if ($this->active()) {
-			$this->driver->del($key);
+			$this->driver->delete($key);
 		}
 	}
 	
@@ -234,6 +238,8 @@ class Solar_Cache extends Solar_Base {
 	/**
 	* 
 	* Checks if a cache entry exists and is not past its lifetime.
+	* 
+	* No entry can be valid if caching is not active.
 	* 
 	* @access public
 	* 
@@ -246,7 +252,7 @@ class Solar_Cache extends Solar_Base {
 	public function valid($key)
 	{
 		if ($this->active()) {
-			return $this->driver->valid($key);
+			return $this->driver->valid($key, $this->life());
 		} else {
 			return false;
 		}
@@ -255,7 +261,9 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Removes all entities from the cache.
+	* Deletes all entities from the cache.
+	* 
+	* Does nothing if caching is not active.
 	* 
 	* @access public
 	* 
@@ -263,9 +271,11 @@ class Solar_Cache extends Solar_Base {
 	* 
 	*/
 	
-	public function clear()
+	public function deleteAll()
 	{
-		return $this->driver->clear();
+		if ($this->active()) {
+			$this->driver->deleteAll();
+		}
 	}
 	
 	
@@ -283,7 +293,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function entry($key)
 	{
-		return $key;
+		return $this->driver->entry($key);
 	}
 }
 ?>

@@ -47,7 +47,7 @@ class Solar_Debug_Timer extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'html' => true
 	);
 	

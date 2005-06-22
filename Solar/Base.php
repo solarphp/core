@@ -36,13 +36,13 @@ abstract class Solar_Base {
 	* 
 	* locale => The directory where locale string files live.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array();
+	protected $config = array();
 	
 	
 	/**
@@ -52,7 +52,7 @@ abstract class Solar_Base {
 	* @access public
 	* 
 	* @param array $config Is merged with the default $config property array
-	* and any defaults from Solar.config.php.
+	* and any values from the Solar.config.php file.
 	* 
 	*/
 	
@@ -60,11 +60,11 @@ abstract class Solar_Base {
 	{
 		// get the user config from the Solar.config.php file, if any.
 		$class = get_class($this);
-		$default = Solar::config($class, null, array());
+		$fromfile = Solar::config($class, null, array());
 		
 		// ... then merge the passed user config ...
 		settype($config, 'array');
-		$config = array_merge($default, $config);
+		$config = array_merge($fromfile, $config);
 		
 		// ... and merge with the class defaults.
 		$this->config = array_merge($this->config, $config);

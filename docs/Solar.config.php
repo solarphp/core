@@ -49,7 +49,7 @@ $config['Solar']['ini_set'] = array(
 $config['Solar_Sql'] = array(
 	'class' => 'Solar_Sql_Driver_Sqlite',
 	'file'  => "$docroot/solar.sqlite",
-	'more'  => '0666',
+	'mode'  => '0666',
 );
 
 

@@ -57,7 +57,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'sql'          => 'sql',
 		'table'        => 'sc_user',
 		'username_col' => 'user_id',

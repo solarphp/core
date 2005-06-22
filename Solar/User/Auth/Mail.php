@@ -48,7 +48,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'mailbox' => null,
 	);
 	

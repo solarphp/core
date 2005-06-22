@@ -45,13 +45,13 @@ class Solar_User_Auth_Ini extends Solar_Base {
 	* 
 	* group => (string) The group in which usernames reside.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'file' => null,
 		'group' => 'users',
 	);

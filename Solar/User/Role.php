@@ -51,7 +51,7 @@ class Solar_User_Role extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'class'   => 'Solar_User_Role_None',
 		'options' => null,
 		'refresh' => false,

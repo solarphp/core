@@ -52,13 +52,13 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	* 
 	* file => (string) Path to password file.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'file'  => null,
 	);
 

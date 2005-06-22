@@ -46,7 +46,7 @@ class Solar_User_Role_Multi extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'drivers' => array(
 			'Solar_User_Role_None'
 		)
@@ -62,7 +62,7 @@ class Solar_User_Role_Multi extends Solar_Base {
 	* 
 	*/
 	
-	public $driver = array();
+	protected $driver = array();
 	
 	
 	/**

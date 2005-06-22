@@ -50,7 +50,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'url'    => null,
 		'format' => null,
 	);

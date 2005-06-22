@@ -64,13 +64,13 @@ class Solar_User_Auth extends Solar_Base {
 	* action_logout => (string) The action-key value to indicate a
 	* logout attempt.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale'        => 'Solar/User/Locale/',
 		'class'         => 'Solar_User_Auth_None',
 		'options'       => null,

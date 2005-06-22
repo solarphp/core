@@ -108,7 +108,7 @@ class Solar_Sql extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'class' => null,
 		'host'  => null,
 		'port'  => null,

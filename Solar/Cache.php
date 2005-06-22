@@ -184,7 +184,7 @@ class Solar_Cache extends Solar_Base {
 	public function replace($key, $data)
 	{
 		if ($this->active()) {
-			return $this->driver->replace($key, $data);
+			return $this->driver->replace($key, $data, $this->life());
 		} else {
 			return false;
 		}

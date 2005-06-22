@@ -51,7 +51,7 @@ class Solar_Cell_Comments_Rules extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'spam_words'  => array(),
 		'max_links'   => 3,
 		'status_good' => 'show',

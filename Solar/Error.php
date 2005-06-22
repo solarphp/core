@@ -89,7 +89,7 @@ class Solar_Error extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'push_callback' => null,
 		'pop_callback'  => null,
 		'trace' => true,
@@ -118,7 +118,7 @@ class Solar_Error extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		$this->config['push_callback'] = array($this, 'defaultPushCallback');
+		$this->config['push_callback'] = array($this, 'pushCallback');
 		parent::__construct($config);
 	}
 	
@@ -242,18 +242,15 @@ class Solar_Error extends Solar_Base {
 	* 
 	* Will print out WARNINGs and ERRORs, will die() on ERRORs.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @return int The number of errors on the stack.
 	* 
 	*/
 	
-	public function defaultPushCallback($err)
+	protected function pushCallback($err)
 	{
 		if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {
-			while (ob_get_level()) {
-				ob_end_flush();
-			}
 			Solar::dump($err);
 		}
 		

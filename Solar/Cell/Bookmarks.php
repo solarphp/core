@@ -44,7 +44,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale'         => 'Solar/Cell/Bookmarks/Locale/',
 	);
 	
@@ -434,8 +434,8 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		}
 		
 		// make sure the rows-per-page matches
-		$prev_rpp = $this->tags->config['rows_per_page'];
-		$this->tags->config['rows_per_page'] = $this->config['rows_per_page'];
+		$prev_rpp = $this->tags->rowsPerPage();
+		$this->tags->setRowsPerPage($this->rowsPerPage());
 		
 		// get the results
 		$having = null;
@@ -450,7 +450,7 @@ class Solar_Cell_Bookmarks extends Solar_Sql_Entity {
 		}
 		
 		// done!
-		$this->tags->config['rows_per_page'] = $prev_rpp;
+		$this->tags->setRowsPerPage($prev_rpp);
 		return $result;
 	}
 	

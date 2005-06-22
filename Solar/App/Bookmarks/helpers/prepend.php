@@ -40,5 +40,5 @@ $bookmarks = Solar::object('Solar_Cell_Bookmarks');
 $form = Solar::object('Solar_Form');
 
 // allow user to set the "count" for each page
-$bookmarks->config['rows_per_page'] = (int) Solar::get('rows_per_page', 10);
+$bookmarks->setRowsPerPage(Solar::get('rows_per_page', 10));
 ?>

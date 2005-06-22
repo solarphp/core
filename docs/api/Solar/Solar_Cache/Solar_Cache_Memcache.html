@@ -54,20 +54,8 @@
 					<a href="#$config" title="details" class="var-name">$config</a>
 				</div>
 								<div class="var-title">
-					<span class="var-type">string</span>
-					<a href="#$host" title="details" class="var-name">$host</a>
-				</div>
-								<div class="var-title">
-					<span class="var-type">string</span>
-					<a href="#$life" title="details" class="var-name">$life</a>
-				</div>
-								<div class="var-title">
 					<span class="var-type">object</span>
 					<a href="#$memcache" title="details" class="var-name">$memcache</a>
-				</div>
-								<div class="var-title">
-					<span class="var-type">string</span>
-					<a href="#$port" title="details" class="var-name">$port</a>
 				</div>
 							</div>
 		</div>
@@ -94,32 +82,32 @@
 								
 				<div class="method-definition">
 											<span class="method-result">void</span>
-										<a href="#clear" title="details" class="method-name">clear</a>
-										()
-									</div>
-								
-				<div class="method-definition">
-											<span class="method-result">void</span>
-										<a href="#del" title="details" class="method-name">del</a>
+										<a href="#delete" title="details" class="method-name">delete</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#deleteAll" title="details" class="method-name">deleteAll</a>
+										()
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">mixed</span>
-										<a href="#get" title="details" class="method-name">get</a>
+										<a href="#fetch" title="details" class="method-name">fetch</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">bool</span>
-										<a href="#set" title="details" class="method-name">set</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>)
+										<a href="#replace" title="details" class="method-name">replace</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$life</span>)
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">bool</span>
 										<a href="#valid" title="details" class="method-name">valid</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$life</span>)
 									</div>
 							</div>
 		</div>
@@ -139,21 +127,21 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$config</span>
-			 = <span class="var-default">array(<br />		'host' =&gt; 'localhost',<br />		'port' =&gt; '11211'<br />		'life' =&gt; 60<br />	)</span>			(line <span class="line-number">54</span>)
+			 = <span class="var-default">array(<br />		'host' =&gt; 'localhost',<br />		'port' =&gt; '11211',<br />	)</span>			(line <span class="line-number">52</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">User-provided configuration.</p>
-<p class="description"><p>Keys are:</p><p>host =&gt; (string) the memcache server hostname</p><p>port =&gt; (string|int) the port on the server</p><p>life =&gt; (int) lifetime in seconds for each cache entry</p></p>
+<p class="description"><p>Keys are:</p><p>host =&gt; (string) the memcache server hostname</p><p>port =&gt; (string|int) the port on the server</p></p>
 	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
+				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	
@@ -167,85 +155,19 @@
 		
 
 </div>
-<a name="var$host" id="$host"><!-- --></A>
-<div class="oddrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">string</span>
-			<span class="var-name">$host</span>
-						(line <span class="line-number">71</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">The hostname where the memcache daemon lives.</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
-			</ul>
-	
-	
-		
-		
-
-</div>
-<a name="var$life" id="$life"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">string</span>
-			<span class="var-name">$life</span>
-						(line <span class="line-number">97</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">The lifetime of each cache entry, in seconds.</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
-			</ul>
-	
-	
-		
-		
-
-</div>
 <a name="var$memcache" id="$memcache"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">object</span>
 			<span class="var-name">$memcache</span>
-						(line <span class="line-number">110</span>)
+						(line <span class="line-number">68</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">A memcache client object.</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
-			</ul>
-	
-	
-		
-		
-
-</div>
-<a name="var$port" id="$port"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			<span class="var-type">string</span>
-			<span class="var-name">$port</span>
-						(line <span class="line-number">84</span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">The port number on the host where the memcache daemon lives.</p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -274,7 +196,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">119</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">77</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -300,35 +222,11 @@
 					</dl>
 		
 	</div>
-<a name="methodclear" id="clear"><!-- --></a>
+<a name="methoddelete" id="delete"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">clear</span> (line <span class="line-number">217</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Removes all cache entries.</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			clear
-		</span>
-				()
-			</div>
-	
-		
-		
-	</div>
-<a name="methoddel" id="del"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">del</span> (line <span class="line-number">179</span>)
+		<span class="method-title">delete</span> (line <span class="line-number">133</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -340,7 +238,7 @@
 	<div class="method-signature">
 		<span class="method-result">void</span>
 		<span class="method-name">
-			del
+			delete
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
 			</div>
@@ -353,11 +251,35 @@
 		
 		
 	</div>
-<a name="methodget" id="get"><!-- --></a>
+<a name="methoddeleteAll" id="deleteAll"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteAll</span> (line <span class="line-number">167</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes all cache entries.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			deleteAll
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodfetch" id="fetch"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">get</span> (line <span class="line-number">161</span>)
+		<span class="method-title">fetch</span> (line <span class="line-number">115</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -370,7 +292,7 @@
 	<div class="method-signature">
 		<span class="method-result">mixed</span>
 		<span class="method-name">
-			get
+			fetch
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
 			</div>
@@ -383,11 +305,11 @@
 		
 		
 	</div>
-<a name="methodset" id="set"><!-- --></a>
+<a name="methodreplace" id="replace"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">set</span> (line <span class="line-number">143</span>)
+		<span class="method-title">replace</span> (line <span class="line-number">97</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -400,9 +322,9 @@
 	<div class="method-signature">
 		<span class="method-result">bool</span>
 		<span class="method-name">
-			set
+			replace
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$life</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -417,7 +339,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">valid</span> (line <span class="line-number">197</span>)
+		<span class="method-title">valid</span> (line <span class="line-number">151</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -432,7 +354,7 @@
 		<span class="method-name">
 			valid
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$life</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -460,7 +382,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Mon, 30 May 2005 15:58:06 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Wed, 22 Jun 2005 16:08:43 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

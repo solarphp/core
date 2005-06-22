@@ -125,12 +125,6 @@
 									</div>
 								
 				<div class="method-definition">
-											<span class="method-result">int</span>
-										<a href="#defaultPushCallback" title="details" class="method-name">defaultPushCallback</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$err</span>)
-									</div>
-								
-				<div class="method-definition">
 											<span class="method-result">array</span>
 										<a href="#pop" title="details" class="method-name">pop</a>
 										()
@@ -140,6 +134,12 @@
 											<span class="method-result">void</span>
 										<a href="#push" title="details" class="method-name">push</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$code</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$text</span> = <span class="var-default">''</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$info</span> = <span class="var-default">array()</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">null</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$trace</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#pushCallback" title="details" class="method-name">pushCallback</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$err</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -165,7 +165,7 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -179,7 +179,7 @@
 <p class="short-description">User-provided configuration.</p>
 <p class="description"><p>Keys are:</p><p>push_callback =&gt; (string|array) The callback when you call push().</p><p>pop_callback =&gt; (string|array) The callback when you call pop().</p><p>trace =&gt; (bool) Whether or not to debug_backtrace() errors.</p><p>level =&gt; (int) Default error level, e.g. E_USER_NOTICE.</p></p>
 	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
+				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	
@@ -194,7 +194,7 @@
 
 </div>
 <a name="var$stack" id="$stack"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -231,7 +231,7 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">Constructor __construct</span> (line <span class="line-number">119</span>)
@@ -261,7 +261,7 @@
 		
 	</div>
 <a name="methodcount" id="count"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">count</span> (line <span class="line-number">233</span>)
@@ -280,32 +280,6 @@
 			count
 		</span>
 				()
-			</div>
-	
-		
-		
-	</div>
-<a name="methoddefaultPushCallback" id="defaultPushCallback"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">defaultPushCallback</span> (line <span class="line-number">251</span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">A naive push callback.</p>
-<p class="description"><p>Will print out WARNINGs and ERRORs, will die() on ERRORs.</p></p>
-	<ul class="tags">
-				<li><span class="field">return:</span> The number of errors on the stack.</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">int</span>
-		<span class="method-name">
-			defaultPushCallback
-		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$err</span>)
 			</div>
 	
 		
@@ -380,11 +354,37 @@
 		
 		
 	</div>
-<a name="method__toString" id="__toString"><!-- --></a>
+<a name="methodpushCallback" id="pushCallback"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">__toString</span> (line <span class="line-number">276</span>)
+		<span class="method-title">pushCallback</span> (line <span class="line-number">251</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">A naive push callback.</p>
+<p class="description"><p>Will print out WARNINGs and ERRORs, will die() on ERRORs.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The number of errors on the stack.</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			pushCallback
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$err</span>)
+			</div>
+	
+		
+		
+	</div>
+<a name="method__toString" id="__toString"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">__toString</span> (line <span class="line-number">273</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -421,7 +421,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Mon, 30 May 2005 15:57:51 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Wed, 22 Jun 2005 16:08:31 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

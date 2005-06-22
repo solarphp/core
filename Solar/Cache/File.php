@@ -138,7 +138,7 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	*/
 	
-	public function replace($key, $data)
+	public function replace($key, $data, $life = null)
 	{
 		// should the data be serialized?
 		if (is_array($data) || is_object($data)) {

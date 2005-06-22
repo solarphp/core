@@ -49,7 +49,7 @@ class Solar_Sql_Result extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'rsrc'  => null,
 		'class' => null
 	);
@@ -79,7 +79,8 @@ class Solar_Sql_Result extends Solar_Base {
 	* 
 	* Fetches an associatve row array and advances to next row.
 	* 
-	* Always forces the keys to lower-case.
+	* Always forces the keys to lower-case and rtrim()s the values
+	* for consistency between all drivers.
 	* 
 	* @access public
 	* 
@@ -96,10 +97,13 @@ class Solar_Sql_Result extends Solar_Base {
 			$this->config['rsrc']
 		);
 		
+		// force field names to lower-case, rtrim() all data
 		if (is_array($row)) {
 			array_change_key_case($row, CASE_LOWER);
+			array_walk($row, 'rtrim');
 		}
 		
+		// done
 		return $row;
 	}
 	
@@ -118,10 +122,18 @@ class Solar_Sql_Result extends Solar_Base {
 	public function fetchNum()
 	{
 		// make a static call to the fetchNum() method from the driver
-		return call_user_func(
+		$row = call_user_func(
 			array($this->config['class'], 'fetchNum'),
 			$this->config['rsrc']
 		);
+		
+		// rtrim() all data
+		if (is_array($row)) {
+			array_walk($row, 'rtrim');
+		}
+		
+		// done
+		return $row;
 	}
 	
 	

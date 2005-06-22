@@ -248,7 +248,7 @@ sc_blog_drafts
 	title
 	body
 
-sc_blog_links -- blogroll
+sc_blog_links -- blogroll  (use Bookmarks instead?)
 	id    -- unique ID
 	area  -- which wiki area
 	type  -- broad category

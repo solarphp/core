@@ -46,7 +46,7 @@ class Solar_User extends Solar_Base
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'auth' => null,
 		'role' => null,
 		'pref' => null,

@@ -56,7 +56,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale' => 'Solar/Sql/Driver/Locale/',
 		'host'   => null,
 		'port'   => null,

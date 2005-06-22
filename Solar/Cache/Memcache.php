@@ -57,19 +57,6 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	/**
 	* 
-	* Catalog of when keys were saved into the cache.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $catalog = array();
-	
-	
-	/**
-	* 
 	* A memcache client object.
 	* 
 	* @access protected
@@ -107,10 +94,9 @@ class Solar_Cache_Memcache extends Solar_Base {
 	* 
 	*/
 	
-	public function replace($key, $data)
+	public function replace($key, $data, $life)
 	{
-		$this->catalog[$key] = time();
-		return $this->memcache->set($key, $data);
+		return $this->memcache->replace($key, $data, $life);
 	}
 	
 	
@@ -146,7 +132,6 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	public function delete($key)
 	{
-		unset($this->catalog[$key]);
 		$this->memcache->delete($key);
 	}
 	
@@ -165,23 +150,7 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	public function valid($key, $life)
 	{
-		// is the entry in the catalog?
-		if (empty($this->catalog[$key])) {
-			echo "not in catalog\n";
-			return false;
-		}
-		
-		// is the entry past its lifetime?
-		if ($this->catalog[$key] + $life > time()) {
-			// past its lifetime, remove from the cache
-			echo "past lifetime\n";
-			unset($this->catalog[$key]);
-			$this->delete($key);
-			return false;
-		}
-		
-		// assume it's still at the cache
-		return true;
+		return (bool) $this->memcache->get($key);
 	}
 	
 	

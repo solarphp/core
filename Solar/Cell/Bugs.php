@@ -65,13 +65,13 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 	* priority => (array) Sequential array of priority strings in order from
 	* lowest to highest.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		
 		// directory for local strings
 		'locale' => 'Solar/Cell/Bugs/Locale/',

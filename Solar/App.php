@@ -32,13 +32,13 @@ abstract class Solar_App extends Solar_Base {
 	* 
 	* User-defined configuration array.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale'     => null,
 		'views'      => null,
 	);

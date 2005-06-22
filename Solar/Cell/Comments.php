@@ -50,13 +50,13 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 	* rules_callback => (string|array) A call_user_func() callback to
 	* apply rule filters to the comment.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'locale'         => 'Solar/Cell/Comments/Locale/',
 		'rules_callback' => array('Solar_Cell_Comments_Rules', 'apply'),
 	);

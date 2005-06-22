@@ -148,7 +148,8 @@ class Solar {
 		// load the autoshare objects ...
 		$list = Solar::config('Solar', 'autoshare', array());
 		
-		// make sure 'user' is there somewhere (by default, at the top)
+		// make sure 'user' is there somewhere (by default, at the top).
+		// we do this so that its __solar('stop') method gets called.
 		if (! in_array('user', $list)) {
 			array_unshift($list, 'user');
 		}

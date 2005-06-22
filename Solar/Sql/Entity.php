@@ -60,7 +60,7 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	*/
 	
 	
-	public $config = array(
+	protected $config = array(
 		'sql'           => 'sql',
 		'auto_create'   => true,
 		'rows_per_page' => 10,
@@ -237,6 +237,9 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 			);
 		}
 		
+		// make sure rowsPerPage is valid
+		$this->setRowsPerPage($this->config['rows_per_page']);
+		
 		// attempt to create the table
 		if ($this->config['auto_create']) {
 			$this->createTable();
@@ -286,6 +289,42 @@ abstract class Solar_Sql_Entity extends Solar_Base {
 	public function quote($value)
 	{
 		return $this->sql->quote($value);
+	}
+	
+	
+	/**
+	* 
+	* Gets the number of rows per page.
+	* 
+	* @access public
+	* 
+	* @return int The number of rows per page.
+	* 
+	*/
+	
+	public function rowsPerPage()
+	{
+		return $this->config['rows_per_page'];
+	}
+	
+	
+	/**
+	* 
+	* Sets the number of rows per page.
+	* 
+	* @access public
+	* 
+	* @param int $num The number of rows per page.
+	* 
+	*/
+	
+	public function setRowsPerPage($num)
+	{
+		if ($num < 1) {
+			$num = 1;
+		}
+		
+		$this->config['rows_per_page'] = (int) $num;
 	}
 	
 	

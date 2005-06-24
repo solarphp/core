@@ -1,0 +1,486 @@
+<?xml version="1.0"?>
+<package packagerversion="1.4.0a12" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Solar</name>
+ <channel>solarphp.com</channel>
+ <summary>Simple object library and application repository for PHP.</summary>
+ <description>Solar is a class library and application component suite for PHP 5 (and
+is PHP5 E_STRICT compliant). Solar provides simple, easy-to-comprehend
+classes and components for the common aspects of web-based rapid
+application development.
+
+Solar is designed for developers who intend to distribute their
+applications to the whole world.  This means, for example, the database
+driver functions work exactly the same way for each supported database. 
+It also means that localization support is built in from the start.
+
+Please visit http://solarphp.com/ for more information.
+ </description>
+ <lead>
+  <name>Paul M. Jones</name>
+  <user>pmjones</user>
+  <email>pmjones@solarphp.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2005-06-24</date>
+ <time>14:51:13</time>
+ <version>
+  <release>0.4.0</release>
+  <api>0.4.0</api>
+ </version>
+ <stability>
+  <release>devel</release>
+  <api>devel</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/lgpl-license.php">LGPL</license>
+ <notes>* WARNING: This is a public development release, and is not yet stable.
+
+* WARNING: There are BC breaks in this release.
+
+* Per general PHP coding guidelines, which restrict names starting with
+double-underscores to core PHP functionality, the __solar() hook method
+has been renamed to solar().
+
+* Converted the Solar_Base::$config array to &quot;protected&quot; (it used to be
+public). This means you can no longer work with config settings on
+Solar_Base-derived classes unless you use getter and setter methods.
+Changed all derived classes to use a protected $config when they
+override the Solar_Base property.
+
+* Solar_Error (BC BREAK): Renamed defaultPushCallback() to just
+pushCallback(), and made it protected. Removed ob_end_flush() calls from
+E_WARNING loop in the pushCallback().
+
+* Solar_Super: Cookies now have strip_tags() applied by default to
+prevent user-edited cookies causing XSS attacks.
+
+* Solar_Locale (BC BREAK): Removed protected property for $code, added
+setter for it (&quot;setCode()&quot;) and getter (simply &quot;code()&quot;). The code()
+method no longer does double-duty as getter and setter.
+
+* Solar_Valid: Added inKeys() validation method. Whereas inList() checks
+against the values of an array, inKeys() checks against the keys of an
+array.
+
+* Solar_Cache (BC BREAKS):
+
+  * Removed public $active property in favor of setter and getter
+  methods on the protected config key (setActive() and active(),
+  respectively).
+
+  * Renamed methods to conform with proposed naming conventions: set
+  =&gt; replace, get =&gt; fetch (also checks validity now), del =&gt; delete
+  (also checks if caching is active now), clear =&gt; deleteAll (also
+  checks if caching is active now).  Changed underlying driver APIs as
+  well.
+
+  * The entry() method now maps to the underlying driver entry()
+  method.
+
+  * Removed valid() method from the master and all drivers.
+
+  * Solar_Cache_File now always locks files for reading and writing.
+
+* Solar_Sql_Result: now performs rtrim() on all fetched rows for
+consistency between all drivers.
+
+* Solar_Sql_Entity: added getter rowsPerPage() and setter
+setRowsPerPage().
+
+* Added first set of unit tests for Solar_Cache
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="2559b82bbb718dbdd02d03c8dec17244" name="docs/Solar.config.php" role="doc" />
+   <file baseinstalldir="/" md5sum="8a3a377b5d29311c2f02d0c98bbf02a5" name="docs/todo.txt" role="doc" />
+   <file baseinstalldir="/" md5sum="756af607871ebeada58a2c6fda8a4224" name="docs/api/blank.html" role="doc" />
+   <file baseinstalldir="/" md5sum="67d6626b0289dd2ee117c927a3001ec9" name="docs/api/classtrees_Savant3.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7647fce809b140da0620bd78dbe61a88" name="docs/api/classtrees_Solar.html" role="doc" />
+   <file baseinstalldir="/" md5sum="41f082162e8380e3a0320d03a4d9f62d" name="docs/api/classtrees_Solar_App.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2ae75c36117e6d1bdb8a6729e8f1a92f" name="docs/api/classtrees_Solar_Cell.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6db805d075ebb0eb9570d24dacf1ba7c" name="docs/api/elementindex.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f43c380ab8cafaa5a9398a1965813cc0" name="docs/api/elementindex_Savant3.html" role="doc" />
+   <file baseinstalldir="/" md5sum="862b4403c24a137e1def8dfc96a262f8" name="docs/api/elementindex_Solar.html" role="doc" />
+   <file baseinstalldir="/" md5sum="57160dad94289d5950e2bf1c6e453bd6" name="docs/api/elementindex_Solar_App.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9ae6498ea98d1438a08c27cbbbc85b72" name="docs/api/elementindex_Solar_Cell.html" role="doc" />
+   <file baseinstalldir="/" md5sum="db07ef16f6ccde350e7a4c0af6c50de7" name="docs/api/errors.html" role="doc" />
+   <file baseinstalldir="/" md5sum="22ad217594feb52ee1f45ff02aa9b9c6" name="docs/api/index.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d4eddc28b6c176c3f45bfd16d01d3574" name="docs/api/li_Savant3.html" role="doc" />
+   <file baseinstalldir="/" md5sum="dc434741edbd15104501acae74b92143" name="docs/api/li_Solar.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0916866a80171857ede383d212c9da76" name="docs/api/li_Solar_App.html" role="doc" />
+   <file baseinstalldir="/" md5sum="032b541a10d785e01cef2854f0bbf176" name="docs/api/li_Solar_Cell.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9c6f8b40d805c60304e3504ae7cd9525" name="docs/api/packages.html" role="doc" />
+   <file baseinstalldir="/" md5sum="70e64ce3fdea105c9c966d99971477ea" name="docs/api/todolist.html" role="doc" />
+   <file baseinstalldir="/" md5sum="039cb8781dae7b5f5661dc2892fb53b5" name="docs/api/media/banner.css" role="doc" />
+   <file baseinstalldir="/" md5sum="83e68bcaf4bdaf71d60028a3402ed38f" name="docs/api/media/stylesheet.css" role="doc" />
+   <file baseinstalldir="/" md5sum="31fa460038a9872ba247d881244ffc07" name="docs/api/Savant3/Savant3.html" role="doc" />
+   <file baseinstalldir="/" md5sum="289be016f158f75d38e2d5387d96298c" name="docs/api/Savant3/Savant3_Error.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f0c06f83930899c3a13a8c746b1b5f8b" name="docs/api/Savant3/Savant3_Error_exception.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7aee0bd34b2100f2c1c7219831d90a45" name="docs/api/Savant3/Savant3_Error_pear.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ff22687689c94654f93eec6b04d6407e" name="docs/api/Savant3/Savant3_Error_solar.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0c7f780c5df41254e52489573cb3f440" name="docs/api/Savant3/Savant3_Error_stack.html" role="doc" />
+   <file baseinstalldir="/" md5sum="01949f0b9f818cb7120c7bf0fa18c37a" name="docs/api/Savant3/Savant3_Exception.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f51657d1d34fef60e69b4865dd5ba4e9" name="docs/api/Savant3/Savant3_Filter.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b4662eca38e2aea0c1f3172d6e99be9a" name="docs/api/Savant3/Savant3_Filter_trimwhitespace.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d8ccab2e1c3910fe14ee2a97097dcb9f" name="docs/api/Savant3/Savant3_Plugin.html" role="doc" />
+   <file baseinstalldir="/" md5sum="797f07aa94d906cf1c0da93e51d774f9" name="docs/api/Savant3/Savant3_Plugin_ahref.html" role="doc" />
+   <file baseinstalldir="/" md5sum="eb7169be65156bb2365b2d03e6e73eae" name="docs/api/Savant3/Savant3_Plugin_date.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0e24ccc0bd7472e834d9e87ffd99cd08" name="docs/api/Savant3/Savant3_Plugin_fester.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3afdc54fe5d65d18b1fb93760e1f5cb3" name="docs/api/Savant3/Savant3_Plugin_form.html" role="doc" />
+   <file baseinstalldir="/" md5sum="69c9c01c03a029caed9f8565418f8d4d" name="docs/api/Savant3/Savant3_Plugin_image.html" role="doc" />
+   <file baseinstalldir="/" md5sum="90717acb17d6ab154185c9c10307cdfc" name="docs/api/Savant3/Savant3_Plugin_scrub.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0c86f3b252b930ac3b84a3dd3f5d162c" name="docs/api/Savant3/Solar_Template.html" role="doc" />
+   <file baseinstalldir="/" md5sum="8ff0b35529ce8e4ab2d09d5fc32587c9" name="docs/api/Savant3/_Solar_Template_Savant3_Error_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0f542c77cbd5dcfbc347b10968815220" name="docs/api/Savant3/_Solar_Template_Savant3_Exception_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c5077e60f3e6a3ccc850fabd9ca47804" name="docs/api/Savant3/_Solar_Template_Savant3_Filter_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="17063aa26f85daddce179b3ebd678a1d" name="docs/api/Savant3/_Solar_Template_Savant3_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="216bff83bcf51b044221ba3b0dcfc75c" name="docs/api/Savant3/_Solar_Template_Savant3_Plugin_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cb9b020392bbdaa4d385efea77410561" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Error_exception_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cb645611515511498bf5b5f0723e3758" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Error_pear_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9fba032ba8a73b18676f54011c5f382c" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Error_solar_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="604b7159057bd9c7ff3e0b827b4c5175" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Error_stack_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="92084c6f0b23a60ba14e3dbeb37d3477" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Filter_trimwhitespace_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f26fe4cbb73deaf1d2aa09a6c5fb3da4" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_ahref_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="af12311a1cc8bc0ed3c7b834ef3a7ee9" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_date_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="81d6d7067023f8f303d723be96c72c2d" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="51a403c924d9d304f1dce50b2ae68022" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_image_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="55a248d6428bf1e0f2484374237083d8" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_scrub_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cb028a49960ad81573f9d9d4b9f2fd3a" name="docs/api/Solar/PEAR.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c97345f8e9f84b3a73c717b53e2e7bc0" name="docs/api/Solar/PEAR_Error.html" role="doc" />
+   <file baseinstalldir="/" md5sum="bdebd1a27f7c570f9919374d3bac56b8" name="docs/api/Solar/Solar.html" role="doc" />
+   <file baseinstalldir="/" md5sum="dcbe50a748141dc9add699afb97b813f" name="docs/api/Solar/Solar_Base.html" role="doc" />
+   <file baseinstalldir="/" md5sum="a00f46aad7312976ad328f1983afaed5" name="docs/api/Solar/Solar_Error.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7afd9f315a951cfde4f099d1850f8b6e" name="docs/api/Solar/Solar_Form.html" role="doc" />
+   <file baseinstalldir="/" md5sum="19a6e6926b5528397a36e5e436b2a7d7" name="docs/api/Solar/Solar_Locale.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d42e4779a38fce9655e7b9dbe1ea7e48" name="docs/api/Solar/Solar_Super.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f9d694cd71dd6d04954d09bb63111674" name="docs/api/Solar/Solar_Uri.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d165db53081a707f7de371b53a847a64" name="docs/api/Solar/Solar_Valid.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9e7eb7f862aebcf125b87450b9f95855" name="docs/api/Solar/_docs_Solar_config_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="a524b90710672e5efd81afa75e99a7e5" name="docs/api/Solar/_Solar_Base_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="dc1c0df7bdd91fafb98a970542251557" name="docs/api/Solar/_Solar_Error_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e4ba89025207e3291c4436ecb2e7cc69" name="docs/api/Solar/_Solar_Form_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0620ef4ccbf5eafbcfd9c0613c01fd19" name="docs/api/Solar/_Solar_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="481c82ccd4dfc9717839b694fdc9402c" name="docs/api/Solar/_Solar_Locale_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b3914e0663ed24f8c00b27927b6b7ef1" name="docs/api/Solar/_Solar_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6acecfed51a5f60c19931d016e83038b" name="docs/api/Solar/_Solar_Sql_Driver_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="25951de0c0e0374d8f30d4a63420378b" name="docs/api/Solar/_Solar_Super_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="49be3572f8d8a069ca95df47f5ef0710" name="docs/api/Solar/_Solar_Template_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b70e259e881c0271fa93b58873ee962e" name="docs/api/Solar/_Solar_Template_Savant3_tests_00_prepend_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cf3e72f0cbec2ea7331c1ce3fbf24705" name="docs/api/Solar/_Solar_Template_Savant3_tests_04_plugins_form_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ebfdec96670b2588641716b04becf987" name="docs/api/Solar/_Solar_Template_Savant3_tests_resources_PEAR_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="8c5b7c016389682c7c8c112c9cbc1e97" name="docs/api/Solar/_Solar_Template_Savant3_tests_resources_Savant3_Plugin_fester_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="85bacb37d08658fd0c5b9b2aeb54c1b7" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_02_output_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="65478ac0fa8e7aee63d0015569f77fae" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_03_filters_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="be9937eae8c39ff36861f7893550b9d4" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_ahref_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="aaf6fb34c441b4e50a63be5bc9c49f62" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_date_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4bf1ec972cec921fec9f5b3e29b017b2" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_fester_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3a1e2cc96baa16bd1dc2db9f0ff073b4" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_form_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f481abadf77112a2d365fa2de5167ed3" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_image_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="fa148db6d663cf987a0e3800285a3aac" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_04_plugins_scrub_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e9125fdf1e5ff0fef2c960ad0ee9eab9" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_06_includes_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4a55ee8f8aaeebfbe086593f48f5194d" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_footer_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="98f8201266d7a053b16cdeddd45560dd" name="docs/api/Solar/_Solar_Template_Savant3_tests_templates_header_tpl_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="21fbf64999a7f97d2bf0a9d76cf5bef7" name="docs/api/Solar/_Solar_Uri_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9868984aa545c1e03b3faa5961b0a172" name="docs/api/Solar/_Solar_User_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="5e3ee065818455105fc4552d27f9b459" name="docs/api/Solar/_Solar_Valid_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="213c83ae8c4aec91d9e96b4543672418" name="docs/api/Solar/Solar_Cache/Solar_Cache.html" role="doc" />
+   <file baseinstalldir="/" md5sum="909fe4c8240711bfa0c77dae245172a8" name="docs/api/Solar/Solar_Cache/Solar_Cache_File.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d5c27b45ab926a0ce551883a5af790d8" name="docs/api/Solar/Solar_Cache/Solar_Cache_Mem.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e34add0a311a708054b4834ffec256dd" name="docs/api/Solar/Solar_Cache/Solar_Cache_Memcache.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c43fe3a41788327bc31ddba79c5d572d" name="docs/api/Solar/Solar_Cache/_Solar_Cache_File_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="138cf43083d11739cbb8d892693560ce" name="docs/api/Solar/Solar_Cache/_Solar_Cache_Memcache_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2bbba983f3923f8b3a5012fff2fff3b1" name="docs/api/Solar/Solar_Cache/_Solar_Cache_Mem_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7bd36f6c5405a9cc68fedd26f5865e48" name="docs/api/Solar/Solar_Cache/_Solar_Cache_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6faa127839c2284cbdb92602fc82ff93" name="docs/api/Solar/Solar_Debug/Solar_Debug_Timer.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9bc4f53b07ce3c7c5bcd37434ebc865e" name="docs/api/Solar/Solar_Debug/_Solar_Debug_Timer_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="5f1d081ef597d1f3cd29ccd9bac06ae1" name="docs/api/Solar/Solar_Locale/Solar_Locale.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ce57e724bfbfeb12d2c8206f7f5781fa" name="docs/api/Solar/Solar_Locale/_Solar_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ef5c53f3bf81a769ddee9c5518833aa3" name="docs/api/Solar/Solar_Locale/_Solar_Locale_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4ddcb8a723379ba5ba4c10a20068beb6" name="docs/api/Solar/Solar_Sql/Solar_Sql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3d92727daacfca1d6ac23a51fdc121cb" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4c8f4fb0163da535e6c04feea49d1386" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="dfd89c47df225f56c2de7c4df4eaad91" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="41c046f0bb91bd3b233cc809f349a5b5" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver_Mysql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="77dd80e5fda69e0302475691c74a4113" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver_Pgsql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9838cbac0e3e78f9bacbf103572593b2" name="docs/api/Solar/Solar_Sql/Solar_Sql_Driver_Sqlite.html" role="doc" />
+   <file baseinstalldir="/" md5sum="8b10b412e78e4f7ed1c40cf9b0cb82ce" name="docs/api/Solar/Solar_Sql/Solar_Sql_Entity.html" role="doc" />
+   <file baseinstalldir="/" md5sum="05be82ce946bf65bb19294194aa0df97" name="docs/api/Solar/Solar_Sql/Solar_Sql_Reserved.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c836ff8bf8f7d0624dbd6f19ecf16e9d" name="docs/api/Solar/Solar_Sql/Solar_Sql_Result.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3097cf03678aa5c4d9a0e58b486b2f8f" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Fbsql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0c7519d3cfa3fffc6dc878e61b9790ea" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="1591643a057113458746831c0c3a5778" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Mssql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="628ee5532b2117f70eca67fe03a4c705" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Mysql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9742f5aa7137838d71b65e8671b086ca" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Pgsql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7a767443600f0e61b10c10aaac682db5" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d7d37c10f8520570b5049d33a0ecabbf" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Sqlite_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c8f246977302ac12489b857b3765603a" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Entity_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="1e5675c17dc7b961f07d2cb97b42e6fe" name="docs/api/Solar/Solar_Sql/_Solar_Sql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="fe467cc3bb08609fff1dcb4c5dd09db7" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Reserved_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="90e415878a538a5f815c2a59f7f0c127" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Result_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e69b6293dd21e02a689c50c30ba4edea" name="docs/api/Solar/Solar_Template/Solar_Template.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4dc43e368fd58c6ce80f425ded02a10d" name="docs/api/Solar/Solar_Template/_Solar_Template_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9218afe5a8d7adae713c97e69c435a6c" name="docs/api/Solar/Solar_User/Solar_User.html" role="doc" />
+   <file baseinstalldir="/" md5sum="5ff3e0ba29cc5265983263486f040c7d" name="docs/api/Solar/Solar_User/Solar_User_Auth.html" role="doc" />
+   <file baseinstalldir="/" md5sum="65ded4a1fc1dee5e182dc313c82a6787" name="docs/api/Solar/Solar_User/Solar_User_Auth_Htpasswd.html" role="doc" />
+   <file baseinstalldir="/" md5sum="260015ba709fd5d43003560d097f36d6" name="docs/api/Solar/Solar_User/Solar_User_Auth_Ini.html" role="doc" />
+   <file baseinstalldir="/" md5sum="15bc87ed6c1a91ff2a3c67b87ce5d15f" name="docs/api/Solar/Solar_User/Solar_User_Auth_Ldap.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d99762dfd00cc4424c356af31e779f51" name="docs/api/Solar/Solar_User/Solar_User_Auth_Mail.html" role="doc" />
+   <file baseinstalldir="/" md5sum="27c36f03aa9674f7af1599ff28dea82f" name="docs/api/Solar/Solar_User/Solar_User_Auth_Multi.html" role="doc" />
+   <file baseinstalldir="/" md5sum="0c4f34c7be6f33c7d9f46bac31e0a158" name="docs/api/Solar/Solar_User/Solar_User_Auth_None.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9c2616b85a5dfd2db2c1e33855f986b7" name="docs/api/Solar/Solar_User/Solar_User_Auth_Sql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="17b5acdd3a7cf1a5b46e902dbe85e5d4" name="docs/api/Solar/Solar_User/Solar_User_Role.html" role="doc" />
+   <file baseinstalldir="/" md5sum="614b0dc0557b82a9984c085c9afdf00d" name="docs/api/Solar/Solar_User/Solar_User_Role_File.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9fa63a001fd8361eb8de8883ff888737" name="docs/api/Solar/Solar_User/Solar_User_Role_Ldap.html" role="doc" />
+   <file baseinstalldir="/" md5sum="fe15b06f8ebe5f50b41f6d4cac8b2b2f" name="docs/api/Solar/Solar_User/Solar_User_Role_Multi.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cde8b26cbb530a590ccc0f507cd08e9b" name="docs/api/Solar/Solar_User/Solar_User_Role_None.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cfa66af340cf98910743803c9a7c0d4b" name="docs/api/Solar/Solar_User/Solar_User_Role_Sql.html" role="doc" />
+   <file baseinstalldir="/" md5sum="afa5362d3ce4b0c697830204ea4643f5" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Htpasswd_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="459f61b362198c01300d860e16c24ad0" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Ini_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b61d52d746d2ad3b08d6d0f56305b812" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Ldap_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="02faaecbe997e3c3caed9dc5850c068b" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Mail_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="478062cbc12bc19830326e2bcae32a0c" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Multi_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="7eba75db342ce1645155ca8181d51b35" name="docs/api/Solar/Solar_User/_Solar_User_Auth_None_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6a4d97774f39fab8225556420ac87a55" name="docs/api/Solar/Solar_User/_Solar_User_Auth_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2ae8c5cc0cce43cbcfb345ffd4866b5e" name="docs/api/Solar/Solar_User/_Solar_User_Auth_Sql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="8bfad9646715fd46fad1d63e9ddd0531" name="docs/api/Solar/Solar_User/_Solar_User_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f68e7fc7e17c0331deef588b8285f7a0" name="docs/api/Solar/Solar_User/_Solar_User_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d799729001faff4cfb909f6e0ee6631b" name="docs/api/Solar/Solar_User/_Solar_User_Role_File_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="a920c18389d7b5b3688ee5685bb7fe99" name="docs/api/Solar/Solar_User/_Solar_User_Role_Ldap_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="112f5c3b7bf76d447372abffa6fbd437" name="docs/api/Solar/Solar_User/_Solar_User_Role_Multi_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="c5de1c8f56746d819ca5b4b4c3d8544d" name="docs/api/Solar/Solar_User/_Solar_User_Role_None_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="bc2b0dd53eb8884f52c29b53f5db7cf3" name="docs/api/Solar/Solar_User/_Solar_User_Role_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="08feb17f809267e039e2baa4cb2f5c2d" name="docs/api/Solar/Solar_User/_Solar_User_Role_Sql_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="adeff68d8e9f3625516e5241da90f4f9" name="docs/api/Solar_App/Solar_App.html" role="doc" />
+   <file baseinstalldir="/" md5sum="046c572e78dbbd21a6c633a62dd60de8" name="docs/api/Solar_App/_Solar_App_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b29e4d0e38d5bb795c3ca8e1e1b8cd5f" name="docs/api/Solar_App/Solar_App_Bookmarks/Solar_App_Bookmarks.html" role="doc" />
+   <file baseinstalldir="/" md5sum="168d6195369ce7d4492030f115891c10" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_controllers_edit_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e7d803d5975f5754f85b3ed14d9dbad3" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_controllers_tag_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d22de437b6f9771d421eacdc2e389d00" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_controllers_user_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="17b6e1e3dfd33aae80ca34e899c47f9b" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_helpers_locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6ff5087481ff33ff477c2c66e16c48b4" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_helpers_prepend_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6fcc22a0652e9b9c6032b0e4ff177897" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_index_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="343b41372a237229af8584042530dd88" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="686e95edb4e56e2f102d9a5b93ea56a3" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_auth_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="d861df82d173e81d6589d1417357b682" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_edit_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f2a0ee621a2c9d71167d54655790f184" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_error_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="5307e231a0d6e6baf033c87bf629b470" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_footer_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="553baca3e78484211fa294c265f4a8e7" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_header_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="01cbca293b1c4fec6df7c7d76b3aeae0" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_list_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="04cf5ac00ffd9c3a077776d51d84dc80" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_views_rss_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2638782ef78a955da9c92cf43eba7ccb" name="docs/api/Solar_App/Solar_App_Bugs/Solar_App_Bugs.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f86baf950f53fdec451b6b338e187735" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_controllers_edit_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="cb10603abeda2eaeaf292605f8d605c1" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_controllers_item_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="1fd5b39ac84401b8c969cdf96a00e9ad" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_controllers_listAll_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="840369629cdfe2f77f6caf1853dd3c41" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_controllers_listOpen_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2889e8b28f2359b0cd14dc997d0d7ee0" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_helpers_locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="a3a6a316f6c8fd20f6622e8eb287b8d7" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_helpers_prepend_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e5276a7e26fc92ff5d61bf25a20500f2" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_index_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="af4c9ce60729d2ddbfa331f723004ded" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f7594bdb9e54978c6bfa0d8a09c0669b" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_auth_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="83d89347ec6c03720beba6344d0a04df" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_comments_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="1cda141773844d193d6098a205846ee1" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_edit_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4ff402dbecffc67b340b9739856e25f9" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_error_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="b693802cd5ad0d7931ded755a7900cc0" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_footer_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2fcd43147936da91aabb4424db80892c" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_header_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="2ced4889f9dc139d72f74724050431a7" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_item_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="4a2e78db8006b2edab5e75dff0d9d3f4" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_list_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e81988e2180b2324ce96571f478bddec" name="docs/api/Solar_Cell/Solar_Cell_Bookmarks/Solar_Cell_Bookmarks.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ed598c694d0e66ea8350e99979d4b9cd" name="docs/api/Solar_Cell/Solar_Cell_Bookmarks/_Solar_Cell_Bookmarks_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="9e79ae0439de249442a9f48eddbe1cbf" name="docs/api/Solar_Cell/Solar_Cell_Bookmarks/_Solar_Cell_Bookmarks_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="400608d0e05abfb2215d9ad6627f0802" name="docs/api/Solar_Cell/Solar_Cell_Bugs/Solar_Cell_Bugs.html" role="doc" />
+   <file baseinstalldir="/" md5sum="f8e48f0351078089f4733b6e037abcca" name="docs/api/Solar_Cell/Solar_Cell_Bugs/_Solar_Cell_Bugs_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="8d7e751a64dc63629751c033fc12b88e" name="docs/api/Solar_Cell/Solar_Cell_Bugs/_Solar_Cell_Bugs_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="98a39d1feb0ead7bf80c3a2c8fa4f846" name="docs/api/Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments.html" role="doc" />
+   <file baseinstalldir="/" md5sum="42584a2ef378799855dea083b13e55fb" name="docs/api/Solar_Cell/Solar_Cell_Comments/Solar_Cell_Comments_Rules.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ad073d3eae76be92c0e4e8610849a0c3" name="docs/api/Solar_Cell/Solar_Cell_Comments/_Solar_Cell_Comments_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="6d68681a1b5931e22f6569ad26136b43" name="docs/api/Solar_Cell/Solar_Cell_Comments/_Solar_Cell_Comments_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="e13c7b4bbee35c29ec9bdd9b749e9bea" name="docs/api/Solar_Cell/Solar_Cell_Comments/_Solar_Cell_Comments_Rules_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="ea5a1d025a689aed83d0c767c24767ef" name="docs/api/Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags.html" role="doc" />
+   <file baseinstalldir="/" md5sum="96e81890d5595c7102007e2edc01530a" name="docs/api/Solar_Cell/Solar_Cell_Tags/Solar_Cell_Tags_Bundle.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3717b1495ef7cbf204a706a3352671c4" name="docs/api/Solar_Cell/Solar_Cell_Tags/_Solar_Cell_Tags_Bundle_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="44d61dc7439e370a30b4c486c211633a" name="docs/api/Solar_Cell/Solar_Cell_Tags/_Solar_Cell_Tags_Locale_en_US_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="79fa0b89f1c827736e167c94338aad0f" name="docs/api/Solar_Cell/Solar_Cell_Tags/_Solar_Cell_Tags_php.html" role="doc" />
+   <file baseinstalldir="/" md5sum="3f8736d3cb003a4c96ea37fe7d355aed" name="Solar/App.php" role="php" />
+   <file baseinstalldir="/" md5sum="b449bc5b6516c7f9ab517afc5f3f0428" name="Solar/Base.php" role="php" />
+   <file baseinstalldir="/" md5sum="f915234688b8ebc86c32c1722e7c151d" name="Solar/Cache.php" role="php" />
+   <file baseinstalldir="/" md5sum="60a8223ea797ac6e08b686137a320235" name="Solar/Error.php" role="php" />
+   <file baseinstalldir="/" md5sum="42b75d677061c6f4251a8cbf5bad3a05" name="Solar/Form.php" role="php" />
+   <file baseinstalldir="/" md5sum="32fed18c31744568f0d67924058ccea9" name="Solar/Locale.php" role="php" />
+   <file baseinstalldir="/" md5sum="e9bd29e4133526fb05f8d9cf1f441033" name="Solar/Sql.php" role="php" />
+   <file baseinstalldir="/" md5sum="5ee52df8574429e296c7f905b0031930" name="Solar/Super.php" role="php" />
+   <file baseinstalldir="/" md5sum="e959da723fd86fb3520825bb0ec4de2c" name="Solar/Template.php" role="php" />
+   <file baseinstalldir="/" md5sum="9f8374b5da27b7990fbbcf5d13d22f4b" name="Solar/Uri.php" role="php" />
+   <file baseinstalldir="/" md5sum="6ae674ef313caf8c03f0f01817f1f0b8" name="Solar/User.php" role="php" />
+   <file baseinstalldir="/" md5sum="abc3107a6cf27aae5814d6978a16d4c0" name="Solar/Valid.php" role="php" />
+   <file baseinstalldir="/" md5sum="d88dbe13477394543d40fc158448168e" name="Solar/App/Bookmarks.php" role="php" />
+   <file baseinstalldir="/" md5sum="bdf222e0f1ce2d40af1d2209a30f2ce2" name="Solar/App/Bugs.php" role="php" />
+   <file baseinstalldir="/" md5sum="3d22dd7e7183eb3544ac7725ccb20bc1" name="Solar/App/Bookmarks/index.php" role="php" />
+   <file baseinstalldir="/" md5sum="9e20c8c7f1dcb7125759850922d030eb" name="Solar/App/Bookmarks/controllers/edit.php" role="php" />
+   <file baseinstalldir="/" md5sum="19af3526d4da9b91be46e5a8c3f85f5d" name="Solar/App/Bookmarks/controllers/tag.php" role="php" />
+   <file baseinstalldir="/" md5sum="38d516422fa7dd5d95d8527c4ea56b72" name="Solar/App/Bookmarks/controllers/user.php" role="php" />
+   <file baseinstalldir="/" md5sum="a7b3c81aef341ef6b1c2724681ea552d" name="Solar/App/Bookmarks/helpers/prepend.php" role="php" />
+   <file baseinstalldir="/" md5sum="6b6f2ff744ba99dd5eb9ff47018ba6c9" name="Solar/App/Bookmarks/helpers/locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="2482cc9a9d285c8ee07ea01858f085ae" name="Solar/App/Bookmarks/views/auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="021d29cf206b9401b89d45e2f645ddfc" name="Solar/App/Bookmarks/views/edit.php" role="php" />
+   <file baseinstalldir="/" md5sum="c1b9db0b8d331ddcd765a6d155b370df" name="Solar/App/Bookmarks/views/error.php" role="php" />
+   <file baseinstalldir="/" md5sum="3d0bdc1761c9f546c66d8b88cc012c11" name="Solar/App/Bookmarks/views/footer.php" role="php" />
+   <file baseinstalldir="/" md5sum="bc9079c175664c10e3e9cd4455849070" name="Solar/App/Bookmarks/views/header.php" role="php" />
+   <file baseinstalldir="/" md5sum="6b2c4ccecc7e6f949ea586115d7161bf" name="Solar/App/Bookmarks/views/list.php" role="php" />
+   <file baseinstalldir="/" md5sum="d97fb54a00d917b0f10b05221c809fc8" name="Solar/App/Bookmarks/views/rss.php" role="php" />
+   <file baseinstalldir="/" md5sum="452fccf1e905979d8569650120ea5b33" name="Solar/App/Bugs/index.php" role="php" />
+   <file baseinstalldir="/" md5sum="194310ae31fb5602d9936f02e32eb3ff" name="Solar/App/Bugs/controllers/edit.php" role="php" />
+   <file baseinstalldir="/" md5sum="9f9a593f49021f52cc29952404002e78" name="Solar/App/Bugs/controllers/item.php" role="php" />
+   <file baseinstalldir="/" md5sum="905829d5e7a0843e863012bfe7aa72d5" name="Solar/App/Bugs/controllers/listAll.php" role="php" />
+   <file baseinstalldir="/" md5sum="6cc70a8b65864a0e4f24cefe6bf465f0" name="Solar/App/Bugs/controllers/listOpen.php" role="php" />
+   <file baseinstalldir="/" md5sum="79ca18b47a689445c26bec1b2b214344" name="Solar/App/Bugs/helpers/prepend.php" role="php" />
+   <file baseinstalldir="/" md5sum="7c18a7cb0f6f45cb9f79439d447bc1a8" name="Solar/App/Bugs/helpers/locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="bdbdb8399e9ae9c90194e343657a3569" name="Solar/App/Bugs/views/auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="01d460028e1af443cbf02cadaa641d69" name="Solar/App/Bugs/views/comments.php" role="php" />
+   <file baseinstalldir="/" md5sum="50e2e765703386183f0de1858a3efb8e" name="Solar/App/Bugs/views/edit.php" role="php" />
+   <file baseinstalldir="/" md5sum="4fcaabc6128c27ef81434650c621630f" name="Solar/App/Bugs/views/error.php" role="php" />
+   <file baseinstalldir="/" md5sum="9fd425e5755cc2e2bbc5fea6cf4c5660" name="Solar/App/Bugs/views/footer.php" role="php" />
+   <file baseinstalldir="/" md5sum="41aa97d0fc60422de95dc23d5011972f" name="Solar/App/Bugs/views/header.php" role="php" />
+   <file baseinstalldir="/" md5sum="0fcd6cdec4b884cefc20818c6418a334" name="Solar/App/Bugs/views/item.php" role="php" />
+   <file baseinstalldir="/" md5sum="2b8b8722a90a5f5203e7b1181c16a320" name="Solar/App/Bugs/views/list.php" role="php" />
+   <file baseinstalldir="/" md5sum="e070911823ec42d54c24a40e9357466c" name="Solar/Cache/File.php" role="php" />
+   <file baseinstalldir="/" md5sum="dd06f737bb71738700a1dc2e257c5f45" name="Solar/Cache/Memcache.php" role="php" />
+   <file baseinstalldir="/" md5sum="f90dbc77e9e3b4b48bd300a56dbe692d" name="Solar/Cell/Bookmarks.php" role="php" />
+   <file baseinstalldir="/" md5sum="a8b1520303977d76117d6dd46861f264" name="Solar/Cell/Bugs.php" role="php" />
+   <file baseinstalldir="/" md5sum="7efbf4e05d3ce6751b520d42539dbfc5" name="Solar/Cell/Comments.php" role="php" />
+   <file baseinstalldir="/" md5sum="fe287c663dd032f5f0059e7cac6ad6d6" name="Solar/Cell/Tags.php" role="php" />
+   <file baseinstalldir="/" md5sum="33b98a95fb20bfd9e0bd326ad9db4c4d" name="Solar/Cell/Bookmarks/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="7eefc5ce9b3de3110ced8d75fb8ca8a3" name="Solar/Cell/Bugs/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="28428ff1f84f990c4d11c4200673716e" name="Solar/Cell/Comments/Rules.php" role="php" />
+   <file baseinstalldir="/" md5sum="05f06ee694440975e64fd143f161c440" name="Solar/Cell/Comments/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="f9970f440eb4b8e44ca4b3bb54702ac0" name="Solar/Cell/Tags/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="f5dd76db085b69bd9f53c9283252573d" name="Solar/Debug/Timer.php" role="php" />
+   <file baseinstalldir="/" md5sum="3a94526c3c4ac078afba3c63f85e5f64" name="Solar/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="245e49a3c8912e8d92540d01ad3e8988" name="Solar/Sql/Driver.php" role="php" />
+   <file baseinstalldir="/" md5sum="2e7c52ebf3374afdd1744354b04b17a9" name="Solar/Sql/Entity.php" role="php" />
+   <file baseinstalldir="/" md5sum="9a0589e766c506069434fee1c102b351" name="Solar/Sql/Reserved.php" role="php" />
+   <file baseinstalldir="/" md5sum="5433e7084cd727a0c92f3284019db286" name="Solar/Sql/Result.php" role="php" />
+   <file baseinstalldir="/" md5sum="8103401acc7323c483efc0cc55e62fe0" name="Solar/Sql/Driver/Fbsql.php" role="php" />
+   <file baseinstalldir="/" md5sum="3b1835b557e872d34a37061bc9632031" name="Solar/Sql/Driver/Mssql.php" role="php" />
+   <file baseinstalldir="/" md5sum="c1d2679580b8a15ed7fa1daa4990683e" name="Solar/Sql/Driver/Mysql.php" role="php" />
+   <file baseinstalldir="/" md5sum="181f49226774de4c008c63a0bfb0844b" name="Solar/Sql/Driver/Pgsql.php" role="php" />
+   <file baseinstalldir="/" md5sum="bb8684e53d5015f712fcf2768c74df5a" name="Solar/Sql/Driver/Sqlite.php" role="php" />
+   <file baseinstalldir="/" md5sum="b81fb4e0b70bd3b8e53a63a811dd97a7" name="Solar/Sql/Driver/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="9c51065353536bc77b63bd5ae1caa15d" name="Solar/Template/Savant3.php" role="php" />
+   <file baseinstalldir="/" md5sum="f512898f05b8d03ab6ae75d1921bd6e1" name="Solar/Template/Savant3/Error.php" role="php" />
+   <file baseinstalldir="/" md5sum="b0135d76f2ea31306b53bbbb35f8152d" name="Solar/Template/Savant3/Exception.php" role="php" />
+   <file baseinstalldir="/" md5sum="320a2e8ad3d6ef620bded072649865fb" name="Solar/Template/Savant3/Filter.php" role="php" />
+   <file baseinstalldir="/" md5sum="15864469682ca2e7e0e14de5cab4a0a8" name="Solar/Template/Savant3/Plugin.php" role="php" />
+   <file baseinstalldir="/" md5sum="7d7bf7645e29ae014a123c2e847d13c0" name="Solar/Template/Savant3/resources/Savant3_Filter_trimwhitespace.php" role="php" />
+   <file baseinstalldir="/" md5sum="73b095e1357ca6a09bdf94c3d622edfd" name="Solar/Template/Savant3/resources/Savant3_Plugin_ahref.php" role="php" />
+   <file baseinstalldir="/" md5sum="b3baf8b9322cf509402054d809f253c7" name="Solar/Template/Savant3/resources/Savant3_Plugin_date.php" role="php" />
+   <file baseinstalldir="/" md5sum="591b41b8cb4b8d470ae7f69d9cb0839a" name="Solar/Template/Savant3/resources/Savant3_Plugin_form.php" role="php" />
+   <file baseinstalldir="/" md5sum="09664018a4455370195ca8496bc1b399" name="Solar/Template/Savant3/resources/Savant3_Plugin_image.php" role="php" />
+   <file baseinstalldir="/" md5sum="9c06e72a571603d911fca64c5dab9f1c" name="Solar/Template/Savant3/resources/Savant3_Plugin_scrub.php" role="php" />
+   <file baseinstalldir="/" md5sum="743132e07d2ee43082f5bd81d8076034" name="Solar/User/Auth.php" role="php" />
+   <file baseinstalldir="/" md5sum="66f106d50218ce9d283cb0bd9a6a999e" name="Solar/User/Role.php" role="php" />
+   <file baseinstalldir="/" md5sum="8713dfa75dbdcd0de9333a3dc8b1a0b5" name="Solar/User/Auth/Htpasswd.php" role="php" />
+   <file baseinstalldir="/" md5sum="8993766cb12ca4e41679fb9b744f6d06" name="Solar/User/Auth/Ini.php" role="php" />
+   <file baseinstalldir="/" md5sum="0c29872bebd4dbd95ab2ea9bfb638958" name="Solar/User/Auth/Ldap.php" role="php" />
+   <file baseinstalldir="/" md5sum="836c9d120c0a7fb5c0e8859f9881d24f" name="Solar/User/Auth/Mail.php" role="php" />
+   <file baseinstalldir="/" md5sum="666d9a6f07ce828ad98b539c6ed1085e" name="Solar/User/Auth/Multi.php" role="php" />
+   <file baseinstalldir="/" md5sum="da44148c85e14b11e63365299b13a0cd" name="Solar/User/Auth/None.php" role="php" />
+   <file baseinstalldir="/" md5sum="dd99692cb6a425e82041f8f59a3f760f" name="Solar/User/Auth/Sql.php" role="php" />
+   <file baseinstalldir="/" md5sum="709034324e410dd0df0bbdb2640b24fc" name="Solar/User/Locale/en_US.php" role="php" />
+   <file baseinstalldir="/" md5sum="0316a3620a51819371d893302018412f" name="Solar/User/Role/File.php" role="php" />
+   <file baseinstalldir="/" md5sum="bcbd74f67d6bfb37283d810eb415560a" name="Solar/User/Role/Ldap.php" role="php" />
+   <file baseinstalldir="/" md5sum="33f43c9fa3193b095a36cd75259878c2" name="Solar/User/Role/Multi.php" role="php" />
+   <file baseinstalldir="/" md5sum="855ba380ffa2d544bfe4196402e08a04" name="Solar/User/Role/None.php" role="php" />
+   <file baseinstalldir="/" md5sum="33fb310d3e26cf1d5bcd26b966e317fc" name="Solar/User/Role/Sql.php" role="php" />
+   <file baseinstalldir="/" md5sum="5b8f9e06d02ad180e2b4f45ad220cec2" name="tests/config.php" role="test" />
+   <file baseinstalldir="/" md5sum="520fe74d97b55da0f2a63d69441b56b9" name="tests/setup.php" role="test" />
+   <file baseinstalldir="/" md5sum="169fa623dd072618fb751e1476233886" name="tests/cache/file_array.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="25d6e99a85a50efc3df8399f0abb0b77" name="tests/cache/file_object.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="6648310d5bbd10bece7bd4bf458ff1a6" name="tests/cache/file_string.phpt" role="test" />
+   <file baseinstalldir="/" md5sum="bade36f9f4492e20ceb7b65a820dcb77" name="package.xml" role="data" />
+   <file baseinstalldir="/" md5sum="0ca40dd06815f214691f217b80ccbef5" name="Solar.php" role="php" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0a12</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.4.0</release>
+    <api>0.4.0</api>
+   </version>
+   <stability>
+    <release>devel</release>
+    <api>devel</api>
+   </stability>
+   <date>2005-06-24</date>
+   <license>LGPL</license>
+   <notes>* WARNING: This is a public development release, and is not yet stable.
+
+* WARNING: There are BC breaks in this release.
+
+* Per general PHP coding guidelines, which restrict names starting with
+double-underscores to core PHP functionality, the __solar() hook method
+has been renamed to solar().
+
+* Converted the Solar_Base::$config array to &quot;protected&quot; (it used to be
+public). This means you can no longer work with config settings on
+Solar_Base-derived classes unless you use getter and setter methods.
+Changed all derived classes to use a protected $config when they
+override the Solar_Base property.
+
+* Solar_Error (BC BREAK): Renamed defaultPushCallback() to just
+pushCallback(), and made it protected. Removed ob_end_flush() calls from
+E_WARNING loop in the pushCallback().
+
+* Solar_Super: Cookies now have strip_tags() applied by default to
+prevent user-edited cookies causing XSS attacks.
+
+* Solar_Locale (BC BREAK): Removed protected property for $code, added
+setter for it (&quot;setCode()&quot;) and getter (simply &quot;code()&quot;). The code()
+method no longer does double-duty as getter and setter.
+
+* Solar_Valid: Added inKeys() validation method. Whereas inList() checks
+against the values of an array, inKeys() checks against the keys of an
+array.
+
+* Solar_Cache (BC BREAKS):
+
+  * Removed public $active property in favor of setter and getter
+  methods on the protected config key (setActive() and active(),
+  respectively).
+
+  * Renamed methods to conform with proposed naming conventions: set
+  =&gt; replace, get =&gt; fetch (also checks validity now), del =&gt; delete
+  (also checks if caching is active now), clear =&gt; deleteAll (also
+  checks if caching is active now).  Changed underlying driver APIs as
+  well.
+
+  * The entry() method now maps to the underlying driver entry()
+  method.
+
+  * Removed valid() method from the master and all drivers.
+
+  * Solar_Cache_File now always locks files for reading and writing.
+
+* Solar_Sql_Result: now performs rtrim() on all fetched rows for
+consistency between all drivers.
+
+* Solar_Sql_Entity: added getter rowsPerPage() and setter
+setRowsPerPage().
+
+* Added first set of unit tests for Solar_Cache
+   </notes>
+  </release>
+ </changelog>
+</package>

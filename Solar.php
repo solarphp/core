@@ -149,7 +149,7 @@ class Solar {
 		$list = Solar::config('Solar', 'autoshare', array());
 		
 		// make sure 'user' is there somewhere (by default, at the top).
-		// we do this so that its __solar('stop') method gets called.
+		// we do this so that its solar('stop') method gets called.
 		if (! in_array('user', $list)) {
 			array_unshift($list, 'user');
 		}
@@ -159,7 +159,7 @@ class Solar {
 			Solar::shared($name);
 		}
 		
-		// ... and then run each of the __solar('start') methods.
+		// ... and then run each of the solar('start') methods.
 		// (we load and run in separate loops because some 
 		// objects may depend on others).
 		foreach ($list as $name) {
@@ -168,7 +168,7 @@ class Solar {
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
 			if (is_callable($class, '__solar')) {
-				Solar::$shared->$name->__solar('start');
+				Solar::$shared->$name->solar('start');
 			}
 		}
 		
@@ -199,7 +199,7 @@ class Solar {
 			Solar::run($file);
 		}
 		
-		// find the __solar('stop') hook in each auto-shared
+		// find the solar('stop') hook in each auto-shared
 		// object ...
 		$list = Solar::config('Solar', 'autoshare', array());
 		
@@ -211,7 +211,7 @@ class Solar {
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
 			if (is_callable($class, '__solar')) {
-				Solar::$shared->$name->__solar('stop');
+				Solar::$shared->$name->solar('stop');
 			}
 		}
 		

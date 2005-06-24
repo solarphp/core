@@ -141,7 +141,7 @@ abstract class Solar_Base {
 	* 
 	*/
 	
-	public function __solar($hook)
+	public function solar($hook)
 	{
 		switch ($hook) {
 		case 'start':

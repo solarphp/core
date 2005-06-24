@@ -53,9 +53,8 @@ class Solar_Cache extends Solar_Base {
 	
 	protected $config = array(
 		'active'  => true,
-		'life'    => 3600,
-		'class'   => 'Solar_Cache_Driver_File',
-		'options' => array()
+		'class'   => 'Solar_Cache_File',
+		'options' => null
 	);
 	
 	
@@ -88,10 +87,7 @@ class Solar_Cache extends Solar_Base {
 		parent::__construct($config);
 		
 		// set activity flag
-		$this->setActive($this->config['active']);
-		
-		// set cache lifetime
-		$this->setLife($this->config['life']);
+		$this->active = $this->config['active'];
 		
 		// instantiate a driver object
 		$this->driver = Solar::object(
@@ -129,39 +125,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function active()
 	{
-		return (bool) $this->config['active'];
-	}
-	
-	
-	/**
-	* 
-	* Sets the lifetime of the cache in seconds.
-	* 
-	* @access public
-	* 
-	* @param int $seconds The lifetime of the cache in seconds.
-	* 
-	*/
-	
-	public function setLife($seconds)
-	{
-		$this->config['life'] = (int) $seconds;
-	}
-	
-	
-	/**
-	* 
-	* Returns the cache lifetime.
-	* 
-	* @access public
-	* 
-	* @return int The lifetime of the cache in seconds.
-	* 
-	*/
-	
-	public function life()
-	{
-		return $this->config['life'];
+		return $this->config['active'];
 	}
 	
 	
@@ -184,7 +148,7 @@ class Solar_Cache extends Solar_Base {
 	public function replace($key, $data)
 	{
 		if ($this->active()) {
-			return $this->driver->replace($key, $data, $this->life());
+			return $this->driver->replace($key, $data);
 		} else {
 			return false;
 		}
@@ -193,9 +157,7 @@ class Solar_Cache extends Solar_Base {
 	
 	/**
 	* 
-	* Fetches cache entry data.
-	* 
-	* No data is returned if caching is not active.
+	* Gets cache entry data.
 	* 
 	* @access public
 	* 
@@ -207,7 +169,7 @@ class Solar_Cache extends Solar_Base {
 	
 	public function fetch($key)
 	{
-		if ($this->active() && $this->valid($key)) {
+		if ($this->active()) {
 			return $this->driver->fetch($key);
 		} else {
 			return false;
@@ -230,40 +192,14 @@ class Solar_Cache extends Solar_Base {
 	public function delete($key)
 	{
 		if ($this->active()) {
-			$this->driver->delete($key);
+			return $this->driver->delete($key);
 		}
 	}
 	
 	
 	/**
 	* 
-	* Checks if a cache entry exists and is not past its lifetime.
-	* 
-	* No entry can be valid if caching is not active.
-	* 
-	* @access public
-	* 
-	* @param string $key The entry ID.
-	* 
-	* @return bool True if valid, false if not.
-	* 
-	*/
-	
-	public function valid($key)
-	{
-		if ($this->active()) {
-			return $this->driver->valid($key, $this->life());
-		} else {
-			return false;
-		}
-	}
-	
-	
-	/**
-	* 
-	* Deletes all entities from the cache.
-	* 
-	* Does nothing if caching is not active.
+	* Removes all entities from the cache.
 	* 
 	* @access public
 	* 
@@ -274,7 +210,7 @@ class Solar_Cache extends Solar_Base {
 	public function deleteAll()
 	{
 		if ($this->active()) {
-			$this->driver->deleteAll();
+			return $this->driver->deleteAll();
 		}
 	}
 	

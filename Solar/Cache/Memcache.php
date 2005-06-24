@@ -43,6 +43,8 @@ class Solar_Cache_Memcache extends Solar_Base {
 	* 
 	* port => (string|int) the port on the server
 	* 
+	* life => (int) lifetime in seconds for each cache entry
+	* 
 	* @access protected
 	* 
 	* @var array
@@ -51,7 +53,8 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	protected $config = array(
 		'host' => 'localhost',
-		'port' => '11211',
+		'port' => '11211'
+		'life' => 60
 	);
 	
 	
@@ -72,11 +75,17 @@ class Solar_Cache_Memcache extends Solar_Base {
 	* 
 	* Constructor.
 	* 
+	* @access public
+	* 
+	* @param array $config An array of user-supplied configuration
+	* values.
+	* 
 	*/
 	
 	public function __construct($config = null)
 	{
 		parent::__construct($config);
+		$this->config['life'] = (int) $this->config['life'];
 		$this->memcache = new Memcache;
 		$this->memcache->connect($this->config['host'], $this->config['port']);
 	}
@@ -94,9 +103,9 @@ class Solar_Cache_Memcache extends Solar_Base {
 	* 
 	*/
 	
-	public function replace($key, $data, $life)
+	public function replace($key, $data)
 	{
-		return $this->memcache->replace($key, $data, $life);
+		return $this->memcache->set($key, $data, null, $this->config['life']);
 	}
 	
 	
@@ -138,24 +147,6 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	/**
 	* 
-	* Checks if a cache entry exists and is not past its lifetime.
-	* 
-	* @access public
-	* 
-	* @param string $key The entry ID.
-	* 
-	* @return bool True if valid, false if not.
-	* 
-	*/
-	
-	public function valid($key, $life)
-	{
-		return (bool) $this->memcache->get($key);
-	}
-	
-	
-	/**
-	* 
 	* Removes all cache entries.
 	* 
 	* @access public
@@ -167,6 +158,24 @@ class Solar_Cache_Memcache extends Solar_Base {
 	public function deleteAll()
 	{
 		$this->memcache->flush();
+	}
+	
+	
+	/**
+	* 
+	* Returns the name for the entry key.
+	* 
+	* @access public
+	* 
+	* @param string $key The entry ID.
+	* 
+	* @return string The cache entry name.
+	* 
+	*/
+	
+	public function entry($key)
+	{
+		return $key;
 	}
 }
 ?>

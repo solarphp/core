@@ -43,6 +43,8 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	* path => (string) the directory path where cache files are stored
 	* 
+	* life => (int) lifetime in seconds for each cache entry
+	* 
 	* @access protected
 	* 
 	* @var array
@@ -51,6 +53,7 @@ class Solar_Cache_File extends Solar_Base {
 	
 	protected $config = array(
 		'path'   => '/tmp/Solar_Cache_File/',
+		'life'   => 3600
 	);
 	
 	
@@ -70,8 +73,9 @@ class Solar_Cache_File extends Solar_Base {
 		// basic construction
 		parent::__construct($config);
 		
-		// fix up the path value
+		// keep local values so they can't be changed
 		$this->config['path'] = Solar::fixdir($this->config['path']);
+		$this->config['life'] = (int) $this->config['life'];
 		
 		// make sure the cache directory is there
 		if (! is_dir($this->config['path'])) {
@@ -82,7 +86,7 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Gets cache entry data.
+	* Fetches cache entry data.
 	* 
 	* @access public
 	* 
@@ -94,28 +98,46 @@ class Solar_Cache_File extends Solar_Base {
 	
 	public function fetch($key)
 	{
-		// get the entry filename and open for reading
+		// get the entry filename *before* validating;
+		// this avoids race conditions.
 		$file = $this->entry($key);
+		
+		// make sure the file exists and is readable,
+		if (file_exists($file) && is_readable($file)) {
+			// has the file expired?
+			$expire_time = filemtime($file) + $this->config['life'];
+			if (time() > $expire_time) {
+				// expired, remove it
+				$this->delete($key);
+				return false;
+			}
+		}
+		
+		// file exists; open it for reading
 		$fp = @fopen($file, 'rb');
 		
 		// could it be opened?
 		if ($fp) {
+		
+			// lock the file right away
+			flock($fp, LOCK_SH);
 			
+			// get the cache entry data.
 			// PHP caches file lengths; clear that out so we get
 			// an accurate file length.
 			clearstatcache();
 			$len = filesize($file);
-			
-			// shared-lock for reading
-			flock($fp, LOCK_SH);
 			$data = fread($fp, $len);
-			flock($fp, LOCK_UN);
-			fclose($fp);
 			
-			// check for serializing
+			// check for serializing while file is locked
+			// to avoid race conditions
 			if (file_exists($file . '.serial')) {
 				$data = unserialize($data);
 			}
+			
+			// unlock and close the file
+			flock($fp, LOCK_UN);
+			fclose($fp);
 			
 			// done!
 			return $data;
@@ -128,7 +150,7 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Sets cache entry data.
+	* Inserts/updates cache entry data.
 	* 
 	* @access public
 	* 
@@ -138,7 +160,7 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	*/
 	
-	public function replace($key, $data, $life = null)
+	public function replace($key, $data)
 	{
 		// should the data be serialized?
 		if (is_array($data) || is_object($data)) {
@@ -158,10 +180,9 @@ class Solar_Cache_File extends Solar_Base {
 			// yes.  exclusive lock for writing.
 			flock($fp, LOCK_EX);
 			fwrite($fp, $data, strlen($data));
-			flock($fp, LOCK_UN);
-			fclose($fp);
 			
-			// add a .serial file?
+			// add a .serial file? (do this while the file
+			// is locked to avoid race conditions)
 			if ($serial) {
 				touch($file . '.serial');
 			} else {
@@ -171,7 +192,9 @@ class Solar_Cache_File extends Solar_Base {
 				@unlink($file . '.serial');
 			}
 			
-			// done!
+			// unlock and close, then done.
+			flock($fp, LOCK_UN);
+			fclose($fp);
 			return true;
 		}
 		
@@ -223,7 +246,8 @@ class Solar_Cache_File extends Solar_Base {
 			// named '0' does not prematurely terminate the
 			// loop.
 			while (false !== ($file = $dir->read())) {
-				// delete the file ...
+				// delete the file (suppress errors so that . and ..
+				// don't throw warnings) ...
 				@unlink($this->config['path'] . $file);
 				// ... and any serial marker.
 				@unlink($file . '.serial');
@@ -232,47 +256,6 @@ class Solar_Cache_File extends Solar_Base {
 			// done
 			$dir->close();
 		}
-	}
-	
-	
-	/**
-	* 
-	* Checks to see if a cache entry is valid.
-	* 
-	* A cache entry is valid if its file exists, that file is readable,
-	* and the file has not passed the cache lifetime in seconds.
-	* 
-	* Removes the entry if it exists but is no longer valid.
-	* 
-	* @access public
-	* 
-	* @param string $key The entry ID.
-	* 
-	* @return bool True if valid, false if not.
-	* 
-	*/
-	
-	public function valid($key, $life)
-	{
-		// get the entry filename
-		$file = $this->entry($key);
-		
-		// make sure the file exists and is readable,
-		if (file_exists($file) && is_readable($file)) {
-			
-			// has the file expired?
-			$expire = filemtime($file) + $life;
-			if (time() < $expire) {
-				// no, so it's valid!
-				return true;
-			} else {
-				// expired, remove it
-				$this->delete($key);
-			}
-		}
-		
-		// if we got this far, it's not valid.
-		return false;
 	}
 	
 	

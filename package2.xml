@@ -24,8 +24,14 @@ Please visit http://solarphp.com/ for more information.
   <email>pmjones@solarphp.com</email>
   <active>yes</active>
  </lead>
+ <helper>
+  <name>Clay Loveless</name>
+  <user>clay</user>
+  <email>clay@killersoft.com</email>
+  <active>yes</active>
+ </helper>
  <date>2005-06-24</date>
- <time>14:51:13</time>
+ <time>15:18:45</time>
  <version>
   <release>0.4.0</release>
   <api>0.4.0</api>
@@ -398,7 +404,7 @@ setRowsPerPage().
    <file baseinstalldir="/" md5sum="169fa623dd072618fb751e1476233886" name="tests/cache/file_array.phpt" role="test" />
    <file baseinstalldir="/" md5sum="25d6e99a85a50efc3df8399f0abb0b77" name="tests/cache/file_object.phpt" role="test" />
    <file baseinstalldir="/" md5sum="6648310d5bbd10bece7bd4bf458ff1a6" name="tests/cache/file_string.phpt" role="test" />
-   <file baseinstalldir="/" md5sum="bade36f9f4492e20ceb7b65a820dcb77" name="package.xml" role="data" />
+   <file baseinstalldir="/" md5sum="e151e0b50ddc6af2c0a589c9943308f3" name="package.xml" role="data" />
    <file baseinstalldir="/" md5sum="0ca40dd06815f214691f217b80ccbef5" name="Solar.php" role="php" />
   </dir>
  </contents>

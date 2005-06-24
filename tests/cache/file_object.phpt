@@ -10,10 +10,10 @@ $sleep = 3;
 $loops = 5;
 
 $config = array(
-	'life'  => $life,
 	'class' => 'Solar_Cache_File',
 	'options' => array(
-		'path' => '/tmp/Solar_Cache_Testing'
+		'path' => '/tmp/Solar_Cache_Testing',
+		'life' => $life,
 	)
 );
 

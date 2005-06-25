@@ -129,11 +129,11 @@ class Solar_Error extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $class The class that generated the error.
-	* 
-	* @param mixed $code A scalar error code, or a Solar_Error object.
+	* @param string|object $class The class name that generated the error.
 	* If a Solar_Error object, the errors in its stack are shifted onto the
 	* local stack.
+	* 
+	* @param mixed $code A string error code.
 	* 
 	* @param string $text An error message.
 	* 
@@ -148,18 +148,19 @@ class Solar_Error extends Solar_Base {
 	* 
 	*/
 	
-	public function push($class, $code, $text = '', $info = array(),
+	public function push($class, $code = '', $text = '', $info = array(),
 		$level = null, $trace = null)
 	{
-		// is the code an extant error object?  if so,
+		// is the class an extant error object?  if so,
 		// capture its stack onto our stack.
-		if (Solar::isError($code)) {
-			while($err = $code->pop()) {
+		if (Solar::isError($class)) {
+			while ($err = array_pop($class->stack)) {
 				// use unshift instead of push to make sure
 				// the order ends up the same in both stacks.
 				array_unshift($this->stack, $err);
 			}
-			// callbacks will already have been effected
+			// errors havent' really been popped, so no pop callback
+			// these are not new errors, so no push callbacks
 			return;
 		}
 		

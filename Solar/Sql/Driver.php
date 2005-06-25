@@ -560,7 +560,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		foreach ($cols as $name => $info) {
 			$result = $this->columnDeclaration($name, $info);
 			if (Solar::isError($result)) {
-				$err->push(__CLASS__, $result);
+				$err->push($result);
 			} else {
 				$declare[] = "$name $result";
 			}

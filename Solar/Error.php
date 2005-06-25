@@ -189,7 +189,7 @@ class Solar_Error extends Solar_Base {
 		
 		// ... and make the callback.
 		if (! empty($this->config['push_callback'])) {
-			call_user_func($this->config['push_callback'], $err);
+			call_user_func($this->config['push_callback'], $err, $this);
 		}
 	}
 	
@@ -214,7 +214,7 @@ class Solar_Error extends Solar_Base {
 		
 		// make the callback and return the error.
 		if (! empty($this->config['pop_callback'])) {
-			call_user_func($this->config['pop_callback'], $err);
+			call_user_func($this->config['pop_callback'], $err, $this);
 		}
 		return $err;
 	}
@@ -244,11 +244,17 @@ class Solar_Error extends Solar_Base {
 	* 
 	* @access protected
 	* 
-	* @return int The number of errors on the stack.
+	* @param array $err An array of error information just pushed onto the
+	* stack.
+	* 
+	* @param object $obj The Solar_Error object that $err was just pushed
+	* into.
+	* 
+	* @return void
 	* 
 	*/
 	
-	protected function pushCallback($err)
+	protected function pushCallback($err, $obj)
 	{
 		if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {
 			Solar::dump($err);
@@ -258,7 +264,7 @@ class Solar_Error extends Solar_Base {
 			while (ob_get_level()) {
 				ob_end_flush();
 			}
-			echo $this;
+			echo $obj;
 			die();
 		}
 	}

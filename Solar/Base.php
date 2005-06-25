@@ -131,6 +131,41 @@ abstract class Solar_Base {
 	
 	/**
 	* 
+	* Convenience method for pushing onto an existing Solar_Error stack.
+	* 
+	* @access protected
+	* 
+	* @param object $err An existing Solar_Error object.
+	* 
+	* @param int $code The error code.
+	* 
+	* @param array $info An array of error-specific data.
+	* 
+	* @param int $level The error level constant, e.g. E_USER_NOTICE.
+	* 
+	* @param bool $trace Whether or not to generate a debug_backtrace().
+	* 
+	*/
+	
+	public function errorPush($err, $code, $info = array(), $level = null,
+		$trace = null)
+	{
+		// automatic value for the class name
+		$class = get_class($this);
+		
+		// automatic locale string for the error text
+		$text = $this->locale($code);
+		
+		// make sure info is an array
+		settype($info, 'array');
+		
+		// push the error onto the stack
+		$err->push($class, $code, $text, $info, $level, $trace);
+	}
+	
+	
+	/**
+	* 
 	* Provides hooks for Solar::start() and Solar::stop() on shared objects.
 	* 
 	* @access public

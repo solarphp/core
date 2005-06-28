@@ -53,7 +53,7 @@ class Solar_Locale extends Solar_Base {
 	* 
 	*/
 	
-	protected $string = array();
+	public $string = array();
 	
 	
 	/**
@@ -91,6 +91,7 @@ class Solar_Locale extends Solar_Base {
 	{
 		$this->string = array();
 		$this->config['code'] = $code;
+		$this->load('Solar', $this->config['locale']);
 	}
 	
 	
@@ -187,9 +188,21 @@ class Solar_Locale extends Solar_Base {
 		$dir = Solar::fixdir($dir);
 		$file = $dir . $this->config['code'] . '.php';
 		
-		// load the strings and set them
-		$list = Solar::run($file);
-		$this->string[$class] = (array) $list;
+		// this hack is the equivalent of is_readable(), but it also
+		// checks the include-path to see if the file exists.
+		$fp = @fopen($file, 'r', true);
+		$ok = ($fp) ? true : false;
+		@fclose($fp);
+		
+		// could we find the file?
+		if ($ok) {
+			$this->string[$class] = (array) include $file;
+		} else {
+			// could not find file.
+			// fail silently, as it's often the case that the
+			// translation file simply doesn't exist yet.
+			$this->string[$class] = array();
+		}
 	}
 
 	

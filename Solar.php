@@ -248,7 +248,7 @@ class Solar {
 	
 	public static function locale($class, $key, $num = 1)
 	{
-		return Solar::$shared->locale->string($class, $key, $num);
+		return Solar::shared('locale')->string($class, $key, $num);
 	}
 	
 	

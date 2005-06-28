@@ -193,7 +193,7 @@ abstract class Solar_Base {
 	* 
 	* Looks up locale strings based on a key.
 	* 
-	* Uses the locale strings in the directory noted by $conf['locale'];
+	* Uses the locale strings in the directory noted by $config['locale'];
 	* if no such key exists, falls back to the strings for the parent
 	* class, and finally falls back to the Solar/Locale strings.
 	* 
@@ -214,12 +214,12 @@ abstract class Solar_Base {
 		// is a locale directory specified?
 		if (empty($this->config['locale'])) {
 			// use the generic Solar locale strings
-			return Solar::$shared->locale->string('Solar', $key, $num);
+			return Solar::shared('locale')->string('Solar', $key, $num);
 		}
 		
 		// get a translation for the current class
 		$class = get_class($this);
-		$string = Solar::$shared->locale->string($class, $key, $num);
+		$string = Solar::shared('locale')->string($class, $key, $num);
 		
 		// is the translation same as the key?  if not, we're done.
 		if ($string != $key) {
@@ -229,8 +229,8 @@ abstract class Solar_Base {
 		// key and string were the same, which means there was no
 		// available translation.  make sure we have a translation file
 		// loaded, then return whatever we get afterwards.
-		Solar::$shared->locale->load($class, $this->config['locale']);
-		return Solar::$shared->locale->string($class, $key, $num);
+		Solar::shared('locale')->load($class, $this->config['locale']);
+		return Solar::shared('locale')->string($class, $key, $num);
 	}
 }
 ?>

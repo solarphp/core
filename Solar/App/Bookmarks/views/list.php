@@ -141,7 +141,7 @@ $link = Solar::object('Solar_Uri');
 						}
 						
 						// edit link
-						if (Solar::$shared->user->auth->username == $item['user_id']) {
+						if (Solar::shared('user')->auth->username == $item['user_id']) {
 							$back_info = Solar::super('server', 'PATH_INFO');
 							$back_qstr = Solar::super('server', 'QUERY_STRING');
 							$link->clearInfo();
@@ -175,7 +175,7 @@ $link = Solar::object('Solar_Uri');
 			<p><?php echo Solar::locale('Solar_App_Bookmarks', 'NO_BOOKMARKS_FOUND') ?></p>
 		<?php endif ?>
 		
-		<?php if (Solar::$shared->user->auth->status_code == 'VALID'): ?>
+		<?php if (Solar::shared('user')->auth->status_code == 'VALID'): ?>
 			<hr />
 			<p><?php
 				$link->clearInfo();

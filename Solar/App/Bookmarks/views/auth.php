@@ -31,8 +31,8 @@
 ?>
 
 <div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">
-	<?php if (Solar::$shared->user->auth->status_code == 'VALID'): ?>
-		<p><?php echo Solar::locale('Solar', 'TEXT_AUTH_USERNAME') ?><br /><strong><?php echo Solar::$shared->user->auth->username ?></strong></p>
+	<?php if (Solar::shared('user')->auth->status_code == 'VALID'): ?>
+		<p><?php echo Solar::locale('Solar', 'TEXT_AUTH_USERNAME') ?><br /><strong><?php echo Solar::shared('user')->auth->username ?></strong></p>
 		<?php
 			echo $this->form('begin');
 			echo $this->form('block', 'begin', null, 'row');
@@ -53,8 +53,8 @@
 			echo $this->form('end');
 		?>
 		<p><?php
-			echo nl2br(wordwrap(Solar::$shared->user->auth->status_text, 20));
-			Solar::$shared->user->auth->reset();
+			echo nl2br(wordwrap(Solar::shared('user')->auth->status_text, 20));
+			Solar::shared('user')->auth->reset();
 		?></p>
 	<?php endif; ?>
 </div>

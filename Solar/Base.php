@@ -147,7 +147,7 @@ abstract class Solar_Base {
 	* 
 	*/
 	
-	public function errorPush($err, $code, $info = array(), $level = null,
+	protected function errorPush($err, $code, $info = array(), $level = null,
 		$trace = null)
 	{
 		// automatic value for the class name

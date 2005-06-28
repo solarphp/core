@@ -66,13 +66,13 @@ class Solar {
 	* 
 	* Shared singleton objects are properties of the $shared object.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @var array
 	* 
 	*/
 	
-	public static $shared = null;
+	protected static $shared = null;
 	
 	
 	/**

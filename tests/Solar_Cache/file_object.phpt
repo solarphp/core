@@ -60,34 +60,39 @@ string(4) "miss"
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(0) {
+  ["config:protected"] => array(1) {
+    ["locale"] => NULL
   }
 }
 1 string(3) "hit"
 object(Coyote)#12 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(0) {
+  ["config:protected"] => array(1) {
+    ["locale"] => NULL
   }
 }
 2 string(3) "hit"
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(0) {
+  ["config:protected"] => array(1) {
+    ["locale"] => NULL
   }
 }
 3 string(4) "miss"
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(0) {
+  ["config:protected"] => array(1) {
+    ["locale"] => NULL
   }
 }
 4 string(3) "hit"
 object(Coyote)#12 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(0) {
+  ["config:protected"] => array(1) {
+    ["locale"] => NULL
   }
 }

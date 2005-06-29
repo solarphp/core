@@ -34,7 +34,8 @@ abstract class Solar_Base {
 	* 
 	* Keys are:
 	* 
-	* locale => The directory where locale string files live.
+	* locale => The directory where locale string files for this class
+	* are located.
 	* 
 	* @access protected
 	* 
@@ -42,7 +43,9 @@ abstract class Solar_Base {
 	* 
 	*/
 	
-	protected $config = array();
+	protected $config = array(
+		'locale' => null,
+	);
 	
 	
 	/**

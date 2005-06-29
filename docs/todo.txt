@@ -1,5 +1,7 @@
 Create an event dispatcher as a universal observer and notifier?
 
+Should Solar_Cache take into account the current locale code?
+
 
 ----
 

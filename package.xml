@@ -30,67 +30,51 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.4.0</version>
-  <date>2005-06-24</date>
+  <version>0.5.0</version>
+  <date>2005-06-28</date>
   <license>LGPL</license>
   <state>devel</state>
   <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* WARNING: There are BC breaks in this release.
+* Solar:
 
-* Started using PackageFileManager2 for packaging (thanks Clay Loveless)
+  * Changed $shared to protected, not public, because some shared
+  objects may not be instantiated at start() time.  From now on, use
+  Solar::shared() to access shared singleton objects; this will
+  instantiate the object if it does not already exist.  Updated all
+  related code throughout Solar to reflect this change.
 
-* BC BREAK:  Per general PHP coding guidelines, which restrict names
-starting with double-underscores to core PHP functionality, the
-__solar() hook method has been renamed to solar().  Thanks, Dan Cain.
+* Solar_Base:
 
-* BC BREAK:  Converted the Solar_Base::$config array to &quot;protected&quot; (it
-used to be public). This means you can no longer work with config
-settings on Solar_Base-derived classes unless you use getter and setter
-methods. Changed all derived classes to use a protected $config when
-they override the Solar_Base property.
+  * Added errorPush() for stacking onto existing Solar_Error objects
+  
+  * Now have an explicit $config['locale'] key set to null
+  
+  * Added test suite
+  
+* Solar_Error:
 
-* Solar_Error (BC BREAK): Renamed defaultPushCallback() to just
-pushCallback(), and made it protected. Removed ob_end_flush() calls from
-E_WARNING loop in the pushCallback().
+  * Added $obj parameter to push and pop callbacks (to send the
+  Solar_Error object itself to the callback)
 
-* Solar_Super: Cookies now have strip_tags() applied by default to
-prevent user-edited cookies causing XSS attacks.
+  * You can now transfer error stacks between Solar_Error objects
+  using push()
 
-* Solar_Locale (BC BREAK): Removed protected property for $code, added
-setter for it (&quot;setCode()&quot;) and getter (simply &quot;code()&quot;). The code()
-method no longer does double-duty as getter and setter.
+  * Added test suite
 
-* Solar_Valid: Added inKeys() validation method. Whereas inList() checks
-against the values of an array, inKeys() checks against the keys of an
-array.
+* Solar_Locale:
 
-* Solar_Cache (BC BREAKS):
-
-  * Removed public $active property in favor of setter and getter
-  methods on the protected config key (setActive() and active(),
-  respectively).
-
-  * Renamed methods to conform with proposed naming conventions: set
-  =&gt; replace, get =&gt; fetch (also checks validity now), del =&gt; delete
-  (also checks if caching is active now), clear =&gt; deleteAll (also
-  checks if caching is active now).  Changed underlying driver APIs as
-  well.
-
-  * The entry() method now maps to the underlying driver entry()
-  method.
-
-  * Removed valid() method from the master and all drivers.
-
-  * Solar_Cache_File now always locks files for reading and writing.
-
-* Solar_Sql_Result: now performs rtrim() on all fetched rows for
-consistency between all drivers.
-
-* Solar_Sql_Entity: added getter rowsPerPage() and setter
-setRowsPerPage().
-
-* Added first set of unit tests for Solar_Cache
+  * The load() method now fails silently if you try to load a
+  translation file that doesn't exist.  It's often the case that some
+  translations exist and others don't; thus, the non-existence of the
+  file shouldn't throw a warning, as the displayed output clearly
+  shows that keys are being returned instead of translations.
+  
+  * On setCode(), now reloads the Solar-wide translation keys for 
+  the new locale.
+  
+  * Added test suite (tests Solar::shared('locale') and
+  Solar_Base::locale() as well)
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -99,6 +83,7 @@ setRowsPerPage().
   <provides type="class" name="Solar_Base" />
   <provides type="function" name="Solar_Base::apiVersion" />
   <provides type="function" name="Solar_Base::error" />
+  <provides type="function" name="Solar_Base::errorPush" />
   <provides type="function" name="Solar_Base::solar" />
   <provides type="function" name="Solar_Base::locale" />
   <provides type="class" name="Solar_Cache" extends="Solar_Base" />
@@ -1266,13 +1251,73 @@ setRowsPerPage().
    <file role="test" baseinstalldir="/" name="tests/setup.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/cache/file_array.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/config.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/cache/file_object.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/error.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/cache/file_string.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/fallback.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/stack.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/es_ES.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/it_IT.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_array.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_object.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_string.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Error/base.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Error/error.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Error/transfer.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Error/locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/base.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/fallback.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/no_key.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/plurals.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/shared.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/es_ES.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/it_IT.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar.php">
@@ -1282,67 +1327,51 @@ setRowsPerPage().
  </release>
  <changelog>
    <release>
-    <version>0.4.0</version>
-    <date>2005-06-24</date>
+    <version>0.5.0</version>
+    <date>2005-06-28</date>
     <license>LGPL</license>
     <state>devel</state>
     <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* WARNING: There are BC breaks in this release.
+* Solar:
 
-* Started using PackageFileManager2 for packaging (thanks Clay Loveless)
+  * Changed $shared to protected, not public, because some shared
+  objects may not be instantiated at start() time.  From now on, use
+  Solar::shared() to access shared singleton objects; this will
+  instantiate the object if it does not already exist.  Updated all
+  related code throughout Solar to reflect this change.
 
-* BC BREAK:  Per general PHP coding guidelines, which restrict names
-starting with double-underscores to core PHP functionality, the
-__solar() hook method has been renamed to solar().  Thanks, Dan Cain.
+* Solar_Base:
 
-* BC BREAK:  Converted the Solar_Base::$config array to &quot;protected&quot; (it
-used to be public). This means you can no longer work with config
-settings on Solar_Base-derived classes unless you use getter and setter
-methods. Changed all derived classes to use a protected $config when
-they override the Solar_Base property.
+  * Added errorPush() for stacking onto existing Solar_Error objects
+  
+  * Now have an explicit $config['locale'] key set to null
+  
+  * Added test suite
+  
+* Solar_Error:
 
-* Solar_Error (BC BREAK): Renamed defaultPushCallback() to just
-pushCallback(), and made it protected. Removed ob_end_flush() calls from
-E_WARNING loop in the pushCallback().
+  * Added $obj parameter to push and pop callbacks (to send the
+  Solar_Error object itself to the callback)
 
-* Solar_Super: Cookies now have strip_tags() applied by default to
-prevent user-edited cookies causing XSS attacks.
+  * You can now transfer error stacks between Solar_Error objects
+  using push()
 
-* Solar_Locale (BC BREAK): Removed protected property for $code, added
-setter for it (&quot;setCode()&quot;) and getter (simply &quot;code()&quot;). The code()
-method no longer does double-duty as getter and setter.
+  * Added test suite
 
-* Solar_Valid: Added inKeys() validation method. Whereas inList() checks
-against the values of an array, inKeys() checks against the keys of an
-array.
+* Solar_Locale:
 
-* Solar_Cache (BC BREAKS):
-
-  * Removed public $active property in favor of setter and getter
-  methods on the protected config key (setActive() and active(),
-  respectively).
-
-  * Renamed methods to conform with proposed naming conventions: set
-  =&gt; replace, get =&gt; fetch (also checks validity now), del =&gt; delete
-  (also checks if caching is active now), clear =&gt; deleteAll (also
-  checks if caching is active now).  Changed underlying driver APIs as
-  well.
-
-  * The entry() method now maps to the underlying driver entry()
-  method.
-
-  * Removed valid() method from the master and all drivers.
-
-  * Solar_Cache_File now always locks files for reading and writing.
-
-* Solar_Sql_Result: now performs rtrim() on all fetched rows for
-consistency between all drivers.
-
-* Solar_Sql_Entity: added getter rowsPerPage() and setter
-setRowsPerPage().
-
-* Added first set of unit tests for Solar_Cache
+  * The load() method now fails silently if you try to load a
+  translation file that doesn't exist.  It's often the case that some
+  translations exist and others don't; thus, the non-existence of the
+  file shouldn't throw a warning, as the displayed output clearly
+  shows that keys are being returned instead of translations.
+  
+  * On setCode(), now reloads the Solar-wide translation keys for 
+  the new locale.
+  
+  * Added test suite (tests Solar::shared('locale') and
+  Solar_Base::locale() as well)
     </notes>
    </release>
  </changelog>

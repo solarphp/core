@@ -56,7 +56,7 @@ for ($i = 0; $i < $loops; $i++) {
 Solar::stop();
 ?>
 --EXPECT--
-string(4) "miss"
+0 string(4) "miss"
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"

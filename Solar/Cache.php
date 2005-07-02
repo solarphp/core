@@ -86,9 +86,6 @@ class Solar_Cache extends Solar_Base {
 		// basic config option settings
 		parent::__construct($config);
 		
-		// set activity flag
-		$this->active = $this->config['active'];
-		
 		// instantiate a driver object
 		$this->driver = Solar::object(
 			$this->config['class'],

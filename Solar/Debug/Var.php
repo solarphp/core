@@ -71,7 +71,7 @@ class Solar_Debug_Var extends Solar_Base {
 	public function dump(&$var, $label = null)
 	{
 		// if there's a label, add a space after it
-		if ($label) {
+		if (trim($label) != '') {
 			$label .= ' ';
 		}
 		

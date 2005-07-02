@@ -51,7 +51,7 @@ for ($i = 0; $i < $loops; $i++) {
 Solar::stop();
 ?>
 --EXPECT--
-string(4) "miss"
+0 string(4) "miss"
 string(26) "My name is Wile E. Coyote."
 1 string(3) "hit"
 string(26) "My name is Wile E. Coyote."

@@ -56,7 +56,7 @@ for ($i = 0; $i < $loops; $i++) {
 Solar::stop();
 ?>
 --EXPECT--
-string(4) "miss"
+0 string(4) "miss"
 array(4) {
   ["name"] => string(7) "Wile E."
   ["type"] => string(6) "Coyote"

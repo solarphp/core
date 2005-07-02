@@ -829,9 +829,7 @@ class Solar {
 	
 	/**
 	* 
-	* Simple variable dumper for HTML using var_dump().
-	* 
-	* @todo This should be replaced by the Log class later.
+	* Simple variable dumper.
 	* 
 	* @access public
 	* 
@@ -845,16 +843,8 @@ class Solar {
 	
 	public static function dump(&$var, $label = null)
 	{
-		echo '<pre>';
-		if ($label) {
-			echo htmlspecialchars($label) . " ";
-		}
-		ob_start();
-		var_dump($var);
-		$output = ob_get_clean();
-		$output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
-		echo htmlspecialchars($output);
-		echo '</pre>';
+		$obj = Solar::object('Solar_Debug_Var');
+		echo $obj->dump($var, $label);
 	}
 	
 	

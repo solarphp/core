@@ -48,7 +48,7 @@ class Solar_Debug_Timer extends Solar_Base {
 	*/
 	
 	protected $config = array(
-		'html' => true
+		'output' => 'html'
 	);
 	
 	
@@ -282,8 +282,8 @@ class Solar_Debug_Timer extends Solar_Base {
 		
 		$output = implode("\n", $row);
 		
-		if ($html) {
-			$output = "\n<pre>" . htmlspecialchars($output) . "</pre>\n";
+		if ($this->config['output'] == 'html') {
+			$output = '<pre>' . htmlspecialchars($output) . '</pre>';
 		}
 		
 		echo $output;

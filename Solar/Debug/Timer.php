@@ -256,12 +256,8 @@ class Solar_Debug_Timer extends Solar_Base {
 	* 
 	*/
 	
-	public function display($html = null)
+	public function display()
 	{
-		if (is_null($html)) {
-			$html = $this->config['html'];
-		}
-		
 		$profile = $this->profile();
 		$header = array('mark', 'lap', 'total');
 		

@@ -251,37 +251,47 @@ class Solar_Debug_Timer extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param bool $html Whether or not to output encoded for HTML.
+	* @param string $title A title for the output.
 	* 
 	* @return void
 	* 
 	*/
 	
-	public function display()
+	public function display($title = null)
 	{
+		// get the profile info
 		$profile = $this->profile();
-		$header = array('mark', 'lap', 'total');
 		
-		$label = array(
+		// format the localized column names
+		$colname = array(
 			'name'  => $this->locale('LABEL_NAME'),
 			'time'  => $this->locale('LABEL_TIME'),
 			'diff'  => $this->locale('LABEL_DIFF'),
 			'total' => $this->locale('LABEL_TOTAL')
 		);
 		
-		foreach ($label as $key => $val) {
+		foreach ($colname as $key => $val) {
 			// reduce to max 8 chars
 			$val = substr($val, 0, 8);
 			// pad to 8 spaces
-			$label[$key] = str_pad($val, 8);
+			$colname[$key] = str_pad($val, 8);
 		}
 		
+		// prep the output rows
 		$row = array();
+		
+		// add a title
+		if (trim($title != '')) {
+			$row[] = $title;
+		}
+		
+		// add the column names
 		$row[] = sprintf(
-			"%-{$this->maxlen}s : {$label['diff']} : {$label['total']}",
-			$label['name']
+			"%-{$this->maxlen}s : {$colname['diff']} : {$colname['total']}",
+			$colname['name']
 		);
 		
+		// add each timer mark
 		foreach ($profile as $key => $val) {
 			$row[] = sprintf(
 				"%-{$this->maxlen}s : %f : %f",
@@ -291,6 +301,7 @@ class Solar_Debug_Timer extends Solar_Base {
 			);
 		}
 		
+		// finalize output and display
 		$output = implode("\n", $row);
 		
 		if ($this->config['output'] == 'html') {

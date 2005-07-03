@@ -26,7 +26,7 @@
 * 
 */
 
-class Solar_Super {
+class Solar_Super extends Solar_Base {
 	
 	
 	/**
@@ -43,39 +43,60 @@ class Solar_Super {
 	
 	protected $config = array(
 	
-		// $_ENV keys
+		// $_COOKIE scrubbers
+		'cookie' => array(
+			array('Solar_Super', 'magicStripSlashes'),
+			'strip_tags',
+		),
+		
+		// $_ENV scrubbers
 		'env' => array(),
 		
-		// $_GET keys
-		'get' => array(
-			array('Solar_Super', 'magicStripslashes'),
-			'strip_tags',
-		),
-		
-		// $_POST keys
-		'post' => array(
-			array('Solar_Super', 'magicStripslashes'),
-		),
-		
-		// $_COOKIE keys
-		'cookie' => array(
-			array('Solar_Super', 'magicStripslashes'),
-			'strip_tags',
-		),
-		
-		// $_SERVER keys
-		'server' => array(
-			array('Solar_Super', 'magicStripslashes'),
-			'strip_tags',
-		),
-		
-		// $_SESSION keys
-		'session' => array(),
-		
-		// $_FILES keys
+		// $_FILES scrubbers
 		'files' => array(
-			array('Solar_Super', 'magicStripslashes'),
+			array('Solar_Super', 'magicStripSlashes'),
 		),
+		
+		// $_GET scrubbers
+		'get' => array(
+			array('Solar_Super', 'magicStripSlashes'),
+			'strip_tags'
+		),
+		
+		// $_POST scrubbers
+		'post' => array(
+			array('Solar_Super', 'magicStripSlashes'),
+		),
+		
+		// $_SERVER scrubbers
+		'server' => array(
+			array('Solar_Super', 'magicStripSlashes'),
+			'strip_tags'
+		),
+		
+		// $_SESSION scrubbers
+		'session' => array(),
+	);
+	
+	
+	/**
+	* 
+	* Only allow access to these superglobals.
+	* 
+	* @access protected
+	* 
+	* @var array
+	* 
+	*/
+	
+	protected $allowed = array(
+		'cookie',
+		'env',
+		'files', 
+		'get',
+		'post',
+		'server',
+		'session',
 	);
 	
 	
@@ -104,22 +125,31 @@ class Solar_Super {
 	
 	public function fetch($type, $key = null, $default = null)
 	{
-		// determine the callback scrubber set
-		$scrub = $this->config[strtolower($type)];
+		// force $type to lowercase for access checking
+		$type = strtolower($type);
 		
-		// convert 'type' to '_TYPE'; e.g., 'get' to '_GET'
+		// disallow access to non-superglobals
+		if (! in_array($type, $this->allowed)) {
+			return $default;
+		}
+		
+		// determine the callback scrubber set
+		$callbacks = $this->config[$type];
+		
+		// force 'type' to '_TYPE' (e.g., 'get' to '_GET')
+		// so we can access it properly through $GLOBALS
 		$type = strtoupper("_$type");
 		
 		// get the whole superglobal, or just one key?
 		if (is_null($key) && isset($GLOBALS[$type])) {
 		
 			// no key selected, return the whole array
-			return Solar::scrub($GLOBALS[$type], $scrub);
+			return $this->scrub($GLOBALS[$type], $callbacks);
 			
 		} elseif (isset($GLOBALS[$type][$key])) {
 		
 			// looking for a specific key
-			return Solar::scrub($GLOBALS[$type][$key], $scrub);
+			return $this->scrub($GLOBALS[$type][$key], $callbacks);
 			
 		} else {
 		
@@ -161,5 +191,34 @@ class Solar_Super {
 		return $value;
 	}
 	
+	
+	/**
+	* 
+	* Recursively applies scrubber callbacks to a value.
+	* 
+	* @access protected
+	* 
+	* @param mixed $value The value to scrub.
+	* 
+	* @param array $callbacks The scrubber callbacks to apply.
+	* 
+	* @return mixed The scrubbed value.
+	* 
+	*/
+	
+	protected function scrub($value, $callbacks = null)
+	{
+		settype($callbacks, 'array');
+		if (is_array($value)) {
+			foreach ($callbacks as $func) {
+				array_walk_recursive($value, $func);
+			}
+		} else {
+			foreach ($callbacks as $func) {
+				call_user_func($func, $value);
+			}
+		}
+		return $value;
+	}
 }
 ?>

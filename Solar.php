@@ -729,50 +729,6 @@ class Solar {
 	
 	/**
 	* 
-	* Scrub a user-supplied value; if an array, do so recursively.
-	* 
-	* @access public
-	* 
-	* @param string $var The variable to scrub.
-	*
-	* @param array $callbacks A list of call_user_func() callbacks to
-	* apply to the variable; the callbacks must take only a single
-	* argument: the variable to be scrubbed.
-	*
-	* @return mixed The scrubbed variable.
-	* 
-	*/
-	
-	public static function scrub($var, $callbacks = null)
-	{
-		// pre-empt scrubbing if there are no callbacks
-		if (! $callbacks) {
-			return $var;
-		}
-		
-		// is the variable an array?
-		if (is_array($var)) {
-		
-			// is an array, so recursively scrub each element.
-			foreach ($var as $k => $v) {
-				$var[$k] = Solar::scrub($v, $callbacks);
-			}
-			
-		} else {
-		
-			// not an array, scrub the value.
-			foreach ($callbacks as $call) {
-				$var = call_user_func($call, $var);
-			}
-		}
-		
-		// done, return the scrubbed variable.
-		return $var;
-	}
-	
-	
-	/**
-	* 
 	* Simple error object generator.
 	* 
 	* @param string $class The class that generated the error.

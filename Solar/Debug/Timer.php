@@ -48,7 +48,8 @@ class Solar_Debug_Timer extends Solar_Base {
 	*/
 	
 	protected $config = array(
-		'output' => 'html'
+		'locale' => 'Solar/Debug/Locale/',
+		'output' => 'html',
 	);
 	
 	
@@ -261,10 +262,24 @@ class Solar_Debug_Timer extends Solar_Base {
 		$profile = $this->profile();
 		$header = array('mark', 'lap', 'total');
 		
+		$label = array(
+			'name'  => $this->locale('LABEL_NAME'),
+			'time'  => $this->locale('LABEL_TIME'),
+			'diff'  => $this->locale('LABEL_DIFF'),
+			'total' => $this->locale('LABEL_TOTAL')
+		);
+		
+		foreach ($label as $key => $val) {
+			// reduce to max 8 chars
+			$val = substr($val, 0, 8);
+			// pad to 8 spaces
+			$label[$key] = str_pad($val, 8);
+		}
+		
 		$row = array();
 		$row[] = sprintf(
-			"%-{$this->maxlen}s : diff     : total",
-			'mark'
+			"%-{$this->maxlen}s : {$label['diff']} : {$label['total']}",
+			$label['name']
 		);
 		
 		foreach ($profile as $key => $val) {

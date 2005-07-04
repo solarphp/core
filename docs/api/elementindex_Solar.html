@@ -213,11 +213,25 @@
 	</div>
 	<dl>
 			<dt class="field">
+						<span class="var-title">$allowed</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Super.html#var$allowed">Solar_Super::$allowed</a> in Super.php</div>
+							<div class="index-item-description">Only allow access to these superglobals.</div>
+					</dd>
+			<dt class="field">
 						<span class="method-title">addFeedback</span>
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Form.html#methodaddFeedback">Solar_Form::addFeedback()</a> in Form.php</div>
 							<div class="index-item-description">Adds multiple feedback messages to elements.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">addQuery</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodaddQuery">Solar_Uri::addQuery()</a> in Uri.php</div>
+							<div class="index-item-description">Adds an element to the $this-&gt;query array.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">addValidate</span>
@@ -378,14 +392,14 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodclearInfo">Solar_Uri::clearInfo()</a> in Uri.php</div>
-							<div class="index-item-description">Clears (resets) $this-&gt;info to a blank array.</div>
+							<div class="index-item-description">Clears (resets) all or part of $this-&gt;info.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">clearQuery</span>
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodclearQuery">Solar_Uri::clearQuery()</a> in Uri.php</div>
-							<div class="index-item-description">Clears (resets) $this-&gt;query to a blank array.</div>
+							<div class="index-item-description">Clears (resets) all or part of $this-&gt;query.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">config</span>
@@ -441,6 +455,13 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Cache/_Solar_Cache_php.html">Cache.php</a> in Cache.php</div>
+					</dd>
+			<dt class="field">
+						<span class="var-title">$config</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Debug/Solar_Debug_Var.html#var$config">Solar_Debug_Var::$config</a> in Var.php</div>
+							<div class="index-item-description">User-provided configuration.</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$config</span>
@@ -656,14 +677,14 @@
 						<span class="var-title">$config</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar_User/Solar_User_Auth_Sql.html#var$config">Solar_User_Auth_Sql::$config</a> in Sql.php</div>
+			<div class="index-item-details"><a href="Solar/Solar_User/Solar_User_Role_Sql.html#var$config">Solar_User_Role_Sql::$config</a> in Sql.php</div>
 							<div class="index-item-description">User-supplied configuration values.</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$config</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar_User/Solar_User_Role_Sql.html#var$config">Solar_User_Role_Sql::$config</a> in Sql.php</div>
+			<div class="index-item-details"><a href="Solar/Solar_User/Solar_User_Auth_Sql.html#var$config">Solar_User_Auth_Sql::$config</a> in Sql.php</div>
 							<div class="index-item-description">User-supplied configuration values.</div>
 					</dd>
 			<dt class="field">
@@ -749,7 +770,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar.html#methoddump">Solar::dump()</a> in Solar.php</div>
-							<div class="index-item-description">Simple variable dumper for HTML using var_dump().</div>
+							<div class="index-item-description">Simple variable dumper.</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$driver</span>
@@ -813,6 +834,13 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Debug/Solar_Debug_Timer.html#methoddisplay">Solar_Debug_Timer::display()</a> in Timer.php</div>
 							<div class="index-item-description">Outputs the current profile.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">dump</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Debug/Solar_Debug_Var.html#methoddump">Solar_Debug_Var::dump()</a> in Var.php</div>
+							<div class="index-item-description">Captures the output of &quot;var_dump()&quot; with a label.</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$driver</span>
@@ -1008,7 +1036,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodexport">Solar_Uri::export()</a> in Uri.php</div>
-							<div class="index-item-description">Builds the parsed URI elements into a string.</div>
+							<div class="index-item-description">Builds the object URI properties into a string.</div>
 					</dd>
 			<dt class="field">
 						<span class="include-title">Error.php</span>
@@ -1028,7 +1056,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Cache/Solar_Cache_File.html#methodentry">Solar_Cache_File::entry()</a> in File.php</div>
-							<div class="index-item-description">Returns the filename for the entry key.</div>
+							<div class="index-item-description">Returns the path and filename for the entry key.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">entry</span>
@@ -1036,6 +1064,12 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Cache/Solar_Cache.html#methodentry">Solar_Cache::entry()</a> in Cache.php</div>
 							<div class="index-item-description">Returns the driver-specific name for the entry key.</div>
+					</dd>
+			<dt class="field">
+						<span class="include-title">en_US.php</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Debug/_Solar_Debug_Locale_en_US_php.html">en_US.php</a> in en_US.php</div>
 					</dd>
 			<dt class="field">
 						<span class="include-title">en_US.php</span>
@@ -1527,14 +1561,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodimport">Solar_Uri::import()</a> in Uri.php</div>
-							<div class="index-item-description">Imports the current URI string.</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">info</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodinfo">Solar_Uri::info()</a> in Uri.php</div>
-							<div class="index-item-description">Changes the elements and values in the $this-&gt;info array.</div>
+							<div class="index-item-description">Imports a URI string (by default, the current URI) into the object.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">info2str</span>
@@ -2292,13 +2319,6 @@
 							<div class="index-item-description">Query string elements split apart into an array.</div>
 					</dd>
 			<dt class="field">
-						<span class="method-title">query</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodquery">Solar_Uri::query()</a> in Uri.php</div>
-							<div class="index-item-description">Changes the elements and values in the $this-&gt;query array.</div>
-					</dd>
-			<dt class="field">
 						<span class="method-title">query2str</span>
 					</dt>
 		<dd class="index-item-body">
@@ -2462,8 +2482,8 @@
 						<span class="method-title">scrub</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar.html#methodscrub">Solar::scrub()</a> in Solar.php</div>
-							<div class="index-item-description">Scrub a user-supplied value; if an array, do so recursively.</div>
+			<div class="index-item-details"><a href="Solar/Solar_Super.html#methodscrub">Solar_Super::scrub()</a> in Super.php</div>
+							<div class="index-item-description">Recursively applies scrubber callbacks to a value.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">server</span>
@@ -2492,6 +2512,34 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Form.html#methodsetElements">Solar_Form::setElements()</a> in Form.php</div>
 							<div class="index-item-description">Sets multiple elements in the form.  Appends if they do not exist.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setInfo</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodsetInfo">Solar_Uri::setInfo()</a> in Uri.php</div>
+							<div class="index-item-description">Sets one element in the $this-&gt;info array by position and value.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setInfoString</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodsetInfoString">Solar_Uri::setInfoString()</a> in Uri.php</div>
+							<div class="index-item-description">Sets all elements in the $this-&gt;info array from a path_info string.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setQuery</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodsetQuery">Solar_Uri::setQuery()</a> in Uri.php</div>
+							<div class="index-item-description">Sets the value of an element in the $this-&gt;query array.</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setQueryString</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Uri.html#methodsetQueryString">Solar_Uri::setQueryString()</a> in Uri.php</div>
+							<div class="index-item-description">Sets all elements of $this-&gt;query from a query string.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">shared</span>
@@ -2597,13 +2645,6 @@
 							<div class="index-item-description">Returns the submitted value for a named element.</div>
 					</dd>
 			<dt class="field">
-						<span class="method-title">super</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Solar/Solar.html#methodsuper">Solar::super()</a> in Solar.php</div>
-							<div class="index-item-description">Convenience method referring to Solar::$shared-&gt;super-&gt;fetch().</div>
-					</dd>
-			<dt class="field">
 						<span class="method-title">setActive</span>
 					</dt>
 		<dd class="index-item-body">
@@ -2644,6 +2685,13 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Debug/Solar_Debug_Timer.html">Solar_Debug_Timer</a> in Timer.php</div>
 							<div class="index-item-description">Class to track code execution times.</div>
+					</dd>
+			<dt class="field">
+						Solar_Debug_Var
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Debug/Solar_Debug_Var.html">Solar_Debug_Var</a> in Var.php</div>
+							<div class="index-item-description">Class to help examine and debug variables.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">start</span>
@@ -3093,6 +3141,12 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Solar/Solar_Form.html#methodvalues">Solar_Form::values()</a> in Form.php</div>
 							<div class="index-item-description">Returns the form element values.</div>
+					</dd>
+			<dt class="field">
+						<span class="include-title">Var.php</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Solar/Solar_Debug/_Solar_Debug_Var_php.html">Var.php</a> in Var.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">validate</span>

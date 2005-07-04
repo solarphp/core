@@ -30,51 +30,55 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.5.0</version>
-  <date>2005-06-28</date>
+  <version>0.6.0</version>
+  <date>2005-07-04</date>
   <license>LGPL</license>
   <state>devel</state>
   <notes>* WARNING: This is a public development release, and is not yet stable.
 
+* WARNING: This release contains backwards compatibility (BC) breaks.
+
+* New classes:
+
+  * Solar_Debug_Var, to capture var_dump() output
+
 * Solar:
 
-  * Changed $shared to protected, not public, because some shared
-  objects may not be instantiated at start() time.  From now on, use
-  Solar::shared() to access shared singleton objects; this will
-  instantiate the object if it does not already exist.  Updated all
-  related code throughout Solar to reflect this change.
-
-* Solar_Base:
-
-  * Added errorPush() for stacking onto existing Solar_Error objects
+  * Solar::dump() now uses an instance of Solar_Debug_Var
   
-  * Now have an explicit $config['locale'] key set to null
+  * BC BREAK: Removed undocumented Solar::scrub() method
   
-  * Added test suite
+  * BC BREAK: Removed undocumented Solar::super() method
   
-* Solar_Error:
-
-  * Added $obj parameter to push and pop callbacks (to send the
-  Solar_Error object itself to the callback)
-
-  * You can now transfer error stacks between Solar_Error objects
-  using push()
-
-  * Added test suite
-
-* Solar_Locale:
-
-  * The load() method now fails silently if you try to load a
-  translation file that doesn't exist.  It's often the case that some
-  translations exist and others don't; thus, the non-existence of the
-  file shouldn't throw a warning, as the displayed output clearly
-  shows that keys are being returned instead of translations.
+* Solar_Super:
   
-  * On setCode(), now reloads the Solar-wide translation keys for 
-  the new locale.
+  * Extends Solar_Base the way it should have from the beginning
   
-  * Added test suite (tests Solar::shared('locale') and
-  Solar_Base::locale() as well)
+  * Only allows access to underscore-prefixed superglobals, except
+  $_REQUEST (you should use $_GET or $_POST, don't be lazy ;-)
+
+  * Now uses internal scrub() method and array_walk_recursive()
+  instead of undocumented Solar::scrub() method (which has been
+  removed)
+
+* Solar_Debug_Timer:
+
+  * Changed config key 'html' to 'output' to be consistent with
+  Solar_Debug_Var (as other output modes may become available)
+  
+  * Removed $html parameter from display()
+  
+  * Added localization strings
+
+* Solar_Uri (BC BREAKS):
+
+  * BC BREAK: Removed multi-action method query() in favor of
+  addQuery(), setQuery(), and setQueryString()
+
+  * BC BREAK: Removed multi-action method info() in favor of setInfo()
+  and setInfoString()
+  
+  * Updated all applications using these previous methods
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -118,7 +122,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Sql::exec" />
   <provides type="function" name="Solar_Sql::bind" />
   <provides type="function" name="Solar_Sql::insert" />
-  <provides type="class" name="Solar_Super" />
+  <provides type="class" name="Solar_Super" extends="Solar_Base" />
   <provides type="function" name="Solar_Super::fetch" />
   <provides type="class" name="Solar_Template" extends="Savant3" />
   <provides type="function" name="Solar_Template::error" />
@@ -126,12 +130,15 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_Uri" extends="Solar_Base" />
   <provides type="function" name="Solar_Uri::import" />
   <provides type="function" name="Solar_Uri::export" />
-  <provides type="function" name="Solar_Uri::query2str" />
-  <provides type="function" name="Solar_Uri::info2str" />
-  <provides type="function" name="Solar_Uri::query" />
-  <provides type="function" name="Solar_Uri::info" />
+  <provides type="function" name="Solar_Uri::addQuery" />
+  <provides type="function" name="Solar_Uri::setQuery" />
+  <provides type="function" name="Solar_Uri::setQueryString" />
+  <provides type="function" name="Solar_Uri::setInfo" />
+  <provides type="function" name="Solar_Uri::setInfoString" />
   <provides type="function" name="Solar_Uri::clearInfo" />
   <provides type="function" name="Solar_Uri::clearQuery" />
+  <provides type="function" name="Solar_Uri::query2str" />
+  <provides type="function" name="Solar_Uri::info2str" />
   <provides type="class" name="Solar_User" extends="Solar_Base" />
   <provides type="function" name="Solar_User::solar" />
   <provides type="class" name="Solar_Valid" />
@@ -210,6 +217,8 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Debug_Timer::diff" />
   <provides type="function" name="Solar_Debug_Timer::profile" />
   <provides type="function" name="Solar_Debug_Timer::display" />
+  <provides type="class" name="Solar_Debug_Var" extends="Solar_Base" />
+  <provides type="function" name="Solar_Debug_Var::dump" />
   <provides type="class" name="Solar_Sql_Driver" extends="Solar_Base" />
   <provides type="function" name="Solar_Sql_Driver::connect" />
   <provides type="function" name="Solar_Sql_Driver::escape" />
@@ -648,7 +657,16 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/Solar_Debug_Timer.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/Solar_Debug_Var.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/_Solar_Debug_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/_Solar_Debug_Timer_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/_Solar_Debug_Var_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Locale/Solar_Locale.html">
@@ -1134,6 +1152,12 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Debug/Timer.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Var.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1327,51 +1351,55 @@ Please visit http://solarphp.com/ for more information.
  </release>
  <changelog>
    <release>
-    <version>0.5.0</version>
-    <date>2005-06-28</date>
+    <version>0.6.0</version>
+    <date>2005-07-04</date>
     <license>LGPL</license>
     <state>devel</state>
     <notes>* WARNING: This is a public development release, and is not yet stable.
 
+* WARNING: This release contains backwards compatibility (BC) breaks.
+
+* New classes:
+
+  * Solar_Debug_Var, to capture var_dump() output
+
 * Solar:
 
-  * Changed $shared to protected, not public, because some shared
-  objects may not be instantiated at start() time.  From now on, use
-  Solar::shared() to access shared singleton objects; this will
-  instantiate the object if it does not already exist.  Updated all
-  related code throughout Solar to reflect this change.
-
-* Solar_Base:
-
-  * Added errorPush() for stacking onto existing Solar_Error objects
+  * Solar::dump() now uses an instance of Solar_Debug_Var
   
-  * Now have an explicit $config['locale'] key set to null
+  * BC BREAK: Removed undocumented Solar::scrub() method
   
-  * Added test suite
+  * BC BREAK: Removed undocumented Solar::super() method
   
-* Solar_Error:
-
-  * Added $obj parameter to push and pop callbacks (to send the
-  Solar_Error object itself to the callback)
-
-  * You can now transfer error stacks between Solar_Error objects
-  using push()
-
-  * Added test suite
-
-* Solar_Locale:
-
-  * The load() method now fails silently if you try to load a
-  translation file that doesn't exist.  It's often the case that some
-  translations exist and others don't; thus, the non-existence of the
-  file shouldn't throw a warning, as the displayed output clearly
-  shows that keys are being returned instead of translations.
+* Solar_Super:
   
-  * On setCode(), now reloads the Solar-wide translation keys for 
-  the new locale.
+  * Extends Solar_Base the way it should have from the beginning
   
-  * Added test suite (tests Solar::shared('locale') and
-  Solar_Base::locale() as well)
+  * Only allows access to underscore-prefixed superglobals, except
+  $_REQUEST (you should use $_GET or $_POST, don't be lazy ;-)
+
+  * Now uses internal scrub() method and array_walk_recursive()
+  instead of undocumented Solar::scrub() method (which has been
+  removed)
+
+* Solar_Debug_Timer:
+
+  * Changed config key 'html' to 'output' to be consistent with
+  Solar_Debug_Var (as other output modes may become available)
+  
+  * Removed $html parameter from display()
+  
+  * Added localization strings
+
+* Solar_Uri (BC BREAKS):
+
+  * BC BREAK: Removed multi-action method query() in favor of
+  addQuery(), setQuery(), and setQueryString()
+
+  * BC BREAK: Removed multi-action method info() in favor of setInfo()
+  and setInfoString()
+  
+  * Updated all applications using these previous methods
     </notes>
    </release>
  </changelog>

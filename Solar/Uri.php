@@ -24,6 +24,8 @@
 * 
 * @package Solar
 * 
+* @todo add a way to let import() know what the script name is
+* 
 */
 
 class Solar_Uri extends Solar_Base {
@@ -177,7 +179,7 @@ class Solar_Uri extends Solar_Base {
 	* @access public
 	* 
 	* @param string $uri The URI to parse; if null, defaults to the current
-	* $this->config['uri'].
+	* URI.
 	* 
 	* @return array An array of all the URI component parts.
 	* 
@@ -186,7 +188,7 @@ class Solar_Uri extends Solar_Base {
 	public function import($uri = null)
 	{
 		// build a default scheme (with '://' in it)
-		$ssl = Solar::super('server', 'HTTPS', 'off');
+		$ssl = Solar::server('HTTPS', 'off');
 		$scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
 		
 		// we'll parse the modified uri, not the original as passed.
@@ -194,7 +196,8 @@ class Solar_Uri extends Solar_Base {
 		
 		// force to the current uri?
 		if (! $uri) {
-			$modified_uri = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$modified_uri = $scheme . Solar::server('HTTP_HOST');
+			$modified_uri .= Solar::server('REQUEST_URI');
 		} elseif (strpos('://', $uri) === false) {
 			// add the scheme
 			$modified_uri = $scheme . $uri;
@@ -228,7 +231,7 @@ class Solar_Uri extends Solar_Base {
 			$elem['query'] = Solar::get();
 			
 			// force the path to the script
-			$elem['path'] = Solar::super('server', 'SCRIPT_NAME');
+			$elem['path'] = Solar::server('SCRIPT_NAME');
 			
 			//  get path info
 			$elem['info'] = Solar::pathinfo();
@@ -270,12 +273,167 @@ class Solar_Uri extends Solar_Base {
 		$uri .= empty($this->host)     ? '' : $this->host;
 		$uri .= empty($this->port)     ? '' : ':' . $this->port;
 		$uri .= empty($this->path)     ? '' : $this->path;
-		$uri .= empty($this->info)     ? '' : '/' . self::info2str($this->info);
-		$uri .= empty($this->query)    ? '' :  '?' . self::query2str($this->query);
+		$uri .= empty($this->info)     ? '' : '/' . $this->info2str($this->info);
+		$uri .= empty($this->query)    ? '' :  '?' . $this->query2str($this->query);
 		$uri .= empty($this->fragment) ? '' :  '#' . $this->fragment;
 		
 		// done!
 		return $uri;
+	}
+	
+	
+	/**
+	* 
+	* Adds an element to the $this->query array.
+	* 
+	* If the element already exists, the element is converted to an array
+	* and the value is appended to that array.
+	*  
+	* @access public
+	* 
+	* @param string $key The GET variable name to work with.
+	* 
+	* @param string $val The value to use.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function addQuery($key, $val = '')
+	{
+		if (isset($this->query[$key])) {
+			settype($this->query[$key], 'array');
+			$this->query[$key][] = $val;
+		} else {
+			$this->query[$key] = $val;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Sets the value of an element in the $this->query array.
+	* 
+	* This will overwrite any previous value.
+	* 
+	* @access public
+	* 
+	* @param string $key The GET variable name to work with.
+	* 
+	* @param string $val The value to use.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function setQuery($key, $val = '')
+	{
+		$this->query[$key] = $val;
+	}
+	
+	
+	/**
+	* 
+	* Sets all elements of $this->query from a query string.
+	* 
+	* This will overwrite any previous values.
+	* 
+	* @access public
+	* 
+	* @param string $key The GET variable name to work with.
+	* 
+	* @param string $val The value to use.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function setQueryString($val)
+	{
+		parse_str($val, $this->query);
+	}
+	
+	
+	/**
+	* 
+	* Sets one element in the $this->info array by position and value.
+	* 
+	* @access public
+	* 
+	* @param int $key The path_info position to work with.
+	* 
+	* @param string $val The value to use.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function setInfo($key, $val = '')
+	{
+		$this->info[(int)$key] = $val;
+	}
+	
+	
+	/**
+	* 
+	* Sets all elements in the $this->info array from a path_info string.
+	* 
+	* This will overwrite any previous values.
+	* 
+	* @access public
+	* 
+	* @param string $val The path_info string to use.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function setInfoString($val)
+	{
+		$this->info = explode('/', $val);
+		if (substr($val, 0, 1) == '/') {
+			array_shift($this->info);
+		}
+	}
+	
+	
+	/**
+	* 
+	* Clears (resets) all or part of $this->info.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function clearInfo($key = null)
+	{
+		if ($key === null || $key === false) {
+			$this->info = array();
+		} elseif (array_key_exists((int) $key, $this->info)) {
+			unset($this->info[(int) $key]);
+		}
+	}
+	
+	
+	/**
+	* 
+	* Clears (resets) all or part of $this->query.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function clearQuery($key = null)
+	{
+		if (! $key) {
+			$this->query = array();
+		} elseif (array_key_exists($key, $this->query)) {
+			unset($this->query[$key]);
+		}
 	}
 	
 	
@@ -286,13 +444,13 @@ class Solar_Uri extends Solar_Base {
 	* Modified from code written by nospam@fiderallalla.de, found at
 	* http://php.net/parse_str.  Automatically urlencodes values.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @return string A URI query string.
 	* 
 	*/
 	
-	public static function query2str($params)
+	protected function query2str($params)
 	{
 		// preempt if $params is not an array, or is empty
 		if (! is_array($params) || count($params) == 0 ) {
@@ -310,7 +468,7 @@ class Solar_Uri extends Solar_Base {
 		foreach ($params as $key => $val) {
 		
 			if (is_array($val) ) {   
-				$out[] = self::query2str($val, $key);
+				$out[] = $this->query2str($val, $key);
 				continue;
 			}
 			
@@ -326,13 +484,13 @@ class Solar_Uri extends Solar_Base {
 	* 
 	* Converts an array of info elements into a string.
 	* 
-	* @access public
+	* @access protected
 	* 
 	* @return string A URI pathinfo string.
 	* 
 	*/
 	
-	public static function info2str($params)
+	protected function info2str($params)
 	{
 		settype($params, 'array');
 		$str = array();
@@ -340,131 +498,6 @@ class Solar_Uri extends Solar_Base {
 			$str[] = urlencode($val);
 		}
 		return implode('/', $str);
-	}
-	
-	
-	/**
-	* 
-	* Changes the elements and values in the $this->query array.
-	* 
-	* With this method, you can 'add', 'set' or 'del' (delete) a value. 
-	* You can also use the 'setstr' action to set the query elements
-	* from a URI query string as the $key parameter.
-	* 
-	* When using 'add', the element will be converted to an array if 
-	* there is more than one value.
-	* 
-	* @access public
-	* 
-	* @param string $act The action to take: 'add', 'set', 'setstr', or 'del'.
-	* 
-	* @param string $key The GET variable name to work with.
-	* 
-	* @param string $val The value to use.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function query($act, $key, $val = '')
-	{
-		switch (strtolower($act)) {
-		
-		case 'add':
-			if (isset($this->query[$key])) {
-				settype($this->query[$key], 'array');
-				$this->query[$key][] = $val;
-			} else {
-				$this->query[$key] = $val;
-			}
-			break;
-		
-		case 'set':
-			$this->query[$key] = $val;
-			break;
-		
-		case 'setstr':
-			parse_str($key, $this->query);
-			break;
-			
-		case 'del':
-			unset($this->query[$key]);
-			break;
-		}
-	}
-	
-	
-	/**
-	* 
-	* Changes the elements and values in the $this->info array.
-	* 
-	* With this method, you can 'set' or 'del' (delete) a value. 
-	* You can also use the 'setstr' action to set the path_info
-	* from a URI query string as the $key parameter.
-	* 
-	* @access public
-	* 
-	* @param string $act The action to take: 'add', 'setstr', or 'del'.
-	* 
-	* @param string $key The path_info position to work with.
-	* 
-	* @param string $val The value to use.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function info($act, $key, $val = '')
-	{
-		switch (strtolower($act)) {
-		
-		case 'set':
-			$this->info[(int)$key] = $val;
-			break;
-		
-		case 'setstr':
-			$this->info = explode('/', $key);
-			if (substr($key, 0, 1) == '/') {
-				array_shift($this->info);
-			}
-			break;
-			
-		case 'del':
-			unset($this->info[(int)$key]);
-			break;
-		}
-	}
-	
-	
-	/**
-	* 
-	* Clears (resets) $this->info to a blank array.
-	* 
-	* @access public
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function clearInfo()
-	{
-		$this->info = array();
-	}
-	
-	
-	/**
-	* 
-	* Clears (resets) $this->query to a blank array.
-	* 
-	* @access public
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function clearQuery()
-	{
-		$this->query = array();
 	}
 }
 ?>

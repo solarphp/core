@@ -472,7 +472,7 @@ class Solar_Cell_Comments extends Solar_Sql_Entity {
 		switch ($col) {
 		
 		case 'ip_addr':
-			return Solar::super('server', 'REMOTE_ADDR');
+			return Solar::server('REMOTE_ADDR');
 			break;
 		
 		case 'ts':

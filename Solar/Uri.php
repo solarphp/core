@@ -174,14 +174,15 @@ class Solar_Uri extends Solar_Base {
 	
 	/**
 	* 
-	* Imports the current URI string.
+	* Imports a URI string (by default, the current URI) into the object.
 	* 
 	* @access public
 	* 
-	* @param string $uri The URI to parse; if null, defaults to the current
-	* URI.
+	* @param string $uri The URI to parse.  If null, defaults to the
+	* current URI, and retrives path_info values; if not null, cannot
+	* retrieve path_info values.
 	* 
-	* @return array An array of all the URI component parts.
+	* @return void
 	* 
 	*/
 	
@@ -223,6 +224,8 @@ class Solar_Uri extends Solar_Base {
 		if ($uri) {
 		
 			// a uri string was passed; parse query elements into an array.
+			// note that we do not capture path_info, as there's no way
+			// to tell where it is (would need the script name).
 			parse_str($elem['query'], $elem['query']);
 			
 		} else {
@@ -246,7 +249,7 @@ class Solar_Uri extends Solar_Base {
 	
 	/**
 	* 
-	* Builds the parsed URI elements into a string.
+	* Builds the object URI properties into a string.
 	* 
 	* @access public
 	* 

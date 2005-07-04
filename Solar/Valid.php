@@ -54,7 +54,7 @@ class Solar_Valid {
 			return true;
 		}
 		
-		$expr = '/^[a-zA-Z]*$/';
+		$expr = '/^[a-zA-Z]+$/';
 		return self::regex($value, $expr, $blank);
 	}
 	
@@ -77,7 +77,7 @@ class Solar_Valid {
 			return true;
 		}
 		
-		$expr = '/^[a-zA-Z0-9]*$/'; 
+		$expr = '/^[a-zA-Z0-9]+$/'; 
 		return self::regex($value, $expr);
 	}
 	

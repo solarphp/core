@@ -156,6 +156,8 @@ class Solar_Cache_File extends Solar_Base {
 	* 
 	* @param string $key The entry ID.
 	* 
+	* @param mixed $data The data to write into the entry.
+	* 
 	* @return bool True on success, false on failure.
 	* 
 	*/
@@ -261,13 +263,13 @@ class Solar_Cache_File extends Solar_Base {
 	
 	/**
 	* 
-	* Returns the filename for the entry key.
+	* Returns the path and filename for the entry key.
 	* 
 	* @access public
 	* 
 	* @param string $key The entry ID.
 	* 
-	* @return string The cache entry filename.
+	* @return string The cache entry path and filename.
 	* 
 	*/
 	

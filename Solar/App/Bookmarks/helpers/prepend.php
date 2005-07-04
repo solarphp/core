@@ -23,7 +23,7 @@ $user = Solar::shared('user');
 
 // RSS data for the page (regardless of whether it's actually available)
 $link = Solar::object('Solar_Uri');
-$link->query('set', 'rss', '1');
+$link->setQuery('rss', '1');
 
 $this->view->rss = array(
 	'avail' => false,

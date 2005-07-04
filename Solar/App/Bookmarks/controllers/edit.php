@@ -70,7 +70,7 @@ if (! $id) {
 	
 	if ($existing_id) {
 		$link = Solar::object('Solar_Uri');
-		$link->query('set', 'id', $existing_id);
+		$link->setQuery('id', $existing_id);
 		header('Location: ' . $link->export());
 	}
 
@@ -105,16 +105,16 @@ $href = false;
 // do we have info or a qstr?
 if ($info || $qstr) {
 	// yes, return to a list of bookmarks
-	$link->info('setstr', $info);
-	$link->query('setstr', $qstr);
+	$link->setInfoString($info);
+	$link->setQueryString($qstr);
 	$href = $link->export();
 } elseif ($uri) {
 	// return to the quickmark uri
 	$href = $uri;
 } else {
 	// return to the user's list
-	$link->info('set', 0, 'user');
-	$link->info('set', 1, $user->auth->username);
+	$link->setInfo(0, 'user');
+	$link->setInfo(1, $user->auth->username);
 	$href = $link->export();
 }
 

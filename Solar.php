@@ -652,32 +652,6 @@ class Solar {
 	
 	/**
 	* 
-	* Convenience method referring to Solar::$shared->super->fetch().
-	* 
-	* @access public
-	* 
-	* @param string $type The superglobal array to work with, e.g. 'server'
-	* or 'env'.
-	* 
-	* @param string $key The array element; if null, returns the whole
-	* array.
-	* 
-	* @param mixed $default If the requested array element is
-	* not set, return this value.
-	* 
-	* @return mixed The array element value (if set), or the
-	* $default value (if not).
-	* 
-	*/
-	
-	public static function super($type, $key = null, $default = null)
-	{
-		return Solar::$shared->super->fetch($type, $key, $default);
-	}
-	
-	
-	/**
-	* 
 	* Safely gets the value of $_SERVER['PATH_INFO'] element.
 	* 
 	* Automatically checks if the element is set; if not, returns a

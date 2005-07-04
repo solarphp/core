@@ -61,9 +61,9 @@ if ($rss) {
 		// and ignore the rows-per-page settings.  build a custom
 		// RSS link for this.
 		$link = Solar::object('Solar_Uri');
-		$link->query('set', 'rss', '1');
-		$link->query('del', 'page');
-		$link->query('del', 'rows_per_page');
+		$link->setQuery('rss', '1');
+		$link->clearQuery('page');
+		$link->clearQuery('rows_per_page');
 		$this->view->rss['link'] = $link->export();
 		unset($link);
 	}

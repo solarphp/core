@@ -99,6 +99,8 @@ class Solar_Cache_Memcache extends Solar_Base {
 	* 
 	* @param string $key The entry ID.
 	* 
+	* @param mixed $data The data to write into the entry.
+	* 
 	* @return bool True on success, false on failure.
 	* 
 	*/

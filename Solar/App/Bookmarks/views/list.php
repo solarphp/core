@@ -45,7 +45,7 @@ $link = Solar::object('Solar_Uri');
 				if (Solar::get('order', 'ts_desc') == $key) {
 					echo "<strong>$val</strong><br />\n";
 				} else {
-					$link->query('set', 'order', $key);
+					$link->setQuery('order', $key);
 					echo $this->ahref($link->export(), $val) . "<br />\n";
 				}
 			}
@@ -62,8 +62,8 @@ $link = Solar::object('Solar_Uri');
 				foreach ($this->user_tags as $tag) {
 					// clear out pathinfo, but reset the page to 1
 					$link->clearInfo();
-					$link->query('set', 'page', 1);
-					$link->info('setstr', "user/{$this->user_id}/$tag");
+					$link->setQuery('page', 1);
+					$link->setInfoString("user/{$this->user_id}/$tag");
 					$tmp[] = $this->ahref($link->export(), $tag);
 				}
 				echo implode("<br />\n", $tmp);
@@ -120,8 +120,8 @@ $link = Solar::object('Solar_Uri');
 						echo Solar::locale('Solar_App_Bookmarks', 'BY') . ' ';
 						$link->clearInfo();
 						$link->clearQuery();
-						$link->info('set', '0', 'user');
-						$link->info('set', '1', $item['user_id']);
+						$link->setInfo('0', 'user');
+						$link->setInfo('1', $item['user_id']);
 						echo $this->ahref($link->export(), $item['user_id']);
 					?></span>
 					
@@ -135,21 +135,21 @@ $link = Solar::object('Solar_Uri');
 							echo '&nbsp;';
 							$link->clearInfo();
 							$link->clearQuery();
-							$link->info('set', '0', 'tag');
-							$link->info('set', '1', $tag);
+							$link->setInfo('0', 'tag');
+							$link->setInfo('1', $tag);
 							echo $this->ahref($link->export(), $tag);
 						}
 						
 						// edit link
 						if (Solar::shared('user')->auth->username == $item['user_id']) {
-							$back_info = Solar::super('server', 'PATH_INFO');
-							$back_qstr = Solar::super('server', 'QUERY_STRING');
+							$back_info = Solar::server('PATH_INFO');
+							$back_qstr = Solar::server('QUERY_STRING');
 							$link->clearInfo();
 							$link->clearQuery();
-							$link->info('set', '0', 'edit');
-							$link->query('set', 'id', $item['id']);
-							$link->query('set', 'info', $back_info);
-							$link->query('set', 'qstr', $back_qstr);
+							$link->setInfo('0', 'edit');
+							$link->setQuery('id', $item['id']);
+							$link->setQuery('info', $back_info);
+							$link->setQuery('qstr', $back_qstr);
 							
 							echo '&nbsp;...&nbsp;' . $this->ahref($link->export(), 'edit');
 						}
@@ -162,9 +162,9 @@ $link = Solar::object('Solar_Uri');
 			<p><strong>[ <?php
 				$link->import();
 				$tmp = Solar::get('page', 1);
-				$link->query('set', 'page', $tmp - 1);
+				$link->setQuery('page', $tmp - 1);
 				$prev = $link->export();
-				$link->query('set', 'page', $tmp + 1);
+				$link->setQuery('page', $tmp + 1);
 				$next = $link->export();
 				if ($this->page > 1) echo $this->ahref($prev, Solar::locale('Solar', 'OP_PREVIOUS')) . ' | ';
 				echo "Page {$this->page} of {$this->pages}";
@@ -180,8 +180,8 @@ $link = Solar::object('Solar_Uri');
 			<p><?php
 				$link->clearInfo();
 				$link->clearQuery();
-				$link->info('set', 0, 'edit');
-				$link->query('set', 'id', '0');
+				$link->setInfo(0, 'edit');
+				$link->setQuery('id', '0');
 				echo $this->ahref($link->export(), Solar::locale('Solar_App_Bookmarks', 'ADD_NEW_BOOKMARK'))
 			?></p>
 			

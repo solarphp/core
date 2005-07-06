@@ -2,7 +2,7 @@
 
 /**
 * 
-* Static methods for validating data, mostly for the Sql_Entity class.
+* Static methods for validating data.
 * 
 * @category Solar
 * 
@@ -13,8 +13,6 @@
 * @license LGPL
 * 
 * @version $Id$
-* 
-* @todo Try to pull more from regexlib.com site?
 * 
 */
 
@@ -50,10 +48,6 @@ class Solar_Valid {
 	
 	public static function alpha($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		
 		$expr = '/^[a-zA-Z]+$/';
 		return self::regex($value, $expr, $blank);
 	}
@@ -73,12 +67,8 @@ class Solar_Valid {
 	
 	public static function alphanumeric($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		
 		$expr = '/^[a-zA-Z0-9]+$/'; 
-		return self::regex($value, $expr);
+		return self::regex($value, $expr, $blank);
 	}
 	
 	
@@ -111,19 +101,20 @@ class Solar_Valid {
 	* @param string|array $callback A string or array suitable for use
 	* as the first argument to call_user_func_array().
 	* 
-	* @param string|array $callback Additional arguments to pass to the
-	* callback; note that the first argument will always be the value to
-	* be validated.
-	* 
 	* @return bool True if valid, false if not.
 	* 
 	* @see call_user_func_array()
 	* 
 	*/
 	
-	public static function custom($value, $callback, $args)
+	public static function custom($value, $callback)
 	{
-		// put the value at the top of the argument list
+		// keep all arguments so we can pass extras to the callback
+		$args = func_get_args();
+		// drop the value and the callback from the arglist
+		array_shift($args);
+		array_shift($args);
+		// put the value back at the top of the argument list
 		array_unshift($args, $value);
 		// make the callback
 		return call_user_func_array($callback, $args);
@@ -146,12 +137,8 @@ class Solar_Valid {
 	
 	public static function email($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		
 		$expr = '/^((\"[^\"\f\n\r\t\v\b]+\")|([\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]+))$/';
-		return self::regex($value, $expr);
+		return self::regex($value, $expr, $blank);
 	}
 	
 	
@@ -183,6 +170,9 @@ class Solar_Valid {
 	* 
 	* Validate that a value is in a list of allowed options.
 	* 
+	* Strict checking is enforced, so a string "1" is not the same as
+	* an integer 1.  This helps to avoid matching 0 and empty, etc.
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -199,7 +189,7 @@ class Solar_Valid {
 			return true;
 		}
 		
-		return in_array($value, (array) $array);
+		return in_array($value, (array) $array, true);
 	}
 	
 	
@@ -222,46 +212,38 @@ class Solar_Valid {
 	
 	public static function inScope($value, $size, $scope, $blank = self::NOT_BLANK)
 	{
+		// allowed blank?
 		if ($blank && self::blank($value)) {
 			return true;
 		}
 		
-		// has to be at least a numeric value
+		// scope has to be smaller than size.
+		// both size and scope have to be positive numbers.
+		if ($size < $scope || $size < 0 || $scope < 0 ||
+			! is_numeric($size) || ! is_numeric($scope)) {
+			return false;
+		}
+		
+		// value must be only numeric
 		if (! is_numeric($value)) {
 			return false;
 		}
 		
-		// maximum number of digits allowed to the left
-		// and right of the decimal point.
-		$right_max = (int) $scope;
-		$left_max = (int) $size - $scope;
+		// drop trailing and leading zeroes
+		$value = (float) $value;
 		
-		// get rid of trailing decimal zeroes
-		settype($value, 'float');
-		
-		// ignore negative signs
-		$value = str_replace('-', '', $value);
-		
-		// find the decimal point, then get the left
-		// and right portions.
-		$pos = strpos($value, '.');
-		if ($pos === false) {
-			$left = $value;
-			$right = '';
-		} else {
-			$left = substr($value, 0, $pos);
-			$right = substr($value, $pos+1);
-		}
-		
-		// how long are the left and right portions?
-		$left_len = strlen($left);
-		$right_len = strlen($right);
-		
-		// do the portions exceed their maxes?
-		if ($left_len > $left_max || $right_len > $right_max) {
-			return false;
-		} else {
+		// test the size (whole + decimal) and scope (decimal only).
+		// does not include signs (+/-) or the decimal point itself.
+		// 
+		// use the @ signs in strlen() checks to suppress errors
+		// when the match-element doesn't exist.
+		$expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/";
+		if (preg_match($expr, $value, $match) &&
+			@strlen($match[2] . $match[5]) <= $size &&
+			@strlen($match[5]) <= $scope) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -280,11 +262,8 @@ class Solar_Valid {
 	
 	public static function integer($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		$expr = '/^[\+\-]{0,1}[0-9]+$/';
-		return self::regex($value, $expr);
+		$expr = '/^[\+\-]?[0-9]+$/';
+		return self::regex($value, $expr, $blank);
 	}
 	
 	
@@ -310,20 +289,14 @@ class Solar_Valid {
 		
 		// basic date format
 		// yyyy-mm-dd
-		$expr = '/[0-9]{4}-[0-9]{2}-[0-9]{2}/';
-		
-		// year, month, and day portions
-		$y = (int) substr($value, 0, 4);
-		$m = (int) substr($value, 6, 2);
-		$d = (int) substr($value, 8, 2);
+		$expr = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/';
 		
 		// validate
-		if (strlen($value) != 10 ||
-			! preg_match($expr, $value) ||
-			! checkdate($m, $d, $y)) {
-			return false;
-		} else {
+		if (preg_match($expr, $value, $match) &&
+			checkdate($match[2], $match[3], $match[1])) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -351,25 +324,23 @@ class Solar_Valid {
 			return true;
 		}
 		
-		// basic timestamp format
-		// yyyy-mm-dd hh:ii:ss
-		$expr = '/' . 
-			'[0-9]{4}-[0-9]{2}-[0-9]{2}' . // date
-			'T' . // a capital letter T
-			'(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]' . // time
-			'/';
+		// basic timestamp format (19 chars long)
+		// yyyy-mm-ddThh:ii:ss
+		// 0123456789012345678
+		// get the individual portions
+		$date = substr($value, 0, 10);
+		$sep = substr($value, 10, 1);
+		$time = substr($value, 11, 8);
 		
-		// year, month, and day portions
-		$y = (int) substr($value, 0, 4);
-		$m = (int) substr($value, 6, 2);
-		$d = (int) substr($value, 8, 2);
-		
-		if (strlen($value) != 19 ||
-			! preg_match($expr, $value) ||
-			! checkdate($m, $d, $y)) {
-			return false;
-		} else {
+		//echo "'$date' '$sep' '$time'\n";
+		// now validate each portion
+		if (strlen($value) == 19 &&
+			self::isoDate($date) &&
+			$sep == 'T' &&
+			self::isoTime($time)) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -377,6 +348,10 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate that a value is an ISO 8601 time string (hh:ii::ss format).
+	* 
+	* Per note from Chris Drozdowski about ISO 8601, allows two midnight
+	* times ... 00:00:00 for the beginning of the day, and 24:00:00 for
+	* the end of the day.
 	* 
 	* @access public
 	* 
@@ -388,12 +363,8 @@ class Solar_Valid {
 	
 	public static function isoTime($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		
-		$expr = '/(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]/';
-		return self::regex($value, $expr);
+		$expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
+		return self::regex($value, $expr, $blank) || ($value == '24:00:00');
 	}
 	
 	
@@ -413,8 +384,10 @@ class Solar_Valid {
 	
 	public static function max($value, $max, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
+		// reverse the blank-check so that empties are not
+		// treated as zero.
+		if (! $blank && self::blank($value)) {
+			return false;
 		}
 		
 		return $value <= $max;
@@ -462,9 +435,12 @@ class Solar_Valid {
 	
 	public static function min($value, $min, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
+		// reverse the blank-check so that empties are not
+		// treated as zero.
+		if (! $blank && self::blank($value)) {
+			return false;
 		}
+		
 		
 		return $value >= $min;
 	}
@@ -564,7 +540,7 @@ class Solar_Valid {
 	
 	/**
 	* 
-	* Validate that a value is not equal to zero.
+	* Validate that a value is not exactly zero.
 	* 
 	* @access public
 	* 
@@ -576,11 +552,8 @@ class Solar_Valid {
 	
 	public static function nonZero($value, $blank = self::NOT_BLANK)
 	{
-		if ($blank && self::blank($value)) {
-			return true;
-		}
-		
-		return $value != 0;
+		$expr = '/^0+$/';
+		return ! self::regex($value, $expr);
 	}
 	
 	

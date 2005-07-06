@@ -10,7 +10,7 @@
 * 
 * @subpackage Solar_User
 * 
-* @author Paul M. Jones <pmjones@solarphp.net>
+* @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
@@ -171,7 +171,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	*
 	* @author Mike Wallner <mike@php.net>
 	* 
-	* @author Paul M. Jones (minor modfications) <pmjones@solarphp.net>
+	* @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
 	* 
 	* @access public
 	* 
@@ -243,7 +243,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
 	*
 	* @author Mike Wallner <mike@php.net>
 	* 
-	* @author Paul M. Jones (minor modfications) <pmjones@solarphp.net>
+	* @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
 	* 
 	* @access protected
 	* 

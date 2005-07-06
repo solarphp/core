@@ -30,7 +30,7 @@ for ($i = 0; $i < 3; $i++) {
 
 $b->push($a);
 
-dump($b);
+Solar::dump($b);
 
 Solar::stop();
 ?>

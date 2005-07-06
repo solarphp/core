@@ -37,11 +37,11 @@ class Example extends Solar_Base {
 // test the Solar_Base::error() method (simple)
 $example = new Example();
 $err = $example->something();
-dump($err);
+Solar::dump($err);
 
 // test the Solar_Base::error() method (extended)
 $err = $example->another();
-dump($err);
+Solar::dump($err);
 
 Solar::stop();
 ?>

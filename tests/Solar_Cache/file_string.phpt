@@ -40,8 +40,8 @@ for ($i = 0; $i < $loops; $i++) {
 	}
 	
 	// dump the results of this iteration
-	dump($status, (string) $i);
-	dump($data);
+	Solar::dump($status, (string) $i);
+	Solar::dump($data);
 	flush();
 	
 	// wait a while before the next run

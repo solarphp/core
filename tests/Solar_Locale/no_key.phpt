@@ -22,11 +22,11 @@ foreach ($codes as $code) {
 	// set the code
 	Solar::shared('locale')->setCode($code);
 	$result = Solar::shared('locale')->code();
-	dump($result);
+	Solar::dump($result);
 	
 	// only the en_US file has the ENGLISH_ONLY key
 	$result = $example->locale('ENGLISH_ONLY');
-	dump($result);
+	Solar::dump($result);
 }
 
 ?>

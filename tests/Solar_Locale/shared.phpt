@@ -10,28 +10,28 @@ $dir = dirname(__FILE__) . '/locale/';
 
 // output the current code
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 
 // load the testing locale and try the default translation
 Solar::shared('locale')->load('testing', $dir);
 $result = Solar::shared('locale')->string('testing', 'HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 // Italiano
 Solar::shared('locale')->setCode('it_IT');
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 Solar::shared('locale')->load('testing', $dir);
 $result = Solar::shared('locale')->string('testing', 'HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 // Espa–ol
 Solar::shared('locale')->setCode('es_ES');
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 Solar::shared('locale')->load('testing', $dir);
 $result = Solar::shared('locale')->string('testing', 'HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 ?>
 --EXPECT--

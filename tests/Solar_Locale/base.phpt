@@ -17,23 +17,23 @@ $example = new Example();
 
 // English
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 $result = $example->locale('HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 // Italiano
 Solar::shared('locale')->setCode('it_IT');
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 $result = $example->locale('HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 // Espa–ol
 Solar::shared('locale')->setCode('es_ES');
 $result = Solar::shared('locale')->code();
-dump($result);
+Solar::dump($result);
 $result = $example->locale('HELLO_WORLD');
-dump($result);
+Solar::dump($result);
 
 ?>
 --EXPECT--

@@ -16,7 +16,7 @@ $err = Solar::error(
 	'ERR_EXAMPLE'    // code
 );
 
-dump($err);
+Solar::dump($err);
 
 // Solar::error extended
 $err = Solar::error(
@@ -30,7 +30,7 @@ $err = Solar::error(
 	false              // trace
 );
 
-dump($err);
+Solar::dump($err);
 
 Solar::stop();
 ?>

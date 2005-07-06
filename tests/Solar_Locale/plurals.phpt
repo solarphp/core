@@ -23,12 +23,12 @@ foreach ($codes as $code) {
 	// set the code
 	Solar::shared('locale')->setCode($code);
 	$result = Solar::shared('locale')->code();
-	dump($result);
+	Solar::dump($result);
 	
 	// try 0, 1, and 2
 	for ($i = 0; $i < 3; $i++) {
 		$result = $i . ' ' . $example->locale('APPLE', $i);
-		dump($result);
+		Solar::dump($result);
 	}
 }
 

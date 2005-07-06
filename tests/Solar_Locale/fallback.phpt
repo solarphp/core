@@ -22,13 +22,13 @@ foreach ($codes as $code) {
 	// set the code
 	Solar::shared('locale')->setCode($code);
 	$result = Solar::shared('locale')->code();
-	dump($result);
+	Solar::dump($result);
 	
 	// none of the locale files has an OK_SAVED key.
 	// en_US should fall back to the system-wide locale strings.
 	// others will return just the key.
 	$result = $example->locale('OK_SAVED');
-	dump($result);
+	Solar::dump($result);
 }
 
 ?>

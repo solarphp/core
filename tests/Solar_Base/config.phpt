@@ -21,12 +21,12 @@ class Example extends Solar_Base {
 
 $example = Solar::object('Example');
 $result = $example->testing();
-dump($result);
+Solar::dump($result);
 
 $opts = array('opt_3' => 'dib');
 $example = Solar::object('Example', $opts);
 $result = $example->testing();
-dump($result);
+Solar::dump($result);
 
 // should be foo, gir, baz
 // then foo, gir, dib

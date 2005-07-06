@@ -30,55 +30,32 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.6.0</version>
-  <date>2005-07-04</date>
+  <version>0.6.1</version>
+  <date>2005-07-06</date>
   <license>LGPL</license>
   <state>devel</state>
   <notes>* WARNING: This is a public development release, and is not yet stable.
 
 * WARNING: This release contains backwards compatibility (BC) breaks.
 
-* New classes:
+* Solar_Valid:
 
-  * Solar_Debug_Var, to capture var_dump() output
+  * The inList() method now strict-checks values; this helps avoid
+  confusing (for example) '0', 0, and empty strings.
 
-* Solar:
+  * The inScope() method was broken, have replaced with an algorithm
+  that actually works (and is incidentally more streamlined).
 
-  * Solar::dump() now uses an instance of Solar_Debug_Var
-  
-  * BC BREAK: Removed undocumented Solar::scrub() method
-  
-  * BC BREAK: Removed undocumented Solar::super() method
-  
-* Solar_Super:
-  
-  * Extends Solar_Base the way it should have from the beginning
-  
-  * Only allows access to underscore-prefixed superglobals, except
-  $_REQUEST (you should use $_GET or $_POST, don't be lazy ;-)
+  * The max() and min() methods no longer treat empty strings as zero.
 
-  * Now uses internal scrub() method and array_walk_recursive()
-  instead of undocumented Solar::scrub() method (which has been
-  removed)
+  * The nonZero() method now works properly in all tested cases, even
+  multiple string zeros (e.g., '000' is still zero).
 
-* Solar_Debug_Timer:
+  * Per note from Chris Drozdowski about ISO 8601, the isoTime()
+  method now allows two midnight times:  &quot;00:00:00&quot; marks the
+  beginning of the day, and &quot;24:00:00&quot; marks the end of the day.
 
-  * Changed config key 'html' to 'output' to be consistent with
-  Solar_Debug_Var (as other output modes may become available)
-  
-  * Removed $html parameter from display()
-  
-  * Added localization strings
-
-* Solar_Uri (BC BREAKS):
-
-  * BC BREAK: Removed multi-action method query() in favor of
-  addQuery(), setQuery(), and setQueryString()
-
-  * BC BREAK: Removed multi-action method info() in favor of setInfo()
-  and setInfoString()
-  
-  * Updated all applications using these previous methods
+  * Added tests for Solar_Valid.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -150,19 +127,6 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Valid::inKeys" />
   <provides type="function" name="Solar_Valid::inList" />
   <provides type="function" name="Solar_Valid::inScope" />
-  <provides type="function" name="Solar_Valid::integer" />
-  <provides type="function" name="Solar_Valid::isoDate" />
-  <provides type="function" name="Solar_Valid::isoDateTime" />
-  <provides type="function" name="Solar_Valid::isoTime" />
-  <provides type="function" name="Solar_Valid::max" />
-  <provides type="function" name="Solar_Valid::maxLength" />
-  <provides type="function" name="Solar_Valid::min" />
-  <provides type="function" name="Solar_Valid::minLength" />
-  <provides type="function" name="Solar_Valid::multiple" />
-  <provides type="function" name="Solar_Valid::nonZero" />
-  <provides type="function" name="Solar_Valid::notBlank" />
-  <provides type="function" name="Solar_Valid::regex" />
-  <provides type="function" name="Solar_Valid::uri" />
   <provides type="class" name="Solar_App_Bookmarks" extends="Solar_App" />
   <provides type="function" name="Solar_App_Bookmarks::setup" />
   <provides type="function" name="Solar_App_Bookmarks::getOrder" />
@@ -1275,73 +1239,112 @@ Please visit http://solarphp.com/ for more information.
    <file role="test" baseinstalldir="/" name="tests/setup.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/config.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Base/config.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/error.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Base/error.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/fallback.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Base/fallback.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Base/locale.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/stack.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Base/stack.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Base/locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/es_ES.php">
+   <file role="test" baseinstalldir="/" name="tests/Base/locale/es_ES.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale/it_IT.php">
+   <file role="test" baseinstalldir="/" name="tests/Base/locale/it_IT.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_array.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Cache/file_array.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_object.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Cache/file_object.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Cache/file_string.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Cache/file_string.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Error/base.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Error/base.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Error/error.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Error/error.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Error/transfer.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Error/transfer.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Error/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Error/locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/base.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Locale/base.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/fallback.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Locale/fallback.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/no_key.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Locale/no_key.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/plurals.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Locale/plurals.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/shared.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Locale/shared.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Locale/locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/es_ES.php">
+   <file role="test" baseinstalldir="/" name="tests/Locale/locale/es_ES.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/locale/it_IT.php">
+   <file role="test" baseinstalldir="/" name="tests/Locale/locale/it_IT.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/alpha_alphanumeric.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/blank_notBlank_nonZero.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/custom.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/email.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/inKeys_inList.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/inScope.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/integer.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/isoDate.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/isoDateTime.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/isoTime.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/maxLength_minLength.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/max_min.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Valid/multiple.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar.php">
@@ -1351,55 +1354,32 @@ Please visit http://solarphp.com/ for more information.
  </release>
  <changelog>
    <release>
-    <version>0.6.0</version>
-    <date>2005-07-04</date>
+    <version>0.6.1</version>
+    <date>2005-07-06</date>
     <license>LGPL</license>
     <state>devel</state>
     <notes>* WARNING: This is a public development release, and is not yet stable.
 
 * WARNING: This release contains backwards compatibility (BC) breaks.
 
-* New classes:
+* Solar_Valid:
 
-  * Solar_Debug_Var, to capture var_dump() output
+  * The inList() method now strict-checks values; this helps avoid
+  confusing (for example) '0', 0, and empty strings.
 
-* Solar:
+  * The inScope() method was broken, have replaced with an algorithm
+  that actually works (and is incidentally more streamlined).
 
-  * Solar::dump() now uses an instance of Solar_Debug_Var
-  
-  * BC BREAK: Removed undocumented Solar::scrub() method
-  
-  * BC BREAK: Removed undocumented Solar::super() method
-  
-* Solar_Super:
-  
-  * Extends Solar_Base the way it should have from the beginning
-  
-  * Only allows access to underscore-prefixed superglobals, except
-  $_REQUEST (you should use $_GET or $_POST, don't be lazy ;-)
+  * The max() and min() methods no longer treat empty strings as zero.
 
-  * Now uses internal scrub() method and array_walk_recursive()
-  instead of undocumented Solar::scrub() method (which has been
-  removed)
+  * The nonZero() method now works properly in all tested cases, even
+  multiple string zeros (e.g., '000' is still zero).
 
-* Solar_Debug_Timer:
+  * Per note from Chris Drozdowski about ISO 8601, the isoTime()
+  method now allows two midnight times:  &quot;00:00:00&quot; marks the
+  beginning of the day, and &quot;24:00:00&quot; marks the end of the day.
 
-  * Changed config key 'html' to 'output' to be consistent with
-  Solar_Debug_Var (as other output modes may become available)
-  
-  * Removed $html parameter from display()
-  
-  * Added localization strings
-
-* Solar_Uri (BC BREAKS):
-
-  * BC BREAK: Removed multi-action method query() in favor of
-  addQuery(), setQuery(), and setQueryString()
-
-  * BC BREAK: Removed multi-action method info() in favor of setInfo()
-  and setInfoString()
-  
-  * Updated all applications using these previous methods
+  * Added tests for Solar_Valid.
     </notes>
    </release>
  </changelog>

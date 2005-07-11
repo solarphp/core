@@ -494,7 +494,7 @@ class Solar_Form extends Solar_Base {
 		$name = array_shift($args);
 		
 		// add a default validation message (args[0] is the method)
-		if (trim($args[1] == '')) {
+		if (trim($args[1]) == '') {
 			$args[1] = Solar::locale('Solar', 'ERR_INVALID');
 		}
 		

@@ -17,7 +17,7 @@
 */
 
 /**
-* Where the Solar.config.php file is located.
+* Define where the Solar.config.php file is located.
 */
 if (! defined('SOLAR_CONFIG_PATH')) {
 	define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . '/Solar.config.php');
@@ -112,6 +112,36 @@ class Solar {
 		// the config file.
 		ini_set('error_reporting', E_ALL|E_STRICT);
 		ini_set('display_errors', true);
+		
+		// don't allow the use of $_REQUEST at all
+		unset($_REQUEST);
+		
+		// remove magic quotes if they are enabled; sybase quotes override
+		// normal quotes.
+		if (get_magic_quotes_gpc()) {
+			
+			// sybase quotes override the default slashed quotes
+			if (ini_get('magic_quotes_sybase')) {
+				$func = array('Solar', 'dispelSybase');
+			} else {
+				$func = array('Solar', 'dispelQuotes');
+			}
+			
+			// dispel magic quotes
+			array_walk_recursive($_GET, $func);
+			array_walk_recursive($_POST, $func);
+			array_walk_recursive($_COOKIE, $func);
+			array_walk_recursive($_FILES, $func);
+			array_walk_recursive($_SERVER, $func);
+			
+			// done
+			unset($func);
+		}
+		
+		// make sure automatic quoting of values from, e.g., SQL sources
+		// is turned off. turn off sybase quotes too.
+		ini_set('magic_quotes_runtime', false);
+		ini_set('magic_quotes_sybase',  false);
 		
 		// load the config file values. note that we use $config here, not
 		// config(), because we are setting the value of the static
@@ -801,6 +831,38 @@ class Solar {
 			$dir .= $sep;
 		}
 		return $dir;
+	}
+	
+	
+	/**
+	* 
+	* A stripslashes() alias that supports array_walk_recursive().
+	* 
+	* @param string &$value The value to strip slashes from.
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected static function dispelQuotes(&$value)
+	{
+		$value = stripslashes($value);
+	}
+	
+	
+	/**
+	* 
+	* A stripslashes() alias that supports array_walk_recursive().
+	* 
+	* @param string &$value The value to strip slashes from.
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected static function dispelSybase(&$value)
+	{
+		$value = str_replace("''", "'", $value);
 	}
 }
 ?>

@@ -45,7 +45,6 @@ class Solar_Super extends Solar_Base {
 	
 		// $_COOKIE scrubbers
 		'cookie' => array(
-			array('Solar_Super', 'magicStripSlashes'),
 			'strip_tags',
 		),
 		
@@ -53,29 +52,31 @@ class Solar_Super extends Solar_Base {
 		'env' => array(),
 		
 		// $_FILES scrubbers
-		'files' => array(
-			array('Solar_Super', 'magicStripSlashes'),
-		),
+		'files' => array(),
 		
 		// $_GET scrubbers
 		'get' => array(
-			array('Solar_Super', 'magicStripSlashes'),
 			'strip_tags'
 		),
 		
 		// $_POST scrubbers
-		'post' => array(
-			array('Solar_Super', 'magicStripSlashes'),
+		'post' => array(),
+		
+		// $_COOKIE scrubbers
+		'cookie' => array(
+			'strip_tags',
 		),
 		
 		// $_SERVER scrubbers
 		'server' => array(
-			array('Solar_Super', 'magicStripSlashes'),
-			'strip_tags'
+			'strip_tags',
 		),
 		
 		// $_SESSION scrubbers
 		'session' => array(),
+		
+		// $_FILES keys
+		'files' => array(),
 	);
 	
 	
@@ -158,39 +159,6 @@ class Solar_Super extends Solar_Base {
 			
 		}
 	}
-	
-	
-	/**
-	* 
-	* Strips slashes from a value, but only if magic_quotes_gpc is turned on.
-	* 
-	* @access public
-	* 
-	* @param mixed $value Strips slashes from this value if
-	* magic_quotes_gpc is turned on; does nothing if magic_quotes_gpc is
-	* off.
-	* 
-	* @return mixed The value after stripslashes().
-	* 
-	*/
-	
-	public static function magicStripslashes($value)
-	{
-		// discover if magic quotes are turned on
-		static $quotes;
-		if (! isset($quotes)) {
-			$quotes = get_magic_quotes_gpc();
-		}
-		
-		// if magic quotes are turned on, unquote the value.
-		if ($quotes) {
-			$value = stripslashes($value);
-		}
-		
-		// done!
-		return $value;
-	}
-	
 	
 	/**
 	* 

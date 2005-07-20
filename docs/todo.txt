@@ -1,6 +1,33 @@
+DOCUMENTATION PLAN
+
+release then document:
+	Solar_Debug_Timer
+	Solar_Debug_Var
+	(re-document solar::dump)
+
+document (easy):
+	Solar_Uri
+
+document (moderate):
+	Solar_Form (need filters, other improvements from MWOP)
+	Solar_User_Auth
+	Solar_User_Role
+
+document (hard)
+	Solar_User
+	Solar_Sql
+
+
+Solar_Template is Savant3, use Savant3 docs.
+
+
+----
+
+NEW CLASSES
+
 Create an event dispatcher as a universal observer and notifier?
 
-Should Solar_Cache take into account the current locale code?
+Do we need a Solar_Template proper?  (Ick.)
 
 
 ----
@@ -161,7 +188,7 @@ Text classes:
 Text/Bayes.php (tracks bayes filtering) -- would this be Solar_Cell_Bayes?
 Text/Csv.php (parse/build CSV/TSV/etc blocks)
 Text/Diff.php (get a diff on text)
-Text/Filter.php (report true/false if it passes a simple filter)
+Text/Filter.php (modifies text to match a filter)
 Text/Markup.php (for wiki, bbcode, textile, markdown, email, etc)
 
 ----

@@ -17,6 +17,11 @@
 */
 
 /**
+* Needed for performing pre-filtering.
+*/
+Solar::loadClass('Solar_Filter');
+
+/**
 * Needed for performing validations.
 */
 Solar::loadClass('Solar_Valid');
@@ -44,10 +49,10 @@ class Solar_Form extends Solar_Base {
 	* 
 	* User-provided configuration.
 	* 
-	* Each key corresponds directly with a valid <form> tag
+	* Each key corresponds directly with a valid form tag
 	* attribute; you can add or remove as you wish.  Note that
 	* although 'action' defaults to null, it will be replaced
-	* in the constructor with $_SERVER['REQUEST_URI'].
+	* in the constructor with Solar::server('REQUEST_URI').
 	* 
 	* Keys are:
 	* 
@@ -65,11 +70,24 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	public $config = array(
+	protected $config = array(
 		'action'  => null,
 		'method'  => 'post',
 		'enctype' => 'multipart/form-data',
 	);
+	
+	
+	/**
+	* 
+	* Attributes for the form tag itself.
+	* 
+	* @access public
+	* 
+	* @var array
+	* 
+	*/
+	
+	public $attribs = array();
 	
 	
 	/**
@@ -105,6 +123,19 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
+	* The array of pre-filters for the form elements
+	* 
+	* @var array 
+	* 
+	* @access protected
+	* 
+	*/
+	
+	protected $filter = array();
+	
+	
+	/**
+	* 
 	* The array of validations for the form elements.
 	* 
 	* @access protected
@@ -120,9 +151,9 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Array of submitted values.
 	* 
-	* Populated on the first call to submitValue(), which itself uses
+	* Populated on the first call to submittedValue(), which itself uses
 	* Solar::get() or Solar::post(), depending on the value of
-	* $this->config['method'].
+	* $this->attribs['method'].
 	* 
 	* @access protected
 	* 
@@ -130,7 +161,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	protected $submit = null;
+	protected $submitted = null;
 	
 	
 	/**
@@ -148,7 +179,7 @@ class Solar_Form extends Solar_Base {
 	* value => (string) The default or selected value(s) for the element.
 	* 
 	* descr => (string) A longer description of the element, e.g. a tooltip
-	* or help value.
+	* or help text.
 	* 
 	* require => (bool) Whether or not the element is required.
 	* 
@@ -197,6 +228,7 @@ class Solar_Form extends Solar_Base {
 	{
 		$this->config['action'] = Solar::server('REQUEST_URI');
 		parent::__construct($config);
+		$this->attribs = $this->config;
 	}
 	
 	
@@ -220,7 +252,7 @@ class Solar_Form extends Solar_Base {
 	public function setElement($name, $info, $array = null)
 	{
 		// prepare the name as an array key?
-		$name = $this->prepName($name, $array);
+		$name = $this->prepareName($name, $array);
 		
 		// prepare the element info
 		$info = array_merge($this->default, $info);
@@ -238,6 +270,13 @@ class Solar_Form extends Solar_Base {
 			'attribs'  => (array)  $info['attribs'],
 			'feedback' => (array)  $info['feedback'],
 		);
+
+		// add filters
+		if (array_key_exists('filter', $info)) {
+			foreach ( (array) $info['filter'] as $args) {
+				$this->filter[$name][] = $args;
+			}
+		}
 		
 		// add validations
 		if (array_key_exists('validate', $info)) {
@@ -270,7 +309,7 @@ class Solar_Form extends Solar_Base {
 	public function addFeedback($list, $array = null)
 	{
 		foreach ($list as $name => $feedback) {
-			$name = $this->prepName($name, $array);
+			$name = $this->prepareName($name, $array);
 			settype($feedback, 'array');
 			foreach ($feedback as $text) {
 				$this->elements[$name]['feedback'][] = $text;
@@ -305,22 +344,29 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Populates form elements with submitted values.
 	* 
+	* Populates form elements with either submitted values or the elements passed
+	* in $submit.
+	* 
 	* @access public
 	* 
-	* @param array $list Element information as array(name => info).
-	* 
-	* @param string $array Rename the element as a key in this array.
+	* @param array $submit The source data array for populating form values
+	* as array(name => info); if null, will populate from $_POST or
+	* $_GET as determined from the form's 'method' attribute.
 	* 
 	* @return void
 	* 
 	*/
 	
-	public function populate()
+	public function populate($submit = null)
 	{
+		if (is_array($submit)) {
+			$this->submitted = $submit;
+		}
+
 		foreach ($this->elements as $name => $info) {
 			// override the initial value with a submitted value, 
 			// if one exists
-			$value = $this->submitValue($name);
+			$value = $this->submittedValue($name);
 			if (! is_null($value)) {
 				$this->elements[$name]['value'] = $value;
 			}
@@ -332,16 +378,33 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Performs validation on each form element.
 	* 
-	* Updates the feedback keys for each element that fails validation.
+	* Updates the feedback keys for each element that fails validation. Values
+	* are either pulled from the submitted form or from the array passed in
+	* $submit.
 	* 
 	* @access public
+	* 
+	* @param array $submit The source data array for populating form values
+	* as array(name => info); if null, will populate from $_POST or
+	* $_GET as determined from the 'method' attribute.
 	* 
 	* @return bool True if all elements are valid, false if not.
 	* 
 	*/
 	
-	public function validate()
+	public function validate($submit = null)
 	{
+		// Populate the form values.
+		if (empty($this->submitted)) {
+			$this->populate($submit);
+		}
+
+		// Loop through each element to filter
+		foreach ($this->filter as $name => $filters) {
+			$value = $this->elements[$name]['value'];
+			$this->elements[$name]['value'] = Solar_Filter::multiple($value, $filters);
+		}
+
 		$validated = true;
 		
 		// loop through each element to be validated
@@ -450,7 +513,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	protected function prepName($name, $array = null)
+	protected function prepareName($name, $array = null)
 	{
 		if ($array) {
 			$pos = strpos($name, '[');
@@ -468,6 +531,35 @@ class Solar_Form extends Solar_Base {
 			}
 		}
 		return $name;
+	}
+	
+
+	/**
+	* 
+	* Adds a pre-filter for an element
+	* 
+	* Adds a pre-filter for an element. All pre-filters are applied via 
+	* {@link Solar_Filter::multiple()} and should conform to the specifications
+	* for that method.
+	* 
+	* @access protected
+	* 
+	* @param string $name The element name
+	* 
+	* @param string $method Solar_Filter filter method or PHP function to use
+	* for filtering
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function addFilter($name, $method) 
+	{
+		// Get the arguments, drop the element name
+		$args = func_get_args();
+		array_shift($args);
+
+		$this->filter[$name][] = $args;
 	}
 	
 	
@@ -515,22 +607,22 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	protected function submitValue($name)
+	protected function submittedValue($name)
 	{
 		// do we have to retrieve the submitted values?
 		// (only need to do it once.)
-		if (is_null($this->submit)) {
-			// $this->config['method'] should be 'get' or 'post'
-			$callback = array('Solar', $this->config['method']);
+		if (is_null($this->submitted)) {
+			// $this->attribs['method'] should be 'get' or 'post'
+			$callback = array('Solar', $this->attribs['method']);
 			// get all submitted values via Solar::get or Solar::post
-			$this->submit = call_user_func($callback);
+			$this->submitted = call_user_func($callback);
 		}
 		
 		// get the related value from the $submit array
 		if (strpos($name, '[') === false) {
 		
 			// no brackets in the name, so it's a plain variable
-			$value = isset($this->submit[$name]) ? $this->submit[$name] : null;
+			$value = isset($this->submitted[$name]) ? $this->submitted[$name] : null;
 		
 		} else {
 				
@@ -548,7 +640,7 @@ class Solar_Form extends Solar_Base {
 			);
 			
 			// evaluate a PHP command that sets value. slow ugly eval() hack.
-			$tmp = "\$this->submit['" . $path . "']";
+			$tmp = "\$this->submitted['" . $path . "']";
 			eval("\$value = isset($tmp) ? $tmp : null;");
 		}
 		

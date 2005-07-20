@@ -81,7 +81,7 @@ class Solar_Debug_Timer extends Solar_Base {
 	
 	/**
 	* 
-	* Solar hooks.
+	* Solar hooks when instantiated as an autoshared object.
 	* 
 	* @access public
 	* 

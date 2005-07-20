@@ -38,6 +38,8 @@ class Solar_Valid {
 	* 
 	* Validate that a value is letters only (upper or lower case).
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -57,6 +59,8 @@ class Solar_Valid {
 	* 
 	* Validate that a value is only letters and digits.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -67,14 +71,20 @@ class Solar_Valid {
 	
 	public static function alphanumeric($value, $blank = self::NOT_BLANK)
 	{
+		return self::alnum($value, $blank);
+	}
+	
+	public static function alnum($value, $blank = self::NOT_BLANK)
+	{
 		$expr = '/^[a-zA-Z0-9]+$/'; 
 		return self::regex($value, $expr, $blank);
 	}
 	
-	
 	/**
 	* 
 	* Validate that a string is empty when trimmed.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -93,6 +103,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate against a custom callback function or method.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -127,6 +139,8 @@ class Solar_Valid {
 	* 
 	* The regular expression in this method was taken from HTML_QuickForm.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -145,6 +159,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate that a value is a key in the list of of allowed options.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -173,6 +189,8 @@ class Solar_Valid {
 	* Strict checking is enforced, so a string "1" is not the same as
 	* an integer 1.  This helps to avoid matching 0 and empty, etc.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -196,6 +214,8 @@ class Solar_Valid {
 	/**
 	* 
 	* See a value has only a certain number of digits and decimals.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -252,6 +272,8 @@ class Solar_Valid {
 	* 
 	* Validate that a value represents an integer (+/-).
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -272,6 +294,8 @@ class Solar_Valid {
 	* Validate that a value is an ISO 8601 date string (yyyy-mm-dd format).
 	* 
 	* Also checks to see that the date itself is valid (e.g., no Feb 30).
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -309,6 +333,8 @@ class Solar_Valid {
 	* middle, which acts as a separator).
 	* 
 	* Also checks that the date itself is valid (e.g., no Feb 30).
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -353,6 +379,8 @@ class Solar_Valid {
 	* times ... 00:00:00 for the beginning of the day, and 24:00:00 for
 	* the end of the day.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -371,6 +399,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate that a value is less than than or equal to a maximum.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -398,6 +428,8 @@ class Solar_Valid {
 	* 
 	* Validate that a string is no longer than a certain length.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -422,6 +454,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate that a value is greater than or equal to a minimum.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -449,6 +483,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate that a string is at least a certain length.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -494,6 +530,8 @@ class Solar_Valid {
 	* // this will be valid (not too long, and OR_BLANK)
 	* $valid = Solar_Valid::multiple('', $validations);
 	* </code>
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -542,6 +580,8 @@ class Solar_Valid {
 	* 
 	* Validate that a value is not exactly zero.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -561,6 +601,8 @@ class Solar_Valid {
 	* 
 	* Validate that a string is not empty when trimmed.
 	* 
+	* @static
+	* 
 	* @access public
 	* 
 	* @param mixed $value The value to validate.
@@ -578,6 +620,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate a value against a regular expression.
+	* 
+	* @static
 	* 
 	* @access public
 	* 
@@ -606,6 +650,8 @@ class Solar_Valid {
 	/**
 	* 
 	* Validate a value as a URI per RFC2396.
+	* 
+	* @static
 	* 
 	* @access public
 	* 

@@ -40,7 +40,7 @@
 	
 	<?php
 		$this->form('set', 'class', 'Savant3');
-		echo $this->form('begin', $this->formdata->config);
+		echo $this->form('begin', $this->formdata->attribs);
 		echo $this->form('hidden', 'op', Solar::locale('Solar', 'OP_SAVE'));
 		echo $this->form('fullauto', $this->formdata->elements);
 		echo $this->form('group', 'start');

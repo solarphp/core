@@ -105,51 +105,20 @@ class Solar {
 			return;
 		}
 		
-		// make sure $shared is a StdClass object
+		// initialize $shared property as a StdClass object
 		Solar::$shared = new StdClass;
 		
-		// by default, show all the errors. you can reduce this later in
-		// the config file.
-		ini_set('error_reporting', E_ALL|E_STRICT);
-		ini_set('display_errors', true);
+		// set up the standard Solar environment
+		Solar::environment();
 		
-		// don't allow the use of $_REQUEST at all
-		unset($_REQUEST);
-		
-		// remove magic quotes if they are enabled; sybase quotes override
-		// normal quotes.
-		if (get_magic_quotes_gpc()) {
-			
-			// sybase quotes override the default slashed quotes
-			if (ini_get('magic_quotes_sybase')) {
-				$func = array('Solar', 'dispelSybase');
-			} else {
-				$func = array('Solar', 'dispelQuotes');
-			}
-			
-			// dispel magic quotes
-			array_walk_recursive($_GET, $func);
-			array_walk_recursive($_POST, $func);
-			array_walk_recursive($_COOKIE, $func);
-			array_walk_recursive($_FILES, $func);
-			array_walk_recursive($_SERVER, $func);
-			
-			// done
-			unset($func);
-		}
-		
-		// make sure automatic quoting of values from, e.g., SQL sources
-		// is turned off. turn off sybase quotes too.
-		ini_set('magic_quotes_runtime', false);
-		ini_set('magic_quotes_sybase',  false);
-		
-		// load the config file values. note that we use $config here, not
-		// config(), because we are setting the value of the static
+		// load the config file values. note that we use $config here,
+		// not config(), because we are setting the value of the static
 		// property.
 		Solar::$config = Solar::run(SOLAR_CONFIG_PATH);
 		
-		// process ini settings
-		foreach (Solar::config('Solar', 'ini_set', array()) as $key => $val) {
+		// process ini settings from config file
+		$settings = Solar::config('Solar', 'ini_set', array());
+		foreach ($settings as $key => $val) {
 			ini_set($key, $val);
 		}
 		
@@ -197,7 +166,7 @@ class Solar {
 			// object instance, but it works fine with just
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
-			if (is_callable($class, '__solar')) {
+			if (is_callable($class, 'solar')) {
 				Solar::$shared->$name->solar('start');
 			}
 		}
@@ -240,7 +209,7 @@ class Solar {
 			// object instance, but it works fine with just
 			// the class name.  so we'll use that.
 			$class = get_class(Solar::$shared->$name);
-			if (is_callable($class, '__solar')) {
+			if (is_callable($class, 'solar')) {
 				Solar::$shared->$name->solar('stop');
 			}
 		}
@@ -836,6 +805,74 @@ class Solar {
 	
 	/**
 	* 
+	* Sets up the standard Solar environment (including some security).
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function environment()
+	{
+		// by default, show all the errors.
+		ini_set('error_reporting', E_ALL|E_STRICT);
+		ini_set('display_errors', true);
+		
+		// clear out registered globals?
+		// (this code from Richard Heyes and Stefan Esser)
+		if (ini_get('register_globals')) {
+		
+			// Variables that shouldn't be unset
+			$keep = array('GLOBALS', '_GET', '_POST', '_COOKIE',
+				'_REQUEST', '_SERVER', '_ENV', '_FILES');
+			
+			// Sources of global input
+			$input = array_merge($_GET,	$_POST, $_COOKIE, $_SERVER,
+				$_ENV, $_FILES, isset($_SESSION) ? $_SESSION : array());
+			
+			// Clear out sources of global input
+			foreach ($input as $key => $val) {
+				if (! in_array($key, $keep) &&
+					array_key_exists($key, $GLOBALS)) {
+					unset($GLOBALS[$key]);
+				}
+			}
+		}
+		
+		// disallow use of $_REQUEST
+		unset($_REQUEST);
+		
+		// remove magic quotes if they are enabled; sybase quotes
+		// override normal quotes.
+		if (ini_get('magic_quotes_gpc')) {
+			
+			// what kind of quotes are we using?
+			if (ini_get('magic_quotes_sybase')) {
+				// sybase quotes
+				$func = array('Solar', 'dispelSybase');
+			} else {
+				// "normal" slashed quotes
+				$func = array('Solar', 'dispelQuotes');
+			}
+			
+			// dispel magic quotes from superglobals
+			array_walk_recursive($_GET, $func);
+			array_walk_recursive($_POST, $func);
+			array_walk_recursive($_COOKIE, $func);
+			array_walk_recursive($_FILES, $func);
+			array_walk_recursive($_SERVER, $func);
+		}
+		
+		// make sure automatic quoting of values from, e.g., SQL sources
+		// is turned off. turn off sybase quotes too.
+		ini_set('magic_quotes_runtime', false);
+		ini_set('magic_quotes_sybase',  false);
+	}
+	
+	
+	/**
+	* 
 	* A stripslashes() alias that supports array_walk_recursive().
 	* 
 	* @param string &$value The value to strip slashes from.
@@ -852,9 +889,9 @@ class Solar {
 	
 	/**
 	* 
-	* A stripslashes() alias that supports array_walk_recursive().
+	* A str_replace() for Sybase quotes; supports array_walk_recursive().
 	* 
-	* @param string &$value The value to strip slashes from.
+	* @param string &$value The value to dispel Sybase quotes from.
 	* 
 	* @return void
 	* 

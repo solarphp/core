@@ -47,6 +47,8 @@ class Solar_Form_Loader extends Solar_Form {
 	* The location of a form definition file is required. You may
 	* optionally pass it a Solar_Form object to which elements will be
 	* added.  A Solar_Form object will be returned.
+    *
+    * If an error occurs, boolean false is returned.
 	* 
 	* @static
 	* 
@@ -56,7 +58,7 @@ class Solar_Form_Loader extends Solar_Form {
 	* 
 	* @param object $form Optional Solar_Form object.
 	* 
-	* @return object Solar_Form object.
+	* @return object|false Solar_Form object, boolean false on error.
 	*
 	*/
 	
@@ -68,7 +70,7 @@ class Solar_Form_Loader extends Solar_Form {
 
 		if (! file_exists($filename)) {
 			// Need to return an error here
-			return;
+			return false;
 		}
 
 		// Initialize form object based on the second argument.
@@ -88,7 +90,7 @@ class Solar_Form_Loader extends Solar_Form {
 		$xml = simplexml_load_file($filename);
 		if (false === $xml) {
 			// return an error here
-			return;
+			return false;
 		}
 		
 		// loop through the XML file data elements
@@ -99,20 +101,11 @@ class Solar_Form_Loader extends Solar_Form {
 				continue;
 			}
 			
-			// ... otherwise get element information.
+			// ... otherwise, get element information.
+			// recast to an array from object to skip manual
+			// assignment of properties to key-value pairs.
 			$name  = (string) $element->name;
-			$info = array(
-				'type'     => (string) $element->type,
-				'label'    => (string) $element->label,
-				'value'    => (string) $element->value,
-				'descr'    => (string) $element->descr,
-				'require'  => (bool)   $element->require,
-				'disable'  => (bool)   $element->disable,
-				'options'  => (array)  $element->options,
-				'attribs'  => (array)  $element->attribs,
-				'feedback' => (array)  $element->feedback,
-			);
-			$form->setElement($name, $info);
+			$form->setElement($name, (array) $element);
 
 			// Get element filters
 			if (! empty($element->filters)) {

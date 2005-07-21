@@ -492,6 +492,30 @@ class Solar_Form extends Solar_Base {
 	}
 	
 	
+	/**
+	* 
+	* Resets the form object to its originally-configured state.
+	* 
+	* This clears out all elements, filters, validations, and feedback,
+	* as well as all submitted values.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function reset()
+	{
+		$this->attribs   = $this->config;
+		$this->elements  = array();
+		$this->filters   = array();
+		$this->validate  = array();
+		$this->feedback  = null;
+		$this->submitted = null;
+	}
+	
+	
 	// -----------------------------------------------------------------
 	//
 	// Support methods.

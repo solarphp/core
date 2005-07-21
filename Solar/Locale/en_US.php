@@ -21,34 +21,54 @@
 return array(
 	
 	// formatting codes and information
-	'FORMAT_LANGUAGE'   => 'English',
-	'FORMAT_COUNTRY'    => 'United States',
-	'FORMAT_CURRENCY'   => '$%s', // printf()
-	'FORMAT_DATE'       => '%b %d, %Y', // strftime(): Mar 19, 2005
-	'FORMAT_TIME'       => '%r', // strftime: 12-hour am/pm
+	'FORMAT_LANGUAGE'    => 'English',
+	'FORMAT_COUNTRY'     => 'United States',
+	'FORMAT_CURRENCY'    => '$%s', // printf()
+	'FORMAT_DATE'        => '%b %d, %Y', // strftime(): Mar 19, 2005
+	'FORMAT_TIME'        => '%r', // strftime: 12-hour am/pm
 	
 	// operation actions
-	'OP_SAVE'       => 'Save',
-	'OP_PREVIEW'    => 'Preview',
-	'OP_CANCEL'     => 'Cancel',
-	'OP_DELETE'     => 'Delete',
-	'OP_RESET'      => 'Reset',
-	'OP_NEXT'       => 'Next',
-	'OP_PREVIOUS'   => 'Previous',
-	'OP_SEARCH'     => 'Search',
-	'OP_GO'         => 'Go!',
+	'OP_SAVE'            => 'Save',
+	'OP_PREVIEW'         => 'Preview',
+	'OP_CANCEL'          => 'Cancel',
+	'OP_DELETE'          => 'Delete',
+	'OP_RESET'           => 'Reset',
+	'OP_NEXT'            => 'Next',
+	'OP_PREVIOUS'        => 'Previous',
+	'OP_SEARCH'          => 'Search',
+	'OP_GO'              => 'Go!',
 	
 	// error messages
-	'ERR_FORM'      => 'Please correct the noted errors.',
-	'ERR_FILE_FIND' => 'Cannot find file.',
-	'ERR_FILE_OPEN' => 'Cannot open file.',
-	'ERR_FILE_READ' => 'Cannot read file.',
-	'ERR_EXTENSION' => 'Extension not loaded.',
-	'ERR_CONNECT'   => 'Connection failed.',
-	'ERR_INVALID'   => 'Invalid data.',
+	'ERR_FORM'           => 'Please correct the noted errors.',
+	'ERR_FILE_FIND'      => 'Cannot find file.',
+	'ERR_FILE_OPEN'      => 'Cannot open file.',
+	'ERR_FILE_READ'      => 'Cannot read file.',
+	'ERR_EXTENSION'      => 'Extension not loaded.',
+	'ERR_CONNECT'        => 'Connection failed.',
+	'ERR_INVALID'        => 'Invalid data.',
+	
+	// validation messages
+	'VALID_ALPHA'        => 'Please use only the letters A-Z.',
+	'VALID_ALNUM'        => 'Please use only letters (A-Z) and numbers (0-9)',
+	'VALID_BLANK'        => 'This value is not allowed to be blank.',
+	'VALID_EMAIL'        => 'Please enter a valid email address.',
+	'VALID_INKEYS'       => 'Please choose a different value.',
+	'VALID_INLIST'       => 'Please choose a different value.',
+	'VALID_INSCOPE'      => 'This value is not in the proper scope.',
+	'VALID_INTEGER'      => 'Please use only whole numbers.',
+	'VALID_ISODATE'      => 'Please enter a date in "yyyy-mm-dd" format.',
+	'VALID_ISODATETIME'  => 'Please enter a date-time in "yyyy-mm-ddThh:ii:ss" format.',
+	'VALID_ISOTIME'      => 'Please enter a time in "hh:ii:ss" format.',
+	'VALID_MAX'          => 'Please enter a smaller value.',
+	'VALID_MAXLENGTH'    => 'Please enter a shorter string.',
+	'VALID_MIN'          => 'Please enter a larger value.',
+	'VALID_MINLENGTH'    => 'Please enter a longer string.',
+	'VALID_NONZERO'      => 'This value is not allowed to be zero.',
+	'VALID_NOTBLANK'     => 'This value must be left blank.',
+	'VALID_URI'          => 'Please enter a valid web address.',
 	
 	// success messages
-	'OK_SAVED'      => 'Saved.',
+	'OK_SAVED'           => 'Saved.',
 	
 	// generic text
 	'TEXT_LOGIN'         => 'Sign In',

@@ -516,6 +516,96 @@ class Solar_Form extends Solar_Base {
 	}
 	
 	
+	/**
+	* 
+	* Loads form attributes and elements from an external source.
+	* 
+	* You can pass an arbitrary number of parameters to this method;
+	* all params after the first will be passed as arguments to the
+	* fetch() method of the loader class.
+	* 
+	* The loader class itself must have at least one method, fetch(),
+	* that returns an associative array with keys 'attribs' and 
+	* 'elements' which contain, respectively, values for $this->attribs
+	* and $this->setElements().
+	* 
+	* Example use:
+	* 
+	* <code>
+	* $form = Solar::object('Solar_Form');
+	* $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
+	* </code>
+	* 
+	* @access public
+	* 
+	* @param string|object $obj If a string, it is treated as a class
+	* name to instantiate with Solar::object(); if an object, it is
+	* used as-is.  Either way, the fetch() method of the object will
+	* be called to populate this form (via $this->attribs property and
+	* the $this->setElements() method).
+	* 
+	* @return mixed Void on success, or Solar_Error on failure.
+	* 
+	*/
+	
+	public function load($obj)
+	{
+		// the first param must be a string class name
+		// or an object.
+		if (is_string($obj)) {
+		
+			// string class name, try to instantiate it.
+			$obj = Solar::object($class);
+			if (Solar::isError($obj)) {
+				return $obj;
+			}
+			
+		} elseif (! is_object($obj)) {
+		
+			// not a string, not an object, not allowed.
+			return $this->error('ERR_LOAD_OBJECT');
+			
+		}
+		
+		// get any additional arguments to pass to the fetch
+		// method (after dropping the first param) ...
+		$args = func_get_args();
+		array_shift($args);
+		
+		// ... and call the fetch method.
+		$info = call_user_func_array(
+			array($obj, 'fetch'),
+			$args
+		);
+		
+		// did it work?
+		if (Solar::isError($info)) {
+		
+			// no, return the error object
+			return $info;
+			
+		} else {
+		
+			// yay, it worked!
+			// 
+			// we don't call reset() because there are
+			// sure to be cases when you need to load()
+			// more than once to get a full form.
+			// 
+			// merge the loaded attribs onto the current ones.
+			$this->attribs = array_merge(
+				$this->attribs,
+				$info['attribs']
+			);
+			
+			// add elements, overwriting existing ones (no way
+			// around this, I'm afraid).
+			$this->setElements($info['elements']);
+			
+		}
+	}
+	
+	
 	// -----------------------------------------------------------------
 	//
 	// Support methods.

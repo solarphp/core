@@ -687,15 +687,26 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	protected function addValidate($name, $method, $message)
+	protected function addValidate($name, $method, $message = null)
 	{
 		// get the arguments, drop the element name
 		$args = func_get_args();
 		$name = array_shift($args);
 		
-		// add a default validation message (args[0] is the method)
+		// add a default validation message (args[0] is the method,
+		// args[1] is the message)
 		if (trim($args[1]) == '') {
-			$args[1] = Solar::locale('Solar', 'ERR_INVALID');
+			
+			// see if we have an method-specific validation message
+			$key = 'VALID_' . strtoupper($method);
+			$args[1] = Solar::locale('Solar', $key);
+			
+			// if the message is the same as the key,
+			// there was no method-specific validation
+			// message.  revert to the generic default.
+			if ($key == $args[1]) {
+				$args[1] = Solar::locale('Solar', 'ERR_INVALID');
+			}
 		}
 		
 		// add to the validation array

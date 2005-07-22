@@ -550,21 +550,20 @@ class Solar_Form extends Solar_Base {
 	
 	public function load($obj)
 	{
-		// the first param must be a string class name
-		// or an object.
+		// if the first param is a string class name
+		// try to instantiate it.
 		if (is_string($obj)) {
-		
-			// string class name, try to instantiate it.
 			$obj = Solar::object($class);
 			if (Solar::isError($obj)) {
 				return $obj;
 			}
-			
-		} elseif (! is_object($obj)) {
+		}
 		
-			// not a string, not an object, not allowed.
+		// if we *still* don't have an object, or if there's no
+		// fetch() method, there's a problem.
+		if (! is_object($obj) ||
+			! is_callable(array($obj, 'fetch'))) {		
 			return $this->error('ERR_LOAD_OBJECT');
-			
 		}
 		
 		// get any additional arguments to pass to the fetch
@@ -580,29 +579,24 @@ class Solar_Form extends Solar_Base {
 		
 		// did it work?
 		if (Solar::isError($info)) {
-		
-			// no, return the error object
 			return $info;
-			
-		} else {
-		
-			// yay, it worked!
-			// 
-			// we don't call reset() because there are
-			// sure to be cases when you need to load()
-			// more than once to get a full form.
-			// 
-			// merge the loaded attribs onto the current ones.
-			$this->attribs = array_merge(
-				$this->attribs,
-				$info['attribs']
-			);
-			
-			// add elements, overwriting existing ones (no way
-			// around this, I'm afraid).
-			$this->setElements($info['elements']);
-			
 		}
+		
+		// yay, it worked!
+		// 
+		// we don't call reset() because there are
+		// sure to be cases when you need to load()
+		// more than once to get a full form.
+		// 
+		// merge the loaded attribs onto the current ones.
+		$this->attribs = array_merge(
+			$this->attribs,
+			$info['attribs']
+		);
+		
+		// add elements, overwriting existing ones (no way
+		// around this, I'm afraid).
+		$this->setElements($info['elements']);
 	}
 	
 	

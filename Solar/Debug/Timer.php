@@ -153,41 +153,6 @@ class Solar_Debug_Timer extends Solar_Base {
 	
 	/**
 	* 
-	* Returns the time elapsed betweens two marks.
-	* 
-	* @access public
-	* 
-	* @param string $start Starting mark; defaults to "__start".
-	* 
-	* @param string $end Ending mark; if not specified, defaults the the
-	* current time.
-	* 
-	* @return float Time difference between $start and $end.
-	* 
-	*/
-	
-	public function diff($start = '__start', $end = null)
-	{
-		// get the starting time
-		$t0 = $this->marks[$start];
-		
-		// get the ending time
-		if (is_null($end)) {
-			// no ending mark specified,
-			// default to right now.
-			$t1 = microtime(true);
-		} else {
-			// ending mark.
-			$t1 = $this->marks[$end];
-		}
-		
-		// compute and return
-		return $t1 - $t0;
-	}
-	
-	
-	/**
-	* 
 	* Returns profiling information as an array.
 	* 
 	* @access public

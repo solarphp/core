@@ -98,7 +98,7 @@ class Solar {
 	* 
 	*/
 	
-	public static function start()
+	public static function start($alt_config = null)
 	{
 		// don't re-start if we're already running.
 		if (Solar::$status) {
@@ -114,7 +114,17 @@ class Solar {
 		// load the config file values. note that we use $config here,
 		// not config(), because we are setting the value of the static
 		// property.
-		Solar::$config = Solar::run(SOLAR_CONFIG_PATH);
+		// 
+		// use alternate config source if one if given.
+		if (is_array($alt_config)) {
+			Solar::$config = $alt_config;
+		} elseif (is_object($alt_config)) {
+			Solar::$config = (array) $alt_config;
+		} elseif (is_string($alt_config)) {
+			Solar::$config = (array) Solar::run($alt_config);
+		} else {
+			Solar::$config = (array) Solar::run(SOLAR_CONFIG_PATH);
+		}
 		
 		// process ini settings from config file
 		$settings = Solar::config('Solar', 'ini_set', array());

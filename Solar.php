@@ -815,10 +815,6 @@ class Solar {
 	
 	protected function environment()
 	{
-		// by default, show all the errors.
-		ini_set('error_reporting', E_ALL|E_STRICT);
-		ini_set('display_errors', true);
-		
 		// clear out registered globals?
 		// (this code from Richard Heyes and Stefan Esser)
 		if (ini_get('register_globals')) {
@@ -840,7 +836,7 @@ class Solar {
 			}
 		}
 		
-		// disallow use of $_REQUEST
+		// disallow use of $_REQUEST, you should use $_GET and $_POST.
 		unset($_REQUEST);
 		
 		// remove magic quotes if they are enabled; sybase quotes

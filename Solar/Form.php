@@ -617,7 +617,8 @@ class Solar_Form extends Solar_Base {
 	* 
 	* @param string $name The element name.
 	* 
-	* @param string $array The array name, if any, into which the place the element.
+	* @param string $array The array name, if any, into which we place
+	* the element.
 	* 
 	* @return string The prepared element name.
 	* 
@@ -649,15 +650,15 @@ class Solar_Form extends Solar_Base {
 	* Adds a pre-filter for an element
 	* 
 	* Adds a pre-filter for an element. All pre-filters are applied via 
-	* {@link Solar_Filter::multiple()} and should conform to the specifications
-	* for that method.
+	* {@link Solar_Filter::multiple()} and should conform to the 
+	* specifications for that method.
 	* 
 	* @access protected
 	* 
-	* @param string $name The element name
+	* @param string $name The element name.
 	* 
-	* @param string $method Solar_Filter filter method or PHP function to use
-	* for filtering
+	* @param string $method Solar_Filter method or PHP function to use
+	* for filtering.
 	* 
 	* @return void
 	* 

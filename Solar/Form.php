@@ -361,6 +361,8 @@ class Solar_Form extends Solar_Base {
 	{
 		if (is_array($submit)) {
 			$this->submitted = $submit;
+		} elseif (is_object($submit)) {
+			$this->submitted = (array) $submit;
 		}
 
 		foreach ($this->elements as $name => $info) {

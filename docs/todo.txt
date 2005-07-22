@@ -1,10 +1,5 @@
 DOCUMENTATION PLAN
 
-release then document:
-	Solar_Debug_Timer
-	Solar_Debug_Var
-	(re-document solar::dump)
-
 document (easy):
 	Solar_Uri
 

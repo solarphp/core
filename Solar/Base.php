@@ -61,16 +61,18 @@ abstract class Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		// get the user config from the Solar.config.php file, if any.
+		// allow construction-time config loading from arbitrary files
+		if (is_string($config)) {
+			$config = Solar::run($config);
+		}
+		
+		// Solar.config.php values override class defaults
 		$class = get_class($this);
-		$fromfile = Solar::config($class, null, array());
+		$solar = Solar::config($class, null, array());
+		$this->config = array_merge($this->config, $solar);
 		
-		// ... then merge the passed user config ...
-		settype($config, 'array');
-		$config = array_merge($fromfile, $config);
-		
-		// ... and merge with the class defaults.
-		$this->config = array_merge($this->config, $config);
+		// construction-time values override Solar.config.php
+		$this->config = array_merge($this->config, (array) $config);
 		
 		// cannot forcibly load the locale strings at this point,
 		// something to do with Solar::$shared->locale not being ready.

@@ -298,7 +298,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				array(
 					'inList',
 					$this->locale('VALID_TYPE'),
-					array_keys($this->config['type'])
+					$this->config['type']
 				)
 			),
 		);
@@ -342,7 +342,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 				array(
 					'inList',
 					$this->locale('VALID_STATUS'),
-					array_keys($this->config['status'])
+					$this->config['status'],
 				),
 			),
 		);

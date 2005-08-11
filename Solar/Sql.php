@@ -264,11 +264,14 @@ class Solar_Sql extends Solar_Base {
 		// the base statement
 		$stmt = "INSERT INTO $table ";
 		
-		// add field names
-		$stmt .= '(' . implode(', ', array_keys($data)) . ') ';
+		// field names come from the array keys
+		$fields = array_keys($data);
+		
+		// add field names themselves
+		$stmt .= '(' . implode(', ', $fields) . ') ';
 		
 		// add value placeholders
-		$stmt .= 'VALUES (:' . implode(', :', array_keys($data)) . ')';
+		$stmt .= 'VALUES (:' . implode(', :', $fields) . ')';
 		
 		// execute the statement
 		return $this->exec($stmt, $data);
@@ -305,7 +308,7 @@ class Solar_Sql extends Solar_Base {
 		}
 		$stmt .= implode(', ', $tmp);
 		
-		// add the where clause, execte, and return
+		// add the where clause, execute, and return
 		$stmt .= " WHERE $where";
 		return $this->exec($stmt, $data);
 	}
@@ -601,7 +604,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function quote($val)
 	{
-		if (is_int($val) || is_double($val)) {
+		if (is_int($val) || is_float($val)) {
 			// it's a number
 			settype($val, 'string');
 		} elseif (is_bool($val)) {

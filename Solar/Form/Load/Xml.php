@@ -59,9 +59,7 @@ class Solar_Form_Load_Xml extends Solar_Base
 	* Loads a Solar_Form definition from an XML file using PHP5's
 	* SimpleXML functions.
 	* 
-	* The location of a form definition file is required. You may
-	* optionally pass it a Solar_Form object to which elements will be
-	* added.  A Solar_Form object will be returned.
+	* The location of a form definition file is required.
     *
     * If an error occurs, a Solar error is generated and returned.
 	* 
@@ -213,14 +211,14 @@ class Solar_Form_Load_Xml extends Solar_Base
 	}
 
 	/**
-	 * Get parameters for a filter or validation rule
-	 *
-	 * @access protected
-	 *
-	 * @param array
-	 *
-	 * @return array
-	 */
+	* Get parameters for a filter or validation rule
+	*
+	* @access protected
+	*
+	* @param array
+	*
+	* @return array
+	*/
 	protected function getParams($params) 
 	{
 		$final = array();

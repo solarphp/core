@@ -10,6 +10,8 @@
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
+* @author Contributions from Matthew Weier O'Phinney <mweierophinney@gmail.com>
+* 
 * @license LGPL
 * 
 * @version $Id$
@@ -206,11 +208,12 @@ class Solar_Form extends Solar_Base {
 		'name'     => null,
 		'type'     => null,
 		'label'    => null,
-		'value'    => null,
 		'descr'    => null,
+		'value'    => null,
 		'require'  => false,
 		'disable'  => false,
 		'options'  => array(),
+		'listsep'  => null,
 		'attribs'  => array(),
 		'feedback' => array(),
 	);
@@ -344,14 +347,14 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Populates form elements with submitted values.
 	* 
-	* Populates form elements with either submitted values or the elements passed
-	* in $submit.
+	* Populates form elements with either submitted values or the
+	* elements passed in $submit.
 	* 
 	* @access public
 	* 
-	* @param array $submit The source data array for populating form values
-	* as array(name => info); if null, will populate from $_POST or
-	* $_GET as determined from the form's 'method' attribute.
+	* @param array $submit The source data array for populating form
+	* values as array(name => value); if null, will populate from $_POST
+	* or $_GET as determined from the form's 'method' attribute.
 	* 
 	* @return void
 	* 
@@ -380,15 +383,15 @@ class Solar_Form extends Solar_Base {
 	* 
 	* Performs validation on each form element.
 	* 
-	* Updates the feedback keys for each element that fails validation. Values
-	* are either pulled from the submitted form or from the array passed in
-	* $submit.
+	* Updates the feedback keys for each element that fails validation.
+	* Values are either pulled from the submitted form or from the array
+	* passed in $submit.
 	* 
 	* @access public
 	* 
-	* @param array $submit The source data array for populating form values
-	* as array(name => info); if null, will populate from $_POST or
-	* $_GET as determined from the 'method' attribute.
+	* @param array $submit The source data array for populating form
+	* values as array(name => info); if null, will populate from $_POST
+	* or $_GET as determined from the 'method' attribute.
 	* 
 	* @return bool True if all elements are valid, false if not.
 	* 
@@ -555,7 +558,7 @@ class Solar_Form extends Solar_Base {
 		// if the first param is a string class name
 		// try to instantiate it.
 		if (is_string($obj)) {
-			$obj = Solar::object($class);
+			$obj = Solar::object($obj);
 			if (Solar::isError($obj)) {
 				return $obj;
 			}

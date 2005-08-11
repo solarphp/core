@@ -43,8 +43,6 @@ class Solar_Filter {
 	* in the regex. If arguments are missing, the original string is
 	* returned without transformations.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param mixed $value The value to be filtered.
@@ -68,8 +66,6 @@ class Solar_Filter {
 	* 
 	* Removes non-alphabetic characters.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param mixed $value The value to be filtered.
@@ -87,8 +83,6 @@ class Solar_Filter {
 	/**
 	* 
 	* Removes non-alphabetic and non-numeric characters.
-	* 
-	* @static
 	* 
 	* @access public
 	* 
@@ -108,8 +102,6 @@ class Solar_Filter {
 	* 
 	* Removes non-alphabetic and non-numeric characters.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param mixed $value The value to be filtered.
@@ -127,8 +119,6 @@ class Solar_Filter {
 	/**
 	* 
 	* Removes all whitespace characters.
-	* 
-	* @static
 	* 
 	* @access public
 	* 
@@ -153,8 +143,6 @@ class Solar_Filter {
 	* should be a format that works with that function. The value should
 	* be a format that strtotime() understands.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param string $value The value to be filtered; must be a value
@@ -176,8 +164,6 @@ class Solar_Filter {
 	* 
 	* Forces a value to an ISO-standard date string.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param string $value The value to be filtered; must be a value
@@ -196,8 +182,6 @@ class Solar_Filter {
 	/**
 	* 
 	* Forces a value to an ISO-standard date-time string.
-	* 
-	* @static
 	* 
 	* @access public
 	* 
@@ -218,8 +202,6 @@ class Solar_Filter {
 	* 
 	* Forces a value to an ISO-standard time string.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param string $value The value to be filtered; must be a value
@@ -238,8 +220,6 @@ class Solar_Filter {
 	/**
 	* 
 	* Removes non-numeric characters.
-	* 
-	* @static
 	* 
 	* @access public
 	* 
@@ -261,8 +241,6 @@ class Solar_Filter {
 	* 
 	* Casts a value as a specific type. $type should be a valid variable type:
 	* 'array', 'string', 'int', 'float', 'double', 'real', or 'bool'.
-	* 
-	* @static
 	* 
 	* @access public
 	* 
@@ -321,8 +299,6 @@ class Solar_Filter {
 	* be passed to the callback function, as long as the value to be
 	* filtered is the first parameter of the callback.
 	* 
-	* @static
-	* 
 	* @access public
 	* 
 	* @param mixed $value The value to be filtered.
@@ -354,7 +330,7 @@ class Solar_Filter {
 	
 	/**
 	* 
-	* Apply multiple filters to a value.
+	* Applies multiple filters to a value.
 	* 
 	* Applies multiple filters to a value. $filters should be an array of
 	* arrays, with each subarray consisting of at least one element. The first
@@ -369,8 +345,6 @@ class Solar_Filter {
 	* is always the value being filtered).
 	* 
 	* Returns the transformed value after applying all filters.
-	* 
-	* @static
 	* 
 	* @access public
 	* 

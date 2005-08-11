@@ -357,7 +357,7 @@ class Solar_Cell_Bugs extends Solar_Sql_Entity {
 			'ts_new'  => 'normal',
 			'ts_mod'  => 'normal',
 			'type'    => 'normal',
-			'queue'    => 'normal',
+			'queue'   => 'normal',
 			'user_id' => 'normal',
 			'status'  => 'normal',
 		);

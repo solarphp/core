@@ -41,4 +41,7 @@ $form = Solar::object('Solar_Form');
 
 // allow user to set the "count" for each page
 $bookmarks->setRowsPerPage(Solar::get('rows_per_page', 10));
+
+// set the view locale to Solar_App_Bookmarks
+$this->view->locale('Solar_App_Bookmarks::');
 ?>

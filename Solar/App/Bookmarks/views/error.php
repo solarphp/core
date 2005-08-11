@@ -33,7 +33,7 @@
 
 <div style="color: red;">
 <?php foreach ($this->err as $text): ?>
-	<p><?php echo $this->scrub($text) ?></p>
+	<p><?php $this->_($text) ?></p>
 <?php endforeach ?>
 </div>
 

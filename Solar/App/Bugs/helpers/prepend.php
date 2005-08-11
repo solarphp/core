@@ -39,4 +39,7 @@ $bugs = Solar::object('Solar_Cell_Bugs');
 $comments = Solar::object('Solar_Cell_Comments');
 $form = Solar::object('Solar_Form');
 
+// set the default locale for the view
+$this->view->locale('Solar_App_Bugs::');
+
 ?>

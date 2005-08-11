@@ -24,7 +24,7 @@ $link = Solar::object('Solar_Uri');
 <div>
 	<!-- ordering -->
 	<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-		<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'ORDERED_BY') ?></h2>
+		<h2><?php $this->_($this->locale('ORDERED_BY')) ?></h2>
 		<p><?php
 			$tmp = array(
 				'rank'       => 'Rank',
@@ -43,7 +43,9 @@ $link = Solar::object('Solar_Uri');
 			// add links
 			foreach ($tmp as $key => $val) {
 				if (Solar::get('order', 'ts_desc') == $key) {
-					echo "<strong>$val</strong><br />\n";
+					echo "<strong>";
+					$this->_($val);
+					echo "</strong><br />\n";
 				} else {
 					$link->setQuery('order', $key);
 					echo $this->ahref($link->export(), $val) . "<br />\n";
@@ -55,7 +57,7 @@ $link = Solar::object('Solar_Uri');
 	<!-- the list of tags for this user (if one is selected) -->
 	<?php if (Solar::pathinfo(0) == 'user'): ?>
 		<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-			<h2><?php echo Solar::locale('Solar_App_Bookmarks', 'TAG_LIST') ?></h2>
+			<h2><?php $this->_($this->locale('TAG_LIST')) ?></h2>
 			<p><?php
 				$link->import();
 				$tmp = array();
@@ -76,9 +78,9 @@ $link = Solar::object('Solar_Uri');
 		<!-- output the user_id and tag-search, if any -->
 		<?php if ($this->user_id || $this->tags): ?>
 			<h2><?php
-				if ($this->user_id) echo Solar::locale('Solar_App_Bookmarks', 'USER') . ': ' . $this->scrub($this->user_id);
+				if ($this->user_id) $this->_($this->locale('USER') . ': ' . $this->user_id);
 				if ($this->user_id && $this->tags) echo "<br />\n";
-				if ($this->tags) echo Solar::locale('Solar_App_Bookmarks', 'TAGS') . ': ' . $this->scrub($this->tags);
+				if ($this->tags) $this->_($this->locale('TAGS') . ': ' . $this->tags);
 			?></h2>
 		<?php endif ?>
 		
@@ -96,28 +98,28 @@ $link = Solar::object('Solar_Uri');
 					<!-- description -->
 					<?php if (trim($item['descr']) != ''): ?>
 					
-					<br /><?php echo nl2br(wordwrap($this->scrub($item['descr']), 72)) ?>
+					<br /><?php echo nl2br(wordwrap($this->escape($item['descr']), 72)) ?>
 					<?php endif ?>
 					
 					<!-- rank and uri -->
 					<br /><span style="font-size: 90%;"><?php
 						// rank
-						echo Solar::locale('Solar_App_Bookmarks', 'RANK') . ' ' . $this->scrub($item['rank']);
+						$this->_($this->locale('RANK') . ' ' . $item['rank']);
 						
 						// from uri
-						echo ' ' . Solar::locale('Solar_App_Bookmarks', 'FROM') . ' ';
+						$this->_(' ' . $this->locale('FROM') . ' ');
 						$cut = $item['uri'];
 						if (strlen($cut) > 72) {
 							// if longer than 72 chars, only show 64 chars, cut in the middle
 							$cut = substr($cut, 0, 48) . '...' . substr($cut, -16);
 						}
-						echo $this->scrub($cut);
+						$this->_($cut);
 					?>
 					
 					<!-- date added by user -->
 					<br /><?php
-						echo Solar::locale('Solar_App_Bookmarks', 'ON') . ' ' . $this->date($item['ts_new']) . ' ';
-						echo Solar::locale('Solar_App_Bookmarks', 'BY') . ' ';
+						$this->_($this->locale('ON') . ' ' . $this->date($item['ts_new']) . ' ');
+						$this->_($this->locale('BY') . ' ');
 						$link->clearInfo();
 						$link->clearQuery();
 						$link->setInfo('0', 'user');
@@ -129,7 +131,7 @@ $link = Solar::object('Solar_Uri');
 					<br /><?php
 					
 						// tags
-						echo Solar::locale('Solar_App_Bookmarks', 'TAGGED');
+						$this->_($this->locale('TAGGED'));
 						$tags = explode(' ', $item['tags']);
 						foreach ($tags as $tag) {
 							echo '&nbsp;';
@@ -166,13 +168,13 @@ $link = Solar::object('Solar_Uri');
 				$prev = $link->export();
 				$link->setQuery('page', $tmp + 1);
 				$next = $link->export();
-				if ($this->page > 1) echo $this->ahref($prev, Solar::locale('Solar', 'OP_PREVIOUS')) . ' | ';
-				echo "Page {$this->page} of {$this->pages}";
-				if ($this->page < $this->pages) echo ' | ' . $this->ahref($next, Solar::locale('Solar', 'OP_NEXT'));
+				if ($this->page > 1) echo $this->ahref($prev, $this->locale('Solar::OP_PREVIOUS')) . ' | ';
+				$this->_("Page {$this->page} of {$this->pages}");
+				if ($this->page < $this->pages) echo ' | ' . $this->ahref($next, $this->locale('Solar::OP_NEXT'));
 			?> ]</strong></p>
 			
 		<?php else: ?>
-			<p><?php echo Solar::locale('Solar_App_Bookmarks', 'NO_BOOKMARKS_FOUND') ?></p>
+			<p><?php $this->_($this->locale('NO_BOOKMARKS_FOUND')) ?></p>
 		<?php endif ?>
 		
 		<?php if (Solar::shared('user')->auth->status_code == 'VALID'): ?>
@@ -182,7 +184,7 @@ $link = Solar::object('Solar_Uri');
 				$link->clearQuery();
 				$link->setInfo(0, 'edit');
 				$link->setQuery('id', '0');
-				echo $this->ahref($link->export(), Solar::locale('Solar_App_Bookmarks', 'ADD_NEW_BOOKMARK'))
+				echo $this->ahref($link->export(), $this->locale('ADD_NEW_BOOKMARK'))
 			?></p>
 			
 			<p><?php
@@ -190,8 +192,8 @@ $link = Solar::object('Solar_Uri');
 				$host = $link->host;
 				$path = $link->path;
 				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)";
-				echo Solar::locale('Solar_App_Bookmarks', 'DRAG_THIS'). ': ';
-				echo $this->ahref($js, Solar::locale('Solar_App_Bookmarks', 'QUICKMARK'));
+				$this->_($this->locale('DRAG_THIS') . ': ');
+				echo $this->ahref($js, $this->locale('QUICKMARK'));
 			?></p>
 		<?php endif ?>
 	</div>

@@ -55,13 +55,13 @@
 		</style>
 		
 		<?php if ($this->rss['avail']) {
-			echo '<link rel="alternate" type="application/rss+xml" title="' . $this->scrub($this->rss['title']) . '" ';
-			echo 'href="' . $this->scrub($this->rss['link']) . '" />' . "\n";
+			echo '<link rel="alternate" type="application/rss+xml" title="' . $this->escape($this->rss['title']) . '" ';
+			echo 'href="' . $this->escape($this->rss['link']) . '" />' . "\n";
 		} ?>
 	</head>
 	<body>
 		
-		<h1><?php echo Solar::locale('Solar_App_Bookmarks', 'BOOKMARKS') ?></h1>
+		<h1><?php $this->_(Solar::locale('Solar_App_Bookmarks', 'BOOKMARKS')) ?></h1>
 		<?php $this->form('set', 'class', 'Savant3') ?>
 		<?php include $this->template('auth.php') ?>
 	

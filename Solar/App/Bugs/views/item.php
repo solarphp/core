@@ -31,9 +31,9 @@
 ?>
 <?php include $this->template('header.php') ?>
 
-<h2><?php echo Solar::locale('Solar_App_Bugs', 'BUG_REPORT') . ' ' . $this->item['id']['value'] ?></h2>
+<h2><?php $this->_($this->locale('BUG_REPORT') . ' ' . $this->item['id']['value']) ?></h2>
 
-<p>[ <?php echo $this->ahref('?action=listOpen', Solar::locale('Solar_App_Bugs', 'BACK_TO_LIST')) ?> ]</p>
+<p>[ <?php echo $this->ahref('?action=listOpen', $this->locale('BACK_TO_LIST')) ?> ]</p>
 
 <!-- enclose in table to collapse the div -->
 <table><tr><td>
@@ -51,7 +51,7 @@
 </td><tr></table>
 
 <?php if ($this->can_edit): ?>
-	<p><?php echo $this->ahref('?action=edit&id=' . $this->item['id']['value'], Solar::locale('Solar_App_Bugs', 'EDIT_BUG_REPORT')) ?></p>
+	<p><?php echo $this->ahref('?action=edit&id=' . $this->item['id']['value'], $this->locale('EDIT_BUG_REPORT')) ?></p>
 <?php endif; ?>
 
 <?php include $this->template('comments.php') ?>
@@ -61,19 +61,19 @@
 	<?php if ($this->formdata->feedback): ?>
 		<div style="background: #eee; padding: 8px;">
 			<?php foreach ((array) $this->formdata->feedback as $text) {
-				echo "<p>" . $this->scrub($text) . "</p>\n";
+				echo "<p>" . $this->escape($text) . "</p>\n";
 			} ?>
 		</div>
 	<?php endif ?>
 	
 	<?php
 		echo $this->form('begin');
-		echo $this->form('block', 'begin', Solar::locale('Solar_App_Bugs', 'ADD_COMMENT'));
-		echo $this->form('hidden', 'action', Solar::locale('Solar', 'OP_SAVE'));
+		echo $this->form('block', 'begin', $this->locale('ADD_COMMENT'));
+		echo $this->form('hidden', 'action', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('fullauto', $this->formdata->elements);
 		echo $this->form('group', 'begin');
-		echo $this->form('submit', 'op', Solar::locale('Solar', 'OP_SAVE'));
-		echo $this->form('reset', 'op', Solar::locale('Solar', 'OP_RESET'));
+		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
+		echo $this->form('reset', 'op', $this->locale('Solar::OP_RESET'));
 		echo $this->form('group', 'end');
 		echo $this->form('end');
 	?>

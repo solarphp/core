@@ -30,7 +30,7 @@
 */
 ?>
 
-<h3><?php echo Solar::locale('Solar_App_Bugs', 'USER_COMMENTS') ?></h3>
+<h3><?php $this->_($this->locale('USER_COMMENTS')) ?></h3>
 
 <?php if ($this->comments): ?>
 
@@ -42,12 +42,12 @@
 						echo $this->date($val['ts'], 'date') . ' | ';
 						echo $this->date($val['ts'], 'time');
 						if ($val['user_id']) {
-							echo  ' | ' . $this->scrub($val['user_id']);
+							$this->_(' | ' . $val['user_id']);
 						} elseif ($val['email']) {
-							echo ' | ' . $this->scrub($val['email']);
+							$this->_(' | ' . $val['email']);
 						}
 				?> ]</strong></p>
-				<pre style="padding: 8px;"><?php echo wordwrap($this->scrub($val['body'])) ?></pre>
+				<pre style="padding: 8px;"><?php $this->_(wordwrap($val['body'])) ?></pre>
 			</td>
 		</tr>
 		<tr><td><br /></td></tr>
@@ -56,6 +56,6 @@
 	
 <?php else: ?>
 
-	<p><?php echo Solar::locale('Solar_App_Bugs', 'NO_COMMENTS') ?></p>
+	<p><?php $this->_($this->locale('NO_COMMENTS')) ?></p>
 	
 <?php endif; ?>

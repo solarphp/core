@@ -24,15 +24,17 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Provides an object-oriented template system for PHP5.</p>
+<p class="description"><p>Savant3 helps you separate business logic from presentation logic  using PHP as the template language. By default, Savant3 does not  compile templates. However, you may pass an optional compiler object  to compile template source to include-able PHP code.  It is E_STRICT  compliant for PHP5.</p><p>Please see the documentation at <a href="http://phpsavant.com/">http://phpsavant.com/</a>, and be  sure to donate! :-)</p></p>
 	<ul class="tags">
-				<li><span class="field">todo:</span> Unit test 'form' (in progress)</li>
 				<li><span class="field">todo:</span> Unit test for plugin extensions</li>
+				<li><span class="field">todo:</span> Unit test 'form' (in progress)</li>
 				<li><span class="field">todo:</span> Write code analyzer for self :-(</li>
+				<li><span class="field">todo:</span> make addPath take arrays and path-strings, not just dir strings</li>
 				<li><span class="field">version:</span> 3.0.0dev4</li>
 				<li><span class="field">author:</span> Paul M. Jones &lt;<a href="mailto:pmjones@ciaweb.net">pmjones@ciaweb.net</a>&gt;</li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_Solar_Template_Savant3_php.html">/Solar/Template/Savant3.php</a> (line <span class="field">52</span>)
+			Located in <a class="field" href="_Solar_Template_Savant3_php.html">/Solar/Template/Savant3.php</a> (line <span class="field">54</span>)
 		</p>
 		
 				
@@ -111,6 +113,12 @@
 								
 				<div class="method-definition">
 											<span class="method-result">void</span>
+										<a href="#addEscape" title="details" class="method-name">addEscape</a>
+										()
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
 										<a href="#addFilters" title="details" class="method-name">addFilters</a>
 											(<span class="var-type">array</span>&nbsp;<span class="var-name">0</span>)
 									</div>
@@ -159,6 +167,12 @@
 								
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
+										<a href="#escape" title="details" class="method-name">escape</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
 										<a href="#fetch" title="details" class="method-name">fetch</a>
 											([<span class="var-type">string</span>&nbsp;<span class="var-name">$tpl</span> = <span class="var-default">null</span>])
 									</div>
@@ -176,9 +190,21 @@
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getEscape" title="details" class="method-name">getEscape</a>
+										()
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">boolean</span>
 										<a href="#isError" title="details" class="method-name">isError</a>
 											(<span class="var-type">object</span>&nbsp;<span class="var-name">$obj</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#plugin" title="details" class="method-name">plugin</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -191,6 +217,12 @@
 											<span class="method-result">void</span>
 										<a href="#setErrorText" title="details" class="method-name">setErrorText</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$text</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setEscape" title="details" class="method-name">setEscape</a>
+										()
 									</div>
 								
 				<div class="method-definition">
@@ -236,6 +268,12 @@
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_" title="details" class="method-name">_</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#__call" title="details" class="method-name">__call</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$params</span>)
@@ -271,7 +309,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$__config</span>
-			 = <span class="var-default">array(<br />		'template_path' =&gt; array(),'resource_path'=&gt;array(),'error_text'=&gt;&quot;\n\ntemplate error, examine fetch() result\n\n&quot;,'exceptions'=&gt;false,'compiler'=&gt;null,'filters'=&gt;array(),'plugins'=&gt;array(),'template'=&gt;null,'plugin_conf'=&gt;array(),'extract'=&gt;false,'fetch'=&gt;null)</span>			(line <span class="line-number">65</span>)
+			 = <span class="var-default">array(<br />		'template_path' =&gt; array(),'resource_path'=&gt;array(),'error_text'=&gt;&quot;\n\ntemplate error, examine fetch() result\n\n&quot;,'exceptions'=&gt;false,'compiler'=&gt;null,'filters'=&gt;array(),'plugins'=&gt;array(),'template'=&gt;null,'plugin_conf'=&gt;array(),'extract'=&gt;false,'fetch'=&gt;null,'escape'=&gt;array('htmlspecialchars'),)</span>			(line <span class="line-number">67</span>)
 		</span>
 	</div>
 
@@ -306,7 +344,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">100</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">103</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -340,11 +378,42 @@
 							</li>
 				</ul>
 	</div>
-<a name="methodaddFilters" id="addFilters"><!-- --></a>
+<a name="methodaddEscape" id="addEscape"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">addFilters</span> (line <span class="line-number">890</span>)
+		<span class="method-title">addEscape</span> (line <span class="line-number">516</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds to the callbacks used when calling $this-&gt;escape().</p>
+<p class="description"><p>Each parameter passed to this function is treated as a separate  callback.  For example:</p><p><pre><ol><code><pre><li> <span class="src-var">$savant</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#methodaddEscape">addEscape</a><span class="src-sym">(</span></li>
+<li>     <span class="src-str">'stripslashes'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'htmlspecialchars'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'StaticClass'</span><span class="src-sym">, </span><span class="src-str">'method'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-var">$object</span><span class="src-sym">, </span><span class="src-var">$method</span><span class="src-sym">)</span></li>
+<li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
+</pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addEscape
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodaddFilters" id="addFilters"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addFilters</span> (line <span class="line-number">1101</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -370,10 +439,10 @@
 		
 	</div>
 <a name="methodaddPath" id="addPath"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">addPath</span> (line <span class="line-number">497</span>)
+		<span class="method-title">addPath</span> (line <span class="line-number">708</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -399,10 +468,10 @@
 		
 	</div>
 <a name="methodapiVersion" id="apiVersion"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">apiVersion</span> (line <span class="line-number">270</span>)
+		<span class="method-title">apiVersion</span> (line <span class="line-number">235</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -424,10 +493,10 @@
 		
 	</div>
 <a name="methodapplyFilters" id="applyFilters"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">applyFilters</span> (line <span class="line-number">912</span>)
+		<span class="method-title">applyFilters</span> (line <span class="line-number">1123</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -453,10 +522,10 @@
 		
 	</div>
 <a name="methodassign" id="assign"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">assign</span> (line <span class="line-number">622</span>)
+		<span class="method-title">assign</span> (line <span class="line-number">833</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -498,10 +567,10 @@
 		
 	</div>
 <a name="methodassignRef" id="assignRef"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">assignRef</span> (line <span class="line-number">676</span>)
+		<span class="method-title">assignRef</span> (line <span class="line-number">887</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -531,10 +600,10 @@
 		
 	</div>
 <a name="methoddisplay" id="display"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">display</span> (line <span class="line-number">707</span>)
+		<span class="method-title">display</span> (line <span class="line-number">918</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -561,10 +630,10 @@
 		
 	</div>
 <a name="methoderror" id="error"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">error</span> (line <span class="line-number">966</span>)
+		<span class="method-title">error</span> (line <span class="line-number">1177</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -606,11 +675,52 @@
 							</li>
 				</ul>
 	</div>
+<a name="methodescape" id="escape"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">escape</span> (line <span class="line-number">570</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Applies escaping to a value.</p>
+<p class="description"><p>You can override the predefined escaping callbacks by passing  added parameters as replacement callbacks.</p><p><pre><ol><code><pre><li> <span class="src-comm">// use predefined callbacks</span></li>
+<li> <span class="src-var">$result </span>= <span class="src-var">$savant</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#methodescape">escape</a><span class="src-sym">(</span><span class="src-var">$value</span><span class="src-sym">)</span><span class="src-sym">;</span></li>
+<li>&nbsp;</li>
+<li> <span class="src-comm">// use replacement callbacks</span></li>
+<li> <span class="src-var">$result </span>= <span class="src-var">$savant</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#methodescape">escape</a><span class="src-sym">(</span></li>
+<li>     <span class="src-var">$value</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'stripslashes'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'htmlspecialchars'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'StaticClass'</span><span class="src-sym">, </span><span class="src-str">'method'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-var">$object</span><span class="src-sym">, </span><span class="src-var">$method</span><span class="src-sym">)</span></li>
+<li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
+</pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			escape
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: The value to be escaped.</span>			</li>
+				</ul>
+		
+		
+	</div>
 <a name="methodfetch" id="fetch"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">fetch</span> (line <span class="line-number">726</span>)
+		<span class="method-title">fetch</span> (line <span class="line-number">937</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -640,7 +750,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">findFile</span> (line <span class="line-number">539</span>)
+		<span class="method-title">findFile</span> (line <span class="line-number">750</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -673,7 +783,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getConfig</span> (line <span class="line-number">296</span>)
+		<span class="method-title">getConfig</span> (line <span class="line-number">327</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -699,11 +809,36 @@
 		
 		
 	</div>
-<a name="methodisError" id="isError"><!-- --></a>
+<a name="methodgetEscape" id="getEscape"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">isError</span> (line <span class="line-number">1010</span>)
+		<span class="method-title">getEscape</span> (line <span class="line-number">535</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the array of output-escaping callbacks.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The array of output-escaping callbacks.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getEscape
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodisError" id="isError"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isError</span> (line <span class="line-number">1221</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -737,11 +872,41 @@
 							</li>
 				</ul>
 	</div>
+<a name="methodplugin" id="plugin"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">plugin</span> (line <span class="line-number">255</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an internal plugin object; creates it as needed.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The plugin object, or a Savant3_Error with an  ERR_PLUGIN code if it can't find the plugin.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			plugin
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The plugin name.  If this plugin has not  been created yet, this method creates it automatically.</span>			</li>
+				</ul>
+		
+		
+	</div>
 <a name="methodsetCompiler" id="setCompiler"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCompiler</span> (line <span class="line-number">328</span>)
+		<span class="method-title">setCompiler</span> (line <span class="line-number">359</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -771,7 +936,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setErrorText</span> (line <span class="line-number">346</span>)
+		<span class="method-title">setErrorText</span> (line <span class="line-number">377</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -796,11 +961,42 @@
 		
 		
 	</div>
-<a name="methodsetExceptions" id="setExceptions"><!-- --></a>
+<a name="methodsetEscape" id="setEscape"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setExceptions</span> (line <span class="line-number">365</span>)
+		<span class="method-title">setEscape</span> (line <span class="line-number">488</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Clears then sets the callbacks to use when calling $this-&gt;escape().</p>
+<p class="description"><p>Each parameter passed to this function is treated as a separate  callback.  For example:</p><p><pre><ol><code><pre><li> <span class="src-var">$savant</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#methodsetEscape">setEscape</a><span class="src-sym">(</span></li>
+<li>     <span class="src-str">'stripslashes'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'htmlspecialchars'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'StaticClass'</span><span class="src-sym">, </span><span class="src-str">'method'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-var">$object</span><span class="src-sym">, </span><span class="src-var">$method</span><span class="src-sym">)</span></li>
+<li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
+</pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setEscape
+		</span>
+				()
+			</div>
+	
+		
+		
+	</div>
+<a name="methodsetExceptions" id="setExceptions"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setExceptions</span> (line <span class="line-number">396</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -826,10 +1022,10 @@
 		
 	</div>
 <a name="methodsetExtract" id="setExtract"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setExtract</span> (line <span class="line-number">384</span>)
+		<span class="method-title">setExtract</span> (line <span class="line-number">415</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -855,10 +1051,10 @@
 		
 	</div>
 <a name="methodsetFilters" id="setFilters"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setFilters</span> (line <span class="line-number">872</span>)
+		<span class="method-title">setFilters</span> (line <span class="line-number">1083</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -884,10 +1080,10 @@
 		
 	</div>
 <a name="methodsetPath" id="setPath"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setPath</span> (line <span class="line-number">451</span>)
+		<span class="method-title">setPath</span> (line <span class="line-number">662</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -916,10 +1112,10 @@
 		
 	</div>
 <a name="methodsetPluginConf" id="setPluginConf"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setPluginConf</span> (line <span class="line-number">404</span>)
+		<span class="method-title">setPluginConf</span> (line <span class="line-number">435</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -948,10 +1144,10 @@
 		
 	</div>
 <a name="methodsetTemplate" id="setTemplate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setTemplate</span> (line <span class="line-number">422</span>)
+		<span class="method-title">setTemplate</span> (line <span class="line-number">453</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -977,10 +1173,10 @@
 		
 	</div>
 <a name="methodtemplate" id="template"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">template</span> (line <span class="line-number">805</span>)
+		<span class="method-title">template</span> (line <span class="line-number">1016</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1009,15 +1205,56 @@
 		
 		
 	</div>
+<a name="method_" id="_"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_</span> (line <span class="line-number">629</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Prints a value after escaping it for output.</p>
+<p class="description"><p>You can override the predefined escaping callbacks by passing  added parameters as replacement callbacks.</p><p><pre><ol><code><pre><li> <span class="src-comm">// use predefined callbacks</span></li>
+<li> <span class="src-var">$this</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#method_">_</a><span class="src-sym">(</span><span class="src-var">$value</span><span class="src-sym">)</span><span class="src-sym">;</span></li>
+<li>&nbsp;</li>
+<li> <span class="src-comm">// use replacement callbacks</span></li>
+<li> <span class="src-var">$this</span><span class="src-sym">-&gt;</span><a href="../Savant3/Savant3.html#method_">_</a><span class="src-sym">(</span></li>
+<li>     <span class="src-var">$value</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'stripslashes'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-str">'htmlspecialchars'</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">'StaticClass'</span><span class="src-sym">, </span><span class="src-str">'method'</span><span class="src-sym">)</span><span class="src-sym">,</span></li>
+<li>     <span class="src-key">array</span><span class="src-sym">(</span><span class="src-var">$object</span><span class="src-sym">, </span><span class="src-var">$method</span><span class="src-sym">)</span></li>
+<li> <span class="src-sym">)</span><span class="src-sym">;</span></li>
+</pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: The value to be escaped and printed.</span>			</li>
+				</ul>
+		
+		
+	</div>
 <a name="method__call" id="__call"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">__call</span> (line <span class="line-number">174</span>)
+		<span class="method-title">__call</span> (line <span class="line-number">182</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">Executes a plugin method with arbitrary parameters.</p>
+<p class="short-description">Executes a main plugin method with arbitrary parameters.</p>
 	<ul class="tags">
 				<li><span class="field">return:</span> The plugin output, or a Savant3_Error with an  ERR_PLUGIN code if it can't find the plugin.</li>
 				<li><span class="field">access:</span> public</li>
@@ -1046,7 +1283,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">__toString</span> (line <span class="line-number">248</span>)
+		<span class="method-title">__toString</span> (line <span class="line-number">213</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1079,7 +1316,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Wed, 06 Jul 2005 16:32:18 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Thu, 11 Aug 2005 16:49:37 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

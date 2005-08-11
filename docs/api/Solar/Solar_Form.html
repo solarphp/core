@@ -25,7 +25,7 @@
 <p class="short-description">Class for hinting how to build forms.</p>
 <p class="description"><p>This is technically a pseudo-form class.   It stores information for how  to build a form, but does not perform output.  Will validate data  in the form and generate feedback messages.</p><p>Built for use primarly with multiple Solar_Sql_Entity extended classes.</p></p>
 		<p class="notes">
-			Located in <a class="field" href="_Solar_Form_php.html">/Solar/Form.php</a> (line <span class="field">40</span>)
+			Located in <a class="field" href="_Solar_Form_php.html">/Solar/Form.php</a> (line <span class="field">47</span>)
 		</p>
 		
 				
@@ -52,6 +52,10 @@
 			<div class="var-summary">
 								<div class="var-title">
 					<span class="var-type">array</span>
+					<a href="#$attribs" title="details" class="var-name">$attribs</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">array</span>
 					<a href="#$config" title="details" class="var-name">$config</a>
 				</div>
 								<div class="var-title">
@@ -68,7 +72,11 @@
 				</div>
 								<div class="var-title">
 					<span class="var-type">array</span>
-					<a href="#$submit" title="details" class="var-name">$submit</a>
+					<a href="#$filter" title="details" class="var-name">$filter</a>
+				</div>
+								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$submitted" title="details" class="var-name">$submitted</a>
 				</div>
 								<div class="var-title">
 					<span class="var-type">array</span>
@@ -105,20 +113,38 @@
 								
 				<div class="method-definition">
 											<span class="method-result">void</span>
+										<a href="#addFilter" title="details" class="method-name">addFilter</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
 										<a href="#addValidate" title="details" class="method-name">addValidate</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$message</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#load" title="details" class="method-name">load</a>
+											(<span class="var-type">string|object </span>&nbsp;<span class="var-name">$obj</span>)
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#populate" title="details" class="method-name">populate</a>
-											(<span class="var-type">array</span>&nbsp;<span class="var-name">$list</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$array</span>)
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$submit</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">string</span>
-										<a href="#prepName" title="details" class="method-name">prepName</a>
+										<a href="#prepareName" title="details" class="method-name">prepareName</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#reset" title="details" class="method-name">reset</a>
+										()
 									</div>
 								
 				<div class="method-definition">
@@ -135,14 +161,14 @@
 								
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
-										<a href="#submitValue" title="details" class="method-name">submitValue</a>
+										<a href="#submittedValue" title="details" class="method-name">submittedValue</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
 									</div>
 								
 				<div class="method-definition">
 											<span class="method-result">bool</span>
 										<a href="#validate" title="details" class="method-name">validate</a>
-										()
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$submit</span> = <span class="var-default">null</span>])
 									</div>
 								
 				<div class="method-definition">
@@ -167,22 +193,44 @@
 							
 					</div>
 		<div class="info-box-body">
-			<a name="var$config" id="$config"><!-- --></A>
+			<a name="var$attribs" id="$attribs"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$attribs</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">92</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Attributes for the form tag itself.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$config" id="$config"><!-- --></A>
 <div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$config</span>
-			 = <span class="var-default">array(<br />		'action'  =&gt; null,<br />		'method'  =&gt; 'post',<br />		'enctype' =&gt; 'multipart/form-data',<br />	)</span>			(line <span class="line-number">68</span>)
+			 = <span class="var-default">array(<br />		'action'  =&gt; null,<br />		'method'  =&gt; 'post',<br />		'enctype' =&gt; 'multipart/form-data',<br />	)</span>			(line <span class="line-number">75</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">User-provided configuration.</p>
-<p class="description"><p>Each key corresponds directly with a valid &lt;form&gt; tag  attribute; you can add or remove as you wish.  Note that  although 'action' defaults to null, it will be replaced  in the constructor with $_SERVER['REQUEST_URI'].</p><p>Keys are:</p><p>action =&gt; (string) The form action attribute; defaults to null,  which is treated as $_SERVER['REQUEST_URI'].</p><p>method =&gt; (string) The form method attribute; defaults to 'post'.</p><p>enctype =&gt; (string) The form encoding type; defaults to  'multipart/form-data'.</p></p>
+<p class="description"><p>Each key corresponds directly with a valid form tag  attribute; you can add or remove as you wish.  Note that  although 'action' defaults to null, it will be replaced  in the constructor with Solar::server('REQUEST_URI').</p><p>Keys are:</p><p>action =&gt; (string) The form action attribute; defaults to null,  which is treated as $_SERVER['REQUEST_URI'].</p><p>method =&gt; (string) The form method attribute; defaults to 'post'.</p><p>enctype =&gt; (string) The form encoding type; defaults to  'multipart/form-data'.</p></p>
 	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
+				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	
@@ -203,13 +251,13 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$default</span>
-			 = <span class="var-default">array(<br />		'name'     =&gt; null,<br />		'type'     =&gt; null,<br />		'label'    =&gt; null,<br />		'value'    =&gt; null,<br />		'descr'    =&gt; null,<br />		'require'  =&gt; false,<br />		'disable'  =&gt; false,<br />		'options'  =&gt; array(),'attribs'=&gt;array(),'feedback'=&gt;array(),)</span>			(line <span class="line-number">174</span>)
+			 = <span class="var-default">array(<br />		'name'     =&gt; null,<br />		'type'     =&gt; null,<br />		'label'    =&gt; null,<br />		'descr'    =&gt; null,<br />		'value'    =&gt; null,<br />		'require'  =&gt; false,<br />		'disable'  =&gt; false,<br />		'options'  =&gt; array(),'listsep'=&gt;null,'attribs'=&gt;array(),'feedback'=&gt;array(),)</span>			(line <span class="line-number">207</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Default values for each element.</p>
-<p class="description"><p>Keys are:</p><p>name =&gt; (string) The name attribute.</p><p>type =&gt; (string) The input or type attribute ('text', 'select', etc).</p><p>label =&gt; (string) A short label for the element.</p><p>value =&gt; (string) The default or selected value(s) for the element.</p><p>descr =&gt; (string) A longer description of the element, e.g. a tooltip  or help value.</p><p>require =&gt; (bool) Whether or not the element is required.</p><p>disable =&gt; (bool) If disabled, the element is read-only (but is still  submitted with other elements).</p><p>options =&gt; (array) The list of allowed values as options for this element  as an associative array in the form (value =&gt; label).</p><p>attribs =&gt; (array) Additional XHTML attributes for the element in the  form (attribute =&gt; value).</p><p>feedback =&gt; (array) An array of feedback messages for this element,  generally based on validation of previous user input.</p></p>
+<p class="description"><p>Keys are:</p><p>name =&gt; (string) The name attribute.</p><p>type =&gt; (string) The input or type attribute ('text', 'select', etc).</p><p>label =&gt; (string) A short label for the element.</p><p>value =&gt; (string) The default or selected value(s) for the element.</p><p>descr =&gt; (string) A longer description of the element, e.g. a tooltip  or help text.</p><p>require =&gt; (bool) Whether or not the element is required.</p><p>disable =&gt; (bool) If disabled, the element is read-only (but is still  submitted with other elements).</p><p>options =&gt; (array) The list of allowed values as options for this element  as an associative array in the form (value =&gt; label).</p><p>attribs =&gt; (array) Additional XHTML attributes for the element in the  form (attribute =&gt; value).</p><p>feedback =&gt; (array) An array of feedback messages for this element,  generally based on validation of previous user input.</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -226,7 +274,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$elements</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">85</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">105</span>)
 		</span>
 	</div>
 
@@ -248,7 +296,7 @@
 		<span class="var-title">
 			<span class="var-type">string|array</span>
 			<span class="var-name">$feedback</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">103</span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number">123</span>)
 		</span>
 	</div>
 
@@ -264,20 +312,42 @@
 		
 
 </div>
-<a name="var$submit" id="$submit"><!-- --></A>
+<a name="var$filter" id="$filter"><!-- --></A>
 <div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
-			<span class="var-name">$submit</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number">133</span>)
+			<span class="var-name">$filter</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number">136</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The array of pre-filters for the form elements</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$submitted" id="$submitted"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$submitted</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number">166</span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Array of submitted values.</p>
-<p class="description"><p>Populated on the first call to submitValue(), which itself uses  Solar::get() or Solar::post(), depending on the value of  $this-&gt;config['method'].</p></p>
+<p class="description"><p>Populated on the first call to submittedValue(), which itself uses  Solar::get() or Solar::post(), depending on the value of  $this-&gt;attribs['method'].</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -288,13 +358,13 @@
 
 </div>
 <a name="var$validate" id="$validate"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$validate</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number">116</span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number">149</span>)
 		</span>
 	</div>
 
@@ -325,10 +395,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number">196</span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number">230</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -355,10 +425,10 @@
 		
 	</div>
 <a name="methodaddFeedback" id="addFeedback"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">addFeedback</span> (line <span class="line-number">270</span>)
+		<span class="method-title">addFeedback</span> (line <span class="line-number">312</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -386,11 +456,44 @@
 		
 		
 	</div>
+<a name="methodaddFilter" id="addFilter"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addFilter</span> (line <span class="line-number">670</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a pre-filter for an element</p>
+<p class="description"><p>Adds a pre-filter for an element. All pre-filters are applied via  <a href="../Solar/Solar_Filter.html#methodmultiple">Solar_Filter::multiple()</a> and should conform to the  specifications for that method.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addFilter
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: The element name.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$method</span><span class="var-description">: Solar_Filter method or PHP function to use  for filtering.</span>			</li>
+				</ul>
+		
+		
+	</div>
 <a name="methodaddValidate" id="addValidate"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">addValidate</span> (line <span class="line-number">490</span>)
+		<span class="method-title">addValidate</span> (line <span class="line-number">696</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -404,7 +507,7 @@
 		<span class="method-name">
 			addValidate
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$message</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$message</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -421,15 +524,49 @@
 		
 		
 	</div>
-<a name="methodpopulate" id="populate"><!-- --></a>
+<a name="methodload" id="load"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">populate</span> (line <span class="line-number">318</span>)
+		<span class="method-title">load</span> (line <span class="line-number">556</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Loads form attributes and elements from an external source.</p>
+<p class="description"><p>You can pass an arbitrary number of parameters to this method;  all params after the first will be passed as arguments to the  fetch() method of the loader class.</p><p>The loader class itself must have at least one method, fetch(),  that returns an associative array with keys 'attribs' and  'elements' which contain, respectively, values for $this-&gt;attribs  and $this-&gt;setElements().</p><p>Example use:</p><p><pre><ol><code><pre><li> <span class="src-var">$form </span>= <span class="src-id"><a href="../Solar/Solar.html">Solar</a></span><span class="src-sym">::</span><a href="../Solar/Solar.html#methodobject">object</a><span class="src-sym">(</span><span class="src-str">'Solar_Form'</span><span class="src-sym">)</span><span class="src-sym">;</span></li>
+<li> <span class="src-var">$form</span><span class="src-sym">-&gt;</span><a href="../Solar/Solar_Form.html#methodload">load</a><span class="src-sym">(</span><span class="src-str">'Solar_Form_Load_Xml'</span><span class="src-sym">, </span><span class="src-str">'/path/to/form.xml'</span><span class="src-sym">)</span><span class="src-sym">;</span></li>
+</pre></code></ol></pre></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Void on success, or Solar_Error on failure.</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			load
+		</span>
+					(<span class="var-type">string|object </span>&nbsp;<span class="var-name">$obj</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string|object </span>
+				<span class="var-name">$obj</span><span class="var-description">: If a string, it is treated as a class  name to instantiate with Solar::object(); if an object, it is  used as-is.  Either way, the fetch() method of the object will  be called to populate this form (via $this-&gt;attribs property and  the $this-&gt;setElements() method).</span>			</li>
+				</ul>
+		
+		
+	</div>
+<a name="methodpopulate" id="populate"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">populate</span> (line <span class="line-number">363</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Populates form elements with submitted values.</p>
+<p class="description"><p>Populates form elements with either submitted values or the  elements passed in $submit.</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
 			</ul>
@@ -439,25 +576,22 @@
 		<span class="method-name">
 			populate
 		</span>
-					(<span class="var-type">array</span>&nbsp;<span class="var-name">$list</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$array</span>)
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$submit</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type">array</span>
-				<span class="var-name">$list</span><span class="var-description">: Element information as array(name =&gt; info).</span>			</li>
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$array</span><span class="var-description">: Rename the element as a key in this array.</span>			</li>
+				<span class="var-name">$submit</span><span class="var-description">: The source data array for populating form  values as array(name =&gt; value); if null, will populate from $_POST  or $_GET as determined from the form's 'method' attribute.</span>			</li>
 				</ul>
 		
 		
 	</div>
-<a name="methodprepName" id="prepName"><!-- --></a>
-<div class="evenrow">
+<a name="methodprepareName" id="prepareName"><!-- --></a>
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">prepName</span> (line <span class="line-number">453</span>)
+		<span class="method-title">prepareName</span> (line <span class="line-number">630</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -470,7 +604,7 @@
 	<div class="method-signature">
 		<span class="method-result">string</span>
 		<span class="method-name">
-			prepName
+			prepareName
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$array</span> = <span class="var-default">null</span>])
 			</div>
@@ -481,8 +615,33 @@
 				<span class="var-name">$name</span><span class="var-description">: The element name.</span>			</li>
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$array</span><span class="var-description">: The array name, if any, into which the place the element.</span>			</li>
+				<span class="var-name">$array</span><span class="var-description">: The array name, if any, into which we place  the element.</span>			</li>
 				</ul>
+		
+		
+	</div>
+<a name="methodreset" id="reset"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">reset</span> (line <span class="line-number">513</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Resets the form object to its originally-configured state.</p>
+<p class="description"><p>This clears out all elements, filters, validations, and feedback,  as well as all submitted values.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			reset
+		</span>
+				()
+			</div>
+	
 		
 		
 	</div>
@@ -490,7 +649,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setElement</span> (line <span class="line-number">220</span>)
+		<span class="method-title">setElement</span> (line <span class="line-number">255</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -525,7 +684,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setElements</span> (line <span class="line-number">296</span>)
+		<span class="method-title">setElements</span> (line <span class="line-number">338</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -553,11 +712,11 @@
 		
 		
 	</div>
-<a name="methodsubmitValue" id="submitValue"><!-- --></a>
+<a name="methodsubmittedValue" id="submittedValue"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">submitValue</span> (line <span class="line-number">518</span>)
+		<span class="method-title">submittedValue</span> (line <span class="line-number">735</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -570,7 +729,7 @@
 	<div class="method-signature">
 		<span class="method-result">mixed</span>
 		<span class="method-name">
-			submitValue
+			submittedValue
 		</span>
 					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
 			</div>
@@ -587,12 +746,12 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">validate</span> (line <span class="line-number">343</span>)
+		<span class="method-title">validate</span> (line <span class="line-number">400</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Performs validation on each form element.</p>
-<p class="description"><p>Updates the feedback keys for each element that fails validation.</p></p>
+<p class="description"><p>Updates the feedback keys for each element that fails validation.  Values are either pulled from the submitted form or from the array  passed in $submit.</p></p>
 	<ul class="tags">
 				<li><span class="field">return:</span> True if all elements are valid, false if not.</li>
 				<li><span class="field">access:</span> public</li>
@@ -603,9 +762,14 @@
 		<span class="method-name">
 			validate
 		</span>
-				()
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$submit</span> = <span class="var-default">null</span>])
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$submit</span><span class="var-description">: The source data array for populating form  values as array(name =&gt; info); if null, will populate from $_POST  or $_GET as determined from the 'method' attribute.</span>			</li>
+				</ul>
 		
 		
 	</div>
@@ -613,7 +777,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">values</span> (line <span class="line-number">394</span>)
+		<span class="method-title">values</span> (line <span class="line-number">462</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -652,7 +816,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Wed, 06 Jul 2005 16:31:57 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Thu, 11 Aug 2005 16:49:16 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_scrub.php,v 1.5 2005/05/27 14:00:25 pmjones Exp $
+* @version $Id$
 *
 */
 

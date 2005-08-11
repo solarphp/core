@@ -57,6 +57,31 @@ class Solar_Template extends Savant3 {
 		settype($config, 'array');
 		$config = array_merge($default, $config);
 		
+		
+		// find the Solar/Template/Plugin directory...
+		$dir = dirname(__FILE__) . '/Template/Plugin/';
+		
+		// ... and add it at the top so it becomes the default fallback
+		// (just before the Savant3 defaults).
+		if (! isset($config['resource_path']) ||
+			empty($config['resource_path'])) {
+			
+			// not set, or empty/null/blank
+			$config['resource_path'] = array($dir);
+			
+		} elseif (is_string($config['resource_path'])) {
+			
+			// path string
+			$config['resource_path'] = $dir . DIRECTORY_SEPARATOR .
+				$config['resource_path'];
+				
+		} elseif (is_array($config['resource_path'])) {
+			
+			// array of paths
+			array_unshift($config['resource_path'], $dir);
+			
+		}
+		
 		// ... and pass to the Savant3 constructor.
 		parent::__construct($config);
 	}

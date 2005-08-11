@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_ahref.php,v 1.3 2005/03/07 14:44:07 pmjones Exp $
+* @version $Id$
 *
 */
 
@@ -77,12 +77,12 @@ class Savant3_Plugin_ahref extends Savant3_Plugin {
 				$tmp .= '#' . $href['fragment'];
 			}
 		
-			$html .= $this->Savant->scrub($tmp);
+			$html .= htmlspecialchars($tmp);
 			
 		} else {
 		
 			// add the HREF from a scalar
-			$html .= $this->Savant->scrub($href);
+			$html .= htmlspecialchars($href);
 			
 		}
 		
@@ -92,13 +92,13 @@ class Savant3_Plugin_ahref extends Savant3_Plugin {
 		if (is_array($attr)) {
 			// from array
 			foreach ($attr as $key => $val) {
-				$key = $this->Savant->scrub($key);
-				$val = $this->Savant->scrub($val);
+				$key = htmlspecialchars($key);
+				$val = htmlspecialchars($val);
 				$html .= " $key=\"$val\"";
 			}
 		} elseif (! is_null($attr)) {
 			// from scalar
-			$html .= $this->Savant->scrub(" $attr");
+			$html .= htmlspecialchars(" $attr");
 		}
 		
 		// set the link text, close the tag, and return

@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_image.php,v 1.5 2005/03/07 14:30:13 pmjones Exp $
+* @version $Id$
 *
 */
 
@@ -154,10 +154,10 @@ class Savant3_Plugin_image extends Savant3_Plugin {
 			}
 			
 			$html .= ' filter:progid:DXImageTransform.Microsoft.AlphaImageLoader';
-			$html .= "(src='$file',sizingMethod='scale');\"";
-			$html .= ' title="' . $this->Savant->scrub($alt) . '"';
+			$html .= "(src='" . htmlspecialchars($file) . "',sizingMethod='scale');\"";
+			$html .= ' title="' . htmlspecialchars($alt) . '"';
 			
-			$html .= $this->_attr($attr);
+			$html .= $this->Savant->html_attribs($attr);
 
 			// done
 			$html .= '></span>';
@@ -166,25 +166,25 @@ class Savant3_Plugin_image extends Savant3_Plugin {
 			
 			// not IE, so build a normal image tag.
 			$html = '<img';
-			$html .= ' src="' . $this->Savant->scrub($file) . '"';
+			$html .= ' src="' . htmlspecialchars($file) . '"';
 			
 			// add the alt attribute
 			if (is_null($alt)) {
 				$alt = basename($file);
 			}
-			$html .= ' alt="' . $this->Savant->scrub($alt) . '"';
+			$html .= ' alt="' . htmlspecialchars($alt) . '"';
 			
 			// add the height attribute
 			if ($height) {
-				$html .= ' height="' . $this->Savant->scrub($height) . '"';
+				$html .= ' height="' . htmlspecialchars($height) . '"';
 			}
 			
 			// add the width attribute
 			if ($width) {
-				$html .= ' width="' . $this->Savant->scrub($width) . '"';
+				$html .= ' width="' . htmlspecialchars($width) . '"';
 			}
 			
-			$html .= $this->_attr($attr);
+			$html .= $this->Savant->html_attribs($attr);
 			
 			// done
 			$html .= ' />';
@@ -192,39 +192,6 @@ class Savant3_Plugin_image extends Savant3_Plugin {
 		}
 		
 		// done!
-		return $html;
-	}
-	
-	
-	/**
-	* 
-	* Create additional HTML attributes.
-	* 
-	* @access private
-	* 
-	* @param array|string $attr An array or string of attributes.
-	* 
-	* @return string A string of attributes.
-	* 
-	*/
-	
-	protected function _attr($attr = null)
-	{
-		$html = '';
-		
-		// add other attributes
-		if (is_array($attr)) {
-			// from array
-			foreach ($attr as $key => $val) {
-				$key = $this->Savant->scrub($key);
-				$val = $this->Savant->scrub($val);
-				$html .= " $key=\"$val\"";
-			}
-		} elseif (! is_null($attr)) {
-			// from scalar
-			$html .= " $attr";
-		}
-		
 		return $html;
 	}
 }

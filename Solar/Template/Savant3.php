@@ -4,22 +4,13 @@
 * 
 * Provides an object-oriented template system for PHP5.
 * 
-* Savant3 helps you separate business logic from presentation logic
-* using PHP as the template language. By default, Savant3 does not
-* compile templates. However, you may pass an optional compiler object
-* to compile template source to include-able PHP code.  It is E_STRICT
-* compliant for PHP5.
-* 
-* Please see the documentation at {@link http://phpsavant.com/}, and be
-* sure to donate! :-)
-* 
 * @package Savant3
 * 
 * @author Paul M. Jones <pmjones@ciaweb.net>
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3.php,v 1.23 2005/05/29 15:29:33 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -35,6 +26,15 @@ include_once dirname(__FILE__) . '/Savant3/Plugin.php';
 * 
 * Provides an object-oriented template system for PHP5.
 * 
+* Savant3 helps you separate business logic from presentation logic
+* using PHP as the template language. By default, Savant3 does not
+* compile templates. However, you may pass an optional compiler object
+* to compile template source to include-able PHP code.  It is E_STRICT
+* compliant for PHP5.
+* 
+* Please see the documentation at {@link http://phpsavant.com/}, and be
+* sure to donate! :-)
+* 
 * @author Paul M. Jones <pmjones@ciaweb.net>
 * 
 * @package Savant3
@@ -46,6 +46,8 @@ include_once dirname(__FILE__) . '/Savant3/Plugin.php';
 * @todo Unit test for plugin extensions
 * 
 * @todo Write code analyzer for self :-(
+* 
+* @todo make addPath take arrays and path-strings, not just dir strings
 * 
 */
 
@@ -73,7 +75,8 @@ class Savant3 {
 		'template'      => null,
 		'plugin_conf'   => array(),
 		'extract'       => false,
-		'fetch'         => null
+		'fetch'         => null,
+		'escape'         => array('htmlspecialchars'),
 	);
 	
 	
@@ -142,6 +145,11 @@ class Savant3 {
 			$this->setTemplate($config['template']);
 		}
 		
+		// set the output escaping callbacks
+		if (isset($config['escape'])) {
+			$this->setEscape($config['escape']);
+		}
+		
 		// set the default plugin configs
 		if (isset($config['plugin_conf']) && is_array($config['plugin_conf'])) {
 			foreach ($config['plugin_conf'] as $name => $opts) {
@@ -158,7 +166,7 @@ class Savant3 {
 	
 	/**
 	*
-	* Executes a plugin method with arbitrary parameters.
+	* Executes a main plugin method with arbitrary parameters.
 	* 
 	* @access public
 	* 
@@ -173,59 +181,16 @@ class Savant3 {
 	
 	public function __call($method, $params)
 	{
-		// shorthand reference
-		$plugins =& $this->__config['plugins'];
+		$plugin = $this->plugin($method);
 		
-		// is the plugin method object already instantiated?
-		if (! array_key_exists($method, $plugins)) {
-			
-			// not already instantiated, so load it up.
-			// set up the class name.
-			$class = "Savant3_Plugin_$method";
-			
-			// has the class been loaded?
-			if (! class_exists($class)) {
-			
-				// class is not loaded, set up the file name.
-				$file = "$class.php";
-				
-				// make sure the class file is available from the resource path.
-				$result = $this->findFile('resource', $file);
-				if (! $result) {
-					// not available, this is an error
-					return $this->error(
-						'ERR_PLUGIN',
-						array('method' => $method)
-					);
-				} else {
-					// available, load the class file
-					include_once $result;
-				}
-			}
-			
-			// get the default configuration for the plugin.
-			$plugin_conf =& $this->__config['plugin_conf'];
-			if (! empty($plugin_conf[$method])) {
-				$opts = $plugin_conf[$method];
-			} else {
-				$opts = array();
-			}
-			
-			// add the Savant reference
-			$opts['Savant'] = $this;
-			
-			// instantiate the plugin with its options.
-			$plugins[$method] = new $class($opts);
+		if ($this->isError($plugin)) {
+			return $plugin;
 		}
 		
-		// call the plugin method ...
-		$result = call_user_func_array(
-			array($plugins[$method], $method),
+		return call_user_func_array(
+			array($plugin, $method),
 			$params
 		);
-		
-		// ... and return its results.
-		return $result;
 	}
 	
 	
@@ -250,7 +215,7 @@ class Savant3 {
 		$output = $this->fetch($tpl);
 		if ($this->isError($output)) {
 			$text = $this->__config['error_text'];
-			return $text;
+			return $this->escape($text);
 		} else {
 			return $output;
 		}
@@ -270,6 +235,72 @@ class Savant3 {
 	public function apiVersion()
 	{
 		return '@package_version@';
+	}
+	
+	
+	/**
+	* 
+	* Returns an internal plugin object; creates it as needed.
+	* 
+	* @access public
+	* 
+	* @param string $name The plugin name.  If this plugin has not
+	* been created yet, this method creates it automatically.
+	*
+	* @return mixed The plugin object, or a Savant3_Error with an
+	* ERR_PLUGIN code if it can't find the plugin.
+	* 
+	*/
+	
+	public function plugin($name)
+	{
+		// shorthand reference
+		$plugins =& $this->__config['plugins'];
+		
+		// is the plugin method object already instantiated?
+		if (! array_key_exists($name, $plugins)) {
+			
+			// not already instantiated, so load it up.
+			// set up the class name.
+			$class = "Savant3_Plugin_$name";
+			
+			// has the class been loaded?
+			if (! class_exists($class)) {
+			
+				// class is not loaded, set up the file name.
+				$file = "$class.php";
+				
+				// make sure the class file is available from the resource path.
+				$result = $this->findFile('resource', $file);
+				if (! $result) {
+					// not available, this is an error
+					return $this->error(
+						'ERR_PLUGIN',
+						array('method' => $name)
+					);
+				} else {
+					// available, load the class file
+					include_once $result;
+				}
+			}
+			
+			// get the default configuration for the plugin.
+			$plugin_conf =& $this->__config['plugin_conf'];
+			if (! empty($plugin_conf[$name])) {
+				$opts = $plugin_conf[$name];
+			} else {
+				$opts = array();
+			}
+			
+			// add the Savant reference
+			$opts['Savant'] = $this;
+			
+			// instantiate the plugin with its options.
+			$plugins[$name] = new $class($opts);
+		}
+	
+		// return the plugin object
+		return $plugins[$name];
 	}
 	
 	
@@ -422,6 +453,186 @@ class Savant3 {
 	public function setTemplate($template)
 	{
 		$this->__config['template'] = $template;
+	}
+	
+	
+	// -----------------------------------------------------------------
+	//
+	// Output escaping and management.
+	//
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Clears then sets the callbacks to use when calling $this->escape().
+	* 
+	* Each parameter passed to this function is treated as a separate
+	* callback.  For example:
+	* 
+	* <code>
+	* $savant->setEscape(
+	*     'stripslashes',
+	*     'htmlspecialchars',
+	*     array('StaticClass', 'method'),
+	*     array($object, $method)
+	* );
+	* </code>
+	* 
+	* @access public
+	*
+	* @return void
+	*
+	*/
+	
+	public function setEscape()
+	{
+		$this->__config['escape'] = func_get_args();
+	}
+	
+	
+	/**
+	* 
+	* Adds to the callbacks used when calling $this->escape().
+	* 
+	* Each parameter passed to this function is treated as a separate
+	* callback.  For example:
+	* 
+	* <code>
+	* $savant->addEscape(
+	*     'stripslashes',
+	*     'htmlspecialchars',
+	*     array('StaticClass', 'method'),
+	*     array($object, $method)
+	* );
+	* </code>
+	* 
+	* @access public
+	*
+	* @return void
+	*
+	*/
+	
+	public function addEscape()
+	{
+		$args = func_get_args();
+		$this->__config['escape'] = array_merge(
+			$this->__config['escape'], $args
+		);
+	}
+	
+	
+	/**
+	*
+	* Gets the array of output-escaping callbacks.
+	*
+	* @access public
+	*
+	* @return array The array of output-escaping callbacks.
+	*
+	*/
+	
+	public function getEscape()
+	{
+		return $this->__config['escape'];
+	}
+	
+	
+	/**
+	*
+	* Applies escaping to a value.
+	* 
+	* You can override the predefined escaping callbacks by passing
+	* added parameters as replacement callbacks.
+	* 
+	* <code>
+	* // use predefined callbacks
+	* $result = $savant->escape($value);
+	* 
+	* // use replacement callbacks
+	* $result = $savant->escape(
+	*     $value,
+	*     'stripslashes',
+	*     'htmlspecialchars',
+	*     array('StaticClass', 'method'),
+	*     array($object, $method)
+	* );
+	* </code>
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to be escaped.
+	* 
+	* @return mixed
+	*
+	*/
+	
+	public function escape($value)
+	{
+		// were custom callbacks passed?
+		if (func_num_args() == 1) {
+		
+			// no, only a value was passed.
+			// loop through the predefined callbacks.
+			foreach ($this->__config['escape'] as $func) {
+				$value = call_user_func($func, $value);
+			}
+			
+		} else {
+		
+			// yes, use the custom callbacks
+			$callbacks = func_get_args();
+			
+			// drop $value
+			array_shift($callbacks);
+			
+			// loop through custom callbacks.
+			foreach ($callbacks as $func) {
+				$value = call_user_func($func, $value);
+			}
+			
+		}
+		
+		return $value;
+	}
+	
+	
+	/**
+	*
+	* Prints a value after escaping it for output.
+	* 
+	* You can override the predefined escaping callbacks by passing
+	* added parameters as replacement callbacks.
+	* 
+	* <code>
+	* // use predefined callbacks
+	* $this->_($value);
+	* 
+	* // use replacement callbacks
+	* $this->_(
+	*     $value,
+	*     'stripslashes',
+	*     'htmlspecialchars',
+	*     array('StaticClass', 'method'),
+	*     array($object, $method)
+	* );
+	* </code>
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to be escaped and printed.
+	* 
+	* @return void
+	*
+	*/
+	
+	public function _($value)
+	{
+		$args = func_get_args();
+		echo call_user_func_array(
+			array($this, 'escape'),
+			$args
+		);
 	}
 	
 	

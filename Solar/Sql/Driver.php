@@ -173,7 +173,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function exec($stmt, $count = 0, $offset = 0)
 	{
-		// 0. Connect to the database if not already.
+		// 0. Connect to the database if not already connected.
 		// 
 		// 1. Re-select the proper database if needed (Fbsql, Mssql, Mysql).
 		// 
@@ -182,7 +182,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		// 
 		// 3. Process the result:
 		// 
-		// 3a. If a resource, return a Solar_SQL object.
+		// 3a. If a resource, return a Solar_Sql_Result object.
 		// 
 		// 3b. If false, return a Solar_Error object.
 		// 
@@ -267,8 +267,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	* This method is dumb; it adds the clause to any kind of statement.
 	* You should not call it directly; use exec() with the optional $count
 	* and $offset parameters instead.
-	* 
-	* The code presented here works for Mysql, Pgsql, and Sqlite.
 	* 
 	* @access protected
 	* 
@@ -359,7 +357,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	*
-	* Get an SQL column declarartion string.
+	* Get an SQL column declaration string.
 	* 
 	* The $info parameter should be in this format:
 	* 

@@ -23,6 +23,12 @@ Please visit http://solarphp.com/ for more information.
    <role>lead</role>
   </maintainer>
   <maintainer>
+   <user>weierophinney</user>
+   <name>Matthew Weier O'Phinney</name>
+   <email>mweierophinney@gmail.com</email>
+   <role>contributor</role>
+  </maintainer>
+  <maintainer>
    <user>clay</user>
    <name>Clay Loveless</name>
    <email>clay@killersoft.com</email>
@@ -30,32 +36,136 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.6.1</version>
-  <date>2005-07-06</date>
+  <version>0.7.0</version>
+  <date>2005-08-11</date>
   <license>LGPL</license>
   <state>devel</state>
   <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* WARNING: This release contains backwards compatibility (BC) breaks.
+* Added new class, Solar_Filter, to filter data.  This is a companion to
+Solar_Valid and is currently used mostly for prefiltering submitted form
+values.  Thanks, Matthew Weier O'Phinney.
 
+* Added new class, Solar_Form_Loader, to allow loading of form elements
+from external sources.  Currently has only one method, fromXml(), to load
+elements from a SimpleXML file.  Thanks, Matthew Weier O'Phinney.
+
+* Solar:
+
+  * New protected method environment() performs some standardized
+  environment setup at Solar::start() time.  Solar now
+  automatically...
+    
+    * Unsets all registered global variables if 'register_globals'
+    is on.
+    
+    * Unsets $_REQUEST (you should use Solar::get(), ::post(), and
+    ::cookie() for security reasons).
+    
+    * Dispels magic quotes from get/post/cookie/files/server
+    superglobals if 'magic_quotes_gpc' is on; handles Sybase quotes
+    as well as slashed quotes.
+    
+    * Turns off 'magic_quotes_runtime' and 'magic_quotes_sybase' so
+    that SQL sources do not quote values on retrieval.
+    
+  * Solar::start() no longer sets error_reporting and display_errors.
+   Per note from Matthew Weier O'Phinney.
+
+  * Fixed bug where start() was calling __solar('start') instead of
+  solar('start') on shared objects (the latter is correct).
+  
+  * Added locale strings for 'VALID_*' keys to support default
+  validation messages in Solar_Sql and Solar_Form.
+  
+  * You can now specify an alternate config sources as the only
+  parameter to calling Solar::start().  Pass an array to populate
+  $config directly, an object to populate from the object properties,
+  or a string to indicate an arbitrary path to a config file.  The
+  default remains to load $config from the file defined by the
+  SOLAR_CONFIG_PATH constant.  Per discussion with Matthew Weier
+  O'Phinney.
+
+* Solar_App_*:
+
+  * View scripts now use the new Savant3 auto-escaping function
+  and the new Solar_Template plugin locale() for localized strings.
+  
+* Solar_Base:
+  
+  * Constructor now allows passing of a string as the $config value,
+  which is subsequently treated as a path to a php-array config file
+  (this means you can have a config file specifically for a class
+  instead of having to pass an array).
+  
+* Solar_Filter:
+  
+  * The alphanumeric() method is deprecated; use alnum() instead, it's
+  easier to type. The alphanumeric() method will be removed after the
+  0.7.0 release.
+
+* Solar_Form:
+
+  * BC BREAK:  Made $config protected like every other Solar class.
+  Config values are now populated through to the new $attribs
+  property, which stores attributes for the &lt;form&gt; tag itself.  If you
+  were using $config to retrive form-tag attributes, you should now
+  use $attribs instead.  Updated Solar_App_* views to reflect this
+  change.
+
+  * Added prefiltering of submitted values; use addFilter() method, or
+  add a 'filter' key to the element array when using setElement(). 
+  Thanks, Matthew Weier O'Phinney.
+
+  * The populate() and validate() methods now take an optional
+  paramter; if that param is an array, it is used for the $submitted
+  property.  This allows you to pick the value population source
+  instead of having to choose only from $_GET and $_POST.  Thanks,
+  Matthew Weier O'Phinney.
+  
+  * Added reset() method to restore form to its originally-configured
+  state.
+  
+  * Added load() method to load attributes and elements (with filters
+  and validations) from an external source.  Per discussions with
+  Matthew Weier O'Phinney.
+  
+  * When no message is given for validation, attempt to get a default
+  validation message from Solar/Locale/en_US.php based on the method
+  used for validation (c.f. the new VALID_* translation keys).
+
+* Solar_Sql:
+  
+  * In quote(), changed is_double() to is_float() to match with column
+  pseudo-type name.
+  
+* Solar_Super:
+
+  * No longer uses the magicStripSlashes() filter when values are
+  fetched, because the Solar environment setup now takes care of
+  slashes at start() time.
+
+* Solar_Template:
+
+  * Updated to Savant3 alpha2 and converted all Solar_App_* view
+  scripts to use its new auto-escaping functions. See change notes at
+  http://phpsavant.com/yawiki/index.php?area=Savant3.  Of note, the
+  'form' plugin will change in the next release, and the 'scrub'
+  plugin will disappear in the next release.
+
+  * Added new 'Plugin/' directory with new 'locale' plugin to help
+  with locale transalations (you can now use $this-&gt;locale('KEY')
+  instead of Solar::locale('Solar', 'KEY')).  All Solar_App_* view
+  scripts now use this plugin.
+
+  * Adds the 'Solar/Template/Plugin/' directory to the top of the
+  configured resource_path automatically.
+  
 * Solar_Valid:
 
-  * The inList() method now strict-checks values; this helps avoid
-  confusing (for example) '0', 0, and empty strings.
-
-  * The inScope() method was broken, have replaced with an algorithm
-  that actually works (and is incidentally more streamlined).
-
-  * The max() and min() methods no longer treat empty strings as zero.
-
-  * The nonZero() method now works properly in all tested cases, even
-  multiple string zeros (e.g., '000' is still zero).
-
-  * Per note from Chris Drozdowski about ISO 8601, the isoTime()
-  method now allows two midnight times:  &quot;00:00:00&quot; marks the
-  beginning of the day, and &quot;24:00:00&quot; marks the end of the day.
-
-  * Added tests for Solar_Valid.
+  * The alphanumeric() method is deprecated; use alnum() instead, it's
+  easier to type. The alphanumeric() method will be removed after the
+  0.7.0 release.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -80,6 +190,20 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Error::pop" />
   <provides type="function" name="Solar_Error::count" />
   <provides type="function" name="Solar_Error::pushCallback" />
+  <provides type="class" name="Solar_Filter" />
+  <provides type="function" name="Solar_Filter::replace" />
+  <provides type="function" name="Solar_Filter::alpha" />
+  <provides type="function" name="Solar_Filter::alnum" />
+  <provides type="function" name="Solar_Filter::alphanumeric" />
+  <provides type="function" name="Solar_Filter::blank" />
+  <provides type="function" name="Solar_Filter::formatDateTime" />
+  <provides type="function" name="Solar_Filter::isoDate" />
+  <provides type="function" name="Solar_Filter::isoDateTime" />
+  <provides type="function" name="Solar_Filter::isoTime" />
+  <provides type="function" name="Solar_Filter::numeric" />
+  <provides type="function" name="Solar_Filter::cast" />
+  <provides type="function" name="Solar_Filter::custom" />
+  <provides type="function" name="Solar_Filter::multiple" />
   <provides type="class" name="Solar_Form" extends="Solar_Base" />
   <provides type="function" name="Solar_Form::setElement" />
   <provides type="function" name="Solar_Form::addFeedback" />
@@ -87,7 +211,9 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Form::populate" />
   <provides type="function" name="Solar_Form::validate" />
   <provides type="function" name="Solar_Form::values" />
-  <provides type="function" name="Solar_Form::prepName" />
+  <provides type="function" name="Solar_Form::reset" />
+  <provides type="function" name="Solar_Form::load" />
+  <provides type="function" name="Solar_Form::prepareName" />
   <provides type="class" name="Solar_Locale" extends="Solar_Base" />
   <provides type="function" name="Solar_Locale::setCode" />
   <provides type="function" name="Solar_Locale::code" />
@@ -121,6 +247,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_Valid" />
   <provides type="function" name="Solar_Valid::alpha" />
   <provides type="function" name="Solar_Valid::alphanumeric" />
+  <provides type="function" name="Solar_Valid::alnum" />
   <provides type="function" name="Solar_Valid::blank" />
   <provides type="function" name="Solar_Valid::custom" />
   <provides type="function" name="Solar_Valid::email" />
@@ -178,11 +305,13 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Debug_Timer::start" />
   <provides type="function" name="Solar_Debug_Timer::stop" />
   <provides type="function" name="Solar_Debug_Timer::mark" />
-  <provides type="function" name="Solar_Debug_Timer::diff" />
   <provides type="function" name="Solar_Debug_Timer::profile" />
   <provides type="function" name="Solar_Debug_Timer::display" />
   <provides type="class" name="Solar_Debug_Var" extends="Solar_Base" />
   <provides type="function" name="Solar_Debug_Var::dump" />
+  <provides type="class" name="Solar_Form_Load_Xml" extends="Solar_Base" />
+  <provides type="function" name="Solar_Form_Load_Xml::fetch" />
+  <provides type="function" name="Solar_Form_Load_Xml::getParams" />
   <provides type="class" name="Solar_Sql_Driver" extends="Solar_Base" />
   <provides type="function" name="Solar_Sql_Driver::connect" />
   <provides type="function" name="Solar_Sql_Driver::escape" />
@@ -249,6 +378,10 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Sql_Driver_Sqlite::fetchNum" />
   <provides type="function" name="Solar_Sql_Driver_Sqlite::limit" />
   <provides type="class" name="Savant3" />
+  <provides type="function" name="Savant3::apiVersion" />
+  <provides type="function" name="Savant3::plugin" />
+  <provides type="class" name="Savant3_Plugin_locale" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_locale::locale" />
   <provides type="class" name="Savant3_Error" />
   <provides type="class" name="Savant3_Exception" extends="Exception" />
   <provides type="class" name="Savant3_Filter" />
@@ -270,6 +403,38 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Savant3_Plugin_form::stop" />
   <provides type="function" name="Savant3_Plugin_form::fullauto" />
   <provides type="function" name="Savant3_Plugin_form::auto" />
+  <provides type="class" name="Savant3_Plugin_form2" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form2::form2" />
+  <provides type="function" name="Savant3_Plugin_form2::set" />
+  <provides type="function" name="Savant3_Plugin_form2::begin" />
+  <provides type="function" name="Savant3_Plugin_form2::end" />
+  <provides type="function" name="Savant3_Plugin_form2::element" />
+  <provides type="class" name="Savant3_Plugin_form_button" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_button::form_button" />
+  <provides type="class" name="Savant3_Plugin_form_checkbox" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_checkbox::form_checkbox" />
+  <provides type="class" name="Savant3_Plugin_form_file" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_file::form_file" />
+  <provides type="class" name="Savant3_Plugin_form_hidden" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_hidden::form_hidden" />
+  <provides type="class" name="Savant3_Plugin_form_image" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_image::form_image" />
+  <provides type="class" name="Savant3_Plugin_form_password" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_password::form_password" />
+  <provides type="class" name="Savant3_Plugin_form_radio" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_radio::form_radio" />
+  <provides type="class" name="Savant3_Plugin_form_reset" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_reset::form_reset" />
+  <provides type="class" name="Savant3_Plugin_form_select" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_select::form_select" />
+  <provides type="class" name="Savant3_Plugin_form_submit" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_submit::form_submit" />
+  <provides type="class" name="Savant3_Plugin_form_text" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_text::form_text" />
+  <provides type="class" name="Savant3_Plugin_form_textarea" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_form_textarea::form_textarea" />
+  <provides type="class" name="Savant3_Plugin_html_attribs" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_html_attribs::html_attribs" />
   <provides type="class" name="Savant3_Plugin_image" extends="Savant3_Plugin" />
   <provides type="function" name="Savant3_Plugin_image::image" />
   <provides type="class" name="Savant3_Plugin_scrub" extends="Savant3_Plugin" />
@@ -426,6 +591,48 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form2.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_button.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_checkbox.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_file.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_hidden.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_image.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_password.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_radio.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_reset.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_select.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_submit.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_text.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_form_textarea.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_html_attribs.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Savant3/Savant3_Plugin_image.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -471,7 +678,49 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_date_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form2_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_button_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_checkbox_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_file_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_hidden_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_image_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_password_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_radio_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_reset_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_select_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_submit_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_textarea_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_form_text_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_html_attribs_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Savant3/_Solar_Template_Savant3_resources_Savant3_Plugin_image_php.html">
@@ -495,7 +744,13 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Error.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Filter.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form_Load_Xml.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Locale.html">
@@ -517,6 +772,12 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Error_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Filter_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Form_Load_Xml_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Form_php.html">
@@ -705,10 +966,16 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Result_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Template/Savant3_Plugin_locale.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Template/Solar_Template.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Template/_Solar_Template_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Template/_Solar_Template_Plugin_Savant3_Plugin_locale_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_User/Solar_User.html">
@@ -966,6 +1233,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Error.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Filter.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Form.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1122,6 +1392,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Debug/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Form/Load/Xml.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1158,6 +1431,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Plugin/Savant3_Plugin_locale.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/Error.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1180,6 +1456,48 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form2.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_button.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_checkbox.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_file.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_hidden.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_image.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_password.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_radio.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_reset.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_select.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_submit.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_text.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_textarea.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_html_attribs.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_image.php">
@@ -1354,32 +1672,136 @@ Please visit http://solarphp.com/ for more information.
  </release>
  <changelog>
    <release>
-    <version>0.6.1</version>
-    <date>2005-07-06</date>
+    <version>0.7.0</version>
+    <date>2005-08-11</date>
     <license>LGPL</license>
     <state>devel</state>
     <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* WARNING: This release contains backwards compatibility (BC) breaks.
+* Added new class, Solar_Filter, to filter data.  This is a companion to
+Solar_Valid and is currently used mostly for prefiltering submitted form
+values.  Thanks, Matthew Weier O'Phinney.
 
+* Added new class, Solar_Form_Loader, to allow loading of form elements
+from external sources.  Currently has only one method, fromXml(), to load
+elements from a SimpleXML file.  Thanks, Matthew Weier O'Phinney.
+
+* Solar:
+
+  * New protected method environment() performs some standardized
+  environment setup at Solar::start() time.  Solar now
+  automatically...
+    
+    * Unsets all registered global variables if 'register_globals'
+    is on.
+    
+    * Unsets $_REQUEST (you should use Solar::get(), ::post(), and
+    ::cookie() for security reasons).
+    
+    * Dispels magic quotes from get/post/cookie/files/server
+    superglobals if 'magic_quotes_gpc' is on; handles Sybase quotes
+    as well as slashed quotes.
+    
+    * Turns off 'magic_quotes_runtime' and 'magic_quotes_sybase' so
+    that SQL sources do not quote values on retrieval.
+    
+  * Solar::start() no longer sets error_reporting and display_errors.
+   Per note from Matthew Weier O'Phinney.
+
+  * Fixed bug where start() was calling __solar('start') instead of
+  solar('start') on shared objects (the latter is correct).
+  
+  * Added locale strings for 'VALID_*' keys to support default
+  validation messages in Solar_Sql and Solar_Form.
+  
+  * You can now specify an alternate config sources as the only
+  parameter to calling Solar::start().  Pass an array to populate
+  $config directly, an object to populate from the object properties,
+  or a string to indicate an arbitrary path to a config file.  The
+  default remains to load $config from the file defined by the
+  SOLAR_CONFIG_PATH constant.  Per discussion with Matthew Weier
+  O'Phinney.
+
+* Solar_App_*:
+
+  * View scripts now use the new Savant3 auto-escaping function
+  and the new Solar_Template plugin locale() for localized strings.
+  
+* Solar_Base:
+  
+  * Constructor now allows passing of a string as the $config value,
+  which is subsequently treated as a path to a php-array config file
+  (this means you can have a config file specifically for a class
+  instead of having to pass an array).
+  
+* Solar_Filter:
+  
+  * The alphanumeric() method is deprecated; use alnum() instead, it's
+  easier to type. The alphanumeric() method will be removed after the
+  0.7.0 release.
+
+* Solar_Form:
+
+  * BC BREAK:  Made $config protected like every other Solar class.
+  Config values are now populated through to the new $attribs
+  property, which stores attributes for the &lt;form&gt; tag itself.  If you
+  were using $config to retrive form-tag attributes, you should now
+  use $attribs instead.  Updated Solar_App_* views to reflect this
+  change.
+
+  * Added prefiltering of submitted values; use addFilter() method, or
+  add a 'filter' key to the element array when using setElement(). 
+  Thanks, Matthew Weier O'Phinney.
+
+  * The populate() and validate() methods now take an optional
+  paramter; if that param is an array, it is used for the $submitted
+  property.  This allows you to pick the value population source
+  instead of having to choose only from $_GET and $_POST.  Thanks,
+  Matthew Weier O'Phinney.
+  
+  * Added reset() method to restore form to its originally-configured
+  state.
+  
+  * Added load() method to load attributes and elements (with filters
+  and validations) from an external source.  Per discussions with
+  Matthew Weier O'Phinney.
+  
+  * When no message is given for validation, attempt to get a default
+  validation message from Solar/Locale/en_US.php based on the method
+  used for validation (c.f. the new VALID_* translation keys).
+
+* Solar_Sql:
+  
+  * In quote(), changed is_double() to is_float() to match with column
+  pseudo-type name.
+  
+* Solar_Super:
+
+  * No longer uses the magicStripSlashes() filter when values are
+  fetched, because the Solar environment setup now takes care of
+  slashes at start() time.
+
+* Solar_Template:
+
+  * Updated to Savant3 alpha2 and converted all Solar_App_* view
+  scripts to use its new auto-escaping functions. See change notes at
+  http://phpsavant.com/yawiki/index.php?area=Savant3.  Of note, the
+  'form' plugin will change in the next release, and the 'scrub'
+  plugin will disappear in the next release.
+
+  * Added new 'Plugin/' directory with new 'locale' plugin to help
+  with locale transalations (you can now use $this-&gt;locale('KEY')
+  instead of Solar::locale('Solar', 'KEY')).  All Solar_App_* view
+  scripts now use this plugin.
+
+  * Adds the 'Solar/Template/Plugin/' directory to the top of the
+  configured resource_path automatically.
+  
 * Solar_Valid:
 
-  * The inList() method now strict-checks values; this helps avoid
-  confusing (for example) '0', 0, and empty strings.
-
-  * The inScope() method was broken, have replaced with an algorithm
-  that actually works (and is incidentally more streamlined).
-
-  * The max() and min() methods no longer treat empty strings as zero.
-
-  * The nonZero() method now works properly in all tested cases, even
-  multiple string zeros (e.g., '000' is still zero).
-
-  * Per note from Chris Drozdowski about ISO 8601, the isoTime()
-  method now allows two midnight times:  &quot;00:00:00&quot; marks the
-  beginning of the day, and &quot;24:00:00&quot; marks the end of the day.
-
-  * Added tests for Solar_Valid.
+  * The alphanumeric() method is deprecated; use alnum() instead, it's
+  easier to type. The alphanumeric() method will be removed after the
+  0.7.0 release.
     </notes>
    </release>
  </changelog>

@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_form2.php,v 1.1 2005/08/09 12:56:14 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -341,7 +341,7 @@ class Savant3_Plugin_form2 extends Savant3_Plugin {
 		
 		// default action
 		if (! isset($attribs['action'])) {
-			$attribs['action'] = htmlspecialchars($_SERVER['REQUEST_URI']);
+			$attribs['action'] = $_SERVER['REQUEST_URI'];
 		}
 		
 		// default method

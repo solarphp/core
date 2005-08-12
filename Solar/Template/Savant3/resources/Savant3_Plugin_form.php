@@ -405,7 +405,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
 			
 			// default action
 			if (! isset($attribs['action'])) {
-				$attribs['action'] = htmlspecialchars($_SERVER['REQUEST_URI']);
+				$attribs['action'] = $_SERVER['REQUEST_URI'];
 			}
 			
 			// default method

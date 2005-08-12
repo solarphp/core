@@ -37,7 +37,7 @@ Please visit http://solarphp.com/ for more information.
   <active>yes</active>
  </helper>
  <date>2005-08-11</date>
- <time>17:29:43</time>
+ <time>19:53:29</time>
  <version>
   <release>0.7.0</release>
   <api>0.7.0</api>
@@ -501,8 +501,8 @@ elements from a SimpleXML file.  Thanks, Matthew Weier O&apos;Phinney.
    <file baseinstalldir="/" md5sum="436c54face4c651c64ded2fc92a2663a" name="Solar/Template/Savant3/resources/Savant3_Filter_trimwhitespace.php" role="php" />
    <file baseinstalldir="/" md5sum="a2d77761beb402e4862983d8fe43cd1d" name="Solar/Template/Savant3/resources/Savant3_Plugin_ahref.php" role="php" />
    <file baseinstalldir="/" md5sum="f9fdd78487cce005716699b701c22e5c" name="Solar/Template/Savant3/resources/Savant3_Plugin_date.php" role="php" />
-   <file baseinstalldir="/" md5sum="4c335f908d06b212b7876ac22e5a73fa" name="Solar/Template/Savant3/resources/Savant3_Plugin_form.php" role="php" />
-   <file baseinstalldir="/" md5sum="471cf9a6b653e5f87da992dc4d47bdbb" name="Solar/Template/Savant3/resources/Savant3_Plugin_form2.php" role="php" />
+   <file baseinstalldir="/" md5sum="f3b311c354dbc3e996e43321099c575b" name="Solar/Template/Savant3/resources/Savant3_Plugin_form.php" role="php" />
+   <file baseinstalldir="/" md5sum="e18deb76f50a216aa268b76256b9a19d" name="Solar/Template/Savant3/resources/Savant3_Plugin_form2.php" role="php" />
    <file baseinstalldir="/" md5sum="951172ab6d7882327d157b97608e1fa1" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_button.php" role="php" />
    <file baseinstalldir="/" md5sum="c0cb14235ef1707700ed63ff55dfb21e" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_checkbox.php" role="php" />
    <file baseinstalldir="/" md5sum="3900154c509054335aa183ad0a6d8d19" name="Solar/Template/Savant3/resources/Savant3_Plugin_form_file.php" role="php" />

@@ -98,32 +98,32 @@ class Solar {
 	* 
 	*/
 	
-public static function start($alt_config = null)
-{
-	// don't re-start if we're already running.
-	if (Solar::$status) {
-		return;
-	}
-	
-	// initialize $shared property as a StdClass object
-	Solar::$shared = new StdClass;
-	
-	// set up the standard Solar environment
-	Solar::environment();
-	
-	// load the config file values. note that we use $config here,
-	// not config(), because we are setting the value of the static
-	// property.  use alternate config source if one is given.
-	if (is_array($alt_config)) {
-		Solar::$config = $alt_config;
-	} elseif (is_object($alt_config)) {
-		Solar::$config = (array) $alt_config;
-	} elseif (is_string($alt_config)) {
-		Solar::$config = (array) Solar::run($alt_config);
-	} else {
-		Solar::$config = (array) Solar::run(SOLAR_CONFIG_PATH);
-	}
-	
+	public static function start($alt_config = null)
+	{
+		// don't re-start if we're already running.
+		if (Solar::$status) {
+			return;
+		}
+		
+		// initialize $shared property as a StdClass object
+		Solar::$shared = new StdClass;
+		
+		// set up the standard Solar environment
+		Solar::environment();
+		
+		// load the config file values. note that we use $config here,
+		// not config(), because we are setting the value of the static
+		// property.  use alternate config source if one is given.
+		if (is_array($alt_config)) {
+			Solar::$config = $alt_config;
+		} elseif (is_object($alt_config)) {
+			Solar::$config = (array) $alt_config;
+		} elseif (is_string($alt_config)) {
+			Solar::$config = (array) Solar::run($alt_config);
+		} else {
+			Solar::$config = (array) Solar::run(SOLAR_CONFIG_PATH);
+		}
+		
 		// process ini settings from config file
 		$settings = Solar::config('Solar', 'ini_set', array());
 		foreach ($settings as $key => $val) {
@@ -248,6 +248,13 @@ public static function start($alt_config = null)
 	* Gets translated locale string for a class and key.
 	* 
 	* @access public
+	* 
+	* @param string $class The class of the translation.
+	* 
+	* @param string $key The translation key.
+	* 
+	* @param mixed $num Helps determine whether to get a singular
+	* or plural translation.
 	* 
 	* @return string A translated locale string.
 	* 
@@ -826,7 +833,8 @@ public static function start($alt_config = null)
 		// clear out registered globals?
 		// (this code from Richard Heyes and Stefan Esser)
 		if (ini_get('register_globals')) {
-		
+			
+			/* // previous version
 			// Variables that shouldn't be unset
 			$keep = array('GLOBALS', '_GET', '_POST', '_COOKIE',
 				'_REQUEST', '_SERVER', '_ENV', '_FILES');
@@ -840,6 +848,32 @@ public static function start($alt_config = null)
 				if (! in_array($key, $keep) &&
 					array_key_exists($key, $GLOBALS)) {
 					unset($GLOBALS[$key]);
+				}
+			}
+			*/
+			
+			// Variables that shouldn't be unset
+			$noUnset = array(
+				'GLOBALS', '_GET', '_POST', '_COOKIE',
+				'_REQUEST', '_SERVER', '_ENV', '_FILES'
+			);
+			
+			// sources of global input.
+			// 
+			// the ternary check on $_SESSION is to make sure that
+			// it's really an array, not just a string; if it's just a
+			// string, that can bypass this check somehow.  Stefan
+			// Esser knows how this works, but I don't.
+			$input = array_merge($_GET, $_POST, $_COOKIE,
+				$_SERVER, $_ENV, $_FILES,
+				isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array()
+			);
+			
+			// unset globals set from input sources, but don't unset
+			// the sources themselves.
+			foreach ($input as $k => $v) {
+				if (! in_array($k, $noUnset) && isset($GLOBALS[$k])) {
+					unset($GLOBALS[$k]);
 				}
 			}
 		}

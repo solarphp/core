@@ -1,33 +1,167 @@
+CENTRAL CONTENT MODEL
+
+A node might have:
+	one page
+	a series of comments
+	a series of files
+
+
+A area has multiple nodes
+A node has multiple parts
+A part has multiple edits (this is for "history" and "archive" purposes)
+
+users (doubles as user prefs)
+	user_handle      -- handle
+	user_passwd      -- md5 hashed password
+	user_email       -- 
+	user_name_p      -- 
+	user_name_f      -- 
+	user_name_m      -- 
+	user_name_l      -- 
+	user_name_s      -- 
+	user_tel         -- 
+	user_adr_pob     -- 
+	user_adr_ext     -- 
+	user_adr_street  -- 
+	user_adr_city    -- 
+	user_adr_region  -- 
+	user_adr_code    -- 
+	user_adr_country -- 
+	user_adr_locale  -- 
+	
+areas
+	area_name        -- unique name for this area
+	area_subj        -- short description of the area (tagline)
+	area_user_handle -- the "owner" of this area
+
+nodes (indexed on node_name + area_name)
+	node_name        -- unique name for this node for the area
+	node_area_name   -- which area this node belongs to
+	node_tags        -- tags for this node
+	node_user_handle -- the "owner" of this node
+	node_prefs       -- serialized array of preferences for this node
+	
+parts
+	part_id          -- unique ID for this part
+	part_area_name   -- is a part of this area
+	part_node_name   -- is a part of this node
+	part_type        -- arbitrary part type (wiki, blog, news, comment, forum, etc)
+	part_locale      -- the locale code for this part
+	part_edit_id     -- the most-current edit ID for this part
+	part_user_handle -- the "owner" of this part
+	
+edits
+	edit_id          -- unique ID for this edit
+	edit_part_id     -- which part this edit belongs to
+	edit_ts          -- timestamp on the edit
+	edit_ip_addr     -- IP address of the editor
+	edit_user_handle -- the username of the editor
+	edit_mime        -- MIME type (text/plain)
+	edit_subj        -- subject, title, filename, uri, etc
+	edit_summ        -- short summary
+	edit_body        -- the actual content
+
+tags
+	tag_area_name    -- the area to which this tag applies
+	tag_node_name    -- the node in the area
+	tag_name         -- the tag itself
+
+privs
+	priv_id          -- unique ID for this privilege
+	priv_seq         -- arbitrary sequence number
+	priv_flag        -- 0/1, deny or allow
+	priv_type        -- user-based or role-based priv?
+	priv_name        -- name of the user or role the priv applies to 
+	priv_ctrl        -- name of the control (comment_ins, comment_del, comment_upd, page_ins, etc)
+	priv_area_name   -- control on this area
+	priv_node_name   -- control on this node in the area
+	
+----
+
+Selections:
+
+	$content->areas->fetchList()
+	$content->areas->fetchItem($area_name)
+	
+	$content->nodes->fetchList($area_name)
+	$content->nodes->fetchItem($area_name, $node_name)
+	
+	$content->parts->fetchList($area_name, $node_name)
+	$content->parts->fetchItem($part_id)
+	
+	$content->edits->fetchList($area_name, $node_name, $part_id)
+	$content->edits->fetchItem($edit_id)
+	
+	
+----
+
+Issue Tracking System
+
+	a standard issues table
+	use the universal comment system driven by the content system
+	what area and node do we use in these cases?
+	area_name: Solar_App_Issues
+	node_name: 12345
+	connect first to the bugs table, then grab comments from general content
+
+----
+
+Bookmark System fits entirely within content system
+
+	area_name -- pmjones_bookmarks
+	node_name -- wiki-fied URI title
+	part_type -- bookmark
+	edit_mime -- text/plain
+	edit_subj -- URI for the link URI
+	edit_summ -- title for the link
+	edit_body -- description of the link
+
+Selecting bookmarks:
+
+SELECT *
+FROM edits
+WHERE
+	areas.area_name == 'pmjones_bookmarks' AND
+	parts.part_type == 'bookmark' AND
+	parts.user_handle == 'pmjones' AND
+	
+...???...
+
+
+
+
+==== ==== ==== ==== 
+
+OLD MODEL
+
 Content storage (really for anything ... think "wiki=content" and "page=node")
 
 sc_content_areas (no notification, use RSS feeds)
-	area        -- unique name of the area (short form)
-	title       -- title for the area (long form)
-	tagline     -- short sentence or descriptive phrase
-	map_node_id -- name of the node with the area map, if any
-	map_data    -- cached serialized area map array ... should this be via Solar_Cache?
+	area -- unique name of the area (short form)
+	subj -- title for the area (long form)
+	summ -- short sentence or descriptive phrase
 	
 sc_content_nodes
 	id       -- unique sequential ID that stays the same across all edits
 	area     -- area name
 	node     -- node name
 	tags     -- tags for the node (no history of these)
+	rel      -- related table for added info
+	rel_id   -- the id in the related table
 	comments -- 0/1, whether comments are allowed or not
-	lock_by  -- locked by this user or IP address for editing (blank or null if not locked)
-	lock_ts  -- timestamp when last locked for editing
-	-- are we doing locking at all? or are we going to the edit/merge thing?
 
-sc_content_edits
+sc_content_parts
 	id       -- unique sequential ID
-	node_id  -- from sc_content_nodes.id
+	node_name-- from sc_content_nodes.id
 	locale   -- the language of the edit (e.g., en_US)
-	current  -- 0/1, is the most-current version for its locale
+	type     -- the content type: 
+	current  -- 0/1, is the most-current version for its locale and type
 	draft    -- 0/1, in draft mode (which means edits are in-place, no history is captured)
 	ts       -- timestamp of the edit
 	user_id  -- user ID of the editor
 	ip_addr  -- IP address of the editor
-	markup   -- the markup type (wiki, email, bbcode, textile, markdown, plain, etc)
-	title    -- don't always get from area map, need for blogs
+	mime     -- the mime type, which indicates a markup type (text/x-solar-wiki, text/x-solar-email, etc)
+	subj     -- the subject line: title, filename, etc
 	summ     -- summary text
 	body     -- main body text
 
@@ -38,6 +172,7 @@ sc_content_links
 	src_node -- source node
 	tgt_area -- target area
 	tgt_node -- target node
+
 
 sc_content_pings -- who we have pinged for trackback
 

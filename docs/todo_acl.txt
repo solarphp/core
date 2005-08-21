@@ -1,0 +1,13 @@
+Privileges (access control list)
+
+sc_privs
+	id   -- unique sequential ID number
+	flag -- 0/1 (deny/allow)
+	type -- user or role?
+	name -- the user or role name
+	priv -- privilege name (in the form prefix:priv_name?)
+	str0 -- arbitrary additional string data to describe the control (per-cell)
+	str1 -- 
+	str2 -- 
+	str3 -- 
+

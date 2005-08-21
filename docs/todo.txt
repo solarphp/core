@@ -1,8 +1,5 @@
 DOCUMENTATION PLAN
 
-document (easy):
-	Solar_Uri
-
 document (moderate):
 	Solar_Form (need filters, other improvements from MWOP)
 	Solar_User_Auth
@@ -11,7 +8,6 @@ document (moderate):
 document (hard)
 	Solar_User
 	Solar_Sql
-
 
 Solar_Template is Savant3, use Savant3 docs.
 
@@ -34,119 +30,6 @@ In list headings, make 'user' clickable, make individual tags clickable
 Search by URL, title, description
 
 Change all instances of tag X to tag Z
-
-
-----
-
-Solar_Sql: DESCRIBE TABLE support
-
-Should return an array of (name => name, type, size, scope, required .. default?)
-
-Mysql:  process results of "DESCRIBE %s" returns like this (an array)
-
-	Field	Type	Null	Key	Default	Extra
-	id 	int(11) 	  	PRI 	0 	 
-	ts_new 	varchar(19) 	  	MUL 	  	 
-	ts_mod 	varchar(19) 	  	MUL 	  	 
-	summ 	varchar(255) binary 	  	  	  	 
-	type 	varchar(16) binary 	  	MUL 	  	 
-	queue 	varchar(255) binary 	  	MUL 	  	 
-	priority 	decimal(1,0) 	YES 	  	NULL 	 
-	user_id 	varchar(32) binary 	YES 	MUL 	NULL 	 
-	status 	varchar(16) binary 	YES 	MUL 	NULL 	 
-
-Pgsql:  see PEAR DB/pgsql.php (or use "\d %s" command?)
-
-Fbsql:  see PEAR DB/fbsql.php
-
-Mssql:  see PEAR DB/mssql.php
-
-Sqlite: process results of ...
-
-	SELECT sql FROM
-		(SELECT * FROM sqlite_master UNION ALL
-		 SELECT * FROM sqlite_temp_master)
-	WHERE tbl_name LIKE '%s' AND type!='meta'
-	ORDER BY type DESC, name
-
-... returns like this:
-
-	CREATE TABLE sc_bugs (
-			id INTEGER NOT NULL,
-			ts_new TIMESTAMP NOT NULL,
-			ts_mod TIMESTAMP NOT NULL,
-			summ VARCHAR(255) NOT NULL,
-			type VARCHAR(16) NOT NULL,
-			queue VARCHAR(255) NOT NULL,
-			priority NUMERIC(1,0) NULL,
-			user_id VARCHAR(32) NULL,
-			status VARCHAR(16) NULL
-	);
-	CREATE UNIQUE INDEX sc_bugs__id__idx ON sc_bugs (id);
-	CREATE INDEX sc_bugs__queue__idx ON sc_bugs (queue);
-	CREATE INDEX sc_bugs__status__idx ON sc_bugs (status);
-	CREATE INDEX sc_bugs__ts_mod__idx ON sc_bugs (ts_mod);
-	CREATE INDEX sc_bugs__ts_new__idx ON sc_bugs (ts_new);
-	CREATE INDEX sc_bugs__type__idx ON sc_bugs (type);
-	CREATE INDEX sc_bugs__user_id__idx ON sc_bugs (user_id);
-
-
-----
-
-Solar_Sql: Portable string and date functions
-
-concat($args)
-substr($arg, $start, $count) -- 1-based
-
--- are these the same everywhere?
-left($arg, $count)
-right($arg, $count)
-upper($arg)
-lower($arg)
-
-function year($arg)
-{
-	// 0123456789
-	// yyyy-mm-dd
-	return $this->substr($arg, 0, 4);
-}
-
-function month($arg)
-{
-	// 0123456789
-	// yyyy-mm-dd
-	return $this->substr($arg, 5, 2);
-}
-
-function day($arg)
-{
-	// 0123456789
-	// yyyy-mm-dd
-	return $this->substr($arg, 8, 2);
-}
-
-function hour($arg)
-{
-	// 01234567
-	// hh:ii:ss
-	return $this->substr($this->right($arg, 8), 0, 2);
-}
-
-function minute($arg)
-{
-	// 01234567
-	// hh:ii:ss
-	return $this->substr($this->right($arg, 8), 3, 2);
-}
-
-function second($arg)
-{
-	// 01234567
-	// hh:ii:ss
-	return $this->substr($this->right($arg, 8), 6, 2);
-}
-
-
 
 
 ----
@@ -185,125 +68,9 @@ Text/Csv.php (parse/build CSV/TSV/etc blocks)
 Text/Diff.php (get a diff on text)
 Text/Filter.php (modifies text to match a filter)
 Text/Markup.php (for wiki, bbcode, textile, markdown, email, etc)
-
-----
-
-Wiki parser (Text/Wiki.php)
-
-a way to do simple common stuff, then a way to do more complex stuff
+	- a way to do simple common stuff, then a way to do more complex stuff
 	- common regexes for URI, email, wikilink, freelink, interwiki
 	- common regexes for inline bold, italic, tt/code, etc
-
-----
-
-Wiki storage (really for anything)
-
-sc_wiki_areas (no notification, use RSS feeds)
-	name     -- unique name of the area (short form)
-	title    -- title for the area (long form)
-	tagline  -- 
-	talk     -- allow comments by default?
-	map_page -- name of the page with the area map, if any
-	map_data -- cached serialized area map array ... should this be via Solar_Cache?
-	
-sc_wiki_pages
-	id       -- unique sequential ID that stays the same across all edits
-	area     -- area name
-	page     -- page name
-	lock_by  -- locked by this user or IP address for editing (blank or null if not locked)
-	lock_ts  -- timestamp when last locked for editing
-
-sc_wiki_edits
-	page_id  -- from sc_wiki_pages.id
-	ts       -- timestamp of the edit
-	user_id  -- user ID of the editor
-	ip_addr  -- IP address of the editor
-	current  -- 0/1, most-current version
-	markup   -- the markup type (wiki, email, bbcode, textile, markdown, plain, etc)
-	talk     -- whether comments are allowed or not (should this be here? who gets to change it?)
-	title    -- don't always get from area map, need for blogs
-	body     -- the marked-up body
-	plain    -- the searchable plain text without markup (need for searching past versions)
-
-sc_wiki_links -- should this be by IDs instead?
-	id
-	src_area
-	src_page
-	tgt_area
-	tgt_page
-
-sc_wiki_pings -- who we have pinged for trackback
-
-sc_wiki_acl -- should we use a generic Solar_Cell_Acl instead?
-
-tags come from Solar_Cell_Tags based on the unique page id number (not the Area:Page string)
-
-To get most-recent wiki page:
-
-	SELECT sc_wiki_pages.*, sc_wiki_edits.*
-	FROM sc_wiki_pages
-	JOIN sc_wiki_edits ON sc_wiki_pages.id = sc_wiki_edits.page_id
-	WHERE
-		sc_wiki_pages.area = :area AND
-		sc_wiki_pages.page = :page AND
-		sc_wiki_edits.current = '1'
-	ORDER BY id DESC
-	LIMIT (count=1 offset=0)
-
-When inserting a new page:
-
-	first: INSERT INTO sc_wiki_edits (..., current) VALUES (..., '1');
-	then:  UPDATE sc_wiki_edits SET current = 0 WHERE ... AND ts < $ts;
-	
-
-
-----
-
-Blogging
-
-sc_blog_drafts
-	id
-	area
-	page
-	ts
-	user_id
-	talk -- whether comments will be allowed or not
-	tags -- space-sep list, /[a-z0-9_]+/i) ... get dumped to sc_wiki_tags later
-	title
-	body
-
-sc_blog_links -- blogroll  (use Bookmarks instead?)
-	id    -- unique ID
-	area  -- which wiki area
-	type  -- broad category
-	uri   -- URI
-	name  -- link text
-	descr -- short description
-	
-For blogging, you really just need a blog area and a reverse timestamp
-sort. The wiki itself takes care of everything else.
-
-Need a default page name (WebLog) and suffix (timestamp created).  You
-can change the title to anything else, of course.
-
-To get top 10 blog entries ...
-
-	SELECT *
-	FROM sc_wiki_pages
-	WHERE
-		current = '1' AND
-		page >= 'WebLog_0001-01-01T00:00:00' AND
-		page <= 'WebLog_9999-12-31T23:59:59' AND 
-		area = :area
-	ORDER BY page DESC
-	LIMIT (count=10 offset=0)
-
-Could we concatenate the combination of the title, categories, and post body
-for the entire page, and then cache that?  it would be faster than to cache
-each individual entry and re-get each one every time, right?
-
-Or would it be better to designate an entire area as a blog? Then you get "real" page 
-names, not "WebLog_...".
 
 ----
 
@@ -333,25 +100,6 @@ allow wiki_admin implies allow area_admin on all areas
 
 must be set up programmatically?
 
-
-----
-
-Page attachments
-
-sc_file
-	id
-	name
-	title
-	descr
-	mime
-	data
-
-sc_wiki_file
-	id
-	area
-	page
-	nick (nickname for the file as related to this page)
-	file_id
 
 ----
 

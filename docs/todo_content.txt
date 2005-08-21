@@ -1,0 +1,134 @@
+Content storage (really for anything ... think "wiki=content" and "page=node")
+
+sc_content_areas (no notification, use RSS feeds)
+	area        -- unique name of the area (short form)
+	title       -- title for the area (long form)
+	tagline     -- short sentence or descriptive phrase
+	map_node_id -- name of the node with the area map, if any
+	map_data    -- cached serialized area map array ... should this be via Solar_Cache?
+	
+sc_content_nodes
+	id       -- unique sequential ID that stays the same across all edits
+	area     -- area name
+	node     -- node name
+	tags     -- tags for the node (no history of these)
+	comments -- 0/1, whether comments are allowed or not
+	lock_by  -- locked by this user or IP address for editing (blank or null if not locked)
+	lock_ts  -- timestamp when last locked for editing
+	-- are we doing locking at all? or are we going to the edit/merge thing?
+
+sc_content_edits
+	id       -- unique sequential ID
+	node_id  -- from sc_content_nodes.id
+	locale   -- the language of the edit (e.g., en_US)
+	current  -- 0/1, is the most-current version for its locale
+	draft    -- 0/1, in draft mode (which means edits are in-place, no history is captured)
+	ts       -- timestamp of the edit
+	user_id  -- user ID of the editor
+	ip_addr  -- IP address of the editor
+	markup   -- the markup type (wiki, email, bbcode, textile, markdown, plain, etc)
+	title    -- don't always get from area map, need for blogs
+	summ     -- summary text
+	body     -- main body text
+
+sc_content_links
+	id       -- unique sequential ID
+	locale   -- the locale of the linking
+	src_area -- source area
+	src_node -- source node
+	tgt_area -- target area
+	tgt_node -- target node
+
+sc_content_pings -- who we have pinged for trackback
+
+
+To get most-recent content node:
+
+	SELECT sc_content_nodes.*, sc_content_edits.*
+	FROM sc_content_nodes
+	JOIN sc_content_edits ON sc_content_nodes.id = sc_content_edits.node_id
+	WHERE
+		sc_content_nodes.area = :area AND
+		sc_content_nodes.node = :node AND
+		sc_content_edits.current = '1'
+	ORDER BY id DESC
+	LIMIT (count=1 offset=0)
+
+When inserting a new node:
+
+	first: INSERT INTO sc_content_edits (..., current) VALUES (..., '1');
+	then:  UPDATE sc_content_edits SET current = 0 WHERE ... AND ts < $ts;
+	
+
+
+----
+
+Blogging
+
+sc_blog_drafts
+	id
+	area
+	node
+	ts
+	user_id
+	comments -- whether comments will be allowed or not
+	tags     -- space-sep list, /[a-z0-9_]+/i) ... get dumped to sc_content_tags later
+	title
+	body
+
+For bloglinks, use the Solar_App_Bookmarks info in a theme
+
+Need a default node name (WebLog) and suffix (timestamp created).  You
+can change the title to anything else, of course.
+
+To get top 10 blog entries ...
+
+	SELECT *
+	FROM sc_content_nodes
+	WHERE
+		current = '1' AND
+		node >= 'WebLog_0001-01-01T00:00:00' AND
+		node <= 'WebLog_9999-12-31T23:59:59' AND 
+		area = :area
+	ORDER BY node DESC
+	LIMIT (count=10 offset=0)
+
+Could we concatenate the combination of the title, categories, and post body
+for the entire node, and then cache that?  it would be faster than to cache
+each individual entry and re-get each one every time, right?
+
+Or would it be better to designate an entire area as a blog? Then you get "real" node 
+names, not "WebLog_...".
+
+
+----
+
+Page attachments
+
+sc_file
+	id
+	name
+	title
+	descr
+	mime
+	data
+
+sc_content_file
+	id
+	area
+	node
+	nick (nickname for the file as related to this node)
+	file_id
+
+
+----
+
+Searching (only on current)
+
+sc_content_index
+	node_id
+	word
+	times
+	
+When you save, it converts to plain-text, tokenizes into words ...
+Then takes a word-count on each and saves in the content index for the node_id.

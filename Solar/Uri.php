@@ -220,16 +220,17 @@ class Solar_Uri extends Solar_Base {
 		// parse the uri and merge with the defaults
 		$elem = array_merge($elem, parse_url($modified_uri));
 		
-		// touchup
+		// touchup; was a uri passed in the first place?
 		if ($uri) {
 		
 			// a uri string was passed; parse query elements into an array.
 			// note that we do not capture path_info, as there's no way
-			// to tell where it is (would need the script name).
+			// to tell where it is (we would need the script name).
 			parse_str($elem['query'], $elem['query']);
 			
 		} else {
-		
+			
+			// no uri was passed, so use the current settings instead.
 			// force the query string
 			$elem['query'] = Solar::get();
 			
@@ -343,9 +344,8 @@ class Solar_Uri extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $key The GET variable name to work with.
-	* 
-	* @param string $val The value to use.
+	* @param string $val The query string to set from; for example,
+	* "foo=bar&baz=dib&zim=gir".
 	* 
 	* @return void
 	* 
@@ -385,7 +385,9 @@ class Solar_Uri extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $val The path_info string to use.
+	* @param string $val The path_info string to use; for example,
+	* "/foo/bar/baz/dib".  A leading slash will *not* create an empty
+	* first element; if the string has a leading slash, it is ignored.
 	* 
 	* @return void
 	* 
@@ -434,7 +436,7 @@ class Solar_Uri extends Solar_Base {
 	{
 		if (! $key) {
 			$this->query = array();
-		} elseif (array_key_exists($key, $this->query)) {
+		} else {
 			unset($this->query[$key]);
 		}
 	}
@@ -448,6 +450,9 @@ class Solar_Uri extends Solar_Base {
 	* http://php.net/parse_str.  Automatically urlencodes values.
 	* 
 	* @access protected
+	* 
+	* @param array $params The key-value pairs to convert into a
+	* query string.
 	* 
 	* @return string A URI query string.
 	* 
@@ -469,14 +474,14 @@ class Solar_Uri extends Solar_Base {
 		$out = array();
 		
 		foreach ($params as $key => $val) {
-		
 			if (is_array($val) ) {   
+				// recurse to capture deeper array.
 				$out[] = $this->query2str($val, $key);
-				continue;
+			} else {
+				// not an array, use the current value.
+				$thekey = (! $akey) ? $key : $akey.'['.$key.']';
+				$out[] = $thekey . '=' . urlencode($val);
 			}
-			
-			$thekey = (! $akey) ? $key : $akey.'['.$key.']';
-			$out[] = $thekey . '=' . urlencode($val);
 		}
 		
 		return implode('&', $out);
@@ -488,6 +493,8 @@ class Solar_Uri extends Solar_Base {
 	* Converts an array of info elements into a string.
 	* 
 	* @access protected
+	* 
+	* @param array $params The pathinfo elements.
 	* 
 	* @return string A URI pathinfo string.
 	* 

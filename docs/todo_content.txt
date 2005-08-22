@@ -1,7 +1,7 @@
 CENTRAL CONTENT MODEL
 
 A node might have:
-	one page
+	one page ("main")
 	a series of comments
 	a series of files
 
@@ -11,14 +11,14 @@ A node has multiple parts
 A part has multiple edits (this is for "history" and "archive" purposes)
 
 users (doubles as user prefs)
-	user_handle      -- handle
-	user_passwd      -- md5 hashed password
+	user_handle      -- varchar(32) -- handle
+	user_passwd      -- varchar(32) -- md5 hashed password
 	user_email       -- 
-	user_name_p      -- 
-	user_name_f      -- 
-	user_name_m      -- 
-	user_name_l      -- 
-	user_name_s      -- 
+	user_n_title     -- 
+	user_n_first     -- 
+	user_n_middle    -- 
+	user_n_last      -- 
+	user_n_suffix    -- 
 	user_tel         -- 
 	user_adr_pob     -- 
 	user_adr_ext     -- 
@@ -30,42 +30,65 @@ users (doubles as user prefs)
 	user_adr_locale  -- 
 	
 areas
-	area_name        -- unique name for this area
+	area_name        -- varchar(127) -- unique name for this area
 	area_subj        -- short description of the area (tagline)
 	area_user_handle -- the "owner" of this area
+	area_prefs       -- serialized array of area preferences
 
 nodes (indexed on node_name + area_name)
-	node_name        -- unique name for this node for the area
-	node_area_name   -- which area this node belongs to
+	node_name        -- varchar(127) -- unique name for this node for the area
+	node_area_name   -- varchar(127) -- which area this node belongs to
 	node_tags        -- tags for this node
 	node_user_handle -- the "owner" of this node
 	node_prefs       -- serialized array of preferences for this node
 	
 parts
-	part_id          -- unique ID for this part
+	part_id          -- integer -- unique ID for this part
 	part_area_name   -- is a part of this area
 	part_node_name   -- is a part of this node
 	part_type        -- arbitrary part type (wiki, blog, news, comment, forum, etc)
+	part_prefs       -- serialized array of prefs for this part
 	part_locale      -- the locale code for this part
 	part_edit_id     -- the most-current edit ID for this part
 	part_user_handle -- the "owner" of this part
 	
 edits
-	edit_id          -- unique ID for this edit
+	edit_id          -- bigint -- unique ID for this edit
 	edit_part_id     -- which part this edit belongs to
 	edit_ts          -- timestamp on the edit
 	edit_ip_addr     -- IP address of the editor
 	edit_user_handle -- the username of the editor
+	edit_flag        -- arbitrary flag on this edit (moderate, spam, disable, etc)
 	edit_mime        -- MIME type (text/plain)
 	edit_subj        -- subject, title, filename, uri, etc
 	edit_summ        -- short summary
 	edit_body        -- the actual content
-
+	edit_prefs       -- serialized array of prefs for this edit
+	
 tags
 	tag_area_name    -- the area to which this tag applies
 	tag_node_name    -- the node in the area
 	tag_name         -- the tag itself
 
+hits
+	hit_id           -- unique ID for the hit
+	hit_area_name    -- area
+	hit_node_name    -- node
+	hit_ts           -- timestamp in Y-m-dTH:i:s format
+	hit_u            -- timestamp in Unix epoch seconds
+	hit_y            -- year
+	hit_m            -- month
+	hit_d            -- day
+	hit_h            -- hour
+	hit_i            -- minute
+	hit_s            -- second
+	hit_w            -- day-of-week
+	hit_session      -- session number of the visitor
+	hit_ip_addr      -- ip address of the visitor
+	hit_referer      -- the full referer string
+	hit_referer_host -- referer host
+	hit_referer_qstr -- referer query string
+	
 privs
 	priv_id          -- unique ID for this privilege
 	priv_seq         -- arbitrary sequence number
@@ -75,6 +98,12 @@ privs
 	priv_ctrl        -- name of the control (comment_ins, comment_del, comment_upd, page_ins, etc)
 	priv_area_name   -- control on this area
 	priv_node_name   -- control on this node in the area
+
+search
+	search_id        -- 
+	search_part_id   -- 
+	search_word      -- 
+	search_rank      --
 	
 ----
 
@@ -86,7 +115,7 @@ Selections:
 	$content->nodes->fetchList($area_name)
 	$content->nodes->fetchItem($area_name, $node_name)
 	
-	$content->parts->fetchList($area_name, $node_name)
+	$content->parts->fetchList($area_name, $node_name, $where, $order)
 	$content->parts->fetchItem($part_id)
 	
 	$content->edits->fetchList($area_name, $node_name, $part_id)

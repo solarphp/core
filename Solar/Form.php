@@ -205,17 +205,17 @@ class Solar_Form extends Solar_Base {
 	*/
 	
 	protected $default = array(
-		'name'     => null,
-		'type'     => null,
-		'label'    => null,
-		'descr'    => null,
-		'value'    => null,
-		'require'  => false,
-		'disable'  => false,
-		'options'  => array(),
-		'listsep'  => null,
-		'attribs'  => array(),
-		'feedback' => array(),
+        'name'     => null,
+        'type'     => null,
+        'label'    => null,
+        'descr'    => null,
+        'value'    => null,
+        'require'  => false,
+        'disable'  => false,
+        'options'  => array(),
+        'listsep'  => null,
+        'attribs'  => array(),
+        'feedback' => array(),
 	);
 	
 	
@@ -260,19 +260,19 @@ class Solar_Form extends Solar_Base {
 		// prepare the element info
 		$info = array_merge($this->default, $info);
 		
-		// forcibly cast each of the keys into the elements array
-		$this->elements[$name] = array (
-			'name'     =>          $name,
-			'type'     => (string) $info['type'],
-			'label'    => (string) $info['label'],
-			'value'    =>          $info['value'], // mixed
-			'descr'    => (string) $info['descr'],
-			'require'  => (bool)   $info['require'],
-			'disable'  => (bool)   $info['disable'],
-			'options'  => (array)  $info['options'],
-			'attribs'  => (array)  $info['attribs'],
-			'feedback' => (array)  $info['feedback'],
-		);
+        // forcibly cast each of the keys into the elements array
+        $this->elements[$name] = array (
+            'name'     =>          $name,
+            'type'     => (string) $info['type'],
+            'label'    => (string) $info['label'],
+            'value'    =>          $info['value'], // mixed
+            'descr'    => (string) $info['descr'],
+            'require'  => (bool)   $info['require'],
+            'disable'  => (bool)   $info['disable'],
+            'options'  => (array)  $info['options'],
+            'attribs'  => (array)  $info['attribs'],
+            'feedback' => (array)  $info['feedback'],
+        );
 
 		// add filters
 		if (array_key_exists('filter', $info)) {
@@ -362,20 +362,22 @@ class Solar_Form extends Solar_Base {
 	
 	public function populate($submit = null)
 	{
+		// import the submitted values
 		if (is_array($submit)) {
+			// from an array
 			$this->submitted = $submit;
 		} elseif (is_object($submit)) {
+			// from an object
 			$this->submitted = (array) $submit;
+		} else {
+			// from $_GET or $_POST, per the form method.
+			$callback = array('Solar', $this->attribs['method']);
+			$this->submitted = call_user_func($callback);
 		}
-
-		foreach ($this->elements as $name => $info) {
-			// override the initial value with a submitted value, 
-			// if one exists
-			$value = $this->submittedValue($name);
-			if (! is_null($value)) {
-				$this->elements[$name]['value'] = $value;
-			}
-		}
+		
+		// populate the submitted values into the
+		// elements themsevles.
+		$this->_populate($this->submitted);
 	}
 	
 	
@@ -451,7 +453,7 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Returns the form element values.
+	* Returns the form element values as an array.
 	* 
 	* @access public
 	* 
@@ -461,38 +463,10 @@ class Solar_Form extends Solar_Base {
 	
 	public function values()
 	{
-		// the values to be returned
 		$values = array();
-		
-		// loop through each of the values
 		foreach ($this->elements as $name => $elem) {
-			
-			if (strpos($name, '[') === false) {
-				
-				// no brackets in the name, so it's a plain variable
-				$values[$name] = $elem['value'];
-			
-			} else {
-			
-				// there are brackets in the name. convert to an array
-				// element. taken from PEAR/HTML/QuickForm/element.php.
-				// 
-				// this converts, e.g., "arrayname[key1][key2]" to
-				// "arrayname']['key1']['key2".  the opening and closing
-				// brackets and quotes will be added when we build the
-				// PHP command.
-				$path = str_replace(
-					array(']', '['),
-					array('', "']['"),
-					$name
-				);
-				
-				// evaluate a PHP command that sets the array path key
-				// to the element value.  evil, slow, ugly hack.
-				eval("\$values['" . $path . "'] = \$elem['value'];");
-			}
+			$this->_values($name, $elem['value'], $values);
 		}
-		
 		return $values;
 	}
 	
@@ -722,54 +696,112 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Returns the submitted value for a named element.
+	* Recursive method to map the submitted values into elements.
 	* 
 	* @access public
 	* 
-	* @param string $name The element name from the form.
+	* @param array|string $src The source data populating form
+	* values.  If an array, will recursively descend into the array;
+	* if a scalar, will map the value into a form element.
 	* 
-	* @return mixed The submitted value for a named element.
+	* @param string $elem The name of the current element mapped from
+	* the array of submitted values.  E.g., $src['foo']['bar']['baz']
+	* maps to "foo[bar][baz]".
+	* 
+	* @return void
 	* 
 	*/
 	
-	protected function submittedValue($name)
+	protected function _populate($src, $elem = null)
 	{
-		// do we have to retrieve the submitted values?
-		// (only need to do it once.)
-		if (is_null($this->submitted)) {
-			// $this->attribs['method'] should be 'get' or 'post'
-			$callback = array('Solar', $this->attribs['method']);
-			// get all submitted values via Solar::get or Solar::post
-			$this->submitted = call_user_func($callback);
-		}
-		
-		// get the related value from the $submit array
-		if (strpos($name, '[') === false) {
-		
-			// no brackets in the name, so it's a plain variable
-			$value = isset($this->submitted[$name]) ? $this->submitted[$name] : null;
-		
+		// are we working with an array?
+		if (is_array($src)) {
+			// yes, descend through each of the sub-elements.
+			foreach ($src as $key => $val) {
+				$sub = empty($elem) ? $key : $elem . "[$key]";
+				$this->_populate($val, $sub);
+			}
 		} else {
-				
-			// there are brackets in the name. convert to an array
-			// element. taken from HTML_QuickForm, element.php.
-			
-			// this converts, e.g., "arrayname[key1][key2]" to
-			// "arrayname']['key1']['key2".  the opening and closing
-			// brackets and quotes will be added when we build the
-			// PHP command.
-			$path = str_replace(
-				array(']', '['),
-				array('', "']['"),
-				$name
-			);
-			
-			// evaluate a PHP command that sets value. slow ugly eval() hack.
-			$tmp = "\$this->submitted['" . $path . "']";
-			eval("\$value = isset($tmp) ? $tmp : null;");
+			// populate an element value, but only if it exists.
+			if (isset($this->elements[$elem])) {
+				$this->elements[$elem]['value'] = $src;
+			}
 		}
+	}
+	
+	
+	/**
+	* 
+	* Recursively pulls values from elements into an associative array.
+	* 
+	* @access protected
+	* 
+	* @param string $key The current array key for the values array.  If
+	* this has square brackets in it, that's a sign we need to keep creating
+	* sub-elements for the values array.
+	* 
+	* @param mixed $val The element value to put into the values array, once
+	* we stop creating sub-elements based on the element name.
+	* 
+	* @param array &$values The values array into which we will place the
+	* element value.  Note that it becomes a reference to sub-elements as
+	* the recursive function creates new sub-elements based on the form
+	* element name.
+	* 
+	* @return void
+	* 
+	*/
+	
+	function _values($key, $val, &$values)
+	{
+		if (strpos($key, '[') === false) {
 		
-		return $value;
+			// actually get a value
+			if (empty($key)) {
+				// handles elements named as auto-append arrays '[]'
+				$values[] = $val;
+			} else {
+				$values[$key] = $val;
+			}
+			return;
+			
+		} else {
+		
+			// recursively parse the element name ($key) to create an
+			// array-key for its value.
+			// 
+			// $key is something like "foo[bar][baz]".
+			// 
+			// 0123456789012
+			// foo[bar][baz]
+			// 
+			// get the part up to the first '['.
+			$pos = strpos($key, '[');
+			$new = substr($key, 0, $pos);
+			$key = substr($key, $pos+1);
+			
+			// create $values['foo'] if it does
+			// not exist.
+			if (! isset($values[$new])) {
+				$values[$new] = null;
+			}
+			
+			// now $key is something like "bar][baz]".
+			// 
+			// 012345678
+			// bar][baz]
+			// 
+			// remove the first remaining ']'.  this should leave us
+			// with 'bar[baz]'.
+			$pos = strpos($key, ']');
+			$lft = substr($key, 0, $pos);
+			$rgt = substr($key, $pos+1);
+			$key = $lft . $rgt;
+			
+			// continue to descend,
+			// but relative to the new value array.
+			$this->_values($key, $val, $values[$new]);
+		}
 	}
 }
 ?>

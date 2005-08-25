@@ -205,17 +205,17 @@ class Solar_Form extends Solar_Base {
 	*/
 	
 	protected $default = array(
-        'name'     => null,
-        'type'     => null,
-        'label'    => null,
-        'descr'    => null,
-        'value'    => null,
-        'require'  => false,
-        'disable'  => false,
-        'options'  => array(),
-        'listsep'  => null,
-        'attribs'  => array(),
-        'feedback' => array(),
+		'name'     => null,
+		'type'     => null,
+		'label'    => null,
+		'descr'    => null,
+		'value'    => null,
+		'require'  => false,
+		'disable'  => false,
+		'options'  => array(),
+		'listsep'  => null,
+		'attribs'  => array(),
+		'feedback' => array(),
 	);
 	
 	
@@ -260,20 +260,20 @@ class Solar_Form extends Solar_Base {
 		// prepare the element info
 		$info = array_merge($this->default, $info);
 		
-        // forcibly cast each of the keys into the elements array
-        $this->elements[$name] = array (
-            'name'     =>          $name,
-            'type'     => (string) $info['type'],
-            'label'    => (string) $info['label'],
-            'value'    =>          $info['value'], // mixed
-            'descr'    => (string) $info['descr'],
-            'require'  => (bool)   $info['require'],
-            'disable'  => (bool)   $info['disable'],
-            'options'  => (array)  $info['options'],
-            'attribs'  => (array)  $info['attribs'],
-            'feedback' => (array)  $info['feedback'],
-        );
-
+		// forcibly cast each of the keys into the elements array
+		$this->elements[$name] = array (
+			'name'     =>          $name,
+			'type'     => (string) $info['type'],
+			'label'    => (string) $info['label'],
+			'value'    =>          $info['value'], // mixed
+			'descr'    => (string) $info['descr'],
+			'require'  => (bool)   $info['require'],
+			'disable'  => (bool)   $info['disable'],
+			'options'  => (array)  $info['options'],
+			'attribs'  => (array)  $info['attribs'],
+			'feedback' => (array)  $info['feedback'],
+		);
+		
 		// add filters
 		if (array_key_exists('filter', $info)) {
 			foreach ( (array) $info['filter'] as $args) {
@@ -756,7 +756,8 @@ class Solar_Form extends Solar_Base {
 	{
 		if (strpos($key, '[') === false) {
 		
-			// actually get a value
+			// no '[' in the key, so we're at the end
+			// of any recursive descent; capture the value.
 			if (empty($key)) {
 				// handles elements named as auto-append arrays '[]'
 				$values[] = $val;
@@ -775,13 +776,16 @@ class Solar_Form extends Solar_Base {
 			// 0123456789012
 			// foo[bar][baz]
 			// 
-			// get the part up to the first '['.
+			// find the first '['.
 			$pos = strpos($key, '[');
+			
+			// the part before the '[' is the new value key
 			$new = substr($key, 0, $pos);
+			
+			// the part after the '[' still needs to be processed
 			$key = substr($key, $pos+1);
 			
-			// create $values['foo'] if it does
-			// not exist.
+			// create $values['foo'] if it does not exist.
 			if (! isset($values[$new])) {
 				$values[$new] = null;
 			}
@@ -794,9 +798,8 @@ class Solar_Form extends Solar_Base {
 			// remove the first remaining ']'.  this should leave us
 			// with 'bar[baz]'.
 			$pos = strpos($key, ']');
-			$lft = substr($key, 0, $pos);
-			$rgt = substr($key, $pos+1);
-			$key = $lft . $rgt;
+			$key = substr_replace($key, '', $pos, 1);
+			
 			
 			// continue to descend,
 			// but relative to the new value array.

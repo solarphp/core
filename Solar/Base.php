@@ -74,6 +74,14 @@ abstract class Solar_Base {
 		// construction-time values override Solar.config.php
 		$this->config = array_merge($this->config, (array) $config);
 		
+		// auto-define the locale directory if needed
+		if (empty($this->config['locale'])) {
+			// converts "Solar_Example_Class" to
+			// "Solar/Example/Class/Locale/"
+			$this->config['locale'] = str_replace('_', '/', $class);
+			$this->config['locale'] .= '/Locale/';
+		}
+		
 		// cannot forcibly load the locale strings at this point,
 		// something to do with Solar::$shared->locale not being ready.
 	}

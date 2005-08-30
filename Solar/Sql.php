@@ -776,6 +776,8 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @return mixed
 	* 
+	* @todo Check name length.
+	* 
 	*/
 	
 	public function createSequence($name, $start = 1)

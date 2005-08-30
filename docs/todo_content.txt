@@ -1,4 +1,21 @@
-CENTRAL CONTENT MODEL
+GENERIC CONTENT MODEL
+
+Organization:
+
+Solar/
+	Content.php
+	Content/
+		Areas.php
+		Nodes.php
+		Parts.php
+		Edits.php
+		Tags.php
+		Pings.php
+		Hits.php
+		Words.php
+		
+
+----
 
 A node might have:
 	one page ("main")

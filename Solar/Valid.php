@@ -273,6 +273,26 @@ class Solar_Valid {
 	
 	/**
 	* 
+	* Validate that a value is a legal IPv4 address.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public function ipv4($value, $blank = self::NOT_BLANK)
+	{
+		// from http://www.regular-expressions.info/examples.html
+		$expr = '/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/';
+		return self::regex($value, $expr, $blank);
+	}
+	
+	
+	/**
+	* 
 	* Validate that a value is an ISO 8601 date string (yyyy-mm-dd format).
 	* 
 	* Also checks to see that the date itself is valid (e.g., no Feb 30).
@@ -369,6 +389,28 @@ class Solar_Valid {
 	{
 		$expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
 		return self::regex($value, $expr, $blank) || ($value == '24:00:00');
+	}
+	
+	
+	/**
+	* 
+	* Validate that a value is a locale code.
+	* 
+	* The format is two lower-case letters, an underscore, and two upper-case
+	* letters.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function locale($value, $blank = self::NOT_BLANK)
+	{
+		$expr = '/^[a-z]{2}_[A-Z]{2}$/';
+		return self::regex($value, $expr);
 	}
 	
 	
@@ -643,6 +685,28 @@ class Solar_Valid {
 		}
 		
 		return (bool) $result;
+	}
+	
+	
+	/**
+	* 
+	* Validate that a value is composed only of "word" characters.
+	* 
+	* These include a-z, A-Z, 0-9, and underscore, indicated by a 
+	* regular expression "\w".
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function word($value, $blank = self::NOT_BLANK)
+	{
+		$expr = '/^\w$/';
+		return self::regex($value, $expr);
 	}
 }
 ?>

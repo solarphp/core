@@ -91,7 +91,7 @@ class Solar_User_Role_Sql extends Solar_Base {
 		// build the SQL statement
 		$stmt =  "SELECT " . $this->config['rolename_col'];
 		$stmt .= " FROM " . $this->config['table'];
-		$stmt .= " WHERE " .  . $this->config['username_col'];
+		$stmt .= " WHERE " . $this->config['username_col'];
 		$stmt .= " = :username";
 		
 		// build the placeholder data

@@ -604,11 +604,17 @@ class Solar_Sql extends Solar_Base {
 	
 	public function quote($val)
 	{
-		if (is_int($val) || is_float($val)) {
-			// it's a number
+		if (is_array($val)) {
+			// recursively quote array values
+			foreach ($val as $k => $v) {
+				$val[$k] = $this->quote($v);
+			}
+		} elseif (is_int($val) || is_float($val)) {
+			// it's a number, no need to quote or escape,
+			// just convert to a string representation.
 			settype($val, 'string');
 		} elseif (is_bool($val)) {
-			// it's boolean
+			// it's boolean, convert to string '1' or '0'
 			$val = $val ? '1' : '0';
 		} elseif (is_null($val)) {
 			// it's null

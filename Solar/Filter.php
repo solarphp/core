@@ -404,5 +404,23 @@ class Solar_Filter {
 		
 		return $value;
 	}
+	
+	
+	/**
+	* 
+	* Trims leading a nd trailing spaces from a value.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to be filtered.
+	* 
+	* @return mixed The filtered value.
+	* 
+	*/
+	
+	public static function trim($value)
+	{
+		return trim($value);
+	}
 }
 ?>

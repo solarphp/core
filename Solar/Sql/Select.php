@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Entity.php 277 2005-05-30 16:02:02Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -438,8 +438,12 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function where($condition, $op = 'AND')
+	public function where($filter, $op = 'AND')
 	{
+		if (empty($filter) || trim($filter) == '') {
+			return;
+		}
+		
 		if ($this->where) {
 			$this->where[] = strtoupper($op) . ' ' . $condition;
 		} else {
@@ -484,6 +488,10 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function having($filter, $op = 'AND')
 	{
+		if (empty($filter) || trim($filter) == '') {
+			return;
+		}
+		
 		if ($this->having) {
 			$this->having[] = strtoupper($op) . ' ' . $filter;
 		} else {

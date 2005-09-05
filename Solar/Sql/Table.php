@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Entity.php 277 2005-05-30 16:02:02Z pmjones $
+* @version $Id$
 * 
 */
 
@@ -56,7 +56,6 @@ class Solar_Sql_Table extends Solar_Base {
 	*/
 	
 	protected $config = array(
-		'locale' => 'Solar/Locale/',
 		'sql'    => 'sql',
 	);
 	
@@ -88,11 +87,11 @@ class Solar_Sql_Table extends Solar_Base {
 	*         'size'     => // (int) column size
 	*         'scope'    => // (int) decimal places
 	*         'label'    => // (string) Text label for forms and tables
+	*         'valid'    => // (array) Solar_Valid methods and args
 	*         'require'  => // (bool) is this a required column?
 	*         'sequence' => // (string) use this auto-sequence
 	*         'default'  => // (string|array) default value
 	*         'primary'  => // (bool) is this part of the primary key?
-	*         'validate' => // (array) Solar_Valid methods and args
 	*      ),
 	* );
 	* </code>
@@ -206,19 +205,19 @@ class Solar_Sql_Table extends Solar_Base {
 	public function insert($data)
 	{
 		// set defaults
-		$data = array_merge($this->getDefault(), $data);
+		$data = array_merge($this->getcolDefault(), $data);
 		
 		// forcibly add sequential values
 		foreach ($this->col as $field => $info) {
 			// does this field use a sequence?
 			if (! empty($info['sequence'])) {
 				// yes, override any given values
-				$data[$field] = $this->sql->nextSequence($info['sequence']);
+				$data[$field] = $this->sql->nextcolSequence($info['sequence']);
 			}
 		}
 		
 		// validate and recast the data.
-		$result = $this->autoValidate($data);
+		$result = $this->autocolValid($data);
 		if (Solar::isError($result)) {
 			return $result;
 		}
@@ -268,7 +267,7 @@ class Solar_Sql_Table extends Solar_Base {
 		}
 		
 		// validate and recast the data
-		$result = $this->autoValidate($data);
+		$result = $this->autocolValid($data);
 		if (Solar::isError($result)) {
 			return $result;
 		}
@@ -314,7 +313,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 	
-	public function getDefault()
+	public function getcolDefault()
 	{
 		$data = array();
 		foreach ($this->col as $name => $info) {
@@ -346,6 +345,117 @@ class Solar_Sql_Table extends Solar_Base {
 		
 		// done!
 		return $data;
+	}
+	
+	
+	/**
+	* 
+	* Convenience method to fetch a series of rows.
+	* 
+	* @access public
+	* 
+	* @return array
+	* 
+	*/
+	
+	protected function _fetchList($where = null, $order = null, $page = null)
+	{
+		// selection tool
+		$select = Solar::object('Solar_Sql_Select');
+		
+		// all non-CLOB columns
+		foreach ($this->col as $name => $info) {
+			if ($info['type'] != 'clob') {
+				$select->cols($name);
+			}
+		}
+			
+		// from this table
+		$select->from($this->name);
+		
+		// where ...
+		$data = array();
+		if (is_array($where) || is_object($where)) {
+			foreach ((array) $where as $col => $val) {
+				if (is_string($col)) {
+					// ... column = :placeholder
+					$select->where("$col = :$col");
+					$data[$col] = $val;
+				} else {
+					// naked user-defined clause
+					$select->where($val);
+				}
+			}
+		} else {
+			// ... user-specified clause
+			$select->where($where);
+		}
+		
+		// order by?
+		$select->order($order);
+		
+		// return all results
+		$select->fetch('all');
+		
+		// execute
+		$result = $select->exec($data, $page);
+		
+		// done!
+		return $result;
+	}
+	
+	
+	/**
+	* 
+	* Convenience method to fetch a single row.
+	* 
+	* @access public
+	* 
+	* @return array
+	* 
+	*/
+	
+	protected function _fetchItem($where = null, $order = null)
+	{
+		// selection tool
+		$select = Solar::object('Solar_Sql_Select');
+		
+		// all columns including CLOBs
+		$cols = array_keys($this->col);
+		$select->cols($cols);
+			
+		// from this table
+		$select->from($this->name);
+		
+		// where ...
+		$data = array();
+		if (is_array($where) || is_object($where)) {
+			foreach ((array) $where as $col => $val) {
+				if (is_string($col)) {
+					// ... column = :placeholder
+					$select->where("$col = :$col");
+					$data[$col] = $val;
+				} else {
+					// naked user-defined clause
+					$select->where($val);
+				}
+			}
+		} else {
+			// ... user-specified clause
+			$select->where($where);
+		}
+		
+		// order by?
+		$select->order($order);
+		
+		// return all results
+		$select->fetch('row');
+		
+		// execute
+		$result = $select->exec($data, $page);
+		
+		// done!
+		return $result;
 	}
 	
 	
@@ -389,7 +499,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 
-	protected function column($name, $type, $size = null, $scope = null)
+	protected function colDefine($name, $type, $size = null, $scope = null)
 	{
 		$locale_key = strtoupper("LABEL_$name");
 		$label = $this->locale($locale_key);
@@ -404,7 +514,7 @@ class Solar_Sql_Table extends Solar_Base {
 			'default'  => false,
 			'primary'  => false,
 			'foreign'  => array(),
-			'validate' => array(),
+			'valid' => array(),
 		);
 	}
 	
@@ -423,36 +533,10 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 
-	protected function require($name)
+	protected function colRequire($name)
 	{
 		/** @todo Throw error if column doesn't exist */
 		$this->col[$name]['require'] = true;
-	}
-	
-	
-	/**
-	* 
-	* Sets/resets the 'primary' flag for one or more columns.
-	* 
-	* Use this to identify primary keys for a table.
-	* 
-	* One column:  $this->primary('col_1');
-	* 
-	* Compsite: $this->primary('col_1', 'col_2', 'col_3');
-	* 
-	* @access protected
-	* 
-	* @return void
-	* 
-	*/
-
-	protected function primary()
-	{
-		/** @todo Throw error if column doesn't exist */
-		$args = func_get_args();
-		foreach ($args as $name) {
-			$this->cols[$name]['primary'] = true;
-		}
 	}
 	
 	
@@ -473,7 +557,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 	
-	protected function sequence($name, $seq = null)
+	protected function colSequence($name, $seq = null)
 	{
 		/** @todo Throw error if column doesn't exist */
 		if (empty($seq)) {
@@ -501,7 +585,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 
-	protected function default($name, $type, $value)
+	protected function colDefault($name, $type, $value)
 	{
 		/** @todo Throw error if column doesn't exist */
 		$args = func_get_args();
@@ -534,7 +618,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 	
-	protected function validate($name, $method)
+	protected function colValid($name, $method)
 	{
 		/** @todo Throw error if column doesn't exist */
 		$args = func_get_args();
@@ -554,7 +638,33 @@ class Solar_Sql_Table extends Solar_Base {
 		array_unshift($args, $method);
 		
 		// and add the full validation arguments
-		$this->col[$name]['validate'][] = $args;
+		$this->col[$name]['valid'][] = $args;
+	}
+	
+	
+	/**
+	* 
+	* Sets/resets the 'primary' flag for one or more columns.
+	* 
+	* Use this to identify primary keys for a table.
+	* 
+	* One column:  $this->primary('col_1');
+	* 
+	* Compsite: $this->primary('col_1', 'col_2', 'col_3');
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+
+	protected function primary()
+	{
+		/** @todo Throw error if column doesn't exist */
+		$args = func_get_args();
+		foreach ($args as $name) {
+			$this->col[$name]['primary'] = true;
+		}
 	}
 	
 	
@@ -572,7 +682,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	* @param string $name The index name.
 	* 
-	* @param string|array $cols The column(s) on which to index.  If
+	* @param string|array $cols The colDefine(s) on which to index.  If
 	* none, the index name doubles as the column name to index on.
 	* 
 	* @return void
@@ -582,7 +692,7 @@ class Solar_Sql_Table extends Solar_Base {
 	protected function index($name)
 	{
 		$cols = func_get_args();
-		$name = array_shift($args);
+		$name = array_shift($cols);
 		
 		if (empty($cols)) {
 			$cols = $name;
@@ -610,7 +720,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	* @param string $name The index name.
 	* 
-	* @param string|array $cols The column(s) on which to index.  If
+	* @param string|array $cols The colDefine(s) on which to index.  If
 	* none, the index name doubles as the column name to index on.
 	* 
 	* @return void
@@ -620,7 +730,7 @@ class Solar_Sql_Table extends Solar_Base {
 	protected function unique($name)
 	{
 		$cols = func_get_args();
-		$name = array_shift($args);
+		$name = array_shift($cols);
 		
 		if (empty($cols)) {
 			$cols = $name;
@@ -728,7 +838,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 	
-	protected function autoValidate(&$data)
+	protected function autocolValid(&$data)
 	{
 		// low and high range values for integers
 		$int_range = array(
@@ -926,12 +1036,12 @@ class Solar_Sql_Table extends Solar_Base {
 			// 
 			
 			// add validation placeholder array if needed
-			if (! isset($this->col[$field]['validate'])) {
-				$this->col[$field]['validate'] = array();
+			if (! isset($this->col[$field]['valid'])) {
+				$this->col[$field]['valid'] = array();
 			}
 			
 			// loop through each validation rule
-			foreach ($this->col[$field]['validate'] as $args) {
+			foreach ($this->col[$field]['valid'] as $args) {
 				
 				// the name of the Solar_Valid method
 				$method = array_shift($args);
@@ -983,7 +1093,7 @@ class Solar_Sql_Table extends Solar_Base {
 				get_class($this),
 				'ERR_DATA',
 				$this->locale('ERR_DATA'),
-				array()
+				array(),
 				E_USER_WARNING,
 				true // backtrace
 			);

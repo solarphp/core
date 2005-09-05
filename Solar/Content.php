@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id:$
+* @version $Id$
 * 
 */
 
@@ -87,16 +87,30 @@ class Solar_Content extends Solar_Base {
 	
 	/**
 	* 
+	* A table object representing the tags on each node.
+	* 
+	* @access protected
+	* 
+	* @var object Solar_Content_Tags
+	* 
+	*/
+	
+	public $tags;
+	
+	
+	/**
+	* 
 	* Constructor.
 	* 
 	*/
 	
-	public __construct($config = null)
+	public function __construct($config = null)
 	{
 		$this->areas = Solar::object('Solar_Content_Areas');
 		$this->nodes = Solar::object('Solar_Content_Nodes');
 		$this->parts = Solar::object('Solar_Content_Parts');
 		$this->edits = Solar::object('Solar_Content_Edits');
+		$this->tags = Solar::object('Solar_Content_Tags');
 	}
 }
 ?>

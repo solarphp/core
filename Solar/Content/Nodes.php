@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id:$
+* @version $Id$
 * 
 */
 
@@ -46,7 +46,7 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 	* 
 	*/
 	
-	protected setup()
+	protected function setup()
 	{
 		// the table name
 		$this->name = 'nodes';
@@ -57,34 +57,34 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 		// 
 		
 		// the area in which this node belongs
-		$this->column('node_area_name', 'varchar', 127);
-		$this->require('node_area_name');
-		$this->validate('node_area_name', 'word');
+		$this->colDefine('node_area_name', 'varchar', 127);
+		$this->colRequire('node_area_name');
+		$this->colValid('node_area_name', 'word');
 		
 		// the node name
-		$this->column('node_name', 'varchar', 127);
-		$this->require('node_name');
-		$this->validate('node_name', 'word');
+		$this->colDefine('node_name', 'varchar', 127);
+		$this->colRequire('node_name');
+		$this->colValid('node_name', 'word');
 		
 		// the node "subject" or title
-		$this->column('node_subj', 'varchar', 255);
+		$this->colDefine('node_subj', 'varchar', 255);
 		
 		// the node tags, made of a-zA-Z0-9_ and space
-		$this->column('node_tags', 'varchar', 255);
-		$this->validate('node_tags', 'regex', '/^[\w ]*$/');
+		$this->colDefine('node_tags', 'varchar', 255);
+		$this->colValid('node_tags', 'regex', '/^[\w ]*$/');
 		
 		// the user who owns this area
-		$this->column('node_user_handle', 'varchar', 32);
-		$this->validate('node_user_handle', 'word');
+		$this->colDefine('node_user_handle', 'varchar', 32);
+		$this->colValid('node_user_handle', 'word');
 		
 		// arbitrary list-order, sequence, or ranking
-		$this->column('node_rank', 'int');
+		$this->colDefine('node_rank', 'int');
 		
 		// arbitrary user-assigned rating, score, level, or value
-		$this->column('node_rating', 'int');
+		$this->colDefine('node_rating', 'int');
 		
 		// serialized array of preferences for this node
-		$this->column('node_prefs', 'clob');
+		$this->colDefine('node_prefs', 'clob');
 		
 		// -------------------------------------------------------------
 		// 
@@ -103,6 +103,13 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 		$this->index('node_tags');
 		$this->index('node_rank');
 		$this->index('node_rating');
+	}
+	
+	public function fetchList($node_area_name, $page = null)
+	{
+		$where = array('node_area_name' => $node_area_name);
+		$order = 'LOWER(node_name) ASC';
+		return parent::fetchList($where, $order, $page);
 	}
 }
 ?>

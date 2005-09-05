@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id:$
+* @version $Id$
 * 
 */
 
@@ -46,30 +46,44 @@ class Solar_Content_Areas extends Solar_Sql_Table {
 	* 
 	*/
 	
-	protected setup()
+	protected function setup()
 	{
 		// the table name
 		$this->name = 'areas';
 		
 		// the area name
-		$this->column('area_name', 'varchar', 127);
-		$this->require('area_name');
-		$this->validate('area_name', 'word');
+		$this->colDefine('area_name', 'varchar', 127);
+		$this->colRequire('area_name');
+		$this->colValid('area_name', 'word');
 		
 		// freeform area "subject" or title
-		$this->column('area_subj', 'varchar', 255);
+		$this->colDefine('area_subj', 'varchar', 255);
 		
 		// the user who owns this area
-		$this->column('area_user_handle', 'varchar', 32);
-		$this->validate('area_user_handle', 'word');
+		$this->colDefine('area_user_handle', 'varchar', 32);
+		$this->colValid('area_user_handle', 'word');
 		
 		// serialized preferences
-		$this->column('area_prefs', 'clob');
+		$this->colDefine('area_prefs', 'clob');
 		
 		// keys and indexes
 		$this->primary('area_name');
 		$this->unique('area_name');
 		$this->index('area_user_handle');
+	}
+	
+	public function fetchList($page = null)
+	{
+		$where = null;
+		$order = 'LOWER(area_name) ASC';
+		return parent::fetchList($where, $order, $page);
+	}
+	
+	public function fetchItem($area_name)
+	{
+		$where = array('area_name' => $area_name);
+		$order = null;
+		return parent::fetchItem($where, $order);
 	}
 }
 ?>

@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id:$
+* @version $Id$
 * 
 */
 
@@ -45,7 +45,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 	* 
 	*/
 	
-	protected setup()
+	protected function setup()
 	{
 		// the table name
 		$this->name = 'tags';
@@ -56,28 +56,28 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 		// 
 		
 		// unique ID for this part
-		$this->column('tag_id', 'int');
-		$this->require('tag_id');
-		$this->sequence('tag_id');
+		$this->colDefine('tag_id', 'int');
+		$this->colRequire('tag_id');
+		$this->colSequence('tag_id');
 		
 		// the area of the node for this tag
-		$this->column('tag_area_name', 'varchar', 127);
-		$this->require('tag_area_name');
-		$this->validate('tag_area_name', 'word');
+		$this->colDefine('tag_area_name', 'varchar', 127);
+		$this->colRequire('tag_area_name');
+		$this->colValid('tag_area_name', 'word');
 		
 		// the node for this tag
-		$this->column('tag_node_name', 'varchar', 127);
-		$this->require('tag_node_name');
-		$this->validate('tag_node_name', 'word');
+		$this->colDefine('tag_node_name', 'varchar', 127);
+		$this->colRequire('tag_node_name');
+		$this->colValid('tag_node_name', 'word');
 		
 		// the "owner" of the node to which this tag applies
-		$this->column('tag_user_handle', 'varchar', 32);
-		$this->require('tag_user_handle');
+		$this->colDefine('tag_user_handle', 'varchar', 32);
+		$this->colRequire('tag_user_handle');
 		
 		// the tag itself
-		$this->column('tag_name', 'varchar', 64);
-		$this->require('tag_name');
-		$this->validate('tag_name', 'word');
+		$this->colDefine('tag_name', 'varchar', 64);
+		$this->colRequire('tag_name');
+		$this->colValid('tag_name', 'word');
 		
 		
 		// -------------------------------------------------------------

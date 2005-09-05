@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id:$
+* @version $Id$
 * 
 */
 
@@ -33,7 +33,7 @@ Solar::loadClass('Solar_Sql_Table');
 * 
 */
 
-class Solar_Content_Parts extends Solar_Sql_Table {
+class Solar_Content_Edits extends Solar_Sql_Table {
 	
 	
 	/**
@@ -46,7 +46,7 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 	* 
 	*/
 	
-	protected setup()
+	protected function setup()
 	{
 		// -------------------------------------------------------------
 		// 
@@ -62,45 +62,45 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		// 
 		
 		// unique ID for this edit
-		$this->column('edit_id', 'int');
-		$this->require('edit_id');
-		$this->sequence('edit_id');
+		$this->colDefine('edit_id', 'int');
+		$this->colRequire('edit_id');
+		$this->colSequence('edit_id');
 		
 		// which part this edit belongs to
-		$this->column('edit_part_id', 'int');
-		$this->require('edit_part_id');
+		$this->colDefine('edit_part_id', 'int');
+		$this->colRequire('edit_part_id');
 		
 		// timestamp when edited
-		$this->column('edit_ts', 'timestamp');
-		$this->require('edit_ts');
+		$this->colDefine('edit_ts', 'timestamp');
+		$this->colRequire('edit_ts');
 		
 		// IP address of the editor
-		$this->column('edit_ip_addr', 'char', 15);
-		$this->require('edit_ip_addr');
-		$this->validate('edit_ip_addr', 'ipv4');
+		$this->colDefine('edit_ip_addr', 'char', 15);
+		$this->colRequire('edit_ip_addr');
+		$this->colValid('edit_ip_addr', 'ipv4');
 		
 		// username of the editor
-		$this->column('edit_user_handle', 'varchar', 32);
+		$this->colDefine('edit_user_handle', 'varchar', 32);
 		
 		// arbitrary flag: moderate, spam, disable, etc
-		$this->column('edit_flag', 'varchar', 32);
+		$this->colDefine('edit_flag', 'varchar', 32);
 		
 		// MIME type: text/plain, text/x-solar-wiki, etc
-		$this->column('edit_mime', 'varchar', 64);
-		$this->require('edit_mime');
-		$this->default('edit_mime', 'literal', 'text/plain');
+		$this->colDefine('edit_mime', 'varchar', 64);
+		$this->colRequire('edit_mime');
+		$this->colDefault('edit_mime', 'literal', 'text/plain');
 		
 		// subject, title, filename, uri, etc
-		$this->column('edit_subj', 'varchar', 255);
+		$this->colDefine('edit_subj', 'varchar', 255);
 		
 		// summary or short description
-		$this->column('edit_summ', 'varchar', 255);
+		$this->colDefine('edit_summ', 'varchar', 255);
 		
 		// the actual content
-		$this->column('edit_body', 'clob');
+		$this->colDefine('edit_body', 'clob');
 		
 		// serialized array of preferences for this edit
-		$this->column('edit_prefs', 'clob');
+		$this->colDefine('edit_prefs', 'clob');
 		
 		
 		// -------------------------------------------------------------
@@ -116,6 +116,13 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		$this->index('edit_subj');
 		$this->index('edit_summ');
 		
+	}
+	
+	public function fetchItem($edit_id)
+	{
+		$where = array('edit_id' => $edit_id);
+		$order = null;
+		return parent::fetchItem($where, $order);
 	}
 }
 ?>

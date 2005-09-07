@@ -148,8 +148,19 @@ class Solar_User_Auth extends Solar_Base {
 	* 
 	* Convenience reference to $_SESSION['Solar_User_Auth']['status_code'].
 	* 
-	* This is the status code of the current authentication; it maps to a
-	* class constant ('VALID', 'IDLED', etc).
+	* This is the status code of the current user authentication; the string
+	* codes are:
+	* 
+	* ANON => The user is anonymous/unauthenticated (no attempt to 
+	* authenticate)
+	* 
+	* EXPIRED => The max time for authentication has expired
+	* 
+	* IDLED => The authenticated user has been idle for too long
+	* 
+	* VALID => The user is authenticated and has not timed out
+	* 
+	* WRONG => The user attempted authentication but failed
 	* 
 	* @access public
 	* 
@@ -200,31 +211,6 @@ class Solar_User_Auth extends Solar_Base {
 	
 	/**
 	* 
-	* Constructor to set up the storage driver.
-	*
-	* @access public
-	* 
-	* @param array $config The config options.
-	* 
-	* @return object
-	* 
-	*/
-	
-	public function __construct($config = null)
-	{
-		// basic config option settings
-		parent::__construct($config);
-		
-		// instantiate a driver object
-		$this->driver = Solar::object(
-			$this->config['class'],
-			$this->config['options']
-		);
-	}
-	
-	
-	/**
-	* 
 	* Start a session with authentication.
 	* 
 	* @access public
@@ -245,8 +231,8 @@ class Solar_User_Auth extends Solar_Base {
 			$_SESSION['Solar_User_Auth'] = array(
 				'status_code' => 'ANON',
 				'status_text' => $this->locale('ANON'),
-				'username' => null,
-				'login_time' => null,
+				'username'    => null,
+				'login_time'  => null,
 				'last_active' => null
 			);
 		}
@@ -257,6 +243,15 @@ class Solar_User_Auth extends Solar_Base {
 		$this->username    =& $_SESSION['Solar_User_Auth']['username'];
 		$this->login_time  =& $_SESSION['Solar_User_Auth']['login_time'];
 		$this->last_active =& $_SESSION['Solar_User_Auth']['last_active'];
+		
+		// instantiate a driver object. we do this here instead of in
+		// the constructor so that custom drivers will find the session
+		// already available to them (e.g. single sign-on systems and
+		// HTTP-based systems).
+		$this->driver = Solar::object(
+			$this->config['class'],
+			$this->config['options']
+		);
 		
 		// update any current authentication (including idle and expire).
 		$this->valid();
@@ -356,7 +351,7 @@ class Solar_User_Auth extends Solar_Base {
 	*
 	* @access public
 	* 
-	* @param string $status_code A Solar_User_Auth status constant;
+	* @param string $status_code A Solar_User_Auth status string;
 	* default is 'ANON'.
 	* 
 	* @return void

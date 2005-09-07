@@ -641,11 +641,7 @@ class Solar_Valid {
 			return true;
 		}
 		
-		if (preg_match($expr, $value)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (bool) preg_match($expr, $value);
 	}
 	
 	

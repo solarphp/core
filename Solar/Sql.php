@@ -246,6 +246,38 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
+	* Builds a SELECT statement from its component parts.
+	* 
+	* @access public
+	* 
+	* @param array $parts The component parts, keyed as 'cols', 'from',
+	* 'join', 'where', 'group', 'having', 'order', and 'limit' (which
+	* itself is an array of 'count' and 'offset').
+	* 
+	* @param array $data An associative array of data to bind into the
+	* placeholders.
+	* 
+	* @param bool $exec Whether or not to execute the select; if false,
+	* returns the statement that would have been executed (not including
+	* the bound data).
+	* 
+	* @return mixed
+	* 
+	*/
+	
+	public function select($parts, $data = null, $exec = true)
+	{
+		$stmt = $this->driver->select($parts);
+		if ($exec) {
+			return $this->exec($stmt, $data);
+		} else {
+			return $stmt;
+		}
+	}
+	
+	
+	/**
+	* 
 	* Inserts a row of data into a table.
 	* 
 	* @access public

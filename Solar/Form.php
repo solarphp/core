@@ -235,6 +235,13 @@ class Solar_Form extends Solar_Base {
 	}
 	
 	
+	// -----------------------------------------------------------------
+	// 
+	// Element-management methods
+	// 
+	// -----------------------------------------------------------------
+	
+	
 	/**
 	* 
 	* Sets one element in the form.  Appends if element does not exist.
@@ -283,16 +290,117 @@ class Solar_Form extends Solar_Base {
 		
 		// add validations
 		if (array_key_exists('validate', $info)) {
+		
 			foreach ( (array) $info['validate'] as $args) {
+			
+				// make sure $args is an array
+				settype($args, 'array');
+				
 				// shift the name onto the top of the args
 				array_unshift($args, $name);
-				// add the validation
+				
+				// add the validation to the element
 				call_user_func_array(
 					array($this, 'addValidate'),
 					$args
 				);
+				
 			}
 		}
+	}
+	
+	
+	/**
+	* 
+	* Sets multiple elements in the form.  Appends if they do not exist.
+	* 
+	* @access public
+	* 
+	* @param array $list Element information as array(name => info).
+	* 
+	* @param string $array Rename the element as a key in this array.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function setElements($list, $array = null)
+	{
+		foreach ($list as $name => $info) {
+			$this->setElement($name, $info, $array);
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds a pre-filter for an element
+	* 
+	* Adds a pre-filter for an element. All pre-filters are applied via 
+	* {@link Solar_Filter::multiple()} and should conform to the 
+	* specifications for that method.
+	* 
+	* @access public
+	* 
+	* @param string $name The element name.
+	* 
+	* @param string $method Solar_Filter method or PHP function to use
+	* for filtering.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function addFilter($name, $method) 
+	{
+		// Get the arguments, drop the element name
+		$args = func_get_args();
+		array_shift($args);
+
+		$this->filter[$name][] = $args;
+	}
+	
+	
+	/**
+	* 
+	* Adds a Solar_Valid method callback as a validation for an element.
+	* 
+	* @access public
+	* 
+	* @param string $name The element name.
+	* 
+	* @param string $method The Solar_Valid callback method.
+	* 
+	* @param string $message The message to use if validation fails.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function addValidate($name, $method, $message = null)
+	{
+		// get the arguments, drop the element name
+		$args = func_get_args();
+		$name = array_shift($args);
+		
+		// add a default validation message (args[0] is the method,
+		// args[1] is the message)
+		if (trim($args[1]) == '') {
+			
+			// see if we have an method-specific validation message
+			$key = 'VALID_' . strtoupper($method);
+			$args[1] = Solar::locale('Solar', $key);
+			
+			// if the message is the same as the key,
+			// there was no method-specific validation
+			// message.  revert to the generic default.
+			if ($key == $args[1]) {
+				$args[1] = Solar::locale('Solar', 'ERR_INVALID');
+			}
+		}
+		
+		// add to the validation array
+		$this->validate[$name][] = $args;
 	}
 	
 	
@@ -321,26 +429,11 @@ class Solar_Form extends Solar_Base {
 	}
 	
 	
-	/**
-	* 
-	* Sets multiple elements in the form.  Appends if they do not exist.
-	* 
-	* @access public
-	* 
-	* @param array $list Element information as array(name => info).
-	* 
-	* @param string $array Rename the element as a key in this array.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function setElements($list, $array = null)
-	{
-		foreach ($list as $name => $info) {
-			$this->setElement($name, $info, $array);
-		}
-	}
+	// -----------------------------------------------------------------
+	// 
+	// Value-management methods
+	// 
+	// -----------------------------------------------------------------
 	
 	
 	/**
@@ -383,7 +476,7 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
-	* Performs validation on each form element.
+	* Performs filtering and validation on each form element.
 	* 
 	* Updates the feedback keys for each element that fails validation.
 	* Values are either pulled from the submitted form or from the array
@@ -469,6 +562,13 @@ class Solar_Form extends Solar_Base {
 		}
 		return $values;
 	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// General-purpose methods
+	// 
+	// -----------------------------------------------------------------
 	
 	
 	/**
@@ -581,7 +681,7 @@ class Solar_Form extends Solar_Base {
 	
 	// -----------------------------------------------------------------
 	//
-	// Support methods.
+	// Support methods
 	//
 	// -----------------------------------------------------------------
 	
@@ -622,78 +722,6 @@ class Solar_Form extends Solar_Base {
 	}
 	
 
-	/**
-	* 
-	* Adds a pre-filter for an element
-	* 
-	* Adds a pre-filter for an element. All pre-filters are applied via 
-	* {@link Solar_Filter::multiple()} and should conform to the 
-	* specifications for that method.
-	* 
-	* @access protected
-	* 
-	* @param string $name The element name.
-	* 
-	* @param string $method Solar_Filter method or PHP function to use
-	* for filtering.
-	* 
-	* @return void
-	* 
-	*/
-	
-	protected function addFilter($name, $method) 
-	{
-		// Get the arguments, drop the element name
-		$args = func_get_args();
-		array_shift($args);
-
-		$this->filter[$name][] = $args;
-	}
-	
-	
-	/**
-	* 
-	* Adds a Solar_Valid method callback as a validation for an element.
-	* 
-	* @access protected
-	* 
-	* @param string $name The element name.
-	* 
-	* @param string $method The Solar_Valid callback method.
-	* 
-	* @param string $message The message to use if validation fails.
-	* 
-	* @return void
-	* 
-	*/
-	
-	protected function addValidate($name, $method, $message = null)
-	{
-		// get the arguments, drop the element name
-		$args = func_get_args();
-		$name = array_shift($args);
-		
-		// add a default validation message (args[0] is the method,
-		// args[1] is the message)
-		if (trim($args[1]) == '') {
-			
-			// see if we have an method-specific validation message
-			$key = 'VALID_' . strtoupper($method);
-			$args[1] = Solar::locale('Solar', $key);
-			
-			// if the message is the same as the key,
-			// there was no method-specific validation
-			// message.  revert to the generic default.
-			if ($key == $args[1]) {
-				$args[1] = Solar::locale('Solar', 'ERR_INVALID');
-			}
-		}
-		
-		// add to the validation array
-		$this->validate[$name][] = $args;
-	}
-	
-	
 	/**
 	* 
 	* Recursive method to map the submitted values into elements.

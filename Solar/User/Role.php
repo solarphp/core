@@ -142,7 +142,7 @@ class Solar_User_Role extends Solar_Base {
 	{
 		// have we loaded roles for the first time yet? if so, and if
 		// we're not forcing refreshes, the we don't need to do
-		// anything, jsut return the list as it is right now.
+		// anything, just return the list as it is right now.
 		if ($this->loaded && ! $this->config['refresh']) {
 			return $this->list;
 		}

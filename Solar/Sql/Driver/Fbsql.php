@@ -301,6 +301,25 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 		}
 	}
 	
+	public function limitSelect()
+	{
+		$count  = (int) $parts['limit']['count'];
+		$offset = (int) $parts['limit']['count'];
+		
+		if ($count > 0) {
+			// are we adding an offset as well?
+			if ($offset > 0) {
+				// yes
+				$top = "SELECT TOP($offset,$count)";
+			} else {
+				// no, just a top
+				$top = "SELECT TOP(0,$count)";
+			}
+			// replace "SELECT" with the new "SELECT TOP" clause
+			$this->stmt = $top . substr($this->stmt, 6);
+		}
+	}
+	
 	
 	/**
 	* 

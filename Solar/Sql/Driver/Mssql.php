@@ -308,6 +308,9 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	* This method only adds a TOP $count clause; the exec() method
 	* skips ahead to the $offset value.  Terribly inefficient.
 	* 
+	* Use this for new limitSelect() manipulation
+	* http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html
+	* 
 	* @access protected
 	* 
 	* @param string &$stmt The SQL statement to modify.
@@ -336,6 +339,62 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	/**
 	* 
+	* Adds a LIMIT clause (or equivalent) to a SELECT statement.
+	* 
+	* Still not great, but much more efficient than old way.
+	* http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html
+	* 
+	* @access protected
+	* 
+	* @param array $parts The SELECT statement parts.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function limitSelect($parts)
+	{
+		$count  = (int) $parts['limit']['count'];
+		$offset = (int) $parts['limit']['offset'];
+		
+		if ($count) {
+			
+			if (! $offset) {
+				// simple TOP request
+				$top = "SELECT TOP $count";
+				$this->stmt = $top . substr($this->stmt, 6);
+				return;
+			}
+			
+			// the count **and** the offset, combined.
+			// this will be used in the "internal" portion of the
+			// hacked-up statement.
+			$total = $count + $offset;
+			
+			// build the "real" order for the external portion.
+			$order = implode(',', $parts['order']);
+			
+			// build a "reverse" order for the internal portion.
+			$reverse = $order;
+			$reverse = str_ireplace(" ASC",  " \xFF", $reverse);
+			$reverse = str_ireplace(" DESC", " ASC",  $reverse);
+			$reverse = str_ireplace(" \xFF", " DESC", $reverse);
+			
+			// create a main statement that replaces the SELECT with a
+			// SELECT TOP
+			$main = "\nSELECT TOP $total" . substr($this->stmt, 6) . "\n";
+			
+			// build the hacked-up statement.
+			// do we need the "as" aliases here?
+			$this->stmt  = "SELECT * FROM (";
+			$this->stmt .= "SELECT TOP $count * FROM ($main) AS solar_limit_rev ORDER BY $reverse";
+			$this->stmt .= ") AS solar_limit ORDER BY $order";
+		}
+	}
+	
+	
+	/**
+	* 
 	* Returns the SQL statement to get a list of database tables.
 	* 
 	* @access public
@@ -347,7 +406,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	public function listTables()
 	{
 		// copied from PEAR DB
-		 return "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
+		return "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
 	}
 	
 	
@@ -367,9 +426,10 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
 	
 	public function createSequence($name, $start = 1)
 	{
+		$start = (int) $start;
 		$this->exec(
 			"CREATE TABLE $name (id INT NOT NULL " .
-			'IDENTITY($start,1) PRIMARY KEY CLUSTERED)'
+			"IDENTITY($start,1) PRIMARY KEY CLUSTERED)"
 		);
 	}
 	

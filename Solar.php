@@ -878,9 +878,6 @@ class Solar {
 			}
 		}
 		
-		// disallow use of $_REQUEST, you should use $_GET and $_POST.
-		unset($_REQUEST);
-		
 		// remove magic quotes if they are enabled; sybase quotes
 		// override normal quotes.
 		if (ini_get('magic_quotes_gpc')) {

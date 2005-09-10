@@ -114,104 +114,27 @@ class Solar_Sql_Select extends Solar_Base {
 	);
 	
 	
+	protected $parts = array(
+		'cols'   => array(),
+		'from'   => array(),
+		'join'   => array(),
+		'where'  => array(),
+		'group'  => array(),
+		'having' => array(),
+		'order'  => array(),
+		'limit'  => array(
+			'count'  => 0,
+			'offset' => 0
+		),
+	);
+		
 	/**
 	* 
-	* The columns to be selected.
+	* The number of rows per page.
 	* 
 	* @access protected
 	* 
-	* @var array
-	* 
-	*/
-	
-	protected $cols = array();
-	
-	
-	/**
-	* 
-	* The tables to select from.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $from = array();
-	
-	
-	/**
-	* 
-	* The tables to join to.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $join = array();
-	
-	
-	/**
-	* 
-	* The WHERE conditions to select on.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $where = array();
-	
-	
-	/**
-	* 
-	* How to group the selected rows.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $group = array();
-	
-	
-	/**
-	* 
-	* The HAVING conditions to filter on.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $having = array();
-	
-	
-	/**
-	* 
-	* The order in which to return rows.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
-	protected $order = array();
-	
-	
-	/**
-	* 
-	* The order in which to return rows.
-	* 
-	* @access protected
-	* 
-	* @var array
+	* @var int
 	* 
 	*/
 	
@@ -233,6 +156,8 @@ class Solar_Sql_Select extends Solar_Base {
 	*/
 	
 	protected $fetch = 'all';
+	
+	protected $bind = array();
 	
 	
 	/**
@@ -327,6 +252,17 @@ class Solar_Sql_Select extends Solar_Base {
 		$this->fetch = $mode;
 	}
 	
+	public function bind($spec)
+	{
+		$spec = func_get_args();
+		
+		if (is_array($spec[0])) {
+			$this->bind = array_merge($this->bind, $spec[0]);
+		} else {
+			$this->bind[$spec[0]] = $spec[1];
+		}
+	}
+	
 	
 	/**
 	* 
@@ -343,15 +279,24 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function clear($key = null)
 	{
-		$tmp = array('cols', 'from', 'join', 'where', 'group',
-			'having', 'order');
+		$tmp = array($this->parts);
 		
 		if (is_null($key)) {
+			// clear all
 			foreach ($tmp as $key) {
-				$this->$key = array();
+				$this->parts[$key] = array();
 			}
 		} elseif (in_array($key, $tmp)) {
-			$this->$key = array();
+			// clear some
+			$this->parts[$key] = array();
+		}
+		
+		// make sure limit has a count and offset
+		if (empty($this->parts['limit'])) {
+			$this->parts['limit'] = array(
+				'count' => 0,
+				'offset' => 0
+			);
 		}
 	}
 	
@@ -370,10 +315,10 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function cols($cols)
+	public function cols($spec)
 	{
 		$spec = func_get_args();
-		$this->cols = array_merge($this->cols, $spec);
+		$this->parts['cols'] = array_merge($this->parts['cols'], $spec);
 	}
 	
 	
@@ -392,7 +337,7 @@ class Solar_Sql_Select extends Solar_Base {
 	public function from($spec)
 	{
 		$spec = func_get_args();
-		$this->cols = array_merge($this->cols, $spec);
+		$this->parts['from'] = array_merge($this->parts['from'], $spec);
 	}
 	
 	
@@ -419,7 +364,7 @@ class Solar_Sql_Select extends Solar_Base {
 		if ($type) {
 			$tmp = strtoupper($type) . ' ' . $tmp;
 		}
-		$this->join[] = $tmp;
+		$this->parts['join'][] = $tmp;
 	}
 	
 	
@@ -444,10 +389,10 @@ class Solar_Sql_Select extends Solar_Base {
 			return;
 		}
 		
-		if ($this->where) {
-			$this->where[] = strtoupper($op) . ' ' . $condition;
+		if ($this->parts['where']) {
+			$this->parts['where'][] = strtoupper($op) . ' ' . $condition;
 		} else {
-			$this->where[] = $condition;
+			$this->parts['where'][] = $condition;
 		}
 	}
 	
@@ -467,7 +412,7 @@ class Solar_Sql_Select extends Solar_Base {
 	public function group()
 	{
 		$spec = func_get_args();
-		$this->group = array_merge($this->group, $spec);
+		$this->parts['group'] = array_merge($this->parts['group'], $spec);
 	}
 	
 	
@@ -492,10 +437,10 @@ class Solar_Sql_Select extends Solar_Base {
 			return;
 		}
 		
-		if ($this->having) {
-			$this->having[] = strtoupper($op) . ' ' . $filter;
+		if ($this->parts['having']) {
+			$this->parts['having'][] = strtoupper($op) . ' ' . $filter;
 		} else {
-			$this->having[] = $filter;
+			$this->parts['having'][] = $filter;
 		}
 	}
 	
@@ -515,53 +460,39 @@ class Solar_Sql_Select extends Solar_Base {
 	public function order($spec)
 	{
 		$spec = func_get_args();
-		$this->order = array_merge($this->order, $spec);
+		
+		// force 'ASC' or 'DESC' on each order spec, default is ASC.
+		foreach ($spec as $key => $val) {
+			$asc  = (strtoupper(substr($val, -4)) == ' ASC');
+			$desc = (strtoupper(substr($val, -5)) == ' DESC');
+			if (! $asc && ! $desc) {
+				$spec[$key] .= ' ASC';
+			}
+		}
+		
+		// merge them into the current order set
+		$this->parts['order'] = array_merge($this->parts['order'], $spec);
 	}
 	
 	
 	/**
 	* 
-	* Generates a SELECT statement based on the current query properties.
+	* Sets a limit count and offset to the query.
 	* 
 	* @access public
 	* 
-	* @return string An SQL SELECT statement.
+	* @param int $count The number of rows to return.
+	* 
+	* @param int $offset Start returning after this many rows.
+	* 
+	* @return void
 	* 
 	*/
 
-	public function stmt()
+	public function limit($count = null, $offset = null)
 	{
-		$stmt = "SELECT\n\t";
-		$stmt .= implode(',\n\t', $this->cols) . "\n";
-		
-		$stmt .= "FROM\n\t";
-		$stmt .= implode(",\n\t", $this->from) . "\n";
-		
-		if ($this->join) {
-			$stmt .= implode("\n\t", $this->join, "\n");
-		}
-		
-		if ($this->where) {
-			$stmt .= "WHERE\n\t";
-			$stmt .= implode("\n\t", $this->where) . "\n";
-		}
-		
-		if ($this->group) {
-			$stmt .= "GROUP BY\n\t";
-			$stmt .= implode(",\n\t", $this->group) . "\n";
-		}
-		
-		if ($this->having) {
-			$stmt .= "HAVING\n\t";
-			$stmt .= implode("\n\t", $this->having) . "\n";
-		}
-		
-		if ($this->order) {
-			$stmt .= "ORDER BY\n\t";
-			$stmt .= implode(",\n\t", $this->order) . "\n";
-		}
-		
-		return $stmt;
+		$this->parts['limit']['count']  = (int) $count;
+		$this->parts['limit']['offset'] = (int) $offset;
 	}
 	
 	
@@ -582,7 +513,7 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function exec($data = null, $page = null)
+	public function exec($page = null)
 	{
 		if ($this->fetch) {
 			$method = 'fetch' . ucfirst(strtolower($this->fetch));
@@ -590,11 +521,15 @@ class Solar_Sql_Select extends Solar_Base {
 			$method = 'exec';
 		}
 		
-		$limit = $this->pageLimit($page);
+		$page = (int) $page;
+		if ($page) {
+			$this->parts['limit'] = $this->pageLimit($page);
+		}
 		
-		return $this->sql->$method(
-			$this->stmt(), $data, $limit['count'], $limit['offset']
-		);
+		$exec = false; // don't execute, just get the statement
+		$stmt = $this->sql->select($this->parts, $this->bind, $exec);
+		
+		return $this->sql->$method($stmt);
 	}
 	
 	
@@ -621,6 +556,9 @@ class Solar_Sql_Select extends Solar_Base {
 		// clear out all columns, then add a single COUNT column
 		$select->clear('cols');
 		$select->cols('COUNT($col)');
+		
+		// clear any limits
+		$select->clear('limit');
 		
 		// select the count of rows and free the cloned copy
 		$select->setFetch('one');
@@ -667,8 +605,8 @@ class Solar_Sql_Select extends Solar_Base {
 			$count  = $this->paging;
 			$offset = $count * ($page - 1);
 		} else {
-			$count  = null;
-			$offset = null;
+			$count  = 0;
+			$offset = 0;
 		}
 		
 		return array(

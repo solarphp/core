@@ -31,6 +31,7 @@ return array(
 	'OP_SAVE'            => 'Save',
 	'OP_PREVIEW'         => 'Preview',
 	'OP_CANCEL'          => 'Cancel',
+	'OP_CREATE'          => 'Create',
 	'OP_DELETE'          => 'Delete',
 	'OP_RESET'           => 'Reset',
 	'OP_NEXT'            => 'Next',
@@ -50,7 +51,7 @@ return array(
 	// validation messages
 	'VALID_ALPHA'        => 'Please use only the letters A-Z.',
 	'VALID_ALNUM'        => 'Please use only letters (A-Z) and numbers (0-9).',
-	'VALID_BLANK'        => 'This value is not allowed to be blank.',
+	'VALID_BLANK'        => 'This value must be blank.',
 	'VALID_EMAIL'        => 'Please enter a valid email address.',
 	'VALID_INKEYS'       => 'Please choose a different value.',
 	'VALID_INLIST'       => 'Please choose a different value.',
@@ -64,7 +65,7 @@ return array(
 	'VALID_MIN'          => 'Please enter a larger value.',
 	'VALID_MINLENGTH'    => 'Please enter a longer string.',
 	'VALID_NONZERO'      => 'This value is not allowed to be zero.',
-	'VALID_NOTBLANK'     => 'This value must be left blank.',
+	'VALID_NOTBLANK'     => 'This value is not allowed to be blank.',
 	'VALID_URI'          => 'Please enter a valid web address.',
 	'VALID_WORD'         => 'Please use only letters (A-Z), numbers (0-9), and underscores(_).',
 	
@@ -77,6 +78,7 @@ return array(
 	'TEXT_AUTH_USERNAME' => 'Signed in as',
 	
 	// generic labels
+	'LABEL_OP'           => 'Operation',
 	'LABEL_USERNAME'     => 'Username',
 	'LABEL_PASSWORD'     => 'Password',
 );

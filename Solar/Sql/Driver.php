@@ -122,6 +122,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		'idx' => 27
 	);
 	
+	protected $stmt = null;
 	
 	/**
 	* 
@@ -152,6 +153,57 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	public function escape($val)
 	{
+	}
+	
+	
+	protected function select($parts)
+	{
+		$this->stmt = "SELECT\n\t";
+		$this->stmt .= implode(',\n\t', $this->parts['cols']) . "\n";
+		
+		$this->stmt .= "FROM\n\t";
+		$this->stmt .= implode(",\n\t", $this->parts['from']) . "\n";
+		
+		if ($this->parts['join']) {
+			$this->stmt .= implode("\n\t", $this->parts['join'], "\n");
+		}
+		
+		if ($this->parts['where']) {
+			$this->stmt .= "WHERE\n\t";
+			$this->stmt .= implode("\n\t", $this->parts['where']) . "\n";
+		}
+		
+		if ($this->parts['group']) {
+			$this->stmt .= "GROUP BY\n\t";
+			$this->stmt .= implode(",\n\t", $this->parts['group']) . "\n";
+		}
+		
+		if ($this->parts['having']) {
+			$this->stmt .= "HAVING\n\t";
+			$this->stmt .= implode("\n\t", $this->parts['having']) . "\n";
+		}
+		
+		if ($this->parts['order']) {
+			$this->stmt .= "ORDER BY\n\t";
+			$this->stmt .= implode(",\n\t", $this->parts['order']) . "\n";
+		}
+		
+		$this->limitSelect($parts);
+		return $this->stmt;
+	}
+	
+	
+	protected function limitSelect($parts)
+	{
+		$count  = (int) $parts['limit']['count'];
+		$offset = (int) $parts['limit']['offset'];
+		
+		if ($count > 0) {
+			$this->stmt .= " LIMIT $count";
+			if ($offset > 0) {
+				$this->stmt .= " OFFSET $offset";
+			}
+		}
 	}
 	
 	

@@ -598,6 +598,11 @@ class Solar_Valid {
 	
 	public static function nonZero($value, $blank = self::NOT_BLANK)
 	{
+		// allowed blank?
+		if ($blank && self::blank($value)) {
+			return true;
+		}
+		
 		$expr = '/^0+$/';
 		return ! self::regex($value, $expr);
 	}
@@ -701,7 +706,7 @@ class Solar_Valid {
 	
 	public static function word($value, $blank = self::NOT_BLANK)
 	{
-		$expr = '/^\w$/';
+		$expr = '/^\w+$/';
 		return self::regex($value, $expr);
 	}
 }

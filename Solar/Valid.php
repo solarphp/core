@@ -285,9 +285,27 @@ class Solar_Valid {
 	
 	public function ipv4($value, $blank = self::NOT_BLANK)
 	{
-		// from http://www.regular-expressions.info/examples.html
-		$expr = '/(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/';
-		return self::regex($value, $expr, $blank);
+		if ($blank && self::blank($value)) {
+			return true;
+		}
+		
+		$expr = '/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/';
+		$result = preg_match($expr, $value, $matches);
+		
+		// no match
+		if (! $result) {
+			return false;
+		}
+		
+		// check that all four quads are 0-255
+		for ($i = 1; $i <= 4; $i++) {
+			if ($matches[$i] < 0 || $matches[$i] > 255) {
+				return false;
+			}
+		}
+		
+		// done!
+		return true;
 	}
 	
 	

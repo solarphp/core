@@ -4,7 +4,7 @@ REELASE 0.8.8:
 	
 	Update apps to use new Savant3
 	
-	JEL french translations
+	JEL email
 	
 	add HelloWorld
 	
@@ -18,8 +18,6 @@ REELASE 0.8.8:
 	
 	MWOP patch to Form_Xml
 	
-	add copyright notices
-
 
 ----
 

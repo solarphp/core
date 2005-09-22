@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formButton.php,v 1.4 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formButton extends Savant3_Plugin {
+class Savant3_Plugin_formButton extends Savant3_Plugin_form_element {
 
 	/**
 	* 
@@ -50,34 +53,31 @@ class Savant3_Plugin_formButton extends Savant3_Plugin {
 	
 	public function formButton($name, $value = null, $attribs = null)
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
-		
-		// make sure attribs don't overwrite name and value
-		unset($attribs['name']);
-		unset($attribs['value']);
+		$info = $this->getInfo($name, $value, $attribs);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// build the element
-		$xhtml = '<input type="button"';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+		if ($disable) {
 		
-		if (! empty($value)) {
-			$xhtml .= ' value="' . htmlspecialchars($value) . '"';
+			// disabled. no hidden value because it can't be clicked.
+			$xhtml .= '[' . htmlspecialchars($value) . ']';
+			
+		} else {
+		
+			// enabled
+			$xhtml .= '<input type="button"';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			
+			if (! empty($value)) {
+				$xhtml .= ' value="' . htmlspecialchars($value) . '"';
+			}
+			
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ' />';
+			
 		}
 		
-		$xhtml .= $this->Savant->htmlAttribs($attribs);
-		$xhtml .= ' />';
 		return $xhtml;
 	}
 }

@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formRadio.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formRadio extends Savant3_Plugin {
+class Savant3_Plugin_formRadio extends Savant3_Plugin_form_element {
 	
 	
 	/**
@@ -55,25 +58,9 @@ class Savant3_Plugin_formRadio extends Savant3_Plugin {
 	public function formRadio($name, $value = null, $attribs = null, 
 		$options = null, $listsep = "<br />\n")
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-				'options' => null,
-				'listsep' => "<br />\n",
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
-		
-		// make sure attribs don't overwrite name and value
-		unset($attribs['name']);
-		unset($attribs['value']);
+		$info = $this->getInfo($name, $value, $attribs, $options, $listsep);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// retrieve attributes for labels (prefixed with 'label_')
 		$label_attribs = array('style' => 'white-space: nowrap;');
@@ -88,38 +75,70 @@ class Savant3_Plugin_formRadio extends Savant3_Plugin {
 		// the radio button values and labels
 		settype($options, 'array');
 		
-		// the array of xhtml output
-		$xhtml = array();
-		foreach ($options as $opt_value => $opt_label) {
+		// default value if none are checked
+		$xhtml .= $this->Savant->formHidden($name, null);
 		
-			// begin the label wrapper
-			$radio = '<label';
-			$radio .= $this->Savant->htmlAttribs($label_attribs);
-			$radio .= '>';
+		// build the element
+		if ($disable) {
+		
+			// disabled.
+			// show the radios as a plain list.
+			$list = array();
 			
-			// begin the radio itself
-			$radio .= '<input type="radio"';
-			$radio .= ' name="' . htmlspecialchars($name) . '"';
-			$radio .= ' value="' . htmlspecialchars($opt_value) . '"';
-			
-			// is it checked?
-			if ($opt_value == $value) {
-				$radio .= ' checked="checked"';
+			// create the list of radios.
+			foreach ($options as $opt_value => $opt_label) {
+				if ($opt_value == $value) {
+					// add a return value, and a checked text.
+					$opt = $this->Savant->formHidden($name, $opt_value) . '[x]';
+				} else {
+					// not checked
+					$opt = '[&nbsp;]';
+				}
+				$list[] = $opt . '&nbsp;' . $opt_label;
 			}
 			
-			// add attribs and end the radio itself
-			$radio .= $this->Savant->htmlAttribs($attribs);
-			$radio .= ' />';
+			$xhtml .= implode($listsep, $list);
 			
-			// add the label and end the label wrapper
-			$radio .= htmlspecialchars($opt_label) . '</label>';
+		} else {
+		
+			// enabled.
+			// the array of all radios.
+			$list = array();
 			
-			// add to the array of radio buttons
-			$xhtml[] = $radio;
+			// add radio buttons to the list.
+			foreach ($options as $opt_value => $opt_label) {
+			
+				// begin the label wrapper
+				$radio = '<label';
+				$radio .= $this->Savant->htmlAttribs($label_attribs);
+				$radio .= '>';
+				
+				// begin the radio itself
+				$radio .= '<input type="radio"';
+				$radio .= ' name="' . htmlspecialchars($name) . '"';
+				$radio .= ' value="' . htmlspecialchars($opt_value) . '"';
+				
+				// is it checked?
+				if ($opt_value == $value) {
+					$radio .= ' checked="checked"';
+				}
+				
+				// add attribs and end the radio itself
+				$radio .= $this->Savant->htmlAttribs($attribs);
+				$radio .= ' />';
+				
+				// add the label and end the label wrapper
+				$radio .= htmlspecialchars($opt_label) . '</label>';
+				
+				// add to the array of radio buttons
+				$list[] = $radio;
+			}
+			
+			// done!
+			$xhtml .= implode($listsep, $list);
 		}
 		
-		// done!
-		return implode($listsep, $xhtml);
+		return $xhtml;
 	}
 }
 ?>

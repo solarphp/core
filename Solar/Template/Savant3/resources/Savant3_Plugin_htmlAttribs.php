@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_htmlAttribs.php,v 1.2 2005/08/12 19:52:38 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -43,11 +43,18 @@ class Savant3_Plugin_htmlAttribs extends Savant3_Plugin {
 	{
 		$xhtml = '';
 		foreach ((array) $attribs as $key => $val) {
-			$key = htmlspecialchars($key);
+		
+			if ($val === null) {
+				continue;
+			}
+			
 			if (is_array($val)) {
 				$val = implode(' ', $val);
 			}
+			
+			$key = htmlspecialchars($key);
 			$val = htmlspecialchars($val);
+			
 			$xhtml .= " $key=\"$val\"";
 		}
 		return $xhtml;

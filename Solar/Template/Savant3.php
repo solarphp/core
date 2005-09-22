@@ -10,7 +10,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3.php,v 1.39 2005/09/11 23:21:10 pmjones Exp $
+* @version $Id$
 * 
 */
 
@@ -162,27 +162,48 @@ class Savant3 {
 	* 
 	* @access public
 	* 
-	* @param string $method The plugin method name.
+	* @param string $func The plugin method name.
 	*
-	* @param array $params The parameters passed to the method.
+	* @param array $args The parameters passed to the method.
 	*
 	* @return mixed The plugin output, or a Savant3_Error with an
 	* ERR_PLUGIN code if it can't find the plugin.
 	* 
 	*/
 	
-	public function __call($method, $params)
+	public function __call($func, $args)
 	{
-		$plugin = $this->plugin($method);
+		$plugin = $this->plugin($func);
 		
 		if ($this->isError($plugin)) {
 			return $plugin;
 		}
 		
-		return call_user_func_array(
-			array($plugin, $method),
-			$params
-		);
+		// try to avoid the very-slow call_user_func_array()
+		// for plugins with very few parameters.  thanks to
+		// Andreas Korthaus for profiling the code to find
+		// the slowdown.
+		switch (count($args)) {
+		
+		case 0:
+			return $plugin->$func();
+		
+		case 1:
+			return $plugin->$func($args[0]);
+			break;
+			
+		case 2:
+			return $plugin->$func($args[0], $args[1]);
+			break;
+			
+		case 3:
+			return $plugin->$func($args[0], $args[1], $args[2]);
+			break;
+		
+		default:
+			return call_user_func_array(array($plugin, $func), $args);
+			break;
+		}
 	}
 	
 	
@@ -479,7 +500,7 @@ class Savant3 {
 	
 	public function setEscape()
 	{
-		$this->__config['escape'] = func_get_args();
+		$this->__config['escape'] = (array) @func_get_args();
 	}
 	
 	
@@ -507,7 +528,7 @@ class Savant3 {
 	
 	public function addEscape()
 	{
-		$args = func_get_args();
+		$args = (array) @func_get_args();
 		$this->__config['escape'] = array_merge(
 			$this->__config['escape'], $args
 		);
@@ -550,6 +571,13 @@ class Savant3 {
 	*     array($object, $method)
 	* );
 	* </code>
+	*
+	* 
+	* Unfortunately, a call to "echo htmlspecialchars()" is twice
+	* as fast as a call to "echo $this->escape()" under the default
+	* escaping (which is htmlspecialchars).  The benchmark showed
+	* 0.007 seconds for htmlspecialchars(), and 0.014 seconds for
+	* $this->escape(), on 300 calls each.
 	* 
 	* @access public
 	* 
@@ -567,7 +595,12 @@ class Savant3 {
 			// no, only a value was passed.
 			// loop through the predefined callbacks.
 			foreach ($this->__config['escape'] as $func) {
-				$value = call_user_func($func, $value);
+				// this if() shaves 0.001sec off of 300 calls.
+				if (is_string($func)) {
+					$value = $func($value);
+				} else {
+					$value = call_user_func($func, $value);
+				}
 			}
 			
 		} else {
@@ -580,7 +613,12 @@ class Savant3 {
 			
 			// loop through custom callbacks.
 			foreach ($callbacks as $func) {
-				$value = call_user_func($func, $value);
+				// this if() shaves 0.001sec off of 300 calls.
+				if (is_string($func)) {
+					$value = $func($value);
+				} else {
+					$value = call_user_func($func, $value);
+				}
 			}
 			
 		}
@@ -620,35 +658,20 @@ class Savant3 {
 	
 	public function eprint($value)
 	{
-		$args = func_get_args();
-		echo call_user_func_array(
-			array($this, 'escape'),
-			$args
-		);
-	}
-	
-	
-	/**
-	*
-	* This method is deprecated.
-	* 
-	* An alias to eprint() and identical in every way.
-	* 
-	* @access public
-	* 
-	* @param mixed $value The value to be escaped and printed.
-	* 
-	* @return void
-	*
-	*/
-	
-	public function _($value)
-	{
-		$args = func_get_args();
-		return call_user_func_array(
-			array($this, 'eprint'),
-			$args
-		);
+		// avoid the very slow call_user_func_array() when there
+		// are no custom escaping callbacks.  thanks to
+		// Andreas Korthaus for profiling the code to find
+		// the slowdown.
+		$num = func_num_args();
+		if ($num == 1) {
+			echo $this->escape($value);
+		} else {
+			$args = func_get_args();
+			echo call_user_func_array(
+				array($this, 'escape'),
+				$args
+			);
+		}
 	}
 	
 	

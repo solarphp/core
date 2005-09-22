@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formTextarea.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,33 @@
 * 
 */
 
-class Savant3_Plugin_formTextarea extends Savant3_Plugin {
+class Savant3_Plugin_formTextarea extends Savant3_Plugin_form_element {
+	
+	
+	/**
+	* 
+	* The default number of rows for a textarea.
+	* 
+	* @access public
+	* 
+	* @var int
+	* 
+	*/
+	
+	public $rows = 24;
+	
+	
+	/**
+	* 
+	* The default number of columns for a textarea.
+	* 
+	* @access public
+	* 
+	* @var int
+	* 
+	*/
+	
+	public $cols = 80;
 	
 	
 	/**
@@ -51,30 +80,40 @@ class Savant3_Plugin_formTextarea extends Savant3_Plugin {
 	
 	public function formTextarea($name, $value = null, $attribs = null)
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
-		
-		// make sure attribs don't overwrite name and value
-		unset($attribs['name']);
-		unset($attribs['value']);
+		$info = $this->getInfo($name, $value, $attribs);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// build the element
-		$xhtml = '<textarea';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
-		$xhtml .= $this->Savant->htmlAttribs($attribs) . '>';
-		$xhtml .= htmlspecialchars($value);
-		$xhtml .= '</textarea>';
+		if ($disable) {
+		
+			// disabled.
+			$xhtml .= $this->Savant->formHidden($name, $value);
+			$xhtml .= nl2br(htmlspecialchars($value));
+			
+		} else {
+		
+			// enabled.
+			
+			// first, make sure that there are 'rows' and 'cols' values
+			// as required by the spec.  noted by Orjan Persson.
+			if (empty($attribs['rows'])) {
+				$attribs['rows'] = (int) $this->rows;
+			}
+			
+			if (empty($attribs['cols'])) {
+				$attribs['cols'] = (int) $this->cols;
+			}
+			
+			// now build the element.
+			$xhtml = '<textarea';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			$xhtml .= $this->Savant->htmlAttribs($attribs) . '>';
+			$xhtml .= htmlspecialchars($value);
+			$xhtml .= '</textarea>';
+			
+		}
+		
 		return $xhtml;
 	}
 }

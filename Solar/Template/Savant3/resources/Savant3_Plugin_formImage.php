@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formImage.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formImage extends Savant3_Plugin {
+class Savant3_Plugin_formImage extends Savant3_Plugin_form_element {
 	
 	
 	/**
@@ -51,31 +54,37 @@ class Savant3_Plugin_formImage extends Savant3_Plugin {
 	
 	public function formImage($name, $value = null, $attribs = null)
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
+		$info = $this->getInfo($name, $value, $attribs);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
+		
+		// unset any 'src' attrib
+		if (isset($attribs['src'])) {
+			unset($attribs['src']);
 		}
 		
-		// make sure attribs don't overwrite name and value and src
-		unset($attribs['name']);
-		unset($attribs['value']);
-		unset($attribs['src']);
+		// unset any 'alt' attrib
+		if (isset($attribs['alt'])) {
+			unset($attribs['alt']);
+		}
 		
 		// build the element
-		$xhtml = '<input type="image"';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
-		$xhtml .= ' src="' . htmlspecialchars($value) . '"';
-		$xhtml .= $this->Savant->htmlAttribs($attribs);
-		$xhtml .= ' />';
+		if ($disable) {
+			// disabled, just an image tag
+			$xhtml .= '<image';
+			$xhtml .= ' alt="' . htmlspecialchars($name) . '"';
+			$xhtml .= ' src="' . htmlspecialchars($value) . '"';
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ' />';
+		} else {
+			// enabled
+			$xhtml = '<input type="image"';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			$xhtml .= ' src="' . htmlspecialchars($value) . '"';
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ' />';
+		}
+		
 		return $xhtml;
 	}
 }

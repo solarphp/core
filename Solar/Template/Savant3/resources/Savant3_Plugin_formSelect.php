@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formSelect.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formSelect extends Savant3_Plugin {
+class Savant3_Plugin_formSelect extends Savant3_Plugin_form_element {
 	
 	
 	/**
@@ -50,30 +53,19 @@ class Savant3_Plugin_formSelect extends Savant3_Plugin {
 	* @param array $options An array of key-value pairs where the array
 	* key is the radio value, and the array value is the radio text.
 	* 
+	* @param string $listsep When disabled, use this list separator string
+	* between list values.
+	* 
 	* @return string The select tag and options XHTML.
 	* 
 	*/
 	
 	public function formSelect($name, $value = null, $attribs = null,
-		$options = null)
+		$options = null, $listsep = "<br />\n")
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
-		
-		// make sure attribs don't overwrite name and value
-		unset($attribs['name']);
-		unset($attribs['value']);
+		$info = $this->getInfo($name, $value, $attribs, $options, $listsep);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// force $value to array so we can compare multiple values
 		// to multiple options.
@@ -93,30 +85,54 @@ class Savant3_Plugin_formSelect extends Savant3_Plugin {
 		}
 		
 		// now start building the XHTML.
-		// the surrounding select element first.
-		$xhtml = '<select';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
-		$xhtml .= $this->Savant->htmlAttribs($attribs);
-		$xhtml .= ">\n\t";
+		if ($disable) {
 		
-		// build the list of options
-		$list = array();
-		foreach ($options as $opt_value => $opt_label) {
-			$opt = '<option';
-			$opt .= ' value="' . htmlspecialchars($opt_value) . '"';
-			$opt .= ' label="' . htmlspecialchars($opt_label) . '"';
-			if (in_array($opt_value, $value)) {
-				$opt .= ' selected="selected"';
+			// disabled.
+			// generate a plain list of selected options.
+			// show the label, not the value, of the option.
+			$list = array();
+			foreach ($options as $opt_value => $opt_label) {
+				if (in_array($opt_value, $value)) {
+					// add the hidden value
+					$opt = $this->Savant->formHidden($name, $opt_value);
+					// add the display label
+					$opt .= htmlspecialchars($opt_label);
+					// add to the list
+					$list[] = $opt;
+				}
 			}
-			$opt .= '>' . htmlspecialchars($opt_label) . "</option>";
-			$list[] = $opt;
+			$xhtml .= implode($listsep, $list);
+			
+		} else {
+		
+			// enabled.
+			// the surrounding select element first.
+			$xhtml .= '<select';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ">\n\t";
+			
+			// build the list of options
+			$list = array();
+			foreach ($options as $opt_value => $opt_label) {
+				$opt = '<option';
+				$opt .= ' value="' . htmlspecialchars($opt_value) . '"';
+				$opt .= ' label="' . htmlspecialchars($opt_label) . '"';
+				if (in_array($opt_value, $value)) {
+					$opt .= ' selected="selected"';
+				}
+				$opt .= '>' . htmlspecialchars($opt_label) . "</option>";
+				$list[] = $opt;
+			}
+			
+			// add the options to the xhtml
+			$xhtml .= implode("\n\t", $list);
+			
+			// finish up
+			$xhtml .= "\n</select>";
+			
 		}
 		
-		// add the options to the xhtml
-		$xhtml .= implode("\n\t", $list);
-		
-		// finish up
-		$xhtml .= "\n</select>";
 		return $xhtml;
 	}
 }

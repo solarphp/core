@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formPassword.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formPassword extends Savant3_Plugin {
+class Savant3_Plugin_formPassword extends Savant3_Plugin_form_element {
 	
 	
 	/**
@@ -51,30 +54,24 @@ class Savant3_Plugin_formPassword extends Savant3_Plugin {
 	
 	public function formPassword($name, $value = null, $attribs = null)
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
-		
-		// make sure attribs don't overwrite name and value
-		unset($attribs['name']);
-		unset($attribs['value']);
+		$info = $this->getInfo($name, $value, $attribs);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// build the element
-		$xhtml = '<input type="password"';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
-		$xhtml .= ' value="' . htmlspecialchars($value) . '"';
-		$xhtml .= $this->Savant->htmlAttribs($attribs);
-		$xhtml .= ' />';
+		if ($disable) {
+			// disabled
+			$xhtml .= $this->Savant->formHidden($name, $value);
+			$xhtml .= 'xxxxxxxx';
+		} else {
+			// enabled
+			$xhtml = '<input type="password"';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			$xhtml .= ' value="' . htmlspecialchars($value) . '"';
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ' />';
+		}
+		
 		return $xhtml;
 	}
 	

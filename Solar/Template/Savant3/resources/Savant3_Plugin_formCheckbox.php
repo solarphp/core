@@ -12,9 +12,12 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formCheckbox.php,v 1.3 2005/08/12 19:29:39 pmjones Exp $
+* @version $Id$
 * 
 */
+
+require_once 'Savant3_Plugin_form_element.php';
+
 
 /**
 * 
@@ -28,7 +31,7 @@
 * 
 */
 
-class Savant3_Plugin_formCheckbox extends Savant3_Plugin {
+class Savant3_Plugin_formCheckbox extends Savant3_Plugin_form_element {
 	
 	/**
 	* 
@@ -53,22 +56,11 @@ class Savant3_Plugin_formCheckbox extends Savant3_Plugin {
 	*/
 	
 	public function formCheckbox($name, $value = null, $attribs = null,
-		$options = null)
+		$options = array(1,0))
 	{
-		// are we pulling the pieces from a Solar_Form array?
-		$arg = func_get_arg(0);
-		if (is_array($arg)) {
-			// merge and extract variables.
-			$default = array(
-				'name'    => null,
-				'value'   => null,
-				'attribs' => null,
-				'options' => null,
-			);
-			$arg = array_merge($default, $arg);
-			extract($arg);
-			settype($attribs, 'array');
-		}
+		$info = $this->getInfo($name, $value, $attribs, $options);
+		extract($info); // name, value, attribs, options, listsep, disable
+		$xhtml = '';
 		
 		// make sure attribs don't overwrite name and value
 		unset($attribs['name']);
@@ -84,24 +76,42 @@ class Savant3_Plugin_formCheckbox extends Savant3_Plugin {
 			}
 		}
 		
-		// add the "unchecked" option first
-		$xhtml = $this->Savant->formHidden($name, $options[1]);
+		// build the element
+		if ($disable) {
 		
-		// add the "checked" option (the checkbox itself) next.
-		// this way, if not-checked, the "unchecked" option is 
-		// returned to the server instead.
-		$xhtml .= '<input type="checkbox"';
-		$xhtml .= ' name="' . htmlspecialchars($name) . '"';
-		$xhtml .= ' value="' . htmlspecialchars($options[0]) . '"';
+			// disabled.
+			if ($value == $options[0]) {
+				// checked
+				$xhtml .= $this->Savant->formHidden($name, $options[0]);
+				$xhtml .= '[x]';
+			} else {
+				// not checked
+				$xhtml .= $this->Savant->formHidden($name, $options[1]);
+				$xhtml .= '[&nbsp;]';
+			}
+			
+		} else {
 		
-		// is it checked already?
-		if ($value == $options[0]) {
-			$xhtml .= ' checked="checked"';
+			// enabled.
+			// add the "unchecked" option first
+			$xhtml .= $this->Savant->formHidden($name, $options[1]);
+			
+			// add the "checked" option (the checkbox itself) next.
+			// this way, if not-checked, the "unchecked" option is 
+			// returned to the server instead.
+			$xhtml .= '<input type="checkbox"';
+			$xhtml .= ' name="' . htmlspecialchars($name) . '"';
+			$xhtml .= ' value="' . htmlspecialchars($options[0]) . '"';
+			
+			// is it checked already?
+			if ($value == $options[0]) {
+				$xhtml .= ' checked="checked"';
+			}
+			
+			// add attributes, and done.
+			$xhtml .= $this->Savant->htmlAttribs($attribs);
+			$xhtml .= ' />';
 		}
-		
-		// add attributes, and done.
-		$xhtml .= $this->Savant->htmlAttribs($attribs);
-		$xhtml .= ' />';
 		return $xhtml;
 	}
 }

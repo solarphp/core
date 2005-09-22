@@ -33,7 +33,7 @@
 
 <div style="color: red;">
 <?php while ($err = $this->error->pop()): ?>
-	<p><?php $this->_($err['class::code'] . ' -- ' . $err['text']) ?></p>
+	<p><?php $this->eprint($err['class::code'] . ' -- ' . $err['text']) ?></p>
 <?php endwhile; ?>
 </div>
 

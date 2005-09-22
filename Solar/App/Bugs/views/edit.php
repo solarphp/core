@@ -32,7 +32,7 @@
 
 <?php include $this->template('header.php') ?>
 
-<h2><?php $this->_($this->locale('BUG_REPORT') . ' ' . $this->formdata->elements['bugs[id]']['value']) ?></h2>
+<h2><?php $this->eprint($this->locale('BUG_REPORT') . ' ' . $this->formdata->elements['bugs[id]']['value']) ?></h2>
 <p>[ <?php echo $this->ahref('?action=listOpen', $this->locale('BACK_TO_LIST')) ?> ]</p>
 
 <!-- enclose in table to collapse the div -->
@@ -50,7 +50,7 @@
 		$this->form('set', 'class', 'Savant3');
 		echo $this->form('begin', $this->formdata->attribs);
 		echo $this->form('hidden', 'op', $this->locale('Solar::OP_SAVE'));
-		echo $this->form('fullauto', $this->formdata->elements);
+		echo $this->form('auto', $this->formdata->elements);
 		echo $this->form('group', 'start');
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_CANCEL'));

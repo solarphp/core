@@ -24,17 +24,17 @@ echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
 ?>
 <rss version="2.0">
 	<channel>
-		<title><?php $this->_($this->rss['title']) ?></title>
-		<link><?php $this->_($this->rss['link']) ?></link>
-		<description><?php $this->_($this->rss['descr']) ?></description>
+		<title><?php $this->eprint($this->rss['title']) ?></title>
+		<link><?php $this->eprint($this->rss['link']) ?></link>
+		<description><?php $this->eprint($this->rss['descr']) ?></description>
 		<pubDate><?php echo date('r', $this->rss['date']) ?></pubDate>
 <?php foreach ($this->list as $key => $val): ?>
 		<item>
-			<category><?php $this->_($val['user_id'] . '/' . str_replace(' ', '+', $val['tags'])) ?></category>
-			<title><?php $this->_($val['title']) ?></title>
+			<category><?php $this->eprint($val['user_id'] . '/' . str_replace(' ', '+', $val['tags'])) ?></category>
+			<title><?php $this->eprint($val['title']) ?></title>
 			<pubDate><?php echo date('r', strtotime($val['ts_mod'])) ?></pubDate>
-			<description><?php $this->_($val['descr']) ?></description>
-			<link><?php $this->_($val['uri']) ?></link>
+			<description><?php $this->eprint($val['descr']) ?></description>
+			<link><?php $this->eprint($val['uri']) ?></link>
 		</item>
 <?php endforeach; ?>
 	</channel>

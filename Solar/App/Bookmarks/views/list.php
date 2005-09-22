@@ -24,7 +24,7 @@ $link = Solar::object('Solar_Uri');
 <div>
 	<!-- ordering -->
 	<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-		<h2><?php $this->_($this->locale('ORDERED_BY')) ?></h2>
+		<h2><?php $this->eprint($this->locale('ORDERED_BY')) ?></h2>
 		<p><?php
 			$tmp = array(
 				'rank'       => 'Rank',
@@ -44,7 +44,7 @@ $link = Solar::object('Solar_Uri');
 			foreach ($tmp as $key => $val) {
 				if (Solar::get('order', 'ts_desc') == $key) {
 					echo "<strong>";
-					$this->_($val);
+					$this->eprint($val);
 					echo "</strong><br />\n";
 				} else {
 					$link->setQuery('order', $key);
@@ -57,7 +57,7 @@ $link = Solar::object('Solar_Uri');
 	<!-- the list of tags for this user (if one is selected) -->
 	<?php if (Solar::pathinfo(0) == 'user'): ?>
 		<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-			<h2><?php $this->_($this->locale('TAG_LIST')) ?></h2>
+			<h2><?php $this->eprint($this->locale('TAG_LIST')) ?></h2>
 			<p><?php
 				$link->import();
 				$tmp = array();
@@ -78,9 +78,9 @@ $link = Solar::object('Solar_Uri');
 		<!-- output the user_id and tag-search, if any -->
 		<?php if ($this->user_id || $this->tags): ?>
 			<h2><?php
-				if ($this->user_id) $this->_($this->locale('USER') . ': ' . $this->user_id);
+				if ($this->user_id) $this->eprint($this->locale('USER') . ': ' . $this->user_id);
 				if ($this->user_id && $this->tags) echo "<br />\n";
-				if ($this->tags) $this->_($this->locale('TAGS') . ': ' . $this->tags);
+				if ($this->tags) $this->eprint($this->locale('TAGS') . ': ' . $this->tags);
 			?></h2>
 		<?php endif ?>
 		
@@ -104,22 +104,22 @@ $link = Solar::object('Solar_Uri');
 					<!-- rank and uri -->
 					<br /><span style="font-size: 90%;"><?php
 						// rank
-						$this->_($this->locale('RANK') . ' ' . $item['rank']);
+						$this->eprint($this->locale('RANK') . ' ' . $item['rank']);
 						
 						// from uri
-						$this->_(' ' . $this->locale('FROM') . ' ');
+						$this->eprint(' ' . $this->locale('FROM') . ' ');
 						$cut = $item['uri'];
 						if (strlen($cut) > 72) {
 							// if longer than 72 chars, only show 64 chars, cut in the middle
 							$cut = substr($cut, 0, 48) . '...' . substr($cut, -16);
 						}
-						$this->_($cut);
+						$this->eprint($cut);
 					?>
 					
 					<!-- date added by user -->
 					<br /><?php
-						$this->_($this->locale('ON') . ' ' . $this->date($item['ts_new']) . ' ');
-						$this->_($this->locale('BY') . ' ');
+						$this->eprint($this->locale('ON') . ' ' . $this->date($item['ts_new']) . ' ');
+						$this->eprint($this->locale('BY') . ' ');
 						$link->clearInfo();
 						$link->clearQuery();
 						$link->setInfo('0', 'user');
@@ -131,7 +131,7 @@ $link = Solar::object('Solar_Uri');
 					<br /><?php
 					
 						// tags
-						$this->_($this->locale('TAGGED'));
+						$this->eprint($this->locale('TAGGED'));
 						$tags = explode(' ', $item['tags']);
 						foreach ($tags as $tag) {
 							echo '&nbsp;';
@@ -169,12 +169,12 @@ $link = Solar::object('Solar_Uri');
 				$link->setQuery('page', $tmp + 1);
 				$next = $link->export();
 				if ($this->page > 1) echo $this->ahref($prev, $this->locale('Solar::OP_PREVIOUS')) . ' | ';
-				$this->_("Page {$this->page} of {$this->pages}");
+				$this->eprint("Page {$this->page} of {$this->pages}");
 				if ($this->page < $this->pages) echo ' | ' . $this->ahref($next, $this->locale('Solar::OP_NEXT'));
 			?> ]</strong></p>
 			
 		<?php else: ?>
-			<p><?php $this->_($this->locale('NO_BOOKMARKS_FOUND')) ?></p>
+			<p><?php $this->eprint($this->locale('NO_BOOKMARKS_FOUND')) ?></p>
 		<?php endif ?>
 		
 		<?php if (Solar::shared('user')->auth->status_code == 'VALID'): ?>
@@ -192,7 +192,7 @@ $link = Solar::object('Solar_Uri');
 				$host = $link->host;
 				$path = $link->path;
 				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)";
-				$this->_($this->locale('DRAG_THIS') . ': ');
+				$this->eprint($this->locale('DRAG_THIS') . ': ');
 				echo $this->ahref($js, $this->locale('QUICKMARK'));
 			?></p>
 		<?php endif ?>

@@ -61,7 +61,7 @@
 	</head>
 	<body>
 		
-		<h1><?php $this->_(Solar::locale('Solar_App_Bookmarks', 'BOOKMARKS')) ?></h1>
+		<h1><?php $this->eprint(Solar::locale('Solar_App_Bookmarks', 'BOOKMARKS')) ?></h1>
 		<?php $this->form('set', 'class', 'Savant3') ?>
 		<?php include $this->template('auth.php') ?>
 	

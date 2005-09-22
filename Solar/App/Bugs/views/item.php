@@ -31,7 +31,7 @@
 ?>
 <?php include $this->template('header.php') ?>
 
-<h2><?php $this->_($this->locale('BUG_REPORT') . ' ' . $this->item['id']['value']) ?></h2>
+<h2><?php $this->eprint($this->locale('BUG_REPORT') . ' ' . $this->item['id']['value']) ?></h2>
 
 <p>[ <?php echo $this->ahref('?action=listOpen', $this->locale('BACK_TO_LIST')) ?> ]</p>
 
@@ -43,7 +43,7 @@
 		$this->form('set', 'class', 'Savant3');
 		$this->form('set', 'freeze', true);
 		echo $this->form('begin');
-		echo $this->form('fullauto', $this->item);
+		echo $this->form('auto', $this->item);
 		echo $this->form('end');
 		$this->form('set', 'freeze', false);
 	?>
@@ -70,7 +70,7 @@
 		echo $this->form('begin');
 		echo $this->form('block', 'begin', $this->locale('ADD_COMMENT'));
 		echo $this->form('hidden', 'action', $this->locale('Solar::OP_SAVE'));
-		echo $this->form('fullauto', $this->formdata->elements);
+		echo $this->form('auto', $this->formdata->elements);
 		echo $this->form('group', 'begin');
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('reset', 'op', $this->locale('Solar::OP_RESET'));

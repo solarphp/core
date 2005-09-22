@@ -32,7 +32,7 @@
 
 <div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">
 	<?php if (Solar::shared('user')->auth->status_code == 'VALID'): ?>
-		<p><?php $this->_($this->locale('Solar::TEXT_AUTH_USERNAME')) ?><br /><strong><?php $this->_(Solar::shared('user')->auth->username) ?></strong></p>
+		<p><?php $this->eprint($this->locale('Solar::TEXT_AUTH_USERNAME')) ?><br /><strong><?php $this->eprint(Solar::shared('user')->auth->username) ?></strong></p>
 		<?php
 			echo $this->form('begin');
 			echo $this->form('block', 'begin', null, 'row');

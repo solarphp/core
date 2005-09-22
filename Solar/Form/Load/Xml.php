@@ -23,12 +23,123 @@ Solar::loadClass('Solar_Form');
 
 /**
 * 
-* Class for loading Solar_Form definitions.
+* Class for loading Solar_Form definitions from a SimpleXML file.
 * 
-* This class loads Solar_Form element definitions. Initially, it only
-* loads them from a SimpleXML file, but it could easily be extended to
-* grab definitions from a database or other configuration storage.
-* 
+* This class loads Solar_Form element definitions from a SimpleXML file.
+*
+* The XML file format should be something like the following:
+* <code>
+* <?xml version='1.0' standalone='yes'?>
+* <form>
+*     <attribs>
+*         <attrib name="action">/contact.php</attrib>
+*         <attrib name="method">post</attrib>
+*         <attrib name="name">contact</attrib>
+*     </attribs>
+*     <element 
+*         name="to"
+*         type="select"
+*         require="1"
+*         disable="0">
+*         <label>Contact:</label>
+*         <descr>Who do you want to mail?</descr>
+*         <filters>
+*             <filter method="replace">
+*                 <params>
+*                     <param>/^(me|someoneelse)$/</param>
+*                     <param>$1@solarphp.com</param>
+*                 </params>
+*             </filter>
+*         </filters>
+*         <validate>
+*             <rule method="inList">
+*                 <message>Please select a contact from the dropdown</message>
+*                 <args>
+*                     <arg>me@solarphp.com</arg>
+*                     <arg>someoneelse@solarphp.com</arg>
+*                 </args>
+*             </rule>
+*         </validate>
+*     </element>
+*     <element
+*         name="fromEmail"
+*         type="text"
+*         require="1"
+*         disable="0">
+*         <label>Your email address:</label>
+*         <filters>
+*             <filter method="trim" />
+*         </filters>
+*         <validate>
+*             <rule method="email">
+*                 <message>Please provide a valid email address</message>
+*             </rule>
+*         </validate>
+*     </element>
+*     <element
+*         name="fromName"
+*         type="text"
+*         require="0"
+*         disable="0">
+*         <label>Your Name:</label>
+*         <filters>
+*             <filter method="trim" />
+*             <filter method="strip_tags" />
+*             <filter method="htmlentities" />
+*         </filters>
+*     </element>
+*     <element
+*         name="subject"
+*         type="text"
+*         require="1"
+*         disable="0">
+*         <label>Subject:</label>
+*         <filters>
+*             <filter method="trim" />
+*             <filter method="strip_tags" />
+*             <filter method="htmlentities" />
+*         </filters>
+*     </element>
+*     <element
+*         name="message"
+*         type="text"
+*         require="1"
+*         disable="0">
+*         <label>Message:</label>
+*     </element>
+* </form>
+* </code>
+*
+* Basically, a form consists of attributes and elements. Attributes are related
+* to the form as a whole, and spefically the &lt;form&gt; HTML element; elements
+* are single elements within the form, and include all information about an
+* element, including:
+*
+* <ul>
+*     <li>HTML element name ('name', required)</li>
+*     <li>HTML element type ('type', optional)</li>
+*     <li>required flag ('require', boolean, optional, defaults to 0)</li>
+*     <li>disable flag ('disable', boolean, optional, defaults to 0)</li>
+*     <li>HTML label text ('label', text, optional)</li>
+*     <li>HTML element attributes ('attribs', array, optional)</li>
+*     <li>filters. These are any pre-filters you wish to run on this element
+*     before processing, and should be valid {@link Solar_Filter} filters. This
+*     is an array, and contains one or more filter elements. These should have:
+*     <ul>
+*         <li>a 'method' attribute corresponding to a Solar_Filter prefilter</li>
+*         <li>If the prefilter requires additional parameters, a params array.
+*         Each param in the params array should be a string.</li>
+*     </ul>
+*     </li>
+*     <li>validation rules. These are any Solar_Valid rules you wish to validate
+*     the element against -- you can use as many as are needed. These are formed
+*     similarly to filters, but a rule takes an extra optional argument:
+*     <ul>
+*         <li>message: a feedback message to use should the validation fail</li>
+*     </ul>
+*     </li>
+* </ul>
+*  
 * @category Solar
 * 
 * @package Solar
@@ -152,7 +263,7 @@ class Solar_Form_Load_Xml extends Solar_Base
 
 					// Were any arguments passed?
 					if (!empty($filter->params)) {
-						$params = $this->getParams($this->params->param);
+						$params = $this->getParams($filter->params->param);
 					}
 					
 					// Add arguments to filter array
@@ -209,7 +320,8 @@ class Solar_Form_Load_Xml extends Solar_Base
 			'elements' => $elements
 		);
 	}
-
+	
+	
 	/**
 	* Get parameters for a filter or validation rule
 	*
@@ -219,6 +331,7 @@ class Solar_Form_Load_Xml extends Solar_Base
 	*
 	* @return array
 	*/
+	
 	protected function getParams($params) 
 	{
 		$final = array();

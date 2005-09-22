@@ -10,7 +10,7 @@
 * 
 * @subpackage Solar_Cell_Comments
 * 
-* @author Jean-Eric Laurent
+* @author Jean-Eric Laurent <jel@jelaurent.com>
 * 
 * @license LGPL
 * 

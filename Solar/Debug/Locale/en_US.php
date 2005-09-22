@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: en_US.php 232 2005-04-23 19:30:56Z pmjones $
+* @version $Id$
 * 
 */
 

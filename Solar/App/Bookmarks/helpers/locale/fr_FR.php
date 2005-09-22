@@ -10,7 +10,7 @@
 * 
 * @subpackage Solar_App_Bookmarks
 * 
-* @author Jean-Eric Laurent
+* @author Jean-Eric Laurent <jel@jelaurent.com>
 * 
 * @license LGPL
 * 

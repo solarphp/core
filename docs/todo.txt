@@ -1,12 +1,10 @@
-REELASE 0.8.8:
+REELASE 0.8.0:
 
 	Embed new Savant3
 	
 	Update apps to use new Savant3
 	
-	JEL email
-	
-	add HelloWorld
+	JEL email address?
 	
 	check reported bugs
 	
@@ -14,21 +12,19 @@ REELASE 0.8.8:
 	
 	start tagging releases
 	
-	how to build so that notes are Text_Wiki-ized?
-	
-	MWOP patch to Form_Xml
-	
 
 ----
 
 DOCUMENTATION PLAN
 
-document (moderate):
-	Solar_Form (need filters, other improvements from MWOP)
+easy:
+	Solar_Filter
+	
+average:
 	Solar_User_Auth
 	Solar_User_Role
 
-document (hard)
+difficult:
 	Solar_User
 	Solar_Sql
 

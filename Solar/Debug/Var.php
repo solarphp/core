@@ -14,7 +14,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Timer.php 340 2005-06-24 14:02:31Z pmjones $
+* @version $Id$
 * 
 */
 

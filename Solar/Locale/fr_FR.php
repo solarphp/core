@@ -10,7 +10,7 @@
 * 
 * @subpackage Solar_Locale
 * 
-* @author Paul M. Jones <pmjones@solarphp.com>
+* @author Jean-Eric Laurent <jel@jelaurent.com>
 * 
 * @license LGPL
 * 
@@ -23,7 +23,7 @@ return array(
 	// formatting codes and information
 	'FORMAT_LANGUAGE'    => 'Français',
 	'FORMAT_COUNTRY'     => 'France',
-	'FORMAT_CURRENCY'    => '€%s', // printf()
+	'FORMAT_CURRENCY'    => 'EUR €%s', // printf()
 	'FORMAT_DATE'        => '%j %m %Y', // strftime(): 19 Mar 2005
 	'FORMAT_TIME'        => '%r', // strftime: 24-hour 
 	

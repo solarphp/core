@@ -1,3 +1,28 @@
+REELASE 0.8.8:
+
+	Embed new Savant3
+	
+	Update apps to use new Savant3
+	
+	JEL french translations
+	
+	add HelloWorld
+	
+	check reported bugs
+	
+	update API docs
+	
+	start tagging releases
+	
+	how to build so that notes are Text_Wiki-ized?
+	
+	MWOP patch to Form_Xml
+	
+	add copyright notices
+
+
+----
+
 DOCUMENTATION PLAN
 
 document (moderate):

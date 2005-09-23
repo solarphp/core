@@ -76,7 +76,7 @@ class Solar_Debug_Timer extends Solar_Base {
 	* 
 	*/
 	
-	protected $maxlen = 0;
+	protected $maxlen = 8;
 	
 	
 	/**

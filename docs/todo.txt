@@ -1,7 +1,5 @@
 REELASE 0.8.0:
 
-	check reported bugs
-	
 	update API docs
 	
 	start tagging releases

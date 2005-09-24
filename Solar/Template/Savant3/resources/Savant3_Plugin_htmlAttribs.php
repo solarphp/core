@@ -43,18 +43,11 @@ class Savant3_Plugin_htmlAttribs extends Savant3_Plugin {
 	{
 		$xhtml = '';
 		foreach ((array) $attribs as $key => $val) {
-		
-			if ($val === null) {
-				continue;
-			}
-			
+			$key = htmlspecialchars($key);
 			if (is_array($val)) {
 				$val = implode(' ', $val);
 			}
-			
-			$key = htmlspecialchars($key);
 			$val = htmlspecialchars($val);
-			
 			$xhtml .= " $key=\"$val\"";
 		}
 		return $xhtml;

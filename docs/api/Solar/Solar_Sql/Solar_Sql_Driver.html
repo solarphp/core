@@ -119,6 +119,10 @@
 					<span class="var-type">array</span>
 					<a href="#$native" title="details" class="var-name">$native</a>
 				</div>
+								<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$stmt" title="details" class="var-name">$stmt</a>
+				</div>
 							</div>
 		</div>
 	</div>
@@ -211,6 +215,12 @@
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#limitSelect" title="details" class="method-name">limitSelect</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parts</span>)
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">array</span>
 										<a href="#listTables" title="details" class="method-name">listTables</a>
 										()
@@ -226,6 +236,12 @@
 											<span class="method-result">int</span>
 										<a href="#numRows" title="details" class="method-name">numRows</a>
 											(<span class="var-type">resource</span>&nbsp;<span class="var-name">&$rsrc</span>)
+									</div>
+								
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#select" title="details" class="method-name">select</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parts</span>)
 									</div>
 								
 				<div class="method-definition">
@@ -252,7 +268,7 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$config" id="$config"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -281,7 +297,7 @@
 
 </div>
 <a name="var$conn" id="$conn"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -303,7 +319,7 @@
 
 </div>
 <a name="var$len" id="$len"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -325,7 +341,7 @@
 
 </div>
 <a name="var$native" id="$native"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -370,6 +386,27 @@
 		
 
 </div>
+<a name="var$stmt" id="$stmt"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$stmt</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number">125</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
 						
 		</div>
 	</div>
@@ -390,7 +427,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">columnDeclaration</span> (line <span class="line-number">380</span>)
+		<span class="method-title">columnDeclaration</span> (line <span class="line-number">432</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -423,7 +460,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">connect</span> (line <span class="line-number">136</span>)
+		<span class="method-title">connect</span> (line <span class="line-number">137</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -471,7 +508,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">createIndex</span> (line <span class="line-number">606</span>)
+		<span class="method-title">createIndex</span> (line <span class="line-number">658</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -508,7 +545,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">createSequence</span> (line <span class="line-number">302</span>)
+		<span class="method-title">createSequence</span> (line <span class="line-number">354</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -564,7 +601,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">createTable</span> (line <span class="line-number">529</span>)
+		<span class="method-title">createTable</span> (line <span class="line-number">581</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -598,7 +635,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">dropSequence</span> (line <span class="line-number">319</span>)
+		<span class="method-title">dropSequence</span> (line <span class="line-number">371</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -651,7 +688,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">escape</span> (line <span class="line-number">153</span>)
+		<span class="method-title">escape</span> (line <span class="line-number">154</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -707,7 +744,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">exec</span> (line <span class="line-number">174</span>)
+		<span class="method-title">exec</span> (line <span class="line-number">226</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -767,7 +804,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">fetch</span> (line <span class="line-number">223</span>)
+		<span class="method-title">fetch</span> (line <span class="line-number">275</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -822,7 +859,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">fetchNum</span> (line <span class="line-number">241</span>)
+		<span class="method-title">fetchNum</span> (line <span class="line-number">293</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -877,7 +914,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">free</span> (line <span class="line-number">258</span>)
+		<span class="method-title">free</span> (line <span class="line-number">310</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -927,7 +964,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">limit</span> (line <span class="line-number">283</span>)
+		<span class="method-title">limit</span> (line <span class="line-number">335</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -983,11 +1020,45 @@
 							</li>
 				</ul>
 	</div>
-<a name="methodlistTables" id="listTables"><!-- --></a>
+<a name="methodlimitSelect" id="limitSelect"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">listTables</span> (line <span class="line-number">353</span>)
+		<span class="method-title">limitSelect</span> (line <span class="line-number">196</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			limitSelect
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parts</span>)
+			</div>
+	
+		
+		
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Fbsql.html#methodlimitSelect">Solar_Sql_Driver_Fbsql::limitSelect()</a>
+							</li>
+					<li>
+				<a href="../../Solar/Solar_Sql/Solar_Sql_Driver_Mssql.html#methodlimitSelect">Solar_Sql_Driver_Mssql::limitSelect()</a>
+								: Adds a LIMIT clause (or equivalent) to a SELECT statement.
+							</li>
+				</ul>
+	</div>
+<a name="methodlistTables" id="listTables"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTables</span> (line <span class="line-number">405</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1033,10 +1104,10 @@
 				</ul>
 	</div>
 <a name="methodnextSequence" id="nextSequence"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">nextSequence</span> (line <span class="line-number">338</span>)
+		<span class="method-title">nextSequence</span> (line <span class="line-number">390</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1088,10 +1159,10 @@
 				</ul>
 	</div>
 <a name="methodnumRows" id="numRows"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">numRows</span> (line <span class="line-number">205</span>)
+		<span class="method-title">numRows</span> (line <span class="line-number">257</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1142,11 +1213,34 @@
 							</li>
 				</ul>
 	</div>
+<a name="methodselect" id="select"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">select</span> (line <span class="line-number">159</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			select
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parts</span>)
+			</div>
+	
+		
+		
+	</div>
 <a name="methodvalidWord" id="validWord"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">validWord</span> (line <span class="line-number">700</span>)
+		<span class="method-title">validWord</span> (line <span class="line-number">752</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1190,7 +1284,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Thu, 11 Aug 2005 16:48:59 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Sat, 24 Sep 2005 14:44:44 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

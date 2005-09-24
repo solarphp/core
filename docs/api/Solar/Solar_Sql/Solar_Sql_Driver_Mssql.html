@@ -128,6 +128,12 @@
 									</div>
 								
 				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#limitSelect" title="details" class="method-name">limitSelect</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$parts</span>)
+									</div>
+								
+				<div class="method-definition">
 											<span class="method-result">string</span>
 										<a href="#listTables" title="details" class="method-name">listTables</a>
 										()
@@ -202,6 +208,9 @@
 													<span class="var-title">
 								<span class="var-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#var$len">Solar_Sql_Driver::$len</a></span><br>
 							</span>
+													<span class="var-title">
+								<span class="var-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#var$stmt">Solar_Sql_Driver::$stmt</a></span><br>
+							</span>
 											</blockquote> 
 										
 		</div>
@@ -252,7 +261,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">createSequence</span> (line <span class="line-number">368</span>)
+		<span class="method-title">createSequence</span> (line <span class="line-number">427</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -290,7 +299,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">dropSequence</span> (line <span class="line-number">389</span>)
+		<span class="method-title">dropSequence</span> (line <span class="line-number">449</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -516,12 +525,12 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">limit</span> (line <span class="line-number">323</span>)
+		<span class="method-title">limit</span> (line <span class="line-number">326</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">Adds a LIMIT clause (or equivalent) to an SQL statement.</p>
-<p class="description"><p>This method only adds a TOP $count clause; the exec() method  skips ahead to the $offset value.  Terribly inefficient.</p></p>
+<p class="description"><p>This method only adds a TOP $count clause; the exec() method  skips ahead to the $offset value.  Terribly inefficient.</p><p>Use this for new limitSelect() manipulation  http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html</p></p>
 	<ul class="tags">
 				<li><span class="field">return:</span> The modified SQL query.</li>
 				<li><span class="field">access:</span> public</li>
@@ -555,11 +564,46 @@
 					</dl>
 		
 	</div>
-<a name="methodlistTables" id="listTables"><!-- --></a>
+<a name="methodlimitSelect" id="limitSelect"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">listTables</span> (line <span class="line-number">347</span>)
+		<span class="method-title">limitSelect</span> (line <span class="line-number">355</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a LIMIT clause (or equivalent) to a SELECT statement.</p>
+<p class="description"><p>Still not great, but much more efficient than old way.  http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			limitSelect
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$parts</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$parts</span><span class="var-description">: The SELECT statement parts.</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodlimitSelect">Solar_Sql_Driver::limitSelect()</a></dt>
+					</dl>
+		
+	</div>
+<a name="methodlistTables" id="listTables"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listTables</span> (line <span class="line-number">406</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -587,10 +631,10 @@
 		
 	</div>
 <a name="methodnextSequence" id="nextSequence"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">nextSequence</span> (line <span class="line-number">407</span>)
+		<span class="method-title">nextSequence</span> (line <span class="line-number">467</span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -623,7 +667,7 @@
 		
 	</div>
 <a name="methodnumRows" id="numRows"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">numRows</span> (line <span class="line-number">242</span>)
@@ -676,9 +720,11 @@
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodfetchNum">Solar_Sql_Driver::fetchNum()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodfree">Solar_Sql_Driver::free()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodlimit">Solar_Sql_Driver::limit()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodlimitSelect">Solar_Sql_Driver::limitSelect()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodlistTables">Solar_Sql_Driver::listTables()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodnextSequence">Solar_Sql_Driver::nextSequence()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodnumRows">Solar_Sql_Driver::numRows()</a></span><br>
+													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodselect">Solar_Sql_Driver::select()</a></span><br>
 													<span class="method-name"><a href="../../Solar/Solar_Sql/Solar_Sql_Driver.html#methodvalidWord">Solar_Sql_Driver::validWord()</a></span><br>
 											</blockquote>
 									<!-- =========== Summary =========== -->
@@ -697,7 +743,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Thu, 11 Aug 2005 16:49:25 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
+		Documentation generated on Sat, 24 Sep 2005 14:45:18 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.3.0RC3</a>
 	</p>
 	</div></body>
 </html>

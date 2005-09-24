@@ -32,13 +32,15 @@ Solar::dump($result);
 // then foo, gir, dib
 ?>
 --EXPECT--
-array(3) {
+array(4) {
   ["opt_1"] => string(3) "foo"
   ["opt_2"] => string(3) "gir"
   ["opt_3"] => string(3) "baz"
+  ["locale"] => string(15) "Example/Locale/"
 }
-array(3) {
+array(4) {
   ["opt_1"] => string(3) "foo"
   ["opt_2"] => string(3) "gir"
   ["opt_3"] => string(3) "dib"
+  ["locale"] => string(15) "Example/Locale/"
 }

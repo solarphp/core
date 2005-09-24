@@ -38,7 +38,7 @@
 <!-- enclose in table to collapse the div -->
 <table><tr><td>
 
-	<?php if ($this->formdata->feedback): ?>
+	<?php if ($this->formdata->feedback):  // show form feedback ?>
 		<div style="background: #eee; padding: 4px; border: 2px solid red;">
 			<?php foreach ((array) $this->formdata->feedback as $text) {
 				echo "<p>" . $this->escape($text) . "</p>\n";
@@ -47,11 +47,19 @@
 	<?php endif ?>
 	
 	<?php
+		// build the editing form
 		$this->form('set', 'class', 'Savant3');
+		$this->form('set', 'freeze', false);
 		echo $this->form('begin', $this->formdata->attribs);
+		
+		// default op is to save
 		echo $this->form('hidden', 'op', $this->locale('Solar::OP_SAVE'));
+		
+		// the form elements
 		echo $this->form('auto', $this->formdata->elements);
-		echo $this->form('group', 'start');
+		
+		// the op group (save/cancel)
+		echo $this->form('group', 'begin');
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_CANCEL'));
 		echo $this->form('group', 'end');

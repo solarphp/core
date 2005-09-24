@@ -43,7 +43,7 @@
 		echo $this->form('begin', $this->formdata->attribs);
 		echo $this->form('hidden', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('auto', $this->formdata->elements);
-		echo $this->form('group', 'start');
+		echo $this->form('group', 'begin');
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_CANCEL'));
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_DELETE'));

@@ -1,13 +1,5 @@
 REELASE 0.8.0:
 
-	Embed new Savant3
-	
-	Update apps to use new Savant3
-	
-	JEL email address?
-	
-	check reported bugs
-	
 	update API docs
 	
 	start tagging releases

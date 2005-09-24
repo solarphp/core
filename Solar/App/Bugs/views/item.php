@@ -45,7 +45,6 @@
 		echo $this->form('begin');
 		echo $this->form('auto', $this->item);
 		echo $this->form('end');
-		$this->form('set', 'freeze', false);
 	?>
 	
 </td><tr></table>
@@ -67,9 +66,10 @@
 	<?php endif ?>
 	
 	<?php
+		$this->form('set', 'freeze', false);
 		echo $this->form('begin');
+		echo $this->form('hidden', 'op', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('block', 'begin', $this->locale('ADD_COMMENT'));
-		echo $this->form('hidden', 'action', $this->locale('Solar::OP_SAVE'));
 		echo $this->form('auto', $this->formdata->elements);
 		echo $this->form('group', 'begin');
 		echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));

@@ -78,7 +78,9 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 }
 
 // get the item elements; this will be frozen on display
-$this->view->item = $bugs->formElements('edit', $data);
+$item = $bugs->formElements('edit', $data);
+$item['id']['type'] = 'text';
+$this->view->item = $item;
 
 // add the comment form
 $this->view->formdata = $form;

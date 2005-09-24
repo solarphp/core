@@ -36,11 +36,12 @@ Solar::stop();
 ?>
 --EXPECT--
 object(Solar_Error)#10 (2) {
-  ["config:protected"] => array(4) {
+  ["config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
+    ["locale"] => string(19) "Solar/Error/Locale/"
   }
   ["stack:protected"] => array(8) {
     [0] => array(7) {

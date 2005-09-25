@@ -124,6 +124,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	
 	protected $stmt = null;
 	
+	
 	/**
 	* 
 	* Connects to the database.
@@ -135,6 +136,21 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 	*/
 	
 	protected function connect()
+	{
+	}
+	
+	
+	/**
+	* 
+	* Returns the proper PDO driver type.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function pdoDriver()
 	{
 	}
 	
@@ -165,7 +181,21 @@ abstract class Solar_Sql_Driver extends Solar_Base {
 		$this->stmt .= implode(",\n\t", $this->parts['from']) . "\n";
 		
 		if ($this->parts['join']) {
-			$this->stmt .= implode("\n\t", $this->parts['join'], "\n");
+			$list = array();
+			foreach ($this->parts['join'] as $join) {
+				$tmp = '';
+				// add the type (LEFT, INNER, etc)
+				if (! empty($join['type'])) {
+					$tmp .= $join['type'] . ' ';
+				}
+				// add the table name and condition
+				$tmp .= 'JOIN ' . $join['name'];
+				$tmp .= ' ON ' . $join['cond'];
+				// add to the list
+				$list[] = $tmp;
+			}
+			// add the list of all joins
+			$this->stmt .= implode("\n\t", $list, "\n");
 		}
 		
 		if ($this->parts['where']) {

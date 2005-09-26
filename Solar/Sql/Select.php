@@ -331,7 +331,7 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a grouping to the query.
+	* Adds grouping to the query.
 	* 
 	* @access public
 	* 

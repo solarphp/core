@@ -29,7 +29,7 @@
 * $select = Solar::object('Solar_Sql_Select');
 * 
 * // select these columns
-* $select->cols(
+* $select->cols(array(
 *   'id',
 * 	'n_last',
 * 	'n_first',
@@ -38,7 +38,7 @@
 * 	'adr_region AS state',
 * 	'adr_postcode AS zip',
 * 	'adr_country',
-* );
+* ));
 * 
 * // from this table
 * $select->from('contacts'); // single or multi
@@ -50,27 +50,26 @@
 * // reverse-ordered by first name
 * $select->order('n_first DESC')
 * 
-* // get 50 at a time
+* // get 50 per page, when we limit by page
 * $select->paging(50);
 * 
-* // fetch the first page of all rows of this bound data ...
+* // bind data into the query.
 * // remember :lastname and :city in the setWhere() calls above.
 * $data = ('lastname' => 'Jones', 'city' => 'Memphis');
+* $select->bind($data);
 * 
 * // use this to indicate which page of results we want
-* $page = 1;
+* $select->limitPage(1);
 * 
-* // fetch all rows as an array (the default)
-* $select->fetch('all');
-* $result = $select->exec($data, $page);
+* // get a Solar_Sql_Result object (the default)
+* $result = $select->fetch(); // or fetch('result')
 * 
-* // alternatively, get a Solar_Sql_Result object
-* $select->fetch('result'); // or null
-* $result = $select->exec($data, $page);
+* // alternatively, fetch all rows as an array
+* $rows = $select->fetch('all');
 * 
 * // find out the count of rows, and how many pages there are.
 * // this comes back as an array('count' => ?, 'pages' => ?).
-* $total = $select->countPages($data);
+* $total = $select->countPages();
 * 
 * </code>
 * 
@@ -94,8 +93,6 @@ class Solar_Sql_Select extends Solar_Base {
 	* sql => (string|array) Name of the shared SQL object, or array of (driver,
 	* options) to create a standalone SQL object.
 	* 
-	* locale => (string) Path to locale files.
-	* 
 	* paging => (int) Number of rows per page.
 	* 
 	* @access protected
@@ -107,9 +104,18 @@ class Solar_Sql_Select extends Solar_Base {
 	protected $config = array(
 		'sql'    => 'sql',
 		'paging' => 10,
-		'fetch'  => 'all',
 	);
 	
+	
+	/**
+	* 
+	* The component parts of a select statement.
+	* 
+	* @access protected
+	* 
+	* @var array
+	* 
+	*/
 	
 	protected $parts = array(
 		'cols'   => array(),
@@ -124,7 +130,8 @@ class Solar_Sql_Select extends Solar_Base {
 			'offset' => 0
 		),
 	);
-		
+	
+	
 	/**
 	* 
 	* The number of rows per page.
@@ -136,23 +143,6 @@ class Solar_Sql_Select extends Solar_Base {
 	*/
 	
 	protected $paging = 10;
-	
-	
-	/**
-	* 
-	* A fetch mode ('all', 'one', 'row', etc.)
-	* 
-	* Set to empty/null/false to get a result object.
-	* 
-	* Eventually, a PDO_FETCHMODE_* constant.
-	* 
-	* @access protected
-	* 
-	* @var string
-	* 
-	*/
-	
-	protected $fetch = 'all';
 	
 	
 	/**
@@ -197,7 +187,6 @@ class Solar_Sql_Select extends Solar_Base {
 		
 		// set up defaults
 		$this->paging($this->config['paging']);
-		$this->fetch($this->config['fetch']);
 	}
 	
 	
@@ -219,138 +208,24 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Sets the paging value.
+	* Sets the number of rows per page.
 	* 
 	* @access public
 	* 
-	* @param int $val The number of rows to page at.
+	* @param int $rows The number of rows to page at.
 	* 
 	* @return void
 	* 
 	*/
 
-	public function paging($val)
+	public function paging($rows)
 	{
 		// force a positive integer
-		$val = (int) $val;
-		if ($val < 1) {
-			$val = 1;
+		$rows = (int) $rows;
+		if ($rows < 1) {
+			$rows = 1;
 		}
-		
-		// set the paging value
-		$this->paging = $val;
-	}
-	
-	
-	/**
-	* 
-	* Sets the fetch-mode value.
-	* 
-	* @access public
-	* 
-	* @param string $mode The fetch mode (null to return a result object, or
-	* 'all', 'row', 'col', etc. to use a fetch*() method.
-	* 
-	* @return void
-	* 
-	*/
-
-	public function fetch($mode = null)
-	{
-		$this->fetch = strtolower(trim($mode));
-	}
-	
-	
-	/**
-	* 
-	* Adds data to bind into the query.
-	* 
-	* @access public
-	* 
-	* @param mixed $key The replacement key in the query.  If this is an
-	* array or object, the $val parameter is ignored, and all the
-	* key-value pairs in the array (or all properties of the object) are
-	* added to the bind.
-	* 
-	* @param mixed $val The value to use for the replacement key.
-	* 
-	* @return void
-	* 
-	*/
-
-	public function bind($key, $val = null)
-	{
-		if (is_array($key)) {
-			$this->bind = array_merge($this->bind, $key);
-		} elseif (is_object($key)) {
-			$this->bind = array_merge((array) $this->bind, $key);
-		} else {
-			$this->bind[$key] = $val;
-		}
-	}
-	
-	
-	/**
-	* 
-	* Unsets bound data.
-	* 
-	* @access public
-	* 
-	* @param mixed $spec The key to unset.  If a string, unsets that one
-	* bound value; if an array, unsets the list of values; if empty, unsets
-	* all bound values (the default).
-	* 
-	* @return void
-	* 
-	*/
-
-	public function unbind($spec = null)
-	{
-		if (empty($spec)) {
-			$this->bind = array();
-		} else {
-			settype($spec, 'array');
-			foreach ($spec as $key) {
-				unset($this->bind[$key]);
-			}
-		}
-	}
-	
-	
-	/**
-	* 
-	* Clears query properties.
-	* 
-	* @access public
-	* 
-	* @param string $key The property to clear; if empty, clears all
-	* query properties.
-	* 
-	* @return void
-	* 
-	*/
-
-	public function clear($key = null)
-	{
-		$tmp = array($this->parts);
-		
-		if (empty($key)) {
-			// clear all
-			foreach ($tmp as $key) {
-				$this->parts[$key] = array();
-			}
-		} elseif (in_array($key, $tmp)) {
-			// clear some
-			$this->parts[$key] = array();
-		}
-		
-		// make sure limit has a count and offset
-		if (empty($this->parts['limit'])) {
-			$this->parts['limit'] = array(
-				'count' => 0,
-				'offset' => 0
-			);
-		}
+		$this->paging = $rows;
 	}
 	
 	
@@ -560,37 +435,149 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Fetch an array of results based on the current query properties.
+	* Sets the limit and count by page number.
+	* 
+	* @access public
+	* 
+	* @param int $page Limit results to this page number.
+	* 
+	* @return void
+	* 
+	*/
+
+	public function limitPage($page = null)
+	{
+		// reset the count and offset
+		$this->parts['limit']['count']  = 0;
+		$this->parts['limit']['offset'] = 0;
+		
+		// determine the count and offset from the page number
+		$page = (int) $page;
+		if ($page > 0) {
+			$this->parts['limit']['count']  = $this->paging;
+			$this->parts['limit']['offset'] = $this->paging * ($page - 1);
+		}
+	}
+	
+	
+	/**
+	* 
+	* Clears query properties.
+	* 
+	* @access public
+	* 
+	* @param string $key The property to clear; if empty, clears all
+	* query properties.
+	* 
+	* @return void
+	* 
+	*/
+
+	public function clear($key = null)
+	{
+		$tmp = array($this->parts);
+		
+		if (empty($key)) {
+			// clear all
+			foreach ($tmp as $key) {
+				$this->parts[$key] = array();
+			}
+		} elseif (in_array($key, $tmp)) {
+			// clear some
+			$this->parts[$key] = array();
+		}
+		
+		// make sure limit has a count and offset
+		if (empty($this->parts['limit'])) {
+			$this->parts['limit'] = array(
+				'count' => 0,
+				'offset' => 0
+			);
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds data to bind into the query.
+	* 
+	* @access public
+	* 
+	* @param mixed $key The replacement key in the query.  If this is an
+	* array or object, the $val parameter is ignored, and all the
+	* key-value pairs in the array (or all properties of the object) are
+	* added to the bind.
+	* 
+	* @param mixed $val The value to use for the replacement key.
+	* 
+	* @return void
+	* 
+	*/
+
+	public function bind($key, $val = null)
+	{
+		if (is_array($key)) {
+			$this->bind = array_merge($this->bind, $key);
+		} elseif (is_object($key)) {
+			$this->bind = array_merge((array) $this->bind, $key);
+		} else {
+			$this->bind[$key] = $val;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Unsets bound data.
+	* 
+	* @access public
+	* 
+	* @param mixed $spec The key to unset.  If a string, unsets that one
+	* bound value; if an array, unsets the list of values; if empty, unsets
+	* all bound values (the default).
+	* 
+	* @return void
+	* 
+	*/
+
+	public function unbind($spec = null)
+	{
+		if (empty($spec)) {
+			$this->bind = array();
+		} else {
+			settype($spec, 'array');
+			foreach ($spec as $key) {
+				unset($this->bind[$key]);
+			}
+		}
+	}
+	
+	
+	/**
+	* 
+	* Fetch the results based on the current query properties.
 	* 
 	* @access public
 	* 
 	* @param string $type The type of fetch to perform (all, one, row, etc).
 	* 
-	* @param array $data Data to bind to the SELECT statement.
-	* 
-	* @param int $page The page number of results to fetch.
-	* 
-	* @return mixed The query results in an array (or as a string, if
-	* fetching only 'one').
+	* @return mixed The query results.
 	* 
 	*/
 
-	public function exec($page = null)
+	public function fetch($type = null)
 	{
-		if (! $this->fetch || $this->fetch == 'result') {
+		if (! $type || $type == 'result') {
 			$method = 'exec';
 		} else {
-			$method = 'fetch' . ucfirst($this->fetch);
+			$method = 'fetch' . ucfirst($type);
 		}
 		
-		$page = (int) $page;
-		if ($page) {
-			$this->parts['limit'] = $this->pageLimit($page);
-		}
-		
-		$exec = false; // don't execute, just get the statement
+		// don't execute, just get the statement
+		$exec = false;
 		$stmt = $this->sql->select($this->parts, $this->bind, $exec);
 		
+		// now execute the statement
 		return $this->sql->$method($stmt);
 	}
 	
@@ -601,7 +588,7 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $col The column to COUNT() on.
+	* @param string $col The column to COUNT() on.  Default is '*'.
 	* 
 	* @return array An associative array with keys 'count' (the total number
 	* of rows) and 'pages' (the number of pages based on $this->paging).
@@ -640,38 +627,6 @@ class Solar_Sql_Select extends Solar_Base {
 		return array(
 			'count' => $result,
 			'pages' => $pages
-		);
-	}
-	
-	
-	/**
-	* 
-	* Calculates the limit count and offset for a given page number.
-	* 
-	* Pages are 1-based; page 1 is records 1-10, page 2 is 11-20, and
-	* so on.  Page 0 is nonexistent, and will not set a limit.
-	* 
-	* @access protected
-	* 
-	* @param int $page The page number to get limits for.
-	* 
-	* @return array An associative array with 'count' and 'offset' values.
-	* 
-	*/
-	
-	protected function pageLimit($page = null)
-	{
-		if ($page !== null && $page !== false && $page > 0) {
-			$count  = $this->paging;
-			$offset = $count * ($page - 1);
-		} else {
-			$count  = 0;
-			$offset = 0;
-		}
-		
-		return array(
-			'count'  => $count,
-			'offset' => $offset
 		);
 	}
 }

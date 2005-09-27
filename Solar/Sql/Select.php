@@ -23,7 +23,7 @@
 * 
 * Class for SQL select generation and results.
 * 
-* Proposed usage:
+* Example usage:
 * 
 * <code>
 * $select = Solar::object('Solar_Sql_Select');
@@ -58,7 +58,7 @@
 * $data = ('lastname' => 'Jones', 'city' => 'Memphis');
 * $select->bind($data);
 * 
-* // use this to indicate which page of results we want
+* // limit by which page of results we want
 * $select->limitPage(1);
 * 
 * // get a Solar_Sql_Result object (the default)
@@ -118,14 +118,15 @@ class Solar_Sql_Select extends Solar_Base {
 	*/
 	
 	protected $parts = array(
-		'cols'   => array(),
-		'from'   => array(),
-		'join'   => array(),
-		'where'  => array(),
-		'group'  => array(),
-		'having' => array(),
-		'order'  => array(),
-		'limit'  => array(
+		'distinct' => false,
+		'cols'     => array(),
+		'from'     => array(),
+		'join'     => array(),
+		'where'    => array(),
+		'group'    => array(),
+		'having'   => array(),
+		'order'    => array(),
+		'limit'    => array(
 			'count'  => 0,
 			'offset' => 0
 		),
@@ -231,6 +232,25 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
+	* Makes the query SELECT DISTINCT.
+	* 
+	* @access public
+	* 
+	* @param bool $flag Whether or not the SELECT is DISTINCT (default
+	* true).
+	* 
+	* @return void
+	* 
+	*/
+
+	public function distinct($flag = true)
+	{
+		$this->parts['distinct'] = (bool) $flag;
+	}
+	
+	
+	/**
+	* 
 	* Adds columns to the query.
 	* 
 	* @access public
@@ -243,6 +263,10 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function cols($spec)
 	{
+		if (empty($spec)) {
+			return;
+		}
+		
 		if (is_string($spec)) {
 			$spec = explode(',', $spec);
 		} else {
@@ -255,7 +279,7 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a table to the query, optionally with columns from that table.
+	* Adds a table to the query.
 	* 
 	* @access public
 	* 
@@ -267,6 +291,10 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function from($spec)
 	{
+		if (empty($spec)) {
+			return;
+		}
+		
 		if (is_string($spec)) {
 			$spec = explode(',', $spec);
 		} else {
@@ -285,7 +313,7 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	* @param string $name The table name to join to.
 	* 
-	* @param string $code Join on this condition.
+	* @param string $cond Join on this condition.
 	* 
 	* @param string $type The type of join to perform, e.g.
 	* "left", "right", "inner", etc.  Typically not needed.
@@ -310,7 +338,7 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param string $condition The WHERE condition.
+	* @param string $cond The WHERE condition.
 	* 
 	* @param string $op Whether to 'AND' or 'OR' this condition with
 	* existing conditions (default is 'AND').
@@ -319,12 +347,16 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function where($filter, $op = 'AND')
+	public function where($cond, $op = 'AND')
 	{
+		if (empty($cond)) {
+			return;
+		}
+		
 		if ($this->parts['where']) {
-			$this->parts['where'][] = strtoupper($op) . ' ' . $condition;
+			$this->parts['where'][] = strtoupper($op) . ' ' . $cond;
 		} else {
-			$this->parts['where'][] = $condition;
+			$this->parts['where'][] = $cond;
 		}
 	}
 	
@@ -343,6 +375,10 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function group($spec)
 	{
+		if (empty($spec)) {
+			return;
+		}
+		
 		if (is_string($spec)) {
 			$spec = explode(',', $spec);
 		} else {
@@ -355,25 +391,29 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a HAVING filter to the query.
+	* Adds a HAVING condition to the query.
 	* 
 	* @access public
 	* 
-	* @param string $condition The HAVING filter.
+	* @param string $cond The HAVING condition.
 	* 
-	* @param string $op Whether to 'AND' or 'OR' this filter with
-	* existing filters (default is 'AND').
+	* @param string $op Whether to 'AND' or 'OR' this condition with
+	* existing conditions (default is 'AND').
 	* 
 	* @return void
 	* 
 	*/
 
-	public function having($filter, $op = 'AND')
+	public function having($cond, $op = 'AND')
 	{
+		if (empty($cond)) {
+			return;
+		}
+		
 		if ($this->parts['having']) {
-			$this->parts['having'][] = strtoupper($op) . ' ' . $filter;
+			$this->parts['having'][] = strtoupper($op) . ' ' . $cond;
 		} else {
-			$this->parts['having'][] = $filter;
+			$this->parts['having'][] = $cond;
 		}
 	}
 	
@@ -392,6 +432,10 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function order($spec)
 	{
+		if (empty($spec)) {
+			return;
+		}
+		
 		if (is_string($spec)) {
 			$spec = explode(',', $spec);
 		} else {
@@ -475,14 +519,14 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function clear($key = null)
 	{
-		$tmp = array($this->parts);
+		$list = array_keys($this->parts);
 		
 		if (empty($key)) {
 			// clear all
-			foreach ($tmp as $key) {
+			foreach ($list as $key) {
 				$this->parts[$key] = array();
 			}
-		} elseif (in_array($key, $tmp)) {
+		} elseif (in_array($key, $list)) {
 			// clear some
 			$this->parts[$key] = array();
 		}
@@ -575,10 +619,10 @@ class Solar_Sql_Select extends Solar_Base {
 		
 		// don't execute, just get the statement
 		$exec = false;
-		$stmt = $this->sql->select($this->parts, $this->bind, $exec);
+		$stmt = $this->sql->select($this->parts, null, false);
 		
-		// now execute the statement
-		return $this->sql->$method($stmt);
+		// now execute the statement with bound data
+		return $this->sql->$method($stmt, $this->bind);
 	}
 	
 	
@@ -598,18 +642,17 @@ class Solar_Sql_Select extends Solar_Base {
 	public function countPages($col = '*')
 	{
 		// make a self-cloned copy so that all settings are identical
-		$select = $this->__clone();
+		$select = clone($this);
 		
 		// clear out all columns, then add a single COUNT column
 		$select->clear('cols');
-		$select->cols('COUNT($col)');
+		$select->cols("COUNT($col)");
 		
 		// clear any limits
 		$select->clear('limit');
 		
 		// select the count of rows and free the cloned copy
-		$select->fetch('one');
-		$result = $select->exec($data);
+		$result = $select->fetch('one');
 		unset($select);
 		
 		// was there an error?

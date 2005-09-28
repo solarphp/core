@@ -1,8 +1,7 @@
 <?php
-
 /**
 * 
-* Class for connecting to SQL databases and performing common operations.
+* Class for connecting to SQL databases and performing standard operations.
 * 
 * @category Solar
 * 
@@ -19,16 +18,10 @@
 */
 
 /**
-* The base class for SQL drivers.
+* Base class for additional SQL driver information.
 */
 
 require_once 'Solar/Sql/Driver.php';
-
-/**
-* The class for reporting SELECT results.
-*/
-
-require_once 'Solar/Sql/Result.php';
 
 
 /**
@@ -41,10 +34,10 @@ require_once 'Solar/Sql/Result.php';
 * 
 * $opts = array(
 * 	'class' => 'Solar_Sql_Driver_Mysql',
-* 	'host'   => 'localhost',
-* 	'user'   => 'pmjones',
-* 	'pass'   => '********',
-* 	'name'   => 'test'
+* 	'host' => '127.0.0.1',
+* 	'user' => 'pmjones',
+* 	'pass' => '********',
+* 	'name' => 'test'
 * );
 * 
 * $sql = Solar::object('Solar_Sql', $opts);
@@ -88,19 +81,19 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* Keys are:
 	* 
-	* class => (string) Driver class, e.g. 'Solar_Sql_Driver_Mysql'.
+	* class => (string) Driver information class, e.g. 'Solar_Sql_Driver_Mysql'.
 	* 
-	* host  => (string) Host specification (typically 'localhost').
+	* host => (string) Host specification (typically 'localhost').
 	* 
-	* port  => (string) Port number for the host name.
+	* port => (string) Port number for the host name.
 	* 
-	* user  => (string) Connect to the database as this username.
+	* user => (string) Connect to the database as this username.
 	* 
-	* pass  => (string) Password associated with the username.
+	* pass => (string) Password associated with the username.
 	* 
-	* name  => (string) Database name (or file path, or TNS name).
+	* name => (string) Database name (or file path, or TNS name).
 	* 
-	* mode  => (string) For SQLite, an octal file mode.
+	* mode => (string) For SQLite, an octal file mode.
 	* 
 	* @access protected
 	* 
@@ -110,21 +103,18 @@ class Solar_Sql extends Solar_Base {
 	
 	protected $config = array(
 		'class' => null,
-		'host'  => null,
-		'port'  => null,
-		'user'  => null,
-		'pass'  => null,
-		'name'  => null,
-		'mode'  => null
+		'host' => '127.0.0.1',
+		'port' => null,
+		'user' => null,
+		'pass' => null,
+		'name' => null,
+		'mode' => null,
 	);
 	
 	
 	/**
 	* 
-	* The database backend driver object.
-	* 
-	* For now, we use sub-drivers for MySQL, SQLite, PostgreSQL, et. al.
-	* However, when PDO comes online, this will become a PDO object.
+	* Object to customize for a specific RDBMS.
 	* 
 	* @access protected
 	* 
@@ -133,6 +123,48 @@ class Solar_Sql extends Solar_Base {
 	*/
 	
 	protected $driver = null;
+	
+	
+	/**
+	* 
+	* Max identifier lengths for table, column, and index names.
+	* 
+	* The total length cannot exceed 63 (the Postgres limit).
+	* 
+	* Reserve 3 chars for suffixes ("__i" for indexes, "__s" for
+	* sequences).
+	* 
+	* Reserve 2 chars for table__index separator (again, because
+	* Postgres needs unique names for indexes even on different tables).
+	* 
+	* This leaves 58 characters to split between table name and col/idx
+	* name.  Figure tables need more "space", so they get 30 and
+	* tables/indexes get 28.
+	* 
+	* @access protected
+	* 
+	* @var array
+	* 
+	*/
+	
+	protected $len = array(
+		'tbl' => 30,
+		'col' => 28,
+		'idx' => 28
+	);
+	
+	
+	/**
+	* 
+	* A portable database object for accessing the RDBMS.
+	* 
+	* @access protected
+	* 
+	* @var object
+	*
+	*/
+	
+	protected $pdo = null;
 	
 	
 	/**
@@ -150,129 +182,48 @@ class Solar_Sql extends Solar_Base {
 		// basic construction
 		parent::__construct($config);
 		
-		// get the driver class
-		$class = $this->config['class'];
-		
-		// set up the driver config array
+		// create the driver-info object
 		$opts = $this->config;
-		
-		// don't override these in the driver
 		unset($opts['class']);
-		
-		// create the driver object, and we're done.
-		$this->driver = Solar::object($class, $opts);
+		$opts['sql'] = $this;
+		$this->driver = Solar::object($this->config['class'], $opts);
 	}
 	
 	
 	/**
 	* 
-	* Executes an SQL statement (with optional bound data).
+	* Prepares and executes an SQL statement with bound data.
 	* 
 	* @access public
 	* 
 	* @param string $stmt The text of the SQL statement, with
 	* placeholders.
 	* 
-	* @param array $data An associative array of data to use for the
+	* @param array $data An associative array of data to bind to the
 	* placeholders.
 	* 
-	* @param int $count If you want to limit the returned results (as in
-	* a SELECT statement) this is the number of rows to return.
+	* @return object A PDOStatement object.
 	* 
-	* @param int $offset If you want to limit the returned results (as
-	* in a SELECT statement) this is the row number to start at.
-	* 
-	* @return mixed Solar_Sql_Result in the case of SELECT statements, a
-	* Solar_Error on error, or boolean true if a non-SELECT statement
-	* succeeded.
+	* @todo Catch exceptions and return as Solar_Error objects.
 	* 
 	*/
 	
-	public function exec($stmt, $data = null, $count = 0, $offset = 0)
+	public function exec($stmt, $data = array())
 	{
-		// if binding data is available, bind it into the statement.
-		if (is_array($data)) {
-			$stmt = $this->bind($stmt, $data);
-		}
+		// connect to the database if needed
+		$this->connect();
 		
-		// if it's a SELECT statement, and a count is specified,
-		// modify the statement so it has a limit-count.
-		if (strtoupper(substr($stmt, 0, 7)) == 'SELECT ' &&
-			($count > 0 || $offset > 0)) {
-			// modify in-place to include a limiting count
-			$this->driver->limit($stmt, (int) $count, (int) $offset);
-		}
+		// force the bound data to be an array
+		settype($data, 'array');
 		
-		// return the results of the statement execution.
-		return $this->driver->exec($stmt, $count, $offset);
-	}
-	
-	
-	/**
-	* 
-	* Binds placeholder text in an SQL statement with quoted values.
-	* 
-	* E.g., if $text = "SELECT * FROM table WHERE user = :user" and your
-	* $data = array('user' => 'bolivar') then the bound result would be
-	* "SELECT * FROM table WHERE user = 'bolivar'".
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with
-	* placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @return string The statement with quoted values bound in place.
-	*/
-	
-	public function bind($stmt, $data)
-	{
-		$regex = '/(:[A-Za-z0-9_]+)/';
-		$split = preg_split($regex, $stmt, -1, PREG_SPLIT_DELIM_CAPTURE);
-		$stmt = '';
-		foreach ($split as $part) {
-			if (substr($part, 0, 1) == ':') {
-				$key = substr($part, 1);
-				$stmt .= $this->quote($data[$key]);
-			} else {
-				$stmt .= $part;
-			}
-		}
-		return $stmt;
-	}
-	
-	
-	/**
-	* 
-	* Builds a SELECT statement from its component parts.
-	* 
-	* @access public
-	* 
-	* @param array $parts The component parts, keyed as 'cols', 'from',
-	* 'join', 'where', 'group', 'having', 'order', and 'limit' (which
-	* itself is an array of 'count' and 'offset').
-	* 
-	* @param array $data An associative array of data to bind into the
-	* placeholders.
-	* 
-	* @param bool $exec Whether or not to execute the select; if false,
-	* returns the statement that would have been executed (not including
-	* the bound data).
-	* 
-	* @return mixed
-	* 
-	*/
-	
-	public function select($parts, $data = null, $exec = true)
-	{
-		$stmt = $this->driver->select($parts);
-		if ($exec) {
-			return $this->exec($stmt, $data);
-		} else {
-			return $stmt;
-		}
+		// prepare the statement
+		$obj = $this->pdo->prepare($stmt);
+		
+		// execute with bound data
+		$obj->execute($data);
+		
+		// return the results embedded in the prepared statement object
+		return $obj;
 	}
 	
 	
@@ -363,326 +314,265 @@ class Solar_Sql extends Solar_Base {
 	
 	public function delete($table, $where)
 	{
-		$stmt = "DELETE FROM $table WHERE $where";
-		return $this->exec($stmt);
+		return $this->exec("DELETE FROM $table WHERE $where");
 	}
 	
 	
 	/**
 	* 
-	* Convenience method to fetch all returned rows.
+	* Select rows from the database.
 	* 
 	* @access public
 	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
+	* @param string $return How to return the results: all, assoc, col,
+	* one, pair, row, result (the default), statement (to just get the
+	* statement), or a class name to create with the result.
 	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
+	* @param array|string $spec An array of component parts for a
+	* SELECT, or a literal query string (SELECT or non-select).
 	* 
-	* @param int $count If you want to limit the returned results (as in 
-	* a SELECT statement) this is the number of rows to return.
+	* @param array $data An associative array of data to bind into the
+	* SELECT statement.
 	* 
-	* @param int $offset If you want to limit the returned results (as in 
-	* a SELECT statement) this is the row number to start at.
-	* 
-	* @return array An array of all returned rows.
+	* @return mixed A Solar_Error on error, or the query results for the
+	* return type requested.
 	* 
 	*/
 	
-	public function fetchAll($stmt, $data = null, $count = null,
-		$offset = null)
+	public function select($return, $spec, $data = array())
 	{
-		// get the result set
-		$result = $this->exec($stmt, $data, $count, $offset);
+		// build the statement from its component parts if needed
+		if (is_array($spec)) {
+			$stmt = $this->driver->buildSelect($spec);
+		} else {
+			$stmt = $spec;
+		}
+		
+		// are we just returning the statement?
+		if (strtolower($return) == 'statement') {
+			return $stmt;
+		}
+		
+		// execute and get the result set
+		$result = $this->exec($stmt, $data);
 		if (Solar::isError($result)) {
 			return $result;
 		}
 		
-		// capture all cols of all rows.
-		$data = array();
-		while ($row = $result->fetch()) {
-			$data[] = $row;
-		}
+		// return data based on the select type
+		switch (strtolower($return)) {
 		
-		// free the result set and return
-		unset($result);
-		return $data;
-	}
-	
-	
-	/**
-	* 
-	* Convenience method to get the query results as an associative array.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @param int $count If you want to limit the returned results (as in 
-	* a SELECT statement) this is the number of rows to return.
-	* 
-	* @param int $offset If you want to limit the returned results (as in 
-	* a SELECT statement) this is the row number to start at.
-	* 
-	* @return array An associative array where the key is the first column 
-	* in the row and the value is an associative array of all remaining 
-	* columns.
-	* 
-	*/
-	
-	public function fetchAssoc($stmt, $data = null, $count = null,
-		$offset = null)
-	{
-		// get the result set
-		$result = $this->exec($stmt, $data, $count, $offset);
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
+		// capture all rows
+		case 'all':
+			$data = $result->fetchAll(PDO_FETCH_ASSOC);
+			break;
+			
 		// capture data as key-value pairs where the first column
 		// is the key and the second column is the value
-		$data = array();
-		while ($row = $result->fetch()) {
-			$key = array_shift($row);
-			$data[$key] = $row;
-		}
-		
-		// free the result set and return
-		unset($result);
-		return $data;
-	}
-	
-	
-	/**
-	* 
-	* Convenience method to fetch the entire first column of values.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @param int $count If you want to limit the returned results (as in 
-	* a SELECT statement) this is the number of rows to return.
-	* 
-	* @param int $offset If you want to limit the returned results (as in 
-	* a SELECT statement) this is the row number to start at.
-	* 
-	* @return array The first value in each row of the query result.
-	* 
-	*/
-	
-	public function fetchCol($stmt, $data = null, $count = null,
-		$offset = null)
-	{
-		// get the result set
-		$result = $this->exec($stmt, $data, $count, $offset);
-		if (Solar::isError($result)) {
-			return $result;
-		}
+		case 'assoc':
+			$data = array();
+			while ($row = $result->fetch(PDO_FETCH_ASSOC)) {
+				$key = array_shift($row);
+				$data[$key] = $row;
+			}
+			break;
 		
 		// capture the first col of every row.
-		$data = array();
-		while ($row = $result->fetchNum()) {
-			$data[] = $row[0];
-		}
-		
-		// free the result set and return
-		unset($result);
-		return $data;
-	}
-	
-	
-	/**
-	* 
-	* Convenience method to fetch only the first value from a query.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @return string The first value in the first row of the query result.
-	* 
-	*/
-	
-	public function fetchOne($stmt, $data = null)
-	{
-		// get the result set (always and only with a count of 1)
-		$result = $this->exec($stmt, $data, 1);
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
-		// capture the first row
-		$row = $result->fetchNum();
-		
-		// free the result set and return the first value of the row
-		unset($result);
-		return $row[0];
-	}
-	
-	
-	/**
-	* 
-	* Convenience method to get the query results as a key-value pairs.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @param int $count If you want to limit the returned results (as in 
-	* a SELECT statement) this is the number of rows to return.
-	* 
-	* @param int $offset If you want to limit the returned results (as in 
-	* a SELECT statement) this is the row number to start at.
-	* 
-	* @return array An associative array where the key is the first value 
-	* in the row and the value is the second value in the row.
-	* 
-	*/
-	
-	public function fetchPair($stmt, $data = null, $count = null,
-		$offset = null)
-	{
-		// get the result set
-		$result = $this->exec($stmt, $data, $count, $offset);
-		if (Solar::isError($result)) {
-			return $result;
-		}
+		case 'col':
+			$data = array();
+			while ($col = $result->fetchColumn(0)) {
+				$data[] = $col;
+			}
+			break;
+			
+		// capture the first column of the first row
+		case 'one':
+			$data = $result->fetchColumn(0);
+			break;
 		
 		// capture data as key-value pairs where the first column
 		// is the key and the second column is the value
-		$data = array();
-		while ($row = $result->fetchNum()) {
-			$data[$row[0]] = $row[1];
-		}
-		
-		// free the result set and return
-		unset($result);
-		return $data;
-	}
-	
-	
-	/**
-	* 
-	* Convenience method to fetch the first row of values from a query.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The text of the SQL statement, with placeholders.
-	* 
-	* @param array $data An associative array of data to use for the
-	* placeholders.
-	* 
-	* @return array The first row of the query.
-	* 
-	*/
-	
-	public function fetchRow($stmt, $data = null)
-	{
-		// get the result set (always and only with a count of 1)
-		$result = $this->exec($stmt, $data, 1);
-		if (Solar::isError($result)) {
-			return $result;
-		}
-		
-		// capture the first row.
-		$data = $result->fetch();
-		
-		// free the result set and return
-		unset($result);
-		return $data;
-	}
-	
-	
-	/**
-	* 
-	* Returns a list of table names in the database.
-	* 
-	* @access public
-	* 
-	* @return array
-	* 
-	*/
-	
-	public function listTables()
-	{
-		return $this->fetchCol($this->driver->listTables());
-	}
-	
-	
-	/**
-	* 
-	* Safely enquotes a value for an SQL statement.
-	* 
-	* @access public
-	* 
-	* @param mixed $val
-	* 
-	* @return string An SQL-safe quoted string.
-	* 
-	*/
-	
-	public function quote($val)
-	{
-		if (is_array($val)) {
-			// recursively quote array values
-			foreach ($val as $k => $v) {
-				$val[$k] = $this->quote($v);
+		case 'pair':
+			$data = array();
+			while ($row = $result->fetch(PDO_FETCH_NUM)) {
+				$data[$row[0]] = $row[1];
 			}
-		} elseif (is_int($val) || is_float($val)) {
-			// it's a number, no need to quote or escape,
-			// just convert to a string representation.
-			settype($val, 'string');
-		} elseif (is_bool($val)) {
-			// it's boolean, convert to string '1' or '0'
-			$val = $val ? '1' : '0';
-		} elseif (is_null($val)) {
-			// it's null
-			$val = 'NULL';
-		} else {
-			// all others are treated as strings.
-			// escape the value, and enquote it.
-			$val = "'" . $this->driver->escape($val) . "'";
+			break;
+		
+		// return the PDOStatement result object
+		case 'result':
+			$data = $result;
+			break;
+		
+		// capture the first row
+		case 'row':
+			$data = $result->fetch(PDO_FETCH_ASSOC);
+			break;
+		
+		// create a new object and put the result into it
+		default:
+			$data = Solar::object($return, array('result' => $result));
+			break;
 		}
-		return $val;
+		
+		// done!
+		return $data;
+	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// Sequences
+	// 
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Create a sequence in the database.
+	* 
+	* @access public
+	* 
+	* @param string $name The sequence name to create.
+	* 
+	* @param string $start The starting sequence number.
+	* 
+	* @return mixed
+	* 
+	* @todo Check name length.
+	* 
+	*/
+	
+	public function createSequence($name, $start = 1)
+	{
+		$name .= '__s';
+		$result = $this->driver->createSequence($this, $name, $start);
+		return $result;
 	}
 	
 	
 	/**
 	* 
-	* Creates a table and its columns in the database.
+	* Drop a sequence from the database.
 	* 
 	* @access public
 	* 
-	* @param string $table The table name.
-	* 
-	* @param array $cols An associative array of column information
-	* where the key is the column name and the value is an associative
-	* array of information about the column.
+	* @param string $name The sequence name to drop.
 	* 
 	* @return mixed
 	* 
 	*/
 	
+	public function dropSequence($name)
+	{
+		$name .= '__s';
+		$result = $this->driver->dropSequence($this, $name);
+		return $result;
+	}
+	
+	
+	/**
+	* 
+	* Gets the next number in a sequence number.
+	* 
+	* Creates the sequence if it does not exist.
+	* 
+	* @access public
+	* 
+	* @param string &$name The sequence name.
+	* 
+	* @return int The next sequence number.
+	* 
+	*/
+	
+	public function nextSequence($name)
+	{
+		$name .= '__s';
+		$result = $this->driver->nextSequence($this, $name);
+		return $result;
+	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// Table, column, and index management
+	// 
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Creates a table.
+	* 
+	* The $cols parameter should be in this format:
+	* 
+	* $cols = array(
+	*   'fieldOne' => array(
+	*     'type'    => bool|char|int|etc,
+	*     'size'    => total length for char|varchar|numeric
+	*     'scope'   => decimal places for numeric
+	*     'require' => true|false,
+	*   ),
+	*   'fieldTwo' => array(...)
+	* );
+	* 
+	* @access public
+	* 
+	* @param string $table The name of the table to create.
+	* 
+	* @param array $cols Array of columns to create.
+	* 
+	* @return mixed An SQL string, or a Solar_Error.
+	* 
+	*/
+	
 	public function createTable($table, $cols)
 	{
-		$stmt = $this->driver->createTable($table, $cols);
-		if (Solar::isError($stmt)) {
-			return $stmt;
+		// table name can only be so many chars
+		$len = strlen($table);
+		if ($len < 1 || $len > $this->len['tbl']) {
+			return $this->error(
+				'ERR_TABLE_LEN',
+				array('table' => $table),
+				E_USER_WARNING
+			);
+		}
+		
+		// table name must be a valid word, and cannot end in
+		// "__s" (this is to prevent sequence table collisions)
+		if (! $this->validWord($table) || substr($table, -3) == "__s") {
+			return $this->error(
+				'ERR_TABLE_WORD',
+				array('table' => $table),
+				E_USER_WARNING
+			);
+		}
+		
+		// array of column definitions
+		$coldef = array();
+		
+		// use this to stack errors when creating definitions
+		$err = Solar::object('Solar_Error');
+		
+		// loop through each column and get its definition
+		foreach ($cols as $name => $info) {
+			$result = $this->buildColDef($name, $info);
+			if (Solar::isError($result)) {
+				$err->push($result);
+			} else {
+				$coldef[] = "$name $result";
+			}
+		}
+		
+		// were there errors?
+		if ($err->count() > 0) {
+			return $err;
 		} else {
-			return $this->driver->exec($stmt);
+			// no errors, execute and return
+			$cols = implode(",\n\t", $coldef);
+			$stmt = "CREATE TABLE $table (\n$cols\n)";
+			$result = $this->exec($stmt);
+			return $result;
 		}
 	}
 	
@@ -701,7 +591,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropTable($table)
 	{
-		return $this->driver->exec("DROP TABLE $table");
+		return $this->exec("DROP TABLE $table");
 	}
 	
 	
@@ -723,12 +613,12 @@ class Solar_Sql extends Solar_Base {
 	
 	public function addColumn($table, $name, $info)
 	{
-		$declare = $this->driver->columnString($name, $info);
-		if (Solar::isError($declare)) {
-			return $declare;
+		$coldef = $this->buildColDef($name, $info);
+		if (Solar::isError($coldef)) {
+			return $coldef;
 		} else {
-			$stmt = "ALTER TABLE $table ADD COLUMN $declare";
-			return $this->driver->exec($stmt);
+			$stmt = "ALTER TABLE $table ADD COLUMN $coldef";
+			return $this->exec($stmt);
 		}
 	}
 	
@@ -749,34 +639,70 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropColumn($table, $name)
 	{
-		$stmt = "ALTER TABLE $table DROP COLUMN $name";
-		return $this->driver->exec($stmt);
+		return $this->exec("ALTER TABLE $table DROP COLUMN $name");
 	}
 	
 	
 	/**
 	* 
-	* Creates an index on a table in the database.
+	* Creates an index on a table.
+	* 
+	* The $info parameter should be in this format:
+	* 
+	* $info = array('type', 'col'); // single-col
+	* 
+	* $info = array('type', array('col', 'col', 'col')), // multi-col
+	* 
+	* $info = 'type'; // shorthand for single-col named for $name
+	* 
+	* The type may be 'normal' or 'unique'.
+	* 
+	* Indexes are automatically renamed to "tablename__indexname__i".
 	* 
 	* @access public
 	* 
-	* @param string $table The table name.
+	* @param string $table The name of the table for the index (1-30 chars).
 	* 
-	* @param string $name The index name to create.
+	* @param string $name The name of the index (1-27 chars).
 	* 
-	* @param array $info Information about the index.
+	* @param string|array $info Information about the index.
 	* 
-	* @return mixed
+	* @return mixed An SQL string, or a Solar_Error.
 	* 
 	*/
 	
 	public function createIndex($table, $name, $info)
 	{
-		$stmt = $this->driver->createIndex($table, $name, $info);
+		// check the table name length
+		$len = strlen($table);
+		if ($len < 1 || $len > $this->len['tbl']) {
+			return $this->error(
+				'ERR_TABLE_LEN',
+				array('table' => $table),
+				E_USER_WARNING
+			);
+		}
+		
+		// check the index name length
+		$len = strlen($name);
+		if ($len < 1 || $len > $this->len['idx']) {
+			return $this->error(
+				'ERR_IDX_LEN',
+				array('table' => $table, 'name' => $name),
+				E_USER_WARNING
+			);
+		}
+		
+		// build a definition statement
+		$stmt = $this->buildIdxDef($table, $name, $info);
+		
+		// were there errors?
 		if (Solar::isError($stmt)) {
+			// yes, return the error object
 			return $stmt;
 		} else {
-			return $this->driver->exec($stmt);
+			// no errors, execute and return
+			return $this->exec($stmt);
 		}
 	}
 	
@@ -797,74 +723,346 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropIndex($table, $name)
 	{
-		$stmt = "DROP INDEX $name ON $table";
-		return $this->driver->exec($stmt);
+		return $this->exec("DROP INDEX $name ON $table");
+	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// Miscellaneous
+	// 
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Safely quotes a value for an SQL statement.
+	* 
+	* Recursively quotes array values (but not their keys).
+	* 
+	* @access public
+	* 
+	* @param mixed $val The value to quote.
+	* 
+	* @return mixed An SQL-safe quoted value.
+	* 
+	*/
+	
+	public function quote($val)
+	{
+		$this->connect();
+		if (is_array($val)) {
+			// recursively quote array values
+			foreach ($val as $k => $v) {
+				$val[$k] = $this->pdo->quote($v);
+			}
+		} else {
+			$this->pdo->quote($val);
+		}
+		
+		return $val;
 	}
 	
 	
 	/**
 	* 
-	* Create a sequence in the database.
+	* Returns a list of table names in the database.
 	* 
 	* @access public
 	* 
-	* @param string $name The index name to drop.
-	* 
-	* @param string $start The starting sequence number.
-	* 
-	* @return mixed
-	* 
-	* @todo Check name length.
+	* @return array
 	* 
 	*/
 	
-	public function createSequence($name, $start = 1)
+	public function listTables()
 	{
-		$name .= '__seq';
-		return $this->driver->createSequence($name, $start);
+		return $this->driver->listTables($this);
+	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// Support
+	// 
+	// -----------------------------------------------------------------
+	
+	
+	/**
+	* 
+	* Creates a PDO object and connects to the database.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function connect()
+	{
+		// if we already have a PDO object, no need to re-connect.
+		if ($this->pdo) {
+			return;
+		}
+		
+		// build a DSN
+		$dsn = $this->driver->dsn();
+		
+		// create PDO object
+		$this->pdo = new PDO(
+			$dsn,
+			$this->config['user'],
+			$this->config['pass']
+		);
+		
+		// always autocommit
+		$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
+		
+		// force names to lower case
+		$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
+		
+		// for now, always use exceptions.
+		// later, we'll go with Solar_Error objects.
+		$this->pdo->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
+	}
+	
+	
+	/**
+	*
+	* Builds a column definition string.
+	* 
+	* The $info parameter should be in this format:
+	* 
+	* $info = array(
+	*   'type'    => bool|char|int|etc,
+	*   'size'    => total length for char|varchar|numeric
+	*   'scope'   => decimal places for numeric
+	*   'require' => true|false,
+	* );
+	* 
+	* @access public
+	* 
+	* @param string $column The column name.
+	* 
+	* @param array $info The column information.
+	* 
+	*/
+	
+	protected function buildColDef($name, $info)
+	{
+		// validate column name length
+		$len = strlen($name);
+		if ($len < 1 || $len > $this->len['col']) {
+			return $this->error(
+				'ERR_COL_LEN',
+				array('name' => $name),
+				E_USER_WARNING,
+				false
+			);
+		}
+		
+		// column name must be a valid word
+		if (! $this->validWord($name)) {
+			return $this->error(
+				'ERR_COL_WORD',
+				array('name' => $name),
+				E_USER_WARNING,
+				false
+			);
+		}
+		
+		// set default values for these variables
+		$tmp = array(
+			'type'	   => null,
+			'size'	   => null,
+			'scope'	   => null,
+			'require'  => null, // true means NOT NULL, false means NULL
+		);
+		
+		$info = array_merge($tmp, $info);
+		extract($info); // see array keys, above
+		
+		// force values
+		$name    = trim(strtolower($name));
+		$type    = strtolower(trim($type));
+		$size    = (int) $size;
+		$scope   = (int) $scope;
+		$require = (bool) $require;
+		
+		// is it a recognized column type?
+		$native = array_keys($this->driver->nativeColTypes());
+		if (! in_array($type, $native)) {
+			return $this->error(
+				'ERR_COL_TYPE',
+				array('name' => $name, 'type' => $type),
+				E_USER_WARNING,
+				false
+			);
+		}
+		
+		// basic declaration string
+		switch ($type) {
+		
+		case 'char':
+		case 'varchar':
+			// does it have a valid size?
+			if ($size < 1 || $size > 255) {
+				return $this->error(
+					'ERR_COL_SIZE',
+					array('name' => $name, 'size' => $size),
+					E_USER_WARNING,
+					false
+				);
+			} else {
+				// replace the 'size' placeholder
+				$coldef = str_replace(':size', $size, $this->native[$type]);
+			}
+			break;
+		
+		case 'numeric':
+		
+			if ($size < 1 || $size > 255) {
+				return $this->error(
+					'ERR_COL_SIZE',
+					array('name' => $name, 'size' => $size, 'scope' => $scope),
+					E_USER_WARNING,
+					false
+				);
+			}
+			
+			if ($scope < 0 || $scope > $size) {
+				return $this->error(
+					'ERR_COL_SCOPE',
+					array('name' => $name, 'size' => $size, 'scope' => $scope),
+					E_USER_WARNING,
+					false
+				);
+			}
+			
+			// replace the 'size' and 'scope' placeholders
+			$coldef = str_replace(
+				array(':size', ':scope'),
+				array($size, $scope),
+				$this->native[$type]
+			);
+			
+			break;
+		
+		default:
+			$coldef = $this->native[$type];
+			break;
+		
+		}
+		
+		// set the "NULL"/"NOT NULL" portion
+		$coldef .= ($require) ? ' NOT NULL' : ' NULL';
+		
+		// done
+		return $coldef;
+	}
+	
+	
+	/**
+	*
+	* Builds an index creation string.
+	* 
+	* @access protected
+	* 
+	* @param string $column The column name.
+	* 
+	* @param array $info The column information.
+	* 
+	*/
+	
+	protected function buildIdxDef($table, $name, $info)
+	{
+		// we prefix all index names with the table name,
+		// and suffix all index names with '__i'.  this
+		// is to soothe PostgreSQL, which demands that index
+		// names not collide, even when they indexes are on
+		// different tables.
+		$fullname = $table . '__' . $name . '__i';
+		
+		// build up the index information for type and columns
+		$type = null;
+		$cols = null;
+		if (is_string($info)) {
+		
+			// shorthand for index names: colname => index_type
+			$type = trim($info);
+			$cols = trim($name);
+			
+		} elseif (is_array($info)) {
+		
+			// longhand: index_name => array('type' => ..., 'cols' => ...)
+			$type = (isset($info['type'])) ? $info['type'] : 'normal';
+			$cols = (isset($info['cols'])) ? $info['cols'] : null;
+			
+		}
+		
+		// are there any columns for the index?
+		if (! $cols) {
+			return $this->error(
+				'ERR_IDX_COLS',
+				array('table' => $table, 'name' => $name),
+				E_USER_WARNING
+			);
+		}
+		
+		// create a string of column names
+		$list = implode(', ', (array) $cols);
+		
+		// create index entry
+		if ($type == 'unique') {
+			return "CREATE UNIQUE INDEX $fullname ON $table ($list)";
+		} elseif ($type == 'normal') {
+			return "CREATE INDEX $fullname ON $table ($list)";
+		} else {
+			return $this->error(
+				'ERR_IDX_TYPE',
+				array('table' => $table, 'name' => $name, 'type' => $type),
+				E_USER_WARNING
+			);
+		}
 	}
 	
 	
 	/**
 	* 
-	* Drop a sequence from the database.
+	* Check if a table, column, or index name is a valid word.
 	* 
-	* @access public
+	* @access protected
 	* 
-	* @param string $name The index name to drop.
+	* @param string $word The word to check.
 	* 
-	* @param string $start The starting sequence number.
-	* 
-	* @return mixed
+	* @return bool True if valid, false if not.
 	* 
 	*/
 	
-	public function dropSequence($name)
+	protected function validWord($word)
 	{
-		$name .= '__seq';
-		return $this->driver->dropSequence($name);
-	}
-	
-	
-	/**
-	* 
-	* Gets a sequence number; creates the sequence if it does not exist.
-	* 
-	* Technically, you only need one sequence for your entire database;
-	* the number itself is not important, only that it is unique.
-	* 
-	* @access public
-	* 
-	* @param string &$name The sequence name.
-	* 
-	* @return int The next sequence number.
-	* 
-	*/
-	
-	public function nextSequence($name)
-	{
-		$name .= '__seq';
-		return $this->driver->nextSequence($name);
+		static $reserved;
+		if (! isset($reserved)) {
+			$reserved = Solar::object('Solar_Sql_Reserved');
+		}
+		
+		// is it a reserved word?
+		if (in_array(strtoupper($word), $reserved->words)) {
+			return false;
+		}
+		
+		// only a-z, 0-9, and _ are allowed in words.
+		// must start with a letter, not a number or underscore.
+		if (! preg_match('/^[a-z][a-z0-9_]*$/', $word)) {
+			return false;
+		}
+		
+		// must not have two or more underscores in a row
+		if (strpos($word, '__') !== false) {
+			return false;
+		}
+		
+		// guess it's OK
+		return true;
 	}
 }
 ?>

@@ -19,11 +19,6 @@
 */
 
 /**
-* Needed for data validation.
-*/
-Solar::loadClass('Solar_Valid');
-
-/**
 * 
 * Class for representing an SQL table.
 * 
@@ -82,16 +77,15 @@ class Solar_Sql_Table extends Solar_Base {
 	* <code>
 	* $col = array(
 	*     'colName' => array(
-	*         'name'     => // (string) the colName, same as the key
-	*         'type'     => // (string) char, varchar, date, etc
-	*         'size'     => // (int) column size
-	*         'scope'    => // (int) decimal places
-	*         'label'    => // (string) Text label for forms and tables
-	*         'valid'    => // (array) Solar_Valid methods and args
-	*         'require'  => // (bool) is this a required column?
-	*         'sequence' => // (string) use this auto-sequence
-	*         'default'  => // (string|array) default value
-	*         'primary'  => // (bool) is this part of the primary key?
+	*         'name'    => (string) the colName, same as the key
+	*         'type'    => (string) char, varchar, date, etc
+	*         'size'    => (int) column size
+	*         'scope'   => (int) decimal places
+	*         'valid'   => (array) Solar_Valid methods and args
+	*         'require' => (bool) is this a required (non-null) column?
+	*         'seqname' => (string) use this auto-sequence
+	*         'default' => (string|array) default value
+	*         'primary' => (bool) is this part of the primary key?
 	*      ),
 	* );
 	* </code>
@@ -99,8 +93,6 @@ class Solar_Sql_Table extends Solar_Base {
 	* @access protected
 	* 
 	* @var array
-	* 
-	* @see addCol()
 	* 
 	*/
 	
@@ -139,6 +131,13 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	* Constructor.
 	* 
+	* @access public
+	* 
+	* @param array $config An array of user-defined configuration
+	* values.
+	* 
+	* @return void
+	* 
 	*/
 
 	public function __construct($config = null)
@@ -146,8 +145,9 @@ class Solar_Sql_Table extends Solar_Base {
 		// main construction
 		parent::__construct($config);
 		
-		// perform column and index setup
+		// perform column and index setup, then fix everything.
 		$this->setup();
+		$this->fixSetup();
 		
 		// connect to the database
 		if (is_string($this->config['sql'])) {
@@ -205,14 +205,14 @@ class Solar_Sql_Table extends Solar_Base {
 	public function insert($data)
 	{
 		// set defaults
-		$data = array_merge($this->getDefault(), $data);
+		$data = array_merge($this->default(), $data);
 		
 		// forcibly add sequential values
 		foreach ($this->col as $field => $info) {
 			// does this field use a sequence?
-			if (! empty($info['sequence'])) {
+			if (! empty($info['seqname'])) {
 				// yes, override any given values
-				$data[$field] = $this->sql->nextcolSequence($info['sequence']);
+				$data[$field] = $this->sql->nextSequence($info['seqname']);
 			}
 		}
 		
@@ -242,9 +242,11 @@ class Solar_Sql_Table extends Solar_Base {
 	* @param array $data An associative array of data to be updated, in
 	* the format (field => value).
 	* 
-	* @param string $where An SQL WHERE clause limiting the updated rows.
+	* @param string $where An SQL WHERE clause limiting the updated
+	* rows.
 	* 
-	* @return mixed The updated data on success, Solar_Error object on failure.
+	* @return mixed The updated data on success, Solar_Error object on
+	* failure.
 	* 
 	*/
 	
@@ -255,15 +257,18 @@ class Solar_Sql_Table extends Solar_Base {
 		
 		// disallow the changing of primary key data
 		foreach (array_keys($data) as $field) {
+		
 			// get the 'primary' flag
 			$primary = isset($this->col[$field]['primary'])
 				? $this->col[$field]['primary']
 				: false;
+				
 			// retain and unset if primary
 			if ($primary) {
 				$retain[$field] = $data[$field];
 				unset($data[$field]);
 			}
+			
 		}
 		
 		// validate and recast the data
@@ -305,11 +310,89 @@ class Solar_Sql_Table extends Solar_Base {
 	
 	/**
 	* 
+	* Convenience method to select rows from this table.
+	* 
+	* @access public
+	* 
+	* @param string $type The type of fetch to execute: 'all', 'one',
+	* 'row', etc. Default is 'result'.
+	* 
+	* @param array|string $where An SQL WHERE clause to filter results. 
+	* May be an array:  If the key is a string, it's assumed to be a
+	* column name and the value is the equality comparison; the value is
+	* automatically bound into the query.  If the key is an integer, the
+	* value is a custom where clause.  Alternatively, $where may be a
+	* string, in which case it is a user-defined WHERE clause in its
+	* entirety (no binding).
+	* 
+	* @param array|string $order An SQL ORDER clause, e.g. an array of
+	* column names.
+	* 
+	* @param int $page The page-number of results to retrieve.
+	* 
+	* @return array
+	* 
+	*/
+	
+	public function select($type = 'result', $where = null,
+		$order = null, $page = null)
+	{
+		// selection tool
+		$select = Solar::object('Solar_Sql_Select');
+		
+		// all columns
+		$select->cols('*');
+		
+		// from this table
+		$select->from($this->name);
+		
+		// data to bind into the query
+		$data = array();
+		
+		// where clause?
+		if (is_array($where) || is_object($where)) {
+			foreach ((array) $where as $key => $val) {
+				if (is_int($col)) {
+					// custom user-defined clause
+					$select->where($val);
+				} else {
+					// equality key-value pair of "column => value"
+					$select->where("$key = :$key");
+					// add to the binding data
+					$data[$key] = $val;
+				}
+			}
+		} else {
+			// ... user-specified clause
+			$select->where($where);
+		}
+		
+		// order by?
+		$select->order($order);
+		
+		// paging?
+		$select->limitPage($page);
+		
+		// bind data
+		$select->bind($data);
+		
+		// fetch and return results
+		$result = $select->fetch($type);
+		return $result;
+	}
+	
+	
+	/**
+	* 
 	* Returns a data array with column keys and default values.
 	* 
 	* @access public
 	* 
-	* @return array
+	* @param string|array The column(s) to get defaults for; if
+	* none specified, gets defaults for all columns.
+	* 
+	* @return array An array of key-value pairs where the key is
+	* the column name and the value is the default column value.
 	* 
 	*/
 	
@@ -366,57 +449,6 @@ class Solar_Sql_Table extends Solar_Base {
 	}
 	
 	
-	/**
-	* 
-	* Convenience method to fetch rows.
-	* 
-	* @access public
-	* 
-	* @return array
-	* 
-	*/
-	
-	protected function fetch($type = 'result', $where = null, $order = null, 
-		$page = null)
-	{
-		// selection tool
-		$select = Solar::object('Solar_Sql_Select');
-		
-		// from this table
-		$select->from($this->name);
-		
-		// where ...
-		$data = array();
-		if (is_array($where) || is_object($where)) {
-			foreach ((array) $where as $col => $val) {
-				if (is_string($col)) {
-					// ... column = :placeholder
-					$select->where("$col = :$col");
-					$data[$col] = $val;
-				} else {
-					// naked user-defined clause
-					$select->where($val);
-				}
-			}
-		} else {
-			// ... user-specified clause
-			$select->where($where);
-		}
-		
-		// order by?
-		$select->order($order);
-		
-		// what kind of fetch? 
-		$select->fetch($type);
-		
-		// execute
-		$result = $select->exec($data, $page);
-		
-		// done!
-		return $result;
-	}
-	
-	
 	// -----------------------------------------------------------------
 	// 
 	// Support and management methods.
@@ -438,7 +470,57 @@ class Solar_Sql_Table extends Solar_Base {
 	{
 	}
 	
+	
+	/**
+	* 
+	* Fixes the $col and $idx properties after user setup.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+
+	protected final function fixSetup()
+	{
+		// a baseline column definition
+		$basecol = array(
+			'name'    => null,
+			'type'    => 'varchar',
+			'size'    => 255,
+			'scope'   => 0,
+			'valid'   => array(),
+			'require' => false,
+			'seqname' => null,
+			'default' => null,
+			'primary' => false
+		);
 		
+		// fix up each column in the schema
+		foreach ($this->col as $name => $info) {
+		
+			// fill in missing elements
+			$info = array_merge($basecol, $info);
+			
+			// make sure there's a name
+			$info['name'] = $name;
+			
+			// force 'valid' to an array of validations
+			settype($info['valid'], 'array');
+			
+			// if 'default' is not already an array, make it
+			// one as a literal.  this lets you avoid the array
+			// when setting up simple literals.
+			if (! is_array($info['default'])) {
+				$info['default'] = array('literal', $info['default']);
+			}
+			
+			// save back into the column info
+			$this->col[$name] = $info;
+		}
+	}
+	
+	
 	/**
 	* 
 	* Creates the table in the database if it does not already exist.
@@ -452,7 +534,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 
-	protected function autoCreate()
+	protected final function autoCreate()
 	{
 		// is a table with the same name already there?
 		$tmp = $this->sql->listTables();
@@ -533,8 +615,11 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 	
-	protected function autoValid(&$data)
+	protected final function autoValid(&$data)
 	{
+		// object methods for validation
+		$valid = Solar::object('Solar_Valid');
+		
 		// low and high range values for integers
 		$int_range = array(
 			'smallint' => array(pow(-2, 15), pow(+2, 15) - 1),
@@ -649,7 +734,7 @@ class Solar_Sql_Table extends Solar_Base {
 				settype($value, 'float');
 				$size = $this->col[$field]['size'];
 				$scope = $this->col[$field]['scope'];
-				if (! Solar_Valid::inScope($value, $size, $scope)) {
+				if (! $valid->inScope($value, $size, $scope)) {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_NUMRANGE',
@@ -668,7 +753,7 @@ class Solar_Sql_Table extends Solar_Base {
 			
 			case 'date':
 				settype($value, 'string');
-				if (! Solar_Valid::isoDate($value)) {
+				if (! $valid->isoDate($value)) {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_DATE',
@@ -689,7 +774,7 @@ class Solar_Sql_Table extends Solar_Base {
 					// add seconds if only hours and minutes
 					$value .= ":00";
 				}
-				if (! Solar_Valid::isoTime($value)) {
+				if (! $valid->isoTime($value)) {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_TIME',
@@ -708,7 +793,7 @@ class Solar_Sql_Table extends Solar_Base {
 				settype($value, 'string');
 				// make sure it's in the format yyyy-mm-ddThh:ii:ss
 				$value = substr($value, 0, 10) . 'T' . substr($value, 11, 8);
-				if (! Solar_Valid::isoDatetime($value)) {
+				if (! $valid->isoDatetime($value)) {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_TIMESTAMP',
@@ -753,7 +838,7 @@ class Solar_Sql_Table extends Solar_Base {
 				
 				// call the appropriate Solar_Valid method
 				$result = call_user_func_array(
-					array('Solar_Valid', $method),
+					array($valid, $method),
 					$args
 				);
 				
@@ -826,7 +911,7 @@ class Solar_Sql_Table extends Solar_Base {
 			'scope'    => $scope,
 			'label'    => $label,
 			'require'  => false,
-			'sequence' => null,
+			'seqname' => null,
 			'default'  => false,
 			'primary'  => false,
 			'foreign'  => array(),
@@ -879,7 +964,7 @@ class Solar_Sql_Table extends Solar_Base {
 		if (empty($seq)) {
 			$seq = $this->name . '__' . $name;
 		}
-		$this->col[$name]['sequence'] = $seq;
+		$this->col[$name]['seqname'] = $seq;
 	}
 	
 	

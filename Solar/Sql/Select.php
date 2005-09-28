@@ -599,6 +599,24 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
+	* Quotes values for a query.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to quote.
+	* 
+	* @return mixed The quoted value.
+	* 
+	*/
+
+	public function quote($value)
+	{
+		return $this->sql->quote($value);
+	}
+	
+	
+	/**
+	* 
 	* Fetch the results based on the current query properties.
 	* 
 	* @access public
@@ -609,20 +627,9 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function fetch($type = null)
+	public function fetch($type = 'result')
 	{
-		if (! $type || $type == 'result') {
-			$method = 'exec';
-		} else {
-			$method = 'fetch' . ucfirst($type);
-		}
-		
-		// don't execute, just get the statement
-		$exec = false;
-		$stmt = $this->sql->select($this->parts, null, false);
-		
-		// now execute the statement with bound data
-		return $this->sql->$method($stmt, $this->bind);
+		return $this->sql->select($type, $this->parts, $this->bind);
 	}
 	
 	

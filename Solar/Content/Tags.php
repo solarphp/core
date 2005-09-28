@@ -64,7 +64,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 		);
 		
 		// the area of the node for this tag
-		$this->col['area_name'] = array(
+		$this->col['areas_name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
@@ -74,7 +74,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 		);
 		
 		// the node for this tag
-		$this->col['node_name'] = array(
+		$this->col['nodes_name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
@@ -85,7 +85,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 		
 		
 		// the "owner" of the node to which this tag applies
-		$this->col['user_handle'] = array(
+		$this->col['users_handle'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 			'require' => true,
@@ -109,9 +109,9 @@ class Solar_Content_Tags extends Solar_Sql_Table {
 		
 		$this->idx = array(
 			'id' => 'unique',
-			'area_name' => 'normal',
-			'node_name' => 'normal',
-			'user_handle' => 'normal',
+			'areas_name' => 'normal',
+			'nodes_name' => 'normal',
+			'users_handle' => 'normal',
 			'name' => 'normal',
 		);
 	}

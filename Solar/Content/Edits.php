@@ -59,27 +59,27 @@ class Solar_Content_Edits extends Solar_Sql_Table {
 		// 
 		
 		// unique ID for this edit
-		$this->col['edit_id'] = array(
+		$this->col['id'] = array(
 			'type'    => 'int',
 			'primary' => true,
 			'require' => true,
-			'seqname' => 'edit_id',
+			'seqname' => 'id',
 		);
 		
 		// which part this edit belongs to
-		$this->col['edit_part_id'] = array(
+		$this->col['parts_id'] = array(
 			'type'    => 'int',
 			'require' => true,
 		);
 		
 		// timestamp when edited
-		$this->col['edit_ts'] = array(
+		$this->col['ts'] = array(
 			'type'    => 'timestamp',
 			'require' => true,
 		);
 		
 		// IP address of the editor
-		$this->col['edit_ip_addr'] = array(
+		$this->col['ip_addr'] = array(
 			'type'    => 'char',
 			'size'    => 15,
 			'require' => true,
@@ -90,19 +90,19 @@ class Solar_Content_Edits extends Solar_Sql_Table {
 		);
 		
 		// username of the editor
-		$this->col['edit_user_handle'] = array(
+		$this->col['users_handle'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 		);
 		
 		// arbitrary flag: moderate, spam, disable, etc
-		$this->col['edit_flag'] = array(
+		$this->col['flag'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 		);
 		
 		// MIME type: text/plain, text/x-solar-wiki, etc
-		$this->col['edit_mime'] = array(
+		$this->col['mime'] = array(
 			'type'    => 'varchar',
 			'size'    => 64,
 			'require' => true,
@@ -110,24 +110,24 @@ class Solar_Content_Edits extends Solar_Sql_Table {
 		);
 		
 		// subject, title, filename, uri, etc
-		$this->col['edit_subj'] = array(
+		$this->col['subj'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
 		);
 		
 		// summary or short description
-		$this->col['edit_summ'] = array(
+		$this->col['summ'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
 		);
 		
 		// the actual content
-		$this->col['edit_body'] = array(
+		$this->col['body'] = array(
 			'type'    => 'clob',
 		);
 		
 		// serialized array of preferences for this edit
-		$this->col['edit_prefs'] = array(
+		$this->col['prefs'] = array(
 			'type'    => 'clob',
 		);
 		
@@ -138,18 +138,18 @@ class Solar_Content_Edits extends Solar_Sql_Table {
 		// 
 		
 		$this->idx = array(
-			'edit_id'      => 'unique',
-			'edit_part_id' => 'normal',
-			'edit_ts'      => 'normal',
-			'edit_flag'    => 'normal',
-			'edit_subj'    => 'normal',
-			'edit_summ'    => 'normal',
+			'id'       => 'unique',
+			'parts_id' => 'normal',
+			'ts'       => 'normal',
+			'flag'     => 'normal',
+			'subj'     => 'normal',
+			'summ'     => 'normal',
 		);
 	}
 	
-	public function fetchItem($edit_id)
+	public function fetchItem($id)
 	{
-		$where = array('edit_id' => $edit_id);
+		$where = array('id' => $id);
 		return parent::select('row', $where);
 	}
 }

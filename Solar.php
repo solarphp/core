@@ -136,7 +136,6 @@ class Solar {
 			'sql'      => 'Solar_Sql',
 			'user'     => 'Solar_User',
 			'locale'   => 'Solar_Locale',
-			'super'    => 'Solar_Super',
 			'template' => 'Solar_Template',
 		);
 		
@@ -145,9 +144,6 @@ class Solar {
 				Solar::$config['Solar']['shared'][$name] = $class;
 			}
 		}
-		
-		// build the shared superglobal data retriever
-		Solar::shared('super');
 		
 		// build the shared locale object
 		Solar::shared('locale');
@@ -565,7 +561,7 @@ class Solar {
 	
 	public static function get($key = null, $default = null)
 	{
-		return Solar::$shared->super->fetch('get', $key, $default);
+		return Solar::super('_GET', $key, $default);
 	}
 	
 	
@@ -591,7 +587,7 @@ class Solar {
 	
 	public static function post($key = null, $default = null)
 	{
-		return Solar::$shared->super->fetch('post', $key, $default);
+		return Solar::super('_POST', $key, $default);
 	}
 	
 	
@@ -614,7 +610,7 @@ class Solar {
 	
 	public static function cookie($key = null, $default = null)
 	{
-		return Solar::$shared->super->fetch('cookie', $key, $default);
+		return Solar::super('_COOKIE', $key, $default);
 	}
 	
 	
@@ -637,7 +633,7 @@ class Solar {
 	
 	public static function server($key = null, $default = null)
 	{
-		return Solar::$shared->super->fetch('server', $key, $default);
+		return Solar::super('_SERVER', $key, $default);
 	}
 	
 	
@@ -660,7 +656,7 @@ class Solar {
 	
 	public static function session($key = null, $default = null)
 	{
-		return Solar::$shared->super->fetch('session', $key, $default);
+		return Solar::super('_SESSION', $key, $default);
 	}
 	
 	
@@ -687,7 +683,7 @@ class Solar {
 	public static function pathinfo($key = null, $default = null)
 	{
 		// get the pathinfo as passed
-		$info = Solar::$shared->super->fetch('server', 'PATH_INFO', '');
+		$info = Solar::super('_SERVER', 'PATH_INFO', '');
 		
 		// explode into its elements
 		$elem = explode('/', $info);
@@ -935,6 +931,48 @@ class Solar {
 	protected static function dispelSybase(&$value)
 	{
 		$value = str_replace("''", "'", $value);
+	}
+	
+	
+	/**
+	* 
+	* Fetches a superglobal value by key, or a default value.
+	* 
+	* @access public
+	* 
+	* @param string $type The superglobal variable name to fetch from;
+	* e.g., '_SERVER' for $_SERVER or '_GET' for $_GET.
+	* 
+	* @param string $key The superglobal array key to retrieve; if null,
+	* will return the entire superglobal array for that type.
+	* 
+	* @param mixed $default If the requested superglobal array key does
+	* not exist, return this value instead.
+	* 
+	* @return mixed The value of the superglobal type array key, or the
+	* default value if the key did not exist.
+	* 
+	*/
+	
+	protected static function super($type, $key = null, $default = null)
+	{
+		// get the whole superglobal, or just one key?
+		if (is_null($key) && isset($GLOBALS[$type])) {
+		
+			// no key selected, return the whole array
+			return $GLOBALS[$type];
+			
+		} elseif (isset($GLOBALS[$type][$key])) {
+		
+			// looking for a specific key
+			return $GLOBALS[$type][$key];
+			
+		} else {
+		
+			// specified key does not exist
+			return $default;
+			
+		}
 	}
 }
 ?>

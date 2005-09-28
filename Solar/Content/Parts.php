@@ -64,7 +64,7 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		);
 		
 		// the area in which this part belongs
-		$this->col['area_name'] = array(
+		$this->col['areas_name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
@@ -74,7 +74,7 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		);
 		
 		// the node in which this part belongs
-		$this->col['node_name'] = array(
+		$this->col['nodes_name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
@@ -105,13 +105,13 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		);
 		
 		// the most-recent edit ID number
-		$this->col['edit_id'] = array(
+		$this->col['edits_id'] = array(
 			'type'    => 'int',
 			'require' => true,
 		);
 		
 		// the user who owns this part
-		$this->col['user_handle'] = array(
+		$this->col['users_handle'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 		);
@@ -150,12 +150,12 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 	}
 	
 	
-	public function fetchList($area_name, $node_name, $types = null,
+	public function fetchList($area, $node, $types = null,
 		$page = null)
 	{
 		$where = array(
-			'area_name' => $area_name,
-			'node_name' => $node_name
+			'areas_name' => $area,
+			'nodes_name' => $node
 		);
 		
 		// add the types to filter for (null means get all types)
@@ -169,8 +169,8 @@ class Solar_Content_Parts extends Solar_Sql_Table {
 		
 		// order is by area, node, type, rank, and timestamp
 		$order = array(
-			'LOWER(area_name)',
-			'LOWER(node_name)',
+			'LOWER(areas_name)',
+			'LOWER(nodes_name)',
 			'LOWER(type)',
 			'rank',
 			'ts'

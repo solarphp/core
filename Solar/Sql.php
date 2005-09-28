@@ -217,15 +217,24 @@ class Solar_Sql extends Solar_Base {
 		settype($data, 'array');
 		
 		// prepare the statement
-		$obj = $this->pdo->prepare($stmt);
+		try {
+			$obj = $this->pdo->prepare($stmt);
+		} catch (Exception $e) {
+			$err = $this->errorException($e);
+			return $err;
+		}
 		
 		// execute with bound data
-		$obj->execute($data);
+		try {
+			$obj->execute($data);
+		} catch (Exception $e) {
+			$err = $this->errorException($e);
+			return $err;
+		}
 		
 		// return the results embedded in the prepared statement object
 		return $obj;
 	}
-	
 	
 	/**
 	* 
@@ -808,21 +817,28 @@ class Solar_Sql extends Solar_Base {
 		$dsn = $this->driver->dsn();
 		
 		// create PDO object
-		$this->pdo = new PDO(
-			$dsn,
-			$this->config['user'],
-			$this->config['pass']
-		);
+		try {
 		
-		// always autocommit
-		$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
-		
-		// force names to lower case
-		$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
-		
-		// for now, always use exceptions.
-		// later, we'll go with Solar_Error objects.
-		$this->pdo->setAttribute(PDO_ATTR_ERRMODE, PDO_ERRMODE_EXCEPTION);
+			$this->pdo = new PDO(
+				$dsn,
+				$this->config['user'],
+				$this->config['pass']
+			);
+			
+			// always autocommit
+			$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
+			
+			// force names to lower case
+			$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
+			
+			// always use exceptions.
+			$this->pdo->setAttribute(PDO_ATTR_ERRMODE,
+				PDO_ERRMODE_EXCEPTION);
+			
+		} catch (Exception $e) {
+			$err = $this->errorException($e);
+			return $err;
+		}
 	}
 	
 	
@@ -889,8 +905,8 @@ class Solar_Sql extends Solar_Base {
 		$require = (bool) $require;
 		
 		// is it a recognized column type?
-		$native = array_keys($this->driver->nativeColTypes());
-		if (! in_array($type, $native)) {
+		$native = $this->driver->nativeColTypes();
+		if (! array_key_exists($type, $native)) {
 			return $this->error(
 				'ERR_COL_TYPE',
 				array('name' => $name, 'type' => $type),
@@ -914,7 +930,7 @@ class Solar_Sql extends Solar_Base {
 				);
 			} else {
 				// replace the 'size' placeholder
-				$coldef = str_replace(':size', $size, $this->native[$type]);
+				$coldef = str_replace(':size', $size, $native[$type]);
 			}
 			break;
 		
@@ -942,13 +958,13 @@ class Solar_Sql extends Solar_Base {
 			$coldef = str_replace(
 				array(':size', ':scope'),
 				array($size, $scope),
-				$this->native[$type]
+				$native[$type]
 			);
 			
 			break;
 		
 		default:
-			$coldef = $this->native[$type];
+			$coldef = $native[$type];
 			break;
 		
 		}

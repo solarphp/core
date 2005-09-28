@@ -67,7 +67,7 @@ class Solar_Content_Areas extends Solar_Sql_Table {
 		);
 		
 		// the user who owns this area
-		$this->col['user_handle'] = array(
+		$this->col['users_handle'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 			'valid'   => array('word'),
@@ -82,7 +82,7 @@ class Solar_Content_Areas extends Solar_Sql_Table {
 		// keys and indexes
 		$this->idx = array(
 			'name'        => 'unique',
-			'user_handle' => 'normal',
+			'users_handle' => 'normal',
 		);
 	}
 	

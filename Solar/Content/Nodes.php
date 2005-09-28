@@ -57,7 +57,7 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 		// 
 		
 		// the area in which this node belongs
-		$this->col['area_name'] = array(
+		$this->col['areas_name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
@@ -93,7 +93,7 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 		);
 		
 		// the user who owns this area
-		$this->col['user_handle'] = array(
+		$this->col['users_handle'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 			'valid'   => array(
@@ -125,14 +125,15 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
 			// composite unique index
 			'full_name' => array(
 				'type' => 'unique',
-				'cols' => array('area_name', 'name'),
+				'cols' => array('areas_name', 'name'),
 			),
 			// other indexes
-			'area_name' => 'normal',
+			'areas_name' => 'normal',
 			'name'      => 'normal',
 			'tags'      => 'normal',
 			'rank'      => 'normal',
 			'rating'    => 'normal',
+		);
 	}
 	
 	public function fetchList($area_name, $page = null)

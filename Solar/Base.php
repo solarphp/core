@@ -179,6 +179,40 @@ abstract class Solar_Base {
 	
 	/**
 	* 
+	* Converts an exception to a Solar_Error of E_USER_ERROR severity.
+	* 
+	* No localization is possible.
+	* 
+	* @access protected
+	* 
+	* @param object $e An exception object.
+	* 
+	* @return object A Solar_Error object.
+	*/
+	
+	protected function errorException($e)
+	{
+		$info = array(
+			'type'  => get_class($e),
+			'file'  => $e->getFile(),
+			'line'  => $e->getLine(),
+			'trace' => $e->getTraceAsString()
+		);
+		
+		$err = Solar::error(
+			get_class($this),
+			$e->getCode(),
+			$e->getMessage(),
+			$info,
+			E_USER_ERROR,
+			false
+		);
+		
+		return $err;
+	}
+	
+	/**
+	* 
 	* Provides hooks for Solar::start() and Solar::stop() on shared objects.
 	* 
 	* @access public

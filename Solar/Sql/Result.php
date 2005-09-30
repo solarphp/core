@@ -32,128 +32,57 @@
 
 class Solar_Sql_Result extends Solar_Base {
 	
-	
-	/**
-	* 
-	* User-provided configuration values.
-	* 
-	* Keys:
-	* 
-	* rsrc => (resource) Query result resource.
-	* 
-	* class => (string) The SQL driver class name.
-	* 
-	* @access protected
-	* 
-	* @var array
-	* 
-	*/
-	
 	protected $config = array(
-		'rsrc'  => null,
-		'class' => null
+		'PDOStatement' => null,
 	);
 	
-	
-	/**
-	* 
-	* Frees the result set.
-	* 
-	* @access public
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function __destruct()
+	public __construct($config = null)
 	{
-		// make a static call to the free() method from the driver
-		call_user_func(
-			array($this->config['class'], 'free'),
-			$this->config['rsrc']
+		parent::__construct($config);
+	}
+	
+	public __call($func, $args)
+	{
+		return call_user_func_array(
+			array($this->config['PDOStatement'], $func),
+			$args
 		);
 	}
 	
-	
-	/**
-	* 
-	* Fetches an associatve row array and advances to next row.
-	* 
-	* Always forces the keys to lower-case and rtrim()s the values
-	* for consistency between all drivers.
-	* 
-	* @access public
-	* 
-	* @return mixed An associative row array, or boolean false when
-	* there are no more rows.
-	* 
-	*/
-	
-	public function fetch()
+	public fetch($mode = PDO_FETCH_ASSOC)
 	{
-		// make a static call to the fetch() method from the driver
-		$row = call_user_func(
-			array($this->config['class'], 'fetch'),
-			$this->config['rsrc']
-		);
+		// the fetched row data 
+		$row = array();
+		$orig = $this->config['PDOStatement']->fetch($mode);
 		
-		// force field names to lower-case, rtrim() all data
-		if (is_array($row)) {
-			array_change_key_case($row, CASE_LOWER);
-			array_walk($row, 'rtrim');
+		if (! $orig) {
+			return false;
 		}
 		
-		// done
-		return $row;
-	}
-	
-	
-	/**
-	* 
-	* Fetches a numeric row array and advances to next row.
-	* 
-	* @access public
-	* 
-	* @return mixed A numeric row array, or boolean false when there
-	* are no more rows.
-	* 
-	*/
-	
-	public function fetchNum()
-	{
-		// make a static call to the fetchNum() method from the driver
-		$row = call_user_func(
-			array($this->config['class'], 'fetchNum'),
-			$this->config['rsrc']
-		);
-		
-		// rtrim() all data
-		if (is_array($row)) {
-			array_walk($row, 'rtrim');
+		// if the name has __ in it, assume that the
+		// left portion is the table name, and the
+		// right portion is the column name. otherwise
+		// it's just a column name.
+		foreach ($orig as $key => $val) {
+			$pos = strpos('__', $key);
+			if ($pos) {
+				$tbl = substr($key, 0, $pos);
+				$col = substr($key, $pos+2);
+				$row[$tbl][$col] = $val;
+			} else {
+				$row[$col] = $val;
+			}
 		}
-		
-		// done
-		return $row;
+		return $data;
 	}
 	
-	
-	/**
-	* 
-	* Returns the number of rows in the result set.
-	* 
-	* @access public
-	* 
-	* @return int The number of rows in the result set.
-	* 
-	*/
-	
-	public function numRows()
+	public fetchAll($mode = PDO_FETCH_ASSOC)
 	{
-		// make a static call to the numRows() method from the driver
-		return call_user_func(
-			array($this->config['class'], 'numRows'),
-			$this->config['rsrc']
-		);
+		$data = array();
+		while ($row = $this->fetch($mode)) {
+			$data[] = $row;
+		}
+		return $data;
 	}
 }
 ?>

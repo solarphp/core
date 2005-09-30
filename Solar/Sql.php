@@ -362,7 +362,7 @@ class Solar_Sql extends Solar_Base {
 			return $stmt;
 		}
 		
-		// execute and get the result set
+		// execute and get the PDOStatement result object
 		$result = $this->exec($stmt, $data);
 		if (Solar::isError($result)) {
 			return $result;
@@ -408,9 +408,15 @@ class Solar_Sql extends Solar_Base {
 			}
 			break;
 		
-		// return the PDOStatement result object
-		case 'result':
+		// the PDOStatement result object
+		case 'pdo':
 			$data = $result;
+			break;
+			
+		// a Solar_Sql_Result object
+		case 'result':
+			$data = Solar::object('Solar_Sql_Result');
+			$data->PDOStatement = $result;
 			break;
 		
 		// capture the first row
@@ -420,7 +426,10 @@ class Solar_Sql extends Solar_Base {
 		
 		// create a new object and put the result into it
 		default:
-			$data = Solar::object($return, array('result' => $result));
+			$data = Solar::object(
+				$return,
+				array('PDOStatement' => $result)
+			);
 			break;
 		}
 		

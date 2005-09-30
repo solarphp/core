@@ -132,6 +132,8 @@ class Solar_Sql_Select extends Solar_Base {
 		),
 	);
 	
+	// a holding space to tell which columns come from which table/join
+	protected $cols = array();
 	
 	/**
 	* 
@@ -251,11 +253,11 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds columns to the query.
+	* Add un-mapped columns to the query.
 	* 
 	* @access public
 	* 
-	* @param string|array $cols The columns to add.
+	* @param string|array The list of columns.
 	* 
 	* @return void
 	* 
@@ -263,72 +265,96 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function cols($spec)
 	{
-		if (empty($spec)) {
-			return;
-		}
-		
-		if (is_string($spec)) {
-			$spec = explode(',', $spec);
-		} else {
-			settype($spec, 'array');
-		}
-		
-		$this->parts['cols'] = array_merge($this->parts['cols'], $spec);
+		// track them as related to no specific table
+		$this->mapCols('', $spec);
 	}
 	
 	
 	/**
 	* 
-	* Adds a table to the query.
+	* Adds a FROM table and columns to the query.
 	* 
 	* @access public
 	* 
-	* @param string|array $from The table name(s) to select from.
+	* @param string|object $spec If a Solar_Sql_Table object, the table
+	* to select from; if a string, the table name to select from.
+	* 
+	* @param array|string $cols The columns to select from this table.
 	* 
 	* @return void
 	* 
 	*/
 
-	public function from($spec)
+	public function from($spec, $cols = null)
 	{
-		if (empty($spec)) {
-			return;
-		}
-		
-		if (is_string($spec)) {
-			$spec = explode(',', $spec);
+		// the $spec may be a table object, or a string.
+		if ($spec instanceof Solar_Sql_Table) {
+			
+			// get the table name
+			$name = $spec->name;
+			
+			// add all columns?
+			if (is_null($cols) || $cols == '*') {
+				$cols = array_keys($spec->col);
+			}
+			
 		} else {
-			settype($spec, 'array');
+			$name = $spec;
 		}
 		
-		$this->parts['from'] = array_merge($this->parts['from'], $spec);
+		// add the table to the 'from' list
+		$this->parts['from'] = array_merge(
+			$this->parts['from'],
+			(array) $name
+		);
+		
+		// add to the columns from this table
+		$this->mapCols($name, $cols);
 	}
 	
 	
 	/**
 	* 
-	* Adds joins to the query, one at a time.
+	* Adds a JOIN table and columns to the query.
 	* 
 	* @access public
 	* 
-	* @param string $name The table name to join to.
+	* @param string|object $spec If a Solar_Sql_Table object, the table
+	* to join to; if a string, the table name to join to.
 	* 
 	* @param string $cond Join on this condition.
 	* 
-	* @param string $type The type of join to perform, e.g.
-	* "left", "right", "inner", etc.  Typically not needed.
+	* @param array|string $cols The columns to select from the joined table..
 	* 
 	* @return void
 	* 
 	*/
 
-	public function join($name, $cond, $type = null)
+	public function join($spec, $cond, $cols = null)
 	{
+		// the $spec may be a table object, or a string.
+		if ($spec instanceof Solar_Sql_Table) {
+			
+			// get the table name
+			$name = $spec->name;
+			
+			// add all columns?
+			if (is_null($cols) || $cols == '*') {
+				$cols = array_keys($spec->col);
+			}
+			
+		} else {
+			$name = $spec;
+		}
+		
 		$this->parts['join'][] = array(
 			'type' => null,
 			'name' => $name,
 			'cond' => $cond
 		);
+		
+		// add to the columns from this joined table
+		$this->mapCols($name, $cols);
 	}
 	
 	
@@ -629,6 +655,44 @@ class Solar_Sql_Select extends Solar_Base {
 
 	public function fetch($type = 'result')
 	{
+		// build up the $parts['cols'] from scratch.
+		$this->parts['cols'] = array();
+		
+		// how many tables/joins to select from?
+		$count = count(array_keys($this->cols));
+		if ($count == 1) {
+		
+			// only one, so no column name deconfliction needed,
+			// use the names as they are.
+			foreach ($this->cols as $key => $cols) {
+				$this->parts['cols'] = $cols;
+			}
+			
+		} else {
+		
+			// more than one from/join, so we need to deconflict the
+			// column names. prefix each col name with the table/join
+			// name.
+			foreach ($this->cols as $tbl => $cols) {
+				
+				// is the table/join aliased?
+				$pos = stripos($tbl, ' AS ');
+				if ($pos) {
+					// yes, use the alias portion as the prefix
+					$pre = trim(substr($tbl, $pos + 4));
+				} else {
+					// no, just use the table/join name as-is
+					$pre = trim($tbl);
+				}
+				
+				// add prefix to each of the columns
+				foreach ($cols as $col) {
+					$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
+				}
+			}
+		}
+		
+		// perform the select query and return the results
 		return $this->sql->select($type, $this->parts, $this->bind);
 	}
 	
@@ -651,9 +715,14 @@ class Solar_Sql_Select extends Solar_Base {
 		// make a self-cloned copy so that all settings are identical
 		$select = clone($this);
 		
-		// clear out all columns, then add a single COUNT column
-		$select->clear('cols');
-		$select->cols("COUNT($col)");
+		// clear out all columns (note that this works because we are
+		// already in a Select class; this wouldn't work externally
+		// because $cols is protected) ...
+		$select->cols = array();
+		
+		// ... then add a single COUNT column (no need for a table name
+		// in this case)
+		$select->cols(null, array("COUNT($col)"));
 		
 		// clear any limits
 		$select->clear('limit');
@@ -678,6 +747,50 @@ class Solar_Sql_Select extends Solar_Base {
 			'count' => $result,
 			'pages' => $pages
 		);
+	}
+	
+	
+	/**
+	* 
+	* Adds to the internal list of columns and tracks where they belong.
+	* 
+	* @access protected
+	* 
+	* @param string $table The table/join these columns come from.
+	* 
+	* @param string|array $list The list of columns; preferably as
+	* an array, but possibly as a comma-separated string.
+	* 
+	* @return void
+	* 
+	*/
+
+	protected function mapCols($table, $list)
+	{
+		if (is_string($list)) {
+			$list = explode(',', $list);
+		} else {
+			settype($list, 'array');
+		}
+		
+		// only add columns if non-blank
+		if (! empty($list)) {
+			
+			// trim everything up ...
+			array_walk($list, 'trim');
+			
+			// ... and merge them into the columns array.
+			if (empty($this->cols[$table])) {
+				// this table/join not previously used
+				$this->cols[$table] = $list;
+			} else {
+				// merge with existing columns for this table/join
+				$this->cols[$table] = array_merge(
+					$this->cols[$table],
+					$lists
+				);
+			}
+		}
 	}
 }
 ?>

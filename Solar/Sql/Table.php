@@ -216,6 +216,9 @@ class Solar_Sql_Table extends Solar_Base {
 			}
 		}
 		
+		// forcibly add "created" timestamp
+		$data['created'] = date('Y-m-d\TH:i:s');
+		
 		// validate and recast the data.
 		$result = $this->autoValid($data);
 		if (Solar::isError($result)) {
@@ -270,6 +273,12 @@ class Solar_Sql_Table extends Solar_Base {
 			}
 			
 		}
+		
+		// disallow changing of "created" timestamp
+		unset($data['created']);
+		
+		// forcibly set the "updated" timestamp
+		$data['updated'] = date('Y-m-d\TH:i:s');
 		
 		// validate and recast the data
 		$result = $this->autoValid($data);
@@ -340,11 +349,8 @@ class Solar_Sql_Table extends Solar_Base {
 		// selection tool
 		$select = Solar::object('Solar_Sql_Select');
 		
-		// all columns
-		$select->cols('*');
-		
-		// from this table
-		$select->from($this->name);
+		// all columns from this table
+		$select->from($this, array_keys($this->col));
 		
 		// data to bind into the query
 		$data = array();
@@ -444,6 +450,11 @@ class Solar_Sql_Table extends Solar_Base {
 			}
 		}
 		
+		// don't send along the created/updated fields, they should
+		// be auto-set on insert/update
+		unset($data['created']);
+		unset($data['updated']);
+		
 		// done!
 		return $data;
 	}
@@ -486,9 +497,9 @@ class Solar_Sql_Table extends Solar_Base {
 		// a baseline column definition
 		$basecol = array(
 			'name'    => null,
-			'type'    => 'varchar',
-			'size'    => 255,
-			'scope'   => 0,
+			'type'    => null,
+			'size'    => null,
+			'scope'   => null,
 			'valid'   => array(),
 			'require' => false,
 			'seqname' => null,
@@ -496,7 +507,48 @@ class Solar_Sql_Table extends Solar_Base {
 			'primary' => false
 		);
 		
-		// fix up each column in the schema
+		// auto-added columns and indexes
+		$autocol = array();
+		$autoidx = array();
+		
+		// auto-add an ID column and index for unique identification
+		if (! array_key_exists('id', $this->col)) {
+			$autocol['id'] = array(
+				'type'    => 'int',
+				'seqname' => $this->name . '_id',
+				'require' => true,
+				'primary' => true,
+			);
+			
+			$autoidx['id'] = 'unique';
+		}
+		
+		// auto-add a "created" column to track when created
+		if (! array_key_exists('created', $this->col)) {
+			$autocol['created'] = array(
+				'type'    => 'timestamp',
+				'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
+			);
+			
+			$autoidx['created'] = 'normal';
+		}
+		
+		// auto-add an "updated" column and index
+		// to track when last updated
+		if (! array_key_exists('updated', $this->col)) {
+			$autocol['updated'] = array(
+				'type'    => 'timestamp',
+				'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
+			);
+			
+			$autoidx['updated'] = 'normal';
+		}
+		
+		// merge the auto-added items on top of the rest
+		$this->col = array_merge($autocol, $this->col);
+		$this->idx = array_merge($autoidx, $this->idx);
+		
+		// fix up each column to have a full set of info
 		foreach ($this->col as $name => $info) {
 		
 			// fill in missing elements

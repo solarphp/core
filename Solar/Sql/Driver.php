@@ -274,11 +274,11 @@ class Solar_Sql_Driver extends Solar_Base {
 		}
 		
 		// add columns
-		$stmt .= implode(',\n\t', $parts['cols']) . "\n";
+		$stmt .= implode(",\n\t", $parts['cols']) . "\n";
 		
 		// from these tables
-		$stmt .= "FROM\n\t";
-		$stmt .= implode(",\n\t", $parts['from']) . "\n";
+		$stmt .= "FROM ";
+		$stmt .= implode(", ", $parts['from']) . "\n";
 		
 		// joined to these tables
 		if ($parts['join']) {
@@ -296,7 +296,7 @@ class Solar_Sql_Driver extends Solar_Base {
 				$list[] = $tmp;
 			}
 			// add the list of all joins
-			$stmt .= implode("\n\t", $list, "\n");
+			$stmt .= implode("\n\t", $list) . "\n";
 		}
 		
 		// with these where conditions

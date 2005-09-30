@@ -137,6 +137,7 @@ class Solar {
 			'user'     => 'Solar_User',
 			'locale'   => 'Solar_Locale',
 			'template' => 'Solar_Template',
+			'content'  => 'Solar_Content',
 		);
 		
 		foreach ($baseline as $name => $class) {

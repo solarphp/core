@@ -26,7 +26,15 @@ And you need to be able to say which part types you want to get.
 
 ----
 
-TASKS
+COMBINED TASKS
+
+new part by area and node (auto-adds the area, node, and edit)
+update part by area, node, and id (updates the edit)
+replace part by area, node, and id (inserts new edit)
+
+----
+
+COMPONENT TASKS
 
 insert a new area
 update an area

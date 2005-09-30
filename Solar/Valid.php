@@ -485,6 +485,31 @@ class Solar_Valid {
 	
 	/**
 	* 
+	* Validate that a value is formatted as a MIME type.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @param mixed $min The minimum valid value.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function mimeType($value, $allow = null,
+		$blank = self::NOT_BLANK)
+	{
+		// basically, anything like 'text/plain' or
+		// 'application/x-vnd.microsoft-powerpoint'
+		$word = '[a-zA-Z][\-\.a-zA-Z0-9]*';
+		$expr = '|^' . $word . '/' . $word . '$|';
+		return self::regex($value, $expr, $blank);
+	}
+	
+	
+	/**
+	* 
 	* Validate that a value is greater than or equal to a minimum.
 	* 
 	* @access public

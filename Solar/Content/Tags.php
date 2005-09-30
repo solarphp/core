@@ -18,12 +18,9 @@
 * 
 */
 
-Solar::loadClass('Solar_Sql_Table');
-
-
 /**
 * 
-* Broad content areas equivalent to logical namespaces.
+* Tags on nodes.
 * 
 * @category Solar
 * 
@@ -33,87 +30,79 @@ Solar::loadClass('Solar_Sql_Table');
 * 
 */
 
-class Solar_Content_Tags extends Solar_Sql_Table {
+class Solar_Content_Tags extends Solar_Base {
+	
+	public $table;
+	
+	public function __construct($config = null)
+	{
+		parent::__construct($config);
+		$this->table = Solar::object('Solar_Content_Tags_Table');
+	}
 	
 	/**
 	* 
-	* Schema setup.
+	* Normalizes tag strings.
 	* 
-	* @access protected
+	* Converts "+" to " ", trims extra spaces, and removes duplicates,
+	* but otherwise keeps them in order and space-separated.
 	* 
-	* @return void
+	* Also converts arrays to a normalized tag string.
+	* 
+	* @access public
+	* 
+	* @param string|array $tags A space-separated string of tags, or a
+	* sequential array of tags.
+	* 
+	* @return string A space-separated string of tags.
 	* 
 	*/
 	
-	protected function setup()
+	public function asString($tags)
 	{
-		// the table name
-		$this->name = 'tags';
+		// convert to array from string?
+		if (! is_array($tags)) {
+			
+			// convert all "+" to spaces (this is for URL values)
+			$tags = str_replace('+', ' ', $tags);
+			
+			// trim all surrounding spaces and extra spaces
+			$tags = trim($tags);
+			$tags = preg_replace('/[ ]{2,}/', ' ', $tags);
+			
+			// convert to array for easy processing
+			$tmp = explode(' ', $tags);
+		}
 		
-		// -------------------------------------------------------------
-		// 
-		// COLUMNS
-		// 
+		// make sure each tag is unique (no double-entries)
+		$tmp = array_unique($tmp);
 		
-		// unique ID for this part
-		$this->col['id'] = array(
-			'type'    => 'int',
-			'require' => true,
-			'seqname' => 'id',
-			'primary' => true,
-		);
-		
-		// the area of the node for this tag
-		$this->col['areas_name'] = array(
-			'type'    => 'varchar',
-			'size'    => 127,
-			'require' => true,
-			'valid'   => array(
-				array('word'),
-			),
-		);
-		
-		// the node for this tag
-		$this->col['nodes_name'] = array(
-			'type'    => 'varchar',
-			'size'    => 127,
-			'require' => true,
-			'valid'   => array(
-				array('word'),
-			),
-		);
-		
-		
-		// the "owner" of the node to which this tag applies
-		$this->col['users_handle'] = array(
-			'type'    => 'varchar',
-			'size'    => 32,
-			'require' => true,
-		);
-		
-		// the tag itself
-		$this->col['name'] = array(
-			'type'    => 'varchar',
-			'size'    => 64,
-			'require' => true,
-			'valid'   => array(
-				array('word'),
-			),
-		);
-		
-		
-		// -------------------------------------------------------------
-		// 
-		// KEYS AND INDEXES
-		// 
-		
-		$this->idx = array(
-			'id' => 'unique',
-			'areas_name' => 'normal',
-			'nodes_name' => 'normal',
-			'users_handle' => 'normal',
-			'name' => 'normal',
-		);
+		// return as space-separated text
+		return implode(' ', $tmp);
+	}
+	
+	
+	/**
+	* 
+	* Normalizes tag arrays.
+	* 
+	* Also converts strings to a normalized tag array.
+	* 
+	* @access public
+	* 
+	* @param string|array $tags A space-separated string of tags, or a
+	* sequential array of tags.
+	* 
+	* @return string A space-separated string of tags.
+	* 
+	*/
+	
+	public function asArray($tags)
+	{
+		// normalize to string...
+		$tags = $this->asString($tags);
+		// ... and convert to array
+		return explode(' ', $tags);
 	}
 }
 ?>

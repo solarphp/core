@@ -18,9 +18,6 @@
 * 
 */
 
-Solar::loadClass('Solar_Sql_Table');
-
-
 /**
 * 
 * Broad content areas equivalent to logical namespaces.
@@ -33,72 +30,14 @@ Solar::loadClass('Solar_Sql_Table');
 * 
 */
 
-class Solar_Content_Areas extends Solar_Sql_Table {
+class Solar_Content_Areas extends Solar_Base {
 	
+	public $table;
 	
-	/**
-	* 
-	* Schema setup.
-	* 
-	* @access protected
-	* 
-	* @return void
-	* 
-	*/
-	
-	protected function setup()
+	public function __construct($config = null)
 	{
-		// the table name
-		$this->name = 'areas';
-		
-		// the area name
-		$this->col['name'] = array(
-			'type'    => 'varchar',
-			'size'    => 127,
-			'require' => true,
-			'valid'   => array('word'),
-			'primary' => true,
-		);
-		
-		// freeform area "subject" or title
-		$this->col['subj'] = array(
-			'type'    => 'varchar',
-			'size'    => 255,
-		);
-		
-		// the user who owns this area
-		$this->col['users_handle'] = array(
-			'type'    => 'varchar',
-			'size'    => 32,
-			'valid'   => array('word'),
-		);
-		
-		// serialized preferences
-		$this->col['prefs'] = array(
-			'type'    => 'clob',
-		);
-		
-		
-		// keys and indexes
-		$this->idx = array(
-			'name'        => 'unique',
-			'users_handle' => 'normal',
-		);
-	}
-	
-	public function fetchList($page = null)
-	{
-		$type = 'all';
-		$where = null;
-		$order = 'LOWER(name) ASC';
-		return $this->select($type, $where, $order, $page);
-	}
-	
-	public function fetchItem($name)
-	{
-		$type = 'row';
-		$where = array('name' => $name);
-		return $this->select($type, $where);
+		parent::__construct($config);
+		$this->table = Solar::object('Solar_Content_Areas_Table');
 	}
 }
 ?>

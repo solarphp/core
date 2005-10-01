@@ -121,51 +121,6 @@ class Solar_Content extends Solar_Base {
 		$this->sql   = Solar::shared('sql');
 	}
 	
-	
-	// -----------------------------------------------------------------
-	// 
-	// Areas
-	// 
-	// -----------------------------------------------------------------
-	
-	public function areaInsert($data)
-	{
-		$result = $this->areas->table->insert($data);
-		return $result;
-	}
-	
-	public function areaUpdate($area, $data)
-	{
-		$where = 'name = ' . $this->sql->quote($area);
-		$result = $this->areas->table->update($data, $where);
-		return $result;
-	}
-	
-	public function areaExists($area)
-	{
-		$select = Solar::object('Solar_Sql_Select');
-		$select->cols('COUNT(*)');
-		$select->from($this->areas->table->name);
-		$select->where('name', $area);
-		$result = $select->fetch('one');
-		return $result;
-	}
-	
-	public function areaList()
-	{
-		$where = null;
-		$order = 'LOWER(name) ASC';
-		return $this->areas->table->select('all', $where, $order);
-	}
-	
-	public function area($area)
-	{
-		$type = 'row';
-		$where = array('name' => $area);
-		return $this->areas->table->select('row', $where);
-	}
-	
-	
 	// -----------------------------------------------------------------
 	// 
 	// Nodes
@@ -173,18 +128,7 @@ class Solar_Content extends Solar_Base {
 	// -----------------------------------------------------------------
 	
 	
-	public function nodeExists($area, $node)
-	{
-		$select = Solar::object('Solar_Sql_Select');
-		$select->cols('COUNT(*)');
-		$select->from($this->areas->table->name);
-		$select->where('areas_name', $area);
-		$select->where('name', $node);
-		$result = $select->fetch('one');
-		return $result;
-	}
-	
-	public function nodeInsert($area, $data)
+	public function nodeInsert($data)
 	{
 		if (! $this->areaExists($area)) {
 			$tmp = array(

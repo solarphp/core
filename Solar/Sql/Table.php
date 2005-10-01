@@ -147,7 +147,7 @@ class Solar_Sql_Table extends Solar_Base {
 		
 		// perform column and index setup, then fix everything.
 		$this->setup();
-		$this->fixSetup();
+		$this->autoSetup();
 		
 		// connect to the database
 		if (is_string($this->config['sql'])) {
@@ -492,7 +492,7 @@ class Solar_Sql_Table extends Solar_Base {
 	* 
 	*/
 
-	protected final function fixSetup()
+	protected final function autoSetup()
 	{
 		// a baseline column definition
 		$basecol = array(

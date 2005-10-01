@@ -501,7 +501,7 @@ class Solar_Valid {
 		$blank = self::NOT_BLANK)
 	{
 		// basically, anything like 'text/plain' or
-		// 'application/x-vnd.microsoft-powerpoint'
+		// 'application/vnd.ms-powerpoint'
 		$word = '[a-zA-Z][\-\.a-zA-Z0-9]*';
 		$expr = '|^' . $word . '/' . $word . '$|';
 		return self::regex($value, $expr, $blank);

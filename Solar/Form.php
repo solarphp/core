@@ -334,6 +334,39 @@ class Solar_Form extends Solar_Base {
 	
 	/**
 	* 
+	* Reorders the existing elements.
+	* 
+	* @access public
+	* 
+	* @param array $list The order in which elements should be placed; each
+	* value in the array is an element name.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function orderElements($list)
+	{
+		// the set of elements as they are now
+		$old = $this->elements;
+		// reset the elements to blank
+		$this->elements = array();
+		// put the elements in the requested order
+		foreach ((array) $list as $name) {
+			if (isset($old[$name])) {
+				$this->elements[$name] = $old[$name];
+			}
+		}
+		// retain all remaining old elements
+		foreach ($old as $name => $info) {
+			$this->elements[$name] = $info;
+		}
+		// done!
+	}
+	
+	
+	/**
+	* 
 	* Adds a pre-filter for an element
 	* 
 	* Adds a pre-filter for an element. All pre-filters are applied via 

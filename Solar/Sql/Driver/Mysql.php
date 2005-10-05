@@ -118,13 +118,15 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	* @access public
 	* 
-	* @return string The SQL statement.
+	* @return array The list of tables in the database.
 	* 
 	*/
 	
 	public function listTables()
 	{
-		return $this->sql->select('col', "SHOW TABLES");
+		$result = $this->exec('SHOW TABLES');
+		$list = $result->fetchAll(PDO_FETCH_COLUMN, 0);
+		return $list;
 	}
 	
 	
@@ -145,8 +147,8 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	public function createSequence($name, $start = 1)
 	{
 		$start -= 1;
-		$this->sql->exec("CREATE TABLE $name (id INT NOT NULL)");
-		$this->sql->exec("INSERT INTO $name (id) VALUES ($start)");
+		$this->exec("CREATE TABLE $name (id INT NOT NULL)");
+		$this->exec("INSERT INTO $name (id) VALUES ($start)");
 	}
 	
 	
@@ -164,7 +166,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	public function dropSequence($name)
 	{
-		$this->sql->exec("DROP TABLE $name");
+		$this->exec("DROP TABLE $name");
 	}
 	
 	
@@ -182,22 +184,25 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	
 	public function nextSequence($name)
 	{
+		$cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
+		
 		// first, try to get the next sequence number, assuming
 		// the table exists.
-		$result = $this->sql->exec("UPDATE $name SET id = LAST_INSERT_ID(id+1)");
-		
-		// did it work?
-		if (! $result || Solar::isError($result)) {
+		try {
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
+		} catch (Exception $e) {
 			// error when updating the sequence.
 			// assume we need to create it.
 			$this->createSequence($name);
 			
 			// now try the sequence number again.
-			$result = $this->sql->exec("UPDATE $name SET id = LAST_INSERT_ID(id+1)");
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
 		}
 		
 		// get the sequence number
-		return $this->sql->lastInsertID();
+		return $this->pdo->lastInsertID();
 	}
 }
 ?>

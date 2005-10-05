@@ -102,13 +102,13 @@ class Solar_Sql extends Solar_Base {
 	*/
 	
 	protected $config = array(
-		'class' => null,
-		'host' => '127.0.0.1',
-		'port' => null,
-		'user' => null,
-		'pass' => null,
-		'name' => null,
-		'mode' => null,
+		'class' => 'Solar_Sql_Driver_Sqlite',
+		'host'  => '127.0.0.1',
+		'port'  => null,
+		'user'  => null,
+		'pass'  => null,
+		'name'  => null,
+		'mode'  => null,
 	);
 	
 	
@@ -156,19 +156,6 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
-	* A portable database object for accessing the RDBMS.
-	* 
-	* @access protected
-	* 
-	* @var object
-	*
-	*/
-	
-	protected $pdo = null;
-	
-	
-	/**
-	* 
 	* Constructor.
 	* 
 	* @access public
@@ -185,55 +172,25 @@ class Solar_Sql extends Solar_Base {
 		// create the driver-info object
 		$opts = $this->config;
 		unset($opts['class']);
-		$opts['sql'] = $this;
 		$this->driver = Solar::object($this->config['class'], $opts);
 	}
 	
 	
 	/**
 	* 
-	* Prepares and executes an SQL statement with bound data.
+	* Generic query executor.
 	* 
 	* @access public
 	* 
-	* @param string $stmt The text of the SQL statement, with
-	* placeholders.
+	* @param string $cmd The query command to execute.
 	* 
-	* @param array $data An associative array of data to bind to the
-	* placeholders.
-	* 
-	* @return object A PDOStatement object.
-	* 
-	* @todo Catch exceptions and return as Solar_Error objects.
+	* @return mixed
 	* 
 	*/
 	
-	public function exec($stmt, $data = array())
+	public function query($cmd)
 	{
-		// connect to the database if needed
-		$this->connect();
-		
-		// force the bound data to be an array
-		settype($data, 'array');
-		
-		// prepare the statement
-		try {
-			$obj = $this->pdo->prepare($stmt);
-		} catch (Exception $e) {
-			$err = $this->errorException($e);
-			return $err;
-		}
-		
-		// execute with bound data
-		try {
-			$obj->execute($data);
-		} catch (Exception $e) {
-			$err = $this->errorException($e);
-			return $err;
-		}
-		
-		// return the results embedded in the prepared statement object
-		return $obj;
+		return $this->driver->exec($cmd);
 	}
 	
 	/**
@@ -266,7 +223,7 @@ class Solar_Sql extends Solar_Base {
 		$stmt .= 'VALUES (:' . implode(', :', $fields) . ')';
 		
 		// execute the statement
-		return $this->exec($stmt, $data);
+		return $this->driver->exec($stmt, $data);
 	}
 	
 	
@@ -286,6 +243,8 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @return mixed A Solar_Error on error.
 	* 
+	* @todo Make it possible to pass $where as an array of conditions.
+	* 
 	*/
 	
 	public function update($table, $data, $where)
@@ -302,7 +261,7 @@ class Solar_Sql extends Solar_Base {
 		
 		// add the where clause, execute, and return
 		$stmt .= " WHERE $where";
-		return $this->exec($stmt, $data);
+		return $this->driver->exec($stmt, $data);
 	}
 	
 	
@@ -319,11 +278,13 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @return mixed A Solar_Error on error.
 	* 
+	* @todo Make it possible to pass $where as an array of conditions.
+	* 
 	*/
 	
 	public function delete($table, $where)
 	{
-		return $this->exec("DELETE FROM $table WHERE $where");
+		return $this->driver->exec("DELETE FROM $table WHERE $where");
 	}
 	
 	
@@ -363,7 +324,7 @@ class Solar_Sql extends Solar_Base {
 		}
 		
 		// execute and get the PDOStatement result object
-		$result = $this->exec($stmt, $data);
+		$result = $this->driver->exec($stmt, $data);
 		if (Solar::isError($result)) {
 			return $result;
 		}
@@ -388,10 +349,13 @@ class Solar_Sql extends Solar_Base {
 		
 		// capture the first col of every row.
 		case 'col':
+			/*
 			$data = array();
 			while ($col = $result->fetchColumn(0)) {
 				$data[] = $col;
 			}
+			*/
+			$data = $result->fetchAll(PDO_FETCH_COLUMN, 0);
 			break;
 			
 		// capture the first column of the first row
@@ -402,6 +366,7 @@ class Solar_Sql extends Solar_Base {
 		// capture data as key-value pairs where the first column
 		// is the key and the second column is the value
 		case 'pair':
+		case 'pairs':
 			$data = array();
 			while ($row = $result->fetch(PDO_FETCH_NUM)) {
 				$data[$row[0]] = $row[1];
@@ -415,8 +380,10 @@ class Solar_Sql extends Solar_Base {
 			
 		// a Solar_Sql_Result object
 		case 'result':
-			$data = Solar::object('Solar_Sql_Result');
-			$data->PDOStatement = $result;
+			$data = Solar::object(
+				'Solar_Sql_Result',
+				array('PDOStatement' => $result)
+			);
 			break;
 		
 		// capture the first row
@@ -484,7 +451,7 @@ class Solar_Sql extends Solar_Base {
 	public function dropSequence($name)
 	{
 		$name .= '__s';
-		$result = $this->driver->dropSequence($this, $name);
+		$result = $this->driver->dropSequence($name);
 		return $result;
 	}
 	
@@ -506,7 +473,7 @@ class Solar_Sql extends Solar_Base {
 	public function nextSequence($name)
 	{
 		$name .= '__s';
-		$result = $this->driver->nextSequence($this, $name);
+		$result = $this->driver->nextSequence($name);
 		return $result;
 	}
 	
@@ -589,7 +556,7 @@ class Solar_Sql extends Solar_Base {
 			// no errors, execute and return
 			$cols = implode(",\n\t", $coldef);
 			$stmt = "CREATE TABLE $table (\n$cols\n)";
-			$result = $this->exec($stmt);
+			$result = $this->driver->exec($stmt);
 			return $result;
 		}
 	}
@@ -609,7 +576,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropTable($table)
 	{
-		return $this->exec("DROP TABLE $table");
+		return $this->driver->exec("DROP TABLE $table");
 	}
 	
 	
@@ -636,7 +603,7 @@ class Solar_Sql extends Solar_Base {
 			return $coldef;
 		} else {
 			$stmt = "ALTER TABLE $table ADD COLUMN $coldef";
-			return $this->exec($stmt);
+			return $this->driver->exec($stmt);
 		}
 	}
 	
@@ -657,7 +624,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropColumn($table, $name)
 	{
-		return $this->exec("ALTER TABLE $table DROP COLUMN $name");
+		return $this->driver->exec("ALTER TABLE $table DROP COLUMN $name");
 	}
 	
 	
@@ -720,7 +687,7 @@ class Solar_Sql extends Solar_Base {
 			return $stmt;
 		} else {
 			// no errors, execute and return
-			return $this->exec($stmt);
+			return $this->driver->exec($stmt);
 		}
 	}
 	
@@ -741,7 +708,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropIndex($table, $name)
 	{
-		return $this->exec("DROP INDEX $name ON $table");
+		return $this->driver->exec("DROP INDEX $name ON $table");
 	}
 	
 	
@@ -756,7 +723,7 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* Safely quotes a value for an SQL statement.
 	* 
-	* Recursively quotes array values (but not their keys).
+	* Quotes individual array values (but not their keys).
 	* 
 	* @access public
 	* 
@@ -768,17 +735,29 @@ class Solar_Sql extends Solar_Base {
 	
 	public function quote($val)
 	{
-		$this->connect();
-		if (is_array($val)) {
-			// recursively quote array values
-			foreach ($val as $k => $v) {
-				$val[$k] = $this->pdo->quote($v);
-			}
-		} else {
-			$this->pdo->quote($val);
-		}
-		
-		return $val;
+		return $this->driver->quote($val);
+	}
+	
+	
+	/**
+	* 
+	* Quote an array of values and return as a separated string.
+	* 
+	* @access public
+	* 
+	* @param array $val The array to quote.
+	* 
+	* @param string $sep The separator string to use.
+	* 
+	* @return string An SQL-safe separated list string (default ',').
+	* 
+	*/
+	
+	public function quoteSep($val, $sep = ',')
+	{
+		settype($val, 'array');
+		$val = $this->driver->quote($val);
+		return implode($sep, $val);
 	}
 	
 	
@@ -803,52 +782,6 @@ class Solar_Sql extends Solar_Base {
 	// Support
 	// 
 	// -----------------------------------------------------------------
-	
-	
-	/**
-	* 
-	* Creates a PDO object and connects to the database.
-	* 
-	* @access protected
-	* 
-	* @return void
-	* 
-	*/
-	
-	protected function connect()
-	{
-		// if we already have a PDO object, no need to re-connect.
-		if ($this->pdo) {
-			return;
-		}
-		
-		// build a DSN
-		$dsn = $this->driver->dsn();
-		
-		// create PDO object
-		try {
-		
-			$this->pdo = new PDO(
-				$dsn,
-				$this->config['user'],
-				$this->config['pass']
-			);
-			
-			// always autocommit
-			$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
-			
-			// force names to lower case
-			$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
-			
-			// always use exceptions.
-			$this->pdo->setAttribute(PDO_ATTR_ERRMODE,
-				PDO_ERRMODE_EXCEPTION);
-			
-		} catch (Exception $e) {
-			$err = $this->errorException($e);
-			return $err;
-		}
-	}
 	
 	
 	/**

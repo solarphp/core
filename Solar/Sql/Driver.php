@@ -70,6 +70,19 @@ class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	* 
+	* A portable database object for accessing the RDBMS.
+	* 
+	* @access protected
+	* 
+	* @var object
+	*
+	*/
+	
+	public $pdo = null;
+	
+	
+	/**
+	* 
 	* Map of Solar generic column types to RDBMS native declarations.
 	* 
 	* @access protected
@@ -111,38 +124,6 @@ class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	* 
-	* The "parent" Solar_Sql object (needed for query execution).
-	* 
-	* @access protected
-	* 
-	* @var object
-	* 
-	*/
-	
-	protected $sql = null;
-	
-	
-	/**
-	* 
-	* Constructor.
-	* 
-	* @access public
-	* 
-	* @param array $config An array of user-defined config options.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function __construct($config = null)
-	{
-		parent::__construct($config);
-		$this->sql = $this->config['sql'];
-	}
-	
-	
-	/**
-	* 
 	* Creates a PDO-style DSN.
 	* 
 	* @access public
@@ -164,6 +145,127 @@ class Solar_Sql_Driver extends Solar_Base {
 		}
 		
 		return $this->pdo_type . ':' . implode(';', $tmp);
+	}
+	
+	
+	/**
+	* 
+	* Creates a PDO object and connects to the database.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function connect()
+	{
+		// if we already have a PDO object, no need to re-connect.
+		if ($this->pdo) {
+			return;
+		}
+		
+		// build a DSN
+		$dsn = $this->dsn();
+		
+		// create PDO object
+		try {
+		
+			$this->pdo = new PDO(
+				$dsn,
+				$this->config['user'],
+				$this->config['pass']
+			);
+			
+			// always autocommit
+			$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
+			
+			// force names to lower case
+			$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
+			
+			// always use exceptions.
+			$this->pdo->setAttribute(PDO_ATTR_ERRMODE,
+				PDO_ERRMODE_EXCEPTION);
+			
+		} catch (Exception $e) {
+			$err = $this->errorException($e, E_USER_ERROR);
+			return $err;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Prepares and executes an SQL statement with bound data.
+	* 
+	* @access public
+	* 
+	* @param string $stmt The text of the SQL statement, with
+	* placeholders.
+	* 
+	* @param array $data An associative array of data to bind to the
+	* placeholders.
+	* 
+	* @return object A PDOStatement object.
+	* 
+	*/
+	
+	public function exec($stmt, $data = array())
+	{
+		// connect to the database if needed
+		$this->connect();
+		
+		// force the bound data to be an array
+		settype($data, 'array');
+		
+		// prepare the statement
+		try {
+			$obj = $this->pdo->prepare($stmt);
+		} catch (Exception $e) {
+			$err = $this->errorException($e, E_USER_WARNING);
+			return $err;
+		}
+		
+		// execute with bound data
+		try {
+			$obj->execute($data);
+		} catch (Exception $e) {
+			$err = $this->errorException($e, E_USER_WARNING);
+			return $err;
+		}
+		
+		// return the results embedded in the prepared statement object
+		return $obj;
+	}
+	
+	
+	/**
+	* 
+	* Safely quotes a value for an SQL statement.
+	* 
+	* Quotes individual array values (but not their keys).
+	* 
+	* @access public
+	* 
+	* @param mixed $val The value to quote.
+	* 
+	* @return mixed An SQL-safe quoted value.
+	* 
+	*/
+	
+	public function quote($val)
+	{
+		$this->connect();
+		if (is_array($val)) {
+			// quote array values, not keys, and only one level's worth
+			// (i.e., non-recursive).
+			foreach ($val as $k => $v) {
+				$val[$k] = $this->pdo->quote($v);
+			}
+		} else {
+			$val = $this->pdo->quote($val);
+		}
+		return $val;
 	}
 	
 	

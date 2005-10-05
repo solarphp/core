@@ -273,13 +273,18 @@ class Solar {
 	* all instances of '_' in the class name to DIRECTORY_SEPARATOR
 	* (i.e., '/' on Unix and '\' on Windows).
 	* 
-	* @todo Add localization for errors
-	* 
 	* @access public
 	* 
 	* @param string $class A Solar (or other) class name.
 	* 
 	* @return void
+	* 
+	* @todo Add localization for errors
+	* 
+	* @todo Replace this with global __autoload() function?  Would mean
+	* dropping the 'registry' capability, but I don't think that's a 
+	* big deal.  Might get in the way of other systems using __autoload()
+	* though, when Solar is combined with other systems.
 	* 
 	*/
 	

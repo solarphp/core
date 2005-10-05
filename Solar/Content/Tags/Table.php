@@ -55,8 +55,8 @@ class Solar_Content_Tags_Table extends Solar_Sql_Table {
 		// COLUMNS
 		// 
 		
-		// the part_id for this tag
-		$this->col['part_id'] = array(
+		// the node_id this tag came from
+		$this->col['node_id'] = array(
 			'type'    => 'int',
 			'require' => true,
 		);
@@ -64,7 +64,7 @@ class Solar_Content_Tags_Table extends Solar_Sql_Table {
 		// the tag itself
 		$this->col['name'] = array(
 			'type'    => 'varchar',
-			'size'    => 64,
+			'size'    => 127,
 			'require' => true,
 			'valid'   => 'word',
 		);
@@ -76,7 +76,8 @@ class Solar_Content_Tags_Table extends Solar_Sql_Table {
 		// 
 		
 		$this->idx = array(
-			'name' => 'normal',
+			'node_id' => 'normal',
+			'name'    => 'normal',
 		);
 	}
 }

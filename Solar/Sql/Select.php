@@ -279,7 +279,7 @@ class Solar_Sql_Select extends Solar_Base {
 	public function cols($spec)
 	{
 		// track them as related to no specific table
-		$this->tblCols'', $spec);
+		$this->tblCols('', $spec);
 	}
 	
 	
@@ -322,7 +322,7 @@ class Solar_Sql_Select extends Solar_Base {
 		);
 		
 		// add to the columns from this table
-		$this->tblCols$name, $cols);
+		$this->tblCols($name, $cols);
 	}
 	
 	
@@ -367,7 +367,7 @@ class Solar_Sql_Select extends Solar_Base {
 		);
 		
 		// add to the columns from this joined table
-		$this->tblCols$name, $cols);
+		$this->tblCols($name, $cols);
 	}
 	
 	

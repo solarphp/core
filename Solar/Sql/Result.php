@@ -36,20 +36,17 @@ class Solar_Sql_Result extends Solar_Base {
 		'PDOStatement' => null,
 	);
 	
-	public __construct($config = null)
-	{
-		parent::__construct($config);
-	}
-	
-	public __call($func, $args)
+	/*
+	public function __call($func, $args)
 	{
 		return call_user_func_array(
 			array($this->config['PDOStatement'], $func),
 			$args
 		);
 	}
+	*/
 	
-	public fetch($mode = PDO_FETCH_ASSOC)
+	public function fetch($mode = PDO_FETCH_ASSOC)
 	{
 		// the fetched row data 
 		$row = array();
@@ -64,19 +61,19 @@ class Solar_Sql_Result extends Solar_Base {
 		// right portion is the column name. otherwise
 		// it's just a column name.
 		foreach ($orig as $key => $val) {
-			$pos = strpos('__', $key);
+			$pos = strpos($key, '__');
 			if ($pos) {
 				$tbl = substr($key, 0, $pos);
 				$col = substr($key, $pos+2);
 				$row[$tbl][$col] = $val;
 			} else {
-				$row[$col] = $val;
+				$row[$key] = $val;
 			}
 		}
-		return $data;
+		return $row;
 	}
 	
-	public fetchAll($mode = PDO_FETCH_ASSOC)
+	public function fetchAll($mode = PDO_FETCH_ASSOC)
 	{
 		$data = array();
 		while ($row = $this->fetch($mode)) {

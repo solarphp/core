@@ -75,7 +75,7 @@
 				<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
 {\fonttbl\f0\fnil\fcharset77 Verdana;\f1\fnil\fcharset77 Verdana-Italic;}
 {\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural\pardirnatural
 
 \f0\fs24 \cf0 * required\
 \
@@ -92,45 +92,6 @@
 			<key>Head</key>
 			<dict>
 				<key>ID</key>
-				<integer>21</integer>
-				<key>Info</key>
-				<integer>2</integer>
-			</dict>
-			<key>ID</key>
-			<integer>14</integer>
-			<key>Points</key>
-			<array>
-				<string>{719.5, 218}</string>
-				<string>{544, 218}</string>
-			</array>
-			<key>Style</key>
-			<dict>
-				<key>stroke</key>
-				<dict>
-					<key>Cap</key>
-					<integer>0</integer>
-					<key>HeadArrow</key>
-					<string>0</string>
-					<key>Join</key>
-					<integer>0</integer>
-					<key>TailArrow</key>
-					<string>CrowBar</string>
-				</dict>
-			</dict>
-			<key>Tail</key>
-			<dict>
-				<key>ID</key>
-				<integer>22</integer>
-				<key>Info</key>
-				<integer>1</integer>
-			</dict>
-		</dict>
-		<dict>
-			<key>Class</key>
-			<string>LineGraphic</string>
-			<key>Head</key>
-			<dict>
-				<key>ID</key>
 				<integer>5</integer>
 				<key>Info</key>
 				<integer>2</integer>
@@ -140,7 +101,7 @@
 			<key>Points</key>
 			<array>
 				<string>{488, 71}</string>
-				<string>{312.5, 266}</string>
+				<string>{314, 265}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -178,8 +139,8 @@
 			<integer>25</integer>
 			<key>Points</key>
 			<array>
-				<string>{489, 266}</string>
-				<string>{312.5, 266}</string>
+				<string>{490, 265.5}</string>
+				<string>{314, 265}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -242,67 +203,14 @@
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{714.5, 135}, {198, 232}}</string>
-			<key>Class</key>
-			<string>ShapedGraphic</string>
-			<key>ID</key>
-			<integer>22</integer>
-			<key>Magnets</key>
-			<array>
-				<string>{-0.474747, -0.142241}</string>
-			</array>
-			<key>Shape</key>
-			<string>Rectangle</string>
-			<key>Style</key>
-			<dict>
-				<key>shadow</key>
-				<dict>
-					<key>Draws</key>
-					<string>NO</string>
-				</dict>
-			</dict>
-			<key>Text</key>
-			<dict>
-				<key>Align</key>
-				<integer>0</integer>
-				<key>Text</key>
-				<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
-{\fonttbl\f0\fnil\fcharset77 Verdana-Bold;\f1\fnil\fcharset77 Verdana-Italic;\f2\fnil\fcharset77 Verdana;
-}
-{\colortbl;\red255\green255\blue255;}
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\qnatural
-
-\f0\b\fs24 \cf0 Edits\
-\
-
-\f1\i\b0 id * (int)\
-created (ts)\
-updated (ts)\
-
-\f2\i0 part_id * (int)\
-editor_ipaddr (char 15)\
-editor_handle (var 32)\
-flag (var 32)\
-email (var 255)\
-uri (var 255)\
-mime (var 64)\
-subj (var 255)\
-summ (var 255)\
-body (clob)}</string>
-			</dict>
-			<key>TextPlacement</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>Bounds</key>
-			<string>{{483, 181}, {198, 323}}</string>
+			<string>{{483, 181}, {198, 338}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
 			<integer>21</integer>
 			<key>Magnets</key>
 			<array>
-				<string>{-0.469697, -0.236842}</string>
+				<string>{-0.464647, -0.25}</string>
 				<string>{-0.191919, -0.385449}</string>
 			</array>
 			<key>Shape</key>
@@ -337,6 +245,7 @@ updated (ts)\
 owner_handle (var 32)\
 locale * (char 5)\
 type (var 32)\
+tags (var 255)\
 rank (int)\
 rating (int)\
 editor_ipaddr (char 15)\
@@ -393,7 +302,7 @@ prefs (clob)\
 created (ts)\
 updated (ts)\
 
-\f2\i0 node_id (int)\
+\f2\i0 part_id (int)\
 name (var 64)}</string>
 			</dict>
 			<key>TextPlacement</key>
@@ -401,15 +310,15 @@ name (var 64)}</string>
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{251, 231}, {189, 198}}</string>
+			<string>{{251, 231}, {189, 216}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
 			<integer>5</integer>
 			<key>Magnets</key>
 			<array>
-				<string>{-0.5, -0.0858586}</string>
-				<string>{-0.174603, -0.323232}</string>
+				<string>{-0.5, -0.12037}</string>
+				<string>{-0.166667, -0.342593}</string>
 			</array>
 			<key>Shape</key>
 			<string>Rectangle</string>
@@ -441,9 +350,10 @@ updated (ts)\
 
 \f2\i0 area_id * (var 127)\
 name * (var 127)\
+type (var 32)\
 subj (var 255)\
-tags (var 255)\
-user_handle (var 32)\
+summ (var 255)\
+owner_handle (var 32)\
 rank (int)\
 rating (int)\
 prefs (clob)}</string>
@@ -493,7 +403,7 @@ updated (ts)\
 
 \f1\i0 name * (var 127)\
 subj (var 255)\
-user_handle (var 32)\
+owner_handle (var 32)\
 prefs (clob)}</string>
 			</dict>
 			<key>TextPlacement</key>
@@ -605,7 +515,7 @@ prefs (clob)}</string>
 		</dict>
 	</array>
 	<key>ModificationDate</key>
-	<string>2005-09-29 20:42:49 -0500</string>
+	<string>2005-10-04 16:39:14 -0500</string>
 	<key>Modifier</key>
 	<string>Paul M. Jones</string>
 	<key>NotesVisible</key>
@@ -687,7 +597,7 @@ prefs (clob)}</string>
 		<key>FitInWindow</key>
 		<false/>
 		<key>Frame</key>
-		<string>{{105, 43}, {1138, 758}}</string>
+		<string>{{346, 171}, {1138, 758}}</string>
 		<key>ShowRuler</key>
 		<false/>
 		<key>ShowStatusBar</key>

@@ -67,33 +67,6 @@ class Solar_Content_Parts_Table extends Solar_Sql_Table {
 			'size'    => 32,
 		);
 		
-		// the locale for this part
-		$this->col['locale'] = array(
-			'type'    => 'char',
-			'size'    => 5,
-			'require' => true,
-			'default' => 'en_US',
-			'valid'   => 'locale',
-		);
-		
-		// the part type: wiki, blog, news, comment, trackback, etc.
-		$this->col['type'] = array(
-			'type'    => 'varchar',
-			'size'    => 32,
-			'require' => true,
-			'valid'   => 'word',
-		);
-		
-		// arbitrary list-order, sequence, or ranking
-		$this->col['rank'] = array(
-			'type'    => 'int',
-		);
-		
-		// arbitrary user-assigned rating, score, level, or value
-		$this->col['rating'] = array(
-			'type'    => 'int',
-		);
-		
 		// username of the most-recent editor
 		$this->col['editor_handle'] = array(
 			'type'    => 'varchar',
@@ -109,10 +82,40 @@ class Solar_Content_Parts_Table extends Solar_Sql_Table {
 			'valid'   => 'ipv4',
 		);
 		
-		// arbitrary flag: moderate, spam, disable, etc
-		$this->col['flag'] = array(
+		// the locale for this part
+		$this->col['locale'] = array(
+			'type'    => 'char',
+			'size'    => 5,
+			'require' => true,
+			'default' => 'en_US',
+			'valid'   => 'locale',
+		);
+		
+		// arbitrary list-order, sequence, or ranking
+		$this->col['rank'] = array(
+			'type'    => 'int',
+		);
+		
+		// arbitrary user-assigned rating, score, level, or value
+		$this->col['rating'] = array(
+			'type'    => 'int',
+		);
+		
+		// tags on this part
+		$this->col['tags'] = array(
+			'type'    => 'varchar',
+			'size'    => 255,
+			'valid'   => array(
+				array('regex', '/^[\w ]$+/'),
+			),
+		);
+		
+		// the part type: wiki, blog, news, comment, trackback, etc.
+		$this->col['type'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
+			'require' => true,
+			'valid'   => 'word',
 		);
 		
 		// email related to this part
@@ -156,7 +159,7 @@ class Solar_Content_Parts_Table extends Solar_Sql_Table {
 		);
 		
 		
-		// serialized array of preferences for this node
+		// serialized array of preferences for this part
 		$this->col['prefs'] = array(
 			'type'    => 'clob',
 		);
@@ -168,16 +171,17 @@ class Solar_Content_Parts_Table extends Solar_Sql_Table {
 		// 
 		
 		$this->idx = array(
-			'node_id'   => 'normal',
-			'locale'    => 'normal',
-			'type'      => 'normal',
-			'rank'      => 'normal',
-			'rating'    => 'normal',
-			'email'     => 'normal',
-			'uri'       => 'normal',
-			'flag'      => 'normal',
-			'subj'      => 'normal',
-			'summ'      => 'normal',
+			'node_id'      => 'normal',
+			'owner_handle' => 'normal',
+			'locale'       => 'normal',
+			'rank'         => 'normal',
+			'rating'       => 'normal',
+			'type'         => 'normal',
+			'email'        => 'normal',
+			'uri'          => 'normal',
+			'tags'         => 'normal',
+			'subj'         => 'normal',
+			'summ'         => 'normal',
 		);
 	}
 }

@@ -33,6 +33,8 @@ Solar::loadClass('Solar_Sql_Table');
 * 
 * @subpackage Solar_Content
 * 
+* @todo Build in content permission system.
+* 
 */
 
 class Solar_Content extends Solar_Base {
@@ -42,7 +44,7 @@ class Solar_Content extends Solar_Base {
 	* 
 	* A table object representing the broad areas of content.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var object Solar_Content_Areas
 	* 
@@ -55,7 +57,7 @@ class Solar_Content extends Solar_Base {
 	* 
 	* A table object representing the container nodes in an area.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var object Solar_Content_Nodes
 	* 
@@ -68,7 +70,7 @@ class Solar_Content extends Solar_Base {
 	* 
 	* A table object representing the content parts within a node.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var object Solar_Content_Parts
 	* 
@@ -81,7 +83,7 @@ class Solar_Content extends Solar_Base {
 	* 
 	* A table object representing the edit history of a node-part.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var object Solar_Content_Edits
 	* 
@@ -94,7 +96,7 @@ class Solar_Content extends Solar_Base {
 	* 
 	* A table object representing the tags on each node.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @var object Solar_Content_Tags
 	* 
@@ -102,7 +104,19 @@ class Solar_Content extends Solar_Base {
 	
 	public $tags;
 	
+	
+	/**
+	* 
+	* The shared SQL object.
+	* 
+	* @access protected
+	* 
+	* @var object Solar_Sql
+	* 
+	*/
+	
 	protected $sql;
+	
 	
 	/**
 	* 
@@ -112,14 +126,48 @@ class Solar_Content extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
+		// need an sql injection just-in-case
+		$this->sql   = Solar::shared('sql');
+		
+		// the component tables
 		$this->areas = Solar::object('Solar_Content_Areas');
 		$this->nodes = Solar::object('Solar_Content_Nodes');
-		$this->parts = Solar::object('Solar_Content_Parts');
-		$this->edits = Solar::object('Solar_Content_Edits');
 		$this->tags  = Solar::object('Solar_Content_Tags');
+		$this->parts = Solar::object('Solar_Content_Parts');
 		
-		$this->sql   = Solar::shared('sql');
+		// don't actually need edits yet, will start on it
+		// when the 'parts' model is ready.
+		// 
+		//$this->edits = Solar::object('Solar_Content_Edits');
 	}
+	
+	
+	// -----------------------------------------------------------------
+	// 
+	// Areas
+	// 
+	// -----------------------------------------------------------------
+	
+	
+	public function fetchArea($area)
+	{
+		return $this->areas->fetchItem($area);
+	}
+	
+	public function fetchAreaList($where = null, $order = null, $page = null)
+	{
+		return $this->areas->fetchList($where, $order, $page);
+	}
+	
+	public function insertArea($data)
+	{
+		return $this->areas->table->insert($data);
+	}
+	
+	public function updateArea($area_id, $data)
+	{
+	}
+	
 	
 	// -----------------------------------------------------------------
 	// 
@@ -128,18 +176,85 @@ class Solar_Content extends Solar_Base {
 	// -----------------------------------------------------------------
 	
 	
-	public function nodeInsert($data)
+	public function fetchNode($area, $node)
 	{
-		if (! $this->areaExists($area)) {
-			$tmp = array(
-				'name' => $area,
-				'users_handle' => Solar::shared('user')->auth->username,
-			);
-			$this->areaInsert($data);
+		return $this->nodes->fetchItem($area, $node);
+	}
+	
+	public function fetchNodeList($where = null, $order = null, $page = null)
+	{
+		return $this->nodes->fetchList($where, $order, $page);
+	}
+	
+	public function insertNode($area_id, $data)
+	{	
+		/* @todo check if the area exists */
+		$data['area_id'] = $area_id;
+		
+		
+		// add a sequential ID.  we do so here, instead of letting the
+		// table do it automatically, becuase we may need the ID for the
+		// default node name below.
+		$data['id'] = $this->nodes->table->increment('id');
+		
+		// if no name specified, use the ID as the name.
+		if (empty($data['name'])) {
+			$data['name'] = $data['id'];
 		}
 		
-		return $this->nodes->table->insert($data);
+		// if no owner specified, set as the current user
+		if (empty($data['owner_handle'])) {
+			$data['owner_handle'] = Solar::shared('user')->auth->username;
+		}
+		
+		// normalize the tag string
+		if (! empty($data['tags'])) {
+			$data['tags'] = $this->tags->asString($data['tags']);
+		}
+		
+		// attempt the insert
+		$node = $this->nodes->table->insert($data);
+		if (Solar::isError($node)) {
+			// return the error
+			return $node;
+		}
+		
+		// add the tags, too
+		$tags = $this->refreshTags($node['id'], $node['tags']);
+		if (Solar::isError($tags)) {	
+			// return the error
+			return $tags;
+		} else {
+			// return the new node data
+			return $node;
+		}
 	}
+	
+	public function updateNode($node_id, $data)
+	{
+		$data['node_id'] = (int) $node_id;
+		
+		// normalize the tag string if one was passed in.
+		if (isset($data['tags'])) {
+			$data['tags'] = $this->tags->asString($data['tags']);
+		}
+		
+		// update the node
+		$where = array('node_id', (int) $node_id);
+		$node = $this->nodes->table->update($data, $where);
+		if (Solar::isError($data)) {
+			return $node;
+		}
+		
+		// refresh the tags
+		if (isset($data['tags'])) {
+			$this->refreshTags($data['node_id'], $data['tags']);
+		}
+		
+		// done
+		return $node;
+	}
+	
 	
 	// -----------------------------------------------------------------
 	// 
@@ -148,31 +263,39 @@ class Solar_Content extends Solar_Base {
 	// -----------------------------------------------------------------
 	
 	
-	// this is a new part entirely
-	public function partInsert($area, $node, $data)
+	public function insertPart($area_id, $node_id, $data)
 	{
-		if (! $this->nodeExists($area, $node)) {
-			$tmp = array(
-				'name' => $node,
-				'users_handle' => Solar::shared('user')->auth->username,
-			);
-			$this->nodeInsert($area, $data);
-		}
-		
-		// now insert the part and its first edit.
-		
+		/* @todo check if the area exists */
+		$data['area_id'] = (int) $area_id;
+		/* @todo check if the node exists */
+		$data['node_id'] = (int) $node_id;
+		return $this->parts->table->insert($data);
 	}
 	
-	// this is a new edit
-	public function partUpdate($area, $node, $id, $data)
+	public function updatePart($part_id, $data)
 	{
+		$where = array('part_id', (int) $part_id);
+		return $this->parts->table->update($data, $where);
 	}
 	
-	// this is an update-in-place
-	public function partReplace($area, $node, $id, $data)
+	public function revisePart($part_id, $data)
 	{
+		// copy the old part to edits
+		// update the part in place
 	}
 	
-
+	
+	// -----------------------------------------------------------------
+	// 
+	// Tags
+	// 
+	// -----------------------------------------------------------------
+	
+	public function refreshTags($node_id, $tags)
+	{
+		$this->tags->refresh($node_id, $tags);
+	}
+	
+	
 }
 ?>

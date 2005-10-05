@@ -53,7 +53,7 @@ class Solar_Content_Areas_Table extends Solar_Sql_Table {
 			'type'    => 'varchar',
 			'size'    => 127,
 			'require' => true,
-			'valid'   => array('word'),
+			'valid'   => 'word',
 		);
 		
 		// the user who owns this area

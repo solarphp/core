@@ -50,24 +50,34 @@ class Solar_Content_Areas extends Solar_Base {
 		// we don't want to auto-add columns).
 		$select->from('areas');
 		
-		// filter and select a count('id')
-		$select->where('name', $area);
-		$result = $select->countPages('id');
+		// by ID or by name?
+		if (is_numeric($area)) {
+			$col = 'id';
+		} else {
+			$col = 'name';
+		}
 		
+		// filter by the column name and bind a value
+		$select->where("$col = :value");
+		$select->bind('value', trim($area));
+		
+		// get a result count
+		$result = $select->countPages();
 		if (Solar::isError($result)) {
 			// failure
 			return $result;
 		} else {
-			// success. just check the
-			// count of how many names showed up
+			// success. just check the count of how many names showed up
 			// and cast as boolean.
 			return (bool) $result['count'];
 		}
 	}
 	
-	public function fetchList($where = null, $order = 'LOWER(name) ASC',
-		$page = null)
+	public function fetchList($where = null, $order = null,	$page = null)
 	{
+		if (is_null($order)) {
+			$order = 'LOWER(name) ASC';
+		}
 		return $this->table->select('all', $where, $order, $page);
 	}
 	
@@ -80,7 +90,7 @@ class Solar_Content_Areas extends Solar_Base {
 		}
 		
 		$type = 'row';
-		$where = array($col => $area);
+		$where = array($col => trim($area));
 		return $this->table->select('row', $where);
 	}
 }

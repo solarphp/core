@@ -63,9 +63,13 @@ class Solar_Content_Nodes extends Solar_Base {
 		$select->from('nodes');
 		$select->join('areas', 'nodes.area_id = areas.id');
 		
-		// filter by area and node
-		$select->where($areas_col, $area);
-		$select->where($nodes_col, $node);
+		// filter by area
+		$select->where("$areas_col = :area_val");
+		$select->bind('area_val', $area);
+		
+		// filter by node
+		$select->where("$nodes_col = :node_val");
+		$select->bind('node_val', $node);
 		
 		// get a count
 		$result = $select->countPages();
@@ -80,9 +84,12 @@ class Solar_Content_Nodes extends Solar_Base {
 		}
 	}
 	
-	public function fetchList($where = null, $order = 'LOWER(name) ASC',
-		$page = null)
+	public function fetchList($where = null, $order = null, $page = null)
 	{
+		if (is_null($order)) {
+			$order = array('rank ASC', 'LOWER(name) ASC');
+		}
+		
 		return $this->table->select('all', $where, $order, $page);
 	}
 	
@@ -90,6 +97,7 @@ class Solar_Content_Nodes extends Solar_Base {
 	{
 		// allow id or name for area
 		if (is_numeric($area)) {
+			// no need for a join in this case
 			$areas_col = 'nodes.area_id';
 		} else {
 			$areas_col = 'areas.name';
@@ -114,9 +122,13 @@ class Solar_Content_Nodes extends Solar_Base {
 			$select->join('areas', 'nodes.area_id = areas.id');
 		}
 		
-		// filter by area and node
-		$select->where($areas_col, $area);
-		$select->where($nodes_col, $node);
+		// filter by area
+		$select->where("$areas_col = :area_val");
+		$select->bind('area_val', $area);
+		
+		// filter by node
+		$select->where("$nodes_col = :node_val");
+		$select->bind('node_val', $node);
 		
 		// return the results
 		return $select->fetch('row');

@@ -55,8 +55,8 @@ class Solar_Content_Tags_Table extends Solar_Sql_Table {
 		// COLUMNS
 		// 
 		
-		// the node_id for this tag (which carries the area_id with it)
-		$this->col['node_id'] = array(
+		// the part_id for this tag
+		$this->col['part_id'] = array(
 			'type'    => 'int',
 			'require' => true,
 		);

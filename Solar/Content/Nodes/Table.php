@@ -60,7 +60,13 @@ class Solar_Content_Nodes_Table extends Solar_Sql_Table {
 			'valid'   => 'word',
 		);
 		
-		// the node name
+		// the user who owns this node
+		$this->col['owner_handle'] = array(
+			'type'    => 'varchar',
+			'size'    => 32,
+		);
+		
+		// the node name (equivalent to a wiki-word)
 		$this->col['name'] = array(
 			'type'    => 'varchar',
 			'size'    => 127,
@@ -68,8 +74,8 @@ class Solar_Content_Nodes_Table extends Solar_Sql_Table {
 			'valid'   => 'word',
 		);
 		
-		// the user who owns this node
-		$this->col['owner_handle'] = array(
+		// the node type
+		$this->col['type'] = array(
 			'type'    => 'varchar',
 			'size'    => 32,
 		);
@@ -80,13 +86,10 @@ class Solar_Content_Nodes_Table extends Solar_Sql_Table {
 			'size'    => 255,
 		);
 		
-		// the node tags, made of word-chars and spaces
-		$this->col['tags'] = array(
+		// summary description of the node
+		$this->col['summ'] = array(
 			'type'    => 'varchar',
 			'size'    => 255,
-			'valid'   => array(
-				array('regex', '/^[\w ]*$/'),
-			),
 		);
 		
 		// arbitrary list-order, sequence, or ranking
@@ -120,7 +123,6 @@ class Solar_Content_Nodes_Table extends Solar_Sql_Table {
 			'area_id'      => 'normal',
 			'name'         => 'normal',
 			'owner_handle' => 'normal',
-			'tags'         => 'normal',
 			'rank'         => 'normal',
 			'rating'       => 'normal',
 		);

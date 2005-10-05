@@ -83,7 +83,7 @@ class Solar_Sql_Table extends Solar_Base {
 	*         'scope'   => (int) decimal places
 	*         'valid'   => (array) Solar_Valid methods and args
 	*         'require' => (bool) is this a required (non-null) column?
-	*         'seqname' => (string) use this auto-sequence
+	*         'autoinc' => (bool) auto-increment
 	*         'default' => (string|array) default value
 	*         'primary' => (bool) is this part of the primary key?
 	*      ),
@@ -207,17 +207,18 @@ class Solar_Sql_Table extends Solar_Base {
 		// set defaults
 		$data = array_merge($this->getDefault(), $data);
 		
-		// forcibly add sequential values
-		foreach ($this->col as $field => $info) {
-			// does this field use a sequence?
-			if (! empty($info['seqname'])) {
-				// yes, override any given values
-				$data[$field] = $this->sql->nextSequence($info['seqname']);
+		// auto-add sequential values
+		foreach ($this->col as $colname => $colinfo) {
+			// does this column autoincrement, and is no data provided?
+			if ($colinfo['autoinc'] && empty($data[$colname])) {
+				$data[$colname] = $this->increment($colname);
 			}
 		}
 		
-		// forcibly add "created" timestamp
-		$data['created'] = date('Y-m-d\TH:i:s');
+		// forcibly add created/updated timestamps
+		$now = date('Y-m-d\TH:i:s');
+		$data['created'] = $now;
+		$data['updated'] = $now;
 		
 		// validate and recast the data.
 		$result = $this->autoValid($data);
@@ -255,23 +256,18 @@ class Solar_Sql_Table extends Solar_Base {
 	
 	public function update($data, $where)
 	{
+		// build the WHERE clause
+		$where = $this->autoWhere($where);
+		
 		// retain primary key data in this array for return values
 		$retain = array();
 		
 		// disallow the changing of primary key data
 		foreach (array_keys($data) as $field) {
-		
-			// get the 'primary' flag
-			$primary = isset($this->col[$field]['primary'])
-				? $this->col[$field]['primary']
-				: false;
-				
-			// retain and unset if primary
-			if ($primary) {
+			if ($this->col[$field]['primary']) {
 				$retain[$field] = $data[$field];
 				unset($data[$field]);
 			}
-			
 		}
 		
 		// disallow changing of "created" timestamp
@@ -312,6 +308,10 @@ class Solar_Sql_Table extends Solar_Base {
 	
 	public function delete($where)
 	{
+		// build the WHERE clause
+		$where = $this->autoWhere($where);
+		
+		// attempt the deletion
 		$result = $this->sql->delete($this->name, $where);
 		return $result;
 	}
@@ -346,45 +346,47 @@ class Solar_Sql_Table extends Solar_Base {
 	public function select($type = 'result', $where = null,
 		$order = null, $page = null)
 	{
+		// fix up the where clause
+		$where = $this->autoWhere($where);
+		
 		// selection tool
 		$select = Solar::object('Solar_Sql_Select');
 		
 		// all columns from this table
-		$select->from($this, array_keys($this->col));
-		
-		// data to bind into the query
-		$data = array();
-		
-		// where clause?
-		if (is_array($where) || is_object($where)) {
-			foreach ((array) $where as $key => $val) {
-				if (is_int($col)) {
-					// custom user-defined clause
-					$select->where($val);
-				} else {
-					// equality key-value pair of "column => value"
-					$select->where("$key = :$key");
-					// add to the binding data
-					$data[$key] = $val;
-				}
-			}
-		} else {
-			// ... user-specified clause
-			$select->where($where);
-		}
-		
-		// order by?
+		$select->from($this->name, array_keys($this->col));
+		$select->where($where);
 		$select->order($order);
-		
-		// paging?
 		$select->limitPage($page);
-		
-		// bind data
-		$select->bind($data);
 		
 		// fetch and return results
 		$result = $select->fetch($type);
 		return $result;
+	}
+	
+	
+	/**
+	* 
+	* Get the next sequence value for a column.
+	* 
+	* @access public
+	* 
+	* @param string $name The column name.
+	* 
+	* @return int The next sequence number for the column.
+	* 
+	*/
+	
+	public function increment($name)
+	{
+		// only increment if auto-increment is set
+		if (! empty($this->col[$name]['autoinc'])) {
+			// table__column
+			$seqname = $this->name . '__' . $name;
+			$result = $this->sql->nextSequence($seqname);
+			return $result;
+		} else {
+			return null;
+		}
 	}
 	
 	
@@ -433,16 +435,20 @@ class Solar_Sql_Table extends Solar_Base {
 			}
 			
 			// yes, so get it based on the kind of default.
-			switch ($info['default']['type']) {
+			// we shift off the front of the array as we go.
+			// element 0 is the type (literal or callback),
+			// element 1 is the literal (or callback name),
+			// elements 2+ are any arguments for a callback.
+			$type = array_shift($info['default']);
+			switch ($type) {
 			
 			case 'callback':
-				$args = $info['default']['args'];
-				$func = array_shift($args);
-				$data[$name] = call_user_func_array($func, $args);
+				$func = array_shift($info['default']);
+				$data[$name] = call_user_func_array($func, $info['default']);
 				break;
 			
 			case 'literal':
-				$data[$name] = $info['default']['args'];
+				$data[$name] = array_shift($info['default']);
 				break;
 			
 			default:
@@ -500,11 +506,11 @@ class Solar_Sql_Table extends Solar_Base {
 			'type'    => null,
 			'size'    => null,
 			'scope'   => null,
-			'valid'   => array(),
+			'primary' => false,
 			'require' => false,
-			'seqname' => null,
+			'autoinc' => false,
 			'default' => null,
-			'primary' => false
+			'valid'   => array(),
 		);
 		
 		// auto-added columns and indexes
@@ -515,9 +521,9 @@ class Solar_Sql_Table extends Solar_Base {
 		if (! array_key_exists('id', $this->col)) {
 			$autocol['id'] = array(
 				'type'    => 'int',
-				'seqname' => $this->name . '_id',
-				'require' => true,
 				'primary' => true,
+				'require' => true,
+				'autoinc' => true,
 			);
 			
 			$autoidx['id'] = 'unique';
@@ -557,8 +563,31 @@ class Solar_Sql_Table extends Solar_Base {
 			// make sure there's a name
 			$info['name'] = $name;
 			
-			// force 'valid' to an array of validations
-			settype($info['valid'], 'array');
+			// if 'valid' is not already an array, make it
+			// one as a simple Solar_Valid call.
+			if (! is_array($info['valid'])) {
+				$info['valid'] = array(
+					array(
+						$info['valid'], // the method
+						$this->locale(strtoupper("VALID_$name")) // validation message
+					)
+				);
+			} else {
+				// insert the validation message into the array
+				foreach ($info['valid'] as $key => $val) {
+					// shift the validation function off the top
+					$func = array_shift($val);
+					// add the validation message
+					// after the function name
+					array_unshift(
+						$val,
+						$func,
+						$this->locale(strtoupper("VALID_$name"))
+					);
+					// save the new version of the validations
+					$info['valid'][$key] = $val;
+				}
+			}
 			
 			// if 'default' is not already an array, make it
 			// one as a literal.  this lets you avoid the array
@@ -611,7 +640,7 @@ class Solar_Sql_Table extends Solar_Base {
 			$result->push(
 				get_class($this),
 				'ERR_TABLE_NOT_CREATED',
-				$this->locale('ERR_TABLE_NOT_CREATED'),
+				Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
 				array('table' => $this->name),
 				E_USER_ERROR
 			);
@@ -636,7 +665,7 @@ class Solar_Sql_Table extends Solar_Base {
 				$result->push(
 					get_class($this),
 					'ERR_TABLE_NOT_CREATED',
-					$this->locale('ERR_TABLE_NOT_CREATED'),
+					Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
 					array('table' => $this->name),
 					E_USER_ERROR
 				);
@@ -664,6 +693,8 @@ class Solar_Sql_Table extends Solar_Base {
 	* the 'info' is an array of error messages (field => array(errors)).
 	* 
 	* @todo Return a Solar_Error stack proper, not an info array.
+	* 
+	* @todo Use $this->errorPush() instead of $err->push().
 	* 
 	*/
 	
@@ -720,15 +751,13 @@ class Solar_Sql_Table extends Solar_Base {
 				continue;
 			}
 			
-			// get the field type
-			$type = $this->col[$field]['type'];
-			
 			
 			// -------------------------------------------------------------
 			// 
-			// Type validation
+			// Volidate and recast for column type
 			// 
 			
+			$type = $this->col[$field]['type'];
 			switch ($type) {
 			
 			case 'bool':
@@ -744,7 +773,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_MAXSIZE',
-						$this->locale('ERR_DATA_MAXSIZE'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_MAXSIZE'),
 						array(
 							'col' => $field,
 							'max' => $max,
@@ -765,7 +794,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_INTRANGE',
-						$this->locale('ERR_DATA_INTRANGE'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_INTRANGE'),
 						array(
 							'col' => $field,
 							'min' => $int_range[$type][0],
@@ -790,7 +819,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_NUMRANGE',
-						$this->locale('ERR_DATA_NUMRANGE'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_NUMRANGE'),
 						array(
 							'col' => $field,
 							'size' => $size,
@@ -809,7 +838,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_DATE',
-						$this->locale('ERR_DATA_DATE'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_DATE'),
 						array(
 							'col' => $field,
 							'value' => $value
@@ -830,7 +859,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_TIME',
-						$this->locale('ERR_DATA_TIME'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_TIME'),
 						array(
 							'col' => $field,
 							'value' => $value
@@ -849,7 +878,7 @@ class Solar_Sql_Table extends Solar_Base {
 					$err->push(
 						get_class($this),
 						'ERR_DATA_TIMESTAMP',
-						$this->locale('ERR_DATA_TIMESTAMP'),
+						Solar::locale('Solar_Sql', 'ERR_DATA_TIMESTAMP'),
 						array(
 							'col' => $field,
 							'value' => $value
@@ -861,28 +890,16 @@ class Solar_Sql_Table extends Solar_Base {
 				break;
 			}
 			
-			
 			// -------------------------------------------------------------
 			// 
-			// Content validation
+			// Content validations
 			// 
-			
-			// add validation placeholder array if needed
-			if (! isset($this->col[$field]['valid'])) {
-				$this->col[$field]['valid'] = array();
-			}
 			
 			// loop through each validation rule
 			foreach ($this->col[$field]['valid'] as $args) {
 				
 				// the name of the Solar_Valid method
 				$method = array_shift($args);
-				
-				// the text of the error message
-				$text = array_shift($args);
-				if (is_null($text)) {
-					$text = Solar::locale('Solar', 'ERR_INVALID');
-				}
 				
 				// config is now the remaining arguments,
 				// put the value on top of it.
@@ -896,12 +913,12 @@ class Solar_Sql_Table extends Solar_Base {
 				
 				// was it valid?
 				if (! $result) {
-					$err->push(
-						get_class($this),
-						'ERR_DATA',
-						$text,
+					$code = 'VALID_' . strtoupper($field);
+					$this->errorPush(
+						$err,
+						$code,
 						array(
-							'col' => $field,
+							'col'   => $field,
 							'value' => $value
 						),
 						E_NOTICE,
@@ -910,6 +927,15 @@ class Solar_Sql_Table extends Solar_Base {
 				}
 				
 			} // endforeach
+			
+			
+			// ---------------------------------------------------------
+			// 
+			// Retain the recasted and validated value ... ???
+			// 
+			
+			$data[$field] = $value;
+			
 			
 		} // endforeach()
 		
@@ -924,13 +950,58 @@ class Solar_Sql_Table extends Solar_Base {
 			$err->push(
 				get_class($this),
 				'ERR_DATA',
-				$this->locale('ERR_DATA'),
+				Solar::locale('Solar_Sql', 'ERR_DATA'),
 				array(),
 				E_USER_WARNING,
 				true // backtrace
 			);
 			return $err;
 		}
+	}
+	
+	
+	/**
+	* 
+	* Automatically builds a simple WHERE clause.
+	* 
+	* @access protected
+	* 
+	* @param string|array $cond The list of WHERE conditions.  Typically
+	* a set of key-value pairs where the key is the column name and the value
+	* is what that column should equal.  If the value is an array, it's 
+	* treated as a list of "IN (...)" values.  All conditions are "AND"ed
+	* together.
+	* 
+	* @return string A WHERE clause composed of the conditions.
+	* 
+	*/
+	
+	protected function autoWhere($cond)
+	{
+		settype($cond, 'array');
+		$where = array();
+		foreach ($cond as $key => $val) {
+			if (is_int($key)) {
+				// the $val is a literal condition
+				$tmp = $val;
+			} else {
+				// the $key is a column name, and
+				// the $val is an equality for that column.
+				if (is_array($val)) {
+					// IN(...) clause from the array of values
+					$tmp = $key . 'IN (';
+					$val = $this->sql->quoteSep($val);
+					$tmp .= $val;
+					$tmp .= ')';
+				} else {
+					// simple equality
+					$tmp = $key . ' = ' . $this->sql->quote($val);
+				}
+			}
+			$where[] = $tmp;
+		}
+		// AND everything together
+		return implode(' AND ', $where);
 	}
 }
 ?>

@@ -187,10 +187,12 @@ abstract class Solar_Base {
 	* 
 	* @param object $e An exception object.
 	* 
+	* @param int $level The error level constant, e.g. E_USER_NOTICE.
+	* 
 	* @return object A Solar_Error object.
 	*/
 	
-	protected function errorException($e)
+	protected function errorException($e, $level)
 	{
 		$info = array(
 			'type'  => get_class($e),
@@ -204,7 +206,7 @@ abstract class Solar_Base {
 			$e->getCode(),
 			$e->getMessage(),
 			$info,
-			E_USER_ERROR,
+			$level,
 			false
 		);
 		

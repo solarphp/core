@@ -17,11 +17,6 @@
 */
 
 /**
-* Need Solar_Form for instanceof comparisons.
-*/
-Solar::loadClass('Solar_Form');
-
-/**
 * 
 * Class for loading Solar_Form definitions from a SimpleXML file.
 * 
@@ -146,9 +141,14 @@ Solar::loadClass('Solar_Form');
 * 
 */
 
-class Solar_Form_Load_Xml extends Solar_Base 
-{
+class Solar_Form_Load_Xml extends Solar_Base {
+	
+	protected $config = array(
+		'locale' => 'Solar/Form/Locale/'
+	);
+	
 	/**
+	* 
 	* Array of element attributes; used by {@link fetch()} to get element
 	* attributes
 	* 
@@ -323,6 +323,7 @@ class Solar_Form_Load_Xml extends Solar_Base
 	
 	
 	/**
+	* 
 	* Get parameters for a filter or validation rule
 	*
 	* @access protected

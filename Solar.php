@@ -33,7 +33,6 @@ require_once 'Solar/Base.php';
 */
 require_once 'Solar/Error.php';
 
-
 /**
 * 
 * Encapsulates shared configuration, objects, and methods for Solar apps.
@@ -137,7 +136,6 @@ class Solar {
 			'user'     => 'Solar_User',
 			'locale'   => 'Solar_Locale',
 			'template' => 'Solar_Template',
-			'content'  => 'Solar_Content',
 		);
 		
 		foreach ($baseline as $name => $class) {
@@ -265,7 +263,7 @@ class Solar {
 	
 	/**
 	* 
-	* A "sham" method; __autoload() does not work with static calls.
+	* A "sham" method; __autoload() causes too many conflicts.
 	* 
 	* If the class name exists as a key in $config['Solar']['registry'],
 	* that array element value will be used as the file path.  If not,
@@ -322,6 +320,7 @@ class Solar {
 		}
 		
 		// include the file and check for failure.
+		// we use run() here so we can see the error backtrace.
 		$result = Solar::run($file);
 		if (Solar::isError($result)) {
 			return $result;
@@ -830,7 +829,7 @@ class Solar {
 	* 
 	*/
 	
-	protected function environment()
+	protected static function environment()
 	{
 		// clear out registered globals?
 		// (this code from Richard Heyes and Stefan Esser)

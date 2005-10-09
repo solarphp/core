@@ -308,7 +308,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
 					$validate[] = $tmpRule;
 				}
 
-				$elementInfo['validate'] = $validate;
+				$elementInfo['valid'] = $validate;
 			}
 			
 			// Add element to formElements array

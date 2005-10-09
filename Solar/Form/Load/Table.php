@@ -17,6 +17,11 @@
 */
 
 /**
+* Needed for loading validations.
+*/
+Solar::loadClass('Solar_Valid');
+
+/**
 * 
 * Class for loading form definitions from Solar_Sql_Table columns.
 * 
@@ -30,8 +35,6 @@
 
 class Solar_Form_Load_Table extends Solar_Base {
 	
-	protected $coltype_elemtype = array(
-	);
 	
 	/**
 	* 
@@ -101,11 +104,17 @@ class Solar_Form_Load_Table extends Solar_Base {
 				'options'  => array(),
 				'attribs'  => array(),
 				'feedback' => array(),
-				'validate' => $table->col[$name]['valid'],
+				'valid'    => $table->col[$name]['valid'],
 			);
 			$info = array_merge($base, $info);
 			
-			// pick a type
+			// make primary keys hidden and disabled
+			if ($table->col[$name]['primary']) {
+				$info['type'] = 'hidden';
+				$info['disable'] = true;
+			}
+			
+			// pick an element type based on the column type
 			if (empty($info['type'])) {
 				// base the element type on the column type.
 				switch ($table->col[$name]['type']) {
@@ -133,7 +142,7 @@ class Solar_Form_Load_Table extends Solar_Base {
 					
 					// if there is a validation for 'inList' or 'inKeys',
 					// make this a select element.
-					foreach ($info['validate'] as $v) {
+					foreach ($info['valid'] as $v) {
 						if ($v[0] == 'inKeys' || $v[0] == 'inList') {
 							$info['type'] = 'select';
 							break;
@@ -148,10 +157,46 @@ class Solar_Form_Load_Table extends Solar_Base {
 				}
 			}
 			
+			// add validations based on column type, but only if
+			// not hidden or disabled
+			if ($info['type'] != 'hidden' && ! $info['disable'] &&
+				empty($info['valid'])) {
+			
+				$method = null;
+				
+				switch ($table->col[$name]['type']) {
+				case 'date':
+					$method = 'isoDate';
+					break;
+				case 'time':
+					$method = 'isoTime';
+					break;
+				case 'timestamp':
+					$method = 'isoDateTime';
+					break;
+				case 'smallint':
+				case 'int':
+				case 'bigint':
+					$method = 'integer';
+					break;
+				}
+				
+				if ($method) {
+					$code = 'VALID_' . strtoupper($method);
+					$info['valid'] = array(
+						array(
+							$method,
+							Solar::locale('Solar', $code),
+							Solar_Valid::OR_BLANK
+						)
+					);
+				}
+			}
+			
 			// set up options for checkboxes if none specified
 			if ($info['type'] == 'checkbox' && empty($info['options'])) {
 				// look for 'inKeys' or 'inList' validation.
-				foreach ($info['validate'] as $v) {
+				foreach ($info['valid'] as $v) {
 					if ($v[0] == 'inKeys' || $v[0] == 'inList') {
 						$info['options'] = $v[2];
 						break;
@@ -167,7 +212,7 @@ class Solar_Form_Load_Table extends Solar_Base {
 			if (($info['type'] == 'select' || $info['type'] == 'radio') &&
 				empty($info['options'])) {
 				// look for 'inKeys' or 'inList' validation.
-				foreach ($info['validate'] as $v) {
+				foreach ($info['valid'] as $v) {
 					if ($v[0] == 'inKeys' || $v[0] == 'inList') {
 						$info['options'] = $v[2];
 						break;

@@ -146,7 +146,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	protected $validate = array();
+	protected $valid = array();
 	
 	
 	/**
@@ -289,9 +289,9 @@ class Solar_Form extends Solar_Base {
 		}
 		
 		// add validations
-		if (array_key_exists('validate', $info)) {
+		if (array_key_exists('valid', $info)) {
 		
-			foreach ( (array) $info['validate'] as $args) {
+			foreach ( (array) $info['valid'] as $args) {
 			
 				// make sure $args is an array
 				settype($args, 'array');
@@ -301,7 +301,7 @@ class Solar_Form extends Solar_Base {
 				
 				// add the validation to the element
 				call_user_func_array(
-					array($this, 'addValidate'),
+					array($this, 'addValid'),
 					$args
 				);
 				
@@ -410,7 +410,7 @@ class Solar_Form extends Solar_Base {
 	* 
 	*/
 	
-	public function addValidate($name, $method, $message = null)
+	public function addValid($name, $method, $message = null)
 	{
 		// get the arguments, drop the element name
 		$args = func_get_args();
@@ -418,7 +418,7 @@ class Solar_Form extends Solar_Base {
 		
 		// add a default validation message (args[0] is the method,
 		// args[1] is the message)
-		if (trim($args[1]) == '') {
+		if (empty($args[1]) || trim($args[1]) == '') {
 			
 			// see if we have an method-specific validation message
 			$key = 'VALID_' . strtoupper($method);
@@ -433,7 +433,7 @@ class Solar_Form extends Solar_Base {
 		}
 		
 		// add to the validation array
-		$this->validate[$name][] = $args;
+		$this->valid[$name][] = $args;
 	}
 	
 	
@@ -541,7 +541,7 @@ class Solar_Form extends Solar_Base {
 		$validated = true;
 		
 		// loop through each element to be validated
-		foreach ($this->validate as $name => $list) {
+		foreach ($this->valid as $name => $list) {
 			
 			// loop through each validation for the element
 			foreach ($list as $args) {
@@ -622,7 +622,7 @@ class Solar_Form extends Solar_Base {
 		$this->attribs   = $this->config;
 		$this->elements  = array();
 		$this->filters   = array();
-		$this->validate  = array();
+		$this->valid     = array();
 		$this->feedback  = null;
 		$this->submitted = null;
 	}

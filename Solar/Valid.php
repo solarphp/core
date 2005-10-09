@@ -688,8 +688,29 @@ class Solar_Valid {
 		if ($blank && self::blank($value)) {
 			return true;
 		}
-		
 		return (bool) preg_match($expr, $value);
+	}
+	
+	
+	/**
+	* 
+	* Validate that a value is composed of separated words.
+	* 
+	* These include a-z, A-Z, 0-9, and underscore, indicated by a 
+	* regular expression "\w".  By default, the separator is a space.
+	* 
+	* @access public
+	* 
+	* @param mixed $value The value to validate.
+	* 
+	* @return bool True if valid, false if not.
+	* 
+	*/
+	
+	public static function sepWords($value, $sep = ' ', $blank = self::NOT_BLANK)
+	{
+		$expr = '/^[\w' . preg_quote($sep) . ']+$/';
+		return self::regex($value, $expr);
 	}
 	
 	
@@ -716,19 +737,61 @@ class Solar_Valid {
 			return true;
 		}
 		
-		// validate the general format. regex from PEAR Valid.
-		$expr = '!^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?!';
-		$result = preg_match($expr, $value, $matches);
+		// TAKEN DIRECTLY FROM PEAR_VALIDATE::URI()
+		// (with modifications)
+		$result = preg_match(
+			'£^(?:([a-z][-+.a-z0-9]*):)?                                                # 1. scheme
+			(?://                                                                       #    authority start
+			(?:((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();:&=+$,])*)@)?                         # 2. authority-userinfo
+			(?:((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*[a-z](?:[-a-z0-9]*[a-z0-9])?\.?)  # 3. authority-hostname OR
+			|([0-9]{1,3}(?:\.[0-9]{1,3}){3}))                                           # 4. authority-ipv4
+			(?::([0-9]*))?)?                                                            # 5. authority-port
+			((?:/(?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'():@&=+$,;])*)+)?                       # 6. path
+			(?:\?([^#]*))?                                                              # 7. query
+			(?:\#((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();/?:@&=+$,])*))?                     # 8. fragment
+			$£xi', $value, $matches);
 		
-		// was it formatted as a URI?
-		if ($result && ! empty($schemes)) {
-			// yes, now check against the allowed schemes.
-			settype($schemes, 'array');
-			$scheme = $matches[2];
-			$result = in_array($scheme, (array) $schemes);
+		if ($result) {
+			
+			$scheme = isset($matches[1]) ? $matches[1] : '';
+			$authority = isset($matches[3]) ? $matches[3] : '' ;
+			
+			// we need some sort of scheme
+			if (! $scheme) {
+				return false;
+			}
+			
+			// is the scheme allowed?
+			if (is_array($schemes) &&
+				!in_array($scheme,$schemes)
+			) {
+				return false;
+			}
+			
+			// check IPv4 addresses as domains
+			if (isset($matches[4])) {
+				$parts = explode('.', $matches[4]);
+				foreach ($parts as $part) {
+					if ($part > 255) {
+						return false;
+					}
+				}
+			}
+			
+			// are we doing strict checks?
+			$list = ';/?:@$,';
+			$strict = '#[' . preg_quote($list, '#') . ']#';
+			$test1 = (isset($matches[7]) && preg_match($strict, $matches[7]));
+			$test2 = (isset($matches[8]) && preg_match($strict, $matches[8]));
+			if ($test1 || $test2) {
+				return false;
+			}
+			
+			return true;
 		}
 		
-		return (bool) $result;
+		// default is to not-validate
+		return false;
 	}
 	
 	

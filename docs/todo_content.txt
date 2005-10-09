@@ -3,12 +3,21 @@ GENERIC CONTENT MODEL
 Still need:
 
 Solar/
-	Content.php
 	Content/
-		Pings.php
-		Hits.php
-		Words.php
-		
+		Hits.php -- tracks hits to a node
+		Words.php -- holds search-words
+
+Basic Cells:
+	Comment (comments received)
+	Ping (pings sent)
+	Trackback (trackbacks received)
+
+Advanced Cells:
+	Blog (blog entry)
+	Wiki (wiki page)
+	File (generic file attachments)
+	Image (images)
+	
 ALSO NEED ACCESS CONTROL!
 
 ----

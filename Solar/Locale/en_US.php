@@ -66,6 +66,7 @@ return array(
 	'VALID_MINLENGTH'    => 'Please enter a longer string.',
 	'VALID_NONZERO'      => 'This value is not allowed to be zero.',
 	'VALID_NOTBLANK'     => 'This value is not allowed to be blank.',
+	'VALID_SEPWORDS'     => 'Please enter Please use only letters (A-Z), numbers (0-9), underscores(_), and separators.',
 	'VALID_URI'          => 'Please enter a valid web address.',
 	'VALID_WORD'         => 'Please use only letters (A-Z), numbers (0-9), and underscores(_).',
 	

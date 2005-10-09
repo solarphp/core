@@ -30,15 +30,8 @@
 * 
 */
 
-class Solar_Content_Tags extends Solar_Base {
+class Solar_Content_Tags extends Solar_Sql_Table {
 	
-	public $table;
-	
-	public function __construct($config = null)
-	{
-		parent::__construct($config);
-		$this->table = Solar::object('Solar_Content_Tags_Table');
-	}
 	
 	/**
 	* 
@@ -108,27 +101,48 @@ class Solar_Content_Tags extends Solar_Base {
 	
 	/**
 	* 
-	* "Refreshes" the tags for a part_id by diff.
+	* Fetch all tags on one node_id.
 	* 
 	* @access public
 	* 
-	* @param int $part_id The part_id to work with.
+	* @param int $node_id The node_id to fetch tags for.
+	* 
+	* @return array An array of tags on that node.
+	* 
+	*/
+	
+	public function fetchForNode($node_id)
+	{
+		$select = Solar::object('Solar_Sql_Select');
+		$select->from($this, 'name');
+		$select->where('node_id = ?', $node_id);
+		return $select->fetch('col');
+	}
+	
+	
+	/**
+	* 
+	* "Refreshes" the tags for a node_id by diff.
+	* 
+	* @access public
+	* 
+	* @param int $node_id The node_id to work with.
 	* 
 	* @param string|array $tags A space-separated string of tags, or a
-	* sequential array of tags.
+	* sequential array of tags.  These are the replacement tags.
 	* 
-	* @return string A space-separated string of tags.
+	* @return void
 	* 
 	* @todo Collect errors and return as needed.
 	* 
 	*/
 	
-	public function refresh($part_id, $tags)
+	public function refresh($node_id, $tags)
 	{
-		$part_id = (int) $part_id;
+		$node_id = (int) $node_id;
 		
 		// get the old set of tags
-		$old = $this->fetchForNode($part_id);
+		$old = $this->fetchForNode($node_id);
 		
 		// normalize the new tags to an array
 		$new = $this->asArray($tags);
@@ -138,19 +152,20 @@ class Solar_Content_Tags extends Solar_Base {
 		
 		// delete
 		if (! empty($diff['del'])) {
-			$list   = $this->sql->quoteSep($diff['del']);
-			$where  = 'part_id = ' . $this->sql->quote($part_id);
-			$where .= " AND name IN ($list)";
-			$this->table->delete($where);
+			$where = array(
+				'node_id = ?' => $node_id,
+				'name IN (?)' => $diff['del'],
+			);
+			$this->delete($where);
 		};
 		
 		// insert
 		foreach ($diff['ins'] as $name) {
 			$data = array(
-				'part_id' => $part_id,
+				'node_id' => $node_id,
 				'name'    => $name
 			);
-			$this->table->insert($data);
+			$this->insert($data);
 		}
 		
 		// done!
@@ -210,30 +225,51 @@ class Solar_Content_Tags extends Solar_Base {
 		);
 	}
 	
-	// fetch all tags on a specific part
-	// returns as array(id => name)
-	protected function fetchForNode($part_id)
-	{
-		$select = Solar::object('Solar_Sql_Select');
-		$select->from($this->table, array('id', 'name'));
-		$select->where('part_id = :part_id');
-		$select->order('name ASC');
-		$select->bind('part_id', $part_id);
-		return $select->fetch('pairs');
-	}
 	
-	// fetch all tags used by a specific user
-	// returns as array(id => name)
-	protected function fetchForUser($handle)
+	/**
+	* 
+	* Schema setup.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function setup()
 	{
-		$select = Solar::object('Solar_Sql_Select');
-		$select->distinct();
-		$select->from($this->table, array('id', 'name'));
-		$select->join('nodes', 'tags.part_id = nodes.id');
-		$select->where('nodes.owner_handle = :handle');
-		$select->order('name ASC');
-		$select->bind('handle', $handle);
-		return $select->fetch('pairs');
+		// the table name
+		$this->name = 'tags';
+		
+		// -------------------------------------------------------------
+		// 
+		// COLUMNS
+		// 
+		
+		// the node_id this tag came from
+		$this->col['node_id'] = array(
+			'type'    => 'int',
+			'require' => true,
+		);
+		
+		// the tag itself
+		$this->col['name'] = array(
+			'type'    => 'varchar',
+			'size'    => 127,
+			'require' => true,
+			'valid'   => 'word',
+		);
+		
+		
+		// -------------------------------------------------------------
+		// 
+		// KEYS AND INDEXES
+		// 
+		
+		$this->idx = array(
+			'node_id' => 'normal',
+			'name'    => 'normal',
+		);
 	}
 }
 ?>

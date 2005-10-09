@@ -30,68 +30,55 @@
 * 
 */
 
-class Solar_Content_Areas extends Solar_Base {
+class Solar_Content_Areas extends Solar_Sql_Table {
 	
-	public $table;
 	
-	public function __construct($config = null)
+	/**
+	* 
+	* Schema setup.
+	* 
+	* @access protected
+	* 
+	* @return void
+	* 
+	*/
+	
+	protected function setup()
 	{
-		parent::__construct($config);
-		$this->table = Solar::object('Solar_Content_Areas_Table');
-	}
-	
-	public function exists($area)
-	{
-		// create a select tool
-		$select = Solar::object('Solar_Sql_Select');
+		// the table name
+		$this->name = 'areas';
 		
-		// select from this table name (note that we don't
-		// just pass the object, although we can, becuase
-		// we don't want to auto-add columns).
-		$select->from('areas');
+		// the area name
+		$this->col['name'] = array(
+			'type'    => 'varchar',
+			'size'    => 127,
+			'require' => true,
+			'valid'   => 'word',
+		);
 		
-		// by ID or by name?
-		if (is_numeric($area)) {
-			$col = 'id';
-		} else {
-			$col = 'name';
-		}
+		// the user who owns this area
+		$this->col['owner_handle'] = array(
+			'type'    => 'varchar',
+			'size'    => 32,
+		);
 		
-		// filter by the column name and bind a value
-		$select->where("$col = :value");
-		$select->bind('value', trim($area));
+		// freeform area "subject" or title
+		$this->col['subj'] = array(
+			'type'    => 'varchar',
+			'size'    => 255,
+		);
 		
-		// get a result count
-		$result = $select->countPages();
-		if (Solar::isError($result)) {
-			// failure
-			return $result;
-		} else {
-			// success. just check the count of how many names showed up
-			// and cast as boolean.
-			return (bool) $result['count'];
-		}
-	}
-	
-	public function fetchList($where = null, $order = null,	$page = null)
-	{
-		if (is_null($order)) {
-			$order = 'LOWER(name) ASC';
-		}
-		return $this->table->select('all', $where, $order, $page);
-	}
-	
-	public function fetchItem($area)
-	{
-		if (is_numeric($area)) {
-			$col = 'id';
-		} else {
-			$col = 'name';
-		}
+		// serialized preferences
+		$this->col['prefs'] = array(
+			'type'    => 'clob',
+		);
 		
-		$type = 'row';
-		$where = array($col => trim($area));
-		return $this->table->select('row', $where);
+		
+		// keys and indexes
+		$this->idx = array(
+			'name'         => 'unique',
+			'owner_handle' => 'normal',
+		);
 	}
 }
 ?>

@@ -59,7 +59,7 @@ class Solar_Content_Areas extends Solar_Sql_Table {
 		// the user who owns this area
 		$this->col['owner_handle'] = array(
 			'type'    => 'varchar',
-			'size'    => 32,
+			'size'    => 255,
 		);
 		
 		// freeform area "subject" or title

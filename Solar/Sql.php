@@ -20,9 +20,7 @@
 /**
 * Base class for additional SQL driver information.
 */
-
 require_once 'Solar/Sql/Driver.php';
-
 
 /**
 * 
@@ -31,7 +29,6 @@ require_once 'Solar/Sql/Driver.php';
 * Example usage:
 * 
 * <code>
-* 
 * $opts = array(
 * 	'class' => 'Solar_Sql_Driver_Mysql',
 * 	'host' => '127.0.0.1',
@@ -41,27 +38,13 @@ require_once 'Solar/Sql/Driver.php';
 * );
 * 
 * $sql = Solar::object('Solar_Sql', $opts);
-* 
-* // a command with placeholders
-* $stmt = "SELECT * FROM some_table WHERE date >= :first AND date <= :last";
-* 
-* // data for the placeholders
-* $data = array(
-* 	'first' => '1970-01-01',
-* 	'last'  => '1979-12-31'
-* )
-* 
-* // retrieve a result set from the bound command and data
-* $result = $sql->exec($stmt, $data);
-* 
-* // fetch the first row of the result set and free the result
-* $row = $result->fetch();
-* unset($result);
-* 
-* // equivalent:
-* $row = $sql->fetchRow($stmt, $data);
-* 
 * </code>
+* 
+* You should consider using Solar_Sql_Table for handling
+* insert/update/delete, as well as single-table selects.
+* 
+* You should consider using Solar_Sql_Select for multi-table and joined
+* selects.
 * 
 * @category Solar
 * 
@@ -114,7 +97,7 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
-	* Object to customize for a specific RDBMS.
+	* Object to use for a specific RDBMS behaviors.
 	* 
 	* @access protected
 	* 
@@ -184,7 +167,7 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @param string $cmd The query command to execute.
 	* 
-	* @return mixed
+	* @return object A PDOStatement result.
 	* 
 	*/
 	
@@ -192,6 +175,55 @@ class Solar_Sql extends Solar_Base {
 	{
 		return $this->driver->exec($cmd);
 	}
+	
+	
+	/**
+	* 
+	* Leave autocommit mode and begin a transaction.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function begin()
+	{
+		return $this->driver->begin();
+	}
+	
+	
+	/**
+	* 
+	* Commit a transaction and return to autocommit mode.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function commit()
+	{
+		return $this->driver->commit();
+	}
+	
+	
+	/**
+	* 
+	* Roll back a transaction and return to autocommit mode.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function rollback()
+	{
+		return $this->driver->rollback();
+	}
+	
 	
 	/**
 	* 
@@ -349,12 +381,6 @@ class Solar_Sql extends Solar_Base {
 		
 		// capture the first col of every row.
 		case 'col':
-			/*
-			$data = array();
-			while ($col = $result->fetchColumn(0)) {
-				$data[] = $col;
-			}
-			*/
 			$data = $result->fetchAll(PDO_FETCH_COLUMN, 0);
 			break;
 			
@@ -375,6 +401,7 @@ class Solar_Sql extends Solar_Base {
 		
 		// the PDOStatement result object
 		case 'pdo':
+		case 'PDOStatement':
 			$data = $result;
 			break;
 			
@@ -430,7 +457,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function createSequence($name, $start = 1)
 	{
-		$name .= '__s';
+		$name .= '__s'; // we do this to deconflict in PostgreSQL
 		$result = $this->driver->createSequence($this, $name, $start);
 		return $result;
 	}
@@ -450,7 +477,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function dropSequence($name)
 	{
-		$name .= '__s';
+		$name .= '__s'; // we do this to deconflict in PostgreSQL
 		$result = $this->driver->dropSequence($name);
 		return $result;
 	}
@@ -472,7 +499,7 @@ class Solar_Sql extends Solar_Base {
 	
 	public function nextSequence($name)
 	{
-		$name .= '__s';
+		$name .= '__s'; // we do this to deconflict in PostgreSQL
 		$result = $this->driver->nextSequence($name);
 		return $result;
 	}
@@ -525,7 +552,7 @@ class Solar_Sql extends Solar_Base {
 		
 		// table name must be a valid word, and cannot end in
 		// "__s" (this is to prevent sequence table collisions)
-		if (! $this->validWord($table) || substr($table, -3) == "__s") {
+		if (! $this->validIdentifier($table) || substr($table, -3) == "__s") {
 			return $this->error(
 				'ERR_TABLE_WORD',
 				array('table' => $table),
@@ -555,7 +582,7 @@ class Solar_Sql extends Solar_Base {
 		} else {
 			// no errors, execute and return
 			$cols = implode(",\n\t", $coldef);
-			$stmt = "CREATE TABLE $table (\n$cols\n)";
+			$stmt = $this->driver->buildCreateTable($table, $cols);
 			$result = $this->driver->exec($stmt);
 			return $result;
 		}
@@ -741,7 +768,7 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
-	* Quote an array of values and return as a separated string.
+	* Quotes an array of values and returns as a separated string.
 	* 
 	* @access public
 	* 
@@ -819,7 +846,7 @@ class Solar_Sql extends Solar_Base {
 		}
 		
 		// column name must be a valid word
-		if (! $this->validWord($name)) {
+		if (! $this->validIdentifier($name)) {
 			return $this->error(
 				'ERR_COL_WORD',
 				array('name' => $name),
@@ -986,7 +1013,7 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
-	* Check if a table, column, or index name is a valid word.
+	* Check if a table, column, or index name is a valid identifier.
 	* 
 	* @access protected
 	* 
@@ -996,7 +1023,7 @@ class Solar_Sql extends Solar_Base {
 	* 
 	*/
 	
-	protected function validWord($word)
+	protected function validIdentifier($word)
 	{
 		static $reserved;
 		if (! isset($reserved)) {

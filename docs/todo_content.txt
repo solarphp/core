@@ -9,45 +9,16 @@ Solar/
 		Hits.php
 		Words.php
 		
-
-----
-
-When you fetch a node, you need to get the most-recent edits of each of the parts.	
-
-And you need to be able to say which part types you want to get.
-
-	SELECT parts.*, edits.*
-	FROM parts
-	JOIN edits ON parts.part_edit_id = edits.edit_id
-	WHERE
-		parts.part_area_name = :area_name AND
-		parts.part_node_name = :node_name AND
-		parts.part_type IN (:part_type)
-
-----
-
-COMBINED TASKS
-
-new part by area and node (auto-adds the area, node, and edit)
-update part by area, node, and id (updates the edit)
-replace part by area, node, and id (inserts new edit)
+ALSO NEED ACCESS CONTROL!
 
 ----
 
 COMPONENT TASKS
 
-insert a new area
-update an area
-delete an area (and all nodes, parts, edits, etc)
+delete an area (and all nodes, edits, etc)
 
-insert a new node (with no parts)
-update a node (including tags)
-delete a node (and all parts, edits, etc)
-
-insert a new part for a node (and its first edit)
-update a part (and its most-recent edit, in-place)
-revise a part as a new edit (which adds a new edit)
-delete a part (and all its edits)
+add a node revision
+delete a node (and all edits, etc)
 
 edits themselves should be below notice at this level
 
@@ -57,10 +28,10 @@ Standalone comment system tasks
 
 select comments for an area and node (paged)
 insert a new comment on a area/node
-	essentially a new part of type 'comment'
+	essentially a new node of type 'comment' as part_of the collection master node
 update a comment in-place (not a revision)
 delete a comment
-flag a comment as spam, or for moderation
+tag a comment as spam, or for moderation
 
 
 ----
@@ -69,7 +40,7 @@ Forum system
 
 Each node is a separate thread
 Parts:
-	'forum' (the initial entry)
+	'forum' (the collection master node)
 	'comments' on that entry
 	
 
@@ -86,26 +57,6 @@ Issue Tracking System
 
 ----
 
-Bookmark System fits entirely within content system
-
-	area_name -- pmjones_bookmarks
-	node_name -- wiki-fied URI title
-	part_type -- bookmark
-	edit_mime -- text/plain
-	edit_subj -- URI for the link URI
-	edit_summ -- title for the link
-	edit_body -- description of the link
-
-Selecting bookmarks:
-
-SELECT *
-FROM edits
-WHERE
-	areas.area_name == 'pmjones_bookmarks' AND
-	parts.part_type == 'bookmark' AND
-	parts.user_handle == 'pmjones' AND
-	
-...???...
 
 
 

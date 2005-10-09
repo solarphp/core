@@ -18,13 +18,10 @@
 * 
 */
 
-
 /**
 * Application controller class.
 */
-
-require_once 'Solar/App.php';
-
+Solar::loadClass('Solar_App');
 
 /**
 * 
@@ -54,24 +51,30 @@ class Solar_App_Bookmarks extends Solar_App {
 		
 		switch ($tmp) {
 		
-		// timestamp
+		// created timestamp
+		case 'created':
+		case 'created_asc':
 		case 'ts':
 		case 'ts_asc':
-			$order = 'ts_new ASC';
+			$order = 'created ASC';
 			break;
 		
+		case 'created_desc':
 		case 'ts_desc':
-			$order = 'ts_new DESC';
+			$order = 'created DESC';
 			break;
 			
 		// title
+		case 'subj':
+		case 'subj_asc':
 		case 'title':
 		case 'title_asc':
-			$order = 'LOWER(title) ASC';
+			$order = 'LOWER(subj) ASC';
 			break;
 		
+		case 'subj_desc':
 		case 'title_desc':
-			$order = 'LOWER(title) DESC';
+			$order = 'LOWER(subj) DESC';
 			break;
 		
 		// tags
@@ -79,12 +82,12 @@ class Solar_App_Bookmarks extends Solar_App {
 		case 'tag_asc':
 		case 'tags':
 		case 'tags_asc':
-			$order = 'LOWER(sc_bookmarks.tags) ASC';
+			$order = 'LOWER(tags) ASC';
 			break;
 			
 		case 'tag_desc':
 		case 'tags_desc':
-			$order = 'LOWER(sc_bookmarks.tags) DESC';
+			$order = 'LOWER(tags) DESC';
 			break;
 		
 		// rank
@@ -97,19 +100,22 @@ class Solar_App_Bookmarks extends Solar_App {
 			$order = 'rank DESC';
 			break;
 		
-		// username
+		// owner handle (username)
+		case 'owner':
+		case 'owner_asc':
 		case 'user':
 		case 'user_asc':
-			$order = 'LOWER(user_id) ASC';
-			break;
-			
-		case 'user_desc':
-			$order = 'LOWER(user_id) DESC';
+			$order = 'LOWER(owner_handle) ASC';
 			break;
 		
-		// default (timestamp descending)
+		case 'owner_desc':
+		case 'user_desc':
+			$order = 'LOWER(owner_handle) DESC';
+			break;
+		
+		// default
 		default:
-			$order = 'ts_new DESC';
+			$order = 'created DESC';
 			break;
 		
 		}

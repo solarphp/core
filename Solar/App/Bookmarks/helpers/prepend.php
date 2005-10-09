@@ -21,7 +21,7 @@
 // get the shared user object
 $user = Solar::shared('user');
 
-// RSS data for the page (regardless of whether it's actually available)
+// RSS link for the page (regardless of whether it's actually available)
 $link = Solar::object('Solar_Uri');
 $link->setQuery('rss', '1');
 
@@ -37,10 +37,9 @@ unset($link);
 
 // get standalone objects
 $bookmarks = Solar::object('Solar_Cell_Bookmarks');
-$form = Solar::object('Solar_Form');
 
-// allow user to set the "count" for each page
-$bookmarks->setRowsPerPage(Solar::get('rows_per_page', 10));
+// allow uri to set the "count" for each page (default 10)
+$bookmarks->paging(Solar::get('paging', 10));
 
 // set the view locale to Solar_App_Bookmarks
 $this->view->locale('Solar_App_Bookmarks::');

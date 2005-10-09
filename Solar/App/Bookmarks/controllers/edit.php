@@ -37,19 +37,15 @@ if ($user->auth->status_code != 'VALID') {
 // get the bookmark ID (0 means a new bookmark)
 $id = (int) Solar::get('id', 0);
 
-// get the bookmark entry
+// get the bookmark node entry
 if ($id) {
 	$item = $bookmarks->fetchItem($id);
 } else {
-	$item = $bookmarks->defaultRow();
-	$item['uri'] = Solar::get('uri');
-	$item['title'] = Solar::get('title');
-	$item['user_id'] = $user->auth->username;
-	$item['tags'] = '';
+	$item = $bookmarks->fetchDefault();
 }
 
 // must be the item owner to edit it
-if ($user->auth->username != $item['user_id']) {
+if ($user->auth->username != $item['owner_handle']) {
 	$this->view->err[] = 'You do not own this bookmark, or it does not exist.';
 	return $this->view('error');
 }
@@ -61,16 +57,20 @@ if ($user->auth->username != $item['user_id']) {
 // 
 
 if (! $id) {
-	// if the ID was zero, and the user already has that URI,
-	// redirect to the edit page for that URI.
-	$existing_id = $bookmarks->userHasUri(
+	
+	// there's no ID, but this might be an incoming QuickMark.
+	// we need to see if the user already has the same URI in
+	// his bookmarks so that we don't add it twice.
+	$existing = $bookmarks->fetchOwnerUri(
 		$user->auth->username,
 		Solar::get('uri')
 	);
 	
-	if ($existing_id) {
+	// if the user *does* already have that URI bookmarked,
+	// redirect to the existing bookmark.
+	if (! empty($existing['id'])) {
 		$link = Solar::object('Solar_Uri');
-		$link->setQuery('id', $existing_id);
+		$link->setQuery('id', $existing['id']);
 		header('Location: ' . $link->export());
 	}
 
@@ -124,13 +124,11 @@ if ($info || $qstr) {
 // operations
 // 
 
-// build the basic form
-$form->setElements(
-	$bookmarks->formElements('edit', $item),
-	'bookmarks'
-);
+// build the basic form, populated with the bookmark data
+// from the database
+$form = $bookmarks->form(array('bookmarks' => $item));
 
-// bring in the submitted values to the form
+// now populate the the submitted POST values to the form
 $form->populate();
 
 // what operation are we performing?
@@ -139,43 +137,35 @@ $op = Solar::post('op');
 // OP: Save
 if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	
-	// force at least one tag
-	if (empty($form->elements['bookmarks[tags]']['value'])) {
-		$form->elements['bookmarks[tags]']['value'] = Solar::config(
-			'Solar_App_Bookmarks',
-			'default_tag',
-			'unfiled'
-		);
-	}
-	
 	// is the form data valid?
 	if (! $form->validate()) {
-	
+		
 		$form->feedback[] = Solar::locale('Solar', 'ERR_FORM');
 		
 	} else {
 	
 		$values = $form->values();
+		$data = $values['bookmarks'];
 		
 		// force a user_id
-		$values['bookmarks']['user_id'] = $user->auth->username;
+		$data['owner_handle'] = $user->auth->username;
 		
 		// new bookmark, or modify old bookmark?
-		if ($values['bookmarks']['id']) {
+		if ($data['id']) {
 		
 			// modify old bookmark
 			$result = $bookmarks->update(
-				$values['bookmarks'], // the data
-				$values['bookmarks']['id'] // the ID number
+				$data['id'], // the ID number
+				$data // the data
 			);
 			
-			$id = $values['bookmarks']['id'];
+			$id = $data['id'];
 			
 		} else {
-		
+			
 			// add new bookmark.
-			$result = $bookmarks->insert($values['bookmarks']);
-			$id = $result;
+			$result = $bookmarks->insert($data);
+			$id = $data['id'];
 		}
 		
 		// were there errors?
@@ -200,7 +190,6 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
 	}
 }
 
-
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 	header("Location: $href");
@@ -210,8 +199,8 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 // OP: Delete
 if ($op == Solar::locale('Solar', 'OP_DELETE')) {
 	$values = $form->values();
-	$where = 'id = ' . $bookmarks->quote($values['bookmarks']['id']);
-	$bookmarks->delete($where);
+	$id = $values['bookmarks']['id'];
+	$bookmarks->delete($id);
 	header("Location: $href");
 }
 

@@ -23,8 +23,8 @@
 */
 include $this->helper('prepend');
 
-// the requested user_id
-$user_id = Solar::pathinfo(1);
+// the requested owner_handle
+$owner_handle = Solar::pathinfo(1);
 
 // what tags are we looking for?
 $tags = Solar::pathinfo(2);
@@ -69,21 +69,21 @@ if ($rss) {
 	}
 }
 
-// get the list of entries and assign to template
-if ($tags) {
-	$this->view->list = $bookmarks->withTags($tags, $user_id, $order, $page);
-} else {
-	$this->view->list = $bookmarks->forUser($user_id, $order, $page);
-}
+// get the list of results
+$this->view->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
 
-// assign remaining variables
-$this->view->count     = $bookmarks->count;
-$this->view->pages     = $bookmarks->pages;
-$this->view->page      = $page;
-$this->view->user_id   = $user_id; // requested user_id
-$this->view->tags      = $tags; // requested tags
-$this->view->user_tags = $bookmarks->userTags($user_id); // all tags for this user
+// get the total pages and row-count
+$total = $bookmarks->fetchCount($owner_handle, $tags);
 
+// assign everything else
+$this->view->rss['avail'] = true;
+$this->view->count        = $total['count'];
+$this->view->pages        = $total['pages'];
+$this->view->order        = $order;
+$this->view->page         = $page;
+$this->view->owner_handle = $owner_handle; // requested owner_handle
+$this->view->tags         = $tags; // the requested tags
+$this->view->tags_in_use  = $bookmarks->fetchTagList($owner_handle); // all tags for this user
 
 // return the view output
 return $this->view($viewname);

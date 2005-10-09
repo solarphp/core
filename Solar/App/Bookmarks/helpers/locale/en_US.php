@@ -47,4 +47,13 @@ return array(
 	'TAGGED'             => 'tagged',
 	'TAGS'               => 'Tags',
 	'USER'               => 'User',
+	'ORDER_CREATED'      => 'Created',
+	'ORDER_CREATED_DESC' => 'Created (desc)',
+	'ORDER_RANK'         => 'Rank',
+	'ORDER_RANK_DESC'    => 'Rank (desc)',
+	'ORDER_TAGS'         => 'Tags',
+	'ORDER_TAGS_DESC'    => 'Tags (desc)',
+	'ORDER_SUBJ'         => 'Title',
+	'ORDER_SUBJ_DESC'    => 'Title (desc)',
+	
 ) ?>

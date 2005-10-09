@@ -22,19 +22,48 @@ include $this->template('header.php');
 $link = Solar::object('Solar_Uri');
 ?>
 <div>
+	<!-- the list of tags in use -->
+	<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
+		<h2><?php $this->eprint($this->locale('TAG_LIST')) ?></h2>
+		<table border="0" cellspacing="2" cellpadding="0"><?php
+			
+			// get a clean link
+			$link->import();
+			
+			// clear out pathinfo, but reset the page to 1
+			$link->clearInfo();
+			$link->setQuery('page', 1);
+			
+			// set up baseline path info for a 'user' or 'tag' request?
+			if ($this->owner_handle) {
+				$baseInfo = "user/{$this->owner_handle}";
+			} else {
+				$baseInfo = "tag";
+			}
+			
+			// build a series of table rows as links to tags
+			$tmp = array();
+			foreach ($this->tags_in_use as $tag => $count) {
+				$link->setInfoString("$baseInfo/$tag");
+				$tmp[] = "<tr><td align=\"right\">$count</td><td>" . $this->ahref($link->export(), $tag) . "</td></tr>";
+			}
+			echo implode("\n", $tmp);
+		?></table>
+	</div>
+	
 	<!-- ordering -->
 	<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
 		<h2><?php $this->eprint($this->locale('ORDERED_BY')) ?></h2>
 		<p><?php
 			$tmp = array(
-				'rank'       => 'Rank',
-				'rank_desc'  => 'Rank (desc)',
-				'tags'       => 'Tags',
-				'tags_desc'  => 'Tags (desc)',
-				'title'      => 'Title',
-				'title_desc' => 'Title (desc)',
-				'ts'         => 'Timestamp',
-				'ts_desc'    => 'Timestamp (desc)',
+				'created'      => $this->locale('ORDER_CREATED'),
+				'created_desc' => $this->locale('ORDER_CREATED_DESC'),
+				'rank'         => $this->locale('ORDER_RANK'),
+				'rank_desc'    => $this->locale('ORDER_RANK_DESC'),
+				'tags'         => $this->locale('ORDER_TAGS'),
+				'tags_desc'    => $this->locale('ORDER_TAGS_DESC'),
+				'subj'         => $this->locale('ORDER_SUBJ'),
+				'subj_desc'    => $this->locale('ORDER_SUBJ_DESC'),
 			);
 			
 			// refresh the base link
@@ -42,7 +71,7 @@ $link = Solar::object('Solar_Uri');
 			
 			// add links
 			foreach ($tmp as $key => $val) {
-				if (Solar::get('order', 'ts_desc') == $key) {
+				if (Solar::get('order', 'created_desc') == $key) {
 					echo "<strong>";
 					$this->eprint($val);
 					echo "</strong><br />\n";
@@ -54,32 +83,13 @@ $link = Solar::object('Solar_Uri');
 		?></p>
 	</div>
 	
-	<!-- the list of tags for this user (if one is selected) -->
-	<?php if (Solar::pathinfo(0) == 'user'): ?>
-		<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-			<h2><?php $this->eprint($this->locale('TAG_LIST')) ?></h2>
-			<p><?php
-				$link->import();
-				$tmp = array();
-				foreach ($this->user_tags as $tag) {
-					// clear out pathinfo, but reset the page to 1
-					$link->clearInfo();
-					$link->setQuery('page', 1);
-					$link->setInfoString("user/{$this->user_id}/$tag");
-					$tmp[] = $this->ahref($link->export(), $tag);
-				}
-				echo implode("<br />\n", $tmp);
-			?></p>
-		</div>
-	<?php endif ?>
-	
 	<!-- results -->
 	<div style="float: left;">
-		<!-- output the user_id and tag-search, if any -->
-		<?php if ($this->user_id || $this->tags): ?>
+		<!-- output the owner_handle and tag-search, if any -->
+		<?php if ($this->owner_handle || $this->tags): ?>
 			<h2><?php
-				if ($this->user_id) $this->eprint($this->locale('USER') . ': ' . $this->user_id);
-				if ($this->user_id && $this->tags) echo "<br />\n";
+				if ($this->owner_handle) $this->eprint($this->locale('USER') . ': ' . $this->owner_handle);
+				if ($this->owner_handle && $this->tags) echo "<br />\n";
 				if ($this->tags) $this->eprint($this->locale('TAGS') . ': ' . $this->tags);
 			?></h2>
 		<?php endif ?>
@@ -92,13 +102,13 @@ $link = Solar::object('Solar_Uri');
 				<p>
 					<!-- title -->
 					<span style="font-size: 120%; font-weight: bold;"><?php
-						echo $this->ahref($item['uri'], $item['title']);
+						echo $this->ahref($item['uri'], $item['subj']);
 					?></span>
 					
 					<!-- description -->
-					<?php if (trim($item['descr']) != ''): ?>
+					<?php if (trim($item['summ']) != ''): ?>
 					
-					<br /><?php echo nl2br(wordwrap($this->escape($item['descr']), 72)) ?>
+					<br /><?php echo nl2br(wordwrap($this->escape($item['summ']), 72)) ?>
 					<?php endif ?>
 					
 					<!-- rank and uri -->
@@ -118,13 +128,13 @@ $link = Solar::object('Solar_Uri');
 					
 					<!-- date added by user -->
 					<br /><?php
-						$this->eprint($this->locale('ON') . ' ' . $this->date($item['ts_new']) . ' ');
+						$this->eprint($this->locale('ON') . ' ' . $this->date($item['created']) . ' ');
 						$this->eprint($this->locale('BY') . ' ');
 						$link->clearInfo();
 						$link->clearQuery();
 						$link->setInfo('0', 'user');
-						$link->setInfo('1', $item['user_id']);
-						echo $this->ahref($link->export(), $item['user_id']);
+						$link->setInfo('1', $item['owner_handle']);
+						echo $this->ahref($link->export(), $item['owner_handle']);
 					?></span>
 					
 					<!-- tags and edit link -->
@@ -143,7 +153,7 @@ $link = Solar::object('Solar_Uri');
 						}
 						
 						// edit link
-						if (Solar::shared('user')->auth->username == $item['user_id']) {
+						if (Solar::shared('user')->auth->username == $item['owner_handle']) {
 							$back_info = Solar::server('PATH_INFO');
 							$back_qstr = Solar::server('QUERY_STRING');
 							$link->clearInfo();
@@ -191,7 +201,7 @@ $link = Solar::object('Solar_Uri');
 				$scheme = $link->scheme;
 				$host = $link->host;
 				$path = $link->path;
-				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title)";
+				$js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
 				$this->eprint($this->locale('DRAG_THIS') . ': ');
 				echo $this->ahref($js, $this->locale('QUICKMARK'));
 			?></p>

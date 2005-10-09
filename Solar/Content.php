@@ -556,8 +556,6 @@ class Solar_Content extends Solar_Base {
 	* 
 	* Deletes nodes.
 	* 
-	* DOES NOT UPDATE THE TAGS TABLE.  THIS IS A PROBLEM.
-	* 
 	* @access public
 	* 
 	* @param array $where A list of multiWhere() conditions to specify
@@ -569,7 +567,24 @@ class Solar_Content extends Solar_Base {
 	
 	public function deleteNodes($where)
 	{
-		return $this->nodes->delete($where);
+		// find out which nodes are getting deleted
+		$select = Solar::object('Solar_Sql_Select');
+		$select->from($this->nodes, 'id');
+		$select->multiWhere($where);
+		$id_list = $select->fetch('col');
+		
+		// delete the nodes themselves
+		$result = $this->nodes->delete($where);
+		if (Solar::isError($result)) {
+			return $result;
+		}
+		
+		// delete the search tags
+		$where = array(
+			'node_id IN (?)' => $id_list
+		);
+		$result = $this->tags->delete($where);
+		return $result;
 	}
 	
 	

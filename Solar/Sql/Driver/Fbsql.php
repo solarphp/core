@@ -61,207 +61,15 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Connects to the database.
+	* The PDO driver type.
 	* 
 	* @access protected
 	* 
-	* @return void
+	* @var string
 	* 
 	*/
 	
-	protected function connect()
-	{
-		// are we already connected?
-		if ($this->conn) {
-			return;
-		}
-		
-		// try to connect
-		$this->conn = @fbsql_connect(
-			$this->config['host'],
-			$this->config['user'],
-			$this->config['pass']
-		);
-		
-		// did it work?
-		if (! $this->conn) {
-			// no, return an error
-			$this->error(
-				'ERR_CONNECT',
-				array(
-					'host' => $this->config['host'],
-					'user' => $this->config['user']
-				),
-				E_USER_ERROR
-			);
-		} else {
-			// yes, turn on auto-commits
-			@fbsql_query('SET COMMIT TRUE', $this->conn);
-		}
-	}
-	
-	
-	/**
-	* 
-	* Provides the proper escaping for enquoted values.
-	* 
-	* @access public
-	* 
-	* @param mixed $val
-	* 
-	* @return string An SQL-safe quoted value.
-	* 
-	*/
-	
-	public function escape($val)
-	{
-		return str_replace("'", "''", $val);
-	}
-	
-	
-	/**
-	* 
-	* Returns the number of rows in a result resource.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return int The number of rows in the resource.
-	* 
-	*/
-	
-	public static function numRows(&$rsrc)
-	{
-		return fbsql_num_rows($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Executes an SQL statement and returns a result object.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The SQL statement to execute.
-	* 
-	* @param int $count The number of records to SELECT.
-	* 
-	* @param int $offset The number of records to skip on SELECT.
-	* 
-	* @return object A Solar_Sql_Result object.
-	* 
-	*/
-	
-	public function exec($stmt, $count = 0, $offset = 0)
-	{
-		// connect if needed.
-		$this->connect();
-		
-		// always re-select the database; we may be re-using
-		// this connection for multiple databases. this is not
-		// a problem with some other drivers, as they select
-		// the database as part of the initial connection.
-		$result = @fbsql_select_db($this->config['name'], $this->conn);
-		if (! $result) {
-			return $this->error(
-				'ERR_DATABASE',
-				array(
-					'host' => $this->config['host'],
-					'name' => $this->config['name']
-				),
-				E_USER_ERROR
-			);
-		}
-		
-		// now attempt the query
-		$result = @fbsql_query($stmt, $this->conn);
-		
-		// what happened?
-		if (is_resource($result)) {
-		
-			// fetchable success
-			$opts = array(
-				'class'  => __CLASS__,
-				'rsrc'   => $result
-			);
-			return new Solar_Sql_Result($opts);
-			
-		} elseif (! $result) {
-		
-			// failure
-			return $this->error(
-				'ERR_STATEMENT',
-				array(
-					'code' => @fbsql_errno(),
-					'text' => @fbsql_error()
-				),
-				E_USER_WARNING
-			);
-			
-		} else {
-			
-			// generic success
-			return $result;
-			
-		}
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as an associative array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool An associative array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetch(&$rsrc)
-	{
-		return @fbsql_fetch_assoc($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as a numeric array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool A numeric array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetchNum(&$rsrc)
-	{
-		return @fbsql_fetch_row($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Frees a result resource.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public static function free(&$rsrc)
-	{
-		return @fbsql_free_result($rsrc);
-	}
+	protected $pdo_type = 'odbc';
 	
 	
 	/**
@@ -301,22 +109,57 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 		}
 	}
 	
-	public function limitSelect()
+	
+	/**
+	* 
+	* Adds a LIMIT clause (or equivalent) to a SELECT statement.
+	* 
+	* @access protected
+	* 
+	* @param array $parts The SELECT statement parts.
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function buildSelect($parts)
 	{
-		$count  = (int) $parts['limit']['count'];
-		$offset = (int) $parts['limit']['count'];
+		// determine count
+		$count = ! empty($parts['limit']['count'])
+			? (int) $parts['limit']['count']
+			: 0;
 		
+		// determine offset
+		$offset = ! empty($parts['limit']['offset'])
+			? (int) $parts['limit']['offset']
+			: 0;
+				
+		// build the basic statement
+		$stmt = parent::buildSelect($parts);
+		
+		// add limits?
 		if ($count > 0) {
+		
 			// are we adding an offset as well?
 			if ($offset > 0) {
 				// yes
-				$top = "SELECT TOP($offset,$count)";
+				$top = "TOP($offset,$count)";
 			} else {
 				// no, just a top
-				$top = "SELECT TOP(0,$count)";
+				$top = "TOP(0,$count)";
 			}
+			
+			// put the TOP in place, depending on DISTINCT
+			if ($parts['distinct']) {
+				$top = "SELECT DISTINCT $top";
+				$pos = 15; // SELECT DISTINCT
+			} else {
+				$top = "SELECT $top";
+				$pos = 6; // SELECT
+			}
+			
 			// replace "SELECT" with the new "SELECT TOP" clause
-			$this->stmt = $top . substr($this->stmt, 6);
+			return $top . substr($stmt, $pos);
 		}
 	}
 	
@@ -334,7 +177,10 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
 	public function listTables()
 	{
 		// copied from PEAR DB
-		return 'SELECT "table_name" FROM information_schema.tables';
+		$cmd = 'SELECT "table_name" FROM information_schema.tables';
+		$result = $this->exec($cmd);
+		$list = $result->fetchAll(PDO_FETCH_COLUMN, 0);
+		return $list;
 	}
 	
 	

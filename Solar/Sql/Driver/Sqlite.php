@@ -61,197 +61,56 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Connects to the database.
+	* The PDO driver type.
 	* 
 	* @access protected
+	* 
+	* @var string
+	* 
+	*/
+	
+	protected $pdo_type = 'mysql';
+	
+	
+	/**
+	* 
+	* Builds a SELECT statement from its component parts.
+	* 
+	* Adds LIMIT clause.
+	* 
+	* @access public
+	* 
+	* @param array $parts The component parts of the statement.
 	* 
 	* @return void
 	* 
 	*/
 	
-	protected function connect()
+	public function buildSelect($parts)
 	{
-		// are we already connected?
-		if ($this->conn) {
-			return;
-		}
+		// build the baseline statement
+		$stmt = parent::buildSelect($parts);
 		
-		// try to connect
-		$this->conn = @sqlite_open(
-			$this->config['name'],
-			$this->config['mode']
-		);
+		// determine count
+		$count = ! empty($parts['limit']['count'])
+			? (int) $parts['limit']['count']
+			: 0;
 		
-		// did it work?
-		if (! $this->conn) {
-			$this->error(
-				'ERR_CONNECT',
-				array('name' => $this->config['name']),
-				E_USER_ERROR
-			);
-		}
-	}
-	
-	
-	/**
-	* 
-	* Provides the proper escaping for enquoted values.
-	* 
-	* The code presented here works for Fbsql, Mssql, and Oci.
-	* 
-	* @access public
-	* 
-	* @param mixed $val
-	* 
-	* @return string An SQL-safe quoted value.
-	* 
-	*/
-	
-	public function escape($val)
-	{
-		return sqlite_escape_string($val);
-	}
-	
-	
-	/**
-	* 
-	* Executes an SQL statement and returns a result object.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The SQL statement to execute.
-	* 
-	* @param int $count The number of records to SELECT.
-	* 
-	* @param int $offset The number of records to skip on SELECT.
-	* 
-	* @return object A Solar_Sql_Result object.
-	* 
-	*/
-	
-	public function exec($stmt, $count = 0, $offset = 0)
-	{
-		// connect to the database if we have not already.
-		$this->connect();
-		
-		// no need to re-select a database, that's part
-		// of the connection parameters.
-		//
-		// attempt the query.
-		$result = @sqlite_query($stmt, $this->conn);
-		
-		// what was the result?
-		if (is_resource($result)) {
-		
-			// fetchable success
-			$opts = array(
-				'class'  => __CLASS__,
-				'rsrc'   => $result
-			);
-			return new Solar_Sql_Result($opts);
+		// determine offset
+		$offset = ! empty($parts['limit']['offset'])
+			? (int) $parts['limit']['offset']
+			: 0;
 			
-		} elseif (! $result) {
-		
-			// failure
-			$err = @sqlite_last_error();
-			return $this->error(
-				'ERR_STATEMENT',
-				array(
-					'code' => $err,
-					'text' => @sqlite_error_string($err),
-				),
-				E_USER_WARNING
-			);
-			
-		} else {
-		
-			// generic success
-			return $result;
-			
-		}
-	}
-	
-	
-	/**
-	* 
-	* Returns the number of rows in a result resource.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return int The number of rows in the resource.
-	* 
-	*/
-	
-	public static function numRows(&$rsrc)
-	{
-		return sqlite_num_rows($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as an associative array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool An associative array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetch(&$rsrc)
-	{
-		return @sqlite_fetch_array($rsrc, SQLITE_ASSOC);
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as a numeric array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool A numeric array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetchNum(&$rsrc)
-	{
-		return @sqlite_fetch_array($rsrc, SQLITE_NUM);
-	}
-	
-	
-	/**
-	* 
-	* Adds a LIMIT clause (or equivalent) to an SQL statement in-place.
-	* 
-	* @access protected
-	* 
-	* @param string &$stmt The SQL statement to modify.
-	* 
-	* @param int $count The number of records to SELECT.
-	* 
-	* @param int $offset The number of records to skip on SELECT.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public function limit(&$stmt, $count = 0, $offset = 0)
-	{
+		// add the count and offset
 		if ($count > 0) {
 			$stmt .= " LIMIT $count";
 			if ($offset > 0) {
 				$stmt .= " OFFSET $offset";
 			}
 		}
+		
+		// done!
+		return $stmt;
 	}
 	
 	
@@ -268,9 +127,13 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	public function listTables()
 	{
 		// copied from PEAR DB
-		return "SELECT name FROM sqlite_master WHERE type='table' " .
+		$cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
 			"UNION ALL SELECT name FROM sqlite_temp_master " .
 			"WHERE type='table' ORDER BY name";
+		
+		$result = $this->exec($cmd);
+		$list = $result->fetchAll(PDO_FETCH_COLUMN, 0);
+		return $list;
 	}
 	
 	
@@ -328,28 +191,25 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
 	
 	public function nextSequence($name)
 	{
-		// first, try to get the next sequence number, assuming
+		$cmd = "INSERT INTO $name (id) VALUES (NULL)";
+		
+		// first, try to increment the sequence number, assuming
 		// the table exists.
-		$result = $this->exec("INSERT INTO $name (id) VALUES (NULL)");
-		
-		// did it work?
-		if (Solar::isError($result)) {
-		
+		try {
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
+		} catch (Exception $e) {
 			// error when updating the sequence.
 			// assume we need to create it.
 			$this->createSequence($name);
 			
-			// now try the sequence number again.
-			$result = $this->exec("INSERT INTO $name (id) VALUES (NULL)");
-			
+			// now try to increment again.
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
 		}
 		
-		// now that we have a new sequence number, delete any earlier rows
-		// to keep the table small.  should this be a trigger instead?
-		$this->exec("DELETE FROM $name WHERE id < LAST_INSERT_ROWID()");
-		
-		// return the sequence number
-		return @sqlite_last_insert_rowid($this->conn);
+		// get the sequence number
+		return $this->pdo->lastInsertID();
 	}
 }
 ?>

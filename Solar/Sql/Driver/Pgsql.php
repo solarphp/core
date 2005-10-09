@@ -61,216 +61,89 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	
 	/**
 	* 
-	* Connects to the database.
+	* The PDO driver type.
 	* 
 	* @access protected
 	* 
-	* @return void
+	* @var string
 	* 
 	*/
 	
-	protected function connect()
-	{
-		if ($this->conn) {
-			return;
-		}
-		
-		/** @todo Add the port specification */
-		// try to connect
-		$this->conn = @pg_connect("host=$this->config['host'] dbname=$this->config['name'] " .
-			"user=$this->config['user'] pass=$this->config['pass']");
-		
-		// did it work?
-		if (! $this->conn) {
-			$this->error(
-				'ERR_CONNECT',
-				array(
-					'name' => $this->config['name'],
-					'host' => $this->config['host'],
-					'user' => $this->config['user']
-				),
-				E_USER_ERROR
-			);
-		} else {
-			// turn on autocommit explicitly
-			@pg_query($this->conn, 'SET AUTOCOMMIT TO ON');
-		}
-	}
+	protected $pdo_type = 'pgsql';
 	
 	
 	/**
 	* 
-	* Provides the proper escaping for enquoted values.
+	* Creates a PDO-style DSN.
 	* 
-	* The code presented here works for Fbsql, Mssql, and Oci.
-	* 
-	* @access public
-	* 
-	* @param mixed $val
-	* 
-	* @return string An SQL-safe quoted value.
-	* 
-	*/
-	
-	public function escape($val)
-	{
-		return pg_escape_string($val);
-	}
-	
-	
-	/**
-	* 
-	* Executes an SQL statement and returns a result object.
-	* 
-	* @access public
-	* 
-	* @param string $stmt The SQL statement to execute.
-	* 
-	* @param int $count The number of records to SELECT.
-	* 
-	* @param int $offset The number of records to skip on SELECT.
-	* 
-	* @return object A Solar_Sql_Result object.
-	* 
-	*/
-	
-	public function exec($stmt, $count = 0, $offset = 0)
-	{
-		$this->connect();
-		
-		// no need to re-select a database, that's part
-		// of the connection parameters.
-		//
-		// attempt the query.
-		$result = @pg_query($this->conn, $stmt);
-		
-		// what was the result?
-		if (is_resource($result)) {
-		
-			// fetchable success
-			$opts = array(
-				'class'  => __CLASS__,
-				'rsrc'   => $result
-			);
-			return new Solar_Sql_Result($opts);
-			
-		} elseif (! $result) {
-		
-			// failure
-			return $this->error(
-				'ERR_STATEMENT',
-				array(
-					'text' => @pg_last_error()
-				),
-				E_USER_WARNING
-			);
-		} else {
-			
-			// generic success
-			return $result;
-			
-		}
-	}
-	
-	
-	/**
-	* 
-	* Returns the number of rows in a result resource.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return int The number of rows in the resource.
-	* 
-	*/
-	
-	public static function numRows(&$rsrc)
-	{
-		return pg_num_rows($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as an associative array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool An associative array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetch(&$rsrc)
-	{
-		return @pg_fetch_assoc($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Fetches the next row from a result resource as a numeric array.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return array|bool A numeric array of the fetched row,
-	* or boolean false when no more rows are available.
-	* 
-	*/
-	
-	public static function fetchNum(&$rsrc)
-	{
-		return @pg_fetch_row($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Frees a result resource.
-	* 
-	* @access public
-	* 
-	* @param resource &$rsrc An SQL result resource.
-	* 
-	* @return void
-	* 
-	*/
-	
-	public static function free(&$rsrc)
-	{
-		return @pg_free_result($rsrc);
-	}
-	
-	
-	/**
-	* 
-	* Adds a LIMIT clause (or equivalent) to an SQL statement in-place.
+	* Per http://php.net/manual/en/ref.pdo-pgsql.connection.php
 	* 
 	* @access protected
 	* 
-	* @param string &$stmt The SQL statement to modify.
+	* @return string A PDO-style DSN.
 	* 
-	* @param int $count The number of records to SELECT.
+	*/
+	
+	protected function dsn()
+	{
+		$dsn = array();
+		
+		if (! empty($this->config['host'])) {
+			$dsn[] = 'host=' . $this->config['host'];
+		}
+		
+		if (! empty($this->config['port'])) {
+			$dsn[] = 'port=' . $this->config['port'];
+		}
+		
+		if (! empty($this->config['name'])) {
+			$dsn[] = 'dbname=' . $this->config['name'];
+		}
+		
+		return $this->pdo_type . ':' . implode(' ', $dsn);
+	}
+	
+	
+	
+	/**
 	* 
-	* @param int $offset The number of records to skip on SELECT.
+	* Builds a SELECT statement from its component parts.
+	* 
+	* Adds LIMIT clause.
+	* 
+	* @access public
+	* 
+	* @param array $parts The component parts of the statement.
 	* 
 	* @return void
 	* 
 	*/
 	
-	public function limit(&$stmt, $count = 0, $offset = 0)
+	public function buildSelect($parts)
 	{
+		// build the baseline statement
+		$stmt = parent::buildSelect($parts);
+		
+		// determine count
+		$count = ! empty($parts['limit']['count'])
+			? (int) $parts['limit']['count']
+			: 0;
+		
+		// determine offset
+		$offset = ! empty($parts['limit']['offset'])
+			? (int) $parts['limit']['offset']
+			: 0;
+			
+		// add the count and offset
 		if ($count > 0) {
 			$stmt .= " LIMIT $count";
 			if ($offset > 0) {
 				$stmt .= " OFFSET $offset";
 			}
 		}
+		
+		// done!
+		return $stmt;
 	}
 	
 	
@@ -287,7 +160,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	public function listTables()
 	{
 		// copied from PEAR DB
-		return "SELECT c.relname AS table_name " .
+		$cmd = "SELECT c.relname AS table_name " .
 			"FROM pg_class c, pg_user u " .
 			"WHERE c.relowner = u.usesysid AND c.relkind = 'r' " .
 			"AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
@@ -299,6 +172,10 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 			"AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
 			"AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " .
 			"AND c.relname !~ '^pg_'";
+		
+		$result = $this->exec($cmd);
+		$list = $result->fetchAll(PDO_FETCH_COLUMN, 0);
+		return $list;
 	}
 	
 	
@@ -356,21 +233,25 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
 	{
 		// first, try to get the next sequence number, assuming
 		// the sequence exists.
-		$result = $this->exec("SELECT NEXTVAL($name)");
+		$cmd = "SELECT NEXTVAL($name)";
 		
-		// did it work?
-		if (! $result || Solar::isError($result)) {
+		// first, try to increment the sequence number, assuming
+		// the table exists.
+		try {
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
+		} catch (Exception $e) {
 			// error when updating the sequence.
 			// assume we need to create it.
 			$this->createSequence($name);
 			
-			// now try the sequence number again.
-			$result = $this->exec("SELECT NEXTVAL($name)");
+			// now try to increment again.
+			$stmt = $this->pdo->prepare($cmd);
+			$stmt->execute();
 		}
 		
 		// get the sequence number
-		$row = $result->fetchNum();
-		return $row[0];
+		return $this->pdo->lastInsertID($name);
 	}
 }
 ?>

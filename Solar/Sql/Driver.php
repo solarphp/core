@@ -78,7 +78,7 @@ class Solar_Sql_Driver extends Solar_Base {
 	*
 	*/
 	
-	public $pdo = null;
+	protected $pdo = null;
 	
 	
 	/**
@@ -126,25 +126,27 @@ class Solar_Sql_Driver extends Solar_Base {
 	* 
 	* Creates a PDO-style DSN.
 	* 
-	* @access public
+	* E.g., "mysql:host=127.0.0.1;dbname=test"
+	* 
+	* @access protected
 	* 
 	* @return string A PDO-style DSN.
 	* 
 	*/
 	
-	public function dsn()
+	protected function dsn()
 	{
-		$tmp = array();
+		$dsn = array();
 		
-		if ($this->config['host']) {
-			$tmp[] = 'host=' . $this->config['host'];
+		if (! empty($this->config['host'])) {
+			$dsn[] = 'host=' . $this->config['host'];
 		}
 		
-		if ($this->config['name']) {
-			$tmp[] = 'dbname=' . $this->config['name'];
+		if (! empty($this->config['name'])) {
+			$dsn[] = 'dbname=' . $this->config['name'];
 		}
 		
-		return $this->pdo_type . ':' . implode(';', $tmp);
+		return $this->pdo_type . ':' . implode(';', $dsn);
 	}
 	
 	
@@ -170,27 +172,82 @@ class Solar_Sql_Driver extends Solar_Base {
 		
 		// create PDO object
 		try {
-		
+			
+			// attempt the connection
 			$this->pdo = new PDO(
 				$dsn,
 				$this->config['user'],
 				$this->config['pass']
 			);
 			
-			// always autocommit
+			// always autocommit to start
 			$this->pdo->setAttribute(PDO_ATTR_AUTOCOMMIT, true);
 			
 			// force names to lower case
 			$this->pdo->setAttribute(PDO_ATTR_CASE, PDO_CASE_LOWER);
+			
+			/** @todo Are there other portability attribs to consider? */
 			
 			// always use exceptions.
 			$this->pdo->setAttribute(PDO_ATTR_ERRMODE,
 				PDO_ERRMODE_EXCEPTION);
 			
 		} catch (Exception $e) {
+			// database connection failures should be fatal
 			$err = $this->errorException($e, E_USER_ERROR);
 			return $err;
 		}
+	}
+	
+	
+	/**
+	* 
+	* Leave autocommit mode and begin a transaction.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function begin()
+	{
+		$this->connect();
+		return $this->pdo->beginTransaction();
+	}
+	
+	
+	/**
+	* 
+	* Commit a transaction and return to autocommit mode.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function commit()
+	{
+		$this->connect();
+		return $this->pdo->commit();
+	}
+	
+	
+	/**
+	* 
+	* Roll back a transaction and return to autocommit mode.
+	* 
+	* @access public
+	* 
+	* @return void
+	* 
+	*/
+	
+	public function rollback()
+	{
+		$this->connect();
+		return $this->pdo->rollBack();
 	}
 	
 	
@@ -247,7 +304,8 @@ class Solar_Sql_Driver extends Solar_Base {
 	* 
 	* @access public
 	* 
-	* @param mixed $val The value to quote.
+	* @param mixed $val The value to quote; if an array, quotes all
+	* values in the array.
 	* 
 	* @return mixed An SQL-safe quoted value.
 	* 
@@ -355,12 +413,35 @@ class Solar_Sql_Driver extends Solar_Base {
 	
 	/**
 	* 
+	* Builds a CREATE TABLE statment.
+	* 
+	* We use this so that certain drivers can append table types
+	* to the creation statment (e.g. MySQL).
+	* 
+	* @access public
+	* 
+	* @param string $name The table name to create.
+	* 
+	* @param string $cols The column definitions.
+	* 
+	* @return mixed An SQL-safe quoted value.
+	* 
+	*/
+	
+	public function buildCreateTable($name, $cols)
+	{
+		return "CREATE TABLE $name (\n$cols\n)";
+	}
+	
+	
+	/**
+	* 
 	* Build an SQL SELECT statement from its component parts.
 	* 
-	* Note that this base method does not add LIMITs.  Your extended
-	* driver class should do so.
+	* We use this so that drivers can append or wrap with LIMIT
+	* clauses or emulation.
 	* 
-	* @access protected
+	* @access public
 	* 
 	* @return string An SQL SELECT statement.
 	* 

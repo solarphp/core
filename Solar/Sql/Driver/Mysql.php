@@ -2,7 +2,7 @@
 
 /**
 * 
-* Class for MySQL meta-information.
+* Class for MySQL behaviors.
 * 
 * @category Solar
 * 
@@ -20,7 +20,7 @@
 
 /**
 * 
-* Class for MySQL meta-information.
+* Class for MySQL behaviors.
 * 
 * @category Solar
 * 
@@ -76,6 +76,8 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	* 
 	* Builds a SELECT statement from its component parts.
 	* 
+	* Adds LIMIT clause.
+	* 
 	* @access public
 	* 
 	* @param array $parts The component parts of the statement.
@@ -127,6 +129,14 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 		$result = $this->exec('SHOW TABLES');
 		$list = $result->fetchAll(PDO_FETCH_COLUMN, 0);
 		return $list;
+	}
+	
+	
+	public function buildCreateTable($name, $cols)
+	{
+		$stmt = parent::buildCreateTable($name, $cols);
+		$stmt .= " TYPE=InnoDB";// for transactions
+		return $stmt;
 	}
 	
 	
@@ -186,7 +196,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 	{
 		$cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
 		
-		// first, try to get the next sequence number, assuming
+		// first, try to increment the sequence number, assuming
 		// the table exists.
 		try {
 			$stmt = $this->pdo->prepare($cmd);
@@ -196,7 +206,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
 			// assume we need to create it.
 			$this->createSequence($name);
 			
-			// now try the sequence number again.
+			// now try to increment again.
 			$stmt = $this->pdo->prepare($cmd);
 			$stmt->execute();
 		}

@@ -298,7 +298,7 @@ class Solar_Sql_Select extends Solar_Base {
 	* 
 	*/
 
-	public function from($spec, $cols = '*')
+	public function from($spec, $cols = null)
 	{
 		// the $spec may be a table object, or a string.
 		if ($spec instanceof Solar_Sql_Table) {
@@ -373,29 +373,133 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a WHERE condition to the query.
+	* Adds a WHERE condition to the query by AND.
+	* 
+	* If a value is passed as the second param, it will be quoted
+	* and replaced into the condition wherever a question-mark
+	* appears.
+	* 
+	* Array values are quoted and comma-separated.
+	* 
+	* <code>
+	* // simplest but non-secure
+	* $select->where("id = $id");
+	* 
+	* // secure
+	* $select->where('id = ?', $id);
+	* 
+	* // equivalent security with named binding
+	* $select->where('id = :id');
+	* $select->bind('id', $id);
+	* </code>
 	* 
 	* @access public
 	* 
 	* @param string $cond The WHERE condition.
 	* 
-	* @param string $op Whether to 'AND' or 'OR' this condition with
-	* existing conditions (default is 'AND').
+	* @param string $val A single value to quote into the condition.
 	* 
 	* @return void
 	* 
 	*/
 
-	public function where($cond, $op = 'AND')
+	public function where($cond)
 	{
 		if (empty($cond)) {
 			return;
 		}
 		
+		if (func_num_args() > 1) {
+			$val = $this->quote(func_get_arg(1));
+			$cond = str_replace('?', $val, $cond);
+		}
+		
 		if ($this->parts['where']) {
-			$this->parts['where'][] = strtoupper($op) . ' ' . $cond;
+			$this->parts['where'][] = "AND $cond";
 		} else {
 			$this->parts['where'][] = $cond;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds a WHERE condition to the query by OR.
+	* 
+	* Otherwise identical to where().
+	* 
+	* @access public
+	* 
+	* @param string $cond The WHERE condition.
+	* 
+	* @param string $val A value to quote into the condition.
+	* 
+	* @return void
+	* 
+	* @see where()
+	* 
+	*/
+
+	public function orWhere($cond)
+	{
+		if (empty($cond)) {
+			return;
+		}
+		
+		if (func_num_args() > 1) {
+			$val = $this->quote(func_get_arg(1));
+			$cond = str_replace('?', $val, $cond);
+		}
+		
+		if ($this->parts['where']) {
+			$this->parts['where'][] = "OR $cond";
+		} else {
+			$this->parts['where'][] = $cond;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds multiple WHERE conditions to the query.
+	* 
+	* Otherwise identical to where()/orWhere().
+	* 
+	* @access public
+	* 
+	* @param array $list An array of WHERE conditions.
+	* 
+	* @param string $op How to add the conditions, by 'AND' (the
+	* default) or by 'OR'.
+	* 
+	* @return void
+	* 
+	* @see where()
+	* 
+	* @see orWhere()
+	* 
+	*/
+
+	public function multiWhere($list, $op = 'AND')
+	{
+		// normally use where() ...
+		$method = 'where';
+		if ($op == 'OR') {
+			// unless it's orWhere().
+			$method = 'orWhere';
+		}
+		
+		// add each condition.
+		foreach ((array) $list as $key => $val) {
+			if (is_int($key)) {
+				// integer key means a literal condition
+				// and no value to be quoted into it
+				$this->$method($val);
+			} else {
+				// string $key means the key is a condition,
+				// and the $val should be quoted into it.
+				$this->$method($key, $val);
+			}
 		}
 	}
 	
@@ -430,29 +534,130 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Adds a HAVING condition to the query.
+	* Adds a HAVING condition to the query by AND.
+	* 
+	* If a value is passed as the second param, it will be quoted
+	* and replaced into the condition wherever a question-mark
+	* appears.
+	* 
+	* Array values are quoted and comma-separated.
+	* 
+	* <code>
+	* // simplest but non-secure
+	* $select->having("COUNT(id) = $count");
+	* 
+	* // secure
+	* $select->having('COUNT(id) = ?', $count);
+	* 
+	* // equivalent security with named binding
+	* $select->having('COUNT(id) = :count');
+	* $select->bind('count', $count);
+	* </code>
 	* 
 	* @access public
 	* 
 	* @param string $cond The HAVING condition.
 	* 
-	* @param string $op Whether to 'AND' or 'OR' this condition with
-	* existing conditions (default is 'AND').
+	* @param string $val A single value to quote into the condition.
 	* 
 	* @return void
 	* 
 	*/
 
-	public function having($cond, $op = 'AND')
+	public function having($cond)
 	{
 		if (empty($cond)) {
 			return;
 		}
 		
+		if (func_num_args() > 1) {
+			$val = $this->quote(func_get_arg(1));
+			$cond = str_replace('?', $val, $cond);
+		}
+		
 		if ($this->parts['having']) {
-			$this->parts['having'][] = strtoupper($op) . ' ' . $cond;
+			$this->parts['having'][] = "AND $cond";
 		} else {
 			$this->parts['having'][] = $cond;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds a HAVING condition to the query by OR.
+	* 
+	* Otherwise identical to orHaving().
+	* 
+	* @access public
+	* 
+	* @param string $cond The HAVING condition.
+	* 
+	* @param string $val A single value to quote into the condition.
+	* 
+	* @return void
+	* 
+	* @see having()
+	* 
+	*/
+
+	public function orHaving($cond)
+	{
+		if (empty($cond)) {
+			return;
+		}
+		
+		if (func_num_args() > 1) {
+			$val = $this->quote(func_get_arg(1));
+			$cond = str_replace('?', $val, $cond);
+		}
+		
+		if ($this->parts['having']) {
+			$this->parts['having'][] = "OR $cond";
+		} else {
+			$this->parts['having'][] = $cond;
+		}
+	}
+	
+	
+	/**
+	* 
+	* Adds multiple HAVING conditions to the query.
+	* 
+	* Otherwise identical to having()/orHaving().
+	* 
+	* @access public
+	* 
+	* @param array $list An array of HAVING conditions.
+	* 
+	* @param string $op How to add the conditions, by 'AND' (the
+	* default) or by 'OR'.
+	* 
+	* @return void
+	* 
+	* @see having()
+	* 
+	* @see orHaving()
+	* 
+	*/
+	
+	public function multiHaving($list, $op = 'AND')
+	{
+		$method = 'having';
+		if (strtoupper($op) == 'OR') {
+			$method = 'orHaving';
+		}
+		
+		foreach ((array) $list as $key => $val) {
+			if (is_int($key)) {
+				// integer key means a literal condition
+				// and no value to be quoted into it
+				$this->$method($val);
+			} else {
+				// string $key means the key is a condition,
+				// and the $val should be quoted into it.
+				$this->$method($key, $val);
+			}
 		}
 	}
 	
@@ -638,19 +843,23 @@ class Solar_Sql_Select extends Solar_Base {
 	
 	/**
 	* 
-	* Quotes values for a query.
+	* Quotes a value; for arrays, quotes and comma-separates.
 	* 
 	* @access public
 	* 
-	* @param mixed $value The value to quote.
+	* @param mixed $val The value to quote.
 	* 
-	* @return mixed The quoted value.
+	* @return string The quoted value.
 	* 
 	*/
 
-	public function quote($value)
+	public function quote($val)
 	{
-		return $this->sql->quote($value);
+		if (is_array($val)) {
+			return $this->sql->quoteSep($val);
+		} else {
+			return $this->sql->quote($val);
+		}
 	}
 	
 	
@@ -673,42 +882,34 @@ class Solar_Sql_Select extends Solar_Base {
 		
 		// how many tables/joins to select from?
 		$count = count(array_keys($this->tbl_cols));
-		if ($count == 1) {
 		
-			// only one, so no column name deconfliction needed,
-			// use the names as they are.
-			foreach ($this->tbl_cols as $key => $cols) {
-				$this->parts['cols'] = $cols;
+		// add table/join column names with deconfliction
+		foreach ($this->tbl_cols as $tbl => $cols) {
+			
+			// set up a table/join prefix.
+			// is the table/join aliased?
+			$pos = stripos($tbl, ' AS ');
+			if ($pos) {
+				// yes, use the alias portion as the prefix
+				$pre = trim(substr($tbl, $pos + 4));
+			} else {
+				// no, just use the table/join name as the prefix.
+				$pre = trim($tbl);
 			}
 			
-		} else {
-		
-			// more than one from/join, so we need to deconflict the
-			// column names. prefix each col name with the table/join
-			// name if deconfliction is required.
-			foreach ($this->tbl_cols as $tbl => $cols) {
-				
-				// is the table/join aliased?
-				$pos = stripos($tbl, ' AS ');
-				if ($pos) {
-					// yes, use the alias portion as the prefix
-					$pre = trim(substr($tbl, $pos + 4));
+			// add each of the columns, deconflicting as we go
+			foreach ($cols as $col) {
+				// is the column aliased?
+				$pos = stripos($col, ' AS ');
+				if ($pos || $pre == '') {
+					// use the column as aliased
+					$this->parts['cols'][] = $col;
+				} elseif ($count == 1) {
+					// only one table with columns: minimal deconfliction
+					$this->parts['cols'][] = "{$pre}.$col AS $col";
 				} else {
-					// no, just use the table/join name as-is
-					$pre = trim($tbl);
-				}
-				
-				// add each of the columns, deconflicting as we go
-				foreach ($cols as $col) {
-					// is the column aliased?
-					$pos = stripos($col, ' AS ');
-					if ($pos) {
-						// yes, use the column as-is
-						$tihs->parts['cols'][] = $col;
-					} else {
-						// no, use auto-deconfliction
-						$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
-					}
+					// more than one table: full deconfliction
+					$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
 				}
 			}
 		}
@@ -739,11 +940,11 @@ class Solar_Sql_Select extends Solar_Base {
 		// clear out all columns (note that this works because we are
 		// already in a Select class; this wouldn't work externally
 		// because $cols is protected) ...
-		$select->cols = array();
+		$select->tbl_cols = array();
 		
 		// ... then add a single COUNT column (no need for a table name
 		// in this case)
-		$select->cols(null, array("COUNT($col)"));
+		$select->cols("COUNT($col)");
 		
 		// clear any limits
 		$select->clear('limit');

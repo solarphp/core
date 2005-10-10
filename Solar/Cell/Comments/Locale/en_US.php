@@ -8,22 +8,21 @@
 * 
 * @package Solar_Cell
 * 
-* @subpackage Solar_Cell_Bookmarks
+* @subpackage Solar_Cell_Comments
 * 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
 * 
-* @version $Id$
+* @version $Id: en_US.php 567 2005-10-09 19:00:54Z pmjones $
 * 
 */
 
 return array(
 	// labels and descriptions of node columns
-	'LABEL_URI'  => 'Location',
-	'LABEL_SUBJ' => 'Title',
-	'LABEL_SUMM' => 'Description',
-	'LABEL_TAGS' => 'Tags',
-	'LABEL_RANK' => 'Rank',
+	'LABEL_SUMM'  => 'Your Name',
+	'LABEL_EMAIL' => 'Email',
+	'LABEL_URI'   => 'Website',
+	'LABEL_BODY'  => 'Comment',
 );
 ?>

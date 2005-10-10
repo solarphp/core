@@ -332,7 +332,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
 	* 
 	*/
 	
-	public function fetchCount($handle = null, $tags = null)
+	public function countPages($handle = null, $tags = null)
 	{
 		$where = $this->where;
 		if ($handle) {

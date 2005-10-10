@@ -73,7 +73,7 @@ if ($rss) {
 $this->view->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
 
 // get the total pages and row-count
-$total = $bookmarks->fetchCount($owner_handle, $tags);
+$total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else
 $this->view->rss['avail'] = true;

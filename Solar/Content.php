@@ -401,10 +401,15 @@ class Solar_Content extends Solar_Base {
 	* 
 	* Fetches the total count and pages of matching nodes.
 	* 
-	* Normally, we would use select->fetchCount(), but the GROUP
+	* SPECIAL NOTE WHEN USING TAGS:
+	* 
+	* Normally, we would use $select->countPages(), but the GROUP
 	* and HAVING clauses related to tag-based searches get in the
-	* way of that.  This stopgap measure is a fat, slow, stupid 
+	* way of that.  The stopgap measure is a fat, slow, stupid 
 	* hack until I can figure out a more elegant solution.
+	* 
+	* Fetching a node count when not using tags is of course much
+	* faster.
 	* 
 	* @access public
 	* 
@@ -422,37 +427,41 @@ class Solar_Content extends Solar_Base {
 	{
 		$select = Solar::object('Solar_Sql_Select');
 		$select->from($this->nodes, 'id');
+		$select->multiWhere($where);
 		
-		if (! empty($tags)) {
-			// force the tags to an array (for the IN(...) clause)
+		if ($tags) {
+			
+			// using tags. this is going to be a hog.
+			// force the tags to an array (for the IN comparison)
 			$tags = $this->tags->asArray($tags);
 			
-			// build and return the select statement
+			// build the select statement
 			$select->join($this->tags, 'tags.node_id = nodes.id');
 			$select->where('tags.name IN (?)', $tags);
 			$select->group('nodes.id');
-			$select->having("COUNT(nodes.id) = ?", count($tags));
+			$select->having('COUNT(nodes.id) = ?', count($tags));
+			
+			// fetch all rows and count how many we got (fat, stupid, slow)
+			$all = $select->fetch('all');
+			$result = count($all);
+			unset($all);
+			
+			// $result is the row-count; how many pages does it convert to?
+			$pages = 0;
+			if ($result > 0) {
+				$pages = ceil($result / $this->paging);
+			}
+			
+			// done!
+			return array(
+				'count' => $result,
+				'pages' => $pages
+			);
+			
+		} else {
+			// yay, not using tags!
+			return $select->countPages();
 		}
-		
-		// add custom where conditions
-		$select->multiWhere($where);
-		
-		// fetch all rows and count how many we got (fat, stupid, slow)
-		$all = $select->fetch('all');
-		$result = count($all);
-		unset($all);
-		
-		// $result is the row-count; how many pages does it convert to?
-		$pages = 0;
-		if ($result > 0) {
-			$pages = ceil($result / $this->paging);
-		}
-		
-		// done!
-		return array(
-			'count' => $result,
-			'pages' => $pages
-		);
 	}
 	
 	

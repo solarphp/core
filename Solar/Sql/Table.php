@@ -307,9 +307,6 @@ class Solar_Sql_Table extends Solar_Base {
 	
 	public function update($data, $where)
 	{
-		// build the WHERE clause
-		$where = $this->autoWhere($where);
-		
 		// retain primary key data in this array for return values
 		$retain = array();
 		
@@ -358,9 +355,6 @@ class Solar_Sql_Table extends Solar_Base {
 	
 	public function delete($where)
 	{
-		// build the WHERE clause
-		$where = $this->autoWhere($where);
-		
 		// attempt the deletion
 		$result = $this->sql->delete($this->name, $where);
 		return $result;
@@ -396,9 +390,6 @@ class Solar_Sql_Table extends Solar_Base {
 	public function select($type = 'result', $where = null,
 		$order = null, $page = null)
 	{
-		// fix up the where clause
-		$where = $this->autoWhere($where);
-		
 		// selection tool
 		$select = Solar::object('Solar_Sql_Select');
 		
@@ -406,7 +397,7 @@ class Solar_Sql_Table extends Solar_Base {
 		$select->from($this->name, array_keys($this->col));
 		
 		// conditions
-		$select->where($where);
+		$select->multiWhere($where);
 		
 		// ordering
 		$select->order($order);
@@ -1020,49 +1011,6 @@ class Solar_Sql_Table extends Solar_Base {
 			);
 			return $err;
 		}
-	}
-	
-	
-	/**
-	* 
-	* Automatically builds a simple comparison WHERE clause.
-	* 
-	* @access protected
-	* 
-	* @param string|array $list The list of WHERE conditions.  Typically
-	* a set of key-value pairs where the key is a column name with
-	* comparison operator, and the value is what the comparison value.
-	* 
-	* array('colname = ?' => 'value', 'colname < ?' => $value, etc);
-	* 
-	* @param string $op The connecting operator, default 'AND'.
-	* 
-	* @return string A WHERE clause composed of the conditions.
-	* 
-	*/
-	
-	protected function autoWhere($list, $op = 'AND')
-	{
-		settype($cond, 'array');
-		$where = array();
-		foreach ($list as $key => $val) {
-			if (is_int($key)) {
-				// the $val is a literal condition
-				$where[] = $val;
-			} else {
-				// $key is a condition,
-				// $val is the value to quote into it.
-				if (is_array($val)) {
-					$val = $this->sql->quoteSep($val);
-				} else {
-					$val = $this->sql->quote($val);
-				}
-				$where[] = str_replace('?', $val, $key);
-			}
-		}
-		
-		// merge everything together
-		return implode(" $op ", $where);
 	}
 }
 ?>

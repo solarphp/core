@@ -29,9 +29,13 @@
 class Solar_Valid {
 	
 	/**
-	* Flags for allowing validation on a blank value.
+	* Flag for allowing validation on a blank value.
 	*/
 	const OR_BLANK  = true;
+	
+	/**
+	* Flag for disallowing validation on a blank value.
+	*/
 	const NOT_BLANK = false;
 	
 	/**
@@ -65,16 +69,12 @@ class Solar_Valid {
 	* 
 	*/
 	
-	public static function alphanumeric($value, $blank = self::NOT_BLANK)
-	{
-		return self::alnum($value, $blank);
-	}
-	
 	public static function alnum($value, $blank = self::NOT_BLANK)
 	{
 		$expr = '/^[a-zA-Z0-9]+$/'; 
 		return self::regex($value, $expr, $blank);
 	}
+	
 	
 	/**
 	* 

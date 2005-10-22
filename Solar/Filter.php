@@ -100,24 +100,6 @@ class Solar_Filter {
 	
 	/**
 	* 
-	* Removes non-alphabetic and non-numeric characters.
-	* 
-	* @access public
-	* 
-	* @param mixed $value The value to be filtered.
-	* 
-	* @return string The filtered value.
-	* 
-	*/
-	
-	public static function alphanumeric($value)
-	{
-		return $this->alnum($value);
-	}
-	
-	
-	/**
-	* 
 	* Removes all whitespace characters.
 	* 
 	* @access public

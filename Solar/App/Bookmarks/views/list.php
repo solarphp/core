@@ -16,9 +16,13 @@
 * @version $Id$
 * 
 */
-?>
-<?php
+
+/**
+* Include the header file.
+*/
 include $this->template('header.php');
+
+// a basic link object
 $link = Solar::object('Solar_Uri');
 ?>
 <div>

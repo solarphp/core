@@ -16,6 +16,10 @@
 * @version $Id$
 * 
 */
+
+/**
+* Include the header file.
+*/
 ?>
 <?php include $this->template('header.php') ?>
 

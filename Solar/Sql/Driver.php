@@ -300,12 +300,9 @@ class Solar_Sql_Driver extends Solar_Base {
 	* 
 	* Safely quotes a value for an SQL statement.
 	* 
-	* Quotes individual array values (but not their keys).
-	* 
 	* @access public
 	* 
-	* @param mixed $val The value to quote; if an array, quotes all
-	* values in the array.
+	* @param mixed $val The value to quote.
 	* 
 	* @return mixed An SQL-safe quoted value.
 	* 
@@ -314,16 +311,7 @@ class Solar_Sql_Driver extends Solar_Base {
 	public function quote($val)
 	{
 		$this->connect();
-		if (is_array($val)) {
-			// quote array values, not keys, and only one level's worth
-			// (i.e., non-recursive).
-			foreach ($val as $k => $v) {
-				$val[$k] = $this->pdo->quote($v);
-			}
-		} else {
-			$val = $this->pdo->quote($val);
-		}
-		return $val;
+		return $this->pdo->quote($val);
 	}
 	
 	

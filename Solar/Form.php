@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Form
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @author Contributions from Matthew Weier O'Phinney <mweierophinney@gmail.com>
@@ -41,6 +43,8 @@ Solar::loadClass('Solar_Valid');
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_Form
 * 
 */
 

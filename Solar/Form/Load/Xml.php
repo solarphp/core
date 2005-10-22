@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Form
+* 
 * @author Matthew Weier O'Phinney <mweierophinney@gmail.com>
 * 
 * @license LGPL
@@ -138,6 +140,8 @@
 * @category Solar
 * 
 * @package Solar
+* 
+* @subpackage Solar_Form
 * 
 */
 

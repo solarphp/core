@@ -8,6 +8,8 @@
 * 
 * @package Solar
 * 
+* @subpackage Solar_Form
+* 
 * @author Paul M. Jones <pmjones@solarphp.com>
 * 
 * @license LGPL
@@ -29,7 +31,7 @@ Solar::loadClass('Solar_Valid');
 * 
 * @package Solar
 * 
-* @author Paul M. Jones <pmjones@solarphp.com>
+* @subpackage Solar_Form
 * 
 */
 

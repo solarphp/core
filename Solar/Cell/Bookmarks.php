@@ -379,7 +379,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
 	* 
 	* @param string $handle The owner_handler (username).
 	* 
-	* @return string $uri The URI to look form
+	* @param string $uri The URI to look form
 	* 
 	* @return array The node data.
 	* 

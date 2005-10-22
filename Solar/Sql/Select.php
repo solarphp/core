@@ -410,8 +410,7 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$val = $this->quote(func_get_arg(1));
-			$cond = str_replace('?', $val, $cond);
+			$cond = $this->quoteInto($cond, func_get_arg(1));
 		}
 		
 		if ($this->parts['where']) {
@@ -447,8 +446,7 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$val = $this->quote(func_get_arg(1));
-			$cond = str_replace('?', $val, $cond);
+			$cond = $this->quoteInto($cond, func_get_arg(1));
 		}
 		
 		if ($this->parts['where']) {
@@ -571,8 +569,7 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$val = $this->quote(func_get_arg(1));
-			$cond = str_replace('?', $val, $cond);
+			$cond = $this->quoteInto($cond, func_get_arg(1));
 		}
 		
 		if ($this->parts['having']) {
@@ -608,8 +605,7 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$val = $this->quote(func_get_arg(1));
-			$cond = str_replace('?', $val, $cond);
+			$cond = $this->quoteInto($cond, func_get_arg(1));
 		}
 		
 		if ($this->parts['having']) {
@@ -837,28 +833,6 @@ class Solar_Sql_Select extends Solar_Base {
 			foreach ($spec as $key) {
 				unset($this->bind[$key]);
 			}
-		}
-	}
-	
-	
-	/**
-	* 
-	* Quotes a value; for arrays, quotes and comma-separates.
-	* 
-	* @access public
-	* 
-	* @param mixed $val The value to quote.
-	* 
-	* @return string The quoted value.
-	* 
-	*/
-
-	public function quote($val)
-	{
-		if (is_array($val)) {
-			return $this->sql->quoteSep($val);
-		} else {
-			return $this->sql->quote($val);
 		}
 	}
 	

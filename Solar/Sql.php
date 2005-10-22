@@ -292,7 +292,10 @@ class Solar_Sql extends Solar_Base {
 		$stmt .= implode(', ', $tmp);
 		
 		// add the where clause, execute, and return
-		$stmt .= " WHERE $where";
+		if ($where) {
+			$where = $this->quoteMulti($where, ' AND ' );
+			$stmt .= " WHERE $where";
+		}
 		return $this->driver->exec($stmt, $data);
 	}
 	
@@ -316,6 +319,9 @@ class Solar_Sql extends Solar_Base {
 	
 	public function delete($table, $where)
 	{
+		if ($where) {
+			$where = $this->quoteMulti($where, ' AND ');
+		}
 		return $this->driver->exec("DELETE FROM $table WHERE $where");
 	}
 	
@@ -401,7 +407,7 @@ class Solar_Sql extends Solar_Base {
 		
 		// the PDOStatement result object
 		case 'pdo':
-		case 'PDOStatement':
+		case 'pdostatement':
 			$data = $result;
 			break;
 			
@@ -609,6 +615,22 @@ class Solar_Sql extends Solar_Base {
 	
 	/**
 	* 
+	* Returns a list of table names in the database.
+	* 
+	* @access public
+	* 
+	* @return array
+	* 
+	*/
+	
+	public function listTables()
+	{
+		return $this->driver->listTables($this);
+	}
+	
+	
+	/**
+	* 
 	* Adds a column to a table in the database.
 	* 
 	* @access public
@@ -741,7 +763,7 @@ class Solar_Sql extends Solar_Base {
 	
 	// -----------------------------------------------------------------
 	// 
-	// Miscellaneous
+	// Quoting
 	// 
 	// -----------------------------------------------------------------
 	
@@ -750,57 +772,112 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* Safely quotes a value for an SQL statement.
 	* 
-	* Quotes individual array values (but not their keys).
+	* If an array is passed as the value, the array values are quoted
+	* and then returned as a separated string (the default separator
+	* is a comma).
 	* 
 	* @access public
 	* 
 	* @param mixed $val The value to quote.
 	* 
-	* @return mixed An SQL-safe quoted value.
-	* 
-	*/
-	
-	public function quote($val)
-	{
-		return $this->driver->quote($val);
-	}
-	
-	
-	/**
-	* 
-	* Quotes an array of values and returns as a separated string.
-	* 
-	* @access public
-	* 
-	* @param array $val The array to quote.
-	* 
 	* @param string $sep The separator string to use.
 	* 
-	* @return string An SQL-safe separated list string (default ',').
+	* @return mixed An SQL-safe quoted value (or string of separated values).
 	* 
 	*/
 	
-	public function quoteSep($val, $sep = ',')
+	public function quote($val, $sep = ',')
 	{
-		settype($val, 'array');
-		$val = $this->driver->quote($val);
-		return implode($sep, $val);
+		if (is_array($val)) {
+			// quote array values, not keys, and only one level's worth
+			// (i.e., non-recursive) ... then combine with separator.
+			foreach ($val as $k => $v) {
+				$val[$k] = $this->driver->quote($v);
+			}
+			return implode($sep, $val);
+		} else {
+			return $this->driver->quote($val);
+		}
 	}
 	
 	
 	/**
 	* 
-	* Returns a list of table names in the database.
+	* Quotes a value and places into a piece of text at a placeholder.
 	* 
-	* @access public
+	* The placeholder is a question-mark; all placeholders will be replaced
+	* with the quoted value.   For example:
 	* 
-	* @return array
+	* <code>
+	* $text = "WHERE date < ?";
+	* $date = "2005-01-02";
+	* $safe = $sql->quoteInto($text, $date);
+	* // $safe = "WHERE date < '2005-01-02'"
+	* </code>
+	* 
+	* @param string $txt The text with a placeholder.
+	* 
+	* @param mixed $val The value to quote.
+	* 
+	* @return mixed An SQL-safe quoted value (or string of separated values)
+	* placed into the orignal text.
 	* 
 	*/
 	
-	public function listTables()
+	public function quoteInto($txt, $val)
 	{
-		return $this->driver->listTables($this);
+		$val = $this->quote($val);
+		return str_replace('?', $val, $txt);
+	}
+	
+	
+	/**
+	* 
+	* Quote multiple text-and-value pieces.
+	* 
+	* The placeholder is a question-mark; all placeholders will be replaced
+	* with the quoted value.   For example:
+	* 
+	* <code>
+	* $list = array(
+	*      "WHERE date > ?"   => '2005-01-01',
+	*      "  AND date < ?"   => '2005-02-01',
+	*      "  AND type IN(?)" => array('a', 'b', 'c'),
+	* );
+	* $safe = $sql->quoteMulti($list);
+	* // $safe = "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+	* </code>
+	* 
+	* @param array $list A series of key-value pairs where the key is
+	* the placeholder text and the value is the value to be quoted into
+	* it.  If the key is an integer, it is assumed that the value is
+	* piece of literal text to be used and not quoted.
+	* 
+	* @param string $sep Return the list pieces separated with this string
+	* (default is null).
+	* 
+	* @return string An SQL-safe string composed of the list keys and
+	* quoted values.
+	* 
+	*/
+	
+	public function quoteMulti($list, $sep = null)
+	{
+		$text = array();
+		foreach ((array) $list as $key => $val) {
+			if (is_int($key)) {
+				// integer $key means a literal phrase and no value to
+				// be bound into it
+				$text[] = $val;
+			} else {
+				// string $key means a phrase with a placeholder, and
+				// $val should be bound into it.
+				$text[] = $this->bind($key, $val); 
+			}
+		}
+		
+		// return the condition list
+		return implode($sep, $text);
 	}
 	
 	

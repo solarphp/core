@@ -410,7 +410,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['where']) {
@@ -446,7 +447,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['where']) {
@@ -569,7 +571,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['having']) {
@@ -605,7 +608,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['having']) {
@@ -919,6 +923,9 @@ class Solar_Sql_Select extends Solar_Base {
 		// ... then add a single COUNT column (no need for a table name
 		// in this case)
 		$select->cols("COUNT($col)");
+		
+		// clear any order (for Postgres, noted by 4bgjnsn)
+		$select->clear('order');
 		
 		// clear any limits
 		$select->clear('limit');

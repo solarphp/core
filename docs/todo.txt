@@ -1,12 +1,3 @@
-REELASE 0.8.0:
-
-	update API docs
-	
-	start tagging releases
-	
-
-----
-
 DOCUMENTATION PLAN
 
 easy:

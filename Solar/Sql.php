@@ -40,8 +40,8 @@ require_once 'Solar/Sql/Driver.php';
 * $sql = Solar::object('Solar_Sql', $opts);
 * </code>
 * 
-* You should consider using Solar_Sql_Table for handling
-* insert/update/delete, as well as single-table selects.
+* You should consider using Solar_Sql_Table for handling insert, update,
+* and delete operations on single tables.
 * 
 * You should consider using Solar_Sql_Select for multi-table and joined
 * selects.
@@ -872,7 +872,7 @@ class Solar_Sql extends Solar_Base {
 			} else {
 				// string $key means a phrase with a placeholder, and
 				// $val should be bound into it.
-				$text[] = $this->bind($key, $val); 
+				$text[] = $this->quoteInto($key, $val); 
 			}
 		}
 		

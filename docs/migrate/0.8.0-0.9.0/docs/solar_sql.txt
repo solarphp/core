@@ -1,102 +1,118 @@
-CONSTRUCTION
+++ Construction
 
 Construction and config keys remain the same; there should be no changes here.
 
 
-DIRECT EXECUTION OF QUERIES
+++ Direct Execution of Queries
 
 Previously, if you wanted to execute an SQL query directly, you would use the exec() method:
 
-	$old_sql->exec('SELECT * FROM table');
+<code type="php">
+$old_sql->exec('SELECT * FROM table');
+</code>
 
 The exec() method has been renamed as query() to mimic the PDO API.
 
-	$new_sql->query('SELECT * FROM table');
+<code type="php">
+$new_sql->query('SELECT * FROM table');
+</code>
 
 Previously, there were three additional parameters for the exec() method for binding data, setting a limit count, and setting a limit offset; these parameters are not available with the new query() method, and are now more properly part of the new Solar_Sql_Select class.
 
 
-QUOTING
+++ Quoting
 
 The old quote() method now uses the PDO driver for quoting.  The results should be identical as in the older API.  However, if you quote an array, the array values are quoted individually and then concatenated using a separator string.  This is useful for IN(...) conditions.  For example:
 
-	$list = array('one', 'two', 'three');
-	$output = $new_sql->quote($list, ',');
-	// $output = "'one','two','three'";
+<code type="php">
+$list = array('one', 'two', 'three');
+$output = $new_sql->quote($list, ',');
+// $output = "'one','two','three'";
+</code>
 
 There are two new quoting methods, quoteInto() and quoteMulti().  The quoteInto() method takes a text string with a placeholder, and a value to be used at the placeholder.  The value is quoted using the Solar_Sql quote() method, then placed into the text string.
 
-	$text = "WHERE type IN(?)";
-	$types = array('one', 'two', 'three');
-	$output = $new_sql->quoteInto($text, $types);
-	// $output = "WHERE type IN('one','two','three')";
+<code type="php">
+$text = "WHERE type IN(?)";
+$types = array('one', 'two', 'three');
+$output = $new_sql->quoteInto($text, $types);
+// $output = "WHERE type IN('one','two','three')";
+</code>
 
 The quoteMulti() method works much the same way, except with arrays ot text-value pairs.
 
-	$conditions = array(
-		"date >= ?"   => '2005-01-01',
-		"date <= ?"   => '2005-01-31',
-		"type IN(?)"  => array('a', 'b', 'c'),
-	);
-	$output = $new_sql->quoteMulti($list, ' AND ');
-	// $output = "date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+<code type="php">
+$conditions = array(
+	"date >= ?"   => '2005-01-01',
+	"date <= ?"   => '2005-01-31',
+	"type IN(?)"  => array('a', 'b', 'c'),
+);
+$output = $new_sql->quoteMulti($list, ' AND ');
+// $output = "date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+</code>
 
 
-INSERT, UPDATE, DELETE
+++ Insert/Update/Delete
 
 Insert and update should be unchanged.
 	
-	// insert
-	$table = 'table_name';
-	$data = array('name' => 'smith');
-	$new_sql->insert($table, $data);
-	
-	// update
-	$table = 'table_name';
-	$data = array('name' => 'jones');
-	$where = "name = 'smith'";
-	$new_sql->update($table, $data, $where);
+<code type="php">
+// insert
+$table = 'table_name';
+$data = array('name' => 'smith');
+$new_sql->insert($table, $data);
 
-	// delete
-	$table = 'table_name';
-	$where = "name = 'brown'";
-	$new_sql->delete($table, $where);
+// update
+$table = 'table_name';
+$data = array('name' => 'jones');
+$where = "name = 'smith'";
+$new_sql->update($table, $data, $where);
+
+// delete
+$table = 'table_name';
+$where = "name = 'brown'";
+$new_sql->delete($table, $where);
+</code>
 
 The $where parameter in each case used to be a WHERE clause string.  Additionally, in the new API, each can now be an array of text-value pairs: the text is a condition with a placeholder, and the value is the value to be quoted and inserted in place of the placeholder.  These conditions are then ANDed together.  For example:
 
-	// update
-	$table = 'table_name';
-	$data = array('name' => 'jones');
-	$where = array("name = ?" => 'smith');
-	$new_sql->update($table, $data, $where);
+<code type="php">
+// update
+$table = 'table_name';
+$data = array('name' => 'jones');
+$where = array("name = ?" => 'smith');
+$new_sql->update($table, $data, $where);
 
-	// delete
-	$table = 'table_name';
-	$where = array("name = ?" => 'smith');
-	$new_sql->delete($table, $where);
+// delete
+$table = 'table_name';
+$where = array("name = ?" => 'smith');
+$new_sql->delete($table, $where);
+</code>
 
 
-SELECT
+++ Select
 
 The new select() method takes the components of a select statement, combines them into a statement for you, then adds LIMIT count and offset clauses in a portable manner (per the underlying driver class).  This means that if you limit yourself to a moderate subset of SELECT commands, your SELECT statements can become truly portable.
 
 While you can use this method directly, it's much easier to build a select statment using Solar_Sql_Select.
 
 
-TRANSACTIONS
+++ Transactions
 
 The previous Solar_Sql class had no API support for transactions; the new API does.
 
-	$new_sql->begin();
-	try {
-		$new_sql->insert('table', array('id' => 1));
-		$new_sql->commit();
-	} catch (Exception $e) {
-		$new_sql->rollback();
-	}
+<code type="php">
+$new_sql->begin();
+try {
+	$new_sql->insert('table', array('id' => 1));
+	$new_sql->commit();
+} catch (Exception $e) {
+	$new_sql->rollback();
+}
+</code>
 
 
-TABLE AND INDEX CREATION
+++ Table and Index Creation
 
 Index creation is exactly the same as before.
 
@@ -105,7 +121,7 @@ Table creation is somewhat modified, in that 'default' keys for column definitio
 Also, drivers for RDBMS systems that do not support transactions by default will use a table type that **does** support transactions.  For example, tables created for MySQL will be of the InnoDB type (not the MyISAM type).
 
 
-OTHER METHODS
+++ Other Methods
 
 All other methods should be functionally identical, even though the backend support is now provided primarily via PDO.
 

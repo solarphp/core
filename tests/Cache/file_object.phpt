@@ -57,7 +57,7 @@ Solar::stop();
 ?>
 --EXPECT--
 0 string(4) "miss"
-object(Coyote)#11 (3) {
+object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
   ["config:protected"] => array(1) {
@@ -65,7 +65,7 @@ object(Coyote)#11 (3) {
   }
 }
 1 string(3) "hit"
-object(Coyote)#12 (3) {
+object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
   ["config:protected"] => array(1) {
@@ -73,7 +73,7 @@ object(Coyote)#12 (3) {
   }
 }
 2 string(3) "hit"
-object(Coyote)#11 (3) {
+object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
   ["config:protected"] => array(1) {
@@ -81,7 +81,7 @@ object(Coyote)#11 (3) {
   }
 }
 3 string(4) "miss"
-object(Coyote)#11 (3) {
+object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
   ["config:protected"] => array(1) {
@@ -89,7 +89,7 @@ object(Coyote)#11 (3) {
   }
 }
 4 string(3) "hit"
-object(Coyote)#12 (3) {
+object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
   ["config:protected"] => array(1) {

@@ -42,88 +42,159 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.8.0</version>
-  <date>2005-09-24</date>
+  <version>0.9.0</version>
+  <date>2005-10-23</date>
   <license>LGPL</license>
   <state>devel</state>
   <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* Translations: Jean-Eric Laurent has contributed fr_FR locale files for all existing classes.  Thanks, JEL!  :-)
+* REQUIREMENTS:  You need to be running PHP 5.1RC1 (exactly) for this release to work for you; this is because of the new PDO-based SQL classes.  RC3 **will not** work because they changed the constants; a followup release of Solar will address this.
 
-* Documentation: added HelloWorld app to the docs/ folder per note from James Kilbride
+* BACKWARDS COMPATIBILITY:  There are major BC breaks in this release, particularly in the Solar_Sql classes, along with those classes related to and depending upon Solar_Sql.
+
+* Removed classes:
+
+ * Solar_Sql_Entity: it has been refactored into Solar_Sql_Select, Solar_Sql_Table, and Solar_Form_Load_Table.
+ 
+ * Solar_Super: it pretty much did one thing, strip_tags() from GET vars.  With the new escaping in Savant3, it's not really needed any more.  Folded the default-value functionality into Solar.php as super().
+ 
+ * Solar_App_Bugs: these classes will reappear after I convert the app to the new Solar_Sql PDO-based system, and revamp the MVC structure of Solar_App.
+ 
+ * Solar_Cell_Bugs: probably will not reappear as a Cell because it isn't generic enough; instead, it will reappear as a model class within Solar_App_Bugs
+ 
+* Added classes:
+
+ * Solar_Sql_Select to build Select statements
+ 
+ * Solar_Sql_Table to act as a Table Data Gateway (auto-creates tables as well)
+ 
+ * Solar_Form_Load_Table to auto-create forms from Solar_Sql_Table schemas
 
 * Solar:
- 
- * The environment() setup now uses an improved routine to unset variables set from global sources when register_globals is on (per Stefan Esser and Richard Heyes)
- 
- * The environment() setup no longer unsets $_REQUEST (although you still shouldn't use it if you can reasonably avoid it).
 
-* Solar_Base:
+ * Fixed bug where environment() method was not static (thanks Adrian Gheorghe)
+
+* Solar_App_Bookmarks:
  
- * If a 'locale' config key is not set, auto-generate one based on the class name. For example, 'Solar_Example_Class' maps to 'Solar/Example/Class/Locale/'.
+ * Updated to use new Solar_Cell_Bookmarks
+ 
+ * You will need to migrate your old bookmarks to the new table, see migrate/0.8.0-0.9.0/convert_bookmarks.php
+ 
+ * You will need to change your QuickMark link to the new one (the &quot;title&quot; variable is now called &quot;subj&quot;)
+ 
+ * Added some view candy, e.g. the tag list shows the number of times the tag appears
+ 
+ * Added localization for the &quot;order by&quot; links
+ 
+* Solar_Base:
+
+ * Added errorException() method to convert exceptions to Solar_Error objects
+ 
+ * Now loads the locale file at __construct() time instead of on first call to locale()
+
+* Solar_Cell_Bookmarks:
+ 
+ * MAJOR BC BREAK, many method names have changes
+ 
+ * Now based on new Solar_Content model
  
 * Solar_Form:
- 
- * Made addValidate() and addFilter() public.
- 
- * In validate(), the 'validate' key is forced to an array; this allows you to use just the Solar_Valid method name, and the default VALID_* message will be used as the feedback text.
- 
- * The populate() method is now free of the eval() calls copied from HTML_QuickForm; we now recursively populate the $submitted property with the _populate() method.
- 
- * The values() method is now free of the eval() calls copied from HTML_QuickForm; we now recursively build the returned values using the _values() method.
- 
- * In the addValidate() method, the $message parameter is now optional; if not present, the method uses the generic VALID_* locale string for the validation.
 
-* Solar_Form_Load_Xml:
+ * Added orderElements() method to set elements into arbitrary order
  
- * Applied patch from Matther Weier O'Phinney to add XML format doc comments inline; also fixes a bug where $this was addressed instead of $filter.
+ * Changed all 'validate' keys to 'valid' in all Form classes for consistency with locale and table classes
 
+* Solar_Filter:
+
+ * Removed deprecated alphanumeric() method; use identical alnum() instead
+ 
 * Solar_Sql:
- 
- * WARNING: This may be the last release of Solar with the current RDBMS API abstraction; a future release should incorporate PDO as the underlying abstraction layer.
- 
- * The quote() method now recursively quotes all values in arrays.
- 
- * Added a new select() method in anticipation of Solar_Sql_Select class.
 
-* Solar_Sql_Driver_*:
+ * MAJOR BC BREAK: The SQL classes are now based on PDO, and there are major shifts in how the the SQL class works.
  
- * Added new select() and limitSelect() methods in anticipation of new Solar_Sql_Select class. The new limitSelect() method will provide much better offset emulation in, e.g., MS-SQL.
+ * Changed default driver class to Sqlite
+ 
+ * Changed default host to 127.0.0.1 (PDO doesn't like 'localhost')
+ 
+ * Changed exec() to query() to be more in line with PDO API
+
+ * added select() return type 'pdo' to return the PDOStatement object
+ 
+ * changed select() return type 'result' to return a Solar_Sql_Result object
+ 
+ * changed default select() return type to assign to $config['PDOStatement'] instead of $config['result']
+ 
+ * Added quoteInto() and quoteMulti() methods
+ 
+ * update() and delete() now take arrays as WHERE clauses, and pass through quoteMulti() automatically
+ 
+ * quote() now allows you to specify a separator string for quoted arrays converted to strings
+
+* Solar_Sql_Driver:
+ 
+ * Complete BC break
+ 
+ * Converted to PDO usage
+ 
+ * Transaction support, but autocommit by default
+ 
+ * select-statement creation now adds tabs and newlines in column list (vice a literal \n\t)
+ 
+ * select-statement creation now separates FROM list by comma only (no tabs or newlines)
+ 
+ * fixed bug in select-statement creation JOIN implode() (wrong params)
+ 
+ * added transaction support methods begin(), commit(), and rollback()
+
+* Solar_Sql_Driver_Mysql:
+
+ * Now uses InnoDB tables now (vice MyISAM) to support transactions.  You'll need MySQL 4.0 or higher for this.
 
 * Solar_Sql_Driver_Mssql:
+ 
+ * buildSelect() now uses smarter (but untested) LIMIT offset emulation, also takes DISTINCT into account
+ 
+* Solar_Sql_Select:
 
- * Fixed bug in createSequence() method where $start was in single-quotes (changed
- to double-quotes to interpolate the variable properly)
+ * now maps columns to from/join names for deconfliction later
+ 
+ * from() and join() now allow you specify which columns to select
+ 
+ * from() and join() now allow the option to specify a table object (instead of a table name)
+ 
+ * fetch() automatically deconflicts columns between tables/joins when they were added via from()/join()
+ 
+ * updated countPages() method to take new deconfliction into account
 
-* Solar_Sql_Locale:
+* Solar_Sql_Result:
  
- * Added new OP_CREATE, LABEL_OP, and VALID_WORD translation keys
+ * complete BC break
  
- * Swapped VALID_BLANK and VALID_NOTBLANK translation strings (they were backwards)
+ * converted to new PDO usage
  
+ * auto-maps deconflicted colnames to arrays:  looks at colnames for __ and converts to arrays on fetch()
+
+* Solar_Sql_Table:
+
+ * automatically adds 'id' column, index, and sequence
+ 
+ * automatically adds 'created' column and index
+ 
+ * automatically adds 'updated' column and index
+ 
+ * insert() automatically sets 'created' and 'updated' timestamps
+ 
+ * update() automatically sets 'updated' timestamp
+
 * Solar_Valid:
  
- * Added ipv4() method to validate IPv4 addresses; also added test file.
+ * Removed deprecated alphanumeric(); use identical alnum() instead
  
- * Added locale() method to validate locale code formats; also added test file.
+ * Added mimeType() method for MIME types
  
- * Added word() method to validate against word characters (regex &quot;\w&quot; type); also added test file.
+ * Added sepWords() method for spearated word strings
  
- * The nonZero() method now honors the $blank parameter.
-
-* Solar_Template:
-
- * Updated to use most-recent releases of Savant3 (beta 2) and Savant3_Plugin_Form (devel 0.2.1)
- 
- * Updated all Solar/App/*/views/* to use the new Savant3 code
- 
-* Solar_User_Auth:
-
- * Moved driver instantiation to start() instead of __construct(); this should allow custom drivers better integration into the start() process (e.g., single sign-on systems and HTTP-based auth).  This eliminates the __construct() method as well.
-
-* Solar_User_Role_Sql:
- 
- * Fixed double-concat bug when generating the WHERE clause
+ * Improved uri() method
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -133,6 +204,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Base::apiVersion" />
   <provides type="function" name="Solar_Base::error" />
   <provides type="function" name="Solar_Base::errorPush" />
+  <provides type="function" name="Solar_Base::errorException" />
   <provides type="function" name="Solar_Base::solar" />
   <provides type="function" name="Solar_Base::locale" />
   <provides type="class" name="Solar_Cache" extends="Solar_Base" />
@@ -143,6 +215,23 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Cache::delete" />
   <provides type="function" name="Solar_Cache::deleteAll" />
   <provides type="function" name="Solar_Cache::entry" />
+  <provides type="class" name="Solar_Content" extends="Solar_Base" />
+  <provides type="function" name="Solar_Content::paging" />
+  <provides type="function" name="Solar_Content::form" />
+  <provides type="function" name="Solar_Content::fetchArea" />
+  <provides type="function" name="Solar_Content::fetchAreaList" />
+  <provides type="function" name="Solar_Content::insertArea" />
+  <provides type="function" name="Solar_Content::updateArea" />
+  <provides type="function" name="Solar_Content::selectAreas" />
+  <provides type="function" name="Solar_Content::fetchNode" />
+  <provides type="function" name="Solar_Content::fetchNodeList" />
+  <provides type="function" name="Solar_Content::fetchNodeCount" />
+  <provides type="function" name="Solar_Content::defaultNode" />
+  <provides type="function" name="Solar_Content::insertNode" />
+  <provides type="function" name="Solar_Content::updateNode" />
+  <provides type="function" name="Solar_Content::deleteNodes" />
+  <provides type="function" name="Solar_Content::selectNodes" />
+  <provides type="function" name="Solar_Content::fetchTagList" />
   <provides type="class" name="Solar_Error" extends="Solar_Base" />
   <provides type="function" name="Solar_Error::push" />
   <provides type="function" name="Solar_Error::pop" />
@@ -152,7 +241,6 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Filter::replace" />
   <provides type="function" name="Solar_Filter::alpha" />
   <provides type="function" name="Solar_Filter::alnum" />
-  <provides type="function" name="Solar_Filter::alphanumeric" />
   <provides type="function" name="Solar_Filter::blank" />
   <provides type="function" name="Solar_Filter::formatDateTime" />
   <provides type="function" name="Solar_Filter::isoDate" />
@@ -165,8 +253,9 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_Form" extends="Solar_Base" />
   <provides type="function" name="Solar_Form::setElement" />
   <provides type="function" name="Solar_Form::setElements" />
+  <provides type="function" name="Solar_Form::orderElements" />
   <provides type="function" name="Solar_Form::addFilter" />
-  <provides type="function" name="Solar_Form::addValidate" />
+  <provides type="function" name="Solar_Form::addValid" />
   <provides type="function" name="Solar_Form::addFeedback" />
   <provides type="function" name="Solar_Form::populate" />
   <provides type="function" name="Solar_Form::validate" />
@@ -180,14 +269,14 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Locale::setString" />
   <provides type="function" name="Solar_Locale::setStrings" />
   <provides type="function" name="Solar_Locale::load" />
+  <provides type="function" name="Solar_Locale::loaded" />
   <provides type="function" name="Solar_Locale::string" />
   <provides type="class" name="Solar_Sql" extends="Solar_Base" />
-  <provides type="function" name="Solar_Sql::exec" />
-  <provides type="function" name="Solar_Sql::bind" />
-  <provides type="function" name="Solar_Sql::select" />
+  <provides type="function" name="Solar_Sql::query" />
+  <provides type="function" name="Solar_Sql::begin" />
+  <provides type="function" name="Solar_Sql::commit" />
+  <provides type="function" name="Solar_Sql::rollback" />
   <provides type="function" name="Solar_Sql::insert" />
-  <provides type="class" name="Solar_Super" extends="Solar_Base" />
-  <provides type="function" name="Solar_Super::fetch" />
   <provides type="class" name="Solar_Template" extends="Savant3" />
   <provides type="function" name="Solar_Template::error" />
   <provides type="function" name="Solar_Template::isError" />
@@ -207,7 +296,6 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_User::solar" />
   <provides type="class" name="Solar_Valid" />
   <provides type="function" name="Solar_Valid::alpha" />
-  <provides type="function" name="Solar_Valid::alphanumeric" />
   <provides type="function" name="Solar_Valid::alnum" />
   <provides type="function" name="Solar_Valid::blank" />
   <provides type="function" name="Solar_Valid::custom" />
@@ -218,8 +306,6 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_App_Bookmarks" extends="Solar_App" />
   <provides type="function" name="Solar_App_Bookmarks::setup" />
   <provides type="function" name="Solar_App_Bookmarks::getOrder" />
-  <provides type="class" name="Solar_App_Bugs" extends="Solar_App" />
-  <provides type="function" name="Solar_App_Bugs::setup" />
   <provides type="class" name="Solar_Cache_File" extends="Solar_Base" />
   <provides type="function" name="Solar_Cache_File::fetch" />
   <provides type="function" name="Solar_Cache_File::replace" />
@@ -232,35 +318,41 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Cache_Memcache::delete" />
   <provides type="function" name="Solar_Cache_Memcache::deleteAll" />
   <provides type="function" name="Solar_Cache_Memcache::entry" />
-  <provides type="class" name="Solar_Cell_Bookmarks" extends="Solar_Sql_Entity" />
-  <provides type="function" name="Solar_Cell_Bookmarks::getSchema" />
+  <provides type="class" name="Solar_Cell_Bookmarks" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cell_Bookmarks::paging" />
+  <provides type="function" name="Solar_Cell_Bookmarks::insert" />
+  <provides type="function" name="Solar_Cell_Bookmarks::update" />
+  <provides type="function" name="Solar_Cell_Bookmarks::fetchDefault" />
   <provides type="function" name="Solar_Cell_Bookmarks::fetchItem" />
   <provides type="function" name="Solar_Cell_Bookmarks::fetchList" />
-  <provides type="function" name="Solar_Cell_Bookmarks::userHasUri" />
-  <provides type="function" name="Solar_Cell_Bookmarks::forUser" />
-  <provides type="function" name="Solar_Cell_Bookmarks::userTags" />
-  <provides type="function" name="Solar_Cell_Bookmarks::withTags" />
-  <provides type="function" name="Solar_Cell_Bookmarks::preInsert" />
-  <provides type="function" name="Solar_Cell_Bookmarks::postInsert" />
-  <provides type="function" name="Solar_Cell_Bookmarks::update" />
-  <provides type="function" name="Solar_Cell_Bookmarks::preUpdate" />
-  <provides type="function" name="Solar_Cell_Bookmarks::postUpdate" />
-  <provides type="class" name="Solar_Cell_Bugs" extends="Solar_Sql_Entity" />
-  <provides type="function" name="Solar_Cell_Bugs::fetchItem" />
-  <provides type="function" name="Solar_Cell_Bugs::fetchOpen" />
-  <provides type="function" name="Solar_Cell_Bugs::fetchList" />
-  <provides type="class" name="Solar_Cell_Comments" extends="Solar_Sql_Entity" />
-  <provides type="function" name="Solar_Cell_Comments::moderate" />
+  <provides type="function" name="Solar_Cell_Bookmarks::countPages" />
+  <provides type="function" name="Solar_Cell_Bookmarks::fetchTagList" />
+  <provides type="function" name="Solar_Cell_Bookmarks::fetchOwnerUri" />
+  <provides type="function" name="Solar_Cell_Bookmarks::delete" />
+  <provides type="function" name="Solar_Cell_Bookmarks::form" />
+  <provides type="class" name="Solar_Cell_Comments" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cell_Comments::paging" />
+  <provides type="function" name="Solar_Cell_Comments::insert" />
+  <provides type="function" name="Solar_Cell_Comments::update" />
+  <provides type="function" name="Solar_Cell_Comments::fetchDefault" />
   <provides type="function" name="Solar_Cell_Comments::fetchItem" />
-  <provides type="function" name="Solar_Cell_Comments::fetchQueue" />
-  <provides type="function" name="Solar_Cell_Comments::search" />
-  <provides type="class" name="Solar_Cell_Tags" extends="Solar_Sql_Entity" />
-  <provides type="function" name="Solar_Cell_Tags::getSchema" />
-  <provides type="function" name="Solar_Cell_Tags::refresh" />
-  <provides type="function" name="Solar_Cell_Tags::diff" />
-  <provides type="function" name="Solar_Cell_Tags::relatedFetch" />
-  <provides type="class" name="Solar_Cell_Comments_Rules" extends="Solar_Base" />
-  <provides type="function" name="Solar_Cell_Comments_Rules::apply" />
+  <provides type="function" name="Solar_Cell_Comments::fetchList" />
+  <provides type="function" name="Solar_Cell_Comments::countPages" />
+  <provides type="function" name="Solar_Cell_Comments::delete" />
+  <provides type="function" name="Solar_Cell_Comments::shortForm" />
+  <provides type="function" name="Solar_Cell_Comments::longForm" />
+  <provides type="class" name="Solar_Content_Areas" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Content_Areas::setup" />
+  <provides type="class" name="Solar_Content_Nodes" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Content_Nodes::setup" />
+  <provides type="function" name="Solar_Content_Nodes::insert" />
+  <provides type="class" name="Solar_Content_Tags" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Content_Tags::asString" />
+  <provides type="function" name="Solar_Content_Tags::asArray" />
+  <provides type="function" name="Solar_Content_Tags::fetchForNode" />
+  <provides type="function" name="Solar_Content_Tags::refresh" />
+  <provides type="function" name="Solar_Content_Tags::diff" />
+  <provides type="function" name="Solar_Content_Tags::setup" />
   <provides type="class" name="Solar_Debug_Timer" extends="Solar_Base" />
   <provides type="function" name="Solar_Debug_Timer::solar" />
   <provides type="function" name="Solar_Debug_Timer::start" />
@@ -270,65 +362,57 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Debug_Timer::display" />
   <provides type="class" name="Solar_Debug_Var" extends="Solar_Base" />
   <provides type="function" name="Solar_Debug_Var::dump" />
+  <provides type="class" name="Solar_Form_Load_Table" extends="Solar_Base" />
+  <provides type="function" name="Solar_Form_Load_Table::fetch" />
   <provides type="class" name="Solar_Form_Load_Xml" extends="Solar_Base" />
   <provides type="function" name="Solar_Form_Load_Xml::fetch" />
   <provides type="function" name="Solar_Form_Load_Xml::getParams" />
   <provides type="class" name="Solar_Sql_Driver" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Driver::dsn" />
   <provides type="function" name="Solar_Sql_Driver::connect" />
-  <provides type="function" name="Solar_Sql_Driver::escape" />
-  <provides type="function" name="Solar_Sql_Driver::select" />
-  <provides type="function" name="Solar_Sql_Driver::limitSelect" />
-  <provides type="class" name="Solar_Sql_Entity" extends="Solar_Base" />
-  <provides type="function" name="Solar_Sql_Entity::getSchema" />
-  <provides type="function" name="Solar_Sql_Entity::quote" />
-  <provides type="function" name="Solar_Sql_Entity::rowsPerPage" />
-  <provides type="function" name="Solar_Sql_Entity::setRowsPerPage" />
-  <provides type="function" name="Solar_Sql_Entity::pageLimit" />
-  <provides type="function" name="Solar_Sql_Entity::selectResult" />
-  <provides type="function" name="Solar_Sql_Entity::selectFetch" />
-  <provides type="function" name="Solar_Sql_Entity::countPages" />
+  <provides type="function" name="Solar_Sql_Driver::begin" />
+  <provides type="function" name="Solar_Sql_Driver::commit" />
+  <provides type="function" name="Solar_Sql_Driver::rollback" />
+  <provides type="function" name="Solar_Sql_Driver::exec" />
+  <provides type="function" name="Solar_Sql_Driver::quote" />
+  <provides type="function" name="Solar_Sql_Driver::createSequence" />
+  <provides type="function" name="Solar_Sql_Driver::dropSequence" />
+  <provides type="function" name="Solar_Sql_Driver::nextSequence" />
+  <provides type="function" name="Solar_Sql_Driver::listTables" />
+  <provides type="function" name="Solar_Sql_Driver::nativeColTypes" />
+  <provides type="function" name="Solar_Sql_Driver::buildCreateTable" />
   <provides type="class" name="Solar_Sql_Reserved" />
   <provides type="class" name="Solar_Sql_Result" extends="Solar_Base" />
   <provides type="function" name="Solar_Sql_Result::fetch" />
-  <provides type="function" name="Solar_Sql_Result::fetchNum" />
-  <provides type="function" name="Solar_Sql_Result::numRows" />
+  <provides type="function" name="Solar_Sql_Result::fetchAll" />
+  <provides type="class" name="Solar_Sql_Select" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Select::paging" />
+  <provides type="function" name="Solar_Sql_Select::distinct" />
+  <provides type="function" name="Solar_Sql_Select::cols" />
+  <provides type="function" name="Solar_Sql_Select::from" />
+  <provides type="function" name="Solar_Sql_Select::join" />
+  <provides type="function" name="Solar_Sql_Select::where" />
+  <provides type="class" name="Solar_Sql_Table" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Table::paging" />
+  <provides type="function" name="Solar_Sql_Table::insert" />
+  <provides type="function" name="Solar_Sql_Table::update" />
+  <provides type="function" name="Solar_Sql_Table::delete" />
+  <provides type="function" name="Solar_Sql_Table::select" />
+  <provides type="function" name="Solar_Sql_Table::increment" />
+  <provides type="function" name="Solar_Sql_Table::getDefault" />
+  <provides type="function" name="Solar_Sql_Table::setup" />
+  <provides type="function" name="Solar_Sql_Table::autoSetup" />
   <provides type="class" name="Solar_Sql_Driver_Fbsql" extends="Solar_Sql_Driver" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::connect" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::escape" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::numRows" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::exec" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::fetch" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::fetchNum" />
-  <provides type="function" name="Solar_Sql_Driver_Fbsql::free" />
   <provides type="function" name="Solar_Sql_Driver_Fbsql::limit" />
   <provides type="class" name="Solar_Sql_Driver_Mssql" extends="Solar_Sql_Driver" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::connect" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::escape" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::exec" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::numRows" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::fetch" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::fetchNum" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::free" />
-  <provides type="function" name="Solar_Sql_Driver_Mssql::limit" />
+  <provides type="function" name="Solar_Sql_Driver_Mssql::buildSelect" />
   <provides type="class" name="Solar_Sql_Driver_Mysql" extends="Solar_Sql_Driver" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::connect" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::escape" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::exec" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::numRows" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::fetch" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::fetchNum" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::free" />
-  <provides type="function" name="Solar_Sql_Driver_Mysql::limit" />
+  <provides type="function" name="Solar_Sql_Driver_Mysql::buildSelect" />
   <provides type="class" name="Solar_Sql_Driver_Pgsql" extends="Solar_Sql_Driver" />
-  <provides type="function" name="Solar_Sql_Driver_Pgsql::connect" />
+  <provides type="function" name="Solar_Sql_Driver_Pgsql::dsn" />
+  <provides type="function" name="Solar_Sql_Driver_Pgsql::buildSelect" />
   <provides type="class" name="Solar_Sql_Driver_Sqlite" extends="Solar_Sql_Driver" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::connect" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::escape" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::exec" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::numRows" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::fetch" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::fetchNum" />
-  <provides type="function" name="Solar_Sql_Driver_Sqlite::limit" />
+  <provides type="function" name="Solar_Sql_Driver_Sqlite::buildSelect" />
   <provides type="class" name="Savant3" />
   <provides type="function" name="Savant3::apiVersion" />
   <provides type="function" name="Savant3::plugin" />
@@ -426,6 +510,12 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar::object" />
   <provides type="function" name="Solar::shared" />
   <filelist>
+   <file role="doc" baseinstalldir="/" name="docs/content_schema.graffle">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/content_schema.png">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/content_schema.xls">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -717,6 +807,42 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Cache/_Solar_Cache_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/Solar_Content.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/Solar_Content_Areas.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/Solar_Content_Nodes.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/Solar_Content_Tags.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Areas_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Areas_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Nodes_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Nodes_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Tags_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Content/_Solar_Content_Tags_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/Solar_Debug_Timer.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -733,6 +859,24 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Debug/_Solar_Debug_Var_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/Solar_Form.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/Solar_Form_Load_Table.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/Solar_Form_Load_Xml.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/_Solar_Form_Load_Table_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/_Solar_Form_Load_Xml_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form/_Solar_Form_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Locale/Solar_Locale.html">
@@ -777,6 +921,12 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/Solar_Sql_Result.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/Solar_Sql_Select.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/Solar_Sql_Table.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Driver_Fbsql_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -804,6 +954,12 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Entity_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -811,6 +967,12 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Result_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Select_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql/_Solar_Sql_Table_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Template/Savant3_Plugin_locale.html">
@@ -1101,6 +1263,21 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/HelloWorld/helpers/locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/bookmarks.txt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql.txt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_select.txt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_table.txt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/scripts/migrate_bookmarks.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/App.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1108,6 +1285,9 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Cache.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Error.php">
@@ -1125,9 +1305,6 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Sql.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Super.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
    <file role="php" baseinstalldir="/" name="Solar/Template.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1141,9 +1318,6 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/index.php">
@@ -1188,54 +1362,6 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/views/rss.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/index.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/controllers/edit.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/controllers/item.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/controllers/listAll.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/controllers/listOpen.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/helpers/prepend.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/helpers/locale/en_US.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/helpers/locale/fr_FR.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/auth.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/comments.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/edit.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/error.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/footer.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/header.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/item.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/App/Bugs/views/list.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
    <file role="php" baseinstalldir="/" name="Solar/Cache/File.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1245,13 +1371,7 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Cell/Bookmarks.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Bugs.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
    <file role="php" baseinstalldir="/" name="Solar/Cell/Comments.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Tags.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Cell/Bookmarks/Locale/en_US.php">
@@ -1260,25 +1380,28 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Cell/Bookmarks/Locale/fr_FR.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Bugs/Locale/en_US.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Bugs/Locale/fr_FR.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Comments/Rules.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
    <file role="php" baseinstalldir="/" name="Solar/Cell/Comments/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Comments/Locale/fr_FR.php">
+   <file role="php" baseinstalldir="/" name="Solar/Content/Areas.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Tags/Locale/en_US.php">
+   <file role="php" baseinstalldir="/" name="Solar/Content/Nodes.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Cell/Tags/Locale/fr_FR.php">
+   <file role="php" baseinstalldir="/" name="Solar/Content/Tags.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Areas/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Nodes/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Tags/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Debug/Timer.php">
@@ -1293,6 +1416,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Debug/Locale/fr_FR.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Form/Load/Table.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Form/Load/Xml.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1305,13 +1431,16 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Sql/Driver.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Sql/Entity.php">
-    <replace from="@package-version@" to="version" type="package-info"/>
-   </file>
    <file role="php" baseinstalldir="/" name="Solar/Sql/Reserved.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Sql/Result.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Select.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Table.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Sql/Driver/Fbsql.php">
@@ -1329,10 +1458,10 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Sql/Driver/Sqlite.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Sql/Driver/Locale/en_US.php">
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="php" baseinstalldir="/" name="Solar/Sql/Driver/Locale/fr_FR.php">
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Locale/fr_FR.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3.php">
@@ -1542,7 +1671,7 @@ Please visit http://solarphp.com/ for more information.
    <file role="test" baseinstalldir="/" name="tests/Locale/locale/it_IT.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/alpha_alphanumeric.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Valid/alpha_alnum.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="test" baseinstalldir="/" name="tests/Valid/blank_notBlank_nonZero.phpt">
@@ -1597,88 +1726,159 @@ Please visit http://solarphp.com/ for more information.
  </release>
  <changelog>
    <release>
-    <version>0.8.0</version>
-    <date>2005-09-24</date>
+    <version>0.9.0</version>
+    <date>2005-10-23</date>
     <license>LGPL</license>
     <state>devel</state>
     <notes>* WARNING: This is a public development release, and is not yet stable.
 
-* Translations: Jean-Eric Laurent has contributed fr_FR locale files for all existing classes.  Thanks, JEL!  :-)
+* REQUIREMENTS:  You need to be running PHP 5.1RC1 (exactly) for this release to work for you; this is because of the new PDO-based SQL classes.  RC3 **will not** work because they changed the constants; a followup release of Solar will address this.
 
-* Documentation: added HelloWorld app to the docs/ folder per note from James Kilbride
+* BACKWARDS COMPATIBILITY:  There are major BC breaks in this release, particularly in the Solar_Sql classes, along with those classes related to and depending upon Solar_Sql.
+
+* Removed classes:
+
+ * Solar_Sql_Entity: it has been refactored into Solar_Sql_Select, Solar_Sql_Table, and Solar_Form_Load_Table.
+ 
+ * Solar_Super: it pretty much did one thing, strip_tags() from GET vars.  With the new escaping in Savant3, it's not really needed any more.  Folded the default-value functionality into Solar.php as super().
+ 
+ * Solar_App_Bugs: these classes will reappear after I convert the app to the new Solar_Sql PDO-based system, and revamp the MVC structure of Solar_App.
+ 
+ * Solar_Cell_Bugs: probably will not reappear as a Cell because it isn't generic enough; instead, it will reappear as a model class within Solar_App_Bugs
+ 
+* Added classes:
+
+ * Solar_Sql_Select to build Select statements
+ 
+ * Solar_Sql_Table to act as a Table Data Gateway (auto-creates tables as well)
+ 
+ * Solar_Form_Load_Table to auto-create forms from Solar_Sql_Table schemas
 
 * Solar:
- 
- * The environment() setup now uses an improved routine to unset variables set from global sources when register_globals is on (per Stefan Esser and Richard Heyes)
- 
- * The environment() setup no longer unsets $_REQUEST (although you still shouldn't use it if you can reasonably avoid it).
 
-* Solar_Base:
+ * Fixed bug where environment() method was not static (thanks Adrian Gheorghe)
+
+* Solar_App_Bookmarks:
  
- * If a 'locale' config key is not set, auto-generate one based on the class name. For example, 'Solar_Example_Class' maps to 'Solar/Example/Class/Locale/'.
+ * Updated to use new Solar_Cell_Bookmarks
+ 
+ * You will need to migrate your old bookmarks to the new table, see migrate/0.8.0-0.9.0/convert_bookmarks.php
+ 
+ * You will need to change your QuickMark link to the new one (the &quot;title&quot; variable is now called &quot;subj&quot;)
+ 
+ * Added some view candy, e.g. the tag list shows the number of times the tag appears
+ 
+ * Added localization for the &quot;order by&quot; links
+ 
+* Solar_Base:
+
+ * Added errorException() method to convert exceptions to Solar_Error objects
+ 
+ * Now loads the locale file at __construct() time instead of on first call to locale()
+
+* Solar_Cell_Bookmarks:
+ 
+ * MAJOR BC BREAK, many method names have changes
+ 
+ * Now based on new Solar_Content model
  
 * Solar_Form:
- 
- * Made addValidate() and addFilter() public.
- 
- * In validate(), the 'validate' key is forced to an array; this allows you to use just the Solar_Valid method name, and the default VALID_* message will be used as the feedback text.
- 
- * The populate() method is now free of the eval() calls copied from HTML_QuickForm; we now recursively populate the $submitted property with the _populate() method.
- 
- * The values() method is now free of the eval() calls copied from HTML_QuickForm; we now recursively build the returned values using the _values() method.
- 
- * In the addValidate() method, the $message parameter is now optional; if not present, the method uses the generic VALID_* locale string for the validation.
 
-* Solar_Form_Load_Xml:
+ * Added orderElements() method to set elements into arbitrary order
  
- * Applied patch from Matther Weier O'Phinney to add XML format doc comments inline; also fixes a bug where $this was addressed instead of $filter.
+ * Changed all 'validate' keys to 'valid' in all Form classes for consistency with locale and table classes
 
+* Solar_Filter:
+
+ * Removed deprecated alphanumeric() method; use identical alnum() instead
+ 
 * Solar_Sql:
- 
- * WARNING: This may be the last release of Solar with the current RDBMS API abstraction; a future release should incorporate PDO as the underlying abstraction layer.
- 
- * The quote() method now recursively quotes all values in arrays.
- 
- * Added a new select() method in anticipation of Solar_Sql_Select class.
 
-* Solar_Sql_Driver_*:
+ * MAJOR BC BREAK: The SQL classes are now based on PDO, and there are major shifts in how the the SQL class works.
  
- * Added new select() and limitSelect() methods in anticipation of new Solar_Sql_Select class. The new limitSelect() method will provide much better offset emulation in, e.g., MS-SQL.
+ * Changed default driver class to Sqlite
+ 
+ * Changed default host to 127.0.0.1 (PDO doesn't like 'localhost')
+ 
+ * Changed exec() to query() to be more in line with PDO API
+
+ * added select() return type 'pdo' to return the PDOStatement object
+ 
+ * changed select() return type 'result' to return a Solar_Sql_Result object
+ 
+ * changed default select() return type to assign to $config['PDOStatement'] instead of $config['result']
+ 
+ * Added quoteInto() and quoteMulti() methods
+ 
+ * update() and delete() now take arrays as WHERE clauses, and pass through quoteMulti() automatically
+ 
+ * quote() now allows you to specify a separator string for quoted arrays converted to strings
+
+* Solar_Sql_Driver:
+ 
+ * Complete BC break
+ 
+ * Converted to PDO usage
+ 
+ * Transaction support, but autocommit by default
+ 
+ * select-statement creation now adds tabs and newlines in column list (vice a literal \n\t)
+ 
+ * select-statement creation now separates FROM list by comma only (no tabs or newlines)
+ 
+ * fixed bug in select-statement creation JOIN implode() (wrong params)
+ 
+ * added transaction support methods begin(), commit(), and rollback()
+
+* Solar_Sql_Driver_Mysql:
+
+ * Now uses InnoDB tables now (vice MyISAM) to support transactions.  You'll need MySQL 4.0 or higher for this.
 
 * Solar_Sql_Driver_Mssql:
+ 
+ * buildSelect() now uses smarter (but untested) LIMIT offset emulation, also takes DISTINCT into account
+ 
+* Solar_Sql_Select:
 
- * Fixed bug in createSequence() method where $start was in single-quotes (changed
- to double-quotes to interpolate the variable properly)
+ * now maps columns to from/join names for deconfliction later
+ 
+ * from() and join() now allow you specify which columns to select
+ 
+ * from() and join() now allow the option to specify a table object (instead of a table name)
+ 
+ * fetch() automatically deconflicts columns between tables/joins when they were added via from()/join()
+ 
+ * updated countPages() method to take new deconfliction into account
 
-* Solar_Sql_Locale:
+* Solar_Sql_Result:
  
- * Added new OP_CREATE, LABEL_OP, and VALID_WORD translation keys
+ * complete BC break
  
- * Swapped VALID_BLANK and VALID_NOTBLANK translation strings (they were backwards)
+ * converted to new PDO usage
  
+ * auto-maps deconflicted colnames to arrays:  looks at colnames for __ and converts to arrays on fetch()
+
+* Solar_Sql_Table:
+
+ * automatically adds 'id' column, index, and sequence
+ 
+ * automatically adds 'created' column and index
+ 
+ * automatically adds 'updated' column and index
+ 
+ * insert() automatically sets 'created' and 'updated' timestamps
+ 
+ * update() automatically sets 'updated' timestamp
+
 * Solar_Valid:
  
- * Added ipv4() method to validate IPv4 addresses; also added test file.
+ * Removed deprecated alphanumeric(); use identical alnum() instead
  
- * Added locale() method to validate locale code formats; also added test file.
+ * Added mimeType() method for MIME types
  
- * Added word() method to validate against word characters (regex &quot;\w&quot; type); also added test file.
+ * Added sepWords() method for spearated word strings
  
- * The nonZero() method now honors the $blank parameter.
-
-* Solar_Template:
-
- * Updated to use most-recent releases of Savant3 (beta 2) and Savant3_Plugin_Form (devel 0.2.1)
- 
- * Updated all Solar/App/*/views/* to use the new Savant3 code
- 
-* Solar_User_Auth:
-
- * Moved driver instantiation to start() instead of __construct(); this should allow custom drivers better integration into the start() process (e.g., single sign-on systems and HTTP-based auth).  This eliminates the __construct() method as well.
-
-* Solar_User_Role_Sql:
- 
- * Fixed double-concat bug when generating the WHERE clause
+ * Improved uri() method
     </notes>
    </release>
  </changelog>

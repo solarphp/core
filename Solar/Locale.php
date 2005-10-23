@@ -208,6 +208,25 @@ class Solar_Locale extends Solar_Base {
 	
 	/**
 	* 
+	* Checks to see if strings have been loaded for a given class.
+	* 
+	* @access public
+	* 
+	* @param string $class The class for the translation key, e.g.
+	* 'Solar_Cell_Talk'.
+	* 
+	* @return bool True if strings are loaded, false if not.
+	* 
+	*/
+
+	public function loaded($class)
+	{
+		return array_key_exists($class, $this->string);
+	}
+	
+	
+	/**
+	* 
 	* Returns the locale string for a class and key.
 	* 
 	* @access public

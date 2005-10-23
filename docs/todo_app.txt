@@ -1,0 +1,77 @@
+A new Solar_App setup?
+
+Solar/
+	App/
+		Bugs.php								## master App class
+		Bugs/
+			controllers/						## controllers for the app
+				prepend.php
+				append.php
+				edit.ctrl.php
+				item.ctrl.php
+				list.ctrl.php
+			models/								## model classes
+				bugs.model.php
+				bugs/							## support files for each model (generally locale)
+					locale/
+						en_US.php
+			views/								## view templates
+				edit.view.php
+				item.view.php
+				list.view.php
+				plugins/						## template plugins
+					Savant3_Plugin_Example.php
+			locale/								## locale viles
+				en_US.php
+			lib/								## miscellaneous non-MVC additional library files
+			pub/								## public files such as images, stylesheets, etc.
+				
+
+Don't use "helpers/" as that has a special meaning in other implementations (equivalent is Savant plugins)
+
+How to have config keys?  Want to avoid long name like "Solar_App_Bugs_Model_Bugs".
+
+Instead, do this:
+
+	$config['Solar_App_Bugs']['models']['bugs'] = array(...);
+
+And then we can do this in Solar_App (usage is "$model = $this->model('name');" ...
+
+	public function model($name, $config = null)
+	{
+		if (! class_exists($name)) {
+			include_once $this->dir['models'] . $name . 'model.php';
+		}
+		
+		// merge configs for the model
+		if (! empty($this->config['models'][$name])) {
+			$config = array_merge(
+				(array) $config,
+				(array) $this->config['models'][$name]
+			);
+		}
+		
+		// inject a locale config
+		if (empty($config['locale'])) {
+			$config['locale'] = $this->dir['models'] . "$name/locale/';
+		}
+		
+		// instantiate and return
+		$obj = new $name($config);
+		return $obj;
+	}
+
+... but then we need to add a "*.model.php" check in Solar_Base so that it doesn't try to load [bugs] group.
+
+Need to add forward() and redirect() methods?
+
+How to handle auto-prepend and auto-append?
+
+Do we need a new view/plugin system?
+
+"Layouts" in addition to "views"?
+
+Should views include the header/footer, or should the controller call the header/footer separately?
+
+
+

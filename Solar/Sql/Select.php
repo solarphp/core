@@ -20,6 +20,11 @@
 
 
 /**
+* Needed for instanceof comparisons.
+*/
+Solar::loadClass('Solar_Sql_Table');
+
+/**
 * 
 * Class for SQL select generation and results.
 * 
@@ -879,15 +884,26 @@ class Solar_Sql_Select extends Solar_Base {
 			foreach ($cols as $col) {
 				// is the column aliased?
 				$pos = stripos($col, ' AS ');
+				$star = strpos($col, '*');
 				if ($pos || $pre == '') {
 					// use the column as aliased
 					$this->parts['cols'][] = $col;
 				} elseif ($count == 1) {
-					// only one table with columns: minimal deconfliction
-					$this->parts['cols'][] = "{$pre}.$col AS $col";
+					// only one table with columns: minimal deconfliction.
+					// need to see if the column is a star.
+					if ($star !== false) {
+						$this->parts['cols'][] = "{$pre}.$col";
+					} else {
+						$this->parts['cols'][] = "{$pre}.$col AS $col";
+					}
 				} else {
-					// more than one table: full deconfliction
-					$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
+					// more than one table: full deconfliction, except for
+					// starred ones.
+					if ($star !== false) {
+						$this->parts['cols'][] = "{$pre}.$col";
+					} else {
+						$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
+					}
 				}
 			}
 		}

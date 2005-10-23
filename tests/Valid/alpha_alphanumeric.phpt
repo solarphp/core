@@ -1,5 +1,5 @@
 --TEST--
-valid: alpha() and alphanumeric()
+valid: alpha() and alnum()
 --FILE---
 <?php
 require_once '../setup.php';
@@ -25,11 +25,11 @@ foreach ($test as $value) {
 	Solar::dump($result);
 }
 
-echo "\nAlphanumeric:\n";
+echo "\nAlnum:\n";
 
 foreach ($test as $value) {
 	Solar::dump($value);
-	$result = Solar_Valid::alphanumeric($value);
+	$result = Solar_Valid::alnum($value);
 	Solar::dump($result);
 }	
 ?>
@@ -50,7 +50,7 @@ bool(false)
 string(20) "non:alpha-numberic's"
 bool(false)
 
-Alphanumeric:
+Alnum:
 int(0)
 bool(true)
 string(1) "0"

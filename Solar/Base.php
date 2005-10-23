@@ -84,14 +84,9 @@ abstract class Solar_Base {
 		
 		// Load the locale strings.  Solar_Locale is a special case,
 		// as it gets started up with Solar, and extends Solar_Base,
-		// which leads to all sorts of weird problems.
-		if ($class != 'Solar_Locale' &&
-			! empty($this->config['locale'])) {
-			// load the locale strings for this class
-			Solar::shared('locale')->load(
-				$class,
-				$this->config['locale']
-			);
+		// which leads to all sorts of weird recursion problems.
+		if ($class != 'Solar_Locale') {
+			$this->locale('');
 		}
 	}
 	
@@ -268,22 +263,35 @@ abstract class Solar_Base {
 	
 	public function locale($key, $num = 1)
 	{
+		// the shared Solar_Locale object
+		$locale = Solar::shared('locale');
+		
 		// is a locale directory specified?
 		if (empty($this->config['locale'])) {
 			// use the generic Solar locale strings
-			return Solar::locale('Solar', $key, $num);
+			return $locale->string('Solar', $key, $num);
+		}
+		
+		// the name of this class
+		$class = get_class($this);
+		
+		// do we need to load locale strings? we check for loading here
+		// because the locale may have changed during runtime.
+		if (! $locale->loaded($class)) {
+			$locale->load($class, $this->config['locale']);
 		}
 		
 		// get a translation for the current class
-		$class = get_class($this);
-		$string = Solar::locale($class, $key, $num);
+		$string = $locale->string($class, $key, $num);
 		
-		// is the translation same as the key?  if not, we're done.
+		// is the translation the same as the key?
 		if ($string != $key) {
+			// found a translation (i.e., different from the key)
 			return $string;
 		} else {
-			// fall back to the global Solar locale strings.
-			return Solar::locale('Solar', $key, $num);
+			// no translation found.
+			// fall back to the generic Solar locale strings.
+			return $locale->string('Solar', $key, $num);
 		}
 	}
 }

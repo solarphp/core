@@ -20,6 +20,11 @@
 
 
 /**
+* Needed for instanceof comparisons.
+*/
+Solar::loadClass('Solar_Sql_Table');
+
+/**
 * 
 * Class for SQL select generation and results.
 * 
@@ -410,7 +415,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['where']) {
@@ -446,7 +452,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['where']) {
@@ -569,7 +576,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['having']) {
@@ -605,7 +613,8 @@ class Solar_Sql_Select extends Solar_Base {
 		}
 		
 		if (func_num_args() > 1) {
-			$cond = $this->quoteInto($cond, func_get_arg(1));
+			$val = func_get_arg(1);
+			$cond = $this->sql->quoteInto($cond, $val);
 		}
 		
 		if ($this->parts['having']) {
@@ -875,15 +884,26 @@ class Solar_Sql_Select extends Solar_Base {
 			foreach ($cols as $col) {
 				// is the column aliased?
 				$pos = stripos($col, ' AS ');
+				$star = strpos($col, '*');
 				if ($pos || $pre == '') {
 					// use the column as aliased
 					$this->parts['cols'][] = $col;
 				} elseif ($count == 1) {
-					// only one table with columns: minimal deconfliction
-					$this->parts['cols'][] = "{$pre}.$col AS $col";
+					// only one table with columns: minimal deconfliction.
+					// need to see if the column is a star.
+					if ($star !== false) {
+						$this->parts['cols'][] = "{$pre}.$col";
+					} else {
+						$this->parts['cols'][] = "{$pre}.$col AS $col";
+					}
 				} else {
-					// more than one table: full deconfliction
-					$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
+					// more than one table: full deconfliction, except for
+					// starred ones.
+					if ($star !== false) {
+						$this->parts['cols'][] = "{$pre}.$col";
+					} else {
+						$this->parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
+					}
 				}
 			}
 		}
@@ -919,6 +939,9 @@ class Solar_Sql_Select extends Solar_Base {
 		// ... then add a single COUNT column (no need for a table name
 		// in this case)
 		$select->cols("COUNT($col)");
+		
+		// clear any order (for Postgres, noted by 4bgjnsn)
+		$select->clear('order');
 		
 		// clear any limits
 		$select->clear('limit');

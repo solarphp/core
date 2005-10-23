@@ -40,8 +40,8 @@ require_once 'Solar/Sql/Driver.php';
 * $sql = Solar::object('Solar_Sql', $opts);
 * </code>
 * 
-* You should consider using Solar_Sql_Table for handling
-* insert/update/delete, as well as single-table selects.
+* You should consider using Solar_Sql_Table for handling insert, update,
+* and delete operations on single tables.
 * 
 * You should consider using Solar_Sql_Select for multi-table and joined
 * selects.
@@ -270,8 +270,8 @@ class Solar_Sql extends Solar_Base {
 	* @param array $data An associative array where the key is the column
 	* name and the value is the value to use for that column.
 	* 
-	* @param string $where The SQL WHERE clause to limit which rows are
-	* updated.
+	* @param string|array $where The SQL WHERE clause to limit which
+	* rows are updated.
 	* 
 	* @return mixed A Solar_Error on error.
 	* 
@@ -308,12 +308,10 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @param string $table The table to delete from.
 	* 
-	* @param string $where The SQL WHERE clause to limit which rows are
-	* deleted.
+	* @param string|array $where The SQL WHERE clause to limit which
+	* rows are deleted.
 	* 
 	* @return mixed A Solar_Error on error.
-	* 
-	* @todo Make it possible to pass $where as an array of conditions.
 	* 
 	*/
 	
@@ -872,7 +870,7 @@ class Solar_Sql extends Solar_Base {
 			} else {
 				// string $key means a phrase with a placeholder, and
 				// $val should be bound into it.
-				$text[] = $this->bind($key, $val); 
+				$text[] = $this->quoteInto($key, $val); 
 			}
 		}
 		

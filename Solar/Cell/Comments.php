@@ -16,7 +16,7 @@
 * 
 * @license LGPL
 * 
-* @version $Id: Bookmarks.php 567 2005-10-09 19:00:54Z pmjones $
+* @version $Id$
 * 
 */
 

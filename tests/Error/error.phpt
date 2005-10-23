@@ -35,7 +35,7 @@ Solar::dump($err);
 Solar::stop();
 ?>
 --EXPECT--
-object(Solar_Error)#9 (2) {
+object(Solar_Error)#8 (2) {
   ["config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
@@ -56,7 +56,7 @@ object(Solar_Error)#9 (2) {
     }
   }
 }
-object(Solar_Error)#10 (2) {
+object(Solar_Error)#9 (2) {
   ["config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL

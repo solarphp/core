@@ -208,7 +208,7 @@ class Solar_Sql_Table extends Solar_Base {
 
 	public function __get($key = null)
 	{
-		$prop = array('col', 'idx', 'name');
+		$prop = array('col', 'idx', 'name', 'paging');
 		if (in_array($key, $prop)) {
 			return $this->$key;
 		} else {
@@ -231,6 +231,7 @@ class Solar_Sql_Table extends Solar_Base {
 	{
 		$this->paging = (int) $val;
 	}
+	
 	
 	/**
 	* 

@@ -279,11 +279,6 @@ class Solar {
 	* 
 	* @todo Add localization for errors
 	* 
-	* @todo Replace this with global __autoload() function?  Would mean
-	* dropping the 'registry' capability, but I don't think that's a 
-	* big deal.  Might get in the way of other systems using __autoload()
-	* though, when Solar is combined with other systems.
-	* 
 	*/
 	
 	public static function loadClass($class)

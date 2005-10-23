@@ -270,8 +270,8 @@ class Solar_Sql extends Solar_Base {
 	* @param array $data An associative array where the key is the column
 	* name and the value is the value to use for that column.
 	* 
-	* @param string $where The SQL WHERE clause to limit which rows are
-	* updated.
+	* @param string|array $where The SQL WHERE clause to limit which
+	* rows are updated.
 	* 
 	* @return mixed A Solar_Error on error.
 	* 
@@ -308,12 +308,10 @@ class Solar_Sql extends Solar_Base {
 	* 
 	* @param string $table The table to delete from.
 	* 
-	* @param string $where The SQL WHERE clause to limit which rows are
-	* deleted.
+	* @param string|array $where The SQL WHERE clause to limit which
+	* rows are deleted.
 	* 
 	* @return mixed A Solar_Error on error.
-	* 
-	* @todo Make it possible to pass $where as an array of conditions.
 	* 
 	*/
 	

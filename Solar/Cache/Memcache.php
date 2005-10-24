@@ -53,8 +53,8 @@ class Solar_Cache_Memcache extends Solar_Base {
 	
 	protected $config = array(
 		'host' => 'localhost',
-		'port' => '11211'
-		'life' => 60
+		'port' => '11211',
+		'life' => 60,
 	);
 	
 	

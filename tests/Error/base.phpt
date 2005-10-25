@@ -43,6 +43,11 @@ Solar::dump($err);
 $err = $example->another();
 Solar::dump($err);
 
+// switch languages
+Solar::shared('locale')->setCode('fr_FR');
+$err = $example->another();
+Solar::dump($err);
+
 Solar::stop();
 ?>
 --EXPECT--
@@ -80,6 +85,28 @@ object(Solar_Error)#10 (2) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"
       ["text"] => string(25) "This is an example error."
+      ["info"] => array(1) {
+        ["baz"] => string(3) "dib"
+      }
+      ["level"] => int(256)
+      ["class::code"] => string(20) "Example::ERR_EXAMPLE"
+      ["trace"] => NULL
+    }
+  }
+}
+object(Solar_Error)#9 (2) {
+  ["config:protected"] => array(5) {
+    ["push_callback"] => NULL
+    ["pop_callback"] => NULL
+    ["trace"] => bool(false)
+    ["level"] => int(1024)
+    ["locale"] => string(19) "Solar/Error/Locale/"
+  }
+  ["stack:protected"] => array(1) {
+    [0] => array(7) {
+      ["class"] => string(7) "Example"
+      ["code"] => string(11) "ERR_EXAMPLE"
+      ["text"] => string(29) "Ceci est un exemple d'erreur."
       ["info"] => array(1) {
         ["baz"] => string(3) "dib"
       }

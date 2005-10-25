@@ -12,8 +12,8 @@ Solar::$config['Solar_Error']['trace']         = false;
 
 // Solar::error basics
 $err = Solar::error(
-	'Example',        // class
-	'ERR_EXAMPLE'    // code
+	'Example',         // class
+	'ERR_EXAMPLE'      // code
 );
 
 Solar::dump($err);

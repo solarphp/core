@@ -410,7 +410,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function set($key, $val)
+    protected function _set($key, $val)
     {
         if (substr($key, 0, 1) != '_' && isset($this->$key)) {
             $this->$key = $val;
@@ -434,7 +434,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function begin($attribs = null)
+    protected function _begin($attribs = null)
     {
         settype($attribs, 'array');
         
@@ -470,7 +470,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function end()
+    protected function _end()
     {
         $xhtml = '';
         $xhtml .= $this->group('end');
@@ -494,7 +494,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function element($info, $arrayName = null)
+    protected function _element($info, $arrayName = null)
     {
         // merge in with base element info
         $info = array_merge($this->_base, $info);
@@ -563,7 +563,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function auto($list, $arrayName = null)
+    protected function _auto($list, $arrayName = null)
     {
         $xhtml = '';
         foreach ($list as $info) {
@@ -603,7 +603,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function block($action = 'begin', $label = null, $type = 'col', 
+    protected function _block($action = 'begin', $label = null, $type = 'col', 
         $float = null, $clear = null)
     {
         if (is_null($float)) {
@@ -647,7 +647,7 @@ class Savant3_Plugin_form extends Savant3_Plugin {
      * 
      */
     
-    protected function group($type, $label = null, $require = false)
+    protected function _group($type, $label = null, $require = false)
     {
         // the XHTML to return
         $xhtml = '';

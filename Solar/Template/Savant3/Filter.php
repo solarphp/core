@@ -40,7 +40,7 @@ abstract class Savant3_Filter {
      * 
      */
     
-    protected $Savant = null;
+    protected $_Savant = null;
     
     
     /**

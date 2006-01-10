@@ -40,7 +40,7 @@ abstract class Savant3_Plugin {
      * 
      */
     
-    protected $Savant = null;
+    protected $_Savant = null;
     
     
     /**

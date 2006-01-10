@@ -49,7 +49,7 @@ class Savant3_Plugin_form_element extends Savant3_Plugin {
      * 
      */
     
-    protected function getInfo($name, $value = null, $attribs = null, 
+    protected function _getInfo($name, $value = null, $attribs = null, 
         $options = null, $listsep = null)
     {
         // the baseline info.  note that $name serves a dual purpose;

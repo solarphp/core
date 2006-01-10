@@ -40,7 +40,7 @@ class Savant3_Plugin_image extends Savant3_Plugin {
      * 
      */
     
-    protected $documentRoot = null;
+    protected $_documentRoot = null;
     
     
     /**
@@ -53,7 +53,7 @@ class Savant3_Plugin_image extends Savant3_Plugin {
      * 
      */
     
-    protected $imageDir = null;
+    protected $_imageDir = null;
     
     
     /**

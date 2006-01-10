@@ -126,7 +126,7 @@ class Savant3_Filter_trimwhitespace extends Savant3_Filter {
      * 
      */
     
-    static protected function replace($search, $replace, &$buffer)
+    static protected function _replace($search, $replace, &$buffer)
     {
         $len = strlen($search);
         $pos = 0;

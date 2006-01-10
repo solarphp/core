@@ -36,7 +36,7 @@ $this->rss = array(
 unset($link);
 
 // get standalone objects
-$bookmarks = Solar::object('Solar_Cell_Bookmarks');
+$bookmarks = Solar::object('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));

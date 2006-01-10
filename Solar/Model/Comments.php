@@ -8,9 +8,9 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Comments
+ * @subpackage Solar_Model_Comments
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -26,13 +26,13 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Comments
+ * @subpackage Solar_Model_Comments
  * 
  */
 
-class Solar_Cell_Comments extends Solar_Base {
+class Solar_Model_Comments extends Solar_Base {
     
     
     /**

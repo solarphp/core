@@ -5,9 +5,9 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  * @author Jean-Eric Laurent <jel@jelaurent.com>
  * 

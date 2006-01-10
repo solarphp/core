@@ -123,7 +123,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param string $key The translation key, e.g. 'LABEL_EMAIL'.
      * 
@@ -147,7 +147,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param array $list An associative array of keys and translation values.
      * 
@@ -170,7 +170,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param string $dir The directory where the translation PHP array files
      * are located.  Will search this directory for a file named after the
@@ -213,7 +213,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @return bool True if strings are loaded, false if not.
      * 
@@ -232,7 +232,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Comments'.
+     * 'Solar_Model_Comments'.
      * 
      * @param string $key The translation key to find.
      * 

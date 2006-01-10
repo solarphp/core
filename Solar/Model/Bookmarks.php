@@ -4,14 +4,14 @@
  * 
  * Bookmarks management class.
  * 
- * All bookmarks go in a single area (Solar_Cell_Bookmarks by default).
+ * All bookmarks go in a single area (Solar_Model_Bookmarks by default).
  * Each node is one bookmark for one owner.
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -27,13 +27,13 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  */
 
-class Solar_Cell_Bookmarks extends Solar_Base {
+class Solar_Model_Bookmarks extends Solar_Base {
     
     
     /**
@@ -47,7 +47,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      */
     
     protected $_config = array(
-        'area_name'    => 'Solar_Cell_Bookmarks',
+        'area_name'    => 'Solar_Model_Bookmarks',
         'default_tags' => 'inbox',
         'paging'       => 10,
     );

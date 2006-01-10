@@ -1,26 +1,26 @@
 <?php
 
 /**
-* 
-* Default controller; for viewing bookmarks by tag intersection.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
-* @author Paul M. Jones <pmjones@solarphp.com>
-* 
-* @license LGPL
-* 
-* @version $Id$
-* 
-*/
+ * 
+ * Default controller; for viewing bookmarks by tag intersection.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_Bookmarks
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 
 /**
-* Prepend for all controllers.
-*/
+ * Prepend for all controllers.
+ */
 include $this->helper('prepend');
 
 // the requested owner_handle (none)
@@ -56,9 +56,9 @@ $this->view->tags_in_use  = $bookmarks->fetchTagList($owner_handle); // all tags
 $rss = Solar::get('rss', false);
 
 if ($rss) {
-	return $this->view('rss');
+    return $this->view('rss');
 } else {
-	return $this->view('list');
+    return $this->view('list');
 }
 
 ?>

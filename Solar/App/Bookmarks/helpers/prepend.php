@@ -1,22 +1,22 @@
 <?php
 
 /**
-* 
-* Sets up the environment for all controller action scripts.
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
-* @author Paul M. Jones <pmjones@solarphp.com>
-* 
-* @license LGPL
-* 
-* @version $Id$
-* 
-*/
+ * 
+ * Sets up the environment for all controller action scripts.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_Bookmarks
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 
 // get the shared user object
 $user = Solar::shared('user');
@@ -26,11 +26,11 @@ $link = Solar::object('Solar_Uri');
 $link->setQuery('rss', '1');
 
 $this->view->rss = array(
-	'avail' => false,
-	'title' => Solar::server('PATH_INFO'),
-	'descr' => 'Solar_App_Bookmarks',
-	'date'  => date('c'), // should be latest mod date in the $this->view->list
-	'link'  => $link->export(),
+    'avail' => false,
+    'title' => Solar::server('PATH_INFO'),
+    'descr' => 'Solar_App_Bookmarks',
+    'date'  => date('c'), // should be latest mod date in the $this->view->list
+    'link'  => $link->export(),
 );
 
 unset($link);

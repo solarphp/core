@@ -1,26 +1,26 @@
 <?php
 
 /**
-* 
-* Controller for viewing bookmarks by user (and optionally by tag).
-* 
-* @category Solar
-* 
-* @package Solar_App
-* 
-* @subpackage Solar_App_Bookmarks
-* 
-* @author Paul M. Jones <pmjones@solarphp.com>
-* 
-* @license LGPL
-* 
-* @version $Id$
-* 
-*/
+ * 
+ * Controller for viewing bookmarks by user (and optionally by tag).
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_Bookmarks
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 
 /**
-* Prepend for all controllers.
-*/
+ * Prepend for all controllers.
+ */
 include $this->helper('prepend');
 
 // the requested owner_handle
@@ -37,36 +37,36 @@ $order = $this->getOrder();
 $rss = Solar::get('rss', false);
 
 if ($rss) {
-	
-	// looking at the RSS view.
-	$viewname = 'rss';
-	if ($tags) {
-		// if tags are requested, get all pages by default.
-		$page = Solar::get('page', 0);
-	} else {
-		// otherwise it's all bookmarks for the user, get only page 1 by default.
-		$page = Solar::get('page', 1);
-	}
-	
+    
+    // looking at the RSS view.
+    $viewname = 'rss';
+    if ($tags) {
+        // if tags are requested, get all pages by default.
+        $page = Solar::get('page', 0);
+    } else {
+        // otherwise it's all bookmarks for the user, get only page 1 by default.
+        $page = Solar::get('page', 1);
+    }
+    
 } else {
 
-	$viewname = 'list';
-	$page = Solar::get('page', 1);
-	
-	// make sure the RSS link is available in the template
-	$this->view->rss['avail'] = true;
-	
-	if ($tags) {
-		// there are tags requested, so the RSS should show all pages
-		// and ignore the rows-per-page settings.  build a custom
-		// RSS link for this.
-		$link = Solar::object('Solar_Uri');
-		$link->setQuery('rss', '1');
-		$link->clearQuery('page');
-		$link->clearQuery('rows_per_page');
-		$this->view->rss['link'] = $link->export();
-		unset($link);
-	}
+    $viewname = 'list';
+    $page = Solar::get('page', 1);
+    
+    // make sure the RSS link is available in the template
+    $this->view->rss['avail'] = true;
+    
+    if ($tags) {
+        // there are tags requested, so the RSS should show all pages
+        // and ignore the rows-per-page settings.  build a custom
+        // RSS link for this.
+        $link = Solar::object('Solar_Uri');
+        $link->setQuery('rss', '1');
+        $link->clearQuery('page');
+        $link->clearQuery('rows_per_page');
+        $this->view->rss['link'] = $link->export();
+        unset($link);
+    }
 }
 
 // get the list of results

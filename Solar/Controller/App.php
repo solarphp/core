@@ -60,19 +60,6 @@ abstract class Solar_Controller_App extends Solar_Base {
     
     /**
      * 
-     * User-defined configuration array.
-     * 
-     * @access protected
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'locale'       => null, // the app-wide locale strings
-    );
-    
-    /**
-     * 
      * Base directory under which actions, views, etc. are located.
      * 
      * @access protected
@@ -209,16 +196,31 @@ abstract class Solar_Controller_App extends Solar_Base {
      * 
      * Try to force users to define what their view variables are. :-(
      * 
+     * @access public
+     * 
+     * @param string $key The property name.
+     * 
+     * @param mixed $val The property value.
+     * 
+     * @return void
+     * 
      */
     public function __set($key, $val)
     {
         throw new Exception("property '$key' not defined");
     }
     
-    
     /**
      * 
      * Try to force users to define what their view variables are. :-(
+     * 
+     * @access public
+     * 
+     * @param string $key The property name.
+     * 
+     * @param mixed $val The property value.
+     * 
+     * @return void
      * 
      */
     public function __get($key)
@@ -287,28 +289,6 @@ abstract class Solar_Controller_App extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
-    }
-    
-    /**
-     * 
-     * Retrieve data for the layout.
-     * 
-     * @access protected
-     * 
-     * @param string The file to include.
-     * 
-     * @return mixed The return from the included file.
-     * 
-     */
-    public function layout($key = null, $val = null)
-    {
-       if (is_null($key)) {
-           return $this->_layout;
-       } elseif (array_key_exists($key, $this->_layout)) {
-           return $this->_layout[$key];
-       } else {
-           return $val;
-       }
     }
     
     /**

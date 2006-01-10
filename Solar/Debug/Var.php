@@ -49,7 +49,7 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'output' => 'html',
     );
     
@@ -86,7 +86,7 @@ class Solar_Debug_Var extends Solar_Base {
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         
         // was this for HTML?
-        if ($this->config['output'] == 'html') {
+        if ($this->_config['output'] == 'html') {
             $output = '<pre>' . htmlspecialchars($output) . '</pre>';
         }
         

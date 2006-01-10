@@ -58,7 +58,7 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'url' => null,
         'basedn' => null,
         'filter' => null,
@@ -78,7 +78,7 @@ class Solar_User_Role_Ldap extends Solar_Base {
     {
         // make sure we have LDAP available
         if (! extension_loaded('ldap')) {
-            return $this->error(
+            return $this->_error(
                 'ERR_EXTENSION',
                 array('extension' => 'ldap'),
                 E_USER_ERROR
@@ -105,13 +105,13 @@ class Solar_User_Role_Ldap extends Solar_Base {
     public function fetch($user)
     {
         // connect
-        $conn = @ldap_connect($this->config['url']);
+        $conn = @ldap_connect($this->_config['url']);
         
         // did the connection work?
         if (! $conn) {
-            return $this->error(
+            return $this->_error(
                 'ERR_CONNECT',
-                array('url' => $this->config['url']),
+                array('url' => $this->_config['url']),
                 E_USER_ERROR
             );
         }
@@ -120,9 +120,9 @@ class Solar_User_Role_Ldap extends Solar_Base {
         @ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         
         // bind to the server
-        if ($this->config['binddn']) {
+        if ($this->_config['binddn']) {
             // authenticated bind
-            $bind = @ldap_bind($conn, $this->config['binddn'], $this->config['bindpw']);
+            $bind = @ldap_bind($conn, $this->_config['binddn'], $this->_config['bindpw']);
         } else {
             // anonumous bind
             $bind = @ldap_bind($conn);
@@ -130,21 +130,21 @@ class Solar_User_Role_Ldap extends Solar_Base {
         
         // did we bind to the server?
         if (! $bind) {
-            // not using $this->error() because we need fine control
+            // not using $this->_error() because we need fine control
             // over the error text.
             return Solar::error(
                 get_class($this), // class name
                 @ldap_errno($conn), // error number
                 @ldap_error($conn), // error text
-                array($this->config), // other info
+                array($this->_config), // other info
                 E_USER_NOTICE // error level
             );
         }
         
         // search for the groups
-        $filter = sprintf($this->config['filter'], $user);
-        $attrib = (array) $this->config['attrib'];
-        $result = ldap_search($conn, $this->config['basedn'], $filter, $attrib);
+        $filter = sprintf($this->_config['filter'], $user);
+        $attrib = (array) $this->_config['attrib'];
+        $result = ldap_search($conn, $this->_config['basedn'], $filter, $attrib);
         
         // get the first entry from the search result and free the result.
         $entry = ldap_first_entry($conn, $result);

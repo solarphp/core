@@ -214,7 +214,7 @@ class Solar_Uri extends Solar_Base {
             'path'     => null,
             'info'     => array(),
             'query'    => array(),
-            'fragment' => null // bug in php 5.0.3 does not find fragments!
+            'fragment' => null,
         );
         
         // parse the uri and merge with the defaults
@@ -294,8 +294,8 @@ class Solar_Uri extends Solar_Base {
         $uri .= (empty($this->host)     ? '' : $this->host)
               . (empty($this->port)     ? '' : ':' . $this->port)
               . (empty($this->path)     ? '' : $this->path)
-              . (empty($this->info)     ? '' : '/' . $this->info2str($this->info))
-              . (empty($this->query)    ? '' : '?' . $this->query2str($this->query))
+              . (empty($this->info)     ? '' : '/' . $this->_info2str($this->info))
+              . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
               . (empty($this->fragment) ? '' : '#' . $this->fragment);
         
         // done!
@@ -315,8 +315,8 @@ class Solar_Uri extends Solar_Base {
     
     public function exportAction()
     {
-        return (empty($this->info)     ? '' : $this->info2str($this->info))
-             . (empty($this->query)    ? '' : '?' . $this->query2str($this->query))
+        return (empty($this->info)     ? '' : $this->_info2str($this->info))
+             . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
              . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
     
@@ -493,7 +493,7 @@ class Solar_Uri extends Solar_Base {
      * 
      */
     
-    protected function query2str($params)
+    protected function _query2str($params)
     {
         // preempt if $params is not an array, or is empty
         if (! is_array($params) || count($params) == 0 ) {
@@ -511,7 +511,7 @@ class Solar_Uri extends Solar_Base {
         foreach ($params as $key => $val) {
             if (is_array($val) ) {   
                 // recurse to capture deeper array.
-                $out[] = $this->query2str($val, $key);
+                $out[] = $this->_query2str($val, $key);
             } else {
                 // not an array, use the current value.
                 $thekey = (! $akey) ? $key : $akey.'['.$key.']';
@@ -535,7 +535,7 @@ class Solar_Uri extends Solar_Base {
      * 
      */
     
-    protected function info2str($params)
+    protected function _info2str($params)
     {
         settype($params, 'array');
         $str = array();

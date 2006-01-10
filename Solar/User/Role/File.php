@@ -53,7 +53,7 @@ class Solar_User_Role_File extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'file' => null
     );
     
@@ -72,11 +72,11 @@ class Solar_User_Role_File extends Solar_Base {
     public function fetch($user)
     {
         // force the full, real path to the file
-        $file = realpath($this->config['file']);
+        $file = realpath($this->_config['file']);
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FILE_FIND',
                 array('file' => $file),
                 E_USER_ERROR

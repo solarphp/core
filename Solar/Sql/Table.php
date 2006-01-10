@@ -50,7 +50,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'sql'    => 'sql',
         'paging' => 10,
     );
@@ -66,7 +66,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected $name = null;
+    protected $_name = null;
     
     
     /**
@@ -79,7 +79,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected $order = array('id');
+    protected $_order = array('id');
     
     
     /**
@@ -92,7 +92,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected $paging = 10;
+    protected $_paging = 10;
     
     
     /**
@@ -123,7 +123,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected $col = array();
+    protected $_col = array();
     
     
     /**
@@ -138,7 +138,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
 
-    protected $idx = array();
+    protected $_idx = array();
     
     
     /**
@@ -151,7 +151,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
 
-    protected $sql = null;
+    protected $_sql = null;
     
     
     /**
@@ -171,26 +171,26 @@ class Solar_Sql_Table extends Solar_Base {
     {
         // main construction
         parent::__construct($config);
-        $this->paging($this->config['paging']);
+        $this->paging($this->_config['paging']);
         
         // perform column and index setup, then fix everything.
-        $this->setup();
-        $this->autoSetup();
+        $this->_setup();
+        $this->_autoSetup();
         
         // connect to the database
-        if (is_string($this->config['sql'])) {
+        if (is_string($this->_config['sql'])) {
             // use a shared object
-            $this->sql = Solar::shared($this->config['sql']);
+            $this->_sql = Solar::shared($this->_config['sql']);
         } else {
             // use a standalone object
-            $this->sql = Solar::object(
-                $this->config['sql'][0],
-                $this->config['sql'][1]
+            $this->_sql = Solar::object(
+                $this->_config['sql'][0],
+                $this->_config['sql'][1]
             );
         }
         
         // auto-create if needed
-        $this->autoCreate();
+        $this->_autoCreate();
     }
     
     
@@ -210,6 +210,7 @@ class Solar_Sql_Table extends Solar_Base {
     {
         $prop = array('col', 'idx', 'name', 'paging');
         if (in_array($key, $prop)) {
+            $key = "_$key";
             return $this->$key;
         } else {
             return null;
@@ -229,7 +230,7 @@ class Solar_Sql_Table extends Solar_Base {
     
     public function paging($val)
     {
-        $this->paging = (int) $val;
+        $this->_paging = (int) $val;
     }
     
     
@@ -279,7 +280,7 @@ class Solar_Sql_Table extends Solar_Base {
         $data = array_merge($this->getDefault(), $data);
         
         // auto-add sequential values
-        foreach ($this->col as $colname => $colinfo) {
+        foreach ($this->_col as $colname => $colinfo) {
             // does this column autoincrement, and is no data provided?
             if ($colinfo['autoinc'] && empty($data[$colname])) {
                 $data[$colname] = $this->increment($colname);
@@ -298,13 +299,13 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // validate and recast the data.
-        $result = $this->autoValid($data);
+        $result = $this->_autoValid($data);
         if (Solar::isError($result)) {
             return $result;
         }
         
         // attempt the insert.
-        $result = $this->sql->insert($this->name, $data);
+        $result = $this->_sql->insert($this->_name, $data);
         if (Solar::isError($result)) {
             return $result;
         }
@@ -338,7 +339,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // disallow the changing of primary key data
         foreach (array_keys($data) as $field) {
-            if ($this->col[$field]['primary']) {
+            if ($this->_col[$field]['primary']) {
                 $retain[$field] = $data[$field];
                 unset($data[$field]);
             }
@@ -350,13 +351,13 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // validate and recast the data
-        $result = $this->autoValid($data);
+        $result = $this->_autoValid($data);
         if (Solar::isError($result)) {
             return $result;
         }
         
         // attempt the update
-        $result = $this->sql->update($this->name, $data, $where);
+        $result = $this->_sql->update($this->_name, $data, $where);
         if (Solar::isError($result)) {
             return $result;
         }
@@ -382,7 +383,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function delete($where)
     {
         // attempt the deletion
-        $result = $this->sql->delete($this->name, $where);
+        $result = $this->_sql->delete($this->_name, $where);
         return $result;
     }
     
@@ -420,7 +421,7 @@ class Solar_Sql_Table extends Solar_Base {
         $select = Solar::object('Solar_Sql_Select');
         
         // all columns from this table
-        $select->from($this->name, array_keys($this->col));
+        $select->from($this->_name, array_keys($this->_col));
         
         // conditions
         $select->multiWhere($where);
@@ -429,7 +430,7 @@ class Solar_Sql_Table extends Solar_Base {
         $select->order($order);
         
         // by page
-        $select->paging($this->paging);
+        $select->paging($this->_paging);
         $select->limitPage($page);
         
         // fetch and return results
@@ -452,10 +453,10 @@ class Solar_Sql_Table extends Solar_Base {
     public function increment($name)
     {
         // only increment if auto-increment is set
-        if (! empty($this->col[$name]['autoinc'])) {
+        if (! empty($this->_col[$name]['autoinc'])) {
             // table__column
-            $seqname = $this->name . '__' . $name;
-            $result = $this->sql->nextSequence($seqname);
+            $seqname = $this->_name . '__' . $name;
+            $result = $this->_sql->nextSequence($seqname);
             return $result;
         } else {
             return null;
@@ -484,7 +485,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // if no columns specified, use all columns
         if (is_null($spec)) {
-            $spec = array_keys($this->col);
+            $spec = array_keys($this->_col);
         } else {
             settype($spec, 'array');
         }
@@ -493,12 +494,12 @@ class Solar_Sql_Table extends Solar_Base {
         foreach ($spec as $name) {
             
             // skip columns that don't exist
-            if (empty($this->col[$name])) {
+            if (empty($this->_col[$name])) {
                 continue;
             }
             
             // get the column info
-            $info = $this->col[$name];
+            $info = $this->_col[$name];
             
             // is there a default set?
             if (empty($info['default'])) {
@@ -555,7 +556,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
 
-    protected function setup()
+    protected function _setup()
     {
     }
     
@@ -570,7 +571,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
 
-    protected final function autoSetup()
+    final protected function _autoSetup()
     {
         // a baseline column definition
         $basecol = array(
@@ -590,7 +591,7 @@ class Solar_Sql_Table extends Solar_Base {
         $autoidx = array();
         
         // auto-add an ID column and index for unique identification
-        if (! array_key_exists('id', $this->col)) {
+        if (! array_key_exists('id', $this->_col)) {
             $autocol['id'] = array(
                 'type'    => 'int',
                 'primary' => true,
@@ -602,7 +603,7 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // auto-add a "created" column to track when created
-        if (! array_key_exists('created', $this->col)) {
+        if (! array_key_exists('created', $this->_col)) {
             $autocol['created'] = array(
                 'type'    => 'timestamp',
                 'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
@@ -613,7 +614,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // auto-add an "updated" column and index
         // to track when last updated
-        if (! array_key_exists('updated', $this->col)) {
+        if (! array_key_exists('updated', $this->_col)) {
             $autocol['updated'] = array(
                 'type'    => 'timestamp',
                 'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
@@ -623,11 +624,11 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // merge the auto-added items on top of the rest
-        $this->col = array_merge($autocol, $this->col);
-        $this->idx = array_merge($autoidx, $this->idx);
+        $this->_col = array_merge($autocol, $this->_col);
+        $this->_idx = array_merge($autoidx, $this->_idx);
         
         // fix up each column to have a full set of info
-        foreach ($this->col as $name => $info) {
+        foreach ($this->_col as $name => $info) {
         
             // fill in missing elements
             $info = array_merge($basecol, $info);
@@ -670,7 +671,7 @@ class Solar_Sql_Table extends Solar_Base {
             }
             
             // save back into the column info
-            $this->col[$name] = $info;
+            $this->_col[$name] = $info;
         }
     }
     
@@ -688,11 +689,11 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
 
-    protected final function autoCreate()
+    final protected function _autoCreate()
     {
         // is a table with the same name already there?
-        $tmp = $this->sql->listTables();
-        $here = strtolower($this->name);
+        $tmp = $this->_sql->listTables();
+        $here = strtolower($this->_name);
         foreach ($tmp as $there) {
             if ($here == strtolower($there)) {
                 // table already exists
@@ -701,9 +702,9 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // create the table itself
-        $result = $this->sql->createTable(
-            $this->name,
-            $this->col
+        $result = $this->_sql->createTable(
+            $this->_name,
+            $this->_col
         );
         
         // was there a problem creating the table?
@@ -714,7 +715,7 @@ class Solar_Sql_Table extends Solar_Base {
                 get_class($this),
                 'ERR_TABLE_NOT_CREATED',
                 Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
-                array('table' => $this->name),
+                array('table' => $this->_name),
                 E_USER_ERROR
             );
             
@@ -723,23 +724,23 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // create each of the indexes
-        foreach ($this->idx as $name => $info) {
+        foreach ($this->_idx as $name => $info) {
         
             // create this index
-            $result = $this->sql->createIndex($this->name, $name, $info);
+            $result = $this->_sql->createIndex($this->_name, $name, $info);
             
             // was there a problem creating the index?
             if (Solar::isError($result)) {
             
                 // cancel the whole deal.
-                $this->sql->dropTable($this->name);
+                $this->_sql->dropTable($this->_name);
                 
                 // add another error on top of it.
                 $result->push(
                     get_class($this),
                     'ERR_TABLE_NOT_CREATED',
                     Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
-                    array('table' => $this->name),
+                    array('table' => $this->_name),
                     E_USER_ERROR
                 );
                 
@@ -771,7 +772,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     
-    protected final function autoValid(&$data)
+    final protected function _autoValid(&$data)
     {
         // object methods for validation
         $valid = Solar::object('Solar_Valid');
@@ -788,7 +789,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // the list of available fields; discard data that
         // does not correspond to one of the known fields.
-        $known = array_keys($this->col);
+        $known = array_keys($this->_col);
         
         // loop through each data field
         foreach ($data as $field => $value) {
@@ -801,8 +802,8 @@ class Solar_Sql_Table extends Solar_Base {
             }
             
             // if 'require' not present, it's not required
-            if (isset($this->col[$field]['require'])) {
-                $require = $this->col[$field]['require'];
+            if (isset($this->_col[$field]['require'])) {
+                $require = $this->_col[$field]['require'];
             } else {
                 $require = false;
             }
@@ -830,7 +831,7 @@ class Solar_Sql_Table extends Solar_Base {
             // Recast first, then validate for column type
             // 
             
-            $type = $this->col[$field]['type'];
+            $type = $this->_col[$field]['type'];
             switch ($type) {
             
             case 'bool':
@@ -841,7 +842,7 @@ class Solar_Sql_Table extends Solar_Base {
             case 'varchar':
                 settype($value, 'string');
                 $len = strlen($value);
-                $max = $this->col[$field]['size'];
+                $max = $this->_col[$field]['size'];
                 if ($len > $max) {
                     $err->push(
                         get_class($this),
@@ -886,8 +887,8 @@ class Solar_Sql_Table extends Solar_Base {
             
             case 'numeric':
                 settype($value, 'float');
-                $size = $this->col[$field]['size'];
-                $scope = $this->col[$field]['scope'];
+                $size = $this->_col[$field]['size'];
+                $scope = $this->_col[$field]['scope'];
                 if (! $valid->inScope($value, $size, $scope)) {
                     $err->push(
                         get_class($this),
@@ -969,7 +970,7 @@ class Solar_Sql_Table extends Solar_Base {
             // 
             
             // loop through each validation rule
-            foreach ($this->col[$field]['valid'] as $args) {
+            foreach ($this->_col[$field]['valid'] as $args) {
                 
                 // the name of the Solar_Valid method
                 $method = array_shift($args);

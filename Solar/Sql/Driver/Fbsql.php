@@ -43,7 +43,7 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'DECIMAL(1,0)',
         'char'      => 'CHAR(:size)',
         'varchar'   => 'VARCHAR(:size)',
@@ -69,7 +69,7 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $pdo_type = 'odbc';
+    protected $_pdo_type = 'odbc';
     
     
     /**

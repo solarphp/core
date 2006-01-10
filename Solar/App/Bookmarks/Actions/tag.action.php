@@ -48,7 +48,7 @@ $owner_handle = null;
 $tags = $this->_info('tags');
 
 // the requested ordering of list results
-$order = $this->getOrder();
+$order = $this->_getOrder();
 
 // what page-number of the results are we looking for?
 // (regardless of RSS or HTML)

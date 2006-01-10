@@ -43,7 +43,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'DECIMAL(1,0)',
         'char'      => 'CHAR(:size) BINARY',
         'varchar'   => 'VARCHAR(:size) BINARY',
@@ -69,7 +69,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $pdo_type = 'mysql';
+    protected $_pdo_type = 'mysql';
     
     
     /**
@@ -199,7 +199,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -207,12 +207,12 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        return $this->pdo->lastInsertID();
+        return $this->_pdo->lastInsertID();
     }
 }
 ?>

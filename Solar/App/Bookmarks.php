@@ -67,7 +67,7 @@ class Solar_App_Bookmarks extends Solar_Controller_App {
     );
     
     // there are only some accepted orderings.
-    protected function getOrder()
+    protected function _getOrder()
     {
         $tmp = strtolower($this->_query('order'));
         

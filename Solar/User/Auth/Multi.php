@@ -46,7 +46,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'drivers' => array(
             'Solar_User_Auth_None'
         )
@@ -63,7 +63,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * 
      */
     
-    protected $driver = array();
+    protected $_driver = array();
     
     
     /**
@@ -78,10 +78,10 @@ class Solar_User_Auth_Multi extends Solar_Base {
         parent::__construct($config);
         
         // make sure the drivers config is an array
-        settype($this->config['drivers'], 'array');
+        settype($this->_config['drivers'], 'array');
         
         // instantiate the driver objects
-        foreach ($this->config['drivers'] as $key => $info) {
+        foreach ($this->_config['drivers'] as $key => $info) {
             
             // is the driver value an array (for custom configs)
             // or a string (for default configs)?
@@ -94,7 +94,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
             }
             
             // add the driver instance
-            $this->driver[] = Solar::object($class, $opts);
+            $this->_driver[] = Solar::object($class, $opts);
         }
     }
     
@@ -114,7 +114,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
     
     public function valid($user, $pass)
     {
-        foreach ($this->driver as $driver) {
+        foreach ($this->_driver as $driver) {
             if ($driver->valid($user, $pass)) {
                 return true;
             }

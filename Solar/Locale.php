@@ -37,7 +37,7 @@ class Solar_Locale extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Locale/',
         'code'   => 'en_US',
     );
@@ -70,10 +70,10 @@ class Solar_Locale extends Solar_Base {
         parent::__construct();
         
         // set the locale code
-        $this->code($this->config['code']);
+        $this->code($this->_config['code']);
         
         // load the baseline Solar translation strings
-        $this->load('Solar', $this->config['locale']);
+        $this->load('Solar', $this->_config['locale']);
     }
     
     
@@ -90,8 +90,8 @@ class Solar_Locale extends Solar_Base {
     public function setCode($code)
     {
         $this->string = array();
-        $this->config['code'] = $code;
-        $this->load('Solar', $this->config['locale']);
+        $this->_config['code'] = $code;
+        $this->load('Solar', $this->_config['locale']);
     }
     
     
@@ -107,7 +107,7 @@ class Solar_Locale extends Solar_Base {
     
     public function code()
     {
-        return $this->config['code'];
+        return $this->_config['code'];
     }
     
     
@@ -174,7 +174,7 @@ class Solar_Locale extends Solar_Base {
      * 
      * @param string $dir The directory where the translation PHP array files
      * are located.  Will search this directory for a file named after the
-     * locale code, ending in '.php'.  E.g., if $this->config['code'] is 'en_US' and
+     * locale code, ending in '.php'.  E.g., if $this->_config['code'] is 'en_US' and
      * $dir is 'Solar/Locale/', load() will look for a file at the path
      * 'Solar/Locale/en_US.php'.
      * 
@@ -186,7 +186,7 @@ class Solar_Locale extends Solar_Base {
     {
         // create the file name
         $dir = Solar::fixdir($dir);
-        $file = $dir . $this->config['code'] . '.php';
+        $file = $dir . $this->_config['code'] . '.php';
         
         // this hack is the equivalent of is_readable(), but it also
         // checks the include-path to see if the file exists.

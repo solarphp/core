@@ -148,7 +148,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         $new = $this->asArray($tags);
         
         // diff the tagsets
-        $diff = $this->diff($old, $new);
+        $diff = $this->_diff($old, $new);
         
         // delete
         if (! empty($diff['del'])) {
@@ -181,7 +181,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * $new = array('c', 'd', 'e');
      * 
      * // perform the diff
-     * $diff = $this->diff($old, $new);
+     * $diff = $this->_diff($old, $new);
      * 
      * // the results are:
      * // $diff['del'] == array('a', 'b');
@@ -202,7 +202,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * 
      */
     
-    protected function diff($old, $new)
+    protected function _diff($old, $new)
     {
         // find intersections first
         $intersect = array_intersect($old, $new);
@@ -236,10 +236,10 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * 
      */
     
-    protected function setup()
+    protected function _setup()
     {
         // the table name
-        $this->name = 'tags';
+        $this->_name = 'tags';
         
         // -------------------------------------------------------------
         // 
@@ -247,13 +247,13 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         // 
         
         // the node_id this tag came from
-        $this->col['node_id'] = array(
+        $this->_col['node_id'] = array(
             'type'    => 'int',
             'require' => true,
         );
         
         // the tag itself
-        $this->col['name'] = array(
+        $this->_col['name'] = array(
             'type'    => 'varchar',
             'size'    => 127,
             'require' => true,
@@ -266,7 +266,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         // KEYS AND INDEXES
         // 
         
-        $this->idx = array(
+        $this->_idx = array(
             'node_id' => 'normal',
             'name'    => 'normal',
         );

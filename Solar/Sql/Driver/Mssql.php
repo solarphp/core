@@ -43,7 +43,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'BIT',
         'char'      => 'BINARY(:size)',
         'varchar'   => 'VARBINARY(:size)',
@@ -69,7 +69,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $pdo_type = 'dblib';
+    protected $_pdo_type = 'dblib';
     
     
     /**
@@ -234,7 +234,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -242,12 +242,12 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        $stmt = $this->pdo->prepare("SELECT @@IDENTITY FROM $name");
+        $stmt = $this->_pdo->prepare("SELECT @@IDENTITY FROM $name");
         $stmt->execute();
         $id = $stmt->fetchColumn(0);
         

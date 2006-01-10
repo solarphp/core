@@ -46,7 +46,7 @@ class Solar_User extends Solar_Base
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'auth' => null,
         'role' => null,
         'pref' => null,
@@ -124,10 +124,10 @@ class Solar_User extends Solar_Base
         parent::__construct($config);
         
         // set up an authentication object.
-        $this->auth = Solar::object('Solar_User_Auth', $this->config['auth']);
+        $this->auth = Solar::object('Solar_User_Auth', $this->_config['auth']);
         
         // set up the roles object.
-        $this->role = Solar::object('Solar_User_Role', $this->config['role']);
+        $this->role = Solar::object('Solar_User_Role', $this->_config['role']);
     }
     
     

@@ -58,7 +58,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'file'  => null,
     );
 
@@ -79,11 +79,11 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
     public function valid($user, $pass)
     {
         // force the full, real path to the file
-        $file = realpath($this->config['file']);
+        $file = realpath($this->_config['file']);
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FILE_FIND',
                 array('file' => $file),
                 E_USER_ERROR
@@ -93,7 +93,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
         // open the file
         $fp = @fopen($file, 'r');
         if (! $fp) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FILE_OPEN',
                 array('file' => $file),
                 E_USER_ERROR
@@ -130,7 +130,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
         if (substr($stored_hash, 0, 6) == '$apr1$') {
         
             // use the apache-specific MD5 encryption
-            $computed_hash = self::apr1($pass, $stored_hash);
+            $computed_hash = self::_apr1($pass, $stored_hash);
             
         } elseif (substr($stored_hash, 0, 5) == '{SHA}') {
         
@@ -183,7 +183,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      */
     
-    static public function apr1($plain, $salt)
+    static protected function _apr1($plain, $salt)
     {
         if (preg_match('/^\$apr1\$/', $salt)) {
             $salt = preg_replace('/^\$apr1\$([^$]+)\$.*/', '\\1', $salt);

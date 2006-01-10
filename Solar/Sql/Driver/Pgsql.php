@@ -43,7 +43,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'BOOLEAN',
         'char'      => 'CHAR(:size)',
         'varchar'   => 'VARCHAR(:size)',
@@ -69,7 +69,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      */
     
-    protected $pdo_type = 'pgsql';
+    protected $_pdo_type = 'pgsql';
     
     
     /**
@@ -84,23 +84,23 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      */
     
-    protected function dsn()
+    protected function _dsn()
     {
         $dsn = array();
         
-        if (! empty($this->config['host'])) {
-            $dsn[] = 'host=' . $this->config['host'];
+        if (! empty($this->_config['host'])) {
+            $dsn[] = 'host=' . $this->_config['host'];
         }
         
-        if (! empty($this->config['port'])) {
-            $dsn[] = 'port=' . $this->config['port'];
+        if (! empty($this->_config['port'])) {
+            $dsn[] = 'port=' . $this->_config['port'];
         }
         
-        if (! empty($this->config['name'])) {
-            $dsn[] = 'dbname=' . $this->config['name'];
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
         }
         
-        return $this->pdo_type . ':' . implode(' ', $dsn);
+        return $this->_pdo_type . ':' . implode(' ', $dsn);
     }
     
     
@@ -238,7 +238,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -246,12 +246,12 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        return $this->pdo->lastInsertID($name);
+        return $this->_pdo->lastInsertID($name);
     }
 }
 ?>

@@ -48,7 +48,7 @@ $owner_handle = $this->_info('owner_handle');
 $tags = $this->_info('tags');
 
 // the requested ordering of list results
-$order = $this->getOrder();
+$order = $this->_getOrder();
 
 // RSS or HTML? set up the page number accordingly (by default, RSS gets
 // all bookmarks, not just one page).

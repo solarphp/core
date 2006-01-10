@@ -51,7 +51,7 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'host' => 'localhost',
         'port' => '11211',
         'life' => 60,
@@ -68,7 +68,7 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      */
     
-    protected $memcache;
+    protected $_memcache;
     
     
     /**
@@ -85,9 +85,9 @@ class Solar_Cache_Memcache extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->config['life'] = (int) $this->config['life'];
-        $this->memcache = new Memcache;
-        $this->memcache->connect($this->config['host'], $this->config['port']);
+        $this->_config['life'] = (int) $this->_config['life'];
+        $this->_memcache = new Memcache;
+        $this->_memcache->connect($this->_config['host'], $this->_config['port']);
     }
     
     
@@ -107,7 +107,7 @@ class Solar_Cache_Memcache extends Solar_Base {
     
     public function replace($key, $data)
     {
-        return $this->memcache->set($key, $data, null, $this->config['life']);
+        return $this->_memcache->set($key, $data, null, $this->_config['life']);
     }
     
     
@@ -125,7 +125,7 @@ class Solar_Cache_Memcache extends Solar_Base {
     
     public function fetch($key)
     {
-        return $this->memcache->get($key);
+        return $this->_memcache->get($key);
     }
     
     
@@ -143,7 +143,7 @@ class Solar_Cache_Memcache extends Solar_Base {
     
     public function delete($key)
     {
-        $this->memcache->delete($key);
+        $this->_memcache->delete($key);
     }
     
     
@@ -159,7 +159,7 @@ class Solar_Cache_Memcache extends Solar_Base {
     
     public function deleteAll()
     {
-        $this->memcache->flush();
+        $this->_memcache->flush();
     }
     
     

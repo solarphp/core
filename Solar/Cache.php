@@ -51,7 +51,7 @@ class Solar_Cache extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'active'  => true,
         'class'   => 'Solar_Cache_File',
         'options' => null
@@ -68,7 +68,7 @@ class Solar_Cache extends Solar_Base {
      * 
      */
     
-    protected $driver;
+    protected $_driver;
     
     
     /**
@@ -87,9 +87,9 @@ class Solar_Cache extends Solar_Base {
         parent::__construct($config);
         
         // instantiate a driver object
-        $this->driver = Solar::object(
-            $this->config['class'],
-            $this->config['options']
+        $this->_driver = Solar::object(
+            $this->_config['class'],
+            $this->_config['options']
         );
     }
     
@@ -106,7 +106,7 @@ class Solar_Cache extends Solar_Base {
     
     public function setActive($flag)
     {
-        $this->config['active'] = (bool) $flag;
+        $this->_config['active'] = (bool) $flag;
     }
     
     
@@ -122,7 +122,7 @@ class Solar_Cache extends Solar_Base {
     
     public function active()
     {
-        return $this->config['active'];
+        return $this->_config['active'];
     }
     
     
@@ -145,7 +145,7 @@ class Solar_Cache extends Solar_Base {
     public function replace($key, $data)
     {
         if ($this->active()) {
-            return $this->driver->replace($key, $data);
+            return $this->_driver->replace($key, $data);
         } else {
             return false;
         }
@@ -167,7 +167,7 @@ class Solar_Cache extends Solar_Base {
     public function fetch($key)
     {
         if ($this->active()) {
-            return $this->driver->fetch($key);
+            return $this->_driver->fetch($key);
         } else {
             return false;
         }
@@ -189,7 +189,7 @@ class Solar_Cache extends Solar_Base {
     public function delete($key)
     {
         if ($this->active()) {
-            return $this->driver->delete($key);
+            return $this->_driver->delete($key);
         }
     }
     
@@ -207,7 +207,7 @@ class Solar_Cache extends Solar_Base {
     public function deleteAll()
     {
         if ($this->active()) {
-            return $this->driver->deleteAll();
+            return $this->_driver->deleteAll();
         }
     }
     
@@ -226,7 +226,7 @@ class Solar_Cache extends Solar_Base {
     
     public function entry($key)
     {
-        return $this->driver->entry($key);
+        return $this->_driver->entry($key);
     }
 }
 ?>

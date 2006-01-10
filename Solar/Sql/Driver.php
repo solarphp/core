@@ -57,7 +57,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Sql/Locale/',
         'host'   => null,
         'port'   => null,
@@ -78,7 +78,7 @@ class Solar_Sql_Driver extends Solar_Base {
      *
      */
     
-    protected $pdo = null;
+    protected $_pdo = null;
     
     
     /**
@@ -91,7 +91,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     
-    protected $native = array(
+    protected $_native = array(
         'bool'      => null,
         'char'      => null, 
         'varchar'   => null, 
@@ -119,7 +119,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     
-    protected $pdo_type = null;
+    protected $_pdo_type = null;
     
     
     /**
@@ -134,19 +134,19 @@ class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     
-    protected function dsn()
+    protected function _dsn()
     {
         $dsn = array();
         
-        if (! empty($this->config['host'])) {
-            $dsn[] = 'host=' . $this->config['host'];
+        if (! empty($this->_config['host'])) {
+            $dsn[] = 'host=' . $this->_config['host'];
         }
         
-        if (! empty($this->config['name'])) {
-            $dsn[] = 'dbname=' . $this->config['name'];
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
         }
         
-        return $this->pdo_type . ':' . implode(';', $dsn);
+        return $this->_pdo_type . ':' . implode(';', $dsn);
     }
     
     
@@ -160,41 +160,41 @@ class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     
-    protected function connect()
+    protected function _connect()
     {
         // if we already have a PDO object, no need to re-connect.
-        if ($this->pdo) {
+        if ($this->_pdo) {
             return;
         }
         
         // build a DSN
-        $dsn = $this->dsn();
+        $dsn = $this->_dsn();
         
         // create PDO object
         try {
             
             // attempt the connection
-            $this->pdo = new PDO(
+            $this->_pdo = new PDO(
                 $dsn,
-                $this->config['user'],
-                $this->config['pass']
+                $this->_config['user'],
+                $this->_config['pass']
             );
             
             // always autocommit to start
-            $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
+            $this->_pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
             
             // force names to lower case
-            $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+            $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             
             /** @todo Are there other portability attribs to consider? */
             
             // always use exceptions.
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE,
+            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION);
             
         } catch (Exception $e) {
             // database connection failures should be fatal
-            $err = $this->errorException($e, E_USER_ERROR);
+            $err = $this->_errorException($e, E_USER_ERROR);
             return $err;
         }
     }
@@ -212,8 +212,8 @@ class Solar_Sql_Driver extends Solar_Base {
     
     public function begin()
     {
-        $this->connect();
-        return $this->pdo->beginTransaction();
+        $this->_connect();
+        return $this->_pdo->beginTransaction();
     }
     
     
@@ -229,8 +229,8 @@ class Solar_Sql_Driver extends Solar_Base {
     
     public function commit()
     {
-        $this->connect();
-        return $this->pdo->commit();
+        $this->_connect();
+        return $this->_pdo->commit();
     }
     
     
@@ -246,8 +246,8 @@ class Solar_Sql_Driver extends Solar_Base {
     
     public function rollback()
     {
-        $this->connect();
-        return $this->pdo->rollBack();
+        $this->_connect();
+        return $this->_pdo->rollBack();
     }
     
     
@@ -270,16 +270,16 @@ class Solar_Sql_Driver extends Solar_Base {
     public function exec($stmt, $data = array())
     {
         // connect to the database if needed
-        $this->connect();
+        $this->_connect();
         
         // force the bound data to be an array
         settype($data, 'array');
         
         // prepare the statement
         try {
-            $obj = $this->pdo->prepare($stmt);
+            $obj = $this->_pdo->prepare($stmt);
         } catch (Exception $e) {
-            $err = $this->errorException($e, E_USER_WARNING);
+            $err = $this->_errorException($e, E_USER_WARNING);
             return $err;
         }
         
@@ -287,7 +287,7 @@ class Solar_Sql_Driver extends Solar_Base {
         try {
             $obj->execute($data);
         } catch (Exception $e) {
-            $err = $this->errorException($e, E_USER_WARNING);
+            $err = $this->_errorException($e, E_USER_WARNING);
             return $err;
         }
         
@@ -310,8 +310,8 @@ class Solar_Sql_Driver extends Solar_Base {
     
     public function quote($val)
     {
-        $this->connect();
-        return $this->pdo->quote($val);
+        $this->_connect();
+        return $this->_pdo->quote($val);
     }
     
     
@@ -395,7 +395,7 @@ class Solar_Sql_Driver extends Solar_Base {
     
     public function nativeColTypes()
     {
-        return $this->native;
+        return $this->_native;
     }
     
     

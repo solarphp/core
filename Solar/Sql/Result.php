@@ -47,7 +47,7 @@ class Solar_Sql_Result extends Solar_Base {
      * @var array
      */
     
-    protected $config = array(
+    protected $_config = array(
         'PDOStatement' => null,
     );
     
@@ -86,7 +86,7 @@ class Solar_Sql_Result extends Solar_Base {
         $row = array();
         
         // the data as originally returned by PDOStatement
-        $orig = $this->config['PDOStatement']->fetch($mode);
+        $orig = $this->_config['PDOStatement']->fetch($mode);
         if (! $orig) {
             return false;
         }

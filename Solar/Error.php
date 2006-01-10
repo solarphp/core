@@ -89,7 +89,7 @@ class Solar_Error extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'push_callback' => null,
         'pop_callback'  => null,
         'trace' => true,
@@ -107,7 +107,7 @@ class Solar_Error extends Solar_Base {
      * 
      */
     
-    protected $stack = array();
+    protected $_stack = array();
     
     
     /**
@@ -118,8 +118,28 @@ class Solar_Error extends Solar_Base {
     
     public function __construct($config = null)
     {
-        $this->config['push_callback'] = array($this, 'pushCallback');
+        $this->_config['push_callback'] = array($this, '_pushCallback');
         parent::__construct($config);
+    }
+    
+    
+    /**
+     * 
+     * Pops-and-prints each error on the stack.
+     * 
+     * @access public
+     * 
+     * @return void
+     * 
+     */
+    
+    public function __toString()
+    {
+        ob_start();
+        while ($err = $this->pop()) {
+            Solar::dump($err);
+        }
+        return ob_get_clean();
     }
     
     
@@ -157,7 +177,7 @@ class Solar_Error extends Solar_Base {
             while ($err = array_pop($class->stack)) {
                 // use unshift instead of push to make sure
                 // the order ends up the same in both stacks.
-                array_unshift($this->stack, $err);
+                array_unshift($this->_stack, $err);
             }
             // errors havent' really been popped, so no pop callback
             // these are not new errors, so no push callbacks
@@ -166,12 +186,12 @@ class Solar_Error extends Solar_Base {
         
         // set default level
         if (is_null($level)) {
-            $level = $this->config['level'];
+            $level = $this->_config['level'];
         }
         
         // set default trace
         if (is_null($trace)) {
-            $trace = $this->config['trace'];
+            $trace = $this->_config['trace'];
         }
         
         // prepare the error array
@@ -186,11 +206,11 @@ class Solar_Error extends Solar_Base {
         );
         
         // push the error array onto the stack ...
-        array_push($this->stack, $err);
+        array_push($this->_stack, $err);
         
         // ... and make the callback.
-        if (! empty($this->config['push_callback'])) {
-            call_user_func($this->config['push_callback'], $err, $this);
+        if (! empty($this->_config['push_callback'])) {
+            call_user_func($this->_config['push_callback'], $err, $this);
         }
     }
     
@@ -207,15 +227,15 @@ class Solar_Error extends Solar_Base {
     
     public function pop()
     {
-        $err = @array_pop($this->stack);
+        $err = @array_pop($this->_stack);
         
         if ($err) {
             $err['count'] = $this->count(); // number of remaining errors
         }
         
         // make the callback and return the error.
-        if (! empty($this->config['pop_callback'])) {
-            call_user_func($this->config['pop_callback'], $err, $this);
+        if (! empty($this->_config['pop_callback'])) {
+            call_user_func($this->_config['pop_callback'], $err, $this);
         }
         return $err;
     }
@@ -233,7 +253,7 @@ class Solar_Error extends Solar_Base {
     
     public function count()
     {
-        return count($this->stack);
+        return count($this->_stack);
     }
     
     
@@ -255,7 +275,7 @@ class Solar_Error extends Solar_Base {
      * 
      */
     
-    protected function pushCallback($err, $obj)
+    protected function _pushCallback($err, $obj)
     {
         if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {
             Solar::dump($err);
@@ -268,22 +288,6 @@ class Solar_Error extends Solar_Base {
             echo $obj;
             die();
         }
-    }
-    
-    
-    /**
-     * 
-     * Pops-and-prints each error on the stack.
-     * 
-     */
-    
-    public function __toString()
-    {
-        ob_start();
-        while ($err = $this->pop()) {
-            Solar::dump($err);
-        }
-        return ob_get_clean();
     }
 }
 ?>

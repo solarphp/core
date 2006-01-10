@@ -71,7 +71,7 @@ class Solar {
      * 
      */
     
-    static protected $shared = null;
+    static protected $_shared = null;
     
     
     /**
@@ -84,7 +84,7 @@ class Solar {
      * 
      */
     
-    static protected $status = false;
+    static protected $_status = false;
     
     
     /**
@@ -100,15 +100,15 @@ class Solar {
     static public function start($alt_config = null)
     {
         // don't re-start if we're already running.
-        if (Solar::$status) {
+        if (Solar::$_status) {
             return;
         }
         
         // initialize $shared property as a StdClass object
-        Solar::$shared = new StdClass;
+        Solar::$_shared = new StdClass;
         
         // set up the standard Solar environment
-        Solar::environment();
+        Solar::_environment();
         
         // load the config file values. note that we use $config here,
         // not config(), because we are setting the value of the static
@@ -168,9 +168,9 @@ class Solar {
             // is_callable() doesn't seem to work with an 
             // object instance, but it works fine with just
             // the class name.  so we'll use that.
-            $class = get_class(Solar::$shared->$name);
+            $class = get_class(Solar::$_shared->$name);
             if (is_callable($class, 'solar')) {
-                Solar::$shared->$name->solar('start');
+                Solar::$_shared->$name->solar('start');
             }
         }
         
@@ -180,7 +180,7 @@ class Solar {
         }
         
         // and we're done!
-        Solar::$status = true;
+        Solar::$_status = true;
     }
     
     
@@ -211,14 +211,14 @@ class Solar {
             // is_callable() doesn't seem to work with an 
             // object instance, but it works fine with just
             // the class name.  so we'll use that.
-            $class = get_class(Solar::$shared->$name);
+            $class = get_class(Solar::$_shared->$name);
             if (is_callable($class, 'solar')) {
-                Solar::$shared->$name->solar('stop');
+                Solar::$_shared->$name->solar('stop');
             }
         }
         
         // reset the status flag, and we're done.
-        Solar::$status = false;
+        Solar::$_status = false;
     }
     
     
@@ -419,7 +419,7 @@ class Solar {
     static public function shared($name)
     {
         // has the shared object already been loaded?
-        if (! isset(Solar::$shared->$name)) {
+        if (! isset(Solar::$_shared->$name)) {
             
             // not loaded yet.  can we find the associated info?
             if (isset(Solar::$config['Solar']['shared']) &&
@@ -437,12 +437,12 @@ class Solar {
                 $config = array_key_exists(1, $info) ? $info[1] : null;
                 
                 // instantiate.
-                Solar::$shared->$name = Solar::object($class, $config);
+                Solar::$_shared->$name = Solar::object($class, $config);
                 
             } else {
             
                 // did not find the info.  that's an error.
-                Solar::$shared->$name = Solar::error(
+                Solar::$_shared->$name = Solar::error(
                     'Solar',
                     'ERR_SHARED_NAME',
                     "shared object name $name not in config file under ['Solar']['shared']", 
@@ -454,7 +454,7 @@ class Solar {
         }
         
         // return the shared instance.
-        return Solar::$shared->$name;
+        return Solar::$_shared->$name;
     }
     
     
@@ -561,7 +561,7 @@ class Solar {
     
     static public function get($key = null, $default = null)
     {
-        return Solar::super('_GET', $key, $default);
+        return Solar::_super('_GET', $key, $default);
     }
     
     
@@ -587,7 +587,7 @@ class Solar {
     
     static public function post($key = null, $default = null)
     {
-        return Solar::super('_POST', $key, $default);
+        return Solar::_super('_POST', $key, $default);
     }
     
     
@@ -610,7 +610,7 @@ class Solar {
     
     static public function cookie($key = null, $default = null)
     {
-        return Solar::super('_COOKIE', $key, $default);
+        return Solar::_super('_COOKIE', $key, $default);
     }
     
     
@@ -633,7 +633,7 @@ class Solar {
     
     static public function server($key = null, $default = null)
     {
-        return Solar::super('_SERVER', $key, $default);
+        return Solar::_super('_SERVER', $key, $default);
     }
     
     
@@ -656,7 +656,7 @@ class Solar {
     
     static public function session($key = null, $default = null)
     {
-        return Solar::super('_SESSION', $key, $default);
+        return Solar::_super('_SESSION', $key, $default);
     }
     
     
@@ -683,7 +683,7 @@ class Solar {
     static public function pathinfo($key = null, $default = null)
     {
         // get the pathinfo as passed
-        $info = Solar::super('_SERVER', 'PATH_INFO', '');
+        $info = Solar::_super('_SERVER', 'PATH_INFO', '');
         
         // explode into its elements
         $elem = explode('/', $info);
@@ -824,7 +824,7 @@ class Solar {
      * 
      */
     
-    static protected function environment()
+    static protected function _environment()
     {
         // clear out registered globals?
         // (this code from Richard Heyes and Stefan Esser)
@@ -881,10 +881,10 @@ class Solar {
             // what kind of quotes are we using?
             if (ini_get('magic_quotes_sybase')) {
                 // sybase quotes
-                $func = array('Solar', 'dispelSybase');
+                $func = array('Solar', '_dispelSybase');
             } else {
                 // "normal" slashed quotes
-                $func = array('Solar', 'dispelQuotes');
+                $func = array('Solar', '_dispelQuotes');
             }
             
             // dispel magic quotes from superglobals
@@ -912,7 +912,7 @@ class Solar {
      * 
      */
     
-    static protected function dispelQuotes(&$value)
+    static protected function _dispelQuotes(&$value)
     {
         $value = stripslashes($value);
     }
@@ -928,7 +928,7 @@ class Solar {
      * 
      */
     
-    static protected function dispelSybase(&$value)
+    static protected function _dispelSybase(&$value)
     {
         $value = str_replace("''", "'", $value);
     }
@@ -954,7 +954,7 @@ class Solar {
      * 
      */
     
-    static protected function super($type, $key = null, $default = null)
+    static protected function _super($type, $key = null, $default = null)
     {
         // get the whole superglobal, or just one key?
         if (is_null($key) && isset($GLOBALS[$type])) {

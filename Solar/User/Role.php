@@ -51,7 +51,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'class'   => 'Solar_User_Role_None',
         'options' => null,
         'refresh' => false,
@@ -68,7 +68,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      */
     
-    protected $driver = array();
+    protected $_driver = array();
     
     
     /**
@@ -81,7 +81,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      */
     
-    protected $loaded = false;
+    protected $_loaded = false;
     
     
     /**
@@ -115,9 +115,9 @@ class Solar_User_Role extends Solar_Base {
         parent::__construct($config);
         
         // instantiate a driver object
-        $this->driver = Solar::object(
-            $this->config['class'],
-            $this->config['options']
+        $this->_driver = Solar::object(
+            $this->_config['class'],
+            $this->_config['options']
         );
         
         // make sure we have a session value and reference to it.
@@ -143,7 +143,7 @@ class Solar_User_Role extends Solar_Base {
         // have we loaded roles for the first time yet? if so, and if
         // we're not forcing refreshes, the we don't need to do
         // anything, just return the list as it is right now.
-        if ($this->loaded && ! $this->config['refresh']) {
+        if ($this->_loaded && ! $this->_config['refresh']) {
             return $this->list;
         }
         
@@ -151,7 +151,7 @@ class Solar_User_Role extends Solar_Base {
         $this->reset();
         
         // fetch the role list
-        $result = $this->driver->fetch($username);
+        $result = $this->_driver->fetch($username);
             
         // let errors go silently from here
         if (! Solar::isError($result) && $result !== false) {
@@ -163,7 +163,7 @@ class Solar_User_Role extends Solar_Base {
         }
         
         // OK, we've loaded what we can.
-        $this->loaded = true;
+        $this->_loaded = true;
         
         // return the results
         return $this->list;
@@ -182,7 +182,7 @@ class Solar_User_Role extends Solar_Base {
     
     public function reset()
     {
-        $this->loaded = false;
+        $this->_loaded = false;
         $this->list = array();
     }
     

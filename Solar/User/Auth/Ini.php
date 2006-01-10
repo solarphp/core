@@ -51,7 +51,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'file' => null,
         'group' => 'users',
     );
@@ -73,11 +73,11 @@ class Solar_User_Auth_Ini extends Solar_Base {
     public function valid($user, $pass)
     {
         // force the full, real path to the .ini file
-        $file = realpath($this->config['file']);
+        $file = realpath($this->_config['file']);
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FILE_FIND',
                 array('file' => $file),
                 E_USER_ERROR
@@ -88,7 +88,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
         $data = parse_ini_file($file, true);
         
         // get a list of users from the [users] group
-        $list = (array) $data[$this->config['group']];
+        $list = (array) $data[$this->_config['group']];
         
         // by default the user is not valid
         $valid = false;

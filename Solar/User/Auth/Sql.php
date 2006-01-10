@@ -57,7 +57,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'sql'          => 'sql',
         'table'        => 'sc_user',
         'username_col' => 'user_id',
@@ -83,12 +83,12 @@ class Solar_User_Auth_Sql extends Solar_Base {
     public function valid($username, $password)
     {
         // get the SQL object
-        if (is_string($this->config['sql'])) {
+        if (is_string($this->_config['sql'])) {
             // use a shared object.
-            $obj = Solar::shared($this->config['sql']);
+            $obj = Solar::shared($this->_config['sql']);
         } else {
             // instantiate a new object.
-            $obj = Solar::object('Solar_Sql', $this->config['sql']);
+            $obj = Solar::object('Solar_Sql', $this->_config['sql']);
         }
         
         // if there were errors, return.
@@ -97,15 +97,15 @@ class Solar_User_Auth_Sql extends Solar_Base {
         }
         
         // build the SQL statement
-        $stmt  = "SELECT COUNT({$this->config['username_col']})";
-        $stmt .= " FROM {$this->config['table']}";
-        $stmt .= " WHERE {$this->config['username_col']} = :username";
-        $stmt .= " AND {$this->config['password_col']} = :password";
+        $stmt  = "SELECT COUNT({$this->_config['username_col']})";
+        $stmt .= " FROM {$this->_config['table']}";
+        $stmt .= " WHERE {$this->_config['username_col']} = :username";
+        $stmt .= " AND {$this->_config['password_col']} = :password";
         
         // build the placeholder data
         $data = array(
             'username' => $username,
-            'password' => md5($this->config['salt'] . $password)
+            'password' => md5($this->_config['salt'] . $password)
         );
         
         // get the results (a count of rows)

@@ -76,7 +76,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'action'  => null,
         'method'  => 'post',
         'enctype' => 'multipart/form-data',
@@ -137,7 +137,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected $filter = array();
+    protected $_filter = array();
     
     
     /**
@@ -150,7 +150,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected $valid = array();
+    protected $_valid = array();
     
     
     /**
@@ -167,7 +167,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected $submitted = null;
+    protected $_submitted = null;
     
     
     /**
@@ -208,7 +208,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected $default = array(
+    protected $_default = array(
         'name'     => null,
         'type'     => null,
         'label'    => null,
@@ -233,9 +233,9 @@ class Solar_Form extends Solar_Base {
     
     public function __construct($config = null)
     {
-        $this->config['action'] = Solar::server('REQUEST_URI');
+        $this->_config['action'] = Solar::server('REQUEST_URI');
         parent::__construct($config);
-        $this->attribs = $this->config;
+        $this->attribs = $this->_config;
     }
     
     
@@ -266,10 +266,10 @@ class Solar_Form extends Solar_Base {
     public function setElement($name, $info, $array = null)
     {
         // prepare the name as an array key?
-        $name = $this->prepareName($name, $array);
+        $name = $this->_prepareName($name, $array);
         
         // prepare the element info
-        $info = array_merge($this->default, $info);
+        $info = array_merge($this->_default, $info);
         
         // forcibly cast each of the keys into the elements array
         $this->elements[$name] = array (
@@ -288,7 +288,7 @@ class Solar_Form extends Solar_Base {
         // add filters
         if (array_key_exists('filter', $info)) {
             foreach ( (array) $info['filter'] as $args) {
-                $this->filter[$name][] = $args;
+                $this->_filter[$name][] = $args;
             }
         }
         
@@ -394,7 +394,7 @@ class Solar_Form extends Solar_Base {
         $args = func_get_args();
         array_shift($args);
 
-        $this->filter[$name][] = $args;
+        $this->_filter[$name][] = $args;
     }
     
     
@@ -437,7 +437,7 @@ class Solar_Form extends Solar_Base {
         }
         
         // add to the validation array
-        $this->valid[$name][] = $args;
+        $this->_valid[$name][] = $args;
     }
     
     
@@ -457,7 +457,7 @@ class Solar_Form extends Solar_Base {
     public function addFeedback($list, $array = null)
     {
         foreach ($list as $name => $feedback) {
-            $name = $this->prepareName($name, $array);
+            $name = $this->_prepareName($name, $array);
             settype($feedback, 'array');
             foreach ($feedback as $text) {
                 $this->elements[$name]['feedback'][] = $text;
@@ -495,19 +495,19 @@ class Solar_Form extends Solar_Base {
         // import the submitted values
         if (is_array($submit)) {
             // from an array
-            $this->submitted = $submit;
+            $this->_submitted = $submit;
         } elseif (is_object($submit)) {
             // from an object
-            $this->submitted = (array) $submit;
+            $this->_submitted = (array) $submit;
         } else {
             // from $_GET or $_POST, per the form method.
             $callback = array('Solar', $this->attribs['method']);
-            $this->submitted = call_user_func($callback);
+            $this->_submitted = call_user_func($callback);
         }
         
         // populate the submitted values into the
         // elements themsevles.
-        $this->_populate($this->submitted);
+        $this->_populate($this->_submitted);
     }
     
     
@@ -532,12 +532,12 @@ class Solar_Form extends Solar_Base {
     public function validate($submit = null)
     {
         // Populate the form values.
-        if (empty($this->submitted)) {
+        if (empty($this->_submitted)) {
             $this->populate($submit);
         }
 
         // Loop through each element to filter
-        foreach ($this->filter as $name => $filters) {
+        foreach ($this->_filter as $name => $filters) {
             $value = $this->elements[$name]['value'];
             $this->elements[$name]['value'] = Solar_Filter::multiple($value, $filters);
         }
@@ -545,7 +545,7 @@ class Solar_Form extends Solar_Base {
         $validated = true;
         
         // loop through each element to be validated
-        foreach ($this->valid as $name => $list) {
+        foreach ($this->_valid as $name => $list) {
             
             // loop through each validation for the element
             foreach ($list as $args) {
@@ -623,12 +623,12 @@ class Solar_Form extends Solar_Base {
     
     public function reset()
     {
-        $this->attribs   = $this->config;
-        $this->elements  = array();
-        $this->filters   = array();
-        $this->valid     = array();
-        $this->feedback  = null;
-        $this->submitted = null;
+        $this->attribs    = $this->_config;
+        $this->elements   = array();
+        $this->feedback   = null;
+        $this->_filter    = array();
+        $this->_valid     = array();
+        $this->_submitted = null;
     }
     
     
@@ -679,7 +679,7 @@ class Solar_Form extends Solar_Base {
         // fetch() method, there's a problem.
         if (! is_object($obj) ||
             ! is_callable(array($obj, 'fetch'))) {        
-            return $this->error('ERR_LOAD_OBJECT');
+            return $this->_error('ERR_LOAD_OBJECT');
         }
         
         // get any additional arguments to pass to the fetch
@@ -738,7 +738,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    protected function prepareName($name, $array = null)
+    protected function _prepareName($name, $array = null)
     {
         if ($array) {
             $pos = strpos($name, '[');
@@ -817,7 +817,7 @@ class Solar_Form extends Solar_Base {
      * 
      */
     
-    function _values($key, $val, &$values)
+    protected function _values($key, $val, &$values)
     {
         if (strpos($key, '[') === false) {
         

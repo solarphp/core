@@ -53,7 +53,7 @@ class Solar_User_Role_Sql extends Solar_Base {
      * 
      */
     
-    protected $config = array(
+    protected $_config = array(
         'sql' => null,
         'table' => 'sc_user_role',
         'username_col' => 'user_id',
@@ -75,12 +75,12 @@ class Solar_User_Role_Sql extends Solar_Base {
     public function fetch($username)
     {
         // get or create the SQL object
-        if (is_string($this->config['sql'])) {
+        if (is_string($this->_config['sql'])) {
             // use a shared object.
-            $obj = Solar::shared($this->config['sql']);
+            $obj = Solar::shared($this->_config['sql']);
         } else {
             // instantiate a new object.
-            $obj = Solar::object('Solar_Sql', $this->config['sql']);
+            $obj = Solar::object('Solar_Sql', $this->_config['sql']);
         }
         
         // if there were errors, return.
@@ -89,9 +89,9 @@ class Solar_User_Role_Sql extends Solar_Base {
         }
         
         // build the SQL statement
-        $stmt =  "SELECT " . $this->config['rolename_col'];
-        $stmt .= " FROM " . $this->config['table'];
-        $stmt .= " WHERE " . $this->config['username_col'];
+        $stmt =  "SELECT " . $this->_config['rolename_col'];
+        $stmt .= " FROM " . $this->_config['table'];
+        $stmt .= " WHERE " . $this->_config['username_col'];
         $stmt .= " = :username";
         
         // build the placeholder data

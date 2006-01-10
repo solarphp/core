@@ -147,7 +147,7 @@
 
 class Solar_Form_Load_Xml extends Solar_Base {
     
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Form/Locale/'
     );
     
@@ -160,7 +160,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
      * 
      * @access protected
      */
-    protected $elementAttribs = array(
+    protected $_elementAttribs = array(
         'type',
         'value',
         'require',
@@ -194,7 +194,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
 
         if (! file_exists($filename)) {
             // Need to return an error here
-            return $this->error(
+            return $this->_error(
                 'ERR_FORM_LOAD_NOFILE',
                 array(),
                 E_USER_WARNING
@@ -205,7 +205,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
         $xml = simplexml_load_file($filename);
         if (false === $xml) {
             // return an error here
-            return $this->error(
+            return $this->_error(
                 'ERR_FORM_LOAD_BADXML',
                 array(
                     'filename' => $filename
@@ -337,7 +337,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
      * @return array
      */
     
-    protected function getParams($params) 
+    protected function _getParams($params) 
     {
         $final = array();
         foreach ($params as $param) {

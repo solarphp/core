@@ -1,3 +1,21 @@
+New indentifier length values?
+
+maxlen is 63, not 64 (pgsql 7.3 max)
+http://www.postgresql.org/docs/7.3/static/sql-syntax.html
+
+	prefix  2 chars
+	__ sep  2 chars
+	table   27 chars
+	__ sep  2 chars
+	field   27 chars
+	__ sep  2 chars
+	suffix  1  (s=seq, i=idx)
+
+          1         2         3         4         5         6
+123456789012345678901234567890123456789012345678901234567890123
+xx__a_very_very_long_table_name__a_very_very_long_field_name__i
+
+
 ----
 
 Solar_Sql: DESCRIBE TABLE support

@@ -1,16 +1,43 @@
+Solar/
+	Controller/
+		Front.php  (Site)
+		Page.php (App)
+		Action.php
+
+Front fwds to Page
+Page fwds to Action
+
+Action controller is very light, no config, only vars for views
+
+So what do I want in a page-level controller?
+	The action scripts to be files
+		Too many actions in one class makes for a big file
+	The data from the action to be stored as instance vars
+		Not $this->data, just $this
+	Need forward() and redirect()
+	No more models at the app level
+	
+----
+
 A new Solar_App setup?
 
 Solar/
+	Site.php									## front controller
+	Site/
+		Layout.php								## layout for the whole site
+		Layout/
+			header.layout.php
+			footer.layout.php
+			auth.layout.php
+	App.php										## page controller
 	App/
-		Bugs.php								## master App class
+		Bugs.php								## master class, extends Solar_App
 		Bugs/
-			controllers/						## controllers for the app
-				prepend.php
-				append.php
-				edit.ctrl.php
-				item.ctrl.php
-				list.ctrl.php
-			models/								## model classes
+			actions/							## controller actions for the app.
+				edit.action.php					## this instead of methods, as they are never called directly.
+				item.action.php
+				list.action.php
+			models/								## model classes (do we really need this here? worry about conflicts)
 				bugs.model.php
 				bugs/							## support files for each model (generally locale)
 					locale/
@@ -19,15 +46,17 @@ Solar/
 				edit.view.php
 				item.view.php
 				list.view.php
-				plugins/						## template plugins
-					Savant3_Plugin_Example.php
 			locale/								## locale viles
 				en_US.php
 			lib/								## miscellaneous non-MVC additional library files
+				prepend.php
+				append.php
 			pub/								## public files such as images, stylesheets, etc.
 				
 
-Don't use "helpers/" as that has a special meaning in other implementations (equivalent is Savant plugins)
+Don't use "helpers/" ?
+	has a special meaning in other implementations (rails)
+	equivalent is Savant plugins
 
 How to have config keys?  Want to avoid long name like "Solar_App_Bugs_Model_Bugs".
 
@@ -63,7 +92,9 @@ And then we can do this in Solar_App (usage is "$model = $this->model('name');" 
 
 ... but then we need to add a "*.model.php" check in Solar_Base so that it doesn't try to load [bugs] group.
 
-Need to add forward() and redirect() methods?
+The dispatch() makes the first call, and then attempts the view.
+
+Need to add forward() and redirect() methods
 
 How to handle auto-prepend and auto-append?
 
@@ -74,4 +105,189 @@ Do we need a new view/plugin system?
 Should views include the header/footer, or should the controller call the header/footer separately?
 
 
+
+----
+
+<?php
+
+class Controller {
+    
+    protected $_defaultController = 'news';
+    protected $_defaultAction = 'list';
+    protected $_vars = array(
+        'news/create' => array(),
+        'news/read'   => array('id'),
+        'news/list'   => array('page'),
+    );
+    
+    
+    /*
+        most content types (each needs somewhat different handling)
+            
+            -- management
+            /:type/create/:id -- create an item, optionally as part_of another id (forwards to update)
+            /:type/update/:id -- edit an item by its id
+            /:type/delete/:id -- delete an item by its id
+            /:type/rate/:id/:value -- rate an item by id
+            
+            -- reading
+            /:type/list/:page -- simple list of items
+            /:type/read/:id|:name/:page -- view an item by id, optionally by page
+            /:type/tag/:tags/:page -- get a list of items by tag, optionally by page
+            /:type/search/:terms/:page -- get a list of items by search terms, optionally by page
+            
+            -- other
+            
+        member profile
+            /member/:handle -- see info on a user
+        
+        sitewide searching by tag and type
+            x says...
+            /tag/:tags/:types/:page
+            /search/:terms/:types
+            
+            z says...
+            /search/terms/:termlist/:types
+            /search/tags/:taglist/:types
+            
+            tags/... => /search/tags/...
+            /search/(terms|tag)/:page/:query/:types
+        
+            
+        dir structure:
+            app/
+                article/
+                    controllers/
+                        read.ctrl.php
+                        list.ctrl.php
+                        create.ctrl.php
+                        update.ctrl.php
+                        delete.ctrl.php
+                    models/
+                    views/
+                        read.view.php
+                        read.tpl
+                        list.view.php
+                        list.tpl
+                        
+                    
+     */
+    
+    public function __construct($opts = array()) { 
+        $this->_appdir = $opts['appdir'];
+    }
+    
+    public function display($spec) {
+        echo $this->fetch($spec);
+    }
+    
+    public function fetch($spec) {
+        $this->_clearVars();
+        return $this->_forward($spec);
+    }
+    
+    protected function _clearVars() {
+        $vars = get_object_vars($this);
+        foreach ($vars as $key => $val) {
+            if (substr($key, 0, 1) != '_') {
+                unset($this->$key);
+            }
+        }
+    }
+    
+    protected function _redirect($spec) {
+        $href = Solar::config('actionWebRoot') . "/$spec";
+        str_replace("\n", '', $href);
+        header("Location: $href");
+    }
+    
+    protected function _forward($spec) {
+        
+        // vars to pass into the controller action file
+        $vars = array();
+        
+        // keep the query string vars
+        $pos = strpos($spec, '?');
+        if ($pos !== false) {
+            $qstr = substr($spec, $pos + 1);
+            $spec = substr($spec, 0, $pos);
+            parse_str($qstr, $vars);
+        }
+        
+        // drop any first and last slashes on the spec
+        if (substr($spec, 0, 1) == '/') {
+            $spec = substr($spec, 1);
+        }
+        if (substr($spec, -1, 1) == '/') {
+            $spec = substr($spec, 0, -1);
+        }
+        
+        // keep the $spec string as an array of information
+        $info = explode('/', $spec);
+        
+        // get the controller name
+        $ctrl = array_shift($info);
+        if (! $ctrl) {
+            $ctrl = $this->_defaultController;
+        }
+        $ctrl = preg_replace('/[^a-z]/i', '', $ctrl);
+        
+        // get the action name
+        $action = array_shift($info);
+        if (! $action) {
+            $action = $this->_defaultAction;
+        }
+        $action = preg_replace('/[^a-z]/i', '', $action);
+        
+        // get the vars to extract from the path info
+        // these override the query string vars.
+        $key = "$ctrl/$action";
+        $map = array();
+        if (array_key_exists($key, $this->_vars)) {
+            $map = $this->_vars[$key];
+        }
+        
+        // map variables for the controller injection
+        foreach ($map as $var) {
+            if (empty($info)) {
+                $vars[$var] = null;
+            } else {
+                $vars[$var] = array_shift($info);
+            }
+        }
+        
+        // load the controller action file and inject vars
+        $file = $this->_appdir . "/$ctrl/controllers/$action.ctrl.php";
+        $view = $this->_run($file, $vars);
+        
+        // was a view name returned?
+        if ($view === false) {
+            // forced to use no view at all
+            return;
+        } elseif (is_null($view)) {
+            // use the default view, named for the action
+            $view = $action;
+        }
+        
+        // run the view and return the output
+        $file = $this->_appdir . "/$ctrl/views/$view.view.php";
+        ob_start();
+        $this->_run($file);
+        return ob_get_clean();
+    }
+    
+    protected function _run($_file_, $_vars_ = array()) {
+        if (! $_file_) throw new Exception();
+        extract((array) $_vars_);
+        unset($_vars_);
+        unset($_file_);
+        include_once func_get_arg(0);
+    }
+    
+    protected function model($name) {
+        include_once "models/$name.php";
+        return new $name();
+    }
+}
+?>
 

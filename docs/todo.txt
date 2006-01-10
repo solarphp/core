@@ -1,7 +1,40 @@
-DOCUMENTATION PLAN
+----
+
+CODING STYLE
+
+protected to be prefixed with _
+	protected $_varname;
+	protected function _method()
+	
+private to be prefixed and suffixed with _
+	private $_varname_;
+	private function _method_();
+
+or just prefix _ on both protected and private?
+
+
+----
+
+TESTING PLAN
+
+update:
+	Solar_Valid
 
 easy:
 	Solar_Filter
+	
+----
+
+DOCUMENTATION PLAN
+
+update:
+	Solar_Valid
+	Solar_Base
+	Solar_Form
+	
+easy:
+	Solar_Filter
+	Solar_Form_Load_Table
 	
 average:
 	Solar_User_Auth
@@ -20,8 +53,7 @@ NEW CLASSES
 
 Create an event dispatcher as a universal observer and notifier?
 
-Do we need a Solar_Template proper?  (Ick.)
-
+Do we need a Solar_Template or Solar_View proper?  (Ick.)
 
 ----
 
@@ -142,3 +174,115 @@ And then you need a prefs object to tell you what keys go with what labels, etc.
 That by itself is a project.
 
 So for now, to get it off the ground, no prefs at all, just Solar::$config values.
+
+
+----
+
+Text_Markup
+
+Text/
+	Markup.php
+	Markup/
+		Parse.php
+		Parse/
+			Bbcode.php -- extends Text_Markup_Parse
+			Bbcode/
+				Url.php -- extends Text_Markup_Parse_Rule
+			DokuWiki.php
+			DokuWiki/
+			Email.php
+			Email/
+			Markdown.php
+			Markdown/
+			MediaWiki.php
+			MediaWiki/
+			PearWiki.php
+			PearWiki/
+			Rule.php -- base for parse-rule objects, not an extension of Markup_Parse
+			SolarWiki.php
+			SolarWiki/
+			Textile.php
+			Textile/
+		Render.php
+		Render/
+			Email.php -- extends Text_Markup_Render
+			Email/
+				Url.php -- extends Text_Markup_Render_Rule
+			Plain.php
+			Plain/
+			Rule.php -- base for render-rule objects, not an extension of Markup_Render
+			Xhtml.php
+			Xhtml/
+	
+	
+Usage:
+
+// create a markup object
+$markup = Solar::object('Solar_Text_Markup');
+
+// set up the parsing by class name; default is SolarWiki
+$options = array(...);
+$markup->setParse('Solar_Text_Markup_Parse_Bbcode', $options);
+
+/*
+// alternative: set up the parsing by object instance
+$parse = Solar::object('Solar_Text_Markup_Parse_Bbcode', $options);
+$markup->setParse($parse);
+*/
+
+// set up the rendering by class name; default is Xhtml
+$options = array(...);
+$markup->setRender('Solar_Text_Markup_Render_Xhtml', $options);
+
+/*
+// alternative: set up the rendering by object instance
+$render = Solar::object('Solar_Text_Markup_Render_Xhtml', $options);
+$markup->setParse($render);
+*/
+
+// transform the source text
+$output = $markup->transform($source);
+
+
+When instantiating, have the parse/render object instantiate the rule objects
+immediately? That way you could address their configs directly, if needed ...
+
+URLs:
+	http://example.com
+	[http://example.com] (rendered as superscript?)
+	[http://example.com |] (drops the scheme)
+	[http://example.com | rendered as this]
+
+Wiki (option to render with spaces)
+	PageName
+	PageName#anchor
+	[PageName#anchor] ???
+	[PageName#anchor |] ???
+	[PageName#anchor | rendered as this]
+	
+Free:
+	[free page name]
+	[free page name#anchor]
+	[free page name#anchor | rendered as this]
+
+Inter:
+	Interwiki:PageName
+	Interwiki:PageName#anchor
+	[Interwiki:PageName#anchor | rendered as this]
+	[Interwiki:free page name]
+	[Interwiki:free page name#anchor]
+	[Interwiki:free page name#anchor |] (drops the interwiki name)
+	[Interwiki:free page name#anchor | rendered as this]
+	Use of double-colons also allowed?
+	
+Default Interwikis:
+	Amazon:
+	Google:
+	Imdb:
+	IMDB:
+	Isbn:
+	ISBN:
+	Issn:
+	ISSN:
+	Php:
+	PHP:

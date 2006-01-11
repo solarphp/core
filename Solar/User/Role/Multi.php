@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Get roles from multiple sources and return as a single list.
@@ -29,7 +28,6 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Role_Multi extends Solar_Base {
     
     /**
@@ -45,7 +43,6 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'drivers' => array(
             'Solar_User_Role_None'
@@ -61,16 +58,13 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_driver = array();
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config
@@ -97,7 +91,6 @@ class Solar_User_Role_Multi extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Fetch the roles from each of the drivers.
@@ -107,7 +100,6 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @return mixed An array of discovered roles.
      * 
      */
-    
     public function fetch($user)
     {
         // the list of all roles

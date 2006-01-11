@@ -54,9 +54,7 @@ require_once 'Solar/Sql/Driver.php';
  * 
  */
 
-
 class Solar_Sql extends Solar_Base {
-    
     
     /**
      * 
@@ -83,7 +81,6 @@ class Solar_Sql extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'class' => 'Solar_Sql_Driver_Sqlite',
         'host'  => '127.0.0.1',
@@ -94,7 +91,6 @@ class Solar_Sql extends Solar_Base {
         'mode'  => null,
     );
     
-    
     /**
      * 
      * Object to use for a specific RDBMS behaviors.
@@ -104,9 +100,7 @@ class Solar_Sql extends Solar_Base {
      * @var object
      *
      */
-    
     protected $_driver = null;
-    
     
     /**
      * 
@@ -129,13 +123,11 @@ class Solar_Sql extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_len = array(
         'tbl' => 30,
         'col' => 28,
         'idx' => 28
     );
-    
     
     /**
      * 
@@ -146,7 +138,6 @@ class Solar_Sql extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
@@ -157,7 +148,6 @@ class Solar_Sql extends Solar_Base {
         unset($opts['class']);
         $this->_driver = Solar::object($this->_config['class'], $opts);
     }
-    
     
     /**
      * 
@@ -170,12 +160,10 @@ class Solar_Sql extends Solar_Base {
      * @return object A PDOStatement result.
      * 
      */
-    
     public function query($cmd)
     {
         return $this->_driver->exec($cmd);
     }
-    
     
     /**
      * 
@@ -186,12 +174,10 @@ class Solar_Sql extends Solar_Base {
      * @return void
      * 
      */
-    
     public function begin()
     {
         return $this->_driver->begin();
     }
-    
     
     /**
      * 
@@ -202,12 +188,10 @@ class Solar_Sql extends Solar_Base {
      * @return void
      * 
      */
-    
     public function commit()
     {
         return $this->_driver->commit();
     }
-    
     
     /**
      * 
@@ -218,12 +202,10 @@ class Solar_Sql extends Solar_Base {
      * @return void
      * 
      */
-    
     public function rollback()
     {
         return $this->_driver->rollback();
     }
-    
     
     /**
      * 
@@ -239,7 +221,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed A Solar_Error on error.
      * 
      */
-    
     public function insert($table, $data)
     {
         // the base statement
@@ -257,7 +238,6 @@ class Solar_Sql extends Solar_Base {
         // execute the statement
         return $this->_driver->exec($stmt, $data);
     }
-    
     
     /**
      * 
@@ -278,7 +258,6 @@ class Solar_Sql extends Solar_Base {
      * @todo Make it possible to pass $where as an array of conditions.
      * 
      */
-    
     public function update($table, $data, $where)
     {
         // the base statement
@@ -299,7 +278,6 @@ class Solar_Sql extends Solar_Base {
         return $this->_driver->exec($stmt, $data);
     }
     
-    
     /**
      * 
      * Deletes rows from the table based on a WHERE clause.
@@ -314,7 +292,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed A Solar_Error on error.
      * 
      */
-    
     public function delete($table, $where)
     {
         if ($where) {
@@ -322,7 +299,6 @@ class Solar_Sql extends Solar_Base {
         }
         return $this->_driver->exec("DELETE FROM $table WHERE $where");
     }
-    
     
     /**
      * 
@@ -344,7 +320,6 @@ class Solar_Sql extends Solar_Base {
      * return type requested.
      * 
      */
-    
     public function select($return, $spec, $data = array())
     {
         // build the statement from its component parts if needed
@@ -442,7 +417,6 @@ class Solar_Sql extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Create a sequence in the database.
@@ -458,14 +432,12 @@ class Solar_Sql extends Solar_Base {
      * @todo Check name length.
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
         $result = $this->_driver->createSequence($this, $name, $start);
         return $result;
     }
-    
     
     /**
      * 
@@ -478,14 +450,12 @@ class Solar_Sql extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function dropSequence($name)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
         $result = $this->_driver->dropSequence($name);
         return $result;
     }
-    
     
     /**
      * 
@@ -500,7 +470,6 @@ class Solar_Sql extends Solar_Base {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
@@ -514,7 +483,6 @@ class Solar_Sql extends Solar_Base {
     // Table, column, and index management
     // 
     // -----------------------------------------------------------------
-    
     
     /**
      * 
@@ -541,7 +509,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed An SQL string, or a Solar_Error.
      * 
      */
-    
     public function createTable($table, $cols)
     {
         // table name can only be so many chars
@@ -592,7 +559,6 @@ class Solar_Sql extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Drops a table from the database.
@@ -604,12 +570,10 @@ class Solar_Sql extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function dropTable($table)
     {
         return $this->_driver->exec("DROP TABLE $table");
     }
-    
     
     /**
      * 
@@ -620,12 +584,10 @@ class Solar_Sql extends Solar_Base {
      * @return array
      * 
      */
-    
     public function listTables()
     {
         return $this->_driver->listTables($this);
     }
-    
     
     /**
      * 
@@ -642,7 +604,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function addColumn($table, $name, $info)
     {
         $coldef = $this->_buildColDef($name, $info);
@@ -653,7 +614,6 @@ class Solar_Sql extends Solar_Base {
             return $this->_driver->exec($stmt);
         }
     }
-    
     
     /**
      * 
@@ -668,12 +628,10 @@ class Solar_Sql extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function dropColumn($table, $name)
     {
         return $this->_driver->exec("ALTER TABLE $table DROP COLUMN $name");
     }
-    
     
     /**
      * 
@@ -702,7 +660,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed An SQL string, or a Solar_Error.
      * 
      */
-    
     public function createIndex($table, $name, $info)
     {
         // check the table name length
@@ -738,7 +695,6 @@ class Solar_Sql extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Drops an index from a table in the database.
@@ -752,7 +708,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function dropIndex($table, $name)
     {
         return $this->_driver->exec("DROP INDEX $name ON $table");
@@ -764,7 +719,6 @@ class Solar_Sql extends Solar_Base {
     // Quoting
     // 
     // -----------------------------------------------------------------
-    
     
     /**
      * 
@@ -783,7 +737,6 @@ class Solar_Sql extends Solar_Base {
      * @return mixed An SQL-safe quoted value (or string of separated values).
      * 
      */
-    
     public function quote($val, $sep = ',')
     {
         if (is_array($val)) {
@@ -797,7 +750,6 @@ class Solar_Sql extends Solar_Base {
             return $this->_driver->quote($val);
         }
     }
-    
     
     /**
      * 
@@ -821,13 +773,11 @@ class Solar_Sql extends Solar_Base {
      * placed into the orignal text.
      * 
      */
-    
     public function quoteInto($txt, $val)
     {
         $val = $this->quote($val);
         return str_replace('?', $val, $txt);
     }
-    
     
     /**
      * 
@@ -858,7 +808,6 @@ class Solar_Sql extends Solar_Base {
      * quoted values.
      * 
      */
-    
     public function quoteMulti($list, $sep = null)
     {
         $text = array();
@@ -885,7 +834,6 @@ class Solar_Sql extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      *
      * Builds a column definition string.
@@ -906,7 +854,6 @@ class Solar_Sql extends Solar_Base {
      * @param array $info The column information.
      * 
      */
-    
     protected function _buildColDef($name, $info)
     {
         // validate column name length
@@ -1020,7 +967,6 @@ class Solar_Sql extends Solar_Base {
         return $coldef;
     }
     
-    
     /**
      *
      * Builds an index creation string.
@@ -1032,7 +978,6 @@ class Solar_Sql extends Solar_Base {
      * @param array $info The column information.
      * 
      */
-    
     protected function _buildIdxDef($table, $name, $info)
     {
         // we prefix all index names with the table name,
@@ -1085,7 +1030,6 @@ class Solar_Sql extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Check if a table, column, or index name is a valid identifier.
@@ -1097,7 +1041,6 @@ class Solar_Sql extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    
     protected function _validIdentifier($word)
     {
         static $reserved;

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Controller for viewing bookmarks by user (and optionally by tag).

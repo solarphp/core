@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Default controller; for viewing bookmarks by tag intersection.
@@ -77,5 +76,4 @@ if ($rss) {
 } else {
     $this->_view = 'list';
 }
-
 ?>

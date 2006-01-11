@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Abstract base class for all Solar objects.
@@ -25,7 +24,6 @@
  * @package Solar
  * 
  */
-
 abstract class Solar_Base {
     
     /**
@@ -42,11 +40,9 @@ abstract class Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'locale' => null,
     );
-    
     
     /**
      * 
@@ -58,7 +54,6 @@ abstract class Solar_Base {
      * and any values from the Solar.config.php file.
      * 
      */
-    
     public function __construct($config = null)
     {
         // allow construction-time config loading from arbitrary files
@@ -90,7 +85,6 @@ abstract class Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Reports the API version for this class.
@@ -103,12 +97,10 @@ abstract class Solar_Base {
      * @return string A PHP-standard version number.
      * 
      */
-    
     public function apiVersion()
     {
         return '@package_version@';
     }
-    
     
     /**
      * 
@@ -121,7 +113,6 @@ abstract class Solar_Base {
      * @return void
      * 
      */
-    
     public function solar($hook)
     {
         switch ($hook) {
@@ -133,7 +124,6 @@ abstract class Solar_Base {
             break;
         }
     }
-    
     
     /**
      * 
@@ -153,7 +143,6 @@ abstract class Solar_Base {
      * string found.
      * 
      */
-    
     public function locale($key, $num = 1)
     {
         // the shared Solar_Locale object
@@ -205,7 +194,6 @@ abstract class Solar_Base {
      * @return object A Solar_Error object.
      * 
      */
-    
     protected function _error($code, $info = array(), $level = null,
         $trace = null)
     {
@@ -222,7 +210,6 @@ abstract class Solar_Base {
         $err = Solar::error($class, $code, $text, $info, $level, $trace);
         return $err;
     }
-    
     
     /**
      * 
@@ -241,7 +228,6 @@ abstract class Solar_Base {
      * @param bool $trace Whether or not to generate a debug_backtrace().
      * 
      */
-    
     protected function _errorPush($err, $code, $info = array(), $level = null,
         $trace = null)
     {
@@ -258,7 +244,6 @@ abstract class Solar_Base {
         $err->push($class, $code, $text, $info, $level, $trace);
     }
     
-    
     /**
      * 
      * Converts an exception to a Solar_Error of E_USER_ERROR severity.
@@ -273,7 +258,6 @@ abstract class Solar_Base {
      * 
      * @return object A Solar_Error object.
      */
-    
     protected function _errorException($e, $level)
     {
         $info = array(
@@ -295,7 +279,6 @@ abstract class Solar_Base {
         return $err;
     }
     
-    
     /**
      * 
      * Convenience method for returning Solar::exception with localized text.
@@ -309,7 +292,6 @@ abstract class Solar_Base {
      * @return object A Solar_Exception object.
      * 
      */
-    
     protected function _exception($code, $info = array())
     {
         $config = array(

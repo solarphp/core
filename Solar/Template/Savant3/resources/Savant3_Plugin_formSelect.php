@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to generate 'select' list of options.

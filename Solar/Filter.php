@@ -30,9 +30,7 @@
  * @package Solar
  * 
  */
-
 class Solar_Filter {
-    
     
     /**
      * 
@@ -54,13 +52,11 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function replace($value, $pattern, $replacement)
     {
         $final = @preg_replace($pattern, $replacement, $value);
         return $final;
     }
-    
     
     /**
      * 
@@ -73,12 +69,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function alpha($value)
     {
         return @preg_replace('/[^a-z]/i', '', $value);
     }
-    
     
     /**
      * 
@@ -91,12 +85,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function alnum($value)
     {
         return @preg_replace('/[^a-z0-9]/i', '', $value);
     }
-    
     
     /**
      * 
@@ -109,12 +101,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function blank($value)
     {
         return @preg_replace('/\s/', '', $value);
     }
-    
     
     /**
      * 
@@ -135,12 +125,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function formatDateTime($value, $format)
     {
         return @date($format, strtotime($value));
     }
-    
     
     /**
      * 
@@ -154,12 +142,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function isoDate($value)
     {
         return @date('Y-m-d', strtotime($value));
     }
-    
     
     /**
      * 
@@ -173,12 +159,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function isoDateTime($value)
     {
         return @date('Y-m-dTH:i:s', strtotime($value));
     }
-    
     
     /**
      * 
@@ -192,12 +176,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function isoTime($value)
     {
         return @date('H:i:s', strtotime($value));
     }
-    
     
     /**
      * 
@@ -210,12 +192,10 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function numeric($value)
     {
         return @preg_replace('/\D/', '', $value);
     }
-    
     
     /**
      * 
@@ -234,7 +214,6 @@ class Solar_Filter {
      * @return mixed The filtered value.
      * 
      */
-    
     static public function cast($value, $type)
     {
         switch (strtolower(strval($type))) {
@@ -271,7 +250,6 @@ class Solar_Filter {
         return $value;
     }
     
-    
     /**
      * 
      * Uses a callback to filter a value.
@@ -290,7 +268,6 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    
     static public function custom($value, $callback)
     {
         // If callback isn't callable, then bail
@@ -308,7 +285,6 @@ class Solar_Filter {
         // apply the callback
         return call_user_func_array($callback, $args);
     }
-    
     
     /**
      * 
@@ -337,7 +313,6 @@ class Solar_Filter {
      * @return mixed The filtered value.
      * 
      */
-    
     static public function multiple($value, $filters)
     {
         // No filters found, invalid filters provided, etc -- return the

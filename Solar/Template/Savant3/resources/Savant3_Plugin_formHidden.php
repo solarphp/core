@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to generate a 'hidden' element.

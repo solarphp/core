@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for hinting how to build forms.
@@ -47,9 +46,7 @@ Solar::loadClass('Solar_Valid');
  * @subpackage Solar_Form
  * 
  */
-
 class Solar_Form extends Solar_Base {
-    
     
     /**
      * 
@@ -75,13 +72,11 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'action'  => null,
         'method'  => 'post',
         'enctype' => 'multipart/form-data',
     );
-    
     
     /**
      * 
@@ -92,9 +87,7 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     public $attribs = array();
-    
     
     /**
      * 
@@ -105,9 +98,7 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     public $elements = array();
-    
     
     /**
      * 
@@ -123,9 +114,7 @@ class Solar_Form extends Solar_Base {
      * @var string|array
      * 
      */
-    
     public $feedback = null;
-    
     
     /**
      * 
@@ -136,9 +125,7 @@ class Solar_Form extends Solar_Base {
      * @access protected
      * 
      */
-    
     protected $_filter = array();
-    
     
     /**
      * 
@@ -149,9 +136,7 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_valid = array();
-    
     
     /**
      * 
@@ -166,9 +151,7 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_submitted = null;
-    
     
     /**
      * 
@@ -207,7 +190,6 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_default = array(
         'name'     => null,
         'type'     => null,
@@ -222,7 +204,6 @@ class Solar_Form extends Solar_Base {
         'feedback' => array(),
     );
     
-    
     /**
      * 
      * Constructor.
@@ -230,7 +211,6 @@ class Solar_Form extends Solar_Base {
      * @access public
      * 
      */
-    
     public function __construct($config = null)
     {
         $this->_config['action'] = Solar::server('REQUEST_URI');
@@ -244,7 +224,6 @@ class Solar_Form extends Solar_Base {
     // Element-management methods
     // 
     // -----------------------------------------------------------------
-    
     
     /**
      * 
@@ -262,7 +241,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setElement($name, $info, $array = null)
     {
         // prepare the name as an array key?
@@ -313,7 +291,6 @@ class Solar_Form extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Sets multiple elements in the form.  Appends if they do not exist.
@@ -327,14 +304,12 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setElements($list, $array = null)
     {
         foreach ($list as $name => $info) {
             $this->setElement($name, $info, $array);
         }
     }
-    
     
     /**
      * 
@@ -348,7 +323,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function orderElements($list)
     {
         // the set of elements as they are now
@@ -368,7 +342,6 @@ class Solar_Form extends Solar_Base {
         // done!
     }
     
-    
     /**
      * 
      * Adds a pre-filter for an element
@@ -387,7 +360,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function addFilter($name, $method) 
     {
         // Get the arguments, drop the element name
@@ -396,7 +368,6 @@ class Solar_Form extends Solar_Base {
 
         $this->_filter[$name][] = $args;
     }
-    
     
     /**
      * 
@@ -413,7 +384,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function addValid($name, $method, $message = null)
     {
         // get the arguments, drop the element name
@@ -440,7 +410,6 @@ class Solar_Form extends Solar_Base {
         $this->_valid[$name][] = $args;
     }
     
-    
     /**
      * 
      * Adds multiple feedback messages to elements.
@@ -453,7 +422,6 @@ class Solar_Form extends Solar_Base {
      * @param string $array Rename each element as a key in this array.
      * 
      */
-    
     public function addFeedback($list, $array = null)
     {
         foreach ($list as $name => $feedback) {
@@ -472,7 +440,6 @@ class Solar_Form extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Populates form elements with submitted values.
@@ -489,7 +456,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function populate($submit = null)
     {
         // import the submitted values
@@ -510,7 +476,6 @@ class Solar_Form extends Solar_Base {
         $this->_populate($this->_submitted);
     }
     
-    
     /**
      * 
      * Performs filtering and validation on each form element.
@@ -528,7 +493,6 @@ class Solar_Form extends Solar_Base {
      * @return bool True if all elements are valid, false if not.
      * 
      */
-    
     public function validate($submit = null)
     {
         // Populate the form values.
@@ -580,7 +544,6 @@ class Solar_Form extends Solar_Base {
         return $validated;
     }
     
-    
     /**
      * 
      * Returns the form element values as an array.
@@ -590,7 +553,6 @@ class Solar_Form extends Solar_Base {
      * @return array An associative array of element values.
      * 
      */
-    
     public function values()
     {
         $values = array();
@@ -607,7 +569,6 @@ class Solar_Form extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Resets the form object to its originally-configured state.
@@ -620,7 +581,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     public function reset()
     {
         $this->attribs    = $this->_config;
@@ -630,7 +590,6 @@ class Solar_Form extends Solar_Base {
         $this->_valid     = array();
         $this->_submitted = null;
     }
-    
     
     /**
      * 
@@ -663,7 +622,6 @@ class Solar_Form extends Solar_Base {
      * @return mixed Void on success, or Solar_Error on failure.
      * 
      */
-    
     public function load($obj)
     {
         // if the first param is a string class name
@@ -722,7 +680,6 @@ class Solar_Form extends Solar_Base {
     //
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Prepares a name as an array key, if needed.
@@ -737,7 +694,6 @@ class Solar_Form extends Solar_Base {
      * @return string The prepared element name.
      * 
      */
-    
     protected function _prepareName($name, $array = null)
     {
         if ($array) {
@@ -776,7 +732,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     protected function _populate($src, $elem = null)
     {
         // are we working with an array?
@@ -793,7 +748,6 @@ class Solar_Form extends Solar_Base {
             }
         }
     }
-    
     
     /**
      * 
@@ -816,7 +770,6 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    
     protected function _values($key, $val, &$values)
     {
         if (strpos($key, '[') === false) {

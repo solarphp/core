@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Get roles from a Unix-style groups file.
@@ -39,9 +38,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Role_File extends Solar_Base {
-    
     
     /**
      * 
@@ -52,7 +49,6 @@ class Solar_User_Role_File extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'file' => null
     );
@@ -68,7 +64,6 @@ class Solar_User_Role_File extends Solar_Base {
      * if there was a file error.
      * 
      */
-    
     public function fetch($user)
     {
         // force the full, real path to the file

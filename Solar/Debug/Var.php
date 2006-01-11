@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class to help examine and debug variables.
@@ -31,7 +30,6 @@
  * @todo add reflect() method for reflection capture
  * 
  */
-
 class Solar_Debug_Var extends Solar_Base {
     
     /**
@@ -48,11 +46,9 @@ class Solar_Debug_Var extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'output' => 'html',
     );
-    
     
     /**
      * 
@@ -67,7 +63,6 @@ class Solar_Debug_Var extends Solar_Base {
      * @return string The labeled results of var_dump().
      * 
      */
-    
     public function dump(&$var, $label = null)
     {
         // if there's a label, add a space after it

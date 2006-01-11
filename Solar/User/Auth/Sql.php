@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Authenticate against an SQL database table.
@@ -29,9 +28,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth_Sql extends Solar_Base {
-    
     
     /**
      * 
@@ -56,7 +53,6 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'sql'          => 'sql',
         'table'        => 'sc_user',
@@ -64,7 +60,6 @@ class Solar_User_Auth_Sql extends Solar_Base {
         'password_col' => 'passwd',
         'salt'         => null
     );
-    
     
     /**
      * 
@@ -79,7 +74,6 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      * 
      */
-    
     public function valid($username, $password)
     {
         // get the SQL object
@@ -121,5 +115,4 @@ class Solar_User_Auth_Sql extends Solar_Base {
         }
     }
 }
-
 ?>

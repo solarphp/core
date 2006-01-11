@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Controller action script for editing a bookmark.

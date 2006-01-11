@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Solar-specific plugin to help with locale strings.
@@ -29,7 +28,6 @@
  * @subpackage Solar_Template
  * 
  */
-
 class Savant3_Plugin_locale extends Savant3_Plugin {
     
     /**
@@ -41,9 +39,7 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
      * @var string
      * 
      */
-    
     public $default = 'Solar';
-    
     
     /**
      * 
@@ -64,7 +60,6 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
      * @return string The translated locale string.
      * 
      */
-    
     function locale($key, $num = 1)
     {
         // is there a :: in the key?

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Social bookmarking application.
@@ -34,7 +33,6 @@ Solar::loadClass('Solar_Controller_App');
  * @subpackage Solar_App_Bookmarks
  * 
  */
-
 class Solar_App_Bookmarks extends Solar_Controller_App {
     
     public $rss;

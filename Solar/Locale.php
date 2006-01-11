@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class to collect and return localization strings.
@@ -27,21 +26,17 @@
  * @package Solar
  * 
  */
-
 class Solar_Locale extends Solar_Base {
-    
     
     /**
      * 
      * User-provided configuration values.
      * 
      */
-    
     protected $_config = array(
         'locale' => 'Solar/Locale/',
         'code'   => 'en_US',
     );
-    
     
     /**
      * 
@@ -52,9 +47,7 @@ class Solar_Locale extends Solar_Base {
      * @var array
      * 
      */
-    
     public $string = array();
-    
     
     /**
      * 
@@ -63,7 +56,6 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
@@ -76,7 +68,6 @@ class Solar_Locale extends Solar_Base {
         $this->load('Solar', $this->_config['locale']);
     }
     
-    
     /**
      * 
      * Sets a new locale code and clears current strings.
@@ -86,14 +77,12 @@ class Solar_Locale extends Solar_Base {
      * @param $code string The new locale code.
      * 
      */
-    
     public function setCode($code)
     {
         $this->string = array();
         $this->_config['code'] = $code;
         $this->load('Solar', $this->_config['locale']);
     }
-    
     
     /**
      * 
@@ -104,12 +93,10 @@ class Solar_Locale extends Solar_Base {
      * @return string The current local code.
      * 
      */
-    
     public function code()
     {
         return $this->_config['code'];
     }
-    
     
     /**
      * 
@@ -133,12 +120,10 @@ class Solar_Locale extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setString($class, $key, $val)
     {
         $this->string[$class][$key] = $val;
     }
-    
     
     /**
      * 
@@ -154,7 +139,6 @@ class Solar_Locale extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setStrings($class, $list)
     {
         foreach ($list as $key => $val) {
@@ -181,7 +165,6 @@ class Solar_Locale extends Solar_Base {
      * @return void
      * 
      */
-
     public function load($class, $dir)
     {
         // create the file name
@@ -218,12 +201,10 @@ class Solar_Locale extends Solar_Base {
      * @return bool True if strings are loaded, false if not.
      * 
      */
-
     public function loaded($class)
     {
         return array_key_exists($class, $this->string);
     }
-    
     
     /**
      * 
@@ -244,7 +225,6 @@ class Solar_Locale extends Solar_Base {
      * translated string was found.
      * 
      */
-
     public function string($class, $key, $num = 1)
     {
         // if the key does not exist for the class,
@@ -266,5 +246,4 @@ class Solar_Locale extends Solar_Base {
         }
     }
 }
-
 ?>

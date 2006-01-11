@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Authenticate against an LDAP server.
@@ -29,9 +28,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth_Ldap extends Solar_Base {
-    
     
     /**
      * 
@@ -49,19 +46,16 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'url'    => null,
         'format' => null,
     );
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // make sure we have LDAP available
@@ -90,7 +84,6 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * or a Solar_Error object if there was a connection error.
      * 
      */
-    
     public function valid($username, $password)
     {
         // connect
@@ -129,5 +122,4 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         }
     }
 }
-
 ?>

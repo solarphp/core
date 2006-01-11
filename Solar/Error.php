@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Error class; returns one or more errors.
@@ -63,9 +62,7 @@
  * @package Solar
  * 
  */
-
 class Solar_Error extends Solar_Base {
-    
     
     /**
      * 
@@ -86,14 +83,12 @@ class Solar_Error extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'push_callback' => null,
         'pop_callback'  => null,
         'trace' => true,
         'level' => E_USER_NOTICE
     );
-    
     
     /**
      * 
@@ -104,22 +99,18 @@ class Solar_Error extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_stack = array();
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         $this->_config['push_callback'] = array($this, '_pushCallback');
         parent::__construct($config);
     }
-    
     
     /**
      * 
@@ -130,7 +121,6 @@ class Solar_Error extends Solar_Base {
      * @return void
      * 
      */
-    
     public function __toString()
     {
         ob_start();
@@ -139,7 +129,6 @@ class Solar_Error extends Solar_Base {
         }
         return ob_get_clean();
     }
-    
     
     /**
      * 
@@ -165,7 +154,6 @@ class Solar_Error extends Solar_Base {
      * @return void
      * 
      */
-    
     public function push($class, $code = '', $text = '', $info = array(),
         $level = null, $trace = null)
     {
@@ -212,7 +200,6 @@ class Solar_Error extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Pops an error off the stack.
@@ -222,7 +209,6 @@ class Solar_Error extends Solar_Base {
      * @return array An array of error information.
      * 
      */
-    
     public function pop()
     {
         $err = @array_pop($this->_stack);
@@ -238,7 +224,6 @@ class Solar_Error extends Solar_Base {
         return $err;
     }
     
-    
     /**
      * 
      * Returns a count of how many errors are on the stack.
@@ -248,12 +233,10 @@ class Solar_Error extends Solar_Base {
      * @return int The number of errors on the stack.
      * 
      */
-    
     public function count()
     {
         return count($this->_stack);
     }
-    
     
     /**
      * 
@@ -272,7 +255,6 @@ class Solar_Error extends Solar_Base {
      * @return void
      * 
      */
-    
     protected function _pushCallback($err, $obj)
     {
         if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {

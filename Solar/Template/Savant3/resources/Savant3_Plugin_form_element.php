@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Base plugin for form elements.  Extend this, don't use it on its own.

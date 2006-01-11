@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to generate an <img ... /> tag.
@@ -195,5 +194,4 @@ class Savant3_Plugin_image extends Savant3_Plugin {
 		return $html;
 	}
 }
-
 ?>

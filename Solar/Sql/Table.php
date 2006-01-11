@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for representing an SQL table.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Table extends Solar_Base {
-    
     
     /**
      * 
@@ -49,12 +46,10 @@ class Solar_Sql_Table extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'sql'    => 'sql',
         'paging' => 10,
     );
-    
     
     /**
      * 
@@ -65,9 +60,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var string
      * 
      */
-    
     protected $_name = null;
-    
     
     /**
      * 
@@ -78,9 +71,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_order = array('id');
-    
     
     /**
      * 
@@ -91,9 +82,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var int
      * 
      */
-    
     protected $_paging = 10;
-    
     
     /**
      * 
@@ -122,9 +111,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_col = array();
-    
     
     /**
      * 
@@ -137,9 +124,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @see addIndex()
      * 
      */
-
     protected $_idx = array();
-    
     
     /**
      * 
@@ -150,9 +135,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var object
      * 
      */
-
     protected $_sql = null;
-    
     
     /**
      * 
@@ -166,7 +149,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return void
      * 
      */
-
     public function __construct($config = null)
     {
         // main construction
@@ -193,7 +175,6 @@ class Solar_Sql_Table extends Solar_Base {
         $this->_autoCreate();
     }
     
-    
     /**
      * 
      * Allows reading of protected properties.
@@ -205,7 +186,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return mixed The property value.
      * 
      */
-
     public function __get($key = null)
     {
         $prop = array('col', 'idx', 'name', 'paging');
@@ -217,7 +197,6 @@ class Solar_Sql_Table extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Sets the number of rows per page.
@@ -227,12 +206,10 @@ class Solar_Sql_Table extends Solar_Base {
      * @param int $val The number of rows per page.
      * 
      */
-    
     public function paging($val)
     {
         $this->_paging = (int) $val;
     }
-    
     
     /**
      * 
@@ -247,7 +224,6 @@ class Solar_Sql_Table extends Solar_Base {
      * Solar_Error object on failure.
      * 
      */
-    
     public function save($data)
     {
         if (empty($data['id'])) {
@@ -257,7 +233,6 @@ class Solar_Sql_Table extends Solar_Base {
             return $this->update($data, $where);
         }
     }
-    
     
     /**
      * 
@@ -271,7 +246,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return mixed The inserted data on success, Solar_Error object on failure.
      * 
      */
-    
     public function insert($data)
     {
         settype($data, 'array');
@@ -314,7 +288,6 @@ class Solar_Sql_Table extends Solar_Base {
         return $data;
     }
     
-    
     /**
      * 
      * Validates and updates data in the table based on a WHERE clause.
@@ -331,7 +304,6 @@ class Solar_Sql_Table extends Solar_Base {
      * failure.
      * 
      */
-    
     public function update($data, $where)
     {
         // retain primary key data in this array for return values
@@ -367,7 +339,6 @@ class Solar_Sql_Table extends Solar_Base {
         return $data;
     }
     
-    
     /**
      * 
      * Deletes rows in the table based on a WHERE clause.
@@ -379,14 +350,12 @@ class Solar_Sql_Table extends Solar_Base {
      * @return mixed Void on success, Solar_Error object on failure.
      * 
      */
-    
     public function delete($where)
     {
         // attempt the deletion
         $result = $this->_sql->delete($this->_name, $where);
         return $result;
     }
-    
     
     /**
      * 
@@ -413,7 +382,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return array
      * 
      */
-    
     public function select($type = 'result', $where = null,
         $order = null, $page = null)
     {
@@ -437,7 +405,6 @@ class Solar_Sql_Table extends Solar_Base {
         return $select->fetch($type);
     }
     
-    
     /**
      * 
      * Increments and returns the sequence value for a column.
@@ -449,7 +416,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return int The next sequence number for the column.
      * 
      */
-    
     public function increment($name)
     {
         // only increment if auto-increment is set
@@ -462,7 +428,6 @@ class Solar_Sql_Table extends Solar_Base {
             return null;
         }
     }
-    
     
     /**
      * 
@@ -477,7 +442,6 @@ class Solar_Sql_Table extends Solar_Base {
      * the column name and the value is the default column value.
      * 
      */
-    
     public function getDefault($spec = null)
     {
         // the array of default data
@@ -545,7 +509,6 @@ class Solar_Sql_Table extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Use this to set up extended table objects.
@@ -555,11 +518,9 @@ class Solar_Sql_Table extends Solar_Base {
      * @return void
      * 
      */
-
     protected function _setup()
     {
     }
-    
     
     /**
      * 
@@ -570,7 +531,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @return void
      * 
      */
-
     final protected function _autoSetup()
     {
         // a baseline column definition
@@ -675,7 +635,6 @@ class Solar_Sql_Table extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Creates the table in the database if it does not already exist.
@@ -688,7 +647,6 @@ class Solar_Sql_Table extends Solar_Base {
      * and was successfully created.
      * 
      */
-
     final protected function _autoCreate()
     {
         // is a table with the same name already there?
@@ -753,7 +711,6 @@ class Solar_Sql_Table extends Solar_Base {
         return true;
     }
     
-    
     /**
      * 
      * Validates and recasts an array of input/update data in-place.
@@ -771,7 +728,6 @@ class Solar_Sql_Table extends Solar_Base {
      * @todo Use $this->errorPush() instead of $err->push().
      * 
      */
-    
     final protected function _autoValid(&$data)
     {
         // object methods for validation

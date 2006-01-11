@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Locale file.  Returns the strings for a specific language.
@@ -17,7 +16,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     
     // table and form labels

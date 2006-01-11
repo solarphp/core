@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class to track code execution times.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Debug
  * 
  */
-
 class Solar_Debug_Timer extends Solar_Base {
-    
     
     /**
      * 
@@ -46,12 +43,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'locale' => 'Solar/Debug/Locale/',
         'output' => 'html',
     );
-    
     
     /**
      * 
@@ -62,9 +57,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_marks = array();
-    
     
     /**
      * 
@@ -75,9 +68,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var boolean
      * 
      */
-    
     protected $_maxlen = 8;
-    
     
     /**
      * 
@@ -90,7 +81,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function solar($hook)
     {
         switch ($hook) {
@@ -103,7 +93,6 @@ class Solar_Debug_Timer extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Resets the profile and marks a new starting time.
@@ -111,13 +100,11 @@ class Solar_Debug_Timer extends Solar_Base {
      * @access public
      * 
      */
-    
     public function start()
     {
         $this->_marks = array();
         $this->mark('__start');
     }
-    
     
     /**
      * 
@@ -126,12 +113,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @access public
      * 
      */
-    
     public function stop()
     {
         $this->mark('__stop');
     }
-    
     
     /**
      * 
@@ -144,12 +129,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function mark($name)
     {
         $this->_marks[$name] = microtime(true);
     }
-    
     
     /**
      * 
@@ -160,7 +143,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return array An array of profile information.
      * 
      */
-    
     public function profile()
     {
         // previous time
@@ -209,7 +191,6 @@ class Solar_Debug_Timer extends Solar_Base {
         return $result;
     }
     
-    
     /**
      * 
      * Outputs the current profile.
@@ -221,7 +202,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function display($title = null)
     {
         // get the profile info

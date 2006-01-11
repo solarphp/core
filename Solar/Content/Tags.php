@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Tags on nodes.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Content
  * 
  */
-
 class Solar_Content_Tags extends Solar_Sql_Table {
-    
     
     /**
      * 
@@ -50,7 +47,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * @return string A space-separated string of tags.
      * 
      */
-    
     public function asString($tags)
     {
         // convert to array from string?
@@ -74,7 +70,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         return implode(' ', $tmp);
     }
     
-    
     /**
      * 
      * Normalizes tag arrays.
@@ -89,7 +84,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * @return string A space-separated string of tags.
      * 
      */
-    
     public function asArray($tags)
     {
         // normalize to string...
@@ -97,7 +91,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         // ... and convert to array
         return explode(' ', $tags);
     }
-    
     
     /**
      * 
@@ -110,7 +103,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * @return array An array of tags on that node.
      * 
      */
-    
     public function fetchForNode($node_id)
     {
         $select = Solar::object('Solar_Sql_Select');
@@ -118,7 +110,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         $select->where('node_id = ?', $node_id);
         return $select->fetch('col');
     }
-    
     
     /**
      * 
@@ -136,7 +127,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * @todo Collect errors and return as needed.
      * 
      */
-    
     public function refresh($node_id, $tags)
     {
         $node_id = (int) $node_id;
@@ -171,7 +161,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         // done!
     }
     
-    
     /**
      * 
      * Determines the diff (delete/insert matrix) between two tag sets.
@@ -201,7 +190,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * added from the new set).
      * 
      */
-    
     protected function _diff($old, $new)
     {
         // find intersections first
@@ -225,7 +213,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
         );
     }
     
-    
     /**
      * 
      * Schema setup.
@@ -235,7 +222,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * @return void
      * 
      */
-    
     protected function _setup()
     {
         // the table name

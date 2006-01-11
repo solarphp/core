@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Authenticate against .ini style files (not very secure).
@@ -31,9 +30,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth_Ini extends Solar_Base {
-    
     
     /**
      * 
@@ -50,7 +47,6 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'file' => null,
         'group' => 'users',
@@ -69,7 +65,6 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * or a Solar_Error object if there was a file error.
      * 
      */
-    
     public function valid($user, $pass)
     {
         // force the full, real path to the .ini file

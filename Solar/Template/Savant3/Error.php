@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Provides a simple error class for Savant.

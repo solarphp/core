@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to generate an 'image' element.

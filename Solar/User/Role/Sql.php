@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Get user roles from an SQL database table.
@@ -29,7 +28,6 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Role_Sql extends Solar_Base {
     
     /**
@@ -52,7 +50,6 @@ class Solar_User_Role_Sql extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'sql' => null,
         'table' => 'sc_user_role',
@@ -71,7 +68,6 @@ class Solar_User_Role_Sql extends Solar_Base {
      * @return array An array of roles discovered in LDAP.
      * 
      */
-    
     public function fetch($username)
     {
         // get or create the SQL object
@@ -106,5 +102,4 @@ class Solar_User_Role_Sql extends Solar_Base {
         return $result;
     }
 }
-
 ?>

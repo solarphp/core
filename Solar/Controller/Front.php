@@ -26,7 +26,6 @@
  * @todo How to get data back from the app to use in the layout (e.g., html title?)
  * 
  */
-
 class Solar_Controller_Front extends Solar_Base {
 
     /**

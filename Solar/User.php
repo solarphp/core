@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Meta-container for the current user to hold auth and roles.
@@ -33,7 +32,6 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User extends Solar_Base
 {
     /**
@@ -45,14 +43,12 @@ class Solar_User extends Solar_Base
      * @var array
      * 
      */
-    
     protected $_config = array(
         'auth' => null,
         'role' => null,
         'pref' => null,
         'perm' => null
     );
-    
     
     /**
      * 
@@ -63,9 +59,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $auth;
-    
     
     /**
      * 
@@ -76,9 +70,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $role;
-    
     
     /**
      * 
@@ -89,9 +81,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $pref;
-    
     
     /**
      * 
@@ -102,9 +92,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $perm;
-    
     
     /**
      * 
@@ -117,7 +105,6 @@ class Solar_User extends Solar_Base
      * @return void
      * 
      */
-    
     public function __construct($config = null)
     {
         // construction
@@ -130,7 +117,6 @@ class Solar_User extends Solar_Base
         $this->role = Solar::object('Solar_User_Role', $this->_config['role']);
     }
     
-    
     /**
      * 
      * Solar hooks.
@@ -142,7 +128,6 @@ class Solar_User extends Solar_Base
      * @return void
      * 
      */
-    
     public function solar($hook)
     {
         switch ($hook) {

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for reading user roles and groups.
@@ -29,9 +28,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Role extends Solar_Base {
-    
     
     /**
      * 
@@ -50,13 +47,11 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'class'   => 'Solar_User_Role_None',
         'options' => null,
         'refresh' => false,
     );
-    
     
     /**
      * 
@@ -67,9 +62,7 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_driver = array();
-    
     
     /**
      * 
@@ -80,9 +73,7 @@ class Solar_User_Role extends Solar_Base {
      * @var bool
      * 
      */
-    
     protected $_loaded = false;
-    
     
     /**
      * 
@@ -93,9 +84,7 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
     public $list;
-    
     
     /**
      * 
@@ -108,7 +97,6 @@ class Solar_User_Role extends Solar_Base {
      * @return object
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config option settings
@@ -127,7 +115,6 @@ class Solar_User_Role extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Refresh the list of roles for the given user.
@@ -137,7 +124,6 @@ class Solar_User_Role extends Solar_Base {
      * @return array The list of roles for the authenticated user.
      * 
      */
-    
     public function fetch($username)
     {
         // have we loaded roles for the first time yet? if so, and if
@@ -169,7 +155,6 @@ class Solar_User_Role extends Solar_Base {
         return $this->list;
     }
     
-    
     /**
      * 
      * Resets the role list to nothing.
@@ -179,13 +164,11 @@ class Solar_User_Role extends Solar_Base {
      * @return void
      * 
      */
-    
     public function reset()
     {
         $this->_loaded = false;
         $this->list = array();
     }
-    
     
     /**
      * 
@@ -198,12 +181,10 @@ class Solar_User_Role extends Solar_Base {
      * @return void
      * 
      */
-    
     public function in($role = null)
     {
         return in_array($role, $this->list);
     }
-    
     
     /**
      * 
@@ -217,7 +198,6 @@ class Solar_User_Role extends Solar_Base {
      * logical 'or'), false if not.
      * 
      */
-    
     public function inAny($roles = array())
     {
         // loop through all of the roles, returning 'true' the first
@@ -233,7 +213,6 @@ class Solar_User_Role extends Solar_Base {
         return false;
     }
     
-    
     /**
      * 
      * Check to see if a user is in all of the listed roles.
@@ -246,7 +225,6 @@ class Solar_User_Role extends Solar_Base {
      * logical 'and'), false if not.
      * 
      */
-    
     public function inAll($roles = array())
     {
         // loop through all of the roles, returning 'false' the first

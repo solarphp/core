@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for connecting to Microsoft SQL databases.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,7 +39,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
     protected $_native = array(
         'bool'      => 'BIT',
         'char'      => 'BINARY(:size)',
@@ -58,7 +54,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
         'timestamp' => 'CHAR(19)'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +63,7 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
     protected $_pdo_type = 'dblib';
-    
     
     /**
      * 
@@ -86,7 +79,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // determine count
@@ -153,7 +145,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
         }
     }
     
-    
     /**
      * 
      * Returns a list of database tables.
@@ -163,7 +154,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @return array The list of tables in the database.
      * 
      */
-    
     public function listTables()
     {
         $cmd = "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
@@ -171,7 +161,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
-    
     
     /**
      * 
@@ -186,7 +175,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $start = (int) $start;
@@ -195,7 +183,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
             "IDENTITY($start,1) PRIMARY KEY CLUSTERED)"
         );
     }
-    
     
     /**
      * 
@@ -208,12 +195,10 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP TABLE $name");
     }
-    
     
     /**
      * 
@@ -226,7 +211,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         $cmd = "INSERT INTO $name DEFAULT VALUES";

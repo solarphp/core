@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for cache control.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Cache
  * 
  */
-
 class Solar_Cache extends Solar_Base {
-    
     
     /**
      * 
@@ -50,13 +47,11 @@ class Solar_Cache extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'active'  => true,
         'class'   => 'Solar_Cache_File',
         'options' => null
     );
-    
     
     /**
      * 
@@ -67,9 +62,7 @@ class Solar_Cache extends Solar_Base {
      * @var object
      * 
      */
-    
     protected $_driver;
-    
     
     /**
      * 
@@ -80,7 +73,6 @@ class Solar_Cache extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config option settings
@@ -93,7 +85,6 @@ class Solar_Cache extends Solar_Base {
         );
     }
     
-    
     /**
      * 
      * Turns caching on and off.
@@ -103,12 +94,10 @@ class Solar_Cache extends Solar_Base {
      * @param bool $flag True to turn on, false to turn off.
      * 
      */
-    
     public function setActive($flag)
     {
         $this->_config['active'] = (bool) $flag;
     }
-    
     
     /**
      * 
@@ -119,12 +108,10 @@ class Solar_Cache extends Solar_Base {
      * @return bool True if active, false if not.
      * 
      */
-    
     public function active()
     {
         return $this->_config['active'];
     }
-    
     
     /**
      * 
@@ -141,7 +128,6 @@ class Solar_Cache extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    
     public function replace($key, $data)
     {
         if ($this->active()) {
@@ -150,7 +136,6 @@ class Solar_Cache extends Solar_Base {
             return false;
         }
     }
-    
     
     /**
      * 
@@ -163,7 +148,6 @@ class Solar_Cache extends Solar_Base {
      * @return mixed Boolean false on failure, string on success.
      * 
      */
-    
     public function fetch($key)
     {
         if ($this->active()) {
@@ -172,7 +156,6 @@ class Solar_Cache extends Solar_Base {
             return false;
         }
     }
-    
     
     /**
      * 
@@ -185,14 +168,12 @@ class Solar_Cache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function delete($key)
     {
         if ($this->active()) {
             return $this->_driver->delete($key);
         }
     }
-    
     
     /**
      * 
@@ -203,14 +184,12 @@ class Solar_Cache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function deleteAll()
     {
         if ($this->active()) {
             return $this->_driver->deleteAll();
         }
     }
-    
     
     /**
      * 
@@ -223,7 +202,6 @@ class Solar_Cache extends Solar_Base {
      * @return mixed The driver-specific name for the entry key.
      * 
      */
-    
     public function entry($key)
     {
         return $this->_driver->entry($key);

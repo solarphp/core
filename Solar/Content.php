@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Generic content management class.
@@ -36,9 +35,7 @@ Solar::loadClass('Solar_Sql_Table');
  * @todo Build in content permission system.
  * 
  */
-
 class Solar_Content extends Solar_Base {
-    
     
     /**
      * 
@@ -49,11 +46,9 @@ class Solar_Content extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'paging' => 10
     );
-    
     
     /**
      * 
@@ -64,9 +59,7 @@ class Solar_Content extends Solar_Base {
      * @var object Solar_Content_Areas
      * 
      */
-    
     protected $_areas;
-    
     
     /**
      * 
@@ -77,9 +70,7 @@ class Solar_Content extends Solar_Base {
      * @var object Solar_Content_Nodes
      * 
      */
-    
     protected $_nodes;
-    
     
     /**
      * 
@@ -90,9 +81,7 @@ class Solar_Content extends Solar_Base {
      * @var object Solar_Content_Tags
      * 
      */
-    
     protected $_tags;
-    
     
     /**
      * 
@@ -103,9 +92,7 @@ class Solar_Content extends Solar_Base {
      * @var int
      * 
      */
-    
     protected $_paging = 10;
-    
     
     /**
      * 
@@ -116,7 +103,6 @@ class Solar_Content extends Solar_Base {
      * @param array $config User-defined configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -127,7 +113,6 @@ class Solar_Content extends Solar_Base {
         $this->_nodes = Solar::object('Solar_Content_Nodes');
         $this->_tags  = Solar::object('Solar_Content_Tags');
     }
-    
     
     /**
      * 
@@ -140,12 +125,10 @@ class Solar_Content extends Solar_Base {
      * @return void
      * 
      */
-    
     public function paging($val)
     {
         $this->_paging = (int) $val;
     }
-    
     
     /**
      * 
@@ -166,7 +149,6 @@ class Solar_Content extends Solar_Base {
      * @return object A Solar_Form object.
      * 
      */
-    
     public function form($class = null, $cols = null, $info = null, $array_name = null)
     {
         // the basic form object
@@ -208,7 +190,6 @@ class Solar_Content extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Fetch one area by ID or name.
@@ -220,7 +201,6 @@ class Solar_Content extends Solar_Base {
      * @return array An array of area information.
      * 
      */
-    
     public function fetchArea($area)
     {
         $select = $this->selectAreas();
@@ -234,7 +214,6 @@ class Solar_Content extends Solar_Base {
         $select->order('id');
         return $select->fetch('row');
     }
-    
     
     /**
      * 
@@ -251,7 +230,6 @@ class Solar_Content extends Solar_Base {
      * @return array An array of information about all the fetched areas.
      * 
      */
-    
     public function fetchAreaList($where = null, $order = null, $page = null)
     {
         $select = $this->selectAreas($where);
@@ -259,7 +237,6 @@ class Solar_Content extends Solar_Base {
         $select->limitPage($page);
         return $select->fetch('all');
     }
-    
     
     /**
      * 
@@ -272,12 +249,10 @@ class Solar_Content extends Solar_Base {
      * @return array The data as inserted.
      * 
      */
-    
     public function insertArea($data)
     {
         return $this->_areas->insert($data);
     }
-    
     
     /**
      * 
@@ -292,13 +267,11 @@ class Solar_Content extends Solar_Base {
      * @return array The data as updated.
      * 
      */
-    
     public function updateArea($id, $data)
     {
         $where = array('id = ?' => $id);
         return $this->_areas->update($data, $where);
     }
-    
     
     /**
      * 
@@ -312,7 +285,6 @@ class Solar_Content extends Solar_Base {
      * tags and the custom WHERE conditions.
      * 
      */
-    
     public function selectAreas($where = null)
     {
         $select = Solar::object('Solar_Sql_Select');
@@ -329,7 +301,6 @@ class Solar_Content extends Solar_Base {
     // 
     // -----------------------------------------------------------------
     
-    
     /**
      * 
      * Fetches one node by name, ID, or where conditions.
@@ -342,7 +313,6 @@ class Solar_Content extends Solar_Base {
      * @return array The first node that matches the search spec.
      * 
      */
-    
     public function fetchNode($spec)
     {
         if (is_array($spec)) {
@@ -367,7 +337,6 @@ class Solar_Content extends Solar_Base {
         return $select->fetch('row');
     }
     
-    
     /**
      * 
      * Fetches a list of nodes.
@@ -386,7 +355,6 @@ class Solar_Content extends Solar_Base {
      * @return array The nodes that match the search specifications.
      * 
      */
-    
     public function fetchNodeList($tags = null, $where = null, $order = null,
         $page = null)
     {
@@ -395,7 +363,6 @@ class Solar_Content extends Solar_Base {
         $select->limitPage($page);
         return $select->fetch('all');
     }
-    
     
     /**
      * 
@@ -422,7 +389,6 @@ class Solar_Content extends Solar_Base {
      * nodes matching) and 'pages' (the total number of pages).
      * 
      */
-    
     public function fetchNodeCount($tags = null, $where = null)
     {
         $select = Solar::object('Solar_Sql_Select');
@@ -464,7 +430,6 @@ class Solar_Content extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Get the default values for a new generic node.
@@ -474,12 +439,10 @@ class Solar_Content extends Solar_Base {
      * @return array An array of default node data.
      * 
      */
-    
     public function defaultNode()
     {
         return $this->_nodes->getDefault();
     }
-    
     
     /**
      * 
@@ -494,7 +457,6 @@ class Solar_Content extends Solar_Base {
      * @return array The data as inserted.
      * 
      */
-    
     public function insertNode($data)
     {    
         // normalize the tag string if one exists
@@ -520,7 +482,6 @@ class Solar_Content extends Solar_Base {
         return $data;
     }
     
-    
     /**
      * 
      * Updates one node in-place.
@@ -536,7 +497,6 @@ class Solar_Content extends Solar_Base {
      * @return array The data as updated.
      * 
      */
-    
     public function updateNode($id, $data)
     {
         // normalize the tag string if one was passed in.
@@ -560,7 +520,6 @@ class Solar_Content extends Solar_Base {
         return $data;
     }
     
-    
     /**
      * 
      * Deletes nodes.
@@ -573,7 +532,6 @@ class Solar_Content extends Solar_Base {
      * @return void
      * 
      */
-    
     public function deleteNodes($where)
     {
         // find out which nodes are getting deleted
@@ -595,7 +553,6 @@ class Solar_Content extends Solar_Base {
         $result = $this->_tags->delete($where);
         return $result;
     }
-    
     
     /**
      * 
@@ -628,7 +585,6 @@ class Solar_Content extends Solar_Base {
      * tags and the custom WHERE conditions.
      * 
      */
-    
     public function selectNodes($tags = null, $where = null)
     {
         $select = Solar::object('Solar_Sql_Select');
@@ -659,7 +615,6 @@ class Solar_Content extends Solar_Base {
     // -----------------------------------------------------------------
     
     
-    
     /**
      * 
      * Fetch tag names and counts.
@@ -673,7 +628,6 @@ class Solar_Content extends Solar_Base {
      * tags and the custom WHERE conditions.
      * 
      */
-    
     // fetch all tags (regardless of type) and their counts as name =>
     // count, ordered by name, optionally for a specific user,
     // optionally having a minimum count.

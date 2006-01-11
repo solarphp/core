@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Memcache cache controller.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Cache
  * 
  */
-
 class Solar_Cache_Memcache extends Solar_Base {
-    
     
     /**
      * 
@@ -50,13 +47,11 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'host' => 'localhost',
         'port' => '11211',
         'life' => 60,
     );
-    
     
     /**
      * 
@@ -67,9 +62,7 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @var object
      * 
      */
-    
     protected $_memcache;
-    
     
     /**
      * 
@@ -81,7 +74,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * values.
      * 
      */
-    
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -89,7 +81,6 @@ class Solar_Cache_Memcache extends Solar_Base {
         $this->_memcache = new Memcache;
         $this->_memcache->connect($this->_config['host'], $this->_config['port']);
     }
-    
     
     /**
      * 
@@ -104,12 +95,10 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    
     public function replace($key, $data)
     {
         return $this->_memcache->set($key, $data, null, $this->_config['life']);
     }
-    
     
     /**
      * 
@@ -122,12 +111,10 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return mixed Boolean false on failure, string on success.
      * 
      */
-    
     public function fetch($key)
     {
         return $this->_memcache->get($key);
     }
-    
     
     /**
      * 
@@ -140,12 +127,10 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function delete($key)
     {
         $this->_memcache->delete($key);
     }
-    
     
     /**
      * 
@@ -156,12 +141,10 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function deleteAll()
     {
         $this->_memcache->flush();
     }
-    
     
     /**
      * 
@@ -174,7 +157,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return string The cache entry name.
      * 
      */
-    
     public function entry($key)
     {
         return $key;

@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to create XHTML forms with CSS and table-based layouts.
@@ -1073,5 +1072,4 @@ class Savant3_Plugin_form extends Savant3_Plugin {
 		return $xhtml;
 	}
 }
-
 ?>

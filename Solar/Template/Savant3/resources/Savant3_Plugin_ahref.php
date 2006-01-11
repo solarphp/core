@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Generates an <a href="">...</a> tag.

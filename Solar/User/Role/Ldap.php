@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Get roles (groups) from an LDAP server.
@@ -29,9 +28,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Role_Ldap extends Solar_Base {
-    
     
     /**
      * 
@@ -57,7 +54,6 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'url' => null,
         'basedn' => null,
@@ -67,13 +63,11 @@ class Solar_User_Role_Ldap extends Solar_Base {
         'bindpw' => null,
     );
     
-    
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // make sure we have LDAP available
@@ -101,7 +95,6 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * @return array An array of roles discovered in LDAP.
      * 
      */
-    
     public function fetch($user)
     {
         // connect
@@ -172,5 +165,4 @@ class Solar_User_Role_Ldap extends Solar_Base {
         return $list;
     }
 }
-
 ?>

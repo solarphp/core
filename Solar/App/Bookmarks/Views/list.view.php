@@ -16,7 +16,6 @@
  * @version $Id$
  * 
  */
-
 include $this->template('header.php');
 
 // a basic link object

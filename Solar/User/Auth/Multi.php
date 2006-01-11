@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Authenticate against multiple sources, falling back as needed.
@@ -29,7 +28,6 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth_Multi extends Solar_Base {
     
     /**
@@ -45,13 +43,11 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'drivers' => array(
             'Solar_User_Auth_None'
         )
     );
-    
     
     /**
      * 
@@ -62,16 +58,13 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_driver = array();
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
@@ -98,7 +91,6 @@ class Solar_User_Auth_Multi extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Validate a username and password.
@@ -111,7 +103,6 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * or a Solar_Error object if there was a driver error.
      * 
      */
-    
     public function valid($user, $pass)
     {
         foreach ($this->_driver as $driver) {

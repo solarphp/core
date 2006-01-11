@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for loading form definitions from a file.
@@ -144,7 +143,6 @@
  * @subpackage Solar_Form
  * 
  */
-
 class Solar_Form_Load_Xml extends Solar_Base {
     
     protected $_config = array(
@@ -185,7 +183,6 @@ class Solar_Form_Load_Xml extends Solar_Base {
      * @return object|false Solar_Form object, boolean false on error.
      *
      */
-    
     public function fetch($filename) 
     {
         $args     = func_get_args();
@@ -325,7 +322,6 @@ class Solar_Form_Load_Xml extends Solar_Base {
         );
     }
     
-    
     /**
      * 
      * Get parameters for a filter or validation rule
@@ -336,7 +332,6 @@ class Solar_Form_Load_Xml extends Solar_Base {
      *
      * @return array
      */
-    
     protected function _getParams($params) 
     {
         $final = array();

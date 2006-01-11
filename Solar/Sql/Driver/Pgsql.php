@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for connecting to PostgreSQL databases.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,7 +39,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
     protected $_native = array(
         'bool'      => 'BOOLEAN',
         'char'      => 'CHAR(:size)',
@@ -58,7 +54,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         'timestamp' => 'CHAR(19)'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +63,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
     protected $_pdo_type = 'pgsql';
-    
     
     /**
      * 
@@ -83,7 +76,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return string A PDO-style DSN.
      * 
      */
-    
     protected function _dsn()
     {
         $dsn = array();
@@ -104,7 +96,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
     }
     
     
-    
     /**
      * 
      * Builds a SELECT statement from its component parts.
@@ -118,7 +109,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // build the baseline statement
@@ -146,7 +136,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Returns the SQL statement to get a list of database tables.
@@ -156,7 +145,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return string The SQL statement.
      * 
      */
-    
     public function listTables()
     {
         // copied from PEAR DB
@@ -178,7 +166,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         return $list;
     }
     
-    
     /**
      * 
      * Creates a sequence, optionally starting at a certain number.
@@ -192,12 +179,10 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $this->exec("CREATE SEQUENCE $name START $start");
     }
-    
     
     /**
      * 
@@ -210,12 +195,10 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP SEQUENCE $name");
     }
-    
     
     /**
      * 
@@ -228,7 +211,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         // first, try to get the next sequence number, assuming

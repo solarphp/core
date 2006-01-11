@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for connecting to Frontbase SQL databases.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,7 +39,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
     protected $_native = array(
         'bool'      => 'DECIMAL(1,0)',
         'char'      => 'CHAR(:size)',
@@ -58,7 +54,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
         'timestamp' => 'CHAR(19)'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +63,7 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
     protected $_pdo_type = 'odbc';
-    
     
     /**
      * 
@@ -91,7 +84,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return string The modified SQL query.
      * 
      */
-    
     public function limit(&$stmt, $count = 0, $offset = 0)
     {
         if ($count > 0) {
@@ -109,7 +101,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
         }
     }
     
-    
     /**
      * 
      * Adds a LIMIT clause (or equivalent) to a SELECT statement.
@@ -121,7 +112,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // determine count
@@ -163,7 +153,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
         }
     }
     
-    
     /**
      * 
      * Returns the SQL statement to get a list of database tables.
@@ -173,7 +162,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return string The SQL statement.
      * 
      */
-    
     public function listTables()
     {
         // copied from PEAR DB
@@ -182,7 +170,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
-    
     
     /**
      * 
@@ -197,7 +184,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
@@ -208,7 +194,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
         );
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
-    
     
     /**
      * 
@@ -221,12 +206,10 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP TABLE $name");
     }
-    
     
     /**
      * 
@@ -239,7 +222,6 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name = 'hive')
     {
         // first, try to get the next sequence number, assuming

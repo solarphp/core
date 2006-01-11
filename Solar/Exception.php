@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Exception class.
@@ -25,7 +24,6 @@
  * @package Solar
  * 
  */
-
 class Solar_Exception extends Exception {
     
     /**

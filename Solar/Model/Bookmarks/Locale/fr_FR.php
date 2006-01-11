@@ -16,7 +16,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     'ERR_TAGS'  => 'Veuillez utiliser une liste de tags valide (séparés par des blancs).',
     'ERR_URI'   => 'Veuillez utiliser une URI valide.',

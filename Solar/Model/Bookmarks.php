@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Bookmarks management class.
@@ -32,9 +31,7 @@
  * @subpackage Solar_Model_Bookmarks
  * 
  */
-
 class Solar_Model_Bookmarks extends Solar_Base {
-    
     
     /**
      * 
@@ -45,13 +42,11 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'area_name'    => 'Solar_Model_Bookmarks',
         'default_tags' => 'inbox',
         'paging'       => 10,
     );
-    
     
     /**
      * 
@@ -62,9 +57,7 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @var object Solar_Content
      * 
      */
-    
     protected $_content;
-    
     
     /**
      * 
@@ -75,9 +68,7 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @var int
      * 
      */
-    
     protected $_area_id;
-    
     
     /**
      * 
@@ -88,9 +79,7 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @var object Solar_Sql
      * 
      */
-    
     protected $_node_type = 'bookmark';
-    
     
     /**
      * 
@@ -101,12 +90,10 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_where = array(
         'nodes.area_id = ?' => null,
         'nodes.type = ?'    => null,
     );
-    
     
     /**
      * 
@@ -117,7 +104,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // main construction
@@ -146,7 +132,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         );
     }
     
-    
     /**
      * 
      * Sets paging in the content object.
@@ -158,12 +143,10 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return void
      * 
      */
-    
     public function paging($val)
     {
         $this->_content->paging((int) $val);
     }
-    
     
     /**
      * 
@@ -176,7 +159,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The data as inserted or updated.
      * 
      */
-    
     public function save($data)
     {
         if (empty($data['id'])) {
@@ -185,7 +167,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
             return $this->update($data['id'], $data);
         }
     }
-    
     
     /**
      * 
@@ -198,7 +179,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The inserted data.
      * 
      */
-    
     public function insert($data)
     {
         // force the area and type
@@ -214,7 +194,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         return $this->_content->insertNode($data);
     }
     
-    
     /**
      * 
      * Update a bookmark node.
@@ -226,7 +205,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The updated data.
      * 
      */
-    
     public function update($node_id, $data)
     {
         // force the area_id and type
@@ -246,7 +224,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         );
     }
     
-    
     /**
      * 
      * Fetch the default bookmark node data.
@@ -256,7 +233,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array Default data for a new bookmark node.
      * 
      */
-    
     public function fetchDefault()
     {
         // a default generic node
@@ -272,7 +248,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         return $data;
     }
     
-    
     /**
      * 
      * Fetch one bookmark (by node ID) from the content store.
@@ -284,7 +259,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The bookmark data.
      * 
      */
-    
     public function fetchItem($id)
     {
         $where = $this->_where;
@@ -292,7 +266,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         $data = $this->_content->fetchNode($where);
         return $data;
     }
-    
     
     /**
      * 
@@ -317,7 +290,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The list of bookmarks.
      * 
      */
-    
     public function fetchList($handle = null, $tags = null, $order = null,
         $page = null)
     {
@@ -332,7 +304,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         
         return $this->_content->fetchNodeList($tags, $where, $order, $page);
     }
-    
     
     /**
      * 
@@ -353,7 +324,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * bookmarks) and 'pages' (number of pages).
      * 
      */
-    
     public function countPages($handle = null, $tags = null)
     {
         $where = $this->_where;
@@ -363,7 +333,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         
         return $this->_content->fetchNodeCount($tags, $where);
     }
-    
     
     /**
      * 
@@ -380,7 +349,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * the value is the number of times that tag appears.
      * 
      */
-    
     public function fetchTagList($handle = null)
     {
         $where = $this->_where;
@@ -389,7 +357,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         }
         return $this->_content->fetchTagList($where);
     }
-    
     
     /**
      * 
@@ -406,7 +373,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return array The node data.
      * 
      */
-    
     public function fetchOwnerUri($handle, $uri)
     {
         $where = $this->_where;
@@ -414,7 +380,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         $where['nodes.uri = ?']          = $uri;
         return $this->_content->fetchNode($where);    
     }
-    
     
     /**
      * 
@@ -427,14 +392,12 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function delete($id)
     {
         $where = $this->_where;
         $where['id = ?'] = (int) $id;
         return $this->_content->deleteNodes($where);
     }
-    
     
     /**
      * 
@@ -451,7 +414,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * @return object A Solar_Form object.
      * 
      */
-    
     public function form($data = null)
     {
         // which node columns do we want?

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for SQL select generation and results.
@@ -17,7 +16,6 @@
  * @version $Id$
  * 
  */
-
 
 /**
  * Needed for instanceof comparisons.
@@ -85,9 +83,7 @@ Solar::loadClass('Solar_Sql_Table');
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Select extends Solar_Base {
-    
     
     /**
      * 
@@ -105,12 +101,10 @@ class Solar_Sql_Select extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'sql'    => 'sql',
         'paging' => 10,
     );
-    
     
     /**
      * 
@@ -121,9 +115,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_bind = array();
-    
     
     /**
      * 
@@ -134,7 +126,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_parts = array(
         'distinct' => false,
         'cols'     => array(),
@@ -150,7 +141,6 @@ class Solar_Sql_Select extends Solar_Base {
         ),
     );
     
-    
     /**
      * 
      * The number of rows per page.
@@ -160,9 +150,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @var int
      * 
      */
-    
     protected $_paging = 10;
-    
     
     /**
      * 
@@ -175,9 +163,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_tbl_cols = array();
-    
     
     /**
      * 
@@ -188,7 +174,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @param array $config User-provided config values.
      * 
      */
-
     public function __construct($config = null)
     {
         // basic construction
@@ -210,7 +195,6 @@ class Solar_Sql_Select extends Solar_Base {
         $this->paging($this->_config['paging']);
     }
     
-    
     /**
      * 
      * Read-only access to properties.
@@ -220,12 +204,10 @@ class Solar_Sql_Select extends Solar_Base {
      * @return mixed The property value.
      * 
      */
-
     public function __get($key)
     {
         return $this->$key;
     }
-    
     
     /**
      * 
@@ -238,7 +220,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function paging($rows)
     {
         // force a positive integer
@@ -248,7 +229,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
         $this->_paging = $rows;
     }
-    
     
     /**
      * 
@@ -262,12 +242,10 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function distinct($flag = true)
     {
         $this->_parts['distinct'] = (bool) $flag;
     }
-    
     
     /**
      * 
@@ -280,13 +258,11 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function cols($spec)
     {
         // track them as related to no specific table
         $this->_tblCols('', $spec);
     }
-    
     
     /**
      * 
@@ -302,7 +278,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function from($spec, $cols = null)
     {
         // the $spec may be a table object, or a string.
@@ -330,7 +305,6 @@ class Solar_Sql_Select extends Solar_Base {
         $this->_tblCols($name, $cols);
     }
     
-    
     /**
      * 
      * Adds a JOIN table and columns to the query.
@@ -347,7 +321,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function join($spec, $cond, $cols = null)
     {
         // the $spec may be a table object, or a string.
@@ -374,7 +347,6 @@ class Solar_Sql_Select extends Solar_Base {
         // add to the columns from this joined table
         $this->_tblCols($name, $cols);
     }
-    
     
     /**
      * 
@@ -407,7 +379,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function where($cond)
     {
         if (empty($cond)) {
@@ -426,7 +397,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Adds a WHERE condition to the query by OR.
@@ -444,7 +414,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @see where()
      * 
      */
-
     public function orWhere($cond)
     {
         if (empty($cond)) {
@@ -462,7 +431,6 @@ class Solar_Sql_Select extends Solar_Base {
             $this->_parts['where'][] = $cond;
         }
     }
-    
     
     /**
      * 
@@ -484,7 +452,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @see orWhere()
      * 
      */
-
     public function multiWhere($list, $op = 'AND')
     {
         // normally use where() ...
@@ -508,7 +475,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Adds grouping to the query.
@@ -520,7 +486,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function group($spec)
     {
         if (empty($spec)) {
@@ -535,7 +500,6 @@ class Solar_Sql_Select extends Solar_Base {
         
         $this->_parts['group'] = array_merge($this->_parts['group'], $spec);
     }
-    
     
     /**
      * 
@@ -568,7 +532,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function having($cond)
     {
         if (empty($cond)) {
@@ -587,7 +550,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Adds a HAVING condition to the query by OR.
@@ -605,7 +567,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @see having()
      * 
      */
-
     public function orHaving($cond)
     {
         if (empty($cond)) {
@@ -623,7 +584,6 @@ class Solar_Sql_Select extends Solar_Base {
             $this->_parts['having'][] = $cond;
         }
     }
-    
     
     /**
      * 
@@ -645,7 +605,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @see orHaving()
      * 
      */
-    
     public function multiHaving($list, $op = 'AND')
     {
         $method = 'having';
@@ -666,7 +625,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Adds a row order to the query.
@@ -678,7 +636,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function order($spec)
     {
         if (empty($spec)) {
@@ -704,7 +661,6 @@ class Solar_Sql_Select extends Solar_Base {
         $this->_parts['order'] = array_merge($this->_parts['order'], $spec);
     }
     
-    
     /**
      * 
      * Sets a limit count and offset to the query.
@@ -718,13 +674,11 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function limit($count = null, $offset = null)
     {
         $this->_parts['limit']['count']  = (int) $count;
         $this->_parts['limit']['offset'] = (int) $offset;
     }
-    
     
     /**
      * 
@@ -737,7 +691,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function limitPage($page = null)
     {
         // reset the count and offset
@@ -752,7 +705,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Clears query properties.
@@ -765,7 +717,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function clear($key = null)
     {
         $list = array_keys($this->_parts);
@@ -789,7 +740,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Adds data to bind into the query.
@@ -806,7 +756,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     public function bind($key, $val = null)
     {
         if (is_array($key)) {
@@ -817,7 +766,6 @@ class Solar_Sql_Select extends Solar_Base {
             $this->_bind[$key] = $val;
         }
     }
-    
     
     /**
      * 
@@ -832,7 +780,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-    
     public function unbind($spec = null)
     {
         if (empty($spec)) {
@@ -845,7 +792,6 @@ class Solar_Sql_Select extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Fetch the results based on the current query properties.
@@ -857,7 +803,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return mixed The query results.
      * 
      */
-    
     public function fetch($type = 'result')
     {
         // build up the $parts['cols'] from scratch.
@@ -921,7 +866,6 @@ class Solar_Sql_Select extends Solar_Base {
         return $this->sql->select($type, $this->_parts, $this->_bind);
     }
     
-    
     /**
      * 
      * Get the count of rows and number of pages for the current query.
@@ -934,7 +878,6 @@ class Solar_Sql_Select extends Solar_Base {
      * of rows) and 'pages' (the number of pages based on $this->_paging).
      * 
      */
-    
     public function countPages($col = 'id')
     {
         // make a self-cloned copy so that all settings are identical
@@ -977,7 +920,6 @@ class Solar_Sql_Select extends Solar_Base {
         );
     }
     
-    
     /**
      * 
      * Adds to the internal table-to-column mapping array.
@@ -992,7 +934,6 @@ class Solar_Sql_Select extends Solar_Base {
      * @return void
      * 
      */
-
     protected function _tblCols($tbl, $cols)
     {
         if (is_string($cols)) {

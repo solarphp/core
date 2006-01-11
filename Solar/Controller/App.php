@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Abstract application controller class for Solar.
@@ -227,7 +226,6 @@ abstract class Solar_Controller_App extends Solar_Base {
     {
         throw new Exception("property '$key' not defined");
     }
-    
     
     /**
      * 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Base class for specific RDBMS driver information.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver extends Solar_Base {
-    
     
     /**
      * 
@@ -56,7 +53,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'locale' => 'Solar/Sql/Locale/',
         'host'   => null,
@@ -67,7 +63,6 @@ class Solar_Sql_Driver extends Solar_Base {
         'mode'   => null,
     );
     
-    
     /**
      * 
      * A portable database object for accessing the RDBMS.
@@ -77,9 +72,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var object
      *
      */
-    
     protected $_pdo = null;
-    
     
     /**
      * 
@@ -90,7 +83,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_native = array(
         'bool'      => null,
         'char'      => null, 
@@ -106,7 +98,6 @@ class Solar_Sql_Driver extends Solar_Base {
         'timestamp' => null
     );
     
-    
     /**
      * 
      * The PDO driver DSN type.
@@ -118,9 +109,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var string
      * 
      */
-    
     protected $_pdo_type = null;
-    
     
     /**
      * 
@@ -133,7 +122,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return string A PDO-style DSN.
      * 
      */
-    
     protected function _dsn()
     {
         $dsn = array();
@@ -149,7 +137,6 @@ class Solar_Sql_Driver extends Solar_Base {
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }
     
-    
     /**
      * 
      * Creates a PDO object and connects to the database.
@@ -159,7 +146,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     protected function _connect()
     {
         // if we already have a PDO object, no need to re-connect.
@@ -199,7 +185,6 @@ class Solar_Sql_Driver extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Leave autocommit mode and begin a transaction.
@@ -209,13 +194,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function begin()
     {
         $this->_connect();
         return $this->_pdo->beginTransaction();
     }
-    
     
     /**
      * 
@@ -226,13 +209,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function commit()
     {
         $this->_connect();
         return $this->_pdo->commit();
     }
-    
     
     /**
      * 
@@ -243,13 +224,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function rollback()
     {
         $this->_connect();
         return $this->_pdo->rollBack();
     }
-    
     
     /**
      * 
@@ -266,7 +245,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return object A PDOStatement object.
      * 
      */
-    
     public function exec($stmt, $data = array())
     {
         // connect to the database if needed
@@ -295,7 +273,6 @@ class Solar_Sql_Driver extends Solar_Base {
         return $obj;
     }
     
-    
     /**
      * 
      * Safely quotes a value for an SQL statement.
@@ -307,13 +284,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return mixed An SQL-safe quoted value.
      * 
      */
-    
     public function quote($val)
     {
         $this->_connect();
         return $this->_pdo->quote($val);
     }
-    
     
     /**
      * 
@@ -328,11 +303,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
     }
-    
     
     /**
      * 
@@ -345,11 +318,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
     }
-    
     
     /**
      * 
@@ -362,11 +333,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
     }
-    
     
     /**
      * 
@@ -377,11 +346,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return array A sequential array of table names in the database.
      * 
      */
-    
     public function listTables()
     {
     }
-    
     
     /**
      * 
@@ -392,12 +359,10 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return array
      * 
      */
-    
     public function nativeColTypes()
     {
         return $this->_native;
     }
-    
     
     /**
      * 
@@ -415,12 +380,10 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return mixed An SQL-safe quoted value.
      * 
      */
-    
     public function buildCreateTable($name, $cols)
     {
         return "CREATE TABLE $name (\n$cols\n)";
     }
-    
     
     /**
      * 
@@ -434,7 +397,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return string An SQL SELECT statement.
      * 
      */
-    
     public function buildSelect($parts)
     {
         // is this a SELECT or SELECT DISTINCT?

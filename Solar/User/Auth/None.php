@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Authenticate against nothing; defaults all authentication to "failed."
@@ -29,9 +28,7 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth_None extends Solar_Base {
-    
     
     /**
      * 
@@ -44,7 +41,6 @@ class Solar_User_Auth_None extends Solar_Base {
      * @return boolean True on success, false on failure.
      * 
      */
-    
     public function valid($user, $pass)
     {
         return false;

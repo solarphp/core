@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Filter to remove extra white space within the text.

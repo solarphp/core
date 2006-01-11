@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Nodes within an area, equivalent to containers for related content parts.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Content
  * 
  */
-
 class Solar_Content_Nodes extends Solar_Sql_Table {
-    
     
     /**
      * 
@@ -42,7 +39,6 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
      * @return void
      * 
      */
-    
     protected function _setup()
     {
         // the table name

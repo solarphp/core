@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Provides an object-oriented template system for PHP5.

@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Abstract Savant3_Plugin class.

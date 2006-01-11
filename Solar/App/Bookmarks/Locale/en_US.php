@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Provides locale strings for the app.
@@ -29,7 +28,6 @@
  * @subpackage Solar_App_Bookmarks
  * 
  */
-
 return array(
     'ADD_NEW_BOOKMARK'   => 'Add new bookmark.',
     'BACKLINK'           => 'Back',

@@ -1,5 +1,4 @@
 <?php
-
 /**
 * 
 * Plugin to generate a 'button' element.
@@ -81,5 +80,4 @@ class Savant3_Plugin_formButton extends Savant3_Plugin_form_element {
 		return $xhtml;
 	}
 }
-
 ?>

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for connecting to SQLite databases.
@@ -29,9 +28,7 @@
  * @subpackage Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,7 +39,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
     protected $_native = array(
         'bool'      => 'BOOLEAN',
         'char'      => 'CHAR(:size)',
@@ -58,7 +54,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         'timestamp' => 'TIMESTAMP'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +63,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
     protected $_pdo_type = 'mysql';
-    
     
     /**
      * 
@@ -85,7 +78,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // build the baseline statement
@@ -113,7 +105,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Returns the SQL statement to get a list of database tables.
@@ -123,7 +114,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return string The SQL statement.
      * 
      */
-    
     public function listTables()
     {
         // copied from PEAR DB
@@ -135,7 +125,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
-    
     
     /**
      * 
@@ -150,14 +139,12 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
         $this->exec("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
-    
     
     /**
      * 
@@ -170,12 +157,10 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP TABLE $name");
     }
-    
     
     /**
      * 
@@ -188,7 +173,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         $cmd = "INSERT INTO $name (id) VALUES (NULL)";

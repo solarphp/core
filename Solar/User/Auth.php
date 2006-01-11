@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Class for checking user authentication credentials.
@@ -29,7 +28,6 @@
  * @subpackage Solar_User
  * 
  */
-
 class Solar_User_Auth extends Solar_Base {
     
 
@@ -69,7 +67,6 @@ class Solar_User_Auth extends Solar_Base {
      * @var array
      * 
      */
-    
     protected $_config = array(
         'locale'        => 'Solar/User/Locale/',
         'class'         => 'Solar_User_Auth_None',
@@ -84,7 +81,6 @@ class Solar_User_Auth extends Solar_Base {
         'op_logout'     => 'logout',
     );
     
-    
     /**
      * 
      * A driver object instance.
@@ -94,9 +90,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var object
      * 
      */
-    
     protected $_driver = null;
-    
     
     /**
      * 
@@ -107,9 +101,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var bool
      * 
      */
-    
     public $allow = true;
-    
     
     /**
      * 
@@ -125,9 +117,7 @@ class Solar_User_Auth extends Solar_Base {
      * @see valid()
      * 
      */
-    
     public $last_active;
-    
     
     /**
      * 
@@ -140,9 +130,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $login_time;
-    
     
     /**
      * 
@@ -167,9 +155,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $status_code;
-    
     
     /**
      * 
@@ -183,9 +169,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $status_text;
-    
     
     /**
      * 
@@ -198,7 +182,6 @@ class Solar_User_Auth extends Solar_Base {
      * @var string
      * 
      */
-    
     public $username;
     
     
@@ -207,7 +190,6 @@ class Solar_User_Auth extends Solar_Base {
     // Public methods.
     // 
     // ----------------------------------------------------------------
-    
     
     /**
      * 
@@ -218,7 +200,6 @@ class Solar_User_Auth extends Solar_Base {
      * @return void
      * 
      */
-    
     public function start()
     {
         // Start the session; suppress errors if already started.
@@ -294,7 +275,6 @@ class Solar_User_Auth extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Revalidates any current authentication and updates idle time.
@@ -310,7 +290,6 @@ class Solar_User_Auth extends Solar_Base {
      * @return boolean Whether or not authentication is still valid.
      * 
      */
-    
     public function valid()
     {
         // is the current user already authenticated?
@@ -342,7 +321,6 @@ class Solar_User_Auth extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Resets any authentication data in the session.
@@ -357,7 +335,6 @@ class Solar_User_Auth extends Solar_Base {
      * @return void
      * 
      */
-    
     public function reset($status_code = 'ANON')
     {
         $status_code = strtoupper($status_code);

@@ -90,7 +90,7 @@ if (! $id) {
     // redirect to the existing bookmark.
     if (! empty($existing['id'])) {
         $link = Solar::object('Solar_Uri');
-        $link->setInfo("bookmarks/edit/{$existing['id']}");
+        $link->setInfoString("bookmarks/edit/{$existing['id']}");
         $this->_redirect($link->export());
     }
 }
@@ -132,8 +132,7 @@ if ($info || $qstr) {
     $href = $uri;
 } else {
     // return to the user's list
-    $link->setInfo(0, 'user');
-    $link->setInfo(1, $user->auth->username);
+    $link->setInfoString("bookmarks/user/{$user->auth->username}");
     $href = $link->export();
 }
 
@@ -190,7 +189,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
             $form->feedback[] = Solar::locale('Solar', 'OK_SAVED');
             
             // if new, return to the backlink
-            if ($this->_query('id', 0) == 0) {
+            if ($this->_info('id', 0) == 0) {
                 $this->_redirect($href);
             }
             

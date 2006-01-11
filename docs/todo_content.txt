@@ -7,12 +7,12 @@ Solar/
 		Hits.php -- tracks hits to a node
 		Words.php -- holds search-words
 
-Basic Cells:
+Basic Models:
 	Comment (comments received)
 	Ping (pings sent)
 	Trackback (trackbacks received)
 
-Advanced Cells:
+Advanced Models:
 	Blog (blog entry)
 	Wiki (wiki page)
 	File (generic file attachments)

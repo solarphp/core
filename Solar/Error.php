@@ -62,8 +62,6 @@
  * 
  * @package Solar
  * 
- * @todo Make this object observable?
- * 
  */
 
 class Solar_Error extends Solar_Base {

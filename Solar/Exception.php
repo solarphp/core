@@ -24,8 +24,6 @@
  * 
  * @package Solar
  * 
- * @todo Make this object observable?
- * 
  */
 
 class Solar_Exception extends Exception {

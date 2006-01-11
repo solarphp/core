@@ -70,6 +70,7 @@ Sqlite: process results of ...
 	CREATE INDEX sc_bugs__type__idx ON sc_bugs (type);
 	CREATE INDEX sc_bugs__user_id__idx ON sc_bugs (user_id);
 
+PDO does column metas.  this will get us the column descriptions anyway.
 
 ----
 

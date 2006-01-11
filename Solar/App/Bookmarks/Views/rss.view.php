@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: rss.php 568 2005-10-09 19:12:30Z pmjones $
+ * @version $Id$
  * 
  */
 

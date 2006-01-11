@@ -14,7 +14,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: edit.php 568 2005-10-09 19:12:30Z pmjones $
+ * @version $Id$
  * 
  */
 

@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Front.php 320 2005-06-22 20:39:27Z pmjones $
+ * @version $Id$
  * 
  */
 

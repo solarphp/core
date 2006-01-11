@@ -12,7 +12,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: App.php 320 2005-06-22 20:39:27Z pmjones $
+ * @version $Id$
  * 
  */
 

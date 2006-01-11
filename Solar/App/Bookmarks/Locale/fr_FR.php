@@ -14,7 +14,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: fr_FR.php 497 2005-09-22 15:53:27Z pmjones $
+ * @version $Id$
  * 
  */
 

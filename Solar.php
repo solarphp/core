@@ -769,6 +769,34 @@ class Solar {
     
     /**
      * 
+     * Simple exception object generator.
+     * 
+     * @param string $class The class that generated the exception.
+     * 
+     * @param mixed $code An scalar error code.
+     * 
+     * @param string $text Any error message text.
+     * 
+     * @param array $info Additional error information in an associative
+     * array.
+     * 
+     * @return object A Solar_Exception object.
+     * 
+     */
+    
+    static public function exception($class, $code, $text = '', $info = array())
+    {
+        return Solar::object('Solar_Exception', array(
+            'class' => $class,
+            'code'  => $code,
+            'text'  => $text,
+            'info'  => $info,
+        ));
+    }
+    
+    
+    /**
+     * 
      * Simple variable dumper.
      * 
      * @access public

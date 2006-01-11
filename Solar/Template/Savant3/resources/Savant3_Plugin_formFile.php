@@ -12,7 +12,7 @@
 * 
 * @license http://www.gnu.org/copyleft/lesser.html LGPL
 * 
-* @version $Id: Savant3_Plugin_formFile.php,v 1.5 2005/09/13 15:39:18 pmjones Exp $
+* @version $Id$
 * 
 */
 

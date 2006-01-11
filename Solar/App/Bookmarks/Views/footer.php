@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: footer.php 194 2005-04-15 04:25:48Z pmjones $
+ * @version $Id$
  * 
  */
 

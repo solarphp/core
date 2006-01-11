@@ -294,5 +294,17 @@ abstract class Solar_Base {
             return $locale->string('Solar', $key, $num);
         }
     }
+    
+    protected function _exception($code, $info = array())
+    {
+        $config = array(
+            'class' => get_class($this),
+            'code' => $code,
+            'text' => $this->locale($code),
+            'info' => $info,
+        );
+        
+        return Solar::object('Solar_Exception', $config);
+    }
 }
 ?>

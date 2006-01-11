@@ -14,7 +14,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: user.php 576 2005-10-10 02:26:30Z pmjones $
+ * @version $Id$
  * 
  */
 

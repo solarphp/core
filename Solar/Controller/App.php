@@ -248,7 +248,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         $this->_forward($spec);
         
         // set up a view object
-        $tpl = Solar::object('Solar_Template');
+        $tpl = Solar::factory('Solar_Template');
         
         // add the app-specific path for views
         $tpl->addPath('template', $this->_basedir . 'Views/');
@@ -409,7 +409,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         // if the spec is null, use current URI
         if (! $spec) {
         
-            $uri = Solar::object('Solar_Uri');
+            $uri = Solar::factory('Solar_Uri');
             $this->_info = $uri->info;
             $this->_query = $uri->query;
             
@@ -421,7 +421,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         } else {
             
             // it's a string. fake the scheme, domain, and path for the uri parser.
-            $uri = Solar::object('Solar_Uri');
+            $uri = Solar::factory('Solar_Uri');
             $uri->import('http://example.com/index.php/' . ltrim($spec, '/'));
             $this->_info = $uri->info;
             $this->_query = $uri->query;

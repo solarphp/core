@@ -110,7 +110,7 @@ class Solar_Model_Bookmarks extends Solar_Base {
         parent::__construct($config);
         
         // create a content object and set its paging
-        $this->_content = Solar::object('Solar_Content');
+        $this->_content = Solar::factory('Solar_Content');
         $this->paging($this->_config['paging']);
         
         // make sure there is a content area for bookmarks

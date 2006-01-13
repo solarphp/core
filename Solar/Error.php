@@ -32,7 +32,7 @@
  * return $err;
  * 
  * // ... or push as you go.
- * $err = Solar::object('Solar_Error');
+ * $err = Solar::factory('Solar_Error');
  * $err->push($code[0], $text[0], $info[0]);
  * $err->push($code[1], $text[1], $info[1]);
  * return $err;

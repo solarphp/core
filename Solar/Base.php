@@ -301,7 +301,7 @@ abstract class Solar_Base {
             'info'  => $info,
         );
         
-        return Solar::object('Solar_Exception', $config);
+        return Solar::factory('Solar_Exception', $config);
     }
 }
 ?>

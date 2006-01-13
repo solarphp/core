@@ -229,7 +229,7 @@ class Solar_User_Auth extends Solar_Base {
         // the constructor so that custom drivers will find the session
         // already available to them (e.g. single sign-on systems and
         // HTTP-based systems).
-        $this->_driver = Solar::object(
+        $this->_driver = Solar::factory(
             $this->_config['class'],
             $this->_config['options']
         );

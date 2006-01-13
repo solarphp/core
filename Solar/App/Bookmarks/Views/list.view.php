@@ -19,7 +19,7 @@
 include $this->template('header.php');
 
 // a basic link object
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 ?>
 <div>
     <!-- the list of tags in use -->

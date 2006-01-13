@@ -105,7 +105,7 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      */
     public function fetchForNode($node_id)
     {
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from($this, 'name');
         $select->where('node_id = ?', $node_id);
         return $select->fetch('col');

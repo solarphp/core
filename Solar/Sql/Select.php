@@ -29,7 +29,7 @@ Solar::loadClass('Solar_Sql_Table');
  * Example usage:
  * 
  * <code>
- * $select = Solar::object('Solar_Sql_Select');
+ * $select = Solar::factory('Solar_Sql_Select');
  * 
  * // select these columns
  * $select->cols(array(
@@ -185,7 +185,7 @@ class Solar_Sql_Select extends Solar_Base {
             $this->sql = Solar::shared($this->_config['sql']);
         } else {
             // use a standalone object
-            $this->sql = Solar::object(
+            $this->sql = Solar::factory(
                 $this->_config['sql'][0],
                 $this->_config['sql'][1]
             );

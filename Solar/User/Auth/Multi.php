@@ -87,7 +87,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
             }
             
             // add the driver instance
-            $this->_driver[] = Solar::object($class, $opts);
+            $this->_driver[] = Solar::factory($class, $opts);
         }
     }
     

@@ -21,7 +21,7 @@
 $user = Solar::shared('user');
 
 // RSS link for the page (regardless of whether it's actually available)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 $link->setQuery('rss', '1');
 
 $this->rss = array(
@@ -35,7 +35,7 @@ $this->rss = array(
 unset($link);
 
 // get standalone objects
-$bookmarks = Solar::object('Solar_Model_Bookmarks');
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));
@@ -88,7 +88,7 @@ if (! $id) {
     // if the user *does* already have that URI bookmarked,
     // redirect to the existing bookmark.
     if (! empty($existing['id'])) {
-        $link = Solar::object('Solar_Uri');
+        $link = Solar::factory('Solar_Uri');
         $link->setInfoString("bookmarks/edit/{$existing['id']}");
         $this->_redirect($link->export());
     }
@@ -104,7 +104,7 @@ if (! $id) {
 //
 
 // get the current link (i.e., to this page)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 
 // clear the current pathinfo and query
 $link->clearInfo();

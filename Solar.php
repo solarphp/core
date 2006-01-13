@@ -368,7 +368,7 @@ class Solar {
      * @return object A new instance of the requested Solar class.
      * 
      */
-    static public function object($class, $config = null)
+    static public function factory($class, $config = null)
     {
         $result = Solar::loadClass($class);
         if (Solar::isError($result)) {
@@ -413,7 +413,7 @@ class Solar {
                 $config = array_key_exists(1, $info) ? $info[1] : null;
                 
                 // instantiate.
-                Solar::$_shared->$name = Solar::object($class, $config);
+                Solar::$_shared->$name = Solar::factory($class, $config);
                 
             } else {
             
@@ -696,7 +696,7 @@ class Solar {
     static public function error($class, $code, $text = '', $info = array(), 
         $level = null, $trace = null)
     {
-        $obj = Solar::object('Solar_Error');
+        $obj = Solar::factory('Solar_Error');
         $obj->push($class, $code, $text, $info, $level, $trace);
         return $obj;
     }
@@ -742,7 +742,7 @@ class Solar {
      */
     static public function exception($class, $code, $text = '', $info = array())
     {
-        return Solar::object('Solar_Exception', array(
+        return Solar::factory('Solar_Exception', array(
             'class' => $class,
             'code'  => $code,
             'text'  => $text,
@@ -765,7 +765,7 @@ class Solar {
      */
     static public function dump(&$var, $label = null)
     {
-        $obj = Solar::object('Solar_Debug_Var');
+        $obj = Solar::factory('Solar_Debug_Var');
         echo $obj->dump($var, $label);
     }
     

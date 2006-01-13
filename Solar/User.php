@@ -111,10 +111,10 @@ class Solar_User extends Solar_Base
         parent::__construct($config);
         
         // set up an authentication object.
-        $this->auth = Solar::object('Solar_User_Auth', $this->_config['auth']);
+        $this->auth = Solar::factory('Solar_User_Auth', $this->_config['auth']);
         
         // set up the roles object.
-        $this->role = Solar::object('Solar_User_Role', $this->_config['role']);
+        $this->role = Solar::factory('Solar_User_Role', $this->_config['role']);
     }
     
     /**

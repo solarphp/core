@@ -82,7 +82,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
             $obj = Solar::shared($this->_config['sql']);
         } else {
             // instantiate a new object.
-            $obj = Solar::object('Solar_Sql', $this->_config['sql']);
+            $obj = Solar::factory('Solar_Sql', $this->_config['sql']);
         }
         
         // if there were errors, return.

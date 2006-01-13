@@ -109,9 +109,9 @@ class Solar_Content extends Solar_Base {
         $this->paging($this->_config['paging']);
         
         // the component tables
-        $this->_areas = Solar::object('Solar_Content_Areas');
-        $this->_nodes = Solar::object('Solar_Content_Nodes');
-        $this->_tags  = Solar::object('Solar_Content_Tags');
+        $this->_areas = Solar::factory('Solar_Content_Areas');
+        $this->_nodes = Solar::factory('Solar_Content_Nodes');
+        $this->_tags  = Solar::factory('Solar_Content_Tags');
     }
     
     /**
@@ -152,7 +152,7 @@ class Solar_Content extends Solar_Base {
     public function form($class = null, $cols = null, $info = null, $array_name = null)
     {
         // the basic form object
-        $form = Solar::object('Solar_Form');
+        $form = Solar::factory('Solar_Form');
         
         // the class for locales
         if (empty($class)) {
@@ -287,7 +287,7 @@ class Solar_Content extends Solar_Base {
      */
     public function selectAreas($where = null)
     {
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_areas, '*');
         $select->multiWhere($where);
         $select->paging($this->_paging);
@@ -391,7 +391,7 @@ class Solar_Content extends Solar_Base {
      */
     public function fetchNodeCount($tags = null, $where = null)
     {
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_nodes, 'id');
         $select->multiWhere($where);
         
@@ -535,7 +535,7 @@ class Solar_Content extends Solar_Base {
     public function deleteNodes($where)
     {
         // find out which nodes are getting deleted
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_nodes, 'id');
         $select->multiWhere($where);
         $id_list = $select->fetch('col');
@@ -587,7 +587,7 @@ class Solar_Content extends Solar_Base {
      */
     public function selectNodes($tags = null, $where = null)
     {
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_nodes, '*');
         
         if (! empty($tags)) {
@@ -633,7 +633,7 @@ class Solar_Content extends Solar_Base {
     // optionally having a minimum count.
     public function fetchTagList($where = null)
     {
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         $select->from(
             $this->_tags,
             array('name', 'COUNT(tags.id) AS rank')

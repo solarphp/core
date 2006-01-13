@@ -103,7 +103,7 @@ class Solar_User_Role extends Solar_Base {
         parent::__construct($config);
         
         // instantiate a driver object
-        $this->_driver = Solar::object(
+        $this->_driver = Solar::factory(
             $this->_config['class'],
             $this->_config['options']
         );

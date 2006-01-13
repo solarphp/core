@@ -607,14 +607,14 @@ class Solar_Form extends Solar_Base {
      * Example use:
      * 
      * <code>
-     * $form = Solar::object('Solar_Form');
+     * $form = Solar::factory('Solar_Form');
      * $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
      * </code>
      * 
      * @access public
      * 
      * @param string|object $obj If a string, it is treated as a class
-     * name to instantiate with Solar::object(); if an object, it is
+     * name to instantiate with Solar::factory(); if an object, it is
      * used as-is.  Either way, the fetch() method of the object will
      * be called to populate this form (via $this->attribs property and
      * the $this->setElements() method).
@@ -627,7 +627,7 @@ class Solar_Form extends Solar_Base {
         // if the first param is a string class name
         // try to instantiate it.
         if (is_string($obj)) {
-            $obj = Solar::object($obj);
+            $obj = Solar::factory($obj);
             if (Solar::isError($obj)) {
                 return $obj;
             }

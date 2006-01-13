@@ -96,7 +96,7 @@ class Solar_Controller_Front extends Solar_Base {
     public function fetch($spec = null)
     {
         // default to current URI
-        $uri = Solar::object('Solar_Uri');
+        $uri = Solar::factory('Solar_Uri');
         
         // override current URI with user spec
         if (is_string($spec)) {
@@ -109,7 +109,7 @@ class Solar_Controller_Front extends Solar_Base {
         
         // instantiate the app class and fetch content
         $class = $this->_map[$name];
-        $app = Solar::object($class);
+        $app = Solar::factory($class);
         $content = $app->fetch($uri);
         return $content;
     }

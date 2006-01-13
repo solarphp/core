@@ -37,7 +37,7 @@ require_once 'Solar/Sql/Driver.php';
  *     'name' => 'test'
  * );
  * 
- * $sql = Solar::object('Solar_Sql', $opts);
+ * $sql = Solar::factory('Solar_Sql', $opts);
  * </code>
  * 
  * You should consider using Solar_Sql_Table for handling insert, update,
@@ -146,7 +146,7 @@ class Solar_Sql extends Solar_Base {
         // create the driver-info object
         $opts = $this->_config;
         unset($opts['class']);
-        $this->_driver = Solar::object($this->_config['class'], $opts);
+        $this->_driver = Solar::factory($this->_config['class'], $opts);
     }
     
     /**
@@ -386,7 +386,7 @@ class Solar_Sql extends Solar_Base {
             
         // a Solar_Sql_Result object
         case 'result':
-            $data = Solar::object(
+            $data = Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
@@ -399,7 +399,7 @@ class Solar_Sql extends Solar_Base {
         
         // create a new object and put the result into it
         default:
-            $data = Solar::object(
+            $data = Solar::factory(
                 $return,
                 array('PDOStatement' => $result)
             );
@@ -535,7 +535,7 @@ class Solar_Sql extends Solar_Base {
         $coldef = array();
         
         // use this to stack errors when creating definitions
-        $err = Solar::object('Solar_Error');
+        $err = Solar::factory('Solar_Error');
         
         // loop through each column and get its definition
         foreach ($cols as $name => $info) {
@@ -1045,7 +1045,7 @@ class Solar_Sql extends Solar_Base {
     {
         static $reserved;
         if (! isset($reserved)) {
-            $reserved = Solar::object('Solar_Sql_Reserved');
+            $reserved = Solar::factory('Solar_Sql_Reserved');
         }
         
         // is it a reserved word?

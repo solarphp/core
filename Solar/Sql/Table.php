@@ -165,7 +165,7 @@ class Solar_Sql_Table extends Solar_Base {
             $this->_sql = Solar::shared($this->_config['sql']);
         } else {
             // use a standalone object
-            $this->_sql = Solar::object(
+            $this->_sql = Solar::factory(
                 $this->_config['sql'][0],
                 $this->_config['sql'][1]
             );
@@ -386,7 +386,7 @@ class Solar_Sql_Table extends Solar_Base {
         $order = null, $page = null)
     {
         // selection tool
-        $select = Solar::object('Solar_Sql_Select');
+        $select = Solar::factory('Solar_Sql_Select');
         
         // all columns from this table
         $select->from($this->_name, array_keys($this->_col));
@@ -533,6 +533,21 @@ class Solar_Sql_Table extends Solar_Base {
      */
     final protected function _autoSetup()
     {
+        // make sure there's a table name.  defaults to the
+        // part after the last underscore, then converts camelCaps 
+        // to underscore_words.
+        if (empty($this->_name)) {
+            // get the class name
+            $tmp = get_class($this);
+            // get the part after the last underscore
+            $tmp = substr($tmp, strrpos($tmp, '_'));
+            // camels to unders
+            $this->_name = preg_replace('/([a-z])([A-Z])/', "$1_$2", $tmp);
+        }
+        
+        // make sure table name is lower case regardless
+        $this->_name = strtolower($this->_name);
+        
         // a baseline column definition
         $basecol = array(
             'name'    => null,
@@ -731,7 +746,7 @@ class Solar_Sql_Table extends Solar_Base {
     final protected function _autoValid(&$data)
     {
         // object methods for validation
-        $valid = Solar::object('Solar_Valid');
+        $valid = Solar::factory('Solar_Valid');
         
         // low and high range values for integers
         $int_range = array(
@@ -741,7 +756,7 @@ class Solar_Sql_Table extends Solar_Base {
         );
         
         // collect all errors captured for all fields
-        $err = Solar::object('Solar_Error');
+        $err = Solar::factory('Solar_Error');
         
         // the list of available fields; discard data that
         // does not correspond to one of the known fields.

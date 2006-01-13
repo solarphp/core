@@ -21,7 +21,7 @@
 $user = Solar::shared('user');
 
 // RSS link for the page (regardless of whether it's actually available)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 $link->setQuery('rss', '1');
 
 $this->rss = array(
@@ -35,7 +35,7 @@ $this->rss = array(
 unset($link);
 
 // get standalone objects
-$bookmarks = Solar::object('Solar_Model_Bookmarks');
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));
@@ -77,7 +77,7 @@ if ($rss) {
         // there are tags requested, so the RSS should show all pages
         // and ignore the rows-per-page settings.  build a custom
         // RSS link for this.
-        $link = Solar::object('Solar_Uri');
+        $link = Solar::factory('Solar_Uri');
         $link->setQuery('rss', '1');
         $link->clearQuery('page');
         $link->clearQuery('rows_per_page');

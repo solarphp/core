@@ -23,16 +23,6 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 }
 
 /**
- * The base for all Solar classes (except Solar itself ;-).
- */
-require_once 'Solar/Base.php';
-
-/**
- * The Solar_Error class, needed for Solar::isError().
- */
-require_once 'Solar/Error.php';
-
-/**
  * 
  * Encapsulates shared configuration, objects, and methods for Solar apps.
  * 
@@ -80,11 +70,29 @@ class Solar {
     
     /**
      * 
+     * Directory where the Solar.php file is located; used for class loading.
+     * 
+     * @access protected
+     * 
+     * @var bool
+     * 
+     */
+    static protected $_dir = null;
+    
+    /**
+     * 
      * Start Solar: get config, load shared objects, run start scripts.
      * 
      * @access public
      * 
      * @return void
+     * 
+     * @todo Put autosharing behavior into Solar_Controller_Front instead?
+     * This would also get rid of the __solar() autoshare method, which might
+     * be nice.  Would need to add a share() method for setting up shared
+     * objects though.
+     * 
+     * @todo Rename ::shared() to ::registry()?  Add ::register() method too.
      * 
      */
     static public function start($alt_config = null)
@@ -94,7 +102,19 @@ class Solar {
             return;
         }
         
-        // initialize $shared property as a StdClass object
+        // where are we in the file system?
+        Solar::$_dir = Solar::fixdir(dirname(__FILE__));
+        
+        // the base for all Solar classes (except Solar itself ;-).
+        require_once Solar::$_dir . 'Solar/Base.php';
+        
+        // the Solar_Error class, needed for Solar::isError().
+        require_once Solar::$_dir . 'Solar/Error.php';
+        
+        // the Solar_Exception class
+        require_once Solar::$_dir . 'Solar/Exception.php';
+        
+        // initialize $_shared property as a StdClass object
         Solar::$_shared = new StdClass;
         
         // set up the standard Solar environment
@@ -262,6 +282,8 @@ class Solar {
      * 
      * @todo Add localization for errors
      * 
+     * @todo Add 'strict' flag to not-prepend self::$_dir?
+     * 
      */
     static public function loadClass($class)
     {
@@ -296,9 +318,9 @@ class Solar {
             
         }
         
-        // include the file and check for failure.
+        // include the file from the Solar dir and check for failure.
         // we use run() here so we can see the error backtrace.
-        $result = Solar::run($file);
+        $result = Solar::run(Solar::$_dir . $file);
         if (Solar::isError($result)) {
             return $result;
         }
@@ -341,7 +363,7 @@ class Solar {
             unset($file);
             unset($fp);
             unset($ok);
-            // include the file and return its results
+            // require the file and return its results
             return include(func_get_arg(0));
         } else {
             // could not open the file for reading
@@ -385,7 +407,7 @@ class Solar {
      * 
      * @access public
      * 
-     * @param string $class The class name.
+     * @param string $name The shared singleton name.
      * 
      * @return object A singleton instance of the requested Solar class.
      * 

@@ -59,8 +59,8 @@ class Solar_Exception extends Exception {
             'class' => '',
             'code'  => '',
             'text'  => '',
-            'info'  => array();
-        )
+            'info'  => array(),
+        );
         $config = array_merge($default, (array) $config);
         extract($config);
         parent::__construct($text, $code);

@@ -254,7 +254,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $tpl->addPath('template', $this->_basedir . 'Views/');
         
         // add the app-specific path for view helpers (Savant plugins)
-        $tpl->addPath('resource', $this->_basedir . 'Helpers/');
+        // $tpl->addPath('resource', $this->_basedir . 'Views/Helpers/');
         
         // tell the template view what locale strings to use
         $class = get_class($this);

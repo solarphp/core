@@ -20,20 +20,6 @@
 // get the shared user object
 $user = Solar::shared('user');
 
-// RSS link for the page (regardless of whether it's actually available)
-$link = Solar::factory('Solar_Uri');
-$link->setQuery('rss', '1');
-
-$this->rss = array(
-    'avail' => false,
-    'title' => Solar::server('PATH_INFO'),
-    'descr' => 'Solar_App_Bookmarks',
-    'date'  => date('c'), // should be latest mod date in the $this->list
-    'link'  => $link->export(),
-);
-
-unset($link);
-
 // get standalone objects
 $bookmarks = Solar::factory('Solar_Model_Bookmarks');
 

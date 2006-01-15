@@ -94,7 +94,6 @@ $total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else
 $this->rss['avail'] = true;
-$this->count        = $total['count'];
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;

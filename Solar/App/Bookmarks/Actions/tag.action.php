@@ -28,7 +28,7 @@ $this->rss = array(
     'avail' => false,
     'title' => Solar::server('PATH_INFO'),
     'descr' => 'Solar_App_Bookmarks',
-    'date'  => date('c'), // should be latest mod date in the $this->view->list
+    'date'  => date(DATE_RFC822), // should be latest mod date in the $this->view->list
     'link'  => $link->export(),
 );
 
@@ -61,7 +61,6 @@ $total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else for the view
 $this->rss['avail'] = true;
-$this->count        = $total['count'];
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;

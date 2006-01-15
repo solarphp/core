@@ -77,7 +77,7 @@ abstract class Solar_Controller_App extends Solar_Base {
      * @var string
      * 
      */
-    protected $_default_action = null;
+    protected $_action_default = null;
     
     /**
      * 
@@ -141,9 +141,9 @@ abstract class Solar_Controller_App extends Solar_Base {
      * The format of this array is key-value pairs, where the key is
      * the action name, and the value is a sequential array of
      * variable names in pathinfo positions.  For example, see this
-     * $_map array:
+     * $_action_info array:
      * 
-     * $_map = array(
+     * $_action_info = array(
      *     'item' => array('id'), // "item/:id"
      *     'list' => array('year', 'month') // "list/:year/:month"
      * );
@@ -153,7 +153,7 @@ abstract class Solar_Controller_App extends Solar_Base {
      * @var string
      * 
      */
-    protected $_map = array();
+    protected $_action_info = array();
     
     /**
      * 
@@ -384,7 +384,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         
         // if the script doesn't exist, use the default.
         if (! $name || ! is_readable($file)) {
-            $name = $this->_default_action;
+            $name = $this->_action_default;
             $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
             $file = $this->_basedir . "Actions/$name.action.php";
         }
@@ -430,11 +430,11 @@ abstract class Solar_Controller_App extends Solar_Base {
         // find the requested action
         $this->_action = array_shift($this->_info);
         if (! $this->_action) {
-            $this->_action = $this->_default_action;
+            $this->_action = $this->_action_default;
         }
         
         // if there is no map for this action, we're done
-        if (empty($this->_map[$this->_action])) {
+        if (empty($this->_action_info[$this->_action])) {
             // no need to map variable names
             return;
         }
@@ -443,7 +443,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         $i = 0;
         
         // go through the info map for the action
-        foreach ($this->_map[$this->_action] as $key => $val) {
+        foreach ($this->_action_info[$this->_action] as $key => $val) {
             
             // if the name is an integer, there is no default value.
             // thus, the value is itself the name.

@@ -55,7 +55,7 @@ Solar::loadClass('Solar_Uri');
  * @package Solar_Controller
  * 
  */
-abstract class Solar_Controller_App extends Solar_Base {
+abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
@@ -166,9 +166,9 @@ abstract class Solar_Controller_App extends Solar_Base {
     {
         // auto-set the base directory
         if (empty($this->_basedir)) {
-            // remove Solar/Controller/App.php from the __FILE__
+            // remove Solar/Controller/Page.php from the __FILE__
             // so that we have a base prefix
-            $base = substr(__FILE__, 0, -24);
+            $base = substr(__FILE__, 0, -25);
             
             // class-to-file conversion as an added directory
             $dir = str_replace('_', '/', get_class($this));

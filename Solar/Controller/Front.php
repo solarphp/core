@@ -38,7 +38,10 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'default_app' => 'bookmarks',
+        'app_default' => 'bookmarks',
+        'app_class'   => array(
+            'bookmarks' => 'Solar_App_Bookmarks',
+        ),
     );
 
     /**
@@ -50,7 +53,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @var array
      * 
      */
-    protected $_default_app;
+    protected $_app_default;
 
     /**
      * 
@@ -61,9 +64,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @var array
      * 
      */
-    protected $_map = array(
-        'bookmarks' => 'Solar_App_Bookmarks',
-    );
+    protected $_app_class;
 
     /**
      * 
@@ -77,8 +78,8 @@ class Solar_Controller_Front extends Solar_Base {
     public function __construct($config)
     {
         parent::__construct($config);
-        $this->_default_app = $this->_config['default_app'];
-        $this->_map = $this->_config['map'];
+        $this->_app_default = $this->_config['app_default'];
+        $this->_app_class = $this->_config['app_class'];
     }
 
     /**
@@ -105,10 +106,10 @@ class Solar_Controller_Front extends Solar_Base {
         }
         
         // pull the app name off the top of the path_info
-        $name = array_shift($uri->info);
+        $app = array_shift($uri->info);
         
         // instantiate the app class and fetch content
-        $class = $this->_map[$name];
+        $class = $this->_app_class[$app];
         $app = Solar::factory($class);
         $content = $app->fetch($uri);
         return $content;

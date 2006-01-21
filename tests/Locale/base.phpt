@@ -8,7 +8,7 @@ Solar::start();
 class Example extends Solar_Base {
 	public function __construct($config = null)
 	{
-		$this->config['locale'] = dirname(__FILE__) . '/locale/';
+		$this->_config['locale'] = dirname(__FILE__) . '/locale/';
 		parent::__construct($config);
 	}
 }

@@ -513,7 +513,7 @@ class Solar_Sql extends Solar_Base {
     {
         // table name can only be so many chars
         $len = strlen($table);
-        if ($len < 1 || $len > $this->len['tbl']) {
+        if ($len < 1 || $len > $this->_len['tbl']) {
             return $this->_error(
                 'ERR_TABLE_LEN',
                 array('table' => $table),
@@ -523,7 +523,7 @@ class Solar_Sql extends Solar_Base {
         
         // table name must be a valid word, and cannot end in
         // "__s" (this is to prevent sequence table collisions)
-        if (! $this->validIdentifier($table) || substr($table, -3) == "__s") {
+        if (! $this->_validIdentifier($table) || substr($table, -3) == "__s") {
             return $this->_error(
                 'ERR_TABLE_WORD',
                 array('table' => $table),
@@ -664,7 +664,7 @@ class Solar_Sql extends Solar_Base {
     {
         // check the table name length
         $len = strlen($table);
-        if ($len < 1 || $len > $this->len['tbl']) {
+        if ($len < 1 || $len > $this->_len['tbl']) {
             return $this->_error(
                 'ERR_TABLE_LEN',
                 array('table' => $table),
@@ -674,7 +674,7 @@ class Solar_Sql extends Solar_Base {
         
         // check the index name length
         $len = strlen($name);
-        if ($len < 1 || $len > $this->len['idx']) {
+        if ($len < 1 || $len > $this->_len['idx']) {
             return $this->_error(
                 'ERR_IDX_LEN',
                 array('table' => $table, 'name' => $name),
@@ -690,7 +690,7 @@ class Solar_Sql extends Solar_Base {
             // yes, return the error object
             return $stmt;
         } else {
-            // no errors, execute and return
+            // no errors, execute and return.
             return $this->_driver->exec($stmt);
         }
     }
@@ -858,7 +858,7 @@ class Solar_Sql extends Solar_Base {
     {
         // validate column name length
         $len = strlen($name);
-        if ($len < 1 || $len > $this->len['col']) {
+        if ($len < 1 || $len > $this->_len['col']) {
             return $this->_error(
                 'ERR_COL_LEN',
                 array('name' => $name),

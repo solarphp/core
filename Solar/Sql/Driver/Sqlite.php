@@ -63,7 +63,27 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    protected $_pdo_type = 'mysql';
+    protected $_pdo_type = 'sqlite';
+    
+    /**
+     * 
+     * Creates a PDO-style DSN.
+     * 
+     * E.g., "mysql:host=127.0.0.1;dbname=test"
+     * 
+     * @access protected
+     * 
+     * @return string A PDO-style DSN.
+     * 
+     */
+    protected function _dsn()
+    {
+        $dsn = array();
+        if (! empty($this->_config['name'])) {
+            $dsn[] = $this->_config['name'];
+        }
+        return $this->_pdo_type . ':' . implode(';', $dsn);
+    }
     
     /**
      * 

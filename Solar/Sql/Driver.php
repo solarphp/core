@@ -113,6 +113,17 @@ class Solar_Sql_Driver extends Solar_Base {
     
     /**
      * 
+     * Execute these commands directly, without preparation.
+     * 
+     * @access protected
+     * 
+     * @var array
+     * 
+     */
+    protected $_direct = array('CREATE', 'ALTER', 'DROP');
+    
+    /**
+     * 
      * Creates a PDO-style DSN.
      * 
      * E.g., "mysql:host=127.0.0.1;dbname=test"
@@ -250,27 +261,25 @@ class Solar_Sql_Driver extends Solar_Base {
         // connect to the database if needed
         $this->_connect();
         
-        // force the bound data to be an array
-        settype($data, 'array');
+        // what kind of command?
+        $pos = strpos($stmt, ' ');
+        $cmd = substr($stmt, 0, $pos);
         
-        // prepare the statement
+        // execute
         try {
-            $obj = $this->_pdo->prepare($stmt);
+            if (in_array(strtoupper($cmd), $this->_direct)) {
+                // execute directly
+                return $this->_pdo->exec($stmt);
+            } else {
+                // prepare and execute
+                $obj = $this->_pdo->prepare($stmt);
+                $obj->execute((array) $data);
+                return $obj;
+            }
         } catch (Exception $e) {
             $err = $this->_errorException($e, E_USER_WARNING);
             return $err;
         }
-        
-        // execute with bound data
-        try {
-            $obj->execute($data);
-        } catch (Exception $e) {
-            $err = $this->_errorException($e, E_USER_WARNING);
-            return $err;
-        }
-        
-        // return the results embedded in the prepared statement object
-        return $obj;
     }
     
     /**

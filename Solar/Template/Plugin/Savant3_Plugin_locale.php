@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,9 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  */
 class Savant3_Plugin_locale extends Savant3_Plugin {

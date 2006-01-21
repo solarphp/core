@@ -103,7 +103,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
         );
         
         // get the results (a count of rows)
-        $result = $obj->fetchOne($stmt, $data);
+        $result = $obj->select('one', $stmt, $data);
         
         // if we get back exactly 1 row, the user is authenticated;
         // otherwise, it's more or less than exactly 1 row, or it's an

@@ -36,14 +36,14 @@ Solar::stop();
 ?>
 --EXPECT--
 object(Solar_Error)#8 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(1) {
+  ["_stack:protected"] => array(1) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"
@@ -57,14 +57,14 @@ object(Solar_Error)#8 (2) {
   }
 }
 object(Solar_Error)#9 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(1) {
+  ["_stack:protected"] => array(1) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"

@@ -15,17 +15,17 @@ class Example extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		$this->config['locale'] = dirname(__FILE__) . '/locale/';
+		$this->_config['locale'] = dirname(__FILE__) . '/locale/';
 	}
 	
 	public function something()
 	{
-		return $this->error('ERR_EXAMPLE');
+		return $this->_error('ERR_EXAMPLE');
 	}
 	
 	public function another()
 	{
-		return $this->error(
+		return $this->_error(
 			'ERR_EXAMPLE',         // code
 			array('baz' => 'dib'), // info
 			E_USER_ERROR,          // level
@@ -52,14 +52,14 @@ Solar::stop();
 ?>
 --EXPECT--
 object(Solar_Error)#9 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(1) {
+  ["_stack:protected"] => array(1) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"
@@ -73,14 +73,14 @@ object(Solar_Error)#9 (2) {
   }
 }
 object(Solar_Error)#10 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(1) {
+  ["_stack:protected"] => array(1) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"
@@ -95,14 +95,14 @@ object(Solar_Error)#10 (2) {
   }
 }
 object(Solar_Error)#9 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(1) {
+  ["_stack:protected"] => array(1) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"

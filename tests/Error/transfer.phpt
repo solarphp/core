@@ -10,7 +10,7 @@ Solar::$config['Solar_Error']['push_callback'] = null;
 Solar::$config['Solar_Error']['pop_callback']  = null;
 Solar::$config['Solar_Error']['trace']         = false;
 
-$a = Solar::object('Solar_Error');
+$a = Solar::factory('Solar_Error');
 for ($i = 0; $i < 5; $i++) {
 	$a->push(
 		'Test_A',
@@ -19,7 +19,7 @@ for ($i = 0; $i < 5; $i++) {
 	);
 }
 
-$b = Solar::object('Solar_Error');
+$b = Solar::factory('Solar_Error');
 for ($i = 0; $i < 3; $i++) {
 	$b->push(
 		'Test_B',
@@ -36,14 +36,14 @@ Solar::stop();
 ?>
 --EXPECT--
 object(Solar_Error)#9 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(8) {
+  ["_stack:protected"] => array(8) {
     [0] => array(7) {
       ["class"] => string(6) "Test_A"
       ["code"] => string(10) "ERR_TEST_A"

@@ -15,14 +15,14 @@ class Example extends Solar_Base {
 	
 	public function __construct($config = null)
 	{
-		$this->config['locale'] = dirname(__FILE__) . '/locale/';
+		$this->_config['locale'] = dirname(__FILE__) . '/locale/';
 	}
 	
 	public function something()
 	{	
-		$error = Solar::object('Solar_Error');
+		$error = Solar::factory('Solar_Error');
 		for ($i = 0; $i < 3; $i++) {
-			$this->errorPush($error, 'ERR_EXAMPLE', array('i' => $i));
+			$this->_errorPush($error, 'ERR_EXAMPLE', array('i' => $i));
 		}
 		return $error;
 	}
@@ -37,14 +37,14 @@ Solar::stop();
 ?>
 --EXPECT--
 object(Solar_Error)#9 (2) {
-  ["config:protected"] => array(5) {
+  ["_config:protected"] => array(5) {
     ["push_callback"] => NULL
     ["pop_callback"] => NULL
     ["trace"] => bool(false)
     ["level"] => int(1024)
     ["locale"] => string(19) "Solar/Error/Locale/"
   }
-  ["stack:protected"] => array(3) {
+  ["_stack:protected"] => array(3) {
     [0] => array(7) {
       ["class"] => string(7) "Example"
       ["code"] => string(11) "ERR_EXAMPLE"

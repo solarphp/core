@@ -19,6 +19,16 @@
  * 
  * Front-controller class for Solar.
  * 
+ * An example front-controller "index.php" for your web root:
+ *
+ * <code>
+ * require_once 'Solar.php';
+ * Solar::start();
+ * $front = Solar::factory('Solar_Controller_Front');
+ * $front->display();
+ * Solar::stop();
+ * </code>
+ * 
  * @category Solar
  * 
  * @package Solar_Controller

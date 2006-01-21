@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for MySQL behaviors.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,8 +35,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'DECIMAL(1,0)',
         'char'      => 'CHAR(:size) BINARY',
         'varchar'   => 'VARCHAR(:size) BINARY',
@@ -58,7 +50,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         'timestamp' => 'CHAR(19)'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +59,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
-    protected $pdo_type = 'mysql';
-    
+    protected $_pdo_type = 'mysql';
     
     /**
      * 
@@ -85,7 +74,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // build the baseline statement
@@ -113,7 +101,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Returns a list of database tables.
@@ -123,7 +110,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @return array The list of tables in the database.
      * 
      */
-    
     public function listTables()
     {
         $result = $this->exec('SHOW TABLES');
@@ -139,7 +125,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Creates a sequence, optionally starting at a certain number.
@@ -153,14 +138,12 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
         $this->exec("CREATE TABLE $name (id INT NOT NULL)");
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
-    
     
     /**
      * 
@@ -173,12 +156,10 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP TABLE $name");
     }
-    
     
     /**
      * 
@@ -191,7 +172,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
@@ -199,7 +179,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -207,12 +187,12 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        return $this->pdo->lastInsertID();
+        return $this->_pdo->lastInsertID();
     }
 }
 ?>

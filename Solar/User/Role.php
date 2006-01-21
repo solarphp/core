@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for reading user roles and groups.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Role extends Solar_Base {
-    
     
     /**
      * 
@@ -50,13 +43,11 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'class'   => 'Solar_User_Role_None',
         'options' => null,
         'refresh' => false,
     );
-    
     
     /**
      * 
@@ -67,9 +58,7 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $driver = array();
-    
+    protected $_driver = array();
     
     /**
      * 
@@ -80,9 +69,7 @@ class Solar_User_Role extends Solar_Base {
      * @var bool
      * 
      */
-    
-    protected $loaded = false;
-    
+    protected $_loaded = false;
     
     /**
      * 
@@ -93,9 +80,7 @@ class Solar_User_Role extends Solar_Base {
      * @var array
      * 
      */
-    
     public $list;
-    
     
     /**
      * 
@@ -108,16 +93,15 @@ class Solar_User_Role extends Solar_Base {
      * @return object
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config option settings
         parent::__construct($config);
         
         // instantiate a driver object
-        $this->driver = Solar::object(
-            $this->config['class'],
-            $this->config['options']
+        $this->_driver = Solar::factory(
+            $this->_config['class'],
+            $this->_config['options']
         );
         
         // make sure we have a session value and reference to it.
@@ -126,7 +110,6 @@ class Solar_User_Role extends Solar_Base {
             $this->list =& $_SESSION['Solar_User_Role'];
         }
     }
-    
     
     /**
      * 
@@ -137,13 +120,12 @@ class Solar_User_Role extends Solar_Base {
      * @return array The list of roles for the authenticated user.
      * 
      */
-    
     public function fetch($username)
     {
         // have we loaded roles for the first time yet? if so, and if
         // we're not forcing refreshes, the we don't need to do
         // anything, just return the list as it is right now.
-        if ($this->loaded && ! $this->config['refresh']) {
+        if ($this->_loaded && ! $this->_config['refresh']) {
             return $this->list;
         }
         
@@ -151,7 +133,7 @@ class Solar_User_Role extends Solar_Base {
         $this->reset();
         
         // fetch the role list
-        $result = $this->driver->fetch($username);
+        $result = $this->_driver->fetch($username);
             
         // let errors go silently from here
         if (! Solar::isError($result) && $result !== false) {
@@ -163,12 +145,11 @@ class Solar_User_Role extends Solar_Base {
         }
         
         // OK, we've loaded what we can.
-        $this->loaded = true;
+        $this->_loaded = true;
         
         // return the results
         return $this->list;
     }
-    
     
     /**
      * 
@@ -179,13 +160,11 @@ class Solar_User_Role extends Solar_Base {
      * @return void
      * 
      */
-    
     public function reset()
     {
-        $this->loaded = false;
+        $this->_loaded = false;
         $this->list = array();
     }
-    
     
     /**
      * 
@@ -198,12 +177,10 @@ class Solar_User_Role extends Solar_Base {
      * @return void
      * 
      */
-    
     public function in($role = null)
     {
         return in_array($role, $this->list);
     }
-    
     
     /**
      * 
@@ -217,7 +194,6 @@ class Solar_User_Role extends Solar_Base {
      * logical 'or'), false if not.
      * 
      */
-    
     public function inAny($roles = array())
     {
         // loop through all of the roles, returning 'true' the first
@@ -233,7 +209,6 @@ class Solar_User_Role extends Solar_Base {
         return false;
     }
     
-    
     /**
      * 
      * Check to see if a user is in all of the listed roles.
@@ -246,7 +221,6 @@ class Solar_User_Role extends Solar_Base {
      * logical 'and'), false if not.
      * 
      */
-    
     public function inAll($roles = array())
     {
         // loop through all of the roles, returning 'false' the first

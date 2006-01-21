@@ -1,14 +1,13 @@
 <?php
-
 /**
  * 
  * Locale file.  Returns the strings for a specific language.
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -17,7 +16,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     // labels and descriptions of node columns
     'LABEL_URI'  => 'Location',

@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for connecting to PostgreSQL databases.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,8 +35,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'BOOLEAN',
         'char'      => 'CHAR(:size)',
         'varchar'   => 'VARCHAR(:size)',
@@ -58,7 +50,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         'timestamp' => 'CHAR(19)'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +59,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @var string
      * 
      */
-    
-    protected $pdo_type = 'pgsql';
-    
+    protected $_pdo_type = 'pgsql';
     
     /**
      * 
@@ -83,26 +72,24 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return string A PDO-style DSN.
      * 
      */
-    
-    protected function dsn()
+    protected function _dsn()
     {
         $dsn = array();
         
-        if (! empty($this->config['host'])) {
-            $dsn[] = 'host=' . $this->config['host'];
+        if (! empty($this->_config['host'])) {
+            $dsn[] = 'host=' . $this->_config['host'];
         }
         
-        if (! empty($this->config['port'])) {
-            $dsn[] = 'port=' . $this->config['port'];
+        if (! empty($this->_config['port'])) {
+            $dsn[] = 'port=' . $this->_config['port'];
         }
         
-        if (! empty($this->config['name'])) {
-            $dsn[] = 'dbname=' . $this->config['name'];
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
         }
         
-        return $this->pdo_type . ':' . implode(' ', $dsn);
+        return $this->_pdo_type . ':' . implode(' ', $dsn);
     }
-    
     
     
     /**
@@ -118,7 +105,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // build the baseline statement
@@ -146,7 +132,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Returns the SQL statement to get a list of database tables.
@@ -156,7 +141,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return string The SQL statement.
      * 
      */
-    
     public function listTables()
     {
         // copied from PEAR DB
@@ -178,7 +162,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         return $list;
     }
     
-    
     /**
      * 
      * Creates a sequence, optionally starting at a certain number.
@@ -192,12 +175,10 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $this->exec("CREATE SEQUENCE $name START $start");
     }
-    
     
     /**
      * 
@@ -210,12 +191,10 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP SEQUENCE $name");
     }
-    
     
     /**
      * 
@@ -228,7 +207,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         // first, try to get the next sequence number, assuming
@@ -238,7 +216,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -246,12 +224,12 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        return $this->pdo->lastInsertID($name);
+        return $this->_pdo->lastInsertID($name);
     }
 }
 ?>

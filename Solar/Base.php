@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Abstract base class for all Solar objects.
@@ -25,7 +24,6 @@
  * @package Solar
  * 
  */
-
 abstract class Solar_Base {
     
     /**
@@ -42,11 +40,9 @@ abstract class Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'locale' => null,
     );
-    
     
     /**
      * 
@@ -58,7 +54,6 @@ abstract class Solar_Base {
      * and any values from the Solar.config.php file.
      * 
      */
-    
     public function __construct($config = null)
     {
         // allow construction-time config loading from arbitrary files
@@ -69,17 +64,17 @@ abstract class Solar_Base {
         // Solar.config.php values override class defaults
         $class = get_class($this);
         $solar = Solar::config($class, null, array());
-        $this->config = array_merge($this->config, $solar);
+        $this->_config = array_merge($this->_config, $solar);
         
         // construction-time values override Solar.config.php
-        $this->config = array_merge($this->config, (array) $config);
+        $this->_config = array_merge($this->_config, (array) $config);
         
         // auto-define the locale directory if needed
-        if (empty($this->config['locale'])) {
+        if (empty($this->_config['locale'])) {
             // converts "Solar_Example_Class" to
             // "Solar/Example/Class/Locale/"
-            $this->config['locale'] = str_replace('_', '/', $class);
-            $this->config['locale'] .= '/Locale/';
+            $this->_config['locale'] = str_replace('_', '/', $class);
+            $this->_config['locale'] .= '/Locale/';
         }
         
         // Load the locale strings.  Solar_Locale is a special case,
@@ -89,7 +84,6 @@ abstract class Solar_Base {
             $this->locale('');
         }
     }
-    
     
     /**
      * 
@@ -103,12 +97,85 @@ abstract class Solar_Base {
      * @return string A PHP-standard version number.
      * 
      */
-    
     public function apiVersion()
     {
         return '@package_version@';
     }
     
+    /**
+     * 
+     * Provides hooks for Solar::start() and Solar::stop() on shared objects.
+     * 
+     * @access public
+     * 
+     * @param string $hook The hook to activate, typically 'start' or 'stop'.
+     * 
+     * @return void
+     * 
+     */
+    public function solar($hook)
+    {
+        switch ($hook) {
+        case 'start':
+            // do nothing
+            break;
+        case 'stop':
+            // do nothing
+            break;
+        }
+    }
+    
+    /**
+     * 
+     * Looks up locale strings based on a key.
+     * 
+     * Uses the locale strings in the directory noted by $config['locale'];
+     * if no such key exists, falls back to the Solar/Locale strings.
+     * 
+     * @access public
+     * 
+     * @param string $key The key to get a locale string for.
+     * 
+     * @param string $num If 1, returns a singular string; otherwise, returns
+     * a plural string (if one exists).
+     * 
+     * @return string The locale string, or the original $key if no
+     * string found.
+     * 
+     */
+    public function locale($key, $num = 1)
+    {
+        // the shared Solar_Locale object
+        $locale = Solar::shared('locale');
+        
+        // is a locale directory specified?
+        if (empty($this->_config['locale'])) {
+            // use the generic Solar locale strings
+            return $locale->string('Solar', $key, $num);
+        }
+        
+        // the name of this class
+        $class = get_class($this);
+        
+        // do we need to load locale strings? we check for loading here
+        // because the locale may have changed during runtime.
+        if (! $locale->loaded($class)) {
+            $locale->load($class, $this->_config['locale']);
+        }
+        
+        // get a translation for the current class
+        $string = $locale->string($class, $key, $num);
+        
+        // is the translation the same as the key?
+        if ($string != $key) {
+            // found a translation (i.e., different from the key)
+            return $string;
+        } else {
+            // no translation found.
+            // fall back to the generic Solar locale strings.
+            return $locale->string('Solar', $key, $num);
+        }
+    }
     
     /**
      * 
@@ -116,7 +183,7 @@ abstract class Solar_Base {
      * 
      * @access protected
      * 
-     * @param int $code The error code.
+     * @param string $code The error code.
      * 
      * @param array $info An array of error-specific data.
      * 
@@ -127,8 +194,7 @@ abstract class Solar_Base {
      * @return object A Solar_Error object.
      * 
      */
-    
-    protected function error($code, $info = array(), $level = null,
+    protected function _error($code, $info = array(), $level = null,
         $trace = null)
     {
         // automatic value for the class name
@@ -145,7 +211,6 @@ abstract class Solar_Base {
         return $err;
     }
     
-    
     /**
      * 
      * Convenience method for pushing onto an existing Solar_Error stack.
@@ -154,7 +219,7 @@ abstract class Solar_Base {
      * 
      * @param object $err An existing Solar_Error object.
      * 
-     * @param int $code The error code.
+     * @param string $code The error code.
      * 
      * @param array $info An array of error-specific data.
      * 
@@ -163,8 +228,7 @@ abstract class Solar_Base {
      * @param bool $trace Whether or not to generate a debug_backtrace().
      * 
      */
-    
-    protected function errorPush($err, $code, $info = array(), $level = null,
+    protected function _errorPush($err, $code, $info = array(), $level = null,
         $trace = null)
     {
         // automatic value for the class name
@@ -180,7 +244,6 @@ abstract class Solar_Base {
         $err->push($class, $code, $text, $info, $level, $trace);
     }
     
-    
     /**
      * 
      * Converts an exception to a Solar_Error of E_USER_ERROR severity.
@@ -195,8 +258,7 @@ abstract class Solar_Base {
      * 
      * @return object A Solar_Error object.
      */
-    
-    protected function errorException($e, $level)
+    protected function _errorException($e, $level)
     {
         $info = array(
             'type'  => get_class($e),
@@ -219,80 +281,27 @@ abstract class Solar_Base {
     
     /**
      * 
-     * Provides hooks for Solar::start() and Solar::stop() on shared objects.
+     * Convenience method for returning Solar::exception with localized text.
      * 
-     * @access public
+     * @access protected
      * 
-     * @param string $hook The hook to activate, typically 'start' or 'stop'.
+     * @param string $code The error code.
      * 
-     * @return void
+     * @param array $info An array of error-specific data.
      * 
-     */
-    
-    public function solar($hook)
-    {
-        switch ($hook) {
-        case 'start':
-            // do nothing
-            break;
-        case 'stop':
-            // do nothing
-            break;
-        }
-    }
-    
-    
-    /**
-     * 
-     * Looks up locale strings based on a key.
-     * 
-     * Uses the locale strings in the directory noted by $config['locale'];
-     * if no such key exists, falls back to the Solar/Locale strings.
-     * 
-     * @access public
-     * 
-     * @param string $key The key to get a locale string for.
-     * 
-     * @param string $num If 1, returns a singular string; otherwise, returns
-     * a plural string (if one exists).
-     * 
-     * @return string The locale string, or the original $key if no
-     * string found.
+     * @return object A Solar_Exception object.
      * 
      */
-    
-    public function locale($key, $num = 1)
+    protected function _exception($code, $info = array())
     {
-        // the shared Solar_Locale object
-        $locale = Solar::shared('locale');
+        $config = array(
+            'class' => get_class($this),
+            'code'  => $code,
+            'text'  => $this->locale($code),
+            'info'  => $info,
+        );
         
-        // is a locale directory specified?
-        if (empty($this->config['locale'])) {
-            // use the generic Solar locale strings
-            return $locale->string('Solar', $key, $num);
-        }
-        
-        // the name of this class
-        $class = get_class($this);
-        
-        // do we need to load locale strings? we check for loading here
-        // because the locale may have changed during runtime.
-        if (! $locale->loaded($class)) {
-            $locale->load($class, $this->config['locale']);
-        }
-        
-        // get a translation for the current class
-        $string = $locale->string($class, $key, $num);
-        
-        // is the translation the same as the key?
-        if ($string != $key) {
-            // found a translation (i.e., different from the key)
-            return $string;
-        } else {
-            // no translation found.
-            // fall back to the generic Solar locale strings.
-            return $locale->string('Solar', $key, $num);
-        }
+        return Solar::factory('Solar_Exception', $config);
     }
 }
 ?>

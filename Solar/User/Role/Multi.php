@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Get roles from multiple sources and return as a single list.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,12 +21,9 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Role_Multi extends Solar_Base {
     
     /**
@@ -45,8 +39,7 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'drivers' => array(
             'Solar_User_Role_None'
         )
@@ -61,26 +54,23 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $driver = array();
-    
+    protected $_driver = array();
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config
         parent::__construct($config);
         
         // make sure the drivers config is an array
-        settype($this->config['drivers'], 'array');
+        settype($this->_config['drivers'], 'array');
         
         // instantiate the driver objects
-        foreach ($this->config['drivers'] as $key => $info) {
+        foreach ($this->_config['drivers'] as $key => $info) {
             
             // is the driver value an array (for custom configs)
             // or a string (for default configs)?
@@ -93,10 +83,9 @@ class Solar_User_Role_Multi extends Solar_Base {
             }
             
             // add the driver instance
-            $this->driver[] = Solar::object($class, $opts);
+            $this->_driver[] = Solar::factory($class, $opts);
         }
     }
-    
     
     /**
      * 
@@ -107,14 +96,13 @@ class Solar_User_Role_Multi extends Solar_Base {
      * @return mixed An array of discovered roles.
      * 
      */
-    
     public function fetch($user)
     {
         // the list of all roles
         $list = array();
         
         // loop through all the drivers and collect roles
-        foreach ($this->driver as $obj) {
+        foreach ($this->_driver as $obj) {
         
             // fetch the role list
             $result = $obj->fetch($username);

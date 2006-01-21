@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Get roles from a Unix-style groups file.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -34,14 +31,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Role_File extends Solar_Base {
-    
     
     /**
      * 
@@ -52,8 +45,7 @@ class Solar_User_Role_File extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'file' => null
     );
     
@@ -68,15 +60,14 @@ class Solar_User_Role_File extends Solar_Base {
      * if there was a file error.
      * 
      */
-    
     public function fetch($user)
     {
         // force the full, real path to the file
-        $file = realpath($this->config['file']);
+        $file = realpath($this->_config['file']);
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FILE_FIND',
                 array('file' => $file),
                 E_USER_ERROR

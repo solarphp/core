@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Social bookmarking application.
@@ -14,14 +13,14 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Bookmarks.php 568 2005-10-09 19:12:30Z pmjones $
+ * @version $Id$
  * 
  */
 
 /**
  * Application controller class.
  */
-Solar::loadClass('Solar_Controller_App');
+Solar::loadClass('Solar_Controller_Page');
 
 /**
  * 
@@ -34,40 +33,164 @@ Solar::loadClass('Solar_Controller_App');
  * @subpackage Solar_App_Bookmarks
  * 
  */
-
-class Solar_App_Bookmarks extends Solar_Controller_App {
+class Solar_App_Bookmarks extends Solar_Controller_Page {
     
-    public $rss;
-    public $count;
-    public $pages;
-    public $order;
-    public $page;
-    public $owner_handle;
-    public $tags;
-    public $tags_in_use;
-    public $list;
-    public $err;
-    public $formdata;
-    public $backlink;
+    /**
+     * 
+     * The default controller action.
+     * 
+     * @var string
+     * 
+     */
+    protected $_action_default = 'tag';
     
-    protected $_default_action = 'tag';
-    
-    // dispatch info map
-    protected $_map = array(
+    /**
+     * 
+     * Pathinfo mappings for each controller action.
+     * 
+     * @access protected
+     * 
+     * @var array
+     * 
+     */
+    protected $_action_info = array(
         
         // tags/:tags
         'tag' => array('tags'),
         
         // user/:owner_handle/:tags
-        
         'user' => array('owner_handle', 'tags'),
         
         // edit/:id
         'edit' => array('id'),
     );
     
-    // there are only some accepted orderings.
-    protected function getOrder()
+    /**
+     * 
+     * An array of RSS header tags for the current page.
+     * 
+     * @var array
+     * 
+     */
+    public $rss = array(
+        // is an RSS feed available?
+        'avail' => null,
+        
+        // RSS title
+        'title' => null,
+        
+        // RSS description
+        'descr' => null,
+        
+        // RSS publication date
+        'date'  => null,
+        
+        // link back to the origin page for the feed
+        'link'  => null,
+    );
+    
+    /**
+     * 
+     * The total number of pages in the query.
+     * 
+     * @var int
+     * 
+     */
+    public $pages;
+    
+    /**
+     * 
+     * The requested bookmark order (title, tags, created, etc).
+     * 
+     * @var string
+     * 
+     */
+    public $order;
+    
+    /**
+     * 
+     * The current page number being displayed.
+     * 
+     * @var int
+     * 
+     */
+    public $page;
+    
+    /**
+     * 
+     * The current owner_handle being displayed.
+     * 
+     * @var string
+     * 
+     */
+    public $owner_handle;
+    
+    /**
+     * 
+     * The tags requested for filtering results.
+     * 
+     * @var string
+     * 
+     */
+    public $tags;
+    
+    /**
+     * 
+     * The list of all tags in use by the current owner_handle.
+     * 
+     * If no owner_handle, the list of all tags for all owners.
+     * 
+     * @var array
+     * 
+     */
+    public $tags_in_use;
+    
+    /**
+     * 
+     * The list of all bookmarks for the current page.
+     * 
+     * @var array
+     * 
+     */
+    public $list;
+    
+    /**
+     * 
+     * An array of error messages.
+     * 
+     * @var array
+     * 
+     */
+    public $err;
+    
+    /**
+     * 
+     * The current form processing object.
+     * 
+     * @var object Solar_Form
+     * 
+     */
+    public $formdata;
+    
+    /**
+     * 
+     * A link back to the previous page: list results, bookmarked page, etc.
+     * 
+     * @var string
+     * 
+     */
+    public $backlink;
+    
+    /**
+     * 
+     * Returns a safe SQL ORDER value from the 'order' query parameter.
+     * 
+     * @access protected
+     * 
+     * @return string
+     * 
+     */
+    protected function _getOrder()
     {
         $tmp = strtolower($this->_query('order'));
         

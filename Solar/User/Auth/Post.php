@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Authenticate via simple HTTP POST request-and-reply.
  *
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -28,14 +25,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Auth_Post extends Solar_Base {
-    
     
     /**
      * 
@@ -60,15 +53,13 @@ class Solar_User_Auth_Post extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'url'      => 'https://example.com/services/authenticate.php',
         'username' => 'username',
         'password' => 'password',
         'headers'  => null, // additional heaaders
         'replies'  => array('0' => false, '1' => true), // key-value array of replies
     );
-    
     
     /**
      * 
@@ -82,16 +73,15 @@ class Solar_User_Auth_Post extends Solar_Base {
      * or a Solar_Error object if there was a connection error.
      * 
      */
-    
     public function valid($username, $password)
     {
         // parse out URL elements
-        $url = parse_url($this->config['url']);
+        $url = parse_url($this->_config['url']);
         
         // build the content string for username and password
         $content = 
-            urlencode($this->config['username']) . '=' . urlencode($username) . '&' .
-            urlencode($this->config['password']) . '=' . urlencode($password);
+            urlencode($this->_config['username']) . '=' . urlencode($username) . '&' .
+            urlencode($this->_config['password']) . '=' . urlencode($password);
         
         // set up the basic headers
         $tmp = array(
@@ -102,7 +92,7 @@ class Solar_User_Auth_Post extends Solar_Base {
         );
         
         // add user-defined headers
-        $tmp = array_merge($tmp, (array) $this->config['headers']);
+        $tmp = array_merge($tmp, (array) $this->_config['headers']);
         
         // build the header string itself
         $headers = "POST {$url['path']} HTTP/1.1\r\n";
@@ -132,11 +122,11 @@ class Solar_User_Auth_Post extends Solar_Base {
         if (! $fp) {
             // build user-info about the error
             $info = array_merge(
-                $this->config,
+                $this->_config,
                 array('errno' => $errno, 'errstr' => $errstr)
             );
             // return the error
-            return $this->error(
+            return $this->_error(
                 'ERR_CONNECT',
                 $info,
                 E_USER_ERROR
@@ -163,9 +153,9 @@ class Solar_User_Auth_Post extends Solar_Base {
         $reply = substr($reply, $pos+2);
         
         // is the reply string a known reply?
-        if (array_key_exists($reply, $this->config['replies'])) {
+        if (array_key_exists($reply, $this->_config['replies'])) {
             // get the true/false value of the reply
-            return (bool) $this->config['replies'][$reply];
+            return (bool) $this->_config['replies'][$reply];
         }
         
         // reply not listed, assume false

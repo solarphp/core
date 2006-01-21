@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Comments management class.
@@ -8,9 +7,9 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Comments
+ * @subpackage Solar_Model_Comments
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -26,14 +25,12 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Comments
+ * @subpackage Solar_Model_Comments
  * 
  */
-
-class Solar_Cell_Comments extends Solar_Base {
-    
+class Solar_Model_Comments extends Solar_Base {
     
     /**
      * 
@@ -44,11 +41,9 @@ class Solar_Cell_Comments extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'paging'       => 10,
     );
-    
     
     /**
      * 
@@ -59,9 +54,7 @@ class Solar_Cell_Comments extends Solar_Base {
      * @var object Solar_Content
      * 
      */
-    
-    protected $content;
-    
+    protected $_content;
     
     /**
      * 
@@ -72,9 +65,7 @@ class Solar_Cell_Comments extends Solar_Base {
      * @var object Solar_Sql
      * 
      */
-    
-    protected $node_type = 'comment';
-    
+    protected $_node_type = 'comment';
     
     /**
      * 
@@ -85,11 +76,9 @@ class Solar_Cell_Comments extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $where = array(
+    protected $_where = array(
         'nodes.type = ?'    => 'comment',
     );
-    
     
     /**
      * 
@@ -100,22 +89,20 @@ class Solar_Cell_Comments extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // main construction
         parent::__construct($config);
         
         // create a content object and set its paging
-        $this->content = Solar::object('Solar_Content');
-        $this->paging($this->config['paging']);
+        $this->_content = Solar::factory('Solar_Content');
+        $this->paging($this->_config['paging']);
         
         // set up the baseline WHERE clause
-        $this->where = array(
-            'nodes.type = ?'    => $this->node_type,
+        $this->_where = array(
+            'nodes.type = ?'    => $this->_node_type,
         );
     }
-    
     
     /**
      * 
@@ -128,12 +115,10 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return void
      * 
      */
-    
     public function paging($val)
     {
-        $this->content->paging((int) $val);
+        $this->_content->paging((int) $val);
     }
-    
     
     /**
      * 
@@ -146,7 +131,6 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array The data as inserted or updated.
      * 
      */
-    
     public function save($data)
     {
         if (empty($data['id'])) {
@@ -155,7 +139,6 @@ class Solar_Cell_Comments extends Solar_Base {
             return $this->update($data['id'], $data);
         }
     }
-    
     
     /**
      * 
@@ -168,12 +151,10 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array The inserted data.
      * 
      */
-    
     public function insert($data)
     {
-        return $this->content->insertNode($data);
+        return $this->_content->insertNode($data);
     }
-    
     
     /**
      * 
@@ -186,15 +167,13 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array The updated data.
      * 
      */
-    
     public function update($node_id, $data)
     {
-        return $this->content->updateNode(
+        return $this->_content->updateNode(
             $node_id,
             $data
         );
     }
-    
     
     /**
      * 
@@ -205,15 +184,13 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array Default data for a new comment node.
      * 
      */
-    
     public function fetchDefault()
     {
         // a default generic node
-        $data = $this->content->defaultNode();
-        $data['type'] = $this->node_type;
+        $data = $this->_content->defaultNode();
+        $data['type'] = $this->_node_type;
         return $data;
     }
-    
     
     /**
      * 
@@ -226,15 +203,13 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array The comment data.
      * 
      */
-    
     public function fetchItem($id)
     {
-        $where = $this->where;
+        $where = $this->_where;
         $where['nodes.id = ?'] = (int) $id;
-        $data = $this->content->fetchNode($where);
+        $data = $this->_content->fetchNode($where);
         return $data;
     }
-    
     
     /**
      * 
@@ -259,11 +234,10 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return array The list of comments.
      * 
      */
-    
     public function fetchList($part_of = null, $tags = null, $order = null,
         $page = null)
     {
-        $where = $this->where;
+        $where = $this->_where;
         
         if ($part_of) {
             $where['nodes.part_of = ?'] = (int) $part_of;
@@ -273,9 +247,8 @@ class Solar_Cell_Comments extends Solar_Base {
             $order = 'nodes.created ASC';
         }
         
-        return $this->content->fetchNodeList($tags, $where, $order, $page);
+        return $this->_content->fetchNodeList($tags, $where, $order, $page);
     }
-    
     
     /**
      * 
@@ -296,17 +269,15 @@ class Solar_Cell_Comments extends Solar_Base {
      * comments) and 'pages' (number of pages).
      * 
      */
-    
     public function countPages($part_of = null, $tags = null)
     {
-        $where = $this->where;
+        $where = $this->_where;
         if ($part_of) {
             $where['nodes.part_of = ?'] = $part_of;
         }
         
-        return $this->content->fetchNodeCount($tags, $where);
+        return $this->_content->fetchNodeCount($tags, $where);
     }
-    
     
     /**
      * 
@@ -319,14 +290,12 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function delete($id)
     {
-        $where = $this->where;
+        $where = $this->_where;
         $where['id = ?'] = (int) $id;
-        return $this->content->deleteNodes($where);
+        return $this->_content->deleteNodes($where);
     }
-    
     
     /**
      * 
@@ -343,7 +312,6 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return object A Solar_Form object.
      * 
      */
-    
     public function shortForm($data = null)
     {
         // which node columns do we want?
@@ -355,7 +323,7 @@ class Solar_Cell_Comments extends Solar_Base {
         $info['body']['attribs']['cols']  = 48;
         
         // get the form with a set of 'comments' elements
-        $form = $this->content->form(
+        $form = $this->_content->form(
             get_class($this),
             $cols,
             $info,
@@ -380,7 +348,6 @@ class Solar_Cell_Comments extends Solar_Base {
         return $form;
     }
     
-    
     /**
      * 
      * Generates a long form for a single comment (name, email, uri, body).
@@ -396,7 +363,6 @@ class Solar_Cell_Comments extends Solar_Base {
      * @return object A Solar_Form object.
      * 
      */
-    
     public function longForm($data = null)
     {
         // name, mail, website, comment.
@@ -415,7 +381,7 @@ class Solar_Cell_Comments extends Solar_Base {
         $info['body']['attribs']['cols']  = 48;
         
         // get the form with a set of 'comments' elements
-        $form = $this->content->form(
+        $form = $this->_content->form(
             get_class($this),
             $cols,
             $info,

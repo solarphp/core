@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Solar-specific plugin to help with locale strings.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,12 +21,9 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  */
-
 class Savant3_Plugin_locale extends Savant3_Plugin {
     
     /**
@@ -41,9 +35,7 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
      * @var string
      * 
      */
-    
     public $default = 'Solar';
-    
     
     /**
      * 
@@ -64,7 +56,6 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
      * @return string The translated locale string.
      * 
      */
-    
     function locale($key, $num = 1)
     {
         // is there a :: in the key?

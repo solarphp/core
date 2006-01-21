@@ -17,7 +17,7 @@ $config = array(
 	)
 );
 
-$cache = Solar::object('Solar_Cache', $config);
+$cache = Solar::factory('Solar_Cache', $config);
 $cache->deleteAll();
 
 $id = "coyote";

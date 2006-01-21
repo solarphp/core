@@ -17,7 +17,7 @@ $config = array(
 	)
 );
 
-$cache = Solar::object('Solar_Cache', $config);
+$cache = Solar::factory('Solar_Cache', $config);
 $cache->deleteAll();
 
 class Coyote extends Solar_Base {
@@ -60,7 +60,7 @@ Solar::stop();
 object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(1) {
+  ["_config:protected"] => array(1) {
     ["locale"] => string(14) "Coyote/Locale/"
   }
 }
@@ -68,7 +68,7 @@ object(Coyote)#10 (3) {
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(1) {
+  ["_config:protected"] => array(1) {
     ["locale"] => string(14) "Coyote/Locale/"
   }
 }
@@ -76,7 +76,7 @@ object(Coyote)#11 (3) {
 object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(1) {
+  ["_config:protected"] => array(1) {
     ["locale"] => string(14) "Coyote/Locale/"
   }
 }
@@ -84,7 +84,7 @@ object(Coyote)#10 (3) {
 object(Coyote)#10 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(1) {
+  ["_config:protected"] => array(1) {
     ["locale"] => string(14) "Coyote/Locale/"
   }
 }
@@ -92,7 +92,7 @@ object(Coyote)#10 (3) {
 object(Coyote)#11 (3) {
   ["acme"] => string(20) "Acme Industries, LLC"
   ["meal:protected"] => string(10) "Roadrunner"
-  ["config:protected"] => array(1) {
+  ["_config:protected"] => array(1) {
     ["locale"] => string(14) "Coyote/Locale/"
   }
 }

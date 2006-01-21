@@ -5,7 +5,7 @@ valid: locale()
 require_once '../setup.php';
 Solar::start();
 
-$valid = Solar::object('Solar_Valid');
+$valid = Solar::factory('Solar_Valid');
 
 $test = array(
 	'en_US',

@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class to help examine and debug variables.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,11 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  * @todo add reflect() method for reflection capture
  * 
  */
-
 class Solar_Debug_Var extends Solar_Base {
     
     /**
@@ -48,11 +42,9 @@ class Solar_Debug_Var extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'output' => 'html',
     );
-    
     
     /**
      * 
@@ -67,7 +59,6 @@ class Solar_Debug_Var extends Solar_Base {
      * @return string The labeled results of var_dump().
      * 
      */
-    
     public function dump(&$var, $label = null)
     {
         // if there's a label, add a space after it
@@ -86,7 +77,7 @@ class Solar_Debug_Var extends Solar_Base {
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         
         // was this for HTML?
-        if ($this->config['output'] == 'html') {
+        if ($this->_config['output'] == 'html') {
             $output = '<pre>' . htmlspecialchars($output) . '</pre>';
         }
         

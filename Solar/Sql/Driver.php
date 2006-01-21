@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Base class for specific RDBMS driver information.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver extends Solar_Base {
-    
     
     /**
      * 
@@ -56,8 +49,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Sql/Locale/',
         'host'   => null,
         'port'   => null,
@@ -66,7 +58,6 @@ class Solar_Sql_Driver extends Solar_Base {
         'name'   => null,
         'mode'   => null,
     );
-    
     
     /**
      * 
@@ -77,9 +68,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var object
      *
      */
-    
-    protected $pdo = null;
-    
+    protected $_pdo = null;
     
     /**
      * 
@@ -90,8 +79,7 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $native = array(
+    protected $_native = array(
         'bool'      => null,
         'char'      => null, 
         'varchar'   => null, 
@@ -106,7 +94,6 @@ class Solar_Sql_Driver extends Solar_Base {
         'timestamp' => null
     );
     
-    
     /**
      * 
      * The PDO driver DSN type.
@@ -118,9 +105,18 @@ class Solar_Sql_Driver extends Solar_Base {
      * @var string
      * 
      */
+    protected $_pdo_type = null;
     
-    protected $pdo_type = null;
-    
+    /**
+     * 
+     * Execute these commands directly, without preparation.
+     * 
+     * @access protected
+     * 
+     * @var array
+     * 
+     */
+    protected $_direct = array('CREATE', 'ALTER', 'DROP');
     
     /**
      * 
@@ -133,22 +129,20 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return string A PDO-style DSN.
      * 
      */
-    
-    protected function dsn()
+    protected function _dsn()
     {
         $dsn = array();
         
-        if (! empty($this->config['host'])) {
-            $dsn[] = 'host=' . $this->config['host'];
+        if (! empty($this->_config['host'])) {
+            $dsn[] = 'host=' . $this->_config['host'];
         }
         
-        if (! empty($this->config['name'])) {
-            $dsn[] = 'dbname=' . $this->config['name'];
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
         }
         
-        return $this->pdo_type . ':' . implode(';', $dsn);
+        return $this->_pdo_type . ':' . implode(';', $dsn);
     }
-    
     
     /**
      * 
@@ -159,46 +153,44 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
-    protected function connect()
+    protected function _connect()
     {
         // if we already have a PDO object, no need to re-connect.
-        if ($this->pdo) {
+        if ($this->_pdo) {
             return;
         }
         
         // build a DSN
-        $dsn = $this->dsn();
+        $dsn = $this->_dsn();
         
         // create PDO object
         try {
             
             // attempt the connection
-            $this->pdo = new PDO(
+            $this->_pdo = new PDO(
                 $dsn,
-                $this->config['user'],
-                $this->config['pass']
+                $this->_config['user'],
+                $this->_config['pass']
             );
             
             // always autocommit to start
-            $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
+            $this->_pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
             
             // force names to lower case
-            $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+            $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             
             /** @todo Are there other portability attribs to consider? */
             
             // always use exceptions.
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE,
+            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION);
             
         } catch (Exception $e) {
             // database connection failures should be fatal
-            $err = $this->errorException($e, E_USER_ERROR);
+            $err = $this->_errorException($e, E_USER_ERROR);
             return $err;
         }
     }
-    
     
     /**
      * 
@@ -209,13 +201,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function begin()
     {
-        $this->connect();
-        return $this->pdo->beginTransaction();
+        $this->_connect();
+        return $this->_pdo->beginTransaction();
     }
-    
     
     /**
      * 
@@ -226,13 +216,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function commit()
     {
-        $this->connect();
-        return $this->pdo->commit();
+        $this->_connect();
+        return $this->_pdo->commit();
     }
-    
     
     /**
      * 
@@ -243,13 +231,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function rollback()
     {
-        $this->connect();
-        return $this->pdo->rollBack();
+        $this->_connect();
+        return $this->_pdo->rollBack();
     }
-    
     
     /**
      * 
@@ -266,35 +252,31 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return object A PDOStatement object.
      * 
      */
-    
     public function exec($stmt, $data = array())
     {
         // connect to the database if needed
-        $this->connect();
+        $this->_connect();
         
-        // force the bound data to be an array
-        settype($data, 'array');
+        // what kind of command?
+        $pos = strpos($stmt, ' ');
+        $cmd = substr($stmt, 0, $pos);
         
-        // prepare the statement
+        // execute
         try {
-            $obj = $this->pdo->prepare($stmt);
+            if (in_array(strtoupper($cmd), $this->_direct)) {
+                // execute directly
+                return $this->_pdo->exec($stmt);
+            } else {
+                // prepare and execute
+                $obj = $this->_pdo->prepare($stmt);
+                $obj->execute((array) $data);
+                return $obj;
+            }
         } catch (Exception $e) {
-            $err = $this->errorException($e, E_USER_WARNING);
+            $err = $this->_errorException($e, E_USER_WARNING);
             return $err;
         }
-        
-        // execute with bound data
-        try {
-            $obj->execute($data);
-        } catch (Exception $e) {
-            $err = $this->errorException($e, E_USER_WARNING);
-            return $err;
-        }
-        
-        // return the results embedded in the prepared statement object
-        return $obj;
     }
-    
     
     /**
      * 
@@ -307,13 +289,11 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return mixed An SQL-safe quoted value.
      * 
      */
-    
     public function quote($val)
     {
-        $this->connect();
-        return $this->pdo->quote($val);
+        $this->_connect();
+        return $this->_pdo->quote($val);
     }
-    
     
     /**
      * 
@@ -328,11 +308,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
     }
-    
     
     /**
      * 
@@ -345,11 +323,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
     }
-    
     
     /**
      * 
@@ -362,11 +338,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
     }
-    
     
     /**
      * 
@@ -377,11 +351,9 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return array A sequential array of table names in the database.
      * 
      */
-    
     public function listTables()
     {
     }
-    
     
     /**
      * 
@@ -392,12 +364,10 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return array
      * 
      */
-    
     public function nativeColTypes()
     {
-        return $this->native;
+        return $this->_native;
     }
-    
     
     /**
      * 
@@ -415,12 +385,10 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return mixed An SQL-safe quoted value.
      * 
      */
-    
     public function buildCreateTable($name, $cols)
     {
         return "CREATE TABLE $name (\n$cols\n)";
     }
-    
     
     /**
      * 
@@ -434,7 +402,6 @@ class Solar_Sql_Driver extends Solar_Base {
      * @return string An SQL SELECT statement.
      * 
      */
-    
     public function buildSelect($parts)
     {
         // is this a SELECT or SELECT DISTINCT?

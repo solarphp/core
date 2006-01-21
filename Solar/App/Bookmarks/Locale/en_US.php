@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Provides locale strings for the app.
@@ -14,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: en_US.php 568 2005-10-09 19:12:30Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -29,7 +28,6 @@
  * @subpackage Solar_App_Bookmarks
  * 
  */
-
 return array(
     'ADD_NEW_BOOKMARK'   => 'Add new bookmark.',
     'BACKLINK'           => 'Back',

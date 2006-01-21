@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for loading form definitions from Solar_Sql_Table columns.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Form
+ * @package Solar_Form
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -29,14 +26,10 @@ Solar::loadClass('Solar_Valid');
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Form
+ * @package Solar_Form
  * 
  */
-
 class Solar_Form_Load_Table extends Solar_Base {
-    
     
     /**
      * 
@@ -49,11 +42,10 @@ class Solar_Form_Load_Table extends Solar_Base {
      * @return object|false Solar_Form object, boolean false on error.
      *
      */
-    
     public function fetch($table, $list = '*', $array_name = null) 
     {
         if (! $table instanceof Solar_Sql_Table) {
-            return $this->error(
+            return $this->_error(
                 'ERR_FORM_LOAD_TABLE',
                 array(),
                 E_USER_WARNING

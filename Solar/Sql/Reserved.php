@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * List of all reserved words for all supported databases.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,12 +21,9 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Reserved {
     
     /**
@@ -41,7 +35,6 @@ class Solar_Sql_Reserved {
      * @var array
      * 
      */
-    
     public $words = array(
         '_ROWID_', 'ABSOLUTE', 'ACCESS', 'ACTION', 'ADD', 'ADMIN',
         'AFTER', 'AGGREGATE', 'ALIAS', 'ALL', 'ALLOCATE', 'ALTER',

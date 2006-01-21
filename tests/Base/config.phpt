@@ -7,7 +7,7 @@ Solar::start();
 
 class Example extends Solar_Base {
 	
-	protected $config = array(
+	protected $_config = array(
 		'opt_1' => 'foo',
 		'opt_2' => 'bar',
 		'opt_3' => 'baz'
@@ -15,16 +15,16 @@ class Example extends Solar_Base {
 	
 	public function testing()
 	{
-		return $this->config;
+		return $this->_config;
 	}
 }
 
-$example = Solar::object('Example');
+$example = Solar::factory('Example');
 $result = $example->testing();
 Solar::dump($result);
 
 $opts = array('opt_3' => 'dib');
-$example = Solar::object('Example', $opts);
+$example = Solar::factory('Example', $opts);
 $result = $example->testing();
 Solar::dump($result);
 

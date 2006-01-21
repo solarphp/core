@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Authenticate against multiple sources, falling back as needed.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,12 +21,9 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Auth_Multi extends Solar_Base {
     
     /**
@@ -45,13 +39,11 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'drivers' => array(
             'Solar_User_Auth_None'
         )
     );
-    
     
     /**
      * 
@@ -62,26 +54,23 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $driver = array();
-    
+    protected $_driver = array();
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
         parent::__construct($config);
         
         // make sure the drivers config is an array
-        settype($this->config['drivers'], 'array');
+        settype($this->_config['drivers'], 'array');
         
         // instantiate the driver objects
-        foreach ($this->config['drivers'] as $key => $info) {
+        foreach ($this->_config['drivers'] as $key => $info) {
             
             // is the driver value an array (for custom configs)
             // or a string (for default configs)?
@@ -94,10 +83,9 @@ class Solar_User_Auth_Multi extends Solar_Base {
             }
             
             // add the driver instance
-            $this->driver[] = Solar::object($class, $opts);
+            $this->_driver[] = Solar::factory($class, $opts);
         }
     }
-    
     
     /**
      * 
@@ -111,10 +99,9 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * or a Solar_Error object if there was a driver error.
      * 
      */
-    
     public function valid($user, $pass)
     {
-        foreach ($this->driver as $driver) {
+        foreach ($this->_driver as $driver) {
             if ($driver->valid($user, $pass)) {
                 return true;
             }

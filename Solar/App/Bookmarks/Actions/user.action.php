@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Controller for viewing bookmarks by user (and optionally by tag).
@@ -14,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: user.php 576 2005-10-10 02:26:30Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -22,7 +21,7 @@
 $user = Solar::shared('user');
 
 // RSS link for the page (regardless of whether it's actually available)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 $link->setQuery('rss', '1');
 
 $this->rss = array(
@@ -36,7 +35,7 @@ $this->rss = array(
 unset($link);
 
 // get standalone objects
-$bookmarks = Solar::object('Solar_Cell_Bookmarks');
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));
@@ -48,7 +47,7 @@ $owner_handle = $this->_info('owner_handle');
 $tags = $this->_info('tags');
 
 // the requested ordering of list results
-$order = $this->getOrder();
+$order = $this->_getOrder();
 
 // RSS or HTML? set up the page number accordingly (by default, RSS gets
 // all bookmarks, not just one page).
@@ -78,7 +77,7 @@ if ($rss) {
         // there are tags requested, so the RSS should show all pages
         // and ignore the rows-per-page settings.  build a custom
         // RSS link for this.
-        $link = Solar::object('Solar_Uri');
+        $link = Solar::factory('Solar_Uri');
         $link->setQuery('rss', '1');
         $link->clearQuery('page');
         $link->clearQuery('rows_per_page');
@@ -95,7 +94,6 @@ $total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else
 $this->rss['avail'] = true;
-$this->count        = $total['count'];
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;

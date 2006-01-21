@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Abstract application controller class for Solar.
@@ -12,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: App.php 320 2005-06-22 20:39:27Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -56,20 +55,7 @@ Solar::loadClass('Solar_Uri');
  * @package Solar_Controller
  * 
  */
-abstract class Solar_Controller_App extends Solar_Base {
-    
-    /**
-     * 
-     * User-defined configuration array.
-     * 
-     * @access protected
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'locale'       => null, // the app-wide locale strings
-    );
+abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
@@ -91,7 +77,7 @@ abstract class Solar_Controller_App extends Solar_Base {
      * @var string
      * 
      */
-    protected $_default_action = null;
+    protected $_action_default = null;
     
     /**
      * 
@@ -155,9 +141,9 @@ abstract class Solar_Controller_App extends Solar_Base {
      * The format of this array is key-value pairs, where the key is
      * the action name, and the value is a sequential array of
      * variable names in pathinfo positions.  For example, see this
-     * $_map array:
+     * $_action_info array:
      * 
-     * $_map = array(
+     * $_action_info = array(
      *     'item' => array('id'), // "item/:id"
      *     'list' => array('year', 'month') // "list/:year/:month"
      * );
@@ -167,7 +153,7 @@ abstract class Solar_Controller_App extends Solar_Base {
      * @var string
      * 
      */
-    protected $_map = array();
+    protected $_action_info = array();
     
     /**
      * 
@@ -180,9 +166,9 @@ abstract class Solar_Controller_App extends Solar_Base {
     {
         // auto-set the base directory
         if (empty($this->_basedir)) {
-            // remove Solar/Controller/App.php from the __FILE__
+            // remove Solar/Controller/Page.php from the __FILE__
             // so that we have a base prefix
-            $base = substr(__FILE__, 0, -24);
+            $base = substr(__FILE__, 0, -25);
             
             // class-to-file conversion as an added directory
             $dir = str_replace('_', '/', get_class($this));
@@ -209,23 +195,37 @@ abstract class Solar_Controller_App extends Solar_Base {
      * 
      * Try to force users to define what their view variables are. :-(
      * 
+     * @access public
+     * 
+     * @param string $key The property name.
+     * 
+     * @param mixed $val The property value.
+     * 
+     * @return void
+     * 
      */
     public function __set($key, $val)
     {
         throw new Exception("property '$key' not defined");
     }
     
-    
     /**
      * 
      * Try to force users to define what their view variables are. :-(
+     * 
+     * @access public
+     * 
+     * @param string $key The property name.
+     * 
+     * @param mixed $val The property value.
+     * 
+     * @return void
      * 
      */
     public function __get($key)
     {
         throw new Exception("property '$key' not defined");
     }
-    
     
     /**
      * 
@@ -248,13 +248,13 @@ abstract class Solar_Controller_App extends Solar_Base {
         $this->_forward($spec);
         
         // set up a view object
-        $tpl = Solar::object('Solar_Template');
+        $tpl = Solar::factory('Solar_Template');
         
         // add the app-specific path for views
         $tpl->addPath('template', $this->_basedir . 'Views/');
         
         // add the app-specific path for view helpers (Savant plugins)
-        $tpl->addPath('resource', $this->_basedir . 'Helpers/');
+        // $tpl->addPath('resource', $this->_basedir . 'Views/Helpers/');
         
         // tell the template view what locale strings to use
         $class = get_class($this);
@@ -287,28 +287,6 @@ abstract class Solar_Controller_App extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
-    }
-    
-    /**
-     * 
-     * Retrieve data for the layout.
-     * 
-     * @access protected
-     * 
-     * @param string The file to include.
-     * 
-     * @return mixed The return from the included file.
-     * 
-     */
-    public function layout($key = null, $val = null)
-    {
-       if (is_null($key)) {
-           return $this->_layout;
-       } elseif (array_key_exists($key, $this->_layout)) {
-           return $this->_layout[$key];
-       } else {
-           return $val;
-       }
     }
     
     /**
@@ -406,7 +384,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         
         // if the script doesn't exist, use the default.
         if (! $name || ! is_readable($file)) {
-            $name = $this->_default_action;
+            $name = $this->_action_default;
             $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
             $file = $this->_basedir . "Actions/$name.action.php";
         }
@@ -431,7 +409,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         // if the spec is null, use current URI
         if (! $spec) {
         
-            $uri = Solar::object('Solar_Uri');
+            $uri = Solar::factory('Solar_Uri');
             $this->_info = $uri->info;
             $this->_query = $uri->query;
             
@@ -443,7 +421,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         } else {
             
             // it's a string. fake the scheme, domain, and path for the uri parser.
-            $uri = Solar::object('Solar_Uri');
+            $uri = Solar::factory('Solar_Uri');
             $uri->import('http://example.com/index.php/' . ltrim($spec, '/'));
             $this->_info = $uri->info;
             $this->_query = $uri->query;
@@ -452,11 +430,11 @@ abstract class Solar_Controller_App extends Solar_Base {
         // find the requested action
         $this->_action = array_shift($this->_info);
         if (! $this->_action) {
-            $this->_action = $this->_default_action;
+            $this->_action = $this->_action_default;
         }
         
         // if there is no map for this action, we're done
-        if (empty($this->_map[$this->_action])) {
+        if (empty($this->_action_info[$this->_action])) {
             // no need to map variable names
             return;
         }
@@ -465,7 +443,7 @@ abstract class Solar_Controller_App extends Solar_Base {
         $i = 0;
         
         // go through the info map for the action
-        foreach ($this->_map[$this->_action] as $key => $val) {
+        foreach ($this->_action_info[$this->_action] as $key => $val) {
             
             // if the name is an integer, there is no default value.
             // thus, the value is itself the name.

@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Locale file.  Returns the strings for a specific language.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  * @author Jean-Eric Laurent <jel@jelaurent.com>
  * 
@@ -17,7 +14,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     'LABEL_NAME'  => 'nom',
     'LABEL_TIME'  => 'heure',

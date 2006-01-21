@@ -1,48 +1,33 @@
 ----
 
-CODING STYLE
-
-protected to be prefixed with _
-	protected $_varname;
-	protected function _method()
-	
-private to be prefixed and suffixed with _
-	private $_varname_;
-	private function _method_();
-
-or just prefix _ on both protected and private?
-
-
-----
-
 TESTING PLAN
 
 update:
-	Solar_Valid
+    all
 
 easy:
-	Solar_Filter
-	
+    Solar_Filter
+    
 ----
 
 DOCUMENTATION PLAN
 
 update:
-	Solar_Valid
-	Solar_Base
-	Solar_Form
-	
+    all
+    
 easy:
-	Solar_Filter
-	Solar_Form_Load_Table
-	
+    Solar_Filter
+    Solar_Form_Load_Table
+    
 average:
-	Solar_User_Auth
-	Solar_User_Role
+    Solar_User_Auth
+    Solar_User_Role
 
 difficult:
-	Solar_User
-	Solar_Sql
+    Solar_User
+    Solar_Sql
+    Solar_Sql_Table
+    Solar_Sql_Select
 
 Solar_Template is Savant3, use Savant3 docs.
 
@@ -54,6 +39,61 @@ NEW CLASSES
 Create an event dispatcher as a universal observer and notifier?
 
 Do we need a Solar_Template or Solar_View proper?  (Ick.)
+
+Solar_User_Priv for class/action/op privileges by user and role
+
+Add Solar_User_Message for flash-style messaging?  Need flashes, anyway.
+
+
+----
+
+NEW MODELS & APPS
+
+Solar_Model_Bugs
+
+Solar_App_Bugs
+
+Solar_Model_Comments
+
+    Need a 'remember me' function
+
+    Need to separate Solar_Model_Comments_Rules into a standalone
+    content-filtering class ... or add a file-based plugin mechanism? 
+    or both?  Text_Bayes?  Text_Filter?
+
+Solar_Model_Members
+    id
+    created_on
+    updated_on
+    confirmed_on
+    confirm_code
+    handle
+    passwd
+    public
+    email
+    uri
+
+Solar_App_Member
+    roster
+    register
+    passwd
+    forgot
+    profile
+    
+Solar_Model_Privs
+    id
+    created_on
+    updated_on
+    allow
+    type
+    name
+    class
+    action
+    op
+    
+Solar_App_Priv
+
+Solar_Model_Comments
 
 ----
 
@@ -68,95 +108,34 @@ Change all instances of tag X to tag Z
 
 ----
 
-Solar_Cell_Hits for hit tracking by URI (not by id, exactly)
+Solar_Model_Comments
 
-----
-
-Solar_Cell_Bugs
-
-List for a specific queue.
-
-----
-
-Solar_App_Bugs
-
-Need ordering and paging options.
-
-Leave this to Loveless/Beaver?
-
-
-----
-
-Solar_Cell_Comments
-
-Need a 'remember me' function
-
-Need to separate Solar_Cell_Comments_Rules into a standalone content-filtering class
-... or add a file-based plugin mechanism?  or both?  Text_Bayes?  Text_Filter?
 
 
 ----
 
 Text classes:
 
-Text/Bayes.php (tracks bayes filtering) -- would this be Solar_Cell_Bayes?
+Text/Bayes.php (tracks bayes filtering) -- would this be Solar_Model_Bayes?
 Text/Csv.php (parse/build CSV/TSV/etc blocks)
 Text/Diff.php (get a diff on text)
 Text/Filter.php (modifies text to match a filter)
 Text/Markup.php (for wiki, bbcode, textile, markdown, email, etc)
-	- a way to do simple common stuff, then a way to do more complex stuff
-	- common regexes for URI, email, wikilink, freelink, interwiki
-	- common regexes for inline bold, italic, tt/code, etc
-
-----
-
-Permission settings (RBAC or ACL?)
-
-sc_perm
-	id      -- unique row ID
-	user_id -- who set this control
-	app     -- related application
-	ord     -- numeric order when sorting
-	type    -- user or role
-	name    -- user name or role name (user wildcards * for any/all, + for auth, group * for all)
-	priv    -- name of privilege
-	flag    -- true/false
-	info    -- priv-specific information (varchar 255)
-
-how to set up "this implies that" lists?
-
-e.g.:
-
-allow page_view  implies nothing
-allow page_edit  implies allow page_view
-allow page_admin implies allow page_edit
-allow area_map   implies allow page_edit on all pages in area
-allow area_admin implies allow area_map on all pages in area
-allow wiki_admin implies allow area_admin on all areas
-
-must be set up programmatically?
-
-
-----
-
-Simple user account table
-
-sc_users
-	user_id 
-	passwd
-
+    - a way to do simple common stuff, then a way to do more complex stuff
+    - common regexes for URI, email, wikilink, freelink, interwiki
+    - common regexes for inline bold, italic, tt/code, etc
 
 ----
 
 Preferences
 
 sc_pref (whole application AND/OR user prefs, *must* support arrays?)
-	id       unique id
-	user_id  '_SOLAR_APP' for application prefs)
-	app      name of the app (64)
-	elem     name of the pref element (64)
-	value    the value of the pref element (255) (or CLOB?)
-	
+    id       unique id
+    user_id  '_SOLAR_APP' for application prefs)
+    app      name of the app (64)
+    elem     name of the pref element (64)
+    value    the value of the pref element (255) (or CLOB?)
+    
 REALLY need to work out the preferences thing.
 
 Need to know if it's single-value keys only, or if multi-values per key are allowed.
@@ -166,9 +145,9 @@ The return array should be like the Solar::config() arrays.
 
 SO, e.g, Solar_App_Talk prefs would look like:
 
-	spam => array(word, word, word, word)
-	autoFlag => 'spam'
-	
+    spam => array(word, word, word, word)
+    autoFlag => 'spam'
+    
 And then you need a prefs object to tell you what keys go with what labels, etc.
 
 That by itself is a project.
@@ -181,40 +160,40 @@ So for now, to get it off the ground, no prefs at all, just Solar::$config value
 Text_Markup
 
 Text/
-	Markup.php
-	Markup/
-		Parse.php
-		Parse/
-			Bbcode.php -- extends Text_Markup_Parse
-			Bbcode/
-				Url.php -- extends Text_Markup_Parse_Rule
-			DokuWiki.php
-			DokuWiki/
-			Email.php
-			Email/
-			Markdown.php
-			Markdown/
-			MediaWiki.php
-			MediaWiki/
-			PearWiki.php
-			PearWiki/
-			Rule.php -- base for parse-rule objects, not an extension of Markup_Parse
-			SolarWiki.php
-			SolarWiki/
-			Textile.php
-			Textile/
-		Render.php
-		Render/
-			Email.php -- extends Text_Markup_Render
-			Email/
-				Url.php -- extends Text_Markup_Render_Rule
-			Plain.php
-			Plain/
-			Rule.php -- base for render-rule objects, not an extension of Markup_Render
-			Xhtml.php
-			Xhtml/
-	
-	
+    Markup.php
+    Markup/
+        Parse.php
+        Parse/
+            Bbcode.php -- extends Text_Markup_Parse
+            Bbcode/
+                Url.php -- extends Text_Markup_Parse_Rule
+            DokuWiki.php
+            DokuWiki/
+            Email.php
+            Email/
+            Markdown.php
+            Markdown/
+            MediaWiki.php
+            MediaWiki/
+            PearWiki.php
+            PearWiki/
+            Rule.php -- base for parse-rule objects, not an extension of Markup_Parse
+            SolarWiki.php
+            SolarWiki/
+            Textile.php
+            Textile/
+        Render.php
+        Render/
+            Email.php -- extends Text_Markup_Render
+            Email/
+                Url.php -- extends Text_Markup_Render_Rule
+            Plain.php
+            Plain/
+            Rule.php -- base for render-rule objects, not an extension of Markup_Render
+            Xhtml.php
+            Xhtml/
+    
+    
 Usage:
 
 // create a markup object
@@ -248,41 +227,41 @@ When instantiating, have the parse/render object instantiate the rule objects
 immediately? That way you could address their configs directly, if needed ...
 
 URLs:
-	http://example.com
-	[http://example.com] (rendered as superscript?)
-	[http://example.com |] (drops the scheme)
-	[http://example.com | rendered as this]
+    http://example.com
+    [http://example.com] (rendered as superscript?)
+    [http://example.com |] (drops the scheme)
+    [http://example.com | rendered as this]
 
 Wiki (option to render with spaces)
-	PageName
-	PageName#anchor
-	[PageName#anchor] ???
-	[PageName#anchor |] ???
-	[PageName#anchor | rendered as this]
-	
+    PageName
+    PageName#anchor
+    [PageName#anchor] ???
+    [PageName#anchor |] ???
+    [PageName#anchor | rendered as this]
+    
 Free:
-	[free page name]
-	[free page name#anchor]
-	[free page name#anchor | rendered as this]
+    [free page name]
+    [free page name#anchor]
+    [free page name#anchor | rendered as this]
 
 Inter:
-	Interwiki:PageName
-	Interwiki:PageName#anchor
-	[Interwiki:PageName#anchor | rendered as this]
-	[Interwiki:free page name]
-	[Interwiki:free page name#anchor]
-	[Interwiki:free page name#anchor |] (drops the interwiki name)
-	[Interwiki:free page name#anchor | rendered as this]
-	Use of double-colons also allowed?
-	
+    Interwiki:PageName
+    Interwiki:PageName#anchor
+    [Interwiki:PageName#anchor | rendered as this]
+    [Interwiki:free page name]
+    [Interwiki:free page name#anchor]
+    [Interwiki:free page name#anchor |] (drops the interwiki name)
+    [Interwiki:free page name#anchor | rendered as this]
+    Use of double-colons also allowed?
+    
 Default Interwikis:
-	Amazon:
-	Google:
-	Imdb:
-	IMDB:
-	Isbn:
-	ISBN:
-	Issn:
-	ISSN:
-	Php:
-	PHP:
+    Amazon:
+    Google:
+    Imdb:
+    IMDB:
+    Isbn:
+    ISBN:
+    Issn:
+    ISSN:
+    Php:
+    PHP:

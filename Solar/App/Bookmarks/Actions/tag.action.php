@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Default controller; for viewing bookmarks by tag intersection.
@@ -14,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: tag.php 576 2005-10-10 02:26:30Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -22,21 +21,21 @@
 $user = Solar::shared('user');
 
 // RSS link for the page (regardless of whether it's actually available)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 $link->setQuery('rss', '1');
 
 $this->rss = array(
     'avail' => false,
     'title' => Solar::server('PATH_INFO'),
     'descr' => 'Solar_App_Bookmarks',
-    'date'  => date('c'), // should be latest mod date in the $this->view->list
+    'date'  => date(DATE_RFC822), // should be latest mod date in the $this->view->list
     'link'  => $link->export(),
 );
 
 unset($link);
 
 // get standalone objects
-$bookmarks = Solar::object('Solar_Cell_Bookmarks');
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));
@@ -48,7 +47,7 @@ $owner_handle = null;
 $tags = $this->_info('tags');
 
 // the requested ordering of list results
-$order = $this->getOrder();
+$order = $this->_getOrder();
 
 // what page-number of the results are we looking for?
 // (regardless of RSS or HTML)
@@ -62,7 +61,6 @@ $total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else for the view
 $this->rss['avail'] = true;
-$this->count        = $total['count'];
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;
@@ -77,5 +75,4 @@ if ($rss) {
 } else {
     $this->_view = 'list';
 }
-
 ?>

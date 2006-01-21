@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Nodes within an area, equivalent to containers for related content parts.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Content
+ * @package Solar_Content
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,19 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Content
+ * @package Solar_Content
  * 
  */
-
 class Solar_Content_Nodes extends Solar_Sql_Table {
-    
-    
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
     
     /**
      * 
@@ -47,11 +35,10 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
      * @return void
      * 
      */
-    
-    protected function setup()
+    protected function _setup()
     {
         // the table name
-        $this->name = 'nodes';
+        $this->_name = 'nodes';
         
         // default order
         $this->order = array(
@@ -66,42 +53,42 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         // 
         
         // the area in which this node belongs
-        $this->col['area_id'] = array(
+        $this->_col['area_id'] = array(
             'type'    => 'int',
             'require' => true,
             'valid'   => 'word',
         );
         
         // the node name (equivalent to a wiki-word)
-        $this->col['name'] = array(
+        $this->_col['name'] = array(
             'type'    => 'varchar',
             'size'    => 127,
             'valid'   => 'word',
         );
         
         // is this node part of another node?
-        $this->col['part_of'] = array(
+        $this->_col['part_of'] = array(
             'type'    => 'int',
             'require' => true,
             'default' => 0,
         );
         
         // username of the node owner
-        $this->col['owner_handle'] = array(
+        $this->_col['owner_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'default' => Solar::shared('user')->auth->username,
         );
         
         // username of the most-recent editor
-        $this->col['editor_handle'] = array(
+        $this->_col['editor_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'default' => Solar::shared('user')->auth->username,
         );
         
         // ip address of the most-recent editor
-        $this->col['editor_ipaddr'] = array(
+        $this->_col['editor_ipaddr'] = array(
             'type'    => 'char',
             'size'    => 15,
             'default' => Solar::server('REMOTE_ADDR'),
@@ -109,13 +96,13 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         );
         
         // the node type (bookmark, wiki, blog, comment, trackback, etc)
-        $this->col['type'] = array(
+        $this->_col['type'] = array(
             'type'    => 'varchar',
             'size'    => 32,
         );
         
         // the locale for this part
-        $this->col['locale'] = array(
+        $this->_col['locale'] = array(
             'type'    => 'char',
             'size'    => 5,
             'default' => 'en_US',
@@ -123,52 +110,52 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         );
         
         // tags on this node (space-separated words)
-        $this->col['tags'] = array(
+        $this->_col['tags'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'valid'   => 'sepWords'
         );
         
         // arbitrary list-order, sequence, or ranking
-        $this->col['rank'] = array(
+        $this->_col['rank'] = array(
             'type'    => 'int',
             'default' => 0,
         );
         
         // arbitrary user-assigned rating, score, level, or value
-        $this->col['rating'] = array(
+        $this->_col['rating'] = array(
             'type'    => 'int',
             'default' => 0,
         );
         
         // email related to this part
-        $this->col['email'] = array(
+        $this->_col['email'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'valid'   => 'email',
         );
         
         // uri related to this part
-        $this->col['uri'] = array(
+        $this->_col['uri'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'valid'   => 'uri',
         );
         
         // the node "subject" or title
-        $this->col['subj'] = array(
+        $this->_col['subj'] = array(
             'type'    => 'varchar',
             'size'    => 255,
         );
         
         // summary description of the node
-        $this->col['summ'] = array(
+        $this->_col['summ'] = array(
             'type'    => 'varchar',
             'size'    => 255,
         );
         
         // mime type of the body
-        $this->col['mime'] = array(
+        $this->_col['mime'] = array(
             'type'    => 'varchar',
             'size'    => 64,
             'default' => 'text/plain',
@@ -176,12 +163,12 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         );
         
         // the actual node content
-        $this->col['body'] = array(
+        $this->_col['body'] = array(
             'type'    => 'clob',
         );
         
         // serialized array of preferences for this node
-        $this->col['prefs'] = array(
+        $this->_col['prefs'] = array(
             'type'    => 'clob',
         );
         
@@ -190,7 +177,7 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         // KEYS AND INDEXES
         // 
         
-        $this->idx = array(
+        $this->_idx = array(
             // composite unique index to ensure unique node names within
             // an area_id
             'unique_in_area' => array(

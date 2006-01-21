@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Locale file.  Returns the strings for a specific language.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -17,7 +14,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     
     // general

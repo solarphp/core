@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Locale file.  Returns the strings for a specific language.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Jean-Eric Laurent <jel@jelaurent.com>
  * 
@@ -17,7 +14,6 @@
  * @version $Id$
  * 
  */
-
 return array(
     // general
     'ERR_CONNECT'    => 'Connection au serveur impossible',

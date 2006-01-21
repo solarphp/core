@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Error class; returns one or more errors.
@@ -33,7 +32,7 @@
  * return $err;
  * 
  * // ... or push as you go.
- * $err = Solar::object('Solar_Error');
+ * $err = Solar::factory('Solar_Error');
  * $err->push($code[0], $text[0], $info[0]);
  * $err->push($code[1], $text[1], $info[1]);
  * return $err;
@@ -62,12 +61,8 @@
  * 
  * @package Solar
  * 
- * @todo Make this object observable?
- * 
  */
-
 class Solar_Error extends Solar_Base {
-    
     
     /**
      * 
@@ -88,14 +83,12 @@ class Solar_Error extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'push_callback' => null,
         'pop_callback'  => null,
         'trace' => true,
         'level' => E_USER_NOTICE
     );
-    
     
     /**
      * 
@@ -106,22 +99,36 @@ class Solar_Error extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $stack = array();
-    
+    protected $_stack = array();
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
-        $this->config['push_callback'] = array($this, 'pushCallback');
+        $this->_config['push_callback'] = array($this, '_pushCallback');
         parent::__construct($config);
     }
     
+    /**
+     * 
+     * Pops-and-prints each error on the stack.
+     * 
+     * @access public
+     * 
+     * @return void
+     * 
+     */
+    public function __toString()
+    {
+        ob_start();
+        while ($err = $this->pop()) {
+            Solar::dump($err);
+        }
+        return ob_get_clean();
+    }
     
     /**
      * 
@@ -147,17 +154,18 @@ class Solar_Error extends Solar_Base {
      * @return void
      * 
      */
-    
     public function push($class, $code = '', $text = '', $info = array(),
         $level = null, $trace = null)
     {
         // is the class an extant error object?  if so,
-        // capture its stack onto our stack.
+        // capture its stack onto our stack.  we can do this
+        // even though it's protected because it's of the
+        // same class.
         if (Solar::isError($class)) {
-            while ($err = array_pop($class->stack)) {
+            while ($err = array_pop($class->_stack)) {
                 // use unshift instead of push to make sure
                 // the order ends up the same in both stacks.
-                array_unshift($this->stack, $err);
+                array_unshift($this->_stack, $err);
             }
             // errors havent' really been popped, so no pop callback
             // these are not new errors, so no push callbacks
@@ -166,12 +174,12 @@ class Solar_Error extends Solar_Base {
         
         // set default level
         if (is_null($level)) {
-            $level = $this->config['level'];
+            $level = $this->_config['level'];
         }
         
         // set default trace
         if (is_null($trace)) {
-            $trace = $this->config['trace'];
+            $trace = $this->_config['trace'];
         }
         
         // prepare the error array
@@ -186,14 +194,13 @@ class Solar_Error extends Solar_Base {
         );
         
         // push the error array onto the stack ...
-        array_push($this->stack, $err);
+        array_push($this->_stack, $err);
         
         // ... and make the callback.
-        if (! empty($this->config['push_callback'])) {
-            call_user_func($this->config['push_callback'], $err, $this);
+        if (! empty($this->_config['push_callback'])) {
+            call_user_func($this->_config['push_callback'], $err, $this);
         }
     }
-    
     
     /**
      * 
@@ -204,22 +211,20 @@ class Solar_Error extends Solar_Base {
      * @return array An array of error information.
      * 
      */
-    
     public function pop()
     {
-        $err = @array_pop($this->stack);
+        $err = @array_pop($this->_stack);
         
         if ($err) {
             $err['count'] = $this->count(); // number of remaining errors
         }
         
         // make the callback and return the error.
-        if (! empty($this->config['pop_callback'])) {
-            call_user_func($this->config['pop_callback'], $err, $this);
+        if (! empty($this->_config['pop_callback'])) {
+            call_user_func($this->_config['pop_callback'], $err, $this);
         }
         return $err;
     }
-    
     
     /**
      * 
@@ -230,12 +235,10 @@ class Solar_Error extends Solar_Base {
      * @return int The number of errors on the stack.
      * 
      */
-    
     public function count()
     {
-        return count($this->stack);
+        return count($this->_stack);
     }
-    
     
     /**
      * 
@@ -254,8 +257,7 @@ class Solar_Error extends Solar_Base {
      * @return void
      * 
      */
-    
-    protected function pushCallback($err, $obj)
+    protected function _pushCallback($err, $obj)
     {
         if ($err['level'] == E_USER_WARNING || $err['level'] == E_WARNING) {
             Solar::dump($err);
@@ -268,22 +270,6 @@ class Solar_Error extends Solar_Base {
             echo $obj;
             die();
         }
-    }
-    
-    
-    /**
-     * 
-     * Pops-and-prints each error on the stack.
-     * 
-     */
-    
-    public function __toString()
-    {
-        ob_start();
-        while ($err = $this->pop()) {
-            Solar::dump($err);
-        }
-        return ob_get_clean();
     }
 }
 ?>

@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * No role source; always returns an empty array.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Role_None extends Solar_Base {
-    
     
     /**
      * 
@@ -43,7 +36,6 @@ class Solar_User_Role_None extends Solar_Base {
      * if there was a file error.
      * 
      */
-    
     public function fetch($user)
     {
         return array();

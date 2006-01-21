@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class to collect and return localization strings.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Locale
+ * @package Solar_Locale
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,24 +21,20 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Locale
  * 
  */
-
 class Solar_Locale extends Solar_Base {
-    
     
     /**
      * 
      * User-provided configuration values.
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Locale/',
         'code'   => 'en_US',
     );
-    
     
     /**
      * 
@@ -52,9 +45,7 @@ class Solar_Locale extends Solar_Base {
      * @var array
      * 
      */
-    
     public $string = array();
-    
     
     /**
      * 
@@ -63,19 +54,17 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
         parent::__construct();
         
         // set the locale code
-        $this->code($this->config['code']);
+        $this->code($this->_config['code']);
         
         // load the baseline Solar translation strings
-        $this->load('Solar', $this->config['locale']);
+        $this->load('Solar', $this->_config['locale']);
     }
-    
     
     /**
      * 
@@ -86,14 +75,12 @@ class Solar_Locale extends Solar_Base {
      * @param $code string The new locale code.
      * 
      */
-    
     public function setCode($code)
     {
         $this->string = array();
-        $this->config['code'] = $code;
-        $this->load('Solar', $this->config['locale']);
+        $this->_config['code'] = $code;
+        $this->load('Solar', $this->_config['locale']);
     }
-    
     
     /**
      * 
@@ -104,12 +91,10 @@ class Solar_Locale extends Solar_Base {
      * @return string The current local code.
      * 
      */
-    
     public function code()
     {
-        return $this->config['code'];
+        return $this->_config['code'];
     }
-    
     
     /**
      * 
@@ -123,7 +108,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param string $key The translation key, e.g. 'LABEL_EMAIL'.
      * 
@@ -133,12 +118,10 @@ class Solar_Locale extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setString($class, $key, $val)
     {
         $this->string[$class][$key] = $val;
     }
-    
     
     /**
      * 
@@ -147,14 +130,13 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param array $list An associative array of keys and translation values.
      * 
      * @return void
      * 
      */
-    
     public function setStrings($class, $list)
     {
         foreach ($list as $key => $val) {
@@ -170,23 +152,22 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @param string $dir The directory where the translation PHP array files
      * are located.  Will search this directory for a file named after the
-     * locale code, ending in '.php'.  E.g., if $this->config['code'] is 'en_US' and
+     * locale code, ending in '.php'.  E.g., if $this->_config['code'] is 'en_US' and
      * $dir is 'Solar/Locale/', load() will look for a file at the path
      * 'Solar/Locale/en_US.php'.
      * 
      * @return void
      * 
      */
-
     public function load($class, $dir)
     {
         // create the file name
         $dir = Solar::fixdir($dir);
-        $file = $dir . $this->config['code'] . '.php';
+        $file = $dir . $this->_config['code'] . '.php';
         
         // this hack is the equivalent of is_readable(), but it also
         // checks the include-path to see if the file exists.
@@ -213,17 +194,15 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Talk'.
+     * 'Solar_Model_Talk'.
      * 
      * @return bool True if strings are loaded, false if not.
      * 
      */
-
     public function loaded($class)
     {
         return array_key_exists($class, $this->string);
     }
-    
     
     /**
      * 
@@ -232,7 +211,7 @@ class Solar_Locale extends Solar_Base {
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Cell_Comments'.
+     * 'Solar_Model_Comments'.
      * 
      * @param string $key The translation key to find.
      * 
@@ -244,7 +223,6 @@ class Solar_Locale extends Solar_Base {
      * translated string was found.
      * 
      */
-
     public function string($class, $key, $num = 1)
     {
         // if the key does not exist for the class,
@@ -266,5 +244,4 @@ class Solar_Locale extends Solar_Base {
         }
     }
 }
-
 ?>

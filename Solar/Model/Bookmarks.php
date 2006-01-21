@@ -1,17 +1,16 @@
 <?php
-
 /**
  * 
  * Bookmarks management class.
  * 
- * All bookmarks go in a single area (Solar_Cell_Bookmarks by default).
+ * All bookmarks go in a single area (Solar_Model_Bookmarks by default).
  * Each node is one bookmark for one owner.
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -27,14 +26,12 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cell
+ * @package Solar_Model
  * 
- * @subpackage Solar_Cell_Bookmarks
+ * @subpackage Solar_Model_Bookmarks
  * 
  */
-
-class Solar_Cell_Bookmarks extends Solar_Base {
-    
+class Solar_Model_Bookmarks extends Solar_Base {
     
     /**
      * 
@@ -45,13 +42,11 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
-        'area_name'    => 'Solar_Cell_Bookmarks',
+    protected $_config = array(
+        'area_name'    => 'Solar_Model_Bookmarks',
         'default_tags' => 'inbox',
         'paging'       => 10,
     );
-    
     
     /**
      * 
@@ -62,9 +57,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @var object Solar_Content
      * 
      */
-    
-    protected $content;
-    
+    protected $_content;
     
     /**
      * 
@@ -75,9 +68,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @var int
      * 
      */
-    
-    protected $area_id;
-    
+    protected $_area_id;
     
     /**
      * 
@@ -88,9 +79,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @var object Solar_Sql
      * 
      */
-    
-    protected $node_type = 'bookmark';
-    
+    protected $_node_type = 'bookmark';
     
     /**
      * 
@@ -101,12 +90,10 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $where = array(
+    protected $_where = array(
         'nodes.area_id = ?' => null,
         'nodes.type = ?'    => null,
     );
-    
     
     /**
      * 
@@ -117,35 +104,33 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // main construction
         parent::__construct($config);
         
         // create a content object and set its paging
-        $this->content = Solar::object('Solar_Content');
-        $this->paging($this->config['paging']);
+        $this->_content = Solar::factory('Solar_Content');
+        $this->paging($this->_config['paging']);
         
         // make sure there is a content area for bookmarks
-        $name = $this->config['area_name'];
-        $area = $this->content->fetchArea($name);
+        $name = $this->_config['area_name'];
+        $area = $this->_content->fetchArea($name);
         if (empty($area)) {
             // area didn't exist, create it.
             $data = array('name'  => $name);
-            $area = $this->content->insertArea($data);
+            $area = $this->_content->insertArea($data);
         }
         
         // save the bookmarks area ID as a property
-        $this->area_id = $area['id'];
+        $this->_area_id = $area['id'];
         
         // set up a baseline WHERE clause for searches
-        $this->where = array(
-            'nodes.area_id = ?' => $this->area_id,
-            'nodes.type = ?'    => $this->node_type,
+        $this->_where = array(
+            'nodes.area_id = ?' => $this->_area_id,
+            'nodes.type = ?'    => $this->_node_type,
         );
     }
-    
     
     /**
      * 
@@ -158,12 +143,10 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return void
      * 
      */
-    
     public function paging($val)
     {
-        $this->content->paging((int) $val);
+        $this->_content->paging((int) $val);
     }
-    
     
     /**
      * 
@@ -176,7 +159,6 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The data as inserted or updated.
      * 
      */
-    
     public function save($data)
     {
         if (empty($data['id'])) {
@@ -185,7 +167,6 @@ class Solar_Cell_Bookmarks extends Solar_Base {
             return $this->update($data['id'], $data);
         }
     }
-    
     
     /**
      * 
@@ -198,22 +179,20 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The inserted data.
      * 
      */
-    
     public function insert($data)
     {
         // force the area and type
-        $data['area_id'] = $this->area_id;
-        $data['type']    = $this->node_type;
+        $data['area_id'] = $this->_area_id;
+        $data['type']    = $this->_node_type;
         
         // force a default tagstring if empty or blank
         if (empty($data['tags']) || trim($data['tags']) == '') {
-            $data['tags'] = $this->config['default_tags'];
+            $data['tags'] = $this->_config['default_tags'];
         }
         
         // attempt the insert
-        return $this->content->insertNode($data);
+        return $this->_content->insertNode($data);
     }
-    
     
     /**
      * 
@@ -226,26 +205,24 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The updated data.
      * 
      */
-    
     public function update($node_id, $data)
     {
         // force the area_id and type
-        $data['area_id'] = $this->area_id;
-        $data['type']    = $this->node_type;
+        $data['area_id'] = $this->_area_id;
+        $data['type']    = $this->_node_type;
         
         // if tags are going to be updated as blank,
         // force in the default tag set
         if (isset($data['tags']) && trim($data['tags']) == '') {
-            $data['tags'] = $this->config['default_tags'];
+            $data['tags'] = $this->_config['default_tags'];
         }
         
         // update the node
-        return $this->content->updateNode(
+        return $this->_content->updateNode(
             $node_id,
             $data
         );
     }
-    
     
     /**
      * 
@@ -256,22 +233,20 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array Default data for a new bookmark node.
      * 
      */
-    
     public function fetchDefault()
     {
         // a default generic node
-        $data = $this->content->defaultNode();
+        $data = $this->_content->defaultNode();
         
         // default for bookmarks
-        $data['area_id']      = $this->area_id;
-        $data['type']         = $this->node_type;
+        $data['area_id']      = $this->_area_id;
+        $data['type']         = $this->_node_type;
         $data['uri']          = Solar::get('uri');
         $data['subj']         = Solar::get('subj');
         $data['owner_handle'] = Solar::shared('user')->auth->username;
-        $data['tags']         = $this->config['default_tags'];
+        $data['tags']         = $this->_config['default_tags'];
         return $data;
     }
-    
     
     /**
      * 
@@ -284,15 +259,13 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The bookmark data.
      * 
      */
-    
     public function fetchItem($id)
     {
-        $where = $this->where;
+        $where = $this->_where;
         $where['nodes.id = ?'] = (int) $id;
-        $data = $this->content->fetchNode($where);
+        $data = $this->_content->fetchNode($where);
         return $data;
     }
-    
     
     /**
      * 
@@ -317,11 +290,10 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The list of bookmarks.
      * 
      */
-    
     public function fetchList($handle = null, $tags = null, $order = null,
         $page = null)
     {
-        $where = $this->where;
+        $where = $this->_where;
         if ($handle) {
             $where['nodes.owner_handle = ?'] = $handle;
         }
@@ -330,9 +302,8 @@ class Solar_Cell_Bookmarks extends Solar_Base {
             $order = 'nodes.created DESC';
         }
         
-        return $this->content->fetchNodeList($tags, $where, $order, $page);
+        return $this->_content->fetchNodeList($tags, $where, $order, $page);
     }
-    
     
     /**
      * 
@@ -353,17 +324,15 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * bookmarks) and 'pages' (number of pages).
      * 
      */
-    
     public function countPages($handle = null, $tags = null)
     {
-        $where = $this->where;
+        $where = $this->_where;
         if ($handle) {
             $where['nodes.owner_handle = ?'] = $handle;
         }
         
-        return $this->content->fetchNodeCount($tags, $where);
+        return $this->_content->fetchNodeCount($tags, $where);
     }
-    
     
     /**
      * 
@@ -380,16 +349,14 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * the value is the number of times that tag appears.
      * 
      */
-    
     public function fetchTagList($handle = null)
     {
-        $where = $this->where;
+        $where = $this->_where;
         if ($handle) {
             $where['nodes.owner_handle = ?'] = $handle;
         }
-        return $this->content->fetchTagList($where);
+        return $this->_content->fetchTagList($where);
     }
-    
     
     /**
      * 
@@ -406,15 +373,13 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return array The node data.
      * 
      */
-    
     public function fetchOwnerUri($handle, $uri)
     {
-        $where = $this->where;
+        $where = $this->_where;
         $where['nodes.owner_handle = ?'] = $handle;
         $where['nodes.uri = ?']          = $uri;
-        return $this->content->fetchNode($where);    
+        return $this->_content->fetchNode($where);    
     }
-    
     
     /**
      * 
@@ -427,14 +392,12 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return mixed
      * 
      */
-    
     public function delete($id)
     {
-        $where = $this->where;
+        $where = $this->_where;
         $where['id = ?'] = (int) $id;
-        return $this->content->deleteNodes($where);
+        return $this->_content->deleteNodes($where);
     }
-    
     
     /**
      * 
@@ -451,7 +414,6 @@ class Solar_Cell_Bookmarks extends Solar_Base {
      * @return object A Solar_Form object.
      * 
      */
-    
     public function form($data = null)
     {
         // which node columns do we want?
@@ -465,7 +427,7 @@ class Solar_Cell_Bookmarks extends Solar_Base {
         $info['rank']['attribs']['size'] = 3;
         
         // get the form with a set of 'bookmarks' elements
-        $form = $this->content->form(
+        $form = $this->_content->form(
             get_class($this),
             $cols,
             $info,

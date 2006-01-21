@@ -1,12 +1,11 @@
 <?php
-
 /**
  * 
  * Parses a URI string into its component parts for manipulation and export.
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Uri
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -22,14 +21,12 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Uri
  * 
  * @todo add a way to let import() know what the script name is
  * 
  */
-
 class Solar_Uri extends Solar_Base {
-    
     
     /**
      * 
@@ -40,9 +37,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $scheme = null;
-    
     
     /**
      * 
@@ -53,9 +48,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $host = null;
-    
     
     /**
      * 
@@ -66,9 +59,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $port = null;
-    
     
     /**
      * 
@@ -79,9 +70,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $user = null;
-    
     
     /**
      * 
@@ -92,9 +81,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $pass = null;
-    
     
     /**
      * 
@@ -105,9 +92,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $path = null;
-    
     
     /**
      * 
@@ -124,9 +109,7 @@ class Solar_Uri extends Solar_Base {
      * @var array
      * 
      */
-    
     public $info = array();
-    
     
     /**
      * 
@@ -137,9 +120,7 @@ class Solar_Uri extends Solar_Base {
      * @var string
      * 
      */
-    
     public $query = array();
-    
     
     /**
      * 
@@ -151,9 +132,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * @todo Bug in parse_url (PHP 5.0.3) does not find fragments.
      */
-    
     public $fragment = null;
-    
     
     /**
      * 
@@ -164,13 +143,11 @@ class Solar_Uri extends Solar_Base {
      * @param array $config User-provided configuration values.
      * 
      */
-    
     public function __construct($config = null)
     {
         parent::__construct($config);
         $this->import();
     }
-    
     
     /**
      * 
@@ -185,7 +162,6 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function import($uri = null)
     {
         // build a default scheme (with '://' in it)
@@ -214,7 +190,7 @@ class Solar_Uri extends Solar_Base {
             'path'     => null,
             'info'     => array(),
             'query'    => array(),
-            'fragment' => null // bug in php 5.0.3 does not find fragments!
+            'fragment' => null,
         );
         
         // parse the uri and merge with the defaults
@@ -264,7 +240,6 @@ class Solar_Uri extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Builds a full URI string.
@@ -274,7 +249,6 @@ class Solar_Uri extends Solar_Base {
      * @return string A URI string.
      * 
      */
-    
     public function export()
     {
         // build the uri as we go.
@@ -294,14 +268,13 @@ class Solar_Uri extends Solar_Base {
         $uri .= (empty($this->host)     ? '' : $this->host)
               . (empty($this->port)     ? '' : ':' . $this->port)
               . (empty($this->path)     ? '' : $this->path)
-              . (empty($this->info)     ? '' : '/' . $this->info2str($this->info))
-              . (empty($this->query)    ? '' : '?' . $this->query2str($this->query))
+              . (empty($this->info)     ? '' : '/' . $this->_info2str($this->info))
+              . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
               . (empty($this->fragment) ? '' : '#' . $this->fragment);
         
         // done!
         return $uri;
     }
-    
     
     /**
      * 
@@ -312,14 +285,12 @@ class Solar_Uri extends Solar_Base {
      * @return string A URI string.
      * 
      */
-    
     public function exportAction()
     {
-        return (empty($this->info)     ? '' : $this->info2str($this->info))
-             . (empty($this->query)    ? '' : '?' . $this->query2str($this->query))
+        return (empty($this->info)     ? '' : $this->_info2str($this->info))
+             . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
              . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
-    
     
     /**
      * 
@@ -337,7 +308,6 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function addQuery($key, $val = '')
     {
         if (isset($this->query[$key])) {
@@ -347,7 +317,6 @@ class Solar_Uri extends Solar_Base {
             $this->query[$key] = $val;
         }
     }
-    
     
     /**
      * 
@@ -364,12 +333,10 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setQuery($key, $val = '')
     {
         $this->query[$key] = $val;
     }
-    
     
     /**
      * 
@@ -385,12 +352,10 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setQueryString($val)
     {
         parse_str($val, $this->query);
     }
-    
     
     /**
      * 
@@ -405,12 +370,10 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setInfo($key, $val = '')
     {
         $this->info[(int)$key] = $val;
     }
-    
     
     /**
      * 
@@ -427,7 +390,6 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function setInfoString($val)
     {
         $this->info = explode('/', $val);
@@ -435,7 +397,6 @@ class Solar_Uri extends Solar_Base {
             array_shift($this->info);
         }
     }
-    
     
     /**
      * 
@@ -446,7 +407,6 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function clearInfo($key = null)
     {
         if ($key === null || $key === false) {
@@ -455,7 +415,6 @@ class Solar_Uri extends Solar_Base {
             unset($this->info[(int) $key]);
         }
     }
-    
     
     /**
      * 
@@ -466,7 +425,6 @@ class Solar_Uri extends Solar_Base {
      * @return void
      * 
      */
-    
     public function clearQuery($key = null)
     {
         if (! $key) {
@@ -475,7 +433,6 @@ class Solar_Uri extends Solar_Base {
             unset($this->query[$key]);
         }
     }
-    
     
     /**
      * 
@@ -492,8 +449,7 @@ class Solar_Uri extends Solar_Base {
      * @return string A URI query string.
      * 
      */
-    
-    protected function query2str($params)
+    protected function _query2str($params)
     {
         // preempt if $params is not an array, or is empty
         if (! is_array($params) || count($params) == 0 ) {
@@ -511,7 +467,7 @@ class Solar_Uri extends Solar_Base {
         foreach ($params as $key => $val) {
             if (is_array($val) ) {   
                 // recurse to capture deeper array.
-                $out[] = $this->query2str($val, $key);
+                $out[] = $this->_query2str($val, $key);
             } else {
                 // not an array, use the current value.
                 $thekey = (! $akey) ? $key : $akey.'['.$key.']';
@@ -521,7 +477,6 @@ class Solar_Uri extends Solar_Base {
         
         return implode('&', $out);
     }
-    
     
     /**
      * 
@@ -534,8 +489,7 @@ class Solar_Uri extends Solar_Base {
      * @return string A URI pathinfo string.
      * 
      */
-    
-    protected function info2str($params)
+    protected function _info2str($params)
     {
         settype($params, 'array');
         $str = array();

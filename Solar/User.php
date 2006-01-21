@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Meta-container for the current user to hold auth and roles.
@@ -8,9 +7,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -28,14 +25,11 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
-class Solar_User extends Solar_Base
-{
+class Solar_User extends Solar_Base {
+    
     /**
      * 
      * User-provided configuration values.
@@ -45,14 +39,12 @@ class Solar_User extends Solar_Base
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'auth' => null,
         'role' => null,
         'pref' => null,
         'perm' => null
     );
-    
     
     /**
      * 
@@ -63,9 +55,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $auth;
-    
     
     /**
      * 
@@ -76,9 +66,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $role;
-    
     
     /**
      * 
@@ -89,9 +77,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $pref;
-    
     
     /**
      * 
@@ -102,9 +88,7 @@ class Solar_User extends Solar_Base
      * @var object
      * 
      */
-    
     public $perm;
-    
     
     /**
      * 
@@ -117,19 +101,17 @@ class Solar_User extends Solar_Base
      * @return void
      * 
      */
-    
     public function __construct($config = null)
     {
         // construction
         parent::__construct($config);
         
         // set up an authentication object.
-        $this->auth = Solar::object('Solar_User_Auth', $this->config['auth']);
+        $this->auth = Solar::factory('Solar_User_Auth', $this->_config['auth']);
         
         // set up the roles object.
-        $this->role = Solar::object('Solar_User_Role', $this->config['role']);
+        $this->role = Solar::factory('Solar_User_Role', $this->_config['role']);
     }
-    
     
     /**
      * 
@@ -142,7 +124,6 @@ class Solar_User extends Solar_Base
      * @return void
      * 
      */
-    
     public function solar($hook)
     {
         switch ($hook) {

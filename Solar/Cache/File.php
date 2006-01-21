@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * File-based cache controller.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,16 +21,12 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  * @todo Add CRC32 to check for cache corruption?
  * 
  */
-
 class Solar_Cache_File extends Solar_Base {
-    
     
     /**
      * 
@@ -50,12 +43,10 @@ class Solar_Cache_File extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'path'   => '/tmp/Solar_Cache_File/',
         'life'   => 3600
     );
-    
     
     /**
      * 
@@ -67,22 +58,20 @@ class Solar_Cache_File extends Solar_Base {
      * values.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic construction
         parent::__construct($config);
         
         // keep local values so they can't be changed
-        $this->config['path'] = Solar::fixdir($this->config['path']);
-        $this->config['life'] = (int) $this->config['life'];
+        $this->_config['path'] = Solar::fixdir($this->_config['path']);
+        $this->_config['life'] = (int) $this->_config['life'];
         
         // make sure the cache directory is there
-        if (! is_dir($this->config['path'])) {
-            mkdir($this->config['path']);
+        if (! is_dir($this->_config['path'])) {
+            mkdir($this->_config['path']);
         }
     }
-    
     
     /**
      * 
@@ -95,7 +84,6 @@ class Solar_Cache_File extends Solar_Base {
      * @return mixed Boolean false on failure, string on success.
      * 
      */
-    
     public function fetch($key)
     {
         // get the entry filename *before* validating;
@@ -105,7 +93,7 @@ class Solar_Cache_File extends Solar_Base {
         // make sure the file exists and is readable,
         if (file_exists($file) && is_readable($file)) {
             // has the file expired?
-            $expire_time = filemtime($file) + $this->config['life'];
+            $expire_time = filemtime($file) + $this->_config['life'];
             if (time() > $expire_time) {
                 // expired, remove it
                 $this->delete($key);
@@ -147,7 +135,6 @@ class Solar_Cache_File extends Solar_Base {
         return false;
     }
     
-    
     /**
      * 
      * Inserts/updates cache entry data.
@@ -161,7 +148,6 @@ class Solar_Cache_File extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    
     public function replace($key, $data)
     {
         // should the data be serialized?
@@ -204,7 +190,6 @@ class Solar_Cache_File extends Solar_Base {
         return false;
     }
     
-    
     /**
      * 
      * Deletes an entry from the cache.
@@ -216,14 +201,12 @@ class Solar_Cache_File extends Solar_Base {
      * @return void
      * 
      */
-    
     public function delete($key)
     {
         $file = $this->entry($key);
         unlink($file);
         @unlink($file . '.serial');
     }
-    
     
     /**
      * 
@@ -234,11 +217,10 @@ class Solar_Cache_File extends Solar_Base {
      * @return void
      * 
      */
-    
     public function deleteAll()
     {
         // open the directory
-        $dir = dir($this->config['path']);
+        $dir = dir($this->_config['path']);
         
         // did it exist?
         if ($dir) {
@@ -250,7 +232,7 @@ class Solar_Cache_File extends Solar_Base {
             while (false !== ($file = $dir->read())) {
                 // delete the file (suppress errors so that . and ..
                 // don't throw warnings) ...
-                @unlink($this->config['path'] . $file);
+                @unlink($this->_config['path'] . $file);
                 // ... and any serial marker.
                 @unlink($file . '.serial');
             }
@@ -259,7 +241,6 @@ class Solar_Cache_File extends Solar_Base {
             $dir->close();
         }
     }
-    
     
     /**
      * 
@@ -272,10 +253,9 @@ class Solar_Cache_File extends Solar_Base {
      * @return string The cache entry path and filename.
      * 
      */
-    
     public function entry($key)
     {
-        return $this->config['path'] . md5($key);
+        return $this->_config['path'] . md5($key);
     }
 } 
 

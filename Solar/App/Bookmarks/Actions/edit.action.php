@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Controller action script for editing a bookmark.
@@ -14,29 +13,15 @@
  * 
  * @license LGPL
  * 
- * @version $Id: edit.php 568 2005-10-09 19:12:30Z pmjones $
+ * @version $Id$
  * 
  */
 
 // get the shared user object
 $user = Solar::shared('user');
 
-// RSS link for the page (regardless of whether it's actually available)
-$link = Solar::object('Solar_Uri');
-$link->setQuery('rss', '1');
-
-$this->rss = array(
-    'avail' => false,
-    'title' => Solar::server('PATH_INFO'),
-    'descr' => 'Solar_App_Bookmarks',
-    'date'  => date('c'), // should be latest mod date in the $this->list
-    'link'  => $link->export(),
-);
-
-unset($link);
-
 // get standalone objects
-$bookmarks = Solar::object('Solar_Cell_Bookmarks');
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
 // allow uri to set the "count" for each page (default 10)
 $bookmarks->paging($this->_query('paging', 10));
@@ -89,8 +74,8 @@ if (! $id) {
     // if the user *does* already have that URI bookmarked,
     // redirect to the existing bookmark.
     if (! empty($existing['id'])) {
-        $link = Solar::object('Solar_Uri');
-        $link->setInfo("bookmarks/edit/{$existing['id']}");
+        $link = Solar::factory('Solar_Uri');
+        $link->setInfoString("bookmarks/edit/{$existing['id']}");
         $this->_redirect($link->export());
     }
 }
@@ -105,7 +90,7 @@ if (! $id) {
 //
 
 // get the current link (i.e., to this page)
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 
 // clear the current pathinfo and query
 $link->clearInfo();
@@ -132,8 +117,7 @@ if ($info || $qstr) {
     $href = $uri;
 } else {
     // return to the user's list
-    $link->setInfo(0, 'user');
-    $link->setInfo(1, $user->auth->username);
+    $link->setInfoString("bookmarks/user/{$user->auth->username}");
     $href = $link->export();
 }
 
@@ -190,7 +174,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
             $form->feedback[] = Solar::locale('Solar', 'OK_SAVED');
             
             // if new, return to the backlink
-            if ($this->_query('id', 0) == 0) {
+            if ($this->_info('id', 0) == 0) {
                 $this->_redirect($href);
             }
             

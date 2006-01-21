@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Default template system for Solar; extended from Savant3.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -30,14 +27,10 @@ include_once dirname(__FILE__) . '/Template/Savant3.php';
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  */
-
 class Solar_Template extends Savant3 {
-    
     
     /**
      *
@@ -46,7 +39,6 @@ class Solar_Template extends Savant3 {
      * @access public
      * 
      */
-    
     public function __construct($config = null)
     {
         // get the user config from the Solar.config.php file, if any.
@@ -85,7 +77,6 @@ class Solar_Template extends Savant3 {
         parent::__construct($config);
     }
     
-    
     /**
      *
      * Returns a Solar_Error object.
@@ -99,7 +90,6 @@ class Solar_Template extends Savant3 {
      * @return Solar_Error
      * 
      */
-    
     public function error($code, $info = array(), $level = E_USER_ERROR,
         $trace = true)
     {
@@ -110,7 +100,6 @@ class Solar_Template extends Savant3 {
         $err = Solar::error($class, $code, $text, $info, $level, $trace);
         return $err;
     }
-    
     
     /**
      *
@@ -123,11 +112,9 @@ class Solar_Template extends Savant3 {
      * @return boolean True if $obj is a Solar_Error.
      *
      */
-    
     public function isError($obj)
     {
         return Solar::isError($obj);
     }
 }
-
 ?>

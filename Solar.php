@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Solar: Simple Object Library and Application repository for PHP5.
@@ -24,16 +23,6 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 }
 
 /**
- * The base for all Solar classes (except Solar itself ;-).
- */
-require_once 'Solar/Base.php';
-
-/**
- * The Solar_Error class, needed for Solar::isError().
- */
-require_once 'Solar/Error.php';
-
-/**
  * 
  * Encapsulates shared configuration, objects, and methods for Solar apps.
  * 
@@ -44,9 +33,7 @@ require_once 'Solar/Error.php';
  * @version @package_version@
  * 
  */
-
 class Solar {
-    
     
     /**
      * 
@@ -57,9 +44,7 @@ class Solar {
      * @var array
      * 
      */
-    
     static public $config = array();
-    
     
     /**
      * 
@@ -70,9 +55,7 @@ class Solar {
      * @var array
      * 
      */
-    
-    static protected $shared = null;
-    
+    static protected $_shared = null;
     
     /**
      * 
@@ -83,9 +66,18 @@ class Solar {
      * @var bool
      * 
      */
+    static protected $_status = false;
     
-    static protected $status = false;
-    
+    /**
+     * 
+     * Directory where the Solar.php file is located; used for class loading.
+     * 
+     * @access protected
+     * 
+     * @var bool
+     * 
+     */
+    static protected $_dir = null;
     
     /**
      * 
@@ -95,20 +87,38 @@ class Solar {
      * 
      * @return void
      * 
+     * @todo Put autosharing behavior into Solar_Controller_Front instead?
+     * This would also get rid of the __solar() autoshare method, which might
+     * be nice.  Would need to add a share() method for setting up shared
+     * objects though.
+     * 
+     * @todo Rename ::shared() to ::registry()?  Add ::register() method too.
+     * 
      */
-    
     static public function start($alt_config = null)
     {
         // don't re-start if we're already running.
-        if (Solar::$status) {
+        if (Solar::$_status) {
             return;
         }
         
-        // initialize $shared property as a StdClass object
-        Solar::$shared = new StdClass;
+        // where are we in the file system?
+        Solar::$_dir = Solar::fixdir(dirname(__FILE__));
+        
+        // the base for all Solar classes (except Solar itself ;-).
+        require_once Solar::$_dir . 'Solar/Base.php';
+        
+        // the Solar_Error class, needed for Solar::isError().
+        require_once Solar::$_dir . 'Solar/Error.php';
+        
+        // the Solar_Exception class
+        require_once Solar::$_dir . 'Solar/Exception.php';
+        
+        // initialize $_shared property as a StdClass object
+        Solar::$_shared = new StdClass;
         
         // set up the standard Solar environment
-        Solar::environment();
+        Solar::_environment();
         
         // load the config file values. note that we use $config here,
         // not config(), because we are setting the value of the static
@@ -168,9 +178,9 @@ class Solar {
             // is_callable() doesn't seem to work with an 
             // object instance, but it works fine with just
             // the class name.  so we'll use that.
-            $class = get_class(Solar::$shared->$name);
+            $class = get_class(Solar::$_shared->$name);
             if (is_callable($class, 'solar')) {
-                Solar::$shared->$name->solar('start');
+                Solar::$_shared->$name->solar('start');
             }
         }
         
@@ -180,9 +190,8 @@ class Solar {
         }
         
         // and we're done!
-        Solar::$status = true;
+        Solar::$_status = true;
     }
-    
     
     /**
      * 
@@ -193,7 +202,6 @@ class Solar {
      * @return void
      * 
      */
-    
     static public function stop()
     {
         // run the application-defined stop scripts.
@@ -211,16 +219,15 @@ class Solar {
             // is_callable() doesn't seem to work with an 
             // object instance, but it works fine with just
             // the class name.  so we'll use that.
-            $class = get_class(Solar::$shared->$name);
+            $class = get_class(Solar::$_shared->$name);
             if (is_callable($class, 'solar')) {
-                Solar::$shared->$name->solar('stop');
+                Solar::$_shared->$name->solar('stop');
             }
         }
         
         // reset the status flag, and we're done.
-        Solar::$status = false;
+        Solar::$_status = false;
     }
-    
     
     /**
      * 
@@ -231,12 +238,10 @@ class Solar {
      * @return string A PHP-standard version number.
      * 
      */
-    
     static public function apiVersion()
     {
         return '@package_version@';
     }
-    
     
     /**
      * 
@@ -254,12 +259,10 @@ class Solar {
      * @return string A translated locale string.
      * 
      */
-    
     static public function locale($class, $key, $num = 1)
     {
         return Solar::shared('locale')->string($class, $key, $num);
     }
-    
     
     /**
      * 
@@ -279,8 +282,9 @@ class Solar {
      * 
      * @todo Add localization for errors
      * 
+     * @todo Add 'strict' flag to not-prepend self::$_dir?
+     * 
      */
-    
     static public function loadClass($class)
     {
         // pre-empt searching for the class
@@ -314,9 +318,9 @@ class Solar {
             
         }
         
-        // include the file and check for failure.
+        // include the file from the Solar dir and check for failure.
         // we use run() here so we can see the error backtrace.
-        $result = Solar::run($file);
+        $result = Solar::run(Solar::$_dir . $file);
         if (Solar::isError($result)) {
             return $result;
         }
@@ -333,7 +337,6 @@ class Solar {
         }
     }
     
-    
     /**
      * 
      * Runs a script in an isolated scope.
@@ -346,7 +349,6 @@ class Solar {
      * Solar_Error if the file could not be opened.
      * 
      */
-    
     static public function run($file)
     {
         // this hack is the equivalent of is_readable(), but it also
@@ -361,7 +363,7 @@ class Solar {
             unset($file);
             unset($fp);
             unset($ok);
-            // include the file and return its results
+            // require the file and return its results
             return include(func_get_arg(0));
         } else {
             // could not open the file for reading
@@ -374,7 +376,6 @@ class Solar {
             );
         }
     }
-    
     
     /**
      * 
@@ -389,8 +390,7 @@ class Solar {
      * @return object A new instance of the requested Solar class.
      * 
      */
-    
-    static public function object($class, $config = null)
+    static public function factory($class, $config = null)
     {
         $result = Solar::loadClass($class);
         if (Solar::isError($result)) {
@@ -401,25 +401,23 @@ class Solar {
         }
     }
     
-    
     /**
      * 
      * Convenience method to instantiate a shared (singleton) object.
      * 
      * @access public
      * 
-     * @param string $class The class name.
+     * @param string $name The shared singleton name.
      * 
      * @return object A singleton instance of the requested Solar class.
      * 
      * @todo Localize these errors.
      * 
      */
-    
     static public function shared($name)
     {
         // has the shared object already been loaded?
-        if (! isset(Solar::$shared->$name)) {
+        if (! isset(Solar::$_shared->$name)) {
             
             // not loaded yet.  can we find the associated info?
             if (isset(Solar::$config['Solar']['shared']) &&
@@ -437,12 +435,12 @@ class Solar {
                 $config = array_key_exists(1, $info) ? $info[1] : null;
                 
                 // instantiate.
-                Solar::$shared->$name = Solar::object($class, $config);
+                Solar::$_shared->$name = Solar::factory($class, $config);
                 
             } else {
             
                 // did not find the info.  that's an error.
-                Solar::$shared->$name = Solar::error(
+                Solar::$_shared->$name = Solar::error(
                     'Solar',
                     'ERR_SHARED_NAME',
                     "shared object name $name not in config file under ['Solar']['shared']", 
@@ -454,9 +452,8 @@ class Solar {
         }
         
         // return the shared instance.
-        return Solar::$shared->$name;
+        return Solar::$_shared->$name;
     }
-    
     
     /**
      * 
@@ -494,7 +491,6 @@ class Solar {
      * @return mixed The value of the configuration group or element.
      * 
      */
-    
     static public function config($group, $elem = null)
     {
         // was a default fallback value passed?  we do it this way
@@ -538,7 +534,6 @@ class Solar {
         }
     }
     
-    
     /**
      * 
      * Safely get the value of an element from the $_GET array.
@@ -558,12 +553,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function get($key = null, $default = null)
     {
-        return Solar::super('_GET', $key, $default);
+        return Solar::_super('_GET', $key, $default);
     }
-    
     
     /**
      * 
@@ -584,12 +577,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function post($key = null, $default = null)
     {
-        return Solar::super('_POST', $key, $default);
+        return Solar::_super('_POST', $key, $default);
     }
-    
     
     /**
      * 
@@ -607,12 +598,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function cookie($key = null, $default = null)
     {
-        return Solar::super('_COOKIE', $key, $default);
+        return Solar::_super('_COOKIE', $key, $default);
     }
-    
     
     /**
      * 
@@ -630,12 +619,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function server($key = null, $default = null)
     {
-        return Solar::super('_SERVER', $key, $default);
+        return Solar::_super('_SERVER', $key, $default);
     }
-    
     
     /**
      * 
@@ -653,12 +640,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function session($key = null, $default = null)
     {
-        return Solar::super('_SESSION', $key, $default);
+        return Solar::_super('_SESSION', $key, $default);
     }
-    
     
     /**
      * 
@@ -679,11 +664,10 @@ class Solar {
      * $default value (if not).
      * 
      */
-    
     static public function pathinfo($key = null, $default = null)
     {
         // get the pathinfo as passed
-        $info = Solar::super('_SERVER', 'PATH_INFO', '');
+        $info = Solar::_super('_SERVER', 'PATH_INFO', '');
         
         // explode into its elements
         $elem = explode('/', $info);
@@ -710,7 +694,6 @@ class Solar {
         }
     }
     
-    
     /**
      * 
      * Simple error object generator.
@@ -732,15 +715,13 @@ class Solar {
      * @return object A Solar_Error object.
      * 
      */
-    
     static public function error($class, $code, $text = '', $info = array(), 
         $level = null, $trace = null)
     {
-        $obj = Solar::object('Solar_Error');
+        $obj = Solar::factory('Solar_Error');
         $obj->push($class, $code, $text, $info, $level, $trace);
         return $obj;
     }
-    
     
     /**
      * 
@@ -752,7 +733,6 @@ class Solar {
      * @return bool True if an error object, false if not.
      * 
      */
-    
     static public function isError($obj)
     {
         // it has to at least be an object
@@ -766,6 +746,31 @@ class Solar {
         return ($is || $sub);
     }
     
+    /**
+     * 
+     * Simple exception object generator.
+     * 
+     * @param string $class The class that generated the exception.
+     * 
+     * @param mixed $code An scalar error code.
+     * 
+     * @param string $text Any error message text.
+     * 
+     * @param array $info Additional error information in an associative
+     * array.
+     * 
+     * @return object A Solar_Exception object.
+     * 
+     */
+    static public function exception($class, $code, $text = '', $info = array())
+    {
+        return Solar::factory('Solar_Exception', array(
+            'class' => $class,
+            'code'  => $code,
+            'text'  => $text,
+            'info'  => $info,
+        ));
+    }
     
     /**
      * 
@@ -780,13 +785,11 @@ class Solar {
      * @return void
      * 
      */
-    
     static public function dump(&$var, $label = null)
     {
-        $obj = Solar::object('Solar_Debug_Var');
+        $obj = Solar::factory('Solar_Debug_Var');
         echo $obj->dump($var, $label);
     }
-    
     
     /**
      * 
@@ -802,7 +805,6 @@ class Solar {
      * @return string The "fixed" directory.
      * 
      */
-    
     static public function fixdir($dir)
     {
         $sep = DIRECTORY_SEPARATOR;
@@ -813,7 +815,6 @@ class Solar {
         return $dir;
     }
     
-    
     /**
      * 
      * Sets up the standard Solar environment (including some security).
@@ -823,8 +824,7 @@ class Solar {
      * @return void
      * 
      */
-    
-    static protected function environment()
+    static protected function _environment()
     {
         // clear out registered globals?
         // (this code from Richard Heyes and Stefan Esser)
@@ -881,10 +881,10 @@ class Solar {
             // what kind of quotes are we using?
             if (ini_get('magic_quotes_sybase')) {
                 // sybase quotes
-                $func = array('Solar', 'dispelSybase');
+                $func = array('Solar', '_dispelSybase');
             } else {
                 // "normal" slashed quotes
-                $func = array('Solar', 'dispelQuotes');
+                $func = array('Solar', '_dispelQuotes');
             }
             
             // dispel magic quotes from superglobals
@@ -901,7 +901,6 @@ class Solar {
         ini_set('magic_quotes_sybase',  false);
     }
     
-    
     /**
      * 
      * A stripslashes() alias that supports array_walk_recursive().
@@ -911,12 +910,10 @@ class Solar {
      * @return void
      * 
      */
-    
-    static protected function dispelQuotes(&$value)
+    static protected function _dispelQuotes(&$value)
     {
         $value = stripslashes($value);
     }
-    
     
     /**
      * 
@@ -927,12 +924,10 @@ class Solar {
      * @return void
      * 
      */
-    
-    static protected function dispelSybase(&$value)
+    static protected function _dispelSybase(&$value)
     {
         $value = str_replace("''", "'", $value);
     }
-    
     
     /**
      * 
@@ -953,8 +948,7 @@ class Solar {
      * default value if the key did not exist.
      * 
      */
-    
-    static protected function super($type, $key = null, $default = null)
+    static protected function _super($type, $key = null, $default = null)
     {
         // get the whole superglobal, or just one key?
         if (is_null($key) && isset($GLOBALS[$type])) {

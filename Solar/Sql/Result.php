@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for iterating through selected row results.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Result extends Solar_Base {
-    
     
     /**
      * 
@@ -46,11 +39,9 @@ class Solar_Sql_Result extends Solar_Base {
      * 
      * @var array
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'PDOStatement' => null,
     );
-    
     
     /**
      * 
@@ -79,14 +70,13 @@ class Solar_Sql_Result extends Solar_Base {
      * and another for non-table-based, and merge at the end?
      * 
      */
-    
     public function fetch($mode = PDO::FETCH_ASSOC)
     {
         // the fetched row data to be returned
         $row = array();
         
         // the data as originally returned by PDOStatement
-        $orig = $this->config['PDOStatement']->fetch($mode);
+        $orig = $this->_config['PDOStatement']->fetch($mode);
         if (! $orig) {
             return false;
         }
@@ -110,7 +100,6 @@ class Solar_Sql_Result extends Solar_Base {
         return $row;
     }
     
-    
     /**
      * 
      * Fetches all rows from the result source via $this->fetch().
@@ -123,7 +112,6 @@ class Solar_Sql_Result extends Solar_Base {
      * @return array A sequential array of data from all fetched rows.
      * 
      */
-    
     public function fetchAll($mode = PDO::FETCH_ASSOC)
     {
         $data = array();

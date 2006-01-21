@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for checking user authentication credentials.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,15 +21,11 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Auth extends Solar_Base {
     
-
     /**
      * 
      * User-supplied configuration values.
@@ -69,8 +62,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'locale'        => 'Solar/User/Locale/',
         'class'         => 'Solar_User_Auth_None',
         'options'       => null,
@@ -84,7 +76,6 @@ class Solar_User_Auth extends Solar_Base {
         'op_logout'     => 'logout',
     );
     
-    
     /**
      * 
      * A driver object instance.
@@ -94,9 +85,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var object
      * 
      */
-    
-    protected $driver = null;
-    
+    protected $_driver = null;
     
     /**
      * 
@@ -107,9 +96,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var bool
      * 
      */
-    
     public $allow = true;
-    
     
     /**
      * 
@@ -125,9 +112,7 @@ class Solar_User_Auth extends Solar_Base {
      * @see valid()
      * 
      */
-    
     public $last_active;
-    
     
     /**
      * 
@@ -140,9 +125,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $login_time;
-    
     
     /**
      * 
@@ -167,9 +150,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $status_code;
-    
     
     /**
      * 
@@ -183,9 +164,7 @@ class Solar_User_Auth extends Solar_Base {
      * @var int
      * 
      */
-    
     public $status_text;
-    
     
     /**
      * 
@@ -198,7 +177,6 @@ class Solar_User_Auth extends Solar_Base {
      * @var string
      * 
      */
-    
     public $username;
     
     
@@ -207,7 +185,6 @@ class Solar_User_Auth extends Solar_Base {
     // Public methods.
     // 
     // ----------------------------------------------------------------
-    
     
     /**
      * 
@@ -218,7 +195,6 @@ class Solar_User_Auth extends Solar_Base {
      * @return void
      * 
      */
-    
     public function start()
     {
         // Start the session; suppress errors if already started.
@@ -248,9 +224,9 @@ class Solar_User_Auth extends Solar_Base {
         // the constructor so that custom drivers will find the session
         // already available to them (e.g. single sign-on systems and
         // HTTP-based systems).
-        $this->driver = Solar::object(
-            $this->config['class'],
-            $this->config['options']
+        $this->_driver = Solar::factory(
+            $this->_config['class'],
+            $this->_config['options']
         );
         
         // update any current authentication (including idle and expire).
@@ -260,16 +236,16 @@ class Solar_User_Auth extends Solar_Base {
         if ($this->allow) {
         
             // get the action and credentials
-            $action   = Solar::post($this->config['post_op']);
-            $username = Solar::post($this->config['post_username']);
-            $password = Solar::post($this->config['post_password']);
+            $action   = Solar::post($this->_config['post_op']);
+            $username = Solar::post($this->_config['post_username']);
+            $password = Solar::post($this->_config['post_password']);
             
             // check for a login request.
-            if ($action == $this->config['op_login']) {
+            if ($action == $this->_config['op_login']) {
                 
                 // check the storage driver to see if the username
                 // and password credentials are valid.
-                $result = $this->driver->valid($username, $password);
+                $result = $this->_driver->valid($username, $password);
                 
                 // were the credentials valid? (check if exactly boolean
                 // true, as it may have returned a Solar error).
@@ -287,13 +263,12 @@ class Solar_User_Auth extends Solar_Base {
             }
             
             // check for a logout request.
-            if ($action == $this->config['op_logout']) {
+            if ($action == $this->_config['op_logout']) {
                 // reset the authentication data
                 $this->reset('LOGOUT');
             }
         }
     }
-    
     
     /**
      * 
@@ -310,23 +285,22 @@ class Solar_User_Auth extends Solar_Base {
      * @return boolean Whether or not authentication is still valid.
      * 
      */
-    
     public function valid()
     {
         // is the current user already authenticated?
         if ($this->status_code == 'VALID') {
             
             // Check if session authentication has expired
-            $tmp = $this->login_time + $this->config['expire'];
-            if ($this->config['expire'] > 0 && $tmp < time()) {
+            $tmp = $this->login_time + $this->_config['expire'];
+            if ($this->_config['expire'] > 0 && $tmp < time()) {
                 // past the expiration time
                 $this->reset('EXPIRED');
                 return false;
             }
     
             // Check if session has been idle for too long
-            $tmp = $this->last_active + $this->config['idle'];
-            if ($this->config['idle'] > 0 && $tmp < time()) {
+            $tmp = $this->last_active + $this->_config['idle'];
+            if ($this->_config['idle'] > 0 && $tmp < time()) {
                 // past the idle time
                 $this->reset('IDLED');
                 return false;
@@ -342,7 +316,6 @@ class Solar_User_Auth extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Resets any authentication data in the session.
@@ -357,7 +330,6 @@ class Solar_User_Auth extends Solar_Base {
      * @return void
      * 
      */
-    
     public function reset($status_code = 'ANON')
     {
         $status_code = strtoupper($status_code);

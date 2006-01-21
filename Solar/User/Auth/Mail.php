@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Authenticate against an IMAP or POP3 mail server.
  *
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  *
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Auth_Mail extends Solar_Base {
-    
     
     /**
      * 
@@ -47,23 +40,20 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'mailbox' => null,
     );
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // make sure the IMAP extension is available
         if (! extension_loaded('imap')) {
-            return $this->error(
+            return $this->_error(
                 'ERR_EXTENSION',
                 array(),
                 E_USER_ERROR
@@ -89,10 +79,9 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * @todo Check the server status with fsockopen().
      * 
      */
-    
     public function valid($username, $password)
     {
-        $mailbox = '{' . $this->config['mailbox'] . '}';
+        $mailbox = '{' . $this->_config['mailbox'] . '}';
         $conn = @imap_open($mailbox, $username, $password, OP_HALFOPEN);
         if (is_resource($conn)) {
             @imap_close($conn);

@@ -5,7 +5,7 @@ valid: ipv4()
 require_once '../setup.php';
 Solar::start();
 
-$valid = Solar::object('Solar_Valid');
+$valid = Solar::factory('Solar_Valid');
 
 $test = array(
 	'141.225.185.101',

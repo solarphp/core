@@ -13,14 +13,17 @@
  * 
  * @license LGPL
  * 
- * @version $Id: list.php 586 2005-10-22 17:01:53Z pmjones $
+ * @version $Id$
  * 
  */
 
+/**
+ * Include the header file.
+ */
 include $this->template('header.php');
 
 // a basic link object
-$link = Solar::object('Solar_Uri');
+$link = Solar::factory('Solar_Uri');
 ?>
 <div>
     <!-- the list of tags in use -->
@@ -199,7 +202,7 @@ $link = Solar::object('Solar_Uri');
                 $scheme = $link->scheme;
                 $host = $link->host;
                 $path = $link->path;
-                $js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
+                $js = "javascript:location.href='$scheme://$host$path/bookmarks/edit?id=0&uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
                 $this->eprint($this->locale('DRAG_THIS') . ': ');
                 echo $this->ahref($js, $this->locale('QUICKMARK'));
             ?></p>

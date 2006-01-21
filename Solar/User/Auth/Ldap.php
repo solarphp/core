@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Authenticate against an LDAP server.
  *
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  *
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_User
  * 
  */
-
 class Solar_User_Auth_Ldap extends Solar_Base {
-    
     
     /**
      * 
@@ -49,24 +42,21 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'url'    => null,
         'format' => null,
     );
-    
     
     /**
      * 
      * Constructor.
      * 
      */
-    
     public function __construct($config = null)
     {
         // make sure we have LDAP available
         if (! extension_loaded('ldap')) {
-            return $this->error(
+            return $this->_error(
                 'ERR_EXTENSION',
                 array('extension' => 'ldap'),
                 E_USER_ERROR
@@ -90,17 +80,16 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * or a Solar_Error object if there was a connection error.
      * 
      */
-    
     public function valid($username, $password)
     {
         // connect
-        $conn = @ldap_connect($this->config['url']);
+        $conn = @ldap_connect($this->_config['url']);
         
         // did the connection work?
         if (! $conn) {
-            return $this->error(
+            return $this->_error(
                 'ERR_CONNECT',
-                array($this->config),
+                array($this->_config),
                 E_USER_ERROR
             );
         }
@@ -109,19 +98,19 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         @ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         
         // bind to the server
-        $rdn = sprintf($this->config['format'], $username);
+        $rdn = sprintf($this->_config['format'], $username);
         $bind = @ldap_bind($conn, $rdn, $password);
         ldap_close($conn);
         
         // return the bind-value
         if (! $bind) {
-            // not using $this->error() because we need fine control
+            // not using $this->_error() because we need fine control
             // over the error text
             return Solar::error(
                 get_class($this), // class name
                 @ldap_errno($conn), // error number
                 @ldap_error($conn), // error text
-                array($this->config), // other info
+                array($this->_config), // other info
                 E_USER_NOTICE // error level
             );
         } else {
@@ -129,5 +118,4 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         }
     }
 }
-
 ?>

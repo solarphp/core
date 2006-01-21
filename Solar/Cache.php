@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for cache control.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  */
-
 class Solar_Cache extends Solar_Base {
-    
     
     /**
      * 
@@ -50,13 +43,11 @@ class Solar_Cache extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'active'  => true,
         'class'   => 'Solar_Cache_File',
         'options' => null
     );
-    
     
     /**
      * 
@@ -67,9 +58,7 @@ class Solar_Cache extends Solar_Base {
      * @var object
      * 
      */
-    
-    protected $driver;
-    
+    protected $_driver;
     
     /**
      * 
@@ -80,19 +69,17 @@ class Solar_Cache extends Solar_Base {
      * @param array $config An array of configuration options.
      * 
      */
-    
     public function __construct($config = null)
     {
         // basic config option settings
         parent::__construct($config);
         
         // instantiate a driver object
-        $this->driver = Solar::object(
-            $this->config['class'],
-            $this->config['options']
+        $this->_driver = Solar::factory(
+            $this->_config['class'],
+            $this->_config['options']
         );
     }
-    
     
     /**
      * 
@@ -103,12 +90,10 @@ class Solar_Cache extends Solar_Base {
      * @param bool $flag True to turn on, false to turn off.
      * 
      */
-    
     public function setActive($flag)
     {
-        $this->config['active'] = (bool) $flag;
+        $this->_config['active'] = (bool) $flag;
     }
-    
     
     /**
      * 
@@ -119,12 +104,10 @@ class Solar_Cache extends Solar_Base {
      * @return bool True if active, false if not.
      * 
      */
-    
     public function active()
     {
-        return $this->config['active'];
+        return $this->_config['active'];
     }
-    
     
     /**
      * 
@@ -141,16 +124,14 @@ class Solar_Cache extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    
     public function replace($key, $data)
     {
         if ($this->active()) {
-            return $this->driver->replace($key, $data);
+            return $this->_driver->replace($key, $data);
         } else {
             return false;
         }
     }
-    
     
     /**
      * 
@@ -163,16 +144,14 @@ class Solar_Cache extends Solar_Base {
      * @return mixed Boolean false on failure, string on success.
      * 
      */
-    
     public function fetch($key)
     {
         if ($this->active()) {
-            return $this->driver->fetch($key);
+            return $this->_driver->fetch($key);
         } else {
             return false;
         }
     }
-    
     
     /**
      * 
@@ -185,14 +164,12 @@ class Solar_Cache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function delete($key)
     {
         if ($this->active()) {
-            return $this->driver->delete($key);
+            return $this->_driver->delete($key);
         }
     }
-    
     
     /**
      * 
@@ -203,14 +180,12 @@ class Solar_Cache extends Solar_Base {
      * @return void
      * 
      */
-    
     public function deleteAll()
     {
         if ($this->active()) {
-            return $this->driver->deleteAll();
+            return $this->_driver->deleteAll();
         }
     }
-    
     
     /**
      * 
@@ -223,10 +198,9 @@ class Solar_Cache extends Solar_Base {
      * @return mixed The driver-specific name for the entry key.
      * 
      */
-    
     public function entry($key)
     {
-        return $this->driver->entry($key);
+        return $this->_driver->entry($key);
     }
 }
 ?>

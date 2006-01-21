@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class for connecting to SQLite databases.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Sql
+ * @package Solar_Sql
  * 
  */
-
 class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
-    
     
     /**
      * 
@@ -42,8 +35,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @var array
      * 
      */
-    
-    protected $native = array(
+    protected $_native = array(
         'bool'      => 'BOOLEAN',
         'char'      => 'CHAR(:size)',
         'varchar'   => 'VARCHAR(:size)',
@@ -58,7 +50,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         'timestamp' => 'TIMESTAMP'
     );
     
-    
     /**
      * 
      * The PDO driver type.
@@ -68,9 +59,27 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @var string
      * 
      */
+    protected $_pdo_type = 'sqlite';
     
-    protected $pdo_type = 'mysql';
-    
+    /**
+     * 
+     * Creates a PDO-style DSN.
+     * 
+     * E.g., "mysql:host=127.0.0.1;dbname=test"
+     * 
+     * @access protected
+     * 
+     * @return string A PDO-style DSN.
+     * 
+     */
+    protected function _dsn()
+    {
+        $dsn = array();
+        if (! empty($this->_config['name'])) {
+            $dsn[] = $this->_config['name'];
+        }
+        return $this->_pdo_type . ':' . implode(';', $dsn);
+    }
     
     /**
      * 
@@ -85,7 +94,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function buildSelect($parts)
     {
         // build the baseline statement
@@ -113,7 +121,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         return $stmt;
     }
     
-    
     /**
      * 
      * Returns the SQL statement to get a list of database tables.
@@ -123,7 +130,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return string The SQL statement.
      * 
      */
-    
     public function listTables()
     {
         // copied from PEAR DB
@@ -135,7 +141,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
-    
     
     /**
      * 
@@ -150,14 +155,12 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
         $this->exec("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
-    
     
     /**
      * 
@@ -170,12 +173,10 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return void
      * 
      */
-    
     public function dropSequence($name)
     {
         $this->exec("DROP TABLE $name");
     }
-    
     
     /**
      * 
@@ -188,7 +189,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    
     public function nextSequence($name)
     {
         $cmd = "INSERT INTO $name (id) VALUES (NULL)";
@@ -196,7 +196,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {
             // error when updating the sequence.
@@ -204,12 +204,12 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
             $this->createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->pdo->prepare($cmd);
+            $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         }
         
         // get the sequence number
-        return $this->pdo->lastInsertID();
+        return $this->_pdo->lastInsertID();
     }
 }
 ?>

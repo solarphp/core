@@ -1,14 +1,11 @@
 <?php
-
 /**
  * 
  * Class to track code execution times.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,14 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  */
-
 class Solar_Debug_Timer extends Solar_Base {
-    
     
     /**
      * 
@@ -46,12 +39,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $config = array(
+    protected $_config = array(
         'locale' => 'Solar/Debug/Locale/',
         'output' => 'html',
     );
-    
     
     /**
      * 
@@ -62,9 +53,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var array
      * 
      */
-    
-    protected $marks = array();
-    
+    protected $_marks = array();
     
     /**
      * 
@@ -75,9 +64,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * @var boolean
      * 
      */
-    
-    protected $maxlen = 8;
-    
+    protected $_maxlen = 8;
     
     /**
      * 
@@ -90,7 +77,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function solar($hook)
     {
         switch ($hook) {
@@ -103,7 +89,6 @@ class Solar_Debug_Timer extends Solar_Base {
         }
     }
     
-    
     /**
      * 
      * Resets the profile and marks a new starting time.
@@ -111,13 +96,11 @@ class Solar_Debug_Timer extends Solar_Base {
      * @access public
      * 
      */
-    
     public function start()
     {
-        $this->marks = array();
+        $this->_marks = array();
         $this->mark('__start');
     }
-    
     
     /**
      * 
@@ -126,12 +109,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @access public
      * 
      */
-    
     public function stop()
     {
         $this->mark('__stop');
     }
-    
     
     /**
      * 
@@ -144,12 +125,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function mark($name)
     {
-        $this->marks[$name] = microtime(true);
+        $this->_marks[$name] = microtime(true);
     }
-    
     
     /**
      * 
@@ -160,7 +139,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return array An array of profile information.
      * 
      */
-    
     public function profile()
     {
         // previous time
@@ -173,7 +151,7 @@ class Solar_Debug_Timer extends Solar_Base {
         $result = array();
         
         // loop through all the marks
-        foreach ($this->marks as $name => $time) {
+        foreach ($this->_marks as $name => $time) {
             
             // figure the time difference
             $diff = $time - $prev;
@@ -194,8 +172,8 @@ class Solar_Debug_Timer extends Solar_Base {
             );
             
             // track the longest marker name
-            if (strlen($name) > $this->maxlen) {
-                $this->maxlen = strlen($name);
+            if (strlen($name) > $this->_maxlen) {
+                $this->_maxlen = strlen($name);
             }
             
             // track the previous time
@@ -209,7 +187,6 @@ class Solar_Debug_Timer extends Solar_Base {
         return $result;
     }
     
-    
     /**
      * 
      * Outputs the current profile.
@@ -221,7 +198,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * @return void
      * 
      */
-    
     public function display($title = null)
     {
         // get the profile info
@@ -252,14 +228,14 @@ class Solar_Debug_Timer extends Solar_Base {
         
         // add the column names
         $row[] = sprintf(
-            "%-{$this->maxlen}s : {$colname['diff']} : {$colname['total']}",
+            "%-{$this->_maxlen}s : {$colname['diff']} : {$colname['total']}",
             $colname['name']
         );
         
         // add each timer mark
         foreach ($profile as $key => $val) {
             $row[] = sprintf(
-                "%-{$this->maxlen}s : %f : %f",
+                "%-{$this->_maxlen}s : %f : %f",
                 $val['name'],
                 $val['diff'],
                 $val['total']
@@ -269,7 +245,7 @@ class Solar_Debug_Timer extends Solar_Base {
         // finalize output and display
         $output = implode("\n", $row);
         
-        if ($this->config['output'] == 'html') {
+        if ($this->_config['output'] == 'html') {
             $output = '<pre>' . htmlspecialchars($output) . '</pre>';
         }
         

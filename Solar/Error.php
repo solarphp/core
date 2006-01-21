@@ -158,9 +158,11 @@ class Solar_Error extends Solar_Base {
         $level = null, $trace = null)
     {
         // is the class an extant error object?  if so,
-        // capture its stack onto our stack.
+        // capture its stack onto our stack.  we can do this
+        // even though it's protected because it's of the
+        // same class.
         if (Solar::isError($class)) {
-            while ($err = array_pop($class->stack)) {
+            while ($err = array_pop($class->_stack)) {
                 // use unshift instead of push to make sure
                 // the order ends up the same in both stacks.
                 array_unshift($this->_stack, $err);

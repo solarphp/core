@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Uri
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Uri
  * 
  * @todo add a way to let import() know what the script name is
  * 

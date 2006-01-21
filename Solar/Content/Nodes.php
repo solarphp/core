@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Content
+ * @package Solar_Content
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,9 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Content
+ * @package Solar_Content
  * 
  */
 class Solar_Content_Nodes extends Solar_Sql_Table {

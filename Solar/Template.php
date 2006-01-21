@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -29,9 +27,7 @@ include_once dirname(__FILE__) . '/Template/Savant3.php';
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Template
+ * @package Solar_Template
  * 
  */
 class Solar_Template extends Savant3 {

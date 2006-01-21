@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Content
+ * @package Solar_Content
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

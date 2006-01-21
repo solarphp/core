@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,9 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Cache
+ * @package Solar_Cache
  * 
  */
 class Solar_Cache extends Solar_Base {

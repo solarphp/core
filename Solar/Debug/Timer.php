@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,9 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Debug
+ * @package Solar_Debug
  * 
  */
 class Solar_Debug_Timer extends Solar_Base {

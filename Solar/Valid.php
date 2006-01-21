@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Valid
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Valid
  * 
  */
 class Solar_Valid {

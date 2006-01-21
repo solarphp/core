@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Locale
+ * @package Solar_Locale
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Locale
  * 
  */
 class Solar_Locale extends Solar_Base {

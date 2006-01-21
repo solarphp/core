@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Form
+ * @package Solar_Form
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -28,9 +26,7 @@ Solar::loadClass('Solar_Valid');
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_Form
+ * @package Solar_Form
  * 
  */
 class Solar_Form_Load_Table extends Solar_Base {

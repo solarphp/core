@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Filter
  * 
  * @author Matthew Weier O'Phinney <mweierophinney@gmail.com>
  * 
@@ -27,7 +27,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Filter
  * 
  */
 class Solar_Filter {

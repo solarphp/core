@@ -198,7 +198,7 @@ $link = Solar::factory('Solar_Uri');
                 $scheme = $link->scheme;
                 $host = $link->host;
                 $path = $link->path;
-                $js = "javascript:location.href='$scheme://$host$path/edit?id=0&uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
+                $js = "javascript:location.href='$scheme://$host$path/bookmarks/edit?id=0&uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
                 $this->eprint($this->locale('DRAG_THIS') . ': ');
                 echo $this->ahref($js, $this->locale('QUICKMARK'));
             ?></p>

@@ -49,6 +49,9 @@ class Solar_Template extends Savant3 {
         settype($config, 'array');
         $config = array_merge($default, $config);
         
+        // use exceptions
+        $config['exceptions'] = true;
+        
         // find the Solar/Template/Plugin directory...
         $dir = dirname(__FILE__) . '/Template/Plugin/';
         

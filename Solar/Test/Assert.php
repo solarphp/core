@@ -17,7 +17,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
@@ -326,7 +326,7 @@ class Solar_Test_Assert {
             $copy = (array) $object;
             
             // get the actual value.  the null-char
-            // trick for accessing protected and privated
+            // trick for accessing protected and private
             // properties comes from Mike Naberezny.
             if ($prop->isPublic()) {
                 $actual = $copy[$name];

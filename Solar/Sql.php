@@ -16,11 +16,6 @@
  */
 
 /**
- * Base class for additional SQL driver information.
- */
-require_once 'Solar/Sql/Driver.php';
-
-/**
  * 
  * Class for connecting to SQL databases and performing common operations.
  * 
@@ -49,7 +44,6 @@ require_once 'Solar/Sql/Driver.php';
  * @package Solar_Sql
  * 
  */
-
 class Solar_Sql extends Solar_Base {
     
     /**
@@ -136,6 +130,12 @@ class Solar_Sql extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        // baseline exception class
+        Solar::loadClass('Solar_Sql_Exception');
+        
+        // baseline driver class
+        Solar::loadClass('Solar_Sql_Driver');
+        
         // basic construction
         parent::__construct($config);
         
@@ -332,9 +332,6 @@ class Solar_Sql extends Solar_Base {
         
         // execute and get the PDOStatement result object
         $result = $this->_driver->exec($stmt, $data);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // return data based on the select type
         switch (strtolower($return)) {
@@ -504,26 +501,26 @@ class Solar_Sql extends Solar_Base {
      * 
      * @return mixed An SQL string, or a Solar_Error.
      * 
+     * @todo Instead of stacking errors, stack info, then throw in exception.
+     * 
      */
     public function createTable($table, $cols)
     {
         // table name can only be so many chars
         $len = strlen($table);
         if ($len < 1 || $len > $this->_len['tbl']) {
-            return $this->_error(
-                'ERR_TABLE_LEN',
-                array('table' => $table),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_TABLE_NAME_LENGTH',
+                array('table' => $table)
             );
         }
         
         // table name must be a valid word, and cannot end in
         // "__s" (this is to prevent sequence table collisions)
         if (! $this->_validIdentifier($table) || substr($table, -3) == "__s") {
-            return $this->_error(
-                'ERR_TABLE_WORD',
-                array('table' => $table),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_TABLE_NAME_RESERVED',
+                array('table' => $table)
             );
         }
         
@@ -531,21 +528,24 @@ class Solar_Sql extends Solar_Base {
         $coldef = array();
         
         // use this to stack errors when creating definitions
-        $err = Solar::factory('Solar_Error');
+        $err = array();
         
         // loop through each column and get its definition
         foreach ($cols as $name => $info) {
-            $result = $this->_buildColDef($name, $info);
-            if (Solar::isError($result)) {
-                $err->push($result);
-            } else {
+            try {
+                $result = $this->_buildColDef($name, $info);
                 $coldef[] = "$name $result";
+            } catch (Exception $e) {
+                $err[$name] = $e->getInfo();
             }
         }
         
         // were there errors?
-        if ($err->count() > 0) {
-            return $err;
+        if ($err) {
+            throw $this->_exception(
+                'ERR_TABLE_NOT_CREATED',
+                $err
+            );
         } else {
             // no errors, execute and return
             $cols = implode(",\n\t", $coldef);
@@ -603,12 +603,8 @@ class Solar_Sql extends Solar_Base {
     public function addColumn($table, $name, $info)
     {
         $coldef = $this->_buildColDef($name, $info);
-        if (Solar::isError($coldef)) {
-            return $coldef;
-        } else {
-            $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
-            return $this->_driver->exec($stmt);
-        }
+        $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
+        return $this->_driver->exec($stmt);
     }
     
     /**
@@ -661,34 +657,24 @@ class Solar_Sql extends Solar_Base {
         // check the table name length
         $len = strlen($table);
         if ($len < 1 || $len > $this->_len['tbl']) {
-            return $this->_error(
-                'ERR_TABLE_LEN',
-                array('table' => $table),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_TABLE_NAME_LENGTH',
+                array('table' => $table)
             );
         }
         
         // check the index name length
         $len = strlen($name);
         if ($len < 1 || $len > $this->_len['idx']) {
-            return $this->_error(
-                'ERR_IDX_LEN',
-                array('table' => $table, 'name' => $name),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_IDX_NAME_LENGTH',
+                array('table' => $table, 'idx' => $name)
             );
         }
         
-        // build a definition statement
+        // build a definition statement, execute, and return
         $stmt = $this->_buildIdxDef($table, $name, $info);
-        
-        // were there errors?
-        if (Solar::isError($stmt)) {
-            // yes, return the error object
-            return $stmt;
-        } else {
-            // no errors, execute and return.
-            return $this->_driver->exec($stmt);
-        }
+        return $this->_driver->exec($stmt);
     }
     
     /**
@@ -855,29 +841,25 @@ class Solar_Sql extends Solar_Base {
         // validate column name length
         $len = strlen($name);
         if ($len < 1 || $len > $this->_len['col']) {
-            return $this->_error(
-                'ERR_COL_LEN',
-                array('name' => $name),
-                E_USER_WARNING,
-                false
+            throw $this->_exception(
+                'ERR_COL_NAME_LENGTH',
+                array('col' => $name)
             );
         }
         
         // column name must be a valid word
         if (! $this->_validIdentifier($name)) {
-            return $this->_error(
-                'ERR_COL_WORD',
-                array('name' => $name),
-                E_USER_WARNING,
-                false
+            throw $this->_exception(
+                'ERR_COL_NAME_RESERVED',
+                array('col' => $name)
             );
         }
         
         // set default values for these variables
         $tmp = array(
-            'type'       => null,
-            'size'       => null,
-            'scope'       => null,
+            'type'     => null,
+            'size'     => null,
+            'scope'    => null,
             'require'  => null, // true means NOT NULL, false means NULL
         );
         
@@ -894,11 +876,9 @@ class Solar_Sql extends Solar_Base {
         // is it a recognized column type?
         $native = $this->_driver->nativeColTypes();
         if (! array_key_exists($type, $native)) {
-            return $this->_error(
-                'ERR_COL_TYPE',
-                array('name' => $name, 'type' => $type),
-                E_USER_WARNING,
-                false
+            throw $this->_exception(
+                'ERR_COL_TYPE_UNKNOWN',
+                array('col' => $name, 'type' => $type)
             );
         }
         
@@ -909,11 +889,9 @@ class Solar_Sql extends Solar_Base {
         case 'varchar':
             // does it have a valid size?
             if ($size < 1 || $size > 255) {
-                return $this->_error(
+                throw $this->_exception(
                     'ERR_COL_SIZE',
-                    array('name' => $name, 'size' => $size),
-                    E_USER_WARNING,
-                    false
+                    array('col' => $name, 'size' => $size)
                 );
             } else {
                 // replace the 'size' placeholder
@@ -924,20 +902,16 @@ class Solar_Sql extends Solar_Base {
         case 'numeric':
         
             if ($size < 1 || $size > 255) {
-                return $this->_error(
+                throw $this->_exception(
                     'ERR_COL_SIZE',
-                    array('name' => $name, 'size' => $size, 'scope' => $scope),
-                    E_USER_WARNING,
-                    false
+                    array('col' => $name, 'size' => $size, 'scope' => $scope)
                 );
             }
             
             if ($scope < 0 || $scope > $size) {
-                return $this->_error(
+                throw $this->_exception(
                     'ERR_COL_SCOPE',
-                    array('name' => $name, 'size' => $size, 'scope' => $scope),
-                    E_USER_WARNING,
-                    false
+                    array('col' => $name, 'size' => $size, 'scope' => $scope)
                 );
             }
             
@@ -1002,10 +976,9 @@ class Solar_Sql extends Solar_Base {
         
         // are there any columns for the index?
         if (! $cols) {
-            return $this->_error(
-                'ERR_IDX_COLS',
-                array('table' => $table, 'name' => $name),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_IDX_NO_COLS',
+                array('table' => $table, 'idx' => $name)
             );
         }
         
@@ -1018,10 +991,9 @@ class Solar_Sql extends Solar_Base {
         } elseif ($type == 'normal') {
             return "CREATE INDEX $fullname ON $table ($list)";
         } else {
-            return $this->_error(
-                'ERR_IDX_TYPE',
-                array('table' => $table, 'name' => $name, 'type' => $type),
-                E_USER_WARNING
+            throw $this->_exception(
+                'ERR_IDX_TYPE_UNKNOWN',
+                array('table' => $table, 'idx' => $name, 'type' => $type)
             );
         }
     }

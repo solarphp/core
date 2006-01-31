@@ -72,6 +72,8 @@ class Solar {
      * 
      * Directory where the Solar.php file is located; used for class loading.
      * 
+     * Usually the same as the PEAR library directory.
+     * 
      * @access protected
      * 
      * @var bool
@@ -108,11 +110,11 @@ class Solar {
         // the base for all Solar classes (except Solar itself ;-).
         require_once Solar::$_dir . 'Solar/Base.php';
         
-        // the Solar_Error class, needed for Solar::isError().
-        require_once Solar::$_dir . 'Solar/Error.php';
-        
         // the Solar_Exception class
         require_once Solar::$_dir . 'Solar/Exception.php';
+        
+        // the Solar_Error class, needed for Solar::isError().
+        require_once Solar::$_dir . 'Solar/Error.php';
         
         // initialize $_shared property as a StdClass object
         Solar::$_shared = new StdClass;
@@ -268,11 +270,12 @@ class Solar {
      * 
      * A "sham" method; __autoload() causes too many conflicts.
      * 
-     * If the class name exists as a key in $config['Solar']['registry'],
-     * that array element value will be used as the file path.  If not,
-     * the class name will be turned into a file path by converting
-     * all instances of '_' in the class name to DIRECTORY_SEPARATOR
-     * (i.e., '/' on Unix and '\' on Windows).
+     * If the class name exists as a key in
+     * $config['Solar']['registry'], that array element value will be
+     * used as the file path.  If not, the class name will be turned
+     * into a file path by converting all instances of '_' in the
+     * class name to DIRECTORY_SEPARATOR (i.e., '/' on Unix and '\'
+     * on Windows).
      * 
      * @access public
      * 
@@ -292,13 +295,13 @@ class Solar {
             return;
         }
         
+        // did we ask for a non-blank class?
         if (trim($class) == '') {
-            return Solar::error(
-                'Solar', // class
-                'ERR_LOADCLASS_EMPTY', // code
-                'No class named for loading', // text
-                array('class' => $class), // info
-                E_USER_ERROR // level
+            throw Solar::exception(
+                'Solar',
+                'ERR_LOADCLASS_EMPTY',
+                'No class named for loading',
+                array('class' => $class)
             );
         }
         
@@ -318,21 +321,18 @@ class Solar {
             
         }
         
-        // include the file from the Solar dir and check for failure.
-        // we use run() here so we can see the error backtrace.
+        // include the file from the Solar dir and check for failure. we
+        // use run() here instead of require() so we can see the
+        // exception backtrace.
         $result = Solar::run(Solar::$_dir . $file);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // if the class was not in the file, we have a problem.
         if (! class_exists($class)) {
-            return Solar::error(
-                'Solar', // class
-                'ERR_LOADCLASS_EXIST', // code
-                'Class does not exist in loaded file', // text
-                array('class' => $class, 'file' => $file), // info
-                E_USER_ERROR // level
+            throw Solar::exception(
+                'Solar',
+                'ERR_LOADCLASS_EXIST',
+                'Class does not exist in loaded file',
+                array('class' => $class, 'file' => $file)
             );
         }
     }
@@ -343,38 +343,47 @@ class Solar {
      * 
      * @access public
      * 
-     * @param string A script path and file name.
+     * @param string $file A script path and file name.
      * 
-     * @return mixed The final return of the included file, if any, or a
-     * Solar_Error if the file could not be opened.
+     * @return mixed The final return of the included file.
      * 
      */
     static public function run($file)
     {
-        // this hack is the equivalent of is_readable(), but it also
-        // checks the include-path to see if the file exists.
-        $fp = @fopen($file, 'r', true);
-        $ok = ($fp) ? true : false;
-        @fclose($fp);
-        
-        // could we find the file?
-        if ($ok) {
-            // clean up the local scope
+        if (Solar::fileExists($file)) {
+            // clean up the local scope, then
+            // include the file and return its results
             unset($file);
-            unset($fp);
-            unset($ok);
-            // require the file and return its results
             return include(func_get_arg(0));
         } else {
             // could not open the file for reading
-            return Solar::error(
+            throw Solar::exception(
                 'Solar',
-                'ERR_FILE_OPEN',
-                'ERR_FILE_OPEN',
-                array('file' => $file),
-                E_USER_WARNING
+                'ERR_FILE_NOT_READABLE',
+                'File does not exist or is not readable',
+                array('file' => $file)
             );
         }
+    }
+    
+    /**
+     * 
+     * Hack for file_exists() && is_readable() that checks the include_path.
+     * 
+     * @access public
+     * 
+     * @param string $file A script path and file name.
+     * 
+     * @return bool True if the file exists and is readble in the
+     * include_path, false if not.
+     * 
+     */
+    static public function fileExists($file)
+    {
+        $fp = @fopen($file, 'r', true);
+        $ok = ($fp) ? true : false;
+        @fclose($fp);
+        return $ok;
     }
     
     /**
@@ -393,12 +402,8 @@ class Solar {
     static public function factory($class, $config = null)
     {
         $result = Solar::loadClass($class);
-        if (Solar::isError($result)) {
-            return $result;
-        } else {
-            $obj = new $class($config);
-            return $obj;
-        }
+        $obj = new $class($config);
+        return $obj;
     }
     
     /**
@@ -439,13 +444,12 @@ class Solar {
                 
             } else {
             
-                // did not find the info.  that's an error.
-                Solar::$_shared->$name = Solar::error(
+                // did not find the info.  that's an exception.
+                throw Solar::exception(
                     'Solar',
                     'ERR_SHARED_NAME',
-                    "shared object name $name not in config file under ['Solar']['shared']", 
-                    array('shared' => $name),
-                    E_USER_ERROR
+                    "Shared object name '$name' not in config file under ['Solar']['shared']", 
+                    array('shared' => $name)
                 );
                 
             }
@@ -967,6 +971,6 @@ class Solar {
             return $default;
             
         }
-    }
+    }    
 }
 ?>

@@ -39,7 +39,7 @@ class Solar_Exception extends Exception {
     
     /**
      * 
-     * User-defined information array.
+     * Class where the exception originated.
      * 
      * @var array
      * 
@@ -63,9 +63,25 @@ class Solar_Exception extends Exception {
         );
         $config = array_merge($default, (array) $config);
         extract($config);
-        parent::__construct($text, $code);
+        parent::__construct($text);
+        $this->code = $code;
         $this->_class = $class;
         $this->_info = (array) $info;
+    }
+    
+    /**
+     * 
+     * Custom string output.
+     * 
+     */
+    public function __toString()
+    {
+        return "exception '" . get_class($this) . "'\n"
+             . "class::code '" . $this->_class . "::" . $this->code . "' \n"
+             . "with message '" . $this->message . "' \n"
+             . "information " . var_export($this->_info, true) . " \n"
+             . "Stack trace:\n"
+             . "  " . str_replace("\n", "\n  ", $this->getTraceAsString());
     }
     
     /**

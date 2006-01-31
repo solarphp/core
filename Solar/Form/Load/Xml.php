@@ -78,24 +78,18 @@ class Solar_Form_Load_Xml extends Solar_Base {
         $param    = array_shift($args);
 
         if (! file_exists($filename)) {
-            // Need to return an error here
-            return $this->_error(
-                'ERR_FORM_LOAD_NOFILE',
-                array(),
-                E_USER_WARNING
-            );
+            throw $this->_exception('ERR_FILE_NOT_FOUND');
         }
 
         // load the XML file data
         $xml = simplexml_load_file($filename);
         if (false === $xml) {
             // return an error here
-            return $this->_error(
-                'ERR_FORM_LOAD_BADXML',
+            return $this->_exception(
+                'ERR_BAD_XML',
                 array(
                     'filename' => $filename
                 ),
-                E_USER_WARNING
             );
         }
         

@@ -270,15 +270,9 @@ class Solar_Sql_Table extends Solar_Base {
         
         // validate and recast the data.
         $result = $this->_autoValid($data);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // attempt the insert.
         $result = $this->_sql->insert($this->_name, $data);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // return the data as inserted
         return $data;
@@ -320,15 +314,9 @@ class Solar_Sql_Table extends Solar_Base {
         
         // validate and recast the data
         $result = $this->_autoValid($data);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // attempt the update
         $result = $this->_sql->update($this->_name, $data, $where);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // restore retained primary key data and return
         $data = array_merge($data, $retain);
@@ -671,54 +659,25 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // create the table itself
-        $result = $this->_sql->createTable(
+        $this->_sql->createTable(
             $this->_name,
             $this->_col
         );
         
-        // was there a problem creating the table?
-        if (Solar::isError($result)) {
-        
-            // add another error on top of it
-            $result->push(
-                get_class($this),
-                'ERR_TABLE_NOT_CREATED',
-                Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
-                array('table' => $this->_name),
-                E_USER_ERROR
-            );
-            
-            // done
-            return $result;
-        }
-        
         // create each of the indexes
         foreach ($this->_idx as $name => $info) {
-        
-            // create this index
-            $result = $this->_sql->createIndex($this->_name, $name, $info);
-            
-            // was there a problem creating the index?
-            if (Solar::isError($result)) {
-            
+            try {
+                // create this index
+                $result = $this->_sql->createIndex($this->_name, $name, $info);
+            } catch (Exception $e) {
+                /** @todo Does this throw a TableNotCreated exception too? */
                 // cancel the whole deal.
                 $this->_sql->dropTable($this->_name);
-                
-                // add another error on top of it.
-                $result->push(
-                    get_class($this),
-                    'ERR_TABLE_NOT_CREATED',
-                    Solar::locale('Solar_Sql', 'ERR_TABLE_NOT_CREATED'),
-                    array('table' => $this->_name),
-                    E_USER_ERROR
-                );
-                
-                // done
-                return $result;
+                throw $e;
             }
         }
         
-        // creation of the table and its indexed is complete
+        // creation of the table and its indexes is complete
         return true;
     }
     

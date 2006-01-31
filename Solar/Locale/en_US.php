@@ -36,13 +36,12 @@ return array(
     'OP_GO'              => 'Go!',
     
     // error messages
-    'ERR_FORM'           => 'Please correct the noted errors.',
-    'ERR_FILE_FIND'      => 'Cannot find file.',
-    'ERR_FILE_OPEN'      => 'Cannot open file.',
-    'ERR_FILE_READ'      => 'Cannot read file.',
-    'ERR_EXTENSION'      => 'Extension not loaded.',
-    'ERR_CONNECT'        => 'Connection failed.',
-    'ERR_INVALID'        => 'Invalid data.',
+    'ERR_FORM'                 => 'Please correct the noted errors.',
+    'ERR_FILE_NOT_FOUND'       => 'File not found.',
+    'ERR_FILE_NOT_READABLE'    => 'File not readable or does not exist.',
+    'ERR_EXTENSION_NOT_LOADED' => 'Extension not loaded.',
+    'ERR_CONNECTION_FAILED'    => 'Connection failed.',
+    'ERR_INVALID'              => 'Invalid data.',
     
     // validation messages
     'VALID_ALPHA'        => 'Please use only the letters A-Z.',

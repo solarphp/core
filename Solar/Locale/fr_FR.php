@@ -35,13 +35,12 @@ return array(
     'OP_GO'              => 'Action!',
     
     // error messages
-    'ERR_FORM'           => 'Merci de corriger les erreurs affichées.',
-    'ERR_FILE_FIND'      => 'Impossible de trouver le fichier.',
-    'ERR_FILE_OPEN'      => 'Impossible d\'ouvrir le fichier.',
-    'ERR_FILE_READ'      => 'Impossible de lire le fichier.',
-    'ERR_EXTENSION'      => 'Extension non chargée.',
-    'ERR_CONNECT'        => 'Connection invalide.',
-    'ERR_INVALID'        => 'Donnée invalide.',
+    'ERR_FORM'                 => 'Merci de corriger les erreurs affichées.',
+    'ERR_FILE_NOT_FOUND'       => 'Impossible de trouver le fichier.',
+    'ERR_FILE_NOT_READABLE'    => 'Impossible de lire le fichier.',
+    'ERR_EXTENSION_NOT_LOADED' => 'Extension non chargée.',
+    'ERR_CONNECTION_FAILED'    => 'Connection invalide.',
+    'ERR_INVALID'              => 'Donnée invalide.',
     
     // validation messages
     'VALID_ALPHA'        => 'Veuillez utiliser esclusivement les lettres A-Z.',

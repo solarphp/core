@@ -45,7 +45,7 @@ class Solar_Locale extends Solar_Base {
      * @var array
      * 
      */
-    public $string = array();
+    protected $_string = array();
     
     /**
      * 
@@ -59,11 +59,8 @@ class Solar_Locale extends Solar_Base {
         // basic construction
         parent::__construct();
         
-        // set the locale code
-        $this->code($this->_config['code']);
-        
-        // load the baseline Solar translation strings
-        $this->load('Solar', $this->_config['locale']);
+        // reset the locale code and load the baseline strings
+        $this->reset($this->_config['code']);
     }
     
     /**
@@ -75,12 +72,22 @@ class Solar_Locale extends Solar_Base {
      * @param $code string The new locale code.
      * 
      */
-    public function setCode($code)
+    public function reset($code)
     {
-        $this->string = array();
         $this->_config['code'] = $code;
+        $this->_string = array();
         $this->load('Solar', $this->_config['locale']);
     }
+    
+    public function setCode($code)
+    {
+        trigger_error(
+            "Solar_Locale::setCode() is deprecated, use Solar_Locale::reset() instead",
+            E_USER_NOTICE
+        );
+        return $this->reset($code);
+    }
+    
     
     /**
      * 
@@ -98,69 +105,21 @@ class Solar_Locale extends Solar_Base {
     
     /**
      * 
-     * Sets the locale translation for a class and key.
-     * 
-     * The locale translation may be a string, or an array of
-     * two elements.  If an array, element 0 is the "singular"
-     * form of the translation, and element 1 is the "plural"
-     * form.
+     * Loads class locale strings from a PHP array file.
      * 
      * @access public
      * 
      * @param string $class The class for the translation key, e.g.
-     * 'Solar_Model_Talk'.
+     * 'Solar_Test_Example'.
      * 
-     * @param string $key The translation key, e.g. 'LABEL_EMAIL'.
+     * @param string $dir The directory where the translation PHP
+     * array files are located.  Will search this directory for a
+     * file named after the locale code, ending in '.php'.  E.g., if
+     * $this->_config['code'] is 'en_US' and $dir is
+     * 'Solar/Test/Example/', load() will look for a file at the path
+     * 'Solar/Test/Example/en_US.php'.
      * 
-     * @param atring|array $val A singular string, or a two-elements
-     * array of singular string and plural string.
-     * 
-     * @return void
-     * 
-     */
-    public function setString($class, $key, $val)
-    {
-        $this->string[$class][$key] = $val;
-    }
-    
-    /**
-     * 
-     * Sets the locale translation for an entire class of keys.
-     * 
-     * @access public
-     * 
-     * @param string $class The class for the translation key, e.g.
-     * 'Solar_Model_Talk'.
-     * 
-     * @param array $list An associative array of keys and translation values.
-     * 
-     * @return void
-     * 
-     */
-    public function setStrings($class, $list)
-    {
-        foreach ($list as $key => $val) {
-            $this->string[$class][$key] = $val;
-        }
-    }
-
-    
-    /**
-     * 
-     * Loads a locale class from a PHP array file in the specified directory.
-     * 
-     * @access public
-     * 
-     * @param string $class The class for the translation key, e.g.
-     * 'Solar_Model_Talk'.
-     * 
-     * @param string $dir The directory where the translation PHP array files
-     * are located.  Will search this directory for a file named after the
-     * locale code, ending in '.php'.  E.g., if $this->_config['code'] is 'en_US' and
-     * $dir is 'Solar/Locale/', load() will look for a file at the path
-     * 'Solar/Locale/en_US.php'.
-     * 
-     * @return void
+     * @return boolean True if the strings were loaded, false if not.
      * 
      */
     public function load($class, $dir)
@@ -169,24 +128,19 @@ class Solar_Locale extends Solar_Base {
         $dir = Solar::fixdir($dir);
         $file = $dir . $this->_config['code'] . '.php';
         
-        // this hack is the equivalent of is_readable(), but it also
-        // checks the include-path to see if the file exists.
-        $fp = @fopen($file, 'r', true);
-        $ok = ($fp) ? true : false;
-        @fclose($fp);
-        
         // could we find the file?
-        if ($ok) {
-            $this->string[$class] = (array) include $file;
+        if (Solar::fileExists($file)) {
+            $this->_string[$class] = (array) include $file;
+            return true;
         } else {
             // could not find file.
             // fail silently, as it's often the case that the
-            // translation file simply doesn't exist yet.
-            $this->string[$class] = array();
+            // translation file simply doesn't exist.
+            $this->_string[$class] = array();
+            return false;
         }
     }
 
-    
     /**
      * 
      * Checks to see if strings have been loaded for a given class.
@@ -201,7 +155,7 @@ class Solar_Locale extends Solar_Base {
      */
     public function loaded($class)
     {
-        return array_key_exists($class, $this->string);
+        return array_key_exists($class, $this->_string);
     }
     
     /**
@@ -227,13 +181,13 @@ class Solar_Locale extends Solar_Base {
     {
         // if the key does not exist for the class,
         // return the key itself.
-        if (! isset($this->string[$class][$key])) {
+        if (! isset($this->_string[$class][$key])) {
             return $key;
         }
         
         // get the translation of the key and force
         // to an array.
-        $string = (array) $this->string[$class][$key];
+        $string = (array) $this->_string[$class][$key];
         
         // return the number-appropriate version of the
         // translated key, if multiple values exist.

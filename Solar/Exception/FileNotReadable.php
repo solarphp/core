@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Exception.php 656 2006-01-14 19:02:13Z pmjones $
+ * @version $Id$
  * 
  */
 

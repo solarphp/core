@@ -1,23 +1,31 @@
 GENERIC CONTENT MODEL
 
-Still need:
+Convert from Solar_Content to Solar_Model_Content:
 
 Solar/
-	Content/
-		Hits.php -- tracks hits to a node
-		Words.php -- holds search-words
+    Model/
+        Content/
+            Areas.php -- broad content areas (logical namespaces)
+            Nodes.php -- nodes of content in the namespaces
+            Tags.php -- searchable tags on a node
 
-Basic Models:
-	Comment (comments received)
-	Ping (pings sent)
-	Trackback (trackbacks received)
+Need to add Solar_Model_Content_Hits for hits and visitors
 
-Advanced Models:
-	Blog (blog entry)
-	Wiki (wiki page)
-	File (generic file attachments)
-	Image (images)
-	
+Content types:
+    comment (comments received)
+    ping (pings sent)
+    trackback (trackbacks received)
+    pingback (pingbacks received)
+    todo (to-do lists)
+    blog (blog entry)
+    wiki (wiki page)
+    file (generic file attachments)
+    forum (discussion thread)
+    gallery (image gallery)
+
+Have a Solar_Model_ContentType class for retrieving specific types?
+    Solar_Content_Bookmarks extends Solar_Model_ContentType
+    
 ALSO NEED ACCESS CONTROL!
 
 ----
@@ -37,7 +45,7 @@ Standalone comment system tasks
 
 select comments for an area and node (paged)
 insert a new comment on a area/node
-	essentially a new node of type 'comment' as part_of the collection master node
+    essentially a new node of type 'comment' as part_of the collection master node
 update a comment in-place (not a revision)
 delete a comment
 tag a comment as spam, or for moderation
@@ -49,20 +57,20 @@ Forum system
 
 Each node is a separate thread
 Parts:
-	'forum' (the collection master node)
-	'comments' on that entry
-	
+    'forum' (the collection master node)
+    'comments' on that entry
+    
 
 ----
 
 Issue Tracking System
 
-	a standard issues table
-	use the universal comment system driven by the content system
-	what area and node do we use in these cases?
-	area_name: Solar_App_Issues
-	node_name: 12345
-	connect first to the bugs table, then grab comments from general content
+    a standard issues table
+    use the universal comment system driven by the content system
+    what area and node do we use in these cases?
+    area_name: Solar_App_Issues
+    node_name: 12345
+    connect first to the bugs table, then grab comments from general content
 
 ----
 

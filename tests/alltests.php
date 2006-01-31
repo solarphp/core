@@ -3,43 +3,69 @@ echo "\n";
 // array of failure messages
 $fail = array();
 
+// array of skipped messages
+$skip = array();
+
 // run tests in each subdir
 $dir = dirname(__FILE__);
-foreach (scandir($dir) as $name) {
+$time = time();
+foreach (scandir($dir) as $subdir) {
 
     // skip certain directories
-    if ($name == '..' || $name[0] == '.' || $name[0] == '_') {
+    if ($subdir == '..' || $subdir[0] == '.' || $subdir[0] == '_') {
         continue;
     }
     
     // only run if the name is a directory
-    if (is_dir("$dir/$name")) {
-    
-        // run tests in the subdir
-        echo "Running tests for $name ... ";
-        $name = escapeshellarg($name);
-        $cmd = "cd $name; pear run-tests; cd ..";
-        exec($cmd, $output);
-        echo "complete.\n";
-        
-        // retain failure messages
-        $output = implode("\n", $output);
-        $count = preg_match_all('/^FAIL.*$/m', $output, $matches, PREG_PATTERN_ORDER);
-        if ($count) {
-            $fail = array_merge($fail, $matches[0]);
+    if (is_dir("$dir/$subdir")) {
+        chdir($subdir);
+        echo "Running tests for $subdir ";
+        $proc = popen('pear run-tests', 'r');
+        while ($line = fread($proc, 2048)) {
+            // what kind of message?
+            $type = substr($line, 0, 4);
+            if ($type == 'FAIL') {
+                $fail[] = trim($line);
+                echo 'F';
+            } elseif ($type == 'SKIP') {
+                $skip[] = trim($line);
+                echo 'S';
+            } elseif ($type == 'PASS') {
+                echo '.';
+            }
         }
+        pclose($proc);
+        echo " complete.\n";
+        chdir('..');
     }
 }
 
 // REPORTING
-$count = count($fail);
+
+// time
 echo "\n";
+echo time() - $time . " seconds, ";
+
+// skips
+$count = count($skip);
 if ($count) {
-    echo count($fail) . " failure";
+    echo "$count skip";
+    if ($count > 1) echo "s";
+    echo ":\n" . implode("\n", $skip);
+} else {
+    echo "no skips, ";
+}
+
+// fails
+$count = count($fail);
+if ($count) {
+    echo "$count failure";
     if ($count > 1) echo "s";
     echo ":\n" . implode("\n", $fail);
 } else {
-    echo "No failures.";
+    echo "no failures.";
 }
+
+// done
 echo "\n\n";
 ?>

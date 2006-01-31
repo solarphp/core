@@ -898,11 +898,6 @@ class Solar_Sql_Select extends Solar_Base {
         $result = $select->fetch('one');
         unset($select);
         
-        // was there an error?
-        if (Solar::isError($result)) {
-            return $result;
-        }
-        
         // $result is the row-count; how many pages does it convert to?
         $pages = 0;
         if ($result > 0) {

@@ -218,14 +218,13 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
      * @return int The next sequence number.
      * 
      */
-    public function nextSequence($name = 'hive')
+    public function nextSequence($name)
     {
-        // first, try to get the next sequence number, assuming
-        // the table exists.
-        $result = $this->exec("INSERT INTO $name (id) VALUES (NULL)");
-        
-        // did it work?
-        if (! $result || Solar::isError($result)) {
+        try {
+            // try to get the next sequence number, assuming
+            // the table exists.
+            $result = $this->exec("INSERT INTO $name (id) VALUES (NULL)");
+        } catch (Exception $e) {
             // error when updating the sequence.
             // assume we need to create it.
             $this->createSequence($name);

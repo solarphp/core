@@ -111,6 +111,21 @@ class Solar_Cache extends Solar_Base {
     
     /**
      * 
+     * Returns the cache lifetime in seconds.
+     * 
+     * @access public
+     * 
+     * @return int The cache lifetime in seconds.
+     * 
+     */
+    public function life()
+    {
+        return $this->_driver->life();
+    }
+    
+    
+    /**
+     * 
      * Inserts/updates cache entry data.
      * 
      * Does not replace if caching is not active.

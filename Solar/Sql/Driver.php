@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Base class for specific RDBMS driver information.
+ * Abstract base class for specific RDBMS driver information.
  * 
  * @category Solar
  * 
@@ -17,14 +17,14 @@
 
 /**
  * 
- * Base class for specific RDBMS driver information.
+ * Abstract base class for specific RDBMS driver information.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Driver extends Solar_Base {
+abstract class Solar_Sql_Driver extends Solar_Base {
     
     /**
      * 
@@ -164,32 +164,21 @@ class Solar_Sql_Driver extends Solar_Base {
         $dsn = $this->_dsn();
         
         // create PDO object
-        try {
-            
-            // attempt the connection
-            $this->_pdo = new PDO(
-                $dsn,
-                $this->_config['user'],
-                $this->_config['pass']
-            );
-            
-            // always autocommit to start
-            $this->_pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
-            
-            // force names to lower case
-            $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            
-            /** @todo Are there other portability attribs to consider? */
-            
-            // always use exceptions.
-            $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
-                PDO::ERRMODE_EXCEPTION);
-            
-        } catch (Exception $e) {
-            // database connection failures should be fatal
-            $err = $this->_errorException($e, E_USER_ERROR);
-            return $err;
-        }
+        // attempt the connection
+        $this->_pdo = new PDO(
+            $dsn,
+            $this->_config['user'],
+            $this->_config['pass']
+        );
+        
+        // force names to lower case
+        $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        
+        /** @todo Are there other portability attribs to consider? */
+        
+        // always use exceptions.
+        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION);
     }
     
     /**
@@ -262,19 +251,14 @@ class Solar_Sql_Driver extends Solar_Base {
         $cmd = substr($stmt, 0, $pos);
         
         // execute
-        try {
-            if (in_array(strtoupper($cmd), $this->_direct)) {
-                // execute directly
-                return $this->_pdo->exec($stmt);
-            } else {
-                // prepare and execute
-                $obj = $this->_pdo->prepare($stmt);
-                $obj->execute((array) $data);
-                return $obj;
-            }
-        } catch (Exception $e) {
-            $err = $this->_errorException($e, E_USER_WARNING);
-            return $err;
+        if (in_array(strtoupper($cmd), $this->_direct)) {
+            // execute directly
+            return $this->_pdo->exec($stmt);
+        } else {
+            // prepare and execute
+            $obj = $this->_pdo->prepare($stmt);
+            $obj->execute((array) $data);
+            return $obj;
         }
     }
     
@@ -310,6 +294,10 @@ class Solar_Sql_Driver extends Solar_Base {
      */
     public function createSequence($name, $start = 1)
     {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => __FUNCTION__)
+        );
     }
     
     /**
@@ -325,6 +313,10 @@ class Solar_Sql_Driver extends Solar_Base {
      */
     public function dropSequence($name)
     {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => __FUNCTION__)
+        );
     }
     
     /**
@@ -340,6 +332,10 @@ class Solar_Sql_Driver extends Solar_Base {
      */
     public function nextSequence($name)
     {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => __FUNCTION__)
+        );
     }
     
     /**
@@ -353,6 +349,10 @@ class Solar_Sql_Driver extends Solar_Base {
      */
     public function listTables()
     {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => __FUNCTION__)
+        );
     }
     
     /**

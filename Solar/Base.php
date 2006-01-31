@@ -50,29 +50,41 @@ abstract class Solar_Base {
      * 
      * @access public
      * 
-     * @param array $config Is merged with the default $config property array
-     * and any values from the Solar.config.php file.
+     * @param mixed $config If array, is merged with the default $_config property array
+     * and any values from the Solar.config.php file.  If string, is loaded from that
+     * file and merged with values from Solar.config.php file.  If boolean false,
+     * no config overrides are performed (class defaults only).
      * 
      */
     public function __construct($config = null)
     {
-        // allow construction-time config loading from arbitrary files
-        if (is_string($config)) {
-            $config = Solar::run($config);
-        }
-        
-        // Solar.config.php values override class defaults
         $class = get_class($this);
-        $solar = Solar::config($class, null, array());
-        $this->_config = array_merge($this->_config, $solar);
         
-        // construction-time values override Solar.config.php
-        $this->_config = array_merge($this->_config, (array) $config);
+        if ($config === false) {
+            // don't attempt to override class defaults at all,
+            // usually for testing.
+        } else {
+            
+            // normal behavior: merge from Solar.config.php,
+            // then from construction-time config.
+            
+            // Solar.config.php values override class defaults
+            $solar = Solar::config($class, null, array());
+            $this->_config = array_merge($this->_config, $solar);
+            
+            // load construction-time config from a file?
+            if (is_string($config)) {
+                $config = Solar::run($config);
+            }
+            
+            // construction-time values override Solar.config.php
+            $this->_config = array_merge($this->_config, (array) $config);
+        }
         
         // auto-define the locale directory if needed
         if (empty($this->_config['locale'])) {
-            // converts "Solar_Example_Class" to
-            // "Solar/Example/Class/Locale/"
+            // converts "Solar_Test_Example" to
+            // "Solar/Test/Example/Locale/"
             $this->_config['locale'] = str_replace('_', '/', $class);
             $this->_config['locale'] .= '/Locale/';
         }
@@ -281,11 +293,27 @@ abstract class Solar_Base {
     
     /**
      * 
-     * Convenience method for returning Solar::exception with localized text.
+     * Convenience method for returning exceptions with localized text.
+     * 
+     * This method attempts to automatically load and throw exceptions
+     * based on the error code, falling back to generic Solar exceptions
+     * when no specific exception classes exist.  For example, if a
+     * class named 'Solar_Example' throws an error code 'ERR_FILE_NOT_FOUND',
+     * attempts will be made to find these exception classes in this order:
+     * 
+     * <ol>
+     * <li>Example_Exception_FileNotFound (class specific)</li>
+     * <li>Solar_Exception_FileNotFound (Solar specific)</li>
+     * <li>Example_Exception (class generic)</li>
+     * <li>Solar_Exception (Solar generic)</li>
+     * </ol>
+     * 
+     * The final fallback is always the Solar_Exception class.
      * 
      * @access protected
      * 
-     * @param string $code The error code.
+     * @param string $code The error code; does additional duty as the
+     * locale string key and the exception class name suffix.
      * 
      * @param array $info An array of error-specific data.
      * 
@@ -294,6 +322,7 @@ abstract class Solar_Base {
      */
     protected function _exception($code, $info = array())
     {
+        // exception configuration
         $config = array(
             'class' => get_class($this),
             'code'  => $code,
@@ -301,6 +330,48 @@ abstract class Solar_Base {
             'info'  => $info,
         );
         
+        // the base exception class for this class
+        $base = get_class($this) . '_Exception';
+        
+        // drop 'ERR_' and 'EXCEPTION_' prefixes from the code
+        // to get a suffix for the exception class
+        $suffix = $code;
+        if (substr($suffix, 0, 4) == 'ERR_') {
+            $suffix = substr($suffix, 4);
+        } elseif (substr($suffix, 0, 10) == 'EXCEPTION_') {
+            $suffix = substr($suffix, 10);
+        }
+        
+        // convert suffix to StudlyCaps
+        $suffix = str_replace('_', ' ', $suffix);
+        $suffix = ucwords(strtolower($suffix));
+        $suffix = str_replace(' ', '', $suffix);
+        
+        // look for Class_Exception_StudlyCapsSuffix
+        try {
+            $obj = Solar::factory("{$base}_$suffix", $config);
+            return $obj;
+        } catch (Exception $e) {
+            // do nothing
+        }
+        
+        // fall back to Solar_Exception_StudlyCapsSuffix
+        try {
+            $obj = Solar::factory("Solar_Exception_$suffix", $config);
+            return $obj;
+        } catch (Exception $e) {
+            // do nothing
+        }
+        
+        // look for generic Class_Exception
+        try {
+            $obj = Solar::factory($base, $config);
+            return $obj;
+        } catch (Exception $e) {
+            // do nothing
+        }
+        
+        // final fallback to generic Solar_Exception
         return Solar::factory('Solar_Exception', $config);
     }
 }

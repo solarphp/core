@@ -80,6 +80,18 @@ class Solar_Cache_Memcache extends Solar_Base {
     
     /**
      * 
+     * Gets the cache lifetime in seconds.
+     * 
+     * @return int The cache lifetime in seconds.
+     * 
+     */
+    public function life()
+    {
+        return $this->_config['life'];
+    }
+    
+    /**
+     * 
      * Sets cache entry data.
      * 
      * @access public

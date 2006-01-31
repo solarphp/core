@@ -75,6 +75,18 @@ class Solar_Cache_File extends Solar_Base {
     
     /**
      * 
+     * Gets the cache lifetime in seconds.
+     * 
+     * @return int The cache lifetime in seconds.
+     * 
+     */
+    public function life()
+    {
+        return $this->_config['life'];
+    }
+    
+    /**
+     * 
      * Fetches cache entry data.
      * 
      * @access public

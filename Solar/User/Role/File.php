@@ -67,10 +67,9 @@ class Solar_User_Role_File extends Solar_Base {
         
         // does the file exist?
         if (! file_exists($file) || ! is_readable($file)) {
-            return $this->_error(
-                'ERR_FILE_FIND',
-                array('file' => $file),
-                E_USER_ERROR
+            throw $this->_exception(
+                'ERR_FILE_NOT_READABLE',
+                array('file' => $file)
             );
         }
         

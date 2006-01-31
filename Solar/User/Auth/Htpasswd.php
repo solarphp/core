@@ -73,21 +73,19 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
         $file = realpath($this->_config['file']);
         
         // does the file exist?
-        if (! file_exists($file) || ! is_readable($file)) {
-            return $this->_error(
-                'ERR_FILE_FIND',
-                array('file' => $file),
-                E_USER_ERROR
+        if (! file_exists($file)) {
+            return $this->_exception(
+                'ERR_FILE_NOT_FOUND',
+                array('file' => $file)
             );
         }
         
         // open the file
         $fp = @fopen($file, 'r');
         if (! $fp) {
-            return $this->_error(
-                'ERR_FILE_OPEN',
-                array('file' => $file),
-                E_USER_ERROR
+            return $this->_exception(
+                'ERR_FILE_NOT_READABLE',
+                array('file' => $file)
             );
         }
         

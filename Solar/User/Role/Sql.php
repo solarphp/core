@@ -75,11 +75,6 @@ class Solar_User_Role_Sql extends Solar_Base {
             $obj = Solar::factory('Solar_Sql', $this->_config['sql']);
         }
         
-        // if there were errors, return.
-        if (! $obj || Solar::isError($obj)) {
-            return $obj;
-        }
-        
         // build the SQL statement
         $stmt =  "SELECT " . $this->_config['rolename_col'];
         $stmt .= " FROM " . $this->_config['table'];

@@ -53,10 +53,9 @@ class Solar_User_Auth_Mail extends Solar_Base {
     {
         // make sure the IMAP extension is available
         if (! extension_loaded('imap')) {
-            return $this->_error(
-                'ERR_EXTENSION',
-                array(),
-                E_USER_ERROR
+            throw $this->_exception(
+                'ERR_EXTENSION_NOT_LOADED',
+                array('extension' => 'imap')
             );
         }
         

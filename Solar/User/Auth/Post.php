@@ -125,11 +125,9 @@ class Solar_User_Auth_Post extends Solar_Base {
                 $this->_config,
                 array('errno' => $errno, 'errstr' => $errstr)
             );
-            // return the error
-            return $this->_error(
-                'ERR_CONNECT',
-                $info,
-                E_USER_ERROR
+            throw $this->_exception(
+                'ERR_CONNECTION_FAILED',
+                $info
             );
         }
         

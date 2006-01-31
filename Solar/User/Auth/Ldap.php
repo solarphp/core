@@ -56,10 +56,9 @@ class Solar_User_Auth_Ldap extends Solar_Base {
     {
         // make sure we have LDAP available
         if (! extension_loaded('ldap')) {
-            return $this->_error(
-                'ERR_EXTENSION',
-                array('extension' => 'ldap'),
-                E_USER_ERROR
+            throw $this->_exception(
+                'ERR_EXTENSION_NOT_LOADED',
+                array('extension' => 'ldap')
             );
         }
         
@@ -87,10 +86,9 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         
         // did the connection work?
         if (! $conn) {
-            return $this->_error(
-                'ERR_CONNECT',
-                array($this->_config),
-                E_USER_ERROR
+            throw $this->_exception(
+                'ERR_CONNECTION_FAILED',
+                array($this->_config)
             );
         }
         
@@ -104,14 +102,13 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         
         // return the bind-value
         if (! $bind) {
-            // not using $this->_error() because we need fine control
+            // not using $this->_exception() because we need fine control
             // over the error text
-            return Solar::error(
-                get_class($this), // class name
-                @ldap_errno($conn), // error number
-                @ldap_error($conn), // error text
-                array($this->_config), // other info
-                E_USER_NOTICE // error level
+            throw Solar::exception(
+                get_class($this),
+                @ldap_errno($conn),
+                @ldap_error($conn),
+                array($this->_config)
             );
         } else {
             return true;

@@ -81,11 +81,6 @@ class Solar_User_Auth_Sql extends Solar_Base {
             $obj = Solar::factory('Solar_Sql', $this->_config['sql']);
         }
         
-        // if there were errors, return.
-        if (! $obj || Solar::isError($obj)) {
-            return $obj;
-        }
-        
         // build the SQL statement
         $stmt  = "SELECT COUNT({$this->_config['username_col']})";
         $stmt .= " FROM {$this->_config['table']}";

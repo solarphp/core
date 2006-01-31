@@ -297,12 +297,16 @@ class Solar_Test_Assert {
      * 
      * The object property may be public, protected, or private.
      * 
-     * @param object
+     * @param object $object The object to test.
      * 
-     * @param mixed $expect The expected result.
+     * @param string $property The property to inspect.
+     * 
+     * @param string $method The Solar_Test_Assert method to call.
+     * 
+     * @param mixed $expect The expected result from the test method.
      * 
      */
-    function property($object, $property, $method, $expect)
+    function property($object, $property, $method, $expect = null)
     {
         if (! is_object($object)) {
             $this->fail("Expected object, actually " . var_export($object));
@@ -340,6 +344,7 @@ class Solar_Test_Assert {
             break;
         }
         
+        // did we find $object->$property?
         if (! $found) {
             $this->fail(
                 "Did not find expected property '$property' " .
@@ -347,9 +352,8 @@ class Solar_Test_Assert {
             );
         }
         
-        if ($method) {
-            $this->$method($actual, $expect);
-        }
+        // test the property value
+        $this->$method($actual, $expect);
     }
     
     /**

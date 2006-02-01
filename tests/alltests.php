@@ -7,38 +7,28 @@ $fail = array();
 $skip = array();
 
 // run tests in each subdir
-$dir = dirname(__FILE__);
+echo "Running tests:";
 $time = time();
-foreach (scandir($dir) as $subdir) {
-
-    // skip certain directories
-    if ($subdir == '..' || $subdir[0] == '.' || $subdir[0] == '_') {
-        continue;
+$proc = popen('pear run-tests -r', 'r');
+$i = 0;
+while ($line = fread($proc, 2048)) {
+    // 40 columns of dots
+    if ($i++ % 40 == 0) {
+        echo "\n";
     }
-    
-    // only run if the name is a directory
-    if (is_dir("$dir/$subdir")) {
-        chdir($subdir);
-        echo "Running tests for $subdir ";
-        $proc = popen('pear run-tests', 'r');
-        while ($line = fread($proc, 2048)) {
-            // what kind of message?
-            $type = substr($line, 0, 4);
-            if ($type == 'FAIL') {
-                $fail[] = trim($line);
-                echo 'F';
-            } elseif ($type == 'SKIP') {
-                $skip[] = trim($line);
-                echo 'S';
-            } elseif ($type == 'PASS') {
-                echo '.';
-            }
-        }
-        pclose($proc);
-        echo " complete.\n";
-        chdir('..');
+    // what kind of message?
+    $type = substr($line, 0, 4);
+    if ($type == 'FAIL') {
+        $fail[] = trim($line);
+        echo 'F';
+    } elseif ($type == 'SKIP') {
+        $skip[] = trim($line);
+        echo 'S';
+    } elseif ($type == 'PASS') {
+        echo '.';
     }
 }
+pclose($proc);
 
 // REPORTING
 

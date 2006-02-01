@@ -2,7 +2,7 @@
 Solar_Cache{_File}::active()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 require '_setup.php';
@@ -19,7 +19,7 @@ $cache->setActive(true);
 $assert->isTrue($cache->active());
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

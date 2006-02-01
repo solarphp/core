@@ -2,7 +2,7 @@
 Solar_Valid::custom()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 
@@ -53,7 +53,7 @@ foreach ($callbacks as $callbackName => $callback) {
 
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

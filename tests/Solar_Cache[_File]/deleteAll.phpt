@@ -2,7 +2,7 @@
 Solar_Cache{_File}::deleteAll()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 require '_setup.php';
@@ -28,7 +28,7 @@ foreach ($list as $id) {
 }
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

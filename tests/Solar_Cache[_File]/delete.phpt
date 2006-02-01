@@ -2,7 +2,7 @@
 Solar_Cache{_File}::delete()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 require '_setup.php';
@@ -24,7 +24,7 @@ $cache->delete($id);
 $assert->isFalse($cache->fetch($id));
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

@@ -2,7 +2,7 @@
 Solar_Base::locale()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 $example = Solar::factory('Solar_Test_Example');
@@ -44,7 +44,7 @@ $assert->same(
 );
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

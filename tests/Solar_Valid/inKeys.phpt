@@ -2,7 +2,7 @@
 Solar_Valid::inKeys()
 --FILE---
 <?php
-require '../_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.php';
 // ---------------------------------------------------------------------
 
 $valid = Solar::factory('Solar_Valid');
@@ -44,7 +44,7 @@ foreach ($test as $val) {
 
 
 // ---------------------------------------------------------------------
-require '../_append.php';
+require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
 test complete

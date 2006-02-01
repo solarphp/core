@@ -7,10 +7,14 @@ $fail = array();
 $skip = array();
 
 // run tests in each subdir
-echo "Running tests:";
 $time = time();
 $proc = popen('pear run-tests -r', 'r');
 $i = 0;
+
+// how many tests are running?
+$line = fread($proc, 2048);
+echo $line;
+
 while ($line = fread($proc, 2048)) {
     // 40 columns of dots
     if ($i++ % 40 == 0) {
@@ -25,37 +29,32 @@ while ($line = fread($proc, 2048)) {
         $skip[] = trim($line);
         echo 'S';
     } elseif ($type == 'PASS') {
+        $pass[] = trim($line);
         echo '.';
     }
 }
 pclose($proc);
+$secs = time() - $time;
 
 // REPORTING
+echo "\n\n";
 
-// time
-echo "\n";
-echo time() - $time . " seconds, ";
+$total = 0;
+$count = count($pass);
+$total += $count;
+echo "$count passed, ";
 
-// skips
 $count = count($skip);
-if ($count) {
-    echo "$count skip";
-    if ($count > 1) echo "s";
-    echo ":\n" . implode("\n", $skip);
-} else {
-    echo "no skips, ";
-}
+$total += $count;
+echo "$count skipped, ";
 
-// fails
 $count = count($fail);
-if ($count) {
-    echo "$count failure";
-    if ($count > 1) echo "s";
-    echo ":\n" . implode("\n", $fail);
-} else {
-    echo "no failures.";
-}
+$total += $count;
+echo "$count failed.\n";
 
-// done
+echo "$total tests in $secs seconds.\n";
+
+echo implode("\n", $skip);
+echo implode("\n", $fail);
 echo "\n\n";
 ?>

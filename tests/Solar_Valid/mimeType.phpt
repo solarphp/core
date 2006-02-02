@@ -57,4 +57,3 @@ $assert->isFalse($valid->mimeType('application/vnd.ms-powerpoint', $allowed));
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

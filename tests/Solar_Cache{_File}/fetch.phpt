@@ -33,4 +33,3 @@ $assert->same($cache->fetch($id), $data);
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

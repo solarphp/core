@@ -14,4 +14,3 @@ we let it pass by default.  Is that bad?
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

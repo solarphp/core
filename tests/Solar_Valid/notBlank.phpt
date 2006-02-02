@@ -40,4 +40,3 @@ foreach ($test as $key => $val) {
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

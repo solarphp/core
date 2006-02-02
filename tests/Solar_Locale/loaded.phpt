@@ -19,4 +19,3 @@ $assert->isTrue($locale->loaded('Solar_Test_Example'));
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

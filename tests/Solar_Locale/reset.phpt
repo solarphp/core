@@ -23,4 +23,3 @@ $assert->same($locale->string('Solar', 'FORMAT_COUNTRY'), 'France');
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

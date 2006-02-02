@@ -27,4 +27,3 @@ $assert->isFalse($cache->fetch($id));
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

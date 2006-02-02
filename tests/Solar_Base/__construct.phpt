@@ -43,4 +43,3 @@ $assert->property($example, '_config', 'same', $expect);
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

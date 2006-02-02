@@ -54,4 +54,3 @@ $assert->isFalse($valid->uri($test, array('ftp', 'mms', 'gopher')));
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

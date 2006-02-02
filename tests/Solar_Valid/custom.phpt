@@ -56,4 +56,3 @@ foreach ($callbacks as $callbackName => $callback) {
 require dirname(dirname(__FILE__)) . '/_append.php';
 ?>
 --EXPECT--
-test complete

@@ -1,33 +1,30 @@
 <?php
-// array of failure messages
-$fail = array();
-
-// array of skipped messages
-$skip = array();
-
 // run tests in each subdir
-$time = time();
 $proc = popen('pear run-tests -r', 'r');
 
-// how many tests are running?
+// the "plan" line
 $line = fread($proc, 2048);
 $tmp = explode(' ', $line);
 echo "1.." . $tmp[1] . "\n";
 
-// run each test
+// the "test" lines
 $i = 0;
 while ($line = fread($proc, 2048)) {
     $i++;
-    $type = substr($line, 0, 4);
-    $mesg = substr($line, 4);
-    $mesg = preg_replace('/(.*)\[.*$/', '$1', $mesg);
-    if ($type == 'FAIL') {
-        echo "not ok $i -" . $mesg;
-    } elseif ($type == 'SKIP') {
-        echo "ok $i -$mesg # SKIP";
-    } elseif ($type == 'PASS') {
-        echo "ok $i -$mesg";
+    $k = preg_match('/^(.{4}) (.*)?(\[.*)/', $line, $mesg);
+    if (! $k) {
+        continue;
     }
+    if ($mesg[1] == 'FAIL') {
+        echo "not ok $i - $mesg[2]";
+    } elseif ($mesg[1] == 'SKIP') {
+        echo "ok $i - $mesg[2] # SKIP";
+    } elseif ($mesg[1] == 'PASS') {
+        echo "ok $i - $mesg[2]";
+    }
+    echo "\n";
 }
+
+// done!
 pclose($proc);
 ?>

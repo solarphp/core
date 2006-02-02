@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
@@ -28,6 +28,10 @@ class Solar_Test_Example2 extends Solar_Base {
     public function solarGenericException()
     {
         throw $this->_exception('ERR_CUSTOM_CONDITION');
+    }
+    
+    public function throwException($code) {
+        throw $this->_exception($code);
     }
 }
 ?>

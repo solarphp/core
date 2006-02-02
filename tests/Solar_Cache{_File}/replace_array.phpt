@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace() -- an array value
+Solar_Cache{_File}::replace(array)
 --FILE---
 <?php
 require dirname(dirname(__FILE__)) . '/_prepend.php';

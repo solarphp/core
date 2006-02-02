@@ -1,5 +1,4 @@
 <?php
-echo "\n";
 // array of failure messages
 $fail = array();
 
@@ -20,16 +19,15 @@ $i = 0;
 while ($line = fread($proc, 2048)) {
     $i++;
     $type = substr($line, 0, 4);
-    $mesg = substr($line, 4, -1); // drop the newline
+    $mesg = substr($line, 4);
+    $mesg = preg_replace('/(.*)\[.*$/', '$1', $mesg);
     if ($type == 'FAIL') {
-        echo "not ok $i - " . $mesg;
+        echo "not ok $i -" . $mesg;
     } elseif ($type == 'SKIP') {
-        echo "ok $i - $mesg # SKIP";
+        echo "ok $i -$mesg # SKIP";
     } elseif ($type == 'PASS') {
-        echo "ok $i - $mesg";
+        echo "ok $i -$mesg";
     }
-    echo "\n";
 }
 pclose($proc);
-echo "\n\n";
 ?>

@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace() -- an object
+Solar_Cache{_File}::replace(object)
 --FILE---
 <?php
 require dirname(dirname(__FILE__)) . '/_prepend.php';

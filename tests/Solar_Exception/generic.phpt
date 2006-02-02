@@ -1,5 +1,5 @@
 --TEST--
-Solar_Exception (all methods)
+Solar_Exception (all methods in generic class)
 --FILE---
 <?php
 require dirname(dirname(__FILE__)) . '/_prepend.php';

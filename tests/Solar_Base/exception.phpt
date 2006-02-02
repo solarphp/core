@@ -34,9 +34,8 @@ try {
 }
 
 // fall back to a generic exception for Solar as a whole.
-$example2 = Solar::factory('Solar_Test_Example2');
 try {
-    $example2->solarGenericException();
+    $example->solarGenericException();
     $assert->fail('Expected exception not thrown.');
 } catch (Exception $e) {
     $assert->isInstance($e, 'Solar_Exception');

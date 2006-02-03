@@ -154,22 +154,12 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
         $data['owner_handle'] = $user->auth->username;
         
         // save the data
-        $result = $bookmarks->save($data);
+        try {
+            $result = $bookmarks->save($data);
+            
+            // retain the id
+            $id = $data['id'];
         
-        // retain the id
-        $id = $data['id'];
-        
-        // were there errors?
-        if (Solar::isError($result)) {
-            
-            // get the error array
-            $err = $result->pop();
-            
-            // capture the feedback text
-            $form->feedback[] = $err['class::code'] . ' -- ' . $err['text'];
-            
-        } else {
-            
             // it worked!  $result is the new ID number.
             $form->feedback[] = Solar::locale('Solar', 'OK_SAVED');
             
@@ -177,6 +167,13 @@ if ($op == Solar::locale('Solar', 'OP_SAVE')) {
             if ($this->_info('id', 0) == 0) {
                 $this->_redirect($href);
             }
+            
+        } catch (Solar_Exception $e) {
+            
+            // exception on save()
+            // we should not have gotten to this point,
+            // but need to be aware of possible problems.
+            $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
             
         }
     }

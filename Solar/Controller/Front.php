@@ -98,10 +98,10 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * @access public
      * 
-     * @param string $spec An app spec for the front controller.
-     * E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
+     * @param string $spec A page/action/info spec for the front
+     * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
-     * @return string The output of the application.
+     * @return string The output of the application page action.
      * 
      */
     public function fetch($spec = null)
@@ -111,12 +111,14 @@ class Solar_Controller_Front extends Solar_Base {
         
         // override current URI with user spec
         if (is_string($spec)) {
-            // this won't work if there's no domain, path, etc.
-            $uri->import($spec);
+            $uri->importAction($spec);
         }
         
         // pull the app name off the top of the path_info
         $app = array_shift($uri->info);
+        if (trim($app) == '') {
+            $app = $this->_app_default;
+        }
         
         // instantiate the app class and fetch content
         $class = $this->_app_class[$app];

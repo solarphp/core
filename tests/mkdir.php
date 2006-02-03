@@ -4,7 +4,7 @@
  */
  
 /**
- * Creates a skeleton test script.
+ * Creates a skeleton test script for a class method.
  */
 function skeleton($class, $method) {
 return <<<END
@@ -63,16 +63,15 @@ if (is_dir($class)) {
     die("STOP: Directory for '$class' already exists.\n");
 }
 
-// make the test directory
+// make the test directory, but only after the class-load succeeds.
+Solar::loadClass($class);
 mkdir($class);
 
 // don't create tests for these methods, they're from Solar_Base
 $base = array('apiVersion', 'locale', 'solar');
 
 // get the list of public methods to create test files for
-Solar::loadClass($class);
 $reflect = new ReflectionClass($class);
-$methods = array();
 foreach ($reflect->getMethods() as $method) {
     $public = $method->isPublic();
     $name = $method->getName();

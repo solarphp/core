@@ -2,7 +2,7 @@
 Solar_Exception (all methods in generic class)
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 $config = array(
@@ -47,6 +47,6 @@ Stack trace:
 $assert->same($e->__toString(), $expect);
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

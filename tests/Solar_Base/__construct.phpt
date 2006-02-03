@@ -2,7 +2,7 @@
 Solar_Base::__construct()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 // does the class create the locale config?
@@ -40,6 +40,6 @@ $assert->property($example, '_config', 'same', $expect);
 
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

@@ -2,7 +2,7 @@
 Solar_Valid::notBlank()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 $valid = Solar::factory('Solar_Valid');
@@ -37,6 +37,6 @@ foreach ($test as $key => $val) {
 
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

@@ -2,7 +2,7 @@
 Solar_Locale::load()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 
@@ -28,6 +28,6 @@ $assert->same($actual, "HELLO_WORLD");
 
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

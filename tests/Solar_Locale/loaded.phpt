@@ -2,7 +2,7 @@
 Solar_Locale::loaded()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 // Solar should be loaded to begin with
@@ -16,6 +16,6 @@ $locale->load('Solar_Test_Example', 'Solar/Test/Example/Locale/');
 $assert->isTrue($locale->loaded('Solar_Test_Example'));
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

@@ -2,7 +2,7 @@
 Solar_Locale::reset()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 
@@ -20,6 +20,6 @@ $assert->same($locale->string('Solar', 'FORMAT_COUNTRY'), 'France');
 
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

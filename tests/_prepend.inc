@@ -1,5 +1,5 @@
 <?php
-define('SOLAR_CONFIG_PATH', dirname(__FILE__) . '/_config.php');
+define('SOLAR_CONFIG_PATH', dirname(__FILE__) . '/_config.inc');
 require_once 'Solar.php';
 Solar::start();
 

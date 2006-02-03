@@ -2,7 +2,7 @@
 Solar_Valid::uri()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.php';
+require dirname(dirname(__FILE__)) . '/_prepend.inc';
 // ---------------------------------------------------------------------
 
 $valid = Solar::factory('Solar_Valid');
@@ -51,6 +51,6 @@ $assert->isFalse($valid->uri($test, array('ftp', 'mms', 'gopher')));
 
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.php';
+require dirname(dirname(__FILE__)) . '/_append.inc';
 ?>
 --EXPECT--

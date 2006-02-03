@@ -2,7 +2,16 @@
 Solar_Cache{_File}::replace(array)
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.inc';
+// include ../_prepend.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {
+    require dirname(dirname(__FILE__)) . '/_prepend.inc';
+}
+
+// include ./_prepend.inc
+if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
+    require dirname(__FILE__) . '/_prepend.inc';
+}
+
 // ---------------------------------------------------------------------
 
 require '_setup.php';
@@ -18,6 +27,14 @@ $assert->isTrue($cache->replace($id, $data));
 $assert->same($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.inc';
+
+// include ./_append.inc
+if (is_readable(dirname(__FILE__) . '/_append.inc')) {
+    require dirname(__FILE__) . '/_append.inc';
+}
+// include ../_append.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_append.inc')) {
+    require dirname(dirname(__FILE__)) . '/_append.inc';
+}
 ?>
 --EXPECT--

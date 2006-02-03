@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace(string)
+Solar_Uri::__construct()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,12 +14,18 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-require '_setup.php';
-
-$id = 'coyote';
-$data = 'Wile E. Coyote';
-$assert->isTrue($cache->replace($id, $data));
-$assert->same($cache->fetch($id), $data);
+// test default values from _setup.inc
+$uri = Solar::factory('Solar_Uri');
+$assert->isInstance($uri, 'Solar_Uri');
+$assert->same($uri->scheme, 'http');
+$assert->same($uri->host, 'example.com');
+$assert->same($uri->port, null);
+$assert->same($uri->user, null);
+$assert->same($uri->pass, null);
+$assert->same($uri->path, '/path/to/index.php');
+$assert->same($uri->info, array('appname', 'action'));
+$assert->same($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
+$assert->same($uri->fragment, 'zim');
 
 // ---------------------------------------------------------------------
 

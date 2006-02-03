@@ -2,7 +2,16 @@
 Solar_Exception (all methods in generic class)
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.inc';
+// include ../_prepend.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {
+    require dirname(dirname(__FILE__)) . '/_prepend.inc';
+}
+
+// include ./_prepend.inc
+if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
+    require dirname(__FILE__) . '/_prepend.inc';
+}
+
 // ---------------------------------------------------------------------
 
 $config = array(
@@ -41,12 +50,20 @@ information array (
   'zim' => 'gir',
 ) 
 Stack trace:
-  #0 " . __FILE__ . "(16): Solar::factory('Solar_Exception', Array)
+  #0 " . __FILE__ . "(25): Solar::factory('Solar_Exception', Array)
   #1 {main}";
   
 $assert->same($e->__toString(), $expect);
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.inc';
+
+// include ./_append.inc
+if (is_readable(dirname(__FILE__) . '/_append.inc')) {
+    require dirname(__FILE__) . '/_append.inc';
+}
+// include ../_append.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_append.inc')) {
+    require dirname(dirname(__FILE__)) . '/_append.inc';
+}
 ?>
 --EXPECT--

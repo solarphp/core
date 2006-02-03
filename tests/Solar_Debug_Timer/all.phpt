@@ -2,7 +2,16 @@
 Solar_Debug_Timer (all tests)
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.inc';
+// include ../_prepend.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {
+    require dirname(dirname(__FILE__)) . '/_prepend.inc';
+}
+
+// include ./_prepend.inc
+if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
+    require dirname(__FILE__) . '/_prepend.inc';
+}
+
 // ---------------------------------------------------------------------
 
 // does the class create the locale config?
@@ -36,6 +45,14 @@ foreach ($profile as $val) {
 }
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.inc';
+
+// include ./_append.inc
+if (is_readable(dirname(__FILE__) . '/_append.inc')) {
+    require dirname(__FILE__) . '/_append.inc';
+}
+// include ../_append.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_append.inc')) {
+    require dirname(dirname(__FILE__)) . '/_append.inc';
+}
 ?>
 --EXPECT--

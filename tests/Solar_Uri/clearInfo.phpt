@@ -1,5 +1,7 @@
 --TEST--
-Solar_Cache{_File}::replace(string)
+Solar_Uri::clearInfo()
+--SKIPIF--
+<?php echo 'skip test incomplete' ?>
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,12 +16,6 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-require '_setup.php';
-
-$id = 'coyote';
-$data = 'Wile E. Coyote';
-$assert->isTrue($cache->replace($id, $data));
-$assert->same($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------
 

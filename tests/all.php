@@ -53,8 +53,6 @@ $total += $count;
 echo "$count failed.\n";
 
 echo "$total tests in $secs seconds.\n";
-
-echo implode("\n", $skip);
-echo implode("\n", $fail);
+echo implode("\n", array_merge($skip, $fail));
 echo "\n\n";
 ?>

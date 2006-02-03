@@ -2,7 +2,16 @@
 Solar_Locale::__construct()
 --FILE---
 <?php
-require dirname(dirname(__FILE__)) . '/_prepend.inc';
+// include ../_prepend.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {
+    require dirname(dirname(__FILE__)) . '/_prepend.inc';
+}
+
+// include ./_prepend.inc
+if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
+    require dirname(__FILE__) . '/_prepend.inc';
+}
+
 // ---------------------------------------------------------------------
 
 // basic construction
@@ -25,6 +34,14 @@ $expect = 'United States';
 $assert->same($locale->string('Solar', 'FORMAT_COUNTRY'), $expect);
 
 // ---------------------------------------------------------------------
-require dirname(dirname(__FILE__)) . '/_append.inc';
+
+// include ./_append.inc
+if (is_readable(dirname(__FILE__) . '/_append.inc')) {
+    require dirname(__FILE__) . '/_append.inc';
+}
+// include ../_append.inc
+if (is_readable(dirname(dirname(__FILE__)) . '/_append.inc')) {
+    require dirname(dirname(__FILE__)) . '/_append.inc';
+}
 ?>
 --EXPECT--

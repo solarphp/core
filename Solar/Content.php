@@ -462,17 +462,9 @@ class Solar_Content extends Solar_Base {
         
         // attempt the insert
         $data = $this->_nodes->insert($data);
-        if (Solar::isError($data)) {
-            // return the error
-            return $data;
-        }
         
         // add the tags to the tag-search table
         $tags = $this->_tags->refresh($data['id'], $data['tags']);
-        if (Solar::isError($tags)) {    
-            // return the error
-            return $tags;
-        }
         
         // return the new node data
         return $data;
@@ -503,9 +495,6 @@ class Solar_Content extends Solar_Base {
         // update the node
         $where = array('id = ?' => (int) $id);
         $data = $this->_nodes->update($data, $where);
-        if (Solar::isError($data)) {
-            return $data;
-        }
         
         // refresh the tags
         if (! empty($data['tags'])) {
@@ -538,9 +527,6 @@ class Solar_Content extends Solar_Base {
         
         // delete the nodes themselves
         $result = $this->_nodes->delete($where);
-        if (Solar::isError($result)) {
-            return $result;
-        }
         
         // delete the search tags
         $where = array(

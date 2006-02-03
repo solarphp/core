@@ -29,6 +29,23 @@
  * 
  * @package Solar_Filter
  * 
+ * @todo standardize names to indicate the action? use "only" or "keep"?
+ * 
+ * replace        => pregReplace
+ * alpha          => stripAlpha, onlyAlpha
+ * alnum          => stripAlnum, onlyAlnum
+ * numeric        => stripNumeric, onlyNumeric (should allow +/- and decimals)
+ * blank          => stripBlanks, onlyBlanks
+ * cast           => cast
+ * isoDate        => formatDate (ISO by default)
+ * isoTime        => formatTime (ISO by default)
+ * formatDateTime => formatDateTime (ISO by default)
+ * 
+ * add new methods:
+ * trim()
+ * strReplace()
+ * stripWordChars(), onlyWordChars() (regex \w)
+ * 
  */
 class Solar_Filter {
     

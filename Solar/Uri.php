@@ -242,6 +242,36 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * Parses a Solar_Controller action spec as a URI.
+     * 
+     * @access public
+     * 
+     * @return void
+     * 
+     */
+    public function importAction($spec)
+    {
+        // make sure there's actually an action spec
+        $spec = trim($spec);
+        if (! $spec) {
+            $spec = '/';
+        }
+        
+        // build a URI string with a fake host and path
+        $fake = 'example.com/index.php';
+        if ($spec[0] != '/') {
+            $fake .= '/';
+        }
+        $fake .= $spec;
+        
+        // import the fake, then remove the host and path
+        $this->import($fake);
+        $this->host = null;
+        $this->path = null;
+    }
+    
+    /**
+     * 
      * Builds a full URI string.
      * 
      * @access public

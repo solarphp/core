@@ -34,6 +34,9 @@ return array(
     'VALID_USER_HANDLE' => 'The username should consist only of letters, numbers, and underscores.',
     'VALID_RANK'        => 'The rank should be a whole number.',
     'VALID_RATING'      => 'The rating should be a whole number.',
+    
+    // error messages
+    'ERR_DATA'          => 'Invalid data; please try again.',
 );
 
 ?>

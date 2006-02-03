@@ -111,5 +111,21 @@ class Solar_Exception extends Exception {
     {
         return $this->_class;
     }
+    
+    /**
+     * 
+     * Gets the class and code together.
+     * 
+     * @var array
+     * 
+     * @access protected
+     * 
+     */
+    final public function getClassCode()
+    {
+        return $this->_class . '::' . $this->code;
+    }
+    
+    
 }
 ?>

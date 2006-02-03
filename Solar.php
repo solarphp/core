@@ -82,6 +82,11 @@ class Solar {
     static protected $_dir = null;
     
     /**
+     * Singleton pattern, disallow construction.
+     */
+    final private function __construct() {}
+    
+    /**
      * 
      * Start Solar: get config, load shared objects, run start scripts.
      * 
@@ -700,63 +705,11 @@ class Solar {
     
     /**
      * 
-     * Simple error object generator.
-     * 
-     * @param string $class The class that generated the error.
-     * 
-     * @param mixed $code An scalar error code.
-     * 
-     * @param string $text Any error message text.
-     * 
-     * @param array $info Additional error information in an associative
-     * array.
-     * 
-     * @param int $level The error level severity, generally E_USER_NOTICE,
-     * E_USER_WARNING, or E_USER_ERROR.
-     * 
-     * @param bool $trace Whether or not to add a debug_backtrace().
-     * 
-     * @return object A Solar_Error object.
-     * 
-     */
-    static public function error($class, $code, $text = '', $info = array(), 
-        $level = null, $trace = null)
-    {
-        $obj = Solar::factory('Solar_Error');
-        $obj->push($class, $code, $text, $info, $level, $trace);
-        return $obj;
-    }
-    
-    /**
-     * 
-     * Checks to see in an object is a Solar_Error or not.
-     * 
-     * @param object $obj Check this object to see if it is of, or is
-     * descended from, the Solar_Error class.
-     * 
-     * @return bool True if an error object, false if not.
-     * 
-     */
-    static public function isError($obj)
-    {
-        // it has to at least be an object
-        if (! is_object($obj)) {
-            return false;
-        }
-        
-        // see if it matches Solar_Error
-        $is = $obj instanceof Solar_Error;
-        $sub = is_subclass_of($obj, 'Solar_Error');
-        return ($is || $sub);
-    }
-    
-    /**
-     * 
-     * Simple exception object generator.
+     * Simple exception object generator.  Does not throw the exception.
      * 
      * @param string $class The class that generated the exception.
      * 
-     * @param mixed $code An scalar error code.
+     * @param mixed $code A scalar error code, generally a string.
      * 
      * @param string $text Any error message text.
      * 

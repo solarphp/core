@@ -351,8 +351,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // protect against header injections
         $url = str_replace(array("\r", "\n"), '', $url);
         
-        // kill off any output buffers
-        ob_clean();
+        // kill off all output buffers
+        while(@ob_end_clean());
         
         // redirect, and exit all remaining scripts
         header("Location: $url");
@@ -420,9 +420,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
             
         } else {
             
-            // it's a string. fake the scheme, domain, and path for the uri parser.
+            // it's a string, assumed to be a page/action/info spec.
             $uri = Solar::factory('Solar_Uri');
-            $uri->import('http://example.com/index.php/' . ltrim($spec, '/'));
+            $uri->importAction($spec);
             $this->_info = $uri->info;
             $this->_query = $uri->query;
         }

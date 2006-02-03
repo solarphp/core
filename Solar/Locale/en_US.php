@@ -36,11 +36,13 @@ return array(
     'OP_GO'              => 'Go!',
     
     // error messages
-    'ERR_FORM'                 => 'Please correct the noted errors.',
+    'ERR_CONNECTION_FAILED'    => 'Connection failed.',
+    'ERR_EXTENSION_NOT_LOADED' => 'Extension not loaded.',
     'ERR_FILE_NOT_FOUND'       => 'File not found.',
     'ERR_FILE_NOT_READABLE'    => 'File not readable or does not exist.',
-    'ERR_EXTENSION_NOT_LOADED' => 'Extension not loaded.',
-    'ERR_CONNECTION_FAILED'    => 'Connection failed.',
+    'ERR_METHOD_NOT_CALLABLE'  => 'Method not callable.',
+    'ERR_METHOD_NOT_IMPLEMENTED' => 'Method not implemented.',
+    'ERR_FORM'                 => 'Please correct the noted errors.',
     'ERR_INVALID'              => 'Invalid data.',
     
     // validation messages

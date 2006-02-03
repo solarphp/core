@@ -615,7 +615,7 @@ class Solar_Form extends Solar_Base {
      * be called to populate this form (via $this->attribs property and
      * the $this->setElements() method).
      * 
-     * @return mixed Void on success, or Solar_Error on failure.
+     * @return void
      * 
      */
     public function load($obj)

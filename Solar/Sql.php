@@ -214,7 +214,7 @@ class Solar_Sql extends Solar_Base {
      * @param array $data An associative array where the key is the column
      * name and the value is the value to insert for that column.
      * 
-     * @return mixed A Solar_Error on error.
+     * @return void
      * 
      */
     public function insert($table, $data)
@@ -249,7 +249,7 @@ class Solar_Sql extends Solar_Base {
      * @param string|array $where The SQL WHERE clause to limit which
      * rows are updated.
      * 
-     * @return mixed A Solar_Error on error.
+     * @return void
      * 
      * @todo Make it possible to pass $where as an array of conditions.
      * 
@@ -285,7 +285,7 @@ class Solar_Sql extends Solar_Base {
      * @param string|array $where The SQL WHERE clause to limit which
      * rows are deleted.
      * 
-     * @return mixed A Solar_Error on error.
+     * @return void
      * 
      */
     public function delete($table, $where)
@@ -312,8 +312,7 @@ class Solar_Sql extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @return mixed A Solar_Error on error, or the query results for the
-     * return type requested.
+     * @return mixed The query results for the return type requested.
      * 
      */
     public function select($return, $spec, $data = array())
@@ -499,7 +498,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * @param array $cols Array of columns to create.
      * 
-     * @return mixed An SQL string, or a Solar_Error.
+     * @return string An SQL string.
      * 
      * @todo Instead of stacking errors, stack info, then throw in exception.
      * 
@@ -649,7 +648,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * @param string|array $info Information about the index.
      * 
-     * @return mixed An SQL string, or a Solar_Error.
+     * @return string An SQL string.
      * 
      */
     public function createIndex($table, $name, $info)

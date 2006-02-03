@@ -216,8 +216,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @param array $data An associative array of data to be saved, in
      * the format (field => value).
      * 
-     * @return mixed The data as inserted or updated on success,
-     * Solar_Error object on failure.
+     * @return array The data as inserted or updated.
      * 
      */
     public function save($data)
@@ -239,7 +238,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @param array $data An associative array of data to be inserted, in
      * the format (field => value).
      * 
-     * @return mixed The inserted data on success, Solar_Error object on failure.
+     * @return array The data as inserted.
      * 
      */
     public function insert($data)
@@ -290,8 +289,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @param string $where An SQL WHERE clause limiting the updated
      * rows.
      * 
-     * @return mixed The updated data on success, Solar_Error object on
-     * failure.
+     * @return array The data as updated.
      * 
      */
     public function update($data, $where)
@@ -331,7 +329,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param string $where An SQL WHERE clause limiting the deleted rows.
      * 
-     * @return mixed Void on success, Solar_Error object on failure.
+     * @return void
      * 
      */
     public function delete($where)
@@ -640,10 +638,9 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @access protected
      * 
-     * @return mixed Solar_Error if there were creation errors (whether
-     * with the table or its indexes), false if the table already existed
-     * and didn't need to be created, or true if the table did not exist
-     * and was successfully created.
+     * @return bool False if the table already existed and didn't
+     * need to be created, or true if the table did not exist and was
+     * successfully created.
      * 
      */
     final protected function _autoCreate()
@@ -690,12 +687,9 @@ class Solar_Sql_Table extends Solar_Base {
      * @param array &$data An associative array of data as (field => value).
      * Note that this is a reference; the array will be modified in-place.
      * 
-     * @return mixed Void if the data is valid, or a Solar_Error object where
-     * the 'info' is an array of error messages (field => array(errors)).
+     * @return void
      * 
-     * @todo Return a Solar_Error stack proper, not an info array.
-     * 
-     * @todo Use $this->errorPush() instead of $err->push().
+     * @todo Better error codes and exceptions?
      * 
      */
     final protected function _autoValid(&$data)
@@ -711,7 +705,7 @@ class Solar_Sql_Table extends Solar_Base {
         );
         
         // collect all errors captured for all fields
-        $err = Solar::factory('Solar_Error');
+        $err = array();
         
         // the list of available fields; discard data that
         // does not correspond to one of the known fields.
@@ -736,12 +730,11 @@ class Solar_Sql_Table extends Solar_Base {
             
             // if null and required, it's not valid.
             if ($require && is_null($value)) {
-                $err->push(
-                    get_class($this),
-                    'ERR_DATA_REQUIRED',
-                    array('col' => $field),
-                    E_NOTICE,
-                    false
+                $err[$field][] = array(
+                    'code' => 'ERR_DATA_REQUIRED',
+                    'text' => $this->_sql->locale('ERR_DATA_REQUIRED'),
+                    'data' => $value,
+                    'info' => array(),
                 );
                 continue;
             }
@@ -770,17 +763,13 @@ class Solar_Sql_Table extends Solar_Base {
                 $len = strlen($value);
                 $max = $this->_col[$field]['size'];
                 if ($len > $max) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_MAXSIZE',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_MAXSIZE'),
-                        array(
-                            'col' => $field,
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_MAXSIZE',
+                        'text' => $this->_sql->locale('ERR_DATA_MAXSIZE'),
+                        'data' => $value,
+                        'info' => array(
                             'max' => $max,
-                            'value' => $value
                         ),
-                        E_NOTICE,
-                        false
                     );
                 }
                 break;
@@ -791,18 +780,14 @@ class Solar_Sql_Table extends Solar_Base {
                 settype($value, 'int');
                 if ($value < $int_range[$type][0] ||
                     $value > $int_range[$type][1]) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_INTRANGE',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_INTRANGE'),
-                        array(
-                            'col' => $field,
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_INTRANGE',
+                        'text' => $this->_sql->locale('ERR_DATA_INTRANGE'),
+                        'data' => $value,
+                        'info' => array(
                             'min' => $int_range[$type][0],
                             'max' => $int_range[$type][1],
-                            'value' => $value
                         ),
-                        E_NOTICE,
-                        false
                     );
                 }
                 break;
@@ -816,18 +801,14 @@ class Solar_Sql_Table extends Solar_Base {
                 $size = $this->_col[$field]['size'];
                 $scope = $this->_col[$field]['scope'];
                 if (! $valid->inScope($value, $size, $scope)) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_NUMRANGE',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_NUMRANGE'),
-                        array(
-                            'col' => $field,
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_NUMRANGE',
+                        'text' => $this->_sql->locale('ERR_DATA_NUMRANGE'),
+                        'data' => $value,
+                        'info' => array(
                             'size' => $size,
                             'scope' => $scope,
-                            'value' => $value
                         ),
-                        E_NOTICE,
-                        false
                     );
                 }
                 break;
@@ -835,16 +816,11 @@ class Solar_Sql_Table extends Solar_Base {
             case 'date':
                 settype($value, 'string');
                 if (! $valid->isoDate($value)) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_DATE',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_DATE'),
-                        array(
-                            'col' => $field,
-                            'value' => $value
-                        ),
-                        E_NOTICE,
-                        false
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_DATE',
+                        'text' => $this->_sql->locale('ERR_DATA_DATE'),
+                        'data' => $value,
+                        'info' =>  array(),
                     );
                 }
                 break;
@@ -856,16 +832,11 @@ class Solar_Sql_Table extends Solar_Base {
                     $value .= ":00";
                 }
                 if (! $valid->isoTime($value)) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_TIME',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_TIME'),
-                        array(
-                            'col' => $field,
-                            'value' => $value
-                        ),
-                        E_NOTICE,
-                        false
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_TIME',
+                        'text' => $this->_sql->locale('ERR_DATA_TIME'),
+                        'data' => $value,
+                        'info' =>  array(),
                     );
                 }
                 break;
@@ -875,16 +846,11 @@ class Solar_Sql_Table extends Solar_Base {
                 // make sure it's in the format yyyy-mm-ddThh:ii:ss
                 $value = substr($value, 0, 10) . 'T' . substr($value, 11, 8);
                 if (! $valid->isoDatetime($value)) {
-                    $err->push(
-                        get_class($this),
-                        'ERR_DATA_TIMESTAMP',
-                        Solar::locale('Solar_Sql', 'ERR_DATA_TIMESTAMP'),
-                        array(
-                            'col' => $field,
-                            'value' => $value
-                        ),
-                        E_NOTICE,
-                        false
+                    $err[$field][] = array(
+                        'code' => 'ERR_DATA_TIMESTAMP',
+                        'text' => $this->_sql->locale('ERR_DATA_TIMESTAMP'),
+                        'data' => $value,
+                        'info' =>  array(),
                     );
                 }
                 break;
@@ -921,16 +887,11 @@ class Solar_Sql_Table extends Solar_Base {
                 
                 // was it valid?
                 if (! $result) {
-                    $err->push(
-                        get_class($this),
-                        $code,
-                        $message,
-                        array(
-                            'col' => $field,
-                            'value' => $value
-                        ),
-                        E_NOTICE,
-                        false
+                    $err[$field][] = array(
+                        'code' => $code,
+                        'text' => $message,
+                        'data' => $value,
+                        'info' =>  array(),
                     );
                 }
             } // endforeach
@@ -938,7 +899,8 @@ class Solar_Sql_Table extends Solar_Base {
             
             // ---------------------------------------------------------
             // 
-            // Retain the recasted and validated value ... ???
+            // Retain the recasted and validated value, since it was
+            // passed by reference.
             // 
             
             $data[$field] = $value;
@@ -952,17 +914,9 @@ class Solar_Sql_Table extends Solar_Base {
         // Done.
         // 
         
-        if ($err->count() > 0) {
-            // there were errors, add a warning error to the stack
-            $err->push(
-                get_class($this),
-                'ERR_DATA',
-                Solar::locale('Solar_Sql', 'ERR_DATA'),
-                array(),
-                E_USER_WARNING,
-                true // backtrace
-            );
-            return $err;
+        if ($err) {
+            // there were errors, throw an exception
+            throw $this->_exception('ERR_DATA', $err);
         }
     }
 }

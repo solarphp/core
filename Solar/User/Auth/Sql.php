@@ -65,8 +65,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      * @param string $pass The plain-text password to use.
      * 
-     * @return boolean|Solar_Error True on success, false on failure,
-     * or a Solar_Error object if there was an SQL error.
+     * @return boolean True on success, false on failure.
      * 
      * 
      */

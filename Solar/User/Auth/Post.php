@@ -69,8 +69,7 @@ class Solar_User_Auth_Post extends Solar_Base {
      * 
      * @param string $pass The plain-text password to use.
      * 
-     * @return boolean|Solar_Error True on success, false on failure,
-     * or a Solar_Error object if there was a connection error.
+     * @return boolean True on success, false on failure.
      * 
      */
     public function valid($username, $password)

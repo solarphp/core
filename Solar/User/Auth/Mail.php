@@ -72,8 +72,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * 
      * @param string $password The password to use.
      * 
-     * @return boolean|Solar_Error True on success, false on failure,
-     * or a Solar_Error object if there was a storage error.
+     * @return boolean True on success, false on failure.
      * 
      * @todo Check the server status with fsockopen().
      * 

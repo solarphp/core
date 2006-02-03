@@ -56,8 +56,7 @@ class Solar_User_Role_File extends Solar_Base {
      *
      * @param string $user Username to get roles for.
      * 
-     * @return mixed An array of discovered roles, or a Solar_Error object
-     * if there was a file error.
+     * @return array An array of discovered roles.
      * 
      */
     public function fetch($user)

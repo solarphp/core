@@ -57,8 +57,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * 
      * @param string $pass The plain-text password to use.
      * 
-     * @return boolean|Solar_Error True on success, false on failure,
-     * or a Solar_Error object if there was a file error.
+     * @return boolean True on success, false on failure.
      * 
      */
     public function valid($user, $pass)

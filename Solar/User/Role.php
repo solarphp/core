@@ -134,9 +134,7 @@ class Solar_User_Role extends Solar_Base {
         
         // fetch the role list
         $result = $this->_driver->fetch($username);
-            
-        // let errors go silently from here
-        if (! Solar::isError($result) && $result !== false) {
+        if ($result) {
             // merge the results into the common list
             $this->list = array_merge(
                 $this->list,

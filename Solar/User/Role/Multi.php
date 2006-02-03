@@ -106,9 +106,7 @@ class Solar_User_Role_Multi extends Solar_Base {
         
             // fetch the role list
             $result = $obj->fetch($username);
-            
-            // let errors go silently from here
-            if (! Solar::isError($result) && $result !== false) {
+            if ($result) {
                 // merge the results into the common list
                 $list = array_merge(
                     $list,

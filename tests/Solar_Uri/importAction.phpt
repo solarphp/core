@@ -1,7 +1,5 @@
 --TEST--
 Solar_Uri::importAction()
---SKIPIF--
-<?php echo 'skip test incomplete' ?>
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -16,6 +14,38 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
+// the URI object itself
+$uri = Solar::factory('Solar_Uri');
+
+// set up the expected values
+$info = array(
+    'appname', 'action', 'more', 'path', 'info'
+);
+$query = array(
+    'a"key' => 'a&value',
+    'b?key' => 'this that other',
+    'c\'key' => 'tag+tag+tag',
+);
+
+$spec = implode('/', $info);
+$tmp = array();
+foreach ($query as $k => $v) {
+    $tmp[] .= urlencode($k) . '=' . urlencode($v);
+}
+$spec .= '?' . implode('&', $tmp);
+
+
+// import the URI spec and test that it imported properly
+$uri->importAction($spec);
+$assert->same($uri->info, $info);
+$assert->same($uri->query, $query);
+
+// npw export, re-import, and check again
+// to make sure there are no translation errors.
+$spec = $uri->exportAction();
+$uri->importAction($spec);
+$assert->same($uri->info, $info);
+$assert->same($uri->query, $query);
 
 // ---------------------------------------------------------------------
 

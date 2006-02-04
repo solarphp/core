@@ -50,22 +50,20 @@ if (! isset($argv[1])) {
     die("STOP: Please specify the class to create a test directory for.\n");
 }
 
-define('SOLAR_CONFIG_PATH', dirname(__FILE__) . '/_config.inc');
+$dir = dirname(__FILE__);
+define('SOLAR_CONFIG_PATH', "$dir/_config.inc");
 require_once 'Solar.php';
 Solar::start();
 
 // what class are we creating tests for?
 $class = $argv[1];
+Solar::loadClass($class);
 
 // does the test directory exist?
 // (don't want to overwrite).
-if (is_dir($class)) {
-    die("STOP: Directory for '$class' already exists.\n");
+if (! is_dir($class)) {
+    mkdir($class);
 }
-
-// make the test directory, but only after the class-load succeeds.
-Solar::loadClass($class);
-mkdir($class);
 
 // don't create tests for these methods, they're from Solar_Base
 $base = array('apiVersion', 'locale', 'solar');
@@ -75,10 +73,11 @@ $reflect = new ReflectionClass($class);
 foreach ($reflect->getMethods() as $method) {
     $public = $method->isPublic();
     $name = $method->getName();
-    if ($public && ! in_array($name, $base)) {
+    $file = "$class/$name.phpt";
+    if ($public && ! in_array($name, $base) && ! file_exists("$dir/$file")) {
         $test = skeleton($class, $name);
-        file_put_contents("$class/$name.phpt", $test);
-        echo "$class/$name.phpt\n";
+        file_put_contents($file, $test);
+        echo "$file\n";
     }
 }
 

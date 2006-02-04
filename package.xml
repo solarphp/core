@@ -42,120 +42,202 @@ Please visit http://solarphp.com/ for more information.
   </maintainer>
   </maintainers>
  <release>
-  <version>0.10.0</version>
-  <date>2006-01-21</date>
+  <version>0.11.0</version>
+  <date>2006-02-04</date>
   <license>LGPL</license>
   <state>devel</state>
-  <notes>* WARNING: This is a public development release, and is not yet stable.
+  <notes>* General notes
 
-* BC BREAKS: There are multiple backwards compatibility breaks in this release.  In particular:
+ * Converted all PHP4 and PEAR-like errors to PHP5 exceptions
  
- * Globally, Solar::object() becomes Solar::factory()
- 
- * Solar_App is replaced entirely by Solar_Controller_Page, with a new MVC architecture
- 
- * In Solar_Base extended classes...
- 
-  * $this-&gt;config becomes $this-&gt;_config
-  
-  * $this-&gt;error() becomes $this-&gt;_error()
-  
-  * $this-&gt;errorPush() becomes $this-&gt;_errorPush()
-  
-  * $this-&gt;errorException() becomes $this-&gt;_errorException()
- 
-* Requires PHP 5.1rc6 or later, because of PDO (in)constant names.
+ * Unit testing now uses a strategy more like PHPUnit and SimpleTest, based on techniques developed by Greg Beaver combining .phpt tests with a simple assertion class
 
-* Style and format changes:
-
- * Converted tabs to 4-spaces
- 
- * Docblocks are now indented 1 extra space
- 
- * Protected properties and methods now have an underscore prefix (this is a break from PEAR coding standards)
- 
- * Order of qualifiers on properties/methods is standardized: &quot;[final] [static] (public|protected|private)&quot;
- 
-* Added new classes:
-
- * Solar_Exception (not moving to exception-based errors just yet though)
-
- * Solar_Controller_Front (front controller)
- 
- * Solar_Controller_Page (page-based application controller) ... replaces earlier Solar_App class, and is much smarter: knows its own directory, automatically renders views, tracks properties, etc.
- 
- * Solar_User_Auth_Post for simple HTTP POST request/response authentication checking
-
-* Major BC break to MVC architecture and directory structure
- 
- * Solar_App class removed entirely
-
- * Now applications extend Solar_Controller_Page instead
- 
- * Apps now only have controller actions and views, no models
- 
- * App models are relegated to their own namespace (e.g., Solar_Model_Bookmarks) to support mix-and-match of model classes from different applications
-
-* Tests
-
- * Fixed bug in tests/Base and tests/Error fr_FR translations (single quotes not escaped).  Thanks, PCDinh.
-
- * Updated tests/Error to test locale switching.
 * Solar
-
- * BC break: renamed Solar::object() to Solar::factory() in line with common pattern vocabulary, changed throughout the Solar system
  
- * Solar.php now &quot;finds itself&quot; in the filesystem, so you don&apos;t need to add it to the include_path.  Solar::loadClass() honors this self-location via the $_dir proproperty.
-
- * Solar_Base, _Error, and _Exception are now loaded inside the constructor, not above the class declaration
-
+ * Converted to throw exceptions instead of return errors
+ 
+ * Added fileExists() method that checks the include_path
+ 
+ * Removed error() and isError() completely, replaced by exception()
+ 
+ * Added private __construct() to enforce singleton pattern
+ 
+ * Calling Solar::start(false) will cause Solar not to look for a config file at all
+ 
 * Solar_App_Bookmarks
 
- * Now uses the new Solar_Controller_Page class and new MVC architecture.
+ * The &apos;edit&apos; action now uses exceptions for error tracking
  
- * You now need to add a front-contoller script in your web directory place of the previous bookmarks.php script.  See the example in Solar_Controller_Front file-level comments.
+* Solar_App_HelloWorld
  
- * You will need to replace your QuickMark with the new one provided by Solar_App_Bookmarks.
+ * Added very simple &quot;hello world&quot; example to show actions/views and localization
  
+* Solar_Base
+
+ * If you pass boolean false to the constructor, only the class default for $_config will be used (no attempt to override with Solar.config.php values), although the &apos;locale&apos; key will still be automatically generated if it does not exist
+ 
+ * Removed all _error*() methods in favor of _exception()
+ 
+ * _exception() method now attempts to find appropriate exception classes:
+  * First, one named for the class and error code
+  * Next, one named for Solar and the error code
+  * Then, the generic class exception
+  * Last, the generic Solar exception
+
 * Solar_Cache
 
- * Fixed bug in Solar_Cache_Memcache config (missing comma).  Thanks, PCDinh.
-
-* Solar_Sql
+ * Added life() facade method to retrieve cache lifetime from the driver
  
- * Converted PDO_* constants to PDO::* namespaces.
+ * Added life() methods to both File and Memcache drivers
+ 
+* Solar_Content
+
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+
+* Solar_Controller_Front
+
+ * now properly uses _app_default when no app specified in URI (thanks Jeff Surgeson)
+ 
+ * now uses Solar_Uri::importAction() to import action specs as partial URIs
+ 
+ * added &apos;hello&apos; =&gt; &apos;Solar_App_HelloWorld&apos; mapping
+ 
+* Solar_Controller_Page
+ 
+ * now properly empties the output buffer (thanks Jeff Surgeson)
+ 
+ * now uses Solar_Uri::importAction() to import action specs as partial URIs
+ 
+ * now throws Solar_Exception_FileNotReadable if an action is not found, instead of forwarding to the default action
+ 
+* Solar_Exception
+
+ * Now sets $code properly at construction time
+ 
+ * Added customized __toString() behavior
+ 
+ * Added getClassCode() method to get &quot;class::code&quot; string
+ 
+ * Added &quot;standard&quot; exception classes in the Solar/Exception/ directory:
+ 
+  * ConnectionFailed
+  * ExtensionNotLoaded
+  * FileNotFound
+  * FileNotReadable
+  * MethodNotCallable
+  * MethodNotImplemented
+ 
+* Solar_Form
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Converted Solar_Form_Load drivers to use exceptions, too
+ 
+* Solar_Locale
+
+ * BC BREAK: The public $string property is now protected $_string
+ 
+ * BC BREAK: Removed unused public methods setString() and setStrings().
+ 
+ * NOTICE: renamed setCode() to reset() to indicate that strings are being reset as part of the behavior.  The setCode() method is deprecated and will trigger a notice when used.
+ 
+ * loadClass() now uses Solar::fileExists() to check locale file existence.
+ 
+ * BC BREAK: Changed a number of translation keys to be in line with more-verbose exception class names.
+ 
+  * ERR_FILE_FIND : ERR_FILE_NOT_FOUND
+  * ERR_FILE_OPEN : removed
+  * ERR_FILE_READ : ERR_FILE_NOT_READABLE
+  * ERR_EXTENSION : ERR_EXTENSION_NOT_LOADED
+  * ERR_CONNECT   : ERR_CONNECTION_FAILED
+  
+* Solar_Sql
+
+ * Now loads Solar_Sql_Driver and Solar_Sql_Exception via Solar::loadClass() in the constructor
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Added generic Solar_Sql_Exception class and a subdirectory of specific exceptions:
+ 
+  * ColNameLength
+  * ColNameReserved
+  * ColScope
+  * ColSize
+  * ColTypeUnknown
+  * IdxNameLength
+  * IdxNoColumns
+  * IdxTypeUnknown
+  * TableNameLength
+  * TableNameReserved
+  * TableNotCreated
 
 * Solar_Sql_Driver
 
- * The exec() method now calls PDO::exec() directly for CREATE, ALTER, and DROP commands, but uses prepared statements for everything else.  This is to avoid exceptions when PDO prepares the query and doesn&apos;t support those commands.
-
-* Solar_Sql_Driver_Sqlite
-
- * Uses correct PDO type and DSN building routine now
+ * Is now marked as an abstract class
+ 
+ * Unimplemented methods now throw Solar_Exception_MethodNotImplemented
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Updated code in FrontBase driver left over from the &quot;Hive&quot; days (e.g., sequence names and exception usage)
  
 * Solar_Sql_Select
 
- * Improved starred, aliased, and parentheses checking on column names when building the statement
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
 
 * Solar_Sql_Table
 
- * Added save() method that handles &quot;insert-or-update?&quot; logic for you based on the presence of an &quot;id&quot; value in the data
-
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
 * Solar_Template
 
- * Upgraded to Savant3-3.0.0 stable
+ * Now throws Savant3 exceptions instead of returning Solar errors
  
+ * Internal errors are now Savant errors, not Solar errors (i.e., removed error() and isError() extension methods)
+ 
+ * Added new plugin, actionLink(), to help with building action links
+ 
+* Solar_Test
+ 
+ * Added new Solar_Test family of classes
+ 
+ * Solar_Test_Assert is a simple unit-testing assertion class for testing return values, similar to PEAR_PHPTest class from Greg Beaver
+ 
+ * Solar_Test_Example is specifically for use in the new unit testing suite and serves no other useful purpose
+ 
+* Solar_User
+
+ * Converted all Auth and Role containers to use exceptions instead of errors
+
 * Solar_Uri
- 
- * Fixed strpos param order bug when checking uri strings for ://
- 
- * Added &quot;guessing&quot; algorithm to find path_info when a uri string is imported
- 
- * Added exportAction() method to export only pathinfo, query, and fragment
 
-* Solar_User_Auth_Sql
+ * Added importAction() method to import action specifications as partial URIs
+ 
+ * Method _query2str() now urlencodes keys (in addition to the values)
+ 
+ * Added method clear() to clear all properties
+ 
+ * Added method addInfo() to add the next info value
+ 
+* Solar_Valid
 
- * Now uses Solar_Sql::select() instead of ::fetchOne (thanks Jeff Surgeson)
+ * blank() and notBlank() methods now convert to string before trimming (gives more accurate results)
+ 
+ * locale() method now honors OR_BLANK settting (was not being passed)
+ 
+ * maxLength() now honors OR_BLANK setting (reversed the check so that it&apos;s negative)
+ 
+ * mimeType() now lets you allow only certain types, and honors OR_BLANK setting
+ 
+ * min() now honors OR_BLANK setting
+ 
+ * nonZero() now honors OR_BLANK setting (reversed the check so that it&apos;s negative)
+ 
+ * sepWords() now honors OR_BLANK setting (was not being passed)
+ 
+ * uri() now allows you to pass a single allowed scheme as a string
+ 
+ * word() now honors OR_BLANK setting (was not being passed)
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -167,6 +249,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_Cache" extends="Solar_Base" />
   <provides type="function" name="Solar_Cache::setActive" />
   <provides type="function" name="Solar_Cache::active" />
+  <provides type="function" name="Solar_Cache::life" />
   <provides type="function" name="Solar_Cache::replace" />
   <provides type="function" name="Solar_Cache::fetch" />
   <provides type="function" name="Solar_Cache::delete" />
@@ -196,6 +279,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_Exception" extends="Exception" />
   <provides type="function" name="Solar_Exception::getInfo" />
   <provides type="function" name="Solar_Exception::getClass" />
+  <provides type="function" name="Solar_Exception::getClassCode" />
   <provides type="class" name="Solar_Filter" />
   <provides type="function" name="Solar_Filter::replace" />
   <provides type="function" name="Solar_Filter::alpha" />
@@ -222,10 +306,9 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Form::reset" />
   <provides type="function" name="Solar_Form::load" />
   <provides type="class" name="Solar_Locale" extends="Solar_Base" />
+  <provides type="function" name="Solar_Locale::reset" />
   <provides type="function" name="Solar_Locale::setCode" />
   <provides type="function" name="Solar_Locale::code" />
-  <provides type="function" name="Solar_Locale::setString" />
-  <provides type="function" name="Solar_Locale::setStrings" />
   <provides type="function" name="Solar_Locale::load" />
   <provides type="function" name="Solar_Locale::loaded" />
   <provides type="function" name="Solar_Locale::string" />
@@ -252,15 +335,16 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Sql::quoteInto" />
   <provides type="function" name="Solar_Sql::quoteMulti" />
   <provides type="class" name="Solar_Template" extends="Savant3" />
-  <provides type="function" name="Solar_Template::error" />
-  <provides type="function" name="Solar_Template::isError" />
   <provides type="class" name="Solar_Uri" extends="Solar_Base" />
   <provides type="function" name="Solar_Uri::import" />
+  <provides type="function" name="Solar_Uri::importAction" />
   <provides type="function" name="Solar_Uri::export" />
   <provides type="function" name="Solar_Uri::exportAction" />
   <provides type="function" name="Solar_Uri::addQuery" />
+  <provides type="function" name="Solar_Uri::clear" />
   <provides type="function" name="Solar_Uri::setQuery" />
   <provides type="function" name="Solar_Uri::setQueryString" />
+  <provides type="function" name="Solar_Uri::addInfo" />
   <provides type="function" name="Solar_Uri::setInfo" />
   <provides type="function" name="Solar_Uri::setInfoString" />
   <provides type="function" name="Solar_Uri::clearInfo" />
@@ -268,8 +352,8 @@ Please visit http://solarphp.com/ for more information.
   <provides type="class" name="Solar_User" extends="Solar_Base" />
   <provides type="function" name="Solar_User::solar" />
   <provides type="class" name="Solar_Valid" />
-  <provides type="function" name="Solar_Valid::alpha" />
   <provides type="function" name="Solar_Valid::alnum" />
+  <provides type="function" name="Solar_Valid::alpha" />
   <provides type="function" name="Solar_Valid::blank" />
   <provides type="function" name="Solar_Valid::custom" />
   <provides type="function" name="Solar_Valid::email" />
@@ -295,13 +379,16 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Valid::uri" />
   <provides type="function" name="Solar_Valid::word" />
   <provides type="class" name="Solar_App_Bookmarks" extends="Solar_Controller_Page" />
+  <provides type="class" name="Solar_App_HelloWorld" extends="Solar_Controller_Page" />
   <provides type="class" name="Solar_Cache_File" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cache_File::life" />
   <provides type="function" name="Solar_Cache_File::fetch" />
   <provides type="function" name="Solar_Cache_File::replace" />
   <provides type="function" name="Solar_Cache_File::delete" />
   <provides type="function" name="Solar_Cache_File::deleteAll" />
   <provides type="function" name="Solar_Cache_File::entry" />
   <provides type="class" name="Solar_Cache_Memcache" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cache_Memcache::life" />
   <provides type="function" name="Solar_Cache_Memcache::replace" />
   <provides type="function" name="Solar_Cache_Memcache::fetch" />
   <provides type="function" name="Solar_Cache_Memcache::delete" />
@@ -330,6 +417,12 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Debug_Timer::display" />
   <provides type="class" name="Solar_Debug_Var" extends="Solar_Base" />
   <provides type="function" name="Solar_Debug_Var::dump" />
+  <provides type="class" name="Solar_Exception_ConnectionFailed" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_ExtensionNotLoaded" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_FileNotFound" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_FileNotReadable" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_MethodNotCallable" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_MethodNotImplemented" extends="Solar_Exception" />
   <provides type="class" name="Solar_Form_Load_Table" extends="Solar_Base" />
   <provides type="function" name="Solar_Form_Load_Table::fetch" />
   <provides type="class" name="Solar_Form_Load_Xml" extends="Solar_Base" />
@@ -372,6 +465,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Sql_Driver::nativeColTypes" />
   <provides type="function" name="Solar_Sql_Driver::buildCreateTable" />
   <provides type="function" name="Solar_Sql_Driver::buildSelect" />
+  <provides type="class" name="Solar_Sql_Exception" extends="Solar_Exception" />
   <provides type="class" name="Solar_Sql_Reserved" />
   <provides type="class" name="Solar_Sql_Result" extends="Solar_Base" />
   <provides type="function" name="Solar_Sql_Result::fetch" />
@@ -438,6 +532,17 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar_Sql_Driver_Sqlite::createSequence" />
   <provides type="function" name="Solar_Sql_Driver_Sqlite::dropSequence" />
   <provides type="function" name="Solar_Sql_Driver_Sqlite::nextSequence" />
+  <provides type="class" name="Solar_Sql_Exception_ColNameLength" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_ColNameReserved" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_ColScope" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_ColSize" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_ColTypeUnknown" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_IdxNameLength" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_IdxNoColumns" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_IdxTypeUnknown" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_TableNameLength" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_TableNameReserved" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Exception_TableNotCreated" extends="Solar_Sql_Exception" />
   <provides type="class" name="Savant3" />
   <provides type="function" name="Savant3::apiVersion" />
   <provides type="function" name="Savant3::plugin" />
@@ -467,6 +572,8 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Savant3::applyFilters" />
   <provides type="function" name="Savant3::error" />
   <provides type="function" name="Savant3::isError" />
+  <provides type="class" name="Savant3_Plugin_actionLink" extends="Savant3_Plugin" />
+  <provides type="function" name="Savant3_Plugin_actionLink::actionLink" />
   <provides type="class" name="Savant3_Plugin_locale" extends="Savant3_Plugin" />
   <provides type="function" name="Savant3_Plugin_locale::locale" />
   <provides type="class" name="Savant3_Error" />
@@ -520,6 +627,30 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Savant3_Plugin_htmlAttribs::htmlAttribs" />
   <provides type="class" name="Savant3_Plugin_image" extends="Savant3_Plugin" />
   <provides type="function" name="Savant3_Plugin_image::image" />
+  <provides type="class" name="Solar_Test_Assert" />
+  <provides type="function" name="Solar_Test_Assert::setLabel" />
+  <provides type="function" name="Solar_Test_Assert::isTrue" />
+  <provides type="function" name="Solar_Test_Assert::notTrue" />
+  <provides type="function" name="Solar_Test_Assert::isFalse" />
+  <provides type="function" name="Solar_Test_Assert::notFalse" />
+  <provides type="function" name="Solar_Test_Assert::isNull" />
+  <provides type="function" name="Solar_Test_Assert::notNull" />
+  <provides type="function" name="Solar_Test_Assert::isInstance" />
+  <provides type="function" name="Solar_Test_Assert::notInstance" />
+  <provides type="function" name="Solar_Test_Assert::same" />
+  <provides type="function" name="Solar_Test_Assert::notSame" />
+  <provides type="function" name="Solar_Test_Assert::equals" />
+  <provides type="function" name="Solar_Test_Assert::notEquals" />
+  <provides type="function" name="Solar_Test_Assert::property" />
+  <provides type="function" name="Solar_Test_Assert::fail" />
+  <provides type="class" name="Solar_Test_Example" extends="Solar_Base" />
+  <provides type="function" name="Solar_Test_Example::classSpecificException" />
+  <provides type="function" name="Solar_Test_Example::solarSpecificException" />
+  <provides type="function" name="Solar_Test_Example::classGenericException" />
+  <provides type="function" name="Solar_Test_Example::solarGenericException" />
+  <provides type="function" name="Solar_Test_Example::exceptionFromCode" />
+  <provides type="class" name="Solar_Test_Example_Exception" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Test_Example_Exception_CustomCondition" extends="Solar_Exception" />
   <provides type="class" name="Solar_User_Auth" extends="Solar_Base" />
   <provides type="function" name="Solar_User_Auth::start" />
   <provides type="function" name="Solar_User_Auth::valid" />
@@ -563,6 +694,7 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar::locale" />
   <provides type="function" name="Solar::loadClass" />
   <provides type="function" name="Solar::run" />
+  <provides type="function" name="Solar::fileExists" />
   <provides type="function" name="Solar::factory" />
   <provides type="function" name="Solar::shared" />
   <provides type="function" name="Solar::config" />
@@ -572,8 +704,6 @@ Please visit http://solarphp.com/ for more information.
   <provides type="function" name="Solar::server" />
   <provides type="function" name="Solar::session" />
   <provides type="function" name="Solar::pathinfo" />
-  <provides type="function" name="Solar::error" />
-  <provides type="function" name="Solar::isError" />
   <provides type="function" name="Solar::exception" />
   <provides type="function" name="Solar::dump" />
   <provides type="function" name="Solar::fixdir" />
@@ -644,6 +774,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/classtrees_Solar_Template.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/classtrees_Solar_Test.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/classtrees_Solar_Uri.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -696,6 +829,9 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/elementindex_Solar_Template.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/elementindex_Solar_Test.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/elementindex_Solar_Uri.html">
@@ -753,6 +889,9 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/li_Solar_Template.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/li_Solar_Test.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/li_Solar_Uri.html">
@@ -932,6 +1071,24 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_ConnectionFailed.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_ExtensionNotLoaded.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_FileNotFound.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_FileNotReadable.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_MethodNotCallable.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Exception_MethodNotImplemented.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Filter.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -941,7 +1098,22 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Form_Load_Xml.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Sql_Exception.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Super.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Test_Assert.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Test_Example.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Test_Example_Exception.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Test_Example_Exception_CustomCondition.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Uri.html">
@@ -950,10 +1122,49 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/Solar_Valid.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Actions_main_action_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Actions_rss_action_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Locale_es_ES_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Views_main_view_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_App_HelloWorld_Views_rss_view_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Base_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Error_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_ConnectionFailed_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_ExtensionNotLoaded_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_FileNotFound_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_FileNotReadable_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_MethodNotCallable_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_MethodNotImplemented_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Exception_php.html">
@@ -971,7 +1182,34 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Sql_Exception_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Super_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Assert_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Exception_CustomCondition_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Exception_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Locale_es_ES_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_Locale_it_IT_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Test_Example_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar/_Solar_Uri_php.html">
@@ -1289,6 +1527,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bookmarks/Solar_App_Bookmarks.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bookmarks/Solar_App_HelloWorld.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_Actions_edit_action_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1361,6 +1602,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_Bookmarks_Views_rss_view_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bookmarks/_Solar_App_HelloWorld_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bugs/Solar_App_Bugs.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1413,6 +1657,33 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_Bugs/_Solar_App_Bugs_views_list_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/Solar_App_HelloWorld.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Actions_main_action_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Actions_rss_action_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Locale_es_ES_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Views_main_view_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_App/Solar_App_HelloWorld/_Solar_App_HelloWorld_Views_rss_view_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Cache/Solar_Cache.html">
@@ -1631,6 +1902,42 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Driver_Sqlite.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_ColNameLength.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_ColNameReserved.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_ColScope.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_ColSize.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_ColTypeUnknown.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_IdxNameLength.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_IdxNoColumns.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_IdxTypeUnknown.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_TableNameLength.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_TableNameReserved.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Exception_TableNotCreated.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/Solar_Sql_Reserved.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1661,6 +1968,42 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Driver_Sqlite_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_ColNameLength_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_ColNameReserved_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_ColScope_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_ColSize_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_ColTypeUnknown_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_IdxNameLength_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_IdxNoColumns_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_IdxTypeUnknown_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_TableNameLength_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_TableNameReserved_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Exception_TableNotCreated_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Locale_en_US_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1682,6 +2025,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Sql/_Solar_Sql_Table_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Template/Savant3_Plugin_actionLink.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Template/Savant3_Plugin_locale.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1691,7 +2037,79 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Template/_Solar_Template_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Template/_Solar_Template_Plugin_Savant3_Plugin_actionLink_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Template/_Solar_Template_Plugin_Savant3_Plugin_locale_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Assert.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example_Exception.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example_Exception_CustomCondition.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Assert_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Exception_CustomCondition_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Exception_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Locale_es_ES_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_Locale_it_IT_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/_Solar_Test_Example_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Assert/Solar_Test_Assert.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/Solar_Test_Example.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/Solar_Test_Example_Exception.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/Solar_Test_Example_Exception_CustomCondition.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Exception_CustomCondition_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Exception_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Locale_en_US_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Locale_es_ES_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Locale_fr_FR_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_Locale_it_IT_php.html">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/api/Solar_Test/Solar_Test_Example/_Solar_Test_Example_php.html">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="doc" baseinstalldir="/" name="docs/api/Solar_Uri/Solar_Uri.html">
@@ -1883,6 +2301,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/Actions/edit.action.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1917,6 +2338,27 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/Views/rss.view.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Actions/main.action.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Actions/rss.action.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Locale/es_ES.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Locale/fr_FR.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Views/main.view.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloWorld/Views/rss.view.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Cache/File.php">
@@ -1964,6 +2406,24 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Debug/Locale/fr_FR.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/ConnectionFailed.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/ExtensionNotLoaded.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/FileNotFound.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/FileNotReadable.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/MethodNotCallable.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/MethodNotImplemented.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Form/Load/Table.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -1994,6 +2454,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Sql/Driver.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Sql/Reserved.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -2021,6 +2484,39 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Sql/Driver/Sqlite.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/ColNameLength.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/ColNameReserved.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/ColScope.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/ColSize.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/ColTypeUnknown.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/IdxNameLength.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/IdxNoColumns.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/IdxTypeUnknown.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/TableNameLength.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/TableNameReserved.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception/TableNotCreated.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/Sql/Locale/en_US.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -2028,6 +2524,9 @@ Please visit http://solarphp.com/ for more information.
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Template/Plugin/Savant3_Plugin_actionLink.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar/Template/Plugin/Savant3_Plugin_locale.php">
@@ -2102,6 +2601,30 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/Template/Savant3/resources/Savant3_Plugin_image.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Assert.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Exception.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Exception/CustomCondition.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/en_US.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/es_ES.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/fr_FR.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/it_IT.php">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="php" baseinstalldir="/" name="Solar/User/Auth.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -2153,136 +2676,208 @@ Please visit http://solarphp.com/ for more information.
    <file role="php" baseinstalldir="/" name="Solar/User/Role/Sql.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/config.php">
+   <file role="test" baseinstalldir="/" name="tests/all.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/setup.php">
+   <file role="test" baseinstalldir="/" name="tests/maketests.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/config.phpt">
+   <file role="test" baseinstalldir="/" name="tests/tap.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/error.phpt">
+   <file role="test" baseinstalldir="/" name="tests/_append.inc">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/fallback.phpt">
+   <file role="test" baseinstalldir="/" name="tests/_config.inc">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/locale.phpt">
+   <file role="test" baseinstalldir="/" name="tests/_prepend.inc">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/stack.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/exception.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/locale.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/locale/es_ES.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Base/__construct.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/locale/fr_FR.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/active.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Base/locale/it_IT.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/delete.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Cache/file_array.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/deleteAll.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Cache/file_object.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/fetch.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Cache/file_string.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/life.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Error/base.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/replace_array.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Error/error.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/replace_object.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Error/transfer.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/replace_string.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Error/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Cache{_File}/_setup.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Error/locale/fr_FR.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Debug_Timer/all.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/base.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Debug_Var/all.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/fallback.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Exception/generic.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/no_key.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Exception/specific.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/plurals.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/load.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/shared.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/loaded.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/locale/en_US.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/reset.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/locale/es_ES.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/string.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/locale/fr_FR.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Locale/__construct.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Locale/locale/it_IT.php">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/addInfo.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/alpha_alnum.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/addQuery.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/blank_notBlank_nonZero.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/clear.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/custom.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/clearInfo.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/email.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/clearQuery.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/inKeys_inList.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/export.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/inScope.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/exportAction.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/integer.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/import.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/ipv4.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/importAction.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/isoDate.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/setInfo.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/isoDateTime.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/setInfoString.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/isoTime.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/setQuery.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/locale.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/setQueryString.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/maxLength_minLength.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/_prepend.inc">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/max_min.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Uri/__construct.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/multiple.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/alnum.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
-   <file role="test" baseinstalldir="/" name="tests/Valid/word.phpt">
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/alpha.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/blank.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/custom.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/email.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/inKeys.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/inList.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/inScope.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/integer.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/ipv4.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/isoDate.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/isoDateTime.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/isoTime.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/locale.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/max.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/maxLength.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/mimeType.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/min.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/minLength.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/multiple.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/nonZero.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/notBlank.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/regex.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/sepWords.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/uri.phpt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar_Valid/word.phpt">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
    <file role="php" baseinstalldir="/" name="Solar.php">
@@ -2292,120 +2887,202 @@ Please visit http://solarphp.com/ for more information.
  </release>
  <changelog>
    <release>
-    <version>0.10.0</version>
-    <date>2006-01-21</date>
+    <version>0.11.0</version>
+    <date>2006-02-04</date>
     <license>LGPL</license>
     <state>devel</state>
-    <notes>* WARNING: This is a public development release, and is not yet stable.
+    <notes>* General notes
 
-* BC BREAKS: There are multiple backwards compatibility breaks in this release.  In particular:
+ * Converted all PHP4 and PEAR-like errors to PHP5 exceptions
  
- * Globally, Solar::object() becomes Solar::factory()
- 
- * Solar_App is replaced entirely by Solar_Controller_Page, with a new MVC architecture
- 
- * In Solar_Base extended classes...
- 
-  * $this-&gt;config becomes $this-&gt;_config
-  
-  * $this-&gt;error() becomes $this-&gt;_error()
-  
-  * $this-&gt;errorPush() becomes $this-&gt;_errorPush()
-  
-  * $this-&gt;errorException() becomes $this-&gt;_errorException()
- 
-* Requires PHP 5.1rc6 or later, because of PDO (in)constant names.
+ * Unit testing now uses a strategy more like PHPUnit and SimpleTest, based on techniques developed by Greg Beaver combining .phpt tests with a simple assertion class
 
-* Style and format changes:
-
- * Converted tabs to 4-spaces
- 
- * Docblocks are now indented 1 extra space
- 
- * Protected properties and methods now have an underscore prefix (this is a break from PEAR coding standards)
- 
- * Order of qualifiers on properties/methods is standardized: &quot;[final] [static] (public|protected|private)&quot;
- 
-* Added new classes:
-
- * Solar_Exception (not moving to exception-based errors just yet though)
-
- * Solar_Controller_Front (front controller)
- 
- * Solar_Controller_Page (page-based application controller) ... replaces earlier Solar_App class, and is much smarter: knows its own directory, automatically renders views, tracks properties, etc.
- 
- * Solar_User_Auth_Post for simple HTTP POST request/response authentication checking
-
-* Major BC break to MVC architecture and directory structure
- 
- * Solar_App class removed entirely
-
- * Now applications extend Solar_Controller_Page instead
- 
- * Apps now only have controller actions and views, no models
- 
- * App models are relegated to their own namespace (e.g., Solar_Model_Bookmarks) to support mix-and-match of model classes from different applications
-
-* Tests
-
- * Fixed bug in tests/Base and tests/Error fr_FR translations (single quotes not escaped).  Thanks, PCDinh.
-
- * Updated tests/Error to test locale switching.
 * Solar
-
- * BC break: renamed Solar::object() to Solar::factory() in line with common pattern vocabulary, changed throughout the Solar system
  
- * Solar.php now &quot;finds itself&quot; in the filesystem, so you don&apos;t need to add it to the include_path.  Solar::loadClass() honors this self-location via the $_dir proproperty.
-
- * Solar_Base, _Error, and _Exception are now loaded inside the constructor, not above the class declaration
-
+ * Converted to throw exceptions instead of return errors
+ 
+ * Added fileExists() method that checks the include_path
+ 
+ * Removed error() and isError() completely, replaced by exception()
+ 
+ * Added private __construct() to enforce singleton pattern
+ 
+ * Calling Solar::start(false) will cause Solar not to look for a config file at all
+ 
 * Solar_App_Bookmarks
 
- * Now uses the new Solar_Controller_Page class and new MVC architecture.
+ * The &apos;edit&apos; action now uses exceptions for error tracking
  
- * You now need to add a front-contoller script in your web directory place of the previous bookmarks.php script.  See the example in Solar_Controller_Front file-level comments.
+* Solar_App_HelloWorld
  
- * You will need to replace your QuickMark with the new one provided by Solar_App_Bookmarks.
+ * Added very simple &quot;hello world&quot; example to show actions/views and localization
  
+* Solar_Base
+
+ * If you pass boolean false to the constructor, only the class default for $_config will be used (no attempt to override with Solar.config.php values), although the &apos;locale&apos; key will still be automatically generated if it does not exist
+ 
+ * Removed all _error*() methods in favor of _exception()
+ 
+ * _exception() method now attempts to find appropriate exception classes:
+  * First, one named for the class and error code
+  * Next, one named for Solar and the error code
+  * Then, the generic class exception
+  * Last, the generic Solar exception
+
 * Solar_Cache
 
- * Fixed bug in Solar_Cache_Memcache config (missing comma).  Thanks, PCDinh.
-
-* Solar_Sql
+ * Added life() facade method to retrieve cache lifetime from the driver
  
- * Converted PDO_* constants to PDO::* namespaces.
+ * Added life() methods to both File and Memcache drivers
+ 
+* Solar_Content
+
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+
+* Solar_Controller_Front
+
+ * now properly uses _app_default when no app specified in URI (thanks Jeff Surgeson)
+ 
+ * now uses Solar_Uri::importAction() to import action specs as partial URIs
+ 
+ * added &apos;hello&apos; =&gt; &apos;Solar_App_HelloWorld&apos; mapping
+ 
+* Solar_Controller_Page
+ 
+ * now properly empties the output buffer (thanks Jeff Surgeson)
+ 
+ * now uses Solar_Uri::importAction() to import action specs as partial URIs
+ 
+ * now throws Solar_Exception_FileNotReadable if an action is not found, instead of forwarding to the default action
+ 
+* Solar_Exception
+
+ * Now sets $code properly at construction time
+ 
+ * Added customized __toString() behavior
+ 
+ * Added getClassCode() method to get &quot;class::code&quot; string
+ 
+ * Added &quot;standard&quot; exception classes in the Solar/Exception/ directory:
+ 
+  * ConnectionFailed
+  * ExtensionNotLoaded
+  * FileNotFound
+  * FileNotReadable
+  * MethodNotCallable
+  * MethodNotImplemented
+ 
+* Solar_Form
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Converted Solar_Form_Load drivers to use exceptions, too
+ 
+* Solar_Locale
+
+ * BC BREAK: The public $string property is now protected $_string
+ 
+ * BC BREAK: Removed unused public methods setString() and setStrings().
+ 
+ * NOTICE: renamed setCode() to reset() to indicate that strings are being reset as part of the behavior.  The setCode() method is deprecated and will trigger a notice when used.
+ 
+ * loadClass() now uses Solar::fileExists() to check locale file existence.
+ 
+ * BC BREAK: Changed a number of translation keys to be in line with more-verbose exception class names.
+ 
+  * ERR_FILE_FIND : ERR_FILE_NOT_FOUND
+  * ERR_FILE_OPEN : removed
+  * ERR_FILE_READ : ERR_FILE_NOT_READABLE
+  * ERR_EXTENSION : ERR_EXTENSION_NOT_LOADED
+  * ERR_CONNECT   : ERR_CONNECTION_FAILED
+  
+* Solar_Sql
+
+ * Now loads Solar_Sql_Driver and Solar_Sql_Exception via Solar::loadClass() in the constructor
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Added generic Solar_Sql_Exception class and a subdirectory of specific exceptions:
+ 
+  * ColNameLength
+  * ColNameReserved
+  * ColScope
+  * ColSize
+  * ColTypeUnknown
+  * IdxNameLength
+  * IdxNoColumns
+  * IdxTypeUnknown
+  * TableNameLength
+  * TableNameReserved
+  * TableNotCreated
 
 * Solar_Sql_Driver
 
- * The exec() method now calls PDO::exec() directly for CREATE, ALTER, and DROP commands, but uses prepared statements for everything else.  This is to avoid exceptions when PDO prepares the query and doesn&apos;t support those commands.
-
-* Solar_Sql_Driver_Sqlite
-
- * Uses correct PDO type and DSN building routine now
+ * Is now marked as an abstract class
+ 
+ * Unimplemented methods now throw Solar_Exception_MethodNotImplemented
+ 
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
+ * Updated code in FrontBase driver left over from the &quot;Hive&quot; days (e.g., sequence names and exception usage)
  
 * Solar_Sql_Select
 
- * Improved starred, aliased, and parentheses checking on column names when building the statement
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
 
 * Solar_Sql_Table
 
- * Added save() method that handles &quot;insert-or-update?&quot; logic for you based on the presence of an &quot;id&quot; value in the data
-
+ * Converted all error-based code to use exceptions instead (e.g., &quot;return $this-&gt;_error()&quot; is now &quot;throw $this-&gt;_exception()&quot;)
+ 
 * Solar_Template
 
- * Upgraded to Savant3-3.0.0 stable
+ * Now throws Savant3 exceptions instead of returning Solar errors
  
+ * Internal errors are now Savant errors, not Solar errors (i.e., removed error() and isError() extension methods)
+ 
+ * Added new plugin, actionLink(), to help with building action links
+ 
+* Solar_Test
+ 
+ * Added new Solar_Test family of classes
+ 
+ * Solar_Test_Assert is a simple unit-testing assertion class for testing return values, similar to PEAR_PHPTest class from Greg Beaver
+ 
+ * Solar_Test_Example is specifically for use in the new unit testing suite and serves no other useful purpose
+ 
+* Solar_User
+
+ * Converted all Auth and Role containers to use exceptions instead of errors
+
 * Solar_Uri
- 
- * Fixed strpos param order bug when checking uri strings for ://
- 
- * Added &quot;guessing&quot; algorithm to find path_info when a uri string is imported
- 
- * Added exportAction() method to export only pathinfo, query, and fragment
 
-* Solar_User_Auth_Sql
+ * Added importAction() method to import action specifications as partial URIs
+ 
+ * Method _query2str() now urlencodes keys (in addition to the values)
+ 
+ * Added method clear() to clear all properties
+ 
+ * Added method addInfo() to add the next info value
+ 
+* Solar_Valid
 
- * Now uses Solar_Sql::select() instead of ::fetchOne (thanks Jeff Surgeson)
+ * blank() and notBlank() methods now convert to string before trimming (gives more accurate results)
+ 
+ * locale() method now honors OR_BLANK settting (was not being passed)
+ 
+ * maxLength() now honors OR_BLANK setting (reversed the check so that it&apos;s negative)
+ 
+ * mimeType() now lets you allow only certain types, and honors OR_BLANK setting
+ 
+ * min() now honors OR_BLANK setting
+ 
+ * nonZero() now honors OR_BLANK setting (reversed the check so that it&apos;s negative)
+ 
+ * sepWords() now honors OR_BLANK setting (was not being passed)
+ 
+ * uri() now allows you to pass a single allowed scheme as a string
+ 
+ * word() now honors OR_BLANK setting (was not being passed)
     </notes>
    </release>
  </changelog>

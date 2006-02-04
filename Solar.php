@@ -136,6 +136,9 @@ class Solar {
             Solar::$config = (array) $alt_config;
         } elseif (is_string($alt_config)) {
             Solar::$config = (array) Solar::run($alt_config);
+        } elseif ($alt_config === false) {
+            // don't load any configs at all
+            Solar::$config = array();
         } else {
             Solar::$config = (array) Solar::run(SOLAR_CONFIG_PATH);
         }

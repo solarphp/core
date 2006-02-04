@@ -34,8 +34,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * html => (bool) enable/disable encoding output for HTML
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -48,8 +46,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Array of time marks.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -59,8 +55,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * When we call profile(), what is the longest marker name length?
      * 
-     * @access protected
-     * 
      * @var boolean
      * 
      */
@@ -69,8 +63,6 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Solar hooks when instantiated as an autoshared object.
-     * 
-     * @access public
      * 
      * @param string $hook The hook name to activate.
      * 
@@ -93,8 +85,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Resets the profile and marks a new starting time.
      * 
-     * @access public
-     * 
      */
     public function start()
     {
@@ -106,8 +96,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Stop the timer.
      * 
-     * @access public
-     * 
      */
     public function stop()
     {
@@ -117,8 +105,6 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Mark the time.
-     * 
-     * @access public
      * 
      * @param string $name Name of the marker to be set
      * 
@@ -133,8 +119,6 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Returns profiling information as an array.
-     * 
-     * @access public
      * 
      * @return array An array of profile information.
      * 
@@ -190,8 +174,6 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Outputs the current profile.
-     * 
-     * @access public
      * 
      * @param string $title A title for the output.
      * 

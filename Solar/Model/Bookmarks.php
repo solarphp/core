@@ -37,8 +37,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * User-defined configuration options.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -52,8 +50,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * An all-purpose content object.
      * 
-     * @access protected
-     * 
      * @var object Solar_Content
      * 
      */
@@ -62,8 +58,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * The area ID where all bookmarks for all users are stored, by ID.
-     * 
-     * @access protected
      * 
      * @var int
      * 
@@ -74,8 +68,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * The node type for all bookmarks.
      * 
-     * @access protected
-     * 
      * @var object Solar_Sql
      * 
      */
@@ -84,8 +76,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * A convenient baseline WHERE array when searching for bookmarks.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -98,8 +88,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of configuration options.
      * 
@@ -136,8 +124,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * Sets paging in the content object.
      * 
-     * @access public
-     * 
      * @param int $val The number of rows per page.
      * 
      * @return void
@@ -151,8 +137,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * Inserts or updates a bookmark.
-     * 
-     * @access public
      * 
      * @param array $data The bookmark data.
      * 
@@ -171,8 +155,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * Insert a new bookmark node.
-     * 
-     * @access public
      * 
      * @param array $data The bookmark data.
      * 
@@ -197,8 +179,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * Update a bookmark node.
-     * 
-     * @access public
      * 
      * @param array $data The bookmark data.
      * 
@@ -228,8 +208,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * Fetch the default bookmark node data.
      * 
-     * @access public
-     * 
      * @return array Default data for a new bookmark node.
      * 
      */
@@ -252,8 +230,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * Fetch one bookmark (by node ID) from the content store.
      * 
-     * @access public
-     * 
      * @param int $id The bookmark node ID.
      * 
      * @return array The bookmark data.
@@ -273,8 +249,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * You can specify an owner_handle (username) and/or a list of
      * tags to filter the list.
-     * 
-     * @access public
      * 
      * @param string $handle The owner_handler (username) to fetch
      * bookmarks for; if empty, fetches for all owners.
@@ -312,8 +286,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * You can specify an owner_handle (username) and/or a list of
      * tags to limit the count.
      * 
-     * @access public
-     * 
      * @param string $handle The owner_handler (username) to count
      * bookmarks for; if empty, counts for all owners.
      * 
@@ -340,8 +312,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * You can specify an owner_handle (username) to limit the list.
      * 
-     * @access public
-     * 
      * @param string $handle The owner_handler (username) to list
      * bookmark tags for; if empty, lists for all owners.
      * 
@@ -364,8 +334,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * Useful for seeing if an owner has already bookmarked a URI.
      * 
-     * @access public
-     * 
      * @param string $handle The owner_handler (username).
      * 
      * @param string $uri The URI to look form
@@ -385,8 +353,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
      * 
      * Deletes one bookmark by node ID.
      * 
-     * @access public
-     * 
      * @param int $id The node ID to delete.
      * 
      * @return mixed
@@ -402,8 +368,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
     /**
      * 
      * Generates a data-entry form for a single bookmark.
-     * 
-     * @access public
      * 
      * @param int|array $data An existing node ID, or an array of data to
      * pre-populate into the form.  The array should have a key

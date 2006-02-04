@@ -66,8 +66,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * mode => (string) For SQLite, an octal file mode.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -84,8 +82,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Object to use for a specific RDBMS behaviors.
-     * 
-     * @access protected
      * 
      * @var object
      *
@@ -108,8 +104,6 @@ class Solar_Sql extends Solar_Base {
      * name.  Figure tables need more "space", so they get 30 and
      * tables/indexes get 28.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -122,8 +116,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of configuration options.
      * 
@@ -149,8 +141,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Generic query executor.
      * 
-     * @access public
-     * 
      * @param string $cmd The query command to execute.
      * 
      * @return object A PDOStatement result.
@@ -165,8 +155,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Leave autocommit mode and begin a transaction.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -178,8 +166,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Commit a transaction and return to autocommit mode.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -193,8 +179,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Roll back a transaction and return to autocommit mode.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -206,8 +190,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Inserts a row of data into a table.
-     * 
-     * @access public
      * 
      * @param string $table The table to insert data into.
      * 
@@ -238,8 +220,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Updates a table with specified data based on a WHERE clause.
-     * 
-     * @access public
      * 
      * @param string $table The table to udpate.
      * 
@@ -278,8 +258,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Deletes rows from the table based on a WHERE clause.
      * 
-     * @access public
-     * 
      * @param string $table The table to delete from.
      * 
      * @param string|array $where The SQL WHERE clause to limit which
@@ -299,8 +277,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Select rows from the database.
-     * 
-     * @access public
      * 
      * @param string $return How to return the results: all, assoc, col,
      * one, pair, row, result (the default), statement (to just get the
@@ -413,8 +389,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Create a sequence in the database.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to create.
      * 
      * @param string $start The starting sequence number.
@@ -435,8 +409,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Drop a sequence from the database.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to drop.
      * 
      * @return mixed
@@ -454,8 +426,6 @@ class Solar_Sql extends Solar_Base {
      * Gets the next number in a sequence number.
      * 
      * Creates the sequence if it does not exist.
-     * 
-     * @access public
      * 
      * @param string &$name The sequence name.
      * 
@@ -491,8 +461,6 @@ class Solar_Sql extends Solar_Base {
      *   ),
      *   'fieldTwo' => array(...)
      * );
-     * 
-     * @access public
      * 
      * @param string $table The name of the table to create.
      * 
@@ -558,8 +526,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Drops a table from the database.
      * 
-     * @access public
-     * 
      * @param string $table The table name.
      * 
      * @return mixed
@@ -574,8 +540,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Returns a list of table names in the database.
      * 
-     * @access public
-     * 
      * @return array
      * 
      */
@@ -587,8 +551,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Adds a column to a table in the database.
-     * 
-     * @access public
      * 
      * @param string $table The table name.
      * 
@@ -609,8 +571,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Drops a columns from a table in the database.
-     * 
-     * @access public
      * 
      * @param string $table The table name.
      * 
@@ -639,8 +599,6 @@ class Solar_Sql extends Solar_Base {
      * The type may be 'normal' or 'unique'.
      * 
      * Indexes are automatically renamed to "tablename__indexname__i".
-     * 
-     * @access public
      * 
      * @param string $table The name of the table for the index (1-30 chars).
      * 
@@ -680,8 +638,6 @@ class Solar_Sql extends Solar_Base {
      * 
      * Drops an index from a table in the database.
      * 
-     * @access public
-     * 
      * @param string $table The table name.
      * 
      * @param string $name The index name to drop.
@@ -708,8 +664,6 @@ class Solar_Sql extends Solar_Base {
      * If an array is passed as the value, the array values are quoted
      * and then returned as a separated string (the default separator
      * is a comma).
-     * 
-     * @access public
      * 
      * @param mixed $val The value to quote.
      * 
@@ -828,8 +782,6 @@ class Solar_Sql extends Solar_Base {
      *   'require' => true|false,
      * );
      * 
-     * @access public
-     * 
      * @param string $column The column name.
      * 
      * @param array $info The column information.
@@ -940,8 +892,6 @@ class Solar_Sql extends Solar_Base {
      *
      * Builds an index creation string.
      * 
-     * @access protected
-     * 
      * @param string $column The column name.
      * 
      * @param array $info The column information.
@@ -1000,8 +950,6 @@ class Solar_Sql extends Solar_Base {
     /**
      * 
      * Check if a table, column, or index name is a valid identifier.
-     * 
-     * @access protected
      * 
      * @param string $word The word to check.
      * 

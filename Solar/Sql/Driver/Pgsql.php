@@ -30,8 +30,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -54,8 +52,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      * The PDO driver type.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -66,8 +62,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * Creates a PDO-style DSN.
      * 
      * Per http://php.net/manual/en/ref.pdo-pgsql.connection.php
-     * 
-     * @access protected
      * 
      * @return string A PDO-style DSN.
      * 
@@ -97,8 +91,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * Builds a SELECT statement from its component parts.
      * 
      * Adds LIMIT clause.
-     * 
-     * @access public
      * 
      * @param array $parts The component parts of the statement.
      * 
@@ -136,8 +128,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      * Returns the SQL statement to get a list of database tables.
      * 
-     * @access public
-     * 
      * @return string The SQL statement.
      * 
      */
@@ -166,8 +156,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      * Creates a sequence, optionally starting at a certain number.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to create.
      * 
      * @param int $start The first sequence number to return.
@@ -184,8 +172,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      * 
      * Drops a sequence.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to drop.
      * 
      * @return void
@@ -199,8 +185,6 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
     /**
      * 
      * Gets a sequence number; creates the sequence if it does not exist.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name.
      * 

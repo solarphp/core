@@ -37,8 +37,6 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * format => (string) Sprintf() format string for the LDAP query; %s
      * represents the username.  Example: "uid=%s,dc=example,dc=com".
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */

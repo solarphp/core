@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Savant3_Plugin_locale.php 676 2006-01-21 20:21:52Z pmjones $
+ * @version $Id$
  *
  */
 
@@ -30,8 +30,6 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
      * 
      * The base path, generally the front-controller path.
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -40,8 +38,6 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
     /**
      * 
      * Internal URI object for creating links.
-     * 
-     * @access protected
      * 
      * @var Solar_Uri
      * 

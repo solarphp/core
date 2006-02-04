@@ -30,8 +30,6 @@ class Solar_Sql_Reserved {
      * 
      * The array of words reserved across all supported databases.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */

@@ -58,8 +58,6 @@ class Solar_Filter {
      * in the regex. If arguments are missing, the original string is
      * returned without transformations.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to be filtered.
      * 
      * @param string The regex pattern to apply.
@@ -79,8 +77,6 @@ class Solar_Filter {
      * 
      * Removes non-alphabetic characters.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
@@ -95,8 +91,6 @@ class Solar_Filter {
      * 
      * Removes non-alphabetic and non-numeric characters.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
@@ -110,8 +104,6 @@ class Solar_Filter {
     /**
      * 
      * Removes all whitespace characters.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -132,8 +124,6 @@ class Solar_Filter {
      * should be a format that works with that function. The value should
      * be a format that strtotime() understands.
      * 
-     * @access public
-     * 
      * @param string $value The value to be filtered; must be a value
      * appropriate for strtotime().
      * 
@@ -151,8 +141,6 @@ class Solar_Filter {
      * 
      * Forces a value to an ISO-standard date string.
      * 
-     * @access public
-     * 
      * @param string $value The value to be filtered; must be a value
      * appropriate for strtotime().
      * 
@@ -167,8 +155,6 @@ class Solar_Filter {
     /**
      * 
      * Forces a value to an ISO-standard date-time string.
-     * 
-     * @access public
      * 
      * @param string $value The value to be filtered; must be a value
      * appropriate for strtotime().
@@ -185,8 +171,6 @@ class Solar_Filter {
      * 
      * Forces a value to an ISO-standard time string.
      * 
-     * @access public
-     * 
      * @param string $value The value to be filtered; must be a value
      * appropriate for strtotime().
      * 
@@ -201,8 +185,6 @@ class Solar_Filter {
     /**
      * 
      * Removes non-numeric characters.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -220,8 +202,6 @@ class Solar_Filter {
      * 
      * Casts a value as a specific type. $type should be a valid variable type:
      * 'array', 'string', 'int', 'float', 'double', 'real', or 'bool'.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to filter.
      * 
@@ -276,8 +256,6 @@ class Solar_Filter {
      * be passed to the callback function, as long as the value to be
      * filtered is the first parameter of the callback.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to be filtered.
      * 
      * @param mixed $callback A callback value suitable for call_user_func().
@@ -320,8 +298,6 @@ class Solar_Filter {
      * is always the value being filtered).
      * 
      * Returns the transformed value after applying all filters.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to be filtered.
      * 

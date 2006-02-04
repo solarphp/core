@@ -36,8 +36,6 @@ class Solar_Template extends Savant3 {
      *
      * Constructor.
      * 
-     * @access public
-     * 
      */
     public function __construct($config = null)
     {

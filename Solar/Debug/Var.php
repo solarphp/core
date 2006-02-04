@@ -37,8 +37,6 @@ class Solar_Debug_Var extends Solar_Base {
      * output => (string) Output mode.  Default is 'html'; anything else is
      * treated as 'text' (plain text).
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -49,8 +47,6 @@ class Solar_Debug_Var extends Solar_Base {
     /**
      * 
      * Captures the output of "var_dump()" with a label.
-     * 
-     * @access public
      * 
      * @param mixed &$var The variable to dump.
      * 

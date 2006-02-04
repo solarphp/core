@@ -37,8 +37,6 @@ class Solar_Content extends Solar_Base {
      * 
      * User-defined configuration options.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -50,8 +48,6 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the broad areas of content.
      * 
-     * @access protected
-     * 
      * @var object Solar_Content_Areas
      * 
      */
@@ -60,8 +56,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * A table object representing the container nodes in an area.
-     * 
-     * @access protected
      * 
      * @var object Solar_Content_Nodes
      * 
@@ -72,8 +66,6 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the searchable tags on each node.
      * 
-     * @access protected
-     * 
      * @var object Solar_Content_Tags
      * 
      */
@@ -83,8 +75,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Pages have this many rows each.
      * 
-     * @access protected
-     * 
      * @var int
      * 
      */
@@ -93,8 +83,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config User-defined configuration options.
      * 
@@ -114,8 +102,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Sets the number of rows per page.
      * 
-     * @access public
-     * 
      * @param int $val The number of rows per page.
      * 
      * @return void
@@ -129,8 +115,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Creates a form based on the nodes table columns.
-     * 
-     * @access public
      * 
      * @param string $class The class to use for locales.
      * 
@@ -190,8 +174,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Fetch one area by ID or name.
      * 
-     * @access public
-     * 
      * @param int|string $area
      * 
      * @return array An array of area information.
@@ -215,8 +197,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Fetch a list of areas.
      * 
-     * @access public
-     * 
      * @param array $where A list of multiWhere() conditions.
      * 
      * @param array $order Order results in this fashion.
@@ -238,8 +218,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Inserts one area.
      * 
-     * @access public
-     * 
      * @param array $data The data to insert.
      * 
      * @return array The data as inserted.
@@ -253,8 +231,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Updates one area in-place.
-     * 
-     * @access public
      * 
      * @param int $id The area ID to update.
      * 
@@ -272,8 +248,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Returns a selection object for custom-where searching of areas.
-     * 
-     * @access public
      * 
      * @param array $where A set of multiWhere() conditions.
      * 
@@ -300,8 +274,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Fetches one node by name, ID, or where conditions.
-     * 
-     * @access public
      * 
      * @param mixed $spec An integer ID, a string name, or an array
      * of multiWhere() conditions to specify which node to fetch.
@@ -337,8 +309,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Fetches a list of nodes.
      * 
-     * @access public
-     * 
      * @param string|array $tags Fetch nodes with these tags.
      * 
      * @param array $where Fetch nodes matching these multiWhere()
@@ -373,8 +343,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Fetching a node count when not using tags is of course much
      * faster.
-     * 
-     * @access public
      * 
      * @param string|array $tags Fetch nodes with these tags.
      * 
@@ -430,8 +398,6 @@ class Solar_Content extends Solar_Base {
      * 
      * Get the default values for a new generic node.
      * 
-     * @access public
-     * 
      * @return array An array of default node data.
      * 
      */
@@ -445,8 +411,6 @@ class Solar_Content extends Solar_Base {
      * Inserts one node.
      * 
      * Updates the 'tags' search table as well.
-     * 
-     * @access public
      * 
      * @param array $data The data to insert.
      * 
@@ -475,8 +439,6 @@ class Solar_Content extends Solar_Base {
      * Updates one node in-place.
      * 
      * Updates the 'tags' search table as well.
-     * 
-     * @access public
      * 
      * @param int $id The node ID to update.
      * 
@@ -508,8 +470,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Deletes nodes.
-     * 
-     * @access public
      * 
      * @param array $where A list of multiWhere() conditions to specify
      * which nodes to delete.
@@ -556,8 +516,6 @@ class Solar_Content extends Solar_Base {
      * The select is an intersection (AND).  To make it union (OR),
      * drop the HAVING clause and add DISTINCT.
      * 
-     * @access public
-     * 
      * @param string|array $tags Fetch nodes with all of these tags.
      * This can be a space-separated list or a sequential array.
      * 
@@ -600,8 +558,6 @@ class Solar_Content extends Solar_Base {
     /**
      * 
      * Fetch tag names and counts.
-     * 
-     * @access public
      * 
      * @param array $where A set of multiWhere() conditions to filter
      * the tags returned.

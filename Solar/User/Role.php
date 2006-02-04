@@ -38,8 +38,6 @@ class Solar_User_Role extends Solar_Base {
      * 
      * options => (array) Config options for constructing the driver class.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -53,8 +51,6 @@ class Solar_User_Role extends Solar_Base {
      * 
      * The driver instance.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -63,8 +59,6 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Have we attempted to load the list of roles yet?
-     * 
-     * @access protected
      * 
      * @var bool
      * 
@@ -75,8 +69,6 @@ class Solar_User_Role extends Solar_Base {
      * 
      * A convenient reference to $_SESSION['Solar_User_Role'].
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -86,8 +78,6 @@ class Solar_User_Role extends Solar_Base {
      * 
      * Constructor to set up the storage driver.
      *
-     * @access public
-     * 
      * @param array $config The config options.
      * 
      * @return object
@@ -114,8 +104,6 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Refresh the list of roles for the given user.
-     * 
-     * @access public
      * 
      * @return array The list of roles for the authenticated user.
      * 
@@ -153,8 +141,6 @@ class Solar_User_Role extends Solar_Base {
      * 
      * Resets the role list to nothing.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -167,8 +153,6 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Check to see if a user is in a role.
-     * 
-     * @access public
      * 
      * @param string $role The role to check.
      * 
@@ -183,8 +167,6 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Check to see if a user is in any of the listed roles.
-     * 
-     * @access public
      * 
      * @param string|array $roles The role(s) to check.
      * 
@@ -210,8 +192,6 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Check to see if a user is in all of the listed roles.
-     * 
-     * @access public
      * 
      * @param string|array $roles The role(s) to check.
      * 

@@ -64,8 +64,6 @@ class Solar_Form_Load_Xml extends Solar_Base {
      *
      * If an error occurs, a Solar error is generated and returned.
      * 
-     * @access public
-     * 
      * @param string $filename Path to form definition file.
      * 
      * @return object|false Solar_Form object, boolean false on error.

@@ -36,8 +36,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * User-defined configuration options.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -49,8 +47,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * An all-purpose content object.
      * 
-     * @access protected
-     * 
      * @var object Solar_Content
      * 
      */
@@ -60,8 +56,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * The node type for all comments.
      * 
-     * @access protected
-     * 
      * @var object Solar_Sql
      * 
      */
@@ -70,8 +64,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * A convenient baseline WHERE array when searching for comments.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -83,8 +75,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of configuration options.
      * 
@@ -108,8 +98,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * Sets paging in the content object.
      * 
-     * @access public
-     * 
      * @param int $val The number of rows per page.
      * 
      * @return void
@@ -123,8 +111,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Inserts or updates a comment.
-     * 
-     * @access public
      * 
      * @param array $data The bookmark data.
      * 
@@ -144,8 +130,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * Insert a new comment node.
      * 
-     * @access public
-     * 
      * @param array $data The comment data.
      * 
      * @return array The inserted data.
@@ -159,8 +143,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Update a comment node.
-     * 
-     * @access public
      * 
      * @param array $data The comment data.
      * 
@@ -179,8 +161,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * Fetch the default comment node data.
      * 
-     * @access public
-     * 
      * @return array Default data for a new comment node.
      * 
      */
@@ -195,8 +175,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Fetch one comment (by node ID) from the content store.
-     * 
-     * @access public
      * 
      * @param int $id The comment node ID.
      * 
@@ -217,8 +195,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * You can specify that comments are "part_of" another node, and
      * any tags on comments.
-     * 
-     * @access public
      * 
      * @param int $part_of Fetch comments that are "part of" this node
      * ID; if blank, fetches all comments on all nodes.
@@ -257,8 +233,6 @@ class Solar_Model_Comments extends Solar_Base {
      * You can specify the "part_of" node ID and/or a list of
      * tags to limit the count.
      * 
-     * @access public
-     * 
      * @param int $part_of Count comments that are "part of" this node
      * ID; if blank, counts all comments on all nodes.
      * 
@@ -283,8 +257,6 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * Deletes one comment by node ID.
      * 
-     * @access public
-     * 
      * @param int $id The node ID to delete.
      * 
      * @return mixed
@@ -300,8 +272,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Generates a short form for a single comment (email, body).
-     * 
-     * @access public
      * 
      * @param int|array $data An existing node ID, or an array of data to
      * pre-populate into the form.  The array should have a key
@@ -351,8 +321,6 @@ class Solar_Model_Comments extends Solar_Base {
     /**
      * 
      * Generates a long form for a single comment (name, email, uri, body).
-     * 
-     * @access public
      * 
      * @param int|array $data An existing node ID, or an array of data to
      * pre-populate into the form.  The array should have a key

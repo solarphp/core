@@ -35,8 +35,6 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * mailbox => (string) An imap_open() mailbox string, e.g. "mail.example.com:143/imap"
      * or "mail.example.com:110/pop3".
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */

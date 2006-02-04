@@ -61,8 +61,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Base directory under which actions, views, etc. are located.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -71,8 +69,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * The default application action.
-     * 
-     * @access protected
      * 
      * @var string
      * 
@@ -83,8 +79,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Application request parameters collected from the URI pathinfo.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -93,8 +87,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Application request parameters collected from the URI query string.
-     * 
-     * @access protected
      * 
      * @var string
      * 
@@ -105,8 +97,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * The action being requested of (performed by) the application.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -116,8 +106,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * The name of the view to be rendered after the action.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -126,8 +114,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Data to be passed up to the site layout.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -148,8 +134,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *     'list' => array('year', 'month') // "list/:year/:month"
      * );
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -158,8 +142,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      */
     public function __construct($config = null)
@@ -195,8 +177,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Try to force users to define what their view variables are. :-(
      * 
-     * @access public
-     * 
      * @param string $key The property name.
      * 
      * @param mixed $val The property value.
@@ -213,8 +193,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Try to force users to define what their view variables are. :-(
      * 
-     * @access public
-     * 
      * @param string $key The property name.
      * 
      * @param mixed $val The property value.
@@ -230,8 +208,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Execute the requested action and returns its output.
-     * 
-     * @access public
      * 
      * @param string $spec The action specification string, e.g.:
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
@@ -276,8 +252,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Executes the requested action and displays its output.
      * 
-     * @access public
-     * 
      * @param string $spec The action specification string, e.g.:
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      * 
@@ -292,8 +266,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Retrieve the value of a pathinfo request key by name.
-     * 
-     * @access protected
      * 
      * @param string $key The info key.
      * 
@@ -316,8 +288,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Retrieve they value of a query request key by name.
      * 
-     * @access protected
-     * 
      * @param string $key The query key.
      * 
      * @param mixed $val If the key does not exist, use this value
@@ -338,8 +308,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Redirects to another URL.
-     * 
-     * @access public
      * 
      * @param string $url The URL to redirect to.
      * 
@@ -362,8 +330,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Executes an action.
-     * 
-     * @access public
      * 
      * @param string $spec The action specification.
      * 
@@ -395,8 +361,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Collects action, pathinfo, and query values.
-     * 
-     * @access protected
      * 
      * @param string $spec The action specification.
      * 
@@ -462,8 +426,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Includes a file in an isolated scope (but with access to $this).
-     * 
-     * @access protected
      * 
      * @param string The file to include.
      * 

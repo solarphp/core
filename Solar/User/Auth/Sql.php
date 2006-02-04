@@ -44,8 +44,6 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      * salt => (string) A salt prefix to make cracking passwords harder.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */

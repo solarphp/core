@@ -30,8 +30,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -54,8 +52,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      * The PDO driver type.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -67,8 +63,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      * Still not great, but much more efficient than old way.
      * http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html
-     * 
-     * @access protected
      * 
      * @param array $parts The SELECT statement parts.
      * 
@@ -145,8 +139,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      * Returns a list of database tables.
      * 
-     * @access public
-     * 
      * @return array The list of tables in the database.
      * 
      */
@@ -161,8 +153,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
     /**
      * 
      * Creates a sequence, optionally starting at a certain number.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name to create.
      * 
@@ -184,8 +174,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
      * 
      * Drops a sequence.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to drop.
      * 
      * @return void
@@ -199,8 +187,6 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
     /**
      * 
      * Gets a sequence number; creates the sequence if it does not exist.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name.
      * 

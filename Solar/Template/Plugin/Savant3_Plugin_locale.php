@@ -30,8 +30,6 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
      * 
      * The default locale class.
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -40,8 +38,6 @@ class Savant3_Plugin_locale extends Savant3_Plugin {
     /**
      * 
      * Returns a localized string.
-     * 
-     * @access public
      * 
      * @param string $key The locale key to look up.  Uses the default
      * class; if you need to use a key from another class, prefix with

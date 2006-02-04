@@ -92,8 +92,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * paging => (int) Number of rows per page.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -106,8 +104,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Data to bind into the query as key => value pairs.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -116,8 +112,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * The component parts of a select statement.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -141,8 +135,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * The number of rows per page.
      * 
-     * @access protected
-     * 
      * @var int
      * 
      */
@@ -154,8 +146,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * We use this for automated deconfliction.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -164,8 +154,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config User-provided config values.
      * 
@@ -195,8 +183,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Read-only access to properties.
      * 
-     * @access public
-     * 
      * @return mixed The property value.
      * 
      */
@@ -208,8 +194,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Sets the number of rows per page.
-     * 
-     * @access public
      * 
      * @param int $rows The number of rows to page at.
      * 
@@ -230,8 +214,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Makes the query SELECT DISTINCT.
      * 
-     * @access public
-     * 
      * @param bool $flag Whether or not the SELECT is DISTINCT (default
      * true).
      * 
@@ -247,8 +229,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Add un-mapped columns to the query.
      * 
-     * @access public
-     * 
      * @param string|array The list of columns.
      * 
      * @return void
@@ -263,8 +243,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Adds a FROM table and columns to the query.
-     * 
-     * @access public
      * 
      * @param string|object $spec If a Solar_Sql_Table object, the table
      * to select from; if a string, the table name to select from.
@@ -304,8 +282,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Adds a JOIN table and columns to the query.
-     * 
-     * @access public
      * 
      * @param string|object $spec If a Solar_Sql_Table object, the table
      * to join to; if a string, the table name to join to.
@@ -366,8 +342,6 @@ class Solar_Sql_Select extends Solar_Base {
      * $select->bind('id', $id);
      * </code>
      * 
-     * @access public
-     * 
      * @param string $cond The WHERE condition.
      * 
      * @param string $val A single value to quote into the condition.
@@ -398,8 +372,6 @@ class Solar_Sql_Select extends Solar_Base {
      * Adds a WHERE condition to the query by OR.
      * 
      * Otherwise identical to where().
-     * 
-     * @access public
      * 
      * @param string $cond The WHERE condition.
      * 
@@ -433,8 +405,6 @@ class Solar_Sql_Select extends Solar_Base {
      * Adds multiple WHERE conditions to the query.
      * 
      * Otherwise identical to where()/orWhere().
-     * 
-     * @access public
      * 
      * @param array $list An array of WHERE conditions.
      * 
@@ -474,8 +444,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Adds grouping to the query.
-     * 
-     * @access public
      * 
      * @param string|array $spec The column(s) to group by.
      * 
@@ -519,8 +487,6 @@ class Solar_Sql_Select extends Solar_Base {
      * $select->bind('count', $count);
      * </code>
      * 
-     * @access public
-     * 
      * @param string $cond The HAVING condition.
      * 
      * @param string $val A single value to quote into the condition.
@@ -551,8 +517,6 @@ class Solar_Sql_Select extends Solar_Base {
      * Adds a HAVING condition to the query by OR.
      * 
      * Otherwise identical to orHaving().
-     * 
-     * @access public
      * 
      * @param string $cond The HAVING condition.
      * 
@@ -586,8 +550,6 @@ class Solar_Sql_Select extends Solar_Base {
      * Adds multiple HAVING conditions to the query.
      * 
      * Otherwise identical to having()/orHaving().
-     * 
-     * @access public
      * 
      * @param array $list An array of HAVING conditions.
      * 
@@ -625,8 +587,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds a row order to the query.
      * 
-     * @access public
-     * 
      * @param string|array $spec The column(s) and direction to order by.
      * 
      * @return void
@@ -661,8 +621,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Sets a limit count and offset to the query.
      * 
-     * @access public
-     * 
      * @param int $count The number of rows to return.
      * 
      * @param int $offset Start returning after this many rows.
@@ -679,8 +637,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Sets the limit and count by page number.
-     * 
-     * @access public
      * 
      * @param int $page Limit results to this page number.
      * 
@@ -704,8 +660,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Clears query properties.
-     * 
-     * @access public
      * 
      * @param string $key The property to clear; if empty, clears all
      * query properties.
@@ -740,8 +694,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds data to bind into the query.
      * 
-     * @access public
-     * 
      * @param mixed $key The replacement key in the query.  If this is an
      * array or object, the $val parameter is ignored, and all the
      * key-value pairs in the array (or all properties of the object) are
@@ -767,8 +719,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Unsets bound data.
      * 
-     * @access public
-     * 
      * @param mixed $spec The key to unset.  If a string, unsets that one
      * bound value; if an array, unsets the list of values; if empty, unsets
      * all bound values (the default).
@@ -791,8 +741,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Fetch the results based on the current query properties.
-     * 
-     * @access public
      * 
      * @param string $type The type of fetch to perform (all, one, row, etc).
      * 
@@ -866,8 +814,6 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Get the count of rows and number of pages for the current query.
      * 
-     * @access public
-     * 
      * @param string $col The column to COUNT() on.  Default is 'id'.
      * 
      * @return array An associative array with keys 'count' (the total number
@@ -914,8 +860,6 @@ class Solar_Sql_Select extends Solar_Base {
     /**
      * 
      * Adds to the internal table-to-column mapping array.
-     * 
-     * @access protected
      * 
      * @param string $tbl The table/join the columns come from.
      * 

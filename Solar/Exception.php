@@ -32,8 +32,6 @@ class Solar_Exception extends Exception {
      * 
      * @var array
      * 
-     * @access protected
-     * 
      */
     protected $_info = array();
     
@@ -42,8 +40,6 @@ class Solar_Exception extends Exception {
      * Class where the exception originated.
      * 
      * @var array
-     * 
-     * @access protected
      * 
      */
     protected $_class;
@@ -90,8 +86,6 @@ class Solar_Exception extends Exception {
      * 
      * @var array
      * 
-     * @access protected
-     * 
      */
     final public function getInfo()
     {
@@ -104,8 +98,6 @@ class Solar_Exception extends Exception {
      * 
      * @var array
      * 
-     * @access protected
-     * 
      */
     final public function getClass()
     {
@@ -117,8 +109,6 @@ class Solar_Exception extends Exception {
      * Gets the class and code together.
      * 
      * @var array
-     * 
-     * @access protected
      * 
      */
     final public function getClassCode()

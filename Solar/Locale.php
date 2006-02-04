@@ -40,8 +40,6 @@ class Solar_Locale extends Solar_Base {
      * 
      * Array of translated strings organized by class and key.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -50,8 +48,6 @@ class Solar_Locale extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      */
     public function __construct($config = null)
@@ -66,8 +62,6 @@ class Solar_Locale extends Solar_Base {
     /**
      * 
      * Sets a new locale code and clears current strings.
-     * 
-     * @access public
      * 
      * @param $code string The new locale code.
      * 
@@ -93,8 +87,6 @@ class Solar_Locale extends Solar_Base {
      * 
      * Gets the locale code.
      * 
-     * @access public
-     * 
      * @return string The current local code.
      * 
      */
@@ -106,8 +98,6 @@ class Solar_Locale extends Solar_Base {
     /**
      * 
      * Loads class locale strings from a PHP array file.
-     * 
-     * @access public
      * 
      * @param string $class The class for the translation key, e.g.
      * 'Solar_Test_Example'.
@@ -145,8 +135,6 @@ class Solar_Locale extends Solar_Base {
      * 
      * Checks to see if strings have been loaded for a given class.
      * 
-     * @access public
-     * 
      * @param string $class The class for the translation key, e.g.
      * 'Solar_Model_Talk'.
      * 
@@ -161,8 +149,6 @@ class Solar_Locale extends Solar_Base {
     /**
      * 
      * Returns the locale string for a class and key.
-     * 
-     * @access public
      * 
      * @param string $class The class for the translation key, e.g.
      * 'Solar_Model_Comments'.

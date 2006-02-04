@@ -45,8 +45,6 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * 
      * bindpw => (string) Bind to the LDAP server as with this password.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -82,8 +80,6 @@ class Solar_User_Role_Ldap extends Solar_Base {
     /**
      * 
      * Fetch roles for a user.
-     * 
-     * @access public
      * 
      * @param string $user Username to get roles for.
      * 

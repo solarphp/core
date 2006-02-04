@@ -45,8 +45,6 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      * file => (string) Path to password file.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -161,8 +159,6 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      * @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
      * 
-     * @access public
-     * 
      * @param string $plain plaintext to crypt
      * 
      * @param string $salt the salt to use for encryption
@@ -230,8 +226,6 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * @author Mike Wallner <mike@php.net>
      * 
      * @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
-     * 
-     * @access protected
      * 
      * @param string $value
      * 

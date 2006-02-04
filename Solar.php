@@ -39,8 +39,6 @@ class Solar {
      * 
      * The values read in from the configuration file.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -50,8 +48,6 @@ class Solar {
      * 
      * Shared singleton objects are properties of the $shared object.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -60,8 +56,6 @@ class Solar {
     /**
      * 
      * Status flag (whether Solar has started or not).
-     * 
-     * @access protected
      * 
      * @var bool
      * 
@@ -73,8 +67,6 @@ class Solar {
      * Directory where the Solar.php file is located; used for class loading.
      * 
      * Usually the same as the PEAR library directory.
-     * 
-     * @access protected
      * 
      * @var bool
      * 
@@ -89,8 +81,6 @@ class Solar {
     /**
      * 
      * Start Solar: get config, load shared objects, run start scripts.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -207,8 +197,6 @@ class Solar {
      * 
      * Stop Solar: run stop scripts and shared object "stop" hooks.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -243,8 +231,6 @@ class Solar {
      * 
      * Returns the API version for Solar.
      * 
-     * @access public
-     * 
      * @return string A PHP-standard version number.
      * 
      */
@@ -256,8 +242,6 @@ class Solar {
     /**
      * 
      * Gets translated locale string for a class and key.
-     * 
-     * @access public
      * 
      * @param string $class The class of the translation.
      * 
@@ -284,8 +268,6 @@ class Solar {
      * into a file path by converting all instances of '_' in the
      * class name to DIRECTORY_SEPARATOR (i.e., '/' on Unix and '\'
      * on Windows).
-     * 
-     * @access public
      * 
      * @param string $class A Solar (or other) class name.
      * 
@@ -349,8 +331,6 @@ class Solar {
      * 
      * Runs a script in an isolated scope.
      * 
-     * @access public
-     * 
      * @param string $file A script path and file name.
      * 
      * @return mixed The final return of the included file.
@@ -378,8 +358,6 @@ class Solar {
      * 
      * Hack for file_exists() && is_readable() that checks the include_path.
      * 
-     * @access public
-     * 
      * @param string $file A script path and file name.
      * 
      * @return bool True if the file exists and is readble in the
@@ -398,8 +376,6 @@ class Solar {
      * 
      * Convenience method to instantiate and configure a Solar object.
      * 
-     * @access public
-     * 
      * @param string $class The class name.
      * 
      * @param array $config The configuration array for the class.
@@ -417,8 +393,6 @@ class Solar {
     /**
      * 
      * Convenience method to instantiate a shared (singleton) object.
-     * 
-     * @access public
      * 
      * @param string $name The shared singleton name.
      * 
@@ -489,8 +463,6 @@ class Solar {
      * $result = Solar::config('group', 'elem', '')
      * </code>
      * 
-     * @access public
-     * 
      * @param string $group The name of the group.
      * 
      * @param string $elem The name of the element in the group.
@@ -553,8 +525,6 @@ class Solar {
      * Automatically checks if the element is set; if not, returns a
      * default value.  Applies scrubbers automatically.
      * 
-     * @access public
-     * 
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -577,8 +547,6 @@ class Solar {
      * Automatically checks if the element is set; if not, returns a
      * default value.  Applies scrubbers automatically.
      * 
-     * @access public
-     * 
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -597,8 +565,6 @@ class Solar {
     /**
      * 
      * Safely get the value of an element from the $_COOKIE array.
-     * 
-     * @access public
      * 
      * @param string $key The array element; if null, returns the whole
      * array.
@@ -619,8 +585,6 @@ class Solar {
      * 
      * Safely get the value of an element from the $_SERVER array.
      * 
-     * @access public
-     * 
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -639,8 +603,6 @@ class Solar {
     /**
      * 
      * Safely get the value of an element from the $_SESSION array.
-     * 
-     * @access public
      * 
      * @param string $key The array element; if null, returns the whole
      * array.
@@ -663,8 +625,6 @@ class Solar {
      * 
      * Automatically checks if the element is set; if not, returns a
      * default value.  Applies scrubbers automatically.
-     * 
-     * @access public
      * 
      * @param int $key The array element; if null, returns the whole
      * array.
@@ -736,8 +696,6 @@ class Solar {
      * 
      * Simple variable dumper.
      * 
-     * @access public
-     * 
      * @param mixed &$var The variable to dump.
      * 
      * @param string $label A label for the dumped output.
@@ -778,8 +736,6 @@ class Solar {
     /**
      * 
      * Sets up the standard Solar environment (including some security).
-     * 
-     * @access protected
      * 
      * @return void
      * 
@@ -892,8 +848,6 @@ class Solar {
     /**
      * 
      * Fetches a superglobal value by key, or a default value.
-     * 
-     * @access public
      * 
      * @param string $type The superglobal variable name to fetch from;
      * e.g., '_SERVER' for $_SERVER or '_GET' for $_GET.

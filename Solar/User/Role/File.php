@@ -40,8 +40,6 @@ class Solar_User_Role_File extends Solar_Base {
      * 
      * User-supplied configuration values.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */

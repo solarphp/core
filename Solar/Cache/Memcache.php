@@ -38,8 +38,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * life => (int) lifetime in seconds for each cache entry
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -53,8 +51,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * A memcache client object.
      * 
-     * @access protected
-     * 
      * @var object
      * 
      */
@@ -63,8 +59,6 @@ class Solar_Cache_Memcache extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of user-supplied configuration
      * values.
@@ -94,8 +88,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * Sets cache entry data.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @param mixed $data The data to write into the entry.
@@ -112,8 +104,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * Gets cache entry data.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @return mixed Boolean false on failure, string on success.
@@ -127,8 +117,6 @@ class Solar_Cache_Memcache extends Solar_Base {
     /**
      * 
      * Deletes a cache entry.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 
@@ -144,8 +132,6 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * Removes all cache entries.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -157,8 +143,6 @@ class Solar_Cache_Memcache extends Solar_Base {
     /**
      * 
      * Returns the name for the entry key.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 

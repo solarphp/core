@@ -38,8 +38,6 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * life => (int) lifetime in seconds for each cache entry
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -51,8 +49,6 @@ class Solar_Cache_File extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of user-supplied configuration
      * values.
@@ -88,8 +84,6 @@ class Solar_Cache_File extends Solar_Base {
     /**
      * 
      * Fetches cache entry data.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 
@@ -151,8 +145,6 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * Inserts/updates cache entry data.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @param mixed $data The data to write into the entry.
@@ -206,8 +198,6 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * Deletes an entry from the cache.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @return void
@@ -223,8 +213,6 @@ class Solar_Cache_File extends Solar_Base {
     /**
      * 
      * Removes all entries from the cache.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -257,8 +245,6 @@ class Solar_Cache_File extends Solar_Base {
     /**
      * 
      * Returns the path and filename for the entry key.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 

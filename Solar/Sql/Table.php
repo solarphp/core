@@ -37,8 +37,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * locale => (string) Path to locale files.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -51,8 +49,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * The table name.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -62,8 +58,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * The default order when fetching rows.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -72,8 +66,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * The numer of rows per page when selecting.
-     * 
-     * @access protected
      * 
      * @var int
      * 
@@ -102,8 +94,6 @@ class Solar_Sql_Table extends Solar_Base {
      * );
      * </code>
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -112,8 +102,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * The index specification array for all indexes on this table:
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -126,8 +114,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * The SQL object.
      * 
-     * @access protected
-     * 
      * @var object
      * 
      */
@@ -136,8 +122,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of user-defined configuration
      * values.
@@ -175,8 +159,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Allows reading of protected properties.
      * 
-     * @access public
-     * 
      * @param string $key The property name.
      * 
      * @return mixed The property value.
@@ -197,8 +179,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Sets the number of rows per page.
      * 
-     * @access public
-     * 
      * @param int $val The number of rows per page.
      * 
      */
@@ -210,8 +190,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Inserts or updates a single row based on its ID.
-     * 
-     * @access public
      * 
      * @param array $data An associative array of data to be saved, in
      * the format (field => value).
@@ -232,8 +210,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Validates and inserts data into the table.
-     * 
-     * @access public
      * 
      * @param array $data An associative array of data to be inserted, in
      * the format (field => value).
@@ -281,8 +257,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Validates and updates data in the table based on a WHERE clause.
      * 
-     * @access public
-     * 
      * @param array $data An associative array of data to be updated, in
      * the format (field => value).
      * 
@@ -325,8 +299,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Deletes rows in the table based on a WHERE clause.
      * 
-     * @access public
-     * 
      * @param string $where An SQL WHERE clause limiting the deleted rows.
      * 
      * @return void
@@ -342,8 +314,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Convenience method to select rows from this table.
-     * 
-     * @access public
      * 
      * @param string $type The type of fetch to execute: 'all', 'one',
      * 'row', etc. Default is 'result'.
@@ -391,8 +361,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Increments and returns the sequence value for a column.
      * 
-     * @access public
-     * 
      * @param string $name The column name.
      * 
      * @return int The next sequence number for the column.
@@ -414,8 +382,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Returns a data array with column keys and default values.
-     * 
-     * @access public
      * 
      * @param string|array The column(s) to get defaults for; if
      * none specified, gets defaults for all columns.
@@ -495,8 +461,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Use this to set up extended table objects.
      * 
-     * @access protected
-     * 
      * @return void
      * 
      */
@@ -507,8 +471,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Fixes the $col and $idx properties after user setup.
-     * 
-     * @access protected
      * 
      * @return void
      * 
@@ -636,8 +598,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Creates the table in the database if it does not already exist.
      * 
-     * @access protected
-     * 
      * @return bool False if the table already existed and didn't
      * need to be created, or true if the table did not exist and was
      * successfully created.
@@ -681,8 +641,6 @@ class Solar_Sql_Table extends Solar_Base {
     /**
      * 
      * Validates and recasts an array of input/update data in-place.
-     * 
-     * @access protected
      * 
      * @param array &$data An associative array of data as (field => value).
      * Note that this is a reference; the array will be modified in-place.

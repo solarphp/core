@@ -35,8 +35,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * 
      * Also converts arrays to a normalized tag string.
      * 
-     * @access public
-     * 
      * @param string|array $tags A space-separated string of tags, or a
      * sequential array of tags.
      * 
@@ -72,8 +70,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * 
      * Also converts strings to a normalized tag array.
      * 
-     * @access public
-     * 
      * @param string|array $tags A space-separated string of tags, or a
      * sequential array of tags.
      * 
@@ -92,8 +88,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * 
      * Fetch all tags on one node_id.
      * 
-     * @access public
-     * 
      * @param int $node_id The node_id to fetch tags for.
      * 
      * @return array An array of tags on that node.
@@ -110,8 +104,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
     /**
      * 
      * "Refreshes" the tags for a node_id by diff.
-     * 
-     * @access public
      * 
      * @param int $node_id The node_id to work with.
      * 
@@ -174,8 +166,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
      * // 'c' doesn't show up becuase it's present in both sets
      * </code>
      * 
-     * @access protected
-     * 
      * @param array $old The old (previous) set of tags.
      * 
      * @param array $new The new (current) set of tags.
@@ -212,8 +202,6 @@ class Solar_Content_Tags extends Solar_Sql_Table {
     /**
      * 
      * Schema setup.
-     * 
-     * @access protected
      * 
      * @return void
      * 

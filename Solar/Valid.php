@@ -40,8 +40,6 @@ class Solar_Valid {
      * 
      * Validate that a value is only letters and digits.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -56,8 +54,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a value is letters only (upper or lower case).
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -74,8 +70,6 @@ class Solar_Valid {
      * 
      * Validate that a string is empty when trimmed.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -89,8 +83,6 @@ class Solar_Valid {
     /**
      * 
      * Validate against a custom callback function or method.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -121,8 +113,6 @@ class Solar_Valid {
      * 
      * The regular expression in this method was taken from HTML_QuickForm.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -137,8 +127,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a value is a key in the list of of allowed options.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -163,8 +151,6 @@ class Solar_Valid {
      * Strict checking is enforced, so a string "1" is not the same as
      * an integer 1.  This helps to avoid matching 0 and empty, etc.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @param array $array An array of allowed options.
@@ -184,8 +170,6 @@ class Solar_Valid {
     /**
      * 
      * See a value has only a certain number of digits and decimals.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -238,8 +222,6 @@ class Solar_Valid {
      * 
      * Validate that a value represents an integer (+/-).
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -254,8 +236,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a value is a legal IPv4 address.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -293,8 +273,6 @@ class Solar_Valid {
      * 
      * Also checks to see that the date itself is valid (e.g., no Feb 30).
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -327,8 +305,6 @@ class Solar_Valid {
      * middle, which acts as a separator).
      * 
      * Also checks that the date itself is valid (e.g., no Feb 30).
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -369,8 +345,6 @@ class Solar_Valid {
      * times ... 00:00:00 for the beginning of the day, and 24:00:00 for
      * the end of the day.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -389,8 +363,6 @@ class Solar_Valid {
      * The format is two lower-case letters, an underscore, and two upper-case
      * letters.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -405,8 +377,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a value is less than than or equal to a maximum.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -430,8 +400,6 @@ class Solar_Valid {
      * 
      * Validate that a string is no longer than a certain length.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @param mixed $min The value must have no more than this many
@@ -454,8 +422,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a value is formatted as a MIME type.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -482,8 +448,6 @@ class Solar_Valid {
      * 
      * Validate that a value is greater than or equal to a minimum.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @param mixed $min The minimum valid value.
@@ -503,8 +467,6 @@ class Solar_Valid {
     /**
      * 
      * Validate that a string is at least a certain length.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -547,8 +509,6 @@ class Solar_Valid {
      * // this will be valid (not too long, and OR_BLANK)
      * $valid = Solar_Valid::multiple('', $validations);
      * </code>
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -593,8 +553,6 @@ class Solar_Valid {
      * 
      * Validate that a value is not exactly zero.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -617,8 +575,6 @@ class Solar_Valid {
      * 
      * Validate that a string is not empty when trimmed.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -632,8 +588,6 @@ class Solar_Valid {
     /**
      * 
      * Validate a value against a regular expression.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -657,8 +611,6 @@ class Solar_Valid {
      * These include a-z, A-Z, 0-9, and underscore, indicated by a 
      * regular expression "\w".  By default, the separator is a space.
      * 
-     * @access public
-     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -673,8 +625,6 @@ class Solar_Valid {
     /**
      * 
      * Validate a value as a URI per RFC2396.
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 
@@ -754,8 +704,6 @@ class Solar_Valid {
      * 
      * These include a-z, A-Z, 0-9, and underscore, indicated by a 
      * regular expression "\w".
-     * 
-     * @access public
      * 
      * @param mixed $value The value to validate.
      * 

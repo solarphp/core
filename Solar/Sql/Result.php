@@ -35,8 +35,6 @@ class Solar_Sql_Result extends Solar_Base {
      * PDOStatment: (object) A PDOStatement object to be used as the
      * result source.
      * 
-     * @access protected
-     * 
      * @var array
      */
     protected $_config = array(
@@ -56,8 +54,6 @@ class Solar_Sql_Result extends Solar_Base {
      * Solar_Sql_Select, this allows you to select from multiple tables
      * and segregate the columns from different tables automatically into
      * separate arrays.
-     * 
-     * @access public
      * 
      * @param int $mode A PDO::FETCH_* constant to specify how the row
      * should be returned; default is PDO::FETCH_ASSOC.
@@ -103,8 +99,6 @@ class Solar_Sql_Result extends Solar_Base {
     /**
      * 
      * Fetches all rows from the result source via $this->fetch().
-     * 
-     * @access public
      * 
      * @param int $mode A PDO::FETCH_* constant to specify how the row
      * should be returned; default is PDO::FETCH_ASSOC.

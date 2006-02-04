@@ -41,8 +41,6 @@ class Solar_User_Role_Sql extends Solar_Base {
      * 
      * 'rolename_col' => (string) The column of roles.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -56,8 +54,6 @@ class Solar_User_Role_Sql extends Solar_Base {
     /**
      * 
      * Get the roles for a user.
-     * 
-     * @access public
      * 
      * @param string $user Username to get roles for.
      * 

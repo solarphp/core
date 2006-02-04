@@ -35,8 +35,6 @@ class Solar_Form_Load_Table extends Solar_Base {
      * 
      * Loads Solar_Form elements based on Solar_Sql_Table columns.
      * 
-     * @access public
-     * 
      * @param object $filename Path to form definition file.
      * 
      * @return object|false Solar_Form object, boolean false on error.

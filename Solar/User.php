@@ -34,8 +34,6 @@ class Solar_User extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -50,8 +48,6 @@ class Solar_User extends Solar_Base {
      * 
      * User authentication object.
      * 
-     * @access public
-     * 
      * @var object
      * 
      */
@@ -60,8 +56,6 @@ class Solar_User extends Solar_Base {
     /**
      * 
      * User roles (group membership) object.
-     * 
-     * @access public
      * 
      * @var object
      * 
@@ -72,8 +66,6 @@ class Solar_User extends Solar_Base {
      * 
      * User preferences object.
      * 
-     * @access public
-     * 
      * @var object
      * 
      */
@@ -83,8 +75,6 @@ class Solar_User extends Solar_Base {
      * 
      * User permissions object.
      * 
-     * @access public
-     * 
      * @var object
      * 
      */
@@ -93,8 +83,6 @@ class Solar_User extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config User-provided configuration options.
      * 
@@ -116,8 +104,6 @@ class Solar_User extends Solar_Base {
     /**
      * 
      * Solar hooks.
-     * 
-     * @access public
      * 
      * @param string $hook The hook to execute (e.g., 'start' or 'stop').
      * 

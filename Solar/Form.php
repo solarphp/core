@@ -63,8 +63,6 @@ class Solar_Form extends Solar_Base {
      * enctype => (string) The form encoding type; defaults to
      * 'multipart/form-data'.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -78,8 +76,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Attributes for the form tag itself.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -88,8 +84,6 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * The array of elements in this form.
-     * 
-     * @access public
      * 
      * @var array
      * 
@@ -105,8 +99,6 @@ class Solar_Form extends Solar_Base {
      * If you like, you can set this to an array and add multiple
      * feeback messages.
      * 
-     * @access public
-     * 
      * @var string|array
      * 
      */
@@ -118,16 +110,12 @@ class Solar_Form extends Solar_Base {
      * 
      * @var array 
      * 
-     * @access protected
-     * 
      */
     protected $_filter = array();
     
     /**
      * 
      * The array of validations for the form elements.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -141,8 +129,6 @@ class Solar_Form extends Solar_Base {
      * Populated on the first call to submittedValue(), which itself uses
      * Solar::get() or Solar::post(), depending on the value of
      * $this->attribs['method'].
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -181,8 +167,6 @@ class Solar_Form extends Solar_Base {
      * generally based on validation of previous user input.
      * 
     
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -204,8 +188,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @access public
-     * 
      */
     public function __construct($config = null)
     {
@@ -224,8 +206,6 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * Sets one element in the form.  Appends if element does not exist.
-     * 
-     * @access public
      * 
      * @param string $name The element name to set or add; overrides
      * $info['name'].
@@ -291,8 +271,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Sets multiple elements in the form.  Appends if they do not exist.
      * 
-     * @access public
-     * 
      * @param array $list Element information as array(name => info).
      * 
      * @param string $array Rename the element as a key in this array.
@@ -310,8 +288,6 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * Reorders the existing elements.
-     * 
-     * @access public
      * 
      * @param array $list The order in which elements should be placed; each
      * value in the array is an element name.
@@ -346,8 +322,6 @@ class Solar_Form extends Solar_Base {
      * {@link Solar_Filter::multiple()} and should conform to the 
      * specifications for that method.
      * 
-     * @access public
-     * 
      * @param string $name The element name.
      * 
      * @param string $method Solar_Filter method or PHP function to use
@@ -368,8 +342,6 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * Adds a Solar_Valid method callback as a validation for an element.
-     * 
-     * @access public
      * 
      * @param string $name The element name.
      * 
@@ -410,8 +382,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Adds multiple feedback messages to elements.
      * 
-     * @access public
-     * 
      * @param array $list An associative array where the key is an element
      * name and the value is a string or sequential array of feedback messages.
      * 
@@ -442,8 +412,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Populates form elements with either submitted values or the
      * elements passed in $submit.
-     * 
-     * @access public
      * 
      * @param array $submit The source data array for populating form
      * values as array(name => value); if null, will populate from $_POST
@@ -479,8 +447,6 @@ class Solar_Form extends Solar_Base {
      * Updates the feedback keys for each element that fails validation.
      * Values are either pulled from the submitted form or from the array
      * passed in $submit.
-     * 
-     * @access public
      * 
      * @param array $submit The source data array for populating form
      * values as array(name => info); if null, will populate from $_POST
@@ -544,8 +510,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Returns the form element values as an array.
      * 
-     * @access public
-     * 
      * @return array An associative array of element values.
      * 
      */
@@ -571,8 +535,6 @@ class Solar_Form extends Solar_Base {
      * 
      * This clears out all elements, filters, validations, and feedback,
      * as well as all submitted values.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -606,8 +568,6 @@ class Solar_Form extends Solar_Base {
      * $form = Solar::factory('Solar_Form');
      * $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
      * </code>
-     * 
-     * @access public
      * 
      * @param string|object $obj If a string, it is treated as a class
      * name to instantiate with Solar::factory(); if an object, it is
@@ -673,8 +633,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Prepares a name as an array key, if needed.
      * 
-     * @access protected
-     * 
      * @param string $name The element name.
      * 
      * @param string $array The array name, if any, into which we place
@@ -708,8 +666,6 @@ class Solar_Form extends Solar_Base {
      * 
      * Recursive method to map the submitted values into elements.
      * 
-     * @access public
-     * 
      * @param array|string $src The source data populating form
      * values.  If an array, will recursively descend into the array;
      * if a scalar, will map the value into a form element.
@@ -741,8 +697,6 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * Recursively pulls values from elements into an associative array.
-     * 
-     * @access protected
      * 
      * @param string $key The current array key for the values array.  If
      * this has square brackets in it, that's a sign we need to keep creating

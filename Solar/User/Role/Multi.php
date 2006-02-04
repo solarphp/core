@@ -34,8 +34,6 @@ class Solar_User_Role_Multi extends Solar_Base {
      * 
      * drivers => (array) The array of driver classes and optional configs.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -48,8 +46,6 @@ class Solar_User_Role_Multi extends Solar_Base {
     /**
      * 
      * An array of the multiple driver instances.
-     * 
-     * @access protected
      * 
      * @var array
      * 

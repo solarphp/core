@@ -48,8 +48,6 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
      * 
      * Pathinfo mappings for each controller action.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -184,8 +182,6 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
     /**
      * 
      * Returns a safe SQL ORDER value from the 'order' query parameter.
-     * 
-     * @access protected
      * 
      * @return string
      * 

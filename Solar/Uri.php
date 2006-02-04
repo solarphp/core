@@ -32,8 +32,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * The scheme (e.g. 'http' or 'https').
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -42,8 +40,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * The host specification (e.g., 'example.com').
-     * 
-     * @access public
      * 
      * @var string
      * 
@@ -54,8 +50,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * The port number (e.g., '80').
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -64,8 +58,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * The username, if any.
-     * 
-     * @access public
      * 
      * @var string
      * 
@@ -76,8 +68,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * The password, if any.
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -86,8 +76,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * The path portion (e.g., 'path/to/index.php').
-     * 
-     * @access public
      * 
      * @var string
      * 
@@ -102,8 +90,6 @@ class Solar_Uri extends Solar_Base {
      * first '*.php' part of the path, and counts elements after that
      * as path info.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -112,8 +98,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Query string elements split apart into an array.
-     * 
-     * @access public
      * 
      * @var string
      * 
@@ -124,8 +108,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * The fragment portion (e.g., "#subsection").
      * 
-     * @access public
-     * 
      * @var string
      * 
      */
@@ -134,8 +116,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config User-provided configuration values.
      * 
@@ -149,8 +129,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Imports a URI string (by default, the current URI) into the object.
-     * 
-     * @access public
      * 
      * @param string $uri The URI to parse.  If null, defaults to the
      * current URI, and retrives path_info values; if not null, cannot
@@ -241,8 +219,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * Parses a Solar_Controller action spec as a URI.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -271,8 +247,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Builds a full URI string.
-     * 
-     * @access public
      * 
      * @return string A URI string.
      * 
@@ -308,8 +282,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * Builds a partial URI string for a Solar_Controller action spec.
      * 
-     * @access public
-     * 
      * @return string A URI string.
      * 
      */
@@ -327,8 +299,6 @@ class Solar_Uri extends Solar_Base {
      * If the element already exists, the element is converted to an array
      * and the value is appended to that array.
      *  
-     * @access public
-     * 
      * @param string $key The GET variable name to work with.
      * 
      * @param string $val The value to use.
@@ -349,8 +319,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Clears all URI properties.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -374,8 +342,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * This will overwrite any previous value.
      * 
-     * @access public
-     * 
      * @param string $key The GET variable name to work with.
      * 
      * @param string $val The value to use.
@@ -394,8 +360,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * This will overwrite any previous values.
      * 
-     * @access public
-     * 
      * @param string $val The query string to set from; for example,
      * "foo=bar&baz=dib&zim=gir".
      * 
@@ -411,8 +375,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * Adds one element to the $this->info array.
      * 
-     * @access public
-     * 
      * @param string $val The value to use.
      * 
      * @return void
@@ -426,8 +388,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Sets one element in the $this->info array by position and value.
-     * 
-     * @access public
      * 
      * @param int $key The path_info position to work with.
      * 
@@ -447,8 +407,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * This will overwrite any previous values.
      * 
-     * @access public
-     * 
      * @param string $val The path_info string to use; for example,
      * "/foo/bar/baz/dib".  A leading slash will *not* create an empty
      * first element; if the string has a leading slash, it is ignored.
@@ -466,8 +424,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * Clears (resets) all or part of $this->info.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -483,8 +439,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Clears (resets) all or part of $this->query.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -504,8 +458,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * Modified from code written by nospam@fiderallalla.de, found at
      * http://php.net/parse_str.  Automatically urlencodes values.
-     * 
-     * @access protected
      * 
      * @param array $params The key-value pairs to convert into a
      * query string.
@@ -545,8 +497,6 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Converts an array of info elements into a string.
-     * 
-     * @access protected
      * 
      * @param array $params The pathinfo elements.
      * 

@@ -44,8 +44,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * mode  => (string) For SQLite, an octal file mode.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -63,8 +61,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * A portable database object for accessing the RDBMS.
      * 
-     * @access protected
-     * 
      * @var object
      *
      */
@@ -73,8 +69,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Map of Solar generic column types to RDBMS native declarations.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -100,8 +94,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * This might not be the same as the Solar driver type.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -110,8 +102,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Execute these commands directly, without preparation.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -123,8 +113,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * Creates a PDO-style DSN.
      * 
      * E.g., "mysql:host=127.0.0.1;dbname=test"
-     * 
-     * @access protected
      * 
      * @return string A PDO-style DSN.
      * 
@@ -147,8 +135,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Creates a PDO object and connects to the database.
-     * 
-     * @access protected
      * 
      * @return void
      * 
@@ -185,8 +171,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Leave autocommit mode and begin a transaction.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -199,8 +183,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Commit a transaction and return to autocommit mode.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -215,8 +197,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Roll back a transaction and return to autocommit mode.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -229,8 +209,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Prepares and executes an SQL statement with bound data.
-     * 
-     * @access public
      * 
      * @param string $stmt The text of the SQL statement, with
      * placeholders.
@@ -266,8 +244,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Safely quotes a value for an SQL statement.
      * 
-     * @access public
-     * 
      * @param mixed $val The value to quote.
      * 
      * @return mixed An SQL-safe quoted value.
@@ -282,8 +258,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Creates a sequence, optionally starting at a certain number.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name to create.
      * 
@@ -304,8 +278,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Drops a sequence.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to drop.
      * 
      * @return void
@@ -322,8 +294,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     /**
      * 
      * Gets the next sequence number; creates the sequence if needed.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name to increment.
      * 
@@ -342,8 +312,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Returns a list of database tables.
      * 
-     * @access public
-     * 
      * @return array A sequential array of table names in the database.
      * 
      */
@@ -359,8 +327,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Returns a list of native column types.
      * 
-     * @access public
-     * 
      * @return array
      * 
      */
@@ -375,8 +341,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * We use this so that certain drivers can append table types
      * to the creation statment (e.g. MySQL).
-     * 
-     * @access public
      * 
      * @param string $name The table name to create.
      * 
@@ -396,8 +360,6 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * We use this so that drivers can append or wrap with LIMIT
      * clauses or emulation.
-     * 
-     * @access public
      * 
      * @return string An SQL SELECT statement.
      * 

@@ -78,8 +78,6 @@ class Solar_Error extends Solar_Base {
      * 
      * level => (int) Default error level, e.g. E_USER_NOTICE.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -93,8 +91,6 @@ class Solar_Error extends Solar_Base {
     /**
      * 
      * Stack of errors.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -116,8 +112,6 @@ class Solar_Error extends Solar_Base {
      * 
      * Pops-and-prints each error on the stack.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -133,8 +127,6 @@ class Solar_Error extends Solar_Base {
     /**
      * 
      * Pushes an error onto the stack.
-     * 
-     * @access public
      * 
      * @param string|object $class The class name that generated the error.
      * If a Solar_Error object, the errors in its stack are shifted onto the
@@ -206,8 +198,6 @@ class Solar_Error extends Solar_Base {
      * 
      * Pops an error off the stack.
      * 
-     * @access public
-     * 
      * @return array An array of error information.
      * 
      */
@@ -230,8 +220,6 @@ class Solar_Error extends Solar_Base {
      * 
      * Returns a count of how many errors are on the stack.
      * 
-     * @access public
-     * 
      * @return int The number of errors on the stack.
      * 
      */
@@ -245,8 +233,6 @@ class Solar_Error extends Solar_Base {
      * A naive push callback.
      * 
      * Will print out WARNINGs and ERRORs, will die() on ERRORs.
-     * 
-     * @access protected
      * 
      * @param array $err An array of error information just pushed onto the
      * stack.

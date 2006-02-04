@@ -38,8 +38,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * options => (array) array of config options for the driver
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -53,8 +51,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * The instantiated driver object.
      * 
-     * @access protected
-     * 
      * @var object
      * 
      */
@@ -63,8 +59,6 @@ class Solar_Cache extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param array $config An array of configuration options.
      * 
@@ -85,8 +79,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Turns caching on and off.
      * 
-     * @access public
-     * 
      * @param bool $flag True to turn on, false to turn off.
      * 
      */
@@ -99,8 +91,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Returns the current caching activity flag.
      * 
-     * @access public
-     * 
      * @return bool True if active, false if not.
      * 
      */
@@ -112,8 +102,6 @@ class Solar_Cache extends Solar_Base {
     /**
      * 
      * Returns the cache lifetime in seconds.
-     * 
-     * @access public
      * 
      * @return int The cache lifetime in seconds.
      * 
@@ -129,8 +117,6 @@ class Solar_Cache extends Solar_Base {
      * Inserts/updates cache entry data.
      * 
      * Does not replace if caching is not active.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 
@@ -152,8 +138,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Gets cache entry data.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @return mixed Boolean false on failure, string on success.
@@ -172,8 +156,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Deletes a cache entry.
      * 
-     * @access public
-     * 
      * @param string $key The entry ID.
      * 
      * @return void
@@ -190,8 +172,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Removes all entities from the cache.
      * 
-     * @access public
-     * 
      * @return void
      * 
      */
@@ -205,8 +185,6 @@ class Solar_Cache extends Solar_Base {
     /**
      * 
      * Returns the driver-specific name for the entry key.
-     * 
-     * @access public
      * 
      * @param string $key The entry ID.
      * 

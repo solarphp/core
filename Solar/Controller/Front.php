@@ -42,8 +42,6 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * User-defined configuration array.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -59,8 +57,6 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * The default application to run when none is specified.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -70,8 +66,6 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Map of front-controller app names to actual application classes.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -80,8 +74,6 @@ class Solar_Controller_Front extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access protected
      * 
      * @var array
      * 
@@ -96,8 +88,6 @@ class Solar_Controller_Front extends Solar_Base {
     /**
      * 
      * Fetches the output of a front-controller specification URI.
-     * 
-     * @access public
      * 
      * @param string $spec A page/action/info spec for the front
      * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
@@ -131,8 +121,6 @@ class Solar_Controller_Front extends Solar_Base {
     /**
      * 
      * Displays the output of a front-controller specification URI.
-     * 
-     * @access public
      * 
      * @param string $spec An app spec for the front controller.
      * E.g., 'bookmarks/user/pmjones/php+blog?page=2'.

@@ -48,8 +48,6 @@ class Solar_User_Auth_Post extends Solar_Base {
      * string, and the value is a boolean indicating if it indicates success
      * or failure to authenticate.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */

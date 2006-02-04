@@ -30,8 +30,6 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
      * 
      * Schema setup.
      * 
-     * @access protected
-     * 
      * @return void
      * 
      */

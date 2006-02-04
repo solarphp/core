@@ -30,8 +30,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -54,8 +52,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      * The PDO driver type.
      * 
-     * @access protected
-     * 
      * @var string
      * 
      */
@@ -66,8 +62,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * Builds a SELECT statement from its component parts.
      * 
      * Adds LIMIT clause.
-     * 
-     * @access public
      * 
      * @param array $parts The component parts of the statement.
      * 
@@ -105,8 +99,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      * Returns a list of database tables.
      * 
-     * @access public
-     * 
      * @return array The list of tables in the database.
      * 
      */
@@ -129,8 +121,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      * Creates a sequence, optionally starting at a certain number.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to create.
      * 
      * @param int $start The first sequence number to return.
@@ -149,8 +139,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      * Drops a sequence.
      * 
-     * @access public
-     * 
      * @param string $name The sequence name to drop.
      * 
      * @return void
@@ -164,8 +152,6 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
     /**
      * 
      * Gets a sequence number; creates the sequence if it does not exist.
-     * 
-     * @access public
      * 
      * @param string $name The sequence name.
      * 

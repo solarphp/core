@@ -35,8 +35,6 @@ abstract class Solar_Base {
      * locale => The directory where locale string files for this class
      * are located.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -47,8 +45,6 @@ abstract class Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * @access public
      * 
      * @param mixed $config If array, is merged with the default $_config property array
      * and any values from the Solar.config.php file.  If string, is loaded from that
@@ -104,8 +100,6 @@ abstract class Solar_Base {
      * If you don't override this method, your classes will use the same
      * API version string as the Solar package itself.
      * 
-     * @access public
-     * 
      * @return string A PHP-standard version number.
      * 
      */
@@ -117,8 +111,6 @@ abstract class Solar_Base {
     /**
      * 
      * Provides hooks for Solar::start() and Solar::stop() on shared objects.
-     * 
-     * @access public
      * 
      * @param string $hook The hook to activate, typically 'start' or 'stop'.
      * 
@@ -143,8 +135,6 @@ abstract class Solar_Base {
      * 
      * Uses the locale strings in the directory noted by $config['locale'];
      * if no such key exists, falls back to the Solar/Locale strings.
-     * 
-     * @access public
      * 
      * @param string $key The key to get a locale string for.
      * 
@@ -207,8 +197,6 @@ abstract class Solar_Base {
      * </ol>
      * 
      * The final fallback is always the Solar_Exception class.
-     * 
-     * @access protected
      * 
      * @param string $code The error code; does additional duty as the
      * locale string key and the exception class name suffix.

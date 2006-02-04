@@ -57,8 +57,6 @@ class Solar_User_Auth extends Solar_Base {
      * action_logout => (string) The action-key value to indicate a
      * logout attempt.
      * 
-     * @access protected
-     * 
      * @var array
      * 
      */
@@ -80,8 +78,6 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * A driver object instance.
      * 
-     * @access protected
-     * 
      * @var object
      * 
      */
@@ -90,8 +86,6 @@ class Solar_User_Auth extends Solar_Base {
     /**
      * 
      * Whether or not to allow authentication actions (login/logout).
-     * 
-     * @access private
      * 
      * @var bool
      * 
@@ -105,8 +99,6 @@ class Solar_User_Auth extends Solar_Base {
      * This is the Unix time at which the authenticated username was last
      * valid().
      * 
-     * @access public
-     * 
      * @var int
      * 
      * @see valid()
@@ -119,8 +111,6 @@ class Solar_User_Auth extends Solar_Base {
      * Convenience reference to $_SESSION['Solar_User_Auth']['login_time'].
      * 
      * This is the Unix time at which the username was authenticated.
-     * 
-     * @access public
      * 
      * @var int
      * 
@@ -145,8 +135,6 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * WRONG => The user attempted authentication but failed
      * 
-     * @access public
-     * 
      * @var int
      * 
      */
@@ -159,8 +147,6 @@ class Solar_User_Auth extends Solar_Base {
      * This is message text related to the status code of the current
      * authentication.
      * 
-     * @access public
-     * 
      * @var int
      * 
      */
@@ -171,8 +157,6 @@ class Solar_User_Auth extends Solar_Base {
      * Convenience reference to $_SESSION['Solar_User_Auth']['username'].
      * 
      * This is the currently authenticated username.
-     * 
-     * @access public
      * 
      * @var string
      * 
@@ -189,8 +173,6 @@ class Solar_User_Auth extends Solar_Base {
     /**
      * 
      * Start a session with authentication.
-     * 
-     * @access public
      * 
      * @return void
      * 
@@ -280,8 +262,6 @@ class Solar_User_Auth extends Solar_Base {
      * to check that the user is logged in, look at the value of
      * $this->status_code.
      * 
-     * @access public
-     * 
      * @return boolean Whether or not authentication is still valid.
      * 
      */
@@ -322,8 +302,6 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * Typically used for idling, expiration, and logout.
      *
-     * @access public
-     * 
      * @param string $status_code A Solar_User_Auth status string;
      * default is 'ANON'.
      * 

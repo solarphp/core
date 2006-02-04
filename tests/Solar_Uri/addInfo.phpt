@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::setQueryString()
+Solar_Uri::addInfo()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -15,10 +15,9 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 // ---------------------------------------------------------------------
 
 $uri = Solar::factory('Solar_Uri');
-$uri->setQueryString('a=b&c=d');
-$expect = array('a' => 'b', 'c' => 'd');
-$assert->same($uri->query, $expect);
-
+$assert->same($uri->info, array('appname', 'action'));
+$uri->addInfo('id');
+$assert->same($uri->info, array('appname', 'action', 'id'));
 
 // ---------------------------------------------------------------------
 

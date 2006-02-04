@@ -1,7 +1,5 @@
 --TEST--
 Solar_Uri::setInfoString()
---SKIPIF--
-<?php echo 'skip test incomplete' ?>
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -15,6 +13,15 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 }
 
 // ---------------------------------------------------------------------
+
+$uri = Solar::factory('Solar_Uri');
+$uri->setInfoString('appname/newaction/id');
+$expect = array('appname', 'newaction', 'id');
+$assert->same($uri->info, $expect);
+
+// lead/trail slashes should not matter
+$uri->setInfoString('/appname/newaction/id/');
+$assert->same($uri->info, $expect);
 
 
 // ---------------------------------------------------------------------

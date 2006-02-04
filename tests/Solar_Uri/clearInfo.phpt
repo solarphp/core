@@ -1,7 +1,5 @@
 --TEST--
 Solar_Uri::clearInfo()
---SKIPIF--
-<?php echo 'skip test incomplete' ?>
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -16,6 +14,9 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
+$uri = Solar::factory('Solar_Uri');
+$uri->clearInfo();
+$assert->same($uri->info, array());
 
 // ---------------------------------------------------------------------
 

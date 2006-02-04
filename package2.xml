@@ -43,7 +43,7 @@ Please visit http://solarphp.com/ for more information.
   <active>yes</active>
  </helper>
  <date>2006-02-04</date>
- <time>13:53:44</time>
+ <time>13:56:24</time>
  <version>
   <release>0.11.0</release>
   <api>0.11.0</api>
@@ -973,7 +973,7 @@ Please visit http://solarphp.com/ for more information.
    <file baseinstalldir="/" md5sum="45174b0af389b15a6b46780be1708873" name="tests/Solar_Valid/sepWords.phpt" role="test" />
    <file baseinstalldir="/" md5sum="9b6d3db987b7c0c80bc621c58007c062" name="tests/Solar_Valid/uri.phpt" role="test" />
    <file baseinstalldir="/" md5sum="b2328ce049ba6c878fd2da0bdd8a18cf" name="tests/Solar_Valid/word.phpt" role="test" />
-   <file baseinstalldir="/" md5sum="a905fbf6d3f22f0bfdb577f894a871df" name="package.xml" role="data" />
+   <file baseinstalldir="/" md5sum="f4570c7cb8eebc87121a322eb20da6cc" name="package.xml" role="data" />
    <file baseinstalldir="/" md5sum="444a63ddfb604ce9888aa152277416c3" name="Solar.php" role="php" />
   </dir>
  </contents>

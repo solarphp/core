@@ -8,7 +8,7 @@
         <ul>
             <?php foreach ($this->list as $code): ?>
             <li>
-                <?php echo $this->actionLink("hello?code=$code", $code) ?>
+                <?php echo $this->actionLink("hello/main?code=$code", $code) ?>
                 (<?php echo $this->actionLink("hello/rss?code=$code", 'RSS') ?>)
             </li>
             <?php endforeach ?>

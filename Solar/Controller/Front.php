@@ -50,6 +50,7 @@ class Solar_Controller_Front extends Solar_Base {
     protected $_config = array(
         'app_default' => 'bookmarks',
         'app_class'   => array(
+            'hello'     => 'Solar_App_HelloWorld',
             'bookmarks' => 'Solar_App_Bookmarks',
         ),
     );

@@ -381,12 +381,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $name = $this->_action;
         $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
         $file = $this->_basedir . "Actions/$name.action.php";
-        
-        // if the script doesn't exist, use the default.
-        if (! $name || ! is_readable($file)) {
-            $name = $this->_action_default;
-            $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
-            $file = $this->_basedir . "Actions/$name.action.php";
+        if (! is_readable($file)) {
+            throw $this->_exception(
+                'ERR_FILE_NOT_FOUND',
+                array('file' => $file)
+            );
         }
         
         // run the action script

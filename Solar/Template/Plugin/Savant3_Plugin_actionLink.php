@@ -75,11 +75,13 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
     public function actionLink($spec, $text)
     {
         if ($spec instanceof Solar_Uri) {
-            $href = $spec->exportAction();
+            // get just the action portions of the URI object
+            $this->_uri->importAction($spec->exportAction());
         } else {
+            // import the string as an action spec
             $this->_uri->importAction($spec);
-            $href = $this->_uri->exportAction();
         }
+        $href = $this->_uri->exportAction();
         return '<a href="' . htmlspecialchars($href) . '">'
              . htmlspecialchars($text) . "</a>";
     }

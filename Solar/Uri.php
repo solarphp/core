@@ -348,6 +348,28 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * Clears all URI properties.
+     * 
+     * @access public
+     * 
+     * @return void
+     * 
+     */
+    public function clear()
+    {
+        $this->scheme = null;
+        $this->host = null;
+        $this->port = null;
+        $this->user = null;
+        $this->pass = null;
+        $this->path = null;
+        $this->info = array();
+        $this->query = array();
+        $this->fragment = null;
+    }
+    
+    /**
+     * 
      * Sets the value of an element in the $this->query array.
      * 
      * This will overwrite any previous value.
@@ -387,6 +409,22 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * Adds one element to the $this->info array.
+     * 
+     * @access public
+     * 
+     * @param string $val The value to use.
+     * 
+     * @return void
+     * 
+     */
+    public function addInfo($val = '')
+    {
+        $this->info[] = $val;
+    }
+    
+    /**
+     * 
      * Sets one element in the $this->info array by position and value.
      * 
      * @access public
@@ -420,10 +458,8 @@ class Solar_Uri extends Solar_Base {
      */
     public function setInfoString($val)
     {
+        $val = trim($val, '/');
         $this->info = explode('/', $val);
-        if (substr($val, 0, 1) == '/') {
-            array_shift($this->info);
-        }
     }
     
     /**

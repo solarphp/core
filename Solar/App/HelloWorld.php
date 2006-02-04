@@ -1,13 +1,13 @@
 <?php
 /**
  * 
- * Social bookmarking application.
+ * Simple "hello world" application with actions, views, and localization.
  * 
  * @category Solar
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_Bookmarks
+ * @subpackage Solar_App_HelloWorld
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -24,13 +24,13 @@ Solar::loadClass('Solar_Controller_Page');
 
 /**
  * 
- * Social bookmarking application.
+ * Simple "hello world" application with actions, views, and localization.
  * 
  * @category Solar
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_Bookmarks
+ * @subpackage Solar_App_HelloWorld
  * 
  */
 class Solar_App_HelloWorld extends Solar_Controller_Page {
@@ -46,19 +46,7 @@ class Solar_App_HelloWorld extends Solar_Controller_Page {
     
     /**
      * 
-     * The path-info values for each action.
-     * 
-     * @var string
-     * 
-     */
-    protected $_action_info = array(
-        // main/:code
-        'main' => array('code')
-    );
-    
-    /**
-     * 
-     * The list of available codes.
+     * The list of available locale codes.
      * 
      * @var array
      * 
@@ -67,7 +55,7 @@ class Solar_App_HelloWorld extends Solar_Controller_Page {
     
     /**
      * 
-     * The translation code we're using.
+     * The requested locale code.
      * 
      * @var string
      * 

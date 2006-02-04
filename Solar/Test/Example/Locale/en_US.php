@@ -1,4 +1,19 @@
 <?php
+/**
+ * 
+ * Translation file.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Test
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 return array(
 	'ERR_EXAMPLE' => 'This is an error message.',
 	'HELLO_WORLD' => 'hello world',

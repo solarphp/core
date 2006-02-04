@@ -1,4 +1,21 @@
 <?php
+/**
+ * 
+ * RSS 2.0 view.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_HelloWorld
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 header('Content-Type: text/xml; charset=iso-8859-1');
 echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
 ?>

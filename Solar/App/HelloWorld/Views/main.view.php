@@ -1,3 +1,22 @@
+<?php
+/**
+ * 
+ * HTML view.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_HelloWorld
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
+?>
 <html>
     <head>
         <title>Solar: Hello World</title>

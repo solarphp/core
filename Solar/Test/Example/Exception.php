@@ -5,13 +5,13 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Test
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Test
  * 
  */
 class Solar_Test_Example_Exception extends Solar_Exception {}

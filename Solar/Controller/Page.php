@@ -383,7 +383,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $file = $this->_basedir . "Actions/$name.action.php";
         if (! is_readable($file)) {
             throw $this->_exception(
-                'ERR_FILE_NOT_FOUND',
+                'ERR_FILE_NOT_READABLE',
                 array('file' => $file)
             );
         }

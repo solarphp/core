@@ -98,11 +98,9 @@ class Solar_Uri extends Solar_Base {
      * 
      * Path info elements after the script name (from $_SERVER['PATH_INFO']).
      * 
-     * This will not work when importing URIs from text, because there's
-     * no good way to know what portion of the path is the script, and
-     * what portion is the info.  The only time it works is when
-     * importing the current URI (i.e., when the only import() parameter
-     * is empty).
+     * The import() method attempts to guess the script name as the
+     * first '*.php' part of the path, and counts elements after that
+     * as path info.
      * 
      * @access public
      * 
@@ -130,7 +128,6 @@ class Solar_Uri extends Solar_Base {
      * 
      * @var string
      * 
-     * @todo Bug in parse_url (PHP 5.0.3) does not find fragments.
      */
     public $fragment = null;
     
@@ -176,7 +173,7 @@ class Solar_Uri extends Solar_Base {
             $modified_uri = $scheme . Solar::server('HTTP_HOST');
             $modified_uri .= Solar::server('REQUEST_URI');
         } elseif (strpos($uri, '://') === false) {
-            // add the scheme
+            // there's a uri, but need to add the scheme
             $modified_uri = $scheme . $uri;
         }
         
@@ -251,20 +248,21 @@ class Solar_Uri extends Solar_Base {
      */
     public function importAction($spec)
     {
-        // make sure there's actually an action spec
+        // make sure there's actually an action spec,
+        // forcibly add a leading slash
         $spec = trim($spec);
         if (! $spec) {
             $spec = '/';
         }
         
         // build a URI string with a fake host and path
-        $fake = 'example.com/index.php';
+        $fake = 'fake.com/fake.php';
         if ($spec[0] != '/') {
             $fake .= '/';
         }
         $fake .= $spec;
         
-        // import the fake, then remove the host and path
+        // import the fake uri, then remove the fake host and path
         $this->import($fake);
         $this->host = null;
         $this->path = null;
@@ -501,7 +499,7 @@ class Solar_Uri extends Solar_Base {
             } else {
                 // not an array, use the current value.
                 $thekey = (! $akey) ? $key : $akey.'['.$key.']';
-                $out[] = $thekey . '=' . urlencode($val);
+                $out[] = urlencode($thekey) . '=' . urlencode($val);
             }
         }
         

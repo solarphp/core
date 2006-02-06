@@ -45,7 +45,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function alnum($value, $blank = self::NOT_BLANK)
+    static public function alnum($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-zA-Z0-9]+$/'; 
         return self::regex($value, $expr, $blank);
@@ -60,7 +60,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function alpha($value, $blank = self::NOT_BLANK)
+    static public function alpha($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-zA-Z]+$/';
         return self::regex($value, $expr, $blank);
@@ -118,7 +118,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function email($value, $blank = self::NOT_BLANK)
+    static public function email($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^((\"[^\"\f\n\r\t\v\b]+\")|([\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]+))$/';
         return self::regex($value, $expr, $blank);
@@ -135,7 +135,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inKeys($value, $array, $blank = self::NOT_BLANK)
+    static public function inKeys($value, $array, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -158,7 +158,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inList($value, $array, $blank = self::NOT_BLANK)
+    static public function inList($value, $array, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -181,7 +181,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inScope($value, $size, $scope, $blank = self::NOT_BLANK)
+    static public function inScope($value, $size, $scope, $blank = Solar_Valid::NOT_BLANK)
     {
         // allowed blank?
         if ($blank && self::blank($value)) {
@@ -227,7 +227,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function integer($value, $blank = self::NOT_BLANK)
+    static public function integer($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[\+\-]?[0-9]+$/';
         return self::regex($value, $expr, $blank);
@@ -242,7 +242,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    public function ipv4($value, $blank = self::NOT_BLANK)
+    public function ipv4($value, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -278,7 +278,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoDate($value, $blank = self::NOT_BLANK)
+    static public function isoDate($value, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -311,7 +311,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoDateTime($value, $blank = self::NOT_BLANK)
+    static public function isoDateTime($value, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -350,7 +350,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoTime($value, $blank = self::NOT_BLANK)
+    static public function isoTime($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
         return self::regex($value, $expr, $blank) || ($value == '24:00:00');
@@ -368,7 +368,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function locale($value, $blank = self::NOT_BLANK)
+    static public function locale($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-z]{2}_[A-Z]{2}$/';
         return self::regex($value, $expr, $blank);
@@ -385,7 +385,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function max($value, $max, $blank = self::NOT_BLANK)
+    static public function max($value, $max, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
@@ -408,7 +408,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function maxLength($value, $max, $blank = self::NOT_BLANK)
+    static public function maxLength($value, $max, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // checked for length.
@@ -429,7 +429,7 @@ class Solar_Valid {
      * 
      */
     static public function mimeType($value, $allowed = null,
-        $blank = self::NOT_BLANK)
+        $blank = Solar_Valid::NOT_BLANK)
     {
         // basically, anything like 'text/plain' or
         // 'application/vnd.ms-powerpoint' or
@@ -455,7 +455,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function min($value, $min, $blank = self::NOT_BLANK)
+    static public function min($value, $min, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -476,7 +476,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function minLength($value, $min, $blank = self::NOT_BLANK)
+    static public function minLength($value, $min, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -558,7 +558,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function nonZero($value, $blank = self::NOT_BLANK)
+    static public function nonZero($value, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
@@ -596,7 +596,7 @@ class Solar_Valid {
      * @return bool True if the value matches the expression, false if not.
      * 
      */
-    static public function regex($value, $expr, $blank = self::NOT_BLANK)
+    static public function regex($value, $expr, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && self::blank($value)) {
             return true;
@@ -616,7 +616,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function sepWords($value, $sep = ' ', $blank = self::NOT_BLANK)
+    static public function sepWords($value, $sep = ' ', $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[\w' . preg_quote($sep) . ']+$/';
         return self::regex($value, $expr, $blank);
@@ -635,7 +635,7 @@ class Solar_Valid {
      * schemes, false if not.
      * 
      */
-    static public function uri($value, $schemes = null, $blank = self::NOT_BLANK)
+    static public function uri($value, $schemes = null, $blank = Solar_Valid::NOT_BLANK)
     {
         // allow blankness?
         if ($blank && self::blank($value)) {
@@ -710,7 +710,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function word($value, $blank = self::NOT_BLANK)
+    static public function word($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^\w+$/';
         return self::regex($value, $expr, $blank);

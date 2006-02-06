@@ -24,7 +24,31 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 
 /**
  * 
- * Encapsulates shared configuration, objects, and methods for Solar apps.
+ * ++ Overview
+ * 
+ * The \\Solar\\ class is responsible for generating and maintaining
+ * the Solar environment.  As such, it stands over and above all
+ * other Solar classes in that it ties everything together in a
+ * meaningful and cohesive way.
+ * 
+ * Unlike most other classes in Solar, the \\Solar\\ class is
+ * composed entirely of static methods and objects.  This means you
+ * never need to instantiate a \\Solar\\ object proper; just include
+ * it.
+ * 
+ * <code type="php">
+ * require_once 'Solar.php';
+ * 
+ * // never instantiate Solar ...
+ * $solar = new Solar(); // improper
+ * $solar->start();      // improper
+ * 
+ * // just call its static methods
+ * Solar::start();       // correct!
+ * </code>
+ * 
+ * You can then call any of the ClassMethods provided by Solar to
+ * speed your development cycle.
  * 
  * @category Solar
  * 
@@ -80,16 +104,66 @@ class Solar {
     
     /**
      * 
-     * Start Solar: get config, load shared objects, run start scripts.
+     * Starts Solar: get config, load shared objects, run start scripts.
      * 
-     * @return void
+     * This method starts the Solar environment; it is usually the
+     * very first method call you make after including the Solar.php
+     * file.
+     * 
+     * <code type="php">
+     * require_once 'Solar.php';
+     * Solar::start();
+     * 
+     * // the rest of your script
+     * 
+     * Solar::stop();
+     * </code>
+     * 
+     * Note that you can specify the location of the [Main:ConfigFile
+     * configuration file] as the only parameter.
+     * 
+     * ++ What start() Does
+     * 
+     * The start() method performs a huge number of activities for
+     * you to set up the execution environment.  Be sure to look at
+     * the Solar.php file itself for the details, but in general,
+     * these activities are:
+     * 
+     * # Reads the [Main:ConfigFile configuration file] file into
+     * Solar::$config.
+     * 
+     * # Processes the Solar::$config['Solar']['ini_set'] key/value
+     * pairs using [[php ini_set()]].
+     * 
+     * # Prepares space for shared objects noted in
+     * Solar::$config['Solar']['shared'] but does not instantiate
+     * them; Solar waits for the first call to Solar::shared() before
+     * loading and instantiating a shared object (this is called
+     * "lazy loading").
+     * 
+     * # Instantiates the shared Solar_Locale object (for reading
+     * locale strings) as Solar::shared('locale').
+     * 
+     * # Instantiates all objects noted in
+     * Solar::$config['Solar']['autoshare'].  As part of this
+     * process, Solar_User is instantiated automatically as
+     * Solar::shared('user').
+     * 
+     * # For each auto-shared object, Solar attempts to run its
+     * \\solar('start')\\ method.  This behavior is reserved only for
+     * auto-shared objects; if you load a shared object later on, its
+     * \\solar('start')\\ method won't be called.
+     * 
+     * # Finally, Solar runs any scripts noted in
+     * Solar::$config['Solar']['start'].  This allows you to specify
+     * additional environment startup behaviors.
      * 
      * @todo Put autosharing behavior into Solar_Controller_Front instead?
      * This would also get rid of the __solar() autoshare method, which might
      * be nice.  Would need to add a share() method for setting up shared
      * objects though.
      * 
-     * @todo Rename ::shared() to ::registry()?  Add ::register() method too.
+     * @todo Rename ::shared() to ::registry()?  Add ::register() method too?
      * 
      */
     static public function start($alt_config = null)
@@ -195,7 +269,39 @@ class Solar {
     
     /**
      * 
-     * Stop Solar: run stop scripts and shared object "stop" hooks.
+     * Stops Solar: run stop scripts and shared object "stop" hooks.
+     * 
+     * Stops the Solar environment.  As a counterpart to
+     * Solar::start(), the stop() method shuts down the Solar
+     * environment.
+     * 
+     * <code type="php">
+     * require_once 'Solar.php';
+     * Solar::start();
+     * 
+     * // the rest of the script goes here
+     * 
+     * Solar::stop();
+     * </code>
+     * 
+     * Like Solar::start(), the stop() method performs a number of
+     * activities for you.  Be sure to read the Solar.php script file
+     * for specifics, but in general, the stop() activities are:
+     * 
+     * # Execute any scripts named in
+     * Solar::$config['Solar']['stop'].  This allows you to run
+     * shutdown scripts particular to your system.
+     * 
+     * # For each auto-shared object, run its \\solar('stop')\\
+     * method.
+     * 
+     *  * This behavior applies only to auto-shared objects from
+     * Solar::start(); shared objects that were not auto-shared at
+     * startup time are not included in the stop() method.
+     * 
+     *  * The auto-shared objects are shut down in a last-in first-out
+     * order.  This means the last auto-shared object is the first to
+     * be stopped.
      * 
      * @return void
      * 
@@ -243,6 +349,38 @@ class Solar {
      * 
      * Gets translated locale string for a class and key.
      * 
+     * This method allows you to retrieve the proper text string as
+     * related to a specific class for a given locale.  Be sure to
+     * read about [Main:LocaleFiles locale files] for more
+     * information.
+     * 
+     * For example, to get the locale string for the 'HELLO' key in
+     * the 'Example' class ...
+     * 
+     * <code type="php">
+     * $text = Solar::locale('Example', 'HELLO');
+     * </code>
+     * 
+     * By default, the locale() method retrieves the singluar string
+     * for the translation key; if you need the "zero" or "plural"
+     * strings, just pass the appropriate number as the third
+     * parameter, and the locale() method will get the correct
+     * translation (provided it has been set up in the locale file).
+     * 
+     * <code type="php">
+     * // get the translation for "0 apples"
+     * $num = 0;
+     * $text = Solar::locale('Example', 'APPLE', $num);
+     * 
+     * // get the translation for "1 apple"
+     * $apples = 1;
+     * $text = Solar::locale('Example', 'APPLE', $num);
+     * 
+     * // get the translation for "2 (or more) apples"
+     * $apples = 2;
+     * $text = Solar::locale('Example', 'APPLE', $num);
+     * </code>
+     * 
      * @param string $class The class of the translation.
      * 
      * @param string $key The translation key.
@@ -260,14 +398,42 @@ class Solar {
     
     /**
      * 
-     * A "sham" method; __autoload() causes too many conflicts.
+     * Loads a class file but does not create an object instance.
      * 
-     * If the class name exists as a key in
-     * $config['Solar']['registry'], that array element value will be
-     * used as the file path.  If not, the class name will be turned
-     * into a file path by converting all instances of '_' in the
-     * class name to DIRECTORY_SEPARATOR (i.e., '/' on Unix and '\'
-     * on Windows).
+     * In normal PHP, you would load a class file using include or
+     * require, then attempt to instantiate the class.
+     * 
+     * <code type="php">
+     * include_once "My/Example/Class.php";
+     * $example = new My_Example_Class();
+     * </code>
+     * 
+     * However, if My/Example/Class.php did not have the
+     * My_Example_Class in it, PHP would throw an error; this can
+     * often be a difficult error to track down.
+     * 
+     * The loadClass() method is the equivalent of the above pair of
+     * steps, but adds a [[php class_exists()]] check to see if the
+     * class was actually loaded from the file.  It won't attempt to
+     * load the same class file more than once.
+     * 
+     * For example:
+     * 
+     * <code type="php">
+     * Solar::loadClass('My_Example_Class');
+     * </code>
+     * 
+     * If after calling loadClass() the 'My_Example_Class' still does
+     * not exist, Solar throws a fatal error, with a backtrace, to
+     * let you know the load failed.  This makes it easy to track
+     * down failed loads.
+     * 
+     * For this method to work, the class to be loaded must be in the
+     * include_path and conform to the [Main:NamingConventions class
+     * naming conventions].  Note that when using Solar::object(),
+     * you **do not** need to use loadClass() first; Solar::object()
+     * automatically calls loadClass() to load the requested class
+     * file.
      * 
      * @param string $class A Solar (or other) class name.
      * 
@@ -331,6 +497,44 @@ class Solar {
      * 
      * Runs a script in an isolated scope.
      * 
+     * Use the run() method to include a file inside its own limited
+     * scope.  This allows you to include files but not pollute the
+     * current scope with the variables from the included file.
+     * 
+     * For example, say you have this "main" script:
+     * 
+     * <code type="php">
+     * $var = 'foo';
+     * include 'helper.php';
+     * echo $var;
+     * </code>
+     * 
+     * If 'helper.php' sets the value of $var for itself, that value
+     * will override the value from the main script, which can lead
+     * to unexpected behavior.  If you want to make sure that
+     * 'helper.php' executes in its own separate scope, use the run()
+     * method instead of [[php include]]:
+     * 
+     * <code type="php">
+     * $var = 'foo';
+     * Solar::run('helper.php');
+     * echo $var;
+     * </code>
+     * 
+     * Now $var will remain the same before and after the inclusion
+     * of helper.php (unless helper.php used [[php global]] to make
+     * $var global).
+     * 
+     * As with [[php include]], you can accept return values from the
+     * file you run:
+     * 
+     * <code type="php">
+     * $result = Solar::run('helper.php');
+     * </code>
+     * 
+     * If the last line of helper.php is a return value, $result will
+     * reflect that value.
+     *      
      * @param string $file A script path and file name.
      * 
      * @return mixed The final return of the included file.
@@ -358,6 +562,15 @@ class Solar {
      * 
      * Hack for file_exists() && is_readable() that checks the include_path.
      * 
+     * Use this to see if a file exists anywhere in the include_path.
+     * 
+     * <code type="php">
+     * $file = 'include/path/to/file.php';
+     * if (Solar::fileExists('include/path/to/file.php')) {
+     *     include $file;
+     * }
+     * </code>
+     * 
      * @param string $file A script path and file name.
      * 
      * @return bool True if the file exists and is readble in the
@@ -375,6 +588,47 @@ class Solar {
     /**
      * 
      * Convenience method to instantiate and configure a Solar object.
+     * 
+     * Creates a new object instance, auto-configuring it from
+     * user-defined parameters and the Solar.config.php file.
+     * 
+     * In normal PHP, you must include a class file and then
+     * instantiate it.
+     * 
+     * <code type="php">
+     * // normal use
+     * include_once 'My/Class/File.php';
+     * $obj = new My_Class_File();
+     * </code>
+     * 
+     * With Solar, if you want to instantiate a standalone object,
+     * you can use the Solar::factory() method instead of the
+     * include-and-instantiate routine.
+     * 
+     * <code type="php">
+     * // Solar object factory
+     * $obj = Solar::factory('My_Class_File');
+     * </code>
+     * 
+     * This checks the include-path to see if the My/Class/File.php
+     * file exists, and throws a warning (with backtrace) if it does
+     * not.
+     * 
+     * If the class conforms to the Solar standards for
+     * [Main:ConstructorParameters constructor parameters], the class
+     * will be configured automatically with its corresponding values
+     * in the [Main:ConfigFile config file].  If you want to override
+     * those values, you can pass a custom config array as the second
+     * parameter:
+     * 
+     * <code type="php">
+     * $options = array('zim' => 'gir', 'baz' => 'dib');
+     * $obj = Solar::factory('My_Class_File', $options);
+     * </code>
+     * 
+     * For this method to work, the class to be loaded must be in the
+     * include_path and conform to the [Main:NamingConventions class
+     * naming conventions].
      * 
      * @param string $class The class name.
      * 
@@ -443,25 +697,106 @@ class Solar {
     
     /**
      * 
-     * Safely get a configuration group array or element value.
+     * Safely gets a configuration group array or element value.
      * 
-     * Returns a blank default value if the group or element is not set.
+     * ++ Reading An Entire Group
      * 
-     * <code>
-     * // get a group config array
-     * $result = Solar::config('group')
+     * If your Solar.config.php file has this entry ...
      * 
-     * // get a group config array, or an empty array if the
-     * // group does not exist
-     * $result = Solar::config('group', null, array())
-     * 
-     * // get an element of a group
-     * $result = Solar::config('group', 'elem')
-     * 
-     * // get an element, or a blank string if the group and
-     * // element does not exist
-     * $result = Solar::config('group', 'elem', '')
+     * <code type="php">
+     * $config['Example'] = array(
+     *   'flag_a'  => 'these',
+     *   'flag_b'  => 'those',
+     *   'deeper'  => array(
+     *     'deep_1' => 'foo',
+     *     'deep_2' => 'bar',
+     *   ),
+     * );
      * </code>
+     * 
+     * ... you can retrieve a copy of the entire 'Example' group like this:
+     * 
+     * <code type="php">
+     * $example = Solar::config('Example');
+     * </code>
+     * 
+     * If the 'Example' group does not exist, the config() method
+     * will return an empty array by default.  If you want to use a
+     * different default value when 'Example' does not exist, specify
+     * a \\null\\ element and the customized default value:
+     * 
+     * <code type="php">
+     * $default = Solar::object('Solar_Error');
+     * $example = Solar::config('Example', null, $default);
+     * </code>
+     * 
+     * Thus, \\$example\\ will be a Solar_Error if 'Example' does not
+     * exist in the config file.
+     * 
+     * 
+     * ++ Reading A Single Group-Element
+     * 
+     * If your Solar.config.php file has this entry (identical to the
+     * above example)...
+     * 
+     * <code type="php">
+     * $config['Example'] = array(
+     *   'flag_a'  => 'these',
+     *   'flag_b'  => 'those',
+     *   'deeper'  => array(
+     *     'deep_1' => 'foo',
+     *     'deep_2' => 'bar',
+     *   ),
+     * );
+     * </code>
+     * 
+     * ... you can retrieve a copy of the 'flag_a' value like this:
+     * 
+     * <code type="php">
+     * $flag_a = Solar::config('Example', 'flag_a');
+     * </code>
+     * 
+     * If the 'Example' group does not exist, or if the 'flag_a'
+     * element does not exist in the 'Example' group, the config()
+     * method will return \\null\\ value by default.  If you want to
+     * use a different default value, specify a that value as the
+     * third parameter:
+     * 
+     * <code type="php">
+     * $flag_a = Solar::config('Example', 'flag_a', 'thars');
+     * </code>
+     * 
+     * Thus, \\$example\\ will be \\false\\ if
+     * Solar::$config['Example']['flag_a'] does not exist.
+     * 
+     * ++ Deep Reading
+     * 
+     * The config() method only allows you to read groups, or major
+     * group elements.  If you have this in your config file (again,
+     * identical to above) ...
+     * 
+     * <code type="php">
+     * $config['Example'] = array(
+     *   'flag_a'  => 'these',
+     *   'flag_b'  => 'those',
+     *   'deeper'  => array(
+     *     'deep_1' => 'foo',
+     *     'deep_2' => 'bar',
+     *   ),
+     * );
+     * </code>
+     * 
+     * ... you can retrieve the 'deeper' element,
+     * 
+     * <code type="php">
+     * $deeper = Solar::config('Example', 'deeper');
+     * </code>
+     * 
+     * ... but you cannot retrieve the 'deep_1' sub-element.  In
+     * practice, this is not usually an issue.  Although you can
+     * always access Solar::$config if you need to, nesting
+     * often-used config file elements too deeply may be a signal
+     * that you need to re-think your design.     *
      * 
      * @param string $group The name of the group.
      * 
@@ -520,10 +855,20 @@ class Solar {
     
     /**
      * 
-     * Safely get the value of an element from the $_GET array.
+     * Safely gets the value of an element from the $_GET array.
      * 
-     * Automatically checks if the element is set; if not, returns a
-     * default value.  Applies scrubbers automatically.
+     * This method accesses the $_GET superglobal array and returns a
+     * copy of the requested key.  If no key is specified,
+     * a copy of the entire $_GET array is returned.  If the
+     * requested key does not exist in the $_GET array, the default
+     * value is returned instead.
+     * 
+     * For example, to get the 'user_name' key from the $_GET array,
+     * with 'No Name' as the default value, you would do this:
+     * 
+     * <code type="php">
+     * $name = Solar::get('user_name', 'No Name');
+     * </code>
      * 
      * @param string $key The array element; if null, returns the whole
      * array.
@@ -542,10 +887,22 @@ class Solar {
     
     /**
      * 
-     * Safely get the value of an element from the $_POST array.
+     * Safely gets the value of an element from the $_POST array.
      * 
-     * Automatically checks if the element is set; if not, returns a
-     * default value.  Applies scrubbers automatically.
+     * This method accesses the $_POST superglobal array and returns
+     * a copy of the requested key.  If no key is
+     * specified, a copy of the entire $_POST array is
+     * returned.  If the requested key does not exist in the $_POST
+     * array, the default value is returned instead.
+     * 
+     * For example, to get the 'subject_line' key from the $_POST
+     * array, with 'No Subject' as the default value, you would do
+     * this:
+     * 
+     * <code type="php">
+     * $subject = Solar::post('subject_line', 'No Subject');
+     * </code>
+
      * 
      * @param string $key The array element; if null, returns the whole
      * array.
@@ -564,8 +921,21 @@ class Solar {
     
     /**
      * 
-     * Safely get the value of an element from the $_COOKIE array.
+     * Safely gets the value of an element from the $_COOKIE array.
      * 
+     * This method accesses the $_COOKIE superglobal array and
+     * returns a copy of the requested key.  If no key is
+     * specified, a copy of the entire $_COOKIE array is
+     * returned.  If the requested key does not exist in the $_COOKIE
+     * array, the default value is returned instead.
+     * 
+     * For example, to get the 'remember_me' key from the $_COOKIE
+     * array, with \\false\\ as the default value, you would do this:
+     * 
+     * <code type="php">
+     * $remember_me = Solar::cookie('remember_me', false);
+     * </code>
+
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -583,8 +953,21 @@ class Solar {
     
     /**
      * 
-     * Safely get the value of an element from the $_SERVER array.
+     * Safely gets the value of an element from the $_SERVER array.
      * 
+     * This method accesses the $_SERVER superglobal array and
+     * returns a copy of the requested key.  If no key is
+     * specified, a copy of the entire $_SERVER array is
+     * returned.  If the requested key does not exist in the $_SERVER
+     * array, the default value is returned instead.
+     * 
+     * For example, to get the 'REQUEST_URI' key from the $_SERVER
+     * array, with \\false\\ as the default value, you would do this:
+     * 
+     * <code type="php">
+     * $remember_me = Solar::server('REQUEST_URI', false);
+     * </code>
+
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -602,8 +985,21 @@ class Solar {
     
     /**
      * 
-     * Safely get the value of an element from the $_SESSION array.
+     * Safely gets the value of an element from the $_SESSION array.
      * 
+     * This method accesses the $_SESSION superglobal array and
+     * returns a copy of the requested key.  If no key is
+     * specified, a copy of the entire $_SESSION array is
+     * returned.  If the requested key does not exist in the
+     * $_SESSION array, the default value is returned instead.
+     * 
+     * For example, to get the 'last_active' key from the $_SESSION
+     * array, with \\false\\ as the default value, you would do this:
+     * 
+     * <code type="php">
+     * $last_active = Solar::session('last_active', false);
+     * </code>
+
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -623,8 +1019,42 @@ class Solar {
      * 
      * Safely gets the value of $_SERVER['PATH_INFO'] element.
      * 
-     * Automatically checks if the element is set; if not, returns a
-     * default value.  Applies scrubbers automatically.
+     * This method is a bit different from the other scrubber
+     * methods.  It accesses the $_SERVER['PATH_INFO'] value, and
+     * returns copy of the requested key.  If no key is
+     * specified, the entire path-info set is returned as an array.
+     * 
+     * The "path-info" portion of a URI comes after the script name
+     * but before any $_GET parameters.  For example, in the
+     * following URI ...
+     * 
+     * <code>
+     * http://example.com/path/to/script.php/foo/bar/baz?zim=gir
+     * </code>
+     * 
+     * ... the "path-info" is \\/foo/bar/baz\\.
+     * 
+     * Path-info values are addressed by their integer position
+     * number, not by associative array key name (as with $_GET et.
+     * al.).  Thus, Solar builds its path-info array for the example
+     * URI to look like this:
+     * 
+     * <code type="php">
+     * array(
+     *   0 => 'foo',
+     *   1 => 'bar',
+     *   2 => 'baz',
+     * );
+     * </code>
+     * 
+     * For example, to get path-info values, you would call the
+     * pathinfo() method like this:
+     * 
+     * <code type="php">
+     * $info_2 = Solar::pathinfo(2, null);  // equals 'baz'
+     * $info_3 = Solar::pathinfo(3, 'dib'); // equals 'dib'
+     * </code>
+
      * 
      * @param int $key The array element; if null, returns the whole
      * array.
@@ -668,7 +1098,29 @@ class Solar {
     
     /**
      * 
-     * Simple exception object generator.  Does not throw the exception.
+     * Generates a simple exception, but does not throw it.
+     * 
+     * This method generates a Solar_Exception object with an originating
+     * class, an error code, an error message, and an array of information
+     * about the specifics of the error.
+     * 
+     * Note that this method only generates the object; it does not
+     * throw the exception.
+     * 
+     * <code type="php">
+     * $class = 'My_Example_Class';
+     * $code = 'ERR_SOMETHING_WRONG';
+     * $text = 'Something is wrong.';
+     * $info = array('foo' => 'bar');
+     * $exception = Solar::exception($class, $code, $text, $info);
+     * throw $exception;
+     * </code>
+     * 
+     * In general, you shouldn't need to use this directly in classes
+     * extended from [Solar_Base:HomePage Solar_Base].  Instead, use
+     * $this->_exception($code, $info) for automated picking of the
+     * right exception class from the $code, and automated translation
+     * of the error message.
      * 
      * @param string $class The class that generated the exception.
      * 
@@ -694,7 +1146,13 @@ class Solar {
     
     /**
      * 
-     * Simple variable dumper.
+     * Dumps a variable to output.
+     * 
+     * Essentially, this is an alias to the Solar_Debug_Var::dump()
+     * method, which buffers the [[php var_dump]] for a variable,
+     * applies some simple formatting for readability, and [[php
+     * echo]]s it tags with an optional label.  Use this for
+     * debugging variables to see exactly what they contain.
      * 
      * @param mixed &$var The variable to dump.
      * 
@@ -711,7 +1169,7 @@ class Solar {
     
     /**
      * 
-     * "Fixes" a directory string.
+     * Fixes a directory string for the operating system.
      * 
      * Basically, use slashes anywhere you need a directory separator.
      * Then run the string through fixdir() and the slashes will be converted

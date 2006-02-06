@@ -87,7 +87,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
                 'ERR_BAD_XML',
                 array(
                     'filename' => $filename
-                ),
+                )
             );
         }
         

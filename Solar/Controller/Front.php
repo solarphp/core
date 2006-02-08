@@ -46,16 +46,18 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'app_default' => 'bookmarks',
         'app_class'   => array(
             'hello'     => 'Solar_App_HelloWorld',
             'bookmarks' => 'Solar_App_Bookmarks',
         ),
+        'app_default' => 'bookmarks',
+        'layout' => '',
+        'output_var' => 'solar_app_output',
     );
 
     /**
      * 
-     * The default application to run when none is specified.
+     * The default short-name when none is specified.
      * 
      * @var array
      * 
@@ -64,13 +66,17 @@ class Solar_Controller_Front extends Solar_Base {
 
     /**
      * 
-     * Map of front-controller app names to actual application classes.
+     * Map of app names to classes.
      * 
      * @var array
      * 
      */
     protected $_app_class;
-
+    
+    protected $_layout; // path to the layout template
+    
+    protected $_output_var; // name of the app-output var in the layout template
+    
     /**
      * 
      * Constructor.
@@ -80,19 +86,26 @@ class Solar_Controller_Front extends Solar_Base {
      */
     public function __construct($config)
     {
+        // set the default layout
+        $this->_config['layout'] = dirname(__FILE__)
+            . '/Front/Layout/default.layout.php';
+        
+        // now do "real" construction
         parent::__construct($config);
         $this->_app_default = $this->_config['app_default'];
-        $this->_app_class = $this->_config['app_class'];
+        $this->_app_class   = $this->_config['app_class'];
+        $this->_layout      = $this->_config['layout'];
+        $this->_output_var  = $this->_config['output_var'];
     }
 
     /**
      * 
-     * Fetches the output of a front-controller specification URI.
+     * Fetches the output of an app/action/info specification URI.
      * 
-     * @param string $spec A page/action/info spec for the front
+     * @param string $spec A app/action/info spec for the front
      * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
-     * @return string The output of the application page action.
+     * @return string The output of the application action.
      * 
      */
     public function fetch($spec = null)
@@ -105,25 +118,54 @@ class Solar_Controller_Front extends Solar_Base {
             $uri->importAction($spec);
         }
         
-        // pull the app name off the top of the path_info
-        $app = array_shift($uri->info);
-        if (trim($app) == '') {
-            $app = $this->_app_default;
+        // pull the app name off the top of the path_info.
+        // note that this alters the URI path_info in-place.
+        $name = array_shift($uri->info);
+        if (trim($name) == '') {
+            $name = $this->_app_default;
         }
         
-        // instantiate the app class and fetch content
-        $class = $this->_app_class[$app];
+        /** @todo Add real 404 support. */
+        // is it a known app name?
+        if (! array_key_exists($name, $this->_app_class)) {
+            return htmlspecialchars("404: Page '$name' unknown.");
+        }
+        
+        // instantiate the app class, fetch its output,
+        // and fetch its layout values.
+        $class = $this->_app_class[$name];
         $app = Solar::factory($class);
-        $content = $app->fetch($uri);
-        return $content;
+        $output = $app->fetch($uri);
+        $layout = $app->getLayout();
+        
+        if (empty($this->_layout) || $layout === false) {
+            // one-step view
+            return $app->fetch($uri);
+        } else {
+            // two-step view.
+            // set up the layout template.
+            $tpl = Solar::factory('Solar_Template');
+            
+            // step 1:
+            // fetch the app output, assign the app vars,
+            // then assign the app output (so that the output
+            // overrides any related app vars).
+            $tpl->assign($layout);
+            $tpl->assign($this->_output_var, $output);
+            
+            // step 2:
+            // render the layout.
+            $tpl->setPath('template', dirname($this->_layout));
+            return $tpl->fetch(basename($this->_layout));
+        }
     }
 
     /**
      * 
-     * Displays the output of a front-controller specification URI.
+     * Displays the output of an app/action/info specification URI.
      * 
-     * @param string $spec An app spec for the front controller.
-     * E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
+     * @param string $spec A app/action/info spec for the front
+     * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
      * @return string The output of the application.
      * 

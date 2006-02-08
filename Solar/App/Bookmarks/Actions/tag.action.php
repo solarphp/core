@@ -17,23 +17,6 @@
  * 
  */
 
-// get the shared user object
-$user = Solar::shared('user');
-
-// RSS link for the page (regardless of whether it's actually available)
-$link = Solar::factory('Solar_Uri');
-$link->setQuery('rss', '1');
-
-$this->rss = array(
-    'avail' => false,
-    'title' => Solar::server('PATH_INFO'),
-    'descr' => 'Solar_App_Bookmarks',
-    'date'  => date(DATE_RFC822), // should be latest mod date in the $this->view->list
-    'link'  => $link->export(),
-);
-
-unset($link);
-
 // get standalone objects
 $bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
@@ -60,7 +43,6 @@ $this->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
 $total = $bookmarks->countPages($owner_handle, $tags);
 
 // assign everything else for the view
-$this->rss['avail'] = true;
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;
@@ -68,11 +50,18 @@ $this->owner_handle = null; // requested owner_handle
 $this->tags         = $tags; // the requested tags
 $this->tags_in_use  = $bookmarks->fetchTagList($owner_handle); // all tags
 
-// RSS or HTML view?
-$rss = $this->_query('rss', false);
-if ($rss) {
-    $this->_view = 'rss';
-} else {
-    $this->_view = 'list';
-}
+// use the 'list' view and site layout
+$this->_view = 'list';
+$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
+$this->_layout['body']['header'] = $this->locale('BOOKMARKS');
+
+// RSS feed link for the page
+$link = Solar::factory('Solar_Uri');
+$link->setInfo(1, 'tagFeed');
+$this->_layout['head']['link']['rss'] = array(
+    'rel'   => 'alternate',
+    'type'  => 'application/rss+xml',
+    'title' => Solar::server('PATH_INFO'),
+    'href'  => $link->export(),
+);
 ?>

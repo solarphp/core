@@ -197,7 +197,11 @@ if ($op == Solar::locale('Solar', 'OP_DELETE')) {
 // completion
 // 
 
-// assign data to the view
+// assign data for the view
 $this->formdata = $form;
 $this->backlink = $href;
+
+// assign data for the layout
+$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
+$this->_layout['body']['header'] = $this->locale('BOOKMARKS');
 ?>

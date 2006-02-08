@@ -61,30 +61,13 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
         
         // edit/:id
         'edit' => array('id'),
-    );
-    
-    /**
-     * 
-     * An array of RSS header tags for the current page.
-     * 
-     * @var array
-     * 
-     */
-    public $rss = array(
-        // is an RSS feed available?
-        'avail' => null,
         
-        // RSS title
-        'title' => null,
+        // userFeed/:owner_handle/:tags
+        'userFeed' => array('owner_handle', 'tags'),
         
-        // RSS description
-        'descr' => null,
+        // tagFeed/:tags
+        'tagFeed' => array('tags'),
         
-        // RSS publication date
-        'date'  => null,
-        
-        // link back to the origin page for the feed
-        'link'  => null,
     );
     
     /**
@@ -113,6 +96,16 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
      * 
      */
     public $page;
+    
+    
+    /**
+     * 
+     * Feed information.
+     * 
+     * @var array
+     * 
+     */
+    public $feed;
     
     /**
      * 

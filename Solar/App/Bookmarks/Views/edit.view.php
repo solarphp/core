@@ -16,13 +16,7 @@
  * @version $Id$
  * 
  */
-
-/**
- * Include the header file.
- */
 ?>
-<?php include $this->template('header.php') ?>
-
 <h2><?php $this->eprint($this->locale('EDIT_ITEM')) ?></h2>
 <p>[ <?php
     echo $this->ahref(
@@ -56,5 +50,3 @@
     ?>
     
 </td><tr></table>
-
-<?php include $this->template('footer.php') ?>

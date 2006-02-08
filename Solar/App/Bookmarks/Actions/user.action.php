@@ -17,23 +17,6 @@
  * 
  */
 
-// get the shared user object
-$user = Solar::shared('user');
-
-// RSS link for the page (regardless of whether it's actually available)
-$link = Solar::factory('Solar_Uri');
-$link->setQuery('rss', '1');
-
-$this->rss = array(
-    'avail' => false,
-    'title' => Solar::server('PATH_INFO'),
-    'descr' => 'Solar_App_Bookmarks',
-    'date'  => date('c'), // should be latest mod date in the $this->list
-    'link'  => $link->export(),
-);
-
-unset($link);
-
 // get standalone objects
 $bookmarks = Solar::factory('Solar_Model_Bookmarks');
 
@@ -49,42 +32,30 @@ $tags = $this->_info('tags');
 // the requested ordering of list results
 $order = $this->_getOrder();
 
-// RSS or HTML? set up the page number accordingly (by default, RSS gets
-// all bookmarks, not just one page).
-$rss = $this->_query('rss', false);
+// which page number?
+$page = $this->_query('page', 1);
 
-if ($rss) {
-    
-    // looking at the RSS view.
-    $this->_view = 'rss';
-    if ($tags) {
-        // if tags are requested, get all pages by default.
-        $page = $this->_query('page', 0);
-    } else {
-        // otherwise it's all bookmarks for the user, get only page 1 by default.
-        $page = $this->_query('page', 1);
-    }
-    
-} else {
+// assign data for the layout
+$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
+$this->_layout['body']['header'] = $this->locale('BOOKMARKS');
 
-    $this->_view = 'list';
-    $page = $this->_query('page', 1);
-    
-    // make sure the RSS link is available in the template
-    $this->rss['avail'] = true;
-    
-    if ($tags) {
-        // there are tags requested, so the RSS should show all pages
-        // and ignore the rows-per-page settings.  build a custom
-        // RSS link for this.
-        $link = Solar::factory('Solar_Uri');
-        $link->setQuery('rss', '1');
-        $link->clearQuery('page');
-        $link->clearQuery('rows_per_page');
-        $this->rss['link'] = $link->export();
-        unset($link);
-    }
+// RSS link for the page
+$link = Solar::factory('Solar_Uri');
+$link->setInfo(1, 'userFeed');
+
+if ($tags) {
+    // there are tags requested, so the RSS should show all pages
+    // (i.e., page zero) and ignore the rows-per-page settings.
+    $link->setQuery('page', 'all');
+    $link->clearQuery('rows_per_page');
 }
+
+$this->_layout['head']['link']['rss'] = array(
+    'rel'   => 'alternate',
+    'type'  => 'application/rss+xml',
+    'title' => Solar::server('PATH_INFO'),
+    'href'  => $link->export(),
+);
 
 // get the list of results
 $this->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
@@ -92,12 +63,15 @@ $this->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
 // get the total pages and row-count
 $total = $bookmarks->countPages($owner_handle, $tags);
 
-// assign everything else
-$this->rss['avail'] = true;
+// set the view
+$this->_view = 'list';
+
+// assign view vars
 $this->pages        = $total['pages'];
 $this->order        = $order;
 $this->page         = $page;
 $this->owner_handle = $owner_handle; // requested owner_handle
 $this->tags         = $tags; // the requested tags
 $this->tags_in_use  = $bookmarks->fetchTagList($owner_handle); // all tags for this user
+
 ?>

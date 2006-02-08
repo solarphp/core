@@ -17,11 +17,6 @@
  * 
  */
 
-/**
- * Include the header file.
- */
-include $this->template('header.php');
-
 // a basic link object
 $link = Solar::factory('Solar_Uri');
 ?>
@@ -209,4 +204,3 @@ $link = Solar::factory('Solar_Uri');
         <?php endif ?>
     </div>
 </div>
-<?php include $this->template('footer.php') ?>

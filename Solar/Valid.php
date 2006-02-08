@@ -19,6 +19,43 @@
  * 
  * Static methods for validating data.
  * 
+ * Solar_Valid aggregates several validation routines as static
+ * methods so you can make sure user input matches your requirements.
+ *  This is useful for checking form values and validating database
+ * fields.
+ * 
+ * Be sure to check the ClassMethods for a full list of
+ * valdiation routines.  Note that all the methods are static, so
+ * you never need to instantiate Solar_Valid (although you can if you
+ * want to).
+ * 
+ * <code type="php">
+ * require_once 'Solar.php';
+ * Solar::start();
+ * 
+ * // load the validation class
+ * Solar::loadClass('Solar_Valid');
+ * 
+ * // Fetch a copy of the $_GET['name'] value
+ * $name = Solar::get('name');
+ * 
+ * // Does it match the "alpha" validation rule?
+ * // (i.e., A-Z and a-z only).
+ * if (! Solar_Valid::alpha($name)) {
+ *     echo htmlspecialchars("Name '$name' is not valid.");
+ * }
+ * 
+ * 
+ * // Fetch a copy og the $_POST['date'] value
+ * $date = Solar::post('date');
+ * 
+ * // Is it an ISO-formatted date?  (Alternatively,
+ * // it can be completely blank.)
+ * if (! Solar_Valid::isoDate($date, Solar_Valid::OR_BLANK)) {
+ *     echo "The date must be in 'yyyy-mm-dd' format, or blank.";
+ * }
+ * </code>
+
  * @category Solar
  * 
  * @package Solar_Valid
@@ -38,7 +75,7 @@ class Solar_Valid {
     
     /**
      * 
-     * Validate that a value is only letters and digits.
+     * Validate that a value is only letters (upper or lower case) and digits.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -68,7 +105,11 @@ class Solar_Valid {
     
     /**
      * 
-     * Validate that a string is empty when trimmed.
+     * Validate that a value is empty when trimmed of all whitespace.
+     * 
+     * The value is assessed as a string; thus, if you pass a numeric
+     * zero, the value will not validate, becuse string '0' does not 
+     * trim down to an empty string.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -84,10 +125,34 @@ class Solar_Valid {
      * 
      * Validate against a custom callback function or method.
      * 
+     * Use this to perform your own customized validations.  The value
+     * will be passed as the first argument to the callback; the
+     * results of the callback should indicate boolean true if the
+     * value was valid, false if not.
+     * 
+     * <code type="php">
+     * require_once 'Solar.php';
+     * Solar::start();
+     * 
+     * Solar::loadClass('Solar_Valid');
+     * 
+     * // validate $value against a function
+     * $result = Solar_Valid::custom($value, 'my_function');
+     * 
+     * // validate $value against a static method
+     * $result = Solar_Valid::custom($value, array('SomeClass', 'StaticMethod'));
+     * 
+     * // validate $value against an object method
+     * $result = Solar_Valid::custom($value, array($object, 'MethodName'));
+     * 
+     * // validate $value against a function, with added parameters for the function
+     * $result = Solar_Valid::custom($value, 'my_function', $foo, 'bar', $etc);
+     * </code>
+     * 
      * @param mixed $value The value to validate.
      * 
-     * @param string|array $callback A string or array suitable for use
-     * as the first argument to call_user_func_array().
+     * @param callback $callback A string or array suitable for use
+     * as the first argument to [[php call_user_func_array()]].
      * 
      * @return bool True if valid, false if not.
      * 
@@ -126,7 +191,10 @@ class Solar_Valid {
     
     /**
      * 
-     * Validate that a value is a key in the list of of allowed options.
+     * Validate that the value is a key in the list of of allowed options.
+     * 
+     * Given the keys of the array (second parameter), the value
+     * (first parameter) must match at least one of those keys.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -170,6 +238,9 @@ class Solar_Valid {
     /**
      * 
      * See a value has only a certain number of digits and decimals.
+     * 
+     * The value must be numeric, can be no longer than the //size//,
+     * and can have no more decimal places than the //scope//.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -269,9 +340,10 @@ class Solar_Valid {
     
     /**
      * 
-     * Validate that a value is an ISO 8601 date string (yyyy-mm-dd format).
+     * Validate that a value is an ISO 8601 date string.
      * 
-     * Also checks to see that the date itself is valid (e.g., no Feb 30).
+     * The format is "yyyy-mm-dd".  Also checks to see that the date
+     * itself is valid (e.g., no Feb 30).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -341,9 +413,9 @@ class Solar_Valid {
      * 
      * Validate that a value is an ISO 8601 time string (hh:ii::ss format).
      * 
-     * Per note from Chris Drozdowski about ISO 8601, allows two midnight
-     * times ... 00:00:00 for the beginning of the day, and 24:00:00 for
-     * the end of the day.
+     * Per note from Chris Drozdowski about ISO 8601, allows two
+     * midnight times ... 00:00:00 for the beginning of the day, and
+     * 24:00:00 for the end of the day.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -489,9 +561,23 @@ class Solar_Valid {
      * 
      * Check the value against multiple validations.
      * 
-     * <code>
+     * Use this to perform multiple validations on a single value. 
+     * All of the validations must be successful for the value to be
+     * valid.  If any of the validations fails, then the value is
+     * treated as not valid.
+     * 
+     * The array describing the validations must itself consist of a
+     * series of arrays where the first element is a Solar_Valid
+     * method name, and the remaining elements are the parameters for
+     * that method (not including the value, of course).
+     * 
+     * <code type="php">
+     * require_once 'Solar.php';
+     * Solar::start();
+     * 
      * Solar::loadClass('Solar_Valid');
-     *
+     * 
+     * // the list of validations to perform
      * $validations = array(
      *     array('maxLength', 12),
      *     array('regex', '/^\w+$/', Solar_Valid::OR_BLANK),
@@ -575,6 +661,9 @@ class Solar_Valid {
      * 
      * Validate that a string is not empty when trimmed.
      * 
+     * Spaces, newlines, etc. will be trimmed, so a value consisting
+     * only of whitespace is considered blank.
+     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -588,6 +677,9 @@ class Solar_Valid {
     /**
      * 
      * Validate a value against a regular expression.
+     * 
+     * Uses [[php preg_match]] to compare the value against the given
+     * regular epxression.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -626,10 +718,18 @@ class Solar_Valid {
      * 
      * Validate a value as a URI per RFC2396.
      * 
+     * The value must match a generic URI format; e.g.,
+     * ``http://example.com``, ``mms://example.org``, and so on.
+     * 
+     * If //$schemes// is null, any and all schemes (http,
+     * ftp, mms, xyz) are allowed.  Otherwise, the URI scheme must be
+     * one of the //$schemes// array values.
+     * 
      * @param mixed $value The value to validate.
      * 
-     * @param array $schemes Allowed schemes for the URI; e.g., http,
-     * https, ftp.  If null, any scheme at all is allowed.
+     * @param string|array $schemes Allowed schemes for the URI;
+     * e.g., http, https, ftp.  If null, any scheme at all is
+     * allowed.
      * 
      * @return bool True if the value is a URI and is one of the allowed
      * schemes, false if not.
@@ -642,8 +742,7 @@ class Solar_Valid {
             return true;
         }
         
-        // TAKEN DIRECTLY FROM PEAR_VALIDATE::URI()
-        // (with modifications)
+        // TAKEN (almost) DIRECTLY FROM PEAR_VALIDATE::URI()
         $result = preg_match(
             '£^(?:([a-z][-+.a-z0-9]*):)?                                                # 1. scheme
             (?://                                                                       #    authority start

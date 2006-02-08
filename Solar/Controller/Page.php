@@ -77,6 +77,34 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * The dispatch pathinfo variable map.
+     * 
+     * The format of this array is key-value pairs, where the key is
+     * the action name, and the value is a sequential array of
+     * variable names in pathinfo positions.  For example, see this
+     * $_action_info array:
+     * 
+     * $_action_info = array(
+     *     'item' => array('id'), // "item/:id"
+     *     'list' => array('year', 'month') // "list/:year/:month"
+     * );
+     * 
+     * @var string
+     * 
+     */
+    protected $_action_info = array();
+    
+    /**
+     * 
+     * The action being requested of (performed by) the application.
+     * 
+     * @var string
+     * 
+     */
+    protected $_action = null;
+    
+    /**
+     * 
      * Application request parameters collected from the URI pathinfo.
      * 
      * @var string
@@ -95,15 +123,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The action being requested of (performed by) the application.
-     * 
-     * @var string
-     * 
-     */
-    protected $_action = null;
-    
-    /**
-     * 
      * The name of the view to be rendered after the action.
      * 
      * @var string
@@ -118,26 +137,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var array
      * 
      */
-    protected $_layout = array();
-    
-    /**
-     * 
-     * The dispatch pathinfo variable map.
-     * 
-     * The format of this array is key-value pairs, where the key is
-     * the action name, and the value is a sequential array of
-     * variable names in pathinfo positions.  For example, see this
-     * $_action_info array:
-     * 
-     * $_action_info = array(
-     *     'item' => array('id'), // "item/:id"
-     *     'list' => array('year', 'month') // "list/:year/:month"
-     * );
-     * 
-     * @var string
-     * 
-     */
-    protected $_action_info = array();
+    protected $_layout;
     
     /**
      * 
@@ -217,11 +217,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function fetch($spec = null)
     {
+        // collect path info and query values
+        $this->_collect($spec);
+        
         // forward to the proper action.
         // this uses the current collection spec,
         // but allows for forwarding from within
         // the action.
-        $this->_forward($spec);
+        $this->_forward($this->_action);
         
         // set up a view object
         $tpl = Solar::factory('Solar_Template');
@@ -229,20 +232,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // add the app-specific path for views
         $tpl->addPath('template', $this->_basedir . 'Views/');
         
-        // add the app-specific path for view helpers (Savant plugins)
-        // $tpl->addPath('resource', $this->_basedir . 'Views/Helpers/');
-        
         // tell the template view what locale strings to use
         $class = get_class($this);
         $tpl->locale("$class::");
         
         // set the view template script
         if (! $this->_view) {
-            // use the most-recent action name
+            // use the action name
             $this->_view = $this->_action;
         }
         
-        // assign the app data, run the view, return the output
+        // assign the data, run the view, return the output
         $tpl->assign($this);
         $result = $tpl->fetch($this->_view . '.view.php');
         return $result;
@@ -265,6 +265,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * Gets the layout variables set by the action script.
+     * 
+     */
+    public function getLayout()
+    {
+        return $this->_layout;
+    }
+    
+    
+    /**
+     * 
      * Retrieve the value of a pathinfo request key by name.
      * 
      * @param string $key The info key.
@@ -277,10 +288,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _info($key, $val = null)
     {
-        if (empty($this->_info[$key])) {
-            return $val;
-        } else {
+        if (array_key_exists($key, $this->_info)) {
             return $this->_info[$key];
+        } else {
+            return $val;
         }
     }
     
@@ -298,10 +309,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _query($key, $val = null)
     {
-        if (empty($this->_query[$key])) {
-            return $val;
-        } else {
+        if (array_key_exists($key, $this->_query)) {
             return $this->_query[$key];
+        } else {
+            return $val;
         }
     }
     
@@ -329,22 +340,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes an action.
+     * Forwards to an action script.
      * 
-     * @param string $spec The action specification.
-     * 
-     * @return string The view template the action expects to use.
+     * @param string $name The action name.
      * 
      */
-    protected function _forward($spec = null)
+    protected function _forward($name)
     {
-        // collect the action, info, and query values
-        $this->_collect($spec);
-        
-        // what is the action name?
-        // filter it so we don't get file traversals,
+        // filter the name so we don't get file traversals,
         // then convert to a script filename.
-        $name = $this->_action;
         $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
         $file = $this->_basedir . "Actions/$name.action.php";
         if (! is_readable($file)) {

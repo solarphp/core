@@ -123,8 +123,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config An array of user-defined configuration
-     * values.
+     * @param array $config User-provided configuration values.
      * 
      * @return void
      * 

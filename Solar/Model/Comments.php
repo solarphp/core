@@ -76,7 +76,7 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config An array of configuration options.
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)

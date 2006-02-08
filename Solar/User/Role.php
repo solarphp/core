@@ -78,7 +78,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      * Constructor to set up the storage driver.
      *
-     * @param array $config The config options.
+     * @param array $config User-provided configuration values.
      * 
      * @return object
      * 

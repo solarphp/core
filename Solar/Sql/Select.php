@@ -155,7 +155,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config User-provided config values.
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)

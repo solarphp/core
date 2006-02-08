@@ -19,6 +19,20 @@
  * 
  * Memcache cache controller.
  * 
+ * This driver lets you connect to a [http://www.danga.com/memcached/
+ * memcached] server, which uses system memory to cache data.  In
+ * general, you never need to instantiate it yourself; instead, use
+ * Solar_Cache as the frontend for it and specify
+ * 'Solar_Cache_Memcache' in the config keys as the 'class' value.
+ * 
+ * This kind of cache is extremely fast, especially when on the same
+ * server as the web process, although it may also be accessed via
+ * network.  This particular driver uses the PHP [[php memcache]]
+ * extension to manage the cache connection.  The extension is not
+ * bundled with PHP; you will need to follow the
+ * [http://php.net/memcache installation instructions] before you can
+ * use it.
+ * 
  * @category Solar
  * 
  * @package Solar_Cache
@@ -30,20 +44,12 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
-     * 
-     * host => (string) the memcache server hostname
-     * 
-     * port => (string|int) the port on the server
-     * 
-     * life => (int) lifetime in seconds for each cache entry
-     * 
      * @var array
      * 
      */
     protected $_config = array(
         'host' => 'localhost',
-        'port' => '11211',
+        'port' => 11211,
         'life' => 60,
     );
     
@@ -60,8 +66,13 @@ class Solar_Cache_Memcache extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config An array of user-supplied configuration
-     * values.
+     * Config keys are:
+     * 
+     * : \\host\\ : (string) The hostname of the memcached server, default 'localhost' 
+     * : \\port\\ : (int) The port number for the memcached server, default 11211 
+     * : \\life\\ : (int) The lifetime of each cache entry in seconds, default 60 (1 minute) 
+     * 
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)

@@ -19,6 +19,25 @@
  * 
  * File-based cache controller.
  * 
+ * This is the file-based driver for [Solar_Cache:HomePage Solar_Cache].
+ * In general, you never need to instantiate it yourself; instead,
+ * use Solar_Cache as the frontend for it and specify
+ * 'Solar_Cache_File' as the 'class' config key value.
+ * 
+ * If you specify a path (for storing cache entry files) that does
+ * not exist, this driver attempts to create it for you.
+ * 
+ * This driver always uses [[php flock()]] when reading and writing
+ * cache entries; it uses a shared lock for reading, and an exclusive
+ * lock for writing.  This is to help cut down on cache corruption
+ * when two processes are trying to access the same cache file entry,
+ * one for reading and one for writing.
+ * 
+ * In addition, this driver automatically serializes and unserializes
+ * arrays and objects that are stored in the cache.  This means you
+ * can store not only string output, but also array data and entire
+ * objects in the cache ... just like Solar_Cache_Memcache.
+ * 
  * @category Solar
  * 
  * @package Solar_Cache
@@ -32,12 +51,6 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
-     * 
-     * path => (string) the directory path where cache files are stored
-     * 
-     * life => (int) lifetime in seconds for each cache entry
-     * 
      * @var array
      * 
      */
@@ -50,8 +63,13 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @param array $config An array of user-supplied configuration
-     * values.
+     * Config keys are:
+     * 
+     * : \\path\\ : (string) The directory where cache files are located; should be readable and writable by the script process, usually the web server process
+     * 
+     * : \\life\\ : (int) The lifetime of each cache entry in seconds; default is 3600 seconds (i.e., 1 hour)
+     * 
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)

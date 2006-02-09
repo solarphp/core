@@ -28,7 +28,7 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
     
     /**
      * 
-     * The base path, generally the front-controller path.
+     * The base href path, generally the front-controller path.
      * 
      * @var string
      * 

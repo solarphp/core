@@ -1,31 +1,37 @@
 GENERIC CONTENT MODEL
 
-Convert from Solar_Content to Solar_Model_Content:
-
 Solar/
     Model/
-        Content/
-            Areas.php -- broad content areas (logical namespaces)
-            Nodes.php -- nodes of content in the namespaces
-            Tags.php -- searchable tags on a node
+        Areas.php -- broad content areas (logical namespaces)
+        Nodes.php -- nodes of content in the namespaces
+        Tags.php -- searchable tags on a node
+        Hits.php -- hits and visitors on a node
+    Content.php
+    Content/
+        Type.php
+        Type/
+            Blog.php
+            Bookmark.php
+            Comment.php
+            Image.php (in galleries)
+            Issue.php (bug tracking)
+            File.php (attachment?)
+            Forum.php (holder for comments)
+            Gallery.php (holder for images)
+            Ping.php (ping sent)
+            Pingback.php (ping received)
+            Todo.php
+            Track.php (track sent)
+            Trackback.php (track received)
+            Wiki.php
+            
 
-Need to add Solar_Model_Content_Hits for hits and visitors
+// ugh:
+$bookmarks = Solar::factory('Solar_Content_Type_Bookmark');
 
-Content types:
-    comment (comments received)
-    ping (pings sent)
-    trackback (trackbacks received)
-    pingback (pingbacks received)
-    todo (to-do lists)
-    blog (blog entry)
-    wiki (wiki page)
-    file (generic file attachments)
-    forum (discussion thread)
-    gallery (image gallery)
 
-Have a Solar_Model_ContentType class for retrieving specific types?
-    Solar_Content_Bookmarks extends Solar_Model_ContentType
-    
+Add dates to content model (e.g., begin and end dates)
+
 ALSO NEED ACCESS CONTROL!
 
 ----
@@ -35,6 +41,7 @@ COMPONENT TASKS
 delete an area (and all nodes, edits, etc)
 
 add a node revision
+
 delete a node (and all edits, etc)
 
 edits themselves should be below notice at this level

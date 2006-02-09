@@ -158,7 +158,7 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
      * 
      * The current form processing object.
      * 
-     * @var object Solar_Form
+     * @var Solar_Form
      * 
      */
     public $formdata;

@@ -21,7 +21,7 @@
  * 
  * An example front-controller "index.php" for your web root:
  *
- * <code>
+ * <code type="php">
  * require_once 'Solar.php';
  * Solar::start();
  * $front = Solar::factory('Solar_Controller_Front');
@@ -32,8 +32,6 @@
  * @category Solar
  * 
  * @package Solar_Controller
- * 
- * @todo How to get data back from the app to use in the layout (e.g., html title?)
  * 
  */
 class Solar_Controller_Front extends Solar_Base {
@@ -125,7 +123,6 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected $_construct;
     
-    
     /**
      * 
      * A script to run at __destruct() time.
@@ -151,14 +148,19 @@ class Solar_Controller_Front extends Solar_Base {
     public function __construct($config)
     {
         // set some defaults
-        $dir = dirname(dirname(__FILE__));
-        $this->_config['layout_dir'] = "$dir/Layout";
+        $dir = dirname(__FILE__);
+        
+        // layout dir is Solar/Layout/
+        $this->_config['layout_dir'] = dirname($dir) . "/Layout";
         $this->_config['layout_tpl'] = 'default';
+        
+        // construction hook
+        $this->_config['construct']  = "$dir/Front/construct.hook.php";
         
         // now do "real" construction
         parent::__construct($config); 
         
-        // set vars from config
+        // set convenience vars from config
         $this->_app_default = $this->_config['app_default'];
         $this->_app_class   = $this->_config['app_class'];
         $this->_layout_dir  = $this->_config['layout_dir'];
@@ -167,20 +169,9 @@ class Solar_Controller_Front extends Solar_Base {
         $this->_construct   = $this->_config['construct'];
         $this->_destruct    = $this->_config['destruct'];
         
-        // perform construct-time script
+        // execute construct-time hook
         if ($this->_construct) {
             Solar::run($this->_construct);
-        }
-        
-        // register a Solar_Sql object if not already
-        if (! Solar::inRegistry('sql')) {
-            Solar::register('sql', Solar::factory('Solar_Sql'));
-        }
-        
-        // register a Solar_User object if not already.
-        // this will trigger the authentication process.
-        if (! Solar::inRegistry('user')) {
-            Solar::register('user', Solar::factory('Solar_User'));
         }
     }
     
@@ -205,7 +196,6 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * @return string The output of the application action.
      * 
-     * @todo Add pre- and post- hook scripts?
      */
     public function fetch($spec = null)
     {
@@ -259,7 +249,7 @@ class Solar_Controller_Front extends Solar_Base {
             return $tpl->fetch($this->_layout_tpl . '.layout.php');
         }
     }
-
+    
     /**
      * 
      * Displays the output of an app/action/info specification URI.

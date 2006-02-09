@@ -26,6 +26,7 @@ Solar::loadClass('Solar_Uri');
  * 
  * Expects a directory structure like this example:
  * 
+ * <code>
  * Example.php
  * Example/
  *   Actions/
@@ -39,9 +40,7 @@ Solar::loadClass('Solar_Uri');
  *   Locale/
  *     en_US.php
  *     pt_BR.php
- *   Public/
- *     stylesheet.css
- *     javascript.js
+ * </code>
  * 
  * Note that models are not included in the application itself; this is
  * for class-name deconfliction reasons.  Your models should be stored 
@@ -56,15 +55,6 @@ Solar::loadClass('Solar_Uri');
  * 
  */
 abstract class Solar_Controller_Page extends Solar_Base {
-    
-    /**
-     * 
-     * Base directory under which actions, views, etc. are located.
-     * 
-     * @var string
-     * 
-     */
-    protected $_basedir = null;
     
     /**
      * 
@@ -105,12 +95,30 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * Base directory under which actions, views, etc. are located.
+     * 
+     * @var string
+     * 
+     */
+    protected $_dir = null;
+    
+    /**
+     * 
      * Application request parameters collected from the URI pathinfo.
      * 
      * @var string
      * 
      */
     protected $_info = array();
+    
+    /**
+     * 
+     * Data to be passed up to the site layout.
+     * 
+     * @var array
+     * 
+     */
+    protected $_layout;
     
     /**
      * 
@@ -128,16 +136,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var string
      * 
      */
-    protected $_view = null; // the requested view
-    
-    /**
-     * 
-     * Data to be passed up to the site layout.
-     * 
-     * @var array
-     * 
-     */
-    protected $_layout;
+    protected $_view = null;
     
     /**
      * 
@@ -149,7 +148,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function __construct($config = null)
     {
         // auto-set the base directory
-        if (empty($this->_basedir)) {
+        if (empty($this->_dir)) {
             // remove Solar/Controller/Page.php from the __FILE__
             // so that we have a base prefix
             $base = substr(__FILE__, 0, -25);
@@ -158,16 +157,16 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $dir = str_replace('_', '/', get_class($this));
             
             // done
-            $this->_basedir = $base . $dir;
+            $this->_dir = $base . $dir;
         }
         
         // fix the basedir
-        $this->_basedir = Solar::fixdir($this->_basedir);
+        $this->_dir = Solar::fixdir($this->_dir);
         
         // auto-set the locale directory
         if (empty($this->_config['locale'])) {
             $this->_config['locale'] = Solar::fixdir(
-                $this->_basedir . 'Locale/'
+                $this->_dir . 'Locale/'
             );
         }
         
@@ -188,7 +187,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function __set($key, $val)
     {
-        throw new Exception("property '$key' not defined");
+        throw $this->_exception(
+            'ERR_PROPERTY_NOT_DEFINED',
+            array('property' => "\$$key")
+        );
     }
     
     /**
@@ -197,19 +199,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * @param string $key The property name.
      * 
-     * @param mixed $val The property value.
-     * 
      * @return void
      * 
      */
     public function __get($key)
     {
-        throw new Exception("property '$key' not defined");
+        throw $this->_exception(
+            'ERR_PROPERTY_NOT_DEFINED',
+            array('property' => "\$$key")
+        );
     }
     
     /**
      * 
-     * Execute the requested action and returns its output.
+     * Executes the requested action and returns its output.
      * 
      * @param string $spec The action specification string, e.g.:
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
@@ -222,32 +225,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // collect path info and query values
         $this->_collect($spec);
         
-        // forward to the proper action.
-        // this uses the current collection spec,
-        // but allows for forwarding from within
-        // the action.
+        // by default, use the action name for the view
+        $this->_view = $this->_action;
+        
+        // run the pre-action, forward to the first action (which may
+        // trigger other actions), and run the post-action.
+        $this->_preAction();
         $this->_forward($this->_action);
+        $this->_postAction();
         
-        // set up a view object
-        $tpl = Solar::factory('Solar_Template');
-        
-        // add the app-specific path for views
-        $tpl->addPath('template', $this->_basedir . 'Views/');
-        
-        // tell the template view what locale strings to use
-        $class = get_class($this);
-        $tpl->locale("$class::");
-        
-        // set the view template script
-        if (! $this->_view) {
-            // use the action name
-            $this->_view = $this->_action;
-        }
-        
-        // assign the data, run the view, return the output
-        $tpl->assign($this);
-        $result = $tpl->fetch($this->_view . '.view.php');
-        return $result;
+        // return the view results.
+        return $this->_view();
     }
     
     /**
@@ -275,6 +263,126 @@ abstract class Solar_Controller_Page extends Solar_Base {
         return $this->_layout;
     }
     
+    /**
+     * 
+     * Collects action, pathinfo, and query values.
+     * 
+     * @param string $spec The action specification.
+     * 
+     * @return void
+     * 
+     */
+    protected function _collect($spec = null)
+    {
+        // if the spec is null, use current URI
+        if (! $spec) {
+        
+            $uri = Solar::factory('Solar_Uri');
+            $this->_info = $uri->info;
+            $this->_query = $uri->query;
+            
+        } elseif ($spec instanceof Solar_Uri) {
+            
+            $this->_info = $spec->info;
+            $this->_query = $spec->query;
+            
+        } else {
+            
+            // it's a string, assumed to be a page/action/info spec.
+            $uri = Solar::factory('Solar_Uri');
+            $uri->importAction($spec);
+            $this->_info = $uri->info;
+            $this->_query = $uri->query;
+        }
+        
+        // find the requested action
+        $this->_action = array_shift($this->_info);
+        if (! $this->_action) {
+            $this->_action = $this->_action_default;
+        }
+        
+        // if there is no map for this action, we're done
+        if (empty($this->_action_info[$this->_action])) {
+            // no need to map variable names
+            return;
+        }
+        
+        // track the numeric position for each mapping
+        $i = 0;
+        
+        // go through the info map for the action
+        foreach ($this->_action_info[$this->_action] as $key => $val) {
+            
+            // if the name is an integer, there is no default value.
+            // thus, the value is itself the name.
+            if (is_int($key)) {
+                // use null as the default value
+                $this->_info[$val] = (empty($this->_info[$i]) ? null : $this->_info[$i]);
+            } else {
+                // use $val as the default value
+                $this->_info[$key] = (empty($this->_info[$i]) ? $val : $this->_info[$i]);
+            }
+            
+            // advance to the next info position
+            $i++;
+        }
+    }
+    
+    /**
+     * 
+     * Executes just before the first action.
+     * 
+     */
+    protected function _preAction()
+    {
+    }
+    
+    /**
+     * 
+     * Executes just after the last action, and just before the view.
+     * 
+     */
+    protected function _postAction()
+    {
+    }
+    
+    
+    /**
+     * 
+     * Includes a file in an isolated scope (but with access to $this).
+     * 
+     * @param string The file to include.
+     * 
+     * @return mixed The return from the included file.
+     * 
+     */
+    protected function _run()
+    {
+        return include func_get_arg(0);
+    }
+    
+    /**
+     * 
+     * Executes and returns the view.
+     * 
+     */
+    public function _view()
+    {
+        // set up a view object
+        $tpl = Solar::factory('Solar_Template');
+        
+        // add the app-specific path for views
+        $tpl->addPath('template', $this->_dir . 'Views/');
+        
+        // tell the template view what locale strings to use
+        $class = get_class($this);
+        $tpl->locale("$class::");
+        
+        // assign the data, run the view, return the output
+        $tpl->assign($this);
+        $result = $tpl->fetch($this->_view . '.view.php');
+        return $result;
+    }
     
     /**
      * 
@@ -352,7 +460,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // filter the name so we don't get file traversals,
         // then convert to a script filename.
         $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
-        $file = $this->_basedir . "Actions/$name.action.php";
+        $file = $this->_dir . "Actions/$name.action.php";
         if (! is_readable($file)) {
             throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
@@ -362,85 +470,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // run the action script
         $this->_run($file);
-    }
-    
-    /**
-     * 
-     * Collects action, pathinfo, and query values.
-     * 
-     * @param string $spec The action specification.
-     * 
-     * @return void
-     * 
-     */
-    protected function _collect($spec = null)
-    {
-        // if the spec is null, use current URI
-        if (! $spec) {
-        
-            $uri = Solar::factory('Solar_Uri');
-            $this->_info = $uri->info;
-            $this->_query = $uri->query;
-            
-        } elseif ($spec instanceof Solar_Uri) {
-            
-            $this->_info = $spec->info;
-            $this->_query = $spec->query;
-            
-        } else {
-            
-            // it's a string, assumed to be a page/action/info spec.
-            $uri = Solar::factory('Solar_Uri');
-            $uri->importAction($spec);
-            $this->_info = $uri->info;
-            $this->_query = $uri->query;
-        }
-        
-        // find the requested action
-        $this->_action = array_shift($this->_info);
-        if (! $this->_action) {
-            $this->_action = $this->_action_default;
-        }
-        
-        // if there is no map for this action, we're done
-        if (empty($this->_action_info[$this->_action])) {
-            // no need to map variable names
-            return;
-        }
-        
-        // track the numeric position for each mapping
-        $i = 0;
-        
-        // go through the info map for the action
-        foreach ($this->_action_info[$this->_action] as $key => $val) {
-            
-            // if the name is an integer, there is no default value.
-            // thus, the value is itself the name.
-            if (is_int($key)) {
-                // use null as the default value
-                $this->_info[$val] = (empty($this->_info[$i]) ? null : $this->_info[$i]);
-            } else {
-                // use $val as the default value
-                $this->_info[$key] = (empty($this->_info[$i]) ? $val : $this->_info[$i]);
-            }
-            
-            // advance to the next info position
-            $i++;
-        }
-    }
-    
-    /**
-     * 
-     * Includes a file in an isolated scope (but with access to $this).
-     * 
-     * @param string The file to include.
-     * 
-     * @return mixed The return from the included file.
-     * 
-     */
-    protected function _run()
-    {
-        return include func_get_arg(0);
     }
 }
 ?>

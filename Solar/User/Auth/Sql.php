@@ -33,7 +33,7 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * Keys are:
      * 
      * sql => (string|array) How to get the SQL object.  If a string, is
-     * treated as a Solar::shared() object name.  If array, treated as
+     * treated as a Solar::registry() object name.  If array, treated as
      * config for a standalone Solar_Sql object.
      * 
      * table => (string) Name of the table holding authentication data.
@@ -69,14 +69,8 @@ class Solar_User_Auth_Sql extends Solar_Base {
      */
     public function valid($username, $password)
     {
-        // get the SQL object
-        if (is_string($this->_config['sql'])) {
-            // use a shared object.
-            $obj = Solar::shared($this->_config['sql']);
-        } else {
-            // instantiate a new object.
-            $obj = Solar::factory('Solar_Sql', $this->_config['sql']);
-        }
+        // get the dependency object of class Solar_Sql
+        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
         // build the SQL statement
         $stmt  = "SELECT COUNT({$this->_config['username_col']})";

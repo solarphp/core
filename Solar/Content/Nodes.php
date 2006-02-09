@@ -75,14 +75,14 @@ class Solar_Content_Nodes extends Solar_Sql_Table {
         $this->_col['owner_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
-            'default' => Solar::shared('user')->auth->username,
+            'default' => Solar::registry('user')->auth->username,
         );
         
         // username of the most-recent editor
         $this->_col['editor_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
-            'default' => Solar::shared('user')->auth->username,
+            'default' => Solar::registry('user')->auth->username,
         );
         
         // ip address of the most-recent editor

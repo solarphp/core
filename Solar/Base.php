@@ -279,62 +279,6 @@ abstract class Solar_Base {
     
     /**
      * 
-     * Provides hooks for Solar::start() and Solar::stop() on shared objects.
-     * 
-     * If you use the [Main:ConfigFile config file] to define a
-     * Solar_Base extended object as an auto-shared object with the
-     * [Solar:ConfigKeys Solar 'autoshare' config key], Solar will
-     * call this method ...
-     * 
-     * * At Solar::start() time as \\``solar('start')``\\
-     * 
-     * * At Solar::stop() time as \\``solar('stop')``\\
-     * 
-     * This means you can override the method to add customized
-     * startup and shutdown behaviors for this object if it is
-     * auto-shared.  By default, no code is executed by the solar()
-     * method for either 'start' or 'stop'.
-     * 
-     * For example, you can have an auto-shared object automatically
-     * print "Hello" at Solar::start() time and "Goodbye" at
-     * Solar::stop() time.
-     * 
-     * <code type="php">
-     * class Example extends Solar_Base {
-     *     public function solar($hook)
-     *     {
-     *         // executes at Solar::start() time
-     *         if ($hook == 'start') {
-     *             echo "Hello!";
-     *         }
-     * 
-     *         // executes at Solar::stop() time
-     *         if ($hook == 'stop') {
-     *             echo "Goodbye!";
-     *         }
-     *     }
-     * }
-     * </code>
-
-     * @param string $hook The hook to activate, typically 'start' or 'stop'.
-     * 
-     * @return void
-     * 
-     */
-    public function solar($hook)
-    {
-        switch ($hook) {
-        case 'start':
-            // do nothing
-            break;
-        case 'stop':
-            // do nothing
-            break;
-        }
-    }
-    
-    /**
-     * 
      * Looks up locale strings based on a key.
      * 
      * This is a convenience method that loads locale strings for the
@@ -363,7 +307,7 @@ abstract class Solar_Base {
      * 
      * // load the translation file for the 'Example' class
      * // based on the current locale code
-     * Solar::shared('locale')->load('Example',
+     * Solar::registry('locale')->load('Example',
      * '/path/to/files/Locale/');
      * 
      * // get a translation for the ERR_EXAMPLE key
@@ -374,14 +318,14 @@ abstract class Solar_Base {
      * 
      * <code type="php">
      * // change locale codes to Espanol
-     * Solar::shared('locale')->setCode('es_ES');
+     * Solar::registry('locale')->setCode('es_ES');
      * 
      * // this string will be blank because the es_ES strings have not
      * // been loaded yet
      * $string = Solar::locale('Example', 'ERR_EXAMPLE');
      * 
      * // need to reload strings for the current locale
-     * Solar::shared('locale')->load('Example',
+     * Solar::registry('locale')->load('Example',
      * '/path/to/files/Locale/');
      * 
      * // now we'll get a translation for the ERR_EXAMPLE key
@@ -427,7 +371,7 @@ abstract class Solar_Base {
      * $string = $example->locale('ERR_EXAMPLE');
      * 
      * // change the code and get another translation
-     * Solar::shared('locale')->setCode('es_ES');
+     * Solar::registry('locale')->setCode('es_ES');
      * $string = $example->locale('ERR_EXAMPLE');
      * </code>
      * 
@@ -475,7 +419,7 @@ abstract class Solar_Base {
     public function locale($key, $num = 1)
     {
         // the shared Solar_Locale object
-        $locale = Solar::shared('locale');
+        $locale = Solar::registry('locale');
         
         // is a locale directory specified?
         if (empty($this->_config['locale'])) {

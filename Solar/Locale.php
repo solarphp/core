@@ -30,6 +30,8 @@ class Solar_Locale extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
+     * @var array
+     * 
      */
     protected $_config = array(
         'locale' => 'Solar/Locale/',
@@ -48,6 +50,8 @@ class Solar_Locale extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)

@@ -32,7 +32,7 @@ class Solar_User_Role_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * 'sql' => (string|array) A string Solar::shared() object name, or a 
+     * 'sql' => (string|array) A string Solar::registry() object name, or a 
      * Solar::factory() config array.
      * 
      * 'table' => (string) The table where roles are stored.
@@ -62,14 +62,8 @@ class Solar_User_Role_Sql extends Solar_Base {
      */
     public function fetch($username)
     {
-        // get or create the SQL object
-        if (is_string($this->_config['sql'])) {
-            // use a shared object.
-            $obj = Solar::shared($this->_config['sql']);
-        } else {
-            // instantiate a new object.
-            $obj = Solar::factory('Solar_Sql', $this->_config['sql']);
-        }
+        // get the dependency object of class Solar_Sql
+        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
         // build the SQL statement
         $stmt =  "SELECT " . $this->_config['rolename_col'];

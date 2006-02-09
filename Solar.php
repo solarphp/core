@@ -70,12 +70,12 @@ class Solar {
     
     /**
      * 
-     * Shared singleton objects are properties of the $shared object.
+     * Object registry.
      * 
      * @var array
      * 
      */
-    static protected $_shared = null;
+    static public $registry = array();
     
     /**
      * 
@@ -137,17 +137,17 @@ class Solar {
      * 
      * # Prepares space for shared objects noted in
      * Solar::$config['Solar']['shared'] but does not instantiate
-     * them; Solar waits for the first call to Solar::shared() before
+     * them; Solar waits for the first call to Solar::registry() before
      * loading and instantiating a shared object (this is called
      * "lazy loading").
      * 
      * # Instantiates the shared Solar_Locale object (for reading
-     * locale strings) as Solar::shared('locale').
+     * locale strings) as Solar::registry('locale').
      * 
      * # Instantiates all objects noted in
      * Solar::$config['Solar']['autoshare'].  As part of this
      * process, Solar_User is instantiated automatically as
-     * Solar::shared('user').
+     * Solar::registry('user').
      * 
      * # For each auto-shared object, Solar attempts to run its
      * \\solar('start')\\ method.  This behavior is reserved only for
@@ -157,6 +157,13 @@ class Solar {
      * # Finally, Solar runs any scripts noted in
      * Solar::$config['Solar']['start'].  This allows you to specify
      * additional environment startup behaviors.
+     * 
+     * @param mixed $alt_config The alternate configuration parameter.
+     * If boolean false, no configs are loaded.  If a string, it's a
+     * script name, and configs are loaded from the return of that script.
+     * If an array, it is used as the config array.  If an object, it is
+     * converted to an array and used as the config array.  If null,
+     * config is loaded from SOLAR_CONFIG_PATH script.
      * 
      * @todo Put autosharing behavior into Solar_Controller_Front instead?
      * This would also get rid of the __solar() autoshare method, which might
@@ -181,12 +188,6 @@ class Solar {
         
         // the Solar_Exception class
         require_once Solar::$_dir . 'Solar/Exception.php';
-        
-        // the Solar_Error class, needed for Solar::isError().
-        require_once Solar::$_dir . 'Solar/Error.php';
-        
-        // initialize $_shared property as a StdClass object
-        Solar::$_shared = new StdClass;
         
         // set up the standard Solar environment
         Solar::_environment();
@@ -213,53 +214,11 @@ class Solar {
             ini_set($key, $val);
         }
         
-        // make sure the baseline set of shared objects is in place,
-        // ready to be called when needed.
-        $baseline = array(
-            'sql'      => 'Solar_Sql',
-            'user'     => 'Solar_User',
-            'locale'   => 'Solar_Locale',
-            'template' => 'Solar_Template',
-        );
+        // register a Solar_Locale object
+        Solar::register('locale', Solar::factory('Solar_Locale'));
         
-        foreach ($baseline as $name => $class) {
-            if (! isset(Solar::$config['Solar']['shared'][$name])) {
-                Solar::$config['Solar']['shared'][$name] = $class;
-            }
-        }
-        
-        // build the shared locale object
-        Solar::shared('locale');
-        
-        // load the autoshare objects ...
-        $list = Solar::config('Solar', 'autoshare', array());
-        
-        // make sure 'user' is there somewhere (by default, at the top).
-        // we do this so that its solar('stop') method gets called.
-        if (! in_array('user', $list)) {
-            array_unshift($list, 'user');
-        }
-        
-        // loop through each autoshare object and load it ...
-        foreach ($list as $name) {
-            Solar::shared($name);
-        }
-        
-        // ... and then run each of the solar('start') methods.
-        // (we load and run in separate loops because some 
-        // objects may depend on others).
-        foreach ($list as $name) {
-            // is_callable() doesn't seem to work with an 
-            // object instance, but it works fine with just
-            // the class name.  so we'll use that.
-            $class = get_class(Solar::$_shared->$name);
-            if (is_callable($class, 'solar')) {
-                Solar::$_shared->$name->solar('start');
-            }
-        }
-        
-        // finally, run any 'start' hook scripts
-        foreach (Solar::config('Solar', 'start', array()) as $file) {
+        // run any 'start' hook scripts
+        foreach ((array) Solar::config('Solar', 'start') as $file) {
             Solar::run($file);
         }
         
@@ -308,25 +267,9 @@ class Solar {
      */
     static public function stop()
     {
-        // run the application-defined stop scripts.
-        foreach (Solar::config('Solar', 'stop', array()) as $file) {
+        // run the user-defined stop scripts.
+        foreach ((array) Solar::config('Solar', 'stop') as $file) {
             Solar::run($file);
-        }
-        
-        // find the solar('stop') hook in each auto-shared
-        // object ...
-        $list = Solar::config('Solar', 'autoshare', array());
-        
-        // ... and run them in reverse order.
-        $list = array_reverse($list);
-        foreach ($list as $name) {
-            // is_callable() doesn't seem to work with an 
-            // object instance, but it works fine with just
-            // the class name.  so we'll use that.
-            $class = get_class(Solar::$_shared->$name);
-            if (is_callable($class, 'solar')) {
-                Solar::$_shared->$name->solar('stop');
-            }
         }
         
         // reset the status flag, and we're done.
@@ -393,7 +336,7 @@ class Solar {
      */
     static public function locale($class, $key, $num = 1)
     {
-        return Solar::shared('locale')->string($class, $key, $num);
+        return Solar::registry('locale')->string($class, $key, $num);
     }
     
     /**
@@ -415,33 +358,34 @@ class Solar {
      * The loadClass() method is the equivalent of the above pair of
      * steps, but adds a [[php class_exists()]] check to see if the
      * class was actually loaded from the file.  It won't attempt to
-     * load the same class file more than once.
+     * load the same class more than once.
      * 
      * For example:
      * 
      * <code type="php">
      * Solar::loadClass('My_Example_Class');
+     * $example = new My_Example_Class();
      * </code>
      * 
      * If after calling loadClass() the 'My_Example_Class' still does
-     * not exist, Solar throws a fatal error, with a backtrace, to
-     * let you know the load failed.  This makes it easy to track
-     * down failed loads.
+     * not exist, Solar throws an exception with a backtrace to let
+     * you know the load failed and where it was called from.  This
+     * makes it easy to track down failed loads.
      * 
      * For this method to work, the class to be loaded must be in the
-     * include_path and conform to the [Main:NamingConventions class
-     * naming conventions].  Note that when using Solar::object(),
-     * you **do not** need to use loadClass() first; Solar::object()
-     * automatically calls loadClass() to load the requested class
-     * file.
+     * same directory as the Solar directory (typically the PEAR
+     * library path) and conform to the [Main:NamingConventions class
+     * naming conventions].
+     * 
+     * Note that when using Solar::factory(), you **do not** need to
+     * use loadClass() first; Solar::factory() automatically calls
+     * loadClass() to load the requested class file.
      * 
      * @param string $class A Solar (or other) class name.
      * 
      * @return void
      * 
      * @todo Add localization for errors
-     * 
-     * @todo Add 'strict' flag to not-prepend self::$_dir?
      * 
      */
     static public function loadClass($class)
@@ -461,21 +405,8 @@ class Solar {
             );
         }
         
-        // is there a registry, and if so,
-        // is the class explicitly registered?
-        if (isset(Solar::$config['Solar']['registry']) &&
-            is_array(Solar::$config['Solar']['registry']) &&
-            array_key_exists($class, Solar::$config['Solar']['registry'])) {
-            
-            // yes, use the registered file path
-            $file = Solar::$config['Solar']['registry'][$class];
-            
-        } else {
-        
-            // no, auto-convert the class name to a file path.
-            $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-            
-        }
+        // convert the class name to a file path.
+        $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
         
         // include the file from the Solar dir and check for failure. we
         // use run() here instead of require() so we can see the
@@ -646,53 +577,146 @@ class Solar {
     
     /**
      * 
-     * Convenience method to instantiate a shared (singleton) object.
+     * Access an object in the registry.
      * 
-     * @param string $name The shared singleton name.
+     * @param string $key The registered name.
      * 
-     * @return object A singleton instance of the requested Solar class.
+     * @return object The object registered under $key.
      * 
      * @todo Localize these errors.
      * 
      */
-    static public function shared($name)
+    static public function registry($key)
     {
         // has the shared object already been loaded?
-        if (! isset(Solar::$_shared->$name)) {
-            
-            // not loaded yet.  can we find the associated info?
-            if (isset(Solar::$config['Solar']['shared']) &&
-                is_array(Solar::$config['Solar']['shared']) &&
-                array_key_exists($name, Solar::$config['Solar']['shared'])) {
-                
-                // found the associated info; always convert to an array.
-                $info = Solar::$config['Solar']['shared'][$name];
-                settype($info, 'array');
-                
-                // get the class name
-                $class = $info[0];
-                
-                // get the config, if it exists.
-                $config = array_key_exists(1, $info) ? $info[1] : null;
-                
-                // instantiate.
-                Solar::$_shared->$name = Solar::factory($class, $config);
-                
-            } else {
-            
-                // did not find the info.  that's an exception.
-                throw Solar::exception(
-                    'Solar',
-                    'ERR_SHARED_NAME',
-                    "Shared object name '$name' not in config file under ['Solar']['shared']", 
-                    array('shared' => $name)
-                );
-                
-            }
+        if (! Solar::inRegistry($key)) {
+            throw Solar::exception(
+                'Solar',
+                'ERR_NOT_IN_REGISTRY',
+                "Object with name '$key' not in registry.",
+                array('name' => $key)
+            );
         }
         
-        // return the shared instance.
-        return Solar::$_shared->$name;
+        // was the registration for a lazy-load?
+        if (is_array(Solar::$registry[$key])) {
+            $val = Solar::$registry[$key];
+            $obj = Solar::factory($val[0], $val[1]);
+            Solar::$registry[$key] = $obj;
+        }
+        
+        // done
+        return Solar::$registry[$key];
+    }
+    
+    /**
+     * 
+     * Register an object under a unique name.
+     * 
+     * You may also register a class and config to lazy-load.
+     * 
+     * @param string $key The name under which to register the object.
+     * 
+     * @param object|string $spec An object to register, or a class
+     * name to lazy-load with Solar::factory() when first requested
+     * via Solar::registry().
+     * 
+     * @param mixed $config If lazy-loading, use this as the config.
+     * 
+     * @return void
+     * 
+     * @todo Localize these errors.
+     * 
+     */
+    static public function register($key, $spec, $config = null)
+    {
+        if (Solar::inRegistry($key)) {
+            // name already exists in registry
+            $class = get_class(Solar::$registry[$key]);
+            throw Solar::exception(
+                'Solar',
+                'ERR_REGISTRY_NAME_EXISTS',
+                "Object with '$key' of class '$class' already in registry", 
+                array('name' => $key, 'class' => $class)
+            );
+        }
+        
+        // register as an object, or as a class and config?
+        if (is_object($spec)) {
+            // directly register the object
+            Solar::$registry[$key] = $spec;
+        } elseif (is_string($spec)) {
+            // register a class and config for lazy loading
+            Solar::$registry[$key] = array($spec, $config);
+        } else {
+            throw Solar::exception(
+                'Solar',
+                'ERR_REGISTRY_FAILURE',
+                'Please pass an object, or a class name and a config array',
+                array()
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Check to see if an object name already exists in the registry.
+     * 
+     * @param string $key The name to check.
+     * 
+     * @return bool
+     * 
+     */
+    static public function inRegistry($key)
+    {
+        return ! empty(Solar::$registry[$key]);
+    }
+    
+    /**
+     * 
+     * Standard handler for dependency injections.
+     * 
+     * This standardizes dependency injections where a class may need
+     * to have different objects available to it for operation.
+     * 
+     * http://www.martinfowler.com/articles/injection.html
+     * 
+     * @param mixed $spec If an object, return as-is. If a string,
+     * it's a Solar::registry() key. Otherwise, use this as a config
+     * param to Solar::factory().
+     * 
+     * @param string $class If $spec is non-string non-object, then
+     * use this as the $class param to Solar::factory().
+     * 
+     * @return object
+     */
+    public function dependency($class, $spec)
+    {
+        // if it's a string, assume it's the key name for a registered
+        // object.  get it, then proceed to class-check.
+        if (is_string($spec)) {
+            $spec = Solar::registry($spec);
+        }
+        
+        // is it an object?
+        if (is_object($spec)) {
+            // make sure it's of the proper class
+            Solar::loadClass($class);
+            if (! $spec instanceof $class) {
+                $actual = get_class($spec);
+                throw Solar::exception(
+                    'Solar',
+                    'ERR_DEPENDENCY_MISMATCH',
+                    "Dependency of class '$class' needed, actually '$actual'",
+                    array('class' => $class, 'actual' => $actual)
+                );
+            }
+            // it's good, return as-is
+            return $spec;
+        }
+        
+        // try to create an object with $spec as the config
+        return Solar::factory($class, $spec);
     }
     
     /**

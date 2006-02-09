@@ -47,13 +47,17 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected $_config = array(
         'app_class'   => array(
-            'hello'     => 'Solar_App_HelloWorld',
-            'bookmarks' => 'Solar_App_Bookmarks',
+            'bookmark'   => 'Solar_App_Bookmarks',
+            'bookmarks'  => 'Solar_App_Bookmarks',
+            'hello'      => 'Solar_App_HelloWorld',
+            'helloworld' => 'Solar_App_HelloWorld',
         ),
         'app_default' => 'bookmarks',
         'layout_dir'  => '',
-        'layout_tpl'  => '',
-        'layout_var'  => 'solar_app_output',
+        'layout_tpl'  => 'default',
+        'layout_var'  => 'solar_app_content',
+        'construct'   => '',
+        'destruct'    => '',
     );
 
     /**
@@ -74,34 +78,124 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected $_app_class;
     
-    protected $_layout_tpl; // the layout template name
+    /**
+     * 
+     * Where the layout directory is located.
+     * 
+     * Defaults is 'Solar/Layout/'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_dir;
     
-    protected $_layout_dir; // the directory where the layout templates are
+    /**
+     * 
+     * The name of the layout template, minus the .layout.php suffix.
+     * 
+     * Default is 'default' (i.e., 'default.layout.php').
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_tpl;
     
-    protected $_layout_var; // name of the app-output var in the layout template
+    /**
+     * 
+     * The name of the app content var in the layout template.
+     * 
+     * Default is 'solar_app_content'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_var;
+    
+    /**
+     * 
+     * A script to run at __construct() time.
+     * 
+     * Generally useful for setting up the application environment,
+     * processing logins, etc.
+     * 
+     * Default is 'Solar/Front/construct.php'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_construct;
+    
+    
+    /**
+     * 
+     * A script to run at __destruct() time.
+     * 
+     * Generally useful for tearing down the application environment.
+     * 
+     * Default is null.
+     * 
+     * @var string
+     * 
+     */
+    protected $_destruct;
     
     /**
      * 
      * Constructor.
      * 
-     * @var array
+     * Runs user-specified construct-time script.
+     * 
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config)
     {
-        // set the layout directory and name
-        $this->_config['layout_dir'] = dirname(dirname(__FILE__)) . '/Layout';
+        // set some defaults
+        $dir = dirname(dirname(__FILE__));
+        $this->_config['layout_dir'] = "$dir/Layout";
         $this->_config['layout_tpl'] = 'default';
         
         // now do "real" construction
-        parent::__construct($config);
+        parent::__construct($config); 
+        
+        // set vars from config
         $this->_app_default = $this->_config['app_default'];
         $this->_app_class   = $this->_config['app_class'];
         $this->_layout_dir  = $this->_config['layout_dir'];
         $this->_layout_tpl  = $this->_config['layout_tpl'];
         $this->_layout_var  = $this->_config['layout_var'];
+        $this->_construct   = $this->_config['construct'];
+        $this->_destruct    = $this->_config['destruct'];
+        
+        // perform construct-time script
+        if ($this->_construct) {
+            Solar::run($this->_construct);
+        }
+        
+        // register a Solar_Sql object if not already
+        if (! Solar::inRegistry('sql')) {
+            Solar::register('sql', Solar::factory('Solar_Sql'));
+        }
+        
+        // register a Solar_User object if not already.
+        // this will trigger the authentication process.
+        if (! Solar::inRegistry('user')) {
+            Solar::register('user', Solar::factory('Solar_User'));
+        }
     }
-
+    
+    /**
+     * 
+     * Runs user-specified destruct-time script.
+     * 
+     */
+    public function __destruct()
+    {
+        if ($this->_destruct) {
+            Solar::run($this->_destruct);
+        }
+    }
+    
     /**
      * 
      * Fetches the output of an app/action/info specification URI.
@@ -111,6 +205,7 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * @return string The output of the application action.
      * 
+     * @todo Add pre- and post- hook scripts?
      */
     public function fetch($spec = null)
     {

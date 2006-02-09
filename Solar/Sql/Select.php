@@ -151,6 +151,16 @@ class Solar_Sql_Select extends Solar_Base {
      */
     protected $_tbl_cols = array();
     
+    
+    /**
+     * 
+     * Internal Solar_Sql object.
+     * 
+     * @var Solar_Sql
+     * 
+     */
+    protected $_sql;
+    
     /**
      * 
      * Constructor.
@@ -163,17 +173,8 @@ class Solar_Sql_Select extends Solar_Base {
         // basic construction
         parent::__construct($config);
         
-        // connect to the database
-        if (is_string($this->_config['sql'])) {
-            // use a shared object
-            $this->sql = Solar::shared($this->_config['sql']);
-        } else {
-            // use a standalone object
-            $this->sql = Solar::factory(
-                $this->_config['sql'][0],
-                $this->_config['sql'][1]
-            );
-        }
+        // connect to the database with dependency injection
+        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
         // set up defaults
         $this->paging($this->_config['paging']);
@@ -357,7 +358,7 @@ class Solar_Sql_Select extends Solar_Base {
         
         if (func_num_args() > 1) {
             $val = func_get_arg(1);
-            $cond = $this->sql->quoteInto($cond, $val);
+            $cond = $this->_sql->quoteInto($cond, $val);
         }
         
         if ($this->_parts['where']) {
@@ -390,7 +391,7 @@ class Solar_Sql_Select extends Solar_Base {
         
         if (func_num_args() > 1) {
             $val = func_get_arg(1);
-            $cond = $this->sql->quoteInto($cond, $val);
+            $cond = $this->_sql->quoteInto($cond, $val);
         }
         
         if ($this->_parts['where']) {
@@ -502,7 +503,7 @@ class Solar_Sql_Select extends Solar_Base {
         
         if (func_num_args() > 1) {
             $val = func_get_arg(1);
-            $cond = $this->sql->quoteInto($cond, $val);
+            $cond = $this->_sql->quoteInto($cond, $val);
         }
         
         if ($this->_parts['having']) {
@@ -535,7 +536,7 @@ class Solar_Sql_Select extends Solar_Base {
         
         if (func_num_args() > 1) {
             $val = func_get_arg(1);
-            $cond = $this->sql->quoteInto($cond, $val);
+            $cond = $this->_sql->quoteInto($cond, $val);
         }
         
         if ($this->_parts['having']) {
@@ -807,7 +808,7 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // perform the select query and return the results
-        return $this->sql->select($type, $this->_parts, $this->_bind);
+        return $this->_sql->select($type, $this->_parts, $this->_bind);
     }
     
     /**

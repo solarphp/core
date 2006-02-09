@@ -38,8 +38,10 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'locale' => 'Solar/Debug/Locale/',
-        'output' => 'html',
+        'locale'       => 'Solar/Debug/Locale/',
+        'output'       => 'html',
+        'auto_start'   => false,
+        'auto_display' => false,
     );
     
     /**
@@ -62,24 +64,35 @@ class Solar_Debug_Timer extends Solar_Base {
     
     /**
      * 
-     * Solar hooks when instantiated as an autoshared object.
+     * Constructor.
      * 
-     * @param string $hook The hook name to activate.
+     * If auto_start is true, this will start the timer.
      * 
-     * @return void
+     * @param array $config User-provided configuration values.
      * 
      */
-    public function solar($hook)
+    public function __construct($config = null)
     {
-        switch ($hook) {
-        case 'start':
+        parent::__construct($config);
+        if ($this->_config['auto_start']) {
             $this->start();
-            break;
-        case 'stop':
-            $this->stop();
-            break;
         }
     }
+    
+    /**
+     * 
+     * Destructor.
+     * 
+     * If auto_display is true, this will display the profile.
+     * 
+     */
+    public function __destruct()
+    {
+        if ($this->_config['auto_display']) {
+            $this->display();
+        }
+    }
+    
     
     /**
      * 

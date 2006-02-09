@@ -138,19 +138,10 @@ class Solar_Sql_Table extends Solar_Base {
         $this->_setup();
         $this->_autoSetup();
         
-        // connect to the database
-        if (is_string($this->_config['sql'])) {
-            // use a shared object
-            $this->_sql = Solar::shared($this->_config['sql']);
-        } else {
-            // use a standalone object
-            $this->_sql = Solar::factory(
-                $this->_config['sql'][0],
-                $this->_config['sql'][1]
-            );
-        }
+        // connect to the database with dependency injection
+        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
-        // auto-create if needed
+        // auto-create the table if needed
         $this->_autoCreate();
     }
     

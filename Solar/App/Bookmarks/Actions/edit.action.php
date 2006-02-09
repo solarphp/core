@@ -18,7 +18,7 @@
  */
 
 // get the shared user object
-$user = Solar::shared('user');
+$user = Solar::registry('user');
 
 // get standalone objects
 $bookmarks = Solar::factory('Solar_Model_Bookmarks');

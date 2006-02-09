@@ -99,41 +99,19 @@ class Solar_User extends Solar_Base {
         
         // set up the roles object.
         $this->role = Solar::factory('Solar_User_Role', $this->_config['role']);
-    }
-    
-    /**
-     * 
-     * Solar hooks.
-     * 
-     * @param string $hook The hook to execute (e.g., 'start' or 'stop').
-     * 
-     * @return void
-     * 
-     */
-    public function solar($hook)
-    {
-        switch ($hook) {
         
-        case 'start':
-            // start up authentication
-            $this->auth->start();
-            
-            // is this a valid authenticated user?
-            if ($this->auth->status_code == 'VALID') {
-                // yes, the user is authenticated as valid.
-                // load up any roles for the user.
-                $this->role->fetch($this->auth->username);
-            } else {
-                // no, user is not valid.  
-                // clear out any previous roles.
-                $this->role->reset();
-            }
-            
-            
-            break;
-            
-        case 'stop':
-            break;
+        // start up authentication
+        $this->auth->start();
+        
+        // is this a valid authenticated user?
+        if ($this->auth->status_code == 'VALID') {
+            // yes, the user is authenticated as valid.
+            // load up any roles for the user.
+            $this->role->fetch($this->auth->username);
+        } else {
+            // no, user is not valid.  
+            // clear out any previous roles.
+            $this->role->reset();
         }
     }
 }

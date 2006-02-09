@@ -38,7 +38,9 @@
     </head>
     <body>
         
+        <?php if (! empty($this->body['header'])): ?>
         <h1><?php echo $this->body['header'] ?></h1>
+        <?php endif; ?>
         
         <?php include $this->template('auth.php') ?>
         

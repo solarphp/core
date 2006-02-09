@@ -23,6 +23,11 @@ $this->code = $this->_query('code', 'en_US');
 // reset the locale strings to the new code
 Solar::registry('locale')->reset($this->code);
 
-// set the translated text, and we're done
+// set the translated text
 $this->text = $this->locale('TEXT_HELLO_WORLD');
+
+// turn off the site layout
+$this->_layout = false;
+
+// done!
 ?>

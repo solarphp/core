@@ -40,9 +40,6 @@
  * * A Solar_Base::_exception() convenience method to generate
  *   exception objects with translated strings from the locale file
  * 
- * * A method called Solar_Base::solar() to hook into Solar::start() and
- *   Solar::stop() processes.
- * 
  * @category Solar
  * 
  * @package Solar

@@ -33,7 +33,7 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
      * @var string
      * 
      */
-    public $path = '/index.php';
+    public $path = '/index.php/';
     
     /**
      * 
@@ -54,7 +54,12 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
         parent::__construct($config);
         $this->_uri = Solar::factory('Solar_Uri');
         $this->_uri->clear();
-        $this->_uri->path = $this->path;
+        if ($this->path[0] != '/') {
+            $this->path = '/' . $this->path;
+        }
+        if (substr($this->path, -1) != '/') {
+            $this->path .= '/';
+        }
     }
     
     /**
@@ -77,7 +82,11 @@ class Savant3_Plugin_actionLink extends Savant3_Plugin {
             // import the string as an action spec
             $this->_uri->importAction($spec);
         }
-        $href = $this->_uri->exportAction();
+        
+        // add the base path to the action href
+        $href = $this->path . $this->_uri->exportAction();
+        
+        // done!
         return '<a href="' . htmlspecialchars($href) . '">'
              . htmlspecialchars($text) . "</a>";
     }

@@ -135,24 +135,8 @@ class Solar {
      * # Processes the Solar::$config['Solar']['ini_set'] key/value
      * pairs using [[php ini_set()]].
      * 
-     * # Prepares space for shared objects noted in
-     * Solar::$config['Solar']['shared'] but does not instantiate
-     * them; Solar waits for the first call to Solar::registry() before
-     * loading and instantiating a shared object (this is called
-     * "lazy loading").
-     * 
      * # Instantiates the shared Solar_Locale object (for reading
      * locale strings) as Solar::registry('locale').
-     * 
-     * # Instantiates all objects noted in
-     * Solar::$config['Solar']['autoshare'].  As part of this
-     * process, Solar_User is instantiated automatically as
-     * Solar::registry('user').
-     * 
-     * # For each auto-shared object, Solar attempts to run its
-     * \\solar('start')\\ method.  This behavior is reserved only for
-     * auto-shared objects; if you load a shared object later on, its
-     * \\solar('start')\\ method won't be called.
      * 
      * # Finally, Solar runs any scripts noted in
      * Solar::$config['Solar']['start'].  This allows you to specify
@@ -169,8 +153,6 @@ class Solar {
      * This would also get rid of the __solar() autoshare method, which might
      * be nice.  Would need to add a share() method for setting up shared
      * objects though.
-     * 
-     * @todo Rename ::shared() to ::registry()?  Add ::register() method too?
      * 
      */
     static public function start($alt_config = null)

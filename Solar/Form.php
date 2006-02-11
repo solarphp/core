@@ -67,9 +67,13 @@ class Solar_Form extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'action'  => null,
-        'method'  => 'post',
-        'enctype' => 'multipart/form-data',
+        'attribs' => array(
+            'action'  => null,
+            'method'  => 'post',
+            'enctype' => 'multipart/form-data',
+        ),
+        'success' => '',
+        'failure' => '',
     );
     
     /**
@@ -193,9 +197,12 @@ class Solar_Form extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        $this->_config['action'] = Solar::server('REQUEST_URI');
+        $this->_config['attribs']['action'] = Solar::server('REQUEST_URI');
+        $this->_config['success'] = $this->locale('OK_SAVED');
+        $this->_config['failure'] = $this->locale('ERR_FORM');
+        
         parent::__construct($config);
-        $this->attribs = $this->_config;
+        $this->attribs = $this->_config['attribs'];
     }
     
     
@@ -433,8 +440,8 @@ class Solar_Form extends Solar_Base {
             $this->_submitted = (array) $submit;
         } else {
             // from $_GET or $_POST, per the form method.
-            $callback = array('Solar', $this->attribs['method']);
-            $this->_submitted = call_user_func($callback);
+            $method = $this->attribs['method'];
+            $this->_submitted = Solar::$method();
         }
         
         // populate the submitted values into the
@@ -504,6 +511,12 @@ class Solar_Form extends Solar_Base {
             } // inner loop of validations
             
         } // outer loop of elements
+        
+        if ($validated) {
+            $this->feedback = array($this->_config['success']);
+        } else {
+            $this->feedback = array($this->_config['failure']);
+        }
         
         return $validated;
     }

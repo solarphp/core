@@ -66,7 +66,10 @@ class Solar {
      * @var array
      * 
      */
-    static public $config = array();
+    static public $config = array(
+        'locale' => 'Solar/Locale/',
+        'locale_code' => 'en_US',
+    );
     
     /**
      * 
@@ -85,6 +88,12 @@ class Solar {
      * 
      */
     static protected $_status = false;
+    
+    // locale strings
+    static public $locale = array();
+    
+    // locale code
+    static protected $_locale_code = 'en_US';
     
     /**
      * 
@@ -124,10 +133,8 @@ class Solar {
      * 
      * ++ What start() Does
      * 
-     * The start() method performs a huge number of activities for
-     * you to set up the execution environment.  Be sure to look at
-     * the Solar.php file itself for the details, but in general,
-     * these activities are:
+     * The start() method performs a number of activities for
+     * you to set up the execution environment:
      * 
      * # Reads the [Main:ConfigFile configuration file] file into
      * Solar::$config.
@@ -135,14 +142,11 @@ class Solar {
      * # Processes the Solar::$config['Solar']['ini_set'] key/value
      * pairs using [[php ini_set()]].
      * 
-     * # Instantiates the shared Solar_Locale object (for reading
-     * locale strings) as Solar::registry('locale').
-     * 
      * # Finally, Solar runs any scripts noted in
      * Solar::$config['Solar']['start'].  This allows you to specify
      * additional environment startup behaviors.
      * 
-     * @param mixed $alt_config The alternate configuration parameter.
+     * @param mixed $config The alternate configuration parameter.
      * If boolean false, no configs are loaded.  If a string, it's a
      * script name, and configs are loaded from the return of that script.
      * If an array, it is used as the config array.  If an object, it is
@@ -155,7 +159,7 @@ class Solar {
      * objects though.
      * 
      */
-    static public function start($alt_config = null)
+    static public function start($config = null)
     {
         // don't re-start if we're already running.
         if (Solar::$_status) {
@@ -174,20 +178,29 @@ class Solar {
         // set up the standard Solar environment
         Solar::_environment();
         
-        // load the config file values. note that we use $config here,
-        // not config(), because we are setting the value of the static
+        // load the config file values. note that we use Solar::$config here,
+        // not Solar::config(), because we are setting the value of the static
         // property.  use alternate config source if one is given.
-        if (is_array($alt_config)) {
-            Solar::$config = $alt_config;
-        } elseif (is_object($alt_config)) {
-            Solar::$config = (array) $alt_config;
-        } elseif (is_string($alt_config)) {
-            Solar::$config = (array) Solar::run($alt_config);
-        } elseif ($alt_config === false) {
-            // don't load any configs at all
-            Solar::$config = array();
+        if (is_array($config) || is_object($config)) {
+            // merge from array or object
+            Solar::$config = array_merge(
+                Solar::$config,
+                (array) $config
+            );
+        } elseif (is_string($config)) {
+            // merge from array file return
+            Solar::$config = array_merge(
+                Solar::$config,
+                (array) Solar::run($config)
+            );
+        } elseif ($config === false) {
+            // leave Solar::$config alone
         } else {
-            Solar::$config = (array) Solar::run(SOLAR_CONFIG_PATH);
+            // use the default config path
+            Solar::$config = array_merge(
+                Solar::$config,
+                (array) Solar::run(SOLAR_CONFIG_PATH)
+            );
         }
         
         // process ini settings from config file
@@ -196,8 +209,9 @@ class Solar {
             ini_set($key, $val);
         }
         
-        // register a Solar_Locale object
-        Solar::register('locale', Solar::factory('Solar_Locale'));
+        // load the initial locale strings
+        Solar::$_locale_code = Solar::$config['locale_code'];
+        Solar::setLocale(Solar::$_locale_code);
         
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {
@@ -318,8 +332,70 @@ class Solar {
      */
     static public function locale($class, $key, $num = 1)
     {
-        return Solar::registry('locale')->string($class, $key, $num);
+        // if the key does not exist for the class,
+        // return the key itself.
+        if (! isset(Solar::$locale[$class][$key])) {
+            return $key;
+        }
+        
+        // get the translation of the key and force
+        // to an array.
+        $string = (array) Solar::$locale[$class][$key];
+        
+        // return the number-appropriate version of the
+        // translated key, if multiple values exist.
+        if ($num != 1 && isset($string[1])) {
+            return $string[1];
+        } else {
+            return $string[0];
+        }
     }
+    
+    /**
+     * 
+     * Sets the locale code and clears out previous locale strings.
+     * 
+     * @param string $code A locale code, e.g., 'en_US'.
+     * 
+     * @return void
+     */
+    static public function setLocale($code)
+    {
+        // set the code
+        Solar::$_locale_code = $code;
+        
+        // reset the strings
+        Solar::$locale = array();
+        
+        // load the base Solar locale strings
+        $dir = Solar::fixdir(Solar::$config['locale']);
+        $file = $dir . Solar::$_locale_code . '.php';
+        
+        // can we find the file?
+        if (Solar::fileExists($file)) {
+            Solar::$locale['Solar'] = (array) include $file;
+            return true;
+        } else {
+            // could not find file.
+            // fail silently, as it's often the case that the
+            // translation file simply doesn't exist.
+            Solar::$locale['Solar'] = array();
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * Returns the current locale code.
+     * 
+     * @return string The current locale code, e.g., 'en_US'.
+     * 
+     */
+    static public function getLocale()
+    {
+        return Solar::$_locale_code;
+    }
+    
     
     /**
      * 

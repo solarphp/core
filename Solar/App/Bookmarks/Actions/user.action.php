@@ -37,7 +37,7 @@ $page = $this->_query('page', 1);
 
 // assign data for the layout
 $this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['header'] = $this->locale('BOOKMARKS');
+$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
 
 // RSS link for the page
 $link = Solar::factory('Solar_Uri');
@@ -63,8 +63,11 @@ $this->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
 // get the total pages and row-count
 $total = $bookmarks->countPages($owner_handle, $tags);
 
+// flash forward the backlink in case we go to edit
+$this->setFlash('backlink', Solar::server('REQUEST_URI'));
+
 // set the view
-$this->_view = 'list';
+$this->_view = 'browse';
 
 // assign view vars
 $this->pages        = $total['pages'];

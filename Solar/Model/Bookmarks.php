@@ -219,9 +219,6 @@ class Solar_Model_Bookmarks extends Solar_Base {
         // default for bookmarks
         $data['area_id']      = $this->_area_id;
         $data['type']         = $this->_node_type;
-        $data['uri']          = Solar::get('uri');
-        $data['subj']         = Solar::get('subj');
-        $data['owner_handle'] = Solar::registry('user')->auth->username;
         $data['tags']         = $this->_config['default_tags'];
         return $data;
     }

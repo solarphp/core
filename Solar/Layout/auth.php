@@ -52,9 +52,8 @@
             echo $this->form('submit', '', $this->locale('Solar::TEXT_LOGIN'), '');
             echo $this->form('end');
         ?>
-        <p><?php
-            echo nl2br(wordwrap($this->escape(Solar::registry('user')->auth->status_text), 20));
-            Solar::registry('user')->auth->reset();
-        ?></p>
     <?php endif; ?>
+    <p><?php
+        echo nl2br(wordwrap($this->escape(Solar::registry('user')->auth->getFlash('status_text')), 20));
+    ?></p>
 </div>

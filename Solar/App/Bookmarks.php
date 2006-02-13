@@ -62,11 +62,16 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
         // edit/:id
         'edit' => array('id'),
         
+        // quick/:uri/:subj
+        'quick' => array('uri', 'subj'),
+        
         // userFeed/:owner_handle/:tags
         'userFeed' => array('owner_handle', 'tags'),
         
         // tagFeed/:tags
         'tagFeed' => array('tags'),
+        
+        // quick and create have no pathinfo
         
     );
     

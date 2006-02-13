@@ -142,18 +142,6 @@ class Solar_User_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_User_Auth']['status_text'].
-     * 
-     * This is message text related to the status code of the current
-     * authentication.
-     * 
-     * @var int
-     * 
-     */
-    public $status_text;
-    
-    /**
-     * 
      * Convenience reference to $_SESSION['Solar_User_Auth']['username'].
      * 
      * This is the currently authenticated username.
@@ -180,6 +168,8 @@ class Solar_User_Auth extends Solar_Base {
     public function start()
     {
         // Start the session; suppress errors if already started.
+        // Technically this should have happened as part of the
+        // Solar::start() process.
         @session_start();
         
         // initialize the session array if it does not exist
@@ -188,7 +178,6 @@ class Solar_User_Auth extends Solar_Base {
             
             $_SESSION['Solar_User_Auth'] = array(
                 'status_code' => 'ANON',
-                'status_text' => $this->locale('ANON'),
                 'username'    => null,
                 'login_time'  => null,
                 'last_active' => null
@@ -197,7 +186,6 @@ class Solar_User_Auth extends Solar_Base {
         
         // add convenience references to the session array keys
         $this->status_code =& $_SESSION['Solar_User_Auth']['status_code'];
-        $this->status_text =& $_SESSION['Solar_User_Auth']['status_text'];
         $this->username    =& $_SESSION['Solar_User_Auth']['username'];
         $this->login_time  =& $_SESSION['Solar_User_Auth']['login_time'];
         $this->last_active =& $_SESSION['Solar_User_Auth']['last_active'];
@@ -234,10 +222,11 @@ class Solar_User_Auth extends Solar_Base {
                 if ($result === true) {
                     // login attempt succeeded.
                     $this->status_code = 'VALID';
-                    $this->status_text = $this->locale('VALID');
                     $this->username    = $username;
                     $this->login_time  = time();
                     $this->last_active = time();
+                    // flash forward the status text
+                    $this->setFlash('status_text', $this->locale($this->status_code));
                 } else {
                     // login attempt failed.
                     $this->reset('WRONG');
@@ -268,6 +257,7 @@ class Solar_User_Auth extends Solar_Base {
     public function valid()
     {
         // is the current user already authenticated?
+        $valid = false;
         if ($this->status_code == 'VALID') {
             
             // Check if session authentication has expired
@@ -290,10 +280,10 @@ class Solar_User_Auth extends Solar_Base {
             $this->last_active = time();
             return true;
             
-        } else {
-            // current user is not already authenticated.
-            return false;
         }
+        
+        // flash forward the status text, and return
+        return $valid;
     }
     
     /**
@@ -312,10 +302,12 @@ class Solar_User_Auth extends Solar_Base {
     {
         $status_code = strtoupper($status_code);
         $this->status_code = $status_code;
-        $this->status_text = $this->locale($status_code);
         $this->username = null;
         $this->login_time = null;
         $this->last_active = null;
+        
+        // flash forward any messages
+        $this->setFlash('status_text', $this->locale($this->status_code));
     }
 }
 ?>

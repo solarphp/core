@@ -225,9 +225,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // collect path info and query values
         $this->_collect($spec);
         
-        // by default, use the action name for the view
-        $this->_view = $this->_action;
-        
         // run the pre-action, forward to the first action (which may
         // trigger other actions), and run the post-action.
         $this->_preAction();
@@ -468,7 +465,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
             );
         }
         
-        // run the action script
+        // set the view to the most-recent action (this one ;-).
+        // we do so before running the script so that the script
+        // can override the view if needed.
+        $this->_view = $name;
+        
+        // run the action script, which may itself _forward() to
+        // other actions.
         $this->_run($file);
     }
 }

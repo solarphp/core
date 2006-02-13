@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Controller action script for editing an existing bookmark.
+ * Controller action script for adding a new bookmark.
  * 
  * @category Solar
  * 
@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id$
+ * @version $Id: edit.action.php 768 2006-02-09 03:29:35Z pmjones $
  * 
  */
 
@@ -26,55 +26,28 @@ if ($user->auth->status_code != 'VALID') {
     return $this->_forward('error');
 }
 
-// get standalone objects
-$bookmarks = Solar::factory('Solar_Model_Bookmarks');
-
-// get the bookmark ID (0 means a new bookmark)
-$id = (int) $this->_info('id', 0);
-if (! $id) {
-    $this->err[] = 'No bookmark selected for editing.';
-    return $this->_forward('error');
-}
-
-
-// must be the item owner to edit it
-$item = $bookmarks->fetchItem($id);
-if ($user->auth->username != $item['owner_handle']) {
-    $this->err[] = 'You do not own this bookmark, or it does not exist.';
-    return $this->_forward('error');
-}
-
-// ---------------------------------------------------------------------
-// 
 // build a link for _redirect() calls and the backlink.
-// 
-// if we came from a tag or user page, return there.
-// if we came from a quickmark, return to the originating page.
-// otherwise, return the list for the user.
-//
-
-$uri = $this->_query('uri');
 $href = $this->getFlash('backlink');
-if ($uri) {
-    $href = $uri;
-} elseif (! $href) {
+if ( ! $href) {
     // return to the user's list
     $link = Solar::factory('Solar_Uri');
     $link->setInfoString("bookmarks/user/{$user->auth->username}");
     $href = $link->export();
 }
 
-// ---------------------------------------------------------------------
-// 
-// operations
-// 
-
 // build the basic form, populated with the bookmark data
 // from the database
+$bookmarks = Solar::factory('Solar_Model_Bookmarks');
+$item = $bookmarks->fetchDefault();
 $form = $bookmarks->form(array('bookmarks' => $item));
 
 // now populate the the submitted POST values to the form
 $form->populate();
+
+// ---------------------------------------------------------------------
+// 
+// operations
+// 
 
 // what operation are we performing?
 $op = Solar::post('op');
@@ -93,12 +66,13 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
         $result = $bookmarks->save($data);
         
         // retain the id
-        $id = $data['id'];
-    
-        // if new, return to the backlink
-        if ($this->_info('id', 0) == 0) {
-            $this->_redirect($href);
-        }
+        $this->_info['id'] = $result['id'];
+        
+        // tell the edit controller that we added successfully
+        $this->setFlash('add_ok', true);
+        
+        // forward to editing
+        return $this->_forward('edit');
         
     } catch (Solar_Exception $e) {
         
@@ -106,20 +80,13 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
         // we should not have gotten to this point,
         // but need to be aware of possible problems.
         $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
+        echo $e;
         
     }
 }
 
 // OP: Cancel
 if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
-    $this->_redirect($href);
-}
-
-// OP: Delete
-if ($op == Solar::locale('Solar', 'OP_DELETE')) {
-    $values = $form->values();
-    $id = $values['bookmarks']['id'];
-    $bookmarks->delete($id);
     $this->_redirect($href);
 }
 

@@ -218,6 +218,9 @@ class Solar {
             Solar::run($file);
         }
         
+        // start the session, and we're done
+        @session_start();
+        
         // and we're done!
         Solar::$_status = true;
     }
@@ -1271,6 +1274,80 @@ class Solar {
             $dir .= $sep;
         }
         return $dir;
+    }
+    
+    /**
+     * 
+     * Sets a "read-once" session value for a class and key.
+     * 
+     * Take from ideas popularized by Rails, a "flash" is a session
+     * value that propagates only until it is read, at which time it
+     * is removed from the session.  This is useful for forwarding
+     * information and messages between page loads.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The value for the key; previous values will
+     * be overwritten.
+     * 
+     * @return void
+     * 
+     */
+    static public function setFlash($class, $key, $val)
+    {
+        $_SESSION['Solar']['flash'][$class][$key] = $val;
+    }
+    
+    /**
+     * 
+     * Appends a "read-once" session value to a class and key.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The flash value to add to the key; this will
+     * result in the flash becoming an array.
+     * 
+     * @return void
+     * 
+     */
+    static public function addFlash($class, $key, $val)
+    {
+        if (! isset ($_SESSION['Solar']['flash'][$class][$key])) {
+            $_SESSION['Solar']['flash'][$class][$key] = array();
+        }
+        
+        if (! is_array($_SESSION['Solar']['flash'][$class][$key])) {
+            settype($_SESSION['Solar']['flash'][$class][$key], 'array');
+        }
+        
+        $_SESSION['Solar']['flash'][$class][$key][] = $val;
+    }
+    
+    /**
+     * 
+     * Retrieves a "read-once" session value, thereby removing the value.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val If the class and key do not exist, return
+     * this value.  Default null.
+     * 
+     * @return mixed The "read-once" value.
+     * 
+     */
+    static public function getFlash($class, $key, $val = null)
+    {
+        if (isset($_SESSION['Solar']['flash'][$class][$key])) {
+            $val = $_SESSION['Solar']['flash'][$class][$key];
+            unset($_SESSION['Solar']['flash'][$class][$key]);
+        }
+        return $val;
     }
     
     /**

@@ -15,7 +15,7 @@
  * 
  */
 return array(
-    'VALID'   => '',
+    'VALID'   => 'Welcome back!',
     'ANON'    => '',
     'LOGOUT'  => 'Thank you for visiting.',
     'WRONG'   => 'Your username and password did not match.  Please try again.',

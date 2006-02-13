@@ -454,6 +454,22 @@ abstract class Solar_Base {
         }
     }
     
+    public function setFlash($key, $val)
+    {
+        return Solar::setFlash(get_class($this), $key, $val);
+    }
+    
+    public function addFlash($key, $val)
+    {
+        return Solar::addFlash(get_class($this), $key, $val);
+    }
+    
+    public function getFlash($key, $val = null)
+    {
+        return Solar::getFlash(get_class($this), $key, $val);
+    }
+    
+    
     /**
      * 
      * Convenience method for returning exceptions with localized text.

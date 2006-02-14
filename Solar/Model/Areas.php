@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_Sql_Table
+ */
+Solar::loadClass('Solar_Sql_Table');
+
+/**
  * 
  * Broad content areas equivalent to logical namespaces.
  * 

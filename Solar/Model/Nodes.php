@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_Sql_Table
+ */
+Solar::loadClass('Solar_Sql_Table');
+
+/**
  * 
  * Nodes within an area, equivalent to containers for related content parts.
  * 

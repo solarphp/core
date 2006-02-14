@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_Sql_Table
+ */
+Solar::loadClass('Solar_Sql_Table');
+
+/**
  * 
  * Tags on nodes.
  * 

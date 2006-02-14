@@ -454,21 +454,59 @@ abstract class Solar_Base {
         }
     }
     
+    
+    /**
+     * 
+     * Sets a "read-once" session value for this class and a key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The value for the key; previous values will
+     * be overwritten.
+     * 
+     * @return void
+     * 
+     */
     public function setFlash($key, $val)
     {
         return Solar::setFlash(get_class($this), $key, $val);
     }
     
+    /**
+     * 
+     * Appends a "read-once" session value for this class and key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The flash value to add to the key; this will
+     * result in the flash becoming an array.
+     * 
+     * @return void
+     * 
+     */
     public function addFlash($key, $val)
     {
         return Solar::addFlash(get_class($this), $key, $val);
     }
     
+    /**
+     * 
+     * Retrieves a "read-once" session value, thereby removing the value.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val If the class and key do not exist, return
+     * this value.  Default null.
+     * 
+     * @return mixed The "read-once" value.
+     * 
+     */
     public function getFlash($key, $val = null)
     {
         return Solar::getFlash(get_class($this), $key, $val);
     }
-    
     
     /**
      * 
@@ -480,12 +518,13 @@ abstract class Solar_Base {
      * class named 'Solar_Example' throws an error code 'ERR_FILE_NOT_FOUND',
      * attempts will be made to find these exception classes in this order:
      * 
-     * <ol>
-     * <li>Example_Exception_FileNotFound (class specific)</li>
-     * <li>Solar_Exception_FileNotFound (Solar specific)</li>
-     * <li>Example_Exception (class generic)</li>
-     * <li>Solar_Exception (Solar generic)</li>
-     * </ol>
+     * # Example_Exception_FileNotFound (class specific)
+     * 
+     * # Solar_Exception_FileNotFound (Solar specific)</li>
+     * 
+     * # Example_Exception (class generic)</li>
+     * 
+     * # Solar_Exception (Solar generic)</li>
      * 
      * The final fallback is always the Solar_Exception class.
      * 

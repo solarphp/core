@@ -42,7 +42,7 @@
         <h1><?php echo $this->body['title'] ?></h1>
         <?php endif; ?>
         
-        <?php include $this->template('auth.php') ?>
+        <?php include $this->template('auth.part.php') ?>
         
         <?php echo $this->solar_app_content ?>
         

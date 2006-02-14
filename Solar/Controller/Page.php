@@ -455,8 +455,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _forward($name)
     {
         // filter the name so we don't get file traversals,
-        // then convert to a script filename.
-        $name = preg_replace('/[^a-z0-9_\/]/i', '', $name);
+        $name = preg_replace('/[^a-z0-9_-]/i', '', $name);
+        
+        // convert actions-with-dashes to camelCaseActions
+        $name = str_replace('-', ' ', strtolower($name));
+        $name = str_replace(' ', '', ucwords($name));
+        $name[0] = strtolower($name[0]);
+        
         $file = $this->_dir . "Actions/$name.action.php";
         if (! is_readable($file)) {
             throw $this->_exception(

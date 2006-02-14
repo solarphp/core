@@ -5,13 +5,13 @@
  * 
  * @category Solar
  * 
- * @package Solar_Content
+ * @package Solar_Model
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license LGPL
  * 
- * @version $Id$
+ * @version $Id: en_US.php 725 2006-02-03 01:28:44Z pmjones $
  * 
  */
 return array(

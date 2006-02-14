@@ -48,7 +48,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the broad areas of content.
      * 
-     * @var object Solar_Content_Areas
+     * @var Solar_Model_Areas
      * 
      */
     protected $_areas;
@@ -57,7 +57,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the container nodes in an area.
      * 
-     * @var object Solar_Content_Nodes
+     * @var Solar_Model_Nodes
      * 
      */
     protected $_nodes;
@@ -66,7 +66,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the searchable tags on each node.
      * 
-     * @var object Solar_Content_Tags
+     * @var Solar_Model_Tags
      * 
      */
     protected $_tags;
@@ -92,10 +92,10 @@ class Solar_Content extends Solar_Base {
         parent::__construct($config);
         $this->paging($this->_config['paging']);
         
-        // the component tables
-        $this->_areas = Solar::factory('Solar_Content_Areas');
-        $this->_nodes = Solar::factory('Solar_Content_Nodes');
-        $this->_tags  = Solar::factory('Solar_Content_Tags');
+        // the component models
+        $this->_areas = Solar::factory('Solar_Model_Areas');
+        $this->_nodes = Solar::factory('Solar_Model_Nodes');
+        $this->_tags  = Solar::factory('Solar_Model_Tags');
     }
     
     /**
@@ -136,7 +136,7 @@ class Solar_Content extends Solar_Base {
         
         // the class for locales
         if (empty($class)) {
-            $class = 'Solar_Content_Nodes';
+            $class = 'Solar_Model_Nodes';
         }
         
         // which columns to include in the form, and in which order

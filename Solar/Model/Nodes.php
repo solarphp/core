@@ -5,13 +5,13 @@
  * 
  * @category Solar
  * 
- * @package Solar_Content
+ * @package Solar_Model
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license LGPL
  * 
- * @version $Id$
+ * @version $Id: Nodes.php 768 2006-02-09 03:29:35Z pmjones $
  * 
  */
 
@@ -21,10 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar_Content
+ * @package Solar_Model
  * 
  */
-class Solar_Content_Nodes extends Solar_Sql_Table {
+class Solar_Model_Nodes extends Solar_Sql_Table {
     
     /**
      * 

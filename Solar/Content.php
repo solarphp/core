@@ -16,11 +16,6 @@
  */
 
 /**
- * Needed by all the table objects.
- */
-Solar::loadClass('Solar_Sql_Table');
-
-/**
  * 
  * Generic content management class.
  * 

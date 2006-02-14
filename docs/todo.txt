@@ -1,3 +1,13 @@
+Solar_View class, with full-up helper set
+
+Refactor Solar_Content
+
+Apps:
+    Docs
+    Todo
+
+
+
 ----
 
 TESTING PLAN
@@ -12,24 +22,7 @@ easy:
 
 DOCUMENTATION PLAN
 
-update:
-    all
-    
-easy:
-    Solar_Filter
-    Solar_Form_Load_Table
-    
-average:
-    Solar_User_Auth
-    Solar_User_Role
-
-difficult:
-    Solar_User
-    Solar_Sql
-    Solar_Sql_Table
-    Solar_Sql_Select
-
-Solar_Template is Savant3, use Savant3 docs.
+Start building wiki pages from internal comments
 
 
 ----
@@ -41,8 +34,6 @@ Create an event dispatcher as a universal observer and notifier?
 Do we need a Solar_Template or Solar_View proper?  (Ick.)
 
 Solar_User_Priv for class/action/op privileges by user and role
-
-Add Solar_User_Message for flash-style messaging?  Need flashes, anyway.
 
 
 ----

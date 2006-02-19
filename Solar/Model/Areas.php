@@ -75,5 +75,11 @@ class Solar_Model_Areas extends Solar_Sql_Table {
             'owner_handle' => 'normal',
         );
     }
+    
+    public function fetchWithName($name)
+    {
+        $where = array('name = ?' => $name);
+        return $this->select('row', $where);
+    }
 }
 ?>

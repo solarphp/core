@@ -24,12 +24,18 @@ $link = Solar::factory('Solar_Uri');
 <div>
     <!-- list of tags in use -->
     <div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-        <?php include $this->template('browse/tags.part.php') ?>
+        <?php
+            /** The list of tags in the system */
+            include $this->template('browse/tags.part.php');
+        ?>
     </div>
     
     <!-- ordering -->
     <div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
-        <?php include $this->template('browse/order.part.php') ?>
+        <?php
+            /** The order-by links */
+            include $this->template('browse/order.part.php');
+        ?>
     </div>
     
     <!-- results -->
@@ -46,6 +52,7 @@ $link = Solar::factory('Solar_Uri');
         <!-- output the list of results -->
         <?php if (count($this->list)): ?>
             <?php foreach ($this->list as $item) {
+                /** Each bookmark item on the page */
                 include $this->template('browse/item.part.php');
             } ?>
             

@@ -41,7 +41,7 @@ foreach ($profile as $val) {
     $key = $val['name'];
     $diff = abs($val['time'] - $mark[$key]);
     $assert->setLabel("'$key': {$val['time']} near {$mark[$key]} diff $diff");
-    $assert->isTrue($diff <= 0.0001);
+    $assert->isTrue($diff <= 0.0005);
 }
 
 // ---------------------------------------------------------------------

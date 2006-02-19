@@ -26,9 +26,6 @@ if ($user->auth->status_code != 'VALID') {
     return $this->_forward('error');
 }
 
-// get standalone objects
-$bookmarks = Solar::factory('Solar_Model_Bookmarks');
-
 // get the bookmark ID (0 means a new bookmark)
 $id = (int) $this->_info('id', 0);
 if (! $id) {
@@ -38,7 +35,7 @@ if (! $id) {
 
 
 // must be the item owner to edit it
-$item = $bookmarks->fetchItem($id);
+$item = $this->_bookmarks->fetchItem($id);
 if ($user->auth->username != $item['owner_handle']) {
     $this->err[] = 'You do not own this bookmark, or it does not exist.';
     return $this->_forward('error');
@@ -71,7 +68,7 @@ if ($uri) {
 
 // build the basic form, populated with the bookmark data
 // from the database
-$form = $bookmarks->form(array('bookmarks' => $item));
+$form = $this->_bookmarks->form($item);
 
 // now populate the the submitted POST values to the form
 $form->populate();
@@ -83,14 +80,14 @@ $op = Solar::post('op');
 if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
     
     $values = $form->values();
-    $data = $values['bookmarks'];
+    $data = $values['bookmark'];
     
     // force a user_id
     $data['owner_handle'] = $user->auth->username;
     
     // save the data
     try {
-        $result = $bookmarks->save($data);
+        $result = $this->_bookmarks->save($data);
         
         // retain the id
         $id = $data['id'];
@@ -119,7 +116,7 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 if ($op == Solar::locale('Solar', 'OP_DELETE')) {
     $values = $form->values();
     $id = $values['bookmarks']['id'];
-    $bookmarks->delete($id);
+    $this->_bookmarks->delete($id);
     $this->_redirect($href);
 }
 

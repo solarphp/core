@@ -37,12 +37,12 @@ if ( ! $href) {
 
 // build the basic form, populated with the bookmark data
 // from the database
-$bookmarks = Solar::factory('Solar_Model_Bookmarks');
-$item = $bookmarks->fetchDefault();
-$form = $bookmarks->form(array('bookmarks' => $item));
+$item = $this->_bookmarks->fetchDefault();
+$form = $this->_bookmarks->form($item);
 
 // now populate the the submitted POST values to the form
 $form->populate();
+
 
 // ---------------------------------------------------------------------
 // 
@@ -56,14 +56,14 @@ $op = Solar::post('op');
 if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
     
     $values = $form->values();
-    $data = $values['bookmarks'];
+    $data = $values['bookmark'];
     
     // force a user_id
     $data['owner_handle'] = $user->auth->username;
     
     // save the data
     try {
-        $result = $bookmarks->save($data);
+        $result = $this->_bookmarks->save($data);
         
         // retain the id
         $this->_info['id'] = $result['id'];

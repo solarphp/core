@@ -17,11 +17,8 @@
  * 
  */
 
-// get standalone objects
-$bookmarks = Solar::factory('Solar_Model_Bookmarks');
-
 // allow uri to set the "count" for each page (default 10)
-$bookmarks->paging($this->_query('paging', 10));
+$this->_bookmarks->setPaging($this->_query('paging', 10));
 
 // the requested owner_handle (none)
 $owner_handle = null;
@@ -37,10 +34,10 @@ $order = $this->_getOrder();
 $page = $this->_query('page', 1);
 
 // get the list of results
-$this->list = $bookmarks->fetchList($owner_handle, $tags, $order, $page);
+$this->list = $this->_bookmarks->fetchList($tags, $owner_handle, $order, $page);
 
 // get the total pages and row-count
-$total = $bookmarks->countPages($owner_handle, $tags);
+$total = $this->_bookmarks->countPages($tags, $owner_handle);
 
 // flash forward the backlink in case we go to edit
 $this->setFlash('backlink', Solar::server('REQUEST_URI'));
@@ -51,7 +48,7 @@ $this->order        = $order;
 $this->page         = $page;
 $this->owner_handle = null; // requested owner_handle
 $this->tags         = $tags; // the requested tags
-$this->tags_in_use  = $bookmarks->fetchTagList($owner_handle); // all tags
+$this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags
 
 // use the 'browse' view and site layout
 $this->_view = 'browse';

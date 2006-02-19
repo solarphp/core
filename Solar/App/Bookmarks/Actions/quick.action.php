@@ -30,12 +30,9 @@ if ($user->auth->status_code != 'VALID') {
 $uri = $this->_query('uri');
 $subj = $this->_query('subj');
 
-// get the bookmarks model
-$bookmarks = Solar::factory('Solar_Model_Bookmarks');
-
 // we need to see if the user already has the same URI in
 // his bookmarks so that we don't add it twice.
-$existing = $bookmarks->fetchOwnerUri(
+$existing = $this->_bookmarks->fetchOwnerUri(
     $user->auth->username,
     $uri
 );
@@ -50,10 +47,10 @@ if (! empty($existing['id'])) {
 }
 
 // get a blank bookmark item, build the basic form
-$item = $bookmarks->fetchDefault();
+$item = $this->_bookmarks->fetchDefault();
 $item['uri'] = $uri;
 $item['subj'] = $subj;
-$form = $bookmarks->form(array('bookmarks' => $item));
+$form = $this->_bookmarks->form($item);
 
 // overwrite form defaults with submissions
 $form->populate();
@@ -67,11 +64,11 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
     
         // get the form values
         $values = $form->values();
-        $data = $values['bookmarks'];
+        $data = $values['bookmark'];
         $data['owner_handle'] = $user->auth->username;
         
         // save
-        $result = $bookmarks->save($data);
+        $result = $this->_bookmarks->save($data);
         
         // redirect to the source URI
         $this->_redirect($uri);

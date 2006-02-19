@@ -32,7 +32,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the broad areas of content.
      * 
-     * @var Solar_Modelareas
+     * @var Solar_Model_Areas
      * 
      */
     public $areas;
@@ -41,7 +41,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the container nodes in an area.
      * 
-     * @var Solar_Modelnodes
+     * @var Solar_Model_Nodes
      * 
      */
     public $nodes;
@@ -50,7 +50,7 @@ class Solar_Content extends Solar_Base {
      * 
      * A table object representing the searchable tags on each node.
      * 
-     * @var Solar_Modeltags
+     * @var Solar_Model_Tags
      * 
      */
     public $tags;

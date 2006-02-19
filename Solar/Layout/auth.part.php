@@ -1,13 +1,11 @@
 <?php
 /**
  * 
- * Savant3 template for the user authentication form.
+ * Savant3 partial template for the user authentication form.
  * 
  * @category Solar
  * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Bookmarks
+ * @package Solar_Layout
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,20 +14,7 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Savant3 template for the user authentication form.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Bookmarks
- * 
- */
 ?>
-
 <div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">
     <?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
         <p><?php $this->eprint($this->locale('Solar::TEXT_AUTH_USERNAME')) ?><br /><strong><?php $this->eprint(Solar::registry('user')->auth->username) ?></strong></p>

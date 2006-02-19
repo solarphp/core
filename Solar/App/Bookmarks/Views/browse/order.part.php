@@ -1,3 +1,22 @@
+<?php
+/**
+ * 
+ * Partial template for a the list of "order" links.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_Bookmarks
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
+?>
         <h2><?php $this->eprint($this->locale('ORDERED_BY')) ?></h2>
         <p><?php
             $tmp = array(

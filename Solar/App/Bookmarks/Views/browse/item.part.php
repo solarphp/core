@@ -1,3 +1,22 @@
+<?php
+/**
+ * 
+ * Partial template for a single bookmark item.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_App
+ * 
+ * @subpackage Solar_App_Bookmarks
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license LGPL
+ * 
+ * @version $Id$
+ * 
+ */
+?>
                 <!-- NEW ITEM -->
                 <p>
                     <!-- title -->

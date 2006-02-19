@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Nodes.php 768 2006-02-09 03:29:35Z pmjones $
+ * @version $Id$
  * 
  */
 

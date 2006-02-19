@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Tags.php 752 2006-02-04 18:59:34Z pmjones $
+ * @version $Id$
  * 
  */
 

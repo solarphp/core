@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: edit.view.php 764 2006-02-08 20:21:31Z pmjones $
+ * @version $Id$
  * 
  */
 ?>

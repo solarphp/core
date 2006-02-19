@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: en_US.php 725 2006-02-03 01:28:44Z pmjones $
+ * @version $Id$
  * 
  */
 return array(

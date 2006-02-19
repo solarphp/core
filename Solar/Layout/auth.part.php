@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: auth.php 649 2006-01-11 15:22:45Z pmjones $
+ * @version $Id$
  * 
  */
 

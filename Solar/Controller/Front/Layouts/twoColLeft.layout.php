@@ -21,8 +21,8 @@
     <head>
         <title><?php echo $this->head['title'] ?></title>
         <?php
-            echo $this->stylesheet('layout/default.css') . "\n        ";
-            echo $this->stylesheet('layout/twoColLeft.css') . "\n";
+            echo $this->stylesheet('layouts/default.css') . "\n        ";
+            echo $this->stylesheet('layouts/twoColLeft.css') . "\n";
             if (! empty($this->head['link'])) {
                 foreach ((array) $this->head['link'] as $key => $val) {
                     echo "        " . $this->link($val) . "\n";

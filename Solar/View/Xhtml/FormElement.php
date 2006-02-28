@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Solar_View_Helper_FormElement.php 654 2006-01-11 17:10:06Z pmjones $
+ * @version $Id$
  * 
  */
 

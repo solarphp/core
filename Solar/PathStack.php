@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Content.php 765 2006-02-08 20:23:18Z pmjones $
+ * @version $Id$
  * 
  */
 

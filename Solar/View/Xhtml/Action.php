@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Solar_View_Helper_actionLink.php 772 2006-02-09 16:12:55Z pmjones $
+ * @version $Id$
  *
  */
 

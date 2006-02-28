@@ -11,7 +11,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: default.layout.php 795 2006-02-19 22:03:33Z pmjones $
+ * @version $Id$
  * 
  */
 ?>

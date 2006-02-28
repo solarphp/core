@@ -16,6 +16,16 @@
  */
 
 /**
+ * The Solar_Exception class.
+ */
+require_once 'Solar/Exception.php';
+        
+/**
+ * The base for all Solar classes (except Solar itself ;-).
+ */
+require_once 'Solar/Base.php';
+
+/**
  * Define where the Solar.config.php file is located.
  */
 if (! defined('SOLAR_CONFIG_PATH')) {
@@ -96,17 +106,6 @@ class Solar {
     static protected $_locale_code = 'en_US';
     
     /**
-     * 
-     * Directory where the Solar.php file is located; used for class loading.
-     * 
-     * Usually the same as the PEAR library directory.
-     * 
-     * @var bool
-     * 
-     */
-    static protected $_dir = null;
-    
-    /**
      * Singleton pattern, disallow construction.
      */
     final private function __construct() {}
@@ -153,10 +152,7 @@ class Solar {
      * converted to an array and used as the config array.  If null,
      * config is loaded from SOLAR_CONFIG_PATH script.
      * 
-     * @todo Put autosharing behavior into Solar_Controller_Front instead?
-     * This would also get rid of the __solar() autoshare method, which might
-     * be nice.  Would need to add a share() method for setting up shared
-     * objects though.
+     * @todo Keep the locale code in $_SESSION.
      * 
      */
     static public function start($config = null)
@@ -166,17 +162,8 @@ class Solar {
             return;
         }
         
-        // where are we in the file system?
-        Solar::$_dir = Solar::fixdir(dirname(__FILE__));
-        
-        // the base for all Solar classes (except Solar itself ;-).
-        require_once Solar::$_dir . 'Solar/Base.php';
-        
-        // the Solar_Exception class
-        require_once Solar::$_dir . 'Solar/Exception.php';
-        
-        // set up the standard Solar environment
-        Solar::_environment();
+        // do some security on globals, and turn off all magic quotes
+        Solar::_globalsQuotes();
         
         // load the config file values. note that we use Solar::$config here,
         // not Solar::config(), because we are setting the value of the static
@@ -472,7 +459,7 @@ class Solar {
         // include the file from the Solar dir and check for failure. we
         // use run() here instead of require() so we can see the
         // exception backtrace.
-        $result = Solar::run(Solar::$_dir . $file);
+        $result = Solar::run($file);
         
         // if the class was not in the file, we have a problem.
         if (! class_exists($class)) {
@@ -1352,34 +1339,16 @@ class Solar {
     
     /**
      * 
-     * Sets up the standard Solar environment (including some security).
+     * Performs some security on globals, removes magic quotes if turned on.
      * 
      * @return void
      * 
      */
-    static protected function _environment()
+    static protected function _globalsQuotes()
     {
         // clear out registered globals?
         // (this code from Richard Heyes and Stefan Esser)
         if (ini_get('register_globals')) {
-            
-            /* // previous version
-            // Variables that shouldn't be unset
-            $keep = array('GLOBALS', '_GET', '_POST', '_COOKIE',
-                '_REQUEST', '_SERVER', '_ENV', '_FILES');
-            
-            // Sources of global input
-            $input = array_merge($_GET,    $_POST, $_COOKIE, $_SERVER,
-                $_ENV, $_FILES, isset($_SESSION) ? $_SESSION : array());
-            
-            // Clear out sources of global input
-            foreach ($input as $key => $val) {
-                if (! in_array($key, $keep) &&
-                    array_key_exists($key, $GLOBALS)) {
-                    unset($GLOBALS[$key]);
-                }
-            }
-             */
             
             // Variables that shouldn't be unset
             $noUnset = array(

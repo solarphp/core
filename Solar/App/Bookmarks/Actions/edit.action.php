@@ -112,7 +112,7 @@ if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
 // OP: Delete
 if ($op == Solar::locale('Solar', 'OP_DELETE')) {
     $values = $form->values();
-    $id = $values['bookmarks']['id'];
+    $id = $values['bookmark']['id'];
     $this->_bookmarks->delete($id);
     $this->_redirect($href);
 }

@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
@@ -55,7 +55,7 @@ class Solar_View_Xhtml extends Solar_View {
     
     public function setHelperPath($path = null)
     {
-        $this->_helper_path->set(dirname(__FILE__) . '/Xhtml/');
+        $this->_helper_path->set('Solar/View/Xhtml/');
         $this->_helper_path->add($path);
     }
 }

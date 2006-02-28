@@ -51,7 +51,7 @@ class Solar_Controller_Front extends Solar_Base {
             'helloworld' => 'Solar_App_HelloWorld',
         ),
         'app_default' => 'bookmarks',
-        'layout_dir'  => 'Solar/Layout/',
+        'layout_dir'  => 'Solar/Controller/Front/Layouts/',
         'layout_tpl'  => 'twoColRight',
         'layout_var'  => 'solar_app_content',
     );

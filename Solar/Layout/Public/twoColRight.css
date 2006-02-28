@@ -1,0 +1,83 @@
+/* based on http://maxdesign.com.au/presentation/page_layouts/ */
+#container
+{
+    margin: 0;
+    background-color: #fff;
+}
+
+#top
+{
+    background-color: #ccc;
+    border-bottom: 1px solid #333;
+}
+
+#top h1
+{
+    margin: 0;
+    padding: .5em;
+}
+
+#right
+{
+    float: right;
+    width: 144px;
+    margin-right: 8px;
+    padding-top: 1em;
+    text-align: center;
+}
+
+#content
+{
+    padding-top: 1em;
+    margin: 0 144px 0 2em;
+}
+
+#bottom
+{
+    clear: both;
+    background-color: #ccc;
+    padding: 1em;
+    border-top: 1px solid #333;
+}
+
+#right form dl {
+    margin: 0em;
+    margin-top: 0.5em;
+}
+
+#right form dt {
+    clear: both;
+    text-align: center;
+    margin: 1em 0 0 0;
+    font-weight: bold;
+}
+
+#right form dd {
+    clear: both;
+    text-align: center;
+    margin: 0;
+}
+
+/* http://phrogz.net/CSS/formdl.html */
+#content form dl {
+    margin: 0em;
+    margin-top: 0.5em;
+    clear: both;
+}
+
+#content form dt {
+    float: left;
+    clear: left;
+    width: 10em;
+    margin-bottom: 0.8em;
+    text-align: right;
+    font-weight: bold;
+    position: relative;
+}
+
+#content form dd {
+    clear: right;
+    margin-left: 10.5em;
+    margin-bottom: 0.8em;
+    padding-left: 0.5em
+}

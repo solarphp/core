@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Savant3 partial template for the user authentication form.
+ * Solar_View_Xhtml partial template for the user authentication form.
  * 
  * @category Solar
  * 
@@ -15,30 +15,38 @@
  * 
  */
 ?>
-<div style="float: right; border: 1px solid gray; margin: 12px; padding: 8px; background: #eee; text-align: center">
-    <?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
-        <p><?php $this->eprint($this->locale('Solar::TEXT_AUTH_USERNAME')) ?><br /><strong><?php $this->eprint(Solar::registry('user')->auth->username) ?></strong></p>
-        <?php
-            echo $this->form('begin');
-            echo $this->form('block', 'begin', null, 'row');
-            echo $this->form('hidden', 'op', 'logout');
-            echo $this->form('submit', '', $this->locale('Solar::TEXT_LOGOUT'), '');
-            echo $this->form('end');
-        ?>
-    <?php else: ?>
-        <?php
-            echo $this->form('begin');
-            echo $this->form('block', 'begin', null, 'row');
-            echo $this->form('hidden', 'op', 'login');
-            echo $this->form('text', 'username', '', $this->locale('Solar::LABEL_USERNAME'), array('size' => 10));
-            echo $this->form('block', 'split');
-            echo $this->form('password', 'password', '', $this->locale('Solar::LABEL_PASSWORD'), array('size' => 10));
-            echo $this->form('block', 'split');
-            echo $this->form('submit', '', $this->locale('Solar::TEXT_LOGIN'), '');
-            echo $this->form('end');
-        ?>
-    <?php endif; ?>
-    <p><?php
-        echo nl2br(wordwrap($this->escape(Solar::registry('user')->auth->getFlash('status_text')), 20));
-    ?></p>
-</div>
+<?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
+    <p>
+        <?php echo $this->getText('Solar::TEXT_AUTH_USERNAME') ?><br />
+        <strong><?php echo $this->escape(Solar::registry('user')->auth->username) ?></strong>
+    </p>
+    <?php
+        echo $this->form()
+                  ->hidden(array('name' => 'op', 'value' => 'logout'))
+                  ->submit(array('name' => 'nil', 'value' => $this->getTextRaw('TEXT_LOGOUT')))
+                  ->fetch();
+    ?>
+<?php else: ?>
+    <?php
+        echo $this->form()
+                  ->hidden(array(
+                        'name' => 'op',
+                        'value' => 'login',
+                  ))
+                  ->text(array(
+                        'name' => 'username',
+                        'label' => $this->getTextRaw('LABEL_USERNAME'),
+                        'attribs' => array('size' => 10),
+                  ))
+                  ->password(array(
+                        'name' => 'password',
+                        'label' => $this->getTextRaw('LABEL_PASSWORD'),
+                        'attribs' => array('size' => 10)
+                  ))
+                  ->submit(array('name' => 'nil', 'value' => $this->getTextRaw('TEXT_LOGIN')))
+                  ->fetch();
+    ?>
+<?php endif; ?>
+<p><?php
+    echo nl2br(wordwrap($this->escape(Solar::registry('user')->auth->getFlash('status_text')), 20));
+?></p>

@@ -24,16 +24,17 @@ return array(
     'FORMAT_TIME'        => '%r', // strftime: 12-hour am/pm
     
     // operation actions
-    'OP_SAVE'            => 'Save',
-    'OP_PREVIEW'         => 'Preview',
     'OP_CANCEL'          => 'Cancel',
     'OP_CREATE'          => 'Create',
     'OP_DELETE'          => 'Delete',
-    'OP_RESET'           => 'Reset',
-    'OP_NEXT'            => 'Next',
-    'OP_PREVIOUS'        => 'Previous',
-    'OP_SEARCH'          => 'Search',
+    'OP_EDIT'            => 'Edit',
     'OP_GO'              => 'Go!',
+    'OP_NEXT'            => 'Next',
+    'OP_PREVIEW'         => 'Preview',
+    'OP_PREVIOUS'        => 'Previous',
+    'OP_RESET'           => 'Reset',
+    'OP_SAVE'            => 'Save',
+    'OP_SEARCH'          => 'Search',
     
     // error messages
     'ERR_CONNECTION_FAILED'    => 'Connection failed.',

@@ -159,7 +159,7 @@
  * 
  *     // ... and save the output in the cache, replacing anything that
  *     // may have been in that entry before.
- *     $cache->replace($id, $output);
+ *     $cache->save($id, $output);
  * }
  * 
  * // now we have the output, whether from the cache
@@ -323,7 +323,7 @@ class Solar_Cache extends Solar_Base {
      * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
      * 
      * // store to the cache, overwriting any previous $id entry
-     * $cache->replace($id, $data);
+     * $cache->save($id, $data);
      * 
      * // now fetch back the data for the $id entry
      * $result = $cache->fetch($id);
@@ -338,10 +338,10 @@ class Solar_Cache extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function replace($key, $data)
+    public function save($key, $data)
     {
         if ($this->active()) {
-            return $this->_driver->replace($key, $data);
+            return $this->_driver->save($key, $data);
         } else {
             return false;
         }

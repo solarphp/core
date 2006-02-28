@@ -32,7 +32,7 @@ if (! $id) {
 
 
 // must be the item owner to edit it
-$item = $this->_bookmarks->fetchItem($id);
+$item = $this->_bookmarks->fetch($id);
 if ($this->_user->auth->username != $item['owner_handle']) {
     $this->err[] = 'You do not own this bookmark, or it does not exist.';
     return $this->_forward('error');

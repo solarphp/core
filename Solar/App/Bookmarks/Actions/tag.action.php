@@ -34,7 +34,7 @@ $order = $this->_getOrder();
 $page = $this->_query('page', 1);
 
 // get the list of results
-$this->list = $this->_bookmarks->fetchList($tags, $owner_handle, $order, $page);
+$this->list = $this->_bookmarks->fetchAll($tags, $owner_handle, $order, $page);
 
 // get the total pages and row-count
 $total = $this->_bookmarks->countPages($tags, $owner_handle);

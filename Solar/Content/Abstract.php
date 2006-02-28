@@ -188,7 +188,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @return array The list of nodes.
      * 
      */
-    public function fetchList($tags = null, $where = null, $order = null,
+    public function fetchAll($tags = null, $where = null, $order = null,
         $page = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
@@ -316,7 +316,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @return array The master node data.
      * 
      */
-    public function fetchItem($id)
+    public function fetch($id)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');

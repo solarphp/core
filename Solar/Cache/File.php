@@ -170,7 +170,7 @@ class Solar_Cache_File extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function replace($key, $data)
+    public function save($key, $data)
     {
         // should the data be serialized?
         if (is_array($data) || is_object($data)) {

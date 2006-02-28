@@ -98,7 +98,7 @@ class Solar_Model_Tags extends Solar_Sql_Table {
      * @return array An array of tags on that node.
      * 
      */
-    public function fetchForNode($node_id)
+    public function fetchAllByNodeId($node_id)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this, 'name');
@@ -125,7 +125,7 @@ class Solar_Model_Tags extends Solar_Sql_Table {
         $node_id = (int) $node_id;
         
         // get the old set of tags
-        $old = $this->fetchForNode($node_id);
+        $old = $this->fetchAllByNodeId($node_id);
         
         // normalize the new tags to an array
         $new = $this->asArray($tags);

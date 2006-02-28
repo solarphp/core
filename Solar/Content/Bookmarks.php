@@ -60,7 +60,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      * @return array The list of bookmarks.
      * 
      */
-    public function fetchList($tags = null, $handle = null, $order = null,
+    public function fetchAll($tags = null, $handle = null, $order = null,
         $page = null)
     {
         $where = array();
@@ -72,7 +72,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
             $order = 'nodes.created DESC';
         }
         
-        return parent::fetchList($tags, $where, $order, $page);
+        return parent::fetchAll($tags, $where, $order, $page);
     }
     
     /**
@@ -137,13 +137,13 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      * @return array The node data.
      * 
      */
-    public function fetchOwnerUri($handle, $uri)
+    public function fetchByOwnerUri($handle, $uri)
     {
         $tags = null;
         $where = array();
         $where['nodes.owner_handle = ?'] = $handle;
         $where['nodes.uri = ?']          = $uri;
-        $result = parent::fetchList($tags, $where);
+        $result = parent::fetchAll($tags, $where);
         if ($result) {
             return $result[0];
         }

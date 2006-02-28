@@ -106,7 +106,7 @@ class Solar_Cache_Memcache extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function replace($key, $data)
+    public function save($key, $data)
     {
         return $this->_memcache->set($key, $data, null, $this->_config['life']);
     }

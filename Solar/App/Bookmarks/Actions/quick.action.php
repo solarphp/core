@@ -29,7 +29,7 @@ $subj = $this->_query('subj');
 
 // we need to see if the user already has the same URI in
 // his bookmarks so that we don't add it twice.
-$existing = $this->_bookmarks->fetchOwnerUri(
+$existing = $this->_bookmarks->fetchByOwnerUri(
     $this->_user->auth->username,
     $uri
 );

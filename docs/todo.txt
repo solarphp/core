@@ -2,11 +2,10 @@
 
 MOVING TO A NON-DEV RELEASE
 
-Method names:
-    Change replace() to save()
-    Change fetchItem(), fetchList() to fetchAll(), fetchRow()? in line with select() param
-    Use fetchBy*() and fetch*By*() (i.e., use "by" as vs "with", "for", etc)
-
+Other names:
+    handle (vice username)
+    passwd (vice password)
+    
 Docs:
     Automate doc prep
         Upgrade to CVS PHP for properties
@@ -17,28 +16,30 @@ Docs:
     Use Orbit_App_Docs
 
 Classes:
-    Solar_View class, with full-up helper set
     Fix SQL auto-deconfliction
 
 Apps:
-    One more app (Solar_App_Todo)
-
-Layout:
-    Standard layout?
+    One more app? (Solar_App_Todo)
 
 Test the non-root config of action links
 
 Figure how to get public files from app to webroot
+    symbolic links created by user :-(
+    ln -s /path/to/Solar/Something/Public /var/www/public/solar/something
+
 
 ----
 
 TESTING PLAN
 
 update:
-    all
+    all existing
 
 easy:
     Solar_Filter
+
+moderate:
+    Solar_View et al
     
 ----
 

@@ -181,7 +181,7 @@ class Solar_Model_Comments extends Solar_Base {
      * @return array The comment data.
      * 
      */
-    public function fetchItem($id)
+    public function fetch($id)
     {
         $where = $this->_where;
         $where['nodes.id = ?'] = (int) $id;
@@ -210,7 +210,7 @@ class Solar_Model_Comments extends Solar_Base {
      * @return array The list of comments.
      * 
      */
-    public function fetchList($part_of = null, $tags = null, $order = null,
+    public function fetchAll($part_of = null, $tags = null, $order = null,
         $page = null)
     {
         $where = $this->_where;
@@ -309,7 +309,7 @@ class Solar_Model_Comments extends Solar_Base {
         } elseif (is_numeric($data)) {
             // $data is a node ID, look it up for values
             $data = array(
-                'comments' => $this->fetchItem((int) $data)
+                'comments' => $this->fetch((int) $data)
             );
         }
         
@@ -365,7 +365,7 @@ class Solar_Model_Comments extends Solar_Base {
         } elseif (is_numeric($data)) {
             // $data is a node ID, look it up for values
             $data = array(
-                'comments' => $this->fetchItem((int) $data)
+                'comments' => $this->fetch((int) $data)
             );
         }
         

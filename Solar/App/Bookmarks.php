@@ -220,7 +220,7 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
         // make sure a bookmarks area exists
         $content = Solar::dependency('Solar_Content', $this->_config['content']);
         $name = $this->_config['area_name'];
-        $area = $content->areas->fetchWithName($name);
+        $area = $content->areas->fetchByName($name);
         if (empty($area)) {
             // area didn't exist, create it.
             $data = array('name'  => $name);

@@ -17,13 +17,13 @@
  * 
  */
 ?>
-<p><?php $this->eprint($this->text) ?></p>
-<p><?php $this->eprint($this->code) ?></p>
+<p><?php echo $this->escape($this->text) ?></p>
+<p><?php echo $this->escape($this->code) ?></p>
 <ul>
     <?php foreach ($this->list as $code): ?>
     <li>
-        <?php echo $this->actionLink("hello/main?code=$code", $code) ?>
-        (<?php echo $this->actionLink("hello/rss?code=$code", 'RSS') ?>)
+        <?php echo $this->action("hello/main?code=$code", $code) ?>
+        (<?php echo $this->action("hello/rss?code=$code", 'RSS') ?>)
     </li>
     <?php endforeach ?>
 </ul>

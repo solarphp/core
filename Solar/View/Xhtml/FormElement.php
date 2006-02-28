@@ -27,6 +27,7 @@
  * 
  */
 abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
+    
     protected $_info = array(
         'type'    => '',
         'name'    => '',
@@ -44,14 +45,32 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         'name',
         'value',
         'label',
-        'attribs',
         'options',
         'require',
         'disable',
         'feedback',
+        'attribs', // last, so that all attribs are unset properly
     );
     
-    protected function _info($info)
+    protected $_type;
+    
+    protected $_name;
+    
+    protected $_value;
+    
+    protected $_label;
+    
+    protected $_attribs;
+    
+    protected $_options;
+    
+    protected $_require;
+    
+    protected $_disable;
+    
+    protected $_feedback;
+    
+    protected function _prepare($info)
     {
         $info = array_merge($this->_info, $info);
         
@@ -67,9 +86,9 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         
         foreach ($this->_keys as $key) {
             unset($info['attribs'][$key]);
+            $prop = "_$key";
+            $this->$prop = $info[$key];
         }
-        
-        return $info;
     }
 }
 ?>

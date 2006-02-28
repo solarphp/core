@@ -44,29 +44,16 @@ class Solar_View_Helper_FormButton extends Solar_View_Helper_FormElement {
      */
     public function formButton($info)
     {
-        extract($this->_info($info));
+        $this->_prepare($info);
+        $xhtml .= '<input type="button"';
+        $xhtml .= ' name="' . $this->_view->escape($this->_name) . '"';
         
-        // build the element
-        if ($disable) {
-        
-            // disabled. no hidden value because it can't be clicked.
-            $xhtml = '[' . $this->_view->escape($value) . ']';
-            
-        } else {
-        
-            // enabled
-            $xhtml .= '<input type="button"';
-            $xhtml .= ' name="' . $this->_view->escape($name) . '"';
-            
-            if (! empty($value)) {
-                $xhtml .= ' value="' . $this->_view->escape($value) . '"';
-            }
-            
-            $xhtml .= $this->_view->attribs($attribs);
-            $xhtml .= ' />';
-            
+        if (! empty($this->_value)) {
+            $xhtml .= ' value="' . $this->_view->escape($this->_value) . '"';
         }
         
+        $xhtml .= $this->_view->attribs($this->_attribs);
+        $xhtml .= ' />';
         return $xhtml;
     }
 }

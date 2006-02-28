@@ -44,21 +44,21 @@ class Solar_View_Helper_FormSubmit extends Solar_View_Helper_FormElement {
      */
     public function formSubmit($info)
     {
-        extract($this->_info($info));
-        $xhtml = '';
+        $this->_prepare($info);
         
-        // ignore disable/enable, always show the button.
-        $xhtml .= '<input type="submit"';
-        $xhtml .= ' name="' . $this->_view->escape($name) . '"';
-        
-        if (! empty($value)) {
-            $xhtml .= ' value="' . $this->_view->escape($value) . '"';
+        // we process values this way so that blank submit buttons
+        // get the browser-default value
+        if (empty($this->_value)) {
+            $escval = '';
+        } else {
+            $escval = ' value="' . $this->_view->escape($this->_value) . '"';
         }
         
-        $xhtml .= $this->_view->attribs($attribs);
-        $xhtml .= ' />';
-        
-        return $xhtml;
+        // output
+        return '<input type="submit"'
+             . ' name="' . $this->_view->escape($this->_name) . '"'
+             . $escval
+             . $this->_view->attribs($this->_attribs) . ' />';
     }
 }
 ?>

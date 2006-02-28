@@ -44,48 +44,28 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement {
      */
     public function formRadio($info)
     {
-        extract($this->_info($info));
+        $this->_prepare($info);
         $radios = array();
         
-        // build the element
-        if ($disable) {
+        // default value if none are checked.
+        $radios[] = $this->_view->formHidden(array('name' => $this->_name, 'value' => null)) . "\n";
         
-            // disabled.
-            foreach ($options as $opt_value => $opt_label) {
-                if ($opt_value == $value) {
-                    // add a return value, and a checked text.
-                    $opt = $this->_view->formHidden(array('name' => $name, 'value' => $opt_value))
-                         . '[x]';
-                } else {
-                    // not checked
-                    $opt = '[&nbsp;]';
-                }
-                $radios[] = $opt . '&nbsp;' . $this->_view->escape($opt_label);
+        // add radio buttons.
+        foreach ($this->_options as $opt_value => $opt_label) {
+        
+            // is it checked?
+            if ($opt_value == $this->_value) {
+                $this->_attribs['checked'] = 'checked';
+            } else {
+                unset($this->_attribs['checked']);
             }
             
-        } else {
-        
-            // enabled.
-            // default value if none are checked.
-            $radios[] = $this->_view->formHidden(array('name' => $name, 'value' => null)) . "\n";
-            
-            // add radio buttons.
-            foreach ($options as $opt_value => $opt_label) {
-            
-                // is it checked?
-                if ($opt_value == $value) {
-                    $attribs['checked'] = 'checked';
-                } else {
-                    unset($attribs['checked']);
-                }
-                
-                // build the radio button
-                $radios[] = '<label><input type="radio"'
-                          . ' name="' . $this->_view->escape($name) . '"'
-                          . ' value="' . $this->_view->escape($opt_value) . '"'
-                          . $this->_view->attribs($attribs) . ' />&nbsp;'
-                          . $this->_view->escape($opt_label) . '</label>';
-            }
+            // build the radio button
+            $radios[] = '<label><input type="radio"'
+                      . ' name="' . $this->_view->escape($this->_name) . '"'
+                      . ' value="' . $this->_view->escape($opt_value) . '"'
+                      . $this->_view->attribs($this->_attribs) . ' />'
+                      . $this->_view->escape($opt_label) . '</label>';
         }
         
         return implode("\n", $radios);

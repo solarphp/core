@@ -44,21 +44,22 @@ class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
      */
     public function formReset($info)
     {
-        extract($this->_info($info));
-        $xhtml = '';
+        $this->_prepare($info);
         
-        // always enabled
-        $xhtml .= '<input type="reset"';
-        $xhtml .= ' name="' . $this->_view->escape($name) . '"';
-        
-        if (! empty($value)) {
-            $xhtml .= ' value="' . $this->_view->escape($value) . '"';
+        // we process values this way so that blank reset buttons
+        // get the browser-default value
+        if (empty($this->_value)) {
+            $escval = '';
+        } else {
+            $escval = ' value="' . $this->_view->escape($this->_value) . '"';
         }
         
-        $xhtml .= $this->_view->attribs($attribs);
-        $xhtml .= ' />';
-        
-        return $xhtml;
+        // output
+        return '<input type="reset"';
+             . ' name="' . $this->_view->escape($this->_name) . '"'
+             . $escval
+             . $this->_view->attribs($this->_attribs)
+             . ' />';
     }
 }
 ?>

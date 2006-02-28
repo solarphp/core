@@ -47,7 +47,7 @@ class Solar_View_Helper_Date extends Solar_View_Helper {
      * 
      * @access public
      * 
-     * @param string $string Any date-time string suitable for
+     * @param string $spec Any date-time string suitable for
      * strtotime().
      * 
      * @param string $format An optional custom [[php date()]]
@@ -56,15 +56,19 @@ class Solar_View_Helper_Date extends Solar_View_Helper {
      * @return string The formatted date string.
      * 
      */
-    function date($string, $format = null)
+    function date($spec, $format = null)
     {
-        if (! $string) {
+        if (! $spec) {
             return;
         }
         if (! $format) {
             $format = $this->_config['format'];
         }
-        return $this->_view->escape(date($format, strtotime($string)));
+        if (is_int($spec)) {
+            return $this->_view->escape(date($format, $spec));
+        } else {
+            return $this->_view->escape(date($format, strtotime($spec)));
+        }
     }
 }
 ?>

@@ -44,61 +44,39 @@ class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement {
      */
     public function formCheckbox($info)
     {
-        extract($this->_info($info));
+        $this->_prepare($info);
         
         // make sure there is a checked value
-        if (empty($options[0])) {
-            $options[0] = 1;
+        if (empty($this->_options[0])) {
+            $this->_options[0] = 1;
         }
         
         // make sure there is an unchecked value
-        if (empty($options[1])) {
-            $options[1] = 0;
+        if (empty($this->_options[1])) {
+            $this->_options[1] = 0;
         }
         
-        // build the element
-        if ($disable) {
-        
-            // disabled.
-            if ($value == $options[0]) {
-                // checked
-                $xhtml = $this->_view->formHidden($name, $options[0])
-                       . '[x]';
-            } else {
-                // not checked
-                $xhtml = $this->_view->formHidden($name, $options[1])
-                       . '[&nbsp;]';
-            }
-            
-            if ($info['label']) {
-                $xhtml .= ' ' . $this->_view->escape($info['label']);
-            }
-            
+        // is it checked already?
+        if ($this->_value == $this->_options[0]) {
+            $this->_attribs['checked'] = 'checked';
         } else {
-            
-            // enabled.
-            // is it checked already?
-            if ($value == $options[0]) {
-                $attribs['checked'] = 'checked';
-            } else {
-                unset($attribs['checked']);
-            }
-            
-            // add the "checked" option first
-            $xhtml = '<input type="checkbox"'
-                   . ' name="' . $this->_view->escape($name) . '"'
-                   . ' value="' . $this->_view->escape($options[0]) . '"'
-                   . $this->_view->attribs($attribs)
-                   . ' />';
-                   
-            // wrap in a label?
-            if ($info['label']) {
-                $xhtml = '<label>' . $xhtml . '&nbsp;' . $this->_view->escape($info['label']) . '</label>';
-            }
-            
-            // prefix with unchecked value
-            $xhtml = $this->_view->formHidden(array('name' => $name, 'value' => $options[1])) . $xhtml;
+            unset($this->_attribs['checked']);
         }
+        
+        // add the "checked" option first
+        $xhtml = '<input type="checkbox"'
+               . ' name="' . $this->_view->escape($this->_name) . '"'
+               . ' value="' . $this->_view->escape($this->_options[0]) . '"'
+               . $this->_view->attribs($this->_attribs)
+               . ' />';
+               
+        // wrap in a label?
+        if ($this->_label) {
+            $xhtml = '<label>' . $xhtml . $this->_view->escape($this->_label) . '</label>';
+        }
+        
+        // prefix with unchecked value
+        $xhtml = $this->_view->formHidden(array('name' => $this->_name, 'value' => $this->_options[1])) . $xhtml;
         
         return $xhtml;
     }

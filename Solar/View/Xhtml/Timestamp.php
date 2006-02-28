@@ -47,7 +47,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * 
      * @access public
      * 
-     * @param string $string Any date-time string suitable for
+     * @param string $spec Any date-time string suitable for
      * strtotime().
      * 
      * @param string $format An optional custom [[php date()]]
@@ -56,15 +56,15 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * @return string The formatted date string.
      * 
      */
-    function timestamp($string, $format = null)
+    function timestamp($spec, $format = null)
     {
-        if (! $string) {
+        if (! $spec) {
             return;
         }
         if (! $format) {
             $format = $this->_config['format'];
         }
-        return $this->_view->escape(date($format, strtotime($string)));
+        return $this->_view->date($spec, $format);
     }
 }
 ?>

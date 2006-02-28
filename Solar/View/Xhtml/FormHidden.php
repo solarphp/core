@@ -44,12 +44,11 @@ class Solar_View_Helper_FormHidden extends Solar_View_Helper_FormElement {
      */
     public function formHidden($info)
     {
-        // enabled, disabled, same thing.
-        extract($this->_info($info));
+        $this->_prepare($info);
         return '<input type="hidden"'
-             . ' name="' . $this->_view->escape($name) . '"'
-             . ' value="' . $this->_view->escape($value) . '"'
-             . $this->_view->attribs($attribs)
+             . ' name="' . $this->_view->escape($this->_name) . '"'
+             . ' value="' . $this->_view->escape($this->_value) . '"'
+             . $this->_view->attribs($this->_attribs)
              . ' />';
     }
 }

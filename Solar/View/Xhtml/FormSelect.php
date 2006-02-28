@@ -44,76 +44,44 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
      */
     public function formSelect($info)
     {
-        extract($this->_info($info));
-        $xhtml = '';
+        $this->_prepare($info);
         
-        // force $value to array so we can compare multiple values
+        // force $this->_value to array so we can compare multiple values
         // to multiple options.
-        settype($value, 'array');
+        settype($this->_value, 'array');
         
         // check for multiple attrib and change name if needed
-        if (isset($attribs['multiple']) &&
-            $attribs['multiple'] == 'multiple' &&
-            substr($name, -2) != '[]') {
-            $name .= '[]';
+        if (isset($this->_attribs['multiple']) &&
+            $this->_attribs['multiple'] == 'multiple' &&
+            substr($this->_name, -2) != '[]') {
+            $this->_name .= '[]';
         }
         
-        // check for multiple implied by the name and set attrib if
+        // check for multiple implied by the name, and set attrib if
         // needed
-        if (substr($name, -2) == '[]') {
-            $attribs['multiple'] = 'multiple';
+        if (substr($this->_name, -2) == '[]') {
+            $this->_attribs['multiple'] = 'multiple';
         }
         
-        // now start building the XHTML.
-        if ($disable) {
-        
-            // disabled.
-            // generate a plain list of selected options.
-            // show the label, not the value, of the option.
-            $list = array();
-            foreach ($options as $opt_value => $opt_label) {
-                if (in_array($opt_value, $value)) {
-                    // add the hidden value
-                    $opt = $this->_view->formHidden(array('name' => $name, 'value' => $opt_value));
-                    // add the display label
-                    $opt .= $this->_view->escape($opt_label);
-                    // add to the list
-                    $list[] = $opt;
-                }
+        // build the list of options
+        $list = array();
+        foreach ($this->_options as $opt_value => $opt_label) {
+            $selected = '';
+            if (in_array($opt_value, $this->_value)) {
+                $selected = ' selected="selected"';
             }
-            $xhtml .= implode($listsep, $list);
-            
-        } else {
-        
-            // enabled.
-            // the surrounding select element first.
-            $xhtml .= '<select';
-            $xhtml .= ' name="' . $this->_view->escape($name) . '"';
-            $xhtml .= $this->_view->attribs($attribs);
-            $xhtml .= ">\n    ";
-            
-            // build the list of options
-            $list = array();
-            foreach ($options as $opt_value => $opt_label) {
-                $opt = '<option';
-                $opt .= ' value="' . $this->_view->escape($opt_value) . '"';
-                $opt .= ' label="' . $this->_view->escape($opt_label) . '"';
-                if (in_array($opt_value, $value)) {
-                    $opt .= ' selected="selected"';
-                }
-                $opt .= '>' . $this->_view->escape($opt_label) . "</option>";
-                $list[] = $opt;
-            }
-            
-            // add the options to the xhtml
-            $xhtml .= implode("\n    ", $list);
-            
-            // finish up
-            $xhtml .= "\n</select>";
-            
+            $list[] = '<option';
+                    . ' value="' . $this->_view->escape($opt_value) . '"'
+                    . ' label="' . $this->_view->escape($opt_label) . '"'
+                    . $selected
+                    . '>' . $this->_view->escape($opt_label) . "</option>";
         }
         
-        return $xhtml;
+        // now build the XHTML
+        return '<select name="' . $this->_view->escape($this->_name) . '"'
+             . $this->_view->attribs($this->_attribs) . ">\n    "
+             . implode("\n    ", $list);
+             . "\n</select>";
     }
 }
 ?>

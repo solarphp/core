@@ -33,11 +33,6 @@ require_once 'Solar/View/Xhtml/FormElement.php';
  */
 class Solar_View_Helper_FormTextarea extends Solar_View_Helper_FormElement {
     
-    protected $_config = array(
-        'rows' => 12,
-        'cols' => 40,
-    );
-    
     /**
      * 
      * Generates a 'textarea' element.
@@ -49,33 +44,12 @@ class Solar_View_Helper_FormTextarea extends Solar_View_Helper_FormElement {
      */
     public function formTextarea($info)
     {
-        extract($this->_info($info));
-        $xhtml = '';
-        
-        // disabled?
-        if ($disable) {
-            $xhtml = $this->_view->formHidden(array('name' => $name, 'value' => $value));
-            $attribs['readonly'] = 'readonly';
-        }
-        
-        
-        // make sure that there are 'rows' and 'cols' values.
-        if (empty($attribs['rows'])) {
-            $attribs['rows'] = (int) $this->_config['rows'];
-        }
-        
-        if (empty($attribs['cols'])) {
-            $attribs['cols'] = (int) $this->_config['cols'];
-        }
-        
-        // now build the element.
-        $xhtml .= '<textarea'
-                . ' name="' . $this->_view->escape($name) . '"'
-                . $this->_view->attribs($attribs) . '>'
-                . $this->_view->escape($value)
-                . '</textarea>';
-            
-        return $xhtml;
+        $this->_prepare($info);
+        return '<textarea'
+             . ' name="' . $this->_view->escape($this->_name) . '"'
+             . $this->_view->attribs($this->_attribs) . '>'
+             . $this->_view->escape($this->_value)
+             . '</textarea>';
     }
 }
 ?>

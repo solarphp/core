@@ -44,22 +44,12 @@ class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement {
      */
     public function formPassword($info)
     {
-        extract($this->_info($info));
-        
-        if ($disable) {
-            // disabled
-            $xhtml = $this->_view->formHidden(array('name' => $name, 'value' => $value))
-                   . 'xxxxxxxx';
-        } else {
-            // enabled
-            $xhtml = '<input type="password"'
-                   . ' name="' . $this->_view->escape($name) . '"'
-                   . ' value="' . $this->_view->escape($value) . '"'
-                   . $this->_view->attribs($attribs)
-                   . ' />';
-        }
-        
-        return $xhtml;
+        $this->_prepare($info);
+        return '<input type="password"'
+             . ' name="' . $this->_view->escape($this->_name) . '"'
+             . ' value="' . $this->_view->escape($this->_value) . '"'
+             . $this->_view->attribs($this->_attribs)
+             . ' />';
     }
     
 }

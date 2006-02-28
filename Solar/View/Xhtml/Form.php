@@ -336,10 +336,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     $form[] = "\t\t$element";
                 } else {
                     $feedback = $this->listFeedback($info['feedback']);
-                    $form[] = '<div>';
                     $form[] = "\t<dt>$star<label for=\"$id\">$label</label></dt>";
                     $form[] = "\t<dd>$element$feedback</dd>";
-                    $form[] = '</div>';
                     $form[] = '';
                 }
                 
@@ -349,17 +347,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 $label = $info[1];
                 if ($flag) {
                     $in_group = true;
-                    $form[] = '<div>';
                     $form[] = "\t<dt><label>$label</label></dt>";
                     $form[] = "\t<dd>";
                     $feedback = '';
                 } else {
                     $in_group = false;
                     $form[] = "$feedback</dd>";
-                    $form[] = '</div>';
                     $form[] = '';
                 }
             }
+            /** @todo add split() for </dl><dl> output? */
             
         }
         $form[] = '</dl>';

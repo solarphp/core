@@ -20,7 +20,7 @@ $var = Solar::factory('Solar_Debug_Var', array('output' => 'text'));
 
 // dump an object
 $expectObject = <<<EXPECT
-object(Solar_Test_Example)#10 (1) {
+object(Solar_Test_Example)#3 (1) {
   ["_config:protected"] => array(4) {
     ["foo"] => string(3) "bar"
     ["baz"] => string(3) "dib"

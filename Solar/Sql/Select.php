@@ -296,29 +296,45 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function join($spec, $cond, $cols = null)
     {
-        // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Table) {
-            
-            // get the table name
-            $name = $spec->name;
-            
-            // add all columns?
-            if ($cols == '*') {
-                $cols = array_keys($spec->col);
-            }
-            
-        } else {
-            $name = $spec;
-        }
-        
-        $this->_parts['join'][] = array(
-            'type' => null,
-            'name' => $name,
-            'cond' => $cond
-        );
-        
-        // add to the columns from this joined table
-        $this->_tblCols($name, $cols);
+        $this->_join(null, $spec, $cond, $cols);
+    }
+    
+    /**
+     * 
+     * Adds a LEFT JOIN table and columns to the query.
+     * 
+     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * to join to; if a string, the table name to join to.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the joined table.
+     * 
+     * @return void
+     * 
+     */
+    public function leftJoin($spec, $cond, $cols)
+    {
+        $this->_join('LEFT', $spec, $cond, $cols);
+    }
+    
+    /**
+     * 
+     * Adds an INNER JOIN table and columns to the query.
+     * 
+     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * to join to; if a string, the table name to join to.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the joined table.
+     * 
+     * @return void
+     * 
+     */
+    public function innerJoin($spec, $cond, $cols)
+    {
+        $this->_join('INNER', $spec, $cond, $cols);
     }
     
     /**
@@ -423,7 +439,7 @@ class Solar_Sql_Select extends Solar_Base {
     {
         // normally use where() ...
         $method = 'where';
-        if ($op == 'OR') {
+        if (strtoupper($op) == 'OR') {
             // unless it's orWhere().
             $method = 'orWhere';
         }
@@ -856,6 +872,52 @@ class Solar_Sql_Select extends Solar_Base {
             'count' => $result,
             'pages' => $pages
         );
+    }
+    
+    /**
+     * 
+     * Support method for adding JOIN clauses.
+     * 
+     * @param string $type The type of join; empty for a plain JOIN, or
+     * "LEFT", "INNER", etc.
+     * 
+     * @param string|Solar_Sql_Table $spec If a Solar_Sql_Table
+     * object, the table to join to; if a string, the table name to
+     * join to.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the
+     * joined table.
+     * 
+     * @return void
+     * 
+     */
+    protected function _join($type, $spec, $cond, $cols)
+    {
+        // the $spec may be a table object, or a string.
+        if ($spec instanceof Solar_Sql_Table) {
+            
+            // get the table name
+            $name = $spec->name;
+            
+            // add all columns?
+            if ($cols == '*') {
+                $cols = array_keys($spec->col);
+            }
+            
+        } else {
+            $name = $spec;
+        }
+        
+        $this->_parts['join'][] = array(
+            'type' => $type,
+            'name' => $name,
+            'cond' => $cond
+        );
+        
+        // add to the columns from this joined table
+        $this->_tblCols($name, $cols);
     }
     
     /**

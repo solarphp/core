@@ -212,7 +212,7 @@ class Solar_Sql_Table extends Solar_Base {
         settype($data, 'array');
         
         // set defaults
-        $data = array_merge($this->getDefault(), $data);
+        $data = array_merge($this->fetchDefault(), $data);
         
         // auto-add sequential values
         foreach ($this->_col as $colname => $colinfo) {
@@ -373,26 +373,17 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Returns a data array with column keys and default values.
      * 
-     * @param string|array The column(s) to get defaults for; if
-     * none specified, gets defaults for all columns.
-     * 
      * @return array An array of key-value pairs where the key is
      * the column name and the value is the default column value.
      * 
      */
-    public function getDefault($spec = null)
+    public function fetchDefault()
     {
         // the array of default data
         $data = array();
         
-        // if no columns specified, use all columns
-        if (is_null($spec)) {
-            $spec = array_keys($this->_col);
-        } else {
-            settype($spec, 'array');
-        }
-        
         // loop through each specified column and collect default data
+        $spec = array_keys($this->_col);
         foreach ($spec as $name) {
             
             // skip columns that don't exist
@@ -432,14 +423,10 @@ class Solar_Sql_Table extends Solar_Base {
             }
         }
         
-        // don't send along the created/updated fields, they should
-        // be auto-set on insert/update
-        unset($data['created']);
-        unset($data['updated']);
-        
         // done!
         return $data;
     }
+    
     
     // -----------------------------------------------------------------
     // 

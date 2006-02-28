@@ -25,6 +25,12 @@
  * 
  * @todo add a way to let import() know what the script name is
  * 
+ * @todo add a way to let actionImport() and actionExport() know what the
+ * front controller path is
+ * 
+ * @todo convert "%2B" to "+" on export? of course, that means real
+ * plus-signs will be spaces...
+ * 
  */
 class Solar_Uri extends Solar_Base {
     

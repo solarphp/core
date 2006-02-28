@@ -62,6 +62,9 @@ class Solar_Form_Load_Table extends Solar_Base {
             settype($list, 'array');
         }
         
+        // default values
+        $default = $table->fetchDefault();
+        
         // loop through the list of requested columns and collect elements
         $elements = array();
         foreach ($list as $name => $info) {
@@ -86,7 +89,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                 'type'     => null,
                 'label'    => $table->locale(strtoupper("LABEL_$name")),
                 'descr'    => $table->locale(strtoupper("DESCR_$name")),
-                'value'    => $table->getDefault($name),
+                'value'    => $default[$name],
                 'require'  => $table->col[$name]['require'],
                 'disable'  => $table->col[$name]['primary'],
                 'options'  => array(),

@@ -47,7 +47,7 @@ class Solar_Model_Comments extends Solar_Base {
      * 
      * An all-purpose content object.
      * 
-     * @var object Solar_Content
+     * @var object Solar_Model
      * 
      */
     protected $_content;
@@ -85,7 +85,7 @@ class Solar_Model_Comments extends Solar_Base {
         parent::__construct($config);
         
         // create a content object and set its paging
-        $this->_content = Solar::factory('Solar_Content');
+        $this->_content = Solar::factory('Solar_Model');
         $this->paging($this->_config['paging']);
         
         // set up the baseline WHERE clause

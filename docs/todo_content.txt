@@ -6,9 +6,9 @@ Solar/
         Nodes.php -- nodes of content in the namespaces
         Tags.php -- searchable tags on a node
         Hits.php -- hits and visitors on a node
-    Content.php
+    Content.php -- domain model
     Content/
-        Type.php
+        Type.php -- abstract type, plus a method to get all parts of one item
         Type/
             Blog.php
             Bookmark.php

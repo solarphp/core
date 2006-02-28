@@ -44,7 +44,13 @@
         echo $this->form('group', 'begin');
         echo $this->form('submit', 'op', $this->locale('Solar::OP_SAVE'));
         echo $this->form('submit', 'op', $this->locale('Solar::OP_CANCEL'));
-        echo $this->form('submit', 'op', $this->locale('Solar::OP_DELETE'));
+        
+        $attribs = array(
+            'onclick' => "return confirm('" . $this->locale('CONFIRM_DELETE') . "')"
+        );
+        
+        echo $this->form('submit', 'op', $this->locale('Solar::OP_DELETE'), null, $attribs);
+        
         echo $this->form('group', 'end');
         echo $this->form('end');
     ?>

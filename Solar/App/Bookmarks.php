@@ -37,6 +37,19 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
     
     /**
      * 
+     * User-defined configuration values.
+     * 
+     * @todo UPDATE areas SET name = 'Solar_App_Bookmarks' WHERE name
+     * = 'Solar_Model_Bookmarks';
+     * 
+     */
+    protected $_config = array(
+        'area_name' => 'Solar_App_Bookmarks',
+        'content'   => 'content',
+    );
+    
+    /**
+     * 
      * The default controller action.
      * 
      * @var string
@@ -62,11 +75,16 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
         // edit/:id
         'edit' => array('id'),
         
+        // quick/:uri/:subj
+        'quick' => array('uri', 'subj'),
+        
         // userFeed/:owner_handle/:tags
         'userFeed' => array('owner_handle', 'tags'),
         
         // tagFeed/:tags
         'tagFeed' => array('tags'),
+        
+        // quick and create have no pathinfo
         
     );
     
@@ -171,6 +189,57 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
      * 
      */
     public $backlink;
+    
+    /**
+     * 
+     * Local reference to the 'user' object in Solar::registry().
+     * 
+     * @var Solar_User
+     * 
+     */
+    protected $_user;
+    
+    /**
+     * 
+     * A bookmarks node interaction manager.
+     * 
+     * @var Solar_Content_Bookmarks
+     * 
+     */
+    protected $_bookmarks;
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        
+        // make sure a bookmarks area exists
+        $content = Solar::dependency('Solar_Content', $this->_config['content']);
+        $name = $this->_config['area_name'];
+        $area = $content->areas->fetchWithName($name);
+        if (empty($area)) {
+            // area didn't exist, create it.
+            $data = array('name'  => $name);
+            $area = $content->areas->insert($data);
+        }
+        
+        // get a user object for privileges
+        $this->_user = Solar::registry('user');
+        
+        // get the bookmarks model using the same content
+        // dependency
+        $this->_bookmarks = Solar::factory(
+            'Solar_Content_Bookmarks',
+            array(
+                'content' => $this->_config['content'],
+                'area_id' => $area['id']
+            )
+        );
+    }
     
     /**
      * 

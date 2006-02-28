@@ -1,12 +1,34 @@
-Solar_View class, with full-up helper set
+----
 
-Refactor Solar_Content
+MOVING TO A NON-DEV RELEASE
+
+Method names:
+    Change replace() to save()
+    Change fetchItem(), fetchList() to fetchAll(), fetchRow()? in line with select() param
+    Use fetchBy*() and fetch*By*() (i.e., use "by" as vs "with", "for", etc)
+
+Docs:
+    Automate doc prep
+        Upgrade to CVS PHP for properties
+    Add manual pages
+    Pull experimental inline docs from the codebase to manual pages
+    Automate merging of manual pages
+    Build a new layout for the Solar site
+    Use Orbit_App_Docs
+
+Classes:
+    Solar_View class, with full-up helper set
+    Fix SQL auto-deconfliction
 
 Apps:
-    Docs
-    Todo
+    One more app (Solar_App_Todo)
 
+Layout:
+    Standard layout?
 
+Test the non-root config of action links
+
+Figure how to get public files from app to webroot
 
 ----
 
@@ -23,7 +45,9 @@ easy:
 DOCUMENTATION PLAN
 
 Start building wiki pages from internal comments
+    DONE
 
+Merge with "manual" pages
 
 ----
 
@@ -38,15 +62,19 @@ Solar_User_Priv for class/action/op privileges by user and role
 
 ----
 
-NEW MODELS & APPS
+NEW MODELS, CONTENT TYPES, & APPS
 
-Solar_Model_Bugs
+Solar_Content_Todo
 
-Solar_App_Bugs
+Solar_App_Todo
 
-Solar_Model_Comments
+Solar_Model_Issues (in addition to the content model, highly specific)
 
-    Need a 'remember me' function
+Solar_App_Issues (bug tracker, uses content todos and comments)
+
+Solar_Content_Comments
+
+    Need a 'remember me' function?
 
     Need to separate Solar_Model_Comments_Rules into a standalone
     content-filtering class ... or add a file-based plugin mechanism? 
@@ -54,10 +82,10 @@ Solar_Model_Comments
 
 Solar_Model_Members
     id
-    created_on
-    updated_on
-    confirmed_on
-    confirm_code
+    created
+    updated
+    confirmed  -- change to an "active" flag?
+    confirm_code  -- change to just "code" for both confirms and resets?
     handle
     passwd
     public
@@ -65,26 +93,25 @@ Solar_Model_Members
     uri
 
 Solar_App_Member
-    roster
-    register
-    passwd
-    forgot
-    profile
+    actions:
+        roster
+        register
+        passwd
+        forgot
+        profile
     
 Solar_Model_Privs
     id
-    created_on
-    updated_on
-    allow
-    type
-    name
-    class
-    action
-    op
+    created
+    updated
+    allow  -- t/f
+    type   -- user/role
+    name   -- handle or role name
+    class  -- app class
+    action -- action
+    op     -- op within that action
     
 Solar_App_Priv
-
-Solar_Model_Comments
 
 ----
 
@@ -96,11 +123,7 @@ Search by URL, title, description
 
 Change all instances of tag X to tag Z
 
-
-----
-
-Solar_Model_Comments
-
+Make taglist and order into select-lists?
 
 
 ----
@@ -219,40 +242,36 @@ immediately? That way you could address their configs directly, if needed ...
 
 URLs:
     http://example.com
-    [http://example.com] (rendered as superscript?)
-    [http://example.com |] (drops the scheme)
-    [http://example.com | rendered as this]
+    [[http://example.com]] superscript
+    [[http://example.com |]] (drops the scheme)
+    [[http://example.com | rendered as this]]
 
 Wiki (option to render with spaces)
     PageName
     PageName#anchor
-    [PageName#anchor] ???
-    [PageName#anchor |] ???
-    [PageName#anchor | rendered as this]
+    [[PageName#anchor]] superscript
+    [[PageName#anchor |]] just the page name
+    [[PageName#anchor | rendered as this]]
     
 Free:
-    [free page name]
-    [free page name#anchor]
-    [free page name#anchor | rendered as this]
+    [[free page name]]
+    [[free page name#anchor]]
+    [[free page name#anchor | rendered as this]]
 
 Inter:
-    Interwiki:PageName
-    Interwiki:PageName#anchor
-    [Interwiki:PageName#anchor | rendered as this]
-    [Interwiki:free page name]
-    [Interwiki:free page name#anchor]
-    [Interwiki:free page name#anchor |] (drops the interwiki name)
-    [Interwiki:free page name#anchor | rendered as this]
-    Use of double-colons also allowed?
+    Interwiki::PageName
+    Interwiki::PageName#anchor
+    [[Interwiki::PageName#anchor | rendered as this]]
+    [[Interwiki::free page name]]
+    [[Interwiki::free page name#anchor]]
+    [[Interwiki::free page name#anchor |]] (drops the interwiki name)
+    [[Interwiki::free page name#anchor | rendered as this]]
+    Use of double-colons is default?
     
 Default Interwikis:
-    Amazon:
-    Google:
-    Imdb:
-    IMDB:
-    Isbn:
-    ISBN:
-    Issn:
-    ISSN:
-    Php:
-    PHP:
+    amazon::
+    google::
+    imdb::
+    isbn::
+    issn::
+    php::

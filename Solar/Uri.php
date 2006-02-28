@@ -36,6 +36,17 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * User-provided configuration values.
+     * 
+     * @var array
+     */
+    protected $_config = array(
+        'action' => '/index.php/',
+        'public' => '/public/',
+    );
+    
+    /**
+     * 
      * The scheme (e.g. 'http' or 'https').
      * 
      * @var string
@@ -288,14 +299,34 @@ class Solar_Uri extends Solar_Base {
      * 
      * Builds a partial URI string for a Solar_Controller action spec.
      * 
-     * @return string A URI string.
+     * Prefixes with the config ['Solar_Uri']['action'] href.
+     * 
+     * @return string An action URI string.
      * 
      */
     public function exportAction()
     {
-        return (empty($this->info)     ? '' : $this->_info2str($this->info))
-             . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
-             . (empty($this->fragment) ? '' : '#' . $this->fragment);
+        return (empty($this->_config['action']) ? '' : $this->_config['action'])
+             . (empty($this->info)              ? '' : $this->_info2str($this->info))
+             . (empty($this->query)             ? '' : '?' . $this->_query2str($this->query))
+             . (empty($this->fragment)          ? '' : '#' . $this->fragment);
+    }
+    
+    /**
+     * 
+     * Builds a partial URI string for a public Solar resource.
+     * 
+     * Prefixes with the config ['Solar_Uri']['public'] href.
+     * 
+     * @return string A public URI string.
+     * 
+     */
+    public function exportPublic()
+    {
+        return (empty($this->_config['public']) ? '' : $this->_config['public'])
+             . (empty($this->info)              ? '' : $this->_info2str($this->info))
+             . (empty($this->query)             ? '' : '?' . $this->_query2str($this->query))
+             . (empty($this->fragment)          ? '' : '#' . $this->fragment);
     }
     
     /**

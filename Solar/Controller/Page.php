@@ -147,17 +147,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // auto-set the base directory
+        $class = get_class($this);
+        
+        // auto-set the base directory, relative to the include path
         if (empty($this->_dir)) {
-            // remove Solar/Controller/Page.php from the __FILE__
-            // so that we have a base prefix
-            $base = substr(__FILE__, 0, -25);
-            
             // class-to-file conversion as an added directory
-            $dir = str_replace('_', '/', get_class($this));
-            
-            // done
-            $this->_dir = $base . $dir;
+            $this->_dir = str_replace('_', '/', $class);
         }
         
         // fix the basedir
@@ -363,22 +358,19 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Executes and returns the view.
      * 
      */
-    public function _view()
+    protected function _view()
     {
-        // set up a view object
-        $tpl = Solar::factory('Solar_Template');
+        $view = Solar::factory('Solar_View_Xhtml');
+        $view->addTemplatePath($this->_dir . 'Views/');
+        $view->addHelperPath($this->_dir . 'Helpers/');
         
-        // add the app-specific path for views
-        $tpl->addPath('template', $this->_dir . 'Views/');
-        
-        // tell the template view what locale strings to use
+        // set the locale class for the getText helper
         $class = get_class($this);
-        $tpl->locale("$class::");
+        $view->getTextRaw("$class::");
         
-        // assign the data, run the view, return the output
-        $tpl->assign($this);
-        $result = $tpl->fetch($this->_view . '.view.php');
-        return $result;
+        // assign and return
+        $view->assign($this);
+        return $view->fetch($this->_view . '.view.php');
     }
     
     /**
@@ -463,7 +455,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $name[0] = strtolower($name[0]);
         
         $file = $this->_dir . "Actions/$name.action.php";
-        if (! is_readable($file)) {
+        if (! Solar::fileExists($file)) {
             throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
                 array('file' => $file)

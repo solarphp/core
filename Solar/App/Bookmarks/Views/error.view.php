@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Savant3 template for displaying major errors.
+ * Solar_View_Xhtml template for displaying major errors.
  * 
  * @category Solar
  * 
@@ -20,6 +20,6 @@
 
 <div style="color: red;">
 <?php foreach ($this->err as $text): ?>
-    <p><?php $this->eprint($text) ?></p>
+    <p><?php echo $this->escape($text) ?></p>
 <?php endforeach ?>
 </div>

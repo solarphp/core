@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Savant3 template for lists of bookmarks (in XHTML).
+ * Solar_View_Xhtml template for lists of bookmarks (in XHTML).
  * 
  * @category Solar
  * 
@@ -18,7 +18,7 @@
  */
 
 // a basic link object
-$link = Solar::factory('Solar_Uri');
+$uri = Solar::factory('Solar_Uri');
 
 ?>
 <div>
@@ -43,14 +43,14 @@ $link = Solar::factory('Solar_Uri');
         <!-- output the owner_handle and tag-search, if any -->
         <?php if ($this->owner_handle || $this->tags): ?>
             <h2><?php
-                if ($this->owner_handle) $this->eprint($this->locale('USER') . ': ' . $this->owner_handle);
+                if ($this->owner_handle) echo $this->getText('USER') . ': ' . $this->escape($this->owner_handle);
                 if ($this->owner_handle && $this->tags) echo "<br />\n";
-                if ($this->tags) $this->eprint($this->locale('TAGS') . ': ' . $this->tags);
+                if ($this->tags) echo $this->getText('TAGS') . ': ' . $this->escape($this->tags);
             ?></h2>
         <?php endif ?>
         
         <!-- output the list of results -->
-        <?php if (count($this->list)): ?>
+        <?php if ($this->list): ?>
             <?php foreach ($this->list as $item) {
                 /** Each bookmark item on the page */
                 include $this->template('browse/item.part.php');
@@ -59,19 +59,19 @@ $link = Solar::factory('Solar_Uri');
             <!-- previous / page-count / next -->
             <hr />
             <p><strong>[ <?php
-                $link->import();
+                $uri->import();
                 $tmp = Solar::get('page', 1);
-                $link->setQuery('page', $tmp - 1);
-                $prev = $link->export();
-                $link->setQuery('page', $tmp + 1);
-                $next = $link->export();
-                if ($this->page > 1) echo $this->ahref($prev, $this->locale('Solar::OP_PREVIOUS')) . ' | ';
-                $this->eprint("Page {$this->page} of {$this->pages}");
-                if ($this->page < $this->pages) echo ' | ' . $this->ahref($next, $this->locale('Solar::OP_NEXT'));
+                $uri->setQuery('page', $tmp - 1);
+                $prev = $uri->export();
+                $uri->setQuery('page', $tmp + 1);
+                $next = $uri->export();
+                if ($this->page > 1) echo $this->anchor($prev, 'OP_PREVIOUS') . ' | ';
+                echo $this->escape("Page {$this->page} of {$this->pages}");
+                if ($this->page < $this->pages) echo ' | ' . $this->anchor($next, 'OP_NEXT');
             ?> ]</strong></p>
             
         <?php else: ?>
-            <p><?php $this->eprint($this->locale('NO_BOOKMARKS_FOUND')) ?></p>
+            <p><?php echo $this->getText('NO_BOOKMARKS_FOUND') ?></p>
         <?php endif ?>
         
         <?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
@@ -79,18 +79,18 @@ $link = Solar::factory('Solar_Uri');
             
             <!-- Add a new bookmark -->
             <p><?php
-                echo $this->actionLink("bookmarks/add", $this->locale('ADD_NEW_BOOKMARK'));
+                echo $this->action("bookmarks/add", 'ADD_NEW_BOOKMARK');
             ?></p>
             
             <!-- QuickMark link -->
             <p><?php
-                $link->import();
-                $scheme = $link->scheme;
-                $host = $link->host;
-                $path = $link->path;
+                $uri->import();
+                $scheme = $uri->scheme;
+                $host = $uri->host;
+                $path = $uri->path;
                 $js = "javascript:location.href='$scheme://$host$path/bookmarks/quick?uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
-                $this->eprint($this->locale('DRAG_THIS') . ': ');
-                echo $this->ahref($js, $this->locale('QUICKMARK'));
+                echo $this->getText('DRAG_THIS') . ': ';
+                echo $this->anchor($js, 'QUICKMARK');
             ?></p>
         <?php endif ?>
     </div>

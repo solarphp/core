@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Savant3 template for lists of bookmarks (in RSS).
+ * Solar_View_Xhtml template for lists of bookmarks (in RSS).
  * 
  * @category Solar
  * 
@@ -28,14 +28,22 @@ echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
 $items = '';
 $updated = ''; // last update
 foreach ($this->list as $key => $val) {
-    $category = $this->escape($val['owner_handle'] . '/' . str_replace(' ', '+', $val['tags']));
+    
+    $category = $this->escape(
+        $val['owner_handle'] . '/' . str_replace(' ', '+', $val['tags'])
+    );
+    
     $title = $this->escape($val['subj']);
-    $pubDate = $this->escape(date(DATE_RSS, strtotime($val['updated'])));
+    
+    $pubDate = $this->date($val['updated'], DATE_RSS);
+    
     if ($val['updated'] > $updated) {
         $updated = $val['updated'];
     }
+    
     $description = $this->escape($val['summ']);
-    $link = $this->escape($val['uri']);
+    
+    $uri = $this->escape($val['uri']);
     
     $items .= <<<ITEM
         <item>
@@ -43,7 +51,7 @@ foreach ($this->list as $key => $val) {
             <title>$title</title>
             <pubDate>$pubDate</pubDate>
             <description>$description</description>
-            <link>$link</link>
+            <link>$uri</link>
         </item>
 
 ITEM;
@@ -51,10 +59,10 @@ ITEM;
 ?>
 <rss version="2.0">
     <channel>
-        <title><?php $this->eprint($this->feed['title']) ?></title>
-        <link><?php $this->eprint($this->feed['link']) ?></link>
-        <description><?php $this->eprint($this->feed['descr']) ?></description>
-        <pubDate><?php $this->eprint(date(DATE_RSS, strtotime($updated))) ?></pubDate>
+        <title><?php echo $this->escape($this->feed['title']) ?></title>
+        <link><?php echo $this->escape($this->feed['link']) ?></link>
+        <description><?php echo $this->escape($this->feed['descr']) ?></description>
+        <pubDate><?php echo $this->date($updated, DATE_RSS) ?></pubDate>
         <?php echo $items ?>
     </channel>
 </rss>

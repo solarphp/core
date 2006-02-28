@@ -6,27 +6,33 @@ Other names:
     handle (vice username)
     passwd (vice password)
     
+Classes:
+    Solar_Sql_Select:
+        Fix column deconfliction
+        Make fluent
+        Use limitPage($page, $rows) and remove paging()
+    Revisit Filter and Valid one more time
+        can we get rid of the orBlank() param?
+        convert from static to instance?
+        how to add custom filters/valids? (have PathStack now...)
+        move to sub-classes for filters/valids?
+        
 Docs:
     Automate doc prep
         Upgrade to CVS PHP for properties
     Add manual pages
-    Pull experimental inline docs from the codebase to manual pages
+    Move experimental inline docs from the codebase to manual pages
     Automate merging of manual pages
     Build a new layout for the Solar site
-    Use Orbit_App_Docs
-
-Classes:
-    Fix SQL auto-deconfliction
+    Use Orbit_App_Docs?
 
 Apps:
     One more app? (Solar_App_Todo)
 
-Test the non-root config of action links
-
 Figure how to get public files from app to webroot
     symbolic links created by user :-(
     ln -s /path/to/Solar/Something/Public /var/www/public/solar/something
-
+    and how to support other vendors in the public space?
 
 ----
 
@@ -56,9 +62,9 @@ NEW CLASSES
 
 Create an event dispatcher as a universal observer and notifier?
 
-Do we need a Solar_Template or Solar_View proper?  (Ick.)
-
 Solar_User_Priv for class/action/op privileges by user and role
+
+Logging class!
 
 
 ----
@@ -192,7 +198,7 @@ Text/
             MediaWiki/
             PearWiki.php
             PearWiki/
-            Rule.php -- base for parse-rule objects, not an extension of Markup_Parse
+            Rule.php -- base for parse-rule objects, not an extension of Text_Markup_Parse
             SolarWiki.php
             SolarWiki/
             Textile.php
@@ -204,7 +210,7 @@ Text/
                 Url.php -- extends Text_Markup_Render_Rule
             Plain.php
             Plain/
-            Rule.php -- base for render-rule objects, not an extension of Markup_Render
+            Rule.php -- base for render-rule objects, not an extension of Text_Markup_Render
             Xhtml.php
             Xhtml/
     
@@ -212,7 +218,7 @@ Text/
 Usage:
 
 // create a markup object
-$markup = Solar::object('Solar_Text_Markup');
+$markup = Solar::factory('Solar_Text_Markup');
 
 // set up the parsing by class name; default is SolarWiki
 $options = array(...);
@@ -220,7 +226,7 @@ $markup->setParse('Solar_Text_Markup_Parse_Bbcode', $options);
 
 /*
 // alternative: set up the parsing by object instance
-$parse = Solar::object('Solar_Text_Markup_Parse_Bbcode', $options);
+$parse = Solar::factory('Solar_Text_Markup_Parse_Bbcode', $options);
 $markup->setParse($parse);
 */
 
@@ -230,7 +236,7 @@ $markup->setRender('Solar_Text_Markup_Render_Xhtml', $options);
 
 /*
 // alternative: set up the rendering by object instance
-$render = Solar::object('Solar_Text_Markup_Render_Xhtml', $options);
+$render = Solar::factory('Solar_Text_Markup_Render_Xhtml', $options);
 $markup->setParse($render);
 */
 
@@ -257,6 +263,7 @@ Wiki (option to render with spaces)
 Free:
     [[free page name]]
     [[free page name#anchor]]
+    [[free page name#anchor |]] just the page name
     [[free page name#anchor | rendered as this]]
 
 Inter:
@@ -267,7 +274,7 @@ Inter:
     [[Interwiki::free page name#anchor]]
     [[Interwiki::free page name#anchor |]] (drops the interwiki name)
     [[Interwiki::free page name#anchor | rendered as this]]
-    Use of double-colons is default?
+    Use of double-colons is the default?
     
 Default Interwikis:
     amazon::
@@ -276,3 +283,7 @@ Default Interwikis:
     isbn::
     issn::
     php::
+
+Macros:
+    {{macro-name key=val key=val key=val}}
+    

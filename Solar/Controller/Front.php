@@ -51,11 +51,9 @@ class Solar_Controller_Front extends Solar_Base {
             'helloworld' => 'Solar_App_HelloWorld',
         ),
         'app_default' => 'bookmarks',
-        'layout_dir'  => '',
-        'layout_tpl'  => 'default',
+        'layout_dir'  => 'Solar/Layout/',
+        'layout_tpl'  => 'twoColRight',
         'layout_var'  => 'solar_app_content',
-        'construct'   => '',
-        'destruct'    => '',
     );
 
     /**
@@ -111,33 +109,6 @@ class Solar_Controller_Front extends Solar_Base {
     
     /**
      * 
-     * A script to run at __construct() time.
-     * 
-     * Generally useful for setting up the application environment,
-     * processing logins, etc.
-     * 
-     * Default is 'Solar/Front/construct.php'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_construct;
-    
-    /**
-     * 
-     * A script to run at __destruct() time.
-     * 
-     * Generally useful for tearing down the application environment.
-     * 
-     * Default is null.
-     * 
-     * @var string
-     * 
-     */
-    protected $_destruct;
-    
-    /**
-     * 
      * Constructor.
      * 
      * Runs user-specified construct-time script.
@@ -147,16 +118,6 @@ class Solar_Controller_Front extends Solar_Base {
      */
     public function __construct($config)
     {
-        // set some defaults
-        $dir = dirname(__FILE__);
-        
-        // layout dir is Solar/Layout/
-        $this->_config['layout_dir'] = dirname($dir) . "/Layout";
-        $this->_config['layout_tpl'] = 'default';
-        
-        // construction hook
-        $this->_config['construct']  = "$dir/Front/construct.hook.php";
-        
         // now do "real" construction
         parent::__construct($config); 
         
@@ -166,26 +127,35 @@ class Solar_Controller_Front extends Solar_Base {
         $this->_layout_dir  = $this->_config['layout_dir'];
         $this->_layout_tpl  = $this->_config['layout_tpl'];
         $this->_layout_var  = $this->_config['layout_var'];
-        $this->_construct   = $this->_config['construct'];
-        $this->_destruct    = $this->_config['destruct'];
         
-        // execute construct-time hook
-        if ($this->_construct) {
-            Solar::run($this->_construct);
-        }
+        // execute construct-time setups
+        $this->_setup();
     }
     
     /**
      * 
-     * Runs user-specified destruct-time script.
+     * Sets up the Solar and Front-Controller environment.
      * 
      */
-    public function __destruct()
+    protected function _setup()
     {
-        if ($this->_destruct) {
-            Solar::run($this->_destruct);
+        // register a Solar_Sql object if not already
+        if (! Solar::inRegistry('sql')) {
+            Solar::register('sql', Solar::factory('Solar_Sql'));
+        }
+        
+        // register a Solar_User object if not already.
+        // this will trigger the authentication process.
+        if (! Solar::inRegistry('user')) {
+            Solar::register('user', Solar::factory('Solar_User'));
+        }
+        
+        // register a Solar_Content object if not already.
+        if (! Solar::inRegistry('content')) {
+            Solar::register('content', Solar::factory('Solar_Content'));
         }
     }
+    
     
     /**
      * 
@@ -194,7 +164,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @param string $spec A app/action/info spec for the front
      * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
-     * @return string The output of the application action.
+     * @return Solar_Uri|string The output of the application action.
      * 
      */
     public function fetch($spec = null)
@@ -228,25 +198,26 @@ class Solar_Controller_Front extends Solar_Base {
         // did the app set any data for the layout?
         $layout = $app->getLayout();
         if ($layout === false) {
-            // the app explicitly does not want to use
-            // the layout, so fall back to a one-step view
-            // and just return the app content.  typically
-            // this is the case in things like RSS feeds.
+            // the app explicitly does not want to use the layout, so
+            // fall back to a one-step view and just return the app
+            // content.  typically this is the case in things like RSS
+            // feeds.
             return $content;
         } else {
+            
             // set up the layout template for a two-step view.
-            $tpl = Solar::factory('Solar_Template');
+            $view = Solar::factory('Solar_View_Xhtml');
             
             // step 1:
             // assign the app's layout data, then assign the app content
             // (so that the content overrides any related app data).
-            $tpl->assign($layout);
-            $tpl->assign($this->_layout_var, $content);
+            $view->assign($layout);
+            $view->assign($this->_layout_var, $content);
             
             // step 2:
             // fetch the layout with the content and vars.
-            $tpl->setPath('template', $this->_layout_dir);
-            return $tpl->fetch($this->_layout_tpl . '.layout.php');
+            $view->setTemplatePath($this->_layout_dir);
+            return $view->fetch($this->_layout_tpl . '.layout.php');
         }
     }
     

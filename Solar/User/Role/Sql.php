@@ -77,7 +77,7 @@ class Solar_User_Role_Sql extends Solar_Base {
         );
         
         // get the results (a column of rows)
-        $result = $obj->fetchCol($stmt, $data);
+        $result = $obj->select('col', $stmt, $data);
         
         // done!
         return $result;

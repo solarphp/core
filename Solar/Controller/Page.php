@@ -360,7 +360,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _view()
     {
-        $view = Solar::factory('Solar_View_Xhtml');
+        $view = Solar::factory('Solar_View');
         $view->addTemplatePath($this->_dir . 'Views/');
         $view->addHelperPath($this->_dir . 'Helpers/');
         

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Provides an abstract TemplateView pattern implementation for Solar.
+ * Provides a TemplateView pattern implementation for Solar.
  * 
  * @category Solar
  * 
@@ -11,13 +11,13 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
 /**
  * 
- * Provides an abstract TemplateView pattern implementation for Solar.
+ * Provides a TemplateView pattern implementation for Solar.
  * 
  * @category Solar
  * 
@@ -26,7 +26,7 @@
  * @todo how to set up base helper dir?
  * 
  */
-abstract class Solar_View extends Solar_Base {
+class Solar_View extends Solar_Base {
     
     /**
      * 
@@ -44,7 +44,10 @@ abstract class Solar_View extends Solar_Base {
     /**
      * Parameters for escaping.
      */
-    protected $_escape = array();
+    protected $_escape = array(
+        'quotes'  => ENT_COMPAT,
+        'charset' => 'iso-8859-1',
+    );
     
     /**
      * 
@@ -95,138 +98,42 @@ abstract class Solar_View extends Solar_Base {
         // set the fallback template path
         $this->_template_path = Solar::factory('Solar_PathStack'); 
         $this->setTemplatePath($this->_config['template_path']);
-    }
-    
-    
-    // -----------------------------------------------------------------
-    //
-    // Helpers
-    //
-    // -----------------------------------------------------------------
-    
-    /**
-     *
-     * Executes an internal helper method with arbitrary parameters.
-     * 
-     * @param string $name The helper name.
-     *
-     * @param array $args The parameters passed to the helper.
-     *
-     * @return string The helper output.
-     * 
-     */
-    public function __call($name, $args)
-    {
-        $helper = $this->getHelper($name);
-        return call_user_func_array(array($helper, $name), $args);
-    }
-    
-    /**
-     * 
-     * Reset the helper directory path stack.
-     * 
-     * @param string|array The directories to set for the stack.
-     * 
-     */
-    public function setHelperPath($path = null)
-    {
-        return $this->_helper_path->set($path);
-    }
-    
-    /**
-     * 
-     * Add to the helper directory path stack.
-     * 
-     * @param string|array The directories to add to the stack.
-     * 
-     */
-    public function addHelperPath($path)
-    {
-        return $this->_helper_path->add($path);
-    }
-    
-    /**
-     * 
-     * Returns the internal helper object; creates it as needed.
-     * 
-     * @param string $name The helper name.  If this helper has not
-     * been created yet, this method creates it automatically.
-     *
-     * @return Solar_Template_Helper
-     * 
-     */
-    public function getHelper($name)
-    {
-        if (empty($this->_helper[$name])) {
-            $this->_helper[$name] = $this->newHelper($name);
-        }
-        return $this->_helper[$name];
-    }
-    
-    /**
-     * 
-     * Creates a new standalone helper object.
-     * 
-     * @param string $name The helper name.
-     *
-     * @return Solar_View_Helper
-     * 
-     */
-    public function newHelper($name)
-    {
-        $key = $name;
-        $name = ucfirst($name);
-        $class = "Solar_View_Helper_$name";
         
-        // has the class been loaded?
-        if (! class_exists($class, false)) {
-        
-            // look for the named file in the helper stack.
-            $file = $this->_helper_path->findInclude("$name.php");
-            if (! $file) {
-                throw $this->_exception(
-                    'ERR_HELPER_NOT_FOUND',
-                    array(
-                        'name' => $name,
-                        'path' => $this->_helper_path->get()
-                    )
-                );
-            }
-            require_once $file;
+        // special setup
+        $this->_setup();
+    }
+    
+    /**
+     * 
+     * Disallow setting of underscore-prefixed variables.
+     * 
+     * @param string $key The variable name.
+     * 
+     * @param string $val The variable value.
+     * 
+     * @return void
+     * 
+     */
+    public function __set($key, $val)
+    {
+        if ($key[0] != '_') {
+            $this->$key = $val;
         }
-        $config = array('_view' => $this);
-        $this->_helper[$key] = new $class($config);
-        return $this->_helper[$key];
-    }
-    
-    // -----------------------------------------------------------------
-    //
-    // Templates
-    //
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Reset the template directory path stack.
-     * 
-     * @param string|array The directories to set for the stack.
-     * 
-     */
-    public function setTemplatePath($path = null)
-    {
-        return $this->_template_path->set($path);
     }
     
     /**
      * 
-     * Add to the template directory path stack.
-     * 
-     * @param string|array The directories to add to the stack.
+     * Specialized setup for escaping, etc. in extended classes.
      * 
      */
-    public function addTemplatePath($path)
+    protected function _setup()
     {
-        return $this->_template_path->add($path);
+        if (! empty($this->_config['escape']['quotes'])) {
+            $this->_escape['quotes'] = $this->_config['escape']['quotes'];
+        }
+        if (! empty($this->_config['escape']['charset'])) {
+            $this->_escape['charset'] = $this->_config['escape']['charset'];
+        }
     }
     
     /**
@@ -236,8 +143,8 @@ abstract class Solar_View extends Solar_Base {
      * This method is overloaded; you can assign all the properties of
      * an object, an associative array, or a single value by name.
      * 
-     * You are not allowed to assign any variable named '_config' as
-     * it would conflict with internal configuration tracking.
+     * You are not allowed to assign any variable with an underscore
+     * prefix.
      * 
      * In the following examples, the template will have two variables
      * assigned to it; the variables will be known inside the template as
@@ -294,6 +201,154 @@ abstract class Solar_View extends Solar_Base {
         
         // $spec was not object, array, or string.
         return false;
+    }
+    
+    // -----------------------------------------------------------------
+    //
+    // Helpers
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     *
+     * Executes an internal helper method with arbitrary parameters.
+     * 
+     * @param string $name The helper name.
+     *
+     * @param array $args The parameters passed to the helper.
+     *
+     * @return string The helper output.
+     * 
+     */
+    public function __call($name, $args)
+    {
+        $helper = $this->getHelper($name);
+        return call_user_func_array(array($helper, $name), $args);
+    }
+    
+    /**
+     * 
+     * Reset the helper directory path stack.
+     * 
+     * @param string|array The directories to set for the stack.
+     * 
+     */
+    public function setHelperPath($path = null)
+    {
+        $this->_helper_path->set('Solar/View/Helper/');
+        $this->_helper_path->add($path);
+    }
+    
+    /**
+     * 
+     * Add to the helper directory path stack.
+     * 
+     * @param string|array The directories to add to the stack.
+     * 
+     */
+    public function addHelperPath($path)
+    {
+        $this->_helper_path->add($path);
+    }
+    
+    /**
+     * 
+     * Returns the internal helper object; creates it as needed.
+     * 
+     * @param string $name The helper name.  If this helper has not
+     * been created yet, this method creates it automatically.
+     *
+     * @return Solar_Template_Helper
+     * 
+     */
+    public function getHelper($name)
+    {
+        if (empty($this->_helper[$name])) {
+            $this->_helper[$name] = $this->newHelper($name);
+        }
+        return $this->_helper[$name];
+    }
+    
+    /**
+     * 
+     * Creates a new standalone helper object.
+     * 
+     * @param string $name The helper name.
+     *
+     * @return Solar_View_Helper
+     * 
+     */
+    public function newHelper($name)
+    {
+        $key = $name;
+        $name = ucfirst($name);
+        $class = "Solar_View_Helper_$name";
+        
+        // has the class been loaded?
+        if (! class_exists($class, false)) {
+        
+            // look for the named file in the helper stack.
+            $file = $this->_helper_path->findInclude("$name.php");
+            if (! $file) {
+                throw $this->_exception(
+                    'ERR_HELPER_NOT_FOUND',
+                    array(
+                        'name' => $name,
+                        'path' => $this->_helper_path->get()
+                    )
+                );
+            }
+            require_once $file;
+        }
+        $config = array('_view' => $this);
+        $this->_helper[$key] = new $class($config);
+        return $this->_helper[$key];
+    }
+    
+    /**
+     * 
+     * Built-in helper for escaping output.
+     * 
+     * @param scalar $val The value to escape.
+     * 
+     */
+    public function escape($value)
+    {
+        return htmlspecialchars(
+            $value,
+            $this->_escape['quotes'],
+            $this->_escape['charset']
+        );
+    }
+    
+    // -----------------------------------------------------------------
+    //
+    // Templates
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Reset the template directory path stack.
+     * 
+     * @param string|array The directories to set for the stack.
+     * 
+     */
+    public function setTemplatePath($path = null)
+    {
+        return $this->_template_path->set($path);
+    }
+    
+    /**
+     * 
+     * Add to the template directory path stack.
+     * 
+     * @param string|array The directories to add to the stack.
+     * 
+     */
+    public function addTemplatePath($path)
+    {
+        return $this->_template_path->add($path);
     }
     
     /**
@@ -364,14 +419,5 @@ abstract class Solar_View extends Solar_Base {
     {
         require func_get_arg(0);
     }
-    
-    /**
-     * 
-     * Returns a value escaped for output.
-     * 
-     * @param scalar $val THe value to escape.
-     * 
-     */
-    abstract public function escape($val);
 }
 ?>

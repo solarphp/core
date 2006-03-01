@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a 'password' element.
+ * Helper for a 'reset' button.
  * 
  * @category Solar
  * 
@@ -18,11 +18,11 @@
 /**
  * The abstract FormElement class.
  */
-require_once 'Solar/View/Xhtml/FormElement.php';
+require_once 'Solar/View/Helper/FormElement.php';
 
 /**
  * 
- * Helper for a 'password' element.
+ * Helper for a 'reset' button.
  * 
  * @category Solar
  * 
@@ -31,26 +31,35 @@ require_once 'Solar/View/Xhtml/FormElement.php';
  * @author Paul M. Jones <pmjones@ciaweb.net>
  * 
  */
-class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement {
+class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
     
     /**
      * 
-     * Generates a 'password' element.
+     * Generates a 'reset' button.
      * 
      * @param array $info An array of element information.
      * 
      * @return string The element XHTML.
      * 
      */
-    public function formPassword($info)
+    public function formReset($info)
     {
         $this->_prepare($info);
-        return '<input type="password"'
+        
+        // we process values this way so that blank reset buttons
+        // get the browser-default value
+        if (empty($this->_value)) {
+            $escval = '';
+        } else {
+            $escval = ' value="' . $this->_view->escape($this->_value) . '"';
+        }
+        
+        // output
+        return '<input type="reset"';
              . ' name="' . $this->_view->escape($this->_name) . '"'
-             . ' value="' . $this->_view->escape($this->_value) . '"'
+             . $escval
              . $this->_view->attribs($this->_attribs)
              . ' />';
     }
-    
 }
 ?>

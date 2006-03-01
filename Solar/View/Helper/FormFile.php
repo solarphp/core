@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a 'textarea' element.
+ * Helper for a 'file' element.
  * 
  * @category Solar
  * 
@@ -18,11 +18,11 @@
 /**
  * The abstract FormElement class.
  */
-require_once 'Solar/View/Xhtml/FormElement.php';
+require_once 'Solar/View/Helper/FormElement.php';
 
 /**
  * 
- * Helper for a 'textarea' element.
+ * Helper for a 'file' element.
  * 
  * @category Solar
  * 
@@ -31,25 +31,25 @@ require_once 'Solar/View/Xhtml/FormElement.php';
  * @author Paul M. Jones <pmjones@ciaweb.net>
  * 
  */
-class Solar_View_Helper_FormTextarea extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormFile extends Solar_View_Helper_FormElement {
+
     /**
      * 
-     * Generates a 'textarea' element.
+     * Generates a 'file' element.
      * 
      * @param array $info An array of element information.
      * 
      * @return string The element XHTML.
      * 
      */
-    public function formTextarea($info)
+    public function formFile($info)
     {
         $this->_prepare($info);
-        return '<textarea'
+        return '<input type="file"'
              . ' name="' . $this->_view->escape($this->_name) . '"'
-             . $this->_view->attribs($this->_attribs) . '>'
-             . $this->_view->escape($this->_value)
-             . '</textarea>';
+             . ' value="' . $this->_view->escape($this->_value) . '"'
+             . $this->_view->attribs($this->_attribs)
+             . ' />';
     }
 }
 ?>

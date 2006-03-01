@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar_View_Xhtml template for displaying major errors.
+ * Solar_View template for displaying major errors.
  * 
  * @category Solar
  * 

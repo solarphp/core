@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a 'hidden' element.
+ * Helper for a 'textarea' element.
  * 
  * @category Solar
  * 
@@ -18,11 +18,11 @@
 /**
  * The abstract FormElement class.
  */
-require_once 'Solar/View/Xhtml/FormElement.php';
+require_once 'Solar/View/Helper/FormElement.php';
 
 /**
  * 
- * Helper for a 'hidden' element.
+ * Helper for a 'textarea' element.
  * 
  * @category Solar
  * 
@@ -31,25 +31,25 @@ require_once 'Solar/View/Xhtml/FormElement.php';
  * @author Paul M. Jones <pmjones@ciaweb.net>
  * 
  */
-class Solar_View_Helper_FormHidden extends Solar_View_Helper_FormElement {
+class Solar_View_Helper_FormTextarea extends Solar_View_Helper_FormElement {
     
     /**
      * 
-     * Generates a 'hidden' element.
+     * Generates a 'textarea' element.
      * 
      * @param array $info An array of element information.
      * 
      * @return string The element XHTML.
      * 
      */
-    public function formHidden($info)
+    public function formTextarea($info)
     {
         $this->_prepare($info);
-        return '<input type="hidden"'
+        return '<textarea'
              . ' name="' . $this->_view->escape($this->_name) . '"'
-             . ' value="' . $this->_view->escape($this->_value) . '"'
-             . $this->_view->attribs($this->_attribs)
-             . ' />';
+             . $this->_view->attribs($this->_attribs) . '>'
+             . $this->_view->escape($this->_value)
+             . '</textarea>';
     }
 }
 ?>

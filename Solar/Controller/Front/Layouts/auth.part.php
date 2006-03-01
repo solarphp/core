@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar_View_Xhtml partial template for the user authentication form.
+ * Solar_View partial template for the user authentication form.
  * 
  * @category Solar
  * 

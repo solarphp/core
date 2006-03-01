@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar_View_Xhtml template for lists of bookmarks (in XHTML).
+ * Solar_View template for lists of bookmarks (in XHTML).
  * 
  * @category Solar
  * 

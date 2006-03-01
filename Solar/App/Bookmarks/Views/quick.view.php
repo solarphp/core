@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar_View_Xhtml template for editing a bookmark.
+ * Solar_View template for editing a bookmark.
  * 
  * @category Solar
  * 

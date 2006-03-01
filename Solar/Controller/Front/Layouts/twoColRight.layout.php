@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * 2-column (narrow right) Solar_View_Xhtml layout template for a Solar site.
+ * 2-column (narrow right) Solar_View layout template for a Solar site.
  * 
  * @category Solar
  * 

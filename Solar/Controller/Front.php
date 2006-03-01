@@ -206,7 +206,7 @@ class Solar_Controller_Front extends Solar_Base {
         } else {
             
             // set up the layout template for a two-step view.
-            $view = Solar::factory('Solar_View_Xhtml');
+            $view = Solar::factory('Solar_View');
             
             // step 1:
             // assign the app's layout data, then assign the app content

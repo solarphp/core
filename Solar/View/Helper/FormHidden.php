@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a 'reset' button.
+ * Helper for a 'hidden' element.
  * 
  * @category Solar
  * 
@@ -18,11 +18,11 @@
 /**
  * The abstract FormElement class.
  */
-require_once 'Solar/View/Xhtml/FormElement.php';
+require_once 'Solar/View/Helper/FormElement.php';
 
 /**
  * 
- * Helper for a 'reset' button.
+ * Helper for a 'hidden' element.
  * 
  * @category Solar
  * 
@@ -31,33 +31,23 @@ require_once 'Solar/View/Xhtml/FormElement.php';
  * @author Paul M. Jones <pmjones@ciaweb.net>
  * 
  */
-class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
+class Solar_View_Helper_FormHidden extends Solar_View_Helper_FormElement {
     
     /**
      * 
-     * Generates a 'reset' button.
+     * Generates a 'hidden' element.
      * 
      * @param array $info An array of element information.
      * 
      * @return string The element XHTML.
      * 
      */
-    public function formReset($info)
+    public function formHidden($info)
     {
         $this->_prepare($info);
-        
-        // we process values this way so that blank reset buttons
-        // get the browser-default value
-        if (empty($this->_value)) {
-            $escval = '';
-        } else {
-            $escval = ' value="' . $this->_view->escape($this->_value) . '"';
-        }
-        
-        // output
-        return '<input type="reset"';
+        return '<input type="hidden"'
              . ' name="' . $this->_view->escape($this->_name) . '"'
-             . $escval
+             . ' value="' . $this->_view->escape($this->_value) . '"'
              . $this->_view->attribs($this->_attribs)
              . ' />';
     }

@@ -7,7 +7,7 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_View_Helper
+ */
+require_once 'Solar/View/Helper.php';
+ 
+/**
  * 
  * Abstract helper for form elements.
  * 
@@ -23,11 +28,18 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
 abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
     
+    /**
+     * 
+     * Default form element information.
+     * 
+     * @var array
+     * 
+     */
     protected $_info = array(
         'type'    => '',
         'name'    => '',
@@ -40,6 +52,15 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         'feedback' => array(),
     );
     
+    /**
+     * 
+     * The order in which to process info keys.
+     * 
+     * Attribs is last so that attributes are unset properly.
+     * 
+     * @var array
+     * 
+     */
     protected $_keys = array(
         'type',
         'name',
@@ -49,27 +70,99 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         'require',
         'disable',
         'feedback',
-        'attribs', // last, so that all attribs are unset properly
+        'attribs',
     );
     
+    /**
+     * 
+     * The form element type (text, radio, etc).
+     * 
+     * @var string
+     * 
+     */
     protected $_type;
     
+    /**
+     * 
+     * The form element name.
+     * 
+     * @var string
+     * 
+     */
     protected $_name;
     
+    
+    /**
+     * 
+     * The form element value.
+     * 
+     * @var string
+     * 
+     */
     protected $_value;
     
+    /**
+     * 
+     * The form element label.
+     * 
+     * @var string
+     * 
+     */
     protected $_label;
+    
+    /**
+     * 
+     * The form element attributes (checked, selected, readonly, etc).
+     * 
+     * @var array
+     * 
+     */
     
     protected $_attribs;
     
+    /**
+     * 
+     * Options for checkbox, select, and radio elements.
+     * 
+     * @var array
+     * 
+     */
     protected $_options;
     
+    /**
+     * 
+     * Whether or not the element is required.
+     * 
+     * @var bool
+     * 
+     */
     protected $_require;
     
+    /**
+     * 
+     * Whether or not the element is to be disabled.
+     * 
+     * @var bool
+     * 
+     */
     protected $_disable;
     
+    /**
+     * 
+     * Feedback messages for the element.
+     * 
+     * @var bool
+     * 
+     */
     protected $_feedback;
     
+    /**
+     * 
+     * Prepares an info array and imports to the properties.
+     * 
+     * @param array $info An array of element information.
+     * 
+     */
     protected function _prepare($info)
     {
         $info = array_merge($this->_info, $info);

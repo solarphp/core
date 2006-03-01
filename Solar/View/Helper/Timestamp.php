@@ -7,7 +7,7 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_View_Helper
+ */
+require_once 'Solar/View/Helper.php';
+ 
+/**
  * 
  * Helper for a formatted timestamp using [[php date()]] conventions.
  * 
@@ -23,7 +28,7 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
 class Solar_View_Helper_Timestamp extends Solar_View_Helper {

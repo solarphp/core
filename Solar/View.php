@@ -19,11 +19,13 @@
  * 
  * Provides a TemplateView pattern implementation for Solar.
  * 
+ * This implementation is good for all (X)HTML and XML template
+ * formats, and provides a built-in escaping mechanism for values,
+ * along with lazy-loading and persistence of helper objects.
+ * 
  * @category Solar
  * 
  * @package Solar_View
- * 
- * @todo how to set up base helper dir?
  * 
  */
 class Solar_View extends Solar_Base {
@@ -42,7 +44,10 @@ class Solar_View extends Solar_Base {
     );
     
     /**
+     * 
      * Parameters for escaping.
+     * 
+     * @var array
      */
     protected $_escape = array(
         'quotes'  => ENT_COMPAT,
@@ -51,7 +56,7 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Array of helper objects.
+     * Instantiated helper objects.
      * 
      * @var array
      * 
@@ -105,7 +110,7 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Disallow setting of underscore-prefixed variables.
+     * Disallows setting of underscore-prefixed variables.
      * 
      * @param string $key The variable name.
      * 
@@ -118,12 +123,15 @@ class Solar_View extends Solar_Base {
     {
         if ($key[0] != '_') {
             $this->$key = $val;
+            return true;
+        } else {
+            return false;
         }
     }
     
     /**
      * 
-     * Specialized setup for escaping, etc. in extended classes.
+     * Allows specialized setup for extended classes.
      * 
      */
     protected function _setup()
@@ -199,7 +207,7 @@ class Solar_View extends Solar_Base {
             return true;
         }
         
-        // $spec was not object, array, or string.
+        // $spec was not array, object, or string.
         return false;
     }
     
@@ -211,7 +219,7 @@ class Solar_View extends Solar_Base {
     
     /**
      *
-     * Executes an internal helper method with arbitrary parameters.
+     * Executes a helper method with arbitrary parameters.
      * 
      * @param string $name The helper name.
      *
@@ -331,7 +339,7 @@ class Solar_View extends Solar_Base {
      * 
      * Reset the template directory path stack.
      * 
-     * @param string|array The directories to set for the stack.
+     * @param string|array $path The directories to set for the stack.
      * 
      */
     public function setTemplatePath($path = null)
@@ -343,7 +351,7 @@ class Solar_View extends Solar_Base {
      * 
      * Add to the template directory path stack.
      * 
-     * @param string|array The directories to add to the stack.
+     * @param string|array $path The directories to add to the stack.
      * 
      */
     public function addTemplatePath($path)
@@ -353,9 +361,9 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Displays a template directly (equivalent to <code>echo $tpl</code>).
+     * Displays a template directly.
      * 
-     * @param string $tpl The template source to compile and display.
+     * @param string $name The template to display.
      * 
      */
     public function display($name)

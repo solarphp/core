@@ -1,49 +1,36 @@
 <?php
-/*
-new CSS-able form method:
+/**
+ * 
+ * Helper for building CSS-based forms.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_View
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * 
+ * @version $Id$
+ * 
+ */
 
-for proper semantics, need to collect all elements rather than building as-we-go
-
-
-<form>
-    <!-- all feedback -->
-    <ul>
-        <!-- each message -->
-        <li>feedback message</li>
-    </ul>
-    
-    <!-- all hidden elements -->
-    <input type="hidden" ... />
-    <input type="hidden" ... />
-    <input type="hidden" ... />
-    
-    <!-- all the actual elements -->
-    <dl>
-        <dt>label and required-tag</dt>
-        <dd>element and feedback</dd>
-    </dl>
-</form>
-
-
-how to do groups?
-    a group is a set of elements in one dd with one dt label
-
-how to do blocks?
-    a block is a set of elements each in a separate dt/dd box, all wrapped in a div
-    col-blocks have label-left element-right
-    row-blocks have label-over element-under
-    
-// full-auto mode
-echo $this->form($this->formobj);
-
-// build manually
-echo $this->form()
-          ->element($info[0])
-          ->element($info[1])
-          ->fetch();
-
-*/
-
+/**
+ * Solar_View_Helper
+ */
+require_once 'Solar/View/Helper.php';
+ 
+/**
+ * 
+ * Helper for building CSS-based forms.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_View
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ */
 class Solar_View_Helper_Form extends Solar_View_Helper {
     
     protected $_config = array(

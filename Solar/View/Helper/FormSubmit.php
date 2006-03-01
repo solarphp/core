@@ -7,7 +7,7 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
@@ -28,7 +28,7 @@ require_once 'Solar/View/Helper/FormElement.php';
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@ciaweb.net>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
 class Solar_View_Helper_FormSubmit extends Solar_View_Helper_FormElement {

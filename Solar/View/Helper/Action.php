@@ -16,6 +16,11 @@
  */
 
 /**
+ * Solar_View_Helper
+ */
+require_once 'Solar/View/Helper.php';
+ 
+/**
  * 
  * Helper for action anchors and hrefs, with built-in text translation.
  * 

@@ -38,9 +38,9 @@ class Solar_User_Auth_Post extends Solar_Base {
      * 
      * url => (string) URL to the HTTP service, e.g. "https://example.com/login.php".
      * 
-     * username => (string) The username element name.
+     * handle => (string) The handle element name.
      * 
-     * password => (string) The password element name.
+     * passwd => (string) The passwd element name.
      * 
      * headers => (array) Additional headers to use in the POST request.
      * 
@@ -52,33 +52,33 @@ class Solar_User_Auth_Post extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'url'      => 'https://example.com/services/authenticate.php',
-        'username' => 'username',
-        'password' => 'password',
-        'headers'  => null, // additional heaaders
-        'replies'  => array('0' => false, '1' => true), // key-value array of replies
+        'url'     => 'https://example.com/services/authenticate.php',
+        'handle'  => 'username',
+        'passwd'  => 'password',
+        'headers' => null, // additional heaaders
+        'replies' => array('0' => false, '1' => true), // key-value array of replies
     );
     
     /**
      * 
-     * Validate a username and password.
+     * Validate a handle and passwd.
      * 
-     * @param string $user Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $passwd The plain-text passwd to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($username, $password)
+    public function valid($handle, $passwd)
     {
         // parse out URL elements
         $url = parse_url($this->_config['url']);
         
-        // build the content string for username and password
+        // build the content string for handle and passwd
         $content = 
-            urlencode($this->_config['username']) . '=' . urlencode($username) . '&' .
-            urlencode($this->_config['password']) . '=' . urlencode($password);
+            urlencode($this->_config['handle']) . '=' . urlencode($handle) . '&' .
+            urlencode($this->_config['passwd']) . '=' . urlencode($passwd);
         
         // set up the basic headers
         $tmp = array(

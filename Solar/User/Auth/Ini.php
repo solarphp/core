@@ -51,14 +51,14 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * 
      * Validate a username and password.
      *
-     * @param string $user Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $passwd The plain-text password to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($user, $pass)
+    public function valid($handle, $passwd)
     {
         // force the full, real path to the .ini file
         $file = realpath($this->_config['file']);
@@ -82,7 +82,7 @@ class Solar_User_Auth_Ini extends Solar_Base {
         
         // there must be an entry for the username,
         // and the plain-text password must match.
-        if (! empty($list[$user]) && $list[$user] == $pass) {
+        if (! empty($list[$handle]) && $list[$handle] == $passwd) {
             $valid = true;
         }
         

@@ -32,8 +32,8 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * 
      * Keys are:
      * 
-     * mailbox => (string) An imap_open() mailbox string, e.g. "mail.example.com:143/imap"
-     * or "mail.example.com:110/pop3".
+     * mailbox => (string) An imap_open() mailbox string, e.g.
+     * "mail.example.com:143/imap" or "mail.example.com:110/pop3".
      * 
      * @var array
      * 
@@ -66,19 +66,19 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * 
      * Validate a username and password.
      * 
-     * @param string $username Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $password The password to use.
+     * @param string $passwd The password to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      * @todo Check the server status with fsockopen().
      * 
      */
-    public function valid($username, $password)
+    public function valid($handle, $passwd)
     {
         $mailbox = '{' . $this->_config['mailbox'] . '}';
-        $conn = @imap_open($mailbox, $username, $password, OP_HALFOPEN);
+        $conn = @imap_open($mailbox, $handle, $passwd, OP_HALFOPEN);
         if (is_resource($conn)) {
             @imap_close($conn);
             return true;

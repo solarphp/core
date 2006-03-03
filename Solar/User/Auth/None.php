@@ -37,7 +37,7 @@ class Solar_User_Auth_None extends Solar_Base {
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($user, $pass)
+    public function valid($handle, $passwd)
     {
         return false;
     }

@@ -95,19 +95,19 @@ class Solar_User extends Solar_Base {
         parent::__construct($config);
         
         // set up an authentication object.
-        $this->auth = Solar::factory('Solar_User_Auth', $this->_config['auth']);
+        $this->auth = Solar::dependency('Solar_User_Auth', $this->_config['auth']);
         
         // set up the roles object.
-        $this->role = Solar::factory('Solar_User_Role', $this->_config['role']);
+        $this->role = Solar::dependency('Solar_User_Role', $this->_config['role']);
         
         // start up authentication
         $this->auth->start();
         
         // is this a valid authenticated user?
-        if ($this->auth->status_code == 'VALID') {
+        if ($this->auth->status == 'VALID') {
             // yes, the user is authenticated as valid.
             // load up any roles for the user.
-            $this->role->fetch($this->auth->username);
+            $this->role->fetch($this->auth->handle);
         } else {
             // no, user is not valid.  
             // clear out any previous roles.

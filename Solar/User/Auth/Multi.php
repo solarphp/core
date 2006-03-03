@@ -87,17 +87,17 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * 
      * Validate a username and password.
      *
-     * @param string $user Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $passwd The plain-text password to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($user, $pass)
+    public function valid($handle, $passwd)
     {
         foreach ($this->_driver as $driver) {
-            if ($driver->valid($user, $pass)) {
+            if ($driver->valid($handle, $passwd)) {
                 return true;
             }
         }

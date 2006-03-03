@@ -57,14 +57,14 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      * Validate a username and password.
      *
-     * @param string $user Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $passwd The plain-text password to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($user, $pass)
+    public function valid($handle, $passwd)
     {
         // force the full, real path to the file
         $file = realpath($this->_config['file']);
@@ -87,10 +87,10 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
         }
         
         // find the user's line in the file
-        $len = strlen($user) + 1;
+        $len = strlen($handle) + 1;
         $ok = false;
         while ($line = fgets($fp)) {
-            if (substr($line, 0, $len) == "$user:") {
+            if (substr($line, 0, $len) == "$handle:") {
                 // found the line, leave the loop
                 $ok = true;
                 break;
@@ -116,14 +116,14 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
         if (substr($stored_hash, 0, 6) == '$apr1$') {
         
             // use the apache-specific MD5 encryption
-            $computed_hash = self::_apr1($pass, $stored_hash);
+            $computed_hash = self::_apr1($passwd, $stored_hash);
             
         } elseif (substr($stored_hash, 0, 5) == '{SHA}') {
         
             // use SHA1 encryption.  pack SHA binary into hexadecimal,
             // then encode into characters using base64. this is per
             // Tomas V. V. Cox.
-            $hex = pack('H40', sha1($pass));
+            $hex = pack('H40', sha1($passwd));
             $computed_hash = '{SHA}' . base64_encode($hex);
             
         } else {
@@ -139,11 +139,11 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
             // it.
             //
             // is the password longer than 8 characters?
-            if (strlen($pass) > 8) {
+            if (strlen($passwd) > 8) {
                 // automatically reject
                 return false;
             } else {
-                $computed_hash = crypt($pass, $stored_hash);
+                $computed_hash = crypt($passwd, $stored_hash);
             }
         }
         

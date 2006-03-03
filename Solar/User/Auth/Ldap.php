@@ -76,7 +76,7 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * @return boolean True on success, false on failure.
      * 
      */
-    public function valid($username, $password)
+    public function valid($handle, $passwd)
     {
         // connect
         $conn = @ldap_connect($this->_config['url']);
@@ -93,8 +93,8 @@ class Solar_User_Auth_Ldap extends Solar_Base {
         @ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         
         // bind to the server
-        $rdn = sprintf($this->_config['format'], $username);
-        $bind = @ldap_bind($conn, $rdn, $password);
+        $rdn = sprintf($this->_config['format'], $handle);
+        $bind = @ldap_bind($conn, $rdn, $passwd);
         ldap_close($conn);
         
         // return the bind-value

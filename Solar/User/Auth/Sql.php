@@ -38,9 +38,9 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      * table => (string) Name of the table holding authentication data.
      * 
-     * username_col => (string) Name of the column with the username.
+     * handle_col => (string) Name of the column with the handle.
      * 
-     * password_col => (string) Name of the column with the MD5-hashed password.
+     * passwd_col => (string) Name of the column with the MD5-hashed passwd.
      * 
      * salt => (string) A salt prefix to make cracking passwords harder.
      * 
@@ -48,40 +48,40 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'sql'          => 'sql',
-        'table'        => 'sc_user',
-        'username_col' => 'user_id',
-        'password_col' => 'passwd',
-        'salt'         => null
+        'sql'        => 'sql',
+        'table'      => 'members',
+        'handle_col' => 'handle',
+        'passwd_col' => 'passwd',
+        'salt'       => null
     );
     
     /**
      * 
-     * Validate a username and password.
+     * Validate a handle and passwd.
      *
-     * @param string $user Username to authenticate.
+     * @param string $user handle to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $pass The plain-text passwd to use.
      * 
      * @return boolean True on success, false on failure.
      * 
      * 
      */
-    public function valid($username, $password)
+    public function valid($handle, $passwd)
     {
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
         // build the SQL statement
-        $stmt  = "SELECT COUNT({$this->_config['username_col']})";
-        $stmt .= " FROM {$this->_config['table']}";
-        $stmt .= " WHERE {$this->_config['username_col']} = :username";
-        $stmt .= " AND {$this->_config['password_col']} = :password";
+        $stmt = "SELECT COUNT({$this->_config['handle_col']})"
+              . " FROM {$this->_config['table']}"
+              . " WHERE {$this->_config['handle_col']} = :handle"
+              . " AND {$this->_config['passwd_col']} = :passwd";
         
         // build the placeholder data
         $data = array(
-            'username' => $username,
-            'password' => md5($this->_config['salt'] . $password)
+            'handle' => $handle,
+            'passwd' => md5($this->_config['salt'] . $passwd)
         );
         
         // get the results (a count of rows)

@@ -16,13 +16,21 @@
  */
 
 /**
+ * Needed for Solar_Form instanceof comparisons.
+ */
+Solar::loadClass('Solar_Form');
+
+/**
  * Solar_View_Helper
  */
-require_once 'Solar/View/Helper.php';
- 
+Solar::loadClass('Solar_View_Helper');
+
 /**
  * 
  * Helper for building CSS-based forms.
+ * 
+ * This is a fluent class; all method calls except fetch() return
+ * $this, which means you can chain method calls for easier readability.
  * 
  * @category Solar
  * 
@@ -33,6 +41,12 @@ require_once 'Solar/View/Helper.php';
  */
 class Solar_View_Helper_Form extends Solar_View_Helper {
     
+    /**
+     * 
+     * User-provided configuration values.
+     * 
+     * @var array
+     */
     protected $_config = array(
         'attribs' => array(),
     );
@@ -41,12 +55,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      * Attributes for the form tag.
      * 
+     * @var array
+     * 
      */
     protected $_attribs = array();
     
     /**
      * 
-     * Collection of form-level feedback messages
+     * Collection of form-level feedback messages.
+     * 
+     * @var array
      * 
      */
     protected $_feedback = array();
@@ -55,12 +73,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      * Collection of hidden elements.
      * 
+     * @var array
+     * 
      */
     protected $_hidden = array();
     
     /**
      *
-     * Stack of elements and layout.
+     * Stack of element and layout pieces for the form.
+     * 
+     * @var array
      * 
      */
     protected $_stack = array();
@@ -68,6 +90,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     /**
      *
      * Default form tag attributes.
+     * 
+     * @var array
      * 
      */
     protected $_default_attribs = array(
@@ -79,6 +103,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     /**
      *
      * Default info for each element.
+     * 
+     * @var array
      * 
      */
     protected $_default_info = array(
@@ -100,12 +126,16 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * If null, does not affect elements.  If false, all elements are
      * disabled.  If true, all elements are enabled.
      * 
+     * @var bool
+     * 
      */
     protected $_disable = null;
     
     /**
      *
      * Constructor.
+     * 
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)
@@ -119,7 +149,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Magic __call() for addElement() using element helpers.
      * 
-     * Allows $this->elementName() internally, and $this->form()->elementType() externally.
+     * Allows $this->elementName() internally, and
+     * $this->form()->elementType() externally.
+     * 
+     * @param string $type The form element type (text, radio, etc).
+     * 
+     * @param array $args Arguments passed to the method call; only
+     * the first argument is used, the $info array.
+     * 
+     * @return string The form element helper output.
      * 
      */
     public function __call($type, $args)
@@ -131,37 +169,43 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      *
-     * Main method for the Solar_View::__call() magic.
+     * Main method interface to Solar_View.
+     * 
+     * @param Solar_Form|array $spec If a Solar_Form object, does a
+     * full auto build and fetch of a form based on the Solar_Form
+     * properties.  If an array, treated as attribute keys and values
+     * for the form tag.
+     * 
+     * @return string|Solar_View_Helper_Form
      * 
      */
     public function form($spec = null)
     {
         if ($spec instanceof Solar_Form) {
-        
             // auto-build and fetch from a Solar_Form object
             $this->reset();
             $this->auto($spec);
             return $this->fetch();
-            
         } elseif (is_array($spec)) {
-        
             // set attributes from an array
             foreach ($spec as $key => $val) {
                 $this->setAttrib($key, $val);
             }
             return $this;
-            
         } else {
-        
             // just return self
             return $this;
-            
         }
     }
     
     /**
      *
      * Sets the default 'disable' flag for elements.
+     * 
+     * @param bool $flag True to force-enable, false to force-disable, null to
+     * leave element 'disable' keys alone.
+     * 
+     * @return Solar_View_Helper_Form
      * 
      */
     public function disable($flag)
@@ -178,6 +222,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Sets a form-tag attribute.
      * 
+     * @param string $key The attribute name.
+     * 
+     * @param string $val The attribute value.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
      */
     public function setAttrib($key, $val = null)
     {
@@ -187,7 +237,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      *
-     * Adds to the form-level feedback array.
+     * Adds to the form-level feedback message array.
+     * 
+     * @param string|array $spec The feedback message(s).
+     * 
+     * @return Solar_View_Helper_Form
      * 
      */
     public function addFeedback($spec)
@@ -199,25 +253,28 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Adds a single element to the form.
      * 
+     * @param array $info The element information.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
      */
     public function addElement($info)
     {
         $info = array_merge($this->_default_info, $info);
         
         if (empty($info['type'])) {
-            throw new Exception('Need a type for the element.');
+            throw $this->_exception('ERR_NO_ELEMENT_TYPE');
         }
         
         if (empty($info['name'])) {
-            Solar::dump($info);
-            throw new Exception('Need a name for the element.');
+            throw $this->_exception('ERR_NO_ELEMENT_NAME');
         }
         
         if (empty($info['attribs']['id'])) {
             $info['attribs']['id'] = $info['name'];
         }
         
-        if ($info['type'] == 'hidden') {
+        if (strtolower($info['type']) == 'hidden') {
             // hidden elements are a special case
             $this->_hidden[] = $info;
         } else {
@@ -230,14 +287,21 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      *
-     * Automatically builds all or part of the form.
+     * Automatically adds multiple pieces to the form.
+     * 
+     * @param Solar_Form|array If a Solar_Form object, adds
+     * attributes, elements and feedback from the object properties. 
+     * If an array, treats it as a a collection of element info
+     * arrays and adds them.
+     * 
+     * @return Solar_View_Helper_Form
      * 
      */
     public function auto($spec)
     {
         if ($spec instanceof Solar_Form) {
             
-            // build from a Solar_Form object.
+            // add from a Solar_Form object.
             // set attributes
             foreach ((array) $spec->attribs as $key => $val) {
                 $this->setAttrib($key, $val);
@@ -253,7 +317,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             
         } elseif (is_array($spec)) {
             
-            // build from an array of elements.
+            // add from an array of elements.
             foreach ($spec as $info) {
                 $this->addElement($info);
             }
@@ -363,6 +427,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Returns a feedback array (form-level or element-level) as an unordered list.
      * 
+     * @return Solar_View_Helper_Form
+     * 
      */
     public function listFeedback($spec)
     {
@@ -380,6 +446,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     /**
      *
      * Resets the form entirely.
+     * 
+     * @return Solar_View_Helper_Form
      * 
      */
     public function reset()

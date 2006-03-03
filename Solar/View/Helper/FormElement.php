@@ -18,7 +18,7 @@
 /**
  * Solar_View_Helper
  */
-require_once 'Solar/View/Helper.php';
+Solar::loadClass('Solar_View_Helper');
  
 /**
  * 

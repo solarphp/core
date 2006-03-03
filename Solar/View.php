@@ -32,7 +32,7 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Array of configuration parameters.
+     * User-provided configuration values.
      * 
      * @var array
      * 
@@ -299,15 +299,31 @@ class Solar_View extends Solar_Base {
             $file = $this->_helper_path->findInclude("$name.php");
             if (! $file) {
                 throw $this->_exception(
-                    'ERR_HELPER_NOT_FOUND',
+                    'ERR_HELPER_FILE_NOT_FOUND',
                     array(
                         'name' => $name,
                         'path' => $this->_helper_path->get()
                     )
                 );
             }
-            require_once $file;
+            
+            // load the file
+            require $file;
+            
+            // check if the class exists now
+            if (! class_exists($class, false)) {
+                throw $this->_exception(
+                    'ERR_HELPER_CLASS_NOT_FOUND',
+                    array(
+                        'name'  => $name,
+                        'file'  => $file,
+                        'class' => $class,
+                    )
+                );
+            }
         }
+        
+        // got the class, let's load it up
         $config = array('_view' => $this);
         $this->_helper[$key] = new $class($config);
         return $this->_helper[$key];

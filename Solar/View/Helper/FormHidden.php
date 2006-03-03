@@ -18,7 +18,7 @@
 /**
  * The abstract FormElement class.
  */
-require_once 'Solar/View/Helper/FormElement.php';
+Solar::loadClass('Solar_View_Helper_FormElement');
 
 /**
  * 

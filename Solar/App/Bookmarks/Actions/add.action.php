@@ -18,7 +18,7 @@
  */
 
 // must be logged in to proceed
-if ($this->_user->auth->status_code != 'VALID') {
+if ($this->_user->auth->status != 'VALID') {
     $this->err[] = 'You are not logged in.';
     return $this->_forward('error');
 }
@@ -28,7 +28,7 @@ $href = $this->getFlash('backlink');
 if ( ! $href) {
     // return to the user's list
     $link = Solar::factory('Solar_Uri');
-    $link->setInfoString("bookmarks/user/{$this->_user->auth->username}");
+    $link->setInfoString("bookmarks/user/{$this->_user->auth->handle}");
     $href = $link->export();
 }
 
@@ -56,7 +56,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
     $data = $values['bookmark'];
     
     // force a user_id
-    $data['owner_handle'] = $this->_user->auth->username;
+    $data['owner_handle'] = $this->_user->auth->handle;
     
     // save the data
     try {

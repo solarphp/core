@@ -18,7 +18,7 @@
  */
 
 // must be logged in to proceed
-if ($this->_user->auth->status_code != 'VALID') {
+if ($this->_user->auth->status != 'VALID') {
     $this->err[] = 'You are not logged in.';
     return $this->_forward('error');
 }
@@ -30,7 +30,7 @@ $subj = $this->_query('subj');
 // we need to see if the user already has the same URI in
 // his bookmarks so that we don't add it twice.
 $existing = $this->_bookmarks->fetchByOwnerUri(
-    $this->_user->auth->username,
+    $this->_user->auth->handle,
     $uri
 );
 
@@ -62,7 +62,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
         // get the form values
         $values = $form->values();
         $data = $values['bookmark'];
-        $data['owner_handle'] = $this->_user->auth->username;
+        $data['owner_handle'] = $this->_user->auth->handle;
         
         // save
         $result = $this->_bookmarks->save($data);

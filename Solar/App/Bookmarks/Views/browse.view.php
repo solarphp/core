@@ -72,7 +72,7 @@ $uri = Solar::factory('Solar_Uri');
         <p><?php echo $this->getText('NO_BOOKMARKS_FOUND') ?></p>
     <?php endif ?>
     
-    <?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
+    <?php if (Solar::registry('user')->auth->status == 'VALID'): ?>
         <hr />
         
         <!-- Add a new bookmark -->

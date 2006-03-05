@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Static methods for validating data.
+ * Methods for validating data.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Static methods for validating data.
+ * Methods for validating data.
  * 
  * Solar_Valid aggregates several validation routines as static
  * methods so you can make sure user input matches your requirements.
@@ -61,7 +61,7 @@
  * @package Solar_Valid
  * 
  */
-class Solar_Valid {
+class Solar_Valid extends Solar_Base {
     
     /**
      * Flag for allowing validation on a blank value.
@@ -73,6 +73,68 @@ class Solar_Valid {
      */
     const NOT_BLANK = false;
     
+    
+    /**
+     * 
+     * User-provided configuration values.
+     * 
+     * @var array
+     * 
+     */
+    protected $_config = array(
+        'custom' => array(),
+    );
+    
+    /**
+     * 
+     * Container for custom validator objects.
+     * 
+     * @var array
+     * 
+     */
+    protected $_custom = array();
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-provided configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        // "real" construction
+        parent::__construct($config);
+        
+        // add custom dependencies in LIFO order
+        $reverse = array_reverse((array) $this->_config['custom']);
+        foreach ($reverse as $class => $spec) {
+            $this->_custom[] = Solar::dependency($class, $spec);
+        }
+    }
+    
+    /**
+     * 
+     * Calls custom validation methods.
+     * 
+     * @param string $method The validation method to call.
+     * 
+     * @param array $params The parameters for the validation method.
+     * 
+     */
+    public function __get($method, $params)
+    {
+        // loop through the stack of custom objects, looking for the
+        // right method name.
+        foreach ($this->_custom as $obj) {
+            if (method_exists($obj, $method)) {
+                return call_user_func_array(array($obj, $method), $params);
+            }
+        }
+        // couldn't find it
+        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
+    }
+    
     /**
      * 
      * Validate that a value is only letters (upper or lower case) and digits.
@@ -82,10 +144,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function alnum($value, $blank = Solar_Valid::NOT_BLANK)
+    public function alnum($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-zA-Z0-9]+$/'; 
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
@@ -97,10 +159,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function alpha($value, $blank = Solar_Valid::NOT_BLANK)
+    public function alpha($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-zA-Z]+$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
@@ -116,7 +178,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function blank($value)
+    public function blank($value)
     {
         return (trim((string)$value) == '');
     }
@@ -139,7 +201,7 @@ class Solar_Valid {
      * // validate $value against a function
      * $result = Solar_Valid::custom($value, 'my_function');
      * 
-     * // validate $value against a static method
+     * // validate $value against a method
      * $result = Solar_Valid::custom($value, array('SomeClass', 'StaticMethod'));
      * 
      * // validate $value against an object method
@@ -159,7 +221,7 @@ class Solar_Valid {
      * @see call_user_func_array()
      * 
      */
-    static public function custom($value, $callback)
+    public function custom($value, $callback)
     {
         // keep all arguments so we can pass extras to the callback
         $args = func_get_args();
@@ -183,15 +245,15 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function email($value, $blank = Solar_Valid::NOT_BLANK)
+    public function email($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^((\"[^\"\f\n\r\t\v\b]+\")|([\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]+))$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
      * 
-     * Validate that the value is a key in the list of of allowed options.
+     * Validate that the value is a key in the list of allowed options.
      * 
      * Given the keys of the array (second parameter), the value
      * (first parameter) must match at least one of those keys.
@@ -203,9 +265,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inKeys($value, $array, $blank = Solar_Valid::NOT_BLANK)
+    public function inKeys($value, $array, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -226,9 +288,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inList($value, $array, $blank = Solar_Valid::NOT_BLANK)
+    public function inList($value, $array, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -252,10 +314,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function inScope($value, $size, $scope, $blank = Solar_Valid::NOT_BLANK)
+    public function inScope($value, $size, $scope, $blank = Solar_Valid::NOT_BLANK)
     {
         // allowed blank?
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -298,10 +360,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function integer($value, $blank = Solar_Valid::NOT_BLANK)
+    public function integer($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[\+\-]?[0-9]+$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
@@ -315,7 +377,7 @@ class Solar_Valid {
      */
     public function ipv4($value, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -350,9 +412,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoDate($value, $blank = Solar_Valid::NOT_BLANK)
+    public function isoDate($value, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -383,9 +445,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoDateTime($value, $blank = Solar_Valid::NOT_BLANK)
+    public function isoDateTime($value, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -400,9 +462,9 @@ class Solar_Valid {
         //echo "'$date' '$sep' '$time'\n";
         // now validate each portion
         if (strlen($value) == 19 &&
-            self::isoDate($date) &&
+            $this->isoDate($date) &&
             $sep == 'T' &&
-            self::isoTime($time)) {
+            $this->isoTime($time)) {
             return true;
         } else {
             return false;
@@ -422,15 +484,17 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function isoTime($value, $blank = Solar_Valid::NOT_BLANK)
+    public function isoTime($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
-        return self::regex($value, $expr, $blank) || ($value == '24:00:00');
+        return $this->regex($value, $expr, $blank) || ($value == '24:00:00');
     }
     
     /**
      * 
      * Validate that a value is a locale code.
+     * 
+     * Note that this overrides Solar_Base::locale().
      * 
      * The format is two lower-case letters, an underscore, and two upper-case
      * letters.
@@ -440,10 +504,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function locale($value, $blank = Solar_Valid::NOT_BLANK)
+    public function locale($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-z]{2}_[A-Z]{2}$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
@@ -457,11 +521,11 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function max($value, $max, $blank = Solar_Valid::NOT_BLANK)
+    public function max($value, $max, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
-        if (! $blank && self::blank($value)) {
+        if (! $blank && $this->blank($value)) {
             return false;
         }
         
@@ -480,11 +544,11 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function maxLength($value, $max, $blank = Solar_Valid::NOT_BLANK)
+    public function maxLength($value, $max, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // checked for length.
-        if (! $blank && self::blank($value)) {
+        if (! $blank && $this->blank($value)) {
             return false;
         }
         
@@ -500,7 +564,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function mimeType($value, $allowed = null,
+    public function mimeType($value, $allowed = null,
         $blank = Solar_Valid::NOT_BLANK)
     {
         // basically, anything like 'text/plain' or
@@ -508,7 +572,7 @@ class Solar_Valid {
         // 'text/xml+xhtml'
         $word = '[a-zA-Z][\-\.a-zA-Z0-9+]*';
         $expr = '|^' . $word . '/' . $word . '$|';
-        $ok = self::regex($value, $expr, $blank);
+        $ok = $this->regex($value, $expr, $blank);
         $allowed = (array) $allowed;
         if ($ok && count($allowed) > 0) {
             $ok = in_array($value, $allowed);
@@ -527,9 +591,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function min($value, $min, $blank = Solar_Valid::NOT_BLANK)
+    public function min($value, $min, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -548,9 +612,9 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function minLength($value, $min, $blank = Solar_Valid::NOT_BLANK)
+    public function minLength($value, $min, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -606,7 +670,7 @@ class Solar_Valid {
      * @return bool True if the value passes all validations, false if not.
      * 
      */
-    static public function multiple($value, $validations)
+    public function multiple($value, $validations)
     {
         // loop through all the requested validations
         settype($validations, 'array');
@@ -644,17 +708,17 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function nonZero($value, $blank = Solar_Valid::NOT_BLANK)
+    public function nonZero($value, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
-        if (! $blank && self::blank($value)) {
+        if (! $blank && $this->blank($value)) {
             return false;
         }
         
         // +-000.000
         $expr = '/^(\+|\-)?0+(.0+)?$/';
-        return ! self::regex($value, $expr);
+        return ! $this->regex($value, $expr);
     }
     
     /**
@@ -669,7 +733,7 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function notBlank($value)
+    public function notBlank($value)
     {
         return (trim((string)$value) != '');
     }
@@ -688,9 +752,9 @@ class Solar_Valid {
      * @return bool True if the value matches the expression, false if not.
      * 
      */
-    static public function regex($value, $expr, $blank = Solar_Valid::NOT_BLANK)
+    public function regex($value, $expr, $blank = Solar_Valid::NOT_BLANK)
     {
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         return (bool) preg_match($expr, $value);
@@ -708,10 +772,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function sepWords($value, $sep = ' ', $blank = Solar_Valid::NOT_BLANK)
+    public function sepWords($value, $sep = ' ', $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[\w' . preg_quote($sep) . ']+$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
     
     /**
@@ -735,10 +799,10 @@ class Solar_Valid {
      * schemes, false if not.
      * 
      */
-    static public function uri($value, $schemes = null, $blank = Solar_Valid::NOT_BLANK)
+    public function uri($value, $schemes = null, $blank = Solar_Valid::NOT_BLANK)
     {
         // allow blankness?
-        if ($blank && self::blank($value)) {
+        if ($blank && $this->blank($value)) {
             return true;
         }
         
@@ -809,10 +873,10 @@ class Solar_Valid {
      * @return bool True if valid, false if not.
      * 
      */
-    static public function word($value, $blank = Solar_Valid::NOT_BLANK)
+    public function word($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^\w+$/';
-        return self::regex($value, $expr, $blank);
+        return $this->regex($value, $expr, $blank);
     }
 }
 ?>

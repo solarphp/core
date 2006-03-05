@@ -73,7 +73,6 @@ class Solar_Valid extends Solar_Base {
      */
     const NOT_BLANK = false;
     
-    
     /**
      * 
      * User-provided configuration values.
@@ -221,7 +220,7 @@ class Solar_Valid extends Solar_Base {
      * @see call_user_func_array()
      * 
      */
-    public function custom($value, $callback)
+    public function callback($value, $callback)
     {
         // keep all arguments so we can pass extras to the callback
         $args = func_get_args();

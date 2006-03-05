@@ -67,9 +67,9 @@ class Solar_User_Auth extends Solar_Base {
         'expire'      => 14400,
         'idle'        => 1800,
         'allow'       => true,
-        'post_op'     => 'op',
-        'post_passwd' => 'username',
-        'post_handle' => 'password',
+        'post_handle' => 'username',
+        'post_passwd' => 'password',
+        'post_submit' => 'op',
         'op_login'    => 'login',
         'op_logout'   => 'logout',
     );
@@ -185,10 +185,10 @@ class Solar_User_Auth extends Solar_Base {
         }
         
         // add convenience references to the session array keys
-        $this->status =& $_SESSION['Solar_User_Auth']['status'];
-        $this->handle    =& $_SESSION['Solar_User_Auth']['handle'];
-        $this->initial  =& $_SESSION['Solar_User_Auth']['initial'];
-        $this->active =& $_SESSION['Solar_User_Auth']['active'];
+        $this->status  =& $_SESSION['Solar_User_Auth']['status'];
+        $this->handle  =& $_SESSION['Solar_User_Auth']['handle'];
+        $this->initial =& $_SESSION['Solar_User_Auth']['initial'];
+        $this->active  =& $_SESSION['Solar_User_Auth']['active'];
         
         // instantiate a driver object. we do this here instead of in
         // the constructor so that custom drivers will find the session
@@ -205,13 +205,13 @@ class Solar_User_Auth extends Solar_Base {
         // are we allowing authentication actions?
         if ($this->allow) {
         
-            // get the action and credentials
-            $action   = Solar::post($this->_config['post_op']);
+            // get the submit value and credentials
             $handle = Solar::post($this->_config['post_handle']);
             $passwd = Solar::post($this->_config['post_passwd']);
+            $submit = Solar::post($this->_config['post_submit']);
             
             // check for a login request.
-            if ($action == $this->_config['op_login']) {
+            if ($submit == $this->_config['op_login']) {
                 
                 // check the storage driver to see if the handle
                 // and passwd credentials are valid.
@@ -221,10 +221,10 @@ class Solar_User_Auth extends Solar_Base {
                 // true, as it may have returned a Solar error).
                 if ($result === true) {
                     // login attempt succeeded.
-                    $this->status = 'VALID';
-                    $this->handle    = $handle;
-                    $this->initial  = time();
-                    $this->active = time();
+                    $this->status  = 'VALID';
+                    $this->handle  = $handle;
+                    $this->initial = time();
+                    $this->active  = time();
                     // flash forward the status text
                     $this->setFlash('status_text', $this->locale($this->status));
                 } else {
@@ -234,7 +234,7 @@ class Solar_User_Auth extends Solar_Base {
             }
             
             // check for a logout request.
-            if ($action == $this->_config['op_logout']) {
+            if ($submit == $this->_config['op_logout']) {
                 // reset the authentication data
                 $this->reset('LOGOUT');
             }

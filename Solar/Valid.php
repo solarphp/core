@@ -121,7 +121,7 @@ class Solar_Valid extends Solar_Base {
      * @param array $params The parameters for the validation method.
      * 
      */
-    public function __get($method, $params)
+    public function __call($method, $params)
     {
         // loop through the stack of custom objects, looking for the
         // right method name.

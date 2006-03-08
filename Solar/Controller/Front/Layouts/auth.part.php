@@ -15,10 +15,10 @@
  * 
  */
 ?>
-<?php if (Solar::registry('user')->auth->status_code == 'VALID'): ?>
+<?php if (Solar::registry('user')->auth->status == 'VALID'): ?>
     <p>
         <?php echo $this->getText('Solar::TEXT_AUTH_USERNAME') ?><br />
-        <strong><?php echo $this->escape(Solar::registry('user')->auth->username) ?></strong>
+        <strong><?php echo $this->escape(Solar::registry('user')->auth->handle) ?></strong>
     </p>
     <?php
         echo $this->form()

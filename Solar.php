@@ -16,16 +16,6 @@
  */
 
 /**
- * The Solar_Exception class.
- */
-require_once 'Solar/Exception.php';
-        
-/**
- * The base for all Solar classes (except Solar itself ;-).
- */
-require_once 'Solar/Base.php';
-
-/**
  * Define where the Solar.config.php file is located.
  */
 if (! defined('SOLAR_CONFIG_PATH')) {
@@ -34,31 +24,7 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 
 /**
  * 
- * ++ Overview
- * 
- * The \\Solar\\ class is responsible for generating and maintaining
- * the Solar environment.  As such, it stands over and above all
- * other Solar classes in that it ties everything together in a
- * meaningful and cohesive way.
- * 
- * Unlike most other classes in Solar, the \\Solar\\ class is
- * composed entirely of static methods and objects.  This means you
- * never need to instantiate a \\Solar\\ object proper; just include
- * it.
- * 
- * <code type="php">
- * require_once 'Solar.php';
- * 
- * // never instantiate Solar ...
- * $solar = new Solar(); // improper
- * $solar->start();      // improper
- * 
- * // just call its static methods
- * Solar::start();       // correct!
- * </code>
- * 
- * You can then call any of the ClassMethods provided by Solar to
- * speed your development cycle.
+ * The Solar arch-class provides static methods needed throughout the Solar environment.
  * 
  * @category Solar
  * 
@@ -73,10 +39,16 @@ class Solar {
      * 
      * The values read in from the configuration file.
      * 
+     * Default keys are:
+     * 
+     * : locale : (string) Path to the Solar locale strings directory, default 'Solar/Locale'.
+     * 
+     * : locale_code : (string) The locale code Solar is using, default 'en_US'.
+     * 
      * @var array
      * 
      */
-    static public $config = array(
+    public static $config = array(
         'locale' => 'Solar/Locale/',
         'locale_code' => 'en_US',
     );
@@ -85,10 +57,16 @@ class Solar {
      * 
      * Object registry.
      * 
+     * Objects are registered using Solar::register(); the registry
+     * array is keyed on the name of the registered object.
+     * 
+     * Although this property is public, you generally shouldn't need
+     * to manipulate it in any way.
+     * 
      * @var array
      * 
      */
-    static public $registry = array();
+    public static $registry = array();
     
     /**
      * 
@@ -97,70 +75,66 @@ class Solar {
      * @var bool
      * 
      */
-    static protected $_status = false;
-    
-    // locale strings
-    static public $locale = array();
-    
-    // locale code
-    static protected $_locale_code = 'en_US';
+    protected static $_status = false;
     
     /**
-     * Singleton pattern, disallow construction.
+     * 
+     * Locale strings for all classes.
+     * 
+     * This is where locale strings for Solar are kept.  The array
+     * is keyed first by the class name, and the sub-keys are the
+     * translation keys.
+     * 
+     * Although this property is public, you generally shouldn't need
+     * to manipulate it in any way.
+     * 
+     * @var array
+     * 
+     */
+    public static $locale = array();
+    
+    
+    /**
+     * 
+     * The current locale code being used by Solar.
+     * 
+     * Default value is 'en_US'.
+     * 
+     * @var string 
+     * 
+     */
+    protected static $_locale_code = 'en_US';
+    
+    /**
+     * 
+     * Constructor is disabled to enforce a singleton pattern.
+     * 
      */
     final private function __construct() {}
     
     /**
      * 
-     * Starts Solar: get config, load shared objects, run start scripts.
+     * Starts Solar: loads configuration values and and sets up the environment.
      * 
-     * This method starts the Solar environment; it is usually the
-     * very first method call you make after including the Solar.php
-     * file.
+     * @param mixed $config An alternative configuration parameter.
      * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
+     * @return void
      * 
-     * // the rest of your script
-     * 
-     * Solar::stop();
-     * </code>
-     * 
-     * Note that you can specify the location of the [Main:ConfigFile
-     * configuration file] as the only parameter.
-     * 
-     * ++ What start() Does
-     * 
-     * The start() method performs a number of activities for
-     * you to set up the execution environment:
-     * 
-     * # Reads the [Main:ConfigFile configuration file] file into
-     * Solar::$config.
-     * 
-     * # Processes the Solar::$config['Solar']['ini_set'] key/value
-     * pairs using [[php ini_set()]].
-     * 
-     * # Finally, Solar runs any scripts noted in
-     * Solar::$config['Solar']['start'].  This allows you to specify
-     * additional environment startup behaviors.
-     * 
-     * @param mixed $config The alternate configuration parameter.
-     * If boolean false, no configs are loaded.  If a string, it's a
-     * script name, and configs are loaded from the return of that script.
-     * If an array, it is used as the config array.  If an object, it is
-     * converted to an array and used as the config array.  If null,
-     * config is loaded from SOLAR_CONFIG_PATH script.
-     * 
-     * @todo Keep the locale code in $_SESSION.
+     * @todo Keep the locale code in $_SESSION?
      * 
      */
-    static public function start($config = null)
+    public static function start($config = null)
     {
         // don't re-start if we're already running.
         if (Solar::$_status) {
             return;
         }
+        
+        // needed for exceptions
+        Solar::loadClass('Solar_Exception');
+        
+        // needed for all sub-classes
+        Solar::loadClass('Solar_Base');
         
         // do some security on globals, and turn off all magic quotes
         Solar::_globalsQuotes();
@@ -214,44 +188,12 @@ class Solar {
     
     /**
      * 
-     * Stops Solar: run stop scripts and shared object "stop" hooks.
-     * 
-     * Stops the Solar environment.  As a counterpart to
-     * Solar::start(), the stop() method shuts down the Solar
-     * environment.
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * // the rest of the script goes here
-     * 
-     * Solar::stop();
-     * </code>
-     * 
-     * Like Solar::start(), the stop() method performs a number of
-     * activities for you.  Be sure to read the Solar.php script file
-     * for specifics, but in general, the stop() activities are:
-     * 
-     * # Execute any scripts named in
-     * Solar::$config['Solar']['stop'].  This allows you to run
-     * shutdown scripts particular to your system.
-     * 
-     * # For each auto-shared object, run its \\solar('stop')\\
-     * method.
-     * 
-     *  * This behavior applies only to auto-shared objects from
-     * Solar::start(); shared objects that were not auto-shared at
-     * startup time are not included in the stop() method.
-     * 
-     *  * The auto-shared objects are shut down in a last-in first-out
-     * order.  This means the last auto-shared object is the first to
-     * be stopped.
+     * Stops Solar: run stop scripts.
      * 
      * @return void
      * 
      */
-    static public function stop()
+    public static function stop()
     {
         // run the user-defined stop scripts.
         foreach ((array) Solar::config('Solar', 'stop') as $file) {
@@ -269,46 +211,14 @@ class Solar {
      * @return string A PHP-standard version number.
      * 
      */
-    static public function apiVersion()
+    public static function apiVersion()
     {
         return '@package_version@';
     }
     
     /**
      * 
-     * Gets translated locale string for a class and key.
-     * 
-     * This method allows you to retrieve the proper text string as
-     * related to a specific class for a given locale.  Be sure to
-     * read about [Main:LocaleFiles locale files] for more
-     * information.
-     * 
-     * For example, to get the locale string for the 'HELLO' key in
-     * the 'Example' class ...
-     * 
-     * <code type="php">
-     * $text = Solar::locale('Example', 'HELLO');
-     * </code>
-     * 
-     * By default, the locale() method retrieves the singluar string
-     * for the translation key; if you need the "zero" or "plural"
-     * strings, just pass the appropriate number as the third
-     * parameter, and the locale() method will get the correct
-     * translation (provided it has been set up in the locale file).
-     * 
-     * <code type="php">
-     * // get the translation for "0 apples"
-     * $num = 0;
-     * $text = Solar::locale('Example', 'APPLE', $num);
-     * 
-     * // get the translation for "1 apple"
-     * $apples = 1;
-     * $text = Solar::locale('Example', 'APPLE', $num);
-     * 
-     * // get the translation for "2 (or more) apples"
-     * $apples = 2;
-     * $text = Solar::locale('Example', 'APPLE', $num);
-     * </code>
+     * Gets the translated locale string for a class and key.
      * 
      * @param string $class The class of the translation.
      * 
@@ -320,7 +230,7 @@ class Solar {
      * @return string A translated locale string.
      * 
      */
-    static public function locale($class, $key, $num = 1)
+    public static function locale($class, $key, $num = 1)
     {
         // if the key does not exist for the class,
         // return the key itself.
@@ -349,7 +259,7 @@ class Solar {
      * 
      * @return void
      */
-    static public function setLocale($code)
+    public static function setLocale($code)
     {
         // set the code
         Solar::$_locale_code = $code;
@@ -381,7 +291,7 @@ class Solar {
      * @return string The current locale code, e.g., 'en_US'.
      * 
      */
-    static public function getLocale()
+    public static function getLocale()
     {
         return Solar::$_locale_code;
     }
@@ -389,45 +299,7 @@ class Solar {
     
     /**
      * 
-     * Loads a class file but does not create an object instance.
-     * 
-     * In normal PHP, you would load a class file using include or
-     * require, then attempt to instantiate the class.
-     * 
-     * <code type="php">
-     * include_once "My/Example/Class.php";
-     * $example = new My_Example_Class();
-     * </code>
-     * 
-     * However, if My/Example/Class.php did not have the
-     * My_Example_Class in it, PHP would throw an error; this can
-     * often be a difficult error to track down.
-     * 
-     * The loadClass() method is the equivalent of the above pair of
-     * steps, but adds a [[php class_exists()]] check to see if the
-     * class was actually loaded from the file.  It won't attempt to
-     * load the same class more than once.
-     * 
-     * For example:
-     * 
-     * <code type="php">
-     * Solar::loadClass('My_Example_Class');
-     * $example = new My_Example_Class();
-     * </code>
-     * 
-     * If after calling loadClass() the 'My_Example_Class' still does
-     * not exist, Solar throws an exception with a backtrace to let
-     * you know the load failed and where it was called from.  This
-     * makes it easy to track down failed loads.
-     * 
-     * For this method to work, the class to be loaded must be in the
-     * same directory as the Solar directory (typically the PEAR
-     * library path) and conform to the [Main:NamingConventions class
-     * naming conventions].
-     * 
-     * Note that when using Solar::factory(), you **do not** need to
-     * use loadClass() first; Solar::factory() automatically calls
-     * loadClass() to load the requested class file.
+     * Loads a class file from the include_path.
      * 
      * @param string $class A Solar (or other) class name.
      * 
@@ -436,7 +308,7 @@ class Solar {
      * @todo Add localization for errors
      * 
      */
-    static public function loadClass($class)
+    public static function loadClass($class)
     {
         // pre-empt searching for the class
         if (class_exists($class)) {
@@ -456,9 +328,8 @@ class Solar {
         // convert the class name to a file path.
         $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
         
-        // include the file from the Solar dir and check for failure. we
-        // use run() here instead of require() so we can see the
-        // exception backtrace.
+        // include the file and check for failure. we use run() here
+        // instead of require() so we can see the exception backtrace.
         $result = Solar::run($file);
         
         // if the class was not in the file, we have a problem.
@@ -474,56 +345,18 @@ class Solar {
     
     /**
      * 
-     * Runs a script in an isolated scope.
+     * Uses [[php include()]] to run a script in an isolated scope.
      * 
-     * Use the run() method to include a file inside its own limited
-     * scope.  This allows you to include files but not pollute the
-     * current scope with the variables from the included file.
+     * @param string $file The file to include.
      * 
-     * For example, say you have this "main" script:
-     * 
-     * <code type="php">
-     * $var = 'foo';
-     * include 'helper.php';
-     * echo $var;
-     * </code>
-     * 
-     * If 'helper.php' sets the value of $var for itself, that value
-     * will override the value from the main script, which can lead
-     * to unexpected behavior.  If you want to make sure that
-     * 'helper.php' executes in its own separate scope, use the run()
-     * method instead of [[php include]]:
-     * 
-     * <code type="php">
-     * $var = 'foo';
-     * Solar::run('helper.php');
-     * echo $var;
-     * </code>
-     * 
-     * Now $var will remain the same before and after the inclusion
-     * of helper.php (unless helper.php used [[php global]] to make
-     * $var global).
-     * 
-     * As with [[php include]], you can accept return values from the
-     * file you run:
-     * 
-     * <code type="php">
-     * $result = Solar::run('helper.php');
-     * </code>
-     * 
-     * If the last line of helper.php is a return value, $result will
-     * reflect that value.
-     *      
-     * @param string $file A script path and file name.
-     * 
-     * @return mixed The final return of the included file.
+     * @return mixed The return value of the included file.
      * 
      */
-    static public function run($file)
+    public static function run($file)
     {
         if (Solar::fileExists($file)) {
-            // clean up the local scope, then
-            // include the file and return its results
+            // clean up the local scope, then include the file and
+            // return its results
             unset($file);
             return include(func_get_arg(0));
         } else {
@@ -539,24 +372,24 @@ class Solar {
     
     /**
      * 
-     * Hack for file_exists() && is_readable() that checks the include_path.
+     * Hack for [[php file_exists()]] that checks the include_path.
      * 
      * Use this to see if a file exists anywhere in the include_path.
      * 
      * <code type="php">
-     * $file = 'include/path/to/file.php';
-     * if (Solar::fileExists('include/path/to/file.php')) {
+     * $file = 'path/to/file.php';
+     * if (Solar::fileExists('path/to/file.php')) {
      *     include $file;
      * }
      * </code>
      * 
-     * @param string $file A script path and file name.
+     * @param string $file Check for this file in the include_path.
      * 
      * @return bool True if the file exists and is readble in the
      * include_path, false if not.
      * 
      */
-    static public function fileExists($file)
+    public static function fileExists($file)
     {
         $fp = @fopen($file, 'r', true);
         $ok = ($fp) ? true : false;
@@ -566,66 +399,25 @@ class Solar {
     
     /**
      * 
-     * Convenience method to instantiate and configure a Solar object.
-     * 
-     * Creates a new object instance, auto-configuring it from
-     * user-defined parameters and the Solar.config.php file.
-     * 
-     * In normal PHP, you must include a class file and then
-     * instantiate it.
-     * 
-     * <code type="php">
-     * // normal use
-     * include_once 'My/Class/File.php';
-     * $obj = new My_Class_File();
-     * </code>
-     * 
-     * With Solar, if you want to instantiate a standalone object,
-     * you can use the Solar::factory() method instead of the
-     * include-and-instantiate routine.
-     * 
-     * <code type="php">
-     * // Solar object factory
-     * $obj = Solar::factory('My_Class_File');
-     * </code>
-     * 
-     * This checks the include-path to see if the My/Class/File.php
-     * file exists, and throws a warning (with backtrace) if it does
-     * not.
-     * 
-     * If the class conforms to the Solar standards for
-     * [Main:ConstructorParameters constructor parameters], the class
-     * will be configured automatically with its corresponding values
-     * in the [Main:ConfigFile config file].  If you want to override
-     * those values, you can pass a custom config array as the second
-     * parameter:
-     * 
-     * <code type="php">
-     * $options = array('zim' => 'gir', 'baz' => 'dib');
-     * $obj = Solar::factory('My_Class_File', $options);
-     * </code>
-     * 
-     * For this method to work, the class to be loaded must be in the
-     * include_path and conform to the [Main:NamingConventions class
-     * naming conventions].
+     * Convenience method to instantiate and configure an object.
      * 
      * @param string $class The class name.
      * 
-     * @param array $config The configuration array for the class.
+     * @param array $config Additional configuration array for the class.
      * 
-     * @return object A new instance of the requested Solar class.
+     * @return object A new instance of the requested class.
      * 
      */
-    static public function factory($class, $config = null)
+    public static function factory($class, $config = null)
     {
-        $result = Solar::loadClass($class);
+        Solar::loadClass($class);
         $obj = new $class($config);
         return $obj;
     }
     
     /**
      * 
-     * Access an object in the registry.
+     * Accesses an object in the registry.
      * 
      * @param string $key The registered name.
      * 
@@ -634,7 +426,7 @@ class Solar {
      * @todo Localize these errors.
      * 
      */
-    static public function registry($key)
+    public static function registry($key)
     {
         // has the shared object already been loaded?
         if (! Solar::inRegistry($key)) {
@@ -659,15 +451,11 @@ class Solar {
     
     /**
      * 
-     * Register an object under a unique name.
-     * 
-     * You may also register a class and config to lazy-load.
+     * Registers an object under a unique name.
      * 
      * @param string $key The name under which to register the object.
      * 
-     * @param object|string $spec An object to register, or a class
-     * name to lazy-load with Solar::factory() when first requested
-     * via Solar::registry().
+     * @param object|string $spec The registry specification.
      * 
      * @param mixed $config If lazy-loading, use this as the config.
      * 
@@ -676,7 +464,7 @@ class Solar {
      * @todo Localize these errors.
      * 
      */
-    static public function register($key, $spec, $config = null)
+    public static function register($key, $spec, $config = null)
     {
         if (Solar::inRegistry($key)) {
             // name already exists in registry
@@ -715,30 +503,25 @@ class Solar {
      * @return bool
      * 
      */
-    static public function inRegistry($key)
+    public static function inRegistry($key)
     {
         return ! empty(Solar::$registry[$key]);
     }
     
     /**
      * 
-     * Standard handler for dependency injections.
+     * Returns a dependency object.
      * 
-     * This standardizes dependency injections where a class may need
-     * to have different objects available to it for operation.
+     * @param string $class The dependency object should be an instance of this class.
      * 
-     * http://www.martinfowler.com/articles/injection.html
+     * @param mixed $spec If an object, check to make sure it's an instance of $class. If a string,
+     * treat as a Solar::registry() key. Otherwise, use this as a config
+     * param to Solar::factory() to create a $class object.
      * 
-     * @param mixed $spec If an object, return as-is. If a string,
-     * it's a Solar::registry() key. Otherwise, use this as a config
-     * param to Solar::factory().
+     * @return object The dependency object.
      * 
-     * @param string $class If $spec is non-string non-object, then
-     * use this as the $class param to Solar::factory().
-     * 
-     * @return object
      */
-    public function dependency($class, $spec)
+    public static function dependency($class, $spec)
     {
         // if it's a string, assume it's the key name for a registered
         // object.  get it, then proceed to class-check.
@@ -771,105 +554,6 @@ class Solar {
      * 
      * Safely gets a configuration group array or element value.
      * 
-     * ++ Reading An Entire Group
-     * 
-     * If your Solar.config.php file has this entry ...
-     * 
-     * <code type="php">
-     * $config['Example'] = array(
-     *   'flag_a'  => 'these',
-     *   'flag_b'  => 'those',
-     *   'deeper'  => array(
-     *     'deep_1' => 'foo',
-     *     'deep_2' => 'bar',
-     *   ),
-     * );
-     * </code>
-     * 
-     * ... you can retrieve a copy of the entire 'Example' group like this:
-     * 
-     * <code type="php">
-     * $example = Solar::config('Example');
-     * </code>
-     * 
-     * If the 'Example' group does not exist, the config() method
-     * will return an empty array by default.  If you want to use a
-     * different default value when 'Example' does not exist, specify
-     * a \\null\\ element and the customized default value:
-     * 
-     * <code type="php">
-     * $default = Solar::object('Solar_Error');
-     * $example = Solar::config('Example', null, $default);
-     * </code>
-     * 
-     * Thus, \\$example\\ will be a Solar_Error if 'Example' does not
-     * exist in the config file.
-     * 
-     * 
-     * ++ Reading A Single Group-Element
-     * 
-     * If your Solar.config.php file has this entry (identical to the
-     * above example)...
-     * 
-     * <code type="php">
-     * $config['Example'] = array(
-     *   'flag_a'  => 'these',
-     *   'flag_b'  => 'those',
-     *   'deeper'  => array(
-     *     'deep_1' => 'foo',
-     *     'deep_2' => 'bar',
-     *   ),
-     * );
-     * </code>
-     * 
-     * ... you can retrieve a copy of the 'flag_a' value like this:
-     * 
-     * <code type="php">
-     * $flag_a = Solar::config('Example', 'flag_a');
-     * </code>
-     * 
-     * If the 'Example' group does not exist, or if the 'flag_a'
-     * element does not exist in the 'Example' group, the config()
-     * method will return \\null\\ value by default.  If you want to
-     * use a different default value, specify a that value as the
-     * third parameter:
-     * 
-     * <code type="php">
-     * $flag_a = Solar::config('Example', 'flag_a', 'thars');
-     * </code>
-     * 
-     * Thus, \\$example\\ will be \\false\\ if
-     * Solar::$config['Example']['flag_a'] does not exist.
-     * 
-     * ++ Deep Reading
-     * 
-     * The config() method only allows you to read groups, or major
-     * group elements.  If you have this in your config file (again,
-     * identical to above) ...
-     * 
-     * <code type="php">
-     * $config['Example'] = array(
-     *   'flag_a'  => 'these',
-     *   'flag_b'  => 'those',
-     *   'deeper'  => array(
-     *     'deep_1' => 'foo',
-     *     'deep_2' => 'bar',
-     *   ),
-     * );
-     * </code>
-     * 
-     * ... you can retrieve the 'deeper' element,
-     * 
-     * <code type="php">
-     * $deeper = Solar::config('Example', 'deeper');
-     * </code>
-     * 
-     * ... but you cannot retrieve the 'deep_1' sub-element.  In
-     * practice, this is not usually an issue.  Although you can
-     * always access Solar::$config if you need to, nesting
-     * often-used config file elements too deeply may be a signal
-     * that you need to re-think your design.     *
-     * 
      * @param string $group The name of the group.
      * 
      * @param string $elem The name of the element in the group.
@@ -882,7 +566,7 @@ class Solar {
      * @return mixed The value of the configuration group or element.
      * 
      */
-    static public function config($group, $elem = null)
+    public static function config($group, $elem = null)
     {
         // was a default fallback value passed?  we do it this way
         // instead of defining a parameter because we need to return
@@ -929,19 +613,6 @@ class Solar {
      * 
      * Safely gets the value of an element from the $_GET array.
      * 
-     * This method accesses the $_GET superglobal array and returns a
-     * copy of the requested key.  If no key is specified,
-     * a copy of the entire $_GET array is returned.  If the
-     * requested key does not exist in the $_GET array, the default
-     * value is returned instead.
-     * 
-     * For example, to get the 'user_name' key from the $_GET array,
-     * with 'No Name' as the default value, you would do this:
-     * 
-     * <code type="php">
-     * $name = Solar::get('user_name', 'No Name');
-     * </code>
-     * 
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -952,7 +623,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function get($key = null, $default = null)
+    public static function get($key = null, $default = null)
     {
         return Solar::_super('_GET', $key, $default);
     }
@@ -961,21 +632,6 @@ class Solar {
      * 
      * Safely gets the value of an element from the $_POST array.
      * 
-     * This method accesses the $_POST superglobal array and returns
-     * a copy of the requested key.  If no key is
-     * specified, a copy of the entire $_POST array is
-     * returned.  If the requested key does not exist in the $_POST
-     * array, the default value is returned instead.
-     * 
-     * For example, to get the 'subject_line' key from the $_POST
-     * array, with 'No Subject' as the default value, you would do
-     * this:
-     * 
-     * <code type="php">
-     * $subject = Solar::post('subject_line', 'No Subject');
-     * </code>
-
-     * 
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -986,7 +642,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function post($key = null, $default = null)
+    public static function post($key = null, $default = null)
     {
         return Solar::_super('_POST', $key, $default);
     }
@@ -995,19 +651,6 @@ class Solar {
      * 
      * Safely gets the value of an element from the $_COOKIE array.
      * 
-     * This method accesses the $_COOKIE superglobal array and
-     * returns a copy of the requested key.  If no key is
-     * specified, a copy of the entire $_COOKIE array is
-     * returned.  If the requested key does not exist in the $_COOKIE
-     * array, the default value is returned instead.
-     * 
-     * For example, to get the 'remember_me' key from the $_COOKIE
-     * array, with \\false\\ as the default value, you would do this:
-     * 
-     * <code type="php">
-     * $remember_me = Solar::cookie('remember_me', false);
-     * </code>
-
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -1018,7 +661,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function cookie($key = null, $default = null)
+    public static function cookie($key = null, $default = null)
     {
         return Solar::_super('_COOKIE', $key, $default);
     }
@@ -1027,19 +670,6 @@ class Solar {
      * 
      * Safely gets the value of an element from the $_SERVER array.
      * 
-     * This method accesses the $_SERVER superglobal array and
-     * returns a copy of the requested key.  If no key is
-     * specified, a copy of the entire $_SERVER array is
-     * returned.  If the requested key does not exist in the $_SERVER
-     * array, the default value is returned instead.
-     * 
-     * For example, to get the 'REQUEST_URI' key from the $_SERVER
-     * array, with \\false\\ as the default value, you would do this:
-     * 
-     * <code type="php">
-     * $remember_me = Solar::server('REQUEST_URI', false);
-     * </code>
-
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -1050,7 +680,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function server($key = null, $default = null)
+    public static function server($key = null, $default = null)
     {
         return Solar::_super('_SERVER', $key, $default);
     }
@@ -1059,19 +689,6 @@ class Solar {
      * 
      * Safely gets the value of an element from the $_SESSION array.
      * 
-     * This method accesses the $_SESSION superglobal array and
-     * returns a copy of the requested key.  If no key is
-     * specified, a copy of the entire $_SESSION array is
-     * returned.  If the requested key does not exist in the
-     * $_SESSION array, the default value is returned instead.
-     * 
-     * For example, to get the 'last_active' key from the $_SESSION
-     * array, with \\false\\ as the default value, you would do this:
-     * 
-     * <code type="php">
-     * $last_active = Solar::session('last_active', false);
-     * </code>
-
      * @param string $key The array element; if null, returns the whole
      * array.
      * 
@@ -1082,7 +699,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function session($key = null, $default = null)
+    public static function session($key = null, $default = null)
     {
         return Solar::_super('_SESSION', $key, $default);
     }
@@ -1090,43 +707,6 @@ class Solar {
     /**
      * 
      * Safely gets the value of $_SERVER['PATH_INFO'] element.
-     * 
-     * This method is a bit different from the other scrubber
-     * methods.  It accesses the $_SERVER['PATH_INFO'] value, and
-     * returns copy of the requested key.  If no key is
-     * specified, the entire path-info set is returned as an array.
-     * 
-     * The "path-info" portion of a URI comes after the script name
-     * but before any $_GET parameters.  For example, in the
-     * following URI ...
-     * 
-     * <code>
-     * http://example.com/path/to/script.php/foo/bar/baz?zim=gir
-     * </code>
-     * 
-     * ... the "path-info" is \\/foo/bar/baz\\.
-     * 
-     * Path-info values are addressed by their integer position
-     * number, not by associative array key name (as with $_GET et.
-     * al.).  Thus, Solar builds its path-info array for the example
-     * URI to look like this:
-     * 
-     * <code type="php">
-     * array(
-     *   0 => 'foo',
-     *   1 => 'bar',
-     *   2 => 'baz',
-     * );
-     * </code>
-     * 
-     * For example, to get path-info values, you would call the
-     * pathinfo() method like this:
-     * 
-     * <code type="php">
-     * $info_2 = Solar::pathinfo(2, null);  // equals 'baz'
-     * $info_3 = Solar::pathinfo(3, 'dib'); // equals 'dib'
-     * </code>
-
      * 
      * @param int $key The array element; if null, returns the whole
      * array.
@@ -1138,7 +718,7 @@ class Solar {
      * $default value (if not).
      * 
      */
-    static public function pathinfo($key = null, $default = null)
+    public static function pathinfo($key = null, $default = null)
     {
         // get the pathinfo as passed
         $info = Solar::_super('_SERVER', 'PATH_INFO', '');
@@ -1172,28 +752,6 @@ class Solar {
      * 
      * Generates a simple exception, but does not throw it.
      * 
-     * This method generates a Solar_Exception object with an originating
-     * class, an error code, an error message, and an array of information
-     * about the specifics of the error.
-     * 
-     * Note that this method only generates the object; it does not
-     * throw the exception.
-     * 
-     * <code type="php">
-     * $class = 'My_Example_Class';
-     * $code = 'ERR_SOMETHING_WRONG';
-     * $text = 'Something is wrong.';
-     * $info = array('foo' => 'bar');
-     * $exception = Solar::exception($class, $code, $text, $info);
-     * throw $exception;
-     * </code>
-     * 
-     * In general, you shouldn't need to use this directly in classes
-     * extended from [Solar_Base:HomePage Solar_Base].  Instead, use
-     * $this->_exception($code, $info) for automated picking of the
-     * right exception class from the $code, and automated translation
-     * of the error message.
-     * 
      * @param string $class The class that generated the exception.
      * 
      * @param mixed $code A scalar error code, generally a string.
@@ -1206,7 +764,7 @@ class Solar {
      * @return object A Solar_Exception object.
      * 
      */
-    static public function exception($class, $code, $text = '', $info = array())
+    public static function exception($class, $code, $text = '', $info = array())
     {
         return Solar::factory('Solar_Exception', array(
             'class' => $class,
@@ -1222,8 +780,8 @@ class Solar {
      * 
      * Essentially, this is an alias to the Solar_Debug_Var::dump()
      * method, which buffers the [[php var_dump]] for a variable,
-     * applies some simple formatting for readability, and [[php
-     * echo]]s it tags with an optional label.  Use this for
+     * applies some simple formatting for readability, [[php echo]]s
+     * it, and prints with an optional label.  Use this for
      * debugging variables to see exactly what they contain.
      * 
      * @param mixed &$var The variable to dump.
@@ -1233,7 +791,7 @@ class Solar {
      * @return void
      * 
      */
-    static public function dump(&$var, $label = null)
+    public static function dump(&$var, $label = null)
     {
         $obj = Solar::factory('Solar_Debug_Var');
         echo $obj->dump($var, $label);
@@ -1253,7 +811,7 @@ class Solar {
      * @return string The "fixed" directory.
      * 
      */
-    static public function fixdir($dir)
+    public static function fixdir($dir)
     {
         $sep = DIRECTORY_SEPARATOR;
         $dir = str_replace('/', $sep, $dir);
@@ -1267,7 +825,7 @@ class Solar {
      * 
      * Sets a "read-once" session value for a class and key.
      * 
-     * Take from ideas popularized by Rails, a "flash" is a session
+     * Taken from ideas popularized by Ruby on Rails, a "flash" is a session
      * value that propagates only until it is read, at which time it
      * is removed from the session.  This is useful for forwarding
      * information and messages between page loads.
@@ -1282,7 +840,7 @@ class Solar {
      * @return void
      * 
      */
-    static public function setFlash($class, $key, $val)
+    public static function setFlash($class, $key, $val)
     {
         $_SESSION['Solar']['flash'][$class][$key] = $val;
     }
@@ -1301,7 +859,7 @@ class Solar {
      * @return void
      * 
      */
-    static public function addFlash($class, $key, $val)
+    public static function addFlash($class, $key, $val)
     {
         if (! isset ($_SESSION['Solar']['flash'][$class][$key])) {
             $_SESSION['Solar']['flash'][$class][$key] = array();
@@ -1328,7 +886,7 @@ class Solar {
      * @return mixed The "read-once" value.
      * 
      */
-    static public function getFlash($class, $key, $val = null)
+    public static function getFlash($class, $key, $val = null)
     {
         if (isset($_SESSION['Solar']['flash'][$class][$key])) {
             $val = $_SESSION['Solar']['flash'][$class][$key];
@@ -1344,7 +902,7 @@ class Solar {
      * @return void
      * 
      */
-    static protected function _globalsQuotes()
+    protected static function _globalsQuotes()
     {
         // clear out registered globals?
         // (this code from Richard Heyes and Stefan Esser)
@@ -1412,7 +970,7 @@ class Solar {
      * @return void
      * 
      */
-    static protected function _dispelQuotes(&$value)
+    protected static function _dispelQuotes(&$value)
     {
         $value = stripslashes($value);
     }
@@ -1426,7 +984,7 @@ class Solar {
      * @return void
      * 
      */
-    static protected function _dispelSybase(&$value)
+    protected static function _dispelSybase(&$value)
     {
         $value = str_replace("''", "'", $value);
     }
@@ -1448,7 +1006,7 @@ class Solar {
      * default value if the key did not exist.
      * 
      */
-    static protected function _super($type, $key = null, $default = null)
+    protected static function _super($type, $key = null, $default = null)
     {
         // get the whole superglobal, or just one key?
         if (is_null($key) && isset($GLOBALS[$type])) {

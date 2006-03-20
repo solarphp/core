@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: save
+
+param: array, $data
+
+return: array
+
+</function>
+
+Inserts or updates a comment.
+
+* Parameters:
+
+ * array //$data//: The bookmark data.
+
+* Returns array: The data as inserted or updated.
+
+Inserts or updates a comment.

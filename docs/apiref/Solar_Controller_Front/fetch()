@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: Solar_Uri|string, $spec, NULL
+
+return: string
+
+</function>
+
+Fetches the output of a page/action/info specification URI.
+
+* Parameters:
+
+ * Solar_Uri|string //$spec//: A page/action/info spec for the front controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
+
+* Returns string: The output of the page action.
+
+Fetches the output of a page/action/info specification URI.

@@ -1,0 +1,3 @@
+protected bool $_feedback
+
+Feedback messages for the element.

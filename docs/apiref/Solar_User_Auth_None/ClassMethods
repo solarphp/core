@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Auth_None::__construct() -- Constructor.
+
+* Solar_User_Auth_None::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Auth_None::locale() -- Looks up locale strings based on a key.
+
+* Solar_User_Auth_None::valid() -- Validate a username and password.  Always fails.
+
+++ Protected
+
+* Solar_User_Auth_None::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

@@ -32,7 +32,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Keys are:
      * 
-     * html => (bool) enable/disable encoding output for HTML
+     * : \\html\\ : (bool) enable/disable encoding output for HTML
      * 
      * @var array
      * 
@@ -55,7 +55,7 @@ class Solar_Debug_Timer extends Solar_Base {
     
     /**
      * 
-     * When we call profile(), what is the longest marker name length?
+     * The longest marker name length shown in profile().
      * 
      * @var boolean
      * 
@@ -66,9 +66,8 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Constructor.
      * 
-     * If auto_start is true, this will start the timer.
-     * 
      * @param array $config User-provided configuration values.
+     * If the 'auto_start' key is true, this will start the timer.
      * 
      */
     public function __construct($config = null)
@@ -83,7 +82,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Destructor.
      * 
-     * If auto_display is true, this will display the profile.
+     * If the 'auto_display' config key is true, this will display the profile.
      * 
      */
     public function __destruct()
@@ -98,6 +97,11 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Resets the profile and marks a new starting time.
      * 
+     * This resets the profile and adds a new mark labeled
+     * \\__start\\.  Use it to start the timer.
+     *
+     * @return void
+     * 
      */
     public function start()
     {
@@ -107,7 +111,11 @@ class Solar_Debug_Timer extends Solar_Base {
     
     /**
      * 
-     * Stop the timer.
+     * Stops the timer.
+     * 
+     * Use this to stop the timer, marking the time with the label \\__stop\\.
+     * 
+     * @return void
      * 
      */
     public function stop()
@@ -117,7 +125,12 @@ class Solar_Debug_Timer extends Solar_Base {
     
     /**
      * 
-     * Mark the time.
+     * Marks the time.
+     * 
+     * Use this to mark the profile to see how much time has
+     * elapsed since the last mark.  Labels do not have to be
+     * unique, but should be distinctive enough so you can tell
+     * which one is which on long profiles.
      * 
      * @param string $name Name of the marker to be set
      * 
@@ -187,6 +200,9 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Outputs the current profile.
+     * 
+     * This dumps the profile information as a table; see the
+     * [HomePage home page for this class] for an example.
      * 
      * @param string $title A title for the output.
      * 

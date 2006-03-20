@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: select
+
+param: string, $type, 'result'
+
+param: array|string, $where, NULL
+
+param: array|string, $order, NULL
+
+param: int, $page, NULL
+
+return: array
+
+</function>
+
+Convenience method to select rows from this table.
+
+* Parameters:
+
+ * string //$type//: The type of fetch to execute: 'all', 'one', 'row', etc. Default is 'result'.
+
+ * array|string //$where//: An SQL WHERE clause to filter results.  May be an array:  If the key is a string, it's assumed to be a column name and the value is the equality comparison; the value is automatically bound into the query.  If the key is an integer, the value is a custom where clause.  Alternatively, $where may be a string, in which case it is a user-defined WHERE clause in its entirety (no binding).
+
+ * array|string //$order//: An SQL ORDER clause, e.g. an array of column names.
+
+ * int //$page//: The page-number of results to retrieve.
+
+* Returns array
+
+Convenience method to select rows from this table.

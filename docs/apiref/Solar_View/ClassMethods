@@ -1,0 +1,47 @@
++ Class Methods
+
+++ Public
+
+* Solar_View::__call() -- *
+
+* Solar_View::__construct() -- Constructor.
+
+* Solar_View::__set() -- Disallows setting of underscore-prefixed variables.
+
+* Solar_View::addHelperPath() -- Add to the helper directory path stack.
+
+* Solar_View::addTemplatePath() -- Add to the template directory path stack.
+
+* Solar_View::apiVersion() -- Reports the API version for this class.
+
+* Solar_View::assign() -- Sets variables for the view.
+
+* Solar_View::display() -- Displays a template directly.
+
+* Solar_View::escape() -- Built-in helper for escaping output.
+
+* Solar_View::fetch() -- Fetches template output.
+
+* Solar_View::getHelper() -- Returns the internal helper object; creates it as needed.
+
+* Solar_View::locale() -- Looks up locale strings based on a key.
+
+* Solar_View::newHelper() -- Creates a new standalone helper object.
+
+* Solar_View::setHelperPath() -- Reset the helper directory path stack.
+
+* Solar_View::setTemplatePath() -- Reset the template directory path stack.
+
+* Solar_View::template() -- *
+
+++ Protected
+
+* Solar_View::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View::_run() -- Runs a template script (allowing access to $this).
+
+* Solar_View::_setup() -- Allows specialized setup for extended classes.
+
+++ Private
+
+None.

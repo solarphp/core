@@ -1,0 +1,39 @@
+HomePage | The Solar_Sql_Select Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_bind
+  $_config
+  $_paging
+  $_parts
+  $_sql
+  $_tbl_cols
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  _exception()
+  _join()
+  _tblCols()
+  apiVersion()
+  bind()
+  clear()
+  cols()
+  countPages()
+  distinct()
+  fetch()
+  from()
+  group()
+  having()
+  innerJoin()
+  join()
+  leftJoin()
+  limit()
+  limitPage()
+  locale()
+  multiHaving()
+  multiWhere()
+  orHaving()
+  orWhere()
+  order()
+  paging()
+  unbind()
+  where()

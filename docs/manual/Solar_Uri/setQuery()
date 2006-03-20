@@ -1,0 +1,17 @@
+This method sets the value of an existing query key (or creates the key if it does not exist).
+
+<code type="php">
+$uri = Solar::factory('Solar_Uri');
+$uri->import('http://example.com/index.php?foo=bar');
+
+// reset the value of 'foo' to be 'baz'
+$uri->setQuery('foo', 'baz');
+
+// add a new query key called 'zim' with a value of 'gir'
+$uri->setQuery('zim', 'gir');
+
+// get the new URI string
+$href = $uri->export();
+
+// $href => 'http://example.com/index.php?foo=baz&zim=gir'
+</code>

@@ -1,0 +1,41 @@
+protected  $_config
+
+User-provided configuration.
+
+Each key corresponds directly with a valid form tag
+attribute; you can add or remove as you wish.  Note that
+although 'action' defaults to null, it will be replaced
+in the constructor with Solar::server('REQUEST_URI').
+
+Keys are:
+
+action => (string) The form action attribute; defaults to null,
+which is treated as $_SERVER['REQUEST_URI'].
+
+method => (string) The form method attribute; defaults to 'post'.
+
+enctype => (string) The form encoding type; defaults to
+'multipart/form-data'.
+
+When constructing a Solar_Form object, each configuration
+key represents a <form> tag attribute.  All config keys are
+copied into the Solar_Form::$attribs property on instantiation.
+For example:
+     *
+<code type="php">
+$config = array(
+    'attribs' => array(
+        'method' => 'get',
+        'action' => 'http://example.com/solar_form.php',
+    ),
+);
+$form = Solar::factory('Solar_Form', $config);
+     *
+
+// now $form->attribs is an array(
+//     'method' => 'get',
+//     'action' => 'http://example.com/solar_form.php',
+// );
+</code>
+     *
+@var array

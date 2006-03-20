@@ -1,0 +1,16 @@
+HomePage | The Solar_Cache_Memcache Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_memcache
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  delete()
+  deleteAll()
+  entry()
+  fetch()
+  life()
+  locale()
+  save()

@@ -21,7 +21,7 @@
 $uri = Solar::factory('Solar_Uri');
 ?>
 <!-- list of tags in use -->
-<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
+<div style="float: right; margin: 0 12px; padding: 8px; border: 1px solid gray; background: #eee;">
     <?php
         /** The list of tags in the system */
         include $this->template('browse/tags.part.php');
@@ -29,12 +29,14 @@ $uri = Solar::factory('Solar_Uri');
 </div>
 
 <!-- ordering -->
-<div style="float: right; margin: 12px; padding: 8px; border: 1px solid gray; background: #eee;">
+<div style="float: right; margin: 0 12px; padding: 8px; border: 1px solid gray; background: #eee;">
     <?php
         /** The order-by links */
         include $this->template('browse/order.part.php');
     ?>
 </div>
+
+<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 
 <!-- results -->
 <div style="float: left;">
@@ -63,9 +65,9 @@ $uri = Solar::factory('Solar_Uri');
             $prev = $uri->export();
             $uri->setQuery('page', $tmp + 1);
             $next = $uri->export();
-            if ($this->page > 1) echo $this->anchor($prev, 'OP_PREVIOUS') . ' | ';
+            if ($this->page > 1) echo $this->anchor($prev, 'SUBMIT_PREVIOUS') . ' | ';
             echo $this->escape("Page {$this->page} of {$this->pages}");
-            if ($this->page < $this->pages) echo ' | ' . $this->anchor($next, 'OP_NEXT');
+            if ($this->page < $this->pages) echo ' | ' . $this->anchor($next, 'SUBMIT_NEXT');
         ?> ]</strong></p>
         
     <?php else: ?>

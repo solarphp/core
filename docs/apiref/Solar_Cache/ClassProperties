@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Cache::$_config -- User-provided configuration.
+
+* Solar_Cache::$_driver -- The instantiated driver object.
+
+++ Private
+
+None.

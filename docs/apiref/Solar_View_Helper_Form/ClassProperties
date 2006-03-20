@@ -1,0 +1,29 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_Form::$_attribs -- Attributes for the form tag.
+
+* Solar_View_Helper_Form::$_config -- User-provided configuration values.
+
+* Solar_View_Helper_Form::$_default_attribs -- *
+
+* Solar_View_Helper_Form::$_default_info -- *
+
+* Solar_View_Helper_Form::$_disable -- Forcibly disable (or enable) elements?
+
+* Solar_View_Helper_Form::$_feedback -- Collection of form-level feedback messages.
+
+* Solar_View_Helper_Form::$_hidden -- Collection of hidden elements.
+
+* Solar_View_Helper_Form::$_stack -- *
+
+* Solar_View_Helper_Form::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

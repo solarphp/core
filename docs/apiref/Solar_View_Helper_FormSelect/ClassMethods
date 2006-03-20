@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_FormSelect::__construct() -- Constructor.
+
+* Solar_View_Helper_FormSelect::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_FormSelect::formSelect() -- Generates 'select' list of options.
+
+* Solar_View_Helper_FormSelect::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_FormSelect::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormSelect::_prepare() -- Prepares an info array and imports to the properties.
+
+++ Private
+
+None.

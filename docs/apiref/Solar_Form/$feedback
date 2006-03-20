@@ -1,0 +1,16 @@
+public string|array $feedback
+
+Overall feedback about the state of the form.
+
+The \\$feedback\\ array stores feedback messages for
+the form itself (not for individual elements). For example,
+"Saved successfully." or "Please correct the noted errors."
+
+If you like, you can set this to an array and add multiple
+feedback messages.
+
+Note that the $feedback property related the form itself,
+and not to the individual elements.  Use this to convey
+the state of the form as a whole to the end user; e.g.,
+'Your input was saved', 'Please correct the information below',
+'Comment held for moderation', and so on.

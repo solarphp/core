@@ -1,0 +1,29 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Auth::__construct() -- Constructor.
+
+* Solar_User_Auth::addFlash() -- Appends a "read-once" session value for this class and key.
+
+* Solar_User_Auth::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Auth::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
+
+* Solar_User_Auth::locale() -- Looks up locale strings based on a key.
+
+* Solar_User_Auth::reset() -- Resets any authentication data in the session.
+
+* Solar_User_Auth::setFlash() -- Sets a "read-once" session value for this class and a key.
+
+* Solar_User_Auth::start() -- Start a session with authentication.
+
+* Solar_User_Auth::valid() -- Revalidates any current authentication and updates idle time.
+
+++ Protected
+
+* Solar_User_Auth::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

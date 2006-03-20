@@ -1,0 +1,21 @@
+<function>
+
+access:  static protected
+
+name: _dispelSybase
+
+param: string, &$value
+
+return: void
+
+</function>
+
+A str_replace() for Sybase quotes; supports array_walk_recursive().
+
+* Parameters:
+
+ * string //$value//: The value to dispel Sybase quotes from.
+
+* Returns void
+
+A str_replace() for Sybase quotes; supports array_walk_recursive().

@@ -1,0 +1,104 @@
++ Getting Started with Solar
+
+++ Initial Installation
+
++++ Download and install via PEAR
+
+<code type="bash">
+$ pear channel-discover solarphp.com
+$ pear install Solar/Solar-devel
+...
+</code>
+
++++ Set up the front-controller
+
+<code type="bash">
+$ cd /var/www/htdocs
+$ vi index.php
+</code>
+
+<code type="php">
+// Path to PEAR libraries, where Solar is installed
+set_include_path('/usr/local/lib/pear');
+
+// Load and start Solar
+require_once 'Solar.php';
+Solar::start();
+
+// Instantiate and run the front controller
+$front = Solar::factory('Solar_Controller_Front');
+$front->display();
+
+// Done!
+Solar::stop();
+</code>
+
+
++++ Set up the public layouts directory
+
+<code type="bash">
+$ cd /var/www/htdocs
+$ mkdir -p public/Solar
+$ ln -s \
+  /usr/local/lib/pear/Solar/Layouts/Public \
+  public/Solar/Layouts
+</code>
+
+
++++ Set up a minimal config file
+
+<code type="bash">
+$ cd /var/www/htdocs
+$ vi Solar.config.php
+</code>
+
+<code type="php">
+$config = array();
+
+// SQL connection
+$config['Solar_Sql'] = array(
+	'class' => 'Solar_Sql_Driver_Mysql',
+	'host'  => '127.0.0.1',
+	'user'  => 'username',
+	'pass'  => 'password',
+	'name'  => 'database',
+);
+
+// Your front controller href
+$config['Solar_Uri']['action'] = '/index.php';
+
+// Your public directory href
+$config['Solar_Uri']['public'] = '/public';
+
+// Done!
+return $config;
+</code>
+    
+++ Browse to "Hello World"
+
+http://example.com/index.php/hello
+
+
+++ Move your config file outside the web root
+
+<code type="bash">
+$ cd /var/www/htdocs
+$ mv Solar.config.php /var/www/conf
+$ vi index.php
+</code>
+
+<code type="php">
+// Path to PEAR libraries, where Solar is installed
+set_include_path('/usr/local/lib/pear');
+
+// Load and start Solar
+require_once 'Solar.php';
+Solar::start('/var/www/conf/Solar.config.php');
+
+// Instantiate and run the front controller
+$front = Solar::factory('Solar_Controller_Front');
+$front->display();
+
+// Done!
+Solar::stop();
+</code>

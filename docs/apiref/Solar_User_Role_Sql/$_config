@@ -1,0 +1,16 @@
+protected  $_config
+
+User-supplied configuration values.
+
+Keys are:
+
+'sql' => (string|array) A string Solar::registry() object name, or a 
+Solar::factory() config array.
+
+'table' => (string) The table where roles are stored.
+
+'username_col' => (string) The column of usernames.
+
+'rolename_col' => (string) The column of roles.
+
+@var array

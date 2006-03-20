@@ -1,0 +1,35 @@
+<function>
+
+access:  static protected
+
+name: _apr1
+
+param: unknown, $plain
+
+param: unknown, $salt
+
+return: unknown
+
+</function>
+
+APR compatible MD5 encryption.
+
+* Parameters:
+
+ * unknown //$plain//: 
+
+ * unknown //$salt//: 
+
+* Returns unknown: unknown
+
+APR compatible MD5 encryption.
+     *
+@author Mike Wallner <mike@php.net>
+
+@author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
+
+@param string $plain plaintext to crypt
+
+@param string $salt the salt to use for encryption
+
+@return mixed

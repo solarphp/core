@@ -1,0 +1,21 @@
+This method lets you set the value of a path-info position.
+
+<code type="php">
+$uri = Solar::factory('Solar_Uri');
+
+$href = 'http://example.com/index.php/more/info';
+$uri->import($href);
+
+// now the $query->info property is array('more', 'info');
+
+// let's change the value of position 0.
+$uri->setInfo(0, 'something');
+
+// and let's add a position 2
+$uri->setInfo(2, 'else');
+
+// now when we export, we get...
+$new_href = $uri->export();
+
+// $new_href: 'http://example.com/index.php/something/info/else'
+</code>

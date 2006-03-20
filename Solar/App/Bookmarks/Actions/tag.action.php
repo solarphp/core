@@ -50,15 +50,15 @@ $this->owner_handle = null; // requested owner_handle
 $this->tags         = $tags; // the requested tags
 $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags
 
-// use the 'browse' view and site layout
+// use the 'browse' view
 $this->_view = 'browse';
-$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
 
 // RSS feed link for the page
 $link = Solar::factory('Solar_Uri');
-$link->setInfo(1, 'tagFeed');
-$this->_layout['head']['link']['rss'] = array(
+$link->setInfo(1, 'tag-feed');
+
+// set the RSS feed link ... move to view script?
+$this->layout_link[] = array(
     'rel'   => 'alternate',
     'type'  => 'application/rss+xml',
     'title' => Solar::server('PATH_INFO'),

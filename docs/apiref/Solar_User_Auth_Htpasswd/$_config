@@ -1,0 +1,9 @@
+protected  $_config
+
+User-provided configuration values.
+
+Keys:
+
+file => (string) Path to password file.
+
+@var array

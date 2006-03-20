@@ -1,0 +1,76 @@
+++ Groups At A Glance
+
+* Core
+ 
+ * Solar::start()
+ 
+ * Solar::stop()
+ 
+ * Solar::config()
+ 
+ * Solar::$config
+ 
+* Localization
+ 
+ * Solar::setLocale()
+ 
+ * Solar::getLocale()
+ 
+ * Solar::locale()
+ 
+ * Solar::$locale
+ 
+* Objects and Classes
+
+ * Solar::loadClass()
+ 
+ * Solar::factory()
+ 
+ * Solar::dependency()
+ 
+* Registry
+
+ * Solar::register()
+ 
+ * Solar::inRegistry()
+ 
+ * Solar::registry()
+ 
+ * Solar::$registry
+ 
+* Superglobals
+ 
+ * Solar::get()
+ 
+ * Solar::post()
+ 
+ * Solar::cookie()
+ 
+ * Solar::server()
+ 
+ * Solar::session()
+ 
+ * Solar::pathinfo()
+
+* Read-Once Flashes
+
+ * Solar::setFlash()
+ 
+ * Solar::addFlash()
+ 
+ * Solar::getFlash()
+
+* File-Related
+
+ * Solar::fileExists()
+ 
+ * Solar::run()
+ 
+ * Solar::fixdir()
+
+* Other
+ 
+ * Solar::apiVersion()
+
+ * Solar::dump()
+ 

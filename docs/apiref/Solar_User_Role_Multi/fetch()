@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: unknown, $user
+
+return: unknown
+
+</function>
+
+Fetch the roles from each of the drivers.
+
+* Parameters:
+
+ * unknown //$user//: 
+
+* Returns unknown: unknown
+
+Fetch the roles from each of the drivers.
+     *
+@param string $user Username to get roles for.
+
+@return mixed An array of discovered roles.

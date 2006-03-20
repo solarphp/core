@@ -38,22 +38,21 @@ class Solar_View_Helper_Script extends Solar_View_Helper {
      * 
      * @param string $src The source href for the script.
      * 
-     * @param string $type The script type (default 'text/javascript').
-     * 
      * @param array $attribs Additional attributes for the <script> tag.
      * 
      * @return string The <script></script> tag.
      * 
      */
-    public function script($src, $type ='text/javascript', $attribs = null)
+    public function script($src, $attribs = null)
     {
         settype($attribs, 'array');
         unset($attribs['src']);
-        unset($attribs['type']);
         
         $src = $this->_view->publicHref($src);
         
-        $type = $this->_view->escape($type);
+        if (empty($attribs['type'])) {
+            $attribs['type'] = 'text/javascript';
+        }
         
         return '<script src="$src" type="$type"'
              . $this->_view->attribs($attribs) . '></script>';

@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Auth_Sql::__construct() -- Constructor.
+
+* Solar_User_Auth_Sql::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Auth_Sql::locale() -- Looks up locale strings based on a key.
+
+* Solar_User_Auth_Sql::valid() -- Validate a handle and passwd.
+
+++ Protected
+
+* Solar_User_Auth_Sql::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

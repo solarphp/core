@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_App_Hello
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-provided configuration values.
+
+* Returns Solar_App_Hello: Solar_App_Hello instance
+
+Constructor.

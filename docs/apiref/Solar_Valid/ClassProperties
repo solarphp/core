@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Valid::$_config -- User-provided configuration values.
+
+* Solar_Valid::$_custom -- Container for custom callable validator objects.
+
+++ Private
+
+None.

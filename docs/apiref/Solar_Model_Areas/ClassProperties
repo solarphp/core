@@ -1,0 +1,25 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Model_Areas::$_col -- The column specification array for all columns in this table.
+
+* Solar_Model_Areas::$_config -- User-provided configuration.
+
+* Solar_Model_Areas::$_idx -- The index specification array for all indexes on this table:
+
+* Solar_Model_Areas::$_name -- The table name.
+
+* Solar_Model_Areas::$_order -- The default order when fetching rows.
+
+* Solar_Model_Areas::$_paging -- The numer of rows per page when selecting.
+
+* Solar_Model_Areas::$_sql -- The SQL object.
+
+++ Private
+
+None.

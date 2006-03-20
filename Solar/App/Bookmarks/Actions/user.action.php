@@ -32,28 +32,6 @@ $order = $this->_getOrder();
 // which page number?
 $page = $this->_query('page', 1);
 
-// assign data for the layout
-$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
-
-// RSS link for the page
-$link = Solar::factory('Solar_Uri');
-$link->setInfo(1, 'userFeed');
-
-if ($tags) {
-    // there are tags requested, so the RSS should show all pages
-    // (i.e., page zero) and ignore the rows-per-page settings.
-    $link->setQuery('page', 'all');
-    $link->clearQuery('rows_per_page');
-}
-
-$this->_layout['head']['link']['rss'] = array(
-    'rel'   => 'alternate',
-    'type'  => 'application/rss+xml',
-    'title' => Solar::server('PATH_INFO'),
-    'href'  => $link->export(),
-);
-
 // get the list of results
 $this->list = $this->_bookmarks->fetchAll($tags, $owner_handle, $order, $page);
 
@@ -73,5 +51,23 @@ $this->page         = $page;
 $this->owner_handle = $owner_handle; // requested owner_handle
 $this->tags         = $tags; // the requested tags
 $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags for this user
+
+// set the RSS feed link for the layout
+$uri = Solar::factory('Solar_Uri');
+$uri->setInfo(1, 'user-feed');
+
+if ($tags) {
+    // there are tags requested, so the RSS should show all pages
+    // (i.e., page zero) and ignore the rows-per-page settings.
+    $uri->setQuery('page', 'all');
+    $uri->clearQuery('rows_per_page');
+}
+
+$this->layout_link[] = array(
+    'rel'   => 'alternate',
+    'type'  => 'application/rss+xml',
+    'title' => Solar::server('PATH_INFO'),
+    'href'  => $uri->export(),
+);
 
 ?>

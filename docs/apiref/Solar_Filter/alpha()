@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: alpha
+
+param: mixed, $value
+
+return: string
+
+</function>
+
+Removes non-alphabetic characters.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+* Returns string: The filtered value.
+
+Removes non-alphabetic characters.

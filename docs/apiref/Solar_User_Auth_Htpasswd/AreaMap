@@ -1,0 +1,12 @@
+HomePage | The Solar_User_Auth_Htpasswd Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+ ClassMethods | Class Methods
+  _64()
+  __construct()
+  _apr1()
+  _exception()
+  apiVersion()
+  locale()
+  valid()

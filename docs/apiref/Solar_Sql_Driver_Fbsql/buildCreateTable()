@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: buildCreateTable
+
+param: string, $name
+
+param: string, $cols
+
+return: mixed
+
+</function>
+
+Builds a CREATE TABLE statment.
+
+* Parameters:
+
+ * string //$name//: The table name to create.
+
+ * string //$cols//: The column definitions.
+
+* Returns mixed: An SQL-safe quoted value.
+
+Builds a CREATE TABLE statment.
+
+We use this so that certain drivers can append table types
+to the creation statment (e.g. MySQL).

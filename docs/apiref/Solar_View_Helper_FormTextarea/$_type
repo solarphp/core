@@ -1,0 +1,3 @@
+protected string $_type
+
+The form element type (text, radio, etc).

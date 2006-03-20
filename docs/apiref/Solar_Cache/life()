@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: life
+
+return: int
+
+</function>
+
+Returns the cache lifetime in seconds.
+
+* Parameters: none.
+
+* Returns int: The cache lifetime in seconds.
+
+Returns the cache lifetime in seconds.

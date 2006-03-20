@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config
+
+return: Solar_View_Helper_PublicHref
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_View_Helper_PublicHref: Solar_View_Helper_PublicHref instance
+
+Constructor.

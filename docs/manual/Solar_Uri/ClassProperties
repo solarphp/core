@@ -1,0 +1,29 @@
+The Solar_Uri class has a number of public properties, all related to the parsed URI processed by Solar_Uri::import().  They are:
+
+||~ Name ||~ Type ||~ Description ||
+|| \\schema\\ || string || The schema protocol; e.g.: http, https, ftp, mailto ... ||
+|| \\host\\ || string || The host name; e.g.: example.com ||
+|| \\user\\ || string || The username for the URI ||
+|| \\pass\\ || string || The password for the URI ||
+|| \\path\\ || string || The file path portion of the URI, including the page or script name ||
+|| \\info\\ || array || A sequential array of path-info elements ||
+|| \\query\\ || array || An associative array of query terms ||
+|| \\fragment\\ || string || The anchor or page fragment being addressed ||
+
+As an example, the following URI would parse into these properties:
+
+<code>
+http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor
+...
+schema   => 'http'
+host     => 'example.com'
+user     => 'anonymous'
+pass     => 'guest'
+
+path     => '/path/to/index.php'
+info     => array('foo', 'bar')
+query    => array('baz' => 'dib')
+fragment => 'anchor'
+</code>
+
+Although methods exist to let you manipulate the query and info components (c.f. the QueryMethods and InfoMethods pages), you are free to access all these properties directly if you wish.

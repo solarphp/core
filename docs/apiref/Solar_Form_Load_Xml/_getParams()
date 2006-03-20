@@ -1,0 +1,27 @@
+<function>
+
+access:   protected
+
+name: _getParams
+
+param: unknown, $params
+
+return: unknown
+
+</function>
+
+Get parameters for a filter or validation rule
+
+* Parameters:
+
+ * unknown //$params//: 
+
+* Returns unknown: unknown
+
+Get parameters for a filter or validation rule
+     *
+@access protected
+     *
+@param array
+     *
+@return array

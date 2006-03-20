@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_User_Auth_Mail::$_config -- User-supplied configuration values.
+
+++ Private
+
+None.

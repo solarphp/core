@@ -1,0 +1,3 @@
+public object $auth
+
+User authentication object.

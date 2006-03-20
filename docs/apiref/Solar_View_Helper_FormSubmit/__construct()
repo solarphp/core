@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_View_Helper_FormSubmit
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_View_Helper_FormSubmit: Solar_View_Helper_FormSubmit instance
+
+Constructor.

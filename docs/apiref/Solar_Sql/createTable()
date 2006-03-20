@@ -1,0 +1,37 @@
+<function>
+
+access:   public
+
+name: createTable
+
+param: string, $table
+
+param: array, $cols
+
+return: string
+
+</function>
+
+Creates a table.
+
+* Parameters:
+
+ * string //$table//: The name of the table to create.
+
+ * array //$cols//: Array of columns to create.
+
+* Returns string: An SQL string.
+
+Creates a table.
+
+The $cols parameter should be in this format:
+
+$cols = array(
+  'fieldOne' => array(
+    'type'    => bool|char|int|etc,
+    'size'    => total length for char|varchar|numeric
+    'scope'   => decimal places for numeric
+    'require' => true|false,
+  ),
+  'fieldTwo' => array(...)
+);

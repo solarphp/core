@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Exception_IdxNoColumns::__construct() -- Constructor.
+
+* Solar_Sql_Exception_IdxNoColumns::__toString() -- Custom string output.
+
+* Solar_Sql_Exception_IdxNoColumns::getClass() -- Gets the class that threw the exception.
+
+* Solar_Sql_Exception_IdxNoColumns::getClassCode() -- Gets the class and code together.
+
+* Solar_Sql_Exception_IdxNoColumns::getCode() -- 
+
+* Solar_Sql_Exception_IdxNoColumns::getFile() -- 
+
+* Solar_Sql_Exception_IdxNoColumns::getInfo() -- Gets user-defined information.
+
+* Solar_Sql_Exception_IdxNoColumns::getLine() -- 
+
+* Solar_Sql_Exception_IdxNoColumns::getMessage() -- 
+
+* Solar_Sql_Exception_IdxNoColumns::getTrace() -- 
+
+* Solar_Sql_Exception_IdxNoColumns::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Sql_Exception_IdxNoColumns::__clone() --

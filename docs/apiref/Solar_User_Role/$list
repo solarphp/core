@@ -1,0 +1,3 @@
+public array $list
+
+A convenient reference to $_SESSION['Solar_User_Role'].

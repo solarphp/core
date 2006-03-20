@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_Debug_Var::__construct() -- Constructor.
+
+* Solar_Debug_Var::apiVersion() -- Reports the API version for this class.
+
+* Solar_Debug_Var::dump() -- Returns the output of "var_dump()" with a label.
+
+* Solar_Debug_Var::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Debug_Var::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

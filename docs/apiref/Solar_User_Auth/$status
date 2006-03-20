@@ -1,0 +1,17 @@
+public int $status
+
+Convenience reference to $_SESSION['Solar_User_Auth']['status'].
+
+This is the status code of the current user authentication; the string
+codes are:
+
+ANON => The user is anonymous/unauthenticated (no attempt to 
+authenticate)
+
+EXPIRED => The max time for authentication has expired
+
+IDLED => The authenticated user has been idle for too long
+
+VALID => The user is authenticated and has not timed out
+
+WRONG => The user attempted authentication but failed

@@ -1,0 +1,9 @@
++ The Solar_Form Class
+
+Class for hinting how to build forms.
+
+This is technically a pseudo-form class.   It stores information for how
+to build a form, but does not perform output.  Will validate data
+in the form and generate feedback messages.
+
+Built for use primarly with multiple Solar_Sql_Entity extended classes.

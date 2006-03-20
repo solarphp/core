@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: import
+
+param: string, $uri, NULL
+
+return: void
+
+</function>
+
+Imports a URI string (by default, the current URI) into the object.
+
+* Parameters:
+
+ * string //$uri//: The URI to parse.  If null, defaults to the current URI, and retrives path_info values; if not null, cannot retrieve path_info values.
+
+* Returns void
+
+Imports a URI string (by default, the current URI) into the object.

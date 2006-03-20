@@ -1,0 +1,36 @@
+<function>
+
+access:   public
+
+name: fetchAll
+
+param: int, $part_of, NULL
+
+param: string|array, $tags, NULL
+
+param: string|array, $order, NULL
+
+param: int, $page, NULL
+
+return: array
+
+</function>
+
+Fetch a list of comments from the content store.
+
+* Parameters:
+
+ * int //$part_of//: Fetch comments that are "part of" this node ID; if blank, fetches all comments on all nodes.
+
+ * string|array //$tags//: Fetch comments with all these tags; if empty, fetches for all tags.
+
+ * string|array //$order//: Order in this fashion; if empty, orders by creation-timestamp ascending (oldest first).
+
+ * int //$page//: Which page-number of results to fetch.
+
+* Returns array: The list of comments.
+
+Fetch a list of comments from the content store.
+
+You can specify that comments are "part_of" another node, and
+any tags on comments.

@@ -22,15 +22,15 @@
  * Example usage:
  * 
  * <code>
- * $opts = array(
- *     'class' => 'Solar_Sql_Driver_Mysql',
+ * $config = array(
+ *     'driver' => 'Solar_Sql_Driver_Mysql',
  *     'host' => '127.0.0.1',
  *     'user' => 'pmjones',
  *     'pass' => '********',
  *     'name' => 'test'
  * );
  * 
- * $sql = Solar::factory('Solar_Sql', $opts);
+ * $sql = Solar::factory('Solar_Sql', $config);
  * </code>
  * 
  * You should consider using Solar_Sql_Table for handling insert, update,
@@ -52,7 +52,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * class => (string) Driver information class, e.g. 'Solar_Sql_Driver_Mysql'.
+     * driver => (string) Driver class, e.g. 'Solar_Sql_Driver_Mysql'.
      * 
      * host => (string) Host specification (typically 'localhost').
      * 
@@ -70,13 +70,13 @@ class Solar_Sql extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'class' => 'Solar_Sql_Driver_Sqlite',
-        'host'  => '127.0.0.1',
-        'port'  => null,
-        'user'  => null,
-        'pass'  => null,
-        'name'  => null,
-        'mode'  => null,
+        'driver' => 'Solar_Sql_Driver_Sqlite',
+        'host'   => '127.0.0.1',
+        'port'   => null,
+        'user'   => null,
+        'pass'   => null,
+        'name'   => null,
+        'mode'   => null,
     );
     
     /**
@@ -139,10 +139,10 @@ class Solar_Sql extends Solar_Base {
         // basic construction
         parent::__construct($config);
         
-        // create the driver-info object
-        $opts = $this->_config;
-        unset($opts['class']);
-        $this->_driver = Solar::factory($this->_config['class'], $opts);
+        // create the driver object
+        $config = $this->_config;
+        unset($config['driver']);
+        $this->_driver = Solar::factory($this->_config['driver'], $config);
     }
     
     /**

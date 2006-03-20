@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: cols
+
+param: unknown, $spec
+
+return: void
+
+</function>
+
+Add un-mapped columns to the query.
+
+* Parameters:
+
+ * unknown //$spec//: 
+
+* Returns void
+
+Add un-mapped columns to the query.

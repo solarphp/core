@@ -17,14 +17,15 @@
  * 
  */
 ?>
+<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <h2><?php echo $this->getText('TITLE_ADD_NEW') ?></h2>
 
 <p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php echo $this->form()
     ->auto($this->formdata)
-    ->hidden(array('name' => 'op', 'value' => $this->getTextRaw('OP_SAVE')))
-    ->submit(array('name' => 'op', 'value' => $this->getTextRaw('OP_SAVE')))
-    ->submit(array('name' => 'op', 'value' => $this->getTextRaw('OP_CANCEL')))
+    ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
+    ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
+    ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_CANCEL')))
     ->fetch();
 ?>

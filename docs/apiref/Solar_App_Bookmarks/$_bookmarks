@@ -1,0 +1,3 @@
+protected Solar_Content_Bookmarks $_bookmarks
+
+A bookmarks node interaction manager.

@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _forward
+
+param: string, $action
+
+return: void
+
+</function>
+
+Forwards to an action script.
+
+* Parameters:
+
+ * string //$action//: The action name.
+
+* Returns void
+
+Forwards to an action script.

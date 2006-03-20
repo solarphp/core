@@ -1,0 +1,5 @@
+protected string $_locale_code
+
+The current locale code being used by Solar.
+
+Default value is 'en_US'.

@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: int, $mode, 2
+
+return: array
+
+</function>
+
+Fetches one row from the result source.
+
+* Parameters:
+
+ * int //$mode//: A PDO::FETCH_* constant to specify how the row should be returned; default is PDO::FETCH_ASSOC.
+
+* Returns array: An array of data from the fetched row.
+
+Fetches one row from the result source.
+
+If a row name has double-underscores, the result is placed into a
+sub-array named for the part before the double-underscores.  For
+example, if the row-name is "example__row_name", then you would
+get back example['row_name'].
+
+When combined with the automated deconfliction in
+Solar_Sql_Select, this allows you to select from multiple tables
+and segregate the columns from different tables automatically into
+separate arrays.

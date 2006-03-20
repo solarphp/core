@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Exception_FileNotFound::__construct() -- Constructor.
+
+* Solar_Exception_FileNotFound::__toString() -- Custom string output.
+
+* Solar_Exception_FileNotFound::getClass() -- Gets the class that threw the exception.
+
+* Solar_Exception_FileNotFound::getClassCode() -- Gets the class and code together.
+
+* Solar_Exception_FileNotFound::getCode() -- 
+
+* Solar_Exception_FileNotFound::getFile() -- 
+
+* Solar_Exception_FileNotFound::getInfo() -- Gets user-defined information.
+
+* Solar_Exception_FileNotFound::getLine() -- 
+
+* Solar_Exception_FileNotFound::getMessage() -- 
+
+* Solar_Exception_FileNotFound::getTrace() -- 
+
+* Solar_Exception_FileNotFound::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Exception_FileNotFound::__clone() --

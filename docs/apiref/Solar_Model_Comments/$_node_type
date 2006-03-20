@@ -1,0 +1,3 @@
+protected object $_node_type
+
+The node type for all comments.

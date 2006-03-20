@@ -42,8 +42,8 @@ class Solar_User_Role extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'class'   => 'Solar_User_Role_None',
-        'options' => null,
+        'driver'  => 'Solar_User_Role_None',
+        'config'  => null,
         'refresh' => false,
     );
     
@@ -90,8 +90,8 @@ class Solar_User_Role extends Solar_Base {
         
         // instantiate a driver object
         $this->_driver = Solar::factory(
-            $this->_config['class'],
-            $this->_config['options']
+            $this->_config['driver'],
+            $this->_config['config']
         );
         
         // make sure we have a session value and reference to it.

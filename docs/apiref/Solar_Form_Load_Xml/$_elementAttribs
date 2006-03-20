@@ -1,0 +1,4 @@
+protected array $_elementAttribs
+
+Array of element attributes; used by {@link fetch()} to get element
+attributes

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Sql_Exception_TableNotCreated
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Sql_Exception_TableNotCreated: Solar_Sql_Exception_TableNotCreated instance
+
+Constructor.

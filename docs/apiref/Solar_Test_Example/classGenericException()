@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: classGenericException
+
+return: unknown
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns unknown: unknown

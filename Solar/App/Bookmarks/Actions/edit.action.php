@@ -71,19 +71,22 @@ $form = $this->_bookmarks->form($item);
 $form->populate();
 
 // what operation are we performing?
-$op = Solar::post('op');
+$submit = Solar::post('submit');
 
 // OP: Save
-if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
     
     $values = $form->values();
     $data = $values['bookmark'];
     
-    // force a user_id
+    // force owner and editor values
     $data['owner_handle'] = $this->_user->auth->handle;
+    $data['editor_handle'] = $this->_user->auth->handle;
     
     // save the data
     try {
+        
+        // attempt the save, may throw an exception
         $result = $this->_bookmarks->save($data);
         
         // retain the id
@@ -105,12 +108,12 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
 }
 
 // OP: Cancel
-if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_CANCEL')) {
     $this->_redirect($href);
 }
 
 // OP: Delete
-if ($op == Solar::locale('Solar', 'OP_DELETE')) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_DELETE')) {
     $values = $form->values();
     $id = $values['bookmark']['id'];
     $this->_bookmarks->delete($id);
@@ -128,8 +131,4 @@ $this->backlink = $href;
 
 // keep the backlink for the next page load
 $this->setFlash('backlink', $href);
-
-// assign data for the layout
-$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
 ?>

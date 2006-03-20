@@ -1,0 +1,3 @@
++ The Solar_Form_Load_Table Class
+
+Class for loading form definitions from Solar_Sql_Table columns.

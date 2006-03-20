@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: setInfoString
+
+param: string, $val
+
+return: void
+
+</function>
+
+Sets all elements in the $this->info array from a path_info string.
+
+* Parameters:
+
+ * string //$val//: The path_info string to use; for example, "/foo/bar/baz/dib".  A leading slash will *not* create an empty first element; if the string has a leading slash, it is ignored.
+
+* Returns void
+
+Sets all elements in the $this->info array from a path_info string.
+
+This will overwrite any previous values.

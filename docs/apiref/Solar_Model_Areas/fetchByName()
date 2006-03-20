@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: fetchByName
+
+param: unknown, $name
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$name//: 
+
+* Returns unknown: unknown

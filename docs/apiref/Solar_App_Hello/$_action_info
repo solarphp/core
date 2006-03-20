@@ -1,0 +1,16 @@
+protected string $_action_info
+
+The info variables to use for actions.
+
+The format of this array is key-value pairs, where the key is
+the action name, and the value is a slash-separated string of
+$_info keys.  For example:
+
+$_routes = array(
+    'item' => 'id', // "item/:id"
+    'list' => 'year/month', // "list/:year/:month"
+);
+
+You can then call $this->_info('id') for the 'item' action,
+or $this->_info('year') and $this->_info('month') in the 'list'
+action.

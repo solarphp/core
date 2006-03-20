@@ -1,0 +1,12 @@
+HomePage | The Solar_Content Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $areas
+  $nodes
+  $tags
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  locale()

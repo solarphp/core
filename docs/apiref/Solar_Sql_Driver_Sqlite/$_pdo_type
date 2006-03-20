@@ -1,0 +1,3 @@
+protected string $_pdo_type
+
+The PDO driver type.

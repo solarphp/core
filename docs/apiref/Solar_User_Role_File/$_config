@@ -1,0 +1,5 @@
+protected  $_config
+
+User-supplied configuration values.
+
+@var array

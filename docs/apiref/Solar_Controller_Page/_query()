@@ -1,0 +1,25 @@
+<function>
+
+access:   protected
+
+name: _query
+
+param: string, $key
+
+param: mixed, $val, NULL
+
+return: mixed
+
+</function>
+
+Retrieve they value of a query request key by name.
+
+* Parameters:
+
+ * string //$key//: The query key.
+
+ * mixed //$val//: If the key does not exist, use this value as a default in its place.
+
+* Returns mixed: The value of that query key.
+
+Retrieve they value of a query request key by name.

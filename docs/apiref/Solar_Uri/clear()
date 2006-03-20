@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: clear
+
+return: void
+
+</function>
+
+Clears all URI properties.
+
+* Parameters: none.
+
+* Returns void
+
+Clears all URI properties.

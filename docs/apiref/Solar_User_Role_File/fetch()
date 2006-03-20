@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: unknown, $user
+
+return: unknown
+
+</function>
+
+Fetch the roles.
+
+* Parameters:
+
+ * unknown //$user//: 
+
+* Returns unknown: unknown
+
+Fetch the roles.
+     *
+@param string $user Username to get roles for.
+
+@return array An array of discovered roles.

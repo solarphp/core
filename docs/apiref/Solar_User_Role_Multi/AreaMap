@@ -1,0 +1,11 @@
+HomePage | The Solar_User_Role_Multi Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_driver
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  fetch()
+  locale()

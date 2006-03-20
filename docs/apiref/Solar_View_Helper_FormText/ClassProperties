@@ -1,0 +1,37 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_FormText::$_attribs -- The form element attributes (checked, selected, readonly, etc).
+
+* Solar_View_Helper_FormText::$_config -- User-provided configuration values.
+
+* Solar_View_Helper_FormText::$_disable -- Whether or not the element is to be disabled.
+
+* Solar_View_Helper_FormText::$_feedback -- Feedback messages for the element.
+
+* Solar_View_Helper_FormText::$_info -- Default form element information.
+
+* Solar_View_Helper_FormText::$_keys -- The order in which to process info keys.
+
+* Solar_View_Helper_FormText::$_label -- The form element label.
+
+* Solar_View_Helper_FormText::$_name -- The form element name.
+
+* Solar_View_Helper_FormText::$_options -- Options for checkbox, select, and radio elements.
+
+* Solar_View_Helper_FormText::$_require -- Whether or not the element is required.
+
+* Solar_View_Helper_FormText::$_type -- The form element type (text, radio, etc).
+
+* Solar_View_Helper_FormText::$_value -- The form element value.
+
+* Solar_View_Helper_FormText::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

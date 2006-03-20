@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __destruct
+
+return: unknown
+
+</function>
+
+Destructor.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Destructor.
+
+If the 'auto_display' config key is true, this will display the profile.

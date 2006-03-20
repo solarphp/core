@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: int, $id
+
+return: array
+
+</function>
+
+Fetch one comment (by node ID) from the content store.
+
+* Parameters:
+
+ * int //$id//: The comment node ID.
+
+* Returns array: The comment data.
+
+Fetch one comment (by node ID) from the content store.

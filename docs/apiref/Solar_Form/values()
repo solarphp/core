@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: values
+
+return: array
+
+</function>
+
+Returns the form element values as an array.
+
+* Parameters: none.
+
+* Returns array: An associative array of element values.
+
+Returns the form element values as an array.

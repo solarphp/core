@@ -32,9 +32,9 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * Keys are:
      * 
-     * class => (string) The driver class, e.g. 'Solar_User_Auth_File'.
+     * driver => (string) The driver class, e.g. 'Solar_User_Auth_File'.
      * 
-     * options => (array) Options for the authentication driver.
+     * config => (array) Config for the authentication driver.
      * 
      * expire => (int) Authentication lifetime in seconds; zero is
      * forever.  Default is 14400 (4 hours).
@@ -44,34 +44,34 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * allow => (bool) Whether or not to allow automatic login/logout.
      * 
-     * post_action => (string) Login/logout action key in $_POST array,
-     * e.g. 'op'.
-     * 
      * post_handle => (string) Username key in $_POST array.
      * 
      * post_passwd => (string) Password key in $_POST array.
      * 
-     * action_login => (string) The action-key value to indicate a
-     * login attempt.
+     * post_submit => (string) Submission key in $_POST array,
+     * e.g. 'submit'.
      * 
-     * action_logout => (string) The action-key value to indicate a
-     * logout attempt.
+     * submit_login => (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * 
+     * submit_logout => (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'locale'      => 'Solar/User/Locale/',
-        'class'       => 'Solar_User_Auth_None',
-        'options'     => null,
-        'expire'      => 14400,
-        'idle'        => 1800,
-        'allow'       => true,
-        'post_handle' => 'username',
-        'post_passwd' => 'password',
-        'post_submit' => 'op',
-        'op_login'    => 'login',
-        'op_logout'   => 'logout',
+        'locale'        => 'Solar/User/Locale/',
+        'driver'        => 'Solar_User_Auth_None',
+        'config'        => null,
+        'expire'        => 14400,
+        'idle'          => 1800,
+        'allow'         => true,
+        'post_handle'   => 'handle',
+        'post_passwd'   => 'passwd',
+        'post_submit'   => 'submit',
+        'submit_login'  => null,
+        'submit_logout' => null,
     );
     
     /**
@@ -110,7 +110,8 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * Convenience reference to $_SESSION['Solar_User_Auth']['initial'].
      * 
-     * This is the Unix time at which the handle was authenticated.
+     * This is the Unix time at which the handle was initially
+     * authenticated.
      * 
      * @var int
      * 
@@ -135,7 +136,7 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * WRONG => The user attempted authentication but failed
      * 
-     * @var int
+     * @var string
      * 
      */
     public $status;
@@ -152,11 +153,20 @@ class Solar_User_Auth extends Solar_Base {
     public $handle;
     
     
-    // ----------------------------------------------------------------
-    // 
-    // Public methods.
-    // 
-    // ----------------------------------------------------------------
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config An array of user-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        $this->_config['submit_login']  = $this->locale('SUBMIT_LOGIN');
+        $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        parent::__construct($config);
+    }
+    
     
     /**
      * 
@@ -195,8 +205,8 @@ class Solar_User_Auth extends Solar_Base {
         // already available to them (e.g. single sign-on systems and
         // HTTP-based systems).
         $this->_driver = Solar::factory(
-            $this->_config['class'],
-            $this->_config['options']
+            $this->_config['driver'],
+            $this->_config['config']
         );
         
         // update any current authentication (including idle and expire).
@@ -211,7 +221,7 @@ class Solar_User_Auth extends Solar_Base {
             $submit = Solar::post($this->_config['post_submit']);
             
             // check for a login request.
-            if ($submit == $this->_config['op_login']) {
+            if ($submit == $this->_config['submit_login']) {
                 
                 // check the storage driver to see if the handle
                 // and passwd credentials are valid.
@@ -234,7 +244,7 @@ class Solar_User_Auth extends Solar_Base {
             }
             
             // check for a logout request.
-            if ($submit == $this->_config['op_logout']) {
+            if ($submit == $this->_config['submit_logout']) {
                 // reset the authentication data
                 $this->reset('LOGOUT');
             }
@@ -309,5 +319,60 @@ class Solar_User_Auth extends Solar_Base {
         // flash forward any messages
         $this->setFlash('status_text', $this->locale($this->status));
     }
+    
+    
+    /**
+     * 
+     * Sets a "read-once" session value for this class and a key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The value for the key; previous values will
+     * be overwritten.
+     * 
+     * @return void
+     * 
+     */
+    public function setFlash($key, $val)
+    {
+        Solar::setFlash(get_class($this), $key, $val);
+    }
+    
+    /**
+     * 
+     * Appends a "read-once" session value for this class and key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The flash value to add to the key; this will
+     * result in the flash becoming an array.
+     * 
+     * @return void
+     * 
+     */
+    public function addFlash($key, $val)
+    {
+        Solar::addFlash(get_class($this), $key, $val);
+    }
+    
+    /**
+     * 
+     * Retrieves a "read-once" session value, thereby removing the value.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val If the class and key do not exist, return
+     * this value.  Default null.
+     * 
+     * @return mixed The "read-once" value.
+     * 
+     */
+    public function getFlash($key, $val = null)
+    {
+        return Solar::getFlash(get_class($this), $key, $val);
+    }
+    
 }
 ?>

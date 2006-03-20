@@ -17,7 +17,7 @@
  * 
  */
 ?>
-
+<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <div style="color: red;">
 <?php foreach ($this->err as $text): ?>
     <p><?php echo $this->escape($text) ?></p>

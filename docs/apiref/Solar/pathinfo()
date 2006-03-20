@@ -1,0 +1,25 @@
+<function>
+
+access:  static public
+
+name: pathinfo
+
+param: int, $key, NULL
+
+param: mixed, $default, NULL
+
+return: mixed
+
+</function>
+
+Safely gets the value of $_SERVER['PATH_INFO'] element.
+
+* Parameters:
+
+ * int //$key//: The array element; if null, returns the whole array.
+
+ * mixed //$default//: If the requested array element is not set, return this value.
+
+* Returns mixed: The array element value (if set), or the $default value (if not).
+
+Safely gets the value of $_SERVER['PATH_INFO'] element.

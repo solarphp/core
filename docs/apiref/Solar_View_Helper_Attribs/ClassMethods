@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Attribs::__construct() -- Constructor.
+
+* Solar_View_Helper_Attribs::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_Attribs::attribs() -- Converts an associative array to an attribute string.
+
+* Solar_View_Helper_Attribs::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_Attribs::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

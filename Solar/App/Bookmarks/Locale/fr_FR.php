@@ -31,7 +31,7 @@
 return array(
     'ADD_NEW_BOOKMARK'   => 'Ajouter un nouveau signet.',
     'BACKLINK'           => 'Retour',
-    'BOOKMARKS'          => 'Système de signets Solar',
+    'BOOKMARKS'          => 'Signets',
     'BY'                 => 'par',
     'DRAG_THIS'          => 'Tirez ce lien vers votre barre d\'outils pour marquage rapide',
     'EDIT_ITEM'          => 'Editer le signet',

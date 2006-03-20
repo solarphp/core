@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: setHelperPath
+
+param: unknown, $path, NULL
+
+return: unknown
+
+</function>
+
+Reset the helper directory path stack.
+
+* Parameters:
+
+ * unknown //$path//: 
+
+* Returns unknown: unknown
+
+Reset the helper directory path stack.

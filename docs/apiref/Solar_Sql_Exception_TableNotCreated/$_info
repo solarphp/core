@@ -1,0 +1,3 @@
+protected array $_info
+
+User-defined information array.

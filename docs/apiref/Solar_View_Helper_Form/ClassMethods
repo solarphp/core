@@ -1,0 +1,41 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Form::__call() -- *
+
+* Solar_View_Helper_Form::__construct() -- *
+
+* Solar_View_Helper_Form::addElement() -- *
+
+* Solar_View_Helper_Form::addFeedback() -- *
+
+* Solar_View_Helper_Form::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_Form::auto() -- *
+
+* Solar_View_Helper_Form::beginGroup() -- 
+
+* Solar_View_Helper_Form::disable() -- *
+
+* Solar_View_Helper_Form::endGroup() -- 
+
+* Solar_View_Helper_Form::fetch() -- *
+
+* Solar_View_Helper_Form::form() -- *
+
+* Solar_View_Helper_Form::listFeedback() -- *
+
+* Solar_View_Helper_Form::locale() -- Looks up locale strings based on a key.
+
+* Solar_View_Helper_Form::reset() -- *
+
+* Solar_View_Helper_Form::setAttrib() -- *
+
+++ Protected
+
+* Solar_View_Helper_Form::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

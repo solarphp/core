@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Role_Multi::__construct() -- Constructor.
+
+* Solar_User_Role_Multi::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Role_Multi::fetch() -- Fetch the roles from each of the drivers.
+
+* Solar_User_Role_Multi::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_User_Role_Multi::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

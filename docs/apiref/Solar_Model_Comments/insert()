@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: insert
+
+param: array, $data
+
+return: array
+
+</function>
+
+Insert a new comment node.
+
+* Parameters:
+
+ * array //$data//: The comment data.
+
+* Returns array: The inserted data.
+
+Insert a new comment node.

@@ -799,26 +799,23 @@ class Solar {
     
     /**
      * 
-     * Fixes a directory string for the operating system.
+     * "Fixes" a directory string for the operating system.
      * 
-     * Basically, use slashes anywhere you need a directory separator.
+     * Use slashes anywhere you need a directory separator.
      * Then run the string through fixdir() and the slashes will be converted
-     * to the proper separator (e.g. '\' on Windows).  Also, adds a trailing
-     * separator to the string for you.
+     * to the proper separator (e.g. '\' on Windows).
+     * 
+     * Always adds a final trailing separator.
      * 
      * @param string $dir The directory string to 'fix'.
      * 
-     * @return string The "fixed" directory.
+     * @return string The "fixed" directory string.
      * 
      */
     public static function fixdir($dir)
     {
-        $sep = DIRECTORY_SEPARATOR;
-        $dir = str_replace('/', $sep, $dir);
-        if (substr($dir, -1) != $sep) {
-            $dir .= $sep;
-        }
-        return $dir;
+        $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
+        return rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     
     /**

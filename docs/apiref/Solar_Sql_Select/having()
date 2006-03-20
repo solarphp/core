@@ -1,0 +1,39 @@
+<function>
+
+access:   public
+
+name: having
+
+param: string, $cond
+
+return: void
+
+</function>
+
+Adds a HAVING condition to the query by AND.
+
+* Parameters:
+
+ * string //$cond//: The HAVING condition.
+
+* Returns void
+
+Adds a HAVING condition to the query by AND.
+
+If a value is passed as the second param, it will be quoted
+and replaced into the condition wherever a question-mark
+appears.
+
+Array values are quoted and comma-separated.
+
+<code>
+// simplest but non-secure
+$select->having("COUNT(id) = $count");
+
+// secure
+$select->having('COUNT(id) = ?', $count);
+
+// equivalent security with named binding
+$select->having('COUNT(id) = :count');
+$select->bind('count', $count);
+</code>

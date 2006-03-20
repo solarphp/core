@@ -1,0 +1,61 @@
++ Class Properties
+
+++ Public
+
+* Solar_App_Hello::$code -- The requested locale code.
+
+* Solar_App_Hello::$layout_base -- 
+
+* Solar_App_Hello::$layout_bottom -- 
+
+* Solar_App_Hello::$layout_left -- 
+
+* Solar_App_Hello::$layout_link -- 
+
+* Solar_App_Hello::$layout_meta -- 
+
+* Solar_App_Hello::$layout_object -- 
+
+* Solar_App_Hello::$layout_right -- 
+
+* Solar_App_Hello::$layout_script -- 
+
+* Solar_App_Hello::$layout_style -- 
+
+* Solar_App_Hello::$layout_title -- 
+
+* Solar_App_Hello::$layout_top -- 
+
+* Solar_App_Hello::$list -- The list of available locale codes.
+
+* Solar_App_Hello::$text -- The translated text.
+
+++ Protected
+
+* Solar_App_Hello::$_action -- The action being requested of (performed by) the application.
+
+* Solar_App_Hello::$_action_default -- The default controller action.
+
+* Solar_App_Hello::$_action_info -- The info variables to use for actions.
+
+* Solar_App_Hello::$_config -- User-provided configuration values.
+
+* Solar_App_Hello::$_dir -- Base directory under which actions, views, etc. are located.
+
+* Solar_App_Hello::$_info -- Application request parameters collected from the URI pathinfo.
+
+* Solar_App_Hello::$_layout -- The name of the layout to use for the view, minus the .layout.php suffix.
+
+* Solar_App_Hello::$_layout_dir -- Where the layout directory is located.
+
+* Solar_App_Hello::$_layout_var -- The name of the variable where page content is placed in the layout.
+
+* Solar_App_Hello::$_name -- The short-name of this application.
+
+* Solar_App_Hello::$_query -- Application request parameters collected from the URI query string.
+
+* Solar_App_Hello::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+
+++ Private
+
+None.

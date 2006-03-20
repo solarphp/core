@@ -1,0 +1,121 @@
++ Minimal Application Skeleton
+
+Because Solar is geared toward distributing applications, you need to create your own "vendor" ("master" or "channel") directory where your classes will be stored.  This directory name will be the prefix on all your class names.  It can be anywhere in the file system.
+
+<code type="bash">
+$ mkdir /path/to/Vendor
+</code>
+
+Make sure the front-controller has that directory in the include_path along with Solar itself.
+
+<code type="bash">
+$ vi /var/www/htdocs/index.php
+</code>
+
+<code type="php">
+// Path to PEAR libraries, where Solar is installed,
+// **and** to the Vendor library
+set_include_path('/usr/local/lib/pear:/path/to/Vendor');
+
+// Load and start Solar
+// ...
+</code>
+
+++ Vendor library setup
+
+In general, your vendor library should be similar to the Solar library.  Since we're doing an application skeleton, we'll need a an "App/" directory.
+
+<code type="bash">
+$ cd /path/to/Vendor
+$ mkdir App
+</code>
+
+The Vendor directory now looks like this.
+
+<code>
+Vendor/
+    App/
+</code>
+
+We'll call our application "Example"; it needs a directory, and subdirectories for its Actions and Views. 
+<code type="bash">
+$ cd /path/to/Vendor/App
+$ touch Example.php
+$ mkdir -p Example/Actions Example/Views
+</code>
+
+The Vendor directory now looks like this.
+
+<code>
+Vendor/
+    App/
+        Example.php
+        Example/
+            Actions/
+            Views/
+</code>
+
+++ Page-Controller
+
+Edit your Example.php page controller to make it extend Solar_App; give it a default action of 'index' and a view-variable of 'output'.
+
+<code type="bash">
+$ vi /path/to/Vendor/App/Example.php
+</code>
+
+<code type="php">
+Solar::loadClass('Solar_App');
+class Vendor_App_Example extends Solar_App {
+    protected $_action_default = 'index';
+    public $output = '';
+}
+</code>
+
+++ Index Action and View
+
+Create the 'index' action for the 'Example' page.
+
+<code type="bash">
+$ vi /path/to/Vendor/App/Example/Actions/index.action.php
+</code>
+
+<code type="php">
+$this->output = "I am the vendor example";
+</code>
+
+
+Now create the related view.
+
+<code type="bash">
+$ vi /path/to/Vendor/App/Example/Views/index.view.php
+</code>
+
+<code type="php">
+echo $this->escape($this->output);
+</code>
+
+++ Front-Controller Recongition
+
+Edit Solar.config.php to recognize your vendor directory (along with the Solar directory) for page controllers.
+
+<code type="bash">
+$ vi /path/to/Vendor/App/Example/Views/index.view.php
+</code>
+
+<code type="php">
+$config = array();
+
+// ...
+
+$config['Solar_Controller_Front']['classes'] = array(
+    'Solar_App',
+    'Vendor_App',
+);
+
+// ...
+
+return $config;
+</code>
+
+Now you should be able to browse to http://example.com/index.php/example/ and see some output.
+

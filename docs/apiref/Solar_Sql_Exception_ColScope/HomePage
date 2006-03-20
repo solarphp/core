@@ -1,0 +1,3 @@
++ The Solar_Sql_Exception_ColScope Class
+
+Exception: column scope is too large or too small for its size.

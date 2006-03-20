@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: validate
+
+param: array, $submit, NULL
+
+return: bool
+
+</function>
+
+Performs filtering and validation on each form element.
+
+* Parameters:
+
+ * array //$submit//: The source data array for populating form values as array(name => info); if null, will populate from $_POST or $_GET as determined from the 'method' attribute.
+
+* Returns bool: True if all elements are valid, false if not.
+
+Performs filtering and validation on each form element.
+
+Updates the feedback keys for each element that fails validation.
+Values are either pulled from the submitted form or from the array
+passed in $submit.

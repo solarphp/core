@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: valid
+
+return: boolean
+
+</function>
+
+Revalidates any current authentication and updates idle time.
+
+* Parameters: none.
+
+* Returns boolean: Whether or not authentication is still valid.
+
+Revalidates any current authentication and updates idle time.
+
+Note that if your script runs more than 1 second, it is possible
+that multiple calls to valid() may result in the authentication
+expiring in the middle of the script.  As such, if you only need
+to check that the user is logged in, look at the value of
+$this->status.

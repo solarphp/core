@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Exception_ColNameReserved::$_class -- Class where the exception originated.
+
+* Solar_Sql_Exception_ColNameReserved::$_info -- User-defined information array.
+
+* Solar_Sql_Exception_ColNameReserved::$code -- 
+
+* Solar_Sql_Exception_ColNameReserved::$file -- 
+
+* Solar_Sql_Exception_ColNameReserved::$line -- 
+
+* Solar_Sql_Exception_ColNameReserved::$message -- 
+
+++ Private
+
+None.

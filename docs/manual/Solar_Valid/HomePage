@@ -1,0 +1,37 @@
+Solar_Valid aggregates several validation routines as static
+methods so you can make sure user input matches your requirements.
+This is useful for checking form values and validating database
+fields.
+
+Be sure to check the ClassMethods for a full list of
+valdiation routines.  Note that all the methods are static, so
+you never need to instantiate Solar_Valid (although you can if you
+want to).
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+// get a validation object
+$valid = Solar::factory('Solar_Valid');
+
+// Fetch a copy of the $_GET['name'] value
+$name = Solar::get('name');
+
+// Does it match the "alpha" validation rule?
+// (i.e., A-Z and a-z only).
+if (! $valid->alpha($name)) {
+    echo htmlspecialchars("Name '$name' is not valid.");
+}
+
+
+// Fetch a copy of the $_POST['date'] value
+$date = Solar::post('date');
+
+// Is it an ISO-formatted date?  (Alternatively,
+// it can be completely blank.)
+if (! $valid->isoDate($date, Solar_Valid::OR_BLANK)) {
+    echo "The date must be in 'yyyy-mm-dd' format, or blank.";
+}
+</code>
+

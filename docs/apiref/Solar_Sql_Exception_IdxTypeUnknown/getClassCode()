@@ -1,0 +1,17 @@
+<function>
+
+access: final  public
+
+name: getClassCode
+
+return: unknown
+
+</function>
+
+Gets the class and code together.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Gets the class and code together.

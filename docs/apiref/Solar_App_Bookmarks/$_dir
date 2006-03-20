@@ -1,0 +1,3 @@
+protected string $_dir
+
+Base directory under which actions, views, etc. are located.

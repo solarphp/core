@@ -1,0 +1,3 @@
+protected array $_info
+
+Default form element information.

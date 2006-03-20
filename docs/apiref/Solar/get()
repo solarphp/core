@@ -1,0 +1,25 @@
+<function>
+
+access:  static public
+
+name: get
+
+param: string, $key, NULL
+
+param: mixed, $default, NULL
+
+return: mixed
+
+</function>
+
+Safely gets the value of an element from the $_GET array.
+
+* Parameters:
+
+ * string //$key//: The array element; if null, returns the whole array.
+
+ * mixed //$default//: If the requested array element is not set, return this value.
+
+* Returns mixed: The array element value (if set), or the $default value (if not).
+
+Safely gets the value of an element from the $_GET array.

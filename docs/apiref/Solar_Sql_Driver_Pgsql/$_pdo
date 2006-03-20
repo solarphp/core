@@ -1,0 +1,3 @@
+protected object $_pdo
+
+A portable database object for accessing the RDBMS.

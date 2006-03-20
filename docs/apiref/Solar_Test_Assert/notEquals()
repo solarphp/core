@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: notEquals
+
+param: mixed, $actual
+
+param: mixed, $expect
+
+return: unknown
+
+</function>
+
+Assert that two variables are not equal.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+ * mixed //$expect//: The expected result.
+
+* Returns unknown: unknown
+
+Assert that two variables are not equal.

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Exception_MethodNotCallable
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Exception_MethodNotCallable: Solar_Exception_MethodNotCallable instance
+
+Constructor.

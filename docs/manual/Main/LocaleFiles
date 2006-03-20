@@ -1,0 +1,47 @@
++ Locale Files
+
+Solar is designed with localization support.  This means you can create a locale file for any Solar class and provide your own localized strings for output.
+
+As you scan through the Solar distribution, you will see that many class directories have a \\Locale/\\ subdirectory.  That subdirectory will have at least one file in it, \\en_US.php\\.  That contains the localization strings for the en_US locale.  As Solar gains acceptance, we expect to build more locale files for each localization (e.g., 'de_DE' for German, 'pt_BR' for Brazilian Portuguese, and so on).
+
+As with the ConfigFile, locale files are simply PHP scripts that return an array.  Thus, the simplest possible locale file is an empty array:
+
+<code type="php">
+return array();
+</code>
+
+Each array is composed of a translation key and at least one string value (the translated version of the key).  For example:
+
+<code type="php">
+return array(
+  'TEXT_HELLO' => 'Hello.',
+  'TEXT_APPLE' => 'apple',
+);
+</code>
+
+(When creating a locale file, be sure to follow the NamingConventions regarding translation string keys.)
+
+If this locale file were associated with a class called \\Solar_Example\\, you would retrieve the translated string by calling \\``Solar::locale('Solar_Example', 'TEXT_HELLO')``\\.  Alternatively, if you were working with a class extended from Solar_Base, you would call \\``$this->locale()``\\ with the same parameters (c.f. the Solar_Base::locale() method).
+
+
+++ Plural Forms
+
+Sometimes you need to specify different singular and plural versions of a translation.  In this case, the translation value is an array where the first element is the singular version, and the second element is the plural version.
+
+<code type="php">
+return array(
+  'TEXT_HELLO' => 'Hello.',
+  'TEXT_APPLE' => array('apple', 'apples'),
+);
+</code>
+
+You then call the \\Solar::locale()\\ method with a numeric value, and Solar picks the proper translation based on the number.  For example:
+
+<code type="php">
+$text = Solar::locale('Solar_Example', 'TEXT_APPLE', 1); // returns 'apple'
+$text = Solar::locale('Solar_Example', 'TEXT_APPLE', 5); // returns 'apples'
+</code>
+
+++ Nonexistent Keys
+
+If you use \\Solar::locale()\\ to request a translation key that does not exist, Solar falls back to the default translation keys found in \\Solar/Locale/*\\; if it cannot find them there, it returns the key itself as the translation.

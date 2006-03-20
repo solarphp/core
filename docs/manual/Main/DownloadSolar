@@ -1,0 +1,96 @@
++ Download and Install
+
+++ Requirements
+
+* Please note that Solar is in development and is not yet stable.
+
+* Solar is written to E_STRICT standards for PHP5, and will not work under PHP4.
+
+* Solar comes with support for the following database backends; while not required, you will probably want one of them installed:
+
+ * !FrontBase
+
+ * Microsoft SQL
+
+ * !MySQL
+
+ * !PostgreSQL
+
+ * SQLite
+
+
+++ Install via PEAR
+
+You can use our [http://solarphp.com/channel.php channel server] to install and upgrade.  Using the channel is the preferred method, because it will always install the most-recent version.
+
+First, let PEAR discover the channel server...
+
+<code>
+bash-2.05$ pear channel-discover solarphp.com
+Adding Channel "solarphp.com" succeeded
+Discovery of channel "solarphp.com" succeeded
+bash-2.05$ 
+</code>
+
+... then you can install or upgrade:
+
+<code>
+bash-2.05$ pear install Solar/Solar-devel
+... installation messages follow ...
+
+bash-2.05$ pear upgrade Solar/Solar-devel
+... upgrade messages follow ...
+</code>
+
+Because Solar is still in development, you need to specify the "-devel" flag when installing or upgrading.
+
+
++++ Bundled Documentation
+
+When PEAR installs the Solar classes, it will place the bundled documentation in a different location.  Typically, you will find the classes in \\/path/to/pear/\\, while documentation will be in \\/path/to/pear/docs/Solar/\\.
+
+
++++ Bundled Tests
+
+When PEAR installs the Solar classes, it will place the bundled test files in a different location.  Typically, you will find the classes in \\/path/to/pear/\\, while the test files will be in \\/path/to/pear/tests/Solar/\\.
+
+
++++ Problems?
+
+If you have problems with the channel not delivering the most-recent release, clear your local PEAR cache and try again:
+
+<code>
+bash-2.05$ pear clear-cache
+reading directory
+cache entries cleared
+
+bash-2.05$ pear upgrade Solar/Solar-devel
+... upgrade messages follow ...
+</code>
+
+Alternatively, you can use PEAR to install or upgrade a specific release directly from a tarball, like this:
+
+<code>
+bash-2.05$ pear install http://solarphp.com/get/Solar-0.13.0.tgz
+... installation messages follow ...
+
+bash-2.05$ pear upgrade http://solarphp.com/get/Solar-0.13.0.tgz
+... upgrade messages follow ...
+</code>
+
+
+++ Source via Subversion
+
+You can [http://solarphp.com/svn/ browse the Subversion repository] and do anonymous checkouts:
+
+<code>
+bash-2.05$ svn checkout https://solarphp.com/svn/ solar
+</code>
+
+++ Direct Download
+
+It is possible to download the tarballs directly from our [http://solarphp.com/channel.php channel server interface], but this is not recommended.  Instead, you should use the [http://pear.php.net PEAR] installer that comes with every installation of PHP.  That way, all the necessary installation scripts will run automatically, and the documentation and tests will be placed in the proper directories.
+
+++ Dependencies
+
+Solar is completely self-contained and has no external dependencies.  When you install Solar, you get everything at once: all the libraries, models, and applications that compose Solar.  This helps to avoid "dependency hell" when upgrading your installation.

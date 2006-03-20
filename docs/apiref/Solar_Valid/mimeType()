@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: mimeType
+
+param: mixed, $value
+
+param: unknown, $allowed, NULL
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is formatted as a MIME type.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * unknown //$allowed//: 
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is formatted as a MIME type.

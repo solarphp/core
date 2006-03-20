@@ -1,0 +1,9 @@
+(This method is part of a [http://www.phppatterns.com/docs/design/the_registry registry pattern].  Basically, it allows you to share the same object throughout your application without using globals.)
+
+Once an object has been registered using Solar::register(), this method gets an object from the registry using its unique name.
+
+You can then use Solar::registry() elsewhere in your application to access that same object.
+
+<code type="php">
+$example = Solar::registry('example');
+</code>

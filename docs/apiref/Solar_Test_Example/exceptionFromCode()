@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: exceptionFromCode
+
+param: unknown, $code
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$code//: 
+
+* Returns unknown: unknown

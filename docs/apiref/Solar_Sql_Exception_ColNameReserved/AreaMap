@@ -1,0 +1,22 @@
+HomePage | The Solar_Sql_Exception_ColNameReserved Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_class
+  $_info
+  $code
+  $file
+  $line
+  $message
+ ClassMethods | Class Methods
+  __clone()
+  __construct()
+  __toString()
+  getClass()
+  getClassCode()
+  getCode()
+  getFile()
+  getInfo()
+  getLine()
+  getMessage()
+  getTrace()
+  getTraceAsString()

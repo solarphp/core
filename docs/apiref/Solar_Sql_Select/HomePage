@@ -1,0 +1,53 @@
++ The Solar_Sql_Select Class
+
+Class for SQL select generation and results.
+
+Example usage:
+
+<code>
+$select = Solar::factory('Solar_Sql_Select');
+
+// select these columns
+$select->cols(array(
+  'id',
+    'n_last',
+    'n_first',
+    'adr_street',
+    'adr_city',
+    'adr_region AS state',
+    'adr_postcode AS zip',
+    'adr_country',
+));
+
+// from this table
+$select->from('contacts'); // single or multi
+
+// on these ANDed conditions
+$select->where('n_last = :lastname');
+$select->where('adr_city = :city');
+
+// reverse-ordered by first name
+$select->order('n_first DESC')
+
+// get 50 per page, when we limit by page
+$select->paging(50);
+
+// bind data into the query.
+// remember :lastname and :city in the setWhere() calls above.
+$data = ('lastname' => 'Jones', 'city' => 'Memphis');
+$select->bind($data);
+
+// limit by which page of results we want
+$select->limitPage(1);
+
+// get a Solar_Sql_Result object (the default)
+$result = $select->fetch(); // or fetch('result')
+
+// alternatively, fetch all rows as an array
+$rows = $select->fetch('all');
+
+// find out the count of rows, and how many pages there are.
+// this comes back as an array('count' => ?, 'pages' => ?).
+$total = $select->countPages();
+
+</code>

@@ -1,0 +1,7 @@
+protected array $_config
+
+User-provided configuration values.
+
+Default config keys are:
+
+: \\locale\\ : (string) Directory where locale files for the class are kept

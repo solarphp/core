@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Exception_IdxNameLength::$_class -- Class where the exception originated.
+
+* Solar_Sql_Exception_IdxNameLength::$_info -- User-defined information array.
+
+* Solar_Sql_Exception_IdxNameLength::$code -- 
+
+* Solar_Sql_Exception_IdxNameLength::$file -- 
+
+* Solar_Sql_Exception_IdxNameLength::$line -- 
+
+* Solar_Sql_Exception_IdxNameLength::$message -- 
+
+++ Private
+
+None.

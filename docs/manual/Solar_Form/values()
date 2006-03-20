@@ -1,0 +1,57 @@
+This method takes values from the form elements and returns them as an array.  
+
+In general, you should only retrieve the values after user input has been populated with Solar_Form::populate() and then filtered and validated with Solar_Form::validate().
+
+Let's say we have a set of elements that combine plain and array-based names, and in two different arrays:
+
+<code>
+id
+user[email]
+user[name]
+contact[street]
+contact[city]
+contact[state]
+contact[zip]
+books[author]
+books[title]
+</code>
+
+After the form has been populated and validated, a call to values() would result in something like this:
+
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+// create the form
+$form = Solar::factory('Solar_Form');
+
+// set up the elements
+// ...
+
+// now populate, validate, and retrieve values
+$form->populate();
+$valid = $form->validate();
+
+if ($valid) {
+
+    $values = $form->values();
+    
+    /*
+        Now the $values array looks something like this:
+        $values = array(
+            'id' => '12345',
+            'user' => array(
+                'email' => 'nobody@example.com',
+                'name'  => 'Nobody Example',
+            ),
+            'contact' => array(
+                'street' => '101 Main Street',
+                'city'   => 'Beverly Hills',
+                'state'  => 'CA',
+                'zip'    => '90210'
+            ),
+        );
+    */
+}
+</code>

@@ -1,0 +1,3 @@
++ The Solar_Sql_Driver_Sqlite Class
+
+Class for connecting to SQLite databases.

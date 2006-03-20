@@ -1,0 +1,6 @@
++ The Solar_View_Helper_Form Class
+
+Helper for building CSS-based forms.
+
+This is a fluent class; all method calls except fetch() return
+$this, which means you can chain method calls for easier readability.

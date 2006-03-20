@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_FormButton::__construct() -- Constructor.
+
+* Solar_View_Helper_FormButton::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_FormButton::formButton() -- Generates a 'button' element.
+
+* Solar_View_Helper_FormButton::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_FormButton::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormButton::_prepare() -- Prepares an info array and imports to the properties.
+
+++ Private
+
+None.

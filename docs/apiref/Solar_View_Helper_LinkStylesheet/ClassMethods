@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_LinkStylesheet::__construct() -- Constructor.
+
+* Solar_View_Helper_LinkStylesheet::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_LinkStylesheet::linkStylesheet() -- Returns a <link rel="stylesheet" ... /> tag.
+
+* Solar_View_Helper_LinkStylesheet::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_LinkStylesheet::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

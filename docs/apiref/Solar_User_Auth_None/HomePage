@@ -1,0 +1,7 @@
++ The Solar_User_Auth_None Class
+
+Authenticate against nothing; defaults all authentication to "failed."
+
+@category Solar
+
+@package Solar_User

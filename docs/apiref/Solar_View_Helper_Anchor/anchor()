@@ -1,0 +1,32 @@
+<function>
+
+access:   public
+
+name: anchor
+
+param: unknown, $spec
+
+param: string, $text
+
+param: array, $attribs, array ()
+
+return: string
+
+</function>
+
+Returns an anchor href tag.
+
+* Parameters:
+
+ * unknown //$spec//: 
+
+ * string //$text//: A locale translation key.
+
+ * array //$attribs//: Attributes for the anchor.
+
+* Returns string
+
+Returns an anchor href tag.
+
+If the $text link text is empty, will just return the
+href value, not an <a href="">...</a> tag.

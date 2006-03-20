@@ -1,0 +1,3 @@
+protected Solar_Uri $_uri
+
+Internal URI object for creating links.

@@ -1,0 +1,300 @@
+This method appends one element to the form; if the //element name// already exists (or if the //element name// and //element array name// already exist), the element is reset to reflect the values passed into the method.
+
+All elements are placed into the Solar_Form::$elements public property; if you wish to manipulate that property directly, you may, but this method is generally more reliable.
+
+
+[[toc]]
+
+++ Appending An Element
+
+To append one element to the form, you need three things:  a Solar_Form object, a name for your element, and a description of the element hint information.
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+// create a form object
+$form = Solar::factory('Solar_Form');
+
+// we'll call our element 'email_addr'
+$name = 'email_addr';
+
+// describe the element information hints
+$info = array(
+
+    // the XHTML element type
+    'type' => 'text', 
+    
+    //  a short, human-readable label
+    'label' => 'Your email address:',
+    
+    // a longer description for tooltips, etc.
+    'descr' => 'Your main email address, so we can contact you.',
+    
+    // the default value before any new user input
+    'value' => null,
+    
+    // what other XHTML attributes should be used for this
+    // element?
+    'attribs' => array(
+        'size'      => 32,
+        'maxlength' => 64,
+    ),
+    
+    // an array of Solar_Valid calls to apply to user-input.
+    'valid' => array(
+        array('email', 'Please enter a valid email address'),
+    ),
+);
+
+// now append the element to the form
+$form->setElement($name, $info);
+</code>
+
+Remember that Solar_Form does not generate any output; instead, it is used as a set of "hints" for your template or view.  With Solar_Template, all of the hints are honored.  Having said that, the above element name and description should generate something like the following output:
+
+<code type="html">
+<input type="text" name="email_addr" value="" size="32" maxlength="64" />
+</code>
+
+
+++ Appending An Element As Part Of An Array
+
+Sometimes you will want an element to be part of a larger array within a form; this is useful when the user input will be used in multiple different tables or data sources, and you need to know which elements go with which source.  Using the above 'email_addr' element as an example, we can specify that the element should belong to an array called 'contact' (perhaps representing a contacts table).
+
+<code type="php">
+// start Solar, create a form object,
+// name the element, describe its info,
+// and then:
+
+$form->setElement($name, $info, 'contacts');
+</code>
+
+Now the generated element output should look something like this:
+
+<code type="html">
+<input type="text" name="contacts[email_addr]" value="" size="32" maxlength="64" />
+</code>
+
+You can get the same effect by giving the element an array-like name to begin with...
+
+<code type="php">
+// start Solar, create a form object.
+// name the element as part of an array:
+$name = 'contacts[email_addr]';
+
+// describe the info, and then:
+$form->setElement($name, $info);
+</code>
+
+This will generate the same output, to wit:
+
+<code type="html">
+<input type="text" name="contacts[email_addr]" value="" size="32" maxlength="64" />
+</code>
+
+Note that when you add an element as part of an array, its name becomes the array-like name; thus, you will have to refer to the 'email_addr' element as 'contacts[email_addr]'.
+
+Also note that the array-like name is in the format for the XHTML form element, not a PHP array; that is, "contacts[email_addr]" and not "contacts['email_addr']" (pay attention to the lack of single quotes).
+
+++ The Element Description Array
+
+These are the element information array keys, and their expected values.  Remember, these are generally hints to the template or view output generator, and may or may not be honored by different template systems (although Solar_Template does honor them all).
+
+Note that you don't need to specify all of these keys for every element info array.  Thus, in many cases, you can get away with just specifying the type, label, and default value; if you want filtering and validation, of course, you'll need to add those too.
+
+
++++ \\type\\ string
+
+The 'type' is the XHTML element type.  Strictly speaking, you can use any string you like here, in case your particular template or view system supports added element types.  In general, though, you can expect to use these values:
+
+||~ \\type\\ ||~ maps to... ||~ uses 'options'? ||
+|| button    || <input type="button" ... /> || no ||
+|| checkbox  || <input type="checkbox" ... /> || yes ||
+|| file      || <input type="file" ... /> || no ||
+|| hidden    || <input type="hidden" ... /> || no ||
+|| image     || <input type="image" ... /> || no ||
+|| password  || <input type="password" ... /> || no ||
+|| radio     || <input type="radio" ... /> || yes ||
+|| reset     || <input type="reset" ... /> || no ||
+|| select    || <select>...</select> || yes ||
+|| submit    || <input type="submit" ... /> || no ||
+|| text      || <input type="text" ... /> || no ||
+|| textarea  || <textarea>...</textarea> || no ||
+
+In some cases, you can use the 'options' key (described below) to tell the form output generator what options are available for the input type; e.g., in a select list, or a set of radio buttons, or the checked/unchecked values for a checkbox.
+
++++ \\label\\ string
+
+This is a short descriptive label string for the form element.
+
++++ \\descr\\ string
+
+This is a longer description of the form element, generally for tooltips, help functions, and so on.
+
++++ \\value\\ string or array
+
+The default value of the form element.  In cases where 'options' are used, this is the default selected or checked option key.  If the \\value\\ is an array and the element is a multiple-select, all the \\value\\ option keys should show as selected by default.
+
++++ \\require\\ bool
+
+A boolean flag indicating whether or not an element should be noted as "required" by the form output generator.  The output noting a field as "required" may change from system to system (Solar_Template by default shows a red ##red|*## by the label to note required items).
+
++++ \\disable\\ bool
+
+A boolean flag indicating whether or not the element should be displayed as read-only by the form output generator.  If the element is disabled, the user should see the element and its value, but not be able to change it.
+
++++ \\options\\ array
+
+The options array tells the form what values to allow for selection, and is treated differently by the different element types (and ignored most of them except for 'select', 'radio', and 'checkbox').
+
+For 'select' and 'radio' elements, the options array is a set of key-value pairs where the array key is the "real" value for the option when selected or checked, and the array value is the label for that option.  For example, if you create a 'select' element with these options ...
+
+<code type="php">
+$info = array(
+    'type'    => 'select',
+    'value'   => 'TN',
+    'options' => array(
+        'AL' => 'Alabama',
+        'KY' => 'Kentucky',
+        'TN' => 'Tennessee',
+        'VA' => 'Virginia',
+    ),
+);
+$form->setElement('state', $info);
+</code>
+
+... you should see output that looks something like this:
+
+<code type="html">
+<select name="state">
+    <option value="AL" label="Alabama">Alabama</option>
+    <option value="KY" label="Kentucky">Kentucky</option>
+    <option value="TN" label="Tennessee" selected="selected">Tennessee</option>
+    <option value="VA" label="Virginia">Virginia</option>
+</select>
+</code>
+
+For 'checkbox' elements, the options array is sequential, where element 0 is the **checked** value, and element 1 is the **unchecked** value.  (This may not be intuitive; the elements are in this order because an unchecked value may not always be necessary, but a checked value is.)  For example, you can create a 'checkbox' element with these options ...
+
+<code type="php">
+$info = array(
+    'type' => 'checkbox',
+    'value' => 'y',
+    'options' => array('y', 'n'),
+);
+$form->setElement('contact_me', $info);
+</code>
+
+... and see output something like this:
+
+<code type="html">
+<input type="hidden" name="contact_me" value="n" />
+<input type="checkbox" name="contact_me" value="y" checked="checked" />
+</code>
+
+(Note that this is Solar_Template output, which uses a hidden value to indicate the unchecked value; the later checkbox value, if checked, will override the hidden value on form submission.)
+
++++ \\listsep\\ string
+
+The 'listsep' string is a hint to the form output generator as to how radio buttons should be separated.  Note that this is only a hint, and may or may not be honored by different output generators (although it is honored by Solar_Template).  For example, this radio button set...
+
+<code type="php">
+$info = array(
+    'type' => 'radio',
+    'value' => 'n',
+    'options' => array(
+        'y' => 'Yes',
+        'n' => 'No',
+        's' => 'Sometimes',
+    ),
+    'listsep' => "\n<br />\n",
+);
+$form->setElement('contact_me', $info);
+</code>
+
+... might generate output something like this (note the interspersed <br /> tags):
+
+<code type="html">
+<label><input type="radio" name="contact_me" value="y">Yes</label>
+<br />
+<label><input type="radio" name="contact_me" value="n" checked="checked">No</label>
+<br />
+<label><input type="radio" name="contact_me" value="s">Sometimes</label>
+</code>
+
+
++++ \\attribs\\ array
+
+This is an array of XHTML attributes to apply to the element.  In the case of 'select' elements, this will apply to the <select> tag and not to the <option> tags.  For example, a textarea element can specify the cols and rows ...
+
+<code type="php">
+$info = array(
+    'type' => 'textarea',
+    'value' => 'type something here',
+    'attribs' => array(
+        'rows' => 24,
+        'cols' => 80,
+    ),
+);
+$form->setElement('body_text', $info);
+</code>
+
+... and would generate something like the following output:
+
+<code type="html">
+<textarea name="body_text" rows="24" cols="80">type something here</textarea>
+</code>
+
++++ \\feedback\\ array
+
+This is an array of messages to give to the user, generally related to user input not passing validation rules.  Typically you will not need to specify feedback yourself; instead, the Solar_Form::validate() method will populate it for you.
+
+
++++ \\filter\\ array
+
+This is an array of [Solar_Filter::HomePage Solar_Filter] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).  Technically, these are passed as arguments to Solar_Filter::multiple(); among other things, this means that if the the requested callback method does not exist, it is assumed to be a PHP function.  For example:
+
+<code type="php">
+$info = array(
+    'type' => 'text',
+    'filter' => array(
+        'trim', // trim spaces with PHP trim()
+        'alnum', // Solar_Valid::alnum() to remove all non-alphanumerics
+        array('custom', array('MyClass', 'filter')), // call the MyClass::filter() method
+    ),
+);
+</code>
+
++++ \\validate\\ array
+
+This is an array of [Solar_Valid::HomePage Solar_Valid] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).
+
+Note that this is actually an array of arrays.  That is, each element in the 'valid' array is itself an array, where element 0 is the Solar_Valid method name, element 1 is the feedback message if the user input is not valid, and additional elements are passed as added parameters to the Solar_Valid method.  
+
+> If you leave element 1 set to \\null\\, Solar will automatically use a localized error message related to the validation method.
+
+For example:
+
+<code type="php">
+$info = array(
+    'type' => 'text',
+    'valid' => array(
+    
+        // text must be only characters a-z, A-Z, and 0-9.
+        // uses Solar::locale('Solar', 'VALID_ALNUM') as the 
+        // feedback message.
+        array('alnum', null),
+        
+        // text must be at least 6 chars long.  uses a custom
+        // feedback message.
+        array('minLength', 'Please use at least 6 characters', 6),
+        
+        // text must be no longer than 12 chars  uses a custom
+        // feedback message.
+        array('maxLength', 'Please use no more than 12 characters', 12),
+    ),
+);
+</code>
+
+When you call Solar_Form::validate(), for each element that does not pass a validation rule, the feedback messages specified as part of the validation rule will automatically be appended to the element 'feedback' array.

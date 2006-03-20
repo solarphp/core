@@ -1,0 +1,3 @@
++ The Solar_Exception_FileNotReadable Class
+
+Exception: file does not exist or is not readable.

@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: cast
+
+param: mixed, $value
+
+param: string, $type
+
+return: mixed
+
+</function>
+
+Filter: cast a value as a type
+
+* Parameters:
+
+ * mixed //$value//: The value to filter.
+
+ * string //$type//: A valid variable type: 'array', 'string', 'int', 'float', 'double', 'real', or 'bool'
+
+* Returns mixed: The filtered value.
+
+Filter: cast a value as a type
+
+Casts a value as a specific type. $type should be a valid variable type:
+'array', 'string', 'int', 'float', 'double', 'real', or 'bool'.

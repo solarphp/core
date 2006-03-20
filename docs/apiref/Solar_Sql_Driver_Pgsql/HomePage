@@ -1,0 +1,3 @@
++ The Solar_Sql_Driver_Pgsql Class
+
+Class for connecting to PostgreSQL databases.

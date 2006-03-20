@@ -106,8 +106,8 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
             return false;
         }
         
-        // break up the pieces: 0 = username, 1 = encrypted (hashed)
-        // password. may be more than that but we don't care.
+        // break up the pieces: 0 = handle, 1 = encrypted (hashed)
+        // passwd. may be more than that but we don't care.
         $tmp = explode(':', trim($line));
         $stored_hash = $tmp[1];
         

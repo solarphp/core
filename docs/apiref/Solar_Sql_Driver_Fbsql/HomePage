@@ -1,0 +1,3 @@
++ The Solar_Sql_Driver_Fbsql Class
+
+Class for connecting to Frontbase SQL databases.

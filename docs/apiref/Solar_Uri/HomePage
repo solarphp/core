@@ -1,0 +1,3 @@
++ The Solar_Uri Class
+
+Parses a URI string into its component parts for manipulation and export.

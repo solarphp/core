@@ -1,0 +1,29 @@
++ Class Methods
+
+++ Public
+
+* Solar_Debug_Timer::__construct() -- Constructor.
+
+* Solar_Debug_Timer::__destruct() -- Destructor.
+
+* Solar_Debug_Timer::apiVersion() -- Reports the API version for this class.
+
+* Solar_Debug_Timer::display() -- Outputs the current profile.
+
+* Solar_Debug_Timer::locale() -- Looks up locale strings based on a key.
+
+* Solar_Debug_Timer::mark() -- Marks the time.
+
+* Solar_Debug_Timer::profile() -- Returns profiling information as an array.
+
+* Solar_Debug_Timer::start() -- Resets the profile and marks a new starting time.
+
+* Solar_Debug_Timer::stop() -- Stops the timer.
+
+++ Protected
+
+* Solar_Debug_Timer::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

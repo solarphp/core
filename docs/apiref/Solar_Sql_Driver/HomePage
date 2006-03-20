@@ -1,0 +1,3 @@
++ The Solar_Sql_Driver Class
+
+Abstract base class for specific RDBMS driver information.

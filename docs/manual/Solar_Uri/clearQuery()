@@ -1,0 +1,16 @@
+This clears the value of a query key, effectively unsetting it from the query property array.  If no key is given, the whole query is cleared.
+
+<code type="php">
+$uri = Solar::factory('Solar_Uri');
+$uri->setQuery('foo' => 'bar');
+$uri->setQuery('baz' => 'dib');
+$uri->setQuery('zim' => 'gir');
+
+// clear one key
+$uri->clearQuery('foo');
+// leaves us with 'baz' and 'zim'
+
+// clear everything
+$uri->clearQuery();
+// now $uri->query is an empty array
+</code>

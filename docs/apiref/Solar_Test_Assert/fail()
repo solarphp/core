@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fail
+
+param: string, $message, 'Failure'
+
+return: unknown
+
+</function>
+
+Throw an exception indicating assertion failure.
+
+* Parameters:
+
+ * string //$message//: The failure message.
+
+* Returns unknown: unknown
+
+Throw an exception indicating assertion failure.

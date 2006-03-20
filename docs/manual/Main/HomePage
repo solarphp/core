@@ -1,0 +1,21 @@
++ Solar for PHP5
+
+++ Current Release
+
+The current release is version 0.13.0 as of ????.  You can view the change log [http://solarphp.com/channel.php?package=Solar&release=0.13.0&downloads here].  Installation instructions are [DownloadSolar here].
+
+++ Overview
+
+Solar is a "simple object library and application repository" for PHP5.  That is, Solar is a combined class library, component suite, and application development framework.
+
+Solar provides simple, [SolarGoals easy-to-comprehend] classes and components for the common aspects of web-based rapid application development, all under the [http://www.gnu.org/licenses/lgpl.html LGPL].
+
+Solar is designed for developers who intend to distribute their applications world-wide.
+
+You can visit our [http://solarphp.com/channel.php PEAR channel] to review releases and change logs.
+
+You can view the [SolarDocs documentation overview] and an example HelloWorld application.
+
+You can read AboutSolar and then join the MailingList.
+
+You can [http://solarphp.com/bugs.php review and report bugs].

@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_Form_Load_Table::__construct() -- Constructor.
+
+* Solar_Form_Load_Table::apiVersion() -- Reports the API version for this class.
+
+* Solar_Form_Load_Table::fetch() -- Loads Solar_Form elements based on Solar_Sql_Table columns.
+
+* Solar_Form_Load_Table::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Form_Load_Table::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

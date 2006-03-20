@@ -23,7 +23,7 @@
  * 
  * @package Solar_Debug
  * 
- * @todo add reflect() method for reflection capture
+ * @todo Add reflect() method for reflection capture?
  * 
  */
 class Solar_Debug_Var extends Solar_Base {
@@ -34,7 +34,7 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      * Keys are:
      * 
-     * output => (string) Output mode.  Default is 'html'; anything else is
+     * : \\output\\ : (string) Output mode.  Default is 'html'; anything else is
      * treated as 'text' (plain text).
      * 
      * @var array
@@ -46,7 +46,13 @@ class Solar_Debug_Var extends Solar_Base {
     
     /**
      * 
-     * Captures the output of "var_dump()" with a label.
+     * Returns the output of "var_dump()" with a label.
+     * 
+     * Buffers the [[php var_dump]] for a variable,
+     * applies some simple formatting for readability,
+     * and [[php echo]]s it with an optional label.
+     * Use this for debugging variables to see exactly
+     * what they contain.
      * 
      * @param mixed &$var The variable to dump.
      * 

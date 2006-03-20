@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: escape
+
+param: unknown, $value
+
+return: unknown
+
+</function>
+
+Built-in helper for escaping output.
+
+* Parameters:
+
+ * unknown //$value//: 
+
+* Returns unknown: unknown
+
+Built-in helper for escaping output.

@@ -1,0 +1,33 @@
+HomePage | The Solar_Model_Tags Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_col
+  $_config
+  $_idx
+  $_name
+  $_order
+  $_paging
+  $_sql
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  _autoCreate()
+  _autoSetup()
+  _autoValid()
+  _diff()
+  _exception()
+  _setup()
+  apiVersion()
+  asArray()
+  asString()
+  delete()
+  fetchAllByNodeId()
+  fetchDefault()
+  increment()
+  insert()
+  locale()
+  paging()
+  refresh()
+  save()
+  select()
+  update()

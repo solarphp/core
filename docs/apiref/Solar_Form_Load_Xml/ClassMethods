@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_Form_Load_Xml::__construct() -- Constructor.
+
+* Solar_Form_Load_Xml::apiVersion() -- Reports the API version for this class.
+
+* Solar_Form_Load_Xml::fetch() -- Loads a Solar_Form definition from an XML file.
+
+* Solar_Form_Load_Xml::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Form_Load_Xml::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Form_Load_Xml::_getParams() -- Get parameters for a filter or validation rule
+
+++ Private
+
+None.

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Test_Example_Exception_CustomCondition
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Test_Example_Exception_CustomCondition: Solar_Test_Example_Exception_CustomCondition instance
+
+Constructor.

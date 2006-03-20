@@ -1,0 +1,23 @@
++ Class Methods
+
+++ Public
+
+* Solar_Controller_Front::__construct() -- Constructor.
+
+* Solar_Controller_Front::apiVersion() -- Reports the API version for this class.
+
+* Solar_Controller_Front::display() -- Displays the output of an page/action/info specification URI.
+
+* Solar_Controller_Front::fetch() -- Fetches the output of a page/action/info specification URI.
+
+* Solar_Controller_Front::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Controller_Front::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Controller_Front::_setup() -- Sets up the Solar and Front-Controller environment.
+
+++ Private
+
+None.

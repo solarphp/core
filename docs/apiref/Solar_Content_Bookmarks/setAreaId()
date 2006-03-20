@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: setAreaId
+
+param: unknown, $area_id
+
+return: void
+
+</function>
+
+Sets the area ID from which nodes will be fetched.
+
+* Parameters:
+
+ * unknown //$area_id//: 
+
+* Returns void
+
+Sets the area ID from which nodes will be fetched.
+
+If set to an empty value, nodes will be fetched from all areas.

@@ -1,0 +1,40 @@
++ Constructor Parameters
+
+All \\__construct()\\ methods in Solar have exactly one parameter:  an associative array.  That array is then populated into the protected \\$_config\\ property used in all classes descended from the Solar BaseClass.
+
+Most classes in the PHP world use a sequential set of parameters for constructors; e.g., if you wanted to specify three pieces of information for a constructor, you would do something like this:
+
+<code type="php">
+class Normal_Example {
+    public $a = null;
+    public $b = null;
+    public $c = null;
+    public function __construct($a, $b, $c)
+    {
+        $this->a = $a;
+        $this->b = $b;
+        $this->c = $c;
+    }
+}
+
+$example = new Normal_Example('one', 'two', 'three')
+</code>
+
+In comparison, Solar classes are instantiated like this:
+
+<code type="php">
+class Solar_Example extends Solar_Base {
+    protected $_config = array(
+        'a' => null,
+        'b' => null,
+        'c' => null,
+    );
+}
+
+$config = array('a' => 'one', 'b' => 'two', 'c' => 'three');
+$example = new Solar_Example($config);
+</code>
+
+Why do things this way?  The idea is to make it easy to read data from a ConfigFile and automatically configure object instances.  In the Solar_Example class, the constructor parameter could easily be read from a configuration file and passed to the Solar_Example constructor, which is not so easy with the Normal_Example.
+
+**Note:** Usually Solar objects are instantiated via Solar::factory(), not via direct instantiation as above, but you get the idea.

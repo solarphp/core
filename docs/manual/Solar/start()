@@ -1,0 +1,80 @@
+This method starts the Solar environment; it is usually the
+very first method call you make after including the Solar.php
+file.  It loads the configuration values, cleans up $GLOBALS, and so on.
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+// the rest of your script
+
+Solar::stop();
+</code>
+
+The start() method performs a number of activities for
+you to set up the execution environment:
+
+# Reads the [Main::ConfigFile configuration file] file into Solar::$config.
+
+# Processes the Solar::$config['Solar']['ini_set'] key/value pairs using [[php ini_set()]].
+
+# Finally, Solar runs any scripts noted in Solar::$config['Solar']['start'].  This allows you to specify additional environment startup behaviors.
+
+
+++ Alternative Configurations
+
+Note that the \\start()\\ is overloaded; you can pass in different
+value types for the $config parameter.
+
+* \\false\\ -- This will explicitly **not** load any
+  additional configuration; you will get only the default
+  Solar::$config array values defined in the Solar class.
+
+* \\null\\ -- Equivalent to Solar::start(), this will cause
+  Solar to read the value of the SOLAR_CONFIG_PATH global constant
+  as the path to a file; the return value of that file will be used
+  for Solar::$config.
+
+* \\string\\ -- The string is treated as a path to a Solar.config.php
+  file; the return value from that file will be used for Solar::$config.
+
+* \\array\\ -- This will use the passed array for the Solar::$config
+  values.
+
+* \\object\\ -- The passed object will be cast as an array,
+  and those values will be used for Solar::$config.
+
+Here are some examples of starting with alternative configuration parameters:
+
+<code type="php">
+require_once 'Solar.php';
+
+// don't load any config values at all
+Solar::start(false);
+
+// a "normal" start; loads the config file
+// from SOLAR_CONFIG_PATH
+Solar::start(null);
+
+// use an array as the config source.
+$config = array(
+    'Solar' => array(
+        'ini_set' => array(
+            'error_reporting' => E_ALL,
+        ),
+    ),
+);
+Solar::start($config);
+
+// use an object as the config source.
+$config = new StdClass;
+$config->Solar = array(
+    'ini_set' => array(
+        'error_reporting' => E_ALL,
+    ),
+);
+Solar::start($config);
+
+// point to an alternative config file
+Solar::start('/path/to/another/config.php');
+</code>

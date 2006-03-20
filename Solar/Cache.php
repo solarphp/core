@@ -19,174 +19,6 @@
  * 
  * Class for cache control.
  * 
- * [[toc]]
- * 
- * ++ Overview
- * 
- * Solar_Cache is a cousin to [http://pear.php.net/Cache_Lite PEAR
- * Cache_Lite], although most of the options have been made standard
- * behavior.
- * 
- * Solar_Cache is itself a facade class; its methods interface
- * directly with a backend container or driver class that handles the
- * actual storage or retrieval.  Solar_Cache comes with two
- * CacheDrivers (or container classes): the FileDriver and the
- * MemcacheDriver.  Although the configuration options for the
- * drivers are slightly different, the API for them is identical
- * (becuase the API is mapped via the master Solar_Cache class).
- * 
- * ++ Examples
- * 
- * +++ Instantiation
- * 
- * To instantiate Solar_Cache, you need to pick which driver you
- * want.  In the following example, we'll set up a FileDriver cache
- * (which stores data as a file on the hard drive).
- * 
- * <code type="php">
- * require_once 'Solar.php';
- * Solar::start();
- * 
- * // set up the cache options
- * $config = array(
- *     'class' => 'Solar_Cache_File',     // which driver class to use
- *     'options' => array(                // the config options for the class
- *         'path' => '/tmp/Solar_Cache/', // where the cache files will be stored
- *         'life' => 1800,                // the cache entry lifetime in seconds
- *     ),
- * );
- * 
- * // create a cache object
- * $cache = Solar::factory('Solar_Cache', $config);
- * </code>
- * 
- * +++ Cache Drivers
- * 
- * Solar_Cache comes with two drivers, or containers, for cached
- * data:
- * 
- * * the [Solar_Cache_File:HomePage Solar_Cache_File] driver, which
- * stores data in the filesystem
- * 
- * * the [Solar_Cache_Memcache:HomePage Solar_Cache_Memcache], which
- * uses [[php memcache]] for storing data in memory
- * 
- * You can write your own cache driver very easily.  Use the
- * Solar_Cache_File or Solar_Cache_Memcache classes as a template,
- * and implement the various methods therein with the same parameter
- * lists.  Then you can use that custom class name as the Solar_Cache
- * 'class' config key value.
- * 
- * +++ Driver Configuration
- * 
- * Note that the config keys for the Solar_Cache class are logically
- * separate from the config keys for its driver classes.  This means
- * you can configure the Solar_Cache, Solar_Cache_File, and
- * Solar_Cache_Memcache classes separately within the
- * [Main:ConfigFile config file] and Solar will use those options
- * automatically.
- * 
- * For example, you can do this in your config file...
- * 
- * <code type="php">
- * $config = array();
- * 
- * // ...
- * 
- * $config['Solar_Cache_File'] => array(
- *     'path' => '/tmp/Solar_Cache',
- *     'life' => 1800,
- * );
- * 
- * $config['Solar_Cache'] => array(
- *     'class' => 'Solar_Cache_File'
- * );
- * 
- * // ...
- * 
- * return $config;
- * </code>
- * 
- * ... and then instantiate a cache exactly like the above example
- * (because the config file already has the options defined for you)
- * with just one line:
- * 
- * <code type="php">
- * require_once 'Solar.php';
- * Solar::start();
- * 
- * // create a cache object
- * $cache = Solar::factory('Solar_Cache');
- * </code>
- * 
- * 
- * +++ Usage
- * 
- * Once you have instantiated the cache, you can use it to store data
- * that usually takes more resources to generate than a filesystem
- * call does (in the case of the FileDriver) or a memory call (in the
- * case of the MemcacheDriver).
- * 
- * In the following example, we simulate caching the results of a
- * database call or other resource-intensive task.  If the cache
- * entry does not exist, we generate the data and save it in the
- * cache; if it does exist, we use that instead (thus speeding up the
- * script execution).
- * 
- * <code type="php">
- * require_once 'Solar.php';
- * Solar::start();
- * 
- * // connect to the cache
- * $cache = Solar::factory('Solar_Cache');
- * 
- * // every cache entry needs a unique ID; we'll assume that ID
- * // is passed as part of the URL.
- * $id = Solar::get('id');
- * 
- * // try to get the cache entry.  if the entry is past its lifetime,
- * // this will addiitonally delete the entry for us, keeping the cache
- * // clean.
- * $output = $cache->fetch($id);
- * 
- * // did we get it?
- * if (! $output) {
- *     // no output stored in the cache under that ID.
- *     // regenerate it ...
- * 
- *     // (assume we connect to a database and transform the data in 
- *     // some way, and call it $output).
- * 
- *     // ... and save the output in the cache, replacing anything that
- *     // may have been in that entry before.
- *     $cache->save($id, $output);
- * }
- * 
- * // now we have the output, whether from the cache
- * // or from generating it fresh., we can output it or do whatever else we need.
- * echo $output;
- * </code>
- * 
- * ++ Limitations and Considerations
- * 
- * Because Solar_Cache is intended work exactly the same with every
- * underlying driver for it, there are some special considerations to
- * take into account.
- * 
- * For example, the PEAR Cache_Lite class allows you to specify
- * "groups" of caches through a single cache object; because the
- * MemcacheDriver has no way of implementing that kind of function,
- * it is not implemented within the FileDriver either.  However, the
- * easy workaround it to have a separate Solar_Cache object for each
- * "group" of caches you want to set up.
- * 
- * If you are on a shared system, you need to make sure the
- * FileDriver path is not shared between separate users or
- * installations, otherwise the installations will "compete" with
- * each other when entry keys are identical.  The easy way to work
- * around this is to not to use a system temp directory, and instead
- * set up a directory specifically for caching.
- * 
  * @category Solar
  * 
  * @package Solar_Cache
@@ -198,13 +30,20 @@ class Solar_Cache extends Solar_Base {
      * 
      * User-provided configuration.
      * 
+     * Keys are:
+     * 
+     * : \\active\\ : (bool) Whether the cache is active or not when instantiated.
+     * 
+     * : \\driver\\ : (string) The driver class, default 'Solar_Cache_File'.
+     * 
+     * Remaining keys are passed to the driver class as config keys.
+     * 
      * @var array
      * 
      */
     protected $_config = array(
-        'active'  => true,
-        'class'   => 'Solar_Cache_File',
-        'options' => null
+        'active' => true,
+        'driver' => 'Solar_Cache_File',
     );
     
     /**
@@ -220,12 +59,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Constructor.
      * 
-     * Config keys are:
-     * 
-     * : \\class\\   : (string) The name of the cache driver class, default 'Solar_Cache_File'
-     * : \\options\\ : (array) An array of config key options to use when instantiating the driver class
-     * : \\active\\  : (bool) Whether or not the cache is active at instantiation time (default true)
-     * 
      * @param array $config User-provided configuration values.
      * 
      */
@@ -235,9 +68,12 @@ class Solar_Cache extends Solar_Base {
         parent::__construct($config);
         
         // instantiate a driver object
+        $config = $this->_config;
+        unset($config['driver']);
+        unset($config['active']);
         $this->_driver = Solar::factory(
-            $this->_config['class'],
-            $this->_config['options']
+            $this->_config['driver'],
+            $config
         );
     }
     
@@ -330,7 +166,7 @@ class Solar_Cache extends Solar_Base {
      * 
      * // $data and $result should be identical
      * </code>
-
+     * 
      * @param string $key The entry ID.
      * 
      * @param string $data The data to store.
@@ -374,7 +210,7 @@ class Solar_Cache extends Solar_Base {
      * $result = $cache->fetch($id);
      * Solar::dump($result);
      * </code>
-
+     * 
      * @param string $key The entry ID.
      * 
      * @return mixed Boolean false on failure, string on success.
@@ -404,7 +240,7 @@ class Solar_Cache extends Solar_Base {
      * // delete any cache entry with that ID
      * $cache->delete($id);
      * </code>
-
+     * 
      * @param string $key The entry ID.
      * 
      * @return void
@@ -429,7 +265,7 @@ class Solar_Cache extends Solar_Base {
      * // delete all entries
      * $cache->deleteAll();
      * </code>
-
+     * 
      * @return void
      * 
      */
@@ -459,7 +295,7 @@ class Solar_Cache extends Solar_Base {
      * // find out what the underlying cache driver uses as the entry name
      * $real_name = $cache->entry($id);
      * </code>
-
+     * 
      * @param string $key The entry ID.
      * 
      * @return mixed The driver-specific name for the entry key.

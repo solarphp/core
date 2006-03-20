@@ -53,8 +53,8 @@ $form = $this->_bookmarks->form($item);
 $form->populate();
 
 // check for a 'Save' operation
-$op = Solar::post('op');
-if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
+$submit = Solar::post('submit');
+if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
     
     // save the data
     try {
@@ -84,8 +84,4 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
 // assign data for the view
 $this->formdata = $form;
 $this->backlink = $uri;
-
-// assign data for the layout
-$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
 ?>

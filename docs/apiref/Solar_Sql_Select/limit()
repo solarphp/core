@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: limit
+
+param: int, $count, NULL
+
+param: int, $offset, NULL
+
+return: void
+
+</function>
+
+Sets a limit count and offset to the query.
+
+* Parameters:
+
+ * int //$count//: The number of rows to return.
+
+ * int //$offset//: Start returning after this many rows.
+
+* Returns void
+
+Sets a limit count and offset to the query.

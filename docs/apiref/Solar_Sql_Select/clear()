@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: clear
+
+param: string, $key, NULL
+
+return: void
+
+</function>
+
+Clears query properties.
+
+* Parameters:
+
+ * string //$key//: The property to clear; if empty, clears all query properties.
+
+* Returns void
+
+Clears query properties.

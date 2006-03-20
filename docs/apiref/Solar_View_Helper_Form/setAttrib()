@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: setAttrib
+
+param: string, $key
+
+param: string, $val, NULL
+
+return: Solar_View_Helper_Form
+
+</function>
+
+*
+
+* Parameters:
+
+ * string //$key//: The attribute name.
+
+ * string //$val//: The attribute value.
+
+* Returns Solar_View_Helper_Form
+
+*
+Sets a form-tag attribute.

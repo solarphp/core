@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: clearQuery
+
+param: unknown, $key, NULL
+
+return: void
+
+</function>
+
+Clears (resets) all or part of $this->query.
+
+* Parameters:
+
+ * unknown //$key//: 
+
+* Returns void
+
+Clears (resets) all or part of $this->query.

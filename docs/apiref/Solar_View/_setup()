@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: unknown
+
+</function>
+
+Allows specialized setup for extended classes.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Allows specialized setup for extended classes.

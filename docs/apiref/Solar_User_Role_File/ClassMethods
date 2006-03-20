@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Role_File::__construct() -- Constructor.
+
+* Solar_User_Role_File::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Role_File::fetch() -- Fetch the roles.
+
+* Solar_User_Role_File::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_User_Role_File::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

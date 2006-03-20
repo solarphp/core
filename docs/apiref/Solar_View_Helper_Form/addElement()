@@ -1,0 +1,22 @@
+<function>
+
+access:   public
+
+name: addElement
+
+param: array, $info
+
+return: Solar_View_Helper_Form
+
+</function>
+
+*
+
+* Parameters:
+
+ * array //$info//: The element information.
+
+* Returns Solar_View_Helper_Form
+
+*
+Adds a single element to the form.

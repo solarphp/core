@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: group
+
+param: string|array, $spec
+
+return: void
+
+</function>
+
+Adds grouping to the query.
+
+* Parameters:
+
+ * string|array //$spec//: The column(s) to group by.
+
+* Returns void
+
+Adds grouping to the query.

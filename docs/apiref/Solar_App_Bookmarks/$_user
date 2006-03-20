@@ -1,0 +1,3 @@
+protected Solar_User $_user
+
+Local reference to the 'user' object in Solar::registry().

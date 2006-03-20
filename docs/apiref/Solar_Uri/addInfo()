@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: addInfo
+
+param: string, $val, ''
+
+return: void
+
+</function>
+
+Adds one element to the $this->info array.
+
+* Parameters:
+
+ * string //$val//: The value to use.
+
+* Returns void
+
+Adds one element to the $this->info array.

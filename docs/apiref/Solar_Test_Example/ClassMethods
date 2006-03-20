@@ -1,0 +1,27 @@
++ Class Methods
+
+++ Public
+
+* Solar_Test_Example::__construct() -- Constructor.
+
+* Solar_Test_Example::apiVersion() -- Reports the API version for this class.
+
+* Solar_Test_Example::classGenericException() -- 
+
+* Solar_Test_Example::classSpecificException() -- 
+
+* Solar_Test_Example::exceptionFromCode() -- 
+
+* Solar_Test_Example::locale() -- Looks up locale strings based on a key.
+
+* Solar_Test_Example::solarGenericException() -- 
+
+* Solar_Test_Example::solarSpecificException() -- 
+
+++ Protected
+
+* Solar_Test_Example::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

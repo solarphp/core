@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetchAll
+
+param: int, $mode, 2
+
+return: array
+
+</function>
+
+Fetches all rows from the result source via $this->fetch().
+
+* Parameters:
+
+ * int //$mode//: A PDO::FETCH_* constant to specify how the row should be returned; default is PDO::FETCH_ASSOC.
+
+* Returns array: A sequential array of data from all fetched rows.
+
+Fetches all rows from the result source via $this->fetch().

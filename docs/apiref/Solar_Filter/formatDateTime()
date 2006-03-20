@@ -1,0 +1,30 @@
+<function>
+
+access:   public
+
+name: formatDateTime
+
+param: string, $value
+
+param: unknown, $format
+
+return: string
+
+</function>
+
+Forces a value to a date() format.
+
+* Parameters:
+
+ * string //$value//: The value to be filtered; must be a value appropriate for strtotime().
+
+ * unknown //$format//: 
+
+* Returns string: The filtered value.
+
+Forces a value to a date() format.
+
+Takes a string value time and formats it according to $format.
+PHP's date() function is used to create the new value, and $format
+should be a format that works with that function. The value should
+be a format that strtotime() understands.

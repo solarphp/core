@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_FormTextarea::__construct() -- Constructor.
+
+* Solar_View_Helper_FormTextarea::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_FormTextarea::formTextarea() -- Generates a 'textarea' element.
+
+* Solar_View_Helper_FormTextarea::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_FormTextarea::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormTextarea::_prepare() -- Prepares an info array and imports to the properties.
+
+++ Private
+
+None.

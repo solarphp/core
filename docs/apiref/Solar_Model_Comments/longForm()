@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: longForm
+
+param: int|array, $data, NULL
+
+return: object
+
+</function>
+
+Generates a long form for a single comment (name, email, uri, body).
+
+* Parameters:
+
+ * int|array //$data//: An existing node ID, or an array of data to pre-populate into the form.  The array should have a key 'comments' with a sub-array using keys for 'uri', 'subj', 'summ', 'tags', and 'rank'.  If empty, default values are pre-populated into the form.
+
+* Returns object: A Solar_Form object.
+
+Generates a long form for a single comment (name, email, uri, body).

@@ -65,7 +65,7 @@
                         
                         // edit link
                         if (Solar::registry('user')->auth->handle == $item['owner_handle']) {
-                            echo '&nbsp;...&nbsp;' . $this->action("bookmarks/edit/{$item['id']}", 'OP_EDIT');
+                            echo '&nbsp;...&nbsp;' . $this->action("bookmarks/edit/{$item['id']}", 'SUBMIT_EDIT');
                         }
                     ?>
                 </p>

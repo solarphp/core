@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: listTables
+
+return: array
+
+</function>
+
+Returns a list of database tables.
+
+* Parameters: none.
+
+* Returns array: The list of tables in the database.
+
+Returns a list of database tables.

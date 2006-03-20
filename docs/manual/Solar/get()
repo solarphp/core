@@ -1,0 +1,13 @@
+This method accesses the $_GET superglobal array and returns a
+copy of the requested key.  If no key is specified,
+a copy of the entire $_GET array is returned.  If the
+requested key does not exist in the $_GET array, the default
+value is returned instead.
+
+For example, to get the 'user_name' key from the $_GET array,
+with 'No Name' as the default value, you would do this:
+
+<code type="php">
+$name = Solar::get('user_name', 'No Name');
+</code>
+

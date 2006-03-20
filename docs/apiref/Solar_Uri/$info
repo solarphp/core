@@ -1,0 +1,7 @@
+public array $info
+
+Path info elements after the script name (from $_SERVER['PATH_INFO']).
+
+The import() method attempts to guess the script name as the
+first '*.php' part of the path, and counts elements after that
+as path info.

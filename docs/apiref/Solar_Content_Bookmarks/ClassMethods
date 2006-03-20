@@ -1,0 +1,51 @@
++ Class Methods
+
+++ Public
+
+* Solar_Content_Bookmarks::__construct() -- Constructor
+
+* Solar_Content_Bookmarks::apiVersion() -- Reports the API version for this class.
+
+* Solar_Content_Bookmarks::countPages() -- Fetches a total count and pages of bookmarks in the content store.
+
+* Solar_Content_Bookmarks::delete() -- Delete a master node and its tags.
+
+* Solar_Content_Bookmarks::fetch() -- Fetch one master node by ID.
+
+* Solar_Content_Bookmarks::fetchAll() -- Fetches a list of bookmarks from the content store.
+
+* Solar_Content_Bookmarks::fetchByOwnerUri() -- Fetches a bookmark by owner_handle (username) and URI.
+
+* Solar_Content_Bookmarks::fetchDefault() -- Fetches a default blank node of this type.
+
+* Solar_Content_Bookmarks::fetchParts() -- Fetch the parts of a master node ID.
+
+* Solar_Content_Bookmarks::fetchTags() -- Fetches a list of all bookmark tags.
+
+* Solar_Content_Bookmarks::form() -- Returns a bookmark data-entry form processor.
+
+* Solar_Content_Bookmarks::getAreaId() -- Gets the area ID from which nodes are being fetched.
+
+* Solar_Content_Bookmarks::getPaging() -- Gets the number of rows per page.
+
+* Solar_Content_Bookmarks::insert() -- Insert a new master node and its tags.
+
+* Solar_Content_Bookmarks::locale() -- Looks up locale strings based on a key.
+
+* Solar_Content_Bookmarks::save() -- Inserts or updates a master node.
+
+* Solar_Content_Bookmarks::setAreaId() -- Sets the area ID from which nodes will be fetched.
+
+* Solar_Content_Bookmarks::setPaging() -- Sets the number of rows per page.
+
+* Solar_Content_Bookmarks::update() -- Update a master node and its tags.
+
+++ Protected
+
+* Solar_Content_Bookmarks::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Content_Bookmarks::_masterWhere() -- Builds a baseline multiWhere() clause for master nodes of this type.
+
+++ Private
+
+None.

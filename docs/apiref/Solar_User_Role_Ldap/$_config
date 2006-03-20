@@ -1,0 +1,20 @@
+protected  $_config
+
+Array of user configuration values.
+
+Keys are:
+
+url => (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
+
+basedn => (string) The base DN for the LDAP search; example: "o=my company,c=us".
+
+filter => (string) An sprintf() filter string for the LDAP search; %s represents the username.
+Example: "uid=%s".
+
+attrib => (string) Use these attributes to find role names.
+
+binddn => (string) Bind to the LDAP server as this distinguished name.
+
+bindpw => (string) Bind to the LDAP server as with this password.
+
+@var array

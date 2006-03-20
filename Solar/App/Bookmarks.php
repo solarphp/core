@@ -18,9 +18,9 @@
  */
 
 /**
- * Application controller class.
+ * Application-specific page controller class.
  */
-Solar::loadClass('Solar_Controller_Page');
+Solar::loadClass('Solar_App');
 
 /**
  * 
@@ -33,7 +33,7 @@ Solar::loadClass('Solar_Controller_Page');
  * @subpackage Solar_App_Bookmarks
  * 
  */
-class Solar_App_Bookmarks extends Solar_Controller_Page {
+class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
@@ -65,28 +65,22 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
      * 
      */
     protected $_action_info = array(
-        
-        // tags/:tags
-        'tag' => array('tags'),
-        
-        // user/:owner_handle/:tags
-        'user' => array('owner_handle', 'tags'),
-        
-        // edit/:id
-        'edit' => array('id'),
-        
-        // quick/:uri/:subj
-        'quick' => array('uri', 'subj'),
-        
-        // userFeed/:owner_handle/:tags
-        'userFeed' => array('owner_handle', 'tags'),
-        
-        // tagFeed/:tags
-        'tagFeed' => array('tags'),
-        
-        // quick and create have no pathinfo
-        
+        'tag'       => 'tags',
+        'user'      => 'owner_handle/tags',
+        'edit'      => 'id',
+        'quick'     => 'uri/subj',
+        'user-feed' => 'owner_handle/tags',
+        'tag-feed'  => 'tags',
     );
+    
+    /**
+     * 
+     * The <title> string.
+     * 
+     * @var string
+     * 
+     */
+    public $layout_title = 'Solar_App_Bookmarks';
     
     /**
      * 
@@ -99,7 +93,7 @@ class Solar_App_Bookmarks extends Solar_Controller_Page {
     
     /**
      * 
-     * The requested bookmark order (title, tags, created, etc).
+     * The requested bookmark order (subj, tags, created, etc).
      * 
      * @var string
      * 

@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: publicHref
+
+param: string, $spec
+
+param: unknown, $raw, false
+
+return: string
+
+</function>
+
+Returns an href to a public resource.
+
+* Parameters:
+
+ * string //$spec//: The action specification.
+
+ * unknown //$raw//: 
+
+* Returns string
+
+Returns an href to a public resource.

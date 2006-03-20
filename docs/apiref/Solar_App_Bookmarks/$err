@@ -1,0 +1,3 @@
+public array $err
+
+An array of error messages.

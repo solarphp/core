@@ -1,0 +1,21 @@
+Imports a URI string into the object and parses it into its constituent components (host, path, query, etc).  If the URI string is null, the object will parse the current browser URI.
+
+If you import a URI string, the class will be attempt to guess the path-info portion of the string; this is because the class does not know what the script or page to be executed is, and so it can't tell what's "before" the script name and what's "after".  It guesses by looking for the first "*.php" part of the URI.
+
+For example:
+
+<code type="php">
+$uri = Solar::factory('Solar_Uri');
+
+$href = 'http://example.com/index.php/some/path/info';
+$uri->import($href);
+
+// Solar_Uri found "index.php" in the string,
+// so the $uri properties are now:
+// $uri->scheme => 'http'
+// $uri->host   => 'example.com'
+// $uri->path   => '/index.php'
+// $uri->info   => array('some', 'path', 'info')
+</code>
+
+However, if you call import() with no parameters, the path-info be populated from $_SERVER['PATH_INFO'] (which is far more sure).

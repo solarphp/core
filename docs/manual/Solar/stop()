@@ -1,0 +1,16 @@
+Stops the Solar environment.  As a counterpart to
+Solar::start(), the stop() method shuts down the Solar
+environment.
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+// the rest of the script goes here
+
+Solar::stop();
+</code>
+
+Effectively, all this does it execute any scripts named in
+Solar::$config['Solar']['stop'].  This allows you to run
+shutdown scripts particular to your system.

@@ -1,0 +1,3 @@
+public string $path
+
+The path portion (e.g., 'path/to/index.php').

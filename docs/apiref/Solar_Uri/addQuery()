@@ -1,0 +1,30 @@
+<function>
+
+access:   public
+
+name: addQuery
+
+param: unknown, $key
+
+param: string, $val, ''
+
+return: void
+
+</function>
+
+Adds an element to the $this->query array.
+
+* Parameters:
+
+ * unknown //$key//: 
+
+ * string //$val//: The value to use.
+
+* Returns void
+
+Adds an element to the $this->query array.
+
+If the element already exists, the element is converted to an array
+and the value is appended to that array.
+ 
+@param string $key The GET variable name to work with.

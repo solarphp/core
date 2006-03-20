@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Date::__construct() -- Constructor.
+
+* Solar_View_Helper_Date::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_Date::date() -- Outputs a formatted date using [[php date()]] conventions.
+
+* Solar_View_Helper_Date::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_Date::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

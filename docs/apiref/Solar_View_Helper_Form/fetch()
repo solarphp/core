@@ -1,0 +1,18 @@
+<function>
+
+access:   public
+
+name: fetch
+
+return: unknown
+
+</function>
+
+*
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+*
+Builds and returns the form output.

@@ -24,18 +24,19 @@ return array(
     'FORMAT_TIME'        => '%r', // strftime: 24-hour 
     
     // operation actions
-    'OP_SAVE'            => 'Sauvegarder',
-    'OP_PREVIEW'         => 'Previsualisation',
-    'OP_CANCEL'          => 'Annuler',
-    'OP_DELETE'          => 'Effacer',
-    'OP_RESET'           => 'Réinitialiser',
-    'OP_NEXT'            => 'Prochain',
-    'OP_PREVIOUS'        => 'Précédent',
-    'OP_SEARCH'          => 'Chercher',
-    'OP_GO'              => 'Action!',
+    'SUBMIT_SAVE'            => 'Sauvegarder',
+    'SUBMIT_PREVIEW'         => 'Previsualisation',
+    'SUBMIT_CANCEL'          => 'Annuler',
+    'SUBMIT_DELETE'          => 'Effacer',
+    'SUBMIT_RESET'           => 'Réinitialiser',
+    'SUBMIT_NEXT'            => 'Prochain',
+    'SUBMIT_PREVIOUS'        => 'Précédent',
+    'SUBMIT_SEARCH'          => 'Chercher',
+    'SUBMIT_GO'              => 'Action!',
+    'SUBMIT_LOGIN'         => 'Sign In',
+    'SUBMIT_LOGOUT'        => 'Sign Out',
     
     // error messages
-    'ERR_FORM'                 => 'Merci de corriger les erreurs affichées.',
     'ERR_FILE_NOT_FOUND'       => 'Impossible de trouver le fichier.',
     'ERR_FILE_NOT_READABLE'    => 'Impossible de lire le fichier.',
     'ERR_EXTENSION_NOT_LOADED' => 'Extension non chargée.',
@@ -62,16 +63,15 @@ return array(
     'VALID_NOTBLANK'     => 'Cette valeur doit être laissée en blanc.',
     'VALID_URI'          => 'Veuiilez entrer une adresse web valide.',
     
-    // success messages
-    'OK_SAVED'           => 'Sauvegardé.',
+    // success/failure messages
+    'SUCCESS_SAVED'           => 'Sauvegardé.',
+    'FAILURE_FORM'                 => 'Merci de corriger les erreurs affichées.',
     
     // generic text
-    'TEXT_LOGIN'         => 'Sign In',
-    'TEXT_LOGOUT'        => 'Sign Out',
     'TEXT_AUTH_USERNAME' => 'Identifié comme',
     
     // generic labels
-    'LABEL_USERNAME'     => 'Identifiant',
-    'LABEL_PASSWORD'     => 'Mot de passe',
+    'LABEL_HANDLE'     => 'Identifiant',
+    'LABEL_PASSWD'     => 'Mot de passe',
 );
 ?>

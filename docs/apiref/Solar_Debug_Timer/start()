@@ -1,0 +1,22 @@
+<function>
+
+access:   public
+
+name: start
+
+return: unknown
+
+</function>
+
+Resets the profile and marks a new starting time.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Resets the profile and marks a new starting time.
+
+This resets the profile and adds a new mark labeled
+\\__start\\.  Use it to start the timer.
+     *
+@return void

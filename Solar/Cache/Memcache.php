@@ -23,7 +23,7 @@
  * memcached] server, which uses system memory to cache data.  In
  * general, you never need to instantiate it yourself; instead, use
  * Solar_Cache as the frontend for it and specify
- * 'Solar_Cache_Memcache' in the config keys as the 'class' value.
+ * 'Solar_Cache_Memcache' in the config keys as the 'driver' value.
  * 
  * This kind of cache is extremely fast, especially when on the same
  * server as the web process, although it may also be accessed via
@@ -69,7 +69,9 @@ class Solar_Cache_Memcache extends Solar_Base {
      * Config keys are:
      * 
      * : \\host\\ : (string) The hostname of the memcached server, default 'localhost' 
+     * 
      * : \\port\\ : (int) The port number for the memcached server, default 11211 
+     * 
      * : \\life\\ : (int) The lifetime of each cache entry in seconds, default 60 (1 minute) 
      * 
      * @param array $config User-provided configuration values.

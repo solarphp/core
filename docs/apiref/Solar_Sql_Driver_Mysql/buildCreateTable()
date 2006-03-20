@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: buildCreateTable
+
+param: unknown, $name
+
+param: unknown, $cols
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$name//: 
+
+ * unknown //$cols//: 
+
+* Returns unknown: unknown

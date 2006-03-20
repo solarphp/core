@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: getHelper
+
+param: string, $name
+
+return: unknown
+
+</function>
+
+Returns the internal helper object; creates it as needed.
+
+* Parameters:
+
+ * string //$name//: The helper name.  If this helper has not been created yet, this method creates it automatically.      * @return Solar_Template_Helper
+
+* Returns unknown: unknown
+
+Returns the internal helper object; creates it as needed.

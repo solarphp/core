@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: __call
+
+param: string, $name
+
+param: unknown, $args
+
+return: unknown
+
+</function>
+
+*
+
+* Parameters:
+
+ * string //$name//: The helper name.      * @param array $args The parameters passed to the helper.      * @return string The helper output.
+
+ * unknown //$args//: 
+
+* Returns unknown: unknown
+
+*
+Executes a helper method with arbitrary parameters.

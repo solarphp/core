@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Style::__construct() -- Constructor.
+
+* Solar_View_Helper_Style::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_Style::locale() -- Looks up locale strings based on a key.
+
+* Solar_View_Helper_Style::style() -- Returns a <style>...</style> tag.
+
+++ Protected
+
+* Solar_View_Helper_Style::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

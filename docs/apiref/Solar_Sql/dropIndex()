@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: dropIndex
+
+param: string, $table
+
+param: string, $name
+
+return: mixed
+
+</function>
+
+Drops an index from a table in the database.
+
+* Parameters:
+
+ * string //$table//: The table name.
+
+ * string //$name//: The index name to drop.
+
+* Returns mixed
+
+Drops an index from a table in the database.

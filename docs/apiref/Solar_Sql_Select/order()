@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: order
+
+param: string|array, $spec
+
+return: void
+
+</function>
+
+Adds a row order to the query.
+
+* Parameters:
+
+ * string|array //$spec//: The column(s) and direction to order by.
+
+* Returns void
+
+Adds a row order to the query.

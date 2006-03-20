@@ -1,0 +1,17 @@
++ Class Methods
+
+++ Public
+
+* Solar_Content::__construct() -- Constructor.
+
+* Solar_Content::apiVersion() -- Reports the API version for this class.
+
+* Solar_Content::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Content::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: update
+
+param: string, $table
+
+param: array, $data
+
+param: string|array, $where
+
+return: void
+
+</function>
+
+Updates a table with specified data based on a WHERE clause.
+
+* Parameters:
+
+ * string //$table//: The table to udpate.
+
+ * array //$data//: An associative array where the key is the column name and the value is the value to use for that column.
+
+ * string|array //$where//: The SQL WHERE clause to limit which rows are updated.
+
+* Returns void
+
+Updates a table with specified data based on a WHERE clause.

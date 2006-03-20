@@ -1,0 +1,3 @@
+protected bool $_disable
+
+Whether or not the element is to be disabled.

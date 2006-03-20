@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Exception_TableNameLength::__construct() -- Constructor.
+
+* Solar_Sql_Exception_TableNameLength::__toString() -- Custom string output.
+
+* Solar_Sql_Exception_TableNameLength::getClass() -- Gets the class that threw the exception.
+
+* Solar_Sql_Exception_TableNameLength::getClassCode() -- Gets the class and code together.
+
+* Solar_Sql_Exception_TableNameLength::getCode() -- 
+
+* Solar_Sql_Exception_TableNameLength::getFile() -- 
+
+* Solar_Sql_Exception_TableNameLength::getInfo() -- Gets user-defined information.
+
+* Solar_Sql_Exception_TableNameLength::getLine() -- 
+
+* Solar_Sql_Exception_TableNameLength::getMessage() -- 
+
+* Solar_Sql_Exception_TableNameLength::getTrace() -- 
+
+* Solar_Sql_Exception_TableNameLength::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Sql_Exception_TableNameLength::__clone() --

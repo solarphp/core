@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Test_Example_Exception_CustomCondition::$_class -- Class where the exception originated.
+
+* Solar_Test_Example_Exception_CustomCondition::$_info -- User-defined information array.
+
+* Solar_Test_Example_Exception_CustomCondition::$code -- 
+
+* Solar_Test_Example_Exception_CustomCondition::$file -- 
+
+* Solar_Test_Example_Exception_CustomCondition::$line -- 
+
+* Solar_Test_Example_Exception_CustomCondition::$message -- 
+
+++ Private
+
+None.

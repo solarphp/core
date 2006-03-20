@@ -1,0 +1,29 @@
++ Class Methods
+
+++ Public
+
+* Solar_Cache_File::__construct() -- Constructor.
+
+* Solar_Cache_File::apiVersion() -- Reports the API version for this class.
+
+* Solar_Cache_File::delete() -- Deletes an entry from the cache.
+
+* Solar_Cache_File::deleteAll() -- Removes all entries from the cache.
+
+* Solar_Cache_File::entry() -- Returns the path and filename for the entry key.
+
+* Solar_Cache_File::fetch() -- Fetches cache entry data.
+
+* Solar_Cache_File::life() -- Gets the cache lifetime in seconds.
+
+* Solar_Cache_File::locale() -- Looks up locale strings based on a key.
+
+* Solar_Cache_File::save() -- Inserts/updates cache entry data.
+
+++ Protected
+
+* Solar_Cache_File::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

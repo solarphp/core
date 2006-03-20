@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+* Solar_View_Helper_GetTextRaw::$_class -- The default locale class.
+
+++ Protected
+
+* Solar_View_Helper_GetTextRaw::$_config -- 
+
+* Solar_View_Helper_GetTextRaw::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

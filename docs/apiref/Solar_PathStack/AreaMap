@@ -1,0 +1,10 @@
+HomePage | The Solar_PathStack Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_stack
+ ClassMethods | Class Methods
+  add()
+  findInclude()
+  findReal()
+  get()
+  set()

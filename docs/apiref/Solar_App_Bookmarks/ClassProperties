@@ -1,0 +1,81 @@
++ Class Properties
+
+++ Public
+
+* Solar_App_Bookmarks::$backlink -- A link back to the previous page: list results, bookmarked page, etc.
+
+* Solar_App_Bookmarks::$err -- An array of error messages.
+
+* Solar_App_Bookmarks::$feed -- Feed information.
+
+* Solar_App_Bookmarks::$formdata -- The current form processing object.
+
+* Solar_App_Bookmarks::$layout_base -- 
+
+* Solar_App_Bookmarks::$layout_bottom -- 
+
+* Solar_App_Bookmarks::$layout_left -- 
+
+* Solar_App_Bookmarks::$layout_link -- 
+
+* Solar_App_Bookmarks::$layout_meta -- 
+
+* Solar_App_Bookmarks::$layout_object -- 
+
+* Solar_App_Bookmarks::$layout_right -- 
+
+* Solar_App_Bookmarks::$layout_script -- 
+
+* Solar_App_Bookmarks::$layout_style -- 
+
+* Solar_App_Bookmarks::$layout_title -- The <title> string.
+
+* Solar_App_Bookmarks::$layout_top -- 
+
+* Solar_App_Bookmarks::$list -- The list of all bookmarks for the current page.
+
+* Solar_App_Bookmarks::$order -- The requested bookmark order (subj, tags, created, etc).
+
+* Solar_App_Bookmarks::$owner_handle -- The current owner_handle being displayed.
+
+* Solar_App_Bookmarks::$page -- The current page number being displayed.
+
+* Solar_App_Bookmarks::$pages -- The total number of pages in the query.
+
+* Solar_App_Bookmarks::$tags -- The tags requested for filtering results.
+
+* Solar_App_Bookmarks::$tags_in_use -- The list of all tags in use by the current owner_handle.
+
+++ Protected
+
+* Solar_App_Bookmarks::$_action -- The action being requested of (performed by) the application.
+
+* Solar_App_Bookmarks::$_action_default -- The default controller action.
+
+* Solar_App_Bookmarks::$_action_info -- Pathinfo mappings for each controller action.
+
+* Solar_App_Bookmarks::$_bookmarks -- A bookmarks node interaction manager.
+
+* Solar_App_Bookmarks::$_config -- User-defined configuration values.
+
+* Solar_App_Bookmarks::$_dir -- Base directory under which actions, views, etc. are located.
+
+* Solar_App_Bookmarks::$_info -- Application request parameters collected from the URI pathinfo.
+
+* Solar_App_Bookmarks::$_layout -- The name of the layout to use for the view, minus the .layout.php suffix.
+
+* Solar_App_Bookmarks::$_layout_dir -- Where the layout directory is located.
+
+* Solar_App_Bookmarks::$_layout_var -- The name of the variable where page content is placed in the layout.
+
+* Solar_App_Bookmarks::$_name -- The short-name of this application.
+
+* Solar_App_Bookmarks::$_query -- Application request parameters collected from the URI query string.
+
+* Solar_App_Bookmarks::$_user -- Local reference to the 'user' object in Solar::registry().
+
+* Solar_App_Bookmarks::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+
+++ Private
+
+None.

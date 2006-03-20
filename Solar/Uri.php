@@ -25,9 +25,6 @@
  * 
  * @todo add a way to let import() know what the script name is
  * 
- * @todo add a way to let actionImport() and actionExport() know what the
- * front controller path is
- * 
  * @todo convert "%2B" to "+" on export? of course, that means real
  * plus-signs will be spaces...
  * 
@@ -241,8 +238,13 @@ class Solar_Uri extends Solar_Base {
      */
     public function importAction($spec)
     {
-        // make sure there's actually an action spec,
-        // forcibly add a leading slash
+        // if the action href is already prefixed, remove it
+        $len = strlen($this->_config['action']);
+        if (substr($spec, 0, $len) == $this->_config['action']) {
+            $spec = substr($spec, $len);
+        }
+        
+        // make sure there's actually an action spec after that
         $spec = trim($spec);
         if (! $spec) {
             $spec = '/';
@@ -265,6 +267,10 @@ class Solar_Uri extends Solar_Base {
      * 
      * Builds a full URI string.
      * 
+     * Takes the current properties of the Solar_Uri object
+     * and assembles them into a URI string.  This method
+     * [[php urlencode()]]s the values on export.
+     *
      * @return string A URI string.
      * 
      */

@@ -1,0 +1,27 @@
+HomePage | The Solar_Sql_Driver_Mssql Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_direct
+  $_native
+  $_pdo
+  $_pdo_type
+ ClassMethods | Class Methods
+  __construct()
+  _connect()
+  _dsn()
+  _exception()
+  apiVersion()
+  begin()
+  buildCreateTable()
+  buildSelect()
+  commit()
+  createSequence()
+  dropSequence()
+  exec()
+  listTables()
+  locale()
+  nativeColTypes()
+  nextSequence()
+  quote()
+  rollback()

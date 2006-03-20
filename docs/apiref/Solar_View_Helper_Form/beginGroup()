@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: beginGroup
+
+param: unknown, $label, NULL
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$label//: 
+
+* Returns unknown: unknown

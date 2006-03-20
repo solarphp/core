@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: int, $id
+
+return: array
+
+</function>
+
+Fetch one master node by ID.
+
+* Parameters:
+
+ * int //$id//: The master node ID.
+
+* Returns array: The master node data.
+
+Fetch one master node by ID.

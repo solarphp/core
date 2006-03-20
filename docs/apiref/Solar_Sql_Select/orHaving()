@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: orHaving
+
+param: string, $cond
+
+return: void
+
+</function>
+
+Adds a HAVING condition to the query by OR.
+
+* Parameters:
+
+ * string //$cond//: The HAVING condition.
+
+* Returns void
+
+Adds a HAVING condition to the query by OR.
+
+Otherwise identical to orHaving().

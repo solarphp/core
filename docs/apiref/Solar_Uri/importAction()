@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: importAction
+
+param: unknown, $spec
+
+return: void
+
+</function>
+
+Parses a Solar_Controller action spec as a URI.
+
+* Parameters:
+
+ * unknown //$spec//: 
+
+* Returns void
+
+Parses a Solar_Controller action spec as a URI.

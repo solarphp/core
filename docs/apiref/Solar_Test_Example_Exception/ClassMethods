@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Test_Example_Exception::__construct() -- Constructor.
+
+* Solar_Test_Example_Exception::__toString() -- Custom string output.
+
+* Solar_Test_Example_Exception::getClass() -- Gets the class that threw the exception.
+
+* Solar_Test_Example_Exception::getClassCode() -- Gets the class and code together.
+
+* Solar_Test_Example_Exception::getCode() -- 
+
+* Solar_Test_Example_Exception::getFile() -- 
+
+* Solar_Test_Example_Exception::getInfo() -- Gets user-defined information.
+
+* Solar_Test_Example_Exception::getLine() -- 
+
+* Solar_Test_Example_Exception::getMessage() -- 
+
+* Solar_Test_Example_Exception::getTrace() -- 
+
+* Solar_Test_Example_Exception::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Test_Example_Exception::__clone() --

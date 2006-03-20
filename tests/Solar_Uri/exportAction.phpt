@@ -37,7 +37,7 @@ $spec .= '?' . implode('&', $tmp);
 
 // import the URI spec and test the export
 $uri->importAction($spec);
-$assert->same($uri->exportAction(), $spec);
+$assert->same($uri->exportAction(), "/index.php/$spec");
 
 // ---------------------------------------------------------------------
 

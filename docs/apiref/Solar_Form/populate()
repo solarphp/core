@@ -1,0 +1,24 @@
+<function>
+
+access:   public
+
+name: populate
+
+param: array, $submit, NULL
+
+return: void
+
+</function>
+
+Populates form elements with submitted values.
+
+* Parameters:
+
+ * array //$submit//: The source data array for populating form values as array(name => value); if null, will populate from $_POST or $_GET as determined from the form's 'method' attribute.
+
+* Returns void
+
+Populates form elements with submitted values.
+
+Populates form elements with either submitted values or the
+elements passed in $submit.

@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Exception_ConnectionFailed::$_class -- Class where the exception originated.
+
+* Solar_Exception_ConnectionFailed::$_info -- User-defined information array.
+
+* Solar_Exception_ConnectionFailed::$code -- 
+
+* Solar_Exception_ConnectionFailed::$file -- 
+
+* Solar_Exception_ConnectionFailed::$line -- 
+
+* Solar_Exception_ConnectionFailed::$message -- 
+
+++ Private
+
+None.

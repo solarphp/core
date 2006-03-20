@@ -1,0 +1,21 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Driver_Mysql::$_config -- User-provided configuration.
+
+* Solar_Sql_Driver_Mysql::$_direct -- Execute these commands directly, without preparation.
+
+* Solar_Sql_Driver_Mysql::$_native -- Map of Solar generic column types to RDBMS native declarations.
+
+* Solar_Sql_Driver_Mysql::$_pdo -- A portable database object for accessing the RDBMS.
+
+* Solar_Sql_Driver_Mysql::$_pdo_type -- The PDO driver type.
+
+++ Private
+
+None.

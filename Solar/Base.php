@@ -51,24 +51,9 @@ abstract class Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Config keys are:
+     * Default config keys are:
      * 
      * : \\locale\\ : (string) Directory where locale files for the class are kept
-     * 
-     * The $_config property has a special purpose within Solar
-     * classes: it contains the configuration parameters for
-     * instantiating an object.  When you extend Solar_Base and
-     * instantiate the subclassed object, any key in this array will
-     * be re-populated with related keys from the [Main:ConfigFile
-     * config file], and/or from keys set in the configuration
-     * parameter of Solar::factory() at instantiation time.
-     * 
-     * Within $_config, the \\locale\\ key itself has a special
-     * purpose; the Solar_Base::locale() method uses it to determine
-     * where localization files related to the class are stored. 
-     * Thus, if you have a 'locale' key in your $_config array, it
-     * should always be a string that tells where the
-     * [Main:LocaleFiles locale files] are.
      * 
      * @var array
      * 
@@ -80,135 +65,6 @@ abstract class Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * The Solar_Base constructor does quite a bit within Solar,
-     * particularly by reading the [Main:ConfigFile config file]
-     * values for the class.
-     * 
-     * ++ Extending the Constructor
-     * 
-     * When you extend the constructor, make sure the only parameter
-     * is \\$config = null\\ (this is how it receives
-     * instantiation-time configuration values) and that it calls the
-     * parent constructor at some point (with the \\$config\\ parameter
-     * passed up the chain).
-     * 
-     * For example:
-     * 
-     * <code type="php">
-     * class Example extends Solar_Base {
-     *     protected $_config = array(
-     *         'opt_1' => 'foo',
-     *         'opt_2' => 'bar',
-     *         'opt_3' => 'baz'
-     *     );
-     * 
-     *     public __construct($config = null)
-     *     {
-     *         // set up the 'locale' option for $config ...
-     *         $this->_config['locale'] = dirname(__FILE__) . '/Locale/';
-     *         
-     *         // ... and continue construction.
-     *         parent::__construct($config);
-     *     }
-     * }
-     * </code>
-     * 
-     * ++ Using The $_config Property
-     * 
-     * When you define a Solar_Base extended class, you will need to
-     * populate the Solar_Base::$_config array with all of the
-     * options and keys you want the user to be able to configure. 
-     * Let's say we want those configuration options to be called
-     * "opt_1", "opt_2", and "opt_3" (as a generic example).  You
-     * would set up your extended class to define those options as
-     * part of the $_config property.
-     * 
-     * <code type="php">
-     * class Example extends Solar_Base {
-     *     protected $_config = array(
-     *         'opt_1' => 'foo',
-     *         'opt_2' => 'bar',
-     *         'opt_3' => 'baz'
-     *     );
-     * }
-     * </code>
-     * 
-     * When you use Solar::factory() to instantiate this class, those
-     * will be the default $_config values.
-     * 
-     * <code type="php">
-     * 
-     * $example = Solar::factory('Example');
-     * 
-     * // The values of $example->_config are as listed above:
-     * //
-     * // 'opt_1' => 'foo'
-     * // 'opt_2' => 'bar'
-     * // 'opt_3' => 'baz'
-     * 
-     * </code>
-     * 
-     * +++ Config File Settings
-     * 
-     * Now, if your [Main:ConfigFile config file] has an 'Example'
-     * group in it, those values will override any of the default
-     * values set by your class definition.  Say your config file
-     * looks something like this:
-     * 
-     * <code type="php">
-     * $config = array();
-     * // ...
-     * $config['Example']['opt_3'] = 'dib';
-     * // ...
-     * return $config;
-     * </code>
-     * 
-     * When you instantiate the Example object, the config file value
-     * will override the default value, leaving all others in place:
-     * 
-     * <code type="php">
-     * 
-     * $example = Solar::factory('Example');
-     * 
-     * // The values of $example->_config are now:
-     * // 
-     * // 'opt_1' => 'foo'
-     * // 'opt_2' => 'bar'
-     * // 'opt_3' => 'dib' ... not 'baz' because it was set in Solar.config.php
-     * 
-     * </code>
-     * 
-     * +++ Instantiation Settings
-     * 
-     * Finally, if you specify a configuration array as the second parameter of Solar::factory(), those values override both the default values of the class definition and the Solar.config.php values.
-     * 
-     * <code type="php">
-     * 
-     * $config = array('opt_2' => 'gir');
-     * $example = Solar::factory('Example', $config);
-     * 
-     * // The values of $example->_config are now:
-     * // 
-     * // 'opt_1' => 'foo' ... as defined by the class
-     * // 'opt_2' => 'gir' ... from the Solar::factory() instantiation config
-     * // 'opt_3' => 'dib' ... from the config file
-     * 
-     * </code>
-     * 
-     * +++ Order of Precedence
-     * 
-     * All of this is to say that the order of precedence for
-     * $_config property values looks like this:
-     * 
-     * * The values start as defined by the class,
-     * 
-     * * And are overwritten by any config file values,
-     * 
-     * * And are again overwritten by options set at instantiation time
-     * 
-     * Note that values not changed remain the same, so if you leave
-     * one out, it's not overwritten to be null.
      * 
      * @param mixed $config If array, is merged with the default
      * $_config property array and any values from the
@@ -274,132 +130,6 @@ abstract class Solar_Base {
      * 
      * Looks up locale strings based on a key.
      * 
-     * This is a convenience method that loads locale strings for the
-     * class, and returns those strings based on the translation key.
-     * Related reading includes [Main:LocaleFiles locale files] and
-     * the [Solar_Locale:HomePage Solar_Locale class].
-     * 
-     * If you request a key that does not exist in the class-specific
-     * locale file, or if there is no locale file for this class and
-     * the current locale code, this method will fall back to the
-     * system-wide Solar locale strings found in the
-     * \\Solar/Locale/*\\ directory. If, after all that searching,
-     * the key has no translation, this method will return the key
-     * itself as the translation.
-     * 
-     * ++ Examples
-     * 
-     * +++ The Hard Way
-     * 
-     * The longhand way of doing localization, using only the Solar
-     * arch-class, looks something like this:
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * // load the translation file for the 'Example' class
-     * // based on the current locale code
-     * Solar::registry('locale')->load('Example',
-     * '/path/to/files/Locale/');
-     * 
-     * // get a translation for the ERR_EXAMPLE key
-     * $string = Solar::locale('Example', 'ERR_EXAMPLE');
-     * </code>
-     * 
-     * If you change locale codes, you need to re-load the strings:
-     * 
-     * <code type="php">
-     * // change locale codes to Espanol
-     * Solar::registry('locale')->setCode('es_ES');
-     * 
-     * // this string will be blank because the es_ES strings have not
-     * // been loaded yet
-     * $string = Solar::locale('Example', 'ERR_EXAMPLE');
-     * 
-     * // need to reload strings for the current locale
-     * Solar::registry('locale')->load('Example',
-     * '/path/to/files/Locale/');
-     * 
-     * // now we'll get a translation for the ERR_EXAMPLE key
-     * $string = Solar::locale('Example', 'ERR_EXAMPLE');
-     * </code>
-     * 
-     * +++ The Easy Way
-     * 
-     * The Solar_Base::locale() method does all the above work for
-     * you.
-     * 
-     * First, you need to have defined $_config['locale'] as the path
-     * to your locale files.
-     * 
-     * <code type="php">
-     * class Example extends Solar_Base {
-     *    protected $_config = array(
-     *        'locale' => '/path/to/files/Locale/'
-     *    );
-     * }
-     * </code>
-     * 
-     * Now you can use the Solar_Base::locale() method.
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * $example = Solar::factory('Example');
-     * $string = $example->locale('ERR_EXAMPLE');
-     * </code>
-     * 
-     * If you change locale codes, the method will automatically
-     * reload strings for the new code on your next call to locale().
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * $example = Solar::factory('Example');
-     * 
-     * // get the default translation
-     * $string = $example->locale('ERR_EXAMPLE');
-     * 
-     * // change the code and get another translation
-     * Solar::registry('locale')->setCode('es_ES');
-     * $string = $example->locale('ERR_EXAMPLE');
-     * </code>
-     * 
-     * Finally, if the requested key does not exist in the
-     * class-specific locale file, this method will "fall back" to
-     * the all-purpose Solar locale file, generally located in
-     * \\Solar/Locale/*\\, and look for the translation key there.
-     * 
-     * +++ Singular/Plural
-     * 
-     * The call to locale() takes an optional second parameter
-     * indicating a number to associate with the translation.  If the
-     * number is 1, a singular version of the translation will be
-     * returned; if the number is more or less than exactly 1, a
-     * plural version of the translation (if it exists) will be
-     * returned.  See more on defining plurals in the
-     * [Main:LocaleFiles locale files] documentation.
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * $example = Solar::factory('Example');
-     * 
-     * // get singular translations
-     * $string = $example->locale('ERR_EXAMPLE');
-     * $string = $example->locale('ERR_EXAMPLE', 1);
-     * 
-     * // get plural translations
-     * $string = $example->locale('ERR_EXAMPLE', 0);
-     * $string = $example->locale('ERR_EXAMPLE', 0.5);
-     * $string = $example->locale('ERR_EXAMPLE', 1.1);
-     * $string = $example->locale('ERR_EXAMPLE', 999);
-     * </code>
-     * 
      * @param string $key The key to get a locale string for.
      * 
      * @param string $num If 1, returns a singular string; otherwise, returns
@@ -454,60 +184,6 @@ abstract class Solar_Base {
         }
     }
     
-    
-    /**
-     * 
-     * Sets a "read-once" session value for this class and a key.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The value for the key; previous values will
-     * be overwritten.
-     * 
-     * @return void
-     * 
-     */
-    public function setFlash($key, $val)
-    {
-        return Solar::setFlash(get_class($this), $key, $val);
-    }
-    
-    /**
-     * 
-     * Appends a "read-once" session value for this class and key.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The flash value to add to the key; this will
-     * result in the flash becoming an array.
-     * 
-     * @return void
-     * 
-     */
-    public function addFlash($key, $val)
-    {
-        return Solar::addFlash(get_class($this), $key, $val);
-    }
-    
-    /**
-     * 
-     * Retrieves a "read-once" session value, thereby removing the value.
-     * 
-     * @param string $class The related class for the flash.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val If the class and key do not exist, return
-     * this value.  Default null.
-     * 
-     * @return mixed The "read-once" value.
-     * 
-     */
-    public function getFlash($key, $val = null)
-    {
-        return Solar::getFlash(get_class($this), $key, $val);
-    }
-    
     /**
      * 
      * Convenience method for returning exceptions with localized text.
@@ -520,11 +196,11 @@ abstract class Solar_Base {
      * 
      * # Example_Exception_FileNotFound (class specific)
      * 
-     * # Solar_Exception_FileNotFound (Solar specific)</li>
+     * # Solar_Exception_FileNotFound (Solar specific)
      * 
-     * # Example_Exception (class generic)</li>
+     * # Example_Exception (class generic)
      * 
-     * # Solar_Exception (Solar generic)</li>
+     * # Solar_Exception (Solar generic)
      * 
      * The final fallback is always the Solar_Exception class.
      * 

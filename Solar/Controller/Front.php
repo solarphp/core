@@ -22,7 +22,7 @@
  * An example front-controller "index.php" for your web root:
  *
  * <code type="php">
- * require_once 'Solar.php';
+ * require 'Solar.php';
  * Solar::start();
  * $front = Solar::factory('Solar_Controller_Front');
  * $front->display();
@@ -40,93 +40,56 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * User-defined configuration array.
      * 
+     * Keys are:
+     * 
+     * : \\classes\\ : (array) Base class names for page controllers.
+     * 
+     * : \\default\\ : (string) The default page name to load.
+     * 
      * @var array
      * 
      */
     protected $_config = array(
-        'app_class'   => array(
-            'bookmark'   => 'Solar_App_Bookmarks',
-            'bookmarks'  => 'Solar_App_Bookmarks',
-            'hello'      => 'Solar_App_HelloWorld',
-            'helloworld' => 'Solar_App_HelloWorld',
-        ),
-        'app_default' => 'bookmarks',
-        'layout_dir'  => 'Solar/Controller/Front/Layouts/',
-        'layout_tpl'  => 'twoColRight',
-        'layout_var'  => 'solar_app_content',
+        'classes' => array('Solar_App'),
+        'default' => 'bookmarks',
     );
 
     /**
      * 
-     * The default short-name when none is specified.
+     * List of base class names.
+     * 
+     * Classes are searched in last-in-first-out order, so later classes take
+     * precedence over earlier ones.
      * 
      * @var array
      * 
      */
-    protected $_app_default;
+    protected $_classes;
+    
+    /**
+     * 
+     * The default page name when none is specified.
+     * 
+     * @var array
+     * 
+     */
+    protected $_default;
 
     /**
      * 
-     * Map of app names to classes.
-     * 
-     * @var array
-     * 
-     */
-    protected $_app_class;
-    
-    /**
-     * 
-     * Where the layout directory is located.
-     * 
-     * Defaults is 'Solar/Layout/'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_layout_dir;
-    
-    /**
-     * 
-     * The name of the layout template, minus the .layout.php suffix.
-     * 
-     * Default is 'default' (i.e., 'default.layout.php').
-     * 
-     * @var string
-     * 
-     */
-    protected $_layout_tpl;
-    
-    /**
-     * 
-     * The name of the app content var in the layout template.
-     * 
-     * Default is 'solar_app_content'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_layout_var;
-    
-    /**
-     * 
      * Constructor.
-     * 
-     * Runs user-specified construct-time script.
      * 
      * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config)
     {
-        // now do "real" construction
+        // do the "real" construction
         parent::__construct($config); 
         
         // set convenience vars from config
-        $this->_app_default = $this->_config['app_default'];
-        $this->_app_class   = $this->_config['app_class'];
-        $this->_layout_dir  = $this->_config['layout_dir'];
-        $this->_layout_tpl  = $this->_config['layout_tpl'];
-        $this->_layout_var  = $this->_config['layout_var'];
+        $this->_default = $this->_config['default'];
+        $this->_classes = $this->_config['classes'];
         
         // execute construct-time setups
         $this->_setup();
@@ -135,6 +98,8 @@ class Solar_Controller_Front extends Solar_Base {
     /**
      * 
      * Sets up the Solar and Front-Controller environment.
+     * 
+     * @return void
      * 
      */
     protected function _setup()
@@ -156,15 +121,16 @@ class Solar_Controller_Front extends Solar_Base {
         }
     }
     
-    
     /**
      * 
-     * Fetches the output of an app/action/info specification URI.
+     * Fetches the output of a page/action/info specification URI.
      * 
-     * @param string $spec A app/action/info spec for the front
+     * @param Solar_Uri|string $spec A page/action/info spec for the front
      * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
-     * @return Solar_Uri|string The output of the application action.
+     * @return string The output of the page action.
+     * 
+     * @todo Add 404 support.
      * 
      */
     public function fetch($spec = null)
@@ -177,58 +143,54 @@ class Solar_Controller_Front extends Solar_Base {
             $uri->importAction($spec);
         }
         
-        // pull the app name off the top of the path_info.
-        $name = array_shift($uri->info);
-        if (trim($name) == '') {
-            // no app specified, use the default.
-            $name = $this->_app_default;
+        // pull the page name off the top of the pathinfo, convert
+        // from "pageName" to "PageName".
+        $page = array_shift($uri->info);
+        if (trim($page) == '') {
+            // no page specified, use the default.
+            $page = $this->_default;
+        }
+        $page = ucfirst($page);
+        
+        // does the page map to a known class?
+        $list = (array) $this->_classes;
+        foreach (array_reverse($list) as $base) {
+            
+            // get a class name
+            $class = $base . '_' . $page;
+            
+            // what file would it be?
+            $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+            
+            // does that file exist?
+            if (Solar::fileExists($file)) {
+                // $class is set to the proper class name, so break
+                // out of the loop
+                break;
+            }
+            
+            // not found at all.
+            $class = false;
         }
         
-        /** @todo Add real 404 support. */
-        // is it a known app name?
-        if (! array_key_exists($name, $this->_app_class)) {
-            return htmlspecialchars("404: Page '$name' unknown.");
+        // did we find the page class?
+        if (! $class) {
+            return htmlspecialchars("404: Page '$page' unknown.");
         }
         
-        // instantiate the app class and fetch its content.
-        $class   = $this->_app_class[$name];
-        $app     = Solar::factory($class);
-        $content = $app->fetch($uri);
-        
-        // did the app set any data for the layout?
-        $layout = $app->getLayout();
-        if ($layout === false) {
-            // the app explicitly does not want to use the layout, so
-            // fall back to a one-step view and just return the app
-            // content.  typically this is the case in things like RSS
-            // feeds.
-            return $content;
-        } else {
-            
-            // set up the layout template for a two-step view.
-            $view = Solar::factory('Solar_View');
-            
-            // step 1:
-            // assign the app's layout data, then assign the app content
-            // (so that the content overrides any related app data).
-            $view->assign($layout);
-            $view->assign($this->_layout_var, $content);
-            
-            // step 2:
-            // fetch the layout with the content and vars.
-            $view->setTemplatePath($this->_layout_dir);
-            return $view->fetch($this->_layout_tpl . '.layout.php');
-        }
+        // instantiate the page class and fetch its content.
+        $page = Solar::factory($class);
+        return $page->fetch($uri);
     }
     
     /**
      * 
-     * Displays the output of an app/action/info specification URI.
+     * Displays the output of an page/action/info specification URI.
      * 
-     * @param string $spec A app/action/info spec for the front
+     * @param string $spec A page/action/info spec for the front
      * controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
      * 
-     * @return string The output of the application.
+     * @return string The output of the page action.
      * 
      */
     public function display($spec = null)

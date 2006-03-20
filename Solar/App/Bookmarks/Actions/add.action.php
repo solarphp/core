@@ -47,10 +47,10 @@ $form->populate();
 // 
 
 // what operation are we performing?
-$op = Solar::post('op');
+$submit = Solar::post('submit');
 
 // OP: Save
-if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
     
     $values = $form->values();
     $data = $values['bookmark'];
@@ -83,7 +83,7 @@ if ($op == Solar::locale('Solar', 'OP_SAVE') && $form->validate()) {
 }
 
 // OP: Cancel
-if ($op == Solar::locale('Solar', 'OP_CANCEL')) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_CANCEL')) {
     $this->_redirect($href);
 }
 
@@ -98,8 +98,4 @@ $this->backlink = $href;
 
 // keep the backlink for the next page load
 $this->setFlash('backlink', $href);
-
-// assign data for the layout
-$this->_layout['head']['title'] = 'Solar_App_Bookmarks';
-$this->_layout['body']['title'] = $this->locale('BOOKMARKS');
 ?>

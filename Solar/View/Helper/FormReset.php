@@ -55,7 +55,7 @@ class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
         }
         
         // output
-        return '<input type="reset"';
+        return '<input type="reset"'
              . ' name="' . $this->_view->escape($this->_name) . '"'
              . $escval
              . $this->_view->attribs($this->_attribs)

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Content_Abstract
+
+</function>
+
+Constructor
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Content_Abstract: Solar_Content_Abstract instance
+
+Constructor

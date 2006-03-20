@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_FormText::__construct() -- Constructor.
+
+* Solar_View_Helper_FormText::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_FormText::formText() -- Generates a 'text' element.
+
+* Solar_View_Helper_FormText::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_FormText::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormText::_prepare() -- Prepares an info array and imports to the properties.
+
+++ Private
+
+None.

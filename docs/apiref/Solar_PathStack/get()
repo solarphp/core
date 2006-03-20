@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: get
+
+return: unknown
+
+</function>
+
+Gets a copy of the current stack.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Gets a copy of the current stack.

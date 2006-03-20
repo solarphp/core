@@ -1,0 +1,11 @@
+protected  $_config
+
+User-provided configuration values.
+
+Keys:
+
+file => (string) Path to password file.
+
+group => (string) The group in which usernames reside.
+
+@var array

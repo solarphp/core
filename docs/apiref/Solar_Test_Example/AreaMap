@@ -1,0 +1,14 @@
+HomePage | The Solar_Test_Example Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  classGenericException()
+  classSpecificException()
+  exceptionFromCode()
+  locale()
+  solarGenericException()
+  solarSpecificException()

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: unknown, $username
+
+return: array
+
+</function>
+
+Refresh the list of roles for the given user.
+
+* Parameters:
+
+ * unknown //$username//: 
+
+* Returns array: The list of roles for the authenticated user.
+
+Refresh the list of roles for the given user.

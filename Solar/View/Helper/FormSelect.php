@@ -70,7 +70,7 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
             if (in_array($opt_value, $this->_value)) {
                 $selected = ' selected="selected"';
             }
-            $list[] = '<option';
+            $list[] = '<option'
                     . ' value="' . $this->_view->escape($opt_value) . '"'
                     . ' label="' . $this->_view->escape($opt_label) . '"'
                     . $selected
@@ -80,7 +80,7 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
         // now build the XHTML
         return '<select name="' . $this->_view->escape($this->_name) . '"'
              . $this->_view->attribs($this->_attribs) . ">\n    "
-             . implode("\n    ", $list);
+             . implode("\n    ", $list)
              . "\n</select>";
     }
 }

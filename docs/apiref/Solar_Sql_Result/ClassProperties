@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Result::$_config -- User-defined configuration keys.
+
+++ Private
+
+None.

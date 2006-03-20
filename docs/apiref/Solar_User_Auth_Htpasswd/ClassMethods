@@ -1,0 +1,23 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Auth_Htpasswd::__construct() -- Constructor.
+
+* Solar_User_Auth_Htpasswd::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Auth_Htpasswd::locale() -- Looks up locale strings based on a key.
+
+* Solar_User_Auth_Htpasswd::valid() -- Validate a username and password.
+
+++ Protected
+
+* Solar_User_Auth_Htpasswd::_64() -- Convert to allowed 64 characters for encryption.
+
+* Solar_User_Auth_Htpasswd::_apr1() -- APR compatible MD5 encryption.
+
+* Solar_User_Auth_Htpasswd::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

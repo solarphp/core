@@ -1,0 +1,35 @@
+<function>
+
+access:   protected
+
+name: _buildColDef
+
+param: unknown, $name
+
+param: array, $info
+
+return: unknown
+
+</function>
+
+*
+
+* Parameters:
+
+ * unknown //$name//: 
+
+ * array //$info//: The column information.
+
+* Returns unknown: unknown
+
+*
+Builds a column definition string.
+
+The $info parameter should be in this format:
+
+$info = array(
+  'type'    => bool|char|int|etc,
+  'size'    => total length for char|varchar|numeric
+  'scope'   => decimal places for numeric
+  'require' => true|false,
+);

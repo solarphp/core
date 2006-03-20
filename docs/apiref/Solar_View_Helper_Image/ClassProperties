@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_Image::$_config -- User-provided configuration values.
+
+* Solar_View_Helper_Image::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

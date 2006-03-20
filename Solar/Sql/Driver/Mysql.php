@@ -82,7 +82,15 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         $offset = ! empty($parts['limit']['offset'])
             ? (int) $parts['limit']['offset']
             : 0;
-            
+      
+        /*
+            // for mysql 3.23.x?
+            if ($count > 0) {
+                $offset = ($offset > 0) ? $offset : 0;    
+                $stmt .= "LIMIT $offset, $count";
+            }
+        */
+        
         // add the count and offset
         if ($count > 0) {
             $stmt .= " LIMIT $count";

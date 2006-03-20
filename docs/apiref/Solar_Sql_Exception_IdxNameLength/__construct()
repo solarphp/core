@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Sql_Exception_IdxNameLength
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Sql_Exception_IdxNameLength: Solar_Sql_Exception_IdxNameLength instance
+
+Constructor.

@@ -22,7 +22,7 @@
  * This is the file-based driver for [Solar_Cache:HomePage Solar_Cache].
  * In general, you never need to instantiate it yourself; instead,
  * use Solar_Cache as the frontend for it and specify
- * 'Solar_Cache_File' as the 'class' config key value.
+ * 'Solar_Cache_File' as the 'driver' config key value.
  * 
  * If you specify a path (for storing cache entry files) that does
  * not exist, this driver attempts to create it for you.
@@ -51,6 +51,15 @@ class Solar_Cache_File extends Solar_Base {
      * 
      * User-provided configuration.
      * 
+     * Config keys are:
+     * 
+     * : \\path\\ : (string) The directory where cache files are located; 
+     *   should be readable and writable by the script process, usually
+     *   the web server process. Default is '/tmp/Solar_Cache_File/'.
+     * 
+     * : \\life\\ : (int) The lifetime of each cache entry in seconds; 
+     *   default is 3600 seconds (i.e., 1 hour).
+     * 
      * @var array
      * 
      */
@@ -62,12 +71,6 @@ class Solar_Cache_File extends Solar_Base {
     /**
      * 
      * Constructor.
-     * 
-     * Config keys are:
-     * 
-     * : \\path\\ : (string) The directory where cache files are located; should be readable and writable by the script process, usually the web server process
-     * 
-     * : \\life\\ : (int) The lifetime of each cache entry in seconds; default is 3600 seconds (i.e., 1 hour)
      * 
      * @param array $config User-provided configuration values.
      * 

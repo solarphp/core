@@ -1,0 +1,6 @@
+protected array $_classes
+
+List of base class names.
+
+Classes are searched in last-in-first-out order, so later classes take
+precedence over earlier ones.

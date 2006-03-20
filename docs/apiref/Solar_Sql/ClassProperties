@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql::$_config -- User-provided configuration.
+
+* Solar_Sql::$_driver -- Object to use for a specific RDBMS behaviors.
+
+* Solar_Sql::$_len -- Max identifier lengths for table, column, and index names.
+
+++ Private
+
+None.

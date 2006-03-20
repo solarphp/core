@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: delete
+
+param: string, $key
+
+return: void
+
+</function>
+
+Deletes a cache entry.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+* Returns void
+
+Deletes a cache entry.
+
+Example:
+
+<code type="php">
+$cache = Solar::factory('Solar_Cache');
+
+// create an entry ID named for the current URI
+$id = Solar::server('REQUEST_URI');
+
+// delete any cache entry with that ID
+$cache->delete($id);
+</code>

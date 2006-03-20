@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_User_Role_File::$_config -- User-supplied configuration values.
+
+++ Private
+
+None.

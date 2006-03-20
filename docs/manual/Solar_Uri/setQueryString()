@@ -1,0 +1,9 @@
+This method will reset the query array property to the keys and values indicated by an arbitrary query string.  For example:
+
+<code type="php"</code>
+$uri = Solar::factory('Solar_Uri');
+
+$qstr = '?foo=bar&baz=dib';
+$uri->setQueryString($qstr);
+// $uri->query: array('foo' => 'bar', 'baz' => 'dib')
+</code>

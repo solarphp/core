@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Exception_TableNameReserved::__construct() -- Constructor.
+
+* Solar_Sql_Exception_TableNameReserved::__toString() -- Custom string output.
+
+* Solar_Sql_Exception_TableNameReserved::getClass() -- Gets the class that threw the exception.
+
+* Solar_Sql_Exception_TableNameReserved::getClassCode() -- Gets the class and code together.
+
+* Solar_Sql_Exception_TableNameReserved::getCode() -- 
+
+* Solar_Sql_Exception_TableNameReserved::getFile() -- 
+
+* Solar_Sql_Exception_TableNameReserved::getInfo() -- Gets user-defined information.
+
+* Solar_Sql_Exception_TableNameReserved::getLine() -- 
+
+* Solar_Sql_Exception_TableNameReserved::getMessage() -- 
+
+* Solar_Sql_Exception_TableNameReserved::getTrace() -- 
+
+* Solar_Sql_Exception_TableNameReserved::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Sql_Exception_TableNameReserved::__clone() --

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: newHelper
+
+param: string, $name
+
+return: unknown
+
+</function>
+
+Creates a new standalone helper object.
+
+* Parameters:
+
+ * string //$name//: The helper name.      * @return Solar_View_Helper
+
+* Returns unknown: unknown
+
+Creates a new standalone helper object.

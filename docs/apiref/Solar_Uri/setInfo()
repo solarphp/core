@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: setInfo
+
+param: int, $key
+
+param: string, $val, ''
+
+return: void
+
+</function>
+
+Sets one element in the $this->info array by position and value.
+
+* Parameters:
+
+ * int //$key//: The path_info position to work with.
+
+ * string //$val//: The value to use.
+
+* Returns void
+
+Sets one element in the $this->info array by position and value.

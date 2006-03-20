@@ -1,0 +1,37 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_FormPassword::$_attribs -- The form element attributes (checked, selected, readonly, etc).
+
+* Solar_View_Helper_FormPassword::$_config -- User-provided configuration values.
+
+* Solar_View_Helper_FormPassword::$_disable -- Whether or not the element is to be disabled.
+
+* Solar_View_Helper_FormPassword::$_feedback -- Feedback messages for the element.
+
+* Solar_View_Helper_FormPassword::$_info -- Default form element information.
+
+* Solar_View_Helper_FormPassword::$_keys -- The order in which to process info keys.
+
+* Solar_View_Helper_FormPassword::$_label -- The form element label.
+
+* Solar_View_Helper_FormPassword::$_name -- The form element name.
+
+* Solar_View_Helper_FormPassword::$_options -- Options for checkbox, select, and radio elements.
+
+* Solar_View_Helper_FormPassword::$_require -- Whether or not the element is required.
+
+* Solar_View_Helper_FormPassword::$_type -- The form element type (text, radio, etc).
+
+* Solar_View_Helper_FormPassword::$_value -- The form element value.
+
+* Solar_View_Helper_FormPassword::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

@@ -67,17 +67,30 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The dispatch pathinfo variable map.
+     * The info variables to use for actions.
      * 
      * The format of this array is key-value pairs, where the key is
-     * the action name, and the value is a sequential array of
-     * variable names in pathinfo positions.  For example, see this
-     * $_action_info array:
+     * the action name, and the value is a slash-separated string of
+     * $_info keys.  For example:
      * 
-     * $_action_info = array(
-     *     'item' => array('id'), // "item/:id"
-     *     'list' => array('year', 'month') // "list/:year/:month"
+     * <code type="php">
+     * $this->_action_info = array(
+     *     'item' => 'id', // "item/:id"
+     *     'list' => 'year/month', // "list/:year/:month"
      * );
+     * </code>
+     * 
+     * You can then call $this->_info('id') for the 'item' action,
+     * or $this->_info('year') and $this->_info('month') in the 'list'
+     * action.
+     * 
+     * If you want default values, you can do this:
+     * 
+     * <code type="php">
+     * $this->_action_info = array(
+     *     'list' => 'year=2005/month=01',
+     * );
+     * </code>
      * 
      * @var string
      * 
@@ -113,12 +126,45 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Data to be passed up to the site layout.
+     * The name of the layout to use for the view, minus the .layout.php suffix.
      * 
-     * @var array
+     * Default is 'twoColRight'.
+     * 
+     * @var string
      * 
      */
-    protected $_layout;
+    protected $_layout = 'twoColRight';
+    
+    /**
+     * 
+     * Where the layout directory is located.
+     * 
+     * Default is 'Solar/Layout/'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_dir = 'Solar/Layout/';
+    
+    /**
+     * 
+     * The name of the variable where page content is placed in the layout.
+     * 
+     * Default is 'layout_content'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_var = 'layout_content';
+    
+    /**
+     * 
+     * The short-name of this application.
+     * 
+     * @var string
+     * 
+     */
+    protected $_name;
     
     /**
      * 
@@ -131,7 +177,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the view to be rendered after the action.
+     * The name of the view to be rendered after the action, minus the .view.php suffix.
      * 
      * @var string
      * 
@@ -148,6 +194,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function __construct($config = null)
     {
         $class = get_class($this);
+        
+        // auto-set the name; e.g. Solar_App_Something => 'something'
+        if (empty($this->_name)) {
+            $pos = strrpos($class, '_');
+            $this->_name = strtolower(substr($class, $pos));
+        }
         
         // auto-set the base directory, relative to the include path
         if (empty($this->_dir)) {
@@ -167,11 +219,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // now do the parent construction
         parent::__construct($config);
+        
+        // extended setup
+        $this->_setup();
     }
     
     /**
      * 
-     * Try to force users to define what their view variables are. :-(
+     * Try to force users to define what their view variables are.
      * 
      * @param string $key The property name.
      * 
@@ -190,7 +245,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Try to force users to define what their view variables are. :-(
+     * Try to force users to define what their view variables are.
      * 
      * @param string $key The property name.
      * 
@@ -207,17 +262,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes the requested action and returns its output.
+     * Executes the requested action and returns its output with layout.
      * 
      * @param string $spec The action specification string, e.g.:
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      * 
-     * @return string The results of the action + view execution.
+     * @return string The results of the action + view + layout.
      * 
      */
     public function fetch($spec = null)
     {
-        // collect path info and query values
+        // collect action, query, and info
         $this->_collect($spec);
         
         // run the pre-action, forward to the first action (which may
@@ -226,8 +281,39 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_forward($this->_action);
         $this->_postAction();
         
-        // return the view results.
-        return $this->_view();
+        // set up a view object for the page content
+        $view = Solar::factory('Solar_View');
+        $view->addTemplatePath($this->_dir . 'Views/');
+        $view->addHelperPath($this->_dir . 'Helpers/');
+        
+        // set the locale class for the getText helper
+        $class = get_class($this);
+        $view->getTextRaw("$class::");
+        
+        // assign variables
+        $view->assign($this);
+        
+        // are we using a layout?
+        if ($this->_layout === false) {
+            
+            // no layout, just render the view.
+            return $view->fetch($this->_view . '.view.php');
+            
+        } else {
+            
+            // using a layout.  render the view.
+            $content = $view->fetch($this->_view . '.view.php');
+            
+            // re-use the same view object for the layout,
+            // adding the layout path to the end of the current
+            // path stack.
+            $view->addTemplatePath($this->_layout_dir);
+            $view->addHelperPath($this->_layout_dir . 'Helpers/');
+            
+            // return the page content inside the layout.
+            $view->assign($this->_layout_var, $content);
+            return $view->fetch($this->_layout . '.layout.php');
+        }
     }
     
     /**
@@ -247,12 +333,66 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Gets the layout variables set by the action script.
+     * Sets a "read-once" session value for this class and a key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The value for the key; previous values will
+     * be overwritten.
+     * 
+     * @return void
      * 
      */
-    public function getLayout()
+    public function setFlash($key, $val)
     {
-        return $this->_layout;
+        Solar::setFlash(get_class($this), $key, $val);
+    }
+    
+    /**
+     * 
+     * Appends a "read-once" session value for this class and key.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val The flash value to add to the key; this will
+     * result in the flash becoming an array.
+     * 
+     * @return void
+     * 
+     */
+    public function addFlash($key, $val)
+    {
+        Solar::addFlash(get_class($this), $key, $val);
+    }
+    
+    /**
+     * 
+     * Retrieves a "read-once" session value, thereby removing the value.
+     * 
+     * @param string $class The related class for the flash.
+     * 
+     * @param string $key The specific type of information for the class.
+     * 
+     * @param mixed $val If the class and key do not exist, return
+     * this value.  Default null.
+     * 
+     * @return mixed The "read-once" value.
+     * 
+     */
+    public function getFlash($key, $val = null)
+    {
+        return Solar::getFlash(get_class($this), $key, $val);
+    }
+    
+    /**
+     * 
+     * Hook for extended setup behaviors.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
     }
     
     /**
@@ -264,65 +404,98 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @return void
      * 
      */
-    protected function _collect($spec = null)
+    protected function _collect($spec)
     {
-        // if the spec is null, use current URI
+        // process the page/action/info specification
         if (! $spec) {
-        
+            
+            // no spec, use the current URI
             $uri = Solar::factory('Solar_Uri');
-            $this->_info = $uri->info;
+            $info = $uri->info;
             $this->_query = $uri->query;
             
         } elseif ($spec instanceof Solar_Uri) {
             
-            $this->_info = $spec->info;
+            // pull from a Solar_Uri object
+            $info = $spec->info;
             $this->_query = $spec->query;
             
         } else {
             
-            // it's a string, assumed to be a page/action/info spec.
+            // a string, assumed to be a page/action/info?query spec.
             $uri = Solar::factory('Solar_Uri');
             $uri->importAction($spec);
-            $this->_info = $uri->info;
+            $info = $uri->info;
             $this->_query = $uri->query;
         }
         
-        // find the requested action
-        $this->_action = array_shift($this->_info);
+        // remove the page name from the info
+        if (! empty($info[0]) && $info[0] == $this->_name) {
+            array_shift($info);
+        }
+        
+        // do we have an initial info element?
+        if (! empty($info[0])) {
+            
+            // look at it to see if it's a known action
+            if (! empty($this->_action_info[$info[0]])) {
+                
+                // it's in the _action_info mapping; save it
+                // and remove it from the info map.
+                $this->_action = array_shift($info);
+                
+            } else {
+                
+                // not a mapped action; is it in the Actions/ directory?
+                $file = $this->_actionFile($info[0]);
+                if (Solar::fileExists($file)) {
+                    // yes; save it, and remove from info map
+                    $this->_action = array_shift($info);
+                }
+            }
+        }
+        
+        // do we have an action yet?
         if (! $this->_action) {
+            // no, so use the default
             $this->_action = $this->_action_default;
         }
         
-        // if there is no map for this action, we're done
-        if (empty($this->_action_info[$this->_action])) {
-            // no need to map variable names
-            return;
-        }
+        // move $info to $this->_info so we always have the originals
+        $this->_info = $info;
         
-        // track the numeric position for each mapping
-        $i = 0;
-        
-        // go through the info map for the action
-        foreach ($this->_action_info[$this->_action] as $key => $val) {
-            
-            // if the name is an integer, there is no default value.
-            // thus, the value is itself the name.
-            if (is_int($key)) {
-                // use null as the default value
-                $this->_info[$val] = (empty($this->_info[$i]) ? null : $this->_info[$i]);
-            } else {
-                // use $val as the default value
-                $this->_info[$key] = (empty($this->_info[$i]) ? $val : $this->_info[$i]);
+        // import $this->_action_info mapped variables to $this->_info as well
+        if (! empty($this->_action_info[$this->_action])) {
+            $map = trim($this->_action_info[$this->_action], '/');
+            $parts = explode('/', $map);
+            foreach ($parts as $key => $val) {
+                
+                // 0 is the name, 1 is the default value
+                $tmp = explode('=', $val);
+                $tmp[0] = trim($tmp[0]);
+                if (empty($tmp[1])) {
+                    $tmp[1] = null;
+                } else {
+                    $tmp[1] = trim($tmp[1]);
+                }
+                
+                // set the info value
+                if (empty($info[$key])) {
+                    // use default value
+                    $this->_info[$tmp[0]] = $tmp[1];
+                } else {
+                    // user-provided value
+                    $this->_info[$tmp[0]] = $info[$key];
+                }
             }
-            
-            // advance to the next info position
-            $i++;
         }
     }
     
     /**
      * 
      * Executes just before the first action.
+     * 
+     * @return void
      * 
      */
     protected function _preAction()
@@ -332,6 +505,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      * 
      * Executes just after the last action, and just before the view.
+     * 
+     * @return void
      * 
      */
     protected function _postAction()
@@ -350,32 +525,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _run()
     {
-        return include func_get_arg(0);
+        return require func_get_arg(0);
     }
     
     /**
      * 
-     * Executes and returns the view.
+     * Retrieve the TAINTED value of a pathinfo request key by name.
      * 
-     */
-    protected function _view()
-    {
-        $view = Solar::factory('Solar_View');
-        $view->addTemplatePath($this->_dir . 'Views/');
-        $view->addHelperPath($this->_dir . 'Helpers/');
-        
-        // set the locale class for the getText helper
-        $class = get_class($this);
-        $view->getTextRaw("$class::");
-        
-        // assign and return
-        $view->assign($this);
-        return $view->fetch($this->_view . '.view.php');
-    }
-    
-    /**
-     * 
-     * Retrieve the value of a pathinfo request key by name.
+     * Note that this value is direct user input; you should sanitize it with
+     * Solar_Valid or Solar_Filter (or some other technique) before using it.
      * 
      * @param string $key The info key.
      * 
@@ -396,7 +554,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Retrieve they value of a query request key by name.
+     * Retrieves the TAINTED value of a query request key by name.
+     * 
+     * Note that this value is direct user input; you should sanitize it with
+     * Solar_Valid or Solar_Filter (or some other technique) before using it.
      * 
      * @param string $key The query key.
      * 
@@ -441,35 +602,55 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Forwards to an action script.
      * 
-     * @param string $name The action name.
+     * @param string $action The action name.
+     * 
+     * @return void
      * 
      */
-    protected function _forward($name)
+    protected function _forward($action)
     {
-        // filter the name so we don't get file traversals,
-        $name = preg_replace('/[^a-z0-9_-]/i', '', $name);
-        
-        // convert actions-with-dashes to camelCaseActions
-        $name = str_replace('-', ' ', strtolower($name));
-        $name = str_replace(' ', '', ucwords($name));
-        $name[0] = strtolower($name[0]);
-        
-        $file = $this->_dir . "Actions/$name.action.php";
+        // find the file
+        $file = $this->_actionFile($action);
         if (! Solar::fileExists($file)) {
             throw $this->_exception(
-                'ERR_FILE_NOT_READABLE',
-                array('file' => $file)
+                'ERR_ACTION_NOT_FOUND',
+                array(
+                    'action' => $action,
+                )
             );
         }
         
         // set the view to the most-recent action (this one ;-).
         // we do so before running the script so that the script
-        // can override the view if needed.
-        $this->_view = $name;
+        // can override the view if needed.  note that this means
+        // the view dirs need to match the action dirs.
+        $this->_view = $action;
         
         // run the action script, which may itself _forward() to
         // other actions.
         $this->_run($file);
+    }
+    
+    /**
+     * 
+     * Returns the file name for an action.
+     * 
+     * @param string $action The action name.
+     * 
+     * @return string A file name for the action.
+     * 
+     */
+    protected function _actionFile($action)
+    {
+        // filter the name so we don't get file traversals
+        $file = preg_replace('/[^a-z0-9-]/i', '', $action);
+        
+        // convert dashes to slashes;
+        // e.g., foo-bar-baz => foo/bar/baz.action.php
+        $file = str_replace('-', '/', $file) . '.action.php';
+        
+        // done
+        return $this->_dir . "Actions/$file";
     }
 }
 ?>

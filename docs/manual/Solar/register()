@@ -1,0 +1,44 @@
+(This method is part of a [http://www.phppatterns.com/docs/design/the_registry registry pattern].  Basically, it allows you to share the same object throughout your application without using globals.)
+
+This method places an object in the registry under a unique name.
+
+<code type="php">
+// script 1
+$obj = Solar::factory('Solar_Example');
+Solar::register('example', $obj);
+</code>
+
+You can then use Solar::registry() elsewhere in your application to access that same object.
+
+<code type="php">
+// script 2
+$example = Solar::registry('example');
+</code>
+
+++ Lazy Loading
+
+Sometimes you will want to register an object, but not actually instantiate that object until the moment it is needed.  This is usually the case when creating an object takes significant overhead or time, such as when connecting to a database.  You can register an object class to lazy-load by providing a class name instead of an object as the registry specification.
+
+<code type="php">
+// script 1
+// note that we specify a class to be created,
+// not an actual object instance.
+Solar::register('example', 'Solar_Example');
+</code>
+
+Then on the first call to Solar::registry(), Solar will create the object instance, register it, and return it to you.
+
+<code type="php">
+// script 2.
+// this will create the object and return it.
+$example = Solar::registry('example');
+</code>
+
+When lazy-loading, you can also specify an alternative configuration for the object to be created, just as with Solar::factory().
+
+<code type="php">
+// script 1
+$config = array(...);
+Solar::register('example', 'Solar_Example', $config);
+</code>
+

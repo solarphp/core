@@ -1,0 +1,35 @@
+Use this to perform multiple validations on a single value. 
+All of the validations must be successful for the value to be
+valid.  If any of the validations fails, then the value is
+treated as not valid.
+
+The array describing the validations must itself consist of a
+series of arrays where the first element is a Solar_Valid
+method name, and the remaining elements are the parameters for
+that method (not including the value, of course).
+
+<code type="php">
+require_once 'Solar.php';
+Solar::start();
+
+Solar::loadClass('Solar_Valid');
+
+// the list of validations to perform
+$validations = array(
+    array('maxLength', 12),
+    array('regex', '/^\w+$/', Solar_Valid::OR_BLANK),
+);
+
+// this will be valid
+$valid = Solar_Valid::multiple('something', $validations);
+
+// this will not be valid (too long)
+$valid = Solar_Valid::multiple('somethingelse', $validations);
+
+// this will not be valid (non-word character)
+$valid = Solar_Valid::multiple('some~thing', $validations);
+
+// this will be valid (not too long, and OR_BLANK)
+$valid = Solar_Valid::multiple('', $validations);
+</code>
+

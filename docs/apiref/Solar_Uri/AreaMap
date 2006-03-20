@@ -1,0 +1,34 @@
+HomePage | The Solar_Uri Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $fragment
+  $host
+  $info
+  $pass
+  $path
+  $port
+  $query
+  $scheme
+  $user
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _info2str()
+  _query2str()
+  addInfo()
+  addQuery()
+  apiVersion()
+  clear()
+  clearInfo()
+  clearQuery()
+  export()
+  exportAction()
+  exportPublic()
+  import()
+  importAction()
+  locale()
+  setInfo()
+  setInfoString()
+  setQuery()
+  setQueryString()

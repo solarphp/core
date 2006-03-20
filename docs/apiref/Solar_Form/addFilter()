@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: addFilter
+
+param: string, $name
+
+param: string, $method
+
+return: void
+
+</function>
+
+Adds a pre-filter for an element
+
+* Parameters:
+
+ * string //$name//: The element name.
+
+ * string //$method//: Solar_Filter method or PHP function to use for filtering.
+
+* Returns void
+
+Adds a pre-filter for an element
+
+Adds a pre-filter for an element. All pre-filters are applied via 
+{@link Solar_Filter::multiple()} and should conform to the 
+specifications for that method.

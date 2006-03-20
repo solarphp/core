@@ -1,0 +1,22 @@
+This method generates a Solar_Exception object with an originating
+class, an error code, an error message, and an array of information
+about the specifics of the error.
+
+Note that this method only generates the object; it does not
+throw the exception.
+
+<code type="php">
+$class = 'My_Example_Class';
+$code = 'ERR_SOMETHING_WRONG';
+$text = 'Something is wrong.';
+$info = array('foo' => 'bar');
+$exception = Solar::exception($class, $code, $text, $info);
+throw $exception;
+</code>
+
+In general, you shouldn't need to use this directly in classes
+extended from [Solar_Base::HomePage Solar_Base].  Instead, use
+[Solar_Base::_exception() $this->_exception]($code, $info) for automated picking of the
+right exception class from the $code, and automated translation
+of the error message.
+

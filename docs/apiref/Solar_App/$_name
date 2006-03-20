@@ -1,0 +1,3 @@
+protected string $_name
+
+The short-name of this application.

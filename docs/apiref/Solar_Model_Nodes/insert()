@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: insert
+
+param: unknown, $data
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$data//: 
+
+* Returns unknown: unknown

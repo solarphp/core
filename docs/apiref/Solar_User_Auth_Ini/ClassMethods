@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Auth_Ini::__construct() -- Constructor.
+
+* Solar_User_Auth_Ini::apiVersion() -- Reports the API version for this class.
+
+* Solar_User_Auth_Ini::locale() -- Looks up locale strings based on a key.
+
+* Solar_User_Auth_Ini::valid() -- Validate a username and password.
+
+++ Protected
+
+* Solar_User_Auth_Ini::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

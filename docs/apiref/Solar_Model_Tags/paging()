@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: paging
+
+param: int, $val
+
+return: unknown
+
+</function>
+
+Sets the number of rows per page.
+
+* Parameters:
+
+ * int //$val//: The number of rows per page.
+
+* Returns unknown: unknown
+
+Sets the number of rows per page.

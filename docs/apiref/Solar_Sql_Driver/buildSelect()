@@ -1,0 +1,24 @@
+<function>
+
+access:   public
+
+name: buildSelect
+
+param: unknown, $parts
+
+return: string
+
+</function>
+
+Build an SQL SELECT statement from its component parts.
+
+* Parameters:
+
+ * unknown //$parts//: 
+
+* Returns string: An SQL SELECT statement.
+
+Build an SQL SELECT statement from its component parts.
+
+We use this so that drivers can append or wrap with LIMIT
+clauses or emulation.

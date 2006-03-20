@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: notNull
+
+param: mixed, $actual
+
+return: unknown
+
+</function>
+
+Assert that a variable is not PHP null.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+* Returns unknown: unknown
+
+Assert that a variable is not PHP null.

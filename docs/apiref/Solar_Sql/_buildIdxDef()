@@ -1,0 +1,30 @@
+<function>
+
+access:   protected
+
+name: _buildIdxDef
+
+param: unknown, $table
+
+param: unknown, $name
+
+param: array, $info
+
+return: unknown
+
+</function>
+
+*
+
+* Parameters:
+
+ * unknown //$table//: 
+
+ * unknown //$name//: 
+
+ * array //$info//: The column information.
+
+* Returns unknown: unknown
+
+*
+Builds an index creation string.

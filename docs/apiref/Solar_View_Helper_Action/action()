@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: action
+
+param: string, $spec
+
+param: string, $text, NULL
+
+return: string
+
+</function>
+
+Returns an action anchor, or just an action href.
+
+* Parameters:
+
+ * string //$spec//: The action specification.
+
+ * string //$text//: A locale translation key.
+
+* Returns string
+
+Returns an action anchor, or just an action href.
+
+If the $text link text is empty, will just return the
+href value, not an <a href="">...</a> anchor tag.

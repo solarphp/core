@@ -1,11 +1,9 @@
 <?php
 // Solar_Cache config
 $config = array(
-    'class' => 'Solar_Cache_File',
-    'options' => array(
-        'path' => '/tmp/Solar_Cache_Testing',
-        'life' => 7, // 7 seconds
-    ),
+    'driver' => 'Solar_Cache_File',
+    'path'   => '/tmp/Solar_Cache_Testing',
+    'life'   => 7, // 7 seconds
 );
 
 // create a Solar_Cache with the Solar_Cache_File driver

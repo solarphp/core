@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: fetchDefault
+
+return: array
+
+</function>
+
+Fetch the default comment node data.
+
+* Parameters: none.
+
+* Returns array: Default data for a new comment node.
+
+Fetch the default comment node data.

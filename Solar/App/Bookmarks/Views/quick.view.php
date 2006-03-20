@@ -17,6 +17,7 @@
  * 
  */
 ?>
+<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <h2><?php echo $this->getText('TITLE_QUICKMARK') ?></h2>
 <p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
@@ -28,7 +29,7 @@
     
     echo $this->form()
               ->auto($this->formdata)
-              ->hidden(array('name' => 'op', 'value' => $this->getTextRaw('OP_SAVE')))
-              ->submit(array('name' => 'op', 'value' => $this->getTextRaw('OP_SAVE')))
+              ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
+              ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
               ->fetch();
 ?>

@@ -1,0 +1,7 @@
+protected array $_submitted
+
+Array of submitted values.
+
+Populated on the first call to submittedValue(), which itself uses
+Solar::get() or Solar::post(), depending on the value of
+$this->attribs['method'].

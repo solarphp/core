@@ -1,0 +1,43 @@
++ Class Methods
+
+++ Public
+
+* Solar_Filter::__call() -- Calls custom filtering methods.
+
+* Solar_Filter::__construct() -- Constructor.
+
+* Solar_Filter::alnum() -- Removes non-alphabetic and non-numeric characters.
+
+* Solar_Filter::alpha() -- Removes non-alphabetic characters.
+
+* Solar_Filter::apiVersion() -- Reports the API version for this class.
+
+* Solar_Filter::blank() -- Removes all whitespace characters.
+
+* Solar_Filter::callback() -- Uses a callback to filter a value.
+
+* Solar_Filter::cast() -- Filter: cast a value as a type
+
+* Solar_Filter::formatDateTime() -- Forces a value to a date() format.
+
+* Solar_Filter::isoDate() -- Forces a value to an ISO-standard date string.
+
+* Solar_Filter::isoDateTime() -- Forces a value to an ISO-standard date-time string.
+
+* Solar_Filter::isoTime() -- Forces a value to an ISO-standard time string.
+
+* Solar_Filter::locale() -- Looks up locale strings based on a key.
+
+* Solar_Filter::multiple() -- Applies multiple filters to a value.
+
+* Solar_Filter::numeric() -- Removes non-numeric characters.
+
+* Solar_Filter::replace() -- Applies a regex replacement filter.
+
+++ Protected
+
+* Solar_Filter::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

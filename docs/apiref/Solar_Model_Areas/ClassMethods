@@ -1,0 +1,45 @@
++ Class Methods
+
+++ Public
+
+* Solar_Model_Areas::__construct() -- Constructor.
+
+* Solar_Model_Areas::__get() -- Allows reading of protected properties.
+
+* Solar_Model_Areas::apiVersion() -- Reports the API version for this class.
+
+* Solar_Model_Areas::delete() -- Deletes rows in the table based on a WHERE clause.
+
+* Solar_Model_Areas::fetchByName() -- 
+
+* Solar_Model_Areas::fetchDefault() -- Returns a data array with column keys and default values.
+
+* Solar_Model_Areas::increment() -- Increments and returns the sequence value for a column.
+
+* Solar_Model_Areas::insert() -- Validates and inserts data into the table.
+
+* Solar_Model_Areas::locale() -- Looks up locale strings based on a key.
+
+* Solar_Model_Areas::paging() -- Sets the number of rows per page.
+
+* Solar_Model_Areas::save() -- Inserts or updates a single row based on its ID.
+
+* Solar_Model_Areas::select() -- Convenience method to select rows from this table.
+
+* Solar_Model_Areas::update() -- Validates and updates data in the table based on a WHERE clause.
+
+++ Protected
+
+* Solar_Model_Areas::_autoCreate() -- Creates the table in the database if it does not already exist.
+
+* Solar_Model_Areas::_autoSetup() -- Fixes the $col and $idx properties after user setup.
+
+* Solar_Model_Areas::_autoValid() -- Validates and recasts an array of input/update data in-place.
+
+* Solar_Model_Areas::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Model_Areas::_setup() -- Schema setup.
+
+++ Private
+
+None.

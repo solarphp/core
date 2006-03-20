@@ -1,0 +1,22 @@
++ The Solar_Cache_File Class
+
+File-based cache controller.
+
+This is the file-based driver for [Solar_Cache:HomePage Solar_Cache].
+In general, you never need to instantiate it yourself; instead,
+use Solar_Cache as the frontend for it and specify
+'Solar_Cache_File' as the 'class' config key value.
+
+If you specify a path (for storing cache entry files) that does
+not exist, this driver attempts to create it for you.
+
+This driver always uses [[php flock()]] when reading and writing
+cache entries; it uses a shared lock for reading, and an exclusive
+lock for writing.  This is to help cut down on cache corruption
+when two processes are trying to access the same cache file entry,
+one for reading and one for writing.
+
+In addition, this driver automatically serializes and unserializes
+arrays and objects that are stored in the cache.  This means you
+can store not only string output, but also array data and entire
+objects in the cache ... just like Solar_Cache_Memcache.

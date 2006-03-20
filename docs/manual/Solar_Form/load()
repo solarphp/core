@@ -1,0 +1,149 @@
+You can pass an arbitrary number of parameters to this method; all params after the first will be passed as arguments to the fetch() method of the loader object.
+
+If the //loader specification// is a string, it is treated as a class name to instantiate with Solar::factory(); if the //loader specification// is an object, it is used as-is.  Either way, the loader's fetch() method will be called to set the elements and attributes of the form.
+
+The loader object itself must have at least one method, fetch(), that returns an associative array with keys 'attribs' and 'elements' which contain, respectively, values for Solar_Form::$attribs and Solar_Form::setElements().
+
+Example use:
+
+<code>
+// create the form object
+$form = Solar::factory('Solar_Form');
+
+// use Solar_Form_Load_Xml as the loader
+$driver = 'Solar_Form_Load_Xml';
+
+// the loader needs to know where the XML file
+// with the form description is.
+$source = '/path/to/form.xml';
+
+// load elements and attributes from the external
+// source
+$form->load($driver, $source);
+
+// populate, validate, and get values
+$form->populate();
+$isValid = $form->validate();
+if ($isValid) {
+    $values = $form->values();
+    // and do something with the values here
+}
+</code>
+
+
++++ Solar_Form_Load_Table
+
+The Solar_Form_Load_Table class loads forms from Solar_Sql_Table column definitions.
+
++++ Solar_Form_Load_Xml
+
+The Solar_Form_Load_Xml class, authored by Matthew Weier O'Phinney, loads  Solar_Form element definitions from a !SimpleXML file.  The XML file format should be something like the following:
+
+<code>
+<?xml version='1.0' standalone='yes'?>
+<form>
+    <attribs>
+        <attrib name="action">/contact.php</attrib>
+        <attrib name="method">post</attrib>
+        <attrib name="name">contact</attrib>
+    </attribs>
+    <element 
+        name="to"
+        type="select"
+        require="1"
+        disable="0">
+        <label>Contact:</label>
+        <descr>Who do you want to mail?</descr>
+        <filters>
+            <filter method="replace">
+                <params>
+                    <param>/^(me|someoneelse)$/</param>
+                    <param>$1@solarphp.com</param>
+                </params>
+            </filter>
+        </filters>
+        <validate>
+            <rule method="inList">
+                <message>Please select a contact from the dropdown</message>
+                <args>
+                    <arg>me@solarphp.com</arg>
+                    <arg>someoneelse@solarphp.com</arg>
+                </args>
+            </rule>
+        </validate>
+    </element>
+    <element
+        name="fromEmail"
+        type="text"
+        require="1"
+        disable="0">
+        <label>Your email address:</label>
+        <filters>
+            <filter method="trim" />
+        </filters>
+        <validate>
+            <rule method="email">
+                <message>Please provide a valid email address</message>
+            </rule>
+        </validate>
+    </element>
+    <element
+        name="fromName"
+        type="text"
+        require="0"
+        disable="0">
+        <label>Your Name:</label>
+        <filters>
+            <filter method="trim" />
+            <filter method="strip_tags" />
+            <filter method="htmlentities" />
+        </filters>
+    </element>
+    <element
+        name="subject"
+        type="text"
+        require="1"
+        disable="0">
+        <label>Subject:</label>
+        <filters>
+            <filter method="trim" />
+            <filter method="strip_tags" />
+            <filter method="htmlentities" />
+        </filters>
+    </element>
+    <element
+        name="message"
+        type="text"
+        require="1"
+        disable="0">
+        <label>Message:</label>
+    </element>
+</form>
+</code>
+
+Basically, a form consists of attributes and elements. Attributes are related
+to the form as a whole, and spefically the &lt;form&gt; HTML element; elements
+are single elements within the form, and include all information about an
+element, including:
+
+* HTML element name ('name', required)
+
+* HTML element type ('type', optional)
+
+* required flag ('require', boolean, optional, defaults to 0)
+
+* disable flag ('disable', boolean, optional, defaults to 0)
+
+* HTML label text ('label', text, optional)
+
+* HTML element attributes ('attribs', array, optional)
+
+* filters: These are any pre-filters you wish to run on this element before processing, and should be valid {@link Solar_Filter} filters. This is an array, and contains one or more filter elements. These should have:
+
+ * a 'method' attribute corresponding to a Solar_Filter prefilter
+
+ * If the prefilter requires additional parameters, a params array. Each param in the params array should be a string.
+
+* validation rules: These are any Solar_Valid rules you wish to validate the element against -- you can use as many as are needed. These are formed similarly to filters, but a rule takes an extra optional argument: <ul>
+
+ * message: a feedback message to use should the validation fail

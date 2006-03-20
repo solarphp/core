@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: reset
+
+param: unknown, $status, 'ANON'
+
+return: void
+
+</function>
+
+Resets any authentication data in the session.
+
+* Parameters:
+
+ * unknown //$status//: 
+
+* Returns void
+
+Resets any authentication data in the session.
+
+Typically used for idling, expiration, and logout.
+     *
+@param string $status A Solar_User_Auth status string;
+default is 'ANON'.

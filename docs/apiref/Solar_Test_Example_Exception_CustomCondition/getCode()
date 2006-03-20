@@ -1,0 +1,15 @@
+<function>
+
+access: final  public
+
+name: getCode
+
+return: unknown
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns unknown: unknown

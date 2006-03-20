@@ -1,0 +1,69 @@
++ Class Methods
+
+++ Public
+
+* Solar_Valid::__call() -- Calls custom validation methods.
+
+* Solar_Valid::__construct() -- Constructor.
+
+* Solar_Valid::alnum() -- Validate that a value is only letters (upper or lower case) and digits.
+
+* Solar_Valid::alpha() -- Validate that a value is letters only (upper or lower case).
+
+* Solar_Valid::apiVersion() -- Reports the API version for this class.
+
+* Solar_Valid::blank() -- Validate that a value is empty when trimmed of all whitespace.
+
+* Solar_Valid::callback() -- Validate against a callback function or method.
+
+* Solar_Valid::email() -- Validate that a value is an email address.
+
+* Solar_Valid::inKeys() -- Validate that the value is a key in the list of allowed options.
+
+* Solar_Valid::inList() -- Validate that a value is in a list of allowed values.
+
+* Solar_Valid::inScope() -- See a value has only a certain number of digits and decimals.
+
+* Solar_Valid::integer() -- Validate that a value represents an integer (+/-).
+
+* Solar_Valid::ipv4() -- Validate that a value is a legal IPv4 address.
+
+* Solar_Valid::isoDate() -- Validate that a value is an ISO 8601 date string.
+
+* Solar_Valid::isoDateTime() -- Validate that a value is an ISO 8601 date-time string.
+
+* Solar_Valid::isoTime() -- Validate that a value is an ISO 8601 time string (hh:ii::ss format).
+
+* Solar_Valid::locale() -- Validate that a value is a locale code.
+
+* Solar_Valid::max() -- Validate that a value is less than than or equal to a maximum.
+
+* Solar_Valid::maxLength() -- Validate that a string is no longer than a certain length.
+
+* Solar_Valid::mimeType() -- Validate that a value is formatted as a MIME type.
+
+* Solar_Valid::min() -- Validate that a value is greater than or equal to a minimum.
+
+* Solar_Valid::minLength() -- Validate that a string is at least a certain length.
+
+* Solar_Valid::multiple() -- Check the value against multiple callback validations.
+
+* Solar_Valid::nonZero() -- Validate that a value is not exactly zero.
+
+* Solar_Valid::notBlank() -- Validate that a string is not empty when trimmed.
+
+* Solar_Valid::regex() -- Validate a value against a regular expression.
+
+* Solar_Valid::sepWords() -- Validate that a value is composed of separated words.
+
+* Solar_Valid::uri() -- Validate a value as a URI per RFC2396.
+
+* Solar_Valid::word() -- Validate that a value is composed only of "word" characters.
+
+++ Protected
+
+* Solar_Valid::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

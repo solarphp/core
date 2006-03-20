@@ -1,0 +1,49 @@
++ Documentation
+
+Documentation is as important as the code itself.  With that in mind, we have combined two forms of documentation on this site:
+
+* All classes have basic API reference material automatically generated with each new release.
+
+* In addition, we also maintain manual narratives (overview, how-to, tutorial, getting started, etc) as part of the class documentation.
+
+Click on the pull-down at the top-right of this page (it's labeled "Main" right now) and select the class you want to read about.  For example, read about the overarching Solar class itself [Solar::HomePage here].
+
+If you want to help with editing documentation pages directly, please join the MailingList and make a request there.  (And thanks!)
+
+Here are some of the more interesting class documentation areas to get you started:
+
+* [Solar::HomePage Solar]
+
+* [Solar_App::HomePage Solar_App]
+
+* [Solar_Base::HomePage Solar_Base]
+
+* [Solar_Cache::HomePage Solar_Cache]
+
+* [Solar_Controller_Front::HomePage Solar_Controller_Front]
+
+* [Solar_Controller_Page::HomePage Solar_Controller_Page]
+
+* [Solar_Filter::HomePage Solar_Filter]
+
+* [Solar_Form::HomePage Solar_Form]
+
+* [Solar_Sql::HomePage Solar_Sql]
+
+* [Solar_Sql_Result::HomePage Solar_Sql_Result]
+
+* [Solar_Sql_Select::HomePage Solar_Sql_Select]
+
+* [Solar_Sql_Table::HomePage Solar_Sql_Table]
+
+* [Solar_Uri::HomePage Solar_Uri]
+
+* [Solar_User::HomePage Solar_User]
+
+* [Solar_User_Auth::HomePage Solar_User_Auth]
+
+* [Solar_User_Role::HomePage Solar_User_Role]
+
+* [Solar_Valid::HomePage Solar_Valid]
+
+* [Solar_View::HomePage Solar_View]

@@ -1,0 +1,15 @@
+<function>
+
+access: final  private
+
+name: __clone
+
+return: unknown
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns unknown: unknown

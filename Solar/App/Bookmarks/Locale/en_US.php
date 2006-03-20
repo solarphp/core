@@ -31,7 +31,7 @@
 return array(
     'ADD_NEW_BOOKMARK'   => 'Add new bookmark.',
     'BACKLINK'           => 'Back',
-    'BOOKMARKS'          => 'Solar Bookmarking System',
+    'BOOKMARKS'          => 'Bookmarks',
     'BY'                 => 'by',
     'DRAG_THIS'          => 'Drag this link to your toolbar for quick bookmarking',
     'EDIT_ITEM'          => 'Edit Bookmark',

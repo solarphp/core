@@ -1,0 +1,3 @@
+protected string $_label
+
+The form element label.

@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: notInstance
+
+param: object, $actual
+
+param: string, $expect
+
+return: unknown
+
+</function>
+
+Assert that a object is not an instance of a class.
+
+* Parameters:
+
+ * object //$actual//: The object to test.
+
+ * string //$expect//: The non-expected class name.
+
+* Returns unknown: unknown
+
+Assert that a object is not an instance of a class.

@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Exception_IdxTypeUnknown::__construct() -- Constructor.
+
+* Solar_Sql_Exception_IdxTypeUnknown::__toString() -- Custom string output.
+
+* Solar_Sql_Exception_IdxTypeUnknown::getClass() -- Gets the class that threw the exception.
+
+* Solar_Sql_Exception_IdxTypeUnknown::getClassCode() -- Gets the class and code together.
+
+* Solar_Sql_Exception_IdxTypeUnknown::getCode() -- 
+
+* Solar_Sql_Exception_IdxTypeUnknown::getFile() -- 
+
+* Solar_Sql_Exception_IdxTypeUnknown::getInfo() -- Gets user-defined information.
+
+* Solar_Sql_Exception_IdxTypeUnknown::getLine() -- 
+
+* Solar_Sql_Exception_IdxTypeUnknown::getMessage() -- 
+
+* Solar_Sql_Exception_IdxTypeUnknown::getTrace() -- 
+
+* Solar_Sql_Exception_IdxTypeUnknown::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Sql_Exception_IdxTypeUnknown::__clone() --

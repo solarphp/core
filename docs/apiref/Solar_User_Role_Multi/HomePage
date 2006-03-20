@@ -1,0 +1,7 @@
++ The Solar_User_Role_Multi Class
+
+Get roles from multiple sources and return as a single list.
+
+@category Solar
+
+@package Solar_User

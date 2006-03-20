@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Exception_MethodNotCallable::__construct() -- Constructor.
+
+* Solar_Exception_MethodNotCallable::__toString() -- Custom string output.
+
+* Solar_Exception_MethodNotCallable::getClass() -- Gets the class that threw the exception.
+
+* Solar_Exception_MethodNotCallable::getClassCode() -- Gets the class and code together.
+
+* Solar_Exception_MethodNotCallable::getCode() -- 
+
+* Solar_Exception_MethodNotCallable::getFile() -- 
+
+* Solar_Exception_MethodNotCallable::getInfo() -- Gets user-defined information.
+
+* Solar_Exception_MethodNotCallable::getLine() -- 
+
+* Solar_Exception_MethodNotCallable::getMessage() -- 
+
+* Solar_Exception_MethodNotCallable::getTrace() -- 
+
+* Solar_Exception_MethodNotCallable::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Exception_MethodNotCallable::__clone() --

@@ -1,0 +1,23 @@
++ The Solar_Sql Class
+
+Class for connecting to SQL databases and performing common operations.
+
+Example usage:
+
+<code>
+$opts = array(
+    'class' => 'Solar_Sql_Driver_Mysql',
+    'host' => '127.0.0.1',
+    'user' => 'pmjones',
+    'pass' => '********',
+    'name' => 'test'
+);
+
+$sql = Solar::factory('Solar_Sql', $opts);
+</code>
+
+You should consider using Solar_Sql_Table for handling insert, update,
+and delete operations on single tables.
+
+You should consider using Solar_Sql_Select for multi-table and joined
+selects.

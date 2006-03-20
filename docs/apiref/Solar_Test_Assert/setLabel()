@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: setLabel
+
+param: unknown, $label
+
+return: unknown
+
+</function>
+
+Sets the label for the next message.
+
+* Parameters:
+
+ * unknown //$label//: 
+
+* Returns unknown: unknown
+
+Sets the label for the next message.

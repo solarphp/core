@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: addHelperPath
+
+param: unknown, $path
+
+return: unknown
+
+</function>
+
+Add to the helper directory path stack.
+
+* Parameters:
+
+ * unknown //$path//: 
+
+* Returns unknown: unknown
+
+Add to the helper directory path stack.

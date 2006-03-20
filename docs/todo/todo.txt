@@ -1,0 +1,294 @@
+MOVING TO A NON-DEV RELEASE
+
+Classes:
+    Solar_Sql_Select:
+        Fix column deconfliction
+        Make fluent
+        Use limitPage($page, $rows) and remove paging()? ... no, need for countPages()
+    Revisit Filter and Valid
+        standardize method names: filter::alnum, filter::stripAlnum()
+        OR_BLANK sucks. can we get rid of it?  not really.  :-(
+        move to sub-classes for filters/valids?
+        how to add custom filters/valids? (have PathStack now...)
+
+Apps:
+    One more app? (Solar_App_Todo)
+
+Packaging:
+    rename pkg/ to src/
+    in package script, copy from src/ to pkg/
+        str_replace('@package_version@') along the way
+        hm, only need it in Solar and Solar_Base, perhaps an easy task?
+    then pear package from pkg, without the replace task
+    then the tarball will work as a plain download
+    
+----
+
+DOCS PLAN
+
+* Fix internal docs. Keep very short!  Move long docs to manual.
+* Update long docs.
+* Write controller stuff, since everyone seems to love that.
+* show default values for properties
+* write new:
+    * Solar
+        * add/get/setFlash()
+    
+----
+
+TESTING PLAN
+
+update:
+    all existing
+
+easy:
+    Solar_Filter
+
+moderate:
+    Solar_View et al
+    
+
+----
+
+GENERAL NOTES
+
+Use "fade-anything technique" (fat) JS lib?
+
+Use prototype/scriptaculous libs?
+
+http://www.ilovejackdaniels.com/php/email-address-validation/
+
+http://routes.groovie.org/
+
+
+----
+
+NEW CLASSES
+
+Create an event dispatcher as a universal observer and notifier?
+
+Solar_User_Access for class/action/op privileges by user and role
+
+Logging class!
+
+
+----
+
+NEW MODELS, CONTENT TYPES, & APPS
+
+Solar_Content_Todo
+
+Solar_App_Todo
+
+Solar_Model_Issues (in addition to the content model, highly specific)
+
+Solar_App_Issues (bug tracker, uses content todos and comments)
+
+Solar_Content_Comments
+
+    Need a 'remember me' function?
+
+    Need to separate Solar_Model_Comments_Rules into a standalone
+    content-filtering class ... or add a file-based plugin mechanism? 
+    or both?  Text_Bayes?  Text_Filter?
+
+Solar_Model_Members
+    id
+    created
+    updated
+    confirmed  -- change to an "active" flag?
+    confirm_code  -- change to just "code" for both confirms and resets?
+    handle
+    passwd
+    public
+    email
+    uri
+
+Solar_App_Member
+    actions:
+        roster
+        register
+        passwd
+        forgot
+        profile
+    
+Solar_Model_Access
+    id
+    created
+    updated
+    allow  -- t/f
+    type   -- user/role
+    name   -- handle or role name
+    class  -- page class
+    action -- action
+    submit -- submit to that action
+    
+Solar_App_Access
+
+----
+
+Bookmarks
+
+In list headings, make 'user' clickable, make individual tags clickable
+
+Search by URL, title, description
+
+Change all instances of tag X to tag Z
+
+Make taglist and order into select-lists?
+
+
+----
+
+Text classes:
+
+Text/Bayes.php (tracks bayes filtering) -- would this be Solar_Model_Bayes?
+Text/Csv.php (parse/build CSV/TSV/etc blocks)
+Text/Diff.php (get a diff on text)
+Text/Filter.php (modifies text to match a filter)
+Text/Markup.php (for wiki, bbcode, textile, markdown, email, etc)
+    - a way to do simple common stuff, then a way to do more complex stuff
+    - common regexes for URI, email, wikilink, freelink, interwiki
+    - common regexes for inline bold, italic, tt/code, etc
+
+----
+
+Preferences
+
+sc_pref (whole application AND/OR user prefs, *must* support arrays?)
+    id       unique id
+    user_id  '_SOLAR_APP' for application prefs)
+    app      name of the app (64)
+    elem     name of the pref element (64)
+    value    the value of the pref element (255) (or CLOB?)
+    
+REALLY need to work out the preferences thing.
+
+Need to know if it's single-value keys only, or if multi-values per key are allowed.
+(Multi shoud be allowed).
+
+The return array should be like the Solar::config() arrays.
+
+SO, e.g, Solar_App_Talk prefs would look like:
+
+    spam => array(word, word, word, word)
+    autoFlag => 'spam'
+    
+And then you need a prefs object to tell you what keys go with what labels, etc.
+
+That by itself is a project.
+
+So for now, to get it off the ground, no prefs at all, just Solar::$config values.
+
+
+----
+
+Text_Markup
+
+Text/
+    Markup.php
+    Markup/
+        Parse.php
+        Parse/
+            Bbcode.php -- extends Text_Markup_Parse
+            Bbcode/
+                Url.php -- extends Text_Markup_Parse_Rule
+            DokuWiki.php
+            DokuWiki/
+            Email.php
+            Email/
+            Markdown.php
+            Markdown/
+            MediaWiki.php
+            MediaWiki/
+            PearWiki.php
+            PearWiki/
+            Rule.php -- base for parse-rule objects, not an extension of Text_Markup_Parse
+            SolarWiki.php
+            SolarWiki/
+            Textile.php
+            Textile/
+        Render.php
+        Render/
+            Email.php -- extends Text_Markup_Render
+            Email/
+                Url.php -- extends Text_Markup_Render_Rule
+            Plain.php
+            Plain/
+            Rule.php -- base for render-rule objects, not an extension of Text_Markup_Render
+            Xhtml.php
+            Xhtml/
+    
+    
+Usage:
+
+// create a markup object
+$markup = Solar::factory('Solar_Text_Markup');
+
+// set up the parsing by class name; default is SolarWiki
+$options = array(...);
+$markup->setParse('Solar_Text_Markup_Parse_Bbcode', $options);
+
+/*
+// alternative: set up the parsing by object instance
+$parse = Solar::factory('Solar_Text_Markup_Parse_Bbcode', $options);
+$markup->setParse($parse);
+*/
+
+// set up the rendering by class name; default is Xhtml
+$options = array(...);
+$markup->setRender('Solar_Text_Markup_Render_Xhtml', $options);
+
+/*
+// alternative: set up the rendering by object instance
+$render = Solar::factory('Solar_Text_Markup_Render_Xhtml', $options);
+$markup->setParse($render);
+*/
+
+// transform the source text
+$output = $markup->transform($source);
+
+
+When instantiating, have the parse/render object instantiate the rule objects
+immediately? That way you could address their configs directly, if needed ...
+
+URLs:
+    http://example.com
+    [[http://example.com]] superscript
+    [[http://example.com |]] (drops the scheme)
+    [[http://example.com | rendered as this]]
+
+Wiki (option to render with spaces)
+    PageName
+    PageName#anchor
+    [[PageName#anchor]] superscript
+    [[PageName#anchor |]] just the page name
+    [[PageName#anchor | rendered as this]]
+    
+Free:
+    [[free page name]]
+    [[free page name#anchor]]
+    [[free page name#anchor |]] just the page name
+    [[free page name#anchor | rendered as this]]
+
+Inter:
+    Interwiki::PageName
+    Interwiki::PageName#anchor
+    [[Interwiki::PageName#anchor | rendered as this]]
+    [[Interwiki::free page name]]
+    [[Interwiki::free page name#anchor]]
+    [[Interwiki::free page name#anchor |]] (drops the interwiki name)
+    [[Interwiki::free page name#anchor | rendered as this]]
+    Use of double-colons is the default?
+    
+Default Interwikis:
+    amazon::
+    google::
+    imdb::
+    isbn::
+    issn::
+    php::
+
+Macros:
+    {{macro-name key=val key=val key=val}}
+    

@@ -1,0 +1,15 @@
++ Standards
+
+All Solar classes follow a common set of implementation standards.
+
+* They each adhere to a common StyleGuide of coding standards
+
+* They use a standard set of NamingConventions
+
+* Each descends from a common lightweight BaseClass
+
+* They all use the same ConstructorParameters for instantiation
+
+* Each reads its configuration from a common ConfigFile
+
+* All are ready for localization using their own set of LocaleFiles

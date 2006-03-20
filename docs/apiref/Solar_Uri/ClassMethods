@@ -1,0 +1,49 @@
++ Class Methods
+
+++ Public
+
+* Solar_Uri::__construct() -- Constructor.
+
+* Solar_Uri::addInfo() -- Adds one element to the $this->info array.
+
+* Solar_Uri::addQuery() -- Adds an element to the $this->query array.
+
+* Solar_Uri::apiVersion() -- Reports the API version for this class.
+
+* Solar_Uri::clear() -- Clears all URI properties.
+
+* Solar_Uri::clearInfo() -- Clears (resets) all or part of $this->info.
+
+* Solar_Uri::clearQuery() -- Clears (resets) all or part of $this->query.
+
+* Solar_Uri::export() -- Builds a full URI string.
+
+* Solar_Uri::exportAction() -- Builds a partial URI string for a Solar_Controller action spec.
+
+* Solar_Uri::exportPublic() -- Builds a partial URI string for a public Solar resource.
+
+* Solar_Uri::import() -- Imports a URI string (by default, the current URI) into the object.
+
+* Solar_Uri::importAction() -- Parses a Solar_Controller action spec as a URI.
+
+* Solar_Uri::locale() -- Looks up locale strings based on a key.
+
+* Solar_Uri::setInfo() -- Sets one element in the $this->info array by position and value.
+
+* Solar_Uri::setInfoString() -- Sets all elements in the $this->info array from a path_info string.
+
+* Solar_Uri::setQuery() -- Sets the value of an element in the $this->query array.
+
+* Solar_Uri::setQueryString() -- Sets all elements of $this->query from a query string.
+
+++ Protected
+
+* Solar_Uri::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Uri::_info2str() -- Converts an array of info elements into a string.
+
+* Solar_Uri::_query2str() -- Converts an array of query elements into a string.
+
+++ Private
+
+None.

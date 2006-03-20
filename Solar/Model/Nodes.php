@@ -80,20 +80,21 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         $this->_col['owner_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
-            'default' => Solar::registry('user')->auth->username,
+            'require' => true,
         );
         
         // username of the most-recent editor
         $this->_col['editor_handle'] = array(
             'type'    => 'varchar',
             'size'    => 255,
-            'default' => Solar::registry('user')->auth->username,
+            'require' => true,
         );
         
         // ip address of the most-recent editor
         $this->_col['editor_ipaddr'] = array(
             'type'    => 'char',
             'size'    => 15,
+            'require' => true,
             'default' => Solar::server('REMOTE_ADDR'),
             'valid'   => 'ipv4',
         );

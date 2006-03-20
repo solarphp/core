@@ -1,0 +1,27 @@
+<function>
+
+access:   public
+
+name: multiWhere
+
+param: array, $list
+
+param: string, $op, 'AND'
+
+return: void
+
+</function>
+
+Adds multiple WHERE conditions to the query.
+
+* Parameters:
+
+ * array //$list//: An array of WHERE conditions.
+
+ * string //$op//: How to add the conditions, by 'AND' (the default) or by 'OR'.
+
+* Returns void
+
+Adds multiple WHERE conditions to the query.
+
+Otherwise identical to where()/orWhere().

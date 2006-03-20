@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Exception_ColSize::__construct() -- Constructor.
+
+* Solar_Sql_Exception_ColSize::__toString() -- Custom string output.
+
+* Solar_Sql_Exception_ColSize::getClass() -- Gets the class that threw the exception.
+
+* Solar_Sql_Exception_ColSize::getClassCode() -- Gets the class and code together.
+
+* Solar_Sql_Exception_ColSize::getCode() -- 
+
+* Solar_Sql_Exception_ColSize::getFile() -- 
+
+* Solar_Sql_Exception_ColSize::getInfo() -- Gets user-defined information.
+
+* Solar_Sql_Exception_ColSize::getLine() -- 
+
+* Solar_Sql_Exception_ColSize::getMessage() -- 
+
+* Solar_Sql_Exception_ColSize::getTrace() -- 
+
+* Solar_Sql_Exception_ColSize::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Sql_Exception_ColSize::__clone() --

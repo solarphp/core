@@ -1,0 +1,29 @@
+<function>
+
+access:  static public
+
+name: getFlash
+
+param: string, $class
+
+param: string, $key
+
+param: mixed, $val, NULL
+
+return: mixed
+
+</function>
+
+Retrieves a "read-once" session value, thereby removing the value.
+
+* Parameters:
+
+ * string //$class//: The related class for the flash.
+
+ * string //$key//: The specific type of information for the class.
+
+ * mixed //$val//: If the class and key do not exist, return this value.  Default null.
+
+* Returns mixed: The "read-once" value.
+
+Retrieves a "read-once" session value, thereby removing the value.

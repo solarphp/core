@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _run
+
+return: unknown
+
+</function>
+
+Runs a template script (allowing access to $this).
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Runs a template script (allowing access to $this).

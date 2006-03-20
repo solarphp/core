@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Cache::__construct() -- Constructor.
+
+* Solar_Cache::active() -- Gets the current activity state of the cache (on or off).
+
+* Solar_Cache::apiVersion() -- Reports the API version for this class.
+
+* Solar_Cache::delete() -- Deletes a cache entry.
+
+* Solar_Cache::deleteAll() -- Deletes all entries from the cache.
+
+* Solar_Cache::entry() -- Returns the driver-specific name for the entry key.
+
+* Solar_Cache::fetch() -- Gets cache entry data.
+
+* Solar_Cache::life() -- Returns the cache lifetime in seconds.
+
+* Solar_Cache::locale() -- Looks up locale strings based on a key.
+
+* Solar_Cache::save() -- Inserts/updates cache entry data.
+
+* Solar_Cache::setActive() -- Makes the cache active (true) or inactive (false).
+
+++ Protected
+
+* Solar_Cache::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

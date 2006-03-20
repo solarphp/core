@@ -1,0 +1,27 @@
+<function>
+
+access:   public
+
+name: active
+
+return: bool
+
+</function>
+
+Gets the current activity state of the cache (on or off).
+
+* Parameters: none.
+
+* Returns bool: True if active, false if not.
+
+Gets the current activity state of the cache (on or off).
+
+Example:
+
+<code type="php">
+$cache = Solar::factory('Solar_Cache');
+
+// is the cache active or not?
+$active = $cache->active();
+Solar::dump($active);
+</code>

@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+* Solar_User_Auth::$active -- Convenience reference to $_SESSION['Solar_User_Auth']['active'].
+
+* Solar_User_Auth::$allow -- Whether or not to allow authentication actions (login/logout).
+
+* Solar_User_Auth::$handle -- Convenience reference to $_SESSION['Solar_User_Auth']['handle'].
+
+* Solar_User_Auth::$initial -- Convenience reference to $_SESSION['Solar_User_Auth']['initial'].
+
+* Solar_User_Auth::$status -- Convenience reference to $_SESSION['Solar_User_Auth']['status'].
+
+++ Protected
+
+* Solar_User_Auth::$_config -- User-supplied configuration values.
+
+* Solar_User_Auth::$_driver -- A driver object instance.
+
+++ Private
+
+None.

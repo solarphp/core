@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: save
+
+param: string, $key
+
+param: mixed, $data
+
+return: bool
+
+</function>
+
+Inserts/updates cache entry data.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+ * mixed //$data//: The data to write into the entry.
+
+* Returns bool: True on success, false on failure.
+
+Inserts/updates cache entry data.

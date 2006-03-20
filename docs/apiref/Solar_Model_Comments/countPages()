@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: countPages
+
+param: int, $part_of, NULL
+
+param: string|array, $tags, NULL
+
+return: array
+
+</function>
+
+Fetch a total count and pages of comments in the content store.
+
+* Parameters:
+
+ * int //$part_of//: Count comments that are "part of" this node ID; if blank, counts all comments on all nodes.
+
+ * string|array //$tags//: Count comments with all these tags; if empty, counts for all tags.
+
+* Returns array: A array with keys 'count' (total number of  comments) and 'pages' (number of pages).
+
+Fetch a total count and pages of comments in the content store.
+
+You can specify the "part_of" node ID and/or a list of
+tags to limit the count.

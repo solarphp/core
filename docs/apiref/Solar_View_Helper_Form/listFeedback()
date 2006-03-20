@@ -1,0 +1,22 @@
+<function>
+
+access:   public
+
+name: listFeedback
+
+param: unknown, $spec
+
+return: Solar_View_Helper_Form
+
+</function>
+
+*
+
+* Parameters:
+
+ * unknown //$spec//: 
+
+* Returns Solar_View_Helper_Form
+
+*
+Returns a feedback array (form-level or element-level) as an unordered list.

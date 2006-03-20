@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _postAction
+
+return: void
+
+</function>
+
+Executes just after the last action, and just before the view.
+
+* Parameters: none.
+
+* Returns void
+
+Executes just after the last action, and just before the view.

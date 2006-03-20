@@ -1,0 +1,3 @@
+protected bool $_status
+
+Status flag (whether Solar has started or not).

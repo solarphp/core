@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: unknown, $table
+
+param: unknown, $list, '*'
+
+param: unknown, $array_name, NULL
+
+return: object|false
+
+</function>
+
+Loads Solar_Form elements based on Solar_Sql_Table columns.
+
+* Parameters:
+
+ * unknown //$table//: 
+
+ * unknown //$list//: 
+
+ * unknown //$array_name//: 
+
+* Returns object|false: Solar_Form object, boolean false on error.      *
+
+Loads Solar_Form elements based on Solar_Sql_Table columns.

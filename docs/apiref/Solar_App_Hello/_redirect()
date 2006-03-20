@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _redirect
+
+param: string, $url
+
+return: void
+
+</function>
+
+Redirects to another URL.
+
+* Parameters:
+
+ * string //$url//: The URL to redirect to.
+
+* Returns void
+
+Redirects to another URL.

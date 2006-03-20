@@ -1,0 +1,22 @@
+<function>
+
+access:   public
+
+name: auto
+
+param: unknown, $spec
+
+return: Solar_View_Helper_Form
+
+</function>
+
+*
+
+* Parameters:
+
+ * unknown //$spec//: 
+
+* Returns Solar_View_Helper_Form
+
+*
+Automatically adds multiple pieces to the form.

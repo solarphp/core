@@ -1,0 +1,19 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_GetText::__construct() -- Constructor.
+
+* Solar_View_Helper_GetText::apiVersion() -- Reports the API version for this class.
+
+* Solar_View_Helper_GetText::getText() -- Returns a localized string, with escaping applied.
+
+* Solar_View_Helper_GetText::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View_Helper_GetText::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

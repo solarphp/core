@@ -81,7 +81,7 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
         if ($raw) {
             return $href;
         } else {
-            $this->_view->escape($href);
+            return $this->_view->escape($href);
         }
     }
 }

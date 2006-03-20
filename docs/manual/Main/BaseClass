@@ -1,0 +1,12 @@
++ Base Class
+
+The [Solar_Base::HomePage Solar_Base] class is a lightweight base class from which all other Solar classes descend.  This base class provides:
+
+||~ Description ||~ See Also ||
+|| A standard constructor that reads from the ConfigFile then combines the instantiation-time ConstructorParameters with the default property values for the class. || Solar_Base::__construct() ||
+|| A single property to hold the initial configuration of the class. || Solar_Base::$_config ||
+|| A method for generating class-specific exceptions with localized error messages. || Solar_Base::_exception() ||
+|| A method for returning text strings based on the current locale; if text strings for the locale have not been loaded, it automatically loads them for you.  || Solar_Base::locale() ||
+|| A method for finding the API version of the class. || Solar_Base::apiVersion() ||
+
+Any class that is expected to be instantiated as an object should be extended from Solar_Base.  However, classes composed only of static methods need not descend from Solar_Base.

@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Result::__construct() -- Constructor.
+
+* Solar_Sql_Result::apiVersion() -- Reports the API version for this class.
+
+* Solar_Sql_Result::fetch() -- Fetches one row from the result source.
+
+* Solar_Sql_Result::fetchAll() -- Fetches all rows from the result source via $this->fetch().
+
+* Solar_Sql_Result::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Sql_Result::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

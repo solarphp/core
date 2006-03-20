@@ -1,0 +1,4 @@
+protected array $_default_attribs
+
+*
+Default form tag attributes.

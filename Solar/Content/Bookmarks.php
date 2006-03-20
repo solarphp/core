@@ -20,7 +20,7 @@
 /**
  * Abstract content master node.
  */
-require_once 'Solar/Content/Abstract.php';
+Solar::loadClass('Solar_Content_Abstract');
 
 /**
  * 

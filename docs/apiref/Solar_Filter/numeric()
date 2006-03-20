@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: numeric
+
+param: mixed, $value
+
+return: string
+
+</function>
+
+Removes non-numeric characters.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+* Returns string: The filtered value.
+
+Removes non-numeric characters.

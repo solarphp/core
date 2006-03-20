@@ -1,0 +1,36 @@
+<function>
+
+access:   public
+
+name: findInclude
+
+param: unknown, $file
+
+return: unknown
+
+</function>
+
+Finds a file in the path stack using include_path.
+
+* Parameters:
+
+ * unknown //$file//: 
+
+* Returns unknown: unknown
+
+Finds a file in the path stack using include_path.
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_PathStack');
+$stack->add('path/1');
+$stack->add('path/2');
+$stack->add('path/3');
+
+$file = $stack->findInclude('file.php');
+// $file is now the first instance of 'file.php' found from the         
+// directory stack, looking first in 'path/3/file.php', then            
+// 'path/2/file.php', then finally 'path/1/file.php'.
+     *
+</code>

@@ -18,16 +18,6 @@
  */
 
 /**
- * Needed for performing pre-filtering.
- */
-Solar::loadClass('Solar_Filter');
-
-/**
- * Needed for performing validations.
- */
-Solar::loadClass('Solar_Valid');
-
-/**
  * 
  * Class for hinting how to build forms.
  * 
@@ -63,6 +53,27 @@ class Solar_Form extends Solar_Base {
      * enctype => (string) The form encoding type; defaults to
      * 'multipart/form-data'.
      * 
+     * When constructing a Solar_Form object, each configuration
+     * key represents a <form> tag attribute.  All config keys are
+     * copied into the Solar_Form::$attribs property on instantiation.
+     * For example:
+     *
+     * <code type="php">
+     * $config = array(
+     *     'attribs' => array(
+     *         'method' => 'get',
+     *         'action' => 'http://example.com/solar_form.php',
+     *     ),
+     * );
+     * $form = Solar::factory('Solar_Form', $config);
+     *
+     * 
+     * // now $form->attribs is an array(
+     * //     'method' => 'get',
+     * //     'action' => 'http://example.com/solar_form.php',
+     * // );
+     * </code>
+     *
      * @var array
      * 
      */
@@ -80,6 +91,10 @@ class Solar_Form extends Solar_Base {
      * 
      * Attributes for the form tag itself.
      * 
+     * The \\$attribs\\ array holds HTML attributes for the
+     * form itself (not for individual elements) such as
+     * \\action\\, \\method\\, and \\enctype\\.
+     *
      * @var array
      * 
      */
@@ -88,6 +103,13 @@ class Solar_Form extends Solar_Base {
     /**
      * 
      * The array of elements in this form.
+     * 
+     * The \\$elements\\ array contains ll elements in the form,
+     * including their names, types, values, any feedback messages,
+     * validation and filter callbacks, and so on. 
+     * 
+     * In general, you should not try to set $elements yourself;
+     * instead, Solar_Form::setElement() and Solar_Form::setElements().
      * 
      * @var array
      * 
@@ -98,10 +120,18 @@ class Solar_Form extends Solar_Base {
      * 
      * Overall feedback about the state of the form.
      * 
-     * E.g., "Saved successfully." or "Please correct the noted errors."
+     * The \\$feedback\\ array stores feedback messages for
+     * the form itself (not for individual elements). For example,
+     * "Saved successfully." or "Please correct the noted errors."
      * 
      * If you like, you can set this to an array and add multiple
-     * feeback messages.
+     * feedback messages.
+     * 
+     * Note that the $feedback property related the form itself,
+     * and not to the individual elements.  Use this to convey
+     * the state of the form as a whole to the end user; e.g.,
+     * 'Your input was saved', 'Please correct the information below',
+     * 'Comment held for moderation', and so on.
      * 
      * @var string|array
      * 
@@ -110,7 +140,7 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * The array of pre-filters for the form elements
+     * The array of pre-filters for the form elements.
      * 
      * @var array 
      * 
@@ -190,6 +220,24 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
+     * A Solar_Filter object for internal filtering needs.
+     * 
+     * @var Solar_Filter
+     * 
+     */
+    protected $_obj_filter;
+    
+    /**
+     * 
+     * A Solar_Valid object for internal validation needs.
+     * 
+     * @var Solar_Valid
+     * 
+     */
+    protected $_obj_vaild;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -198,11 +246,14 @@ class Solar_Form extends Solar_Base {
     public function __construct($config = null)
     {
         $this->_config['attribs']['action'] = Solar::server('REQUEST_URI');
-        $this->_config['success'] = $this->locale('OK_SAVED');
-        $this->_config['failure'] = $this->locale('ERR_FORM');
+        $this->_config['success'] = $this->locale('SUCCESS_FORM');
+        $this->_config['failure'] = $this->locale('FAILURE_FORM');
         
         parent::__construct($config);
         $this->attribs = $this->_config['attribs'];
+        
+        $this->_obj_filter = Solar::factory('Solar_Filter');
+        $this->_obj_valid = Solar::factory('Solar_Valid');
     }
     
     
@@ -474,7 +525,7 @@ class Solar_Form extends Solar_Base {
         // Loop through each element to filter
         foreach ($this->_filter as $name => $filters) {
             $value = $this->elements[$name]['value'];
-            $this->elements[$name]['value'] = Solar_Filter::multiple($value, $filters);
+            $this->elements[$name]['value'] = $this->_obj_filter->multiple($value, $filters);
         }
 
         $validated = true;
@@ -495,9 +546,9 @@ class Solar_Form extends Solar_Base {
                 // put the value on top of it.
                 array_unshift($args, $this->elements[$name]['value']);
                 
-                // call the appropriate Solar_Valid method
+                // call the appropriate Solar_Valid method.
                 $result = call_user_func_array(
-                    array('Solar_Valid', $method),
+                    array($this->_obj_valid, $method),
                     $args
                 );
                 
@@ -549,7 +600,8 @@ class Solar_Form extends Solar_Base {
      * Resets the form object to its originally-configured state.
      * 
      * This clears out all elements, filters, validations, and feedback,
-     * as well as all submitted values.
+     * as well as all submitted values.  Use this method to "start over
+     * again" using the same form object.
      * 
      * @return void
      * 

@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 
@@ -27,7 +27,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id:$
+ * @version $Id$
  * 
  */
 

@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+* Solar_Content::$areas -- A table object representing the broad areas of content.
+
+* Solar_Content::$nodes -- A table object representing the container nodes in an area.
+
+* Solar_Content::$tags -- A table object representing the searchable tags on each node.
+
+++ Protected
+
+* Solar_Content::$_config -- User-provided configuration values.
+
+++ Private
+
+None.

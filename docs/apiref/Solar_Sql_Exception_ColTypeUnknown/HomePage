@@ -1,0 +1,3 @@
++ The Solar_Sql_Exception_ColTypeUnknown Class
+
+Exception: column type is unknown.

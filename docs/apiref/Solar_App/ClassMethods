@@ -1,0 +1,51 @@
++ Class Methods
+
+++ Public
+
+* Solar_App::__construct() -- Constructor.
+
+* Solar_App::__get() -- Try to force users to define what their view variables are.
+
+* Solar_App::__set() -- Try to force users to define what their view variables are.
+
+* Solar_App::addFlash() -- Appends a "read-once" session value for this class and key.
+
+* Solar_App::apiVersion() -- Reports the API version for this class.
+
+* Solar_App::display() -- Executes the requested action and displays its output.
+
+* Solar_App::fetch() -- Executes the requested action and returns its output with layout.
+
+* Solar_App::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
+
+* Solar_App::locale() -- Looks up locale strings based on a key.
+
+* Solar_App::setFlash() -- Sets a "read-once" session value for this class and a key.
+
+++ Protected
+
+* Solar_App::_actionFile() -- Returns the file name for an action.
+
+* Solar_App::_collect() -- Collects action, pathinfo, and query values.
+
+* Solar_App::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_App::_forward() -- Forwards to an action script.
+
+* Solar_App::_info() -- Retrieve the value of a pathinfo request key by name.
+
+* Solar_App::_postAction() -- Executes just after the last action, and just before the view.
+
+* Solar_App::_preAction() -- Executes just before the first action.
+
+* Solar_App::_query() -- Retrieve they value of a query request key by name.
+
+* Solar_App::_redirect() -- Redirects to another URL.
+
+* Solar_App::_run() -- Includes a file in an isolated scope (but with access to $this).
+
+* Solar_App::_setup() -- Hook for extended setup behaviors.
+
+++ Private
+
+None.

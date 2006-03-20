@@ -1,0 +1,15 @@
+Use this to clear the value of one path-info position; if no position is specified, the entire path-info component is cleared.
+
+<code type="php">
+$uri = Solar::factory('Solar_Uri');
+$uri->import('http://example.com/index.php/more/path/info';
+// now $uri->info is array('more', 'path', 'info');
+
+// let's clear position 1
+$uri->clearInfo(1);
+// now $uri->info is array('more', 'info');
+
+// let's clear everything
+$uri->clearInfo();
+// now $uri->info is array()
+</code>

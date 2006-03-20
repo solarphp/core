@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: __toString
+
+return: unknown
+
+</function>
+
+Custom string output.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Custom string output.

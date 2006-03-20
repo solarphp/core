@@ -19,43 +19,6 @@
  * 
  * Methods for validating data.
  * 
- * Solar_Valid aggregates several validation routines as static
- * methods so you can make sure user input matches your requirements.
- *  This is useful for checking form values and validating database
- * fields.
- * 
- * Be sure to check the ClassMethods for a full list of
- * valdiation routines.  Note that all the methods are static, so
- * you never need to instantiate Solar_Valid (although you can if you
- * want to).
- * 
- * <code type="php">
- * require_once 'Solar.php';
- * Solar::start();
- * 
- * // load the validation class
- * Solar::loadClass('Solar_Valid');
- * 
- * // Fetch a copy of the $_GET['name'] value
- * $name = Solar::get('name');
- * 
- * // Does it match the "alpha" validation rule?
- * // (i.e., A-Z and a-z only).
- * if (! Solar_Valid::alpha($name)) {
- *     echo htmlspecialchars("Name '$name' is not valid.");
- * }
- * 
- * 
- * // Fetch a copy og the $_POST['date'] value
- * $date = Solar::post('date');
- * 
- * // Is it an ISO-formatted date?  (Alternatively,
- * // it can be completely blank.)
- * if (! Solar_Valid::isoDate($date, Solar_Valid::OR_BLANK)) {
- *     echo "The date must be in 'yyyy-mm-dd' format, or blank.";
- * }
- * </code>
-
  * @category Solar
  * 
  * @package Solar_Valid
@@ -86,7 +49,7 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Container for custom validator objects.
+     * Container for custom callable validator objects.
      * 
      * @var array
      * 
@@ -120,6 +83,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param array $params The parameters for the validation method.
      * 
+     * @return bool True if valid, false if not.
+     * 
      */
     public function __call($method, $params)
     {
@@ -140,6 +105,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -154,6 +121,8 @@ class Solar_Valid extends Solar_Base {
      * Validate that a value is letters only (upper or lower case).
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -184,31 +153,7 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Validate against a custom callback function or method.
-     * 
-     * Use this to perform your own customized validations.  The value
-     * will be passed as the first argument to the callback; the
-     * results of the callback should indicate boolean true if the
-     * value was valid, false if not.
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * Solar::loadClass('Solar_Valid');
-     * 
-     * // validate $value against a function
-     * $result = Solar_Valid::custom($value, 'my_function');
-     * 
-     * // validate $value against a method
-     * $result = Solar_Valid::custom($value, array('SomeClass', 'StaticMethod'));
-     * 
-     * // validate $value against an object method
-     * $result = Solar_Valid::custom($value, array($object, 'MethodName'));
-     * 
-     * // validate $value against a function, with added parameters for the function
-     * $result = Solar_Valid::custom($value, 'my_function', $foo, 'bar', $etc);
-     * </code>
+     * Validate against a callback function or method.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -237,15 +182,16 @@ class Solar_Valid extends Solar_Base {
      * 
      * Validate that a value is an email address.
      * 
-     * The regular expression in this method was taken from HTML_QuickForm.
-     * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
      */
     public function email($value, $blank = Solar_Valid::NOT_BLANK)
     {
+        // taken from HTML_QuickForm.
         $expr = '/^((\"[^\"\f\n\r\t\v\b]+\")|([\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+(\.[\w\!\#\$\%\&\'\*\+\-\~\/\^\`\|\{\}]+)*))@((\[(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))\])|(((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9]))\.((25[0-5])|(2[0-4][0-9])|([0-1]?[0-9]?[0-9])))|((([A-Za-z0-9\-])+\.)+[A-Za-z\-]+))$/';
         return $this->regex($value, $expr, $blank);
     }
@@ -261,6 +207,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param array $array An array of allowed options.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -275,14 +223,16 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Validate that a value is in a list of allowed options.
+     * Validate that a value is in a list of allowed values.
      * 
      * Strict checking is enforced, so a string "1" is not the same as
      * an integer 1.  This helps to avoid matching 0 and empty, etc.
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param array $array An array of allowed options.
+     * @param array $array An array of allowed values.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -300,8 +250,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * See a value has only a certain number of digits and decimals.
      * 
-     * The value must be numeric, can be no longer than the //size//,
-     * and can have no more decimal places than the //scope//.
+     * The value must be numeric, can be no longer than the \\$size\\,
+     * and can have no more decimal places than the \\$scope\\.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -309,6 +259,8 @@ class Solar_Valid extends Solar_Base {
      * excluding the negative sign and decimal point.
      * 
      * @param int $scope The maximum number of decimal places.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -356,6 +308,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -370,6 +324,8 @@ class Solar_Valid extends Solar_Base {
      * Validate that a value is a legal IPv4 address.
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -408,6 +364,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -440,6 +398,8 @@ class Solar_Valid extends Solar_Base {
      * Also checks that the date itself is valid (e.g., no Feb 30).
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -480,6 +440,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -500,6 +462,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -516,6 +480,8 @@ class Solar_Valid extends Solar_Base {
      * @param mixed $value The value to validate.
      * 
      * @param mixed $min The maximum valid value.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -540,6 +506,8 @@ class Solar_Valid extends Solar_Base {
      * @param mixed $min The value must have no more than this many
      * characters.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -559,6 +527,8 @@ class Solar_Valid extends Solar_Base {
      * Validate that a value is formatted as a MIME type.
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -587,6 +557,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $min The minimum valid value.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -608,6 +580,8 @@ class Solar_Valid extends Solar_Base {
      * @param mixed $min The value must have at least this many
      * characters.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -622,42 +596,7 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Check the value against multiple validations.
-     * 
-     * Use this to perform multiple validations on a single value. 
-     * All of the validations must be successful for the value to be
-     * valid.  If any of the validations fails, then the value is
-     * treated as not valid.
-     * 
-     * The array describing the validations must itself consist of a
-     * series of arrays where the first element is a Solar_Valid
-     * method name, and the remaining elements are the parameters for
-     * that method (not including the value, of course).
-     * 
-     * <code type="php">
-     * require_once 'Solar.php';
-     * Solar::start();
-     * 
-     * Solar::loadClass('Solar_Valid');
-     * 
-     * // the list of validations to perform
-     * $validations = array(
-     *     array('maxLength', 12),
-     *     array('regex', '/^\w+$/', Solar_Valid::OR_BLANK),
-     * );
-     * 
-     * // this will be valid
-     * $valid = Solar_Valid::multiple('something', $validations);
-     * 
-     * // this will not be valid (too long)
-     * $valid = Solar_Valid::multiple('somethingelse', $validations);
-     * 
-     * // this will not be valid (non-word character)
-     * $valid = Solar_Valid::multiple('some~thing', $validations);
-     * 
-     * // this will be valid (not too long, and OR_BLANK)
-     * $valid = Solar_Valid::multiple('', $validations);
-     * </code>
+     * Check the value against multiple callback validations.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -704,6 +643,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -748,6 +689,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param string $expr The regular expression to validate against.
      * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if the value matches the expression, false if not.
      * 
      */
@@ -768,6 +711,10 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
+     * @param string $sep The word separator character.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
      * @return bool True if valid, false if not.
      * 
      */
@@ -784,15 +731,12 @@ class Solar_Valid extends Solar_Base {
      * The value must match a generic URI format; e.g.,
      * ``http://example.com``, ``mms://example.org``, and so on.
      * 
-     * If //$schemes// is null, any and all schemes (http,
-     * ftp, mms, xyz) are allowed.  Otherwise, the URI scheme must be
-     * one of the //$schemes// array values.
-     * 
      * @param mixed $value The value to validate.
      * 
      * @param string|array $schemes Allowed schemes for the URI;
-     * e.g., http, https, ftp.  If null, any scheme at all is
-     * allowed.
+     * e.g., http, https, ftp.  If null, all schemes are allowed.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if the value is a URI and is one of the allowed
      * schemes, false if not.
@@ -868,6 +812,8 @@ class Solar_Valid extends Solar_Base {
      * regular expression "\w".
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
      * 
      * @return bool True if valid, false if not.
      * 

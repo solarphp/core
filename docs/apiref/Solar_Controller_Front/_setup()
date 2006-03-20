@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: void
+
+</function>
+
+Sets up the Solar and Front-Controller environment.
+
+* Parameters: none.
+
+* Returns void
+
+Sets up the Solar and Front-Controller environment.

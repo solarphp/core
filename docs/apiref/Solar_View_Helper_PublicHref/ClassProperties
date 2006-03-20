@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_PublicHref::$_config -- User-provided configuration values.
+
+* Solar_View_Helper_PublicHref::$_uri -- Internal URI object for creating links.
+
+* Solar_View_Helper_PublicHref::$_view -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

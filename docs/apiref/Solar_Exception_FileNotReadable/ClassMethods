@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Exception_FileNotReadable::__construct() -- Constructor.
+
+* Solar_Exception_FileNotReadable::__toString() -- Custom string output.
+
+* Solar_Exception_FileNotReadable::getClass() -- Gets the class that threw the exception.
+
+* Solar_Exception_FileNotReadable::getClassCode() -- Gets the class and code together.
+
+* Solar_Exception_FileNotReadable::getCode() -- 
+
+* Solar_Exception_FileNotReadable::getFile() -- 
+
+* Solar_Exception_FileNotReadable::getInfo() -- Gets user-defined information.
+
+* Solar_Exception_FileNotReadable::getLine() -- 
+
+* Solar_Exception_FileNotReadable::getMessage() -- 
+
+* Solar_Exception_FileNotReadable::getTrace() -- 
+
+* Solar_Exception_FileNotReadable::getTraceAsString() -- 
+
+++ Protected
+
+None.
+
+++ Private
+
+* Solar_Exception_FileNotReadable::__clone() --

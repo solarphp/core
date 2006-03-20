@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Static methods for filtering data.
+ * Methods for filtering data.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Static methods for filtering data.
+ * Methods for filtering data.
  * 
  * An OOP container for applying filters to data, e.g., form elements.
  * Filters are typically callbacks that accept either a single value as
@@ -32,22 +32,85 @@
  * @todo standardize names to indicate the action? use "only" or "keep"?
  * 
  * replace        => pregReplace
- * alpha          => stripAlpha, onlyAlpha
- * alnum          => stripAlnum, onlyAlnum
- * numeric        => stripNumeric, onlyNumeric (should allow +/- and decimals)
- * blank          => stripBlanks, onlyBlanks
+ * alpha          => stripAlpha, keepAlpha
+ * alnum          => stripAlnum, keepAlnum
+ * numeric        => stripNumeric, keepNumeric (should allow +/- and decimals)
+ * blank          => stripBlanks, keepBlanks
  * cast           => cast
  * isoDate        => formatDate (ISO by default)
  * isoTime        => formatTime (ISO by default)
- * formatDateTime => formatDateTime (ISO by default)
+ * formatDateTime => formatTimestamp (ISO by default)
  * 
  * add new methods:
  * trim()
  * strReplace()
- * stripWordChars(), onlyWordChars() (regex \w)
+ * stripWordChars(), keepWordChars() (regex \w)
  * 
  */
-class Solar_Filter {
+class Solar_Filter extends Solar_Base {
+    
+    /**
+     * 
+     * User-provided configuration values.
+     * 
+     * @var array
+     * 
+     */
+    protected $_config = array(
+        'custom' => array(),
+    );
+    
+    /**
+     * 
+     * Container for custom validator objects.
+     * 
+     * @var array
+     * 
+     */
+    protected $_custom = array();
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-provided configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        // "real" construction
+        parent::__construct($config);
+        
+        // add custom dependencies in LIFO order
+        $reverse = array_reverse((array) $this->_config['custom']);
+        foreach ($reverse as $class => $spec) {
+            $this->_custom[] = Solar::dependency($class, $spec);
+        }
+    }
+    
+    /**
+     * 
+     * Calls custom filtering methods.
+     * 
+     * @param string $method The filtering method to call.
+     * 
+     * @param array $params The parameters for the filtering method.
+     * 
+     * @return mixed The filtered value.
+     * 
+     */
+    public function __call($method, $params)
+    {
+        // loop through the stack of custom objects, looking for the
+        // right method name.
+        foreach ($this->_custom as $obj) {
+            if (method_exists($obj, $method)) {
+                return call_user_func_array(array($obj, $method), $params);
+            }
+        }
+        // couldn't find it
+        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
+    }
     
     /**
      * 
@@ -67,7 +130,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function replace($value, $pattern, $replacement)
+    public function replace($value, $pattern, $replacement)
     {
         $final = @preg_replace($pattern, $replacement, $value);
         return $final;
@@ -82,7 +145,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function alpha($value)
+    public function alpha($value)
     {
         return @preg_replace('/[^a-z]/i', '', $value);
     }
@@ -96,7 +159,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function alnum($value)
+    public function alnum($value)
     {
         return @preg_replace('/[^a-z0-9]/i', '', $value);
     }
@@ -110,7 +173,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function blank($value)
+    public function blank($value)
     {
         return @preg_replace('/\s/', '', $value);
     }
@@ -132,7 +195,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function formatDateTime($value, $format)
+    public function formatDateTime($value, $format)
     {
         return @date($format, strtotime($value));
     }
@@ -147,7 +210,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function isoDate($value)
+    public function isoDate($value)
     {
         return @date('Y-m-d', strtotime($value));
     }
@@ -162,7 +225,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function isoDateTime($value)
+    public function isoDateTime($value)
     {
         return @date('Y-m-dTH:i:s', strtotime($value));
     }
@@ -177,7 +240,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function isoTime($value)
+    public function isoTime($value)
     {
         return @date('H:i:s', strtotime($value));
     }
@@ -191,7 +254,7 @@ class Solar_Filter {
      * @return string The filtered value.
      * 
      */
-    static public function numeric($value)
+    public function numeric($value)
     {
         return @preg_replace('/\D/', '', $value);
     }
@@ -211,7 +274,7 @@ class Solar_Filter {
      * @return mixed The filtered value.
      * 
      */
-    static public function cast($value, $type)
+    public function cast($value, $type)
     {
         switch (strtolower(strval($type))) {
         
@@ -260,10 +323,10 @@ class Solar_Filter {
      * 
      * @param mixed $callback A callback value suitable for call_user_func().
      * 
-     * @return string The filtered value.
+     * @return mixed The filtered value.
      * 
      */
-    static public function custom($value, $callback)
+    public function callback($value, $callback)
     {
         // If callback isn't callable, then bail
         if (! is_callable($callback)) {
@@ -306,7 +369,7 @@ class Solar_Filter {
      * @return mixed The filtered value.
      * 
      */
-    static public function multiple($value, $filters)
+    public function multiple($value, $filters)
     {
         // No filters found, invalid filters provided, etc -- return the
         // value
@@ -329,16 +392,16 @@ class Solar_Filter {
             
             // Get the callback
             $callback = false;
-            if ('custom' == $method) {
+            if ('callback' == $method) {
                 // Custom callback; check for availability
                 $callback = array_shift($params);
                 if (! is_callable($callback)) {
                     $callback = false;
                 }
-            } elseif (is_callable(array('self', $method))) {
+            } elseif (is_callable(array($this, $method))) {
                 // Solar_Filter method name, takes precedence over
                 // native PHP functions.
-                $callback = array('self', $method);
+                $callback = array($this, $method);
             } elseif (function_exists($method)) {
                 // Function callback
                 $callback = $method;

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: distinct
+
+param: bool, $flag, true
+
+return: void
+
+</function>
+
+Makes the query SELECT DISTINCT.
+
+* Parameters:
+
+ * bool //$flag//: Whether or not the SELECT is DISTINCT (default true).
+
+* Returns void
+
+Makes the query SELECT DISTINCT.

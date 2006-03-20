@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: export
+
+return: unknown
+
+</function>
+
+Builds a full URI string.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Builds a full URI string.
+
+Takes the current properties of the Solar_Uri object
+and assembles them into a URI string.  This method
+[[php urlencode()]]s the values on export.
+     *
+@return string A URI string.

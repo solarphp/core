@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: dropTable
+
+param: string, $table
+
+return: mixed
+
+</function>
+
+Drops a table from the database.
+
+* Parameters:
+
+ * string //$table//: The table name.
+
+* Returns mixed
+
+Drops a table from the database.

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: display
+
+param: string, $name
+
+return: unknown
+
+</function>
+
+Displays a template directly.
+
+* Parameters:
+
+ * string //$name//: The template to display.
+
+* Returns unknown: unknown
+
+Displays a template directly.

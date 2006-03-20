@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: valid
+
+param: unknown, $handle
+
+param: unknown, $passwd
+
+return: unknown
+
+</function>
+
+Validate a handle and passwd.
+
+* Parameters:
+
+ * unknown //$handle//: 
+
+ * unknown //$passwd//: 
+
+* Returns unknown: unknown
+
+Validate a handle and passwd.
+     *
+@param string $user handle to authenticate.
+
+@param string $pass The plain-text passwd to use.
+
+@return boolean True on success, false on failure.

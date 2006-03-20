@@ -1,0 +1,29 @@
+HomePage | The Solar_View_Helper_Form Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_attribs
+  $_config
+  $_default_attribs
+  $_default_info
+  $_disable
+  $_feedback
+  $_hidden
+  $_stack
+  $_view
+ ClassMethods | Class Methods
+  __call()
+  __construct()
+  _exception()
+  addElement()
+  addFeedback()
+  apiVersion()
+  auto()
+  beginGroup()
+  disable()
+  endGroup()
+  fetch()
+  form()
+  listFeedback()
+  locale()
+  reset()
+  setAttrib()

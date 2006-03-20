@@ -1,0 +1,3 @@
+protected bool $_require
+
+Whether or not the element is required.

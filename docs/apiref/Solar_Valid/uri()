@@ -1,0 +1,32 @@
+<function>
+
+access:   public
+
+name: uri
+
+param: mixed, $value
+
+param: string|array, $schemes, NULL
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate a value as a URI per RFC2396.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * string|array //$schemes//: Allowed schemes for the URI; e.g., http, https, ftp.  If null, all schemes are allowed.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if the value is a URI and is one of the allowed schemes, false if not.
+
+Validate a value as a URI per RFC2396.
+
+The value must match a generic URI format; e.g.,
+``http://example.com``, ``mms://example.org``, and so on.

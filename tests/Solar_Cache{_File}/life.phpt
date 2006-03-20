@@ -20,7 +20,7 @@ $id = 'coyote';
 $data = 'Wile E. Coyote';
 
 // configured from setup
-$assert->same($cache->life(), $config['options']['life']);
+$assert->same($cache->life(), $config['life']);
 
 // store something
 $assert->isTrue($cache->replace($id, $data));

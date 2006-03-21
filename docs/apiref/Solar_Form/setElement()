@@ -20,7 +20,7 @@ Sets one element in the form.  Appends if element does not exist.
 
  * string //$name//: The element name to set or add; overrides $info['name'].
 
- * array //$info//: Element information.
+ * array //$info//: Element information using the same keys as in Solar_Form::$_default.
 
  * string //$array//: Rename the element as a key in this array.
 

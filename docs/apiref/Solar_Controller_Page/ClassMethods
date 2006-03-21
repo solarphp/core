@@ -32,13 +32,13 @@
 
 * Solar_Controller_Page::_forward() -- Forwards to an action script.
 
-* Solar_Controller_Page::_info() -- Retrieve the value of a pathinfo request key by name.
+* Solar_Controller_Page::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
 
 * Solar_Controller_Page::_postAction() -- Executes just after the last action, and just before the view.
 
 * Solar_Controller_Page::_preAction() -- Executes just before the first action.
 
-* Solar_Controller_Page::_query() -- Retrieve they value of a query request key by name.
+* Solar_Controller_Page::_query() -- Retrieves the TAINTED value of a query request key by name.
 
 * Solar_Controller_Page::_redirect() -- Redirects to another URL.
 

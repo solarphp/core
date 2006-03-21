@@ -2,9 +2,7 @@ HomePage | The Solar_Filter Class
 ApiRef | API Reference
  ClassProperties | Class Properties
   $_config
-  $_custom
  ClassMethods | Class Methods
-  __call()
   __construct()
   _exception()
   alnum()

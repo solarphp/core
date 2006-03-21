@@ -5,7 +5,7 @@ File-based cache controller.
 This is the file-based driver for [Solar_Cache:HomePage Solar_Cache].
 In general, you never need to instantiate it yourself; instead,
 use Solar_Cache as the frontend for it and specify
-'Solar_Cache_File' as the 'class' config key value.
+'Solar_Cache_File' as the 'driver' config key value.
 
 If you specify a path (for storing cache entry files) that does
 not exist, this driver attempts to create it for you.

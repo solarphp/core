@@ -2,8 +2,6 @@
 
 ++ Public
 
-* Solar_Valid::__call() -- Calls custom validation methods.
-
 * Solar_Valid::__construct() -- Constructor.
 
 * Solar_Valid::alnum() -- Validate that a value is only letters (upper or lower case) and digits.

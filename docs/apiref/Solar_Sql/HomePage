@@ -5,15 +5,15 @@ Class for connecting to SQL databases and performing common operations.
 Example usage:
 
 <code>
-$opts = array(
-    'class' => 'Solar_Sql_Driver_Mysql',
+$config = array(
+    'driver' => 'Solar_Sql_Driver_Mysql',
     'host' => '127.0.0.1',
     'user' => 'pmjones',
     'pass' => '********',
     'name' => 'test'
 );
 
-$sql = Solar::factory('Solar_Sql', $opts);
+$sql = Solar::factory('Solar_Sql', $config);
 </code>
 
 You should consider using Solar_Sql_Table for handling insert, update,

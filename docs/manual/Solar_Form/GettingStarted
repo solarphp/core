@@ -1,6 +1,4 @@
-[[toc]]
-
-++ Use Cycle
++ Getting Started
 
 In general, the basic form cycle goes like this:
 
@@ -33,15 +31,6 @@ First, we create the form object itself:
 require_once 'Solar.php';
 Solar::start();
 
-// the form config array indicates the <form> tag
-// attributes and values; these will go into the
-// $form->attribs public property.
-$config = array(
-    'action'  => '/test/index.php',
-    'method'  => 'post',
-    'enctype' => 'multipart/form-data',
-);
-
 $form = Solar::factory('Solar_Form', $config);
 </code>
 
@@ -60,37 +49,12 @@ $form->setElement('user_email', $info);
 
 +++ Instant Feedback: Display the Form
 
-Just to show we're on the right track, let's display the form output.  We need to use Solar_Template for this, because Solar_Form does not perform output functions, only collection and processing.  The Solar_Template view script looks like this:
+Just to show we're on the right track, let's display the form output.  (This doesn't populate the values or validate the input, it just displays for now.)
 
-<code type="html">
-  <!-- form_example.view.php -->
-  <head>
-    <title>Form Example</title>
-  </head>
-  <body>
-  <?php
-    // print any form-wide feedback messages; note the use
-    // of Solar_Template::escape() to make the message HTML safe.
-    // note that we cast the feedback property as an (array)
-    // so that the foreach loop is guaranteed to work properly.
-    foreach ((array) $this->forminfo->feedback as $message) {
-        echo '<p>' . $this->escape($message) . '</p>';
-    }
-    
-    // use the form() method calls in Solar_Template.
-    // begin the form with its attributes ....
-    echo $this->form('begin', $this->forminfo->attribs);
-    
-    // ... auto-display the assigned elements ...
-    echo $this->form('auto', $this->forminfo->elements);
-    
-    // then end the form.
-    echo $this->form('end');
-  ?>
-  </body>
-</code>
+We need to use [Solar_View::HomePage Solar_View] and its related [Solar_View_Helper_Form::HomePage form helper]. This is because Solar_Form does not perform output functions, only collection and processing.  
 
-And here is a form-creation script extended from the earlier code:
+Here is a combined controller and view extended from the earlier code.  (Normally you would separate your controller and view, but this example is about instant feedback.)
+
 
 <code type="php">
 // Start Solar
@@ -107,54 +71,33 @@ $info = array(
 );
 $form->setElement('user_email', $info);
 
-// Set a "Save" submit button called "user_op"
+// Set a "Save" submit button called "submit"
 $info = array(
   'type'  => 'submit',
   'label' => 'Action:',
   'value' => 'Save',
 
 );
-$form->setElement('user_op', $info);
+$form->setElement('submit', $info);
 
-// Create a Template view object
-$view = Solar::factory('Solar_Template');
-
-// Assign the form to the template as 'forminfo'
-$view->assign('forminfo', $form);
-$view->display('form_example.view.php');
+// Create a view object and output the form
+// using the form() helper
+$view = Solar::factory('Solar_View');
+echo $view->form($form);
 </code>
 
-The output should look something like this:
+The output will look something like this; note that the form helper uses semantic markup, and can by styled using CSS.
 
 <code type="html">
-  <!-- form_example.view.php -->
-  <head>
-  <title>Form Example</title>
-  </head>
-  <body>
-  <form action="/test/index.php" method="post" enctype="multipart/form-data">
-    <div>
-      <table>
-        <tr>
-          <th>
-            <label>Email Address:</label>
-          </th>
-          <td>
-            <input type="text" name="user_email" value="" />
-          </td>
-        </tr>
-        <tr>
-          <th>
-            <label>Action:</label>
-          </th>
-          <td>
-            <input type="submit" name="user_op" value="Save" />
-          </td>
-        </tr>
-      </table>
-    </div>
-  </form>
-  </body>
+    <form action="/test/index.php" method="post" enctype="multipart/form-data">
+        <dl>
+            <dt><label for="user_email">Email Address:</label></dt>
+            <dd><input type="text" id="user_email" name="user_email" value="" /></dd>
+        
+            <dt><label for="submit">Action:</label></dt>
+            <dd><input type="submit" id="submit" name="submit" value="Save" />
+        </dl>
+    </form>
 </code>
 
 +++ Populating Values
@@ -165,7 +108,7 @@ If you want to provide a default value, just put it in the 'value' key for that 
 $info = array(
   'type'  => 'text',
   'label' => 'Email Address:',
-  'value' => '(initial value)',
+  'value' => 'nobody@example.com',
 );
 
 $form->setElement('user_email', $info);
@@ -179,51 +122,43 @@ However, we'd like to automatically override the defaults with submitted values.
 
 $form->populate();
 
-// ... create a Solar_Template object, assign, and display.
+// ... create a Solar_View object, assign, and display.
 </code>
 
 The Solar_Form::populate() method will look for the $_POST['user_email'] array value and put it into the $form object for you.  If the user entered "nobody@example.com" as the address, the view script would display something like this:
 
 <code type="html">
-  <!-- form_example.view.php -->
-  <!-- ... -->
-  <tr>
-    <th>
-      <label>Email Address:</label>
-    </th>
-    <td>
-      <input type="text" name="user_email" value="nobody@example.com" />
-    </td>
-  </tr>
-  <!-- ... -->
+    <!-- ... -->
+    <dt><label for="user_email">Email Address:</label></dt>
+    <dd><input type="text" id="user_email" name="user_email" value="nobody@example.com" />
+    <!-- ... -->
 </code>
 
-(Technically, the form will use Solar::post() to get the values, not directly from $_POST.)
+(Technically, the form will use Solar::post() to get the values instead of pulling directly from $_POST.)
+
 
 +++ Validation
 
-One possible problem:  what if the user enters something besides an email address?  It would be nice if we could get display a message if the data is not valid.  We can do so using the Solar_Form::validate() method.
+Wwhat if the user enters something besides an email address?  It would be nice if we could get display a message if the data is not valid.  We can do so using the Solar_Form::validate() method.
 
-First, we need to add a 'valid' key to the user_email element.  Note that we use an array of arrays to do this, becuase you can have multiple validations on a single element.  (In the future, we will use an addValidate() method to make this more convenient.)
+First, we need to add a validation rule on the 'user_email' element.  This just tells the form what method to use for validation; it does not perform the validation just yet.  
 
 <code type="php">
 // Set the "user_email" element
 $info = array(
-  'type'  => 'text',
-  'label' => 'Email Address:',
-  
-  // validate against Solar_Valid::email(), and use a custom
-  // error message if validation fails.
-  'valid' => array(
-    array('email', 'Please enter a valid email address.')
-  ),
-  
+    'type'  => 'text',
+    'label' => 'Email Address:',
 );
 $form->setElement('user_email', $info);
 
+// add a validation rule
+$form->addValid(
+    'user_email', 'email',
+    'Please enter a valid email address.'
+);
 </code>
 
-This just tells the form what method to use for validation; it does not perform the validation just yet.  For that, we need to call the Solar_Form::validate() method on the form object after populating it with data.
+Then, after populating the form object with data, call the Solar_Form::validate() method.
 
 <code type="php">
 // ... start Solar, create the form object, set elements,
@@ -232,52 +167,58 @@ This just tells the form what method to use for validation; it does not perform 
 $form->populate();
 $form->validate();
 
-// ... create a Solar_Template object, assign, and display.
+// ... create a Solar_View object, assign, and display.
 </code>
 
-Invalid user input (e.g., entering "not really email") will generate this output for the 'user_email' element; note that our feedback message is applied for us.
+Invalid user input (e.g., entering "not really email") will generate the following output.  The feedback messages are added automatically when Solar_Form::validate() is called.
 
 <code type="html">
-  <!-- form_example.view.php -->
-  <!-- ... -->
-  <tr>
-  <th>
-    <label>Email Address:</label>
-  </th>
-  <td>
-    <input type="text" name="user_email" value="not really email" /><br />
-    <span style="color: red; font-size: 80%;">
-      Please enter a valid email address.
-    </span>
-  </td>
-  </tr>
+    <!-- ... -->
+    <form action="/test/index.php" method="post" enctype="multipart/form-data">
+        <ul>
+            <li>Please correct the noted errors.<li>
+        </ul>
+        <dl>
+            <dt><label for="user_email">Email Address:</label></dt>
+            <dd>
+                <input type="text" id="user_email" name="user_email" value="not really email" />
+                <ul>
+                    <li>Please enter a valid email address.</li>
+                </ul>
+            </dd>
+        
+            <dt><label for="submit">Action:</label></dt>
+            <dd><input type="submit" id="submit" name="submit" value="Save" />
+        </dl>
+    </form>
   <!-- ... -->
 </code>
 
 
 +++ Filters
 
-Sometimes we will want to pre-process the user input before validating it.  What if the user had extra spaces in the email address?  Those spaces will confuse the validation, even though it looks (to the user) like a valid address.  For these and other cases, you can add a 'filter' key to an element to indicate that the user input should be passed through a Solar_Filter method, removing anything that doesn't pass the filter.
+Sometimes we will want to pre-process the user input before validating it.  What if the user had extra spaces in the email address?  Those spaces will confuse the validation, even though it looks (to the user) like a valid address.  For these and other cases, you can add a 'filter' key to an element to indicate that the user input should be passed through a [Solar_Filter::HomePage Solar_Filter] method, removing anything that doesn't pass the filter.
 
-For example, to filter out all blanks from the user input before validation, you can apply this filter (note that we use an array for filter specifications, as you can apply multiple filters to a single element):
+For example, to filter out all blanks from the user input before validation, you can add this filter:
 
 <code type="php">
 // Set the "user_email" element
 $info = array(
-  'type'  => 'text',
-  'label' => 'Email Address:',
-  
-  // filter out blank whitespace
-  'filter' => array('blank'),
-  
-  // validate against Solar_Valid::email(), and use a custom
-  // error message if validation fails.
-  'valid' => array(
-    array('email', 'Please enter a valid email address.')
-  ),
-  
+    'type'  => 'text',
+    'label' => 'Email Address:',
 );
+
+// set the element
 $form->setElement('user_email', $info);
+
+// add a validation rule
+$form->addValid(
+    'user_email', 'email',
+    'Please enter a valid email address.'
+);
+
+// add a pre-filter
+$form->addFilter('user_email', 'blank');
 </code>
 
 All filters are applied as part of the Solar_Form::validate() method automatically, just before the validation itself occurs.
@@ -285,31 +226,28 @@ All filters are applied as part of the Solar_Form::validate() method automatical
 
 +++ Retrieving Values
 
-Now that you have accepted the form and filtered and validated the user input it contains, you will want to pull the values out of the form and do something with them.  You do this with the Solar_Form::values() method.
+Now that you have accepted the form, and filtered and validated the user input it contains, you will want to pull the values out of the form and do something with them.  You do this with the Solar_Form::values() method.
 
 <code type="php">
 // ... start Solar, create the form object, set elements,
 // and then:
 
-$form->populate(); // populate the form with user input
-$op = Solar::post('user_op'); // our submit button
+// populate the form with user input
+$form->populate();
 
-// process a 'Save' operation
-if ($op == 'Save') {
+// what was the submission request?
+$submit = Solar::post('submit'); 
+
+// process a 'Save' submission
+if ($submit == 'Save') {
     
-    // validate the user input
-    $isValid = $form->validate();
-    
-    if ($isValid) {
+    if ($form->validate();) {
         $values = $form->values();
         // then insert $values['user_email'] into a database,
         // or forward on to another page, or whatever.
     }
 }
 
-// ... create a Solar_Template object, assign, and display;
-// the validation messages were added to it automatically
-// when we called validate().
 </code>
 
 Note the the array returned by Solar_Form::values() will match the structure of the $_POST array for the form elements, so if you had sub-arrays in the form, you will get sub-arrays from Solar_Form::values().  Wise use of array key names will help you keep track of what information goes in which table, and so on.

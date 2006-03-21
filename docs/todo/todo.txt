@@ -1,21 +1,24 @@
 MOVING TO A NON-DEV RELEASE
 
+General:
+    Have ACTION_* in addition to SUBMIT_* keys?
+    
 Classes:
-    Solar_Sql_Select:
-        Fix column deconfliction
-        Make fluent
-        Use limitPage($page, $rows) and remove paging()? ... no, need for countPages()
     Revisit Filter and Valid
         standardize method names: filter::alnum, filter::stripAlnum()
         OR_BLANK sucks. can we get rid of it?  not really.  :-(
         move to sub-classes for filters/valids?
         how to add custom filters/valids? (have PathStack now...)
+    Solar_Sql_Select:
+        Fix column deconfliction
+        Make fluent
+    Add Solar_Sql_Record and RecordSet
 
 Apps:
+    Create CSS file for Bookmarks
     One more app? (Solar_App_Todo)
 
 Packaging:
-    rename pkg/ to src/
     in package script, copy from src/ to pkg/
         str_replace('@package_version@') along the way
         hm, only need it in Solar and Solar_Base, perhaps an easy task?

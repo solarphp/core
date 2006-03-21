@@ -10,15 +10,12 @@ return: void
 
 </function>
 
-Populates form elements with submitted values.
+Populates form elements with specified values.
 
 * Parameters:
 
- * array //$submit//: The source data array for populating form values as array(name => value); if null, will populate from $_POST or $_GET as determined from the form's 'method' attribute.
+ * array //$submit//: The source data array for populating form values as array(name => value); if null, will populate from $_POST or $_GET as determined from the Solar_Form::$attribs['method'] value.
 
 * Returns void
 
-Populates form elements with submitted values.
-
-Populates form elements with either submitted values or the
-elements passed in $submit.
+Populates form elements with specified values.

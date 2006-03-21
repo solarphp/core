@@ -16,9 +16,9 @@
 
 * Solar_Form::$_filter -- The array of pre-filters for the form elements.
 
-* Solar_Form::$_obj_filter -- 
+* Solar_Form::$_obj_filter -- A Solar_Filter object for internal filtering needs.
 
-* Solar_Form::$_obj_vaild -- 
+* Solar_Form::$_obj_vaild -- A Solar_Valid object for internal validation needs.
 
 * Solar_Form::$_submitted -- Array of submitted values.
 

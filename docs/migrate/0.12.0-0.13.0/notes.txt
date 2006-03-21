@@ -6,6 +6,7 @@ As usual, be sure to read the change notes for full details.
 
 This release has a lot of changes related to consistency and standardization; in particular, config keys have been standardized in many cases.
 
+
 ++ Config Key Changes
 
 I've tried to make config keys consistent and standard across all classes.  In particular, note these changes:
@@ -28,6 +29,7 @@ You should make sure to change your Solar.config.php array to reflect the new ke
 
 Also, you should make sure your authentication forms use the new 'handle
 
+
 ++ Locale Key Changes
 
 Similarly, I've tried to make locale keys consistent and standard across all classes.
@@ -45,9 +47,11 @@ Similarly, I've tried to make locale keys consistent and standard across all cla
 * Label keys now use '_SUBMIT', '_HANDLE', and '_PASSWD' in relation to
   the standard config keys for submissions, usernames, and passwords.
 
+
 ++ Solar_Filter and Solar_Valid
 
-These classes are no longer static; you have to instantiate them.  Also, the custom() method has been renamed to callback() to more clearly indicate how it works.
+These classes are no longer static; you have to instantiate them.  Also, the custom() methods have been renamed to callback() to more clearly indicate how they work.
+
 
 ++ URI Generation
 
@@ -56,6 +60,7 @@ The Solar_Uri class has two new config keys, 'action' and 'public', to indicate 
 For example, if your front-controller is at '/~username/solar/front.php', set that as your 'action' config key value.  Then, all calls to exportAction() will be prefixed with that value.  Similarly, if all your public files (CSS, JavaScript, etc) are at '/~username/public', set that as your 'public' config key value, and all calls to exportPublic() will be prefixed with that value.
 
 These keys make it easy to set defaults that will be used throughout Solar, e.g. in Solar_View helpers for action() and publicHref().
+
 
 ++ View Processing
 
@@ -89,23 +94,24 @@ When changing your Solar_Template scripts to Solar_View, note that these changes
 
 The front controller is much lighter now.  All layout processing has been moved into the page controller.  Also, the way the front controller maps page requests to page classes has been changed.  Previously, you would set up an "_app_class" array that mapped short page names to full class names:
 
-$_app_class = array(
-    'bookmarks' => 'Solar_App_Bookmarks',
-    'hello'     => 'Solar_App_Hello',
-    'other'     => 'Vendor_App_Other',
-);
+    $_app_class = array(
+        'bookmarks' => 'Solar_App_Bookmarks',
+        'hello'     => 'Solar_App_Hello',
+        'other'     => 'Vendor_App_Other',
+    );
 
 In the spirit of auto-discovery, override, and fallback, the front-controller now uses a simpler array of base class names; the short-page name is appended to the class name to get the proper class.
 
-$_classes = array(
-    'Solar_App',
-    'Vendor_Pages',
-    'Another_Vendor_App',
-);
+    $_classes = array(
+        'Solar_App',
+        'Vendor_Pages',
+        'Another_Vendor_App',
+    );
 
 If the front-controller receives a request for the page 'hello', it looks first for 'Another_Vendor_App_Hello', then falls back to 'Vendor_Pages_Hello', and finally defaults to 'Solar_App_Hello'.
 
 This allows you to have your own vendor-specific versions of Solar applications.  It also means you don't need to add to the map every time you add a new page controller class; just put your app in one of the noted class directories, and the front-controller will find it automatically.
+
 
 ++ Page Controller
 
@@ -115,9 +121,9 @@ In addition, all Solar_App_* classes extend the new Solar_App class, which provi
 
 The technique for indicating what variables should be mapped from the URI into the $_info array has changed.  Previously, you would key on the action, and provide an array of variable names:
 
-$_action_info = array(
-    'read' => array('area', 'page');
-)
+    $_action_info = array(
+        'read' => array('area', 'page');
+    )
 
 This would map a URI of  "read/Main/HomePage" to the "list" action, and populate $_info['area'] and  $_info['page'].
 
@@ -125,15 +131,23 @@ The problem here is that you couldn't tell the page-controller how to map defaul
 
 The new page-controller code uses this format for mapping variables ...
 
-$_action_info = array(
-    'read' => 'area/page',
-);
+    $_action_info = array(
+        'read' => 'area/page',
+    );
 
 ... and *does* map variables using the default action_info map, so that calls to non-existent actions map properly.  Thus, the 'Main/HomePage' URI will map to the 'read' action and populate the 'area' and 'page' $_info keys for you.  This should help make your URIs prettier.
 
+Setting default values for info mapping is easier too; for example:
+
+    $_action_info = array(
+        'read' => 'area=Main/page=HomePage',
+    );
+
+
+
 ++ Public Directories
 
-Finally, Solar/Layout and the Solar/App classes now have a Public/ directory.  These are for storing stylesheets, JavaScript files, images, etc.  The problem is that, because Solar is outside the webroot, you need to be able to put these files in a place accessible via http.
+The Solar/Layout and the Solar/App classes now have a Public/ directory.  These are for storing stylesheets, JavaScript files, images, etc.  The problem is that, because Solar is outside the webroot, you need to be able to put these files in a place accessible via http.
 
 There are two ways to do this; either way, you need to create a 'public/Solar' directory in your web root.  Then in that location, either:
 

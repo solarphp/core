@@ -4,9 +4,9 @@ User-supplied configuration values.
 
 Keys are:
 
-class => (string) The driver class, e.g. 'Solar_User_Auth_File'.
+driver => (string) The driver class, e.g. 'Solar_User_Auth_File'.
 
-options => (array) Options for the authentication driver.
+config => (array) Config for the authentication driver.
 
 expire => (int) Authentication lifetime in seconds; zero is
 forever.  Default is 14400 (4 hours).
@@ -16,15 +16,15 @@ forever.  Default is 1800 (30 minutes).
 
 allow => (bool) Whether or not to allow automatic login/logout.
 
-post_action => (string) Login/logout action key in $_POST array,
-e.g. 'op'.
-
 post_handle => (string) Username key in $_POST array.
 
 post_passwd => (string) Password key in $_POST array.
 
-action_login => (string) The action-key value to indicate a
-login attempt.
+post_submit => (string) Submission key in $_POST array,
+e.g. 'submit'.
 
-action_logout => (string) The action-key value to indicate a
-logout attempt.
+submit_login => (string) The submission-key value to indicate a
+login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+
+submit_logout => (string) The submission-key value to indicate a
+login attempt; default is the 'SUBMIT_LOGOUT' locale key value.

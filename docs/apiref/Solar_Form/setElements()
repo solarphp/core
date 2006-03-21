@@ -16,9 +16,9 @@ Sets multiple elements in the form.  Appends if they do not exist.
 
 * Parameters:
 
- * array //$list//: Element information as array(name => info).
+ * array //$list//: Element information as array(name => info), where each info value is an array like Solar_Form::$_default.
 
- * string //$array//: Rename the element as a key in this array.
+ * string //$array//: Rename each element as a key in this array.
 
 * Returns void
 

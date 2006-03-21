@@ -1,4 +1,4 @@
-public int $status
+public string $status
 
 Convenience reference to $_SESSION['Solar_User_Auth']['status'].
 

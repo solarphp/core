@@ -2,8 +2,6 @@
 
 ++ Public
 
-* Solar_Filter::__call() -- Calls custom filtering methods.
-
 * Solar_Filter::__construct() -- Constructor.
 
 * Solar_Filter::alnum() -- Removes non-alphabetic and non-numeric characters.

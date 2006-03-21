@@ -6,6 +6,6 @@ Keys are:
 
 : \\active\\ : (bool) Whether the cache is active or not when instantiated.
 
-: \\class\\ : (string) The driver class, default 'Solar_Cache_File'.
+: \\driver\\ : (string) The driver class, default 'Solar_Cache_File'.
 
-: \\options\\ : (array) Config options for the driver class.
+Remaining keys are passed to the driver class as config keys.

@@ -1,1 +1,3 @@
-protected  $_obj_filter
+protected Solar_Filter $_obj_filter
+
+A Solar_Filter object for internal filtering needs.

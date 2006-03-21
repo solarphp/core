@@ -38,69 +38,6 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * User-provided configuration values.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'custom' => array(),
-    );
-    
-    /**
-     * 
-     * Container for custom callable validator objects.
-     * 
-     * @var array
-     * 
-     */
-    protected $_custom = array();
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        // "real" construction
-        parent::__construct($config);
-        
-        // add custom dependencies in LIFO order
-        $reverse = array_reverse((array) $this->_config['custom']);
-        foreach ($reverse as $class => $spec) {
-            $this->_custom[] = Solar::dependency($class, $spec);
-        }
-    }
-    
-    /**
-     * 
-     * Calls custom validation methods.
-     * 
-     * @param string $method The validation method to call.
-     * 
-     * @param array $params The parameters for the validation method.
-     * 
-     * @return bool True if valid, false if not.
-     * 
-     */
-    public function __call($method, $params)
-    {
-        // loop through the stack of custom objects, looking for the
-        // right method name.
-        foreach ($this->_custom as $obj) {
-            if (method_exists($obj, $method)) {
-                return call_user_func_array(array($obj, $method), $params);
-            }
-        }
-        // couldn't find it
-        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
-    }
-    
-    /**
-     * 
      * Validate that a value is only letters (upper or lower case) and digits.
      * 
      * @param mixed $value The value to validate.

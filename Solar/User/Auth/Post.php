@@ -53,8 +53,8 @@ class Solar_User_Auth_Post extends Solar_Base {
      */
     protected $_config = array(
         'url'     => 'https://example.com/services/authenticate.php',
-        'handle'  => 'username',
-        'passwd'  => 'password',
+        'handle'  => 'handle',
+        'passwd'  => 'passwd',
         'headers' => null, // additional heaaders
         'replies' => array('0' => false, '1' => true), // key-value array of replies
     );

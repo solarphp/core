@@ -242,7 +242,7 @@ Please visit http://solarphp.com/ for more information.
     
     * changed &apos;TEXT_LOGIN&apos; and &apos;TEXT_LOGOUT&apos; to &apos;SUBMIT_LOGIN&apos; and &apos;SUBMIT_LOGOUT&apos;
     
-    * changed generic &apos;LABEL_*&apos; keys from &apos;_OP&apos;, &apos;_USERNAME&apos;, &apos;_PASSWORD&apos; to &apos;_SUBMIT&apos;, &apos;_HANDLE&apos;, &apos;PASSWD&apos;
+    * changed &apos;LABEL_*&apos; keys from &apos;_OP&apos;, &apos;_USERNAME&apos;, &apos;_PASSWORD&apos; to &apos;_SUBMIT&apos;, &apos;_HANDLE&apos;, &apos;PASSWD&apos;
     
 * Solar/Layout/
 
@@ -262,7 +262,7 @@ Please visit http://solarphp.com/ for more information.
     
 * Solar_Sql:
 
-    * uses &apos;driver&apos; instead of &apos;class&apos; key now
+    * changed config key &apos;class&apos; to &apos;driver&apos;
 
 * Solar_Uri
 
@@ -284,7 +284,7 @@ Please visit http://solarphp.com/ for more information.
     
 * Solar_User_Auth
 
-    * renamed config keys (old =&gt; new)
+    * changed config key names (old =&gt; new)
     
         * class =&gt; driver
     
@@ -312,19 +312,17 @@ Please visit http://solarphp.com/ for more information.
 
 * Solar_User_Auth_Sql
 
-    * renamed config keys and default values
+    * changed config key &apos;username_col&apos; to &apos;handle_col&apos; and defaults to &apos;handle&apos;
     
-        * &apos;username_col&apos; is now &apos;handle_col&apos; and defaults to &apos;handle&apos;
-        
-        * &apos;password_col&apos; is now &apos;passwd_col&apos; and defaults to &apos;passwd&apos;
-        
-        * &apos;table&apos; now defaults to &apos;members&apos; (vice &apos;sc_users&apos;)
+    * changed config key &apos;password_col&apos; to &apos;passwd_col&apos; and defaults to &apos;passwd&apos;
+    
+    * changed config key &apos;table&apos; now defaults to &apos;members&apos; (vice &apos;sc_users&apos;)
         
 * Solar_User_Auth_Post
 
-    * config key &apos;username&apos; is now &apos;handle&apos; (defaults to &apos;handle&apos;)
+    * changed config key &apos;username&apos; to &apos;handle&apos; (defaults to &apos;handle&apos;)
         
-    * config key &apos;password&apos; is now &apos;passwd&apos; (defaults to &apos;passwd&apos;)
+    * changed config key &apos;password&apos; to &apos;passwd&apos; (defaults to &apos;passwd&apos;)
 
 * Solar_User_Role:
 
@@ -336,7 +334,7 @@ Please visit http://solarphp.com/ for more information.
 
     * no longer static (must instantiate!)
 
-     * renamed custom() method to callback()
+    * renamed custom() method to callback()
   </notes>
   <deps>
    <dep type="php" rel="ge" version="5.0.0" optional="no"/>
@@ -7866,6 +7864,9 @@ Please visit http://solarphp.com/ for more information.
    <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/scripts/migrate_bookmarks.php">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.12.0-0.13.0/notes.txt">
+    <replace from="@package-version@" to="version" type="package-info"/>
+   </file>
    <file role="doc" baseinstalldir="/" name="docs/other/content_schema.graffle">
     <replace from="@package-version@" to="version" type="package-info"/>
    </file>
@@ -9026,7 +9027,7 @@ Please visit http://solarphp.com/ for more information.
     
     * changed &apos;TEXT_LOGIN&apos; and &apos;TEXT_LOGOUT&apos; to &apos;SUBMIT_LOGIN&apos; and &apos;SUBMIT_LOGOUT&apos;
     
-    * changed generic &apos;LABEL_*&apos; keys from &apos;_OP&apos;, &apos;_USERNAME&apos;, &apos;_PASSWORD&apos; to &apos;_SUBMIT&apos;, &apos;_HANDLE&apos;, &apos;PASSWD&apos;
+    * changed &apos;LABEL_*&apos; keys from &apos;_OP&apos;, &apos;_USERNAME&apos;, &apos;_PASSWORD&apos; to &apos;_SUBMIT&apos;, &apos;_HANDLE&apos;, &apos;PASSWD&apos;
     
 * Solar/Layout/
 
@@ -9046,7 +9047,7 @@ Please visit http://solarphp.com/ for more information.
     
 * Solar_Sql:
 
-    * uses &apos;driver&apos; instead of &apos;class&apos; key now
+    * changed config key &apos;class&apos; to &apos;driver&apos;
 
 * Solar_Uri
 
@@ -9068,7 +9069,7 @@ Please visit http://solarphp.com/ for more information.
     
 * Solar_User_Auth
 
-    * renamed config keys (old =&gt; new)
+    * changed config key names (old =&gt; new)
     
         * class =&gt; driver
     
@@ -9096,19 +9097,17 @@ Please visit http://solarphp.com/ for more information.
 
 * Solar_User_Auth_Sql
 
-    * renamed config keys and default values
+    * changed config key &apos;username_col&apos; to &apos;handle_col&apos; and defaults to &apos;handle&apos;
     
-        * &apos;username_col&apos; is now &apos;handle_col&apos; and defaults to &apos;handle&apos;
-        
-        * &apos;password_col&apos; is now &apos;passwd_col&apos; and defaults to &apos;passwd&apos;
-        
-        * &apos;table&apos; now defaults to &apos;members&apos; (vice &apos;sc_users&apos;)
+    * changed config key &apos;password_col&apos; to &apos;passwd_col&apos; and defaults to &apos;passwd&apos;
+    
+    * changed config key &apos;table&apos; now defaults to &apos;members&apos; (vice &apos;sc_users&apos;)
         
 * Solar_User_Auth_Post
 
-    * config key &apos;username&apos; is now &apos;handle&apos; (defaults to &apos;handle&apos;)
+    * changed config key &apos;username&apos; to &apos;handle&apos; (defaults to &apos;handle&apos;)
         
-    * config key &apos;password&apos; is now &apos;passwd&apos; (defaults to &apos;passwd&apos;)
+    * changed config key &apos;password&apos; to &apos;passwd&apos; (defaults to &apos;passwd&apos;)
 
 * Solar_User_Role:
 
@@ -9120,7 +9119,7 @@ Please visit http://solarphp.com/ for more information.
 
     * no longer static (must instantiate!)
 
-     * renamed custom() method to callback()
+    * renamed custom() method to callback()
     </notes>
    </release>
  </changelog>

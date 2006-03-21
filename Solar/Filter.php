@@ -32,10 +32,10 @@
  * @todo standardize names to indicate the action? use "only" or "keep"?
  * 
  * replace        => pregReplace
- * alpha          => stripAlpha, keepAlpha
- * alnum          => stripAlnum, keepAlnum
- * numeric        => stripNumeric, keepNumeric (should allow +/- and decimals)
- * blank          => stripBlanks, keepBlanks
+ * alpha          => stripAlpha, alpha
+ * alnum          => stripAlnum, alnum
+ * numeric        => stripNumeric, numeric (should allow +/- and decimals)
+ * blank          => stripBlanks, blanks
  * cast           => cast
  * isoDate        => formatDate (ISO by default)
  * isoTime        => formatTime (ISO by default)
@@ -44,73 +44,10 @@
  * add new methods:
  * trim()
  * strReplace()
- * stripWordChars(), keepWordChars() (regex \w)
+ * stripWordChars(), wordChars() (regex \w)
  * 
  */
 class Solar_Filter extends Solar_Base {
-    
-    /**
-     * 
-     * User-provided configuration values.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'custom' => array(),
-    );
-    
-    /**
-     * 
-     * Container for custom validator objects.
-     * 
-     * @var array
-     * 
-     */
-    protected $_custom = array();
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        // "real" construction
-        parent::__construct($config);
-        
-        // add custom dependencies in LIFO order
-        $reverse = array_reverse((array) $this->_config['custom']);
-        foreach ($reverse as $class => $spec) {
-            $this->_custom[] = Solar::dependency($class, $spec);
-        }
-    }
-    
-    /**
-     * 
-     * Calls custom filtering methods.
-     * 
-     * @param string $method The filtering method to call.
-     * 
-     * @param array $params The parameters for the filtering method.
-     * 
-     * @return mixed The filtered value.
-     * 
-     */
-    public function __call($method, $params)
-    {
-        // loop through the stack of custom objects, looking for the
-        // right method name.
-        foreach ($this->_custom as $obj) {
-            if (method_exists($obj, $method)) {
-                return call_user_func_array(array($obj, $method), $params);
-            }
-        }
-        // couldn't find it
-        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
-    }
     
     /**
      * 

@@ -139,12 +139,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Where the layout directory is located.
      * 
-     * Default is 'Solar/Layout/'.
+     * Default is 'Solar/App/Layouts/'.
      * 
      * @var string
      * 
      */
-    protected $_layout_dir = 'Solar/Layout/';
+    protected $_layout_dir = 'Solar/App/Layouts/';
     
     /**
      * 
@@ -294,7 +294,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $view->assign($this);
         
         // are we using a layout?
-        if ($this->_layout === false) {
+        if (! $this->_layout) {
             
             // no layout, just render the view.
             return $view->fetch($this->_view . '.view.php');

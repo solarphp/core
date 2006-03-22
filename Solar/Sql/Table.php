@@ -331,20 +331,12 @@ class Solar_Sql_Table extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         
         // all columns from this table
-        $select->from($this->_name, array_keys($this->_col));
-        
-        // conditions
-        $select->multiWhere($where);
-        
-        // ordering
-        $select->order($order);
-        
-        // by page
-        $select->paging($this->_paging);
-        $select->limitPage($page);
-        
-        // fetch and return results
-        return $select->fetch($type);
+        return $select->from($this->_name, array_keys($this->_col))
+                      ->multiWhere($where)
+                      ->order($order)
+                      ->setPaging($this->_paging)
+                      ->limitPage($page)
+                      ->fetch($type);
     }
     
     /**

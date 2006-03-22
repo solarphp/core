@@ -6,7 +6,7 @@ name: orHaving
 
 param: string, $cond
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,7 +16,7 @@ Adds a HAVING condition to the query by OR.
 
  * string //$cond//: The HAVING condition.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Adds a HAVING condition to the query by OR.
 

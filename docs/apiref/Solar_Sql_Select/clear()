@@ -6,7 +6,7 @@ name: clear
 
 param: string, $key, NULL
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,6 +16,6 @@ Clears query properties.
 
  * string //$key//: The property to clear; if empty, clears all query properties.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Clears query properties.

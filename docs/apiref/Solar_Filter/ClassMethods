@@ -4,33 +4,47 @@
 
 * Solar_Filter::__construct() -- Constructor.
 
-* Solar_Filter::alnum() -- Removes non-alphabetic and non-numeric characters.
+* Solar_Filter::alnum() -- Returns only alphanumeric characters within the value.
 
-* Solar_Filter::alpha() -- Removes non-alphabetic characters.
+* Solar_Filter::alpha() -- Returns only alphabetic characters within the value.
 
 * Solar_Filter::apiVersion() -- Reports the API version for this class.
 
-* Solar_Filter::blank() -- Removes all whitespace characters.
+* Solar_Filter::blanks() -- Returns only whitespace characters within the value.
 
 * Solar_Filter::callback() -- Uses a callback to filter a value.
 
-* Solar_Filter::cast() -- Filter: cast a value as a type
+* Solar_Filter::cast() -- Casts the value as a PHP variable type.
 
-* Solar_Filter::formatDateTime() -- Forces a value to a date() format.
+* Solar_Filter::formatDate() -- Forces a value to a date format using [[php date()]].
 
-* Solar_Filter::isoDate() -- Forces a value to an ISO-standard date string.
+* Solar_Filter::formatTime() -- Forces a value to a time format using [[php date()]].
 
-* Solar_Filter::isoDateTime() -- Forces a value to an ISO-standard date-time string.
-
-* Solar_Filter::isoTime() -- Forces a value to an ISO-standard time string.
+* Solar_Filter::formatTimestamp() -- Forces a value to a timestamp format using [[php date()]].
 
 * Solar_Filter::locale() -- Looks up locale strings based on a key.
 
 * Solar_Filter::multiple() -- Applies multiple filters to a value.
 
-* Solar_Filter::numeric() -- Removes non-numeric characters.
+* Solar_Filter::numeric() -- Returns only numbers within the value.
 
-* Solar_Filter::replace() -- Applies a regex replacement filter.
+* Solar_Filter::pregReplace() -- Applies a [[php preg_replace()]] filter.
+
+* Solar_Filter::strReplace() -- Applies a [[php str_replace()]] filter.
+
+* Solar_Filter::stripAlnum() -- Strips alphanumeric characters from the value.
+
+* Solar_Filter::stripAlpha() -- Strips alphabetic characters from the value.
+
+* Solar_Filter::stripBlanks() -- Strips all whitespace from the value.
+
+* Solar_Filter::stripNumeric() -- Strips all numbers from the value.
+
+* Solar_Filter::stripWords() -- Strips word characters from the value.
+
+* Solar_Filter::trim() -- Trims characters from the beginning and end of the value.
+
+* Solar_Filter::words() -- Returns only word characters within the value.
 
 ++ Protected
 

@@ -8,7 +8,7 @@ param: mixed, $key
 
 param: mixed, $val, NULL
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -20,6 +20,6 @@ Adds data to bind into the query.
 
  * mixed //$val//: The value to use for the replacement key.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Adds data to bind into the query.

@@ -6,7 +6,7 @@ name: where
 
 param: string, $cond
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,7 +16,7 @@ Adds a WHERE condition to the query by AND.
 
  * string //$cond//: The WHERE condition.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Adds a WHERE condition to the query by AND.
 

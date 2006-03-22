@@ -6,7 +6,7 @@ name: group
 
 param: string|array, $spec
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,6 +16,6 @@ Adds grouping to the query.
 
  * string|array //$spec//: The column(s) to group by.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Adds grouping to the query.

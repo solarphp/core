@@ -9,7 +9,6 @@ ApiRef | API Reference
   $_tbl_cols
  ClassMethods | Class Methods
   __construct()
-  __get()
   _exception()
   _join()
   _tblCols()
@@ -21,6 +20,7 @@ ApiRef | API Reference
   distinct()
   fetch()
   from()
+  getPaging()
   group()
   having()
   innerJoin()
@@ -34,6 +34,6 @@ ApiRef | API Reference
   orHaving()
   orWhere()
   order()
-  paging()
+  setPaging()
   unbind()
   where()

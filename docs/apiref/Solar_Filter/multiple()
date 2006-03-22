@@ -29,7 +29,7 @@ arrays, with each subarray consisting of at least one element. The first
 element should be the filter type; this is the name of a valid
 Solar_Filter method <b>OR</b> a PHP function. 
 
-If the filter type is {@link custom()}, then the second argument should
+If the filter method is Solar_Filter::callback(), then the second argument should
 be a valid callback. 
 
 Any additional elements in the subarray will be passed as additional

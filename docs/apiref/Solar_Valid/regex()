@@ -28,5 +28,5 @@ Validate a value against a regular expression.
 
 Validate a value against a regular expression.
 
-Uses [[php preg_match]] to compare the value against the given
+Uses [[php preg_match()]] to compare the value against the given
 regular epxression.

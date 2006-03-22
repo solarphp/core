@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Removes non-numeric characters.
+Returns only numbers within the value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Removes non-numeric characters.
 
 * Returns string: The filtered value.
 
-Removes non-numeric characters.
+Returns only numbers within the value.

@@ -14,6 +14,8 @@
 
 * Solar_Valid::callback() -- Validate against a callback function or method.
 
+* Solar_Valid::ctype() -- Validate a value against a [[php ctype]] function.
+
 * Solar_Valid::email() -- Validate that a value is an email address.
 
 * Solar_Valid::inKeys() -- Validate that the value is a key in the list of allowed options.
@@ -28,11 +30,13 @@
 
 * Solar_Valid::isoDate() -- Validate that a value is an ISO 8601 date string.
 
-* Solar_Valid::isoDateTime() -- Validate that a value is an ISO 8601 date-time string.
-
 * Solar_Valid::isoTime() -- Validate that a value is an ISO 8601 time string (hh:ii::ss format).
 
-* Solar_Valid::locale() -- Validate that a value is a locale code.
+* Solar_Valid::isoTimestamp() -- Validate that a value is an ISO 8601 timestamp string.
+
+* Solar_Valid::locale() -- Looks up locale strings based on a key.
+
+* Solar_Valid::localeCode() -- Validate that a value is a locale code.
 
 * Solar_Valid::max() -- Validate that a value is less than than or equal to a maximum.
 
@@ -46,9 +50,9 @@
 
 * Solar_Valid::multiple() -- Check the value against multiple callback validations.
 
-* Solar_Valid::nonZero() -- Validate that a value is not exactly zero.
-
 * Solar_Valid::notBlank() -- Validate that a string is not empty when trimmed.
+
+* Solar_Valid::notZero() -- Validate that a value is not exactly zero.
 
 * Solar_Valid::regex() -- Validate a value against a regular expression.
 

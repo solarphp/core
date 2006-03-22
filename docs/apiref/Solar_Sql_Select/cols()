@@ -6,7 +6,7 @@ name: cols
 
 param: unknown, $spec
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,6 +16,6 @@ Add un-mapped columns to the query.
 
  * unknown //$spec//: 
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Add un-mapped columns to the query.

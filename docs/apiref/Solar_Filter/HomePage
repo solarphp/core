@@ -1,9 +1,3 @@
 + The Solar_Filter Class
 
-Methods for filtering data.
-
-An OOP container for applying filters to data, e.g., form elements.
-Filters are typically callbacks that accept either a single value as
-an argument (and return a transformed version of that value), or a
-value to transform as the first argument and one or more additional
-parameters.
+Methods for filtering user input or other data.

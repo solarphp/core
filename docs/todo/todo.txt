@@ -4,14 +4,7 @@ General:
     Have ACTION_* in addition to SUBMIT_* keys?
     
 Classes:
-    Solar_Filter and Solar_Valid
-        standardize method names: filter::alnum, filter::stripAlnum()
-        OR_BLANK sucks. can we get rid of it?  not really.  :-(
-        move to sub-classes for filters/valids?
-        how to add custom filters/valids? (have PathStack now...)
-        use ctype_* when possible
-    Solar_Sql_Select:
-        Fix column deconfliction
+    Solar_Sql_Select: fix column deconfliction
     Add Solar_Sql_Record and RecordSet?
     
 Apps:

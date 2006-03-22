@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: setPaging
+
+param: int, $rows
+
+return: Solar_Sql_Select
+
+</function>
+
+Sets the number of rows per page.
+
+* Parameters:
+
+ * int //$rows//: The number of rows to page at.
+
+* Returns Solar_Sql_Select
+
+Sets the number of rows per page.

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: blanks
+
+param: mixed, $value
+
+return: string
+
+</function>
+
+Returns only whitespace characters within the value.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+* Returns string: The filtered value.
+
+Returns only whitespace characters within the value.

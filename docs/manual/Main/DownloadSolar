@@ -71,12 +71,20 @@ bash-2.05$ pear upgrade Solar/Solar-devel
 Alternatively, you can use PEAR to install or upgrade a specific release directly from a tarball, like this:
 
 <code>
-bash-2.05$ pear install http://solarphp.com/get/Solar-0.13.0.tgz
+bash-2.05$ pear install http://solarphp.com/get/Solar-@package_version@.tgz
 ... installation messages follow ...
 
-bash-2.05$ pear upgrade http://solarphp.com/get/Solar-0.13.0.tgz
+bash-2.05$ pear upgrade http://solarphp.com/get/Solar-@package_version@.tgz
 ... upgrade messages follow ...
 </code>
+
+++ Direct Download
+
+You can download Solar directly from this link:
+
+http://solarphp.com/get/Solar-@package_version@.tgz
+
+Then copy the \\Solar.php\\ file and \\Solar/\\ directory into your libraries.
 
 
 ++ Source via Subversion

@@ -59,7 +59,7 @@ return array(
     'VALID_MAXLENGTH'    => 'Veuillez entrer un texte moins long.',
     'VALID_MIN'          => 'Veuillez entrer une plus grande valeur.',
     'VALID_MINLENGTH'    => 'Veuillez entrer un texte plus long.',
-    'VALID_NONZERO'      => 'Cette valeur ne peut pas être zéro.',
+    'VALID_NOTZERO'      => 'Cette valeur ne peut pas être zéro.',
     'VALID_NOTBLANK'     => 'Cette valeur doit être laissée en blanc.',
     'VALID_URI'          => 'Veuiilez entrer une adresse web valide.',
     

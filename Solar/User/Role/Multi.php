@@ -87,12 +87,12 @@ class Solar_User_Role_Multi extends Solar_Base {
      * 
      * Fetch the roles from each of the drivers.
      *
-     * @param string $user Username to get roles for.
+     * @param string $handle User handle to get roles for.
      * 
      * @return mixed An array of discovered roles.
      * 
      */
-    public function fetch($user)
+    public function fetch($handle)
     {
         // the list of all roles
         $list = array();
@@ -101,7 +101,7 @@ class Solar_User_Role_Multi extends Solar_Base {
         foreach ($this->_driver as $obj) {
         
             // fetch the role list
-            $result = $obj->fetch($username);
+            $result = $obj->fetch($handle);
             if ($result) {
                 // merge the results into the common list
                 $list = array_merge(

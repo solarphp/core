@@ -1,17 +1,15 @@
 <function>
 
-access:   protected
+access:   public
 
 name: _setup
 
-return: void
+return: unknown
 
 </function>
 
-Hook for extended setup behaviors.
+
 
 * Parameters: none.
 
-* Returns void
-
-Hook for extended setup behaviors.
+* Returns unknown: unknown

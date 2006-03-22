@@ -8,6 +8,8 @@
 
 * Solar_App::__set() -- Try to force users to define what their view variables are.
 
+* Solar_App::_setup() -- 
+
 * Solar_App::addFlash() -- Appends a "read-once" session value for this class and key.
 
 * Solar_App::apiVersion() -- Reports the API version for this class.
@@ -43,8 +45,6 @@
 * Solar_App::_redirect() -- Redirects to another URL.
 
 * Solar_App::_run() -- Includes a file in an isolated scope (but with access to $this).
-
-* Solar_App::_setup() -- Hook for extended setup behaviors.
 
 ++ Private
 

@@ -8,10 +8,10 @@ return: void
 
 </function>
 
-Sets up the Solar and Front-Controller environment.
+Sets up the environment for all pages.
 
 * Parameters: none.
 
 * Returns void
 
-Sets up the Solar and Front-Controller environment.
+Sets up the environment for all pages.

@@ -41,15 +41,15 @@ class Solar {
      * 
      * Default keys are:
      * 
-     * : locale : (string) Path to the Solar locale strings directory, default 'Solar/Locale'.
+     * : \\locale\\ : (string) Path to the Solar locale strings directory, default 'Solar/Locale'.
      * 
-     * : locale_code : (string) The locale code Solar is using, default 'en_US'.
+     * : \\locale_code\\ : (string) The locale code Solar is using, default 'en_US'.
      * 
      * @var array
      * 
      */
     public static $config = array(
-        'locale' => 'Solar/Locale/',
+        'locale'      => 'Solar/Locale/',
         'locale_code' => 'en_US',
     );
     

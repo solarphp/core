@@ -76,7 +76,7 @@ return $config;
     
 ++ Browse to "Hello World"
 
-http://example.com/index.php/hello
+``http://example.com/index.php/hello``
 
 
 ++ Move your config file outside the web root

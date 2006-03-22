@@ -13,7 +13,6 @@ Adding password for user username
 
 <code type="bash">
 $ vi Solar.config.php
-$ 
 </code>
 
 <code type="php">

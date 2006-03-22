@@ -12,7 +12,6 @@ Classes:
         use ctype_* when possible
     Solar_Sql_Select:
         Fix column deconfliction
-        Make fluent
     Add Solar_Sql_Record and RecordSet?
     
 Apps:

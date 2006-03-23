@@ -14,11 +14,11 @@
 
 * Solar_View_Helper_Form::auto() -- *
 
-* Solar_View_Helper_Form::beginGroup() -- 
+* Solar_View_Helper_Form::beginGroup() -- *
 
 * Solar_View_Helper_Form::disable() -- *
 
-* Solar_View_Helper_Form::endGroup() -- 
+* Solar_View_Helper_Form::endGroup() -- *
 
 * Solar_View_Helper_Form::fetch() -- *
 

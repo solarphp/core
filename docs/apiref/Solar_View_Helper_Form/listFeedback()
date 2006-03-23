@@ -4,9 +4,9 @@ access:   public
 
 name: listFeedback
 
-param: unknown, $spec
+param: array, $spec
 
-param: unknown, $class, NULL
+param: string, $class, NULL
 
 return: Solar_View_Helper_Form
 
@@ -16,9 +16,9 @@ return: Solar_View_Helper_Form
 
 * Parameters:
 
- * unknown //$spec//: 
+ * array //$spec//: An array of messages.
 
- * unknown //$class//: 
+ * string //$class//: The class to use for the <ul> tag.
 
 * Returns Solar_View_Helper_Form
 

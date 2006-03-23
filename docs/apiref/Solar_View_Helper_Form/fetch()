@@ -4,7 +4,7 @@ access:   public
 
 name: fetch
 
-return: unknown
+return: string
 
 </function>
 
@@ -12,7 +12,7 @@ return: unknown
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns string
 
 *
 Builds and returns the form output.

@@ -24,7 +24,7 @@ None.
 
 * Solar_View_Helper_Form::$_stack -- *
 
-* Solar_View_Helper_Form::$_status -- 
+* Solar_View_Helper_Form::$_status -- *
 
 * Solar_View_Helper_Form::$_view -- Reference to the parent Solar_View object.
 

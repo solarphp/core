@@ -8,8 +8,14 @@ Classes:
     Add Solar_Sql_Record and RecordSet?
     
 Apps:
-    Create CSS file for Bookmarks
+    Create CSS file for Bookmarks?
+    Update master css for form feedback
 
+Special:
+    How to tell the form helper what class of list to use for master feedback?
+    We can set a status pos/neg, but how to map a class to the status indicator?
+    Easiest is to set an overall form class.
+    
 ----
 
 DOCS PLAN

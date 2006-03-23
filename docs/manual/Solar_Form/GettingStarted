@@ -175,7 +175,7 @@ Invalid user input (e.g., entering "not really email") will generate the followi
 <code type="html">
     <!-- ... -->
     <form action="/test/index.php" method="post" enctype="multipart/form-data">
-        <ul>
+        <ul class="failure">
             <li>Please correct the noted errors.<li>
         </ul>
         <dl>
@@ -193,6 +193,17 @@ Invalid user input (e.g., entering "not really email") will generate the followi
     </form>
   <!-- ... -->
 </code>
+
+If the user input is valid, when you display the form, the list-block above will be ...
+
+<code type="html">
+    <!-- ... -->
+    <ul class="success">
+        <li>Saved.</li>
+    </ul>
+</code>
+
+The different "success" and "failure" CSS classes allow you to style feedback messages appropriately.
 
 
 +++ Filters

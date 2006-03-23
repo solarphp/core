@@ -14,16 +14,17 @@ $ vi /home/username/public_html/index.php
 
 <code type="php">
 // Path to PEAR libraries, where Solar is installed,
-// **and** to the Vendor library
+// **and** to the Vendor library.
 set_include_path('/home/username/pear/php:/home/username/Vendor');
 
 // Load and start Solar
 // ...
 </code>
 
+
 ++ Vendor library setup
 
-In general, your vendor library should be similar to the Solar library.  Since we're doing an application skeleton, we'll need a an "App/" directory.
+In general, your vendor library should be structured like the Solar library.  Since we're doing an application skeleton, we'll need a an "App/" directory.
 
 <code type="bash">
 $ cd /home/username/Vendor

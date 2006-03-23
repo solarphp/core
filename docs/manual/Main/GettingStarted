@@ -18,7 +18,7 @@ $ vi index.php
 </code>
 
 <code type="php">
-// Path to PEAR libraries, where Solar is installed
+// Path to PEAR libraries, or where Solar is installed
 set_include_path('/home/username/pear/php');
 
 // Load and start Solar

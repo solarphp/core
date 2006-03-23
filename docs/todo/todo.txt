@@ -4,6 +4,7 @@ General:
     Have ACTION_* in addition to SUBMIT_* keys?
     
 Classes:
+    Solar_Form::values() ... have param for initial key
     Solar_Sql_Select: fix column deconfliction
     Add Solar_Sql_Record and RecordSet?
     

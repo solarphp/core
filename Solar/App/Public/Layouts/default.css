@@ -96,9 +96,39 @@ textarea {
     padding-left: 0.5em
 }
 
+#content form ul {
+	margin: 0;
+	padding: 4px;
+	list-style: none;
+}
+
+#content form ul.success {
+	background-color: #aaf;
+	border: 1px solid #33f;
+}
+
+#content form ul.failure {
+	background-color: #faa;
+	border: 1px solid #f33;
+}
+
+#content form dl ul {
+	color: red;
+	font-size: 90%;
+}
+
 #right form dl,
 #right form dd,
 #right form dt {
+	margin: 4px;
+	padding: 0;
+	text-align: center;
+    clear: both;
+}
+
+#left form dl,
+#left form dd,
+#left form dt {
 	margin: 4px;
 	padding: 0;
 	text-align: center;

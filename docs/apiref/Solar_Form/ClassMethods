@@ -12,6 +12,8 @@
 
 * Solar_Form::apiVersion() -- Reports the API version for this class.
 
+* Solar_Form::getStatus() -- Gets the current form status.
+
 * Solar_Form::load() -- Loads form attributes and elements from an external source.
 
 * Solar_Form::locale() -- Looks up locale strings based on a key.
@@ -25,6 +27,8 @@
 * Solar_Form::setElement() -- Sets one element in the form.  Appends if element does not exist.
 
 * Solar_Form::setElements() -- Sets multiple elements in the form.  Appends if they do not exist.
+
+* Solar_Form::setStatus() -- Forcibly sets the form status.
 
 * Solar_Form::validate() -- Performs filtering and validation on each form element.
 

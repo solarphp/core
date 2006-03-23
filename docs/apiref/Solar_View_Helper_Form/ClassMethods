@@ -32,6 +32,8 @@
 
 * Solar_View_Helper_Form::setAttrib() -- *
 
+* Solar_View_Helper_Form::setStatus() -- Sets the form status.
+
 ++ Protected
 
 * Solar_View_Helper_Form::_exception() -- Convenience method for returning exceptions with localized text.

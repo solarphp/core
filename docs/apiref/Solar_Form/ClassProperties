@@ -20,6 +20,8 @@
 
 * Solar_Form::$_obj_vaild -- A Solar_Valid object for internal validation needs.
 
+* Solar_Form::$_status -- The validation status of the form.
+
 * Solar_Form::$_submitted -- Array of submitted values.
 
 * Solar_Form::$_valid -- The array of validations for the form elements.

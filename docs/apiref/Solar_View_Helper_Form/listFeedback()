@@ -6,6 +6,8 @@ name: listFeedback
 
 param: unknown, $spec
 
+param: unknown, $class, NULL
+
 return: Solar_View_Helper_Form
 
 </function>
@@ -15,6 +17,8 @@ return: Solar_View_Helper_Form
 * Parameters:
 
  * unknown //$spec//: 
+
+ * unknown //$class//: 
 
 * Returns Solar_View_Helper_Form
 

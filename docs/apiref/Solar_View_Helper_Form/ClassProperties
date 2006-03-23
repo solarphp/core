@@ -8,6 +8,8 @@ None.
 
 * Solar_View_Helper_Form::$_attribs -- Attributes for the form tag.
 
+* Solar_View_Helper_Form::$_class -- *
+
 * Solar_View_Helper_Form::$_config -- User-provided configuration values.
 
 * Solar_View_Helper_Form::$_default_attribs -- *
@@ -21,6 +23,8 @@ None.
 * Solar_View_Helper_Form::$_hidden -- Collection of hidden elements.
 
 * Solar_View_Helper_Form::$_stack -- *
+
+* Solar_View_Helper_Form::$_status -- 
 
 * Solar_View_Helper_Form::$_view -- Reference to the parent Solar_View object.
 

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: setStatus
+
+param: bool, $flag
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Sets the form status.
+
+* Parameters:
+
+ * bool //$flag//: True if you want to say the form is valid, false if you want to say it is not valid.
+
+* Returns Solar_View_Helper_Form
+
+Sets the form status.

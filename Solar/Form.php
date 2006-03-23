@@ -59,6 +59,15 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
+     * The validation status of the form.
+     * 
+     * @var bool Null if validation has not occurred yet, true if
+     * valid, false if not valid.
+     */
+    protected $_status = null;
+    
+    /**
+     * 
      * Attributes for the form tag itself.
      * 
      * The \\$attribs\\ array holds HTML attributes for the
@@ -228,7 +237,6 @@ class Solar_Form extends Solar_Base {
         $this->_obj_filter = Solar::factory('Solar_Filter');
         $this->_obj_valid = Solar::factory('Solar_Valid');
     }
-    
     
     // -----------------------------------------------------------------
     // 
@@ -458,6 +466,8 @@ class Solar_Form extends Solar_Base {
     public function populate($submit = null)
     {
         $this->_submitted = array();
+        $this->_status = null;
+        
         // import the submitted values
         if (is_array($submit)) {
             // from an array
@@ -549,6 +559,7 @@ class Solar_Form extends Solar_Base {
             $this->feedback = array($this->_config['failure']);
         }
         
+        $this->_status = $validated;
         return $validated;
     }
     
@@ -594,6 +605,37 @@ class Solar_Form extends Solar_Base {
         $this->_filter    = array();
         $this->_valid     = array();
         $this->_submitted = null;
+    }
+    
+    /**
+     * 
+     * Forcibly sets the form status.
+     * 
+     * @param bool $flag True if you want to say the form is valid,
+     * false if you want to say it is not valid.
+     * 
+     * @return void
+     * 
+     */
+    public function setStatus($flag)
+    {
+        if ($flag === null) {
+            $this->_status = null;
+        } else {
+            $this->_status = (bool) $flag;
+        }
+    }
+    
+    /**
+     * 
+     * Gets the current form status.
+     * 
+     * @return bool
+     * 
+     */
+    public function getStatus()
+    {
+        return $this->_status;
     }
     
     /**
@@ -669,7 +711,6 @@ class Solar_Form extends Solar_Base {
         $this->setElements($info['elements']);
     }
     
-    
     // -----------------------------------------------------------------
     //
     // Support methods
@@ -708,7 +749,6 @@ class Solar_Form extends Solar_Base {
         return $name;
     }
     
-
     /**
      * 
      * Recursive method to map the submitted values into elements.

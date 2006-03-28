@@ -6,11 +6,21 @@ The format of this array is key-value pairs, where the key is
 the action name, and the value is a slash-separated string of
 $_info keys.  For example:
 
-$_routes = array(
+<code type="php">
+$this->_action_info = array(
     'item' => 'id', // "item/:id"
     'list' => 'year/month', // "list/:year/:month"
 );
+</code>
 
 You can then call $this->_info('id') for the 'item' action,
 or $this->_info('year') and $this->_info('month') in the 'list'
 action.
+
+If you want default values, you can do this:
+
+<code type="php">
+$this->_action_info = array(
+    'list' => 'year=2005/month=01',
+);
+</code>

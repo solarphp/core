@@ -16,7 +16,7 @@
 
 * Solar_Controller_Front::_exception() -- Convenience method for returning exceptions with localized text.
 
-* Solar_Controller_Front::_setup() -- Sets up the Solar and Front-Controller environment.
+* Solar_Controller_Front::_setup() -- Sets up the environment for all pages.
 
 ++ Private
 

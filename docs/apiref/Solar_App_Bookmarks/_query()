@@ -12,7 +12,7 @@ return: mixed
 
 </function>
 
-Retrieve they value of a query request key by name.
+Retrieves the TAINTED value of a query request key by name.
 
 * Parameters:
 
@@ -22,4 +22,7 @@ Retrieve they value of a query request key by name.
 
 * Returns mixed: The value of that query key.
 
-Retrieve they value of a query request key by name.
+Retrieves the TAINTED value of a query request key by name.
+
+Note that this value is direct user input; you should sanitize it with
+Solar_Valid or Solar_Filter (or some other technique) before using it.

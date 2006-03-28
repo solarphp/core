@@ -13,13 +13,13 @@ $ pear install Solar/Solar-devel
 +++ Set up the front-controller
 
 <code type="bash">
-$ cd /var/www/htdocs
+$ cd /home/username/public_html
 $ vi index.php
 </code>
 
 <code type="php">
-// Path to PEAR libraries, where Solar is installed
-set_include_path('/usr/local/lib/pear');
+// Path to PEAR libraries, or where Solar is installed
+set_include_path('/home/username/pear/php');
 
 // Load and start Solar
 require_once 'Solar.php';
@@ -34,21 +34,20 @@ Solar::stop();
 </code>
 
 
-+++ Set up the public layouts directory
++++ Symlink (alias) to the public directory
 
 <code type="bash">
-$ cd /var/www/htdocs
-$ mkdir -p public/Solar
-$ ln -s \
-  /usr/local/lib/pear/Solar/Layouts/Public \
-  public/Solar/Layouts
+$ cd /home/username/public_html
+$ mkdir public
+$ cd public
+$ ln -s /home/username/pear/php/Solar/App/Public Solar
 </code>
 
 
 +++ Set up a minimal config file
 
 <code type="bash">
-$ cd /var/www/htdocs
+$ cd /home/username/public_html
 $ vi Solar.config.php
 </code>
 
@@ -57,11 +56,11 @@ $config = array();
 
 // SQL connection
 $config['Solar_Sql'] = array(
-	'class' => 'Solar_Sql_Driver_Mysql',
-	'host'  => '127.0.0.1',
-	'user'  => 'username',
-	'pass'  => 'password',
-	'name'  => 'database',
+	'driver' => 'Solar_Sql_Driver_Mysql',
+	'host'   => '127.0.0.1',
+	'user'   => 'username',
+	'pass'   => 'password',
+	'name'   => 'database',
 );
 
 // Your front controller href
@@ -76,24 +75,24 @@ return $config;
     
 ++ Browse to "Hello World"
 
-http://example.com/index.php/hello
+``http://example.com/index.php/hello``
 
 
 ++ Move your config file outside the web root
 
 <code type="bash">
-$ cd /var/www/htdocs
-$ mv Solar.config.php /var/www/conf
+$ cd /home/username/public_html
+$ mv Solar.config.php /home/username
 $ vi index.php
 </code>
 
 <code type="php">
 // Path to PEAR libraries, where Solar is installed
-set_include_path('/usr/local/lib/pear');
+set_include_path('/home/username/pear/php');
 
 // Load and start Solar
 require_once 'Solar.php';
-Solar::start('/var/www/conf/Solar.config.php');
+Solar::start('/home/username/Solar.config.php');
 
 // Instantiate and run the front controller
 $front = Solar::factory('Solar_Controller_Front');

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for hinting how to build forms.
+ * Form-processing class; also hints the view on how to present the form.
  * 
  * @category Solar
  * 
@@ -19,13 +19,7 @@
 
 /**
  * 
- * Class for hinting how to build forms.
- * 
- * This is technically a pseudo-form class.   It stores information for how
- * to build a form, but does not perform output.  Will validate data
- * in the form and generate feedback messages.
- * 
- * Built for use primarly with multiple Solar_Sql_Entity extended classes.
+ * Form-processing class; also hints the view on how to present the form.
  * 
  * @category Solar
  * 
@@ -38,42 +32,18 @@ class Solar_Form extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Each key corresponds directly with a valid form tag
-     * attribute; you can add or remove as you wish.  Note that
-     * although 'action' defaults to null, it will be replaced
-     * in the constructor with Solar::server('REQUEST_URI').
-     * 
      * Keys are:
      * 
-     * action => (string) The form action attribute; defaults to null,
-     * which is treated as $_SERVER['REQUEST_URI'].
+     * : \\attribs\\ : An array of <form> tag attributes; used for hinting
+     * the view on how to present the form.  Defaults are 'method="post"',
+     * 'action=$_SERVER["REQUEST_URI"]', and 'enctype="multipart/form-data"'.
      * 
-     * method => (string) The form method attribute; defaults to 'post'.
+     * : \\success\\ : The overall "success" message when validating form
+     * input. Default is Solar locale key SUCCESS_FORM.
      * 
-     * enctype => (string) The form encoding type; defaults to
-     * 'multipart/form-data'.
+     * : \\failure\\ : The overall "failure" message when validating form
+     * input. Default is Solar locale key FAILURE_FORM.
      * 
-     * When constructing a Solar_Form object, each configuration
-     * key represents a <form> tag attribute.  All config keys are
-     * copied into the Solar_Form::$attribs property on instantiation.
-     * For example:
-     *
-     * <code type="php">
-     * $config = array(
-     *     'attribs' => array(
-     *         'method' => 'get',
-     *         'action' => 'http://example.com/solar_form.php',
-     *     ),
-     * );
-     * $form = Solar::factory('Solar_Form', $config);
-     *
-     * 
-     * // now $form->attribs is an array(
-     * //     'method' => 'get',
-     * //     'action' => 'http://example.com/solar_form.php',
-     * // );
-     * </code>
-     *
      * @var array
      * 
      */
@@ -83,9 +53,18 @@ class Solar_Form extends Solar_Base {
             'method'  => 'post',
             'enctype' => 'multipart/form-data',
         ),
-        'success' => '',
-        'failure' => '',
+        'success' => null,
+        'failure' => null,
     );
+    
+    /**
+     * 
+     * The validation status of the form.
+     * 
+     * @var bool Null if validation has not occurred yet, true if
+     * valid, false if not valid.
+     */
+    protected $_status = null;
     
     /**
      * 
@@ -93,7 +72,9 @@ class Solar_Form extends Solar_Base {
      * 
      * The \\$attribs\\ array holds HTML attributes for the
      * form itself (not for individual elements) such as
-     * \\action\\, \\method\\, and \\enctype\\.
+     * \\action\\, \\method\\, and \\enctype\\.  Note that these
+     * are "hints" for the presentation of the form, and may not
+     * be honored by the view.
      *
      * @var array
      * 
@@ -104,7 +85,7 @@ class Solar_Form extends Solar_Base {
      * 
      * The array of elements in this form.
      * 
-     * The \\$elements\\ array contains ll elements in the form,
+     * The \\$elements\\ array contains all elements in the form,
      * including their names, types, values, any feedback messages,
      * validation and filter callbacks, and so on. 
      * 
@@ -123,20 +104,17 @@ class Solar_Form extends Solar_Base {
      * The \\$feedback\\ array stores feedback messages for
      * the form itself (not for individual elements). For example,
      * "Saved successfully." or "Please correct the noted errors."
+     * Each array element is an additional feedback message.
      * 
-     * If you like, you can set this to an array and add multiple
-     * feedback messages.
+     * Note that the $feedback property pertains to the form as a
+     * whole, not the individual elements.  This is as opposed to
+     * the 'feedback' key in each of the elements, which contains
+     * feedback specific to that element.
      * 
-     * Note that the $feedback property related the form itself,
-     * and not to the individual elements.  Use this to convey
-     * the state of the form as a whole to the end user; e.g.,
-     * 'Your input was saved', 'Please correct the information below',
-     * 'Comment held for moderation', and so on.
-     * 
-     * @var string|array
+     * @var array
      * 
      */
-    public $feedback = null;
+    public $feedback = array();
     
     /**
      * 
@@ -160,11 +138,13 @@ class Solar_Form extends Solar_Base {
      * 
      * Array of submitted values.
      * 
-     * Populated on the first call to submittedValue(), which itself uses
+     * Populated on the first call to Solar_Form::_populate(), which itself uses
      * Solar::get() or Solar::post(), depending on the value of
      * $this->attribs['method'].
      * 
      * @var array
+     * 
+     * @todo Do we really need this as a property?
      * 
      */
     protected $_submitted = null;
@@ -175,32 +155,31 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are:
      * 
-     * name => (string) The name attribute.
+     * : \\name\\ : (string) The name attribute.
      * 
-     * type => (string) The input or type attribute ('text', 'select', etc).
+     * : \\type\\ : (string) The input or type attribute ('text', 'select', etc).
      * 
-     * label => (string) A short label for the element.
+     * : \\label\\ : (string) A short label for the element.
      * 
-     * value => (string) The default or selected value(s) for the element.
+     * : \\value\\ : (string) The default or selected value(s) for the element.
      * 
-     * descr => (string) A longer description of the element, e.g. a tooltip
+     * : \\descr\\ : (string) A longer description of the element, e.g. a tooltip
      * or help text.
      * 
-     * require => (bool) Whether or not the element is required.
+     * : \\require\\ : (bool) Whether or not the element is required.
      * 
-     * disable => (bool) If disabled, the element is read-only (but is still
+     * : \\disable\\ : (bool) If disabled, the element is read-only (but is still
      * submitted with other elements).
      * 
-     * options => (array) The list of allowed values as options for this element
+     * : \\options\\ : (array) The list of allowed values as options for this element
      * as an associative array in the form (value => label).
      * 
-     * attribs => (array) Additional XHTML attributes for the element in the
+     * : \\attribs\\ : (array) Additional XHTML attributes for the element in the
      * form (attribute => value).
      * 
-     * feedback => (array) An array of feedback messages for this element,
+     * : \\feedback\\ : (array) An array of feedback messages for this element,
      * generally based on validation of previous user input.
      * 
-    
      * @var array
      * 
      */
@@ -245,17 +224,19 @@ class Solar_Form extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        // programmatic defaults
         $this->_config['attribs']['action'] = Solar::server('REQUEST_URI');
         $this->_config['success'] = $this->locale('SUCCESS_FORM');
         $this->_config['failure'] = $this->locale('FAILURE_FORM');
         
+        // "real" contruction
         parent::__construct($config);
-        $this->attribs = $this->_config['attribs'];
         
+        // retain setups, create validator/filter objects
+        $this->attribs = $this->_config['attribs'];
         $this->_obj_filter = Solar::factory('Solar_Filter');
         $this->_obj_valid = Solar::factory('Solar_Valid');
     }
-    
     
     // -----------------------------------------------------------------
     // 
@@ -270,7 +251,8 @@ class Solar_Form extends Solar_Base {
      * @param string $name The element name to set or add; overrides
      * $info['name'].
      * 
-     * @param array $info Element information.
+     * @param array $info Element information using the same keys as
+     * in Solar_Form::$_default.
      * 
      * @param string $array Rename the element as a key in this array.
      * 
@@ -331,9 +313,10 @@ class Solar_Form extends Solar_Base {
      * 
      * Sets multiple elements in the form.  Appends if they do not exist.
      * 
-     * @param array $list Element information as array(name => info).
+     * @param array $list Element information as array(name => info), where
+     * each info value is an array like Solar_Form::$_default.
      * 
-     * @param string $array Rename the element as a key in this array.
+     * @param string $array Rename each element as a key in this array.
      * 
      * @return void
      * 
@@ -376,11 +359,14 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Adds a pre-filter for an element
+     * Adds a Solar_Filter method callback for an element.
      * 
-     * Adds a pre-filter for an element. All pre-filters are applied via 
-     * {@link Solar_Filter::multiple()} and should conform to the 
+     * All pre-filters are applied via 
+     * Solar_Filter::multiple() and should conform to the 
      * specifications for that method.
+     * 
+     * All parameters after $method are treated as added parameters
+     * for the Solar_Filter method call.
      * 
      * @param string $name The element name.
      * 
@@ -407,7 +393,7 @@ class Solar_Form extends Solar_Base {
      * 
      * @param string $method The Solar_Valid callback method.
      * 
-     * @param string $message The message to use if validation fails.
+     * @param string $message The feedback message to use if validation fails.
      * 
      * @return void
      * 
@@ -468,20 +454,20 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Populates form elements with submitted values.
-     * 
-     * Populates form elements with either submitted values or the
-     * elements passed in $submit.
+     * Populates form elements with specified values.
      * 
      * @param array $submit The source data array for populating form
      * values as array(name => value); if null, will populate from $_POST
-     * or $_GET as determined from the form's 'method' attribute.
+     * or $_GET as determined from the Solar_Form::$attribs['method'] value.
      * 
      * @return void
      * 
      */
     public function populate($submit = null)
     {
+        $this->_submitted = array();
+        $this->_status = null;
+        
         // import the submitted values
         if (is_array($submit)) {
             // from an array
@@ -491,8 +477,10 @@ class Solar_Form extends Solar_Base {
             $this->_submitted = (array) $submit;
         } else {
             // from $_GET or $_POST, per the form method.
-            $method = $this->attribs['method'];
-            $this->_submitted = Solar::$method();
+            $method = strtolower($this->attribs['method']);
+            if ($method == 'get' || $method == 'post') {
+                $this->_submitted = Solar::$method();
+            }
         }
         
         // populate the submitted values into the
@@ -525,7 +513,9 @@ class Solar_Form extends Solar_Base {
         // Loop through each element to filter
         foreach ($this->_filter as $name => $filters) {
             $value = $this->elements[$name]['value'];
-            $this->elements[$name]['value'] = $this->_obj_filter->multiple($value, $filters);
+            $this->elements[$name]['value'] = $this->_obj_filter->multiple(
+                $value, $filters
+            );
         }
 
         $validated = true;
@@ -569,6 +559,7 @@ class Solar_Form extends Solar_Base {
             $this->feedback = array($this->_config['failure']);
         }
         
+        $this->_status = $validated;
         return $validated;
     }
     
@@ -608,12 +599,43 @@ class Solar_Form extends Solar_Base {
      */
     public function reset()
     {
-        $this->attribs    = $this->_config;
+        $this->attribs    = $this->_config['attribs'];
         $this->elements   = array();
         $this->feedback   = null;
         $this->_filter    = array();
         $this->_valid     = array();
         $this->_submitted = null;
+    }
+    
+    /**
+     * 
+     * Forcibly sets the form status.
+     * 
+     * @param bool $flag True if you want to say the form is valid,
+     * false if you want to say it is not valid.
+     * 
+     * @return void
+     * 
+     */
+    public function setStatus($flag)
+    {
+        if ($flag === null) {
+            $this->_status = null;
+        } else {
+            $this->_status = (bool) $flag;
+        }
+    }
+    
+    /**
+     * 
+     * Gets the current form status.
+     * 
+     * @return bool
+     * 
+     */
+    public function getStatus()
+    {
+        return $this->_status;
     }
     
     /**
@@ -689,7 +711,6 @@ class Solar_Form extends Solar_Base {
         $this->setElements($info['elements']);
     }
     
-    
     // -----------------------------------------------------------------
     //
     // Support methods
@@ -728,7 +749,6 @@ class Solar_Form extends Solar_Base {
         return $name;
     }
     
-
     /**
      * 
      * Recursive method to map the submitted values into elements.

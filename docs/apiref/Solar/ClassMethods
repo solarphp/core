@@ -20,7 +20,7 @@
 
 * Solar::fileExists() -- Hack for [[php file_exists()]] that checks the include_path.
 
-* Solar::fixdir() -- Fixes a directory string for the operating system.
+* Solar::fixdir() -- "Fixes" a directory string for the operating system.
 
 * Solar::get() -- Safely gets the value of an element from the $_GET array.
 

@@ -4,16 +4,19 @@ access:   public
 
 name: beginGroup
 
-param: unknown, $label, NULL
+param: string, $label, NULL
 
-return: unknown
+return: Solar_View_Helper_Form
 
 </function>
 
-
+*
 
 * Parameters:
 
- * unknown //$label//: 
+ * string //$label//: The label text.
 
-* Returns unknown: unknown
+* Returns Solar_View_Helper_Form
+
+*
+Begins a group of form elements under a single label.

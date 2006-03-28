@@ -8,8 +8,6 @@ None.
 
 * Solar_Filter::$_config -- User-provided configuration values.
 
-* Solar_Filter::$_custom -- Container for custom validator objects.
-
 ++ Private
 
 None.

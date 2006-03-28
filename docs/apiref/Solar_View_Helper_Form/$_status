@@ -1,0 +1,4 @@
+protected bool $_status
+
+*
+The current failure/success status.

@@ -1,6 +1,6 @@
-++ Overview
++ Form Descriptor
 
-While this descriptor array originated with [http://phpsavant.com Savant] and [Main::HomePage Solar], the array structure is generic enough for any framework to generate, and for any template system to render.  The structure is composed of an array of elements, where each element is itself an associative array.
+While this descriptor array originated with [http://phpsavant.com Savant] and [Main::HomePage Solar], the structure is generic enough for any framework to generate, and for any template system to render.  The structure is composed of an array of elements, where each element is itself an associative array.
 
 An example element array looks like this:
 
@@ -51,7 +51,7 @@ $elements = array(
 
 ++ Element Keys
 
-These are the "hinting" keys available for form elements:
+These are the keys available for form elements:
 
 ||~ Key ||~ Type ||~ Description ||
 || \\name\\ || string || the element name ||
@@ -62,6 +62,5 @@ These are the "hinting" keys available for form elements:
 || \\require\\ || bool || whether or not the element is required ||
 || \\disable\\ || bool || whether or not editing of the value should be disabled (i.e., read-only) ||
 || \\options\\ || array || key-value pairs of options for select, radio, checkbox, etc; each array key is the actual value of the option, and the corresponding array value is the displayed label of the option||
-|| \\listsep\\ || string || a raw string used to separate radio buttons ||
 || \\attribs\\ || array || key-value pairs for additional attributes to be applied ||
 || \\feedback\\ || array || messages for the user related to the element; e.g. validation feedback ||

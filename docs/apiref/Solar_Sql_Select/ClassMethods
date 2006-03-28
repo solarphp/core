@@ -4,8 +4,6 @@
 
 * Solar_Sql_Select::__construct() -- Constructor.
 
-* Solar_Sql_Select::__get() -- Read-only access to properties.
-
 * Solar_Sql_Select::apiVersion() -- Reports the API version for this class.
 
 * Solar_Sql_Select::bind() -- Adds data to bind into the query.
@@ -21,6 +19,8 @@
 * Solar_Sql_Select::fetch() -- Fetch the results based on the current query properties.
 
 * Solar_Sql_Select::from() -- Adds a FROM table and columns to the query.
+
+* Solar_Sql_Select::getPaging() -- Gets the number of rows per page.
 
 * Solar_Sql_Select::group() -- Adds grouping to the query.
 
@@ -48,7 +48,7 @@
 
 * Solar_Sql_Select::order() -- Adds a row order to the query.
 
-* Solar_Sql_Select::paging() -- Sets the number of rows per page.
+* Solar_Sql_Select::setPaging() -- Sets the number of rows per page.
 
 * Solar_Sql_Select::unbind() -- Unsets bound data.
 

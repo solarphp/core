@@ -4,13 +4,12 @@ User-supplied configuration values.
 
 Keys are:
 
-'sql' => (string|array) A string Solar::registry() object name, or a 
-Solar::factory() config array.
+'sql' => (dependency) A Solar_Sql dependency.
 
 'table' => (string) The table where roles are stored.
 
-'username_col' => (string) The column of usernames.
+'handle_col' => (string) The column for user handles.
 
-'rolename_col' => (string) The column of roles.
+'role_col' => (string) The column for roles.
 
 @var array

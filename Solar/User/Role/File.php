@@ -52,18 +52,18 @@ class Solar_User_Role_File extends Solar_Base {
      * 
      * Fetch the roles.
      *
-     * @param string $user Username to get roles for.
+     * @param string $handle User handle to get roles for.
      * 
      * @return array An array of discovered roles.
      * 
      */
-    public function fetch($user)
+    public function fetch($handle)
     {
         // force the full, real path to the file
         $file = realpath($this->_config['file']);
         
         // does the file exist?
-        if (! file_exists($file) || ! is_readable($file)) {
+        if (! Solar::fileExists($file)) {
             throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
                 array('file' => $file)
@@ -73,8 +73,8 @@ class Solar_User_Role_File extends Solar_Base {
         // load the file as an array of lines
         $lines = file($file);
         
-        // the list of roles
-        $list = array();
+        // the discovered roles
+        $roles = array();
         
         // loop through each line, find the group, then see if the user
         // is on the line anywhere
@@ -86,18 +86,18 @@ class Solar_User_Role_File extends Solar_Base {
             // the group name is the part before the ':'
             $group = substr($line, 0, $pos);
             
-            // the list of users comes after
+            // the list of user handles comes after
             $tmp = substr($line, $pos+1);
-            $users = explode(',', $tmp);
+            $list = explode(',', $tmp);
             
             // is the user part of the group?
-            if (in_array($user, $users)) {
-                $list[] = $group;
+            if (in_array($handle, $list)) {
+                $roles[] = $group;
             }
         }
         
         // done!
-        return $list;
+        return $roles;
     }
 }
 ?>

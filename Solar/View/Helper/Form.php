@@ -89,6 +89,27 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      *
+     * Form CSS class to use for failure/success statuses.
+     * 
+     * @var array
+     * 
+     */
+    protected $_class = array(
+        0 => 'failure',
+        1 => 'success',
+    );
+    
+    /**
+     *
+     * The current failure/success status.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_status = null;
+    
+    /**
+     *
      * Default form tag attributes.
      * 
      * @var array
@@ -286,6 +307,26 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
+     * 
+     * Sets the form status.
+     * 
+     * @param bool $flag True if you want to say the form is valid,
+     * false if you want to say it is not valid.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function setStatus($flag)
+    {
+        if ($flag === null) {
+            $this->_status = null;
+        } else {
+            $this->_status = (bool) $flag;
+        }
+        return $this;
+    }
+    
+    /**
      *
      * Automatically adds multiple pieces to the form.
      * 
@@ -302,7 +343,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         if ($spec instanceof Solar_Form) {
             
             // add from a Solar_Form object.
-            // set attributes
+            // set the form status.
+            $this->setStatus($spec->getStatus());
+            
+            // set the form attributes
             foreach ((array) $spec->attribs as $key => $val) {
                 $this->setAttrib($key, $val);
             }
@@ -327,12 +371,28 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         return $this;
     }
     
+    /**
+     *
+     * Begins a group of form elements under a single label.
+     * 
+     * @param string $label The label text.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function beginGroup($label = null)
     {
         $this->_stack[] = array('group', array(true, $label));
         return $this;
     }
     
+    /**
+     *
+     * Ends a group of form elements.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
     public function endGroup()
     {
         $this->_stack[] = array('group', array(false, null));
@@ -343,6 +403,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Builds and returns the form output.
      * 
+     * @return string
+     * 
      */
     public function fetch()
     {
@@ -350,8 +412,14 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $form = array();
         $form[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
         
-        // the form-level feedback list
-        $form[] = $this->listFeedback($this->_feedback);
+        // the form-level feedback list, with the proper status
+        // class.
+        if (is_bool($this->_status)) {
+            $class = $this->_class[(int) $this->_status];
+        } else {
+            $class = null;
+        }
+        $form[] = $this->listFeedback($this->_feedback, $class);
         
         // the hidden elements
         foreach ($this->_hidden as $info) {
@@ -427,14 +495,23 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      *
      * Returns a feedback array (form-level or element-level) as an unordered list.
      * 
+     * @param array $spec An array of messages.
+     * 
+     * @param string $class The class to use for the <ul> tag.
+     * 
      * @return Solar_View_Helper_Form
      * 
      */
-    public function listFeedback($spec)
+    public function listFeedback($spec, $class = null)
     {
         if (! empty($spec)) {
             $list = array();
-            $list[] = '<ul>';
+            if ($class) {
+                $list[] = '<ul class="' . $this->_view->escape($class) . '">';
+            } else {
+                $list[] = '<ul>';
+            }
+            
             foreach ((array) $spec as $text) {
                 $list[] = '<li>'. $this->_view->escape($text) . '</li>';
             }
@@ -459,6 +536,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $this->_feedback = array();
         $this->_hidden = array();
         $this->_stack = array();
+        $this->_status = null;
         
         return $this;
     }

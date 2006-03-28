@@ -54,7 +54,7 @@ class Solar_View_Helper_Script extends Solar_View_Helper {
             $attribs['type'] = 'text/javascript';
         }
         
-        return '<script src="$src" type="$type"'
+        return "<script src=\"$src\""
              . $this->_view->attribs($attribs) . '></script>';
     }
 }

@@ -10,17 +10,18 @@ return: string
 
 </function>
 
-Fixes a directory string for the operating system.
+"Fixes" a directory string for the operating system.
 
 * Parameters:
 
  * string //$dir//: The directory string to 'fix'.
 
-* Returns string: The "fixed" directory.
+* Returns string: The "fixed" directory string.
 
-Fixes a directory string for the operating system.
+"Fixes" a directory string for the operating system.
 
-Basically, use slashes anywhere you need a directory separator.
+Use slashes anywhere you need a directory separator.
 Then run the string through fixdir() and the slashes will be converted
-to the proper separator (e.g. '\' on Windows).  Also, adds a trailing
-separator to the string for you.
+to the proper separator (e.g. '\' on Windows).
+
+Always adds a final trailing separator.

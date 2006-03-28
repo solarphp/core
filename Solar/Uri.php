@@ -137,6 +137,20 @@ class Solar_Uri extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        // fix the action href by adding leading and trailing slashes
+        if ($this->_config['action'][0] != '/') {
+            $this->_config['action'] = '/' . $this->_config['action'];
+        }
+        $this->_config['action'] = rtrim($this->_config['action'], '/') . '/';
+        
+        // fix the public href by adding leading and trailing slashes
+        if ($this->_config['public'][0] != '/') {
+            $this->_config['public'] = '/' . $this->_config['public'];
+        }
+        $this->_config['public'] = rtrim($this->_config['public'], '/') . '/';
+        
+        // import the current URI
         $this->import();
     }
     

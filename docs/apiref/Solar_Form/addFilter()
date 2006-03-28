@@ -12,7 +12,7 @@ return: void
 
 </function>
 
-Adds a pre-filter for an element
+Adds a Solar_Filter method callback for an element.
 
 * Parameters:
 
@@ -22,8 +22,11 @@ Adds a pre-filter for an element
 
 * Returns void
 
-Adds a pre-filter for an element
+Adds a Solar_Filter method callback for an element.
 
-Adds a pre-filter for an element. All pre-filters are applied via 
-{@link Solar_Filter::multiple()} and should conform to the 
+All pre-filters are applied via 
+Solar_Filter::multiple() and should conform to the 
 specifications for that method.
+
+All parameters after $method are treated as added parameters
+for the Solar_Filter method call.

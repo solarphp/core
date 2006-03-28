@@ -12,7 +12,7 @@ param: string, $cond
 
 param: array|string, $cols
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -28,6 +28,6 @@ Support method for adding JOIN clauses.
 
  * array|string //$cols//: The columns to select from the joined table.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Support method for adding JOIN clauses.

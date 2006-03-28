@@ -32,24 +32,24 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * 
      * Keys are:
      * 
-     * url => (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
+     * : \\url\\ : (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
      * 
-     * basedn => (string) The base DN for the LDAP search; example: "o=my company,c=us".
+     * : \\basedn\\ : (string) The base DN for the LDAP search; example: "o=my company,c=us".
      * 
-     * filter => (string) An sprintf() filter string for the LDAP search; %s represents the username.
+     * : \\filter\\ : (string) An sprintf() filter string for the LDAP search; %s represents the username.
      * Example: "uid=%s".
      * 
-     * attrib => (string) Use these attributes to find role names.
+     * : \\attrib\\ : (string) Use these attributes to find role names.
      * 
-     * binddn => (string) Bind to the LDAP server as this distinguished name.
+     * : \\binddn\\ : (string) Bind to the LDAP server as this distinguished name.
      * 
-     * bindpw => (string) Bind to the LDAP server as with this password.
+     * : \\bindpw\\ : (string) Bind to the LDAP server as with this password.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'url' => null,
+        'url'    => null,
         'basedn' => null,
         'filter' => null,
         'attrib' => array('ou'),
@@ -60,6 +60,8 @@ class Solar_User_Role_Ldap extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User defined configuration values.
      * 
      */
     public function __construct($config = null)
@@ -81,12 +83,12 @@ class Solar_User_Role_Ldap extends Solar_Base {
      * 
      * Fetch roles for a user.
      * 
-     * @param string $user Username to get roles for.
+     * @param string $handle Username to get roles for.
      * 
      * @return array An array of roles discovered in LDAP.
      * 
      */
-    public function fetch($user)
+    public function fetch($handle)
     {
         // connect
         $conn = @ldap_connect($this->_config['url']);
@@ -124,7 +126,7 @@ class Solar_User_Role_Ldap extends Solar_Base {
         }
         
         // search for the groups
-        $filter = sprintf($this->_config['filter'], $user);
+        $filter = sprintf($this->_config['filter'], $handle);
         $attrib = (array) $this->_config['attrib'];
         $result = ldap_search($conn, $this->_config['basedn'], $filter, $attrib);
         

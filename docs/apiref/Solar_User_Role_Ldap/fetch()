@@ -4,7 +4,7 @@ access:   public
 
 name: fetch
 
-param: unknown, $user
+param: unknown, $handle
 
 return: unknown
 
@@ -14,12 +14,12 @@ Fetch roles for a user.
 
 * Parameters:
 
- * unknown //$user//: 
+ * unknown //$handle//: 
 
 * Returns unknown: unknown
 
 Fetch roles for a user.
 
-@param string $user Username to get roles for.
+@param string $handle Username to get roles for.
 
 @return array An array of roles discovered in LDAP.

@@ -6,11 +6,13 @@
 
 * Solar_Form::addFeedback() -- Adds multiple feedback messages to elements.
 
-* Solar_Form::addFilter() -- Adds a pre-filter for an element
+* Solar_Form::addFilter() -- Adds a Solar_Filter method callback for an element.
 
 * Solar_Form::addValid() -- Adds a Solar_Valid method callback as a validation for an element.
 
 * Solar_Form::apiVersion() -- Reports the API version for this class.
+
+* Solar_Form::getStatus() -- Gets the current form status.
 
 * Solar_Form::load() -- Loads form attributes and elements from an external source.
 
@@ -18,13 +20,15 @@
 
 * Solar_Form::orderElements() -- Reorders the existing elements.
 
-* Solar_Form::populate() -- Populates form elements with submitted values.
+* Solar_Form::populate() -- Populates form elements with specified values.
 
 * Solar_Form::reset() -- Resets the form object to its originally-configured state.
 
 * Solar_Form::setElement() -- Sets one element in the form.  Appends if element does not exist.
 
 * Solar_Form::setElements() -- Sets multiple elements in the form.  Appends if they do not exist.
+
+* Solar_Form::setStatus() -- Forcibly sets the form status.
 
 * Solar_Form::validate() -- Performs filtering and validation on each form element.
 

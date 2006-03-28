@@ -110,7 +110,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'type'    => 'char',
             'size'    => 5,
             'default' => 'en_US',
-            'valid'   => 'locale',
+            'valid'   => 'localeCode',
         );
         
         // tags on this node (space-separated words)

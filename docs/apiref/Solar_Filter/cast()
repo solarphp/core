@@ -12,7 +12,7 @@ return: mixed
 
 </function>
 
-Filter: cast a value as a type
+Casts the value as a PHP variable type.
 
 * Parameters:
 
@@ -22,7 +22,4 @@ Filter: cast a value as a type
 
 * Returns mixed: The filtered value.
 
-Filter: cast a value as a type
-
-Casts a value as a specific type. $type should be a valid variable type:
-'array', 'string', 'int', 'float', 'double', 'real', or 'bool'.
+Casts the value as a PHP variable type.

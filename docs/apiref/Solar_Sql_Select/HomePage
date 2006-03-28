@@ -30,7 +30,7 @@ $select->where('adr_city = :city');
 $select->order('n_first DESC')
 
 // get 50 per page, when we limit by page
-$select->paging(50);
+$select->setPaging(50);
 
 // bind data into the query.
 // remember :lastname and :city in the setWhere() calls above.

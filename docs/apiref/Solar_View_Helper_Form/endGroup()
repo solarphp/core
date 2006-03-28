@@ -4,12 +4,15 @@ access:   public
 
 name: endGroup
 
-return: unknown
+return: Solar_View_Helper_Form
 
 </function>
 
-
+*
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns Solar_View_Helper_Form
+
+*
+Ends a group of form elements.

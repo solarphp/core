@@ -14,11 +14,11 @@
 
 * Solar_View_Helper_Form::auto() -- *
 
-* Solar_View_Helper_Form::beginGroup() -- 
+* Solar_View_Helper_Form::beginGroup() -- *
 
 * Solar_View_Helper_Form::disable() -- *
 
-* Solar_View_Helper_Form::endGroup() -- 
+* Solar_View_Helper_Form::endGroup() -- *
 
 * Solar_View_Helper_Form::fetch() -- *
 
@@ -31,6 +31,8 @@
 * Solar_View_Helper_Form::reset() -- *
 
 * Solar_View_Helper_Form::setAttrib() -- *
+
+* Solar_View_Helper_Form::setStatus() -- Sets the form status.
 
 ++ Protected
 

@@ -8,6 +8,8 @@
 
 * Solar_App_Bookmarks::__set() -- Try to force users to define what their view variables are.
 
+* Solar_App_Bookmarks::_setup() -- 
+
 * Solar_App_Bookmarks::addFlash() -- Appends a "read-once" session value for this class and key.
 
 * Solar_App_Bookmarks::apiVersion() -- Reports the API version for this class.
@@ -34,19 +36,17 @@
 
 * Solar_App_Bookmarks::_getOrder() -- Returns a safe SQL ORDER value from the 'order' query parameter.
 
-* Solar_App_Bookmarks::_info() -- Retrieve the value of a pathinfo request key by name.
+* Solar_App_Bookmarks::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
 
 * Solar_App_Bookmarks::_postAction() -- Executes just after the last action, and just before the view.
 
 * Solar_App_Bookmarks::_preAction() -- Executes just before the first action.
 
-* Solar_App_Bookmarks::_query() -- Retrieve they value of a query request key by name.
+* Solar_App_Bookmarks::_query() -- Retrieves the TAINTED value of a query request key by name.
 
 * Solar_App_Bookmarks::_redirect() -- Redirects to another URL.
 
 * Solar_App_Bookmarks::_run() -- Includes a file in an isolated scope (but with access to $this).
-
-* Solar_App_Bookmarks::_setup() -- Hook for extended setup behaviors.
 
 ++ Private
 

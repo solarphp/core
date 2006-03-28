@@ -2,9 +2,7 @@ HomePage | The Solar_Valid Class
 ApiRef | API Reference
  ClassProperties | Class Properties
   $_config
-  $_custom
  ClassMethods | Class Methods
-  __call()
   __construct()
   _exception()
   alnum()
@@ -12,6 +10,7 @@ ApiRef | API Reference
   apiVersion()
   blank()
   callback()
+  ctype()
   email()
   inKeys()
   inList()
@@ -19,17 +18,18 @@ ApiRef | API Reference
   integer()
   ipv4()
   isoDate()
-  isoDateTime()
   isoTime()
+  isoTimestamp()
   locale()
+  localeCode()
   max()
   maxLength()
   mimeType()
   min()
   minLength()
   multiple()
-  nonZero()
   notBlank()
+  notZero()
   regex()
   sepWords()
   uri()

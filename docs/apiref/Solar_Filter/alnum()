@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Removes non-alphabetic and non-numeric characters.
+Returns only alphanumeric characters within the value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Removes non-alphabetic and non-numeric characters.
 
 * Returns string: The filtered value.
 
-Removes non-alphabetic and non-numeric characters.
+Returns only alphanumeric characters within the value.

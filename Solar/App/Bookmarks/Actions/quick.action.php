@@ -63,6 +63,7 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
         $values = $form->values();
         $data = $values['bookmark'];
         $data['owner_handle'] = $this->_user->auth->handle;
+        $data['editor_handle'] = $this->_user->auth->handle;
         
         // save
         $result = $this->_bookmarks->save($data);

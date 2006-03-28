@@ -1,27 +1,17 @@
 MOVING TO A NON-DEV RELEASE
 
-Classes:
-    Solar_Sql_Select:
-        Fix column deconfliction
-        Make fluent
-        Use limitPage($page, $rows) and remove paging()? ... no, need for countPages()
-    Revisit Filter and Valid
-        standardize method names: filter::alnum, filter::stripAlnum()
-        OR_BLANK sucks. can we get rid of it?  not really.  :-(
-        move to sub-classes for filters/valids?
-        how to add custom filters/valids? (have PathStack now...)
-
-Apps:
-    One more app? (Solar_App_Todo)
-
-Packaging:
-    rename pkg/ to src/
-    in package script, copy from src/ to pkg/
-        str_replace('@package_version@') along the way
-        hm, only need it in Solar and Solar_Base, perhaps an easy task?
-    then pear package from pkg, without the replace task
-    then the tarball will work as a plain download
+General:
+    Have ACTION_* in addition to SUBMIT_* keys?
     
+Classes:
+    Solar_Form::values() ... have param for initial key
+    Solar_Sql_Select: fix column deconfliction
+    Add Solar_Sql_Record and RecordSet?
+    
+Apps:
+    Create CSS file for Bookmarks?
+    Update master css for form feedback
+
 ----
 
 DOCS PLAN
@@ -30,9 +20,6 @@ DOCS PLAN
 * Update long docs.
 * Write controller stuff, since everyone seems to love that.
 * show default values for properties
-* write new:
-    * Solar
-        * add/get/setFlash()
     
 ----
 
@@ -67,7 +54,7 @@ NEW CLASSES
 
 Create an event dispatcher as a universal observer and notifier?
 
-Solar_User_Access for class/action/op privileges by user and role
+Solar_User_Access for class/action/submit privileges by user and role
 
 Logging class!
 

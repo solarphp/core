@@ -4,7 +4,7 @@ User-provided configuration.
 
 Keys are:
 
-class => (string) Driver information class, e.g. 'Solar_Sql_Driver_Mysql'.
+driver => (string) Driver class, e.g. 'Solar_Sql_Driver_Mysql'.
 
 host => (string) Host specification (typically 'localhost').
 

@@ -4,27 +4,22 @@ access:   public
 
 name: locale
 
-param: mixed, $value
+param: string, $key
 
-param: bool, $blank, false
+param: string, $num, 1
 
-return: bool
+return: string
 
 </function>
 
-Validate that a value is a locale code.
+Looks up locale strings based on a key.
 
 * Parameters:
 
- * mixed //$value//: The value to validate.
+ * string //$key//: The key to get a locale string for.
 
- * bool //$blank//: Allow blank values to be valid.
+ * string //$num//: If 1, returns a singular string; otherwise, returns a plural string (if one exists).
 
-* Returns bool: True if valid, false if not.
+* Returns string: The locale string, or the original $key if no string found.
 
-Validate that a value is a locale code.
-
-Note that this overrides Solar_Base::locale().
-
-The format is two lower-case letters, an underscore, and two upper-case
-letters.
+Looks up locale strings based on a key.

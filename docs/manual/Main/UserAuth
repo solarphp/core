@@ -3,7 +3,7 @@
 ++ Set up a minimal authentication source
 
 <code type="bash">
-$ htpasswd -c -s /var/www/conf/htpasswd.conf username
+$ htpasswd -c -s /home/username/htpasswd.conf username
 New password: 
 Re-type new password: 
 Adding password for user username
@@ -13,7 +13,6 @@ Adding password for user username
 
 <code type="bash">
 $ vi Solar.config.php
-$ 
 </code>
 
 <code type="php">
@@ -21,11 +20,11 @@ $config = array();
 
 // SQL connection
 $config['Solar_Sql'] = array(
-	'class' => 'Solar_Sql_Driver_Mysql',
-	'host'  => '127.0.0.1',
-	'user'  => 'username',
-	'pass'  => 'password',
-	'name'  => 'database',
+	'driver' => 'Solar_Sql_Driver_Mysql',
+	'host'   => '127.0.0.1',
+	'user'   => 'username',
+	'pass'   => 'password',
+	'name'   => 'database',
 );
 
 // Front controller HREF prefix
@@ -35,8 +34,8 @@ $config['Solar_Uri']['action'] = '/index.php';
 $config['Solar_Uri']['public'] = '/public';
 
 // Authentication source
-$config['Solar_User']['auth']['class'] = 'Solar_User_Auth_Htpasswd';
-$config['Solar_User']['auth']['options']['file'] = '/var/www/conf/htpasswd.conf';
+$config['Solar_User']['auth']['driver'] = 'Solar_User_Auth_Htpasswd';
+$config['Solar_User']['auth']['config']['file'] = '/home/username/htpasswd.conf';
 
 // Done!
 return $config;
@@ -44,7 +43,7 @@ return $config;
 
 ++ Browse to "Hello World"
 
-http://example.com/index.php/hello
+``http://example.com/index.php/hello``
 
 Attempt to log in with your username and password.
 

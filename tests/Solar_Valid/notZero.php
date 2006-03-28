@@ -1,5 +1,5 @@
 --TEST--
-Solar_Valid::locale()
+Solar_Valid::notZero()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -16,45 +16,43 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 $valid = Solar::factory('Solar_Valid');
 
-// good
+// good (are non-zero)
 $test = array(
-	'en_US',
-	'pt_BR',
-	'xx_YY',
+    '1', '2', '5',
+	"Seven 8 nine",
+	"non:alpha-numeric's",
+	'someThing8else',
+	'+-0.0',
 );
 foreach ($test as $val) {
-    $assert->setLabel($val);
-    $assert->isTrue($valid->locale($val));
+    $assert->setLabel("'$val'");
+    $assert->isTrue($valid->notZero($val));
 }
 
-// bad, or are blank
+// bad (are in fact zero, or are blank)
 $test = array(
     ' ', '',
-	'PT_br',
-	'EN_US',
-	'12_34',
-	'en_USA',
-	'America/Chicago',
+    '0', 0, '00000.00', '+0', '-0', "+00.00",
 );
-foreach ($test as $val) {
-    $assert->setLabel($val);
-    $assert->isFalse($valid->locale($val));
+foreach ($test as $key => $val) {
+    $assert->setLabel("'$val'");
+    $assert->isFalse($valid->notZero($val));
 }
 
 
-// blanks allowed
+// blank
 $test = array(
-    "", ' ',
-	'en_US',
-	'pt_BR',
-	'xx_YY',
+    ' ', '',
+    '1', '2', '5',
+	"Seven 8 nine",
+	"non:alpha-numeric's",
+	'someThing8else',
+	'+-0.0',
 );
 foreach ($test as $val) {
-    $assert->setLabel($val);
-    $assert->isTrue($valid->locale($val, Solar_Valid::OR_BLANK));
+    $assert->setLabel("'$val'");
+    $assert->isTrue($valid->notZero($val, Solar_Valid::OR_BLANK));
 }
-
-
 
 // ---------------------------------------------------------------------
 

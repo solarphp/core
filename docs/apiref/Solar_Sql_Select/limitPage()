@@ -6,7 +6,7 @@ name: limitPage
 
 param: int, $page, NULL
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -16,6 +16,6 @@ Sets the limit and count by page number.
 
  * int //$page//: Limit results to this page number.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Sets the limit and count by page number.

@@ -38,69 +38,6 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * User-provided configuration values.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'custom' => array(),
-    );
-    
-    /**
-     * 
-     * Container for custom callable validator objects.
-     * 
-     * @var array
-     * 
-     */
-    protected $_custom = array();
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        // "real" construction
-        parent::__construct($config);
-        
-        // add custom dependencies in LIFO order
-        $reverse = array_reverse((array) $this->_config['custom']);
-        foreach ($reverse as $class => $spec) {
-            $this->_custom[] = Solar::dependency($class, $spec);
-        }
-    }
-    
-    /**
-     * 
-     * Calls custom validation methods.
-     * 
-     * @param string $method The validation method to call.
-     * 
-     * @param array $params The parameters for the validation method.
-     * 
-     * @return bool True if valid, false if not.
-     * 
-     */
-    public function __call($method, $params)
-    {
-        // loop through the stack of custom objects, looking for the
-        // right method name.
-        foreach ($this->_custom as $obj) {
-            if (method_exists($obj, $method)) {
-                return call_user_func_array(array($obj, $method), $params);
-            }
-        }
-        // couldn't find it
-        throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED');
-    }
-    
-    /**
-     * 
      * Validate that a value is only letters (upper or lower case) and digits.
      * 
      * @param mixed $value The value to validate.
@@ -112,8 +49,7 @@ class Solar_Valid extends Solar_Base {
      */
     public function alnum($value, $blank = Solar_Valid::NOT_BLANK)
     {
-        $expr = '/^[a-zA-Z0-9]+$/'; 
-        return $this->regex($value, $expr, $blank);
+        return $this->ctype($value, 'alnum', $blank);
     }
     
     /**
@@ -129,8 +65,7 @@ class Solar_Valid extends Solar_Base {
      */
     public function alpha($value, $blank = Solar_Valid::NOT_BLANK)
     {
-        $expr = '/^[a-zA-Z]+$/';
-        return $this->regex($value, $expr, $blank);
+        return $this->ctype($value, 'alpha', $blank);
     }
     
     /**
@@ -176,6 +111,29 @@ class Solar_Valid extends Solar_Base {
         array_unshift($args, $value);
         // make the callback
         return call_user_func_array($callback, $args);
+    }
+    
+    /**
+     * 
+     * Validate a value against a [[php ctype]] function.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param string $type The ctype to validate against: 'alnum',
+     * 'alpha', 'digit', etc.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
+     * @return bool True if the value matches the ctype, false if not.
+     * 
+     */
+    public function ctype($value, $type, $blank = Solar_Valid::NOT_BLANK)
+    {
+        if ($blank && $this->blank($value)) {
+            return true;
+        }
+        $func = 'ctype_' . $type;
+        return (bool) $func((string)$value);
     }
     
     /**
@@ -390,7 +348,28 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Validate that a value is an ISO 8601 date-time string.
+     * Validate that a value is an ISO 8601 time string (hh:ii::ss format).
+     * 
+     * Per note from Chris Drozdowski about ISO 8601, allows two
+     * midnight times ... 00:00:00 for the beginning of the day, and
+     * 24:00:00 for the end of the day.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function isoTime($value, $blank = Solar_Valid::NOT_BLANK)
+    {
+        $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
+        return $this->regex($value, $expr, $blank) || ($value == '24:00:00');
+    }
+    
+    /**
+     * 
+     * Validate that a value is an ISO 8601 timestamp string.
      * 
      * The format is "yyyy-mm-ddThh:ii:ss" (note the literal "T" in the
      * middle, which acts as a separator).
@@ -404,7 +383,7 @@ class Solar_Valid extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    public function isoDateTime($value, $blank = Solar_Valid::NOT_BLANK)
+    public function isoTimestamp($value, $blank = Solar_Valid::NOT_BLANK)
     {
         if ($blank && $this->blank($value)) {
             return true;
@@ -432,27 +411,6 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Validate that a value is an ISO 8601 time string (hh:ii::ss format).
-     * 
-     * Per note from Chris Drozdowski about ISO 8601, allows two
-     * midnight times ... 00:00:00 for the beginning of the day, and
-     * 24:00:00 for the end of the day.
-     * 
-     * @param mixed $value The value to validate.
-     * 
-     * @param bool $blank Allow blank values to be valid.
-     * 
-     * @return bool True if valid, false if not.
-     * 
-     */
-    public function isoTime($value, $blank = Solar_Valid::NOT_BLANK)
-    {
-        $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
-        return $this->regex($value, $expr, $blank) || ($value == '24:00:00');
-    }
-    
-    /**
-     * 
      * Validate that a value is a locale code.
      * 
      * Note that this overrides Solar_Base::locale().
@@ -467,7 +425,7 @@ class Solar_Valid extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    public function locale($value, $blank = Solar_Valid::NOT_BLANK)
+    public function localeCode($value, $blank = Solar_Valid::NOT_BLANK)
     {
         $expr = '/^[a-z]{2}_[A-Z]{2}$/';
         return $this->regex($value, $expr, $blank);
@@ -648,7 +606,7 @@ class Solar_Valid extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    public function nonZero($value, $blank = Solar_Valid::NOT_BLANK)
+    public function notZero($value, $blank = Solar_Valid::NOT_BLANK)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
@@ -682,7 +640,7 @@ class Solar_Valid extends Solar_Base {
      * 
      * Validate a value against a regular expression.
      * 
-     * Uses [[php preg_match]] to compare the value against the given
+     * Uses [[php preg_match()]] to compare the value against the given
      * regular epxression.
      * 
      * @param mixed $value The value to validate.

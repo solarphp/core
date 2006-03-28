@@ -8,7 +8,7 @@ param: string|object, $spec
 
 param: array|string, $cols, NULL
 
-return: void
+return: Solar_Sql_Select
 
 </function>
 
@@ -20,6 +20,6 @@ Adds a FROM table and columns to the query.
 
  * array|string //$cols//: The columns to select from this table.
 
-* Returns void
+* Returns Solar_Sql_Select
 
 Adds a FROM table and columns to the query.

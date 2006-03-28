@@ -2,7 +2,7 @@
 
 ++ Current Release
 
-The current release is version 0.13.0 as of ????.  You can view the change log [http://solarphp.com/channel.php?package=Solar&release=0.13.0&downloads here].  Installation instructions are [DownloadSolar here].
+The current release is version 0.14.0 as of 2006-03-23.  You can view the change log [http://solarphp.com/channel.php?package=Solar&release=0.14.0&downloads here].  Installation instructions are [DownloadSolar here].
 
 ++ Overview
 
@@ -14,8 +14,6 @@ Solar is designed for developers who intend to distribute their applications wor
 
 You can visit our [http://solarphp.com/channel.php PEAR channel] to review releases and change logs.
 
-You can view the [SolarDocs documentation overview] and an example HelloWorld application.
+You can view the [SolarDocs documentation overview] and notes on GettingStarted.
 
-You can read AboutSolar and then join the MailingList.
-
-You can [http://solarphp.com/bugs.php review and report bugs].
+You can read AboutSolar and then join the MailingList to report bugs.

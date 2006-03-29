@@ -287,8 +287,8 @@ class Solar_Sql extends Solar_Base {
      * Select rows from the database.
      * 
      * @param string $return How to return the results: all, assoc, col,
-     * one, pair, row, result (the default), statement (to just get the
-     * statement), or a class name to create with the result.
+     * one, pair, pdo, row, result (the default), statement (as text),
+     * or a class name to create with the result.
      * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string (SELECT or non-select).

@@ -20,6 +20,15 @@ DOCS PLAN
 * Update long docs.
 * Write controller stuff, since everyone seems to love that.
 * show default values for properties
+
+When packaging, the way to update the site is:
+
+    move the package.tgz to the desktop
+    unzip it
+    archive the apiref & manual dirs
+    scp to solarphp.com
+    unzip there
+    done :-)
     
 ----
 

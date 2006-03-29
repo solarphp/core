@@ -97,12 +97,13 @@ $ vi Example/Views/index.view.php
 echo $this->escape($this->output);
 </code>
 
-++ Front-Controller Recongition
+++ Front-Controller Recognition
 
 Edit Solar.config.php to recognize your vendor directory (along with the Solar directory) for page controllers.
 
 <code type="bash">
-$ vi Views/index.view.php
+$ cd /home/username/public_html
+$ vi Solar.config.php
 </code>
 
 <code type="php">

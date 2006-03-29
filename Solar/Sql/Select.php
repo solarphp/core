@@ -29,8 +29,8 @@ Solar::loadClass('Solar_Sql_Table');
  * <code>
  * $select = Solar::factory('Solar_Sql_Select');
  * 
- * // select these columns
- * $select->cols(array(
+ * // select these columns from the 'contacts' table
+ * $select->from('contacts', array(
  *   'id',
  *     'n_last',
  *     'n_first',
@@ -40,9 +40,6 @@ Solar::loadClass('Solar_Sql_Table');
  *     'adr_postcode AS zip',
  *     'adr_country',
  * ));
- * 
- * // from this table
- * $select->from('contacts'); // single or multi
  * 
  * // on these ANDed conditions
  * $select->where('n_last = :lastname');
@@ -180,15 +177,17 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Read-only access to properties.
+     * Returns this object as an SQL statement string.
      * 
-     * @return mixed The property value.
+     * @return string An SQL statement string.
      * 
-    public function __get($key)
-    {
-        return $this->$key;
-    }
      */
+    
+    public function __toString()
+    {
+        return $this->fetch('string');
+    }
+    
     
     /**
      * 
@@ -240,22 +239,6 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Add un-mapped columns to the query.
-     * 
-     * @param string|array The list of columns.
-     * 
-     * @return Solar_Sql_Select
-     * 
-     */
-    public function cols($spec)
-    {
-        // track them as related to no specific table
-        $this->_tblCols('', $spec);
-        return $this;
-    }
-    
-    /**
-     * 
      * Adds a FROM table and columns to the query.
      * 
      * @param string|object $spec If a Solar_Sql_Table object, the table
@@ -284,10 +267,9 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // add the table to the 'from' list
-        $this->_parts['from'] = array_merge(
-            $this->_parts['from'],
-            (array) $name
-        );
+        if (! in_array($name, $this->_parts['from'])) {
+            $this->_parts['from'][] = $name;
+        }
         
         // add to the columns from this table
         $this->_tblCols($name, $cols);
@@ -823,8 +805,15 @@ class Solar_Sql_Select extends Solar_Base {
         // build up the $parts['cols'] from scratch.
         $this->_parts['cols'] = array();
         
-        // how many tables/joins to select from?
-        $count = count(array_keys($this->_tbl_cols));
+        // how many tables/joins to get columns from?
+        // it's not as easy as simply counting tables, because
+        // some of them may not have columns.
+        $count = 0;
+        foreach ($this->_tbl_cols as $tbl => $cols) {
+            if (count($cols) > 1) {
+                $count ++;
+            }
+        }
         
         // add table/join column names with deconfliction
         foreach ($this->_tbl_cols as $tbl => $cols) {
@@ -834,10 +823,10 @@ class Solar_Sql_Select extends Solar_Base {
             $pos = stripos($tbl, ' AS ');
             if ($pos) {
                 // yes, use the alias portion as the prefix
-                $pre = trim(substr($tbl, $pos + 4));
+                $prefix = trim(substr($tbl, $pos + 4));
             } else {
                 // no, just use the table/join name as the prefix.
-                $pre = trim($tbl);
+                $prefix = trim($tbl);
             }
             
             // add each of the columns, deconflicting as we go
@@ -846,33 +835,28 @@ class Solar_Sql_Select extends Solar_Base {
                 // is the column name aliased?
                 $aliased = stripos($col, ' AS ');
                 
-                // is it starred?
-                $starred = strpos($col, '*');
+                // is it starred?  (we convert position zero to a
+                // boolean true).
+                $starpos = strpos($col, '*');
+                $starred = is_int($starpos) ? true : false;
                 
                 // does it use a function?
                 $parens = strpos($col, '(');
                 
                 // choose our column-name deconfliction strategy
-                if ($pre == '' || $aliased || $parens) {
-                    // no prefix, aliased, or uses parentheses.
-                    // use the column-name as-is.
+                if ($prefix == '' || $parens) {
+                    // if there's no table/join, we can't prefix it.
+                    // similarly, if there are parens in the name,
+                    // it's a function, so leave it alone too.
                     $this->_parts['cols'][] = $col;
-                } elseif ($count == 1) {
-                    // only one table with columns: minimal deconfliction.
-                    // need to see if the column is a star.
-                    if ($starred !== false) {
-                        $this->_parts['cols'][] = "{$pre}.$col";
-                    } else {
-                        $this->_parts['cols'][] = "{$pre}.$col AS $col";
-                    }
+                } elseif ($starred || $aliased || $count == 1) {
+                    // there is a * in the column name, or it is
+                    // manually aliased, or there's only one table
+                    // to begin with.  minimal deconfliction, forcing
+                    // only the prefix.
+                    $this->_parts['cols'][] = "{$prefix}.$col";
                 } else {
-                    // more than one table: full deconfliction, except for
-                    // starred ones.
-                    if ($starred !== false) {
-                        $this->_parts['cols'][] = "{$pre}.$col";
-                    } else {
-                        $this->_parts['cols'][] = "{$pre}.$col AS {$pre}__$col";
-                    }
+                    $this->_parts['cols'][] = "{$prefix}.$col AS {$prefix}__$col";
                 }
             }
         }
@@ -896,20 +880,18 @@ class Solar_Sql_Select extends Solar_Base {
         // make a self-cloned copy so that all settings are identical
         $select = clone($this);
         
-        // clear out all columns (note that this works because we are
-        // already in a Select class; this wouldn't work externally
-        // because $cols is protected) ...
-        $select->_tbl_cols = array();
-        
-        // ... then add a single COUNT column (no need for a table name
-        // in this case)
-        $select->cols("COUNT($col)");
-        
         // clear any order (for Postgres, noted by 4bgjnsn)
         $select->clear('order');
         
         // clear any limits
         $select->clear('limit');
+        
+        // set a single COUNT column.
+        // 
+        // note that this works because we are already in a Select 
+        // class; this wouldn't work externally because $_tbl_cols is 
+        // protected.
+        $select->_tbl_cols = array('' => array("COUNT($col)"));
         
         // select the count of rows and free the cloned copy
         $result = $select->fetch('one');
@@ -994,23 +976,19 @@ class Solar_Sql_Select extends Solar_Base {
             settype($cols, 'array');
         }
         
-        // only add columns if non-blank
-        if (! empty($cols)) {
-            
-            // trim everything up ...
-            array_walk($cols, 'trim');
-            
-            // ... and merge them into the tbl_cols mapping.
-            if (empty($this->_tbl_cols[$tbl])) {
-                // this table/join not previously used
-                $this->_tbl_cols[$tbl] = $cols;
-            } else {
-                // merge with existing columns for this table/join
-                $this->_tbl_cols[$tbl] = array_merge(
-                    $this->_tbl_cols[$tbl],
-                    $cols
-                );
-            }
+        // trim everything up ...
+        array_walk($cols, 'trim');
+        
+        // ... and merge them into the tbl_cols mapping.
+        if (empty($this->_tbl_cols[$tbl])) {
+            // this table/join not previously used
+            $this->_tbl_cols[$tbl] = $cols;
+        } else {
+            // merge with existing columns for this table/join
+            $this->_tbl_cols[$tbl] = array_merge(
+                $this->_tbl_cols[$tbl],
+                $cols
+            );
         }
     }
 }

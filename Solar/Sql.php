@@ -312,64 +312,84 @@ class Solar_Sql extends Solar_Base {
         }
         
         // are we just returning the statement text?
-        if ($lctype == 'text' || $lctype = 'string') {
+        if ($lctype == 'text' || $lctype == 'string') {
             return $stmt;
         }
         
         // execute and get the PDOStatement result object
         $result = $this->_driver->exec($stmt, $data);
         
-        // how to return data?
+        // did we get a result?
+        // how to return the result?
         switch ($lctype) {
         
         // return all rows keyed in sequence
         case 'all':
+            if (! $result) {
+                return array();
+            }
+        
             $tmp = Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
-            $data = $tmp->fetchAll();
+            return $tmp->fetchAll();
             break;
             
         // return all rows keyed on the first col
         case 'assoc':
+            if (! $result) {
+                return array();
+            }
+        
             $tmp = Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
-            $data = $tmp->fetchAll(true);
+            return $tmp->fetchAll(true);
             break;
         
         // return the first col of every row
         case 'col':
-            $data = $result->fetchAll(PDO::FETCH_COLUMN, 0);
+            if (! $result) {
+                return array();
+            }
+            return $result->fetchAll(PDO::FETCH_COLUMN, 0);
             break;
             
         // return the first col of the first row
         case 'one':
-            $data = $result->fetchColumn(0);
+            if (! $result) {
+                return null;
+            }
+            return $result->fetchColumn(0);
             break;
         
         // return rows as key-value pairs where the first col
         // is the key and the second col is the value
         case 'pair':
         case 'pairs':
+            if (! $result) {
+                return array();
+            }
+        
             $data = array();
             while ($row = $result->fetch(PDO::FETCH_NUM)) {
                 $data[$row[0]] = $row[1];
             }
+            return $data;
             break;
         
         // return the PDOStatement object
         case 'pdo':
         case 'pdostatement':
         case 'statement':
-            $data = $result;
+            return $result;
             break;
             
         // return a Solar_Sql_Result object
         case 'result':
-            $data = Solar::factory(
+            return Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
@@ -377,7 +397,11 @@ class Solar_Sql extends Solar_Base {
         
         // return only the first row
         case 'row':
-            $data = Solar::factory(
+            if (! $result) {
+                return null;
+            }
+        
+            return Solar::factory(
                 'Solar_Sql_Row',
                 array('data' => $result->fetch(PDO::FETCH_ASSOC))
             );
@@ -385,15 +409,12 @@ class Solar_Sql extends Solar_Base {
         
         // return a new object and inject the PDOStatement into it
         default:
-            $data = Solar::factory(
+            return Solar::factory(
                 $type,
                 array('PDOStatement' => $result)
             );
             break;
         }
-        
-        // done!
-        return $data;
     }
     
     

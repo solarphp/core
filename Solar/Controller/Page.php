@@ -578,29 +578,46 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Redirects to another URL.
+     * Redirects to another page and action.
      * 
-     * @param string $url The URL to redirect to.
+     * @param Solar_Uri|string $spec The URI to redirect to.
+     * 
+     * @param bool $external Treat as a link to an external URI;
+     * i.e., not as a page-action link.
      * 
      * @return void
      * 
      */
-    protected function _redirect($url)
+    protected function _redirect($spec, $external = false)
     {
-        // protect against header injections
-        $url = str_replace(array("\r", "\n"), '', $url);
+        if ($spec instanceof Solar_Uri) {
+            $href = ($external) ? $spec->export() : $spec->exportAction();
+        } elseif ($external || strpos($spec, '://') !== false) {
+            // external link, protect against header injections
+            $href = str_replace(array("\r", "\n"), '', $spec);
+        } else {
+            $uri = Solar::factory('Solar_Uri');
+            $href = $uri->toAction($spec);
+        }
         
-        // kill off all output buffers
+        // make sure there's actually an href
+        $href = trim($href);
+        if (! $href) {
+            throw $this->_exception('ERR_REDIRECT_FAILED', array(
+                'spec' => $spec,
+                'href' => $href,
+            ));
+        }
+        
+        // kill off all output buffers and redirect
         while(@ob_end_clean());
-        
-        // redirect, and exit all remaining scripts
-        header("Location: $url");
+        header("Location: $href");
         exit;
     }
     
     /**
      * 
-     * Forwards to an action script.
+     * Forwards internally to another action.
      * 
      * @param string $action The action name.
      * 

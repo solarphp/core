@@ -305,21 +305,14 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Convenience method to select rows from this table.
      * 
-     * @param string $type The type of fetch to execute: 'all', 'one',
+     * @param string $type The type of select to execute: 'all', 'one',
      * 'row', etc. Default is 'result'.
      * 
-     * @param array|string $where An SQL WHERE clause to filter results. 
-     * May be an array:  If the key is a string, it's assumed to be a
-     * column name and the value is the equality comparison; the value is
-     * automatically bound into the query.  If the key is an integer, the
-     * value is a custom where clause.  Alternatively, $where may be a
-     * string, in which case it is a user-defined WHERE clause in its
-     * entirety (no binding).
+     * @param string|array A Solar_Sql_Select::multiWhere() parameter.
      * 
-     * @param array|string $order An SQL ORDER clause, e.g. an array of
-     * column names.
+     * @param string|array A Solar_Sql_Select::order() parameter.
      * 
-     * @param int $page The page-number of results to retrieve.
+     * @param int $page The page number of rows to fetch.
      * 
      * @return array
      * 
@@ -327,10 +320,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function select($type = 'result', $where = null,
         $order = null, $page = null)
     {
-        // selection tool
         $select = Solar::factory('Solar_Sql_Select');
-        
-        // all columns from this table
         return $select->from($this->_name, array_keys($this->_col))
                       ->multiWhere($where)
                       ->order($order)
@@ -363,10 +353,50 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
-     * Returns a data array with column keys and default values.
+     * Fetches one row from the table by its primary key ID.
      * 
-     * @return array An array of key-value pairs where the key is
-     * the column name and the value is the default column value.
+     * @param int $id The primary key ID value.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     */
+    public function fetch($id)
+    {
+        $select = Solar::factory('Solar_Sql_Select');
+        return $select->from($this->_name, array_keys($this->_col))
+                      ->where('id = ?', $id)
+                      ->fetch('row');
+    }
+    
+    /**
+     * 
+     * Fetches all rows by arbitrary criteria.
+     * 
+     * @param string|array A Solar_Sql_Select::multiWhere() parameter.
+     * 
+     * @param string|array A Solar_Sql_Select::order() parameter.
+     * 
+     * @param int $page The page number of rows to fetch.
+     * 
+     * @return array An array of Solar_Sql_Row objects.
+     * 
+     */
+    public function fetchAll($where = null, $order = null, $page = null)
+    {
+        $select = Solar::factory('Solar_Sql_Select');
+        return $select->from($this->_name, array_keys($this->_col))
+                      ->multiWhere($where)
+                      ->order($order)
+                      ->setPaging($this->_paging)
+                      ->limitPage($page)
+                      ->fetch('all');
+    }
+    
+    /**
+     * 
+     * Returns a default row of column keys and default values.
+     * 
+     * @return Solar_Sql_Row
      * 
      */
     public function fetchDefault()
@@ -416,7 +446,10 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // done!
-        return $data;
+        return Solar::factory(
+            'Solar_Sql_Row', 
+            array('data' => $data)
+        );
     }
     
     

@@ -38,6 +38,13 @@ return array(
     'SUBMIT_SAVE'                => 'Salvar',
     'SUBMIT_SEARCH'              => 'Buscar',
     
+    // controller actions
+    'ACTION_BROWSE'              => 'Lista',
+    'ACTION_READ'                => 'Ler',
+    'ACTION_EDIT'                => 'Editar',
+    'ACTION_ADD'                 => 'Adicionar',
+    'ACTION_DELETE'              => 'Removar',
+    
     // exception error messages  
     'ERR_CONNECTION_FAILED'      => 'Falha na conexão.',
     'ERR_EXTENSION_NOT_LOADED'   => 'Extensão não foi carregada.',

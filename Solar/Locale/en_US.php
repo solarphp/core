@@ -23,7 +23,7 @@ return array(
     'FORMAT_DATE'                => '%b %d, %Y', // strftime(): Mar 19, 2005
     'FORMAT_TIME'                => '%r', // strftime: 12-hour am/pm
     
-    // submit operations         
+    // page submissions
     'SUBMIT_CANCEL'              => 'Cancel',
     'SUBMIT_CREATE'              => 'Create',
     'SUBMIT_DELETE'              => 'Delete',
@@ -37,6 +37,13 @@ return array(
     'SUBMIT_RESET'               => 'Reset',
     'SUBMIT_SAVE'                => 'Save',
     'SUBMIT_SEARCH'              => 'Search',
+    
+    // controller actions
+    'ACTION_BROWSE'              => 'Browse',
+    'ACTION_READ'                => 'Read',
+    'ACTION_EDIT'                => 'Edit',
+    'ACTION_ADD'                 => 'Add',
+    'ACTION_DELETE'              => 'Delete',
     
     // exception error messages  
     'ERR_CONNECTION_FAILED'      => 'Connection failed.',

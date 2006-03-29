@@ -567,16 +567,27 @@ class Solar_Form extends Solar_Base {
      * 
      * Returns the form element values as an array.
      * 
+     * @param string $key Return only values that are part of
+     * this array key.  If null, returns all values in the
+     * form.
+     * 
      * @return array An associative array of element values.
      * 
      */
-    public function values()
+    public function values($key = null)
     {
         $values = array();
         foreach ($this->elements as $name => $elem) {
             $this->_values($name, $elem['value'], $values);
         }
-        return $values;
+        
+        if (! $key) {
+            return $values;
+        }
+        
+        if (! empty($values[$key])) {
+            return $values[$key];
+        }
     }
     
     

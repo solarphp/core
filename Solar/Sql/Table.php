@@ -209,10 +209,8 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function insert($data)
     {
-        settype($data, 'array');
-        
         // set defaults
-        $data = array_merge($this->fetchDefault(), $data);
+        $data = array_merge((array) $this->fetchDefault(), (array) $data);
         
         // auto-add sequential values
         foreach ($this->_col as $colname => $colinfo) {
@@ -240,7 +238,7 @@ class Solar_Sql_Table extends Solar_Base {
         $result = $this->_sql->insert($this->_name, $data);
         
         // return the data as inserted
-        return $data;
+        return Solar::factory('Solar_Sql_Row', array('data' => $data));
     }
     
     /**
@@ -282,7 +280,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // restore retained primary key data and return
         $data = array_merge($data, $retain);
-        return $data;
+        return Solar::factory('Solar_Sql_Row', array('data' => $data));
     }
     
     /**

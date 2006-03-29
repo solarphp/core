@@ -24,7 +24,7 @@
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Result extends Solar_Base {
+class Solar_Sql_Result extends Solar_Base implements Iterator {
     
     /**
      * 
@@ -32,10 +32,11 @@ class Solar_Sql_Result extends Solar_Base {
      * 
      * Keys are:
      * 
-     * PDOStatment: (object) A PDOStatement object to be used as the
+     * : \\PDOStatement\\ : (object) A PDOStatement object to be used as the
      * result source.
      * 
      * @var array
+     * 
      */
     protected $_config = array(
         'PDOStatement' => null,
@@ -43,76 +44,213 @@ class Solar_Sql_Result extends Solar_Base {
     
     /**
      * 
-     * Fetches one row from the result source.
+     * The PDOStatement being used as a result source.
      * 
-     * If a row name has double-underscores, the result is placed into a
-     * sub-array named for the part before the double-underscores.  For
-     * example, if the row-name is "example__row_name", then you would
-     * get back example['row_name'].
-     * 
-     * When combined with the automated deconfliction in
-     * Solar_Sql_Select, this allows you to select from multiple tables
-     * and segregate the columns from different tables automatically into
-     * separate arrays.
-     * 
-     * @param int $mode A PDO::FETCH_* constant to specify how the row
-     * should be returned; default is PDO::FETCH_ASSOC.
-     * 
-     * @return array An array of data from the fetched row.
-     * 
-     * @todo In colname-to-array deconfliction: what if a natural colname
-     * is the same as a table name? Then the one will overwrite the
-     * other, which is bad juju.  Perhaps a separate array for table-based,
-     * and another for non-table-based, and merge at the end?
+     * @var PDOStatement
      * 
      */
-    public function fetch($mode = PDO::FETCH_ASSOC)
+    protected $_stmt = null;
+    
+    /**
+     * 
+     * Collection of rows fetched from the result source.
+     * 
+     * Each element in the array is a Solar_Sql_Row object.
+     * 
+     * @var array
+     * 
+     */
+    protected $_rows = array();
+    
+    protected $_assoc = array();
+    
+    /**
+     * 
+     * Pointer to the current iteration.
+     * 
+     * @var int
+     * 
+     */
+    protected $_curr = null;
+    
+    /**
+     * 
+     * Have we filled Solar_Sql_Result::$_rows with all results?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_full = false;
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration.
+     * 
+     */
+    public function __construct($config = null)
     {
-        // the fetched row data to be returned
-        $row = array();
-        
-        // the data as originally returned by PDOStatement
-        $orig = $this->_config['PDOStatement']->fetch($mode);
-        if (! $orig) {
-            return false;
+        parent::__construct($config);
+        if (! ($this->_config['PDOStatement'] instanceof PDOStatement)) {
+            throw $this->_exception('ERR_NOT_PDOSTATEMENT');
         }
-        
-        // loop through each column of original data and merge into the
-        // $row array.
-        foreach ($orig as $key => $val) {
-            // does the column name have double-underscores in it?
-            $pos = strpos($key, '__');
-            if ($pos) {
-                // assume that the left portion is the table name, and
-                // the right portion is the column name.
-                $tbl = substr($key, 0, $pos);
-                $col = substr($key, $pos+2);
-                $row[$tbl][$col] = $val;
-            } else {
-                // no underscores, it's just a column name.
-                $row[$key] = $val;
-            }
-        }
-        return $row;
+        $this->_stmt = $this->_config['PDOStatement'];
     }
     
     /**
      * 
-     * Fetches all rows from the result source via $this->fetch().
+     * Rewinds the iterator back to the beginning.
      * 
-     * @param int $mode A PDO::FETCH_* constant to specify how the row
-     * should be returned; default is PDO::FETCH_ASSOC.
-     * 
-     * @return array A sequential array of data from all fetched rows.
+     * @return void
      * 
      */
-    public function fetchAll($mode = PDO::FETCH_ASSOC)
+    public function rewind()
     {
-        $data = array();
-        while ($row = $this->fetch($mode)) {
-            $data[] = $row;
-        }
-        return $data;
+        $this->_curr = 0;
     }
+    
+    /**
+     * 
+     * Returns the current iterator key.
+     * 
+     * @return int The current iterator key.
+     * 
+     */
+    public function key()
+    {
+        return $this->_curr;
+    }
+    
+    /**
+     * 
+     * Increments the iterator key.
+     * 
+     * @return int The incremented iterator key.
+     * 
+     * @todo Should this fetch a row too?
+     * 
+     */
+    public function next()
+    {
+        // increment the counter
+        $this->_curr += 1;
+        
+        // populate the row
+        $this->_fetch();
+        
+        // return the incremented value
+        return $this->_curr;
+    }
+    
+    /**
+     * 
+     * Determines if the current iterator key is valid.
+     * 
+     * Also populates the current row from the result source.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function valid()
+    {
+        // do we already have a row in the current position?
+        if (! empty($this->_rows[$this->_curr])) {
+            return true;
+        } else {
+            // populate the current position
+            return $this->_fetch();
+        }
+    }
+    
+    /**
+     * 
+     * Returns the current row for the iterator.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     */
+    public function current()
+    {
+        return $this->_rows[$this->_curr];
+    }
+    
+    /**
+     * 
+     * Returns the next row from the result source.
+     * 
+     * @return Solar_Sql_Row|bool Boolean false if there is no
+     * next row, or the next Solar_Sql_Row result.
+     * 
+     */
+    public function fetch()
+    {
+        if ($this->valid()) {
+            $row = $this->_rows[$this->_curr];
+            $this->next();
+            return $row;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * Returns all rows from the result source.
+     * 
+     * @return array An array of Solar_Sql_Row objects.
+     * 
+     */
+    public function fetchAll($assoc = false)
+    {
+        if (! $this->_full) {
+            // populate all of $_rows
+            foreach ($this as $val) {}
+        }
+        
+        // return as associative on the first column?
+        if ($assoc) {
+            $rows = array();
+            foreach ($this->_assoc as $key => $val) {
+                $rows[$val] = $this->_rows[$key];
+            }
+            return $rows;
+        }
+        
+        // return as sequential
+        return $this->_rows;
+    }
+    
+    /**
+     * 
+     * Support method to populate Solar::$_rows from the result source.
+     * 
+     * @return bool True if a row was populated, false if not.
+     * 
+     */
+    protected function _fetch()
+    {
+        // is there a next row?
+        $data = $this->_stmt->fetch(PDO::FETCH_ASSOC);
+        if (! $data) {
+            // no new rows, which means the $_rows array
+            // must be fully populated.
+            $this->_full = true;
+            return false;
+        }
+        
+        // found a row, retain it internally
+        $this->_rows[$this->_curr] = Solar::factory(
+            'Solar_Sql_Row',
+            array('data' => $data)
+        );
+        
+        // set the associative key for it
+        $this->_assoc[$this->_curr] = array_shift($data);
+        
+        // done
+        return true;
+    }
+    
 }
 ?>

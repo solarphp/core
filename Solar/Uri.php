@@ -245,7 +245,9 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Parses a Solar_Controller action spec as a URI.
+     * Parses a page-and-action specification as a URI.
+     * 
+     * @param string $spec The page-and-action specification.
      * 
      * @return void
      * 
@@ -317,7 +319,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Builds a partial URI string for a Solar_Controller action spec.
+     * Builds a URI string for a page-and-action spec.
      * 
      * Prefixes with the config ['Solar_Uri']['action'] href.
      * 
@@ -334,7 +336,23 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Builds a partial URI string for a public Solar resource.
+     * Converts a page-and-action specification to a URI in one step.
+     * 
+     * @param string $spec The page-and-action specification.
+     * 
+     * @return void
+     * 
+     */
+    public function toAction($spec)
+    {
+        $uri = Solar::factory('Solar_Uri');
+        $uri->importAction($spec);
+        return $uri->exportAction();
+    }
+    
+    /**
+     * 
+     * Builds a URI string for a public Solar resource.
      * 
      * Prefixes with the config ['Solar_Uri']['public'] href.
      * 
@@ -347,6 +365,22 @@ class Solar_Uri extends Solar_Base {
              . (empty($this->info)              ? '' : $this->_info2str($this->info))
              . (empty($this->query)             ? '' : '?' . $this->_query2str($this->query))
              . (empty($this->fragment)          ? '' : '#' . $this->fragment);
+    }
+    
+    /**
+     * 
+     * Converts a public resource specification to a URI in one step.
+     * 
+     * @param string $spec The page-and-action specification.
+     * 
+     * @return void
+     * 
+     */
+    public function toPublic($spec)
+    {
+        $uri = Solar::factory('Solar_Uri');
+        $uri->import($spec);
+        return $uri->exportPublic();
     }
     
     /**

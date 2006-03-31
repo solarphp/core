@@ -23,7 +23,7 @@ foreach ($list as $id) {
     // data has not been stored yet
     $assert->isFalse($cache->fetch($id));
     // so store some data
-    $assert->isTrue($cache->replace($id, $data));
+    $assert->isTrue($cache->save($id, $data));
     // and we should be able to fetch now
     $assert->same($cache->fetch($id), $data);
 }

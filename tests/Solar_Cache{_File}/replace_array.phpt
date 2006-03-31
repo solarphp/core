@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace(array)
+Solar_Cache{_File}::save(array)
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -23,7 +23,7 @@ $data = array(
     'eats' => 'Roadrunner',
     'flag' => 'Not again!',
 );
-$assert->isTrue($cache->replace($id, $data));
+$assert->isTrue($cache->save($id, $data));
 $assert->same($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------

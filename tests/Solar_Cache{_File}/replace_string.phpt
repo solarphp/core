@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace(string)
+Solar_Cache{_File}::save(string)
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -18,7 +18,7 @@ require '_setup.php';
 
 $id = 'coyote';
 $data = 'Wile E. Coyote';
-$assert->isTrue($cache->replace($id, $data));
+$assert->isTrue($cache->save($id, $data));
 $assert->same($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------

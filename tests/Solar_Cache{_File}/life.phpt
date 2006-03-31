@@ -23,7 +23,7 @@ $data = 'Wile E. Coyote';
 $assert->same($cache->life(), $config['life']);
 
 // store something
-$assert->isTrue($cache->replace($id, $data));
+$assert->isTrue($cache->save($id, $data));
 $assert->same($cache->fetch($id), $data);
 
 // wait until just before the lifetime,

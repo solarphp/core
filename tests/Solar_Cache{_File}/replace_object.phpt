@@ -1,5 +1,5 @@
 --TEST--
-Solar_Cache{_File}::replace(object)
+Solar_Cache{_File}::save(object)
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -23,7 +23,7 @@ class Coyote extends Solar_Base {
 
 $id = 'coyote';
 $data = new Coyote();
-$assert->isTrue($cache->replace($id, $data));
+$assert->isTrue($cache->save($id, $data));
 $assert->equals($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------

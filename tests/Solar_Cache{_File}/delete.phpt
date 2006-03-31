@@ -23,7 +23,7 @@ $data = 'Wile E. Coyote';
 $assert->isFalse($cache->fetch($id));
 
 // store it
-$assert->isTrue($cache->replace($id, $data));
+$assert->isTrue($cache->save($id, $data));
 
 // and we should be able to fetch now
 $assert->same($cache->fetch($id), $data);

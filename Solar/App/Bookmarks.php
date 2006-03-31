@@ -204,12 +204,12 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * Constructor.
+     * Extended setup.
      * 
      */
-    public function __construct($config = null)
+    public function _setup()
     {
-        parent::__construct($config);
+        parent::_setup();
         
         // make sure a bookmarks area exists
         $content = Solar::dependency('Solar_Content', $this->_config['content']);
@@ -233,6 +233,9 @@ class Solar_App_Bookmarks extends Solar_App {
                 'area_id' => $area['id']
             )
         );
+        
+        // add the stylesheet
+        $this->layout_style[] = 'Solar/styles/bookmarks.css';
     }
     
     /**

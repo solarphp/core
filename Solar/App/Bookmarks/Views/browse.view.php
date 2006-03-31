@@ -21,7 +21,7 @@
 $uri = Solar::factory('Solar_Uri');
 ?>
 <!-- list of tags in use -->
-<div style="float: right; margin: 0 12px; padding: 8px; border: 1px solid gray; background: #eee;">
+<div id="taglist">
     <?php
         /** The list of tags in the system */
         include $this->template('browse/tags.part.php');
@@ -29,7 +29,7 @@ $uri = Solar::factory('Solar_Uri');
 </div>
 
 <!-- ordering -->
-<div style="float: right; margin: 0 12px; padding: 8px; border: 1px solid gray; background: #eee;">
+<div id="ordering">
     <?php
         /** The order-by links */
         include $this->template('browse/order.part.php');
@@ -39,7 +39,7 @@ $uri = Solar::factory('Solar_Uri');
 <h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 
 <!-- results -->
-<div style="float: left;">
+<div id="bookmarks">
     <!-- output the owner_handle and tag-search, if any -->
     <?php if ($this->owner_handle || $this->tags): ?>
         <h2><?php

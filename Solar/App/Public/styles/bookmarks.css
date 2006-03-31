@@ -1,0 +1,51 @@
+#taglist {
+	float: right;
+	margin: 0 12px;
+	padding: 8px;
+	border: 1px solid gray;
+	background: #eee;
+}
+
+#taglist h3 {
+	margin: 4px 0;
+}
+
+#taglist ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#taglist ul li {
+	padding: 4px 0;
+}
+
+#ordering {
+	float: right;
+	margin: 0 12px;
+	padding: 8px;
+	border: 1px solid gray;
+	background: #eee;
+}
+
+#ordering h3 {
+	margin: 4px 0;
+}
+
+#ordering ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#ordering ul li {
+	padding: 4px 0;
+}
+
+#ordering ul li.selected {
+	font-weight: bold;
+}
+
+#bookmarks {
+	float: left;
+}

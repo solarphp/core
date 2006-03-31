@@ -19,20 +19,19 @@
 ?>
         <h3><?php echo $this->getText('TAG_LIST') ?></h3>
         <?php
-            $uri->setQuery('page', 1);
             if ($this->owner_handle) {
-                $baseInfo = "bookmarks/user/{$this->owner_handle}";
+                $action = "bookmarks/user/{$this->owner_handle}";
             } else {
-                $baseInfo = "bookmarks/tag";
+                $action = "bookmarks/tag";
             }
         ?>
-        <table border="0" cellspacing="2" cellpadding="0"><?php
-            // build a series of table rows as links to tags
+        <ul>
+        <?php
+            // build a series of links to tags
             $tmp = array();
             foreach ($this->tags_in_use as $tag => $count) {
-                $uri->setInfoString("$baseInfo/$tag");
-                $tmp[] = "<tr><td align=\"right\">$count</td><td>" . $this->action($uri, $tag) . "</td></tr>";
+                $tmp[] = "<li>" . $this->action("$action/$tag", $tag) . " ($count)</li>";
             }
             echo implode("\n", $tmp);
         ?>
-        </table>
+        </ul>

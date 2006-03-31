@@ -18,7 +18,8 @@
  */
 ?>
         <h3><?php echo $this->getText('ORDERED_BY') ?></h3>
-        <p><?php
+        <ul>
+        <?php
             $tmp = array(
                 'created'      => 'ORDER_CREATED',
                 'created_desc' => 'ORDER_CREATED_DESC',
@@ -36,12 +37,13 @@
             // add links
             foreach ($tmp as $key => $val) {
                 if (Solar::get('order', 'created_desc') == $key) {
-                    echo "<strong>"
+                    echo "<li class=\"selected\"><strong>"
                        . $this->getText($val)
-                       . "</strong><br />\n";
+                       . "</strong></li>\n";
                 } else {
                     $uri->setQuery('order', $key);
-                    echo $this->action($uri, $val) . "<br />\n";
+                    echo "<li>" . $this->action($uri, $val) . "</li>\n";
                 }
             }
-        ?></p>
+        ?>
+        </ul>

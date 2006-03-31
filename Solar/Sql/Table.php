@@ -238,7 +238,7 @@ class Solar_Sql_Table extends Solar_Base {
         $result = $this->_sql->insert($this->_name, $data);
         
         // return the data as inserted
-        return Solar::factory('Solar_Sql_Row', array('data' => $data));
+        return $data;
     }
     
     /**
@@ -280,7 +280,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // restore retained primary key data and return
         $data = array_merge($data, $retain);
-        return Solar::factory('Solar_Sql_Row', array('data' => $data));
+        return $data;
     }
     
     /**
@@ -355,15 +355,13 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $id The primary key ID value.
      * 
-     * @return Solar_Sql_Row
+     * @return array
      * 
      */
     public function fetch($id)
     {
-        $select = Solar::factory('Solar_Sql_Select');
-        return $select->from($this->_name, array_keys($this->_col))
-                      ->where('id = ?', $id)
-                      ->fetch('row');
+        $where = array('id = ?' => $id);
+        return $this->select('row', $where);
     }
     
     /**
@@ -376,25 +374,19 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $page The page number of rows to fetch.
      * 
-     * @return array An array of Solar_Sql_Row objects.
+     * @return array An array rows.
      * 
      */
     public function fetchAll($where = null, $order = null, $page = null)
     {
-        $select = Solar::factory('Solar_Sql_Select');
-        return $select->from($this->_name, array_keys($this->_col))
-                      ->multiWhere($where)
-                      ->order($order)
-                      ->setPaging($this->_paging)
-                      ->limitPage($page)
-                      ->fetch('all');
+        return $this->select('all', $where, $order, $page);
     }
     
     /**
      * 
      * Returns a default row of column keys and default values.
      * 
-     * @return Solar_Sql_Row
+     * @return array
      * 
      */
     public function fetchDefault()
@@ -444,10 +436,7 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // done!
-        return Solar::factory(
-            'Solar_Sql_Row', 
-            array('data' => $data)
-        );
+        return $data;
     }
     
     

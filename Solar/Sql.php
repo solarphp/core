@@ -287,8 +287,8 @@ class Solar_Sql extends Solar_Base {
      * Select rows from the database.
      * 
      * @param string $type How to return the results: all, assoc, col,
-     * one, pair, pdo, row, result (the default), string (as text),
-     * or a class name to create with the result.
+     * one, pair, row, result (the default), string (to just get the
+     * command string), or a class name to create with the result.
      * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string (SELECT or non-select).
@@ -301,9 +301,6 @@ class Solar_Sql extends Solar_Base {
      */
     public function select($type, $spec, $data = array())
     {
-        // lower-case return type
-        $lctype = strtolower($type);
-        
         // build the statement from its component parts if needed
         if (is_array($spec)) {
             $stmt = $this->_driver->buildSelect($spec);
@@ -311,110 +308,83 @@ class Solar_Sql extends Solar_Base {
             $stmt = $spec;
         }
         
-        // are we just returning the statement text?
-        if ($lctype == 'text' || $lctype == 'string') {
+        // are we just returning the statement?
+        $lctype = strtolower($type);
+        if ($lctype == 'statement') {
             return $stmt;
         }
         
         // execute and get the PDOStatement result object
         $result = $this->_driver->exec($stmt, $data);
         
-        // did we get a result?
-        // how to return the result?
+        // return data based on the select type
         switch ($lctype) {
         
-        // return all rows keyed in sequence
+        // return all rows
         case 'all':
-            if (! $result) {
-                return array();
-            }
-        
-            $tmp = Solar::factory(
-                'Solar_Sql_Result',
-                array('PDOStatement' => $result)
-            );
-            return $tmp->fetchAll();
+            $data = $result->fetchAll(PDO::FETCH_ASSOC);
             break;
             
-        // return all rows keyed on the first col
+        // return data as an array keyed on the first column
         case 'assoc':
-            if (! $result) {
-                return array();
+            $data = array();
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                $key = array_shift($row);
+                $data[$key] = $row;
             }
-        
-            $tmp = Solar::factory(
-                'Solar_Sql_Result',
-                array('PDOStatement' => $result)
-            );
-            return $tmp->fetchAll(true);
             break;
         
         // return the first col of every row
         case 'col':
-            if (! $result) {
-                return array();
-            }
-            return $result->fetchAll(PDO::FETCH_COLUMN, 0);
+            $data = $result->fetchAll(PDO::FETCH_COLUMN, 0);
             break;
             
         // return the first col of the first row
         case 'one':
-            if (! $result) {
-                return null;
-            }
-            return $result->fetchColumn(0);
+            $data = $result->fetchColumn(0);
             break;
         
-        // return rows as key-value pairs where the first col
-        // is the key and the second col is the value
+        // return data as key-value pairs where the first column
+        // is the key and the second column is the value
         case 'pair':
         case 'pairs':
-            if (! $result) {
-                return array();
-            }
-        
             $data = array();
             while ($row = $result->fetch(PDO::FETCH_NUM)) {
                 $data[$row[0]] = $row[1];
             }
-            return $data;
             break;
         
-        // return the PDOStatement object
+        // the PDOStatement result object
         case 'pdo':
         case 'pdostatement':
-        case 'statement':
-            return $result;
+        case 'statment':
+            $data = $result;
             break;
             
-        // return a Solar_Sql_Result object
+        // a Solar_Sql_Result object
         case 'result':
-            return Solar::factory(
+            $data = Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
             break;
         
-        // return only the first row
+        // return the first row
         case 'row':
-            if (! $result) {
-                return null;
-            }
-        
-            return Solar::factory(
-                'Solar_Sql_Row',
-                array('data' => $result->fetch(PDO::FETCH_ASSOC))
-            );
+            $data = $result->fetch(PDO::FETCH_ASSOC);
             break;
         
-        // return a new object and inject the PDOStatement into it
+        // create a new object and put the result into it
         default:
-            return Solar::factory(
+            $data = Solar::factory(
                 $type,
                 array('PDOStatement' => $result)
             );
             break;
         }
+        
+        // done!
+        return $data;
     }
     
     

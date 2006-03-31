@@ -104,14 +104,6 @@ class Solar_Sql extends Solar_Base {
      * name.  Figure tables need more "space", so they get 30 and
      * tables/indexes get 28.
      * 
-     * @todo Reserve another 6 chars for 4-char prefix and __ separator? That
-     * leaves 52 chars to table and col/idx names, for 26 chars each.  Or,
-     * just tell end-users to prefix their table names with a vendor string.
-     * This has to apply to Solar too.  Also means no more auto-table-name
-     * discovery? Not reall, can still use (e.g.) Solar_Model_SolarNodes.
-     * Or perhaps it can auto-prefix with vendor class name automatically;
-     * e.g., Solar_Model_Nodes becomes solar_nodes.
-     * 
      * @var array
      * 
      */

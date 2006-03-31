@@ -43,20 +43,18 @@ if ($this->_user->auth->handle != $item['owner_handle']) {
 // build a link for _redirect() calls and the backlink.
 // 
 // if we came from a tag or user page, return there.
-// if we came from a quickmark, return to the originating page.
 // otherwise, return the list for the user.
 //
 
-$uri = $this->_query('uri');
 $href = $this->getFlash('backlink');
-if ($uri) {
-    $href = $uri;
-} elseif (! $href) {
-    // return to the user's list
-    $link = Solar::factory('Solar_Uri');
-    $link->setInfoString("bookmarks/user/{$this->_user->auth->handle}");
-    $href = $link->export();
+if (! $href) {
+    // probably browsed directly to this page; return to the user's list
+    $uri = Solar::factory('Solar_Uri');
+    $href = $uri->toAction("bookmarks/user/{$this->_user->auth->handle}");
 }
+
+// keep the backlink for the next page load
+$this->setFlash('backlink', $href);
 
 // ---------------------------------------------------------------------
 // 
@@ -76,10 +74,8 @@ $submit = Solar::post('submit');
 // OP: Save
 if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
     
-    $values = $form->values();
-    $data = $values['bookmark'];
-    
     // force owner and editor values
+    $data = $form->values('bookmark');
     $data['owner_handle'] = $this->_user->auth->handle;
     $data['editor_handle'] = $this->_user->auth->handle;
     
@@ -128,7 +124,4 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_DELETE')) {
 // assign data for the view
 $this->formdata = $form;
 $this->backlink = $href;
-
-// keep the backlink for the next page load
-$this->setFlash('backlink', $href);
 ?>

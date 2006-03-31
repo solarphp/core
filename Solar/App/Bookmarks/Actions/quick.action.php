@@ -36,11 +36,9 @@ $existing = $this->_bookmarks->fetchByOwnerUri(
 
 // if the user *does* already have that URI bookmarked,
 // redirect to the existing bookmark.
-/** @todo This won't work in non-base non-index.php cases, will it? */
 if (! empty($existing['id'])) {
-    $link = Solar::factory('Solar_Uri');
-    $link->setInfoString("bookmarks/edit/{$existing['id']}");
-    $this->_redirect($link->export());
+    $this->setFlash('backlink', $uri);
+    $this->_redirect("bookmarks/edit/{$existing['id']}");
 }
 
 // get a blank bookmark item, build the basic form
@@ -60,23 +58,24 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
     try {
     
         // get the form values
-        $values = $form->values();
-        $data = $values['bookmark'];
+        $data = $form->values('bookmark');
         $data['owner_handle'] = $this->_user->auth->handle;
         $data['editor_handle'] = $this->_user->auth->handle;
         
         // save
         $result = $this->_bookmarks->save($data);
         
-        // redirect to the source URI
-        $this->_redirect($uri);
+        // redirect to the source URI (external)
+        $this->_redirect($data['uri']);
         
     } catch (Solar_Exception $e) {
         
         // exception on save()
         // we should not have gotten to this point,
         // but need to be aware of possible problems.
+        $form->setStatus(false);
         $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
+        echo $e;
         
     }
 }

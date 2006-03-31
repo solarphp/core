@@ -17,7 +17,7 @@
 
 /**
  * 
- * Class for fetching selected row results.
+ * Class for iterating through selected row results.
  * 
  * @category Solar
  * 
@@ -44,25 +44,12 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
     
     /**
      * 
-     * The PDOStatement being used as a result source.
-     * 
-     * @var PDOStatement
-     * 
-     */
-    protected $_stmt = null;
-    
-    /**
-     * 
      * Collection of rows fetched from the result source.
-     * 
-     * Each element in the array is a Solar_Sql_Row object.
      * 
      * @var array
      * 
      */
     protected $_rows = array();
-    
-    protected $_assoc = array();
     
     /**
      * 
@@ -95,7 +82,6 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
         if (! ($this->_config['PDOStatement'] instanceof PDOStatement)) {
             throw $this->_exception('ERR_NOT_PDOSTATEMENT');
         }
-        $this->_stmt = $this->_config['PDOStatement'];
     }
     
     /**
@@ -127,8 +113,6 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * Increments the iterator key.
      * 
      * @return int The incremented iterator key.
-     * 
-     * @todo Should this fetch a row too?
      * 
      */
     public function next()
@@ -167,7 +151,7 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * 
      * Returns the current row for the iterator.
      * 
-     * @return Solar_Sql_Row
+     * @return mixed The current row element.
      * 
      */
     public function current()
@@ -179,8 +163,8 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * 
      * Returns the next row from the result source.
      * 
-     * @return Solar_Sql_Row|bool Boolean false if there is no
-     * next row, or the next Solar_Sql_Row result.
+     * @return mixed Boolean false if there is no
+     * next row, or the next row element.
      * 
      */
     public function fetch()
@@ -198,32 +182,23 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * 
      * Returns all rows from the result source.
      * 
-     * @return array An array of Solar_Sql_Row objects.
+     * @return array An array of row elements.
      * 
      */
-    public function fetchAll($assoc = false)
+    public function fetchAll()
     {
         if (! $this->_full) {
             // populate all of $_rows
             foreach ($this as $val) {}
         }
         
-        // return as associative on the first column?
-        if ($assoc) {
-            $rows = array();
-            foreach ($this->_assoc as $key => $val) {
-                $rows[$val] = $this->_rows[$key];
-            }
-            return $rows;
-        }
-        
-        // return as sequential
+        // return them all
         return $this->_rows;
     }
     
     /**
      * 
-     * Support method to populate Solar::$_rows from the result source.
+     * Support method to populate Solar_Sql_Result::$_rows from the result source.
      * 
      * @return bool True if a row was populated, false if not.
      * 
@@ -231,7 +206,7 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
     protected function _fetch()
     {
         // is there a next row?
-        $data = $this->_stmt->fetch(PDO::FETCH_ASSOC);
+        $data = $this->_config['PDOStatement']->fetch(PDO::FETCH_ASSOC);
         if (! $data) {
             // no new rows, which means the $_rows array
             // must be fully populated.
@@ -240,17 +215,8 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
         }
         
         // found a row, retain it internally
-        $this->_rows[$this->_curr] = Solar::factory(
-            'Solar_Sql_Row',
-            array('data' => $data)
-        );
-        
-        // set the associative key for it
-        $this->_assoc[$this->_curr] = array_shift($data);
-        
-        // done
+        $this->_rows[$this->_curr] = $data;
         return true;
     }
-    
 }
 ?>

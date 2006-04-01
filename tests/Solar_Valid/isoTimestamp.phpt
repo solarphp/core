@@ -1,5 +1,5 @@
 --TEST--
-Solar_Valid::isoDateTime()
+Solar_Valid::isoTimestamp()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -24,7 +24,7 @@ $test = array(
 );
 foreach ($test as $val) {
     $assert->setLabel($val);
-    $assert->isTrue($valid->isoDateTime($val));
+    $assert->isTrue($valid->isoTimestamp($val));
 }
 
 // bad, or are blank
@@ -42,7 +42,7 @@ $test = array(
 );
 foreach ($test as $val) {
     $assert->setLabel($val);
-    $assert->isFalse($valid->isoDateTime($val));
+    $assert->isFalse($valid->isoTimestamp($val));
 }
 
 
@@ -55,7 +55,7 @@ $test = array(
 );
 foreach ($test as $val) {
     $assert->setLabel($val);
-    $assert->isTrue($valid->isoDateTime($val, Solar_Valid::OR_BLANK));
+    $assert->isTrue($valid->isoTimestamp($val, Solar_Valid::OR_BLANK));
 }
 
 

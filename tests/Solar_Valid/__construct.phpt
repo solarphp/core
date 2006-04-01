@@ -1,7 +1,5 @@
 --TEST--
 Solar_Valid::__construct()
---SKIPIF--
-<?php echo 'skip test incomplete' ?>
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -16,6 +14,8 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
+$valid = Solar::factory('Solar_Valid');
+$assert->isInstance($valid, 'Solar_Valid');
 
 // ---------------------------------------------------------------------
 

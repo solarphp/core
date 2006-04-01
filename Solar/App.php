@@ -39,7 +39,7 @@ abstract class Solar_App extends Solar_Controller_Page {
     
     public $layout_link = array();
     
-    public $layout_style = array();
+    public $layout_style = array('Solar/styles/default.css');
     
     public $layout_script = array();
     

@@ -21,7 +21,6 @@
     
     <head>
         <?php
-            array_unshift($this->layout_style, 'Solar/styles/default.css');
             include $this->template('head.part.php');
         ?>
     </head>

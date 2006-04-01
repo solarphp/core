@@ -581,7 +581,7 @@ class Solar_Valid extends Solar_Base {
             
             // call the validation method
             $result = call_user_func_array(
-                array('self', $method),
+                array($this, $method),
                 $params
             );
             

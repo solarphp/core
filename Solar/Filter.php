@@ -36,7 +36,7 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Returns only alphabetic characters within the value.
+     * Returns only alphabetic characters within a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -45,12 +45,12 @@ class Solar_Filter extends Solar_Base {
      */
     public function alpha($value)
     {
-        return @preg_replace('/[^a-z]/i', '', $value);
+        return preg_replace('/[^a-z]/i', '', $value);
     }
     
     /**
      * 
-     * Strips alphabetic characters from the value.
+     * Strips alphabetic characters from a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -59,12 +59,12 @@ class Solar_Filter extends Solar_Base {
      */
     public function stripAlpha($value)
     {
-        return @preg_replace('/[a-z]/i', '', $value);
+        return preg_replace('/[a-z]/i', '', $value);
     }
     
     /**
      * 
-     * Returns only alphanumeric characters within the value.
+     * Returns only alphanumeric characters within a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -73,12 +73,12 @@ class Solar_Filter extends Solar_Base {
      */
     public function alnum($value)
     {
-        return @preg_replace('/[^a-z0-9]/i', '', $value);
+        return preg_replace('/[^a-z0-9]/i', '', $value);
     }
     
     /**
      * 
-     * Strips alphanumeric characters from the value.
+     * Strips alphanumeric characters from a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -87,40 +87,40 @@ class Solar_Filter extends Solar_Base {
      */
     public function stripAlnum($value)
     {
-        return @preg_replace('/[a-z0-9]/i', '', $value);
+        return preg_replace('/[a-z0-9]/i', '', $value);
     }
     
     /**
      * 
-     * Returns only whitespace characters within the value.
+     * Returns only whitespace characters within a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
      * 
      */
-    public function blanks($value)
+    public function blank($value)
     {
-        return @preg_replace('/\S/', '', $value);
+        return preg_replace('/\S/', '', $value);
     }
     
     /**
      * 
-     * Strips all whitespace from the value.
+     * Strips all whitespace from a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
      * 
      */
-    public function stripBlanks($value)
+    public function stripBlank($value)
     {
-        return @preg_replace('/\s/', '', $value);
+        return preg_replace('/\s/', '', $value);
     }
     
     /**
      * 
-     * Returns only numbers within the value.
+     * Returns only numbers within a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -129,12 +129,12 @@ class Solar_Filter extends Solar_Base {
      */
     public function numeric($value)
     {
-        return @preg_replace('/\D/', '', $value);
+        return preg_replace('/\D/', '', $value);
     }
     
     /**
      * 
-     * Strips all numbers from the value.
+     * Strips all numbers from a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -143,35 +143,35 @@ class Solar_Filter extends Solar_Base {
      */
     public function stripNumeric($value)
     {
-        return @preg_replace('/\d/', '', $value);
+        return preg_replace('/\d/', '', $value);
     }
     
     /**
      * 
-     * Returns only word characters within the value.
+     * Returns only word characters within a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
      * 
      */
-    public function words($value)
+    public function word($value)
     {
-        return @preg_replace('/\W/', '', $value);
+        return preg_replace('/\W/', '', $value);
     }
     
     /**
      * 
-     * Strips word characters from the value.
+     * Strips word characters from a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
      * @return string The filtered value.
      * 
      */
-    public function stripWords($value)
+    public function stripWord($value)
     {
-        return @preg_replace('/\w/', '', $value);
+        return preg_replace('/\w/', '', $value);
     }
     
     // -----------------------------------------------------------------
@@ -190,8 +190,9 @@ class Solar_Filter extends Solar_Base {
      * 
      * The value should be a format that [[php strtotime()]] understands.
      * 
-     * @param string $value The value to be filtered; must be a value
-     * appropriate for strtotime().
+     * @param string $value The value to be filtered.  If an integer, it
+     * is used as a Unix timestamp; otherwise, converted to a Unix
+     * timestamp using [[php strtotime()]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '2005-02-25').
@@ -201,7 +202,11 @@ class Solar_Filter extends Solar_Base {
      */
     public function formatDate($value, $format = 'Y-m-d')
     {
-        return @date($format, strtotime($value));
+        if (is_int($value)) {
+            return date($format, $value);
+        } else {
+            return date($format, strtotime($value));
+        }
     }
     
     /**
@@ -214,8 +219,9 @@ class Solar_Filter extends Solar_Base {
      * 
      * The value should be a format that [[php strtotime()]] understands.
      * 
-     * @param string $value The value to be filtered; must be a value
-     * appropriate for strtotime().
+     * @param string $value The value to be filtered.  If an integer, it
+     * is used as a Unix timestamp; otherwise, converted to a Unix
+     * timestamp using [[php strtotime()]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '12:34:56').
@@ -225,7 +231,7 @@ class Solar_Filter extends Solar_Base {
      */
     public function formatTime($value, $format = 'H:i:s')
     {
-        return @date($format, strtotime($value));
+        return $this->formatDate($value, $format);
     }
     
     /**
@@ -238,8 +244,9 @@ class Solar_Filter extends Solar_Base {
      * 
      * The value should be a format that [[php strtotime()]] understands.
      * 
-     * @param string $value The value to be filtered; must be a value
-     * appropriate for strtotime().
+     * @param string $value The value to be filtered.  If an integer, it
+     * is used as a Unix timestamp; otherwise, converted to a Unix
+     * timestamp using [[php strtotime()]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '2005-02-25T12:34:56').
@@ -249,7 +256,7 @@ class Solar_Filter extends Solar_Base {
      */
     public function formatTimestamp($value, $format = 'Y-m-d\TH:i:s')
     {
-        return @date($format, strtotime($value));
+        return $this->formatDate($value, $format);
     }
     
     // -----------------------------------------------------------------
@@ -273,7 +280,7 @@ class Solar_Filter extends Solar_Base {
      */
     public function pregReplace($value, $pattern, $replace)
     {
-        return @preg_replace($pattern, $replace, $value);
+        return preg_replace($pattern, $replace, $value);
     }
     
     /**
@@ -291,12 +298,12 @@ class Solar_Filter extends Solar_Base {
      */
     public function strReplace($value, $find, $replace)
     {
-        return @str_replace($find, $replace, $value);
+        return str_replace($find, $replace, $value);
     }
      
     /**
      * 
-     * Trims characters from the beginning and end of the value.
+     * Trims characters from the beginning and end of a value.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -312,47 +319,31 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Casts the value as a PHP variable type.
+     * Uses [[php settype()]] to cast a value as a PHP variable type.
      * 
      * @param mixed $value The value to filter.
      * 
-     * @param string $type A valid variable type: 'array', 'string',
-     * 'int', 'float', 'double', 'real', or 'bool'
+     * @param string $type A valid variable type: 'array', 'bool',
+     * 'boolean', 'int', 'integer', 'float', 'double', 'string', 
+     * 'object', 'null',
      * 
      * @return mixed The filtered value.
      * 
      */
     public function cast($value, $type)
     {
-        switch (strtolower(strval($type))) {
+        $allow = array(
+            'array', 'bool', 'boolean', 'int', 'integer',
+            'float', 'double', 'string', 'object', 'null',
+        );
         
-        case 'array':
-            settype($value, 'array');
-            break;
-            
-        case 'bool':
-        case 'boolean':
-            $value = empty($value) ? false : true;
-            break;
-            
-        case 'double':
-        case 'float':
-        case 'real':
-            $value = floatval($value);
-            break;
-            
-        case 'int':
-        case 'integer':
-            $value = intval($value);
-            break;
-            
-        case 'string':
-            $value = strval($value);
-            break;
-            
-        default:
-            break;
-            
+        $type = strtolower((string) $type);
+        if ($type == 'real') {
+            $type = 'double';
+        }
+        
+        if (in_array($type, $allow)) {
+            settype($value, $type);
         }
         
         return $value;
@@ -466,6 +457,11 @@ class Solar_Filter extends Solar_Base {
                 // Place the value at the beginning of the parameters
                 array_unshift($params, $value);
                 $value = call_user_func_array($callback, $params);
+            } else {
+                throw $this->_exception('ERR_FILTER_MULTIPLE', array(
+                    'method' => $method,
+                    'params' => $params,
+                ));
             }
         }
         

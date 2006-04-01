@@ -1,20 +1,21 @@
 MOVING TO A NON-DEV RELEASE
 
-General:
-    Have ACTION_* in addition to SUBMIT_* keys?
-    
-Classes:
-    Solar_Form::values() ... have param for initial key
-    Solar_Sql_Select: fix column deconfliction
-    Add Solar_Sql_Record and RecordSet?
-    
+Get database error messages back from form submissions
+
 Apps:
     Create CSS file for Bookmarks?
-    Update master css for form feedback
+
+Database:
+    Just give instructions on how to create portable tables?
+    Then make Solar_Model extend Solar_Sql_Table and use portable
+      validation
+    No, because we need sequences :-(
 
 ----
 
 DOCS PLAN
+
+Link to Solar vs Zend in docs    
 
 * Fix internal docs. Keep very short!  Move long docs to manual.
 * Update long docs.

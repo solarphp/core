@@ -1,5 +1,5 @@
 --TEST--
-Solar_Debug_Var (all tests)
+Solar_Debug_Var::dump()
 --FILE---
 <?php
 // include ../_prepend.inc

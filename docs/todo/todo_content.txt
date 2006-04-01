@@ -24,6 +24,8 @@ Solar/
         Trackback.php (track received)
         Wiki.php
             
+(Combine "wiki" and "blog" into "pages"?)
+
 
 // ugh:
 $bookmarks = Solar::factory('Solar_Content_Bookmarks');
@@ -33,6 +35,8 @@ Add dates to content model (e.g., begin and end dates)
 Rename "rank" to "position"?
 
 ALSO NEED ACCESS CONTROL!
+
+----
 
 ----
 
@@ -48,14 +52,22 @@ edits themselves should be below notice at this level
 
 ----
 
+Solar_Content_Comments
+
+Need a 'remember me' function?
+
+Need to separate Solar_Model_Comments_Rules into a standalone
+content-filtering class ... or add a file-based plugin mechanism? 
+or both?  Text_Bayes?  Text_Filter?
+
 Standalone comment system tasks
 
-select comments for an area and node (paged)
-insert a new comment on a area/node
-    essentially a new node of type 'comment' as part_of the collection master node
-update a comment in-place (not a revision)
-delete a comment
-tag a comment as spam, or for moderation
+    select comments for an area and node (paged)
+    insert a new comment on a area/node
+        essentially a new node of type 'comment' as part_of the collection master node
+    update a comment in-place (not a revision)
+    delete a comment
+    tag a comment as spam, or for moderation
 
 
 ----

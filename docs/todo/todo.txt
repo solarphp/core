@@ -2,9 +2,6 @@ MOVING TO A NON-DEV RELEASE
 
 Get database error messages back from form submissions
 
-Apps:
-    Create CSS file for Bookmarks?
-
 Database:
     Just give instructions on how to create portable tables?
     Then make Solar_Model extend Solar_Sql_Table and use portable
@@ -38,9 +35,6 @@ TESTING PLAN
 update:
     all existing
 
-easy:
-    Solar_Filter
-
 moderate:
     Solar_View et al
     
@@ -65,29 +59,14 @@ NEW CLASSES
 Create an event dispatcher as a universal observer and notifier?
 
 Solar_User_Access for class/action/submit privileges by user and role
-
+    Solar_User_Perms?
+    
 Logging class!
 
 
 ----
 
 NEW MODELS, CONTENT TYPES, & APPS
-
-Solar_Content_Todo
-
-Solar_App_Todo
-
-Solar_Model_Issues (in addition to the content model, highly specific)
-
-Solar_App_Issues (bug tracker, uses content todos and comments)
-
-Solar_Content_Comments
-
-    Need a 'remember me' function?
-
-    Need to separate Solar_Model_Comments_Rules into a standalone
-    content-filtering class ... or add a file-based plugin mechanism? 
-    or both?  Text_Bayes?  Text_Filter?
 
 Solar_Model_Members
     id

@@ -1,5 +1,5 @@
 --TEST--
-Solar_Debug_Timer (all tests)
+Solar_Debug_Timer (all methods)
 --FILE---
 <?php
 // include ../_prepend.inc

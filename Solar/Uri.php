@@ -379,7 +379,7 @@ class Solar_Uri extends Solar_Base {
     public function toPublic($spec)
     {
         $uri = Solar::factory('Solar_Uri');
-        $uri->import($spec);
+        $uri->importAction($spec);
         return $uri->exportPublic();
     }
     

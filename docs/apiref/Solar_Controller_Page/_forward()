@@ -10,7 +10,7 @@ return: void
 
 </function>
 
-Forwards to an action script.
+Forwards internally to another action.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Forwards to an action script.
 
 * Returns void
 
-Forwards to an action script.
+Forwards internally to another action.

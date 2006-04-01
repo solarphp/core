@@ -9,13 +9,13 @@ ApiRef | API Reference
   $_tbl_cols
  ClassMethods | Class Methods
   __construct()
+  __toString()
   _exception()
   _join()
   _tblCols()
   apiVersion()
   bind()
   clear()
-  cols()
   countPages()
   distinct()
   fetch()

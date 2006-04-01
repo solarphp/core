@@ -10,9 +10,13 @@
 
 * Solar_Model_Areas::delete() -- Deletes rows in the table based on a WHERE clause.
 
+* Solar_Model_Areas::fetch() -- Fetches one row from the table by its primary key ID.
+
+* Solar_Model_Areas::fetchAll() -- Fetches all rows by arbitrary criteria.
+
 * Solar_Model_Areas::fetchByName() -- 
 
-* Solar_Model_Areas::fetchDefault() -- Returns a data array with column keys and default values.
+* Solar_Model_Areas::fetchDefault() -- Returns a default row of column keys and default values.
 
 * Solar_Model_Areas::increment() -- Increments and returns the sequence value for a column.
 

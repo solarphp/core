@@ -7,8 +7,8 @@ Example usage:
 <code>
 $select = Solar::factory('Solar_Sql_Select');
 
-// select these columns
-$select->cols(array(
+// select these columns from the 'contacts' table
+$select->from('contacts', array(
   'id',
     'n_last',
     'n_first',
@@ -18,9 +18,6 @@ $select->cols(array(
     'adr_postcode AS zip',
     'adr_country',
 ));
-
-// from this table
-$select->from('contacts'); // single or multi
 
 // on these ANDed conditions
 $select->where('n_last = :lastname');

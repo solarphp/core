@@ -4,18 +4,18 @@ access:   public
 
 name: importAction
 
-param: unknown, $spec
+param: string, $spec
 
 return: void
 
 </function>
 
-Parses a Solar_Controller action spec as a URI.
+Parses a page-and-action specification as a URI.
 
 * Parameters:
 
- * unknown //$spec//: 
+ * string //$spec//: The page-and-action specification.
 
 * Returns void
 
-Parses a Solar_Controller action spec as a URI.
+Parses a page-and-action specification as a URI.

@@ -12,7 +12,7 @@ return: string
 
 </function>
 
-Trims characters from the beginning and end of the value.
+Trims characters from the beginning and end of a value.
 
 * Parameters:
 
@@ -22,4 +22,4 @@ Trims characters from the beginning and end of the value.
 
 * Returns string: The filtered value.
 
-Trims characters from the beginning and end of the value.
+Trims characters from the beginning and end of a value.

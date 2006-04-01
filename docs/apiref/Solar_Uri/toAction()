@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: toAction
+
+param: string, $spec
+
+return: void
+
+</function>
+
+Converts a page-and-action specification to a URI in one step.
+
+* Parameters:
+
+ * string //$spec//: The page-and-action specification.
+
+* Returns void
+
+Converts a page-and-action specification to a URI in one step.

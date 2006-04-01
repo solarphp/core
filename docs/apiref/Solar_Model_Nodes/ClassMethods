@@ -10,7 +10,11 @@
 
 * Solar_Model_Nodes::delete() -- Deletes rows in the table based on a WHERE clause.
 
-* Solar_Model_Nodes::fetchDefault() -- Returns a data array with column keys and default values.
+* Solar_Model_Nodes::fetch() -- Fetches one row from the table by its primary key ID.
+
+* Solar_Model_Nodes::fetchAll() -- Fetches all rows by arbitrary criteria.
+
+* Solar_Model_Nodes::fetchDefault() -- Returns a default row of column keys and default values.
 
 * Solar_Model_Nodes::increment() -- Increments and returns the sequence value for a column.
 

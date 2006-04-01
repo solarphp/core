@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: fetchAll
+
+param: unknown, $where, NULL
+
+param: unknown, $order, NULL
+
+param: int, $page, NULL
+
+return: array
+
+</function>
+
+Fetches all rows by arbitrary criteria.
+
+* Parameters:
+
+ * unknown //$where//: 
+
+ * unknown //$order//: 
+
+ * int //$page//: The page number of rows to fetch.
+
+* Returns array: An array rows.
+
+Fetches all rows by arbitrary criteria.

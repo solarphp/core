@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: current
+
+return: mixed
+
+</function>
+
+Returns the current row for the iterator.
+
+* Parameters: none.
+
+* Returns mixed: The current row element.
+
+Returns the current row for the iterator.

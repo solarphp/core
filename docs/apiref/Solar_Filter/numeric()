@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Returns only numbers within the value.
+Returns only numbers within a value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Returns only numbers within the value.
 
 * Returns string: The filtered value.
 
-Returns only numbers within the value.
+Returns only numbers within a value.

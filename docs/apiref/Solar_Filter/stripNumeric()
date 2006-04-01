@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Strips all numbers from the value.
+Strips all numbers from a value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Strips all numbers from the value.
 
 * Returns string: The filtered value.
 
-Strips all numbers from the value.
+Strips all numbers from a value.

@@ -32,3 +32,5 @@ ApiRef | API Reference
   setInfoString()
   setQuery()
   setQueryString()
+  toAction()
+  toPublic()

@@ -4,13 +4,13 @@
 
 * Solar_Sql_Select::__construct() -- Constructor.
 
+* Solar_Sql_Select::__toString() -- Returns this object as an SQL statement string.
+
 * Solar_Sql_Select::apiVersion() -- Reports the API version for this class.
 
 * Solar_Sql_Select::bind() -- Adds data to bind into the query.
 
 * Solar_Sql_Select::clear() -- Clears query properties.
-
-* Solar_Sql_Select::cols() -- Add un-mapped columns to the query.
 
 * Solar_Sql_Select::countPages() -- Get the count of rows and number of pages for the current query.
 

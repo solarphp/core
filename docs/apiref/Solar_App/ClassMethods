@@ -32,7 +32,7 @@
 
 * Solar_App::_exception() -- Convenience method for returning exceptions with localized text.
 
-* Solar_App::_forward() -- Forwards to an action script.
+* Solar_App::_forward() -- Forwards internally to another action.
 
 * Solar_App::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
 
@@ -42,7 +42,7 @@
 
 * Solar_App::_query() -- Retrieves the TAINTED value of a query request key by name.
 
-* Solar_App::_redirect() -- Redirects to another URL.
+* Solar_App::_redirect() -- Redirects to another page and action.
 
 * Solar_App::_run() -- Includes a file in an isolated scope (but with access to $this).
 

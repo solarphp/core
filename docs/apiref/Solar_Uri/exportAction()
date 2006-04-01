@@ -8,12 +8,12 @@ return: string
 
 </function>
 
-Builds a partial URI string for a Solar_Controller action spec.
+Builds a URI string for a page-and-action spec.
 
 * Parameters: none.
 
 * Returns string: An action URI string.
 
-Builds a partial URI string for a Solar_Controller action spec.
+Builds a URI string for a page-and-action spec.
 
 Prefixes with the config ['Solar_Uri']['action'] href.

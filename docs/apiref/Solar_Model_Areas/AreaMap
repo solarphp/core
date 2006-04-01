@@ -18,6 +18,8 @@ ApiRef | API Reference
   _setup()
   apiVersion()
   delete()
+  fetch()
+  fetchAll()
   fetchByName()
   fetchDefault()
   increment()

@@ -8,10 +8,10 @@ return: array
 
 </function>
 
-Returns a data array with column keys and default values.
+Returns a default row of column keys and default values.
 
 * Parameters: none.
 
-* Returns array: An array of key-value pairs where the key is the column name and the value is the default column value.
+* Returns array
 
-Returns a data array with column keys and default values.
+Returns a default row of column keys and default values.

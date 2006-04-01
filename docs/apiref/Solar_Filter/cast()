@@ -12,14 +12,14 @@ return: mixed
 
 </function>
 
-Casts the value as a PHP variable type.
+Uses [[php settype()]] to cast a value as a PHP variable type.
 
 * Parameters:
 
  * mixed //$value//: The value to filter.
 
- * string //$type//: A valid variable type: 'array', 'string', 'int', 'float', 'double', 'real', or 'bool'
+ * string //$type//: A valid variable type: 'array', 'bool', 'boolean', 'int', 'integer', 'float', 'double', 'string',  'object', 'null',
 
 * Returns mixed: The filtered value.
 
-Casts the value as a PHP variable type.
+Uses [[php settype()]] to cast a value as a PHP variable type.

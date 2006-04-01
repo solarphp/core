@@ -4,5 +4,5 @@ User-defined configuration keys.
 
 Keys are:
 
-PDOStatment: (object) A PDOStatement object to be used as the
+: \\PDOStatement\\ : (object) A PDOStatement object to be used as the
 result source.

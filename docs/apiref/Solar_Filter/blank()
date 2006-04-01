@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Removes all whitespace characters.
+Returns only whitespace characters within a value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Removes all whitespace characters.
 
 * Returns string: The filtered value.
 
-Removes all whitespace characters.
+Returns only whitespace characters within a value.

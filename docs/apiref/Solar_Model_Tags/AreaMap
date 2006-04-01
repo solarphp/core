@@ -21,6 +21,8 @@ ApiRef | API Reference
   asArray()
   asString()
   delete()
+  fetch()
+  fetchAll()
   fetchAllByNodeId()
   fetchDefault()
   increment()

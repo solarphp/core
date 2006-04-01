@@ -8,7 +8,7 @@
 
 * Solar_App_Bookmarks::__set() -- Try to force users to define what their view variables are.
 
-* Solar_App_Bookmarks::_setup() -- 
+* Solar_App_Bookmarks::_setup() -- Extended setup.
 
 * Solar_App_Bookmarks::addFlash() -- Appends a "read-once" session value for this class and key.
 
@@ -32,7 +32,7 @@
 
 * Solar_App_Bookmarks::_exception() -- Convenience method for returning exceptions with localized text.
 
-* Solar_App_Bookmarks::_forward() -- Forwards to an action script.
+* Solar_App_Bookmarks::_forward() -- Forwards internally to another action.
 
 * Solar_App_Bookmarks::_getOrder() -- Returns a safe SQL ORDER value from the 'order' query parameter.
 
@@ -44,7 +44,7 @@
 
 * Solar_App_Bookmarks::_query() -- Retrieves the TAINTED value of a query request key by name.
 
-* Solar_App_Bookmarks::_redirect() -- Redirects to another URL.
+* Solar_App_Bookmarks::_redirect() -- Redirects to another page and action.
 
 * Solar_App_Bookmarks::_run() -- Includes a file in an isolated scope (but with access to $this).
 

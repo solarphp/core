@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Returns only alphanumeric characters within the value.
+Returns only alphanumeric characters within a value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Returns only alphanumeric characters within the value.
 
 * Returns string: The filtered value.
 
-Returns only alphanumeric characters within the value.
+Returns only alphanumeric characters within a value.

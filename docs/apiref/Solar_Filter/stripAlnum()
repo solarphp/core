@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Strips alphanumeric characters from the value.
+Strips alphanumeric characters from a value.
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Strips alphanumeric characters from the value.
 
 * Returns string: The filtered value.
 
-Strips alphanumeric characters from the value.
+Strips alphanumeric characters from a value.

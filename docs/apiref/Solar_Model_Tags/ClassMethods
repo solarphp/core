@@ -14,9 +14,13 @@
 
 * Solar_Model_Tags::delete() -- Deletes rows in the table based on a WHERE clause.
 
+* Solar_Model_Tags::fetch() -- Fetches one row from the table by its primary key ID.
+
+* Solar_Model_Tags::fetchAll() -- Fetches all rows by arbitrary criteria.
+
 * Solar_Model_Tags::fetchAllByNodeId() -- Fetch all tags on one node_id.
 
-* Solar_Model_Tags::fetchDefault() -- Returns a data array with column keys and default values.
+* Solar_Model_Tags::fetchDefault() -- Returns a default row of column keys and default values.
 
 * Solar_Model_Tags::increment() -- Increments and returns the sequence value for a column.
 

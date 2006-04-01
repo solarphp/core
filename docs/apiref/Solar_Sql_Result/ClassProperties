@@ -8,6 +8,12 @@ None.
 
 * Solar_Sql_Result::$_config -- User-defined configuration keys.
 
+* Solar_Sql_Result::$_curr -- Pointer to the current iteration.
+
+* Solar_Sql_Result::$_full -- Have we filled Solar_Sql_Result::$_rows with all results?
+
+* Solar_Sql_Result::$_rows -- Collection of rows fetched from the result source.
+
 ++ Private
 
 None.

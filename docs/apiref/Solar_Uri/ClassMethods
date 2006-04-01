@@ -18,13 +18,13 @@
 
 * Solar_Uri::export() -- Builds a full URI string.
 
-* Solar_Uri::exportAction() -- Builds a partial URI string for a Solar_Controller action spec.
+* Solar_Uri::exportAction() -- Builds a URI string for a page-and-action spec.
 
-* Solar_Uri::exportPublic() -- Builds a partial URI string for a public Solar resource.
+* Solar_Uri::exportPublic() -- Builds a URI string for a public Solar resource.
 
 * Solar_Uri::import() -- Imports a URI string (by default, the current URI) into the object.
 
-* Solar_Uri::importAction() -- Parses a Solar_Controller action spec as a URI.
+* Solar_Uri::importAction() -- Parses a page-and-action specification as a URI.
 
 * Solar_Uri::locale() -- Looks up locale strings based on a key.
 
@@ -35,6 +35,10 @@
 * Solar_Uri::setQuery() -- Sets the value of an element in the $this->query array.
 
 * Solar_Uri::setQueryString() -- Sets all elements of $this->query from a query string.
+
+* Solar_Uri::toAction() -- Converts a page-and-action specification to a URI in one step.
+
+* Solar_Uri::toPublic() -- Converts a public resource specification to a URI in one step.
 
 ++ Protected
 

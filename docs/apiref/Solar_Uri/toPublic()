@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: toPublic
+
+param: string, $spec
+
+return: void
+
+</function>
+
+Converts a public resource specification to a URI in one step.
+
+* Parameters:
+
+ * string //$spec//: The page-and-action specification.
+
+* Returns void
+
+Converts a public resource specification to a URI in one step.

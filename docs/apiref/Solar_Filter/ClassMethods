@@ -4,17 +4,17 @@
 
 * Solar_Filter::__construct() -- Constructor.
 
-* Solar_Filter::alnum() -- Returns only alphanumeric characters within the value.
+* Solar_Filter::alnum() -- Returns only alphanumeric characters within a value.
 
-* Solar_Filter::alpha() -- Returns only alphabetic characters within the value.
+* Solar_Filter::alpha() -- Returns only alphabetic characters within a value.
 
 * Solar_Filter::apiVersion() -- Reports the API version for this class.
 
-* Solar_Filter::blanks() -- Returns only whitespace characters within the value.
+* Solar_Filter::blank() -- Returns only whitespace characters within a value.
 
 * Solar_Filter::callback() -- Uses a callback to filter a value.
 
-* Solar_Filter::cast() -- Casts the value as a PHP variable type.
+* Solar_Filter::cast() -- Uses [[php settype()]] to cast a value as a PHP variable type.
 
 * Solar_Filter::formatDate() -- Forces a value to a date format using [[php date()]].
 
@@ -26,25 +26,25 @@
 
 * Solar_Filter::multiple() -- Applies multiple filters to a value.
 
-* Solar_Filter::numeric() -- Returns only numbers within the value.
+* Solar_Filter::numeric() -- Returns only numbers within a value.
 
 * Solar_Filter::pregReplace() -- Applies a [[php preg_replace()]] filter.
 
 * Solar_Filter::strReplace() -- Applies a [[php str_replace()]] filter.
 
-* Solar_Filter::stripAlnum() -- Strips alphanumeric characters from the value.
+* Solar_Filter::stripAlnum() -- Strips alphanumeric characters from a value.
 
-* Solar_Filter::stripAlpha() -- Strips alphabetic characters from the value.
+* Solar_Filter::stripAlpha() -- Strips alphabetic characters from a value.
 
-* Solar_Filter::stripBlanks() -- Strips all whitespace from the value.
+* Solar_Filter::stripBlank() -- Strips all whitespace from a value.
 
-* Solar_Filter::stripNumeric() -- Strips all numbers from the value.
+* Solar_Filter::stripNumeric() -- Strips all numbers from a value.
 
-* Solar_Filter::stripWords() -- Strips word characters from the value.
+* Solar_Filter::stripWord() -- Strips word characters from a value.
 
-* Solar_Filter::trim() -- Trims characters from the beginning and end of the value.
+* Solar_Filter::trim() -- Trims characters from the beginning and end of a value.
 
-* Solar_Filter::words() -- Returns only word characters within the value.
+* Solar_Filter::word() -- Returns only word characters within a value.
 
 ++ Protected
 

@@ -16,7 +16,7 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 $uri = Solar::factory('Solar_Uri');
 $uri->clearQuery();
-$uri->assertSame($uri->query, array());
+$assert->same($uri->query, array());
 
 // ---------------------------------------------------------------------
 

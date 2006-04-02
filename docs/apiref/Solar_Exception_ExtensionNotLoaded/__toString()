@@ -4,14 +4,14 @@ access:   public
 
 name: __toString
 
-return: unknown
+return: void
 
 </function>
 
-Custom string output.
+Returnes the exception as a string.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
-Custom string output.
+Returnes the exception as a string.

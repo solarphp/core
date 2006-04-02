@@ -6,7 +6,7 @@ name: _prepare
 
 param: array, $info
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,6 +16,6 @@ Prepares an info array and imports to the properties.
 
  * array //$info//: An array of element information.
 
-* Returns unknown: unknown
+* Returns void
 
 Prepares an info array and imports to the properties.

@@ -261,7 +261,7 @@ class Solar_User_Auth extends Solar_Base {
      * to check that the user is logged in, look at the value of
      * $this->status.
      * 
-     * @return boolean Whether or not authentication is still valid.
+     * @return bool Whether or not authentication is still valid.
      * 
      */
     public function valid()
@@ -301,7 +301,7 @@ class Solar_User_Auth extends Solar_Base {
      * Resets any authentication data in the session.
      * 
      * Typically used for idling, expiration, and logout.
-     *
+     * 
      * @param string $status A Solar_User_Auth status string;
      * default is 'ANON'.
      * 

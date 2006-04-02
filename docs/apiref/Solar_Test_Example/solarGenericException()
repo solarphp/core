@@ -4,12 +4,14 @@ access:   public
 
 name: solarGenericException
 
-return: unknown
+return: void
 
 </function>
 
-
+Throws ERR_NO_SUCH_CONDITION for this class.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
+
+Throws ERR_NO_SUCH_CONDITION for this class.

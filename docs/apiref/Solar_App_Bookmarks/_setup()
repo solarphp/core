@@ -4,7 +4,7 @@ access:   public
 
 name: _setup
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,6 +12,6 @@ Extended setup.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
 Extended setup.

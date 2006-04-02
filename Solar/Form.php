@@ -75,7 +75,7 @@ class Solar_Form extends Solar_Base {
      * \\action\\, \\method\\, and \\enctype\\.  Note that these
      * are "hints" for the presentation of the form, and may not
      * be honored by the view.
-     *
+     * 
      * @var array
      * 
      */
@@ -432,6 +432,8 @@ class Solar_Form extends Solar_Base {
      * name and the value is a string or sequential array of feedback messages.
      * 
      * @param string $array Rename each element as a key in this array.
+     * 
+     * @return void
      * 
      */
     public function addFeedback($list, $array = null)

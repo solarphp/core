@@ -4,7 +4,7 @@ access:   public
 
 name: clearInfo
 
-param: unknown, $key, NULL
+param: string, $key, NULL
 
 return: void
 
@@ -14,7 +14,7 @@ Clears (resets) all or part of $this->info.
 
 * Parameters:
 
- * unknown //$key//: 
+ * string //$key//: The info key to clear; if null, clears all keys.
 
 * Returns void
 

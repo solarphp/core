@@ -1,9 +1,7 @@
-protected  $_config
+protected array $_config
 
 User-provided configuration values.
 
-Keys:
+Keys are:
 
-file => (string) Path to password file.
-
-@var array
+: \\file\\ : (string) Path to password file.

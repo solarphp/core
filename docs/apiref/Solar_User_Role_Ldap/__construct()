@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_User_Role_Ldap
 
@@ -14,10 +14,8 @@ Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User defined configuration values.
 
 * Returns Solar_User_Role_Ldap: Solar_User_Role_Ldap instance
 
 Constructor.
-
-@param array $config User defined configuration values.

@@ -2,7 +2,7 @@
 /**
  * 
  * Authenticate via simple HTTP POST request-and-reply.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Authenticate via simple HTTP POST request-and-reply.
- *
+ * 
  * Based in part on php.net user comments:
  * http://us3.php.net/manual/en/function.fsockopen.php#57275
  * http://us3.php.net/manual/en/function.fopen.php#58099
@@ -67,7 +67,7 @@ class Solar_User_Auth_Post extends Solar_Base {
      * 
      * @param string $passwd The plain-text passwd to use.
      * 
-     * @return boolean True on success, false on failure.
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

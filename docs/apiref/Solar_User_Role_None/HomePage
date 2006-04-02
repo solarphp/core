@@ -1,7 +1,3 @@
 + The Solar_User_Role_None Class
 
 No role source; always returns an empty array.
-
-@category Solar
-
-@package Solar_User

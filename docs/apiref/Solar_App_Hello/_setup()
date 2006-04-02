@@ -4,12 +4,17 @@ access:   public
 
 name: _setup
 
-return: unknown
+return: void
 
 </function>
 
-
+Sets up the Solar_App environment.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
+
+Sets up the Solar_App environment.
+
+Registers 'sql', 'user', and 'content' objects, and sets the
+layout title to the class name.

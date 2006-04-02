@@ -4,17 +4,17 @@
 
 * Solar_Exception_FileNotReadable::__construct() -- Constructor.
 
-* Solar_Exception_FileNotReadable::__toString() -- Custom string output.
+* Solar_Exception_FileNotReadable::__toString() -- Returnes the exception as a string.
 
-* Solar_Exception_FileNotReadable::getClass() -- Gets the class that threw the exception.
+* Solar_Exception_FileNotReadable::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Exception_FileNotReadable::getClassCode() -- Gets the class and code together.
+* Solar_Exception_FileNotReadable::getClassCode() -- Returns the class name and code together.
 
 * Solar_Exception_FileNotReadable::getCode() -- 
 
 * Solar_Exception_FileNotReadable::getFile() -- 
 
-* Solar_Exception_FileNotReadable::getInfo() -- Gets user-defined information.
+* Solar_Exception_FileNotReadable::getInfo() -- Returns user-defined information.
 
 * Solar_Exception_FileNotReadable::getLine() -- 
 

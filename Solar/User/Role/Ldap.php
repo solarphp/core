@@ -2,7 +2,7 @@
 /**
  * 
  * Get roles (groups) from an LDAP server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Get roles (groups) from an LDAP server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User

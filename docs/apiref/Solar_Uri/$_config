@@ -1,3 +1,9 @@
 protected array $_config
 
 User-provided configuration values.
+
+Keys are:
+
+: \\action\\ : (string) The base action HREF, e.g. '/index.php/'.
+
+: \\public\\ : (string) The base public HREF, e.g. '/public/'.

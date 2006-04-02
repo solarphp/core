@@ -8,7 +8,7 @@ None.
 
 * Solar_Form_Load_Xml::$_config -- User-defined configuration array.
 
-* Solar_Form_Load_Xml::$_elementAttribs -- Array of element attributes; used by {@link fetch()} to get element
+* Solar_Form_Load_Xml::$_elementAttribs -- Array of element attribute names.
 
 ++ Private
 

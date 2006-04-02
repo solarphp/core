@@ -12,7 +12,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -38,7 +38,7 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
      * If the $text link text is empty, will just return the
      * href value, not an <a href="">...</a> tag.
      * 
-     * @param string $href The anchor href.
+     * @param Solar_Uri|string $spec The anchor HREF specification.
      * 
      * @param string $text A locale translation key.
      * 

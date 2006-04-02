@@ -203,6 +203,18 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         );
     }
     
+    /**
+     * 
+     * Inserts one row into the nodes table.
+     * 
+     * Automatically adds a sequential ID.  If no node-name is given,
+     * uses the sequential ID as the node-name.
+     * 
+     * @param array $data The data to be inserted.
+     * 
+     * @return array The data as inserted.
+     * 
+     */
     public function insert($data)
     {
         // although the Table object itself would increment the ID for

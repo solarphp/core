@@ -4,7 +4,7 @@ access:   public
 
 name: fetch
 
-param: unknown, $username
+param: string, $handle
 
 return: array
 
@@ -14,7 +14,7 @@ Refresh the list of roles for the given user.
 
 * Parameters:
 
- * unknown //$username//: 
+ * string //$handle//: The username to fetch roles for.
 
 * Returns array: The list of roles for the authenticated user.
 

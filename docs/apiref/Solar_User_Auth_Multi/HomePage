@@ -1,7 +1,3 @@
 + The Solar_User_Auth_Multi Class
 
 Authenticate against multiple sources, falling back as needed.
-
-@category Solar
-
-@package Solar_User

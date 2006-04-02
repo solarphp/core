@@ -4,7 +4,7 @@ access:   public
 
 name: export
 
-return: unknown
+return: string
 
 </function>
 
@@ -12,12 +12,10 @@ Builds a full URI string.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns string: The full URI string.
 
 Builds a full URI string.
 
 Takes the current properties of the Solar_Uri object
 and assembles them into a URI string.  This method
 [[php urlencode()]]s the values on export.
-     *
-@return string A URI string.

@@ -6,7 +6,7 @@
 
 ++ Protected
 
-* Solar_View_Helper_GetTextRaw::$_config -- 
+* Solar_View_Helper_GetTextRaw::$_config -- User-defined configuration.
 
 * Solar_View_Helper_GetTextRaw::$_view -- Reference to the parent Solar_View object.
 

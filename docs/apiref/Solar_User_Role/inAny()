@@ -6,7 +6,7 @@ name: inAny
 
 param: string|array, $roles, array ()
 
-return: boolean
+return: bool
 
 </function>
 
@@ -16,6 +16,6 @@ Check to see if a user is in any of the listed roles.
 
  * string|array //$roles//: The role(s) to check.
 
-* Returns boolean: True if the user is in any of the listed roles (a logical 'or'), false if not.
+* Returns bool: True if the user is in any of the listed roles (a logical 'or'), false if not.
 
 Check to see if a user is in any of the listed roles.

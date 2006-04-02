@@ -2,7 +2,7 @@
 /**
  * 
  * Get user roles from an SQL database table.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Get user roles from an SQL database table.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -32,13 +32,13 @@ class Solar_User_Role_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * 'sql' => (dependency) A Solar_Sql dependency.
+     * : \\sql\\ : (dependency) A Solar_Sql dependency.
      * 
-     * 'table' => (string) The table where roles are stored.
+     * : \\table\\ : (string) The table where roles are stored.
      * 
-     * 'handle_col' => (string) The column for user handles.
+     * : \\handle_col\\ : (string) The column for user handles.
      * 
-     * 'role_col' => (string) The column for roles.
+     * : \\role_col\\ : (string) The column for roles.
      * 
      * @var array
      * 
@@ -52,7 +52,7 @@ class Solar_User_Role_Sql extends Solar_Base {
     
     /**
      * 
-     * Get the roles for a user.
+     * Fetches the roles for a user.
      * 
      * @param string $handle User handle to get roles for.
      * 

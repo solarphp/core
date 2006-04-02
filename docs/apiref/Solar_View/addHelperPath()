@@ -4,9 +4,9 @@ access:   public
 
 name: addHelperPath
 
-param: unknown, $path
+param: string|array, $path
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,8 +14,8 @@ Add to the helper directory path stack.
 
 * Parameters:
 
- * unknown //$path//: 
+ * string|array //$path//: The directories to add to the stack.
 
-* Returns unknown: unknown
+* Returns void
 
 Add to the helper directory path stack.

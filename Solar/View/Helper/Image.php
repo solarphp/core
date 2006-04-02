@@ -13,7 +13,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -32,8 +32,6 @@ class Solar_View_Helper_Image extends Solar_View_Helper {
 	/**
 	* 
 	* Outputs an <img ... /> tag.
-	* 
-	* @access public
 	* 
 	* @param string $src The public href to the image.
 	* 

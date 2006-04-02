@@ -41,9 +41,9 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Keys:
+     * Keys are:
      * 
-     * file => (string) Path to password file.
+     * : \\file\\ : (string) Path to password file.
      * 
      * @var array
      * 
@@ -51,17 +51,16 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
     protected $_config = array(
         'file'  => null,
     );
-
-
+    
     /**
      * 
-     * Validate a username and password.
-     *
-     * @param string $handle Username to authenticate.
+     * Validates a username handle and password.
      * 
-     * @param string $passwd The plain-text password to use.
+     * @param string $handle The username handle.
      * 
-     * @return boolean True on success, false on failure.
+     * @param string $passwd The plain-text password.
+     * 
+     * @return bool True if valid, false if not.
      * 
      */
     public function valid($handle, $passwd)
@@ -154,19 +153,19 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
     /**
      * 
      * APR compatible MD5 encryption.
-     *
+     * 
      * @author Mike Wallner <mike@php.net>
      * 
      * @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
      * 
-     * @param string $plain plaintext to crypt
+     * @param string $plain Plaintext to crypt.
      * 
-     * @param string $salt the salt to use for encryption
+     * @param string $salt The salt to use for encryption.
      * 
-     * @return mixed
+     * @return string The APR MD5 encrypted string.
      * 
      */
-    static protected function _apr1($plain, $salt)
+    protected static function _apr1($plain, $salt)
     {
         if (preg_match('/^\$apr1\$/', $salt)) {
             $salt = preg_replace('/^\$apr1\$([^$]+)\$.*/', '\\1', $salt);
@@ -215,26 +214,26 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
             );
         }
         
-        return '$apr1$' . $salt . '$' . implode($p) . 
-            self::_64(ord($binary[11]), 3);
+        return '$apr1$' . $salt . '$' . implode($p) 
+             . self::_64(ord($binary[11]), 3);
     }
     
     /**
      * 
      * Convert to allowed 64 characters for encryption.
-     *
+     * 
      * @author Mike Wallner <mike@php.net>
      * 
      * @author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
      * 
-     * @param string $value
+     * @param string $value The value to convert.
      * 
-     * @param int $count
+     * @param int $count The number of characters.
      * 
-     * @return string
+     * @return string The converted value.
      * 
      */
-    static protected function _64($value, $count)
+    protected static function _64($value, $count)
     {
         $charset = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         $result = '';

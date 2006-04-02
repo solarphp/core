@@ -29,7 +29,7 @@ class Solar_User_Role_None extends Solar_Base {
     /**
      * 
      * Fetch the roles.
-     *
+     * 
      * @param string $handle User handle to get roles for.
      * 
      * @return array An array of discovered roles.

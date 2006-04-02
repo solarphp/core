@@ -4,7 +4,7 @@ access:   public
 
 name: assign
 
-param: unknown, $spec
+param: mixed, $spec
 
 return: bool
 
@@ -14,7 +14,7 @@ Sets variables for the view.
 
 * Parameters:
 
- * unknown //$spec//: 
+ * mixed //$spec//: The assignment specification.
 
 * Returns bool: True on success, false on failure.
 

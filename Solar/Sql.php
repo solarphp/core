@@ -84,7 +84,7 @@ class Solar_Sql extends Solar_Base {
      * Object to use for a specific RDBMS behaviors.
      * 
      * @var object
-     *
+     * 
      */
     protected $_driver = null;
     
@@ -771,7 +771,7 @@ class Solar_Sql extends Solar_Base {
     // -----------------------------------------------------------------
     
     /**
-     *
+     * 
      * Builds a column definition string.
      * 
      * The $info parameter should be in this format:
@@ -783,9 +783,11 @@ class Solar_Sql extends Solar_Base {
      *   'require' => true|false,
      * );
      * 
-     * @param string $column The column name.
+     * @param string $name The column name.
      * 
      * @param array $info The column information.
+     * 
+     * @return string The column definition string.
      * 
      */
     protected function _buildColDef($name, $info)
@@ -890,12 +892,16 @@ class Solar_Sql extends Solar_Base {
     }
     
     /**
-     *
-     * Builds an index creation string.
      * 
-     * @param string $column The column name.
+     * Builds an index definition string.
      * 
-     * @param array $info The column information.
+     * @param string $table The table name.
+     * 
+     * @param string $name The index name.
+     * 
+     * @param array $info The index information.
+     * 
+     * @return string The index definition string.
      * 
      */
     protected function _buildIdxDef($table, $name, $info)

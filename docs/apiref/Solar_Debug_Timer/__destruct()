@@ -4,7 +4,7 @@ access:   public
 
 name: __destruct
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,7 +12,7 @@ Destructor.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
 Destructor.
 

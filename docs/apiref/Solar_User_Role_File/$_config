@@ -1,5 +1,7 @@
-protected  $_config
+protected array $_config
 
 User-supplied configuration values.
 
-@var array
+Keys are:
+
+: \\file\\ : (string) Where the roles file is located.

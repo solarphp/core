@@ -4,17 +4,17 @@
 
 * Solar_Sql_Exception_ColScope::__construct() -- Constructor.
 
-* Solar_Sql_Exception_ColScope::__toString() -- Custom string output.
+* Solar_Sql_Exception_ColScope::__toString() -- Returnes the exception as a string.
 
-* Solar_Sql_Exception_ColScope::getClass() -- Gets the class that threw the exception.
+* Solar_Sql_Exception_ColScope::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Sql_Exception_ColScope::getClassCode() -- Gets the class and code together.
+* Solar_Sql_Exception_ColScope::getClassCode() -- Returns the class name and code together.
 
 * Solar_Sql_Exception_ColScope::getCode() -- 
 
 * Solar_Sql_Exception_ColScope::getFile() -- 
 
-* Solar_Sql_Exception_ColScope::getInfo() -- Gets user-defined information.
+* Solar_Sql_Exception_ColScope::getInfo() -- Returns user-defined information.
 
 * Solar_Sql_Exception_ColScope::getLine() -- 
 

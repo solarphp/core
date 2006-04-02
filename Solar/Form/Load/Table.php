@@ -33,12 +33,28 @@ class Solar_Form_Load_Table extends Solar_Base {
     
     /**
      * 
+     * User-defined configuration array.
+     * 
+     * @var array
+     * 
+     */
+    protected $_config = array(
+        'locale' => 'Solar/Form/Locale/'
+    );
+    
+    /**
+     * 
      * Loads Solar_Form elements based on Solar_Sql_Table columns.
      * 
-     * @param object $filename Path to form definition file.
+     * @param Solar_Sql_Table $table Load form elements from this table object.
      * 
-     * @return object|false Solar_Form object, boolean false on error.
-     *
+     * @param array $list Which table columns to load as form elements, default '*'.
+     * 
+     * @param string $array_name Load the table columns as elements of this
+     * array-name within the form.
+     * 
+     * @return Solar_Form|false Solar_Form object, or boolean false on error.
+     * 
      */
     public function fetch($table, $list = '*', $array_name = null) 
     {

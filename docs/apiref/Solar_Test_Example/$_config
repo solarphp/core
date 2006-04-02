@@ -1,1 +1,3 @@
-protected  $_config
+protected array $_config
+
+User-defined configuration values.

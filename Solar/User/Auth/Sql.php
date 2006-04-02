@@ -2,7 +2,7 @@
 /**
  * 
  * Authenticate against an SQL database table.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Authenticate against an SQL database table.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -32,17 +32,17 @@ class Solar_User_Auth_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * sql => (string|array) How to get the SQL object.  If a string, is
+     * : \\sql\\ : (string|array) How to get the SQL object.  If a string, is
      * treated as a Solar::registry() object name.  If array, treated as
      * config for a standalone Solar_Sql object.
      * 
-     * table => (string) Name of the table holding authentication data.
+     * : \\table\\ : (string) Name of the table holding authentication data.
      * 
-     * handle_col => (string) Name of the column with the handle.
+     * : \\handle_col\\ : (string) Name of the column with the handle.
      * 
-     * passwd_col => (string) Name of the column with the MD5-hashed passwd.
+     * : \\passwd_col\\ : (string) Name of the column with the MD5-hashed passwd.
      * 
-     * salt => (string) A salt prefix to make cracking passwords harder.
+     * : \\salt\\ : (string) A salt prefix to make cracking passwords harder.
      * 
      * @var array
      * 
@@ -58,13 +58,12 @@ class Solar_User_Auth_Sql extends Solar_Base {
     /**
      * 
      * Validate a handle and passwd.
-     *
-     * @param string $user handle to authenticate.
      * 
-     * @param string $pass The plain-text passwd to use.
+     * @param string $handle Username handle to authenticate.
      * 
-     * @return boolean True on success, false on failure.
+     * @param string $passwd The plain-text passwd to use.
      * 
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

@@ -4,17 +4,17 @@
 
 * Solar_Exception_MethodNotImplemented::__construct() -- Constructor.
 
-* Solar_Exception_MethodNotImplemented::__toString() -- Custom string output.
+* Solar_Exception_MethodNotImplemented::__toString() -- Returnes the exception as a string.
 
-* Solar_Exception_MethodNotImplemented::getClass() -- Gets the class that threw the exception.
+* Solar_Exception_MethodNotImplemented::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Exception_MethodNotImplemented::getClassCode() -- Gets the class and code together.
+* Solar_Exception_MethodNotImplemented::getClassCode() -- Returns the class name and code together.
 
 * Solar_Exception_MethodNotImplemented::getCode() -- 
 
 * Solar_Exception_MethodNotImplemented::getFile() -- 
 
-* Solar_Exception_MethodNotImplemented::getInfo() -- Gets user-defined information.
+* Solar_Exception_MethodNotImplemented::getInfo() -- Returns user-defined information.
 
 * Solar_Exception_MethodNotImplemented::getLine() -- 
 

@@ -8,7 +8,7 @@ param: array, $list
 
 param: string, $array, NULL
 
-return: unknown
+return: void
 
 </function>
 
@@ -20,6 +20,6 @@ Adds multiple feedback messages to elements.
 
  * string //$array//: Rename each element as a key in this array.
 
-* Returns unknown: unknown
+* Returns void
 
 Adds multiple feedback messages to elements.

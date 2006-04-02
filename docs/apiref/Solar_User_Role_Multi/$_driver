@@ -1,5 +1,3 @@
-protected  $_driver
+protected array $_driver
 
 An array of the multiple driver instances.
-
-@var array

@@ -48,6 +48,9 @@ class Solar_Exception extends Exception {
      * 
      * Constructor.
      * 
+     * @param array $config User-defined configuration with keys
+     * for 'class', 'code', 'text', and 'info'.
+     * 
      */
     public function __construct($config = null)
     {
@@ -67,7 +70,9 @@ class Solar_Exception extends Exception {
     
     /**
      * 
-     * Custom string output.
+     * Returnes the exception as a string.
+     * 
+     * @return void
      * 
      */
     public function __toString()
@@ -82,9 +87,9 @@ class Solar_Exception extends Exception {
     
     /**
      * 
-     * Gets user-defined information.
+     * Returns user-defined information.
      * 
-     * @var array
+     * @return array
      * 
      */
     final public function getInfo()
@@ -94,9 +99,9 @@ class Solar_Exception extends Exception {
     
     /**
      * 
-     * Gets the class that threw the exception.
+     * Returns the class name that threw the exception.
      * 
-     * @var array
+     * @return string
      * 
      */
     final public function getClass()
@@ -106,9 +111,9 @@ class Solar_Exception extends Exception {
     
     /**
      * 
-     * Gets the class and code together.
+     * Returns the class name and code together.
      * 
-     * @var array
+     * @return string
      * 
      */
     final public function getClassCode()

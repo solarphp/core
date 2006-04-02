@@ -4,7 +4,7 @@ access:   public
 
 name: start
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,11 +12,9 @@ Resets the profile and marks a new starting time.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
 Resets the profile and marks a new starting time.
 
 This resets the profile and adds a new mark labeled
 \\__start\\.  Use it to start the timer.
-     *
-@return void

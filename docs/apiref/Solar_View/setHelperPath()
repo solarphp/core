@@ -4,9 +4,9 @@ access:   public
 
 name: setHelperPath
 
-param: unknown, $path, NULL
+param: string|array, $path, NULL
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,8 +14,8 @@ Reset the helper directory path stack.
 
 * Parameters:
 
- * unknown //$path//: 
+ * string|array //$path//: The directories to set for the stack.
 
-* Returns unknown: unknown
+* Returns void
 
 Reset the helper directory path stack.

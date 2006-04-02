@@ -4,7 +4,7 @@ access:   public
 
 name: setAreaId
 
-param: unknown, $area_id
+param: int, $area_id
 
 return: void
 
@@ -14,7 +14,7 @@ Sets the area ID from which nodes will be fetched.
 
 * Parameters:
 
- * unknown //$area_id//: 
+ * int //$area_id//: int The area ID.
 
 * Returns void
 

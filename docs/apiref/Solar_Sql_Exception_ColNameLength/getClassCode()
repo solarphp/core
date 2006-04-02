@@ -4,14 +4,14 @@ access: final  public
 
 name: getClassCode
 
-return: unknown
+return: string
 
 </function>
 
-Gets the class and code together.
+Returns the class name and code together.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns string
 
-Gets the class and code together.
+Returns the class name and code together.

@@ -8,7 +8,7 @@
 
 * Solar_App::__set() -- Try to force users to define what their view variables are.
 
-* Solar_App::_setup() -- 
+* Solar_App::_setup() -- Sets up the Solar_App environment.
 
 * Solar_App::addFlash() -- Appends a "read-once" session value for this class and key.
 

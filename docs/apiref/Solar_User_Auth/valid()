@@ -4,7 +4,7 @@ access:   public
 
 name: valid
 
-return: boolean
+return: bool
 
 </function>
 
@@ -12,7 +12,7 @@ Revalidates any current authentication and updates idle time.
 
 * Parameters: none.
 
-* Returns boolean: Whether or not authentication is still valid.
+* Returns bool: Whether or not authentication is still valid.
 
 Revalidates any current authentication and updates idle time.
 

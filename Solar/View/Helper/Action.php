@@ -12,7 +12,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -43,6 +43,8 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-specified configuration.
      * 
      */
     public function __construct($config)

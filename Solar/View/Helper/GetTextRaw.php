@@ -12,7 +12,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -31,6 +31,17 @@ Solar::loadClass('Solar_View_Helper');
  */
 class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
     
+    /**
+     * 
+     * User-defined configuration.
+     * 
+     * Keys are:
+     * 
+     * : \\class\\ : (string) The class for locale translations.
+     * 
+     * @var array
+     * 
+     */
     protected $_config = array(
         'class' => 'Solar',
     );
@@ -44,6 +55,13 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      */
     public $_class;
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -54,12 +72,19 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      * Returns a localized string WITH NO ESCAPING.
      * 
-     * @param string $key The locale key to look up.  Uses the default
-     * class; if you need to use a key from another class, prefix with
-     * that class name and two colons (e.g.,
-     * 'Non_Default_Class::KEY_NAME').  If you need to set a new default
-     * class, use the class name with two colons and no key (e.g.
-     * 'New_Default_Class::').
+     * Alternatively, use this method to reset the default class, or
+     * get a localized string from another class withour resetting the
+     * default.
+     * 
+     * To set a new default class, use the class name with two colons
+     * and no key (e.g. 'New_Default_Class::').
+     * 
+     * To use a key from another class, prefix with that class name and
+     * two colons (e.g. 'Non_Default_Class::KEY_NAME').
+     * 
+     * @param string $key The locale key to look up from the default
+     * class, or a class name and key, or a class name to set as the new
+     * default.
      * 
      * @param int|float $num A number to help determine if the
      * translation should return singluar or plural.

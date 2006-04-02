@@ -4,11 +4,11 @@ access:   public
 
 name: valid
 
-param: unknown, $handle
+param: string, $handle
 
-param: unknown, $passwd
+param: string, $passwd
 
-return: unknown
+return: bool
 
 </function>
 
@@ -16,16 +16,10 @@ Validate a handle and passwd.
 
 * Parameters:
 
- * unknown //$handle//: 
+ * string //$handle//: Username handle to authenticate.
 
- * unknown //$passwd//: 
+ * string //$passwd//: The plain-text passwd to use.
 
-* Returns unknown: unknown
+* Returns bool: True on success, false on failure.
 
 Validate a handle and passwd.
-     *
-@param string $user handle to authenticate.
-
-@param string $pass The plain-text passwd to use.
-
-@return boolean True on success, false on failure.

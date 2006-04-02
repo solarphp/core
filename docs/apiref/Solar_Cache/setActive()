@@ -6,7 +6,7 @@ name: setActive
 
 param: bool, $flag
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,7 +16,7 @@ Makes the cache active (true) or inactive (false).
 
  * bool //$flag//: True to turn on, false to turn off.
 
-* Returns unknown: unknown
+* Returns void
 
 Makes the cache active (true) or inactive (false).
 

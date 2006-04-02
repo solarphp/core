@@ -48,6 +48,7 @@ class Solar_View extends Solar_Base {
      * Parameters for escaping.
      * 
      * @var array
+     * 
      */
     protected $_escape = array(
         'quotes'  => ENT_COMPAT,
@@ -133,6 +134,8 @@ class Solar_View extends Solar_Base {
      * 
      * Allows specialized setup for extended classes.
      * 
+     * @return void
+     * 
      */
     protected function _setup()
     {
@@ -180,6 +183,11 @@ class Solar_View extends Solar_Base {
      * $view->assign('var2', 'else');
      * </code>
      * 
+     * @param mixed $spec The assignment specification.
+     * 
+     * @param mixed $var (Optional) If $spec is a string, assign
+     * this variable to the $spec name.
+     * 
      * @return bool True on success, false on failure.
      * 
      */
@@ -218,13 +226,13 @@ class Solar_View extends Solar_Base {
     // -----------------------------------------------------------------
     
     /**
-     *
+     * 
      * Executes a helper method with arbitrary parameters.
      * 
      * @param string $name The helper name.
-     *
+     * 
      * @param array $args The parameters passed to the helper.
-     *
+     * 
      * @return string The helper output.
      * 
      */
@@ -238,7 +246,9 @@ class Solar_View extends Solar_Base {
      * 
      * Reset the helper directory path stack.
      * 
-     * @param string|array The directories to set for the stack.
+     * @param string|array $path The directories to set for the stack.
+     * 
+     * @return void
      * 
      */
     public function setHelperPath($path = null)
@@ -251,7 +261,9 @@ class Solar_View extends Solar_Base {
      * 
      * Add to the helper directory path stack.
      * 
-     * @param string|array The directories to add to the stack.
+     * @param string|array $path The directories to add to the stack.
+     * 
+     * @return void
      * 
      */
     public function addHelperPath($path)
@@ -265,8 +277,8 @@ class Solar_View extends Solar_Base {
      * 
      * @param string $name The helper name.  If this helper has not
      * been created yet, this method creates it automatically.
-     *
-     * @return Solar_Template_Helper
+     * 
+     * @return Solar_View_Helper
      * 
      */
     public function getHelper($name)
@@ -282,7 +294,7 @@ class Solar_View extends Solar_Base {
      * Creates a new standalone helper object.
      * 
      * @param string $name The helper name.
-     *
+     * 
      * @return Solar_View_Helper
      * 
      */
@@ -333,7 +345,9 @@ class Solar_View extends Solar_Base {
      * 
      * Built-in helper for escaping output.
      * 
-     * @param scalar $val The value to escape.
+     * @param scalar $value The value to escape.
+     * 
+     * @return string The escaped value.
      * 
      */
     public function escape($value)
@@ -381,6 +395,8 @@ class Solar_View extends Solar_Base {
      * 
      * @param string $name The template to display.
      * 
+     * @return void
+     * 
      */
     public function display($name)
     {
@@ -405,7 +421,7 @@ class Solar_View extends Solar_Base {
     }
     
     /**
-     *
+     * 
      * Returns the path to the requested template script.
      * 
      * Used inside a template script like so:
@@ -436,7 +452,9 @@ class Solar_View extends Solar_Base {
      * 
      * Runs a template script (allowing access to $this).
      * 
-     * @param string The template script to run.
+     * @param string $file The template script to run.
+     * 
+     * @return void
      * 
      */
     protected function _run()

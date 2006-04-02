@@ -4,9 +4,9 @@ access:   public
 
 name: fetch
 
-param: unknown, $handle
+param: string, $handle
 
-return: unknown
+return: array
 
 </function>
 
@@ -14,12 +14,8 @@ Fetch the roles.
 
 * Parameters:
 
- * unknown //$handle//: 
+ * string //$handle//: User handle to get roles for.
 
-* Returns unknown: unknown
+* Returns array: An array of discovered roles.
 
 Fetch the roles.
-     *
-@param string $handle User handle to get roles for.
-
-@return array An array of discovered roles.

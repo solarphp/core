@@ -3,7 +3,7 @@
 Front-controller class for Solar.
 
 An example front-controller "index.php" for your web root:
- *
+
 <code type="php">
 require 'Solar.php';
 Solar::start();

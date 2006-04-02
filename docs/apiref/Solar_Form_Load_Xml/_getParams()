@@ -4,24 +4,18 @@ access:   protected
 
 name: _getParams
 
-param: unknown, $params
+param: array, $params
 
-return: unknown
+return: array
 
 </function>
 
-Get parameters for a filter or validation rule
+Gets parameters for a filter or validation rule.
 
 * Parameters:
 
- * unknown //$params//: 
+ * array //$params//: The array of parameters.
 
-* Returns unknown: unknown
+* Returns array
 
-Get parameters for a filter or validation rule
-     *
-@access protected
-     *
-@param array
-     *
-@return array
+Gets parameters for a filter or validation rule.

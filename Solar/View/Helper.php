@@ -23,12 +23,6 @@
  * 
  * @package Solar_View
  * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
- * 
- * @version $Id$
- * 
  */
 
 abstract class Solar_View_Helper extends Solar_Base {
@@ -36,8 +30,6 @@ abstract class Solar_View_Helper extends Solar_Base {
     /**
      * 
      * Reference to the parent Solar_View object.
-     * 
-     * @access protected
      * 
      * @var Solar_View
      * 
@@ -48,12 +40,7 @@ abstract class Solar_View_Helper extends Solar_Base {
      * 
      * Constructor.
      * 
-     * @access public
-     * 
-     * @param array $conf An array of configuration keys and values for
-     * this plugin.
-     * 
-     * @return void
+     * @param array $config User-specified configuration.
      * 
      */
     public function __construct($config = null)

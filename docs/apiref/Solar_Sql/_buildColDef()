@@ -4,25 +4,24 @@ access:   protected
 
 name: _buildColDef
 
-param: unknown, $name
+param: string, $name
 
 param: array, $info
 
-return: unknown
+return: string
 
 </function>
 
-*
+Builds a column definition string.
 
 * Parameters:
 
- * unknown //$name//: 
+ * string //$name//: The column name.
 
  * array //$info//: The column information.
 
-* Returns unknown: unknown
+* Returns string: The column definition string.
 
-*
 Builds a column definition string.
 
 The $info parameter should be in this format:

@@ -4,9 +4,9 @@ access:   public
 
 name: findReal
 
-param: unknown, $file
+param: string, $file
 
-return: unknown
+return: bool
 
 </function>
 
@@ -14,9 +14,9 @@ Finds a file in the path stack using realpath().
 
 * Parameters:
 
- * unknown //$file//: 
+ * string //$file//: The file to find using the directory stack.
 
-* Returns unknown: unknown
+* Returns bool: True if found, false if not.
 
 Finds a file in the path stack using realpath().
 

@@ -4,9 +4,9 @@ access:   public
 
 name: set
 
-param: unknown, $path
+param: array|string, $path
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,9 +14,9 @@ Clears the stack and adds one or more directories.
 
 * Parameters:
 
- * unknown //$path//: 
+ * array|string //$path//: The directories to add to the stack after clearing it.
 
-* Returns unknown: unknown
+* Returns void
 
 Clears the stack and adds one or more directories.
 
@@ -30,7 +30,7 @@ $stack->add('path/3');
 
 // $stack->get() reveals that the directory search order is
 // 'path/3/', 'path/2/', 'path/1/'.
-     *
+
 $stack->set('another/path');
 
 // $stack->get() is now 'another/path'.

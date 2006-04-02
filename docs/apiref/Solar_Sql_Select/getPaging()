@@ -4,17 +4,13 @@ access:   public
 
 name: getPaging
 
-param: unknown, $rows
-
 return: int
 
 </function>
 
 Gets the number of rows per page.
 
-* Parameters:
-
- * unknown //$rows//: 
+* Parameters: none.
 
 * Returns int: The number of rows per page.
 

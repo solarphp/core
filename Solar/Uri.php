@@ -35,7 +35,14 @@ class Solar_Uri extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
+     * Keys are:
+     * 
+     * : \\action\\ : (string) The base action HREF, e.g. '/index.php/'.
+     * 
+     * : \\public\\ : (string) The base public HREF, e.g. '/public/'.
+     * 
      * @var array
+     * 
      */
     protected $_config = array(
         'action' => '/index.php/',
@@ -286,8 +293,8 @@ class Solar_Uri extends Solar_Base {
      * Takes the current properties of the Solar_Uri object
      * and assembles them into a URI string.  This method
      * [[php urlencode()]]s the values on export.
-     *
-     * @return string A URI string.
+     * 
+     * @return string The full URI string.
      * 
      */
     public function export()
@@ -389,7 +396,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * If the element already exists, the element is converted to an array
      * and the value is appended to that array.
-     *  
+     * 
      * @param string $key The GET variable name to work with.
      * 
      * @param string $val The value to use.
@@ -515,6 +522,8 @@ class Solar_Uri extends Solar_Base {
      * 
      * Clears (resets) all or part of $this->info.
      * 
+     * @param string $key The info key to clear; if null, clears all keys.
+     * 
      * @return void
      * 
      */
@@ -530,6 +539,8 @@ class Solar_Uri extends Solar_Base {
     /**
      * 
      * Clears (resets) all or part of $this->query.
+     * 
+     * @param string $key The query key to clear; if null, clears all keys.
      * 
      * @return void
      * 

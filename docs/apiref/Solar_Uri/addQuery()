@@ -4,7 +4,7 @@ access:   public
 
 name: addQuery
 
-param: unknown, $key
+param: string, $key
 
 param: string, $val, ''
 
@@ -16,7 +16,7 @@ Adds an element to the $this->query array.
 
 * Parameters:
 
- * unknown //$key//: 
+ * string //$key//: The GET variable name to work with.
 
  * string //$val//: The value to use.
 
@@ -26,5 +26,3 @@ Adds an element to the $this->query array.
 
 If the element already exists, the element is converted to an array
 and the value is appended to that array.
- 
-@param string $key The GET variable name to work with.

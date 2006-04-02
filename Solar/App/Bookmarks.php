@@ -39,8 +39,15 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * User-defined configuration values.
      * 
-     * @todo UPDATE areas SET name = 'Solar_App_Bookmarks' WHERE name
-     * = 'Solar_Model_Bookmarks';
+     * Keys are:
+     * 
+     * : \\area_name\\ : (string) The content area for the bookmarks
+     * app, default 'Solar_App_Bookmarks'.  Will be created automatically
+     * if it does not exist.
+     * 
+     * : \\content\\ : (dependency) A Solar_Content domain model dependency object.
+     * 
+     * @var array
      * 
      */
     protected $_config = array(
@@ -75,15 +82,6 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * The <title> string.
-     * 
-     * @var string
-     * 
-     */
-    public $layout_title = 'Solar_App_Bookmarks';
-    
-    /**
-     * 
      * The total number of pages in the query.
      * 
      * @var int
@@ -108,7 +106,6 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      */
     public $page;
-    
     
     /**
      * 
@@ -206,6 +203,8 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * Extended setup.
      * 
+     * @return void
+     * 
      */
     public function _setup()
     {
@@ -234,7 +233,7 @@ class Solar_App_Bookmarks extends Solar_App {
             )
         );
         
-        // add the stylesheet
+        // add the bookmarks stylesheet
         $this->layout_style[] = 'Solar/styles/bookmarks.css';
     }
     

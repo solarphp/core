@@ -18,15 +18,15 @@
 
 * Solar_Model_Nodes::increment() -- Increments and returns the sequence value for a column.
 
-* Solar_Model_Nodes::insert() -- 
+* Solar_Model_Nodes::insert() -- Inserts one row into the nodes table.
 
 * Solar_Model_Nodes::locale() -- Looks up locale strings based on a key.
-
-* Solar_Model_Nodes::paging() -- Sets the number of rows per page.
 
 * Solar_Model_Nodes::save() -- Inserts or updates a single row based on its ID.
 
 * Solar_Model_Nodes::select() -- Convenience method to select rows from this table.
+
+* Solar_Model_Nodes::setPaging() -- Sets the number of rows per page.
 
 * Solar_Model_Nodes::update() -- Validates and updates data in the table based on a WHERE clause.
 

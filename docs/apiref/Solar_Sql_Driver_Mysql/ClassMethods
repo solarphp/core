@@ -8,7 +8,7 @@
 
 * Solar_Sql_Driver_Mysql::begin() -- Leave autocommit mode and begin a transaction.
 
-* Solar_Sql_Driver_Mysql::buildCreateTable() -- 
+* Solar_Sql_Driver_Mysql::buildCreateTable() -- Builds a CREATE TABLE command string.
 
 * Solar_Sql_Driver_Mysql::buildSelect() -- Builds a SELECT statement from its component parts.
 

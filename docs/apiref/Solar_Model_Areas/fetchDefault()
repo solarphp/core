@@ -12,6 +12,6 @@ Returns a default row of column keys and default values.
 
 * Parameters: none.
 
-* Returns array
+* Returns array: An array of default row data.
 
 Returns a default row of column keys and default values.

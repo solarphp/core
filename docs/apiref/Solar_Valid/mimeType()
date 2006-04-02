@@ -6,7 +6,7 @@ name: mimeType
 
 param: mixed, $value
 
-param: unknown, $allowed, NULL
+param: array, $allowed, NULL
 
 param: bool, $blank, false
 
@@ -20,7 +20,7 @@ Validate that a value is formatted as a MIME type.
 
  * mixed //$value//: The value to validate.
 
- * unknown //$allowed//: 
+ * array //$allowed//: The MIME type must be one of these allowed values; if null, then all values are allowed.
 
  * bool //$blank//: Allow blank values to be valid.
 

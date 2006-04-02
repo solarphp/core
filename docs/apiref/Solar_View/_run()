@@ -4,7 +4,7 @@ access:   protected
 
 name: _run
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,6 +12,6 @@ Runs a template script (allowing access to $this).
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
 Runs a template script (allowing access to $this).

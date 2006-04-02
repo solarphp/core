@@ -4,8 +4,8 @@ User-provided configuration values.
 
 Keys are:
 
-refresh => (bool) Whether or not to refresh the groups on every load.
+: \\refresh\\ : (bool) Whether or not to refresh the groups on every load.
 
-class => (string) The driver class to use.
+: \\class\\ : (string) The driver class to use.
 
-options => (array) Config options for constructing the driver class.
+: \\options\\ : (array) Config options for constructing the driver class.

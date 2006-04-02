@@ -12,7 +12,3 @@ that if the real password is "atechars", the word "atecharsnine" would
 be valid.  This is bad.  As a workaround, if the password provided by
 the user is longer than 8 characters, and DES encryption is being
 used, this class will *not* validate it.
-
-@category Solar
-
-@package Solar_User

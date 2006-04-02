@@ -12,7 +12,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**

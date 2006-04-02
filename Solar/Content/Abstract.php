@@ -30,9 +30,11 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * User-defined configuaration values.
      * 
-     * : content : (dependency) A Solar_Content dependency.
-     * : area_id : (int) Only work with this area_id (if any).
-     * : paging : (int) The number of rows per page when fetching pages.
+     * : \\content\\ : (dependency) A Solar_Content dependency object.
+     * 
+     * : \\area_id\\ : (int) Only work with this area_id (if any).
+     * 
+     * : \\paging\\ : (int) The number of rows per page when fetching pages.
      * 
      * @var array
      * 
@@ -103,7 +105,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * Constructor
      * 
-     * @param $config array User-defined configuration values.
+     * @param array $config User-defined configuration values.
      * 
      */
     public function __construct($config = null)
@@ -122,7 +124,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * If set to an empty value, nodes will be fetched from all areas.
      * 
-     * @param $area_id int The area ID.
+     * @param int $area_id int The area ID.
      * 
      * @return void
      * 
@@ -519,6 +521,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * Delete a master node and its tags.
      * 
      * @param int $id The master node ID to delete.
+     * 
+     * @return void
      * 
      */
     public function delete($id)

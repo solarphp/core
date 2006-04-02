@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View::__call() -- *
+* Solar_View::__call() -- Executes a helper method with arbitrary parameters.
 
 * Solar_View::__construct() -- Constructor.
 
@@ -32,7 +32,7 @@
 
 * Solar_View::setTemplatePath() -- Reset the template directory path stack.
 
-* Solar_View::template() -- *
+* Solar_View::template() -- Returns the path to the requested template script.
 
 ++ Protected
 

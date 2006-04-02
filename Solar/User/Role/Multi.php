@@ -32,7 +32,7 @@ class Solar_User_Role_Multi extends Solar_Base {
      * 
      * Keys are:
      * 
-     * drivers => (array) The array of driver classes and optional configs.
+     * : \\drivers\\ : (array) The array of driver classes and optional configs.
      * 
      * @var array
      * 
@@ -55,6 +55,8 @@ class Solar_User_Role_Multi extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User defined configuration values.
      * 
      */
     public function __construct($config = null)
@@ -85,8 +87,8 @@ class Solar_User_Role_Multi extends Solar_Base {
     
     /**
      * 
-     * Fetch the roles from each of the drivers.
-     *
+     * Fetches the roles from each of the drivers.
+     * 
      * @param string $handle User handle to get roles for.
      * 
      * @return mixed An array of discovered roles.

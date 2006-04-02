@@ -4,16 +4,18 @@ access:   public
 
 name: fetchByName
 
-param: unknown, $name
+param: string, $name
 
-return: unknown
+return: array
 
 </function>
 
-
+Returns one area row by name.
 
 * Parameters:
 
- * unknown //$name//: 
+ * string //$name//: The area name to fetch by.
 
-* Returns unknown: unknown
+* Returns array: An array of row data.
+
+Returns one area row by name.

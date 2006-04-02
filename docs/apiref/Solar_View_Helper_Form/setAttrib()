@@ -12,7 +12,7 @@ return: Solar_View_Helper_Form
 
 </function>
 
-*
+Sets a form-tag attribute.
 
 * Parameters:
 
@@ -22,5 +22,4 @@ return: Solar_View_Helper_Form
 
 * Returns Solar_View_Helper_Form
 
-*
 Sets a form-tag attribute.

@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_View_Helper_FormHidden
 
@@ -14,7 +14,7 @@ Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-specified configuration.
 
 * Returns Solar_View_Helper_FormHidden: Solar_View_Helper_FormHidden instance
 

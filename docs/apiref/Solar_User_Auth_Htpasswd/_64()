@@ -4,11 +4,11 @@ access:  static protected
 
 name: _64
 
-param: unknown, $value
+param: string, $value
 
-param: unknown, $count
+param: int, $count
 
-return: unknown
+return: string
 
 </function>
 
@@ -16,20 +16,10 @@ Convert to allowed 64 characters for encryption.
 
 * Parameters:
 
- * unknown //$value//: 
+ * string //$value//: The value to convert.
 
- * unknown //$count//: 
+ * int //$count//: The number of characters.
 
-* Returns unknown: unknown
+* Returns string: The converted value.
 
 Convert to allowed 64 characters for encryption.
-     *
-@author Mike Wallner <mike@php.net>
-
-@author Paul M. Jones (minor modfications) <pmjones@solarphp.com>
-
-@param string $value
-
-@param int $count
-
-@return string

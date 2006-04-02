@@ -95,6 +95,8 @@ class Solar_Cache extends Solar_Base {
      * 
      * @param bool $flag True to turn on, false to turn off.
      * 
+     * @return void
+     * 
      */
     public function setActive($flag)
     {

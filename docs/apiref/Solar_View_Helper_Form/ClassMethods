@@ -2,35 +2,35 @@
 
 ++ Public
 
-* Solar_View_Helper_Form::__call() -- *
+* Solar_View_Helper_Form::__call() -- Magic __call() for addElement() using element helpers.
 
-* Solar_View_Helper_Form::__construct() -- *
+* Solar_View_Helper_Form::__construct() -- Constructor.
 
-* Solar_View_Helper_Form::addElement() -- *
+* Solar_View_Helper_Form::addElement() -- Adds a single element to the form.
 
-* Solar_View_Helper_Form::addFeedback() -- *
+* Solar_View_Helper_Form::addFeedback() -- Adds to the form-level feedback message array.
 
 * Solar_View_Helper_Form::apiVersion() -- Reports the API version for this class.
 
-* Solar_View_Helper_Form::auto() -- *
+* Solar_View_Helper_Form::auto() -- Automatically adds multiple pieces to the form.
 
-* Solar_View_Helper_Form::beginGroup() -- *
+* Solar_View_Helper_Form::beginGroup() -- Begins a group of form elements under a single label.
 
-* Solar_View_Helper_Form::disable() -- *
+* Solar_View_Helper_Form::disable() -- Sets the default 'disable' flag for elements.
 
-* Solar_View_Helper_Form::endGroup() -- *
+* Solar_View_Helper_Form::endGroup() -- Ends a group of form elements.
 
-* Solar_View_Helper_Form::fetch() -- *
+* Solar_View_Helper_Form::fetch() -- Builds and returns the form output.
 
-* Solar_View_Helper_Form::form() -- *
+* Solar_View_Helper_Form::form() -- Main method interface to Solar_View.
 
-* Solar_View_Helper_Form::listFeedback() -- *
+* Solar_View_Helper_Form::listFeedback() -- Returns a feedback array (form-level or element-level) as an unordered list.
 
 * Solar_View_Helper_Form::locale() -- Looks up locale strings based on a key.
 
-* Solar_View_Helper_Form::reset() -- *
+* Solar_View_Helper_Form::reset() -- Resets the form entirely.
 
-* Solar_View_Helper_Form::setAttrib() -- *
+* Solar_View_Helper_Form::setAttrib() -- Sets a form-tag attribute.
 
 * Solar_View_Helper_Form::setStatus() -- Sets the form status.
 

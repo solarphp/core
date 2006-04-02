@@ -6,21 +6,20 @@ name: __call
 
 param: string, $name
 
-param: unknown, $args
+param: array, $args
 
-return: unknown
+return: string
 
 </function>
 
-*
+Executes a helper method with arbitrary parameters.
 
 * Parameters:
 
- * string //$name//: The helper name.      * @param array $args The parameters passed to the helper.      * @return string The helper output.
+ * string //$name//: The helper name.
 
- * unknown //$args//: 
+ * array //$args//: The parameters passed to the helper.
 
-* Returns unknown: unknown
+* Returns string: The helper output.
 
-*
 Executes a helper method with arbitrary parameters.

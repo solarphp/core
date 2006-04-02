@@ -84,6 +84,8 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * If the 'auto_display' config key is true, this will display the profile.
      * 
+     * @return void
+     * 
      */
     public function __destruct()
     {
@@ -99,7 +101,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * This resets the profile and adds a new mark labeled
      * \\__start\\.  Use it to start the timer.
-     *
+     * 
      * @return void
      * 
      */

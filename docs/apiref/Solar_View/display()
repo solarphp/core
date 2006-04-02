@@ -6,7 +6,7 @@ name: display
 
 param: string, $name
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,6 +16,6 @@ Displays a template directly.
 
  * string //$name//: The template to display.
 
-* Returns unknown: unknown
+* Returns void
 
 Displays a template directly.

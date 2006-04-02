@@ -6,7 +6,7 @@ name: isNull
 
 param: mixed, $actual
 
-return: unknown
+return: bool
 
 </function>
 
@@ -16,6 +16,6 @@ Assert that a variable is PHP null.
 
  * mixed //$actual//: The variable to test.
 
-* Returns unknown: unknown
+* Returns bool: The assertion result.
 
 Assert that a variable is PHP null.

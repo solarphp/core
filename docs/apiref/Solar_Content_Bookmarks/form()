@@ -4,7 +4,7 @@ access:   public
 
 name: form
 
-param: unknown, $data, NULL
+param: array, $data, NULL
 
 return: Solar_Form
 
@@ -14,7 +14,7 @@ Returns a bookmark data-entry form processor.
 
 * Parameters:
 
- * unknown //$data//: 
+ * array //$data//: The default data for the form.
 
 * Returns Solar_Form
 

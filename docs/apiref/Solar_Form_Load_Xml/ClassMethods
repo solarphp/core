@@ -14,7 +14,7 @@
 
 * Solar_Form_Load_Xml::_exception() -- Convenience method for returning exceptions with localized text.
 
-* Solar_Form_Load_Xml::_getParams() -- Get parameters for a filter or validation rule
+* Solar_Form_Load_Xml::_getParams() -- Gets parameters for a filter or validation rule.
 
 ++ Private
 

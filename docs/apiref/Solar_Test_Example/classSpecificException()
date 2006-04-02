@@ -4,12 +4,14 @@ access:   public
 
 name: classSpecificException
 
-return: unknown
+return: void
 
 </function>
 
-
+Throws ERR_CUSTOM_CONDITION for this class.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
+
+Throws ERR_CUSTOM_CONDITION for this class.

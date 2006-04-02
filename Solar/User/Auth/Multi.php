@@ -32,7 +32,7 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * 
      * Keys are:
      * 
-     * drivers => (array) The array of driver classes and optional configs.
+     * : \\drivers\\ : (array) The array of driver classes and optional configs.
      * 
      * @var array
      * 
@@ -55,6 +55,8 @@ class Solar_User_Auth_Multi extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-supplied configuration.
      * 
      */
     public function __construct($config = null)
@@ -85,13 +87,13 @@ class Solar_User_Auth_Multi extends Solar_Base {
     
     /**
      * 
-     * Validate a username and password.
-     *
+     * Validates a username and password.
+     * 
      * @param string $handle Username to authenticate.
      * 
      * @param string $passwd The plain-text password to use.
      * 
-     * @return boolean True on success, false on failure.
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

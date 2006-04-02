@@ -14,7 +14,7 @@
 
 * Solar_Model_Areas::fetchAll() -- Fetches all rows by arbitrary criteria.
 
-* Solar_Model_Areas::fetchByName() -- 
+* Solar_Model_Areas::fetchByName() -- Returns one area row by name.
 
 * Solar_Model_Areas::fetchDefault() -- Returns a default row of column keys and default values.
 
@@ -24,11 +24,11 @@
 
 * Solar_Model_Areas::locale() -- Looks up locale strings based on a key.
 
-* Solar_Model_Areas::paging() -- Sets the number of rows per page.
-
 * Solar_Model_Areas::save() -- Inserts or updates a single row based on its ID.
 
 * Solar_Model_Areas::select() -- Convenience method to select rows from this table.
+
+* Solar_Model_Areas::setPaging() -- Sets the number of rows per page.
 
 * Solar_Model_Areas::update() -- Validates and updates data in the table based on a WHERE clause.
 

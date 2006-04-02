@@ -4,9 +4,9 @@ access:   public
 
 name: add
 
-param: unknown, $path
+param: array|string, $path
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,9 +14,9 @@ Adds one or more directories to the stack.
 
 * Parameters:
 
- * unknown //$path//: 
+ * array|string //$path//: The directories to add to the stack.
 
-* Returns unknown: unknown
+* Returns void
 
 Adds one or more directories to the stack.
 
@@ -31,7 +31,7 @@ $stack->add('path/3');
 // $stack->get() reveals that the directory search order will be
 // 'path/3/', 'path/2/', 'path/1/', because the later adds
 // override the newer ones.
-     *
+
 $stack = Solar::factory('Solar_PathStack');
 $stack->add(array('path/1', 'path/2', 'path/3'));
 // as before, $stack->get() reveals that the directory search order will be

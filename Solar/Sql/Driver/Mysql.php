@@ -117,11 +117,21 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         return $list;
     }
     
-    
+    /**
+     * 
+     * Builds a CREATE TABLE command string.
+     * 
+     * @param string $name The table name to create.
+     * 
+     * @param string $cols The column definitions.
+     * 
+     * @return string A CREATE TABLE command string.
+     * 
+     */
     public function buildCreateTable($name, $cols)
     {
         $stmt = parent::buildCreateTable($name, $cols);
-        $stmt .= " TYPE=InnoDB";// for transactions
+        $stmt .= " TYPE=InnoDB"; // for transactions
         return $stmt;
     }
     

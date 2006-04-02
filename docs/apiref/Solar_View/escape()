@@ -4,9 +4,9 @@ access:   public
 
 name: escape
 
-param: unknown, $value
+param: scalar, $value
 
-return: unknown
+return: string
 
 </function>
 
@@ -14,8 +14,8 @@ Built-in helper for escaping output.
 
 * Parameters:
 
- * unknown //$value//: 
+ * scalar //$value//: The value to escape.
 
-* Returns unknown: unknown
+* Returns string: The escaped value.
 
 Built-in helper for escaping output.

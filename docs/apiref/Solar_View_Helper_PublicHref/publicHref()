@@ -4,9 +4,9 @@ access:   public
 
 name: publicHref
 
-param: string, $spec
+param: Solar_Uri|string, $spec
 
-param: unknown, $raw, false
+param: bool, $raw, false
 
 return: string
 
@@ -16,9 +16,9 @@ Returns an href to a public resource.
 
 * Parameters:
 
- * string //$spec//: The action specification.
+ * Solar_Uri|string //$spec//: The public resource HREF specification.
 
- * unknown //$raw//: 
+ * bool //$raw//: Return the resource string without escaping (default false).
 
 * Returns string
 

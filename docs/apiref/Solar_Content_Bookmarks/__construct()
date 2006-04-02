@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_Content_Bookmarks
 
@@ -14,7 +14,7 @@ Constructor
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-defined configuration values.
 
 * Returns Solar_Content_Bookmarks: Solar_Content_Bookmarks instance
 

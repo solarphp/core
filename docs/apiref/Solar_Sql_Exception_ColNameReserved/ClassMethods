@@ -4,17 +4,17 @@
 
 * Solar_Sql_Exception_ColNameReserved::__construct() -- Constructor.
 
-* Solar_Sql_Exception_ColNameReserved::__toString() -- Custom string output.
+* Solar_Sql_Exception_ColNameReserved::__toString() -- Returnes the exception as a string.
 
-* Solar_Sql_Exception_ColNameReserved::getClass() -- Gets the class that threw the exception.
+* Solar_Sql_Exception_ColNameReserved::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Sql_Exception_ColNameReserved::getClassCode() -- Gets the class and code together.
+* Solar_Sql_Exception_ColNameReserved::getClassCode() -- Returns the class name and code together.
 
 * Solar_Sql_Exception_ColNameReserved::getCode() -- 
 
 * Solar_Sql_Exception_ColNameReserved::getFile() -- 
 
-* Solar_Sql_Exception_ColNameReserved::getInfo() -- Gets user-defined information.
+* Solar_Sql_Exception_ColNameReserved::getInfo() -- Returns user-defined information.
 
 * Solar_Sql_Exception_ColNameReserved::getLine() -- 
 

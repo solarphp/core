@@ -4,12 +4,14 @@ access:   public
 
 name: solarSpecificException
 
-return: unknown
+return: void
 
 </function>
 
-
+Throws ERR_FILE_NOT_FOUND for this class.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
+
+Throws ERR_FILE_NOT_FOUND for this class.

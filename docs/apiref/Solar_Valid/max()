@@ -6,7 +6,7 @@ name: max
 
 param: mixed, $value
 
-param: unknown, $max
+param: mixed, $max
 
 param: bool, $blank, false
 
@@ -20,7 +20,7 @@ Validate that a value is less than than or equal to a maximum.
 
  * mixed //$value//: The value to validate.
 
- * unknown //$max//: 
+ * mixed //$max//: The maximum valid value.
 
  * bool //$blank//: Allow blank values to be valid.
 

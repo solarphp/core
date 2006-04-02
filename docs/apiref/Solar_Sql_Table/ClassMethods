@@ -22,11 +22,11 @@
 
 * Solar_Sql_Table::locale() -- Looks up locale strings based on a key.
 
-* Solar_Sql_Table::paging() -- Sets the number of rows per page.
-
 * Solar_Sql_Table::save() -- Inserts or updates a single row based on its ID.
 
 * Solar_Sql_Table::select() -- Convenience method to select rows from this table.
+
+* Solar_Sql_Table::setPaging() -- Sets the number of rows per page.
 
 * Solar_Sql_Table::update() -- Validates and updates data in the table based on a WHERE clause.
 

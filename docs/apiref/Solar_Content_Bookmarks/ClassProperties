@@ -12,13 +12,13 @@ None.
 
 * Solar_Content_Bookmarks::$_content -- Solar_Content dependency.
 
-* Solar_Content_Bookmarks::$_form -- 
+* Solar_Content_Bookmarks::$_form -- Columns used in the data-entry form.
 
 * Solar_Content_Bookmarks::$_paging -- When fetching, get this many rows per page.
 
 * Solar_Content_Bookmarks::$_parts -- What node types are acceptable as parts of this master node type?
 
-* Solar_Content_Bookmarks::$_type -- 
+* Solar_Content_Bookmarks::$_type -- The content type ('bookmark').
 
 ++ Private
 

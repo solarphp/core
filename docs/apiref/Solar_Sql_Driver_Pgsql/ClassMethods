@@ -8,7 +8,7 @@
 
 * Solar_Sql_Driver_Pgsql::begin() -- Leave autocommit mode and begin a transaction.
 
-* Solar_Sql_Driver_Pgsql::buildCreateTable() -- Builds a CREATE TABLE statment.
+* Solar_Sql_Driver_Pgsql::buildCreateTable() -- Builds a CREATE TABLE command string.
 
 * Solar_Sql_Driver_Pgsql::buildSelect() -- Builds a SELECT statement from its component parts.
 

@@ -216,7 +216,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @return int The number of rows per page.
      * 
      */
-    public function getPaging($rows)
+    public function getPaging()
     {
         return $this->_paging;
     }

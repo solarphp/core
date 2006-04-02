@@ -6,16 +6,16 @@ name: fail
 
 param: string, $message, 'Failure'
 
-return: unknown
+return: bool
 
 </function>
 
-Throw an exception indicating assertion failure.
+Throws and prints an exception indicating assertion failure.
 
 * Parameters:
 
  * string //$message//: The failure message.
 
-* Returns unknown: unknown
+* Returns bool: Always returns boolean false.
 
-Throw an exception indicating assertion failure.
+Throws and prints an exception indicating assertion failure.

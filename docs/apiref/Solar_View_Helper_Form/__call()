@@ -12,7 +12,7 @@ return: string
 
 </function>
 
-*
+Magic __call() for addElement() using element helpers.
 
 * Parameters:
 
@@ -22,7 +22,6 @@ return: string
 
 * Returns string: The form element helper output.
 
-*
 Magic __call() for addElement() using element helpers.
 
 Allows $this->elementName() internally, and

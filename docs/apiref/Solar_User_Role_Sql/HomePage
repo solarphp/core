@@ -1,7 +1,3 @@
 + The Solar_User_Role_Sql Class
 
 Get user roles from an SQL database table.
- *
-@category Solar
-
-@package Solar_User

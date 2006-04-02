@@ -12,7 +12,7 @@ param: string, $method
 
 param: mixed, $expect, NULL
 
-return: unknown
+return: bool
 
 </function>
 
@@ -28,7 +28,7 @@ Assert that an object property meets criteria.
 
  * mixed //$expect//: The expected result from the test method.
 
-* Returns unknown: unknown
+* Returns bool: The assertion result.
 
 Assert that an object property meets criteria.
 

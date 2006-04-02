@@ -12,7 +12,7 @@
  * @license LGPL
  * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -44,6 +44,8 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
      * 
      * Constructor.
      * 
+     * @param array $config User-defined configuration.
+     * 
      */
     public function __construct($config)
     {
@@ -59,7 +61,9 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
      * 
      * Returns an href to a public resource.
      * 
-     * @param string $spec The action specification.
+     * @param Solar_Uri|string $spec The public resource HREF specification.
+     * 
+     * @param bool $raw Return the resource string without escaping (default false).
      * 
      * @return string
      * 

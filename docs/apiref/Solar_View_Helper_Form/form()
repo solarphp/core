@@ -10,7 +10,7 @@ return: string|Solar_View_Helper_Form
 
 </function>
 
-*
+Main method interface to Solar_View.
 
 * Parameters:
 
@@ -18,5 +18,4 @@ return: string|Solar_View_Helper_Form
 
 * Returns string|Solar_View_Helper_Form
 
-*
 Main method interface to Solar_View.

@@ -37,8 +37,6 @@ class Solar_View_Helper_Time extends Solar_View_Helper {
      * 
      * The default date() format string.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -50,8 +48,6 @@ class Solar_View_Helper_Time extends Solar_View_Helper {
      * 
      * Outputs a formatted time using [[php date()]] conventions.
      * 
-     * @access public
-     * 
      * @param string $spec Any date-time string suitable for
      * strtotime().
      * 
@@ -61,7 +57,7 @@ class Solar_View_Helper_Time extends Solar_View_Helper {
      * @return string The formatted date string.
      * 
      */
-    function time($spec, $format = null)
+    public function time($spec, $format = null)
     {
         if (! $spec) {
             return;

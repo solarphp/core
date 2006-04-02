@@ -20,7 +20,7 @@
  * Authenticate against .ini style files.
  * 
  * Format for each line is "username = plainpassword\n";
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -32,11 +32,11 @@ class Solar_User_Auth_Ini extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Keys:
+     * Keys are:
      * 
-     * file => (string) Path to password file.
+     * : \\file\\ : (string) Path to password file.
      * 
-     * group => (string) The group in which usernames reside.
+     * : \\group\\ : (string) The group in which usernames reside.
      * 
      * @var array
      * 
@@ -45,17 +45,17 @@ class Solar_User_Auth_Ini extends Solar_Base {
         'file' => null,
         'group' => 'users',
     );
-
-
+    
+    
     /**
      * 
      * Validate a username and password.
-     *
+     * 
      * @param string $handle Username to authenticate.
      * 
      * @param string $passwd The plain-text password to use.
      * 
-     * @return boolean True on success, false on failure.
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

@@ -4,14 +4,14 @@ access: final  public
 
 name: getClass
 
-return: unknown
+return: string
 
 </function>
 
-Gets the class that threw the exception.
+Returns the class name that threw the exception.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns string
 
-Gets the class that threw the exception.
+Returns the class name that threw the exception.

@@ -437,7 +437,7 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param mixed $min The maximum valid value.
+     * @param mixed $max The maximum valid value.
      * 
      * @param bool $blank Allow blank values to be valid.
      * 
@@ -461,7 +461,7 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param mixed $min The value must have no more than this many
+     * @param mixed $max The value must have no more than this many
      * characters.
      * 
      * @param bool $blank Allow blank values to be valid.
@@ -485,6 +485,9 @@ class Solar_Valid extends Solar_Base {
      * Validate that a value is formatted as a MIME type.
      * 
      * @param mixed $value The value to validate.
+     * 
+     * @param array $allowed The MIME type must be one of these
+     * allowed values; if null, then all values are allowed.
      * 
      * @param bool $blank Allow blank values to be valid.
      * 

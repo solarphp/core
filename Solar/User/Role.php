@@ -32,11 +32,11 @@ class Solar_User_Role extends Solar_Base {
      * 
      * Keys are:
      * 
-     * refresh => (bool) Whether or not to refresh the groups on every load.
+     * : \\refresh\\ : (bool) Whether or not to refresh the groups on every load.
      * 
-     * class => (string) The driver class to use.
+     * : \\class\\ : (string) The driver class to use.
      * 
-     * options => (array) Config options for constructing the driver class.
+     * : \\options\\ : (array) Config options for constructing the driver class.
      * 
      * @var array
      * 
@@ -77,10 +77,8 @@ class Solar_User_Role extends Solar_Base {
     /**
      * 
      * Constructor to set up the storage driver.
-     *
-     * @param array $config User-provided configuration values.
      * 
-     * @return object
+     * @param array $config User-provided configuration values.
      * 
      */
     public function __construct($config = null)
@@ -105,10 +103,12 @@ class Solar_User_Role extends Solar_Base {
      * 
      * Refresh the list of roles for the given user.
      * 
+     * @param string $handle The username to fetch roles for.
+     * 
      * @return array The list of roles for the authenticated user.
      * 
      */
-    public function fetch($username)
+    public function fetch($handle)
     {
         // have we loaded roles for the first time yet? if so, and if
         // we're not forcing refreshes, the we don't need to do
@@ -121,7 +121,7 @@ class Solar_User_Role extends Solar_Base {
         $this->reset();
         
         // fetch the role list
-        $result = $this->_driver->fetch($username);
+        $result = $this->_driver->fetch($handle);
         if ($result) {
             // merge the results into the common list
             $this->list = array_merge(
@@ -170,7 +170,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      * @param string|array $roles The role(s) to check.
      * 
-     * @return boolean True if the user is in any of the listed roles (a
+     * @return bool True if the user is in any of the listed roles (a
      * logical 'or'), false if not.
      * 
      */
@@ -195,7 +195,7 @@ class Solar_User_Role extends Solar_Base {
      * 
      * @param string|array $roles The role(s) to check.
      * 
-     * @return boolean True if the user is in all of the listed roles (a
+     * @return bool True if the user is in all of the listed roles (a
      * logical 'and'), false if not.
      * 
      */

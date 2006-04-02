@@ -4,30 +4,22 @@ access:   public
 
 name: valid
 
-param: unknown, $handle
+param: string, $handle
 
-param: unknown, $passwd
+param: string, $passwd
 
-return: unknown
+return: bool
 
 </function>
 
-Validate a username and password.
+Validates a username and password.
 
 * Parameters:
 
- * unknown //$handle//: 
+ * string //$handle//: Username to authenticate.
 
- * unknown //$passwd//: 
+ * string //$passwd//: The password to use.
 
-* Returns unknown: unknown
+* Returns bool: True on success, false on failure.
 
-Validate a username and password.
-
-@param string $handle Username to authenticate.
-
-@param string $passwd The password to use.
-
-@return boolean True on success, false on failure.
-
-@todo Check the server status with fsockopen().
+Validates a username and password.

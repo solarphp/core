@@ -35,8 +35,22 @@ Solar::loadClass('Solar_Content_Abstract');
  */
 class Solar_Content_Bookmarks extends Solar_Content_Abstract {
     
+    /**
+     * 
+     * The content type ('bookmark').
+     * 
+     * @var string
+     * 
+     */
     protected $_type = 'bookmark';
     
+    /**
+     * 
+     * Columns used in the data-entry form.
+     * 
+     * @var array
+     * 
+     */
     protected $_form = array('id', 'uri', 'subj', 'summ', 'tags', 'rank');
     
     /**
@@ -152,6 +166,8 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
     /**
      * 
      * Returns a bookmark data-entry form processor.
+     * 
+     * @param array $data The default data for the form.
      * 
      * @return Solar_Form
      * 

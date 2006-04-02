@@ -29,12 +29,12 @@ class Solar_User_Auth_None extends Solar_Base {
     /**
      * 
      * Validate a username and password.  Always fails.
-     *
-     * @param string $user Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $handle Username to authenticate.
      * 
-     * @return boolean True on success, false on failure.
+     * @param string $passwd The plain-text password to use.
+     * 
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

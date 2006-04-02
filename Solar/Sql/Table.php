@@ -132,7 +132,7 @@ class Solar_Sql_Table extends Solar_Base {
     {
         // main construction
         parent::__construct($config);
-        $this->paging($this->_config['paging']);
+        $this->setPaging($this->_config['paging']);
         
         // perform column and index setup, then fix everything.
         $this->_setup();
@@ -171,8 +171,10 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $val The number of rows per page.
      * 
+     * @return void
+     * 
      */
-    public function paging($val)
+    public function setPaging($val)
     {
         $this->_paging = (int) $val;
     }
@@ -306,13 +308,13 @@ class Solar_Sql_Table extends Solar_Base {
      * @param string $type The type of select to execute: 'all', 'one',
      * 'row', etc. Default is 'result'.
      * 
-     * @param string|array A Solar_Sql_Select::multiWhere() parameter.
+     * @param string|array $where A Solar_Sql_Select::multiWhere() parameter.
      * 
-     * @param string|array A Solar_Sql_Select::order() parameter.
+     * @param string|array $order A Solar_Sql_Select::order() parameter.
      * 
      * @param int $page The page number of rows to fetch.
      * 
-     * @return array
+     * @return mixed
      * 
      */
     public function select($type = 'result', $where = null,
@@ -355,7 +357,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $id The primary key ID value.
      * 
-     * @return array
+     * @return array A row array.
      * 
      */
     public function fetch($id)
@@ -368,13 +370,13 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Fetches all rows by arbitrary criteria.
      * 
-     * @param string|array A Solar_Sql_Select::multiWhere() parameter.
+     * @param string|array $where A Solar_Sql_Select::multiWhere() parameter.
      * 
-     * @param string|array A Solar_Sql_Select::order() parameter.
+     * @param string|array $order A Solar_Sql_Select::order() parameter.
      * 
      * @param int $page The page number of rows to fetch.
      * 
-     * @return array An array rows.
+     * @return array An array of rows.
      * 
      */
     public function fetchAll($where = null, $order = null, $page = null)
@@ -386,7 +388,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Returns a default row of column keys and default values.
      * 
-     * @return array
+     * @return array An array of default row data.
      * 
      */
     public function fetchDefault()

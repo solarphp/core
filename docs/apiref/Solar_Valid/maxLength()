@@ -6,7 +6,7 @@ name: maxLength
 
 param: mixed, $value
 
-param: unknown, $max
+param: mixed, $max
 
 param: bool, $blank, false
 
@@ -20,7 +20,7 @@ Validate that a string is no longer than a certain length.
 
  * mixed //$value//: The value to validate.
 
- * unknown //$max//: 
+ * mixed //$max//: The value must have no more than this many characters.
 
  * bool //$blank//: Allow blank values to be valid.
 

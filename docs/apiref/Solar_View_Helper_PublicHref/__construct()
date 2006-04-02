@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config
+param: array, $config
 
 return: Solar_View_Helper_PublicHref
 
@@ -14,7 +14,7 @@ Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-defined configuration.
 
 * Returns Solar_View_Helper_PublicHref: Solar_View_Helper_PublicHref instance
 

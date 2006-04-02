@@ -39,18 +39,18 @@ class Solar_Form_Load_Xml extends Solar_Base {
     
     /**
      * 
-     * Array of element attributes; used by {@link fetch()} to get element
-     * attributes
+     * Array of element attribute names.
+     * 
+     * Used by Solar_Form_Load_Xml::fetch() to get element attributes.
      * 
      * @var array
      * 
-     * @access protected
      */
     protected $_elementAttribs = array(
         'type',
         'value',
         'require',
-        'disable'
+        'disable',
     );
 
     /**
@@ -61,13 +61,13 @@ class Solar_Form_Load_Xml extends Solar_Base {
      * SimpleXML functions.
      * 
      * The location of a form definition file is required.
-     *
+     * 
      * If an error occurs, a Solar error is generated and returned.
      * 
      * @param string $filename Path to form definition file.
      * 
      * @return object|false Solar_Form object, boolean false on error.
-     *
+     * 
      */
     public function fetch($filename) 
     {
@@ -204,13 +204,12 @@ class Solar_Form_Load_Xml extends Solar_Base {
     
     /**
      * 
-     * Get parameters for a filter or validation rule
-     *
-     * @access protected
-     *
-     * @param array
-     *
+     * Gets parameters for a filter or validation rule.
+     * 
+     * @param array $params The array of parameters.
+     * 
      * @return array
+     * 
      */
     protected function _getParams($params) 
     {

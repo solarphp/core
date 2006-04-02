@@ -52,9 +52,9 @@
 
 ++ Protected
 
-* Solar_Sql::_buildColDef() -- *
+* Solar_Sql::_buildColDef() -- Builds a column definition string.
 
-* Solar_Sql::_buildIdxDef() -- *
+* Solar_Sql::_buildIdxDef() -- Builds an index definition string.
 
 * Solar_Sql::_exception() -- Convenience method for returning exceptions with localized text.
 

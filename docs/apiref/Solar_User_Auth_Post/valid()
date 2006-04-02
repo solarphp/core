@@ -8,7 +8,7 @@ param: string, $handle
 
 param: string, $passwd
 
-return: boolean
+return: bool
 
 </function>
 
@@ -20,6 +20,6 @@ Validate a handle and passwd.
 
  * string //$passwd//: The plain-text passwd to use.
 
-* Returns boolean: True on success, false on failure.
+* Returns bool: True on success, false on failure.
 
 Validate a handle and passwd.

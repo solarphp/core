@@ -1,1 +1,3 @@
-protected  $_type
+protected string $_type
+
+The content type ('bookmark').

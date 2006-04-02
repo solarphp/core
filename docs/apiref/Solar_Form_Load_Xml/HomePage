@@ -1,5 +1,3 @@
 + The Solar_Form_Load_Xml Class
 
 Class for loading Solar_Form definitions from a SimpleXML file.
- 
-@category Solar

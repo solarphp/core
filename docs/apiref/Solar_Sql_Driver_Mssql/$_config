@@ -4,14 +4,14 @@ User-provided configuration.
 
 Keys are:
 
-host  => (string) Host specification (typically 'localhost').
+: \\host\\ : (string) Host specification (typically 'localhost').
 
-port  => (string) Port number for the host name.
+: \\port\\ : (string) Port number for the host name.
 
-user  => (string) Connect to the database as this username.
+: \\user\\ : (string) Connect to the database as this username.
 
-pass  => (string) Password associated with the username.
+: \\pass\\ : (string) Password associated with the username.
 
-name  => (string) Database name (or file path, or TNS name).
+: \\name\\ : (string) Database name (or file path, or TNS name).
 
-mode  => (string) For SQLite, an octal file mode.
+: \\mode\\ : (string) For SQLite, an octal file mode.

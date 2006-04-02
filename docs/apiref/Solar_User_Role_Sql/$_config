@@ -1,15 +1,13 @@
-protected  $_config
+protected array $_config
 
 User-supplied configuration values.
 
 Keys are:
 
-'sql' => (dependency) A Solar_Sql dependency.
+: \\sql\\ : (dependency) A Solar_Sql dependency.
 
-'table' => (string) The table where roles are stored.
+: \\table\\ : (string) The table where roles are stored.
 
-'handle_col' => (string) The column for user handles.
+: \\handle_col\\ : (string) The column for user handles.
 
-'role_col' => (string) The column for roles.
-
-@var array
+: \\role_col\\ : (string) The column for roles.

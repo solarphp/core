@@ -1,1 +1,3 @@
-public  $layout_object
+public array $layout_object
+
+An array of <object> tag values for the layout <head> block.

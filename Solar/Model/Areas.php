@@ -76,6 +76,15 @@ class Solar_Model_Areas extends Solar_Sql_Table {
         );
     }
     
+    /**
+     * 
+     * Returns one area row by name.
+     * 
+     * @param string $name The area name to fetch by.
+     * 
+     * @return array An array of row data.
+     * 
+     */
     public function fetchByName($name)
     {
         $where = array('name = ?' => $name);

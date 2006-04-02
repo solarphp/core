@@ -1,1 +1,3 @@
-public  $layout_base
+public string $layout_base
+
+The <base> href value for the layout <head> block.

@@ -4,22 +4,18 @@ access:   public
 
 name: fetch
 
-param: unknown, $handle
+param: string, $handle
 
-return: unknown
+return: mixed
 
 </function>
 
-Fetch the roles from each of the drivers.
+Fetches the roles from each of the drivers.
 
 * Parameters:
 
- * unknown //$handle//: 
+ * string //$handle//: User handle to get roles for.
 
-* Returns unknown: unknown
+* Returns mixed: An array of discovered roles.
 
-Fetch the roles from each of the drivers.
-     *
-@param string $handle User handle to get roles for.
-
-@return mixed An array of discovered roles.
+Fetches the roles from each of the drivers.

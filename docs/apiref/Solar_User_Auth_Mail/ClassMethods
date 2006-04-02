@@ -8,7 +8,7 @@
 
 * Solar_User_Auth_Mail::locale() -- Looks up locale strings based on a key.
 
-* Solar_User_Auth_Mail::valid() -- Validate a username and password.
+* Solar_User_Auth_Mail::valid() -- Validates a username and password.
 
 ++ Protected
 

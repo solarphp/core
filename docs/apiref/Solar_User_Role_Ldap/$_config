@@ -1,4 +1,4 @@
-protected  $_config
+protected array $_config
 
 Array of user configuration values.
 
@@ -16,5 +16,3 @@ Example: "uid=%s".
 : \\binddn\\ : (string) Bind to the LDAP server as this distinguished name.
 
 : \\bindpw\\ : (string) Bind to the LDAP server as with this password.
-
-@var array

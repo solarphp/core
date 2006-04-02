@@ -2,7 +2,7 @@
 /**
  * 
  * Authenticate against an LDAP server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Authenticate against an LDAP server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -32,9 +32,9 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * 
      * Keys are:
      * 
-     * url => (string) URL to the LDAP server, e.g. "ldaps://example.com:389".
+     * : \\url\\ : (string) URL to the LDAP server, e.g. "ldaps://example.com:389".
      * 
-     * format => (string) Sprintf() format string for the LDAP query; %s
+     * : \\format\\ : (string) Sprintf() format string for the LDAP query; %s
      * represents the username.  Example: "uid=%s,dc=example,dc=com".
      * 
      * @var array
@@ -48,6 +48,8 @@ class Solar_User_Auth_Ldap extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-defined configuration.
      * 
      */
     public function __construct($config = null)
@@ -69,11 +71,11 @@ class Solar_User_Auth_Ldap extends Solar_Base {
      * 
      * Validate a username and password.
      * 
-     * @param string $user Username to authenticate.
+     * @param string $handle Username to authenticate.
      * 
-     * @param string $pass The plain-text password to use.
+     * @param string $passwd The plain-text password to use.
      * 
-     * @return boolean True on success, false on failure.
+     * @return bool True on success, false on failure.
      * 
      */
     public function valid($handle, $passwd)

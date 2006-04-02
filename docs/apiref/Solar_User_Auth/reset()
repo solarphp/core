@@ -4,7 +4,7 @@ access:   public
 
 name: reset
 
-param: unknown, $status, 'ANON'
+param: string, $status, 'ANON'
 
 return: void
 
@@ -14,13 +14,10 @@ Resets any authentication data in the session.
 
 * Parameters:
 
- * unknown //$status//: 
+ * string //$status//: A Solar_User_Auth status string; default is 'ANON'.
 
 * Returns void
 
 Resets any authentication data in the session.
 
 Typically used for idling, expiration, and logout.
-     *
-@param string $status A Solar_User_Auth status string;
-default is 'ANON'.

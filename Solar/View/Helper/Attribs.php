@@ -37,8 +37,6 @@ class Solar_View_Helper_Attribs extends Solar_View_Helper {
      * 
      * Converts an associative array to an attribute string.
      * 
-     * @access public
-     * 
      * @param array $attribs From this array, each key-value pair is 
      * converted to an attribute name and value.
      * 

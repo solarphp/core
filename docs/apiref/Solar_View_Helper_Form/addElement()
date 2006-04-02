@@ -10,7 +10,7 @@ return: Solar_View_Helper_Form
 
 </function>
 
-*
+Adds a single element to the form.
 
 * Parameters:
 
@@ -18,5 +18,4 @@ return: Solar_View_Helper_Form
 
 * Returns Solar_View_Helper_Form
 
-*
 Adds a single element to the form.

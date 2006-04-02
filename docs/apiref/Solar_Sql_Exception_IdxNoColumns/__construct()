@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_Sql_Exception_IdxNoColumns
 
@@ -14,7 +14,7 @@ Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-defined configuration with keys for 'class', 'code', 'text', and 'info'.
 
 * Returns Solar_Sql_Exception_IdxNoColumns: Solar_Sql_Exception_IdxNoColumns instance
 

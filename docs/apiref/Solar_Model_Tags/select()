@@ -6,13 +6,13 @@ name: select
 
 param: string, $type, 'result'
 
-param: unknown, $where, NULL
+param: string|array, $where, NULL
 
-param: unknown, $order, NULL
+param: string|array, $order, NULL
 
 param: int, $page, NULL
 
-return: array
+return: mixed
 
 </function>
 
@@ -22,12 +22,12 @@ Convenience method to select rows from this table.
 
  * string //$type//: The type of select to execute: 'all', 'one', 'row', etc. Default is 'result'.
 
- * unknown //$where//: 
+ * string|array //$where//: A Solar_Sql_Select::multiWhere() parameter.
 
- * unknown //$order//: 
+ * string|array //$order//: A Solar_Sql_Select::order() parameter.
 
  * int //$page//: The page number of rows to fetch.
 
-* Returns array
+* Returns mixed
 
 Convenience method to select rows from this table.

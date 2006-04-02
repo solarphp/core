@@ -4,9 +4,9 @@ access:   public
 
 name: setLabel
 
-param: unknown, $label
+param: string, $label
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,8 +14,8 @@ Sets the label for the next message.
 
 * Parameters:
 
- * unknown //$label//: 
+ * string //$label//: The message label.
 
-* Returns unknown: unknown
+* Returns void
 
 Sets the label for the next message.

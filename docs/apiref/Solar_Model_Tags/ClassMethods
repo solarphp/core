@@ -28,13 +28,13 @@
 
 * Solar_Model_Tags::locale() -- Looks up locale strings based on a key.
 
-* Solar_Model_Tags::paging() -- Sets the number of rows per page.
-
 * Solar_Model_Tags::refresh() -- "Refreshes" the tags for a node_id by diff.
 
 * Solar_Model_Tags::save() -- Inserts or updates a single row based on its ID.
 
 * Solar_Model_Tags::select() -- Convenience method to select rows from this table.
+
+* Solar_Model_Tags::setPaging() -- Sets the number of rows per page.
 
 * Solar_Model_Tags::update() -- Validates and updates data in the table based on a WHERE clause.
 

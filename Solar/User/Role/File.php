@@ -40,6 +40,10 @@ class Solar_User_Role_File extends Solar_Base {
      * 
      * User-supplied configuration values.
      * 
+     * Keys are:
+     * 
+     * : \\file\\ : (string) Where the roles file is located.
+     * 
      * @var array
      * 
      */
@@ -50,8 +54,8 @@ class Solar_User_Role_File extends Solar_Base {
         
     /**
      * 
-     * Fetch the roles.
-     *
+     * Fetches the roles for a username.
+     * 
      * @param string $handle User handle to get roles for.
      * 
      * @return array An array of discovered roles.

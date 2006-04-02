@@ -32,11 +32,9 @@ $bookmarks = Solar::factory('Solar_Content_Bookmarks');
 
 Add dates to content model (e.g., begin and end dates)
 
-Rename "rank" to "position"?
+Rename "rank" to "position"
 
 ALSO NEED ACCESS CONTROL!
-
-----
 
 ----
 

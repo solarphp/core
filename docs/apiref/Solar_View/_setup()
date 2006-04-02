@@ -4,7 +4,7 @@ access:   protected
 
 name: _setup
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,6 +12,6 @@ Allows specialized setup for extended classes.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void
 
 Allows specialized setup for extended classes.

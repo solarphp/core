@@ -83,7 +83,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     protected $_hidden = array();
     
     /**
-     *
+     * 
      * Stack of element and layout pieces for the form.
      * 
      * @var array
@@ -92,7 +92,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     protected $_stack = array();
     
     /**
-     *
+     * 
      * Form CSS class to use for failure/success statuses.
      * 
      * @var array
@@ -104,7 +104,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     );
     
     /**
-     *
+     * 
      * The current failure/success status.
      * 
      * @var bool
@@ -113,7 +113,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     protected $_status = null;
     
     /**
-     *
+     * 
      * Default form tag attributes.
      * 
      * @var array
@@ -126,7 +126,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     );
     
     /**
-     *
+     * 
      * Default info for each element.
      * 
      * @var array
@@ -157,7 +157,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     protected $_disable = null;
     
     /**
-     *
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -171,7 +171,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Magic __call() for addElement() using element helpers.
      * 
      * Allows $this->elementName() internally, and
@@ -193,7 +193,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Main method interface to Solar_View.
      * 
      * @param Solar_Form|array $spec If a Solar_Form object, does a
@@ -224,7 +224,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Sets the default 'disable' flag for elements.
      * 
      * @param bool $flag True to force-enable, false to force-disable, null to
@@ -244,7 +244,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Sets a form-tag attribute.
      * 
      * @param string $key The attribute name.
@@ -261,7 +261,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Adds to the form-level feedback message array.
      * 
      * @param string|array $spec The feedback message(s).
@@ -275,7 +275,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Adds a single element to the form.
      * 
      * @param array $info The element information.
@@ -331,10 +331,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Automatically adds multiple pieces to the form.
      * 
-     * @param Solar_Form|array If a Solar_Form object, adds
+     * @param Solar_Form|array $spec If a Solar_Form object, adds
      * attributes, elements and feedback from the object properties. 
      * If an array, treats it as a a collection of element info
      * arrays and adds them.
@@ -376,7 +376,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Begins a group of form elements under a single label.
      * 
      * @param string $label The label text.
@@ -391,7 +391,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Ends a group of form elements.
      * 
      * @return Solar_View_Helper_Form
@@ -404,7 +404,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Builds and returns the form output.
      * 
      * @return string
@@ -496,7 +496,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Returns a feedback array (form-level or element-level) as an unordered list.
      * 
      * @param array $spec An array of messages.
@@ -525,7 +525,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     }
     
     /**
-     *
+     * 
      * Resets the form entirely.
      * 
      * @return Solar_View_Helper_Form

@@ -1,18 +1,37 @@
 MOVING TO A NON-DEV RELEASE
 
+
 Get database error messages back from form submissions
 
-Database:
-    Just give instructions on how to create portable tables?
-    Then make Solar_Model extend Solar_Sql_Table and use portable
-      validation
-    No, because we need sequences :-(
+Convert Solar_Uri to Solar-specific URI haldnler, not generic handler?
+
+Write tests
+
+Write inline docs
+    Add for Solar_Exception to overcome Exception lack?
+    
+Write narrative docs
+    Solar_Form and values()
+    
+Upgrade doc-builder
+    show default value for properties
+    add parenting
+    more robust docblock parser
+    split into parse and write/build/render
+    have doc-parser un-prefix lines starting with star, not star-space
+    warn when there is no docblock
+    
+Write todo app
+    Mock screens
+
+Upgrade bookmarks app
+
 
 ----
 
 DOCS PLAN
 
-Link to Solar vs Zend in docs    
+Link to Solar vs Zend in docs
 
 * Fix internal docs. Keep very short!  Move long docs to manual.
 * Update long docs.
@@ -21,7 +40,7 @@ Link to Solar vs Zend in docs
 
 When packaging, the way to update the site is:
 
-    move the package.tgz to the desktop
+    copy the package.tgz to the desktop
     unzip it
     archive the apiref & manual dirs
     scp to solarphp.com
@@ -32,11 +51,21 @@ When packaging, the way to update the site is:
 
 TESTING PLAN
 
-update:
-    all existing
-
-moderate:
-    Solar_View et al
+need:
+    App
+    Content
+    Controller_Page
+    Controller_Front
+    Form
+    Form_Load*
+    Model_*
+    PathStack
+    Sql
+    User
+    User_Auth
+    User_Role
+    View
+    View_Helper*
     
 
 ----

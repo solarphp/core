@@ -4,20 +4,22 @@ access:   public
 
 name: buildCreateTable
 
-param: unknown, $name
+param: string, $name
 
-param: unknown, $cols
+param: string, $cols
 
-return: unknown
+return: string
 
 </function>
 
-
+Builds a CREATE TABLE command string.
 
 * Parameters:
 
- * unknown //$name//: 
+ * string //$name//: The table name to create.
 
- * unknown //$cols//: 
+ * string //$cols//: The column definitions.
 
-* Returns unknown: unknown
+* Returns string: A CREATE TABLE command string.
+
+Builds a CREATE TABLE command string.

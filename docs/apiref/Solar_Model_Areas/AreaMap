@@ -25,7 +25,7 @@ ApiRef | API Reference
   increment()
   insert()
   locale()
-  paging()
   save()
   select()
+  setPaging()
   update()

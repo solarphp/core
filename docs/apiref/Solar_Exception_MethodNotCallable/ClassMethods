@@ -4,17 +4,17 @@
 
 * Solar_Exception_MethodNotCallable::__construct() -- Constructor.
 
-* Solar_Exception_MethodNotCallable::__toString() -- Custom string output.
+* Solar_Exception_MethodNotCallable::__toString() -- Returnes the exception as a string.
 
-* Solar_Exception_MethodNotCallable::getClass() -- Gets the class that threw the exception.
+* Solar_Exception_MethodNotCallable::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Exception_MethodNotCallable::getClassCode() -- Gets the class and code together.
+* Solar_Exception_MethodNotCallable::getClassCode() -- Returns the class name and code together.
 
 * Solar_Exception_MethodNotCallable::getCode() -- 
 
 * Solar_Exception_MethodNotCallable::getFile() -- 
 
-* Solar_Exception_MethodNotCallable::getInfo() -- Gets user-defined information.
+* Solar_Exception_MethodNotCallable::getInfo() -- Returns user-defined information.
 
 * Solar_Exception_MethodNotCallable::getLine() -- 
 

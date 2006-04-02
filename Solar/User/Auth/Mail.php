@@ -2,7 +2,7 @@
 /**
  * 
  * Authenticate against an IMAP or POP3 mail server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -18,7 +18,7 @@
 /**
  * 
  * Authenticate against an IMAP or POP3 mail server.
- *
+ * 
  * @category Solar
  * 
  * @package Solar_User
@@ -32,7 +32,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * 
      * Keys are:
      * 
-     * mailbox => (string) An imap_open() mailbox string, e.g.
+     * : \\mailbox\\ : (string) An imap_open() mailbox string, e.g.
      * "mail.example.com:143/imap" or "mail.example.com:110/pop3".
      * 
      * @var array
@@ -45,6 +45,8 @@ class Solar_User_Auth_Mail extends Solar_Base {
     /**
      * 
      * Constructor.
+     * 
+     * @param array $config User-supplied configuration.
      * 
      */
     public function __construct($config = null)
@@ -64,13 +66,13 @@ class Solar_User_Auth_Mail extends Solar_Base {
 
     /**
      * 
-     * Validate a username and password.
+     * Validates a username and password.
      * 
      * @param string $handle Username to authenticate.
      * 
      * @param string $passwd The password to use.
      * 
-     * @return boolean True on success, false on failure.
+     * @return bool True on success, false on failure.
      * 
      * @todo Check the server status with fsockopen().
      * 

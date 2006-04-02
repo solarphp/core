@@ -35,6 +35,7 @@ class Solar_PathStack {
      * The stack of directories.
      * 
      * @var array
+     * 
      */
     protected $_stack = array();
     
@@ -43,6 +44,7 @@ class Solar_PathStack {
      * Gets a copy of the current stack.
      * 
      * @var array
+     * 
      */
     public function get()
     {
@@ -64,7 +66,7 @@ class Solar_PathStack {
      * // $stack->get() reveals that the directory search order will be
      * // 'path/3/', 'path/2/', 'path/1/', because the later adds
      * // override the newer ones.
-     *
+     * 
      * $stack = Solar::factory('Solar_PathStack');
      * $stack->add(array('path/1', 'path/2', 'path/3'));
      * // as before, $stack->get() reveals that the directory search order will be
@@ -79,7 +81,9 @@ class Solar_PathStack {
      * 
      * </code>
      * 
-     * @var array|string $path The directories to add to the stack.
+     * @param array|string $path The directories to add to the stack.
+     * 
+     * @return void
      * 
      */
     public function add($path)
@@ -115,14 +119,16 @@ class Solar_PathStack {
      * 
      * // $stack->get() reveals that the directory search order is
      * // 'path/3/', 'path/2/', 'path/1/'.
-     *
+     * 
      * $stack->set('another/path');
      * 
      * // $stack->get() is now 'another/path'.
      * </code>
      * 
-     * @var array|string $path The directories to add to the stack
+     * @param array|string $path The directories to add to the stack
      * after clearing it.
+     * 
+     * @return void
      * 
      */
     public function set($path)
@@ -147,10 +153,12 @@ class Solar_PathStack {
      * // $file is now the first instance of 'file.php' found from the         
      * // directory stack, looking first in 'path/3/file.php', then            
      * // 'path/2/file.php', then finally 'path/1/file.php'.
-     *
+     * 
      * </code>
      * 
-     * @var string $file The file to find using the directory stack.
+     * @param string $file The file to find using the directory stack.
+     * 
+     * @return bool True if found, false if not.
      * 
      */
     public function findInclude($file)
@@ -188,7 +196,9 @@ class Solar_PathStack {
      * // filesystem root.
      * </code>
      * 
-     * @var string $file The file to find using the directory stack.
+     * @param string $file The file to find using the directory stack.
+     * 
+     * @return bool True if found, false if not.
      * 
      */
     public function findReal($file)

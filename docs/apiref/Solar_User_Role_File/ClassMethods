@@ -6,7 +6,7 @@
 
 * Solar_User_Role_File::apiVersion() -- Reports the API version for this class.
 
-* Solar_User_Role_File::fetch() -- Fetch the roles.
+* Solar_User_Role_File::fetch() -- Fetches the roles for a username.
 
 * Solar_User_Role_File::locale() -- Looks up locale strings based on a key.
 

@@ -6,7 +6,7 @@ name: getHelper
 
 param: string, $name
 
-return: unknown
+return: Solar_View_Helper
 
 </function>
 
@@ -14,8 +14,8 @@ Returns the internal helper object; creates it as needed.
 
 * Parameters:
 
- * string //$name//: The helper name.  If this helper has not been created yet, this method creates it automatically.      * @return Solar_Template_Helper
+ * string //$name//: The helper name.  If this helper has not been created yet, this method creates it automatically.
 
-* Returns unknown: unknown
+* Returns Solar_View_Helper
 
 Returns the internal helper object; creates it as needed.

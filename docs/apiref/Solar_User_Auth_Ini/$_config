@@ -1,11 +1,9 @@
-protected  $_config
+protected array $_config
 
 User-provided configuration values.
 
-Keys:
+Keys are:
 
-file => (string) Path to password file.
+: \\file\\ : (string) Path to password file.
 
-group => (string) The group in which usernames reside.
-
-@var array
+: \\group\\ : (string) The group in which usernames reside.

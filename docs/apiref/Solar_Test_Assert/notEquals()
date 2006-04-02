@@ -8,7 +8,7 @@ param: mixed, $actual
 
 param: mixed, $expect
 
-return: unknown
+return: bool
 
 </function>
 
@@ -20,6 +20,6 @@ Assert that two variables are not equal.
 
  * mixed //$expect//: The expected result.
 
-* Returns unknown: unknown
+* Returns bool: The assertion result.
 
 Assert that two variables are not equal.

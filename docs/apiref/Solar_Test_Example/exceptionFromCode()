@@ -4,16 +4,18 @@ access:   public
 
 name: exceptionFromCode
 
-param: unknown, $code
+param: string, $code
 
-return: unknown
+return: void
 
 </function>
 
-
+Throws a user-specified error code for this class.
 
 * Parameters:
 
- * unknown //$code//: 
+ * string //$code//: The error code to throw.
 
-* Returns unknown: unknown
+* Returns void
+
+Throws a user-specified error code for this class.

@@ -1,1 +1,3 @@
-public  $layout_left
+public array $layout_left
+
+An array of content for the layout <div id="left"> block.

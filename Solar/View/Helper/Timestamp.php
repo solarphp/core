@@ -37,8 +37,6 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * 
      * The default date() format string.
      * 
-     * @access public
-     * 
      * @var array
      * 
      */
@@ -61,7 +59,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * @return string The formatted date string.
      * 
      */
-    function timestamp($spec, $format = null)
+    public function timestamp($spec, $format = null)
     {
         if (! $spec) {
             return;

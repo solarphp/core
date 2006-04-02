@@ -10,27 +10,27 @@
 
 * Solar_App_Bookmarks::$formdata -- The current form processing object.
 
-* Solar_App_Bookmarks::$layout_base -- 
+* Solar_App_Bookmarks::$layout_base -- The <base> href value for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_bottom -- 
+* Solar_App_Bookmarks::$layout_bottom -- An array of content for the layout <div id="bottom"> block.
 
-* Solar_App_Bookmarks::$layout_left -- 
+* Solar_App_Bookmarks::$layout_left -- An array of content for the layout <div id="left"> block.
 
-* Solar_App_Bookmarks::$layout_link -- 
+* Solar_App_Bookmarks::$layout_link -- An array of <link> tag values for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_meta -- 
+* Solar_App_Bookmarks::$layout_meta -- An array of <meta> tag values for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_object -- 
+* Solar_App_Bookmarks::$layout_object -- An array of <object> tag values for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_right -- 
+* Solar_App_Bookmarks::$layout_right -- An array of content for the layout <div id="right"> block.
 
-* Solar_App_Bookmarks::$layout_script -- 
+* Solar_App_Bookmarks::$layout_script -- An array of <script> tag values for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_style -- 
+* Solar_App_Bookmarks::$layout_style -- An array of <style> tag values for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_title -- The <title> string.
+* Solar_App_Bookmarks::$layout_title -- The <title> tag value for the layout <head> block.
 
-* Solar_App_Bookmarks::$layout_top -- 
+* Solar_App_Bookmarks::$layout_top -- An array of content for the layout <div id="top"> block.
 
 * Solar_App_Bookmarks::$list -- The list of all bookmarks for the current page.
 

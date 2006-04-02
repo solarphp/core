@@ -4,14 +4,14 @@ access: final  public
 
 name: getInfo
 
-return: unknown
+return: array
 
 </function>
 
-Gets user-defined information.
+Returns user-defined information.
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns array
 
-Gets user-defined information.
+Returns user-defined information.

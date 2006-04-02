@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_User_Auth_Multi
 
@@ -14,7 +14,7 @@ Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-supplied configuration.
 
 * Returns Solar_User_Auth_Multi: Solar_User_Auth_Multi instance
 

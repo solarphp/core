@@ -3,7 +3,3 @@
 Authenticate against .ini style files.
 
 Format for each line is "username = plainpassword\n";
- *
-@category Solar
-
-@package Solar_User

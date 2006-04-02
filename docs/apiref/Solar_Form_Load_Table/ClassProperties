@@ -6,7 +6,7 @@ None.
 
 ++ Protected
 
-* Solar_Form_Load_Table::$_config -- User-provided configuration values.
+* Solar_Form_Load_Table::$_config -- User-defined configuration array.
 
 ++ Private
 

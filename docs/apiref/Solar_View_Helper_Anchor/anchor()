@@ -4,7 +4,7 @@ access:   public
 
 name: anchor
 
-param: unknown, $spec
+param: Solar_Uri|string, $spec
 
 param: string, $text
 
@@ -18,7 +18,7 @@ Returns an anchor href tag.
 
 * Parameters:
 
- * unknown //$spec//: 
+ * Solar_Uri|string //$spec//: The anchor HREF specification.
 
  * string //$text//: A locale translation key.
 

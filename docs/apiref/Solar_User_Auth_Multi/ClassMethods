@@ -8,7 +8,7 @@
 
 * Solar_User_Auth_Multi::locale() -- Looks up locale strings based on a key.
 
-* Solar_User_Auth_Multi::valid() -- Validate a username and password.
+* Solar_User_Auth_Multi::valid() -- Validates a username and password.
 
 ++ Protected
 

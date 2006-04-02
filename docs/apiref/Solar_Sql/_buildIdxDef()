@@ -4,27 +4,26 @@ access:   protected
 
 name: _buildIdxDef
 
-param: unknown, $table
+param: string, $table
 
-param: unknown, $name
+param: string, $name
 
 param: array, $info
 
-return: unknown
+return: string
 
 </function>
 
-*
+Builds an index definition string.
 
 * Parameters:
 
- * unknown //$table//: 
+ * string //$table//: The table name.
 
- * unknown //$name//: 
+ * string //$name//: The index name.
 
- * array //$info//: The column information.
+ * array //$info//: The index information.
 
-* Returns unknown: unknown
+* Returns string: The index definition string.
 
-*
-Builds an index creation string.
+Builds an index definition string.

@@ -4,17 +4,17 @@
 
 * Solar_Sql_Exception_ColNameLength::__construct() -- Constructor.
 
-* Solar_Sql_Exception_ColNameLength::__toString() -- Custom string output.
+* Solar_Sql_Exception_ColNameLength::__toString() -- Returnes the exception as a string.
 
-* Solar_Sql_Exception_ColNameLength::getClass() -- Gets the class that threw the exception.
+* Solar_Sql_Exception_ColNameLength::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Sql_Exception_ColNameLength::getClassCode() -- Gets the class and code together.
+* Solar_Sql_Exception_ColNameLength::getClassCode() -- Returns the class name and code together.
 
 * Solar_Sql_Exception_ColNameLength::getCode() -- 
 
 * Solar_Sql_Exception_ColNameLength::getFile() -- 
 
-* Solar_Sql_Exception_ColNameLength::getInfo() -- Gets user-defined information.
+* Solar_Sql_Exception_ColNameLength::getInfo() -- Returns user-defined information.
 
 * Solar_Sql_Exception_ColNameLength::getLine() -- 
 

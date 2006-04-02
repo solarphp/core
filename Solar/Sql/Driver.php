@@ -32,17 +32,17 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Keys are:
      * 
-     * host  => (string) Host specification (typically 'localhost').
+     * : \\host\\ : (string) Host specification (typically 'localhost').
      * 
-     * port  => (string) Port number for the host name.
+     * : \\port\\ : (string) Port number for the host name.
      * 
-     * user  => (string) Connect to the database as this username.
+     * : \\user\\ : (string) Connect to the database as this username.
      * 
-     * pass  => (string) Password associated with the username.
+     * : \\pass\\ : (string) Password associated with the username.
      * 
-     * name  => (string) Database name (or file path, or TNS name).
+     * : \\name\\ : (string) Database name (or file path, or TNS name).
      * 
-     * mode  => (string) For SQLite, an octal file mode.
+     * : \\mode\\ : (string) For SQLite, an octal file mode.
      * 
      * @var array
      * 
@@ -62,7 +62,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * A portable database object for accessing the RDBMS.
      * 
      * @var object
-     *
+     * 
      */
     protected $_pdo = null;
     
@@ -337,7 +337,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     
     /**
      * 
-     * Builds a CREATE TABLE statment.
+     * Builds a CREATE TABLE command string.
      * 
      * We use this so that certain drivers can append table types
      * to the creation statment (e.g. MySQL).
@@ -346,7 +346,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * @param string $cols The column definitions.
      * 
-     * @return mixed An SQL-safe quoted value.
+     * @return string A CREATE TABLE command string.
      * 
      */
     public function buildCreateTable($name, $cols)
@@ -356,12 +356,15 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     
     /**
      * 
-     * Build an SQL SELECT statement from its component parts.
+     * Build an SQL SELECT command string from its component parts.
      * 
      * We use this so that drivers can append or wrap with LIMIT
      * clauses or emulation.
      * 
-     * @return string An SQL SELECT statement.
+     * @param array $parts The parts of the SELECT statement, generally
+     * from a Solar_Sql_Select object.
+     * 
+     * @return string An SQL SELECT command string.
      * 
      */
     public function buildSelect($parts)

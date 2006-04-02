@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_GetTextRaw::__construct() -- 
+* Solar_View_Helper_GetTextRaw::__construct() -- Constructor.
 
 * Solar_View_Helper_GetTextRaw::apiVersion() -- Reports the API version for this class.
 

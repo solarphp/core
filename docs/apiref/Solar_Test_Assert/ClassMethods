@@ -4,7 +4,7 @@
 
 * Solar_Test_Assert::equals() -- Assert that two variables are equal.
 
-* Solar_Test_Assert::fail() -- Throw an exception indicating assertion failure.
+* Solar_Test_Assert::fail() -- Throws and prints an exception indicating assertion failure.
 
 * Solar_Test_Assert::isFalse() -- Assert that a variable is boolean false.
 

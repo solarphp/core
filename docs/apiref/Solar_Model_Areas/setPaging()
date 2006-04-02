@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: setPaging
+
+param: int, $val
+
+return: void
+
+</function>
+
+Sets the number of rows per page.
+
+* Parameters:
+
+ * int //$val//: The number of rows per page.
+
+* Returns void
+
+Sets the number of rows per page.

@@ -1,3 +1,13 @@
 + The Solar_View_Helper_FormCheckbox Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View_Helper::HomePage Solar_View_Helper]
+
+  * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
+
+   * [Solar_View_Helper_FormCheckbox::HomePage Solar_View_Helper_FormCheckbox]
+
 Helper for a 'checkbox' element.

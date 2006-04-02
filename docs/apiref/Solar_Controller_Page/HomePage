@@ -1,5 +1,11 @@
 + The Solar_Controller_Page Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Controller_Page::HomePage Solar_Controller_Page]
+
 Abstract application (page) controller class for Solar.
 
 Expects a directory structure like this example:

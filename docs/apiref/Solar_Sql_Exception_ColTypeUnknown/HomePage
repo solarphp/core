@@ -1,3 +1,13 @@
 + The Solar_Sql_Exception_ColTypeUnknown Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
+
+   * [Solar_Sql_Exception_ColTypeUnknown::HomePage Solar_Sql_Exception_ColTypeUnknown]
+
 Exception: column type is unknown.

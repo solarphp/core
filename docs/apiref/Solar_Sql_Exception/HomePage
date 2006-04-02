@@ -1,3 +1,11 @@
 + The Solar_Sql_Exception Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
+
 Exception class.

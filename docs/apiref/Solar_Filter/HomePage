@@ -1,3 +1,9 @@
 + The Solar_Filter Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Filter::HomePage Solar_Filter]
+
 Methods for filtering user input or other data.

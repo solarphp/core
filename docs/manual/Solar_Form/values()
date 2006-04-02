@@ -12,17 +12,11 @@ contact[street]
 contact[city]
 contact[state]
 contact[zip]
-books[author]
-books[title]
 </code>
 
 After the form has been populated and validated, a call to values() would result in something like this:
 
-
 <code type="php">
-require_once 'Solar.php';
-Solar::start();
-
 // create the form
 $form = Solar::factory('Solar_Form');
 
@@ -38,20 +32,46 @@ if ($valid) {
     $values = $form->values();
     
     /*
-        Now the $values array looks something like this:
-        $values = array(
-            'id' => '12345',
-            'user' => array(
-                'email' => 'nobody@example.com',
-                'name'  => 'Nobody Example',
-            ),
-            'contact' => array(
-                'street' => '101 Main Street',
-                'city'   => 'Beverly Hills',
-                'state'  => 'CA',
-                'zip'    => '90210'
-            ),
-        );
+    Now the $values array looks something like this:
+    $values = array(
+        'id' => '12345',
+        'user' => array(
+            'email' => 'nobody@example.com',
+            'name'  => 'Nobody Example',
+        ),
+        'contact' => array(
+            'street' => '101 Main Street',
+            'city'   => 'Beverly Hills',
+            'state'  => 'CA',
+            'zip'    => '90210'
+        ),
+    );
+    */
+}
+</code>
+
+You can also call values() with one parameter, the "group" of elements you want to retrieve.
+
+<code type="php">
+
+    $user = $form->values('user');
+    
+    $contact = $form->values('contact');
+    
+    /*
+    Now the arrays look something like this:
+    
+    $user = array(
+        'email' => 'nobody@example.com',
+        'name'  => 'Nobody Example',
+    );
+    
+    $contact = array(
+        'street' => '101 Main Street',
+        'city'   => 'Beverly Hills',
+        'state'  => 'CA',
+        'zip'    => '90210'
+    );
     */
 }
 </code>

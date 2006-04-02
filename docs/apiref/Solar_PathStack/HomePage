@@ -1,5 +1,9 @@
 + The Solar_PathStack Class
 
+++ Inheritance
+
+* [Solar_PathStack::HomePage Solar_PathStack]
+
 Stack for finding files in user-defined fallback paths.
 
 As you add directory paths, they are searched first when you call

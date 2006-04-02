@@ -1,3 +1,11 @@
 + The Solar_View_Helper_Style Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View_Helper::HomePage Solar_View_Helper]
+
+  * [Solar_View_Helper_Style::HomePage Solar_View_Helper_Style]
+
 Helper for <style>...</style> tags.

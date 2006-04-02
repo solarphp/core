@@ -1,5 +1,11 @@
 + The Solar_View Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View::HomePage Solar_View]
+
 Provides a TemplateView pattern implementation for Solar.
 
 This implementation is good for all (X)HTML and XML template

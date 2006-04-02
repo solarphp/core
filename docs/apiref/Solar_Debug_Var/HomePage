@@ -1,3 +1,9 @@
 + The Solar_Debug_Var Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Debug_Var::HomePage Solar_Debug_Var]
+
 Class to help examine and debug variables.

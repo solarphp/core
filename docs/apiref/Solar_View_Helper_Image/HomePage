@@ -1,3 +1,11 @@
 + The Solar_View_Helper_Image Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View_Helper::HomePage Solar_View_Helper]
+
+  * [Solar_View_Helper_Image::HomePage Solar_View_Helper_Image]
+
 Helper to generate an <img ... /> tag.

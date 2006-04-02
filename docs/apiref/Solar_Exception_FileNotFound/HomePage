@@ -1,3 +1,11 @@
 + The Solar_Exception_FileNotFound Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Exception_FileNotFound::HomePage Solar_Exception_FileNotFound]
+
 Exception: file cannot be found.

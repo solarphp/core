@@ -1,3 +1,11 @@
 + The Solar_View_Helper_Date Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View_Helper::HomePage Solar_View_Helper]
+
+  * [Solar_View_Helper_Date::HomePage Solar_View_Helper_Date]
+
 Helper for a formatted date using [[php date()]] conventions.

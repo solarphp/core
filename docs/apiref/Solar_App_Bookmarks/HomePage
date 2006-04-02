@@ -1,3 +1,13 @@
 + The Solar_App_Bookmarks Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Controller_Page::HomePage Solar_Controller_Page]
+
+  * [Solar_App::HomePage Solar_App]
+
+   * [Solar_App_Bookmarks::HomePage Solar_App_Bookmarks]
+
 Social bookmarking application.

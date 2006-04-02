@@ -1,3 +1,11 @@
 + The Solar_Exception_MethodNotCallable Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Exception_MethodNotCallable::HomePage Solar_Exception_MethodNotCallable]
+
 Exception: a class or object method is not callable.

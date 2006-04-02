@@ -1,3 +1,11 @@
 + The Solar_Test_Example_Exception Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Test_Example_Exception::HomePage Solar_Test_Example_Exception]
+
 Example for testing Solar class-to-file hierarchy, locales, and exceptions.

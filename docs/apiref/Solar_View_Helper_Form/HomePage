@@ -1,5 +1,13 @@
 + The Solar_View_Helper_Form Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_View_Helper::HomePage Solar_View_Helper]
+
+  * [Solar_View_Helper_Form::HomePage Solar_View_Helper_Form]
+
 Helper for building CSS-based forms.
 
 This is a fluent class; all method calls except fetch() return

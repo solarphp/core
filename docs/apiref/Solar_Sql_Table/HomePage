@@ -1,3 +1,9 @@
 + The Solar_Sql_Table Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Sql_Table::HomePage Solar_Sql_Table]
+
 Class for representing an SQL table.

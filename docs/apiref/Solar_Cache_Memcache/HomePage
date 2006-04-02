@@ -1,5 +1,11 @@
 + The Solar_Cache_Memcache Class
 
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Cache_Memcache::HomePage Solar_Cache_Memcache]
+
 Memcache cache controller.
 
 This driver lets you connect to a [http://www.danga.com/memcached/

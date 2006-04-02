@@ -1,22 +1,14 @@
 MOVING TO A NON-DEV RELEASE
 
-
 Get database error messages back from form submissions
 
-Convert Solar_Uri to Solar-specific URI haldnler, not generic handler?
+Convert Solar_Uri to Solar-specific URI handler, not generic handler?
 
 Write tests
 
-Write inline docs
-    Add for Solar_Exception to overcome Exception lack?
-    
-Write narrative docs
-    Solar_Form and values()
-    
 Upgrade doc-builder
-    show default value for properties
+    show default value for properties (can't without instantiating)
     add parenting
-    more robust docblock parser
     split into parse and write/build/render
     have doc-parser un-prefix lines starting with star, not star-space
     warn when there is no docblock
@@ -33,10 +25,7 @@ DOCS PLAN
 
 Link to Solar vs Zend in docs
 
-* Fix internal docs. Keep very short!  Move long docs to manual.
-* Update long docs.
 * Write controller stuff, since everyone seems to love that.
-* show default values for properties
 
 When packaging, the way to update the site is:
 

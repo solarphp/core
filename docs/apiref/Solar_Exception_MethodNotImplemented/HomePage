@@ -1,3 +1,11 @@
 + The Solar_Exception_MethodNotImplemented Class
 
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Exception_MethodNotImplemented::HomePage Solar_Exception_MethodNotImplemented]
+
 Exception: a class method is not implemented.

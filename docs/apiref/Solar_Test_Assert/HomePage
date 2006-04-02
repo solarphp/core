@@ -1,5 +1,9 @@
 + The Solar_Test_Assert Class
 
+++ Inheritance
+
+* [Solar_Test_Assert::HomePage Solar_Test_Assert]
+
 Class for simple unit-testing assertions.
 
 If the assertion is successful, it returns boolean true with no

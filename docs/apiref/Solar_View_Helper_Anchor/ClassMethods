@@ -2,17 +2,21 @@
 
 ++ Public
 
-* Solar_View_Helper_Anchor::__construct() -- Constructor.
-
 * Solar_View_Helper_Anchor::anchor() -- Returns an anchor href tag.
 
-* Solar_View_Helper_Anchor::apiVersion() -- Reports the API version for this class.
+Inherited Methods:
 
-* Solar_View_Helper_Anchor::locale() -- Looks up locale strings based on a key.
+* Solar_View_Helper::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_View_Helper_Anchor::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

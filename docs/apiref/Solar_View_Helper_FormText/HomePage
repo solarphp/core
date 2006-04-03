@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormText::HomePage Solar_View_Helper_FormText]
+   * Solar_View_Helper_FormText
 
 Helper for a 'text' element.

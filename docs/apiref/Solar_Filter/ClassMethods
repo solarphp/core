@@ -2,13 +2,9 @@
 
 ++ Public
 
-* Solar_Filter::__construct() -- Constructor.
-
 * Solar_Filter::alnum() -- Returns only alphanumeric characters within a value.
 
 * Solar_Filter::alpha() -- Returns only alphabetic characters within a value.
-
-* Solar_Filter::apiVersion() -- Reports the API version for this class.
 
 * Solar_Filter::blank() -- Returns only whitespace characters within a value.
 
@@ -21,8 +17,6 @@
 * Solar_Filter::formatTime() -- Forces a value to a time format using [[php date()]].
 
 * Solar_Filter::formatTimestamp() -- Forces a value to a timestamp format using [[php date()]].
-
-* Solar_Filter::locale() -- Looks up locale strings based on a key.
 
 * Solar_Filter::multiple() -- Applies multiple filters to a value.
 
@@ -46,9 +40,19 @@
 
 * Solar_Filter::word() -- Returns only word characters within a value.
 
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
-* Solar_Filter::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

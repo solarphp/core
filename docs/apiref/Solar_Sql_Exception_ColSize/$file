@@ -1,1 +1,3 @@
+//Inherited from Exception::$file.//
+
 protected  $file

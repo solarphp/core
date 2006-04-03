@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Debug_Timer::HomePage Solar_Debug_Timer]
+ * Solar_Debug_Timer
 
 Class to track code execution times.

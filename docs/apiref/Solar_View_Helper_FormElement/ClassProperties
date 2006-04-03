@@ -8,8 +8,6 @@ None.
 
 * Solar_View_Helper_FormElement::$_attribs -- The form element attributes (checked, selected, readonly, etc).
 
-* Solar_View_Helper_FormElement::$_config -- User-provided configuration values.
-
 * Solar_View_Helper_FormElement::$_disable -- Whether or not the element is to be disabled.
 
 * Solar_View_Helper_FormElement::$_feedback -- Feedback messages for the element.
@@ -30,7 +28,11 @@ None.
 
 * Solar_View_Helper_FormElement::$_value -- The form element value.
 
-* Solar_View_Helper_FormElement::$_view -- Reference to the parent Solar_View object.
+Inherited Properties:
+
+* Solar_Base::$_config() -- User-provided configuration values.
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
 
 ++ Private
 

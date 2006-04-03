@@ -2,25 +2,29 @@
 
 ++ Public
 
-* Solar_Test_Example::__construct() -- Constructor.
-
-* Solar_Test_Example::apiVersion() -- Reports the API version for this class.
-
 * Solar_Test_Example::classGenericException() -- Throws ERR_GENERIC_CONDITION for this class.
 
 * Solar_Test_Example::classSpecificException() -- Throws ERR_CUSTOM_CONDITION for this class.
 
 * Solar_Test_Example::exceptionFromCode() -- Throws a user-specified error code for this class.
 
-* Solar_Test_Example::locale() -- Looks up locale strings based on a key.
-
 * Solar_Test_Example::solarGenericException() -- Throws ERR_NO_SUCH_CONDITION for this class.
 
 * Solar_Test_Example::solarSpecificException() -- Throws ERR_FILE_NOT_FOUND for this class.
 
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
-* Solar_Test_Example::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

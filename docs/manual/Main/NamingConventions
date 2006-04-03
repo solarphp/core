@@ -9,18 +9,19 @@ All Solar class names start with \\Solar_\\ and map directly to their filesystem
 When reasonable, methods in Solar classes should conform to these names when they perform these related functions:
 
 ||~ Method Name ||~ Usage ||~ Examples ||
-|| get        || gets the value of a property || $obj->getProperty() ||
-|| set        || sets the value of a property || $obj->setProperty($value) ||
-|| fetch      || fetches one entry from storage (instead of get/find/retrieve) || $cache->fetch($id) ||
-|| fetchAll   || fetches multiple entries from storage || $table->fetchAll() ||
-|| fetchBy    || fetches one entry from storage, using alternative criteria (instead of fetchWith/fetchFor) || $table->fetchByName($name) ||
-|| fetchAllBy || fetches mulitple entries from storage, using alternative criteria (instead of fetchWith/fetchFor) || $table->fetchAllByName($name) ||
-|| insert     || inserts new data in storage (instead of add/new/save) || $table->insert($data) ||
-|| update     || updates existing data in storage (instead of save/change) || $table->update($data, $where), $file->update($data, $path) ||
-|| save       || updates existing data **or** inserts new data in storage (instead of replace) || $cache->save($id, $data) ||
-|| delete     || deletes data from storage (instead of remove) || $table->delete($where), $cache->delete($id) ||
+|| get          || gets the value of a property || $obj->getProperty() ||
+|| set          || sets the value of a property || $obj->setProperty($value) ||
+|| fetch        || fetches one entry from storage (instead of get/find/retrieve) || $cache->fetch($id) ||
+|| fetchAll     || fetches multiple entries from storage || $table->fetchAll() ||
+|| fetchBy      || fetches one entry from storage, using alternative criteria (instead of fetchWith/fetchFor) || $table->fetchByName($name) ||
+|| fetchAllBy   || fetches multiple entries from storage, using alternative criteria (instead of fetchWith/fetchFor) || $table->fetchAllByName($name) ||
+|| insert       || inserts new data in storage (instead of add/new/save) || $table->insert($data) ||
+|| update       || updates existing data in storage (instead of save/change) || $table->update($data, $where), $file->update($data, $path) ||
+|| save         || updates existing data **or** inserts new data in storage (instead of replace) || $cache->save($id, $data) ||
+|| delete       || deletes data from storage (instead of remove) || $table->delete($where), $cache->delete($id) ||
+|| is           || returns boolean true/false || $cache->isActive() ||
 
-These names are set in stone, but should be used whenever reasonable.
+These names are not set in stone, but should be used when reasonable.
 
 ++ Global Variables
 
@@ -44,14 +45,16 @@ LocaleFiles should be named for their locale code.  For example, the \\en_US\\  
 
 ++ Locale Translation Keys
 
-Keys in the LocaleFiles should be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
+Keys in the LocaleFiles should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
 
-||~ Prefix     ||~ Usage ||
-|| \\DESCR_\\  || Form element descriptions (long) ||
-|| \\ERR_\\    || Error and exceptions messages ||
-|| \\FORMAT_\\ || Strings related to formatting for the locale ||
-|| \\LABEL_\\  || Form element labels (short) ||
-|| \\OK_\\     || Success messages ||
-|| \\SUBMIT_\\ || Controller action operations (typically submit-button values) ||
-|| \\TEXT_\\   || General-purpose text ||
-|| \\WARN_\\   || Warning or failure messages ||
+||~ Prefix      ||~ Usage ||
+|| \\ACTION_\\  || Page-controller actions ||
+|| \\DESCR_\\   || Form element descriptions (longer) ||
+|| \\ERR_\\     || Logic error and exception messages ||
+|| \\FAILURE_\\ || Failure messages, typically form-related ||
+|| \\FORMAT_\\  || Formatting strings for the locale ||
+|| \\LABEL_\\   || Form element labels (shorter) ||
+|| \\SUCCESS_\\ || Success messages, typically form-related ||
+|| \\SUBMIT_\\  || Submit-button values ||
+|| \\TEXT_\\    || General-purpose text ||
+|| \\WARNING_\\ || Warnings, typically form-related ||

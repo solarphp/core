@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Table::_autoSetup().//
+
 <function>
 
 access: final  protected

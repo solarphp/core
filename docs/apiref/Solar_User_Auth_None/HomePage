@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_None::HomePage Solar_User_Auth_None]
+ * Solar_User_Auth_None
 
 Authenticate against nothing; defaults all authentication to "failed."

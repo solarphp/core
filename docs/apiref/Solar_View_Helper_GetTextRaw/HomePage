@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_GetTextRaw::HomePage Solar_View_Helper_GetTextRaw]
+  * Solar_View_Helper_GetTextRaw
 
 Helper for locale strings (no escaping is applied).

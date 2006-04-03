@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Form_Load_Xml::HomePage Solar_Form_Load_Xml]
+ * Solar_Form_Load_Xml
 
 Class for loading Solar_Form definitions from a SimpleXML file.

@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Valid::HomePage Solar_Valid]
+ * Solar_Valid
 
 Methods for validating data.

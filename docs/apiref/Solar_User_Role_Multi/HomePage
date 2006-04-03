@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Role_Multi::HomePage Solar_User_Role_Multi]
+ * Solar_User_Role_Multi
 
 Get roles from multiple sources and return as a single list.

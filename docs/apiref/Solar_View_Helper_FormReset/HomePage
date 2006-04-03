@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormReset::HomePage Solar_View_Helper_FormReset]
+   * Solar_View_Helper_FormReset
 
 Helper for a 'reset' button.

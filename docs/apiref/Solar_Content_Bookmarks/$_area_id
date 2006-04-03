@@ -1,3 +1,5 @@
+//Inherited from Solar_Content_Abstract::$_area_id.//
+
 protected int $_area_id
 
 The default area ID to fetch nodes from.

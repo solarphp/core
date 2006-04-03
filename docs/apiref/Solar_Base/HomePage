@@ -1,9 +1,5 @@
 + The Solar_Base Class
 
-++ Inheritance
-
-* [Solar_Base::HomePage Solar_Base]
-
 Abstract base class for all Solar objects.
 
 This is the class from which almost all other Solar classes are

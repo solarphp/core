@@ -2,27 +2,29 @@
 
 ++ Public
 
-* Solar_Exception_FileNotFound::__construct() -- Constructor.
+Inherited Methods:
 
-* Solar_Exception_FileNotFound::__toString() -- Returnes the exception as a string.
+* Solar_Exception::__construct() -- Constructor.
 
-* Solar_Exception_FileNotFound::getClass() -- Returns the class name that threw the exception.
+* Solar_Exception::__toString() -- Returnes the exception as a string.
 
-* Solar_Exception_FileNotFound::getClassCode() -- Returns the class name and code together.
+* Solar_Exception::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Exception_FileNotFound::getCode() -- 
+* Solar_Exception::getClassCode() -- Returns the class name and code together.
 
-* Solar_Exception_FileNotFound::getFile() -- 
+* Exception::getCode() -- 
 
-* Solar_Exception_FileNotFound::getInfo() -- Returns user-defined information.
+* Exception::getFile() -- 
 
-* Solar_Exception_FileNotFound::getLine() -- 
+* Solar_Exception::getInfo() -- Returns user-defined information.
 
-* Solar_Exception_FileNotFound::getMessage() -- 
+* Exception::getLine() -- 
 
-* Solar_Exception_FileNotFound::getTrace() -- 
+* Exception::getMessage() -- 
 
-* Solar_Exception_FileNotFound::getTraceAsString() -- 
+* Exception::getTrace() -- 
+
+* Exception::getTraceAsString() -- 
 
 ++ Protected
 
@@ -30,4 +32,6 @@ None.
 
 ++ Private
 
-* Solar_Exception_FileNotFound::__clone() --
+Inherited Methods:
+
+* Exception::__clone() --

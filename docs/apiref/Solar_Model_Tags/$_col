@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Table::$_col.//
+
 protected array $_col
 
 The column specification array for all columns in this table.

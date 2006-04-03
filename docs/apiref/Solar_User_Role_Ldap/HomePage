@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Role_Ldap::HomePage Solar_User_Role_Ldap]
+ * Solar_User_Role_Ldap
 
 Get roles (groups) from an LDAP server.

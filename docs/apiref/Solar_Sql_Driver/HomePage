@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
+ * Solar_Sql_Driver
 
 Abstract base class for specific RDBMS driver information.

@@ -1,3 +1,5 @@
+//Inherited from Solar_Content_Abstract::update().//
+
 <function>
 
 access:   public

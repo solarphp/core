@@ -6,6 +6,8 @@ name: reset
 
 param: string, $status, 'ANON'
 
+param: string, $handle, NULL
+
 return: void
 
 </function>
@@ -16,8 +18,11 @@ Resets any authentication data in the session.
 
  * string //$status//: A Solar_User_Auth status string; default is 'ANON'.
 
+ * string //$handle//: The authenticated user handle; only honored if $status is 'VALID'.
+
 * Returns void
 
 Resets any authentication data in the session.
 
-Typically used for idling, expiration, and logout.
+Typically used for idling, expiration, and logout.  Calls
+[[php session_regenerate_id()]] to clear previous session.

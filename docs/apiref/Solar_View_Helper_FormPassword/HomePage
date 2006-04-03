@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormPassword::HomePage Solar_View_Helper_FormPassword]
+   * Solar_View_Helper_FormPassword
 
 Helper for a 'password' element.

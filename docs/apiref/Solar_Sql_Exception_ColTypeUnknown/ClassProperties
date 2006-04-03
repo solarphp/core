@@ -6,17 +6,19 @@ None.
 
 ++ Protected
 
-* Solar_Sql_Exception_ColTypeUnknown::$_class -- Class where the exception originated.
+Inherited Properties:
 
-* Solar_Sql_Exception_ColTypeUnknown::$_info -- User-defined information array.
+* Solar_Exception::$_class() -- Class where the exception originated.
 
-* Solar_Sql_Exception_ColTypeUnknown::$code -- 
+* Solar_Exception::$_info() -- User-defined information array.
 
-* Solar_Sql_Exception_ColTypeUnknown::$file -- 
+* Exception::$code() -- 
 
-* Solar_Sql_Exception_ColTypeUnknown::$line -- 
+* Exception::$file() -- 
 
-* Solar_Sql_Exception_ColTypeUnknown::$message -- 
+* Exception::$line() -- 
+
+* Exception::$message() -- 
 
 ++ Private
 

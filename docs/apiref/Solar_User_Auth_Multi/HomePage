@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_Multi::HomePage Solar_User_Auth_Multi]
+ * Solar_User_Auth_Multi
 
 Authenticate against multiple sources, falling back as needed.

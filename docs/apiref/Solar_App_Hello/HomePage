@@ -8,6 +8,6 @@
 
   * [Solar_App::HomePage Solar_App]
 
-   * [Solar_App_Hello::HomePage Solar_App_Hello]
+   * Solar_App_Hello
 
 Simple "hello world" application with actions, views, and localization.

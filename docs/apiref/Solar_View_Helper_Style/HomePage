@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Style::HomePage Solar_View_Helper_Style]
+  * Solar_View_Helper_Style
 
 Helper for <style>...</style> tags.

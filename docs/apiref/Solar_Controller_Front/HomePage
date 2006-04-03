@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Controller_Front::HomePage Solar_Controller_Front]
+ * Solar_Controller_Front
 
 Front-controller class for Solar.
 

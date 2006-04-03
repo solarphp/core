@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_layout_var.//
+
 protected string $_layout_var
 
 The name of the variable where page content is placed in the layout.

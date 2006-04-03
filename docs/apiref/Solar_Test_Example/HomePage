@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Test_Example::HomePage Solar_Test_Example]
+ * Solar_Test_Example
 
 Example for testing Solar class-to-file hierarchy, locales, and exceptions.

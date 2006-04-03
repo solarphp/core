@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_action.//
+
 protected string $_action
 
 The action being requested of (performed by) the application.

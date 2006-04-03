@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_Mail::HomePage Solar_User_Auth_Mail]
+ * Solar_User_Auth_Mail
 
 Authenticate against an IMAP or POP3 mail server.

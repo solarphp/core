@@ -6,17 +6,19 @@ None.
 
 ++ Protected
 
-* Solar_Test_Example_Exception::$_class -- Class where the exception originated.
+Inherited Properties:
 
-* Solar_Test_Example_Exception::$_info -- User-defined information array.
+* Solar_Exception::$_class() -- Class where the exception originated.
 
-* Solar_Test_Example_Exception::$code -- 
+* Solar_Exception::$_info() -- User-defined information array.
 
-* Solar_Test_Example_Exception::$file -- 
+* Exception::$code() -- 
 
-* Solar_Test_Example_Exception::$line -- 
+* Exception::$file() -- 
 
-* Solar_Test_Example_Exception::$message -- 
+* Exception::$line() -- 
+
+* Exception::$message() -- 
 
 ++ Private
 

@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_View_Helper::HomePage Solar_View_Helper]
+ * Solar_View_Helper
 
 Abstract Solar_View_Helper class.

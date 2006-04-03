@@ -8,6 +8,6 @@
 
   * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
 
-   * [Solar_Sql_Exception_TableNameLength::HomePage Solar_Sql_Exception_TableNameLength]
+   * Solar_Sql_Exception_TableNameLength
 
 Exception: table name is too long or too short.

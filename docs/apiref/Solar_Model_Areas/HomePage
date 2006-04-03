@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Table::HomePage Solar_Sql_Table]
 
-  * [Solar_Model_Areas::HomePage Solar_Model_Areas]
+  * Solar_Model_Areas
 
 Broad content areas equivalent to logical namespaces.

@@ -1,7 +1,3 @@
 + The Solar_Sql_Reserved Class
 
-++ Inheritance
-
-* [Solar_Sql_Reserved::HomePage Solar_Sql_Reserved]
-
 List of all reserved words for all supported databases.

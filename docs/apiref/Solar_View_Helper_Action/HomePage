@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Action::HomePage Solar_View_Helper_Action]
+  * Solar_View_Helper_Action
 
 Helper for action anchors and hrefs, with built-in text translation.

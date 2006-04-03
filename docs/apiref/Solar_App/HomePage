@@ -6,6 +6,6 @@
 
  * [Solar_Controller_Page::HomePage Solar_Controller_Page]
 
-  * [Solar_App::HomePage Solar_App]
+  * Solar_App
 
 Abstract base class for Solar application classes.

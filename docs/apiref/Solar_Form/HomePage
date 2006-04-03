@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Form::HomePage Solar_Form]
+ * Solar_Form
 
 Form-processing class; also hints the view on how to present the form.

@@ -10,13 +10,15 @@ None.
 
 * Solar_Exception::$_info -- User-defined information array.
 
-* Solar_Exception::$code -- 
+Inherited Properties:
 
-* Solar_Exception::$file -- 
+* Exception::$code() -- 
 
-* Solar_Exception::$line -- 
+* Exception::$file() -- 
 
-* Solar_Exception::$message -- 
+* Exception::$line() -- 
+
+* Exception::$message() -- 
 
 ++ Private
 

@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Link::HomePage Solar_View_Helper_Link]
+  * Solar_View_Helper_Link
 
 Helper for links.

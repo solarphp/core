@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormCheckbox::HomePage Solar_View_Helper_FormCheckbox]
+   * Solar_View_Helper_FormCheckbox
 
 Helper for a 'checkbox' element.

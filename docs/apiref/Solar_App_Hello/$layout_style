@@ -1,3 +1,5 @@
+//Inherited from Solar_App::$layout_style.//
+
 public array $layout_style
 
 An array of <style> tag values for the layout <head> block.

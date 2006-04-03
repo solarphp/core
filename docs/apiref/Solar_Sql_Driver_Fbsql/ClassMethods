@@ -2,45 +2,49 @@
 
 ++ Public
 
-* Solar_Sql_Driver_Fbsql::__construct() -- Constructor.
-
-* Solar_Sql_Driver_Fbsql::apiVersion() -- Reports the API version for this class.
-
-* Solar_Sql_Driver_Fbsql::begin() -- Leave autocommit mode and begin a transaction.
-
-* Solar_Sql_Driver_Fbsql::buildCreateTable() -- Builds a CREATE TABLE command string.
-
 * Solar_Sql_Driver_Fbsql::buildSelect() -- Adds a LIMIT clause (or equivalent) to a SELECT statement.
-
-* Solar_Sql_Driver_Fbsql::commit() -- Commit a transaction and return to autocommit mode.
-
-* Solar_Sql_Driver_Fbsql::createSequence() -- Creates a sequence, optionally starting at a certain number.
-
-* Solar_Sql_Driver_Fbsql::dropSequence() -- Drops a sequence.
-
-* Solar_Sql_Driver_Fbsql::exec() -- Prepares and executes an SQL statement with bound data.
 
 * Solar_Sql_Driver_Fbsql::limit() -- Adds a LIMIT clause (or equivalent) to an SQL statement.
 
 * Solar_Sql_Driver_Fbsql::listTables() -- Returns the SQL statement to get a list of database tables.
 
-* Solar_Sql_Driver_Fbsql::locale() -- Looks up locale strings based on a key.
-
-* Solar_Sql_Driver_Fbsql::nativeColTypes() -- Returns a list of native column types.
-
 * Solar_Sql_Driver_Fbsql::nextSequence() -- Gets a sequence number; creates the sequence if it does not exist.
 
-* Solar_Sql_Driver_Fbsql::quote() -- Safely quotes a value for an SQL statement.
+Inherited Methods:
 
-* Solar_Sql_Driver_Fbsql::rollback() -- Roll back a transaction and return to autocommit mode.
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Sql_Driver::begin() -- Leave autocommit mode and begin a transaction.
+
+* Solar_Sql_Driver::buildCreateTable() -- Builds a CREATE TABLE command string.
+
+* Solar_Sql_Driver::commit() -- Commit a transaction and return to autocommit mode.
+
+* Solar_Sql_Driver::createSequence() -- Creates a sequence, optionally starting at a certain number.
+
+* Solar_Sql_Driver::dropSequence() -- Drops a sequence.
+
+* Solar_Sql_Driver::exec() -- Prepares and executes an SQL statement with bound data.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+* Solar_Sql_Driver::nativeColTypes() -- Returns a list of native column types.
+
+* Solar_Sql_Driver::quote() -- Safely quotes a value for an SQL statement.
+
+* Solar_Sql_Driver::rollback() -- Roll back a transaction and return to autocommit mode.
 
 ++ Protected
 
-* Solar_Sql_Driver_Fbsql::_connect() -- Creates a PDO object and connects to the database.
+Inherited Methods:
 
-* Solar_Sql_Driver_Fbsql::_dsn() -- Creates a PDO-style DSN.
+* Solar_Sql_Driver::_connect() -- Creates a PDO object and connects to the database.
 
-* Solar_Sql_Driver_Fbsql::_exception() -- Convenience method for returning exceptions with localized text.
+* Solar_Sql_Driver::_dsn() -- Creates a PDO-style DSN.
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

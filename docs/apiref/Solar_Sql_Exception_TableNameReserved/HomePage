@@ -8,6 +8,6 @@
 
   * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
 
-   * [Solar_Sql_Exception_TableNameReserved::HomePage Solar_Sql_Exception_TableNameReserved]
+   * Solar_Sql_Exception_TableNameReserved
 
 Exception: table name is a reserved word.

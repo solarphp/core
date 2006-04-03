@@ -8,7 +8,9 @@
 
 * Solar_View_Helper_GetTextRaw::$_config -- User-defined configuration.
 
-* Solar_View_Helper_GetTextRaw::$_view -- Reference to the parent Solar_View object.
+Inherited Properties:
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
 
 ++ Private
 

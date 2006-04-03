@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormOptions::HomePage Solar_View_Helper_FormOptions]
+   * Solar_View_Helper_FormOptions
 
 Helper for standalone options.

@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Cache::HomePage Solar_Cache]
+ * Solar_Cache
 
 Class for cache control.

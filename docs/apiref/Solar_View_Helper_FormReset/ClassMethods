@@ -2,19 +2,23 @@
 
 ++ Public
 
-* Solar_View_Helper_FormReset::__construct() -- Constructor.
-
-* Solar_View_Helper_FormReset::apiVersion() -- Reports the API version for this class.
-
 * Solar_View_Helper_FormReset::formReset() -- Generates a 'reset' button.
 
-* Solar_View_Helper_FormReset::locale() -- Looks up locale strings based on a key.
+Inherited Methods:
+
+* Solar_View_Helper::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_View_Helper_FormReset::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
 
-* Solar_View_Helper_FormReset::_prepare() -- Prepares an info array and imports to the properties.
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormElement::_prepare() -- Prepares an info array and imports to the properties.
 
 ++ Private
 

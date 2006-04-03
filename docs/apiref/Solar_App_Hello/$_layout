@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_layout.//
+
 protected string $_layout
 
 The name of the layout to use for the view, minus the .layout.php suffix.

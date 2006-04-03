@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
 
-  * [Solar_Sql_Driver_Fbsql::HomePage Solar_Sql_Driver_Fbsql]
+  * Solar_Sql_Driver_Fbsql
 
 Class for connecting to Frontbase SQL databases.

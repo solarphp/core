@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Table::$_order.//
+
 protected array $_order
 
 The default order when fetching rows.

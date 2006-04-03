@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Controller_Page::HomePage Solar_Controller_Page]
+ * Solar_Controller_Page
 
 Abstract application (page) controller class for Solar.
 

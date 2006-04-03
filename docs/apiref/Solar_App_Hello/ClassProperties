@@ -4,57 +4,61 @@
 
 * Solar_App_Hello::$code -- The requested locale code.
 
-* Solar_App_Hello::$layout_base -- The <base> href value for the layout <head> block.
-
-* Solar_App_Hello::$layout_bottom -- An array of content for the layout <div id="bottom"> block.
-
-* Solar_App_Hello::$layout_left -- An array of content for the layout <div id="left"> block.
-
-* Solar_App_Hello::$layout_link -- An array of <link> tag values for the layout <head> block.
-
-* Solar_App_Hello::$layout_meta -- An array of <meta> tag values for the layout <head> block.
-
-* Solar_App_Hello::$layout_object -- An array of <object> tag values for the layout <head> block.
-
-* Solar_App_Hello::$layout_right -- An array of content for the layout <div id="right"> block.
-
-* Solar_App_Hello::$layout_script -- An array of <script> tag values for the layout <head> block.
-
-* Solar_App_Hello::$layout_style -- An array of <style> tag values for the layout <head> block.
-
-* Solar_App_Hello::$layout_title -- The <title> tag value for the layout <head> block.
-
-* Solar_App_Hello::$layout_top -- An array of content for the layout <div id="top"> block.
-
 * Solar_App_Hello::$list -- The list of available locale codes.
 
 * Solar_App_Hello::$text -- The translated text.
 
-++ Protected
+Inherited Properties:
 
-* Solar_App_Hello::$_action -- The action being requested of (performed by) the application.
+* Solar_App::$layout_base() -- The <base> href value for the layout <head> block.
+
+* Solar_App::$layout_bottom() -- An array of content for the layout <div id="bottom"> block.
+
+* Solar_App::$layout_left() -- An array of content for the layout <div id="left"> block.
+
+* Solar_App::$layout_link() -- An array of <link> tag values for the layout <head> block.
+
+* Solar_App::$layout_meta() -- An array of <meta> tag values for the layout <head> block.
+
+* Solar_App::$layout_object() -- An array of <object> tag values for the layout <head> block.
+
+* Solar_App::$layout_right() -- An array of content for the layout <div id="right"> block.
+
+* Solar_App::$layout_script() -- An array of <script> tag values for the layout <head> block.
+
+* Solar_App::$layout_style() -- An array of <style> tag values for the layout <head> block.
+
+* Solar_App::$layout_title() -- The <title> tag value for the layout <head> block.
+
+* Solar_App::$layout_top() -- An array of content for the layout <div id="top"> block.
+
+++ Protected
 
 * Solar_App_Hello::$_action_default -- The default controller action.
 
-* Solar_App_Hello::$_action_info -- The info variables to use for actions.
+Inherited Properties:
 
-* Solar_App_Hello::$_config -- User-provided configuration values.
+* Solar_Controller_Page::$_action() -- The action being requested of (performed by) the application.
 
-* Solar_App_Hello::$_dir -- Base directory under which actions, views, etc. are located.
+* Solar_Controller_Page::$_action_info() -- The info variables to use for actions.
 
-* Solar_App_Hello::$_info -- Application request parameters collected from the URI pathinfo.
+* Solar_Base::$_config() -- User-provided configuration values.
 
-* Solar_App_Hello::$_layout -- The name of the layout to use for the view, minus the .layout.php suffix.
+* Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc. are located.
 
-* Solar_App_Hello::$_layout_dir -- Where the layout directory is located.
+* Solar_Controller_Page::$_info() -- Application request parameters collected from the URI pathinfo.
 
-* Solar_App_Hello::$_layout_var -- The name of the variable where page content is placed in the layout.
+* Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .layout.php suffix.
 
-* Solar_App_Hello::$_name -- The short-name of this application.
+* Solar_Controller_Page::$_layout_dir() -- Where the layout directory is located.
 
-* Solar_App_Hello::$_query -- Application request parameters collected from the URI query string.
+* Solar_Controller_Page::$_layout_var() -- The name of the variable where page content is placed in the layout.
 
-* Solar_App_Hello::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+* Solar_Controller_Page::$_name() -- The short-name of this application.
+
+* Solar_Controller_Page::$_query() -- Application request parameters collected from the URI query string.
+
+* Solar_Controller_Page::$_view() -- The name of the view to be rendered after the action, minus the .view.php suffix.
 
 ++ Private
 

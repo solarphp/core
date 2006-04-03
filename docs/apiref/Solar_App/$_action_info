@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_action_info.//
+
 protected string $_action_info
 
 The info variables to use for actions.

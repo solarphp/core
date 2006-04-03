@@ -4,15 +4,19 @@
 
 * Solar_User_Auth_Ldap::__construct() -- Constructor.
 
-* Solar_User_Auth_Ldap::apiVersion() -- Reports the API version for this class.
-
-* Solar_User_Auth_Ldap::locale() -- Looks up locale strings based on a key.
-
 * Solar_User_Auth_Ldap::valid() -- Validate a username and password.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_User_Auth_Ldap::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

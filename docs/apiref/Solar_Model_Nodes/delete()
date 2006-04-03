@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Table::delete().//
+
 <function>
 
 access:   public

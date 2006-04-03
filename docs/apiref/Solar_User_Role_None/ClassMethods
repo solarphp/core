@@ -2,17 +2,21 @@
 
 ++ Public
 
-* Solar_User_Role_None::__construct() -- Constructor.
-
-* Solar_User_Role_None::apiVersion() -- Reports the API version for this class.
-
 * Solar_User_Role_None::fetch() -- Fetch the roles.
 
-* Solar_User_Role_None::locale() -- Looks up locale strings based on a key.
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_User_Role_None::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

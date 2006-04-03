@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormTextarea::HomePage Solar_View_Helper_FormTextarea]
+   * Solar_View_Helper_FormTextarea
 
 Helper for a 'textarea' element.

@@ -1,3 +1,5 @@
+//Inherited from Solar_Content_Abstract::_masterWhere().//
+
 <function>
 
 access:   protected

@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Role::HomePage Solar_User_Role]
+ * Solar_User_Role
 
 Class for reading user roles and groups.

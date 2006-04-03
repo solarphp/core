@@ -12,8 +12,6 @@ None.
 
 * Solar_Controller_Page::$_action_info -- The info variables to use for actions.
 
-* Solar_Controller_Page::$_config -- User-provided configuration values.
-
 * Solar_Controller_Page::$_dir -- Base directory under which actions, views, etc. are located.
 
 * Solar_Controller_Page::$_info -- Application request parameters collected from the URI pathinfo.
@@ -29,6 +27,10 @@ None.
 * Solar_Controller_Page::$_query -- Application request parameters collected from the URI query string.
 
 * Solar_Controller_Page::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- User-provided configuration values.
 
 ++ Private
 

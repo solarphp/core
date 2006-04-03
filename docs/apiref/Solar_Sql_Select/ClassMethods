@@ -6,8 +6,6 @@
 
 * Solar_Sql_Select::__toString() -- Returns this object as an SQL statement string.
 
-* Solar_Sql_Select::apiVersion() -- Reports the API version for this class.
-
 * Solar_Sql_Select::bind() -- Adds data to bind into the query.
 
 * Solar_Sql_Select::clear() -- Clears query properties.
@@ -36,8 +34,6 @@
 
 * Solar_Sql_Select::limitPage() -- Sets the limit and count by page number.
 
-* Solar_Sql_Select::locale() -- Looks up locale strings based on a key.
-
 * Solar_Sql_Select::multiHaving() -- Adds multiple HAVING conditions to the query.
 
 * Solar_Sql_Select::multiWhere() -- Adds multiple WHERE conditions to the query.
@@ -54,13 +50,21 @@
 
 * Solar_Sql_Select::where() -- Adds a WHERE condition to the query by AND.
 
-++ Protected
+Inherited Methods:
 
-* Solar_Sql_Select::_exception() -- Convenience method for returning exceptions with localized text.
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
 
 * Solar_Sql_Select::_join() -- Support method for adding JOIN clauses.
 
 * Solar_Sql_Select::_tblCols() -- Adds to the internal table-to-column mapping array.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Date::HomePage Solar_View_Helper_Date]
+  * Solar_View_Helper_Date
 
 Helper for a formatted date using [[php date()]] conventions.

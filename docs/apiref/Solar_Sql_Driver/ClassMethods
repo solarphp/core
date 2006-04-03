@@ -2,10 +2,6 @@
 
 ++ Public
 
-* Solar_Sql_Driver::__construct() -- Constructor.
-
-* Solar_Sql_Driver::apiVersion() -- Reports the API version for this class.
-
 * Solar_Sql_Driver::begin() -- Leave autocommit mode and begin a transaction.
 
 * Solar_Sql_Driver::buildCreateTable() -- Builds a CREATE TABLE command string.
@@ -22,8 +18,6 @@
 
 * Solar_Sql_Driver::listTables() -- Returns a list of database tables.
 
-* Solar_Sql_Driver::locale() -- Looks up locale strings based on a key.
-
 * Solar_Sql_Driver::nativeColTypes() -- Returns a list of native column types.
 
 * Solar_Sql_Driver::nextSequence() -- Gets the next sequence number; creates the sequence if needed.
@@ -32,13 +26,23 @@
 
 * Solar_Sql_Driver::rollback() -- Roll back a transaction and return to autocommit mode.
 
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
 * Solar_Sql_Driver::_connect() -- Creates a PDO object and connects to the database.
 
 * Solar_Sql_Driver::_dsn() -- Creates a PDO-style DSN.
 
-* Solar_Sql_Driver::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

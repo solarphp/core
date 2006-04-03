@@ -1,3 +1,5 @@
+//Inherited from Solar_View_Helper_FormElement::$_disable.//
+
 protected bool $_disable
 
 Whether or not the element is to be disabled.

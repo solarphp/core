@@ -2,27 +2,29 @@
 
 ++ Public
 
-* Solar_Test_Example_Exception_CustomCondition::__construct() -- Constructor.
+Inherited Methods:
 
-* Solar_Test_Example_Exception_CustomCondition::__toString() -- Returnes the exception as a string.
+* Solar_Exception::__construct() -- Constructor.
 
-* Solar_Test_Example_Exception_CustomCondition::getClass() -- Returns the class name that threw the exception.
+* Solar_Exception::__toString() -- Returnes the exception as a string.
 
-* Solar_Test_Example_Exception_CustomCondition::getClassCode() -- Returns the class name and code together.
+* Solar_Exception::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Test_Example_Exception_CustomCondition::getCode() -- 
+* Solar_Exception::getClassCode() -- Returns the class name and code together.
 
-* Solar_Test_Example_Exception_CustomCondition::getFile() -- 
+* Exception::getCode() -- 
 
-* Solar_Test_Example_Exception_CustomCondition::getInfo() -- Returns user-defined information.
+* Exception::getFile() -- 
 
-* Solar_Test_Example_Exception_CustomCondition::getLine() -- 
+* Solar_Exception::getInfo() -- Returns user-defined information.
 
-* Solar_Test_Example_Exception_CustomCondition::getMessage() -- 
+* Exception::getLine() -- 
 
-* Solar_Test_Example_Exception_CustomCondition::getTrace() -- 
+* Exception::getMessage() -- 
 
-* Solar_Test_Example_Exception_CustomCondition::getTraceAsString() -- 
+* Exception::getTrace() -- 
+
+* Exception::getTraceAsString() -- 
 
 ++ Protected
 
@@ -30,4 +32,6 @@ None.
 
 ++ Private
 
-* Solar_Test_Example_Exception_CustomCondition::__clone() --
+Inherited Methods:
+
+* Exception::__clone() --

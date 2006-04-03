@@ -2,13 +2,9 @@
 
 ++ Public
 
-* Solar_Valid::__construct() -- Constructor.
-
 * Solar_Valid::alnum() -- Validate that a value is only letters (upper or lower case) and digits.
 
 * Solar_Valid::alpha() -- Validate that a value is letters only (upper or lower case).
-
-* Solar_Valid::apiVersion() -- Reports the API version for this class.
 
 * Solar_Valid::blank() -- Validate that a value is empty when trimmed of all whitespace.
 
@@ -33,8 +29,6 @@
 * Solar_Valid::isoTime() -- Validate that a value is an ISO 8601 time string (hh:ii::ss format).
 
 * Solar_Valid::isoTimestamp() -- Validate that a value is an ISO 8601 timestamp string.
-
-* Solar_Valid::locale() -- Looks up locale strings based on a key.
 
 * Solar_Valid::localeCode() -- Validate that a value is a locale code.
 
@@ -62,9 +56,19 @@
 
 * Solar_Valid::word() -- Validate that a value is composed only of "word" characters.
 
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
-* Solar_Valid::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

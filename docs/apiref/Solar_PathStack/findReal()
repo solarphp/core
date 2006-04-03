@@ -6,7 +6,7 @@ name: findReal
 
 param: string, $file
 
-return: bool
+return: mixed
 
 </function>
 
@@ -16,20 +16,21 @@ Finds a file in the path stack using realpath().
 
  * string //$file//: The file to find using the directory stack.
 
-* Returns bool: True if found, false if not.
+* Returns mixed: The absolute path to the file, or flase if not found using the stack.
 
 Finds a file in the path stack using realpath().
 
-While slower than findInclude(), this helps to protect against
-directory traversal attacks.
+While slower than Solar_PathStack::find(), this helps to protect
+against directory traversal attacks.  It only works with absolute
+paths; relative paths will fail.
 
 For example:
 
 <code type="php">
 $stack = Solar::factory('Solar_PathStack');
-$stack->add('path/1');
-$stack->add('path/2');
-$stack->add('path/3');
+$stack->add('/path/1');
+$stack->add('/path/2');
+$stack->add('/path/3');
 
 $file = $stack->findReal('file.php');
 // $file is now the first instance of 'file.php' found from the         

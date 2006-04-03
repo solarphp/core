@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth::HomePage Solar_User_Auth]
+ * Solar_User_Auth
 
 Class for checking user authentication credentials.

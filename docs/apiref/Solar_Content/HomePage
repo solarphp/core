@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Content::HomePage Solar_Content]
+ * Solar_Content
 
 Generic content management class.

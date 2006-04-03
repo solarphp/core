@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
 
-  * [Solar_Sql_Driver_Pgsql::HomePage Solar_Sql_Driver_Pgsql]
+  * Solar_Sql_Driver_Pgsql
 
 Class for connecting to PostgreSQL databases.

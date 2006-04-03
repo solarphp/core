@@ -2,27 +2,29 @@
 
 ++ Public
 
-* Solar_Sql_Exception_ColSize::__construct() -- Constructor.
+Inherited Methods:
 
-* Solar_Sql_Exception_ColSize::__toString() -- Returnes the exception as a string.
+* Solar_Exception::__construct() -- Constructor.
 
-* Solar_Sql_Exception_ColSize::getClass() -- Returns the class name that threw the exception.
+* Solar_Exception::__toString() -- Returnes the exception as a string.
 
-* Solar_Sql_Exception_ColSize::getClassCode() -- Returns the class name and code together.
+* Solar_Exception::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Sql_Exception_ColSize::getCode() -- 
+* Solar_Exception::getClassCode() -- Returns the class name and code together.
 
-* Solar_Sql_Exception_ColSize::getFile() -- 
+* Exception::getCode() -- 
 
-* Solar_Sql_Exception_ColSize::getInfo() -- Returns user-defined information.
+* Exception::getFile() -- 
 
-* Solar_Sql_Exception_ColSize::getLine() -- 
+* Solar_Exception::getInfo() -- Returns user-defined information.
 
-* Solar_Sql_Exception_ColSize::getMessage() -- 
+* Exception::getLine() -- 
 
-* Solar_Sql_Exception_ColSize::getTrace() -- 
+* Exception::getMessage() -- 
 
-* Solar_Sql_Exception_ColSize::getTraceAsString() -- 
+* Exception::getTrace() -- 
+
+* Exception::getTraceAsString() -- 
 
 ++ Protected
 
@@ -30,4 +32,6 @@ None.
 
 ++ Private
 
-* Solar_Sql_Exception_ColSize::__clone() --
+Inherited Methods:
+
+* Exception::__clone() --

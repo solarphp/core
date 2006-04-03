@@ -8,6 +8,6 @@
 
   * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
 
-   * [Solar_View_Helper_FormHidden::HomePage Solar_View_Helper_FormHidden]
+   * Solar_View_Helper_FormHidden
 
 Helper for a 'hidden' element.

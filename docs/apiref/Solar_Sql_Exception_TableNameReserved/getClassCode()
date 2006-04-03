@@ -1,3 +1,5 @@
+//Inherited from Solar_Exception::getClassCode().//
+
 <function>
 
 access: final  public

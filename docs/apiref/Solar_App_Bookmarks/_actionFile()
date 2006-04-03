@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::_actionFile().//
+
 <function>
 
 access:   protected

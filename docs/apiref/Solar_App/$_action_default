@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_action_default.//
+
 protected string $_action_default
 
 The default application action.

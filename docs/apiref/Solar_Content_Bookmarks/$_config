@@ -1,3 +1,5 @@
+//Inherited from Solar_Content_Abstract::$_config.//
+
 protected array $_config
 
 User-defined configuaration values.

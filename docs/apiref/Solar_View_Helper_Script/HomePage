@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Script::HomePage Solar_View_Helper_Script]
+  * Solar_View_Helper_Script
 
 Helper for <script> tags from a public Solar resource.

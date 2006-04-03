@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_Ini::HomePage Solar_User_Auth_Ini]
+ * Solar_User_Auth_Ini
 
 Authenticate against .ini style files.
 

@@ -10,25 +10,25 @@
 
 * Solar_Controller_Page::addFlash() -- Appends a "read-once" session value for this class and key.
 
-* Solar_Controller_Page::apiVersion() -- Reports the API version for this class.
-
 * Solar_Controller_Page::display() -- Executes the requested action and displays its output.
 
 * Solar_Controller_Page::fetch() -- Executes the requested action and returns its output with layout.
 
 * Solar_Controller_Page::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
 
-* Solar_Controller_Page::locale() -- Looks up locale strings based on a key.
-
 * Solar_Controller_Page::setFlash() -- Sets a "read-once" session value for this class and a key.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
 * Solar_Controller_Page::_actionFile() -- Returns the file name for an action.
 
 * Solar_Controller_Page::_collect() -- Collects action, pathinfo, and query values.
-
-* Solar_Controller_Page::_exception() -- Convenience method for returning exceptions with localized text.
 
 * Solar_Controller_Page::_forward() -- Forwards internally to another action.
 
@@ -45,6 +45,10 @@
 * Solar_Controller_Page::_run() -- Includes a file in an isolated scope (but with access to $this).
 
 * Solar_Controller_Page::_setup() -- Hook for extended setup behaviors.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

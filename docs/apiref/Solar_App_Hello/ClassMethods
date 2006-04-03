@@ -2,49 +2,53 @@
 
 ++ Public
 
-* Solar_App_Hello::__construct() -- Constructor.
+Inherited Methods:
 
-* Solar_App_Hello::__get() -- Try to force users to define what their view variables are.
+* Solar_Controller_Page::__construct() -- Constructor.
 
-* Solar_App_Hello::__set() -- Try to force users to define what their view variables are.
+* Solar_Controller_Page::__get() -- Try to force users to define what their view variables are.
 
-* Solar_App_Hello::_setup() -- Sets up the Solar_App environment.
+* Solar_Controller_Page::__set() -- Try to force users to define what their view variables are.
 
-* Solar_App_Hello::addFlash() -- Appends a "read-once" session value for this class and key.
+* Solar_App::_setup() -- Sets up the Solar_App environment.
 
-* Solar_App_Hello::apiVersion() -- Reports the API version for this class.
+* Solar_Controller_Page::addFlash() -- Appends a "read-once" session value for this class and key.
 
-* Solar_App_Hello::display() -- Executes the requested action and displays its output.
+* Solar_Base::apiVersion() -- Reports the API version for this class.
 
-* Solar_App_Hello::fetch() -- Executes the requested action and returns its output with layout.
+* Solar_Controller_Page::display() -- Executes the requested action and displays its output.
 
-* Solar_App_Hello::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
+* Solar_Controller_Page::fetch() -- Executes the requested action and returns its output with layout.
 
-* Solar_App_Hello::locale() -- Looks up locale strings based on a key.
+* Solar_Controller_Page::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
 
-* Solar_App_Hello::setFlash() -- Sets a "read-once" session value for this class and a key.
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+* Solar_Controller_Page::setFlash() -- Sets a "read-once" session value for this class and a key.
 
 ++ Protected
 
-* Solar_App_Hello::_actionFile() -- Returns the file name for an action.
+Inherited Methods:
 
-* Solar_App_Hello::_collect() -- Collects action, pathinfo, and query values.
+* Solar_Controller_Page::_actionFile() -- Returns the file name for an action.
 
-* Solar_App_Hello::_exception() -- Convenience method for returning exceptions with localized text.
+* Solar_Controller_Page::_collect() -- Collects action, pathinfo, and query values.
 
-* Solar_App_Hello::_forward() -- Forwards internally to another action.
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
-* Solar_App_Hello::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
+* Solar_Controller_Page::_forward() -- Forwards internally to another action.
 
-* Solar_App_Hello::_postAction() -- Executes just after the last action, and just before the view.
+* Solar_Controller_Page::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
 
-* Solar_App_Hello::_preAction() -- Executes just before the first action.
+* Solar_Controller_Page::_postAction() -- Executes just after the last action, and just before the view.
 
-* Solar_App_Hello::_query() -- Retrieves the TAINTED value of a query request key by name.
+* Solar_Controller_Page::_preAction() -- Executes just before the first action.
 
-* Solar_App_Hello::_redirect() -- Redirects to another page and action.
+* Solar_Controller_Page::_query() -- Retrieves the TAINTED value of a query request key by name.
 
-* Solar_App_Hello::_run() -- Includes a file in an isolated scope (but with access to $this).
+* Solar_Controller_Page::_redirect() -- Redirects to another page and action.
+
+* Solar_Controller_Page::_run() -- Includes a file in an isolated scope (but with access to $this).
 
 ++ Private
 

@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Form_Load_Table::HomePage Solar_Form_Load_Table]
+ * Solar_Form_Load_Table
 
 Class for loading form definitions from Solar_Sql_Table columns.

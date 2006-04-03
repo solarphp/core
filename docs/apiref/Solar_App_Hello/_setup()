@@ -1,3 +1,5 @@
+//Inherited from Solar_App::_setup().//
+
 <function>
 
 access:   public

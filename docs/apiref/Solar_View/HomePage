@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_View::HomePage Solar_View]
+ * Solar_View
 
 Provides a TemplateView pattern implementation for Solar.
 

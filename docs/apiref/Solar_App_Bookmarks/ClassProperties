@@ -10,28 +10,6 @@
 
 * Solar_App_Bookmarks::$formdata -- The current form processing object.
 
-* Solar_App_Bookmarks::$layout_base -- The <base> href value for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_bottom -- An array of content for the layout <div id="bottom"> block.
-
-* Solar_App_Bookmarks::$layout_left -- An array of content for the layout <div id="left"> block.
-
-* Solar_App_Bookmarks::$layout_link -- An array of <link> tag values for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_meta -- An array of <meta> tag values for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_object -- An array of <object> tag values for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_right -- An array of content for the layout <div id="right"> block.
-
-* Solar_App_Bookmarks::$layout_script -- An array of <script> tag values for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_style -- An array of <style> tag values for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_title -- The <title> tag value for the layout <head> block.
-
-* Solar_App_Bookmarks::$layout_top -- An array of content for the layout <div id="top"> block.
-
 * Solar_App_Bookmarks::$list -- The list of all bookmarks for the current page.
 
 * Solar_App_Bookmarks::$order -- The requested bookmark order (subj, tags, created, etc).
@@ -46,9 +24,31 @@
 
 * Solar_App_Bookmarks::$tags_in_use -- The list of all tags in use by the current owner_handle.
 
-++ Protected
+Inherited Properties:
 
-* Solar_App_Bookmarks::$_action -- The action being requested of (performed by) the application.
+* Solar_App::$layout_base() -- The <base> href value for the layout <head> block.
+
+* Solar_App::$layout_bottom() -- An array of content for the layout <div id="bottom"> block.
+
+* Solar_App::$layout_left() -- An array of content for the layout <div id="left"> block.
+
+* Solar_App::$layout_link() -- An array of <link> tag values for the layout <head> block.
+
+* Solar_App::$layout_meta() -- An array of <meta> tag values for the layout <head> block.
+
+* Solar_App::$layout_object() -- An array of <object> tag values for the layout <head> block.
+
+* Solar_App::$layout_right() -- An array of content for the layout <div id="right"> block.
+
+* Solar_App::$layout_script() -- An array of <script> tag values for the layout <head> block.
+
+* Solar_App::$layout_style() -- An array of <style> tag values for the layout <head> block.
+
+* Solar_App::$layout_title() -- The <title> tag value for the layout <head> block.
+
+* Solar_App::$layout_top() -- An array of content for the layout <div id="top"> block.
+
+++ Protected
 
 * Solar_App_Bookmarks::$_action_default -- The default controller action.
 
@@ -58,23 +58,27 @@
 
 * Solar_App_Bookmarks::$_config -- User-defined configuration values.
 
-* Solar_App_Bookmarks::$_dir -- Base directory under which actions, views, etc. are located.
-
-* Solar_App_Bookmarks::$_info -- Application request parameters collected from the URI pathinfo.
-
-* Solar_App_Bookmarks::$_layout -- The name of the layout to use for the view, minus the .layout.php suffix.
-
-* Solar_App_Bookmarks::$_layout_dir -- Where the layout directory is located.
-
-* Solar_App_Bookmarks::$_layout_var -- The name of the variable where page content is placed in the layout.
-
-* Solar_App_Bookmarks::$_name -- The short-name of this application.
-
-* Solar_App_Bookmarks::$_query -- Application request parameters collected from the URI query string.
-
 * Solar_App_Bookmarks::$_user -- Local reference to the 'user' object in Solar::registry().
 
-* Solar_App_Bookmarks::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+Inherited Properties:
+
+* Solar_Controller_Page::$_action() -- The action being requested of (performed by) the application.
+
+* Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc. are located.
+
+* Solar_Controller_Page::$_info() -- Application request parameters collected from the URI pathinfo.
+
+* Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .layout.php suffix.
+
+* Solar_Controller_Page::$_layout_dir() -- Where the layout directory is located.
+
+* Solar_Controller_Page::$_layout_var() -- The name of the variable where page content is placed in the layout.
+
+* Solar_Controller_Page::$_name() -- The short-name of this application.
+
+* Solar_Controller_Page::$_query() -- Application request parameters collected from the URI query string.
+
+* Solar_Controller_Page::$_view() -- The name of the view to be rendered after the action, minus the .view.php suffix.
 
 ++ Private
 

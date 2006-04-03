@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_LinkStylesheet::HomePage Solar_View_Helper_LinkStylesheet]
+  * Solar_View_Helper_LinkStylesheet
 
 Helper for <link rel="stylesheet"> tags.

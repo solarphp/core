@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
 
-  * [Solar_Sql_Driver_Sqlite::HomePage Solar_Sql_Driver_Sqlite]
+  * Solar_Sql_Driver_Sqlite
 
 Class for connecting to SQLite databases.

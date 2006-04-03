@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_Post::HomePage Solar_User_Auth_Post]
+ * Solar_User_Auth_Post
 
 Authenticate via simple HTTP POST request-and-reply.
 

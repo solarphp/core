@@ -2,19 +2,23 @@
 
 ++ Public
 
-* Solar_View_Helper_FormFile::__construct() -- Constructor.
-
-* Solar_View_Helper_FormFile::apiVersion() -- Reports the API version for this class.
-
 * Solar_View_Helper_FormFile::formFile() -- Generates a 'file' element.
 
-* Solar_View_Helper_FormFile::locale() -- Looks up locale strings based on a key.
+Inherited Methods:
+
+* Solar_View_Helper::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_View_Helper_FormFile::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
 
-* Solar_View_Helper_FormFile::_prepare() -- Prepares an info array and imports to the properties.
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormElement::_prepare() -- Prepares an info array and imports to the properties.
 
 ++ Private
 

@@ -6,17 +6,19 @@ None.
 
 ++ Protected
 
-* Solar_Sql_Exception_ColNameLength::$_class -- Class where the exception originated.
+Inherited Properties:
 
-* Solar_Sql_Exception_ColNameLength::$_info -- User-defined information array.
+* Solar_Exception::$_class() -- Class where the exception originated.
 
-* Solar_Sql_Exception_ColNameLength::$code -- 
+* Solar_Exception::$_info() -- User-defined information array.
 
-* Solar_Sql_Exception_ColNameLength::$file -- 
+* Exception::$code() -- 
 
-* Solar_Sql_Exception_ColNameLength::$line -- 
+* Exception::$file() -- 
 
-* Solar_Sql_Exception_ColNameLength::$message -- 
+* Exception::$line() -- 
+
+* Exception::$message() -- 
 
 ++ Private
 

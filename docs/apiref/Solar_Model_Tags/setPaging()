@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Table::setPaging().//
+
 <function>
 
 access:   public

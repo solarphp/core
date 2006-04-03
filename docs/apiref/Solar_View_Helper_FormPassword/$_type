@@ -1,3 +1,5 @@
+//Inherited from Solar_View_Helper_FormElement::$_type.//
+
 protected string $_type
 
 The form element type (text, radio, etc).

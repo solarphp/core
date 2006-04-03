@@ -6,8 +6,6 @@
 
 * Solar_Sql::addColumn() -- Adds a column to a table in the database.
 
-* Solar_Sql::apiVersion() -- Reports the API version for this class.
-
 * Solar_Sql::begin() -- Leave autocommit mode and begin a transaction.
 
 * Solar_Sql::commit() -- Commit a transaction and return to autocommit mode.
@@ -32,8 +30,6 @@
 
 * Solar_Sql::listTables() -- Returns a list of table names in the database.
 
-* Solar_Sql::locale() -- Looks up locale strings based on a key.
-
 * Solar_Sql::nextSequence() -- Gets the next number in a sequence number.
 
 * Solar_Sql::query() -- Generic query executor.
@@ -50,15 +46,23 @@
 
 * Solar_Sql::update() -- Updates a table with specified data based on a WHERE clause.
 
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
 * Solar_Sql::_buildColDef() -- Builds a column definition string.
 
 * Solar_Sql::_buildIdxDef() -- Builds an index definition string.
 
-* Solar_Sql::_exception() -- Convenience method for returning exceptions with localized text.
-
 * Solar_Sql::_validIdentifier() -- Check if a table, column, or index name is a valid identifier.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

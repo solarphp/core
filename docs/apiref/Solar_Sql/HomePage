@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Sql::HomePage Solar_Sql]
+ * Solar_Sql
 
 Class for connecting to SQL databases and performing common operations.
 

@@ -1,3 +1,5 @@
+//Inherited from Solar_Sql_Driver::_dsn().//
+
 <function>
 
 access:   protected

@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_name.//
+
 protected string $_name
 
 The short-name of this application.

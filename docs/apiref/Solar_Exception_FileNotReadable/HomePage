@@ -6,6 +6,6 @@
 
  * [Solar_Exception::HomePage Solar_Exception]
 
-  * [Solar_Exception_FileNotReadable::HomePage Solar_Exception_FileNotReadable]
+  * Solar_Exception_FileNotReadable
 
 Exception: file does not exist or is not readable.

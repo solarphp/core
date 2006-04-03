@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::$_layout_dir.//
+
 protected string $_layout_dir
 
 Where the layout directory is located.

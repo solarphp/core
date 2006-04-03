@@ -6,9 +6,11 @@ None.
 
 ++ Protected
 
-* Solar_View_Helper_Anchor::$_config -- User-provided configuration values.
+Inherited Properties:
 
-* Solar_View_Helper_Anchor::$_view -- Reference to the parent Solar_View object.
+* Solar_Base::$_config() -- User-provided configuration values.
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
 
 ++ Private
 

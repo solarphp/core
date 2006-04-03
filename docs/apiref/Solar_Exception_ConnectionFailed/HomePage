@@ -6,6 +6,6 @@
 
  * [Solar_Exception::HomePage Solar_Exception]
 
-  * [Solar_Exception_ConnectionFailed::HomePage Solar_Exception_ConnectionFailed]
+  * Solar_Exception_ConnectionFailed
 
 Exception: connection to a resource failed.

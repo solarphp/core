@@ -4,15 +4,19 @@
 
 * Solar_View_Helper_PublicHref::__construct() -- Constructor.
 
-* Solar_View_Helper_PublicHref::apiVersion() -- Reports the API version for this class.
-
-* Solar_View_Helper_PublicHref::locale() -- Looks up locale strings based on a key.
-
 * Solar_View_Helper_PublicHref::publicHref() -- Returns an href to a public resource.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_View_Helper_PublicHref::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

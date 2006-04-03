@@ -1,3 +1,5 @@
+//Inherited from Solar_Base::apiVersion().//
+
 <function>
 
 access:   public

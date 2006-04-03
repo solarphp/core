@@ -26,29 +26,31 @@
 
 ++ Protected
 
-* Solar_App::$_action -- The action being requested of (performed by) the application.
+Inherited Properties:
 
-* Solar_App::$_action_default -- The default application action.
+* Solar_Controller_Page::$_action() -- The action being requested of (performed by) the application.
 
-* Solar_App::$_action_info -- The info variables to use for actions.
+* Solar_Controller_Page::$_action_default() -- The default application action.
 
-* Solar_App::$_config -- User-provided configuration values.
+* Solar_Controller_Page::$_action_info() -- The info variables to use for actions.
 
-* Solar_App::$_dir -- Base directory under which actions, views, etc. are located.
+* Solar_Base::$_config() -- User-provided configuration values.
 
-* Solar_App::$_info -- Application request parameters collected from the URI pathinfo.
+* Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc. are located.
 
-* Solar_App::$_layout -- The name of the layout to use for the view, minus the .layout.php suffix.
+* Solar_Controller_Page::$_info() -- Application request parameters collected from the URI pathinfo.
 
-* Solar_App::$_layout_dir -- Where the layout directory is located.
+* Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .layout.php suffix.
 
-* Solar_App::$_layout_var -- The name of the variable where page content is placed in the layout.
+* Solar_Controller_Page::$_layout_dir() -- Where the layout directory is located.
 
-* Solar_App::$_name -- The short-name of this application.
+* Solar_Controller_Page::$_layout_var() -- The name of the variable where page content is placed in the layout.
 
-* Solar_App::$_query -- Application request parameters collected from the URI query string.
+* Solar_Controller_Page::$_name() -- The short-name of this application.
 
-* Solar_App::$_view -- The name of the view to be rendered after the action, minus the .view.php suffix.
+* Solar_Controller_Page::$_query() -- Application request parameters collected from the URI query string.
+
+* Solar_Controller_Page::$_view() -- The name of the view to be rendered after the action, minus the .view.php suffix.
 
 ++ Private
 

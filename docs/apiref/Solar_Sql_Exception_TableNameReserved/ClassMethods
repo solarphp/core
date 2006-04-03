@@ -2,27 +2,29 @@
 
 ++ Public
 
-* Solar_Sql_Exception_TableNameReserved::__construct() -- Constructor.
+Inherited Methods:
 
-* Solar_Sql_Exception_TableNameReserved::__toString() -- Returnes the exception as a string.
+* Solar_Exception::__construct() -- Constructor.
 
-* Solar_Sql_Exception_TableNameReserved::getClass() -- Returns the class name that threw the exception.
+* Solar_Exception::__toString() -- Returnes the exception as a string.
 
-* Solar_Sql_Exception_TableNameReserved::getClassCode() -- Returns the class name and code together.
+* Solar_Exception::getClass() -- Returns the class name that threw the exception.
 
-* Solar_Sql_Exception_TableNameReserved::getCode() -- 
+* Solar_Exception::getClassCode() -- Returns the class name and code together.
 
-* Solar_Sql_Exception_TableNameReserved::getFile() -- 
+* Exception::getCode() -- 
 
-* Solar_Sql_Exception_TableNameReserved::getInfo() -- Returns user-defined information.
+* Exception::getFile() -- 
 
-* Solar_Sql_Exception_TableNameReserved::getLine() -- 
+* Solar_Exception::getInfo() -- Returns user-defined information.
 
-* Solar_Sql_Exception_TableNameReserved::getMessage() -- 
+* Exception::getLine() -- 
 
-* Solar_Sql_Exception_TableNameReserved::getTrace() -- 
+* Exception::getMessage() -- 
 
-* Solar_Sql_Exception_TableNameReserved::getTraceAsString() -- 
+* Exception::getTrace() -- 
+
+* Exception::getTraceAsString() -- 
 
 ++ Protected
 
@@ -30,4 +32,6 @@ None.
 
 ++ Private
 
-* Solar_Sql_Exception_TableNameReserved::__clone() --
+Inherited Methods:
+
+* Exception::__clone() --

@@ -8,6 +8,6 @@
 
   * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
 
-   * [Solar_Sql_Exception_TableNotCreated::HomePage Solar_Sql_Exception_TableNotCreated]
+   * Solar_Sql_Exception_TableNotCreated
 
 Exception: table not created.

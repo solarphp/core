@@ -1,3 +1,5 @@
+//Inherited from Solar_Controller_Page::__get().//
+
 <function>
 
 access:   public

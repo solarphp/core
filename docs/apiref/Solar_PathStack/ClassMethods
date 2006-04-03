@@ -4,7 +4,7 @@
 
 * Solar_PathStack::add() -- Adds one or more directories to the stack.
 
-* Solar_PathStack::findInclude() -- Finds a file in the path stack using include_path.
+* Solar_PathStack::find() -- Finds a file in the path stack.
 
 * Solar_PathStack::findReal() -- Finds a file in the path stack using realpath().
 

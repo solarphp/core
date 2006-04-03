@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Role_File::HomePage Solar_User_Role_File]
+ * Solar_User_Role_File
 
 Get roles from a Unix-style groups file.
 

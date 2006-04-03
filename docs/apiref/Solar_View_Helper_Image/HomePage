@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Image::HomePage Solar_View_Helper_Image]
+  * Solar_View_Helper_Image
 
 Helper to generate an <img ... /> tag.

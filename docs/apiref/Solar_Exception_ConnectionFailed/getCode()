@@ -1,3 +1,5 @@
+//Inherited from Exception::getCode().//
+
 <function>
 
 access: final  public

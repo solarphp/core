@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Role_Sql::HomePage Solar_User_Role_Sql]
+ * Solar_User_Role_Sql
 
 Get user roles from an SQL database table.

@@ -12,8 +12,6 @@
 
 * Solar_View::addTemplatePath() -- Add to the template directory path stack.
 
-* Solar_View::apiVersion() -- Reports the API version for this class.
-
 * Solar_View::assign() -- Sets variables for the view.
 
 * Solar_View::display() -- Displays a template directly.
@@ -24,8 +22,6 @@
 
 * Solar_View::getHelper() -- Returns the internal helper object; creates it as needed.
 
-* Solar_View::locale() -- Looks up locale strings based on a key.
-
 * Solar_View::newHelper() -- Creates a new standalone helper object.
 
 * Solar_View::setHelperPath() -- Reset the helper directory path stack.
@@ -34,13 +30,21 @@
 
 * Solar_View::template() -- Returns the path to the requested template script.
 
-++ Protected
+Inherited Methods:
 
-* Solar_View::_exception() -- Convenience method for returning exceptions with localized text.
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
 
 * Solar_View::_run() -- Runs a template script (allowing access to $this).
 
 * Solar_View::_setup() -- Allows specialized setup for extended classes.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

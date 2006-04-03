@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_Attribs::HomePage Solar_View_Helper_Attribs]
+  * Solar_View_Helper_Attribs
 
 Plugin to convert an associative array to a string of tag attributes.

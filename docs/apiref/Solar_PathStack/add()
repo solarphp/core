@@ -24,24 +24,22 @@ For example:
 
 <code type="php">
 $stack = Solar::factory('Solar_PathStack');
-$stack->add('path/1');
-$stack->add('path/2');
-$stack->add('path/3');
-
-// $stack->get() reveals that the directory search order will be
-// 'path/3/', 'path/2/', 'path/1/', because the later adds
-// override the newer ones.
-
-$stack = Solar::factory('Solar_PathStack');
 $stack->add(array('path/1', 'path/2', 'path/3'));
-// as before, $stack->get() reveals that the directory search order will be
-// 'path/3/', 'path/2/', 'path/1/', because the later adds
-// override the newer ones.
+// $stack->get() reveals that the directory search order will be
+// 'path/1/', 'path/2/', 'path/3/'.
 
 $stack = Solar::factory('Solar_PathStack');
 $stack->add('path/1:path/2:path/3');
-// in this case, $stack->get() reveals that the directory search order will be
+// $stack->get() reveals that the directory search order will be
 // 'path/1/', 'path/2/', 'path/3/', because this is the way the
 // filesystem expects a path definition to work.
+
+$stack = Solar::factory('Solar_PathStack');
+$stack->add('path/1');
+$stack->add('path/2');
+$stack->add('path/3');
+// $stack->get() reveals that the directory search order will be
+// 'path/3/', 'path/2/', 'path/1/', because the later adds
+// override the newer ones.
 
 </code>

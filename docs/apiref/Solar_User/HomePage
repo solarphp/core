@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User::HomePage Solar_User]
+ * Solar_User
 
 Meta-container for the current user to hold auth and roles.
 

@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
 
-  * [Solar_Sql_Driver_Mysql::HomePage Solar_Sql_Driver_Mysql]
+  * Solar_Sql_Driver_Mysql
 
 Class for MySQL behaviors.

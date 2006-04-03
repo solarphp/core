@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_User_Auth_Ldap::HomePage Solar_User_Auth_Ldap]
+ * Solar_User_Auth_Ldap
 
 Authenticate against an LDAP server.

@@ -11,6 +11,6 @@ ApiRef | API Reference
   deleteAll()
   entry()
   fetch()
-  life()
+  getLife()
   locale()
   save()

@@ -6,6 +6,6 @@
 
  * [Solar_Sql_Driver::HomePage Solar_Sql_Driver]
 
-  * [Solar_Sql_Driver_Mssql::HomePage Solar_Sql_Driver_Mssql]
+  * Solar_Sql_Driver_Mssql
 
 Class for connecting to Microsoft SQL databases.

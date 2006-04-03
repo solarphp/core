@@ -6,17 +6,19 @@ None.
 
 ++ Protected
 
-* Solar_Exception_ExtensionNotLoaded::$_class -- Class where the exception originated.
+Inherited Properties:
 
-* Solar_Exception_ExtensionNotLoaded::$_info -- User-defined information array.
+* Solar_Exception::$_class() -- Class where the exception originated.
 
-* Solar_Exception_ExtensionNotLoaded::$code -- 
+* Solar_Exception::$_info() -- User-defined information array.
 
-* Solar_Exception_ExtensionNotLoaded::$file -- 
+* Exception::$code() -- 
 
-* Solar_Exception_ExtensionNotLoaded::$line -- 
+* Exception::$file() -- 
 
-* Solar_Exception_ExtensionNotLoaded::$message -- 
+* Exception::$line() -- 
+
+* Exception::$message() -- 
 
 ++ Private
 

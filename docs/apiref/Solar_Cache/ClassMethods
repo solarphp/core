@@ -4,10 +4,6 @@
 
 * Solar_Cache::__construct() -- Constructor.
 
-* Solar_Cache::active() -- Gets the current activity state of the cache (on or off).
-
-* Solar_Cache::apiVersion() -- Reports the API version for this class.
-
 * Solar_Cache::delete() -- Deletes a cache entry.
 
 * Solar_Cache::deleteAll() -- Deletes all entries from the cache.
@@ -16,17 +12,25 @@
 
 * Solar_Cache::fetch() -- Gets cache entry data.
 
-* Solar_Cache::life() -- Returns the cache lifetime in seconds.
+* Solar_Cache::getLife() -- Returns the cache lifetime in seconds.
 
-* Solar_Cache::locale() -- Looks up locale strings based on a key.
+* Solar_Cache::isActive() -- Gets the current activity state of the cache (on or off).
 
 * Solar_Cache::save() -- Inserts/updates cache entry data.
 
 * Solar_Cache::setActive() -- Makes the cache active (true) or inactive (false).
 
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
-* Solar_Cache::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

@@ -1,7 +1,3 @@
 + The Solar Class
 
-++ Inheritance
-
-* [Solar::HomePage Solar]
-
 The Solar arch-class provides static methods needed throughout the Solar environment.

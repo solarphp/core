@@ -4,6 +4,6 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Uri::HomePage Solar_Uri]
+ * Solar_Uri
 
 Parses a URI string into its component parts for manipulation and export.

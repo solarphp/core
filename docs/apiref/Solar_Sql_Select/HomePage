@@ -4,7 +4,7 @@
 
 * [Solar_Base::HomePage Solar_Base]
 
- * [Solar_Sql_Select::HomePage Solar_Sql_Select]
+ * Solar_Sql_Select
 
 Class for SQL select generation and results.
 

@@ -1,3 +1,5 @@
+//Inherited from Exception::__clone().//
+
 <function>
 
 access: final  private

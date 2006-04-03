@@ -4,8 +4,6 @@
 
 * Solar_Cache_Memcache::__construct() -- Constructor.
 
-* Solar_Cache_Memcache::apiVersion() -- Reports the API version for this class.
-
 * Solar_Cache_Memcache::delete() -- Deletes a cache entry.
 
 * Solar_Cache_Memcache::deleteAll() -- Removes all cache entries.
@@ -14,15 +12,21 @@
 
 * Solar_Cache_Memcache::fetch() -- Gets cache entry data.
 
-* Solar_Cache_Memcache::life() -- Gets the cache lifetime in seconds.
-
-* Solar_Cache_Memcache::locale() -- Looks up locale strings based on a key.
+* Solar_Cache_Memcache::getLife() -- Gets the cache lifetime in seconds.
 
 * Solar_Cache_Memcache::save() -- Sets cache entry data.
 
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
 ++ Protected
 
-* Solar_Cache_Memcache::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

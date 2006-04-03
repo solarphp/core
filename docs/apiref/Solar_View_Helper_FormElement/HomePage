@@ -6,6 +6,6 @@
 
  * [Solar_View_Helper::HomePage Solar_View_Helper]
 
-  * [Solar_View_Helper_FormElement::HomePage Solar_View_Helper_FormElement]
+  * Solar_View_Helper_FormElement
 
 Abstract helper for form elements.

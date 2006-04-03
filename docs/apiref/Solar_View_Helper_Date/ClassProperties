@@ -8,7 +8,9 @@ None.
 
 * Solar_View_Helper_Date::$_config -- The default date() format string.
 
-* Solar_View_Helper_Date::$_view -- Reference to the parent Solar_View object.
+Inherited Properties:
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
 
 ++ Private
 

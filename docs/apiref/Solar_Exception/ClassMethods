@@ -10,19 +10,21 @@
 
 * Solar_Exception::getClassCode() -- Returns the class name and code together.
 
-* Solar_Exception::getCode() -- 
-
-* Solar_Exception::getFile() -- 
-
 * Solar_Exception::getInfo() -- Returns user-defined information.
 
-* Solar_Exception::getLine() -- 
+Inherited Methods:
 
-* Solar_Exception::getMessage() -- 
+* Exception::getCode() -- 
 
-* Solar_Exception::getTrace() -- 
+* Exception::getFile() -- 
 
-* Solar_Exception::getTraceAsString() -- 
+* Exception::getLine() -- 
+
+* Exception::getMessage() -- 
+
+* Exception::getTrace() -- 
+
+* Exception::getTraceAsString() -- 
 
 ++ Protected
 
@@ -30,4 +32,6 @@ None.
 
 ++ Private
 
-* Solar_Exception::__clone() --
+Inherited Methods:
+
+* Exception::__clone() --

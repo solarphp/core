@@ -1,3 +1,5 @@
+//Inherited from Exception::getLine().//
+
 <function>
 
 access: final  public

@@ -4,13 +4,17 @@
 
 * Solar_User::__construct() -- Constructor.
 
-* Solar_User::apiVersion() -- Reports the API version for this class.
+Inherited Methods:
 
-* Solar_User::locale() -- Looks up locale strings based on a key.
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
 
-* Solar_User::_exception() -- Convenience method for returning exceptions with localized text.
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 ++ Private
 

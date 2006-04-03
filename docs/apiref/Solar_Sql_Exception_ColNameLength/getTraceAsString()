@@ -1,3 +1,5 @@
+//Inherited from Exception::getTraceAsString().//
+
 <function>
 
 access: final  public

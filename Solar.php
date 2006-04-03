@@ -179,8 +179,10 @@ class Solar {
             Solar::run($file);
         }
         
-        // start the session, and we're done
-        @session_start();
+        // start the session if one hasn't been started already
+        if (session_id() === '') {
+            session_start();
+        }
         
         // and we're done!
         Solar::$_status = true;

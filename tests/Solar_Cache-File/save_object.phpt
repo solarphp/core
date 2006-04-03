@@ -1,5 +1,5 @@
 --TEST--
-Solar_Exception::getLine()
+Solar_Cache-File::save(object)
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,8 +14,17 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$e = Solar::factory('Solar_Exception', $config);
-$assert->same($e->getLine(), 416); // the line in Solar::factory() method
+require '_setup.php';
+
+class Coyote extends Solar_Base {
+	public $acme = 'Acme Industries, LLC';
+	protected $meal = 'Roadrunner';
+}
+
+$id = 'coyote';
+$data = new Coyote();
+$assert->isTrue($cache->save($id, $data));
+$assert->equals($cache->fetch($id), $data);
 
 // ---------------------------------------------------------------------
 

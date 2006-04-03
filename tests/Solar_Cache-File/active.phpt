@@ -1,5 +1,5 @@
 --TEST--
-Solar_Exception::getLine()
+Solar_Cache-File::isActive()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,8 +14,18 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$e = Solar::factory('Solar_Exception', $config);
-$assert->same($e->getLine(), 416); // the line in Solar::factory() method
+require '_setup.php';
+
+// should be active by default
+$assert->isTrue($cache->isActive());
+
+// turn it off
+$cache->setActive(false);
+$assert->isFalse($cache->isActive());
+
+// turn it back on
+$cache->setActive(true);
+$assert->isTrue($cache->isActive());
 
 // ---------------------------------------------------------------------
 

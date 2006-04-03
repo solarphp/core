@@ -1,5 +1,13 @@
 GENERIC CONTENT MODEL
 
+Add dates to content model (e.g., begin and end dates)
+    uses are:
+        due/target date
+        begin & end dates
+        hide_until, reveal_on dates
+        
+Rename "rank" to "position"
+
 Solar/
     Model/
         Areas.php -- broad content areas (logical namespaces)
@@ -29,10 +37,6 @@ Solar/
 
 // ugh:
 $bookmarks = Solar::factory('Solar_Content_Bookmarks');
-
-Add dates to content model (e.g., begin and end dates)
-
-Rename "rank" to "position"
 
 ALSO NEED ACCESS CONTROL!
 

@@ -3,35 +3,36 @@ MOVING TO A NON-DEV RELEASE
 Get database error messages back from form submissions
 
 Convert Solar_Uri to Solar-specific URI handler, not generic handler?
+    Or create Solar_Uri_Action for specific needs
+    Also Solar_Uri_Public?
+
+Have Solar_Base process configs along inheritance lines?
+
+Add jsurgeson as helper
 
 Write tests
 
+Write narrative docs (seeing as tech docs are done :-)
+    * Link to Solar vs Zend in docs
+    * Write controller stuff, since everyone seems to love that.
+
 Upgrade doc-builder
     show default value for properties (can't without instantiating)
-    add parenting
+    collect and show constants
     split into parse and write/build/render
-    have doc-parser un-prefix lines starting with star, not star-space
-    warn when there is no docblock
+    move parser into Solar core
     
 Write todo app
     Mock screens
 
-Upgrade bookmarks app
+Upgrade bookmarks app, incl. remaining CSS
 
-
-----
-
-DOCS PLAN
-
-Link to Solar vs Zend in docs
-
-* Write controller stuff, since everyone seems to love that.
 
 When packaging, the way to update the site is:
 
-    copy the package.tgz to the desktop
+    copy the pearball to the desktop
     unzip it
-    archive the apiref & manual dirs
+    zip the apiref & manual dirs
     scp to solarphp.com
     unzip there
     done :-)
@@ -84,7 +85,7 @@ Logging class!
 
 ----
 
-NEW MODELS, CONTENT TYPES, & APPS
+NEW MODELS & APPS
 
 Solar_Model_Members
     id
@@ -115,7 +116,7 @@ Solar_Model_Access
     name   -- handle or role name
     class  -- page class
     action -- action
-    submit -- submit to that action
+    submit -- submit to that action (is this really necessary?)
     
 Solar_App_Access
 

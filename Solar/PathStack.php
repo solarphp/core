@@ -59,25 +59,23 @@ class Solar_PathStack {
      * 
      * <code type="php">
      * $stack = Solar::factory('Solar_PathStack');
-     * $stack->add('path/1');
-     * $stack->add('path/2');
-     * $stack->add('path/3');
-     * 
-     * // $stack->get() reveals that the directory search order will be
-     * // 'path/3/', 'path/2/', 'path/1/', because the later adds
-     * // override the newer ones.
-     * 
-     * $stack = Solar::factory('Solar_PathStack');
      * $stack->add(array('path/1', 'path/2', 'path/3'));
-     * // as before, $stack->get() reveals that the directory search order will be
-     * // 'path/3/', 'path/2/', 'path/1/', because the later adds
-     * // override the newer ones.
+     * // $stack->get() reveals that the directory search order will be
+     * // 'path/1/', 'path/2/', 'path/3/'.
      * 
      * $stack = Solar::factory('Solar_PathStack');
      * $stack->add('path/1:path/2:path/3');
-     * // in this case, $stack->get() reveals that the directory search order will be
+     * // $stack->get() reveals that the directory search order will be
      * // 'path/1/', 'path/2/', 'path/3/', because this is the way the
      * // filesystem expects a path definition to work.
+     * 
+     * $stack = Solar::factory('Solar_PathStack');
+     * $stack->add('path/1');
+     * $stack->add('path/2');
+     * $stack->add('path/3');
+     * // $stack->get() reveals that the directory search order will be
+     * // 'path/3/', 'path/2/', 'path/1/', because the later adds
+     * // override the newer ones.
      * 
      * </code>
      * 
@@ -89,7 +87,11 @@ class Solar_PathStack {
     public function add($path)
     {
         if (is_string($path)) {
-            $path = array_reverse(explode(PATH_SEPARATOR, $path));
+            $path = explode(PATH_SEPARATOR, $path);
+        }
+        
+        if (is_array($path)) {
+            $path = array_reverse($path);
         }
         
         foreach ($path as $dir) {
@@ -139,7 +141,9 @@ class Solar_PathStack {
     
     /**
      * 
-     * Finds a file in the path stack using include_path.
+     * Finds a file in the path stack.
+     * 
+     * Relative paths are honored as part of the include_path.
      * 
      * For example:
      * 
@@ -149,19 +153,20 @@ class Solar_PathStack {
      * $stack->add('path/2');
      * $stack->add('path/3');
      * 
-     * $file = $stack->findInclude('file.php');
+     * $file = $stack->find('file.php');
      * // $file is now the first instance of 'file.php' found from the         
      * // directory stack, looking first in 'path/3/file.php', then            
      * // 'path/2/file.php', then finally 'path/1/file.php'.
-     * 
      * </code>
      * 
-     * @param string $file The file to find using the directory stack.
+     * @param string $file The file to find using the directory stack
+     * and the include_path.
      * 
-     * @return bool True if found, false if not.
+     * @return mixed The relative path to the file, or false if not
+     * found using the stack.
      * 
      */
-    public function findInclude($file)
+    public function find($file)
     {
         foreach ($this->_stack as $dir) {
             $spec = $dir . $file;
@@ -176,16 +181,17 @@ class Solar_PathStack {
      * 
      * Finds a file in the path stack using realpath().
      * 
-     * While slower than findInclude(), this helps to protect against
-     * directory traversal attacks.
+     * While slower than Solar_PathStack::find(), this helps to protect
+     * against directory traversal attacks.  It only works with absolute
+     * paths; relative paths will fail.
      * 
      * For example:
      * 
      * <code type="php">
      * $stack = Solar::factory('Solar_PathStack');
-     * $stack->add('path/1');
-     * $stack->add('path/2');
-     * $stack->add('path/3');
+     * $stack->add('/path/1');
+     * $stack->add('/path/2');
+     * $stack->add('/path/3');
      * 
      * $file = $stack->findReal('file.php');
      * // $file is now the first instance of 'file.php' found from the         
@@ -198,7 +204,8 @@ class Solar_PathStack {
      * 
      * @param string $file The file to find using the directory stack.
      * 
-     * @return bool True if found, false if not.
+     * @return mixed The absolute path to the file, or flase if not
+     * found using the stack.
      * 
      */
     public function findReal($file)

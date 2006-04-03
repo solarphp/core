@@ -308,7 +308,7 @@ class Solar_View extends Solar_Base {
         if (! class_exists($class, false)) {
         
             // look for the named file in the helper stack.
-            $file = $this->_helper_path->findInclude("$name.php");
+            $file = $this->_helper_path->find("$name.php");
             if (! $file) {
                 throw $this->_exception(
                     'ERR_HELPER_FILE_NOT_FOUND',
@@ -438,7 +438,7 @@ class Solar_View extends Solar_Base {
     public function template($name)
     {
         // get a path to the template
-        $file = $this->_template_path->findInclude($name);
+        $file = $this->_template_path->find($name);
         if (! $file) {
             throw $this->_exception(
                 'ERR_TEMPLATE_NOT_FOUND',

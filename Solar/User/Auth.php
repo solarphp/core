@@ -177,14 +177,10 @@ class Solar_User_Auth extends Solar_Base {
      */
     public function start()
     {
-        // Start the session; suppress errors if already started.
-        // Technically this should have happened as part of the
-        // Solar::start() process.
         // start the session if one hasn't been started already
-        if (! session_id()) {
+        if (session_id() === '') {
             session_start();
         }
-        
         
         // initialize the session array if it does not exist
         if (! isset($_SESSION['Solar_User_Auth']) ||

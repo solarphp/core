@@ -125,16 +125,16 @@ class Solar_User_Auth extends Solar_Base {
      * This is the status code of the current user authentication; the string
      * codes are:
      * 
-     * ANON => The user is anonymous/unauthenticated (no attempt to 
+     * : \\ANON\\ : The user is anonymous/unauthenticated (no attempt to 
      * authenticate)
      * 
-     * EXPIRED => The max time for authentication has expired
+     * : \\EXPIRED\\ : The max time for authentication has expired
      * 
-     * IDLED => The authenticated user has been idle for too long
+     * : \\IDLED\\ : The authenticated user has been idle for too long
      * 
-     * VALID => The user is authenticated and has not timed out
+     * : \\VALID\\ : The user is authenticated and has not timed out
      * 
-     * WRONG => The user attempted authentication but failed
+     * : \\WRONG\\ : The user attempted authentication but failed
      * 
      * @var string
      * 
@@ -180,17 +180,21 @@ class Solar_User_Auth extends Solar_Base {
         // Start the session; suppress errors if already started.
         // Technically this should have happened as part of the
         // Solar::start() process.
-        @session_start();
+        // start the session if one hasn't been started already
+        if (! session_id()) {
+            session_start();
+        }
+        
         
         // initialize the session array if it does not exist
         if (! isset($_SESSION['Solar_User_Auth']) ||
             ! is_array($_SESSION['Solar_User_Auth'])) {
             
             $_SESSION['Solar_User_Auth'] = array(
-                'status' => 'ANON',
-                'handle'    => null,
-                'initial'  => null,
-                'active' => null
+                'status'  => 'ANON',
+                'handle'  => null,
+                'initial' => null,
+                'active'  => null
             );
         }
         
@@ -215,9 +219,7 @@ class Solar_User_Auth extends Solar_Base {
         // are we allowing authentication actions?
         if ($this->allow) {
         
-            // get the submit value and credentials
-            $handle = Solar::post($this->_config['post_handle']);
-            $passwd = Solar::post($this->_config['post_passwd']);
+            // get the submit value
             $submit = Solar::post($this->_config['post_submit']);
             
             // check for a login request.
@@ -225,20 +227,12 @@ class Solar_User_Auth extends Solar_Base {
                 
                 // check the storage driver to see if the handle
                 // and passwd credentials are valid.
+                $handle = Solar::post($this->_config['post_handle']);
+                $passwd = Solar::post($this->_config['post_passwd']);
                 $result = $this->_driver->valid($handle, $passwd);
-                
-                // were the credentials valid? (check if exactly boolean
-                // true, as it may have returned a Solar error).
                 if ($result === true) {
-                    // login attempt succeeded.
-                    $this->status  = 'VALID';
-                    $this->handle  = $handle;
-                    $this->initial = time();
-                    $this->active  = time();
-                    // flash forward the status text
-                    $this->setFlash('status_text', $this->locale($this->status));
+                    $this->reset('VALID', $handle);
                 } else {
-                    // login attempt failed.
                     $this->reset('WRONG');
                 }
             }
@@ -300,21 +294,35 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * Resets any authentication data in the session.
      * 
-     * Typically used for idling, expiration, and logout.
+     * Typically used for idling, expiration, and logout.  Calls
+     * [[php session_regenerate_id()]] to clear previous session.
      * 
      * @param string $status A Solar_User_Auth status string;
      * default is 'ANON'.
      * 
+     * @param string $handle The authenticated user handle; only
+     * honored if $status is 'VALID'.
+     * 
      * @return void
      * 
      */
-    public function reset($status = 'ANON')
+    public function reset($status = 'ANON', $handle = null)
     {
         $status = strtoupper($status);
-        $this->status = $status;
-        $this->handle = null;
+        $this->status  = $status;
+        $this->handle  = null;
         $this->initial = null;
-        $this->active = null;
+        $this->active  = null;
+        
+        if ($status == 'VALID') {
+            $now = time();
+            $this->initial = $now;
+            $this->active  = $now;
+            $this->handle  = $handle;
+        }
+        
+        // reset the session id and delete previous session
+        session_regenerate_id(true);
         
         // flash forward any messages
         $this->setFlash('status_text', $this->locale($this->status));

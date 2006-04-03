@@ -113,14 +113,14 @@ class Solar_Cache extends Solar_Base {
      * $cache = Solar::factory('Solar_Cache');
      * 
      * // is the cache active or not?
-     * $active = $cache->active();
-     * Solar::dump($active);
+     * $flag = $cache->isActive();
+     * Solar::dump($flag);
      * </code>
      * 
      * @return bool True if active, false if not.
      * 
      */
-    public function active()
+    public function isActive()
     {
         return $this->_config['active'];
     }
@@ -132,9 +132,9 @@ class Solar_Cache extends Solar_Base {
      * @return int The cache lifetime in seconds.
      * 
      */
-    public function life()
+    public function getLife()
     {
-        return $this->_driver->life();
+        return $this->_driver->getLife();
     }
     
     
@@ -178,7 +178,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function save($key, $data)
     {
-        if ($this->active()) {
+        if ($this->isActive()) {
             return $this->_driver->save($key, $data);
         } else {
             return false;
@@ -220,7 +220,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function fetch($key)
     {
-        if ($this->active()) {
+        if ($this->isActive()) {
             return $this->_driver->fetch($key);
         } else {
             return false;
@@ -250,7 +250,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function delete($key)
     {
-        if ($this->active()) {
+        if ($this->isActive()) {
             return $this->_driver->delete($key);
         }
     }
@@ -273,7 +273,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function deleteAll()
     {
-        if ($this->active()) {
+        if ($this->isActive()) {
             return $this->_driver->deleteAll();
         }
     }

@@ -8,4 +8,6 @@
 
   * Solar_Exception_ConnectionFailed
 
+++ Overview
+
 Exception: connection to a resource failed.

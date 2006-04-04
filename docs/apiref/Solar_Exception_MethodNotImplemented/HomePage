@@ -8,4 +8,6 @@
 
   * Solar_Exception_MethodNotImplemented
 
+++ Overview
+
 Exception: a class method is not implemented.

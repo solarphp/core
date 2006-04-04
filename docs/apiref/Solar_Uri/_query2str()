@@ -4,7 +4,7 @@ access:   protected
 
 name: _query2str
 
-param: array, $params
+param: array, $spec
 
 return: string
 
@@ -14,7 +14,7 @@ Converts an array of query elements into a string.
 
 * Parameters:
 
- * array //$params//: The key-value pairs to convert into a query string.
+ * array //$spec//: The key-value pairs to convert into a query string.
 
 * Returns string: A URI query string.
 

@@ -6,8 +6,6 @@
 
 * Solar_Uri::$host -- The host specification (e.g., 'example.com').
 
-* Solar_Uri::$info -- Path info elements after the script name (from $_SERVER['PATH_INFO']).
-
 * Solar_Uri::$pass -- The password, if any.
 
 * Solar_Uri::$path -- The path portion (e.g., 'path/to/index.php').
@@ -23,6 +21,8 @@
 ++ Protected
 
 * Solar_Uri::$_config -- User-provided configuration values.
+
+* Solar_Uri::$_encode_path -- Url-encode only these characters in path elements.
 
 ++ Private
 

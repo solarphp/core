@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$fragment.//
+
+public string $fragment
+
+The fragment portion (e.g., "#subsection").

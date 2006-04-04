@@ -1,0 +1,23 @@
+//Inherited from Solar_Uri::_path2str().//
+
+<function>
+
+access:   protected
+
+name: _path2str
+
+param: array, $spec
+
+return: string
+
+</function>
+
+Converts an array of path elements into a string.
+
+* Parameters:
+
+ * array //$spec//: The path elements.
+
+* Returns string: A URI path string.
+
+Converts an array of path elements into a string.

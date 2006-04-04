@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_Anchor::anchor() -- Returns an anchor href tag.
+* Solar_View_Helper_Anchor::anchor() -- Returns a anchor href tag.
 
 Inherited Methods:
 

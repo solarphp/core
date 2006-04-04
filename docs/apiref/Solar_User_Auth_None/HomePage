@@ -6,4 +6,6 @@
 
  * Solar_User_Auth_None
 
+++ Overview
+
 Authenticate against nothing; defaults all authentication to "failed."

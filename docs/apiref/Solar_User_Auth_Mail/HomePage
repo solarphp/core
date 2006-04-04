@@ -6,4 +6,6 @@
 
  * Solar_User_Auth_Mail
 
+++ Overview
+
 Authenticate against an IMAP or POP3 mail server.

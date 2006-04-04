@@ -10,4 +10,6 @@
 
    * Solar_Sql_Exception_ColNameLength
 
+++ Overview
+
 Exception: column name is too long or too short.

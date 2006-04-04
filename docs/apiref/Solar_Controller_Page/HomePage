@@ -6,7 +6,9 @@
 
  * Solar_Controller_Page
 
-Abstract application (page) controller class for Solar.
+++ Overview
+
+Abstract page-based application controller class for Solar.
 
 Expects a directory structure like this example:
 

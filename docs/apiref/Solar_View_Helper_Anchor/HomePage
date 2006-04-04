@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Anchor
 
+++ Overview
+
 Helper for anchor href tags, with built-in text translation.

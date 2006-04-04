@@ -54,14 +54,12 @@ $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags
 $this->_view = 'browse';
 
 // RSS feed link for the page
-$link = Solar::factory('Solar_Uri');
-$link->setInfo(1, 'tag-feed');
-
-// set the RSS feed link ... move to view script?
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->path[1] = 'tag-feed';
 $this->layout_link[] = array(
     'rel'   => 'alternate',
     'type'  => 'application/rss+xml',
     'title' => Solar::server('PATH_INFO'),
-    'href'  => $link->export(),
+    'href'  => $uri->fetch(),
 );
 ?>

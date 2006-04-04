@@ -53,21 +53,21 @@ $this->tags         = $tags; // the requested tags
 $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags for this user
 
 // set the RSS feed link for the layout
-$uri = Solar::factory('Solar_Uri');
-$uri->setInfo(1, 'user-feed');
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->info[1] = 'user-feed';
 
 if ($tags) {
     // there are tags requested, so the RSS should show all pages
     // (i.e., page zero) and ignore the rows-per-page settings.
-    $uri->setQuery('page', 'all');
-    $uri->clearQuery('rows_per_page');
+    $uri->query['page'] = 'all';
+    unset($uri->query['rows_per_page']);
 }
 
 $this->layout_link[] = array(
     'rel'   => 'alternate',
     'type'  => 'application/rss+xml',
     'title' => Solar::server('PATH_INFO'),
-    'href'  => $uri->export(),
+    'href'  => $uri->fetch(),
 );
 
 ?>

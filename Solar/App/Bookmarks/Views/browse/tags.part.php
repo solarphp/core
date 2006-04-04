@@ -28,9 +28,11 @@
         <ul>
         <?php
             // build a series of links to tags
+            $uri = Solar::factory('Solar_Uri_Action');
             $tmp = array();
             foreach ($this->tags_in_use as $tag => $count) {
-                $tmp[] = "<li>" . $this->action("$action/$tag", $tag) . " ($count)</li>";
+                $uri->setPath("$action/$tag");
+                $tmp[] = "<li>" . $this->action($uri, $tag) . " ($count)</li>";
             }
             echo implode("\n", $tmp);
         ?>

@@ -31,8 +31,8 @@
                 'subj_desc'    => 'ORDER_SUBJ_DESC',
             );
             
-            // refresh the base link
-            $uri->import();
+            // an action uri processor
+            $uri = Solar::factory('Solar_Uri_Action');
             
             // add links
             foreach ($tmp as $key => $val) {
@@ -41,7 +41,7 @@
                        . $this->getText($val)
                        . "</strong></li>\n";
                 } else {
-                    $uri->setQuery('order', $key);
+                    $uri->query['order'] = $key;
                     echo "<li>" . $this->action($uri, $val) . "</li>\n";
                 }
             }

@@ -27,9 +27,9 @@ $this->_view = 'feed';
 $this->feed['title'] = 'tag';
 $this->feed['descr'] = $this->tags;
 
-$uri = Solar::factory('Solar_Uri');
-$uri->setInfo(1, 'tag');
-$this->feed['link'] = $uri->export();
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->info[1] = 'tag';
+$this->feed['link'] = $uri->fetch(true);
 
 // explicitly use a one-step view (i.e., no layout)
 $this->_layout = false;

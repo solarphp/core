@@ -28,9 +28,9 @@ $this->feed['title'] = 'user';
 $this->feed['descr'] = $this->owner_handle . '/' . $this->tags;
 $this->feed['date'] = date(DATE_RSS);
 
-$uri = Solar::factory('Solar_Uri');
-$uri->setInfo(1, 'user');
-$this->feed['link'] = $uri->export();
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->info[1] = 'user';
+$this->feed['link'] = $uri->fetch(true);
 
 // explicitly use a one-step view (no layout)
 $this->_layout = false;

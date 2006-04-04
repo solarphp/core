@@ -17,8 +17,6 @@
  * 
  */
 
-// a basic link object
-$uri = Solar::factory('Solar_Uri');
 ?>
 <!-- list of tags in use -->
 <div id="taglist">
@@ -59,15 +57,24 @@ $uri = Solar::factory('Solar_Uri');
         <!-- previous / page-count / next -->
         <hr />
         <p><strong>[ <?php
-            $uri->import();
-            $tmp = Solar::get('page', 1);
-            $uri->setQuery('page', $tmp - 1);
-            $prev = $uri->export();
-            $uri->setQuery('page', $tmp + 1);
-            $next = $uri->export();
-            if ($this->page > 1) echo $this->anchor($prev, 'SUBMIT_PREVIOUS') . ' | ';
+        
+            // action uri processor
+            $uri = Solar::factory('Solar_Uri_Action');
+            
+            // previous
+            if ($this->page > 1) {
+                $uri->query['page'] = $this->page - 1;
+                echo $this->action($uri, 'SUBMIT_PREVIOUS') . ' | ';
+            }
+            
+            // current
             echo $this->escape("Page {$this->page} of {$this->pages}");
-            if ($this->page < $this->pages) echo ' | ' . $this->anchor($next, 'SUBMIT_NEXT');
+            
+            // next
+            if ($this->page < $this->pages) {
+                $uri->query['page'] = $this->page + 1;
+                echo ' | ' . $this->action($uri, 'SUBMIT_NEXT');
+            }
         ?> ]</strong></p>
         
     <?php else: ?>
@@ -84,11 +91,10 @@ $uri = Solar::factory('Solar_Uri');
         
         <!-- QuickMark link -->
         <p><?php
-            $uri->import();
-            $scheme = $uri->scheme;
-            $host = $uri->host;
-            $path = $uri->path;
-            $js = "javascript:location.href='$scheme://$host$path/bookmarks/quick?uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
+            $uri = Solar::factory('Solar_Uri_Action');
+            $uri->set('bookmarks/quick');
+            $href = $uri->fetch(true);
+            $js = "javascript:location.href='$href?uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
             echo $this->getText('DRAG_THIS') . ': ';
             echo $this->anchor($js, 'QUICKMARK');
         ?></p>

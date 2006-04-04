@@ -49,8 +49,8 @@ if ($this->_user->auth->handle != $item['owner_handle']) {
 $href = $this->getFlash('backlink');
 if (! $href) {
     // probably browsed directly to this page; return to the user's list
-    $uri = Solar::factory('Solar_Uri');
-    $href = $uri->toAction("bookmarks/user/{$this->_user->auth->handle}");
+    $uri = Solar::factory('Solar_Uri_Action');
+    $href = $uri->quick("bookmarks/user/{$this->_user->auth->handle}");
 }
 
 // keep the backlink for the next page load

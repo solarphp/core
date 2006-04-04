@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract application controller class for Solar.
+ * Abstract page-based application controller class for Solar.
  * 
  * @category Solar
  * 
@@ -16,13 +16,13 @@
  */
 
 /**
- * Load Solar_Uri for dispatch comparisons.
+ * Load Solar_Uri_Action for dispatch comparisons.
  */
-Solar::loadClass('Solar_Uri');
+Solar::loadClass('Solar_Uri_Action');
 
 /**
  * 
- * Abstract application (page) controller class for Solar.
+ * Abstract page-based application controller class for Solar.
  * 
  * Expects a directory structure like this example:
  * 
@@ -410,22 +410,22 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (! $spec) {
             
             // no spec, use the current URI
-            $uri = Solar::factory('Solar_Uri');
-            $info = $uri->info;
+            $uri = Solar::factory('Solar_Uri_Action');
+            $info = $uri->path;
             $this->_query = $uri->query;
             
-        } elseif ($spec instanceof Solar_Uri) {
+        } elseif ($spec instanceof Solar_Uri_Action) {
             
-            // pull from a Solar_Uri object
-            $info = $spec->info;
+            // pull from a Solar_Uri_Action object
+            $info = $spec->path;
             $this->_query = $spec->query;
             
         } else {
             
             // a string, assumed to be a page/action/info?query spec.
-            $uri = Solar::factory('Solar_Uri');
-            $uri->importAction($spec);
-            $info = $uri->info;
+            $uri = Solar::factory('Solar_Uri_Action');
+            $uri->set($spec);
+            $info = $uri->path;
             $this->_query = $uri->query;
         }
         
@@ -580,29 +580,26 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Redirects to another page and action.
      * 
-     * @param Solar_Uri|string $spec The URI to redirect to.
-     * 
-     * @param bool $external Treat as a link to an external URI;
-     * i.e., not as a page-action link.
+     * @param Solar_Uri_Action|string $spec The URI to redirect to.
      * 
      * @return void
      * 
      */
-    protected function _redirect($spec, $external = false)
+    protected function _redirect($spec)
     {
-        if ($spec instanceof Solar_Uri) {
-            $href = ($external) ? $spec->export() : $spec->exportAction();
-        } elseif ($external || strpos($spec, '://') !== false) {
+        if ($spec instanceof Solar_Uri_Action) {
+            $href = $spec->fetch();
+        } elseif (strpos($spec, '://') !== false) {
             // external link, protect against header injections
             $href = str_replace(array("\r", "\n"), '', $spec);
         } else {
-            $uri = Solar::factory('Solar_Uri');
-            $href = $uri->toAction($spec);
+            $uri = Solar::factory('Solar_Uri_Action');
+            $href = $uri->fetch($spec);
         }
         
         // make sure there's actually an href
         $href = trim($href);
-        if (! $href) {
+        if (! $href || trim($spec) == '') {
             throw $this->_exception('ERR_REDIRECT_FAILED', array(
                 'spec' => $spec,
                 'href' => $href,

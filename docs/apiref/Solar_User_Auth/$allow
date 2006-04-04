@@ -1,3 +1,0 @@
-public bool $allow
-
-Whether or not to allow authentication actions (login/logout).

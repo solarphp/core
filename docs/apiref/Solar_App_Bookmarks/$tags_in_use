@@ -1,5 +1,0 @@
-public array $tags_in_use
-
-The list of all tags in use by the current owner_handle.
-
-If no owner_handle, the list of all tags for all owners.

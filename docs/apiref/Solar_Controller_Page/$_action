@@ -1,3 +1,0 @@
-protected string $_action
-
-The action being requested of (performed by) the application.

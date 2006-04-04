@@ -1,3 +1,0 @@
-protected Solar_Sql $_sql
-
-Internal Solar_Sql object.

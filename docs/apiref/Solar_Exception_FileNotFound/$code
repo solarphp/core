@@ -1,3 +1,0 @@
-//Inherited from Exception::$code.//
-
-protected  $code

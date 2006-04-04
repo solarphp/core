@@ -1,5 +1,0 @@
-//Inherited from Solar_App::$layout_meta.//
-
-public array $layout_meta
-
-An array of <meta> tag values for the layout <head> block.

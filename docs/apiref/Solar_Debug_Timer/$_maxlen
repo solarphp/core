@@ -1,3 +1,0 @@
-protected boolean $_maxlen
-
-The longest marker name length shown in profile().

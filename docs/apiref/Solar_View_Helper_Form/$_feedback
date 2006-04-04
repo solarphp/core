@@ -1,3 +1,0 @@
-protected array $_feedback
-
-Collection of form-level feedback messages.

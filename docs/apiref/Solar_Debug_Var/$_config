@@ -1,8 +1,0 @@
-protected array $_config
-
-User-provided configuration.
-
-Keys are:
-
-: \\output\\ : (string) Output mode.  Default is 'html'; anything else is
-treated as 'text' (plain text).

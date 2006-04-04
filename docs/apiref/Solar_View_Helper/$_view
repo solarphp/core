@@ -1,3 +1,0 @@
-protected Solar_View $_view
-
-Reference to the parent Solar_View object.

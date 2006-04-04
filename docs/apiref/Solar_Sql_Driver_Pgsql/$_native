@@ -1,5 +1,0 @@
-//Inherited from Solar_Sql_Driver::$_native.//
-
-protected array $_native
-
-Map of Solar generic column types to RDBMS native declarations.

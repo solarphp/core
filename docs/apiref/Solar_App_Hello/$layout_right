@@ -1,5 +1,0 @@
-//Inherited from Solar_App::$layout_right.//
-
-public array $layout_right
-
-An array of content for the layout <div id="right"> block.

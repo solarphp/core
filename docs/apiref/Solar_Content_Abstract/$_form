@@ -1,3 +1,0 @@
-protected array $_form
-
-Array of columns needed for forms related to the master node type.

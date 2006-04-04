@@ -1,5 +1,0 @@
-protected array $_tbl_cols
-
-Tracks which columns are being select from each table and join.
-
-We use this for automated deconfliction.

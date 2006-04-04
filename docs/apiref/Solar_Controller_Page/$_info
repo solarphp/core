@@ -1,3 +1,0 @@
-protected string $_info
-
-Application request parameters collected from the URI pathinfo.

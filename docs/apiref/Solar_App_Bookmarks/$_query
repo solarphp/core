@@ -1,5 +1,0 @@
-//Inherited from Solar_Controller_Page::$_query.//
-
-protected string $_query
-
-Application request parameters collected from the URI query string.

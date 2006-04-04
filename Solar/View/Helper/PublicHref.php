@@ -35,7 +35,7 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
      * 
      * Internal URI object for creating links.
      * 
-     * @var Solar_Uri
+     * @var Solar_Uri_Public
      * 
      */
     protected $_uri = null;
@@ -52,16 +52,15 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
         // do the real configuration
         parent::__construct($config);
         
-        // build the base URI for links
-        $this->_uri = Solar::factory('Solar_Uri');
-        $this->_uri->clear();
+        // public uri processor
+        $this->_uri = Solar::factory('Solar_Uri_Public');
     }
     
     /**
      * 
      * Returns an href to a public resource.
      * 
-     * @param Solar_Uri|string $spec The public resource HREF specification.
+     * @param Solar_Uri_Public|string $spec The public resource href specification.
      * 
      * @param bool $raw Return the resource string without escaping (default false).
      * 
@@ -70,18 +69,15 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
      */
     public function publicHref($spec, $raw = false)
     {
-        if ($spec instanceof Solar_Uri) {
-            // get just the action portions of the URI object
-            $this->_uri->importAction($spec->exportAction());
+        if ($spec instanceof Solar_Uri_Public) {
+            // already a public uri object
+            $href = $spec->fetch();
         } else {
-            // import the string as an action spec
-            $this->_uri->importAction($spec);
+            // build-and-fetch the string as a public href
+            $href = $this->_uri->quick($spec);
         }
         
-        // get the public href
-        $href = $this->_uri->exportPublic();
-        
-        // return the href, or an anchor?
+        // return escaped or not?
         if ($raw) {
             return $href;
         } else {

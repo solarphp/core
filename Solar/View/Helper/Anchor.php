@@ -38,7 +38,7 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
      * If the $text link text is empty, will just return the
      * href value, not an <a href="">...</a> tag.
      * 
-     * @param Solar_Uri|string $spec The anchor HREF specification.
+     * @param Solar_Uri|string $spec The anchor href specification.
      * 
      * @param string $text A locale translation key.
      * 
@@ -50,7 +50,8 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
     public function anchor($spec, $text, $attribs = array())
     {
         if ($spec instanceof Solar_Uri) {
-            $href = $spec->export();
+            // fetch the full href, not just the path/query/fragment
+            $href = $spec->fetch(true);
         } else {
             $href = $spec;
         }

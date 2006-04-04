@@ -35,7 +35,7 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
      * 
      * Internal URI object for creating links.
      * 
-     * @var Solar_Uri
+     * @var Solar_Uri_Action
      * 
      */
     protected $_uri = null;
@@ -52,9 +52,8 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
         // do the real configuration
         parent::__construct($config);
         
-        // build the base URI for links
-        $this->_uri = Solar::factory('Solar_Uri');
-        $this->_uri->clear();
+        // get a URI processor
+        $this->_uri = Solar::factory('Solar_Uri_Action');
     }
     
     /**
@@ -73,16 +72,15 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
      */
     public function action($spec, $text = null)
     {
-        if ($spec instanceof Solar_Uri) {
-            // get just the action portions of the URI object
-            $href = $spec->exportAction();
+        if ($spec instanceof Solar_Uri_Action) {
+            // already an action uri object
+            $href = $spec->fetch();
         } else {
-            // import the string as an action spec
-            $this->_uri->importAction($spec);
-            $href = $this->_uri->exportAction();
+            // build-and-fetch the string as an action spec
+            $href = $this->_uri->quick($spec);
         }
         
-        // get the action href
+        // escape the href itself
         $href = $this->_view->escape($href);
         
         // return the href, or an anchor?

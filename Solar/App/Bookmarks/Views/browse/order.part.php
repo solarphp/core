@@ -23,8 +23,8 @@
             $tmp = array(
                 'created'      => 'ORDER_CREATED',
                 'created_desc' => 'ORDER_CREATED_DESC',
-                'rank'         => 'ORDER_RANK',
-                'rank_desc'    => 'ORDER_RANK_DESC',
+                'position'         => 'ORDER_POSITION',
+                'position_desc'    => 'ORDER_POSITION_DESC',
                 'tags'         => 'ORDER_TAGS',
                 'tags_desc'    => 'ORDER_TAGS_DESC',
                 'subj'         => 'ORDER_SUBJ',

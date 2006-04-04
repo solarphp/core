@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 
@@ -33,7 +33,7 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
     
     /**
      * 
-     * Returns an anchor href tag.
+     * Returns a anchor href tag.
      * 
      * If the $text link text is empty, will just return the
      * href value, not an <a href="">...</a> tag.

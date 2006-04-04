@@ -9,7 +9,7 @@
  * 
  * @author Matthew Weier O'Phinney <mweierophinney@gmail.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 

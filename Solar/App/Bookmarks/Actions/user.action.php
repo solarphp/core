@@ -11,7 +11,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 
@@ -46,7 +46,7 @@ $this->_view = 'browse';
 
 // assign view vars
 $this->pages        = $total['pages'];
-$this->order        = $order;
+$this->order        = Solar::get('order', 'created_desc');
 $this->page         = $page;
 $this->owner_handle = $owner_handle; // requested owner_handle
 $this->tags         = $tags; // the requested tags

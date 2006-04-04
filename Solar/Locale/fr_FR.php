@@ -9,7 +9,7 @@
  * 
  * @author Jean-Eric Laurent <jel@jelaurent.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 

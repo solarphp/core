@@ -11,7 +11,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 
@@ -20,7 +20,7 @@
 <h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <h2><?php echo $this->getText('TITLE_ADD_NEW') ?></h2>
 
-<p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
+<p>[ <?php echo $this->action($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php echo $this->form()
     ->auto($this->formdata)

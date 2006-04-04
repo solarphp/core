@@ -11,7 +11,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 
@@ -36,7 +36,7 @@
             
             // add links
             foreach ($tmp as $key => $val) {
-                if (Solar::get('order', 'created_desc') == $key) {
+                if ($this->order == $key) {
                     echo "<li class=\"selected\"><strong>"
                        . $this->getText($val)
                        . "</strong></li>\n";

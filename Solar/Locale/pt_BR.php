@@ -9,7 +9,7 @@
  * 
  * @author Marcelo Santos Araujo <marcelosaraujo@gmail.com>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 

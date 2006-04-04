@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Manipulates URI properties.
+ * Manipulates and generates URI strings.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Manipulates URI properties.
+ * Manipulates and generates URI strings.
  * 
  * @category Solar
  * 
@@ -32,13 +32,14 @@ class Solar_Uri extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\path\\ : (string) A path prefix, e.g. '/index.php/'.
+     * : \\path\\ : (string) A path prefix.  Generally needed only
+     * for specific URI subclasses, e.g. Solar_Uri_Action.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'path' => null,
+        'path' => '',
     );
     
     /**

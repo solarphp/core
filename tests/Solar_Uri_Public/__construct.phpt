@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::setInfo()
+Solar_Uri_Public::__construct()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,17 +14,8 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-
-// set existing key
-$uri->setInfo(1, 'newaction');
-$expect = array('appname', 'newaction');
-$assert->same($uri->info, $expect);
-
-// set new key
-$uri->setInfo(2, 'id');
-$expect[] = 'id';
-$assert->same($uri->info, $expect);
+$uri = Solar::factory('Solar_Uri_Public');
+$assert->isInstance($uri, 'Solar_Uri_Public');
 
 // ---------------------------------------------------------------------
 

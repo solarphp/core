@@ -14,16 +14,16 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-// test default values from _setup.inc
 $uri = Solar::factory('Solar_Uri');
 $assert->isInstance($uri, 'Solar_Uri');
+
+// test default values from _setup.inc
 $assert->same($uri->scheme, 'http');
 $assert->same($uri->host, 'example.com');
 $assert->same($uri->port, null);
 $assert->same($uri->user, null);
 $assert->same($uri->pass, null);
-$assert->same($uri->path, '/path/to/index.php');
-$assert->same($uri->info, array('appname', 'action'));
+$assert->same($uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
 $assert->same($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
 $assert->same($uri->fragment, 'zim');
 

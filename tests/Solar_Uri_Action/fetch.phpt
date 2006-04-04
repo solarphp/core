@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::clearInfo()
+Solar_Uri_Action::fetch()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,9 +14,15 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-$uri->clearInfo();
-$assert->same($uri->info, array());
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->set('controller/action/id/?page=1');
+
+// partial fetch
+$assert->same($uri->fetch(), '/index.php/controller/action/id?page=1');
+
+// full fetch
+$assert->same($uri->fetch(true), 'http://example.com/index.php/controller/action/id?page=1');
+
 
 // ---------------------------------------------------------------------
 

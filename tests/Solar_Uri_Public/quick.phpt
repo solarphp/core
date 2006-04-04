@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::addInfo()
+Solar_Uri_Public::quick()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,10 +14,17 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-$assert->same($uri->info, array('appname', 'action'));
-$uri->addInfo('id');
-$assert->same($uri->info, array('appname', 'action', 'id'));
+$uri = Solar::factory('Solar_Uri_Public');
+
+// partial
+$expect = 'Solar/styles/default.css';
+$actual = $uri->quick($expect);
+$assert->same($actual, "/public/$expect");
+
+// full
+$expect = 'http://example.com/public/Solar/styles/default.css';
+$actual = $uri->quick($expect, true);
+$assert->same($actual, $expect);
 
 // ---------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::setQueryString()
+Solar_Uri_Public::fetch()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,10 +14,14 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-$uri->setQueryString('a=b&c=d');
-$expect = array('a' => 'b', 'c' => 'd');
-$assert->same($uri->query, $expect);
+$uri = Solar::factory('Solar_Uri_Public');
+$uri->set('Solar/styles/default.css');
+
+// partial fetch
+$assert->same($uri->fetch(), '/public/Solar/styles/default.css');
+
+// full fetch
+$assert->same($uri->fetch(true), 'http://example.com/public/Solar/styles/default.css');
 
 
 // ---------------------------------------------------------------------

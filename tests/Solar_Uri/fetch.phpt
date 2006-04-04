@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::toAction()
+Solar_Uri::fetch()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,31 +14,49 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-// the URI object itself
 $uri = Solar::factory('Solar_Uri');
 
-// set up the expected values
+// preliminaries
+$scheme = 'http';
+$host = 'www.example.net';
+$port = 8080;
+$path = '/some/path/index.php';
+
 $info = array(
-    'appname', 'action', 'more', 'path', 'info'
+    'more', 'path', 'info'
 );
+
+$istr = implode('/', $info);
+
 $query = array(
     'a"key' => 'a&value',
     'b?key' => 'this that other',
     'c\'key' => 'tag+tag+tag',
 );
 
-$spec = implode('/', $info);
 $tmp = array();
 foreach ($query as $k => $v) {
     $tmp[] .= urlencode($k) . '=' . urlencode($v);
 }
-$spec .= '?' . implode('&', $tmp);
+
+$qstr = implode('&', $tmp);
+
+// set up expectations
+$expect_full = "$scheme://$host:$port$path/$istr?$qstr";
+$expect_part = "$path/$istr?$qstr";
+
+// set the URI
+$uri->set($expect_full);
+
+// full fetch
+$assert->setLabel('full');
+$assert->same($uri->fetch(true), $expect_full);
+
+// partial fetch
+$assert->setLabel('part');
+$assert->same($uri->fetch(), $expect_part);
 
 
-// import the URI spec and test that toAction() works the same
-$uri->importAction($spec);
-$expect = $uri->exportAction();
-$assert->same($uri->toAction($spec), $expect);
 
 // ---------------------------------------------------------------------
 

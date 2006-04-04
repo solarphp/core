@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::toPublic()
+Solar_Uri_Action::quick()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,11 +14,17 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
+$uri = Solar::factory('Solar_Uri_Action');
 
-$uri = Solar::factory('Solar_Uri');
-$uri->importAction('/styles/default.css');
-$expect = $uri->exportPublic();
-$assert->same($uri->toPublic('/styles/default.css'), $expect);
+// partial
+$expect = '/index.php/controller/action/id?foo=bar';
+$actual = $uri->quick($expect);
+$assert->same($actual, $expect);
+
+// full
+$expect = 'http://example.com/index.php/controller/action?foo=bar';
+$actual = $uri->quick($expect, true);
+$assert->same($actual, $expect);
 
 // ---------------------------------------------------------------------
 

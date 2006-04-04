@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::setQuery()
+Solar_Uri_Action::__construct()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,9 +14,8 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-$uri->setQuery('a=b&c=d');
-$assert->same($uri->query, array('a' => 'b', 'c' => 'd'));
+$uri = Solar::factory('Solar_Uri_Action');
+$assert->isInstance($uri, 'Solar_Uri_Action');
 
 // ---------------------------------------------------------------------
 

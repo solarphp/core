@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::exportPublic()
+Solar_Uri_Public::setPath()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,9 +14,9 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-$uri->importAction('/styles/default.css');
-$assert->same($uri->exportPublic(), "/public/styles/default.css");
+$uri = Solar::factory('Solar_Uri_Public');
+$uri->setPath('/very/special/example/');
+$assert->same($uri->path, array('very', 'special', 'example'));
 
 // ---------------------------------------------------------------------
 

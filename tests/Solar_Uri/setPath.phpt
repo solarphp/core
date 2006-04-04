@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::clear()
+Solar_Uri::setPath()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -15,17 +15,8 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 // ---------------------------------------------------------------------
 
 $uri = Solar::factory('Solar_Uri');
-$uri->clear();
-
-$assert->same($uri->scheme, null);
-$assert->same($uri->host, null);
-$assert->same($uri->port, null);
-$assert->same($uri->user, null);
-$assert->same($uri->pass, null);
-$assert->same($uri->path, null);
-$assert->same($uri->info, array());
-$assert->same($uri->query, array());
-$assert->same($uri->fragment, null);
+$uri->setPath('/very/special/example/');
+$assert->same($uri->path, array('very', 'special', 'example'));
 
 // ---------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::addQuery()
+Solar_Uri_Action::setPath()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -14,20 +14,9 @@ if (is_readable(dirname(__FILE__) . '/_prepend.inc')) {
 
 // ---------------------------------------------------------------------
 
-$uri = Solar::factory('Solar_Uri');
-
-$expect = $uri->query;
-
-// add a new query term
-$uri->addQuery('zim', 'gir');
-$expect['zim'] = 'gir';
-$assert->same($uri->query, $expect);
-
-// append to an existing query term
-$uri->addQuery('zim', 'irk');
-$expect['zim'] = array('gir', 'irk');
-$assert->same($uri->query, $expect);
-
+$uri = Solar::factory('Solar_Uri_Action');
+$uri->setPath('/very/special/example/');
+$assert->same($uri->path, array('very', 'special', 'example'));
 
 // ---------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 --TEST--
-Solar_Uri::import()
+Solar_Uri::set()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -21,17 +21,14 @@ $uri = Solar::factory('Solar_Uri');
 $scheme = 'http';
 $host = 'www.example.net';
 $port = 8080;
-$path = '/some/path/index.php';
-$info = array(
-    'more', 'path', 'info'
-);
+$path = 'some/path/index.php/more/path/info';
 $query = array(
     'a"key' => 'a&value',
     'b?key' => 'this that other',
     'c\'key' => 'tag+tag+tag',
 );
 
-$spec = "$scheme://$host:$port$path/" . implode('/', $info);
+$spec = "$scheme://$host:$port/$path/";
 
 $tmp = array();
 foreach ($query as $k => $v) {
@@ -39,25 +36,24 @@ foreach ($query as $k => $v) {
 }
 $spec .= '?' . implode('&', $tmp);
 
-
 // import the URI spec and test that it imported properly
-$uri->import($spec);
+$uri->set($spec);
+$assert->setLabel('Initial import');
 $assert->same($uri->scheme, $scheme);
 $assert->same($uri->host, $host);
 $assert->same($uri->port, $port);
-$assert->same($uri->path, $path);
-$assert->same($uri->info, $info);
+$assert->same($uri->path, explode('/', $path));
 $assert->same($uri->query, $query);
 
-// npw export, re-import, and check again
-// to make sure there are no translation errors.
-$spec = $uri->export();
-$uri->import($spec);
+// npw export in full, then re-import and check again.
+// do this to make sure there are no translation errors.
+$spec = $uri->fetch(true);
+$uri->set($spec);
+$assert->setLabel('Retranslation');
 $assert->same($uri->scheme, $scheme);
 $assert->same($uri->host, $host);
 $assert->same($uri->port, $port);
-$assert->same($uri->path, $path);
-$assert->same($uri->info, $info);
+$assert->same($uri->path, explode('/', $path));
 $assert->same($uri->query, $query);
 
 // ---------------------------------------------------------------------

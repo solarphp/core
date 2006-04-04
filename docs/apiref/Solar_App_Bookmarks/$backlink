@@ -1,0 +1,3 @@
+public string $backlink
+
+A link back to the previous page: list results, bookmarked page, etc.

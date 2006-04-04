@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: mark
+
+param: string, $name
+
+return: void
+
+</function>
+
+Marks the time.
+
+* Parameters:
+
+ * string //$name//: Name of the marker to be set
+
+* Returns void
+
+Marks the time.
+
+Use this to mark the profile to see how much time has
+elapsed since the last mark.  Labels do not have to be
+unique, but should be distinctive enough so you can tell
+which one is which on long profiles.

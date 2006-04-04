@@ -1,0 +1,23 @@
+//Inherited from Solar_Base::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: mixed, $config, NULL
+
+return: Solar_Valid
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * mixed //$config//: If array, is merged with the default $_config property array and any values from the Solar.config.php file.  If string, is loaded from that file and merged with values from Solar.config.php file.  If boolean false, no config overrides are performed (class defaults only).
+
+* Returns Solar_Valid: Solar_Valid instance
+
+Constructor.

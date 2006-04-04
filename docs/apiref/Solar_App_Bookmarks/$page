@@ -1,0 +1,3 @@
+public int $page
+
+The current page number being displayed.

@@ -1,0 +1,12 @@
+HomePage | The Solar_View_Helper_Action Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_uri
+  $_view
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  action()
+  apiVersion()
+  locale()

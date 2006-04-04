@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_PathStack::$_stack -- The stack of directories.
+
+++ Private
+
+None.

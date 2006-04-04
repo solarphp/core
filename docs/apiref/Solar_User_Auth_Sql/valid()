@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: valid
+
+param: string, $handle
+
+param: string, $passwd
+
+return: bool
+
+</function>
+
+Validate a handle and passwd.
+
+* Parameters:
+
+ * string //$handle//: Username handle to authenticate.
+
+ * string //$passwd//: The plain-text passwd to use.
+
+* Returns bool: True on success, false on failure.
+
+Validate a handle and passwd.

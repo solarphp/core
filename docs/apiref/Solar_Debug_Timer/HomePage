@@ -1,0 +1,11 @@
++ The Solar_Debug_Timer Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Debug_Timer
+
+++ Overview
+
+Class to track code execution times.

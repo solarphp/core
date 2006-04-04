@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: ipv4
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is a legal IPv4 address.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is a legal IPv4 address.

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: escape
+
+param: scalar, $value
+
+return: string
+
+</function>
+
+Built-in helper for escaping output.
+
+* Parameters:
+
+ * scalar //$value//: The value to escape.
+
+* Returns string: The escaped value.
+
+Built-in helper for escaping output.

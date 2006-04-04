@@ -1,0 +1,3 @@
+protected Solar_PathStack $_helper_path
+
+Path stack for helpers.

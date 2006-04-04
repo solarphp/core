@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: form
+
+param: array, $data, NULL
+
+return: Solar_Form
+
+</function>
+
+Returns a bookmark data-entry form processor.
+
+* Parameters:
+
+ * array //$data//: The default data for the form.
+
+* Returns Solar_Form
+
+Returns a bookmark data-entry form processor.

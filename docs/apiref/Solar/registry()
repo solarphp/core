@@ -1,0 +1,21 @@
+<function>
+
+access:  static public
+
+name: registry
+
+param: string, $key
+
+return: object
+
+</function>
+
+Accesses an object in the registry.
+
+* Parameters:
+
+ * string //$key//: The registered name.
+
+* Returns object: The object registered under $key.
+
+Accesses an object in the registry.

@@ -1,0 +1,34 @@
+<function>
+
+access:  static public
+
+name: setFlash
+
+param: string, $class
+
+param: string, $key
+
+param: mixed, $val
+
+return: void
+
+</function>
+
+Sets a "read-once" session value for a class and key.
+
+* Parameters:
+
+ * string //$class//: The related class for the flash.
+
+ * string //$key//: The specific type of information for the class.
+
+ * mixed //$val//: The value for the key; previous values will be overwritten.
+
+* Returns void
+
+Sets a "read-once" session value for a class and key.
+
+Taken from ideas popularized by Ruby on Rails, a "flash" is a session
+value that propagates only until it is read, at which time it
+is removed from the session.  This is useful for forwarding
+information and messages between page loads.

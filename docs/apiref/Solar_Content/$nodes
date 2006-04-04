@@ -1,0 +1,3 @@
+public Solar_Model_Nodes $nodes
+
+A table object representing the container nodes in an area.

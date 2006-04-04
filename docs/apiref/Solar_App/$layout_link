@@ -1,0 +1,3 @@
+public array $layout_link
+
+An array of <link> tag values for the layout <head> block.

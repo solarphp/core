@@ -1,0 +1,31 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Role::__construct() -- Constructor to set up the storage driver.
+
+* Solar_User_Role::fetch() -- Refresh the list of roles for the given user.
+
+* Solar_User_Role::in() -- Check to see if a user is in a role.
+
+* Solar_User_Role::inAll() -- Check to see if a user is in all of the listed roles.
+
+* Solar_User_Role::inAny() -- Check to see if a user is in any of the listed roles.
+
+* Solar_User_Role::reset() -- Resets the role list to nothing.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

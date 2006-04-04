@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: rewind
+
+return: void
+
+</function>
+
+Rewinds the iterator back to the beginning.
+
+* Parameters: none.
+
+* Returns void
+
+Rewinds the iterator back to the beginning.

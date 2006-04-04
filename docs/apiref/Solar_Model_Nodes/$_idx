@@ -1,0 +1,5 @@
+//Inherited from Solar_Sql_Table::$_idx.//
+
+protected array $_idx
+
+The index specification array for all indexes on this table:

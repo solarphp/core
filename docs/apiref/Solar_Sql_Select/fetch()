@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: string, $type, 'result'
+
+return: mixed
+
+</function>
+
+Fetch the results based on the current query properties.
+
+* Parameters:
+
+ * string //$type//: The type of fetch to perform (all, one, row, etc).
+
+* Returns mixed: The query results.
+
+Fetch the results based on the current query properties.

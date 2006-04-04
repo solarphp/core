@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: listFeedback
+
+param: array, $spec
+
+param: string, $class, NULL
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Returns a feedback array (form-level or element-level) as an unordered list.
+
+* Parameters:
+
+ * array //$spec//: An array of messages.
+
+ * string //$class//: The class to use for the <ul> tag.
+
+* Returns Solar_View_Helper_Form
+
+Returns a feedback array (form-level or element-level) as an unordered list.

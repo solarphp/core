@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: addHelperPath
+
+param: string|array, $path
+
+return: void
+
+</function>
+
+Add to the helper directory path stack.
+
+* Parameters:
+
+ * string|array //$path//: The directories to add to the stack.
+
+* Returns void
+
+Add to the helper directory path stack.

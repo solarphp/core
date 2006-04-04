@@ -1,0 +1,21 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View::$_config -- User-provided configuration values.
+
+* Solar_View::$_escape -- Parameters for escaping.
+
+* Solar_View::$_helper -- Instantiated helper objects.
+
+* Solar_View::$_helper_path -- Path stack for helpers.
+
+* Solar_View::$_template_path -- Path stack for templates.
+
+++ Private
+
+None.

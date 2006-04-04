@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Controller_Front::$_classes -- List of base class names.
+
+* Solar_Controller_Front::$_config -- User-defined configuration array.
+
+* Solar_Controller_Front::$_default -- The default page name when none is specified.
+
+++ Private
+
+None.

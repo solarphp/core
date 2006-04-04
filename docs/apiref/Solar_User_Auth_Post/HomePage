@@ -1,0 +1,15 @@
++ The Solar_User_Auth_Post Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Auth_Post
+
+++ Overview
+
+Authenticate via simple HTTP POST request-and-reply.
+
+Based in part on php.net user comments:
+http://us3.php.net/manual/en/function.fsockopen.php#57275
+http://us3.php.net/manual/en/function.fopen.php#58099

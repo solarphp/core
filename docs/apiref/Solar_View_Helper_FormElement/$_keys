@@ -1,0 +1,5 @@
+protected array $_keys
+
+The order in which to process info keys.
+
+Attribs is last so that attributes are unset properly.

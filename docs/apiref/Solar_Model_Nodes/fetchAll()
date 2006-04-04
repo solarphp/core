@@ -1,0 +1,31 @@
+//Inherited from Solar_Sql_Table::fetchAll().//
+
+<function>
+
+access:   public
+
+name: fetchAll
+
+param: string|array, $where, NULL
+
+param: string|array, $order, NULL
+
+param: int, $page, NULL
+
+return: array
+
+</function>
+
+Fetches all rows by arbitrary criteria.
+
+* Parameters:
+
+ * string|array //$where//: A Solar_Sql_Select::multiWhere() parameter.
+
+ * string|array //$order//: A Solar_Sql_Select::order() parameter.
+
+ * int //$page//: The page number of rows to fetch.
+
+* Returns array: An array of rows.
+
+Fetches all rows by arbitrary criteria.

@@ -1,0 +1,32 @@
+<function>
+
+access:   public
+
+name: sepWords
+
+param: mixed, $value
+
+param: string, $sep, ' '
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is composed of separated words.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * string //$sep//: The word separator character.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is composed of separated words.
+
+These include a-z, A-Z, 0-9, and underscore, indicated by a 
+regular expression "\w".  By default, the separator is a space.

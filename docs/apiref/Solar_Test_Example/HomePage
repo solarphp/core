@@ -1,0 +1,11 @@
++ The Solar_Test_Example Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Test_Example
+
+++ Overview
+
+Example for testing Solar class-to-file hierarchy, locales, and exceptions.

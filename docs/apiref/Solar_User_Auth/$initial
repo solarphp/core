@@ -1,0 +1,6 @@
+public int $initial
+
+Convenience reference to $_SESSION['Solar_User_Auth']['initial'].
+
+This is the Unix time at which the handle was initially
+authenticated.

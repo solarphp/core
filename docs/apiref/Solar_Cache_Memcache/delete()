@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: delete
+
+param: string, $key
+
+return: void
+
+</function>
+
+Deletes a cache entry.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+* Returns void
+
+Deletes a cache entry.

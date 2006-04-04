@@ -1,0 +1,47 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Form::__call() -- Magic __call() for addElement() using element helpers.
+
+* Solar_View_Helper_Form::__construct() -- Constructor.
+
+* Solar_View_Helper_Form::addElement() -- Adds a single element to the form.
+
+* Solar_View_Helper_Form::addFeedback() -- Adds to the form-level feedback message array.
+
+* Solar_View_Helper_Form::auto() -- Automatically adds multiple pieces to the form.
+
+* Solar_View_Helper_Form::beginGroup() -- Begins a group of form elements under a single label.
+
+* Solar_View_Helper_Form::disable() -- Sets the default 'disable' flag for elements.
+
+* Solar_View_Helper_Form::endGroup() -- Ends a group of form elements.
+
+* Solar_View_Helper_Form::fetch() -- Builds and returns the form output.
+
+* Solar_View_Helper_Form::form() -- Main method interface to Solar_View.
+
+* Solar_View_Helper_Form::listFeedback() -- Returns a feedback array (form-level or element-level) as an unordered list.
+
+* Solar_View_Helper_Form::reset() -- Resets the form entirely.
+
+* Solar_View_Helper_Form::setAttrib() -- Sets a form-tag attribute.
+
+* Solar_View_Helper_Form::setStatus() -- Sets the form status.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

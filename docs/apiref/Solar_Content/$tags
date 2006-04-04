@@ -1,0 +1,3 @@
+public Solar_Model_Tags $tags
+
+A table object representing the searchable tags on each node.

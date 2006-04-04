@@ -1,0 +1,19 @@
+//Inherited from Solar_Sql_Table::_autoSetup().//
+
+<function>
+
+access: final  protected
+
+name: _autoSetup
+
+return: void
+
+</function>
+
+Fixes the $col and $idx properties after user setup.
+
+* Parameters: none.
+
+* Returns void
+
+Fixes the $col and $idx properties after user setup.

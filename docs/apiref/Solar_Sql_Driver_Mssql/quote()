@@ -1,0 +1,23 @@
+//Inherited from Solar_Sql_Driver::quote().//
+
+<function>
+
+access:   public
+
+name: quote
+
+param: mixed, $val
+
+return: mixed
+
+</function>
+
+Safely quotes a value for an SQL statement.
+
+* Parameters:
+
+ * mixed //$val//: The value to quote.
+
+* Returns mixed: An SQL-safe quoted value.
+
+Safely quotes a value for an SQL statement.

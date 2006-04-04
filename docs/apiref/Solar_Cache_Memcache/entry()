@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: entry
+
+param: string, $key
+
+return: string
+
+</function>
+
+Returns the name for the entry key.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+* Returns string: The cache entry name.
+
+Returns the name for the entry key.

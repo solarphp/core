@@ -1,0 +1,3 @@
+public array $list
+
+The list of available locale codes.

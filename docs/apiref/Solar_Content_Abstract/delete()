@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: delete
+
+param: int, $id
+
+return: void
+
+</function>
+
+Delete a master node and its tags.
+
+* Parameters:
+
+ * int //$id//: The master node ID to delete.
+
+* Returns void
+
+Delete a master node and its tags.

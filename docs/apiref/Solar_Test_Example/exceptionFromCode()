@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: exceptionFromCode
+
+param: string, $code
+
+return: void
+
+</function>
+
+Throws a user-specified error code for this class.
+
+* Parameters:
+
+ * string //$code//: The error code to throw.
+
+* Returns void
+
+Throws a user-specified error code for this class.

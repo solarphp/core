@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: countPages
+
+param: string|array, $tags, NULL
+
+param: string|array, $where, NULL
+
+return: array
+
+</function>
+
+Fetch a total count and pages of master nodes in the content store.
+
+* Parameters:
+
+ * string|array //$tags//: Count master nodes with all these tags; if empty, counts for all tags.
+
+ * string|array //$where//: A set of multiWhere() conditions to determine which nodes are fetched.
+
+* Returns array: A array with keys 'count' (total number of  bookmarks) and 'pages' (number of pages).
+
+Fetch a total count and pages of master nodes in the content store.

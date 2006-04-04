@@ -1,0 +1,36 @@
+<function>
+
+access:   public
+
+name: inScope
+
+param: mixed, $value
+
+param: int, $size
+
+param: int, $scope
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+See a value has only a certain number of digits and decimals.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * int //$size//: The total number of digits allowed in the value, excluding the negative sign and decimal point.
+
+ * int //$scope//: The maximum number of decimal places.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+See a value has only a certain number of digits and decimals.
+
+The value must be numeric, can be no longer than the \\$size\\,
+and can have no more decimal places than the \\$scope\\.

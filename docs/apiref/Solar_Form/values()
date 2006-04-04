@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: values
+
+param: string, $key, NULL
+
+return: array
+
+</function>
+
+Returns the form element values as an array.
+
+* Parameters:
+
+ * string //$key//: Return only values that are part of this array key.  If null, returns all values in the form.
+
+* Returns array: An associative array of element values.
+
+Returns the form element values as an array.

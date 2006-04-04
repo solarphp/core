@@ -1,0 +1,23 @@
+//Inherited from Solar_View_Helper::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_View_Helper_FormElement
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-specified configuration.
+
+* Returns Solar_View_Helper_FormElement: Solar_View_Helper_FormElement instance
+
+Constructor.

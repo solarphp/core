@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: dump
+
+param: mixed, &$var
+
+param: string, $label, NULL
+
+return: string
+
+</function>
+
+Returns the output of "var_dump()" with a label.
+
+* Parameters:
+
+ * mixed //$var//: The variable to dump.
+
+ * string //$label//: A label to prefix to the dump.
+
+* Returns string: The labeled results of var_dump().
+
+Returns the output of "var_dump()" with a label.
+
+Buffers the [[php var_dump]] for a variable,
+applies some simple formatting for readability,
+and [[php echo]]s it with an optional label.
+Use this for debugging variables to see exactly
+what they contain.

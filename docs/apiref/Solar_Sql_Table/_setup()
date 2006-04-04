@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: void
+
+</function>
+
+Use this to set up extended table objects.
+
+* Parameters: none.
+
+* Returns void
+
+Use this to set up extended table objects.

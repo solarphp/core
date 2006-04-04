@@ -1,0 +1,9 @@
+protected array $_config
+
+User-provided configuration.
+
+Keys are:
+
+: \\sql\\ : (dependency) A Solar_Sql dependency object.
+
+: \\paging\\ : (int) Number of rows per page.

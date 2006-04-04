@@ -1,0 +1,25 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Table::$_col -- The column specification array for all columns in this table.
+
+* Solar_Sql_Table::$_config -- User-provided configuration.
+
+* Solar_Sql_Table::$_idx -- The index specification array for all indexes on this table:
+
+* Solar_Sql_Table::$_name -- The table name.
+
+* Solar_Sql_Table::$_order -- The default order when fetching rows.
+
+* Solar_Sql_Table::$_paging -- The numer of rows per page when selecting.
+
+* Solar_Sql_Table::$_sql -- The SQL object.
+
+++ Private
+
+None.

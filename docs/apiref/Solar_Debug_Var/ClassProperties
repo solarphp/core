@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Debug_Var::$_config -- User-provided configuration.
+
+++ Private
+
+None.

@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+* Solar_Sql_Reserved::$words -- The array of words reserved across all supported databases.
+
+++ Protected
+
+None.
+
+++ Private
+
+None.

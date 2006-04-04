@@ -1,0 +1,3 @@
+protected int $_paging
+
+The number of rows per page.

@@ -1,0 +1,25 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_FormFile::formFile() -- Generates a 'file' element.
+
+Inherited Methods:
+
+* Solar_View_Helper::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_View_Helper_FormElement::_prepare() -- Prepares an info array and imports to the properties.
+
+++ Private
+
+None.

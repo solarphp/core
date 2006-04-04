@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: formatTimestamp
+
+param: string, $value
+
+param: string, $format, 'Y-m-d\\TH:i:s'
+
+return: string
+
+</function>
+
+Forces a value to a timestamp format using [[php date()]].
+
+* Parameters:
+
+ * string //$value//: The value to be filtered.  If an integer, it is used as a Unix timestamp; otherwise, converted to a Unix timestamp using [[php strtotime()]].
+
+ * string //$format//: A timestamp format string appropriate for date(); default is ISO 8601 format (e.g., '2005-02-25T12:34:56').
+
+* Returns string: The filtered value.
+
+Forces a value to a timestamp format using [[php date()]].
+
+Takes a string value time and formats it according to $format.
+The [[php date()]] function is used to create the new value, and $format
+should be a format that works with that function.
+
+The value should be a format that [[php strtotime()]] understands.

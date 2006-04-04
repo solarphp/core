@@ -1,0 +1,25 @@
+<function>
+
+access:  static protected
+
+name: _apr1
+
+param: string, $plain
+
+param: string, $salt
+
+return: string
+
+</function>
+
+APR compatible MD5 encryption.
+
+* Parameters:
+
+ * string //$plain//: Plaintext to crypt.
+
+ * string //$salt//: The salt to use for encryption.
+
+* Returns string: The APR MD5 encrypted string.
+
+APR compatible MD5 encryption.

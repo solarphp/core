@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: fetchAll
+
+param: string|array, $tags, NULL
+
+param: string|array, $where, NULL
+
+param: string|array, $order, NULL
+
+param: int, $page, NULL
+
+return: array
+
+</function>
+
+Fetch a list of nodes of the master node type.
+
+* Parameters:
+
+ * string|array //$tags//: Fetch nodes with all these tags; if empty, ignores tags.
+
+ * string|array //$where//: A set of multiWhere() conditions to determine which nodes are fetched.
+
+ * string|array //$order//: Order the returned rows in this fashion.
+
+ * int //$page//: Which page-number of results to fetch.
+
+* Returns array: The list of nodes.
+
+Fetch a list of nodes of the master node type.

@@ -1,0 +1,51 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Table::__construct() -- Constructor.
+
+* Solar_Sql_Table::__get() -- Allows reading of protected properties.
+
+* Solar_Sql_Table::delete() -- Deletes rows in the table based on a WHERE clause.
+
+* Solar_Sql_Table::fetch() -- Fetches one row from the table by its primary key ID.
+
+* Solar_Sql_Table::fetchAll() -- Fetches all rows by arbitrary criteria.
+
+* Solar_Sql_Table::fetchDefault() -- Returns a default row of column keys and default values.
+
+* Solar_Sql_Table::increment() -- Increments and returns the sequence value for a column.
+
+* Solar_Sql_Table::insert() -- Validates and inserts data into the table.
+
+* Solar_Sql_Table::save() -- Inserts or updates a single row based on its ID.
+
+* Solar_Sql_Table::select() -- Convenience method to select rows from this table.
+
+* Solar_Sql_Table::setPaging() -- Sets the number of rows per page.
+
+* Solar_Sql_Table::update() -- Validates and updates data in the table based on a WHERE clause.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Sql_Table::_autoCreate() -- Creates the table in the database if it does not already exist.
+
+* Solar_Sql_Table::_autoSetup() -- Fixes the $col and $idx properties after user setup.
+
+* Solar_Sql_Table::_autoValid() -- Validates and recasts an array of input/update data in-place.
+
+* Solar_Sql_Table::_setup() -- Use this to set up extended table objects.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

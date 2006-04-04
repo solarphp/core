@@ -1,0 +1,27 @@
+<function>
+
+access:   public
+
+name: template
+
+param: string, $name
+
+return: string
+
+</function>
+
+Returns the path to the requested template script.
+
+* Parameters:
+
+ * string //$name//: The template name to look for in the template path.
+
+* Returns string: The full path to the template script.
+
+Returns the path to the requested template script.
+
+Used inside a template script like so:
+
+<code>
+include $this->template($name);
+</code>

@@ -1,0 +1,19 @@
++ The Solar_User_Role_File Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Role_File
+
+++ Overview
+
+Get roles from a Unix-style groups file.
+
+The file format is "group:user1,user2,user3\n".  Example:
+
+<code>
+sysadmin:pmjones
+writer:pmjones,boshag,agtsmith
+editor:pmjones,agtsmith
+</code>

@@ -1,0 +1,3 @@
+protected array $_order
+
+The default order when fetching rows.

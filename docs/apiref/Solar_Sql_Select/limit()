@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: limit
+
+param: int, $count, NULL
+
+param: int, $offset, NULL
+
+return: Solar_Sql_Select
+
+</function>
+
+Sets a limit count and offset to the query.
+
+* Parameters:
+
+ * int //$count//: The number of rows to return.
+
+ * int //$offset//: Start returning after this many rows.
+
+* Returns Solar_Sql_Select
+
+Sets a limit count and offset to the query.

@@ -1,0 +1,5 @@
+//Inherited from Solar_Content_Abstract::$_paging.//
+
+protected string $_paging
+
+When fetching, get this many rows per page.

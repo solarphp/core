@@ -1,0 +1,3 @@
+public string $query
+
+Query string elements split apart into an array.

@@ -1,0 +1,5 @@
+protected string $_layout_dir
+
+Where the layout directory is located.
+
+Default is 'Solar/App/Layouts/'.

@@ -1,0 +1,3 @@
+public object $pref
+
+User preferences object.

@@ -1,0 +1,11 @@
++ The Solar_Exception Class
+
+++ Inheritance
+
+* Exception
+
+ * Solar_Exception
+
+++ Overview
+
+Exception class.

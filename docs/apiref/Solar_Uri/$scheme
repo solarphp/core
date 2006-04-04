@@ -1,0 +1,3 @@
+public string $scheme
+
+The scheme (e.g. 'http' or 'https').

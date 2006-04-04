@@ -1,0 +1,5 @@
+//Inherited from Solar_Sql_Driver::$_direct.//
+
+protected array $_direct
+
+Execute these commands directly, without preparation.

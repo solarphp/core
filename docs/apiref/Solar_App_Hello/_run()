@@ -1,0 +1,19 @@
+//Inherited from Solar_Controller_Page::_run().//
+
+<function>
+
+access:   protected
+
+name: _run
+
+return: mixed
+
+</function>
+
+Includes a file in an isolated scope (but with access to $this).
+
+* Parameters: none.
+
+* Returns mixed: The return from the included file.
+
+Includes a file in an isolated scope (but with access to $this).

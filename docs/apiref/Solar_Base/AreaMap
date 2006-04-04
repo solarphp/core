@@ -1,0 +1,9 @@
+HomePage | The Solar_Base Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  locale()

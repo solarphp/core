@@ -1,0 +1,21 @@
+<function>
+
+access:  static public
+
+name: run
+
+param: string, $file
+
+return: mixed
+
+</function>
+
+Uses [[php include()]] to run a script in an isolated scope.
+
+* Parameters:
+
+ * string //$file//: The file to include.
+
+* Returns mixed: The return value of the included file.
+
+Uses [[php include()]] to run a script in an isolated scope.

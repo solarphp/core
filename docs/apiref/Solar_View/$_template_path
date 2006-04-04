@@ -1,0 +1,3 @@
+protected Solar_PathStack $_template_path
+
+Path stack for templates.

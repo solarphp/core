@@ -1,0 +1,5 @@
+//Inherited from Solar_App::$layout_bottom.//
+
+public array $layout_bottom
+
+An array of content for the layout <div id="bottom"> block.

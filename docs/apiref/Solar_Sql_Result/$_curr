@@ -1,0 +1,3 @@
+protected int $_curr
+
+Pointer to the current iteration.

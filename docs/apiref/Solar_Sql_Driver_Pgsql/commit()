@@ -1,0 +1,19 @@
+//Inherited from Solar_Sql_Driver::commit().//
+
+<function>
+
+access:   public
+
+name: commit
+
+return: void
+
+</function>
+
+Commit a transaction and return to autocommit mode.
+
+* Parameters: none.
+
+* Returns void
+
+Commit a transaction and return to autocommit mode.

@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: image
+
+param: string, $src
+
+param: array, $attribs, array ()
+
+return: string
+
+</function>
+
+Outputs an <img ... /> tag.
+
+* Parameters:
+
+ * string //$src//: The public href to the image.
+
+ * array //$attribs//: Additional attributes for the tag.
+
+* Returns string: An <img ... /> tag.
+
+Outputs an <img ... /> tag.

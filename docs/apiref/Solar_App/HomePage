@@ -1,0 +1,13 @@
++ The Solar_App Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Controller_Page::HomePage Solar_Controller_Page]
+
+  * Solar_App
+
+++ Overview
+
+Abstract base class for Solar application classes.

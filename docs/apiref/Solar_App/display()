@@ -1,0 +1,23 @@
+//Inherited from Solar_Controller_Page::display().//
+
+<function>
+
+access:   public
+
+name: display
+
+param: string, $spec, NULL
+
+return: void
+
+</function>
+
+Executes the requested action and displays its output.
+
+* Parameters:
+
+ * string //$spec//: The action specification string, e.g.: "tags/php+framework" or "user/pmjones/php+framework?page=3"
+
+* Returns void
+
+Executes the requested action and displays its output.

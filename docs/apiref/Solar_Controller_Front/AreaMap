@@ -1,0 +1,14 @@
+HomePage | The Solar_Controller_Front Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_classes
+  $_config
+  $_default
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _setup()
+  apiVersion()
+  display()
+  fetch()
+  locale()

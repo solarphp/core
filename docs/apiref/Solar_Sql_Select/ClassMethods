@@ -1,0 +1,71 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Select::__construct() -- Constructor.
+
+* Solar_Sql_Select::__toString() -- Returns this object as an SQL statement string.
+
+* Solar_Sql_Select::bind() -- Adds data to bind into the query.
+
+* Solar_Sql_Select::clear() -- Clears query properties.
+
+* Solar_Sql_Select::countPages() -- Get the count of rows and number of pages for the current query.
+
+* Solar_Sql_Select::distinct() -- Makes the query SELECT DISTINCT.
+
+* Solar_Sql_Select::fetch() -- Fetch the results based on the current query properties.
+
+* Solar_Sql_Select::from() -- Adds a FROM table and columns to the query.
+
+* Solar_Sql_Select::getPaging() -- Gets the number of rows per page.
+
+* Solar_Sql_Select::group() -- Adds grouping to the query.
+
+* Solar_Sql_Select::having() -- Adds a HAVING condition to the query by AND.
+
+* Solar_Sql_Select::innerJoin() -- Adds an INNER JOIN table and columns to the query.
+
+* Solar_Sql_Select::join() -- Adds a JOIN table and columns to the query.
+
+* Solar_Sql_Select::leftJoin() -- Adds a LEFT JOIN table and columns to the query.
+
+* Solar_Sql_Select::limit() -- Sets a limit count and offset to the query.
+
+* Solar_Sql_Select::limitPage() -- Sets the limit and count by page number.
+
+* Solar_Sql_Select::multiHaving() -- Adds multiple HAVING conditions to the query.
+
+* Solar_Sql_Select::multiWhere() -- Adds multiple WHERE conditions to the query.
+
+* Solar_Sql_Select::orHaving() -- Adds a HAVING condition to the query by OR.
+
+* Solar_Sql_Select::orWhere() -- Adds a WHERE condition to the query by OR.
+
+* Solar_Sql_Select::order() -- Adds a row order to the query.
+
+* Solar_Sql_Select::setPaging() -- Sets the number of rows per page.
+
+* Solar_Sql_Select::unbind() -- Unsets bound data.
+
+* Solar_Sql_Select::where() -- Adds a WHERE condition to the query by AND.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Sql_Select::_join() -- Support method for adding JOIN clauses.
+
+* Solar_Sql_Select::_tblCols() -- Adds to the internal table-to-column mapping array.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: isInstance
+
+param: object, $actual
+
+param: string, $expect
+
+return: bool
+
+</function>
+
+Assert that a object is an instance of a class.
+
+* Parameters:
+
+ * object //$actual//: The object to test.
+
+ * string //$expect//: The expected class name.
+
+* Returns bool: The assertion result.
+
+Assert that a object is an instance of a class.

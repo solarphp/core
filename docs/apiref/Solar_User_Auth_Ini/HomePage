@@ -1,0 +1,13 @@
++ The Solar_User_Auth_Ini Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Auth_Ini
+
+++ Overview
+
+Authenticate against .ini style files.
+
+Format for each line is "username = plainpassword\n";

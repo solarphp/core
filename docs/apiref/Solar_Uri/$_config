@@ -1,0 +1,8 @@
+protected array $_config
+
+User-provided configuration values.
+
+Keys are:
+
+: \\path\\ : (string) A path prefix.  Generally needed only
+for specific URI subclasses, e.g. Solar_Uri_Action.

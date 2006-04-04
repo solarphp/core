@@ -1,0 +1,53 @@
+<function>
+
+access:   public
+
+name: assign
+
+param: mixed, $spec
+
+return: bool
+
+</function>
+
+Sets variables for the view.
+
+* Parameters:
+
+ * mixed //$spec//: The assignment specification.
+
+* Returns bool: True on success, false on failure.
+
+Sets variables for the view.
+
+This method is overloaded; you can assign all the properties of
+an object, an associative array, or a single value by name.
+
+You are not allowed to assign any variable with an underscore
+prefix.
+
+In the following examples, the template will have two variables
+assigned to it; the variables will be known inside the template as
+"$this->var1" and "$this->var2".
+
+<code>
+$view = Solar::factory('Solar_View_Template');
+
+// assign directly
+$view->var1 = 'something';
+$view->var2 = 'else';
+
+// assign by associative array
+$ary = array('var1' => 'something', 'var2' => 'else');
+$view->assign($ary);
+
+// assign by object
+$obj = new stdClass;
+$obj->var1 = 'something';
+$obj->var2 = 'else';
+$view->assign($obj);
+
+// assign by name and value
+$view->assign('var1', 'something');
+$view->assign('var2', 'else');
+</code>

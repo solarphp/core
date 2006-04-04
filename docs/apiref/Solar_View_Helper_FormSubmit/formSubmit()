@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: formSubmit
+
+param: array, $info
+
+return: string
+
+</function>
+
+Generates a 'submit' button.
+
+* Parameters:
+
+ * array //$info//: An array of element information.
+
+* Returns string: The element XHTML.
+
+Generates a 'submit' button.

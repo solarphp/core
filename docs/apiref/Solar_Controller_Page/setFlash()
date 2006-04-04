@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: setFlash
+
+param: string, $key
+
+param: mixed, $val
+
+return: void
+
+</function>
+
+Sets a "read-once" session value for this class and a key.
+
+* Parameters:
+
+ * string //$key//: The specific type of information for the class.
+
+ * mixed //$val//: The value for the key; previous values will be overwritten.
+
+* Returns void
+
+Sets a "read-once" session value for this class and a key.

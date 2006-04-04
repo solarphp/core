@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: numeric
+
+param: mixed, $value
+
+return: string
+
+</function>
+
+Returns only numbers within a value.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+* Returns string: The filtered value.
+
+Returns only numbers within a value.

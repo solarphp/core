@@ -1,0 +1,37 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Result::__construct() -- Constructor.
+
+* Solar_Sql_Result::current() -- Returns the current row for the iterator.
+
+* Solar_Sql_Result::fetch() -- Returns the next row from the result source.
+
+* Solar_Sql_Result::fetchAll() -- Returns all rows from the result source.
+
+* Solar_Sql_Result::key() -- Returns the current iterator key.
+
+* Solar_Sql_Result::next() -- Increments the iterator key.
+
+* Solar_Sql_Result::rewind() -- Rewinds the iterator back to the beginning.
+
+* Solar_Sql_Result::valid() -- Determines if the current iterator key is valid.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Sql_Result::_fetch() -- Support method to populate Solar_Sql_Result::$_rows from the result source.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

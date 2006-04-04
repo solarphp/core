@@ -1,0 +1,11 @@
++ The Solar_Content_Abstract Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Content_Abstract
+
+++ Overview
+
+Abstract content node master.

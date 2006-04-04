@@ -1,0 +1,49 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql_Driver_Mssql::buildSelect() -- Adds a LIMIT clause (or equivalent) to a SELECT statement.
+
+* Solar_Sql_Driver_Mssql::listTables() -- Returns a list of database tables.
+
+* Solar_Sql_Driver_Mssql::nextSequence() -- Gets a sequence number; creates the sequence if it does not exist.
+
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Sql_Driver::begin() -- Leave autocommit mode and begin a transaction.
+
+* Solar_Sql_Driver::buildCreateTable() -- Builds a CREATE TABLE command string.
+
+* Solar_Sql_Driver::commit() -- Commit a transaction and return to autocommit mode.
+
+* Solar_Sql_Driver::createSequence() -- Creates a sequence, optionally starting at a certain number.
+
+* Solar_Sql_Driver::dropSequence() -- Drops a sequence.
+
+* Solar_Sql_Driver::exec() -- Prepares and executes an SQL statement with bound data.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+* Solar_Sql_Driver::nativeColTypes() -- Returns a list of native column types.
+
+* Solar_Sql_Driver::quote() -- Safely quotes a value for an SQL statement.
+
+* Solar_Sql_Driver::rollback() -- Roll back a transaction and return to autocommit mode.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Sql_Driver::_connect() -- Creates a PDO object and connects to the database.
+
+* Solar_Sql_Driver::_dsn() -- Creates a PDO-style DSN.
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

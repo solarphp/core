@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: inAny
+
+param: string|array, $roles, array ()
+
+return: bool
+
+</function>
+
+Check to see if a user is in any of the listed roles.
+
+* Parameters:
+
+ * string|array //$roles//: The role(s) to check.
+
+* Returns bool: True if the user is in any of the listed roles (a logical 'or'), false if not.
+
+Check to see if a user is in any of the listed roles.

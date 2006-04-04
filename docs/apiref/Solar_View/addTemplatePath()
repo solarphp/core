@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: addTemplatePath
+
+param: string|array, $path
+
+return: unknown
+
+</function>
+
+Add to the template directory path stack.
+
+* Parameters:
+
+ * string|array //$path//: The directories to add to the stack.
+
+* Returns unknown: unknown
+
+Add to the template directory path stack.

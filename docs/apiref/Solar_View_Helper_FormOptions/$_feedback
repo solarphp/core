@@ -1,0 +1,5 @@
+//Inherited from Solar_View_Helper_FormElement::$_feedback.//
+
+protected bool $_feedback
+
+Feedback messages for the element.

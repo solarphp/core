@@ -1,0 +1,11 @@
++ The Solar_User_Role_None Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Role_None
+
+++ Overview
+
+No role source; always returns an empty array.

@@ -1,0 +1,39 @@
+<function>
+
+access:   public
+
+name: multiple
+
+param: mixed, $value
+
+param: array, $filters
+
+return: mixed
+
+</function>
+
+Applies multiple filters to a value.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+ * array //$filters//: The filters to apply.
+
+* Returns mixed: The filtered value.
+
+Applies multiple filters to a value.
+
+Applies multiple filters to a value. $filters should be an array of
+arrays, with each subarray consisting of at least one element. The first
+element should be the filter type; this is the name of a valid
+Solar_Filter method <b>OR</b> a PHP function. 
+
+If the filter method is Solar_Filter::callback(), then the second argument should
+be a valid callback. 
+
+Any additional elements in the subarray will be passed as additional
+arguments to the filter (the first argument to a filter function/method
+is always the value being filtered).
+
+Returns the transformed value after applying all filters.

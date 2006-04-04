@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: classGenericException
+
+return: void
+
+</function>
+
+Throws ERR_GENERIC_CONDITION for this class.
+
+* Parameters: none.
+
+* Returns void
+
+Throws ERR_GENERIC_CONDITION for this class.

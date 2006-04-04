@@ -1,0 +1,7 @@
+protected array $_config
+
+User-provided configuration.
+
+Keys are:
+
+: \\html\\ : (bool) enable/disable encoding output for HTML

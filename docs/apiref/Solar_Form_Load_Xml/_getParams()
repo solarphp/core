@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _getParams
+
+param: array, $params
+
+return: array
+
+</function>
+
+Gets parameters for a filter or validation rule.
+
+* Parameters:
+
+ * array //$params//: The array of parameters.
+
+* Returns array
+
+Gets parameters for a filter or validation rule.

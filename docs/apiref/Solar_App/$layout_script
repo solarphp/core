@@ -1,0 +1,3 @@
+public array $layout_script
+
+An array of <script> tag values for the layout <head> block.

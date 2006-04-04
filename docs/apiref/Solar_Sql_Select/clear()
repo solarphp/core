@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: clear
+
+param: string, $key, NULL
+
+return: Solar_Sql_Select
+
+</function>
+
+Clears query properties.
+
+* Parameters:
+
+ * string //$key//: The property to clear; if empty, clears all query properties.
+
+* Returns Solar_Sql_Select
+
+Clears query properties.

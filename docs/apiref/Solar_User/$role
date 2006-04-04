@@ -1,0 +1,3 @@
+public object $role
+
+User roles (group membership) object.

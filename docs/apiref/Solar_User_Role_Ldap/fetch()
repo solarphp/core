@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: string, $handle
+
+return: array
+
+</function>
+
+Fetch roles for a user.
+
+* Parameters:
+
+ * string //$handle//: Username to get roles for.
+
+* Returns array: An array of roles discovered in LDAP.
+
+Fetch roles for a user.

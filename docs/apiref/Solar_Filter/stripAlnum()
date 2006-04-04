@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: stripAlnum
+
+param: mixed, $value
+
+return: string
+
+</function>
+
+Strips alphanumeric characters from a value.
+
+* Parameters:
+
+ * mixed //$value//: The value to be filtered.
+
+* Returns string: The filtered value.
+
+Strips alphanumeric characters from a value.

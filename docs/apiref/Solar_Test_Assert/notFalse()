@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: notFalse
+
+param: mixed, $actual
+
+return: bool
+
+</function>
+
+Assert that a variable is not boolean false.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+* Returns bool: The assertion result.
+
+Assert that a variable is not boolean false.

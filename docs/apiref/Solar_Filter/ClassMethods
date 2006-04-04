@@ -1,0 +1,59 @@
++ Class Methods
+
+++ Public
+
+* Solar_Filter::alnum() -- Returns only alphanumeric characters within a value.
+
+* Solar_Filter::alpha() -- Returns only alphabetic characters within a value.
+
+* Solar_Filter::blank() -- Returns only whitespace characters within a value.
+
+* Solar_Filter::callback() -- Uses a callback to filter a value.
+
+* Solar_Filter::cast() -- Uses [[php settype()]] to cast a value as a PHP variable type.
+
+* Solar_Filter::formatDate() -- Forces a value to a date format using [[php date()]].
+
+* Solar_Filter::formatTime() -- Forces a value to a time format using [[php date()]].
+
+* Solar_Filter::formatTimestamp() -- Forces a value to a timestamp format using [[php date()]].
+
+* Solar_Filter::multiple() -- Applies multiple filters to a value.
+
+* Solar_Filter::numeric() -- Returns only numbers within a value.
+
+* Solar_Filter::pregReplace() -- Applies a [[php preg_replace()]] filter.
+
+* Solar_Filter::strReplace() -- Applies a [[php str_replace()]] filter.
+
+* Solar_Filter::stripAlnum() -- Strips alphanumeric characters from a value.
+
+* Solar_Filter::stripAlpha() -- Strips alphabetic characters from a value.
+
+* Solar_Filter::stripBlank() -- Strips all whitespace from a value.
+
+* Solar_Filter::stripNumeric() -- Strips all numbers from a value.
+
+* Solar_Filter::stripWord() -- Strips word characters from a value.
+
+* Solar_Filter::trim() -- Trims characters from the beginning and end of a value.
+
+* Solar_Filter::word() -- Returns only word characters within a value.
+
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

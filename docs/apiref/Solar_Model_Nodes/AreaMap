@@ -1,0 +1,30 @@
+HomePage | The Solar_Model_Nodes Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_col
+  $_config
+  $_idx
+  $_name
+  $_order
+  $_paging
+  $_sql
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  _autoCreate()
+  _autoSetup()
+  _autoValid()
+  _exception()
+  _setup()
+  apiVersion()
+  delete()
+  fetch()
+  fetchAll()
+  fetchDefault()
+  increment()
+  insert()
+  locale()
+  save()
+  select()
+  setPaging()
+  update()

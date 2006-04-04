@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fail
+
+param: string, $message, 'Failure'
+
+return: bool
+
+</function>
+
+Throws and prints an exception indicating assertion failure.
+
+* Parameters:
+
+ * string //$message//: The failure message.
+
+* Returns bool: Always returns boolean false.
+
+Throws and prints an exception indicating assertion failure.

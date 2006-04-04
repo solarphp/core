@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Cache_File::$_config -- User-provided configuration.
+
+++ Private
+
+None.

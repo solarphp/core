@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: email
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is an email address.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is an email address.

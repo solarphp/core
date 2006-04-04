@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Form_Load_Table::$_config -- User-defined configuration array.
+
+++ Private
+
+None.

@@ -1,0 +1,11 @@
++ The Solar_Form Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Form
+
+++ Overview
+
+Form-processing class; also hints the view on how to present the form.

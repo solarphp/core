@@ -1,0 +1,11 @@
++ The Solar_Test_Assert Class
+
+Class for simple unit-testing assertions.
+
+If the assertion is successful, it returns boolean true with no
+output.  If the assertion fails, it throws and prints an exception, 
+then returns false.
+
+This is effectively the same behavior as in Greg Beaver's 
+PEAR_PHPTest class, but uses exceptions instead of PEAR_Error 
+and debug_backtrace().

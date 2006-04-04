@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+* Solar_View_Helper_GetTextRaw::$_class -- The default locale class.
+
+++ Protected
+
+* Solar_View_Helper_GetTextRaw::$_config -- User-defined configuration.
+
+Inherited Properties:
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

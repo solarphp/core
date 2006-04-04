@@ -1,0 +1,15 @@
++ The Solar_App_Hello Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Controller_Page::HomePage Solar_Controller_Page]
+
+  * [Solar_App::HomePage Solar_App]
+
+   * Solar_App_Hello
+
+++ Overview
+
+Simple "hello world" application with actions, views, and localization.

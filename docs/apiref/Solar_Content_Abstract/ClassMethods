@@ -1,0 +1,53 @@
++ Class Methods
+
+++ Public
+
+* Solar_Content_Abstract::__construct() -- Constructor
+
+* Solar_Content_Abstract::countPages() -- Fetch a total count and pages of master nodes in the content store.
+
+* Solar_Content_Abstract::delete() -- Delete a master node and its tags.
+
+* Solar_Content_Abstract::fetch() -- Fetch one master node by ID.
+
+* Solar_Content_Abstract::fetchAll() -- Fetch a list of nodes of the master node type.
+
+* Solar_Content_Abstract::fetchDefault() -- Fetches a default blank node of this type.
+
+* Solar_Content_Abstract::fetchParts() -- Fetch the parts of a master node ID.
+
+* Solar_Content_Abstract::fetchTags() -- Fetches a list of all tags on all master nodes of this type.
+
+* Solar_Content_Abstract::form() -- Generates a data-entry form for a master node.
+
+* Solar_Content_Abstract::getAreaId() -- Gets the area ID from which nodes are being fetched.
+
+* Solar_Content_Abstract::getPaging() -- Gets the number of rows per page.
+
+* Solar_Content_Abstract::insert() -- Insert a new master node and its tags.
+
+* Solar_Content_Abstract::save() -- Inserts or updates a master node.
+
+* Solar_Content_Abstract::setAreaId() -- Sets the area ID from which nodes will be fetched.
+
+* Solar_Content_Abstract::setPaging() -- Sets the number of rows per page.
+
+* Solar_Content_Abstract::update() -- Update a master node and its tags.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Content_Abstract::_masterWhere() -- Builds a baseline multiWhere() clause for master nodes of this type.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

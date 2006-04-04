@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: Solar_Sql_Table, $table
+
+param: array, $list, '*'
+
+param: string, $array_name, NULL
+
+return: Solar_Form|false
+
+</function>
+
+Loads Solar_Form elements based on Solar_Sql_Table columns.
+
+* Parameters:
+
+ * Solar_Sql_Table //$table//: Load form elements from this table object.
+
+ * array //$list//: Which table columns to load as form elements, default '*'.
+
+ * string //$array_name//: Load the table columns as elements of this array-name within the form.
+
+* Returns Solar_Form|false: Solar_Form object, or boolean false on error.
+
+Loads Solar_Form elements based on Solar_Sql_Table columns.

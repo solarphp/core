@@ -1,0 +1,23 @@
++ Class Methods
+
+++ Public
+
+* Solar_User_Role_Sql::fetch() -- Fetches the roles for a user.
+
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

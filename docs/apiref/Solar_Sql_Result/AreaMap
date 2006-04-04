@@ -1,0 +1,20 @@
+HomePage | The Solar_Sql_Result Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_curr
+  $_full
+  $_rows
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _fetch()
+  apiVersion()
+  current()
+  fetch()
+  fetchAll()
+  key()
+  locale()
+  next()
+  rewind()
+  valid()

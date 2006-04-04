@@ -1,0 +1,5 @@
+protected array $_elementAttribs
+
+Array of element attribute names.
+
+Used by Solar_Form_Load_Xml::fetch() to get element attributes.

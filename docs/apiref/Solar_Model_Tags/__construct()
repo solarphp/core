@@ -1,0 +1,23 @@
+//Inherited from Solar_Sql_Table::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Model_Tags
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-provided configuration values.
+
+* Returns Solar_Model_Tags: Solar_Model_Tags instance
+
+Constructor.

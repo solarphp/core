@@ -1,0 +1,24 @@
+<function>
+
+access:   public
+
+name: insert
+
+param: array, $data
+
+return: array
+
+</function>
+
+Inserts one row into the nodes table.
+
+* Parameters:
+
+ * array //$data//: The data to be inserted.
+
+* Returns array: The data as inserted.
+
+Inserts one row into the nodes table.
+
+Automatically adds a sequential ID.  If no node-name is given,
+uses the sequential ID as the node-name.

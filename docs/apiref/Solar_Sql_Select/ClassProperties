@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Select::$_bind -- Data to bind into the query as key => value pairs.
+
+* Solar_Sql_Select::$_config -- User-provided configuration.
+
+* Solar_Sql_Select::$_paging -- The number of rows per page.
+
+* Solar_Sql_Select::$_parts -- The component parts of a select statement.
+
+* Solar_Sql_Select::$_sql -- Internal Solar_Sql object.
+
+* Solar_Sql_Select::$_tbl_cols -- Tracks which columns are being select from each table and join.
+
+++ Private
+
+None.

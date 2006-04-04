@@ -1,0 +1,23 @@
+//Inherited from Solar_Controller_Page::_actionFile().//
+
+<function>
+
+access:   protected
+
+name: _actionFile
+
+param: string, $action
+
+return: string
+
+</function>
+
+Returns the file name for an action.
+
+* Parameters:
+
+ * string //$action//: The action name.
+
+* Returns string: A file name for the action.
+
+Returns the file name for an action.

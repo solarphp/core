@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: int, $id
+
+return: array
+
+</function>
+
+Fetches one row from the table by its primary key ID.
+
+* Parameters:
+
+ * int //$id//: The primary key ID value.
+
+* Returns array: A row array.
+
+Fetches one row from the table by its primary key ID.

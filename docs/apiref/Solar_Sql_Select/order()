@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: order
+
+param: string|array, $spec
+
+return: Solar_Sql_Select
+
+</function>
+
+Adds a row order to the query.
+
+* Parameters:
+
+ * string|array //$spec//: The column(s) and direction to order by.
+
+* Returns Solar_Sql_Select
+
+Adds a row order to the query.

@@ -1,0 +1,27 @@
+//Inherited from Solar_Content_Abstract::fetchParts().//
+
+<function>
+
+access:   public
+
+name: fetchParts
+
+param: int, $master_id
+
+param: array, $order, NULL
+
+return: array
+
+</function>
+
+Fetch the parts of a master node ID.
+
+* Parameters:
+
+ * int //$master_id//: The master node ID.
+
+ * array //$order//: Return in this order.
+
+* Returns array: A list of nodes of this type that are part_of the $master_id node.
+
+Fetch the parts of a master node ID.

@@ -1,0 +1,19 @@
+//Inherited from Solar_Content_Abstract::getAreaId().//
+
+<function>
+
+access:   public
+
+name: getAreaId
+
+return: int
+
+</function>
+
+Gets the area ID from which nodes are being fetched.
+
+* Parameters: none.
+
+* Returns int: The area ID.
+
+Gets the area ID from which nodes are being fetched.

@@ -1,0 +1,11 @@
+protected array $_config
+
+User-provided configuration.
+
+Keys are:
+
+: \\active\\ : (bool) Whether the cache is active or not when instantiated.
+
+: \\driver\\ : (string) The driver class, default 'Solar_Cache_File'.
+
+Remaining keys are passed to the driver class as config keys.

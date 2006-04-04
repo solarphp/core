@@ -1,0 +1,3 @@
+public string $pass
+
+The password, if any.

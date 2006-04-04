@@ -1,0 +1,37 @@
+<function>
+
+access:   public
+
+name: set
+
+param: array|string, $path
+
+return: void
+
+</function>
+
+Clears the stack and adds one or more directories.
+
+* Parameters:
+
+ * array|string //$path//: The directories to add to the stack after clearing it.
+
+* Returns void
+
+Clears the stack and adds one or more directories.
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_PathStack');
+$stack->add('path/1');
+$stack->add('path/2');
+$stack->add('path/3');
+
+// $stack->get() reveals that the directory search order is
+// 'path/3/', 'path/2/', 'path/1/'.
+
+$stack->set('another/path');
+
+// $stack->get() is now 'another/path'.
+</code>

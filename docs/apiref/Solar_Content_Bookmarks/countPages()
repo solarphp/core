@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: countPages
+
+param: string|array, $tags, NULL
+
+param: string, $handle, NULL
+
+return: array
+
+</function>
+
+Fetches a total count and pages of bookmarks in the content store.
+
+* Parameters:
+
+ * string|array //$tags//: Count bookmarks with all these tags; if empty, counts for all tags.
+
+ * string //$handle//: The owner_handle (username) to count bookmarks for; if empty, counts for all owners.
+
+* Returns array: A array with keys 'count' (total number of  bookmarks) and 'pages' (number of pages).
+
+Fetches a total count and pages of bookmarks in the content store.
+
+You can specify an owner_handle (username) and/or a list of
+tags to limit the count.

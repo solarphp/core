@@ -1,0 +1,11 @@
+HomePage | The Solar_View_Helper_GetText Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_view
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  getText()
+  locale()

@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-provided configuration values.
+
+* Returns Solar_View_Helper_Form: Solar_View_Helper_Form instance
+
+Constructor.

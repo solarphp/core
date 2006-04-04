@@ -1,0 +1,23 @@
+//Inherited from Solar_Content_Abstract::update().//
+
+<function>
+
+access:   public
+
+name: update
+
+param: array, $data
+
+return: array
+
+</function>
+
+Update a master node and its tags.
+
+* Parameters:
+
+ * array //$data//: The node data.
+
+* Returns array: The updated data.
+
+Update a master node and its tags.

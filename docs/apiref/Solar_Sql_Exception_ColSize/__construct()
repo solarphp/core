@@ -1,0 +1,23 @@
+//Inherited from Solar_Exception::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Sql_Exception_ColSize
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-defined configuration with keys for 'class', 'code', 'text', and 'info'.
+
+* Returns Solar_Sql_Exception_ColSize: Solar_Sql_Exception_ColSize instance
+
+Constructor.

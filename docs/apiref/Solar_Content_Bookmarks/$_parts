@@ -1,0 +1,5 @@
+//Inherited from Solar_Content_Abstract::$_parts.//
+
+protected array $_parts
+
+What node types are acceptable as parts of this master node type?

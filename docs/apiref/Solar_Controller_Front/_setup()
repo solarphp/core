@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: void
+
+</function>
+
+Sets up the environment for all pages.
+
+* Parameters: none.
+
+* Returns void
+
+Sets up the environment for all pages.

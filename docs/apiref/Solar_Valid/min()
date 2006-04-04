@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: min
+
+param: mixed, $value
+
+param: mixed, $min
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is greater than or equal to a minimum.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * mixed //$min//: The minimum valid value.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is greater than or equal to a minimum.

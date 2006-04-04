@@ -1,0 +1,23 @@
+//Inherited from Solar_Controller_Page::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_App_Bookmarks
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-provided configuration values.
+
+* Returns Solar_App_Bookmarks: Solar_App_Bookmarks instance
+
+Constructor.

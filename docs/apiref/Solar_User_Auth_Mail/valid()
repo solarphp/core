@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: valid
+
+param: string, $handle
+
+param: string, $passwd
+
+return: bool
+
+</function>
+
+Validates a username and password.
+
+* Parameters:
+
+ * string //$handle//: Username to authenticate.
+
+ * string //$passwd//: The password to use.
+
+* Returns bool: True on success, false on failure.
+
+Validates a username and password.

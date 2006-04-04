@@ -116,6 +116,23 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * Url-encode only these characters in path elements.
+     * 
+     * Characters are ' ' (space), '/', '?', '&', and '#'.
+     * 
+     * @var array
+     * 
+     */
+    protected $_encode_path = array (
+        ' ' => '+',
+        '/' => '%2F',
+        '?' => '%3F',
+        '&' => '%26',
+        '#' => '%23',
+    );
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -126,7 +143,10 @@ class Solar_Uri extends Solar_Base {
         // real construction
         parent::__construct($config);
         
-        // fix the prefix by adding leading and trailing slashes
+        // fix the base path by adding leading and trailing slashes
+        if (trim($this->_config['path']) == '') {
+            $this->_config['path'] = '/';
+        }
         if ($this->_config['path'][0] != '/') {
             $this->_config['path'] = '/' . $this->_config['path'];
         }
@@ -251,8 +271,8 @@ class Solar_Uri extends Solar_Base {
         // add the rest of the URI
         return $uri
              . $this->_config['path']
-             . (empty($this->path)     ? '' : $this->_path2str($this->path))
-             . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
+             . (empty($this->path)     ? '' : $this->pathEncode($this->path))
+             . (empty($this->query)    ? '' : '?' . http_build_query($this->query))
              . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
     
@@ -317,63 +337,26 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Converts an array of query elements into a string.
-     * 
-     * Modified from code written by nospam@fiderallalla.de, found at
-     * http://php.net/parse_str.  Automatically urlencodes values.
-     * 
-     * @param array $spec The key-value pairs to convert into a
-     * query string.
-     * 
-     * @param string $key The parent key for the current array.
-     * 
-     * @return string A URI query string.
-     * 
-     */
-    protected function _query2str($spec)
-    {
-        // preempt if $spec is not an array, or is empty
-        if (! is_array($spec) || count($spec) == 0 ) {
-            return '';
-        }
-        
-        $args = func_get_args();
-        
-        // is there an array key present?
-        $akey = (! isset($args[1])) ? false : $args[1];       
-        
-        // the array of generated query substrings
-        $out = array();
-        
-        foreach ($spec as $key => $val) {
-            if (is_array($val) ) {   
-                // recurse to capture deeper array.
-                $out[] = $this->_query2str($val, $key);
-            } else {
-                // not an array, use the current value.
-                $thekey = (! $akey) ? $key : $akey.'['.$key.']';
-                $out[] = urlencode($thekey) . '=' . urlencode($val);
-            }
-        }
-        
-        return implode('&', $out);
-    }
-    
-    /**
-     * 
      * Converts an array of path elements into a string.
+     * 
+     * Does not use [[php urlencode()]]; instead, only converts
+     * characters found in Solar_Uri::$_encode_path.
      * 
      * @param array $spec The path elements.
      * 
      * @return string A URI path string.
      * 
      */
-    protected function _path2str($spec)
+    public function pathEncode($spec)
     {
-        settype($spec, 'array');
+        if (is_string($spec)) {
+            $spec = explode('/', $spec);
+        }
+        $keys = array_keys($this->_encode_path);
+        $vals = array_values($this->_encode_path);
         $out = array();
-        foreach ($spec as $val) {
-            $out[] = urlencode($val);
+        foreach ((array) $spec as $elem) {
+            $out[] = str_replace($keys, $vals, $elem);
         }
         return implode('/', $out);
     }

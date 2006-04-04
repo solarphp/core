@@ -24,6 +24,13 @@ Solar::loadClass('Solar_Uri');
  * 
  * Manipulates generates public URI strings.
  * 
+ * This class is functionally identical to Solar_Uri, except that it
+ * automatically adds a prefix to the "path" portion of all URIs.  This
+ * makes it easy to work with URIs for public Solar resources.
+ * 
+ * Use the 'path' [[Solar_Uri_Public::$_config config key]] to specify
+ * the path prefix leading to the public resource directory, if any.
+ * 
  * @category Solar
  * 
  * @package Solar_Uri

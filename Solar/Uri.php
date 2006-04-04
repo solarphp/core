@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Parses a URI string into its component parts for manipulation and export.
+ * Manipulates URI properties.
  * 
  * @category Solar
  * 
@@ -17,16 +17,11 @@
 
 /**
  * 
- * Parses a URI string into its component parts for manipulation and export.
+ * Manipulates URI properties.
  * 
  * @category Solar
  * 
  * @package Solar_Uri
- * 
- * @todo add a way to let import() know what the script name is
- * 
- * @todo convert "%2B" to "+" on export? of course, that means real
- * plus-signs will be spaces...
  * 
  */
 class Solar_Uri extends Solar_Base {
@@ -37,16 +32,13 @@ class Solar_Uri extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\action\\ : (string) The base action HREF, e.g. '/index.php/'.
-     * 
-     * : \\public\\ : (string) The base public HREF, e.g. '/public/'.
+     * : \\path\\ : (string) A path prefix, e.g. '/index.php/'.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'action' => '/index.php/',
-        'public' => '/public/',
+        'path' => null,
     );
     
     /**
@@ -105,19 +97,6 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Path info elements after the script name (from $_SERVER['PATH_INFO']).
-     * 
-     * The import() method attempts to guess the script name as the
-     * first '*.php' part of the path, and counts elements after that
-     * as path info.
-     * 
-     * @var array
-     * 
-     */
-    public $info = array();
-    
-    /**
-     * 
      * Query string elements split apart into an array.
      * 
      * @var string
@@ -143,414 +122,195 @@ class Solar_Uri extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        // real construction
         parent::__construct($config);
         
-        // fix the action href by adding leading and trailing slashes
-        if ($this->_config['action'][0] != '/') {
-            $this->_config['action'] = '/' . $this->_config['action'];
+        // fix the prefix by adding leading and trailing slashes
+        if ($this->_config['path'][0] != '/') {
+            $this->_config['path'] = '/' . $this->_config['path'];
         }
-        $this->_config['action'] = rtrim($this->_config['action'], '/') . '/';
+        $this->_config['path'] = rtrim($this->_config['path'], '/') . '/';
         
-        // fix the public href by adding leading and trailing slashes
-        if ($this->_config['public'][0] != '/') {
-            $this->_config['public'] = '/' . $this->_config['public'];
-        }
-        $this->_config['public'] = rtrim($this->_config['public'], '/') . '/';
-        
-        // import the current URI
-        $this->import();
+        // set properties
+        $this->set();
     }
     
     /**
      * 
-     * Imports a URI string (by default, the current URI) into the object.
+     * Sets properties from a specified URI.
      * 
      * @param string $uri The URI to parse.  If null, defaults to the
-     * current URI, and retrives path_info values; if not null, cannot
-     * retrieve path_info values.
+     * current URI.
      * 
      * @return void
      * 
      */
-    public function import($uri = null)
+    public function set($uri = null)
     {
         // build a default scheme (with '://' in it)
         $ssl = Solar::server('HTTPS', 'off');
         $scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
         
-        // we'll parse the modified uri, not the original as passed.
-        $modified_uri = $uri;
+        // get the current host
+        $host = Solar::server('HTTP_HOST');
         
         // force to the current uri?
+        $uri = trim($uri);
         if (! $uri) {
-            $modified_uri = $scheme . Solar::server('HTTP_HOST');
-            $modified_uri .= Solar::server('REQUEST_URI');
-        } elseif (strpos($uri, '://') === false) {
-            // there's a uri, but need to add the scheme
-            $modified_uri = $scheme . $uri;
+            $uri = $scheme . $host . Solar::server('REQUEST_URI');
         }
         
-        // default elements
+        // add the scheme and host?
+        $pos = strpos($uri, '://');
+        if ($pos === false) {
+            $uri = ltrim($uri, '/');
+            $uri = "$scheme$host/$uri";
+        }
+        
+        // default uri elements
         $elem = array(
             'scheme'   => null,
-            'host'     => null,
-            'port'     => null,
             'user'     => null,
             'pass'     => null,
+            'host'     => null,
+            'port'     => null,
             'path'     => null,
-            'info'     => array(),
-            'query'    => array(),
+            'query'    => null,
             'fragment' => null,
         );
         
         // parse the uri and merge with the defaults
-        $elem = array_merge($elem, parse_url($modified_uri));
+        $elem = array_merge($elem, parse_url($uri));
         
-        // touchup; was a uri passed in the first place?
-        if ($uri) {
+        // strip the prefix from the path.
+        // the conditions are:
+        // $elem['path'] == '/index.php/'
+        // -- or --
+        // $elem['path'] == '/index.php'
+        // -- or --
+        // $elem['path'] == '/index.php/*'
+        //
+        $path = $this->_config['path'];
+        $len  = strlen($path);
+        $flag = $elem['path'] == $path ||
+                $elem['path'] == rtrim($path, '/') ||
+                substr($elem['path'], 0, $len) == $path;
             
-            // a uri string was passed; try to capture path_info by guessing.
-            $orig = explode('/', trim($elem['path'], '/'));
-            $path = array();
-            
-            while (! empty($orig)) {
-                $val = array_shift($orig);
-                $path[] = $val;
-                if (stripos($val, '.php') !== false) {
-                    // this is the script.php part;
-                    // keep it and drop out
-                    break;
-                } 
-            };
-            
-            $elem['path'] = '/' . implode('/', $path);
-            $elem['info'] = $orig;
-            
-            // now capture the query portions.
-            if (! empty($elem['query'])) {
-                parse_str($elem['query'], $elem['query']);
-            }
-            
-        } else {
-            
-            // no uri was passed, so use the current settings instead.
-            // force the query string
-            $elem['query'] = Solar::get();
-            
-            // force the path to the script
-            $elem['path'] = Solar::server('SCRIPT_NAME');
-            
-            //  get path info
-            $elem['info'] = Solar::pathinfo();
+        if ($flag) {
+            $elem['path'] = substr($elem['path'], $len);
         }
         
-        // done, pass into the properties
-        foreach ($elem as $key => $val) {
-            $this->$key = $val;
-        }
+        // retain parsed elements as properties
+        $this->scheme   = $elem['scheme'];
+        $this->user     = $elem['user'];
+        $this->pass     = $elem['pass'];
+        $this->host     = $elem['host'];
+        $this->port     = $elem['port'];
+        $this->fragment = $elem['fragment'];
+        $this->setPath($elem['path']);
+        $this->setQuery($elem['query']);
     }
     
     /**
      * 
-     * Parses a page-and-action specification as a URI.
+     * Returns a URI based on the object properties.
      * 
-     * @param string $spec The page-and-action specification.
-     * 
-     * @return void
-     * 
-     */
-    public function importAction($spec)
-    {
-        // if the action href is already prefixed, remove it
-        $len = strlen($this->_config['action']);
-        if (substr($spec, 0, $len) == $this->_config['action']) {
-            $spec = substr($spec, $len);
-        }
-        
-        // make sure there's actually an action spec after that
-        $spec = trim($spec);
-        if (! $spec) {
-            $spec = '/';
-        }
-        
-        // build a URI string with a fake host and path
-        $fake = 'fake.com/fake.php';
-        if ($spec[0] != '/') {
-            $fake .= '/';
-        }
-        $fake .= $spec;
-        
-        // import the fake uri, then remove the fake host and path
-        $this->import($fake);
-        $this->host = null;
-        $this->path = null;
-    }
-    
-    /**
-     * 
-     * Builds a full URI string.
-     * 
-     * Takes the current properties of the Solar_Uri object
-     * and assembles them into a URI string.  This method
-     * [[php urlencode()]]s the values on export.
-     * 
-     * @return string The full URI string.
-     * 
-     */
-    public function export()
-    {
-        // build the uri as we go.
-        // add the scheme.
-        $uri = empty($this->scheme) ? '' : $this->scheme . '://';
-        
-        // add the username and password, if any.
-        if (! empty($this->user)) {
-            $uri .= $this->user;
-            if (! empty($this->pass)) {
-                $uri .= ':' . $this->pass;
-            }
-            $uri .= '@';
-        }
-        
-        // add the remaining pieces.
-        $uri .= (empty($this->host)     ? '' : $this->host)
-              . (empty($this->port)     ? '' : ':' . $this->port)
-              . (empty($this->path)     ? '' : $this->path)
-              . (empty($this->info)     ? '' : '/' . $this->_info2str($this->info))
-              . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
-              . (empty($this->fragment) ? '' : '#' . $this->fragment);
-        
-        // done!
-        return $uri;
-    }
-    
-    /**
-     * 
-     * Builds a URI string for a page-and-action spec.
-     * 
-     * Prefixes with the config ['Solar_Uri']['action'] href.
+     * @param bool $full If true, returns a full URI with scheme,
+     * user, pass, host, and port.  Otherwise, just returns the
+     * path, query, and fragment.  Default false.
      * 
      * @return string An action URI string.
      * 
      */
-    public function exportAction()
+    public function fetch($full = false)
     {
-        return (empty($this->_config['action']) ? '' : $this->_config['action'])
-             . (empty($this->info)              ? '' : $this->_info2str($this->info))
-             . (empty($this->query)             ? '' : '?' . $this->_query2str($this->query))
-             . (empty($this->fragment)          ? '' : '#' . $this->fragment);
-    }
-    
-    /**
-     * 
-     * Converts a page-and-action specification to a URI in one step.
-     * 
-     * @param string $spec The page-and-action specification.
-     * 
-     * @return void
-     * 
-     */
-    public function toAction($spec)
-    {
-        $uri = Solar::factory('Solar_Uri');
-        $uri->importAction($spec);
-        return $uri->exportAction();
-    }
-    
-    /**
-     * 
-     * Builds a URI string for a public Solar resource.
-     * 
-     * Prefixes with the config ['Solar_Uri']['public'] href.
-     * 
-     * @return string A public URI string.
-     * 
-     */
-    public function exportPublic()
-    {
-        return (empty($this->_config['public']) ? '' : $this->_config['public'])
-             . (empty($this->info)              ? '' : $this->_info2str($this->info))
-             . (empty($this->query)             ? '' : '?' . $this->_query2str($this->query))
-             . (empty($this->fragment)          ? '' : '#' . $this->fragment);
-    }
-    
-    /**
-     * 
-     * Converts a public resource specification to a URI in one step.
-     * 
-     * @param string $spec The page-and-action specification.
-     * 
-     * @return void
-     * 
-     */
-    public function toPublic($spec)
-    {
-        $uri = Solar::factory('Solar_Uri');
-        $uri->importAction($spec);
-        return $uri->exportPublic();
-    }
-    
-    /**
-     * 
-     * Adds an element to the $this->query array.
-     * 
-     * If the element already exists, the element is converted to an array
-     * and the value is appended to that array.
-     * 
-     * @param string $key The GET variable name to work with.
-     * 
-     * @param string $val The value to use.
-     * 
-     * @return void
-     * 
-     */
-    public function addQuery($key, $val = '')
-    {
-        if (isset($this->query[$key])) {
-            settype($this->query[$key], 'array');
-            $this->query[$key][] = $val;
-        } else {
-            $this->query[$key] = $val;
+        // the uri string
+        $uri = '';
+        
+        // are we doing a full URI?
+        if ($full) {
+            
+            // add the scheme, if any.
+            $uri .= empty($this->scheme) ? '' : $this->scheme . '://';
+        
+            // add the username and password, if any.
+            if (! empty($this->user)) {
+                $uri .= $this->user;
+                if (! empty($this->pass)) {
+                    $uri .= ':' . $this->pass;
+                }
+                $uri .= '@';
+            }
+        
+            // add the host and port, if any.
+            $uri .= (empty($this->host) ? '' : $this->host)
+                  . (empty($this->port) ? '' : ':' . $this->port);
         }
+        
+        // add the rest of the URI
+        return $uri
+             . $this->_config['path']
+             . (empty($this->path)     ? '' : $this->_path2str($this->path))
+             . (empty($this->query)    ? '' : '?' . $this->_query2str($this->query))
+             . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
     
     /**
      * 
-     * Clears all URI properties.
+     * Returns a URI based on the specified string.
      * 
-     * @return void
+     * @param string $spec The URI specification.
+     * 
+     * @param bool $full If true, returns a full URI with scheme,
+     * user, pass, host, and port.  Otherwise, just returns the
+     * path, query, and fragment.  Default false.
+     * 
+     * @return string An action URI string.
      * 
      */
-    public function clear()
+    public function quick($spec, $full = false)
     {
-        $this->scheme = null;
-        $this->host = null;
-        $this->port = null;
-        $this->user = null;
-        $this->pass = null;
-        $this->path = null;
-        $this->info = array();
-        $this->query = array();
-        $this->fragment = null;
+        $uri = clone($this);
+        $uri->set($spec);
+        return $uri->fetch($full);
     }
+    
     
     /**
      * 
-     * Sets the value of an element in the $this->query array.
-     * 
-     * This will overwrite any previous value.
-     * 
-     * @param string $key The GET variable name to work with.
-     * 
-     * @param string $val The value to use.
-     * 
-     * @return void
-     * 
-     */
-    public function setQuery($key, $val = '')
-    {
-        $this->query[$key] = $val;
-    }
-    
-    /**
-     * 
-     * Sets all elements of $this->query from a query string.
+     * Sets the Solar_Uri::$query array from a string.
      * 
      * This will overwrite any previous values.
      * 
-     * @param string $val The query string to set from; for example,
-     * "foo=bar&baz=dib&zim=gir".
+     * @param string $spec The query string to use; for example,
+     * "foor=bar&baz=dib".
      * 
      * @return void
      * 
      */
-    public function setQueryString($val)
+    public function setQuery($spec)
     {
-        parse_str($val, $this->query);
+        parse_str($spec, $this->query);
     }
     
     /**
      * 
-     * Adds one element to the $this->info array.
-     * 
-     * @param string $val The value to use.
-     * 
-     * @return void
-     * 
-     */
-    public function addInfo($val = '')
-    {
-        $this->info[] = $val;
-    }
-    
-    /**
-     * 
-     * Sets one element in the $this->info array by position and value.
-     * 
-     * @param int $key The path_info position to work with.
-     * 
-     * @param string $val The value to use.
-     * 
-     * @return void
-     * 
-     */
-    public function setInfo($key, $val = '')
-    {
-        $this->info[(int)$key] = $val;
-    }
-    
-    /**
-     * 
-     * Sets all elements in the $this->info array from a path_info string.
+     * Sets the Solar_Uri::$path array from a string.
      * 
      * This will overwrite any previous values.
      * 
-     * @param string $val The path_info string to use; for example,
+     * @param string $spec The path string to use; for example,
      * "/foo/bar/baz/dib".  A leading slash will *not* create an empty
      * first element; if the string has a leading slash, it is ignored.
      * 
      * @return void
      * 
      */
-    public function setInfoString($val)
+    public function setPath($spec)
     {
-        $val = trim($val, '/');
-        $this->info = explode('/', $val);
-    }
-    
-    /**
-     * 
-     * Clears (resets) all or part of $this->info.
-     * 
-     * @param string $key The info key to clear; if null, clears all keys.
-     * 
-     * @return void
-     * 
-     */
-    public function clearInfo($key = null)
-    {
-        if ($key === null || $key === false) {
-            $this->info = array();
-        } elseif (array_key_exists((int) $key, $this->info)) {
-            unset($this->info[(int) $key]);
-        }
-    }
-    
-    /**
-     * 
-     * Clears (resets) all or part of $this->query.
-     * 
-     * @param string $key The query key to clear; if null, clears all keys.
-     * 
-     * @return void
-     * 
-     */
-    public function clearQuery($key = null)
-    {
-        if (! $key) {
-            $this->query = array();
-        } else {
-            unset($this->query[$key]);
+        $this->path = explode('/', trim($spec, '/'));
+        foreach ($this->path as $key => $val) {
+            $this->path[$key] = urldecode($val);
         }
     }
     
@@ -561,16 +321,18 @@ class Solar_Uri extends Solar_Base {
      * Modified from code written by nospam@fiderallalla.de, found at
      * http://php.net/parse_str.  Automatically urlencodes values.
      * 
-     * @param array $params The key-value pairs to convert into a
+     * @param array $spec The key-value pairs to convert into a
      * query string.
+     * 
+     * @param string $key The parent key for the current array.
      * 
      * @return string A URI query string.
      * 
      */
-    protected function _query2str($params)
+    protected function _query2str($spec)
     {
-        // preempt if $params is not an array, or is empty
-        if (! is_array($params) || count($params) == 0 ) {
+        // preempt if $spec is not an array, or is empty
+        if (! is_array($spec) || count($spec) == 0 ) {
             return '';
         }
         
@@ -582,7 +344,7 @@ class Solar_Uri extends Solar_Base {
         // the array of generated query substrings
         $out = array();
         
-        foreach ($params as $key => $val) {
+        foreach ($spec as $key => $val) {
             if (is_array($val) ) {   
                 // recurse to capture deeper array.
                 $out[] = $this->_query2str($val, $key);
@@ -598,21 +360,21 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * Converts an array of info elements into a string.
+     * Converts an array of path elements into a string.
      * 
-     * @param array $params The pathinfo elements.
+     * @param array $spec The path elements.
      * 
-     * @return string A URI pathinfo string.
+     * @return string A URI path string.
      * 
      */
-    protected function _info2str($params)
+    protected function _path2str($spec)
     {
-        settype($params, 'array');
-        $str = array();
-        foreach ($params as $val) {
-            $str[] = urlencode($val);
+        settype($spec, 'array');
+        $out = array();
+        foreach ($spec as $val) {
+            $out[] = urlencode($val);
         }
-        return implode('/', $str);
+        return implode('/', $out);
     }
 }
 ?>

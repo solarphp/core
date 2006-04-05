@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$query.//
+
+public string $query
+
+Query string elements split apart into an array.

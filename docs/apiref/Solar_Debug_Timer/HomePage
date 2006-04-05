@@ -6,4 +6,6 @@
 
  * Solar_Debug_Timer
 
+++ Overview
+
 Class to track code execution times.

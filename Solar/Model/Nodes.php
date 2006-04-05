@@ -45,7 +45,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         
         // default order
         $this->order = array(
-            'rank ASC',
+            'position ASC',
             'LOWER(name) ASC'
         );
         
@@ -70,7 +70,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         );
         
         // is this node part of another node?
-        $this->_col['part_of'] = array(
+        $this->_col['parent_id'] = array(
             'type'    => 'int',
             'require' => true,
             'default' => 0,
@@ -120,8 +120,8 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'valid'   => 'sepWords'
         );
         
-        // arbitrary list-order, sequence, or ranking
-        $this->_col['rank'] = array(
+        // arbitrary list-order, sequence, or positioning
+        $this->_col['position'] = array(
             'type'    => 'int',
             'default' => 0,
         );
@@ -191,12 +191,12 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             // other indexes
             'area_id'      => 'normal',
             'name'         => 'normal',
-            'part_of'      => 'normal',
+            'parent_id'      => 'normal',
             'owner_handle' => 'normal',
             'type'         => 'normal',
             'locale'       => 'normal',
             'tags'         => 'normal',
-            'rank'         => 'normal',
+            'position'         => 'normal',
             'rating'       => 'normal',
             'uri'          => 'normal',
             'email'        => 'normal',

@@ -289,14 +289,14 @@ class Solar_App_Bookmarks extends Solar_App {
             $order = 'LOWER(tags) DESC';
             break;
         
-        // rank
-        case 'rank':
-        case 'rank_asc':
-            $order = 'rank ASC';
+        // position
+        case 'position':
+        case 'position_asc':
+            $order = 'position ASC';
             break;
         
-        case 'rank_desc':
-            $order = 'rank DESC';
+        case 'position_desc':
+            $order = 'position DESC';
             break;
         
         // owner handle (username)

@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Uri.php 1035 2006-04-04 13:24:44Z pmjones $
+ * @version $Id$
  * 
  */
 

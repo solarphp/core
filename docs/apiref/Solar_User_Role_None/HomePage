@@ -6,4 +6,6 @@
 
  * Solar_User_Role_None
 
+++ Overview
+
 No role source; always returns an empty array.

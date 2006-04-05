@@ -10,4 +10,6 @@
 
    * Solar_Sql_Exception_IdxNoColumns
 
+++ Overview
+
 Exception: index has no columns.

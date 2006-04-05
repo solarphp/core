@@ -6,6 +6,8 @@
 
  * Solar_Sql
 
+++ Overview
+
 Class for connecting to SQL databases and performing common operations.
 
 Example usage:

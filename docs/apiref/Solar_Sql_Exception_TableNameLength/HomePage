@@ -10,4 +10,6 @@
 
    * Solar_Sql_Exception_TableNameLength
 
+++ Overview
+
 Exception: table name is too long or too short.

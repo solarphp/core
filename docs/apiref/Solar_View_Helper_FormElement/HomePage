@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_FormElement
 
+++ Overview
+
 Abstract helper for form elements.

@@ -6,7 +6,7 @@
 
 <code type="bash">
 $ pear channel-discover solarphp.com
-$ pear install Solar/Solar-devel
+$ pear install Solar/Solar-alpha
 ...
 </code>
 

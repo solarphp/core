@@ -6,4 +6,6 @@
 
  * Solar_User_Role_Ldap
 
+++ Overview
+
 Get roles (groups) from an LDAP server.

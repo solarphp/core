@@ -40,7 +40,7 @@ return array(
     'ON'                 => 'on',
     'ORDERED_BY'         => 'Commandé par',
     'QUICKMARK'          => 'QuickMark',
-    'RANK'               => 'rang',
+    'POSITION'               => 'rang',
     'TAG_LIST'           => 'Tags en Service',
     'TAGGED'             => 'taggé',
     'TAGS'               => 'Tags',

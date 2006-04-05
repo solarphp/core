@@ -1,12 +1,5 @@
-Solar_Valid aggregates several validation routines as static
-methods so you can make sure user input matches your requirements.
-This is useful for checking form values and validating database
-fields.
-
-Be sure to check the ClassMethods for a full list of
-valdiation routines.  Note that all the methods are static, so
-you never need to instantiate Solar_Valid (although you can if you
-want to).
+Solar_Valid aggregates several validation methods so you can make sure user input matches your requirements. This is useful for checking form values and
+validating database fields.
 
 <code type="php">
 require_once 'Solar.php';
@@ -35,3 +28,5 @@ if (! $valid->isoDate($date, Solar_Valid::OR_BLANK)) {
 }
 </code>
 
+Be sure to check the ClassMethods for a full list of
+valdiation routines.

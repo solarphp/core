@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$host.//
+
+public string $host
+
+The host specification (e.g., 'example.com').

@@ -8,4 +8,6 @@
 
   * Solar_Exception_MethodNotCallable
 
+++ Overview
+
 Exception: a class or object method is not callable.

@@ -14,11 +14,11 @@ return: string
 
 </function>
 
-Returns an anchor href tag.
+Returns a anchor href tag.
 
 * Parameters:
 
- * Solar_Uri|string //$spec//: The anchor HREF specification.
+ * Solar_Uri|string //$spec//: The anchor href specification.
 
  * string //$text//: A locale translation key.
 
@@ -26,7 +26,7 @@ Returns an anchor href tag.
 
 * Returns string
 
-Returns an anchor href tag.
+Returns a anchor href tag.
 
 If the $text link text is empty, will just return the
 href value, not an <a href="">...</a> tag.

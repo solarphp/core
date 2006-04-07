@@ -594,7 +594,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $href = str_replace(array("\r", "\n"), '', $spec);
         } else {
             $uri = Solar::factory('Solar_Uri_Action');
-            $href = $uri->fetch($spec);
+            $href = $uri->quick($spec);
         }
         
         // make sure there's actually an href

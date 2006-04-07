@@ -54,7 +54,7 @@ $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags f
 
 // set the RSS feed link for the layout
 $uri = Solar::factory('Solar_Uri_Action');
-$uri->info[1] = 'user-feed';
+$uri->path[1] = 'user-feed';
 
 if ($tags) {
     // there are tags requested, so the RSS should show all pages
@@ -69,5 +69,4 @@ $this->layout_link[] = array(
     'title' => Solar::server('PATH_INFO'),
     'href'  => $uri->fetch(),
 );
-
 ?>

@@ -6,4 +6,6 @@
 
  * Solar_Sql_Result
 
+++ Overview
+
 Class for iterating through selected row results.

@@ -178,7 +178,25 @@ class Solar_Uri extends Solar_Base {
         // force to the current uri?
         $uri = trim($uri);
         if (! $uri) {
-            $uri = $scheme . $host . Solar::server('REQUEST_URI');
+            
+            // add the scheme and host
+            $uri = $scheme . $host;
+            
+            // we need to see if mod_rewrite is turned on or off.
+            // if on, we can use REQUEST_URI as-is.
+            // if off, we need to use the script name, esp. for front-controller stuff.
+            // we make a guess based on the 'path' config key.
+            // if it ends in '.php' then we guess that mod_rewrite is off.
+            if (substr($this->_config['path'], -5) == '.php/') {
+                // guess that mod_rewrite is off; build up from 
+                // component parts.
+                $uri .= Solar::server('SCRIPT_NAME')
+                      . Solar::server('PATH_INFO')
+                      . '?' . Solar::server('QUERY_STRING');
+            } else {
+                // guess that mod_rewrite is on
+                $uri .= Solar::server('REQUEST_URI');
+            }
         }
         
         // add the scheme and host?

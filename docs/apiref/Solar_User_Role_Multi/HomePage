@@ -6,4 +6,6 @@
 
  * Solar_User_Role_Multi
 
+++ Overview
+
 Get roles from multiple sources and return as a single list.

@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Time
 
+++ Overview
+
 Helper for a formatted time using [[php date()]] conventions.

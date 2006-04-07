@@ -24,7 +24,7 @@
 
 You can download Solar directly from this link:
 
-http://solarphp.com/get/Solar-@package_version@.tgz
+http://solarphp.com/get/Solar-0.15.2.tgz
 
 Then copy the \\Solar.php\\ file and \\Solar/\\ directory into your libraries.
 
@@ -47,14 +47,14 @@ bash-2.05$
 ... then you can install or upgrade:
 
 <code>
-bash-2.05$ pear install Solar/Solar-devel
+bash-2.05$ pear install Solar/Solar-alpha
 ... installation messages follow ...
 
-bash-2.05$ pear upgrade Solar/Solar-devel
+bash-2.05$ pear upgrade Solar/Solar-alpha
 ... upgrade messages follow ...
 </code>
 
-Because Solar is still in development, you need to specify the "-devel" flag when installing or upgrading.
+Because Solar is still in alpha, you need to specify the "-alpha" flag when installing or upgrading.
 
 
 +++ Bundled Documentation
@@ -76,17 +76,17 @@ bash-2.05$ pear clear-cache
 reading directory
 cache entries cleared
 
-bash-2.05$ pear upgrade Solar/Solar-devel
+bash-2.05$ pear upgrade Solar/Solar-alpha
 ... upgrade messages follow ...
 </code>
 
 Alternatively, you can use PEAR to install or upgrade a specific release directly from a tarball, like this:
 
 <code>
-bash-2.05$ pear install http://solarphp.com/get/Solar-@package_version@.tgz
+bash-2.05$ pear install http://solarphp.com/get/Solar-0.15.2.tgz
 ... installation messages follow ...
 
-bash-2.05$ pear upgrade http://solarphp.com/get/Solar-@package_version@.tgz
+bash-2.05$ pear upgrade http://solarphp.com/get/Solar-0.15.2.tgz
 ... upgrade messages follow ...
 </code>
 
@@ -97,6 +97,3 @@ You can [http://solarphp.com/svn/ browse the Subversion repository] and do anony
 <code>
 bash-2.05$ svn checkout https://solarphp.com/svn/ solar
 </code>
-
-++ Dependencies
-

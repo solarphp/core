@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Action
 
+++ Overview
+
 Helper for action anchors and hrefs, with built-in text translation.

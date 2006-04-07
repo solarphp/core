@@ -6,6 +6,8 @@
 
  * Solar_View
 
+++ Overview
+
 Provides a TemplateView pattern implementation for Solar.
 
 This implementation is good for all (X)HTML and XML template

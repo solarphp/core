@@ -6,4 +6,6 @@
 
  * Solar_Sql_Driver
 
+++ Overview
+
 Abstract base class for specific RDBMS driver information.

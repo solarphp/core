@@ -6,4 +6,6 @@
 
  * Solar_Uri
 
-Parses a URI string into its component parts for manipulation and export.
+++ Overview
+
+Manipulates and generates URI strings.

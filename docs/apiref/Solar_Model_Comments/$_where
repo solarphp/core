@@ -1,3 +1,0 @@
-protected array $_where
-
-A convenient baseline WHERE array when searching for comments.

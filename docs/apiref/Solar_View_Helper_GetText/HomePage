@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_GetText
 
+++ Overview
+
 Helper for locale strings, with escaping.

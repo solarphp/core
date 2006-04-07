@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.net>
  * 
- * @license LGPL
+ * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
  * @version $Id$
  * 
@@ -30,7 +30,7 @@ if (! defined('SOLAR_CONFIG_PATH')) {
  * 
  * @package Solar
  * 
- * @version @package_version@
+ * @version 0.15.2
  * 
  */
 class Solar {
@@ -215,7 +215,7 @@ class Solar {
      */
     public static function apiVersion()
     {
-        return '@package_version@';
+        return '0.15.2';
     }
     
     /**

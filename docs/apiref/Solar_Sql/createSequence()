@@ -8,18 +8,18 @@ param: string, $name
 
 param: string, $start, 1
 
-return: mixed
+return: void
 
 </function>
 
-Create a sequence in the database.
+Creates a sequence in the database.
 
 * Parameters:
 
- * string //$name//: The sequence name to create.
+ * string //$name//: The sequence name to create; this will be  automatically suffixed with '__s' for portability reasons.
 
  * string //$start//: The starting sequence number.
 
-* Returns mixed
+* Returns void
 
-Create a sequence in the database.
+Creates a sequence in the database.

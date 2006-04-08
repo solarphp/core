@@ -27,9 +27,11 @@ Quotes a value and places into a piece of text at a placeholder.
 The placeholder is a question-mark; all placeholders will be replaced
 with the quoted value.   For example:
 
-<code>
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
 $text = "WHERE date < ?";
 $date = "2005-01-02";
 $safe = $sql->quoteInto($text, $date);
-// $safe = "WHERE date < '2005-01-02'"
+// $safe == "WHERE date < '2005-01-02'"
 </code>

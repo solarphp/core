@@ -1,0 +1,65 @@
+This method exists primarily in support of [Solar_Sql_Select::HomePage Solar_Sql_Select], which you should strongly consider using instead of calling this method.
+
+If you do use this method, here are some quick examples:
+
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
+// get all rows
+$all = $sql->select('all', "SELECT * FROM table");
+
+// get just the first row
+$id = $sql->quote('id_value');
+$row = $sql->select('row', "SELECT * FROM table WHERE id = $id");
+
+// get just the first value
+$count = $sql->select('one', "SELECT COUNT(*) FROM table");
+</code>
+
+++ Security and Binding
+
+As with all SQL commands, you should be certain to quote values using Solar_Sql::quote(), Solar_Sql::quoteInto(), or Solar_Sql::quoteMulti().  Alterntatively, use [Solar_Sql_Select::HomePage Solar_Sql_Select] to build SELECT statements and fetch results.
+
+You can also build your SELECT commands using named placeholders, and the $data array will be automatically quoted into the command for you (per the requirements of your particular database).  For example:
+
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
+// the command
+$cmd = "SELECT * FROM table WHERE foo = :bar AND zim = :dib";
+
+// data to bind into named placeholders
+$data = array(
+    'bar' => 'double quote"ed',
+    'dib' => "single quote'ed",
+);
+
+// get a Solar_Sql_Result object
+$result = $sql->select('result', $cmd, $data);
+
+// the result will be from this statement:
+// SELECT * FROM table WHERE foo = 'double quote\"ed' AND zim = 'single quote\'ed'
+</code>
+
+++ Return Types
+
+The \\$type\\ parameter determines how the results of the SELECT command are returned.
+
+: \\all\\ : Returns all rows as a sequential array. Each element is an associative array representing a row; the row array is keyed on the column name.
+
+: \\assoc\\ : Returns all rows as an associative array keyed on the first column. Each element is an associative array representing a row; the row array is keyed on the column name.
+
+: \\col\\ : Returns a sequential array made up of the first column of each row; useful for getting a series of single values.
+
+: \\one\\ : Returns the very first value in the first row; useful for getting a single value, such as a COUNT.
+
+: \\pairs\\ : Returns an associative array; the key is the first column, and the value is the second column.  Useful for building option lists or other key-value pairs.
+
+: \\pdostatement\\ : Returns the executed PDOStatement result for direct manipulation.  (You can also use 'pdo' or 'statement' as an alias for 'pdostatement'.)
+
+: \\row\\ : Returns only the first row as an associative array; elements are keyed on the column names.
+
+: \\result\\ : Returns a [Solar_Sql_Result::HomePage Solar_Sql_Result] object.
+
+: \\string\\ : Returns the SQL statement as a string, and does not execute the query.  Useful for debugging SQL commands.
+

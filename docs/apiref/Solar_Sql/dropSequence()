@@ -6,16 +6,16 @@ name: dropSequence
 
 param: string, $name
 
-return: mixed
+return: void
 
 </function>
 
-Drop a sequence from the database.
+Drops a sequence from the database.
 
 * Parameters:
 
- * string //$name//: The sequence name to drop.
+ * string //$name//: The sequence name to drop; this will be  automatically suffixed with '__s' for portability reasons.
 
-* Returns mixed
+* Returns void
 
-Drop a sequence from the database.
+Drops a sequence from the database.

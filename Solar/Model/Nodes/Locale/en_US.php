@@ -22,7 +22,7 @@ return array(
     'LABEL_SUBJ'        => 'Title/Subject',
     'LABEL_TAGS'        => 'Tags',
     'LABEL_USER_HANDLE' => 'Owner',
-    'LABEL_POSITION'        => 'Rank Order',
+    'LABEL_POS'        => 'Rank Order',
     'LABEL_RATING'      => 'User Rating',
     'LABEL_PREFS'       => 'Preferences',
     
@@ -32,7 +32,7 @@ return array(
     'VALID_SUBJ'        => 'Please enter a title or subject for this node.',
     'VALID_TAGS'        => 'The tags should be a space-separated list of words, each consisting only of letters, numbers, and underscores.',
     'VALID_USER_HANDLE' => 'The username should consist only of letters, numbers, and underscores.',
-    'VALID_POSITION'        => 'The position should be a whole number.',
+    'VALID_POS'        => 'The pos should be a whole number.',
     'VALID_RATING'      => 'The rating should be a whole number.',
     
     // error messages

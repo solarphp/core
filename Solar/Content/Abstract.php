@@ -415,7 +415,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from(
             $this->_content->tags,
-            array('name', 'COUNT(tags.id) AS position')
+            array('name', 'COUNT(tags.id) AS pos')
         );
         
         // join to the nodes table
@@ -546,7 +546,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @param int|array $data An existing node ID, or an array of data to
      * pre-populate into the form.  The array should have a key
      * 'bookmarks' with a sub-array using keys for 'uri', 'subj', 'summ',
-     * 'tags', and 'position'.  If empty, default values are pre-populated
+     * 'tags', and 'pos'.  If empty, default values are pre-populated
      * into the form.
      * 
      * @return object A Solar_Form object.

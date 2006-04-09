@@ -30,11 +30,11 @@
                     <br /><?php echo nl2br(wordwrap($this->escape($item['summ']), 72)) ?>
                     <?php endif ?>
                     
-                    <!-- position and uri -->
+                    <!-- pos and uri -->
                     <br /><span style="font-size: 90%;"><?php
                     
-                        // position
-                        echo $this->getText('POSITION') . ' ' . $this->escape($item['position']);
+                        // pos
+                        echo $this->getText('POS') . ' ' . $this->escape($item['pos']);
                         
                         // from uri
                         echo ' ' . $this->getText('FROM') . ' ';

@@ -45,7 +45,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         
         // default order
         $this->order = array(
-            'position ASC',
+            'pos ASC',
             'LOWER(name) ASC'
         );
         
@@ -120,8 +120,8 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'valid'   => 'sepWords'
         );
         
-        // arbitrary list-order, sequence, or positioning
-        $this->_col['position'] = array(
+        // arbitrary list-order, sequence, or posing
+        $this->_col['pos'] = array(
             'type'    => 'int',
             'default' => 0,
         );
@@ -196,7 +196,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'type'         => 'normal',
             'locale'       => 'normal',
             'tags'         => 'normal',
-            'position'         => 'normal',
+            'pos'         => 'normal',
             'rating'       => 'normal',
             'uri'          => 'normal',
             'email'        => 'normal',

@@ -22,6 +22,6 @@ return array(
     'LABEL_SUBJ' => 'Title',
     'LABEL_SUMM' => 'Description',
     'LABEL_TAGS' => 'Tags',
-    'LABEL_POSITION' => 'Rank',
+    'LABEL_POS' => 'Rank',
 );
 ?>

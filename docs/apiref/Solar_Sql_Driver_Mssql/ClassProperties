@@ -6,6 +6,8 @@ None.
 
 ++ Protected
 
+* Solar_Sql_Driver_Mssql::$_native -- Map of Solar generic column types to RDBMS native declarations.
+
 * Solar_Sql_Driver_Mssql::$_pdo_type -- The PDO driver type.
 
 Inherited Properties:
@@ -13,8 +15,6 @@ Inherited Properties:
 * Solar_Sql_Driver::$_config() -- User-provided configuration.
 
 * Solar_Sql_Driver::$_direct() -- Execute these commands directly, without preparation.
-
-* Solar_Sql_Driver::$_native() -- Map of Solar generic column types to RDBMS native declarations.
 
 * Solar_Sql_Driver::$_pdo() -- A portable database object for accessing the RDBMS.
 

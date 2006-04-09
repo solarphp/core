@@ -202,7 +202,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         if ($this->_parts) {
             // join each table and get a count
             foreach ($this->_parts as $part) {
-                // JOIN nodes AS comment_nodes ON comment_nodes.part_of = nodes.id
+                // JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
                 $join = $part . '_nodes';
                 $type = $this->_content->sql->quote($part);
                 $count = $part . '_count';
@@ -210,7 +210,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
                     // this table
                     "nodes AS $join",
                     // on these conditions
-                    "$join.part_of = nodes.id AND $join.type = $type",
+                    "$join.parent_id = nodes.id AND $join.type = $type",
                     // with these columns
                     "COUNT($join.id) AS $count"
                 );
@@ -327,7 +327,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         if ($this->_parts) {
             // join each table and get a count
             foreach ($this->_parts as $part) {
-                // JOIN nodes AS comment_nodes ON comment_nodes.part_of = nodes.id
+                // JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
                 $join = $part . '_nodes';
                 $type = $this->_content->sql->quote($part);
                 $count = $part . '_count';
@@ -336,7 +336,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
                     // this table
                     "nodes AS $join",
                     // on these conditions
-                    "$join.part_of = nodes.id AND $join.type = $type",
+                    "$join.parent_id = nodes.id AND $join.type = $type",
                     // with these columns
                     "COUNT($join.id) AS $count"
                 );
@@ -360,7 +360,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * @param array $order Return in this order.
      * 
-     * @return array A list of nodes of this type that are part_of
+     * @return array A list of nodes of this type that are parent_id
      * the $master_id node.
      * 
      */
@@ -378,7 +378,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $where['nodes.type = ?'] = $this->_type;
         
         // limit to parts of the master node ID
-        $where['nodes.part_of = ?'] = $master_id;
+        $where['nodes.parent_id = ?'] = $master_id;
         
         // order and return
         $select->order($order);
@@ -415,7 +415,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from(
             $this->_content->tags,
-            array('name', 'COUNT(tags.id) AS rank')
+            array('name', 'COUNT(tags.id) AS pos')
         );
         
         // join to the nodes table
@@ -546,7 +546,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @param int|array $data An existing node ID, or an array of data to
      * pre-populate into the form.  The array should have a key
      * 'bookmarks' with a sub-array using keys for 'uri', 'subj', 'summ',
-     * 'tags', and 'rank'.  If empty, default values are pre-populated
+     * 'tags', and 'pos'.  If empty, default values are pre-populated
      * into the form.
      * 
      * @return object A Solar_Form object.
@@ -606,7 +606,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $where['nodes.type = ?'] = $this->_type;
         
         // limit to master nodes
-        $where['nodes.part_of = ?'] = 0;
+        $where['nodes.parent_id = ?'] = 0;
         
         // done
         return $where;

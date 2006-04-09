@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$scheme.//
+
+public string $scheme
+
+The scheme (e.g. 'http' or 'https').

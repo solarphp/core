@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$path.//
+
+public string $path
+
+The path portion (e.g., 'path/to/index.php').

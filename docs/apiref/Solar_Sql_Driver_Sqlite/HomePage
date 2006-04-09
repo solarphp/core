@@ -8,4 +8,6 @@
 
   * Solar_Sql_Driver_Sqlite
 
+++ Overview
+
 Class for connecting to SQLite databases.

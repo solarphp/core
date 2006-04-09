@@ -14,16 +14,27 @@ return: mixed
 
 </function>
 
-Adds a column to a table in the database.
+Adds a portable column to a table in the database.
 
 * Parameters:
 
- * string //$table//: The table name.
+ * string //$table//: The table name (1-30 chars).
 
- * string //$name//: The column name to add.
+ * string //$name//: The column name to add (1-28 chars).
 
  * array //$info//: Information about the column.
 
 * Returns mixed
 
-Adds a column to a table in the database.
+Adds a portable column to a table in the database.
+
+The $info parameter should be in this format:
+
+<code type="php">
+$info = array(
+    'type'    => bool|char|int|etc,
+    'size'    => total length for char|varchar|numeric
+    'scope'   => decimal places for numeric
+    'require' => true|false,
+);
+</code>

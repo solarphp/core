@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_GetTextRaw
 
+++ Overview
+
 Helper for locale strings (no escaping is applied).

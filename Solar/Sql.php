@@ -17,27 +17,7 @@
 
 /**
  * 
- * Class for connecting to SQL databases and performing common operations.
- * 
- * Example usage:
- * 
- * <code>
- * $config = array(
- *     'driver' => 'Solar_Sql_Driver_Mysql',
- *     'host' => '127.0.0.1',
- *     'user' => 'pmjones',
- *     'pass' => '********',
- *     'name' => 'test'
- * );
- * 
- * $sql = Solar::factory('Solar_Sql', $config);
- * </code>
- * 
- * You should consider using Solar_Sql_Table for handling insert, update,
- * and delete operations on single tables.
- * 
- * You should consider using Solar_Sql_Select for multi-table and joined
- * selects.
+ * Class for connecting to SQL databases and performing standard operations.
  * 
  * @category Solar
  * 
@@ -52,19 +32,19 @@ class Solar_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * driver => (string) Driver class, e.g. 'Solar_Sql_Driver_Mysql'.
+     * : \\driver\\ : (string) The driver class to use, e.g. 'Solar_Sql_Driver_Mysql'.
      * 
-     * host => (string) Host specification (typically 'localhost').
+     * : \\host\\ : (string) Host specification (typically '127.0.0.1').
      * 
-     * port => (string) Port number for the host name.
+     * : \\port\\ : (string) Port number for the host name.
      * 
-     * user => (string) Connect to the database as this username.
+     * : \\user\\ : (string) Connect to the database as this username.
      * 
-     * pass => (string) Password associated with the username.
+     * : \\pass\\ : (string) Password associated with the username.
      * 
-     * name => (string) Database name (or file path, or TNS name).
+     * : \\name\\ : (string) Database name (or file path, or TNS name).
      * 
-     * mode => (string) For SQLite, an octal file mode.
+     * : \\mode\\ : (string) For SQLite, an octal file mode.
      * 
      * @var array
      * 
@@ -191,12 +171,14 @@ class Solar_Sql extends Solar_Base {
      * 
      * Inserts a row of data into a table.
      * 
+     * Automatically applies Solar_Sql::quote() to the data values for you.
+     * 
      * @param string $table The table to insert data into.
      * 
      * @param array $data An associative array where the key is the column
      * name and the value is the value to insert for that column.
      * 
-     * @return void
+     * @return int The number of rows affected, typically 1.
      * 
      */
     public function insert($table, $data)
@@ -221,6 +203,8 @@ class Solar_Sql extends Solar_Base {
      * 
      * Updates a table with specified data based on a WHERE clause.
      * 
+     * Automatically applies Solar_Sql::quote() to the data values for you.
+     * 
      * @param string $table The table to udpate.
      * 
      * @param array $data An associative array where the key is the column
@@ -229,9 +213,7 @@ class Solar_Sql extends Solar_Base {
      * @param string|array $where The SQL WHERE clause to limit which
      * rows are updated.
      * 
-     * @return void
-     * 
-     * @todo Make it possible to pass $where as an array of conditions.
+     * @return int The number of rows affected.
      * 
      */
     public function update($table, $data, $where)
@@ -263,7 +245,7 @@ class Solar_Sql extends Solar_Base {
      * @param string|array $where The SQL WHERE clause to limit which
      * rows are deleted.
      * 
-     * @return void
+     * @return int The number of rows affected.
      * 
      */
     public function delete($table, $where)
@@ -302,7 +284,7 @@ class Solar_Sql extends Solar_Base {
         
         // are we just returning the statement?
         $lctype = strtolower($type);
-        if ($lctype == 'statement') {
+        if ($lctype == 'string') {
             return $stmt;
         }
         
@@ -366,12 +348,9 @@ class Solar_Sql extends Solar_Base {
             $data = $result->fetch(PDO::FETCH_ASSOC);
             break;
         
-        // create a new object and put the result into it
+        // not a recognized select type
         default:
-            $data = Solar::factory(
-                $type,
-                array('PDOStatement' => $result)
-            );
+            throw $this->_exception('ERR_SELECT_TYPE', array('type' => $type));
             break;
         }
         
@@ -388,13 +367,14 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Create a sequence in the database.
+     * Creates a sequence in the database.
      * 
-     * @param string $name The sequence name to create.
+     * @param string $name The sequence name to create; this will be 
+     * automatically suffixed with '__s' for portability reasons.
      * 
      * @param string $start The starting sequence number.
      * 
-     * @return mixed
+     * @return void
      * 
      * @todo Check name length.
      * 
@@ -408,11 +388,12 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Drop a sequence from the database.
+     * Drops a sequence from the database.
      * 
-     * @param string $name The sequence name to drop.
+     * @param string $name The sequence name to drop; this will be 
+     * automatically suffixed with '__s' for portability reasons.
      * 
-     * @return mixed
+     * @return void
      * 
      */
     public function dropSequence($name)
@@ -424,13 +405,12 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Gets the next number in a sequence number.
+     * Gets the next number in a sequence; creates the sequence if it does not exist.
      * 
-     * Creates the sequence if it does not exist.
+     * @param string $name The sequence name; this will be 
+     * automatically suffixed with '__s' for portability reasons.
      * 
-     * @param string &$name The sequence name.
-     * 
-     * @return int The next sequence number.
+     * @return int The next number in the sequence.
      * 
      */
     public function nextSequence($name)
@@ -449,10 +429,11 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Creates a table.
+     * Creates a portable table.
      * 
      * The $cols parameter should be in this format:
      * 
+     * <code type="php">
      * $cols = array(
      *   'fieldOne' => array(
      *     'type'    => bool|char|int|etc,
@@ -462,7 +443,9 @@ class Solar_Sql extends Solar_Base {
      *   ),
      *   'fieldTwo' => array(...)
      * );
+     * </code>
      * 
+     * For available field types, see Solar_Sql_Driver::$_native.
      * @param string $table The name of the table to create.
      * 
      * @param array $cols Array of columns to create.
@@ -551,11 +534,22 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Adds a column to a table in the database.
+     * Adds a portable column to a table in the database.
      * 
-     * @param string $table The table name.
+     * The $info parameter should be in this format:
      * 
-     * @param string $name The column name to add.
+     * <code type="php">
+     * $info = array(
+     *     'type'    => bool|char|int|etc,
+     *     'size'    => total length for char|varchar|numeric
+     *     'scope'   => decimal places for numeric
+     *     'require' => true|false,
+     * );
+     * </code>
+     * 
+     * @param string $table The table name (1-30 chars).
+     * 
+     * @param string $name The column name to add (1-28 chars).
      * 
      * @param array $info Information about the column.
      * 
@@ -571,7 +565,7 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Drops a columns from a table in the database.
+     * Drops a column from a table in the database.
      * 
      * @param string $table The table name.
      * 
@@ -587,23 +581,28 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
-     * Creates an index on a table.
+     * Creates a portable index on a table.
      * 
      * The $info parameter should be in this format:
      * 
-     * $info = array('type', 'col'); // single-col
+     * <code type="php">
+     * $type = 'normal';
      * 
-     * $info = array('type', array('col', 'col', 'col')), // multi-col
+     * $info = array($type, 'col'); // single-col
      * 
-     * $info = 'type'; // shorthand for single-col named for $name
+     * $info = array($type, array('col', 'col', 'col')), // multi-col
      * 
-     * The type may be 'normal' or 'unique'.
+     * $info = $type; // shorthand for single-col named for $name
+     * </code>
      * 
-     * Indexes are automatically renamed to "tablename__indexname__i".
+     * The $type may be 'normal' or 'unique'.
+     * 
+     * Indexes are automatically renamed to "tablename__indexname__i" for
+     * portability reasons.
      * 
      * @param string $table The name of the table for the index (1-30 chars).
      * 
-     * @param string $name The name of the index (1-27 chars).
+     * @param string $name The name of the index (1-28 chars).
      * 
      * @param string|array $info Information about the index.
      * 
@@ -663,25 +662,34 @@ class Solar_Sql extends Solar_Base {
      * Safely quotes a value for an SQL statement.
      * 
      * If an array is passed as the value, the array values are quoted
-     * and then returned as a separated string (the default separator
-     * is a comma).
+     * and then returned as a comma-separated string; this is useful 
+     * for generating IN() lists.
+     * 
+     * <code type="php">
+     * $sql = Solar::factory('Solar_Sql');
+     * 
+     * $safe = $sql->quote('foo"bar"');
+     * // $safe == "'foo\"bar\"'"
+     * 
+     * $safe = $sql->quote(array('one', 'two', 'three'));
+     * // $safe == "'one', 'two', 'three'"
+     * </code>
      * 
      * @param mixed $val The value to quote.
      * 
-     * @param string $sep The separator string to use.
-     * 
-     * @return mixed An SQL-safe quoted value (or string of separated values).
+     * @return string An SQL-safe quoted value (or a string of 
+     * separated-and-quoted values).
      * 
      */
-    public function quote($val, $sep = ',')
+    public function quote($val)
     {
         if (is_array($val)) {
             // quote array values, not keys, and only one level's worth
-            // (i.e., non-recursive) ... then combine with separator.
+            // (i.e., non-recursive) ... then combine with commas.
             foreach ($val as $k => $v) {
                 $val[$k] = $this->_driver->quote($v);
             }
-            return implode($sep, $val);
+            return implode(', ', $val);
         } else {
             return $this->_driver->quote($val);
         }
@@ -694,11 +702,14 @@ class Solar_Sql extends Solar_Base {
      * The placeholder is a question-mark; all placeholders will be replaced
      * with the quoted value.   For example:
      * 
-     * <code>
+     * <code type="php">
+     * $sql = Solar::factory('Solar_Sql');
+     * 
      * $text = "WHERE date < ?";
      * $date = "2005-01-02";
      * $safe = $sql->quoteInto($text, $date);
-     * // $safe = "WHERE date < '2005-01-02'"
+     * 
+     * // $safe == "WHERE date < '2005-01-02'"
      * </code>
      * 
      * @param string $txt The text with a placeholder.
@@ -722,14 +733,17 @@ class Solar_Sql extends Solar_Base {
      * The placeholder is a question-mark; all placeholders will be replaced
      * with the quoted value.   For example:
      * 
-     * <code>
+     * <code type="php">
+     * $sql = Solar::factory('Solar_Sql');
+     * 
      * $list = array(
      *      "WHERE date > ?"   => '2005-01-01',
      *      "  AND date < ?"   => '2005-02-01',
      *      "  AND type IN(?)" => array('a', 'b', 'c'),
      * );
      * $safe = $sql->quoteMulti($list);
-     * // $safe = "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+     * 
+     * // $safe == "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
      * </code>
      * 
      * @param array $list A series of key-value pairs where the key is
@@ -738,7 +752,7 @@ class Solar_Sql extends Solar_Base {
      * piece of literal text to be used and not quoted.
      * 
      * @param string $sep Return the list pieces separated with this string
-     * (default is null).
+     * (e.g. ' AND '), default null.
      * 
      * @return string An SQL-safe string composed of the list keys and
      * quoted values.

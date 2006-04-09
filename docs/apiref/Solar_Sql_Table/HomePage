@@ -6,4 +6,6 @@
 
  * Solar_Sql_Table
 
+++ Overview
+
 Class for representing an SQL table.

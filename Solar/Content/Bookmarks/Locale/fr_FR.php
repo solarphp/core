@@ -19,7 +19,7 @@
 return array(
     'ERR_TAGS'  => 'Veuillez utiliser une liste de tags valide (séparés par des blancs).',
     'ERR_URI'   => 'Veuillez utiliser une URI valide.',
-    'ERR_RANK'  => 'Veuillez utiliser un nombre entier, ou laisser vide.',
+    'ERR_POS'  => 'Veuillez utiliser un nombre entier, ou laisser vide.',
     'ERR_TITLE' => 'Veuillez entrer un titre pour ce signet.',
 );
 ?>

@@ -1,0 +1,38 @@
+string(46) "CREATE UNIQUE INDEX areas__id__i ON areas (id)"
+string(49) "CREATE INDEX areas__created__i ON areas (created)"
+string(49) "CREATE INDEX areas__updated__i ON areas (updated)"
+string(50) "CREATE UNIQUE INDEX areas__name__i ON areas (name)"
+string(59) "CREATE INDEX areas__owner_handle__i ON areas (owner_handle)"
+PHP Fatal error:  Uncaught exception 'Solar_Sql_Exception_ColNameReserved'
+class::code 'Solar_Sql::ERR_COL_NAME_RESERVED' 
+with message 'ERR_COL_NAME_RESERVED' 
+information array (
+  'col' => 'position',
+) 
+Stack trace:
+  #0 /Users/pmjones/Sites/dev/solar/src/Solar/Base.php(244): Solar::factory('Solar_Sql_Excep...', Array)
+  #1 /Users/pmjones/Sites/dev/solar/src/Solar/Sql.php(825): Solar_Base->_exception('ERR_COL_NAME_RE...', Array)
+  #2 /Users/pmjones/Sites/dev/solar/src/Solar/Sql.php(487): Solar_Sql->_buildColDef('position', Array)
+  #3 /Users/pmjones/Sites/dev/solar/src/Solar/Sql/Table.php(613): Solar_Sql->createTable('nodes', Array)
+  #4 /Users/pmjones/Sites/dev/solar/src/Solar/Sql/Table.php(145): Solar_Sql_Table->_autoCreate()
+  #5 /Users/pmjones/Sites/dev/solar/src/Solar.php(416): Solar_Sql_Table->__construct(NULL)
+  #6 /Users/pmjones/Sites/dev/solar/src/Solar/Content.php(69): Solar::factory('Solar_Model_Nod...')
+  #7 /Users/pmjones/Sites/dev/solar/src/Solar.php(416): Solar_Content->__construct(NULL)
+  #8 /Users/pmjones/ in /Users/pmjones/Sites/dev/solar/src/Solar.php on line 416
+
+Fatal error: Uncaught exception 'Solar_Sql_Exception_ColNameReserved'
+class::code 'Solar_Sql::ERR_COL_NAME_RESERVED' 
+with message 'ERR_COL_NAME_RESERVED' 
+information array (
+  'col' => 'position',
+) 
+Stack trace:
+  #0 /Users/pmjones/Sites/dev/solar/src/Solar/Base.php(244): Solar::factory('Solar_Sql_Excep...', Array)
+  #1 /Users/pmjones/Sites/dev/solar/src/Solar/Sql.php(825): Solar_Base->_exception('ERR_COL_NAME_RE...', Array)
+  #2 /Users/pmjones/Sites/dev/solar/src/Solar/Sql.php(487): Solar_Sql->_buildColDef('position', Array)
+  #3 /Users/pmjones/Sites/dev/solar/src/Solar/Sql/Table.php(613): Solar_Sql->createTable('nodes', Array)
+  #4 /Users/pmjones/Sites/dev/solar/src/Solar/Sql/Table.php(145): Solar_Sql_Table->_autoCreate()
+  #5 /Users/pmjones/Sites/dev/solar/src/Solar.php(416): Solar_Sql_Table->__construct(NULL)
+  #6 /Users/pmjones/Sites/dev/solar/src/Solar/Content.php(69): Solar::factory('Solar_Model_Nod...')
+  #7 /Users/pmjones/Sites/dev/solar/src/Solar.php(416): Solar_Content->__construct(NULL)
+  #8 /Users/pmjones/ in /Users/pmjones/Sites/dev/solar/src/Solar.php on line 416

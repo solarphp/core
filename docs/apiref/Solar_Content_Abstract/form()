@@ -14,7 +14,7 @@ Generates a data-entry form for a master node.
 
 * Parameters:
 
- * int|array //$data//: An existing node ID, or an array of data to pre-populate into the form.  The array should have a key 'bookmarks' with a sub-array using keys for 'uri', 'subj', 'summ', 'tags', and 'position'.  If empty, default values are pre-populated into the form.
+ * int|array //$data//: An existing node ID, or an array of data to pre-populate into the form.  The array should have a key 'bookmarks' with a sub-array using keys for 'uri', 'subj', 'summ', 'tags', and 'pos'.  If empty, default values are pre-populated into the form.
 
 * Returns object: A Solar_Form object.
 

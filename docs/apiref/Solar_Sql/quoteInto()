@@ -33,5 +33,6 @@ $sql = Solar::factory('Solar_Sql');
 $text = "WHERE date < ?";
 $date = "2005-01-02";
 $safe = $sql->quoteInto($text, $date);
+
 // $safe == "WHERE date < '2005-01-02'"
 </code>

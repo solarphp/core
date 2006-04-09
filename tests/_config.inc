@@ -13,9 +13,6 @@ $config['Solar_Debug_Var']['output'] = 'text';
 
 $config['Solar_Sql'] = array(
     'driver' => 'Solar_Sql_Driver_Sqlite',
-);
-
-$config['Solar_Sql_Driver_Sqlite'] = array(
     'name'   => 'solar_test.sq3',
 );
 

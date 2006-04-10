@@ -179,7 +179,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                     $method = 'isoTime';
                     break;
                 case 'timestamp':
-                    $method = 'isoDateTime';
+                    $method = 'isoTimestamp';
                     break;
                 case 'smallint':
                 case 'int':

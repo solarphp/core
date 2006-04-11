@@ -4,37 +4,17 @@
 
 * Solar_Uri::__construct() -- Constructor.
 
-* Solar_Uri::addInfo() -- Adds one element to the $this->info array.
+* Solar_Uri::fetch() -- Returns a URI based on the object properties.
 
-* Solar_Uri::addQuery() -- Adds an element to the $this->query array.
+* Solar_Uri::pathEncode() -- Converts an array of path elements into a string.
 
-* Solar_Uri::clear() -- Clears all URI properties.
+* Solar_Uri::quick() -- Returns a URI based on the specified string.
 
-* Solar_Uri::clearInfo() -- Clears (resets) all or part of $this->info.
+* Solar_Uri::set() -- Sets properties from a specified URI.
 
-* Solar_Uri::clearQuery() -- Clears (resets) all or part of $this->query.
+* Solar_Uri::setPath() -- Sets the Solar_Uri::$path array from a string.
 
-* Solar_Uri::export() -- Builds a full URI string.
-
-* Solar_Uri::exportAction() -- Builds a URI string for a page-and-action spec.
-
-* Solar_Uri::exportPublic() -- Builds a URI string for a public Solar resource.
-
-* Solar_Uri::import() -- Imports a URI string (by default, the current URI) into the object.
-
-* Solar_Uri::importAction() -- Parses a page-and-action specification as a URI.
-
-* Solar_Uri::setInfo() -- Sets one element in the $this->info array by position and value.
-
-* Solar_Uri::setInfoString() -- Sets all elements in the $this->info array from a path_info string.
-
-* Solar_Uri::setQuery() -- Sets the value of an element in the $this->query array.
-
-* Solar_Uri::setQueryString() -- Sets all elements of $this->query from a query string.
-
-* Solar_Uri::toAction() -- Converts a page-and-action specification to a URI in one step.
-
-* Solar_Uri::toPublic() -- Converts a public resource specification to a URI in one step.
+* Solar_Uri::setQuery() -- Sets the Solar_Uri::$query array from a string.
 
 Inherited Methods:
 
@@ -43,10 +23,6 @@ Inherited Methods:
 * Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
-
-* Solar_Uri::_info2str() -- Converts an array of info elements into a string.
-
-* Solar_Uri::_query2str() -- Converts an array of query elements into a string.
 
 Inherited Methods:
 

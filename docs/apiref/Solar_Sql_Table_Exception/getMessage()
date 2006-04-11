@@ -1,0 +1,17 @@
+//Inherited from Exception::getMessage().//
+
+<function>
+
+access: final  public
+
+name: getMessage
+
+return: unknown
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns unknown: unknown

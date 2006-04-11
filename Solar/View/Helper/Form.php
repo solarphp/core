@@ -451,9 +451,25 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 $star     = $info['require'] ? '*' : '';
                 $label    = $this->_view->escape($info['label']);
                 $id       = $this->_view->escape($info['attribs']['id']);
-                $helper   = 'form' . ucfirst($info['type']);
-                $element  = $this->_view->$helper($info);
+                $method   = 'form' . ucfirst($info['type']);
+                try {
+                    // look for the requested element helper
+                    $helper = $this->_view->getHelper($method);
+                } catch (Solar_View_Exception $e) {
+                    // use 'text' helper as a fallback
+                    if ($e->getCode() == 'ERR_HELPER_FILE_NOT_FOUND' ||
+                        $e->getCode() == 'ERR_HELPER_CLASS_NOT_FOUND') {
+                        // use 'text' helper
+                        $method = 'formText';
+                        $helper = $this->_view->getHelper($method);
+                    }
+                }
                 
+                // get the element output
+                $element = $helper->$method($info);
+                
+                // add the element and its feedback;
+                // handle differently if we're in a group.
                 if ($in_group) {
                     $feedback .= $this->listFeedback($info['feedback']);
                     $form[] = "\t\t$element";

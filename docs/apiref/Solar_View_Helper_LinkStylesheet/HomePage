@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_LinkStylesheet
 
+++ Overview
+
 Helper for <link rel="stylesheet"> tags.

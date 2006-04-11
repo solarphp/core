@@ -6,6 +6,8 @@
 
  * Solar_Cache_Memcache
 
+++ Overview
+
 Memcache cache controller.
 
 This driver lets you connect to a [http://www.danga.com/memcached/

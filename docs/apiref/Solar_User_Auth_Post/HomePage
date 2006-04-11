@@ -6,6 +6,8 @@
 
  * Solar_User_Auth_Post
 
+++ Overview
+
 Authenticate via simple HTTP POST request-and-reply.
 
 Based in part on php.net user comments:

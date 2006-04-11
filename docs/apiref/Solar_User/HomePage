@@ -6,6 +6,8 @@
 
  * Solar_User
 
+++ Overview
+
 Meta-container for the current user to hold auth and roles.
 
 When prefs and permissions come along, will hold those too.

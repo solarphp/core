@@ -1,0 +1,5 @@
+//Inherited from Solar_Uri::$pass.//
+
+public string $pass
+
+The password, if any.

@@ -6,9 +6,7 @@ access:   protected
 
 name: _redirect
 
-param: Solar_Uri|string, $spec
-
-param: bool, $external, false
+param: Solar_Uri_Action|string, $spec
 
 return: void
 
@@ -18,9 +16,7 @@ Redirects to another page and action.
 
 * Parameters:
 
- * Solar_Uri|string //$spec//: The URI to redirect to.
-
- * bool //$external//: Treat as a link to an external URI; i.e., not as a page-action link.
+ * Solar_Uri_Action|string //$spec//: The URI to redirect to.
 
 * Returns void
 

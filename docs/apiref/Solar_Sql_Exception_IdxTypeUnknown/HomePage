@@ -10,4 +10,6 @@
 
    * Solar_Sql_Exception_IdxTypeUnknown
 
+++ Overview
+
 Exception: index type is unknown (should be 'normal' or 'unique').

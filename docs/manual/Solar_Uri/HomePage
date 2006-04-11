@@ -1,6 +1,15 @@
-This class helps you to create and manipulate URIs, including query strings and path-info elements.  It does so by splitting up the pieces of the URI and allowing you modify them individually; you can then then export the components as a single URI string.  This helps when building complex links, such as in a paged navigation system.
+This class helps you to create and manipulate URIs, including query
+strings and path elements. It does so by splitting up the pieces of the
+URI and allowing you modify them individually; you can then then fetch
+them as a single URI string. This helps when building complex links,
+such as in a paged navigation system.
 
-The following is a simple example.  Say that the page address is currently \\``http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor``\\ (note the path-info string after the index.php script name).  You can use Solar_Uri to parse this complex string very easily:
+> Note: For controller action URIs, use [Solar_Uri_Action::HomePage Solar_Uri_Action] instead.  Likewise, for public resource URIs, use [Solar_Uri_Public::HomePage Solar_Uri_Public] instead.
+
+The following is a simple example. Say that the page address is
+currently
+\\``http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor``\\.
+You can use Solar_Uri to parse this complex string very easily:
 
 <code type="php">
 require_once 'Solar.php';
@@ -18,13 +27,13 @@ $uri = Solar::factory('Solar_Uri');
 // $uri->host     => 'example.com'
 // $uri->user     => 'anonymous'
 // $uri->pass     => 'guest'
-// $uri->path     => '/path/to/index.php'
-// $uri->info     => array('foo', 'bar')
+// $uri->path     => array('path', 'to', 'index.php', 'foo', 'bar')
 // $uri->query    => array('baz' => 'dib')
 // $uri->fragment => 'anchor'
 </code>
 
-Now that we have imported the URI and had it parsed automatically, we can modify the component parts, then export a new URI string.
+Now that we have imported the URI and had it parsed automatically, we
+can modify the component parts, then fetch a new URI string.
 
 <code type="php">
 // change to 'https://'
@@ -38,16 +47,29 @@ $uri->pass = '';
 $uri->setQuery('baz', 'zab');
 
 // add a new query element called 'zim' with a value of 'gir'
-$uri->addQuery('zim', 'gir');
+$uri->query['zim'] = 'gir';
 
-// reset the pathinfo to something else entirely
-$uri->setInfoString('/something/else');
+// reset the path to something else entirely
+$uri->setPath('/something/else/entirely.php');
 
-// and export it to a string.
-$new_uri = $uri->export();
+// add a path element
+$uri->path[] = 'another';
+
+// and fetch it to a string.
+$new_uri = $uri->fetch();
 
 // the $new_uri string is:
-// https://example.com/path/to/index.php/something/else?baz=zab&zim=gir#anchor
+// /something/else/entirely.php/another?baz=zab&zim=gir#anchor
+
+// wait, there's no scheme or host!
+// we need to fetch the "full" URI.
+$full_uri = $uri->fetch(true);
+
+// the $full_uri string is:
+// https://example.com/something/else/entirely.php/another?baz=zab&zim=gir#anchor
+
 </code>
 
-As you can see, this class is quite powerful when it comes to URIs.  For more information, be sure to read about the various PublicMethods.
+As you can see, this class is quite powerful when it comes to URIs. For
+more information, be sure to read about the various ClassMethods.
+

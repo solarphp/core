@@ -4,16 +4,16 @@ User-provided configuration.
 
 Keys are:
 
-driver => (string) Driver class, e.g. 'Solar_Sql_Driver_Mysql'.
+: \\driver\\ : (string) The driver class to use, e.g. 'Solar_Sql_Driver_Mysql'.
 
-host => (string) Host specification (typically 'localhost').
+: \\host\\ : (string) Host specification (typically '127.0.0.1').
 
-port => (string) Port number for the host name.
+: \\port\\ : (string) Port number for the host name.
 
-user => (string) Connect to the database as this username.
+: \\user\\ : (string) Connect to the database as this username.
 
-pass => (string) Password associated with the username.
+: \\pass\\ : (string) Password associated with the username.
 
-name => (string) Database name (or file path, or TNS name).
+: \\name\\ : (string) Database name (or file path, or TNS name).
 
-mode => (string) For SQLite, an octal file mode.
+: \\mode\\ : (string) For SQLite, an octal file mode.

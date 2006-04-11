@@ -8,6 +8,8 @@
 
   * Solar_View_Helper_Form
 
+++ Overview
+
 Helper for building CSS-based forms.
 
 This is a fluent class; all method calls except fetch() return

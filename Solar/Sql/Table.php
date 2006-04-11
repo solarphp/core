@@ -680,8 +680,8 @@ class Solar_Sql_Table extends Solar_Base {
             // if null and required, it's not valid.
             if ($require && is_null($value)) {
                 $err[$field][] = array(
-                    'code' => 'ERR_DATA_REQUIRED',
-                    'text' => $this->_sql->locale('ERR_DATA_REQUIRED'),
+                    'code' => 'VALID_NOTBLANK',
+                    'text' => $this->_locale('VALID_NOTBLANK'),
                     'data' => $value,
                     'info' => array(),
                 );
@@ -713,8 +713,8 @@ class Solar_Sql_Table extends Solar_Base {
                 $max = $this->_col[$field]['size'];
                 if ($len > $max) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_MAXSIZE',
-                        'text' => $this->_sql->locale('ERR_DATA_MAXSIZE'),
+                        'code' => 'VALID_MAXLENGTH',
+                        'text' => $this->_locale('VALID_MAXLENGTH'),
                         'data' => $value,
                         'info' => array(
                             'max' => $max,
@@ -730,8 +730,8 @@ class Solar_Sql_Table extends Solar_Base {
                 if ($value < $int_range[$type][0] ||
                     $value > $int_range[$type][1]) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_INTRANGE',
-                        'text' => $this->_sql->locale('ERR_DATA_INTRANGE'),
+                        'code' => 'VALID_INRANGE',
+                        'text' => $this->_locale('VALID_INRANGE'),
                         'data' => $value,
                         'info' => array(
                             'min' => $int_range[$type][0],
@@ -751,8 +751,8 @@ class Solar_Sql_Table extends Solar_Base {
                 $scope = $this->_col[$field]['scope'];
                 if (! $valid->inScope($value, $size, $scope)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_NUMRANGE',
-                        'text' => $this->_sql->locale('ERR_DATA_NUMRANGE'),
+                        'code' => 'VALID_INSCOPE',
+                        'text' => $this->_locale('VALID_INSCOPE'),
                         'data' => $value,
                         'info' => array(
                             'size' => $size,
@@ -766,8 +766,8 @@ class Solar_Sql_Table extends Solar_Base {
                 settype($value, 'string');
                 if (! $valid->isoDate($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_DATE',
-                        'text' => $this->_sql->locale('ERR_DATA_DATE'),
+                        'code' => 'VALID_DATE',
+                        'text' => $this->_locale('VALID_DATE'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -782,8 +782,8 @@ class Solar_Sql_Table extends Solar_Base {
                 }
                 if (! $valid->isoTime($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_TIME',
-                        'text' => $this->_sql->locale('ERR_DATA_TIME'),
+                        'code' => 'VALID_TIME',
+                        'text' => $this->_locale('VALID_TIME'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -796,8 +796,8 @@ class Solar_Sql_Table extends Solar_Base {
                 $value = substr($value, 0, 10) . 'T' . substr($value, 11, 8);
                 if (! $valid->isoTimestamp($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_TIMESTAMP',
-                        'text' => $this->_sql->locale('ERR_DATA_TIMESTAMP'),
+                        'code' => 'VALID_TIMESTAMP',
+                        'text' => $this->_locale('VALID_TIMESTAMP'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -865,7 +865,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         if ($err) {
             // there were errors, throw an exception
-            throw $this->_exception('ERR_DATA', $err);
+            throw $this->_exception('ERR_INVALID_DATA', $err);
         }
     }
 }

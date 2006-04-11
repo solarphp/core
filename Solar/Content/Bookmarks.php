@@ -51,7 +51,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      * @var array
      * 
      */
-    protected $_form = array('id', 'uri', 'subj', 'summ', 'tags', 'rank');
+    protected $_form = array('id', 'uri', 'subj', 'summ', 'tags', 'pos');
     
     /**
      * 
@@ -179,7 +179,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
         $form->elements['bookmark[subj]']['attribs']['size'] = 48;
         $form->elements['bookmark[summ]']['attribs']['size'] = 48;
         $form->elements['bookmark[tags]']['attribs']['size'] = 48;
-        $form->elements['bookmark[rank]']['attribs']['size'] = 5;
+        $form->elements['bookmark[pos]']['attribs']['size'] = 5;
         return $form;
     }
 }

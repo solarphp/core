@@ -10,7 +10,7 @@ param: array, $data
 
 param: string|array, $where
 
-return: void
+return: int
 
 </function>
 
@@ -24,6 +24,8 @@ Updates a table with specified data based on a WHERE clause.
 
  * string|array //$where//: The SQL WHERE clause to limit which rows are updated.
 
-* Returns void
+* Returns int: The number of rows affected.
 
 Updates a table with specified data based on a WHERE clause.
+
+Automatically applies Solar_Sql::quote() to the data values for you.

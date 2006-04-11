@@ -594,7 +594,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $href = str_replace(array("\r", "\n"), '', $spec);
         } else {
             $uri = Solar::factory('Solar_Uri_Action');
-            $href = $uri->fetch($spec);
+            $href = $uri->quick($spec);
         }
         
         // make sure there's actually an href
@@ -637,8 +637,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set the view to the most-recent action (this one ;-).
         // we do so before running the script so that the script
         // can override the view if needed.  note that this means
-        // the view dirs need to match the action dirs.
-        $this->_view = $action;
+        // the view dirs need to match the action dirs.  also,
+        // replace dashes with slashes for subdirectories.
+        $this->_view = str_replace('-', '/', $action);
         
         // run the action script, which may itself _forward() to
         // other actions.

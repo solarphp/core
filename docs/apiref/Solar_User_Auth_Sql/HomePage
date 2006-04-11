@@ -6,4 +6,6 @@
 
  * Solar_User_Auth_Sql
 
+++ Overview
+
 Authenticate against an SQL database table.

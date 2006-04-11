@@ -4,24 +4,20 @@ access:   public
 
 name: setQuery
 
-param: string, $key
-
-param: string, $val, ''
+param: string, $spec
 
 return: void
 
 </function>
 
-Sets the value of an element in the $this->query array.
+Sets the Solar_Uri::$query array from a string.
 
 * Parameters:
 
- * string //$key//: The GET variable name to work with.
-
- * string //$val//: The value to use.
+ * string //$spec//: The query string to use; for example, "foor=bar&baz=dib".
 
 * Returns void
 
-Sets the value of an element in the $this->query array.
+Sets the Solar_Uri::$query array from a string.
 
-This will overwrite any previous value.
+This will overwrite any previous values.

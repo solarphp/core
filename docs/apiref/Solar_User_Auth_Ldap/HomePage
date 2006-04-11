@@ -6,4 +6,6 @@
 
  * Solar_User_Auth_Ldap
 
+++ Overview
+
 Authenticate against an LDAP server.

@@ -14,28 +14,33 @@ return: string
 
 </function>
 
-Creates an index on a table.
+Creates a portable index on a table.
 
 * Parameters:
 
  * string //$table//: The name of the table for the index (1-30 chars).
 
- * string //$name//: The name of the index (1-27 chars).
+ * string //$name//: The name of the index (1-28 chars).
 
  * string|array //$info//: Information about the index.
 
 * Returns string: An SQL string.
 
-Creates an index on a table.
+Creates a portable index on a table.
 
 The $info parameter should be in this format:
 
-$info = array('type', 'col'); // single-col
+<code type="php">
+$type = 'normal';
 
-$info = array('type', array('col', 'col', 'col')), // multi-col
+$info = array($type, 'col'); // single-col
 
-$info = 'type'; // shorthand for single-col named for $name
+$info = array($type, array('col', 'col', 'col')), // multi-col
 
-The type may be 'normal' or 'unique'.
+$info = $type; // shorthand for single-col named for $name
+</code>
 
-Indexes are automatically renamed to "tablename__indexname__i".
+The $type may be 'normal' or 'unique'.
+
+Indexes are automatically renamed to "tablename__indexname__i" for
+portability reasons.

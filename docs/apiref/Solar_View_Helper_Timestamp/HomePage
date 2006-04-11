@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Timestamp
 
+++ Overview
+
 Helper for a formatted timestamp using [[php date()]] conventions.

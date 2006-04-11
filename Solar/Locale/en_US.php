@@ -63,7 +63,7 @@ return array(
     'VALID_INSCOPE'              => 'This value is not in the proper scope.',
     'VALID_INTEGER'              => 'Please use only whole numbers.',
     'VALID_ISODATE'              => 'Please enter a date in "yyyy-mm-dd" format.',
-    'VALID_ISODATETIME'          => 'Please enter a date-time in "yyyy-mm-ddThh:ii:ss" format.',
+    'VALID_ISOTIMESTAMP'         => 'Please enter a timestamp in "yyyy-mm-ddThh:ii:ss" format.',
     'VALID_ISOTIME'              => 'Please enter a time in "hh:ii:ss" format.',
     'VALID_MAX'                  => 'Please enter a smaller value.',
     'VALID_MAXLENGTH'            => 'Please enter a shorter string.',

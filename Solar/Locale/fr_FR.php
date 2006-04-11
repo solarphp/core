@@ -53,7 +53,7 @@ return array(
     'VALID_INSCOPE'      => 'Cette valeur n\'appartient pas à la cible définie.',
     'VALID_INTEGER'      => 'Veuillez exclusivement utiliser des nombres entiers.',
     'VALID_ISODATE'      => 'Veuillez entrer une date au format "yyyy-mm-dd".',
-    'VALID_ISODATETIME'  => 'Veuillez entrer une date-temps au format "yyyy-mm-ddThh:mm:ss".',
+    'VALID_ISOTIMESTAMP' => 'Veuillez entrer une date-temps au format "yyyy-mm-ddThh:mm:ss".',
     'VALID_ISOTIME'      => 'Veuillez entrer un temps au format "hh:mm:ss".',
     'VALID_MAX'          => 'Veuillez entrer une valeur plus petite.',
     'VALID_MAXLENGTH'    => 'Veuillez entrer un texte moins long.',

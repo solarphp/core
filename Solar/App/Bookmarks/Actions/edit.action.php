@@ -93,13 +93,16 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
             $this->_redirect($href);
         }
         
-    } catch (Solar_Exception $e) {
+    } catch (Solar_Sql_Table_Exception $e) {
         
         // exception on save()
         // we should not have gotten to this point,
         // but need to be aware of possible problems.
+        $form->setStatus(false);
         $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
         
+        // add bookmark[*] element feedback
+        $form->addFeedback($e->getInfo(), 'bookmark');
     }
 }
 

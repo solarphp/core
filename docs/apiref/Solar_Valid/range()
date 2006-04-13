@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: range
+
+param: mixed, $value
+
+param: mixed, $min
+
+param: mixed, $max
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is within a given range.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * mixed //$min//: The minimum valid value.
+
+ * mixed //$max//: The maximum valid value.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Validate that a value is within a given range.

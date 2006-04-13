@@ -14,11 +14,11 @@
 
 * Solar_Valid::email() -- Validate that a value is an email address.
 
+* Solar_Valid::feedback() -- Validate a value using a callback, and return a message if validation fails.
+
 * Solar_Valid::inKeys() -- Validate that the value is a key in the list of allowed options.
 
 * Solar_Valid::inList() -- Validate that a value is in a list of allowed values.
-
-* Solar_Valid::inScope() -- See a value has only a certain number of digits and decimals.
 
 * Solar_Valid::integer() -- Validate that a value represents an integer (+/-).
 
@@ -48,7 +48,13 @@
 
 * Solar_Valid::notZero() -- Validate that a value is not exactly zero.
 
+* Solar_Valid::range() -- Validate that a value is within a given range.
+
+* Solar_Valid::rangeLength() -- Validate that the length of a value is within a given range.
+
 * Solar_Valid::regex() -- Validate a value against a regular expression.
+
+* Solar_Valid::scope() -- See a value has only a certain number of digits and decimals.
 
 * Solar_Valid::sepWords() -- Validate that a value is composed of separated words.
 

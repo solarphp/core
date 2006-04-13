@@ -546,30 +546,13 @@ class Solar_Sql_Table extends Solar_Base {
             // make sure there's a name
             $info['name'] = $name;
             
-            // if 'valid' is not already an array, make it
-            // one as a simple Solar_Valid call.
-            if (! is_array($info['valid'])) {
+            // if 'valid' is a string, make the validation a simple
+            // Solar_Valid method call.
+            if (is_string($info['valid'])) {
                 $info['valid'] = array(
-                    array(
-                        $info['valid'], // the method
-                        $this->locale(strtoupper("VALID_$name")) // validation message
-                    )
+                    $info['valid'],
+                    'VALID_' . strtoupper($info['valid']),
                 );
-            } else {
-                // insert the validation message into the array
-                foreach ($info['valid'] as $key => $val) {
-                    // shift the validation function off the top
-                    $func = array_shift($val);
-                    // add the validation message
-                    // after the function name
-                    array_unshift(
-                        $val,
-                        $func,
-                        $this->locale(strtoupper("VALID_$name"))
-                    );
-                    // save the new version of the validations
-                    $info['valid'][$key] = $val;
-                }
             }
             
             
@@ -681,7 +664,7 @@ class Solar_Sql_Table extends Solar_Base {
             if ($require && is_null($value)) {
                 $err[$field][] = array(
                     'code' => 'VALID_NOTBLANK',
-                    'text' => $this->_locale('VALID_NOTBLANK'),
+                    'text' => $this->locale('VALID_NOTBLANK'),
                     'data' => $value,
                     'info' => array(),
                 );
@@ -714,7 +697,7 @@ class Solar_Sql_Table extends Solar_Base {
                 if ($len > $max) {
                     $err[$field][] = array(
                         'code' => 'VALID_MAXLENGTH',
-                        'text' => $this->_locale('VALID_MAXLENGTH'),
+                        'text' => $this->locale('VALID_MAXLENGTH'),
                         'data' => $value,
                         'info' => array(
                             'max' => $max,
@@ -731,7 +714,7 @@ class Solar_Sql_Table extends Solar_Base {
                     $value > $int_range[$type][1]) {
                     $err[$field][] = array(
                         'code' => 'VALID_INRANGE',
-                        'text' => $this->_locale('VALID_INRANGE'),
+                        'text' => $this->locale('VALID_INRANGE'),
                         'data' => $value,
                         'info' => array(
                             'min' => $int_range[$type][0],
@@ -752,7 +735,7 @@ class Solar_Sql_Table extends Solar_Base {
                 if (! $valid->inScope($value, $size, $scope)) {
                     $err[$field][] = array(
                         'code' => 'VALID_INSCOPE',
-                        'text' => $this->_locale('VALID_INSCOPE'),
+                        'text' => $this->locale('VALID_INSCOPE'),
                         'data' => $value,
                         'info' => array(
                             'size' => $size,
@@ -767,7 +750,7 @@ class Solar_Sql_Table extends Solar_Base {
                 if (! $valid->isoDate($value)) {
                     $err[$field][] = array(
                         'code' => 'VALID_DATE',
-                        'text' => $this->_locale('VALID_DATE'),
+                        'text' => $this->locale('VALID_DATE'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -783,7 +766,7 @@ class Solar_Sql_Table extends Solar_Base {
                 if (! $valid->isoTime($value)) {
                     $err[$field][] = array(
                         'code' => 'VALID_TIME',
-                        'text' => $this->_locale('VALID_TIME'),
+                        'text' => $this->locale('VALID_TIME'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -797,7 +780,7 @@ class Solar_Sql_Table extends Solar_Base {
                 if (! $valid->isoTimestamp($value)) {
                     $err[$field][] = array(
                         'code' => 'VALID_TIMESTAMP',
-                        'text' => $this->_locale('VALID_TIMESTAMP'),
+                        'text' => $this->locale('VALID_TIMESTAMP'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -807,9 +790,28 @@ class Solar_Sql_Table extends Solar_Base {
             
             // -------------------------------------------------------------
             // 
-            // Content validations
+            // Content validations, if any
             // 
             
+            if ($this->_col[$field]['valid']) {
+                
+                // the error code if validation fails.
+                // (0 is the method, 1 is the message, 2... are params)
+                $code = $this->_col[$field]['valid'][1];
+                
+                // if there was a message returned, then validation failed.
+                if ($valid->feedback($value, $this->_col[$field]['valid'])) {
+                    $err[$field][] = array(
+                        'code' => $code,
+                        'text' => $this->locale($code),
+                        'data' => $value,
+                        'info' =>  array(),
+                    );
+                }
+            }
+            
+            
+            /*
             // loop through each validation rule
             foreach ($this->_col[$field]['valid'] as $args) {
                 
@@ -844,7 +846,7 @@ class Solar_Sql_Table extends Solar_Base {
                     );
                 }
             } // endforeach
-            
+            */
             
             // ---------------------------------------------------------
             // 

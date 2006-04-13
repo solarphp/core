@@ -111,9 +111,17 @@ class Solar_Form_Load_Table extends Solar_Base {
                 'options'  => array(),
                 'attribs'  => array(),
                 'feedback' => array(),
-                'valid'    => $table->col[$name]['valid'],
+                'valid'    => array(),
             );
             $info = array_merge($base, $info);
+            
+            if (! empty($table->col[$name]['valid'])) {
+                // get the validation array...
+                $info['valid'][0] = $table->col[$name]['valid'];
+                // ... and translate the message using the 
+                // **table** locale strings.
+                $info['valid'][0][1] = $table->locale($info['valid'][0][1]);
+            }
             
             // make primary keys hidden and disabled
             if ($table->col[$name]['primary']) {
@@ -244,10 +252,12 @@ class Solar_Form_Load_Table extends Solar_Base {
             $elements[$info['name']] = $info;
         }
         
-        return array(
+        $result = array(
             'attribs'  => array(),
             'elements' => $elements
         );
+        
+        return $result;
     }
 }
 ?>

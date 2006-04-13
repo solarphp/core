@@ -784,5 +784,57 @@ class Solar_Valid extends Solar_Base {
         $expr = '/^\w+$/';
         return $this->regex($value, $expr, $blank);
     }
+    
+    /**
+     * 
+     * Validate a value using a callback, and return a message if validation fails.
+     * 
+     * This method is the **opposite** of all other Solar_Valid methods,
+     * because it returns a message if validation fails, and returns
+     * null if validation succeeds.  This is useful for Solar_Sql_Table
+     * and Solar_Form validation checking, and other places where
+     * you need automated validation with feedback messaging.
+     * 
+     * The $args param is a sequential array, in the format of array('method',
+     * 'message', array_of_parameters_for_callback).  This is so that the
+     * Solar_Form and other similar callback systems can use a consistent
+     * format for storing validation requirements.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param array $args An array of at least two elements; 0 is the Solar_Valid
+     * method to call, 1 is the feedback message to return if validation fails,
+     * and all additional elements are additional parameters to pass to the
+     * Solar_Valid method.
+     * 
+     * @return string|void The feedback message if validation fails, or null
+     * if the validation succeeded.  Note that this is the opposite of all other
+     * Solar_Valid returns.
+     * 
+     */
+    public function feedback($value, $args)
+    {
+        // need at least a method and a message in $args
+        if (count($args) < 2) {
+            throw $this->_exception('ERR_NOT_ENOUGH_ARGS');
+        }
+        
+        // get the method and message,
+        // then put the value on top of the args
+        $method = array_shift($args);
+        $message = array_shift($args);
+        array_unshift($args, $value);
+        
+        // make the callback
+        $valid = call_user_func_array(
+            array($this, $method),
+            $args
+        );
+        
+        if (! $valid) {
+            // validation failed, return the message
+            return $message;
+        }
+    }
 }
 ?>

@@ -156,6 +156,58 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
+     * Validate a value using a callback, and return a message if validation fails.
+     * 
+     * This method is the **opposite** of all other Solar_Valid methods,
+     * because it returns a message if validation fails, but returns
+     * null if validation succeeds.  This is useful for Solar_Sql_Table
+     * and Solar_Form validation checking, and other places where
+     * you need automated validation with feedback messaging.
+     * 
+     * The $args param is a sequential array, in the format of array('method',
+     * 'message', ...) where additional parameters are passed to the callback.
+     * This is so that Solar_Form and other similar systems can use a
+     * consistent format for storing validation requirements.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param array $args An array of at least two elements; 0 is the Solar_Valid
+     * method to call, 1 is the feedback message to return if validation fails,
+     * and all remaining elements are additional parameters to pass to the
+     * Solar_Valid method.
+     * 
+     * @return string|void The feedback message if validation fails, or null
+     * if the validation succeeded.  Note that this is the opposite of all other
+     * Solar_Valid returns.
+     * 
+     */
+    public function feedback($value, $args)
+    {
+        // need at least a method and a message in $args
+        if (count($args) < 2) {
+            throw $this->_exception('ERR_NOT_ENOUGH_ARGS');
+        }
+        
+        // get the method and message,
+        // then put the value on top of the args
+        $method = array_shift($args);
+        $message = array_shift($args);
+        array_unshift($args, $value);
+        
+        // make the callback
+        $valid = call_user_func_array(
+            array($this, $method),
+            $args
+        );
+        
+        if (! $valid) {
+            // validation failed, return the message
+            return $message;
+        }
+    }
+    
+    /**
+     * 
      * Validate that the value is a key in the list of allowed options.
      * 
      * Given the keys of the array (second parameter), the value
@@ -202,62 +254,6 @@ class Solar_Valid extends Solar_Base {
         }
         
         return in_array($value, (array) $array, true);
-    }
-    
-    /**
-     * 
-     * See a value has only a certain number of digits and decimals.
-     * 
-     * The value must be numeric, can be no longer than the \\$size\\,
-     * and can have no more decimal places than the \\$scope\\.
-     * 
-     * @param mixed $value The value to validate.
-     * 
-     * @param int $size The total number of digits allowed in the value,
-     * excluding the negative sign and decimal point.
-     * 
-     * @param int $scope The maximum number of decimal places.
-     * 
-     * @param bool $blank Allow blank values to be valid.
-     * 
-     * @return bool True if valid, false if not.
-     * 
-     */
-    public function inScope($value, $size, $scope, $blank = Solar_Valid::NOT_BLANK)
-    {
-        // allowed blank?
-        if ($blank && $this->blank($value)) {
-            return true;
-        }
-        
-        // scope has to be smaller than size.
-        // both size and scope have to be positive numbers.
-        if ($size < $scope || $size < 0 || $scope < 0 ||
-            ! is_numeric($size) || ! is_numeric($scope)) {
-            return false;
-        }
-        
-        // value must be only numeric
-        if (! is_numeric($value)) {
-            return false;
-        }
-        
-        // drop trailing and leading zeroes
-        $value = (float) $value;
-        
-        // test the size (whole + decimal) and scope (decimal only).
-        // does not include signs (+/-) or the decimal point itself.
-        // 
-        // use the @ signs in strlen() checks to suppress errors
-        // when the match-element doesn't exist.
-        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/";
-        if (preg_match($expr, $value, $match) &&
-            @strlen($match[2] . $match[5]) <= $size &&
-            @strlen($match[5]) <= $scope) {
-            return true;
-        } else {
-            return false;
-        }
     }
     
     /**
@@ -641,6 +637,55 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
+     * Validate that a value is within a given range.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param mixed $min The minimum valid value.
+     * 
+     * @param mixed $max The maximum valid value.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function range($value, $min, $max, $blank = Solar_Valid::NOT_BLANK)
+    {
+        if ($blank && $this->blank($value)) {
+            return true;
+        }
+        
+        return ($value >= $min && $value <= $max);
+    }
+    
+    /**
+     * 
+     * Validate that the length of a value is within a given range.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param mixed $min The minimum valid length.
+     * 
+     * @param mixed $max The maximum valid length.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function rangeLength($value, $min, $max, $blank = Solar_Valid::NOT_BLANK)
+    {
+        if ($blank && $this->blank($value)) {
+            return true;
+        }
+        
+        $len = strlen($value);
+        return ($len >= $min && $len <= $max);
+    }
+    
+    /**
+     * 
      * Validate a value against a regular expression.
      * 
      * Uses [[php preg_match()]] to compare the value against the given
@@ -661,6 +706,62 @@ class Solar_Valid extends Solar_Base {
             return true;
         }
         return (bool) preg_match($expr, $value);
+    }
+    
+    /**
+     * 
+     * See a value has only a certain number of digits and decimals.
+     * 
+     * The value must be numeric, can be no longer than the \\$size\\,
+     * and can have no more decimal places than the \\$scope\\.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param int $size The total number of digits allowed in the value,
+     * excluding the negative sign and decimal point.
+     * 
+     * @param int $scope The maximum number of decimal places.
+     * 
+     * @param bool $blank Allow blank values to be valid.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function scope($value, $size, $scope, $blank = Solar_Valid::NOT_BLANK)
+    {
+        // allowed blank?
+        if ($blank && $this->blank($value)) {
+            return true;
+        }
+        
+        // scope has to be smaller than size.
+        // both size and scope have to be positive numbers.
+        if ($size < $scope || $size < 0 || $scope < 0 ||
+            ! is_numeric($size) || ! is_numeric($scope)) {
+            return false;
+        }
+        
+        // value must be only numeric
+        if (! is_numeric($value)) {
+            return false;
+        }
+        
+        // drop trailing and leading zeroes
+        $value = (float) $value;
+        
+        // test the size (whole + decimal) and scope (decimal only).
+        // does not include signs (+/-) or the decimal point itself.
+        // 
+        // use the @ signs in strlen() checks to suppress errors
+        // when the match-element doesn't exist.
+        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/";
+        if (preg_match($expr, $value, $match) &&
+            @strlen($match[2] . $match[5]) <= $size &&
+            @strlen($match[5]) <= $scope) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**
@@ -783,58 +884,6 @@ class Solar_Valid extends Solar_Base {
     {
         $expr = '/^\w+$/';
         return $this->regex($value, $expr, $blank);
-    }
-    
-    /**
-     * 
-     * Validate a value using a callback, and return a message if validation fails.
-     * 
-     * This method is the **opposite** of all other Solar_Valid methods,
-     * because it returns a message if validation fails, and returns
-     * null if validation succeeds.  This is useful for Solar_Sql_Table
-     * and Solar_Form validation checking, and other places where
-     * you need automated validation with feedback messaging.
-     * 
-     * The $args param is a sequential array, in the format of array('method',
-     * 'message', array_of_parameters_for_callback).  This is so that the
-     * Solar_Form and other similar callback systems can use a consistent
-     * format for storing validation requirements.
-     * 
-     * @param mixed $value The value to validate.
-     * 
-     * @param array $args An array of at least two elements; 0 is the Solar_Valid
-     * method to call, 1 is the feedback message to return if validation fails,
-     * and all additional elements are additional parameters to pass to the
-     * Solar_Valid method.
-     * 
-     * @return string|void The feedback message if validation fails, or null
-     * if the validation succeeded.  Note that this is the opposite of all other
-     * Solar_Valid returns.
-     * 
-     */
-    public function feedback($value, $args)
-    {
-        // need at least a method and a message in $args
-        if (count($args) < 2) {
-            throw $this->_exception('ERR_NOT_ENOUGH_ARGS');
-        }
-        
-        // get the method and message,
-        // then put the value on top of the args
-        $method = array_shift($args);
-        $message = array_shift($args);
-        array_unshift($args, $value);
-        
-        // make the callback
-        $valid = call_user_func_array(
-            array($this, $method),
-            $args
-        );
-        
-        if (! $valid) {
-            // validation failed, return the message
-            return $message;
-        }
     }
 }
 ?>

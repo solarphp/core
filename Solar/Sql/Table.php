@@ -692,9 +692,8 @@ class Solar_Sql_Table extends Solar_Base {
             case 'char':
             case 'varchar':
                 settype($value, 'string');
-                $len = strlen($value);
                 $max = $this->_col[$field]['size'];
-                if ($len > $max) {
+                if (! $valid->maxLength($value, $max, Solar_Valid::OR_BLANK)) {
                     $err[$field][] = array(
                         'code' => 'VALID_MAXLENGTH',
                         'text' => $this->locale('VALID_MAXLENGTH'),
@@ -710,15 +709,16 @@ class Solar_Sql_Table extends Solar_Base {
             case 'bigint':
             case 'smallint':
                 settype($value, 'int');
-                if ($value < $int_range[$type][0] ||
-                    $value > $int_range[$type][1]) {
+                $min = $int_range[$type][0];
+                $max = $int_range[$type][1];
+                if (! $valid->range($value, $min, $max)) {
                     $err[$field][] = array(
-                        'code' => 'VALID_INRANGE',
-                        'text' => $this->locale('VALID_INRANGE'),
+                        'code' => 'VALID_RANGE',
+                        'text' => $this->locale('VALID_RANGE'),
                         'data' => $value,
                         'info' => array(
-                            'min' => $int_range[$type][0],
-                            'max' => $int_range[$type][1],
+                            'min' => $min,
+                            'max' => $max,
                         ),
                     );
                 }
@@ -732,10 +732,10 @@ class Solar_Sql_Table extends Solar_Base {
                 settype($value, 'float');
                 $size = $this->_col[$field]['size'];
                 $scope = $this->_col[$field]['scope'];
-                if (! $valid->inScope($value, $size, $scope)) {
+                if (! $valid->scope($value, $size, $scope)) {
                     $err[$field][] = array(
-                        'code' => 'VALID_INSCOPE',
-                        'text' => $this->locale('VALID_INSCOPE'),
+                        'code' => 'VALID_SCOPE',
+                        'text' => $this->locale('VALID_SCOPE'),
                         'data' => $value,
                         'info' => array(
                             'size' => $size,
@@ -809,44 +809,6 @@ class Solar_Sql_Table extends Solar_Base {
                     );
                 }
             }
-            
-            
-            /*
-            // loop through each validation rule
-            foreach ($this->_col[$field]['valid'] as $args) {
-                
-                // the name of the Solar_Valid method
-                $method = array_shift($args);
-                
-                // the error code and message to use
-                // if an error is generated
-                $code = 'VALID_' . strtoupper($field);
-                $message = array_shift($args);
-                if (empty($message)) {
-                    $message = $this->locale($code);
-                }
-                
-                // validation config is now the remaining arguments,
-                // put the value on top of it.
-                array_unshift($args, $value);
-                
-                // call the appropriate Solar_Valid method
-                $result = call_user_func_array(
-                    array($valid, $method),
-                    $args
-                );
-                
-                // was it valid?
-                if (! $result) {
-                    $err[$field][] = array(
-                        'code' => $code,
-                        'text' => $message,
-                        'data' => $value,
-                        'info' =>  array(),
-                    );
-                }
-            } // endforeach
-            */
             
             // ---------------------------------------------------------
             // 

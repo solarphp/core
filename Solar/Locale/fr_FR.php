@@ -50,7 +50,7 @@ return array(
     'VALID_EMAIL'        => 'Veuillez entrer une adresse email valide.',
     'VALID_INKEYS'       => 'Veuillez choisir une valeur différente.',
     'VALID_INLIST'       => 'Veuillez choisir une valeur différente.',
-    'VALID_INSCOPE'      => 'Cette valeur n\'appartient pas à la cible définie.',
+    'VALID_SCOPE'      => 'Cette valeur n\'appartient pas à la cible définie.',
     'VALID_INTEGER'      => 'Veuillez exclusivement utiliser des nombres entiers.',
     'VALID_ISODATE'      => 'Veuillez entrer une date au format "yyyy-mm-dd".',
     'VALID_ISOTIMESTAMP' => 'Veuillez entrer une date-temps au format "yyyy-mm-ddThh:mm:ss".',

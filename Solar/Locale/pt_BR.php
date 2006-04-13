@@ -60,7 +60,7 @@ return array(
     'VALID_EMAIL'                => 'Por favor, entre com um endereço de email válido.',
     'VALID_INKEYS'               => 'Por favor, selecione um valor diferente.',
     'VALID_INLIST'               => 'Por favor, selecione um valor diferente.',
-    'VALID_INSCOPE'              => 'Este valor náo está contido em um escopo apropriado.',
+    'VALID_SCOPE'              => 'Este valor náo está contido em um escopo apropriado.',
     'VALID_INTEGER'              => 'Por favor, utilize apenas números inteiros.',
     'VALID_ISODATE'              => 'Por favor, entre com uma data no formato "yyyy-mm-dd".',
     'VALID_ISOTIMESTAMP'         => 'Por favor, entre com a data e o tempo (data-tempo) no formato "yyyy-mm-ddThh:ii:ss".',

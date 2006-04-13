@@ -1,5 +1,5 @@
 --TEST--
-Solar_Valid::inScope()
+Solar_Valid::scope()
 --FILE---
 <?php
 // include ../_prepend.inc
@@ -56,13 +56,13 @@ $scope = 4;
 // good
 foreach ($good as $val) {
     $assert->setLabel($val);
-    $assert->isTrue($valid->inScope($val, $size, $scope));
+    $assert->isTrue($valid->scope($val, $size, $scope));
 }
 
 // bad, or are blank
 foreach ($bad as $val) {
     $assert->setLabel($val);
-    $assert->isFalse($valid->inScope($val, $size, $scope));
+    $assert->isFalse($valid->scope($val, $size, $scope));
 }
 
 // blanks allowed
@@ -71,7 +71,7 @@ $test[] = "";
 $test[] = " ";
 foreach ($test as $val) {
     $assert->setLabel($val);
-    $assert->isTrue($valid->inScope($val, $size, $scope, Solar_Valid::OR_BLANK));
+    $assert->isTrue($valid->scope($val, $size, $scope, Solar_Valid::OR_BLANK));
 }
 
 

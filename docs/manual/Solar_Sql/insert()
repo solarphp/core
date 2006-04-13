@@ -1,0 +1,15 @@
+For example:
+
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
+$table = 'invaders';
+$data = array(
+    'irken' => 'zim',
+    'robot' => 'gir',
+    'human' => 'dib'
+);
+
+$rows_affected = $sql->insert($table, $data);
+// calls 'INSERT INTO invaders (irken, robot, human) VALUES ("zim", "gir", "dib")'
+</code>

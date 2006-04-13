@@ -10,14 +10,12 @@ return: int
 
 </function>
 
-Gets the next number in a sequence number.
+Gets the next number in a sequence; creates the sequence if it does not exist.
 
 * Parameters:
 
- * string //$name//: The sequence name.
+ * string //$name//: The sequence name; this will be  automatically suffixed with '__s' for portability reasons.
 
-* Returns int: The next sequence number.
+* Returns int: The next number in the sequence.
 
-Gets the next number in a sequence number.
-
-Creates the sequence if it does not exist.
+Gets the next number in a sequence; creates the sequence if it does not exist.

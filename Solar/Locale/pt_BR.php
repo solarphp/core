@@ -60,11 +60,10 @@ return array(
     'VALID_EMAIL'                => 'Por favor, entre com um endereço de email válido.',
     'VALID_INKEYS'               => 'Por favor, selecione um valor diferente.',
     'VALID_INLIST'               => 'Por favor, selecione um valor diferente.',
-    'VALID_INSCOPE'              => 'Este valor náo está contido em um escopo apropriado.',
+    'VALID_SCOPE'              => 'Este valor náo está contido em um escopo apropriado.',
     'VALID_INTEGER'              => 'Por favor, utilize apenas números inteiros.',
     'VALID_ISODATE'              => 'Por favor, entre com uma data no formato "yyyy-mm-dd".',
-    'VALID_ISODATETIME'          => 'Por favor, entre com a data e o tempo (data-tempo) no formato
-"yyyy-mm-ddThh:ii:ss".',
+    'VALID_ISOTIMESTAMP'         => 'Por favor, entre com a data e o tempo (data-tempo) no formato "yyyy-mm-ddThh:ii:ss".',
     'VALID_ISOTIME'              => 'Por favor, entre com o horário no formato "hh:ii:ss".',
     'VALID_MAX'                  => 'Por favor, entre com um valor menor.',
     'VALID_MAXLENGTH'            => 'Por favor, entre com uma string menor.',
@@ -72,10 +71,9 @@ return array(
     'VALID_MINLENGTH'            => 'Por favor, entre com uma string maior.',
     'VALID_NOTZERO'              => 'Este valor não pode ser zero.',
     'VALID_NOTBLANK'             => 'Este valor não pode ser deixado em branco.',
-    'VALID_SEPWORDS'             => 'Por favor, utilize apenas letras (A-Z), números (0-9),
-underscores(_), e separadores.',
+    'VALID_SEPWORDS'             => 'Por favor, utilize apenas letras (A-Z), números (0-9), underscores (_), e separadores.',
     'VALID_URI'                  => 'Por favor, entre com um endereço web válido.',
-    'VALID_WORD'                 => 'Por favor, utilize apenas letras (A-Z), números (0-9), e underscores(_).',
+    'VALID_WORD'                 => 'Por favor, utilize apenas letras (A-Z), números (0-9), e underscores (_).',
     
     // success feedback messages
     'SUCCESS_FORM'               => 'Salvo.',

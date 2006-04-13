@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Attribs
 
+++ Overview
+
 Plugin to convert an associative array to a string of tag attributes.

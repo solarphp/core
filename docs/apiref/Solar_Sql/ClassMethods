@@ -4,25 +4,25 @@
 
 * Solar_Sql::__construct() -- Constructor.
 
-* Solar_Sql::addColumn() -- Adds a column to a table in the database.
+* Solar_Sql::addColumn() -- Adds a portable column to a table in the database.
 
 * Solar_Sql::begin() -- Leave autocommit mode and begin a transaction.
 
 * Solar_Sql::commit() -- Commit a transaction and return to autocommit mode.
 
-* Solar_Sql::createIndex() -- Creates an index on a table.
+* Solar_Sql::createIndex() -- Creates a portable index on a table.
 
-* Solar_Sql::createSequence() -- Create a sequence in the database.
+* Solar_Sql::createSequence() -- Creates a sequence in the database.
 
-* Solar_Sql::createTable() -- Creates a table.
+* Solar_Sql::createTable() -- Creates a portable table.
 
 * Solar_Sql::delete() -- Deletes rows from the table based on a WHERE clause.
 
-* Solar_Sql::dropColumn() -- Drops a columns from a table in the database.
+* Solar_Sql::dropColumn() -- Drops a column from a table in the database.
 
 * Solar_Sql::dropIndex() -- Drops an index from a table in the database.
 
-* Solar_Sql::dropSequence() -- Drop a sequence from the database.
+* Solar_Sql::dropSequence() -- Drops a sequence from the database.
 
 * Solar_Sql::dropTable() -- Drops a table from the database.
 
@@ -30,7 +30,7 @@
 
 * Solar_Sql::listTables() -- Returns a list of table names in the database.
 
-* Solar_Sql::nextSequence() -- Gets the next number in a sequence number.
+* Solar_Sql::nextSequence() -- Gets the next number in a sequence; creates the sequence if it does not exist.
 
 * Solar_Sql::query() -- Generic query executor.
 

@@ -8,4 +8,6 @@
 
   * Solar_View_Helper_Image
 
+++ Overview
+
 Helper to generate an <img ... /> tag.

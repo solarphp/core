@@ -8,4 +8,6 @@
 
   * Solar_Sql_Driver_Mssql
 
+++ Overview
+
 Class for connecting to Microsoft SQL databases.

@@ -6,4 +6,6 @@
 
  * Solar_User_Role_Sql
 
+++ Overview
+
 Get user roles from an SQL database table.

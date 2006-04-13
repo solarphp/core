@@ -8,7 +8,7 @@ param: string, $table
 
 param: array, $data
 
-return: void
+return: int
 
 </function>
 
@@ -20,6 +20,8 @@ Inserts a row of data into a table.
 
  * array //$data//: An associative array where the key is the column name and the value is the value to insert for that column.
 
-* Returns void
+* Returns int: The number of rows affected, typically 1.
 
 Inserts a row of data into a table.
+
+Automatically applies Solar_Sql::quote() to the data values for you.

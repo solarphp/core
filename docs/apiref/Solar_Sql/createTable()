@@ -12,7 +12,7 @@ return: string
 
 </function>
 
-Creates a table.
+Creates a portable table.
 
 * Parameters:
 
@@ -22,10 +22,11 @@ Creates a table.
 
 * Returns string: An SQL string.
 
-Creates a table.
+Creates a portable table.
 
 The $cols parameter should be in this format:
 
+<code type="php">
 $cols = array(
   'fieldOne' => array(
     'type'    => bool|char|int|etc,
@@ -35,3 +36,6 @@ $cols = array(
   ),
   'fieldTwo' => array(...)
 );
+</code>
+
+For available field types, see Solar_Sql_Driver::$_native.

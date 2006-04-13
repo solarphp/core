@@ -6,6 +6,8 @@
 
  * Solar_Sql_Select
 
+++ Overview
+
 Class for SQL select generation and results.
 
 Example usage:

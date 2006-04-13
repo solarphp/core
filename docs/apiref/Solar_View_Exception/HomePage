@@ -1,0 +1,13 @@
++ The Solar_View_Exception Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * Solar_View_Exception
+
+++ Overview
+
+Generic Solar_View exception.

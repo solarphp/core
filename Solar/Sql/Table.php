@@ -546,30 +546,13 @@ class Solar_Sql_Table extends Solar_Base {
             // make sure there's a name
             $info['name'] = $name;
             
-            // if 'valid' is not already an array, make it
-            // one as a simple Solar_Valid call.
-            if (! is_array($info['valid'])) {
+            // if 'valid' is a string, make the validation a simple
+            // Solar_Valid method call.
+            if (is_string($info['valid'])) {
                 $info['valid'] = array(
-                    array(
-                        $info['valid'], // the method
-                        $this->locale(strtoupper("VALID_$name")) // validation message
-                    )
+                    $info['valid'],
+                    'VALID_' . strtoupper($info['valid']),
                 );
-            } else {
-                // insert the validation message into the array
-                foreach ($info['valid'] as $key => $val) {
-                    // shift the validation function off the top
-                    $func = array_shift($val);
-                    // add the validation message
-                    // after the function name
-                    array_unshift(
-                        $val,
-                        $func,
-                        $this->locale(strtoupper("VALID_$name"))
-                    );
-                    // save the new version of the validations
-                    $info['valid'][$key] = $val;
-                }
             }
             
             
@@ -680,8 +663,8 @@ class Solar_Sql_Table extends Solar_Base {
             // if null and required, it's not valid.
             if ($require && is_null($value)) {
                 $err[$field][] = array(
-                    'code' => 'ERR_DATA_REQUIRED',
-                    'text' => $this->_sql->locale('ERR_DATA_REQUIRED'),
+                    'code' => 'VALID_NOTBLANK',
+                    'text' => $this->locale('VALID_NOTBLANK'),
                     'data' => $value,
                     'info' => array(),
                 );
@@ -709,12 +692,11 @@ class Solar_Sql_Table extends Solar_Base {
             case 'char':
             case 'varchar':
                 settype($value, 'string');
-                $len = strlen($value);
                 $max = $this->_col[$field]['size'];
-                if ($len > $max) {
+                if (! $valid->maxLength($value, $max, Solar_Valid::OR_BLANK)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_MAXSIZE',
-                        'text' => $this->_sql->locale('ERR_DATA_MAXSIZE'),
+                        'code' => 'VALID_MAXLENGTH',
+                        'text' => $this->locale('VALID_MAXLENGTH'),
                         'data' => $value,
                         'info' => array(
                             'max' => $max,
@@ -727,15 +709,16 @@ class Solar_Sql_Table extends Solar_Base {
             case 'bigint':
             case 'smallint':
                 settype($value, 'int');
-                if ($value < $int_range[$type][0] ||
-                    $value > $int_range[$type][1]) {
+                $min = $int_range[$type][0];
+                $max = $int_range[$type][1];
+                if (! $valid->range($value, $min, $max)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_INTRANGE',
-                        'text' => $this->_sql->locale('ERR_DATA_INTRANGE'),
+                        'code' => 'VALID_RANGE',
+                        'text' => $this->locale('VALID_RANGE'),
                         'data' => $value,
                         'info' => array(
-                            'min' => $int_range[$type][0],
-                            'max' => $int_range[$type][1],
+                            'min' => $min,
+                            'max' => $max,
                         ),
                     );
                 }
@@ -749,10 +732,10 @@ class Solar_Sql_Table extends Solar_Base {
                 settype($value, 'float');
                 $size = $this->_col[$field]['size'];
                 $scope = $this->_col[$field]['scope'];
-                if (! $valid->inScope($value, $size, $scope)) {
+                if (! $valid->scope($value, $size, $scope)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_NUMRANGE',
-                        'text' => $this->_sql->locale('ERR_DATA_NUMRANGE'),
+                        'code' => 'VALID_SCOPE',
+                        'text' => $this->locale('VALID_SCOPE'),
                         'data' => $value,
                         'info' => array(
                             'size' => $size,
@@ -766,8 +749,8 @@ class Solar_Sql_Table extends Solar_Base {
                 settype($value, 'string');
                 if (! $valid->isoDate($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_DATE',
-                        'text' => $this->_sql->locale('ERR_DATA_DATE'),
+                        'code' => 'VALID_DATE',
+                        'text' => $this->locale('VALID_DATE'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -782,8 +765,8 @@ class Solar_Sql_Table extends Solar_Base {
                 }
                 if (! $valid->isoTime($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_TIME',
-                        'text' => $this->_sql->locale('ERR_DATA_TIME'),
+                        'code' => 'VALID_TIME',
+                        'text' => $this->locale('VALID_TIME'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -796,8 +779,8 @@ class Solar_Sql_Table extends Solar_Base {
                 $value = substr($value, 0, 10) . 'T' . substr($value, 11, 8);
                 if (! $valid->isoTimestamp($value)) {
                     $err[$field][] = array(
-                        'code' => 'ERR_DATA_TIMESTAMP',
-                        'text' => $this->_sql->locale('ERR_DATA_TIMESTAMP'),
+                        'code' => 'VALID_TIMESTAMP',
+                        'text' => $this->locale('VALID_TIMESTAMP'),
                         'data' => $value,
                         'info' =>  array(),
                     );
@@ -807,44 +790,25 @@ class Solar_Sql_Table extends Solar_Base {
             
             // -------------------------------------------------------------
             // 
-            // Content validations
+            // Content validations, if any
             // 
             
-            // loop through each validation rule
-            foreach ($this->_col[$field]['valid'] as $args) {
+            if ($this->_col[$field]['valid']) {
                 
-                // the name of the Solar_Valid method
-                $method = array_shift($args);
+                // the error code if validation fails.
+                // (0 is the method, 1 is the message, 2... are params)
+                $code = $this->_col[$field]['valid'][1];
                 
-                // the error code and message to use
-                // if an error is generated
-                $code = 'VALID_' . strtoupper($field);
-                $message = array_shift($args);
-                if (empty($message)) {
-                    $message = $this->locale($code);
-                }
-                
-                // validation config is now the remaining arguments,
-                // put the value on top of it.
-                array_unshift($args, $value);
-                
-                // call the appropriate Solar_Valid method
-                $result = call_user_func_array(
-                    array($valid, $method),
-                    $args
-                );
-                
-                // was it valid?
-                if (! $result) {
+                // if there was a message returned, then validation failed.
+                if ($valid->feedback($value, $this->_col[$field]['valid'])) {
                     $err[$field][] = array(
                         'code' => $code,
-                        'text' => $message,
+                        'text' => $this->locale($code),
                         'data' => $value,
                         'info' =>  array(),
                     );
                 }
-            } // endforeach
-            
+            }
             
             // ---------------------------------------------------------
             // 
@@ -865,7 +829,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         if ($err) {
             // there were errors, throw an exception
-            throw $this->_exception('ERR_DATA', $err);
+            throw $this->_exception('ERR_INVALID_DATA', $err);
         }
     }
 }

@@ -8,4 +8,6 @@
 
   * Solar_Exception_ExtensionNotLoaded
 
+++ Overview
+
 Exception: a required PHP extension is not loaded.

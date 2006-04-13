@@ -4,6 +4,5 @@ User-provided configuration values.
 
 Keys are:
 
-: \\action\\ : (string) The base action HREF, e.g. '/index.php/'.
-
-: \\public\\ : (string) The base public HREF, e.g. '/public/'.
+: \\path\\ : (string) A path prefix.  Generally needed only
+for specific URI subclasses, e.g. Solar_Uri_Action.

@@ -8,7 +8,7 @@ param: string, $table
 
 param: string|array, $where
 
-return: void
+return: int
 
 </function>
 
@@ -20,6 +20,6 @@ Deletes rows from the table based on a WHERE clause.
 
  * string|array //$where//: The SQL WHERE clause to limit which rows are deleted.
 
-* Returns void
+* Returns int: The number of rows affected.
 
 Deletes rows from the table based on a WHERE clause.

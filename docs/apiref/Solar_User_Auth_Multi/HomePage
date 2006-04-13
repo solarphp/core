@@ -6,4 +6,6 @@
 
  * Solar_User_Auth_Multi
 
+++ Overview
+
 Authenticate against multiple sources, falling back as needed.

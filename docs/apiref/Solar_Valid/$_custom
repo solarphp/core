@@ -1,3 +1,0 @@
-protected array $_custom
-
-Container for custom callable validator objects.

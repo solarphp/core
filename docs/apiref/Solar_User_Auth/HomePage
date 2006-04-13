@@ -6,4 +6,6 @@
 
  * Solar_User_Auth
 
+++ Overview
+
 Class for checking user authentication credentials.

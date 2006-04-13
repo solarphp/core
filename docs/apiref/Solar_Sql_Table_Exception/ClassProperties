@@ -1,0 +1,25 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+Inherited Properties:
+
+* Solar_Exception::$_class() -- Class where the exception originated.
+
+* Solar_Exception::$_info() -- User-defined information array.
+
+* Exception::$code() -- 
+
+* Exception::$file() -- 
+
+* Exception::$line() -- 
+
+* Exception::$message() -- 
+
+++ Private
+
+None.

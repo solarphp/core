@@ -1,6 +1,6 @@
 --TEST--
 Solar_Cache-File::fetch()
---FILE---
+--FILE--
 <?php
 // include ../_prepend.inc
 if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {

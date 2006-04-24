@@ -12,7 +12,7 @@ return <<<END
 $class::$method()
 --SKIPIF--
 <?php echo 'skip test incomplete' ?>
---FILE---
+--FILE--
 <?php
 // include ../_prepend.inc
 if (is_readable(dirname(dirname(__FILE__)) . '/_prepend.inc')) {
@@ -66,7 +66,7 @@ if (! is_dir($class)) {
 }
 
 // don't create tests for these methods, they're from Solar_Base
-$base = array('apiVersion', 'locale', 'solar');
+$base = array('apiVersion', 'locale');
 
 // get the list of public methods to create test files for
 $reflect = new ReflectionClass($class);

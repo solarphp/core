@@ -1,7 +1,7 @@
 <?php
 $config = array();
 
-$config['Solar']['ini_set']['error_reporting'] = E_ALL | E_STRICT;
+$config['Solar']['ini_set']['error_reporting'] = (E_ALL | E_STRICT);
 $config['Solar']['ini_set']['display_errors'] = true;
 $config['Solar']['ini_set']['date.timezone'] = 'America/Chicago';
 
@@ -13,7 +13,7 @@ $config['Solar_Debug_Var']['output'] = 'text';
 
 $config['Solar_Sql'] = array(
     'driver' => 'Solar_Sql_Driver_Sqlite',
-    'name'   => 'solar_test.sq3',
+    'name'   => dirname(__FILE__) . '/solar_test.sq3',
 );
 
 return $config;

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for simple unit-testing assertions.
+ * A single unit test.
  * 
  * @category Solar
  * 
@@ -11,50 +11,58 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id$
+ * @version $Id: Assert.php 1041 2006-04-04 15:12:36Z pmjones $
  * 
  */
 
 /**
  * 
- * Class for simple unit-testing assertions.
- * 
- * If the assertion is successful, it returns boolean true with no
- * output.  If the assertion fails, it throws and prints an exception, 
- * then returns false.
- * 
- * This is effectively the same behavior as in Greg Beaver's 
- * PEAR_PHPTest class, but uses exceptions instead of PEAR_Error 
- * and debug_backtrace().
+ * A single unit test.
  * 
  * @category Solar
  * 
  * @package Solar_Test
  * 
  */
-class Solar_Test_Assert {
+abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * The label for messages.
-     * 
-     * @var string
+     * Setup before the entire unit test.
      * 
      */
-    protected $_label;
-    
-    /**
-     * 
-     * Sets the label for the next message.
-     * 
-     * @param string $label The message label.
-     * 
-     * @return void
-     * 
-     */
-    public function setLabel($label)
+    public function __construct($config = null)
     {
-        $this->_label = $label;
+        parent::__construct($config);
+    }
+    
+    
+    /**
+     * 
+     * Teardown after the entire unit test.
+     * 
+     */
+    public function __destruct()
+    {
+    }
+    
+    
+    /**
+     * 
+     * Setup before each method test.
+     * 
+     */
+    public function setup()
+    {
+    }
+    
+    /**
+     * 
+     * Teardown after each method test.
+     * 
+     */
+    public function teardown()
+    {
     }
     
     /**
@@ -66,11 +74,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function isTrue($actual)
+    protected function _assertTrue($actual)
     {
         if ($actual !== true) {
-            return $this->fail(
-                "Expected true, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected true, actually not-true',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -86,11 +97,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notTrue($actual)
+    protected function _assertNotTrue($actual)
     {
         if ($actual === true) {
-            return $this->fail(
-                "Expected non-true, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected not-true, actually true',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -106,11 +120,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function isFalse($actual)
+    protected function _assertFalse($actual)
     {
         if ($actual !== false) {
-            return $this->fail(
-                "Expected false, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected false, actually not-false',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -126,11 +143,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notFalse($actual)
+    protected function _assertNotFalse($actual)
     {
         if ($actual === false) {
-            return $this->fail(
-                "Expected non-false, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected not-false, actually false',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -146,11 +166,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function isNull($actual)
+    protected function _assertNull($actual)
     {
         if ($actual !== null) {
-            return $this->fail(
-                "Expected null, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected null, actually not-null',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -166,11 +189,14 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notNull($actual)
+    protected function _assertNotNull($actual)
     {
         if ($actual === null) {
-            return $this->fail(
-                "Expected non-null, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected not-null, actually null',
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -188,23 +214,29 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function isInstance($actual, $expect)
+    protected function _assertInstance($actual, $expect)
     {
         if (! is_object($actual)) {
-            return $this->fail(
-                "Expected object, actually " . var_export($actual, true)
+            $this->_fail(
+                'Expected object, actually ' . gettype($actual),
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         }
         
         if (! class_exists($expect, false)) {
-            return $this->fail(
+            $this->_fail(
                 "Expected class '$expect' not loaded for comparison"
             );
         }
         
         if (!($actual instanceof $expect)) {
-            return $this->fail(
-                "Expected object of class '$expect', actually '" . get_class($actual) . "'"
+            $this->_fail(
+                "Expected instance of class '$expect', actually not",
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         }
         
@@ -222,24 +254,29 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notInstance($actual, $expect)
+    protected function _assertNotInstance($actual, $expect)
     {
         if (! is_object($actual)) {
-            return $this->fail(
-                "Expected object, actually ",
-                $actual
+            $this->_fail(
+                "Expected object, actually "  . gettype($actual),
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         }
         
         if (! class_exists($expect, false)) {
-            return $this->fail(
+            $this->_fail(
                 "Expected class '$expect' not loaded for comparison"
             );
         }
         
         if ($actual instanceof $expect) {
-            return $this->fail(
-                "Expected object not of class '$expect', actually '" . get_class($actual) . "'"
+            $this->_fail(
+                "Expected instance not-of class '$expect', actually is",
+                array(
+                    'actual' => var_export($actual, true),
+                )
             );
         }
         
@@ -257,12 +294,15 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function same($actual, $expect)
+    protected function _assertSame($actual, $expect)
     {
         if ($actual !== $expect) {
-            return $this->fail(
-                "Expected same: " . var_export($expect, true) .
-                "\nActually not same: " . var_export($actual, true)
+            $this->_fail(
+                'Expected same, actually not-same',
+                array(
+                    'expect' => var_export($expect, true),
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -280,12 +320,15 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notSame($actual, $expect)
+    protected function _assertNotSame($actual, $expect)
     {
         if ($actual === $expect) {
-            return $this->fail(
-                "Expected not same: " . var_export($expect, true) .
-                "\nActually same: " . var_export($actual, true)
+            $this->_fail(
+                'Expected not-same, actually same',
+                array(
+                    'expect' => var_export($expect, true),
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -303,15 +346,18 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function equals($actual, $expect)
+    protected function _assertEquals($actual, $expect)
     {
         $exp = serialize($expect);
         $act = serialize($actual);
         
         if ($exp != $act) {
-            return $this->fail(
-                "Expected equals: " . var_export($expect, true) .
-                "\nActually not equals: " . var_export($actual, true)
+            $this->_fail(
+                'Expected equals, actually not-equals',
+                array(
+                    'expect' => var_export($expect, true),
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -329,15 +375,18 @@ class Solar_Test_Assert {
      * @return bool The assertion result.
      * 
      */
-    public function notEquals($actual, $expect)
+    protected function _assertNotEquals($actual, $expect)
     {
         $exp = serialize($expect);
         $act = serialize($actual);
         
         if ($exp == $act) {
-            return $this->fail(
-                "Expected not equals: " . var_export($expect, true) .
-                "\nActually equals: " . var_export($actual, true)
+            $this->_fail(
+                'Expected not-equals, actually equals',
+                array(
+                    'expect' => var_export($expect, true),
+                    'actual' => var_export($actual, true),
+                )
             );
         } else {
             return true;
@@ -354,17 +403,17 @@ class Solar_Test_Assert {
      * 
      * @param string $property The property to inspect.
      * 
-     * @param string $method The Solar_Test_Assert method to call.
+     * @param string $test The Solar_Test_Assert method to call.
      * 
      * @param mixed $expect The expected result from the test method.
      * 
      * @return bool The assertion result.
      * 
      */
-    public function property($object, $property, $method, $expect = null)
+    protected function _assertProperty($object, $property, $test, $expect = null)
     {
         if (! is_object($object)) {
-            return $this->fail("Expected object, actually " . var_export($object));
+            $this->_fail("Expected object, actually " . gettype($object));
         }
         
         // introspect the object and look for the property
@@ -401,38 +450,80 @@ class Solar_Test_Assert {
         
         // did we find $object->$property?
         if (! $found) {
-            return $this->fail(
+            $this->_fail(
                 "Did not find expected property '$property' " .
                 "in object of class '$class'"
             );
         }
         
         // test the property value
+        $method = '_assert' . ucfirst($test);
         return $this->$method($actual, $expect);
     }
     
     /**
      * 
-     * Throws and prints an exception indicating assertion failure.
+     * Throws an exception indicating a failed test.
      * 
-     * @param string $message The failure message.
+     * @param string $text The failed-test message.
      * 
-     * @return bool Always returns boolean false.
+     * @param array $info Additional info for the exception.
+     * 
+     * @return void
      * 
      */
-    public function fail($message = 'Failure')
+    protected function _fail($text = null, $info = null)
     {
-        try {
-            throw new Exception($message);
-        } catch (Exception $e) {
-            if ($this->_label) {
-                echo $this->_label . "\n";
-            }
-            $this->_label = null;
-            echo $e->getMessage() . "\n";
-            echo $e->getTraceAsString() . "\n\n";
-            return false;
-        }
+        throw Solar::factory('Solar_Test_Exception_Fail', array(
+            'class' => get_class($this),
+            'code'  => 'ERR_FAIL',
+            'text'  => ($text ? $text : $this->locale('ERR_FAIL')),
+            'info'  => $info,
+        ));
+    }
+    
+    
+    /**
+     * 
+     * Throws an exception indicating an incomplete test.
+     * 
+     * @param string $text The incomplete-test message.
+     * 
+     * @param array $info Additional info for the exception.
+     * 
+     * @return void
+     * 
+     */
+    protected function _todo($text = null, $info = null)
+    {
+        throw Solar::factory('Solar_Test_Exception_Todo', array(
+            'class' => get_class($this),
+            'code'  => 'ERR_TODO',
+            'text'  => ($text ? $text : $this->locale('ERR_TODO')),
+            'info'  => $info,
+        ));
+    }
+    
+    
+    /**
+     * 
+     * Throws an exception indicating a skipped test.
+     * 
+     * @param string $text The skipped-test message.
+     * 
+     * @param array $info Additional info for the exception.
+     * 
+     * @return void
+     * 
+     */
+    protected function _skip($text = null, $info = null)
+    {
+        throw Solar::factory('Solar_Test_Exception_Skip', array(
+            'class' => get_class($this),
+            'code'  => 'ERR_SKIP',
+            'text'  => ($text ? $text : $this->locale('ERR_SKIP')),
+            'info'  => $info,
+        ));
     }
 }
 ?>

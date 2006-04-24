@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Provides a TemplateView pattern implementation for Solar.
+ * Provides a Template View pattern implementation for Solar.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Provides a TemplateView pattern implementation for Solar.
+ * Provides a Template View pattern implementation for Solar.
  * 
  * This implementation is good for all (X)HTML and XML template
  * formats, and provides a built-in escaping mechanism for values,

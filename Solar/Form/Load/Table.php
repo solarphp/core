@@ -56,7 +56,7 @@ class Solar_Form_Load_Table extends Solar_Base {
      * @return Solar_Form|false Solar_Form object, or boolean false on error.
      * 
      */
-    public function fetch($table, $list = '*', $array_name = null) 
+    public function fetch($table, $list = '*', $array_name = null)
     {
         if (! $table instanceof Solar_Sql_Table) {
             throw $this->_exception('ERR_NOT_TABLE_OBJECT');

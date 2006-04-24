@@ -184,9 +184,11 @@ class Solar_Uri extends Solar_Base {
             
             // we need to see if mod_rewrite is turned on or off.
             // if on, we can use REQUEST_URI as-is.
-            // if off, we need to use the script name, esp. for front-controller stuff.
+            // if off, we need to use the script name, esp. for
+            // front-controller stuff.
             // we make a guess based on the 'path' config key.
-            // if it ends in '.php' then we guess that mod_rewrite is off.
+            // if it ends in '.php' then we guess that mod_rewrite is
+            // off.
             if (substr($this->_config['path'], -5) == '.php/') {
                 // guess that mod_rewrite is off; build up from 
                 // component parts.
@@ -289,7 +291,7 @@ class Solar_Uri extends Solar_Base {
         // add the rest of the URI
         return $uri
              . $this->_config['path']
-             . (empty($this->path)     ? '' : $this->pathEncode($this->path))
+             . (empty($this->path)     ? '' : $this->_pathEncode($this->path))
              . (empty($this->query)    ? '' : '?' . http_build_query($this->query))
              . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
@@ -365,7 +367,7 @@ class Solar_Uri extends Solar_Base {
      * @return string A URI path string.
      * 
      */
-    public function pathEncode($spec)
+    protected function _pathEncode($spec)
     {
         if (is_string($spec)) {
             $spec = explode('/', $spec);

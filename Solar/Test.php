@@ -67,7 +67,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is boolean true.
+     * Asserts that a variable is boolean true.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -90,7 +90,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is not boolean true.
+     * Asserts that a variable is not boolean true.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -113,7 +113,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is boolean false.
+     * Asserts that a variable is boolean false.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -136,7 +136,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is not boolean false.
+     * Asserts that a variable is not boolean false.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -159,7 +159,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is PHP null.
+     * Asserts that a variable is PHP null.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -182,7 +182,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a variable is not PHP null.
+     * Asserts that a variable is not PHP null.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -205,7 +205,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a object is an instance of a class.
+     * Asserts that a object is an instance of a class.
      * 
      * @param object $actual The object to test.
      * 
@@ -245,7 +245,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that a object is not an instance of a class.
+     * Asserts that a object is not an instance of a class.
      * 
      * @param object $actual The object to test.
      * 
@@ -285,7 +285,10 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that two variables are the same.
+     * Asserts that two variables have the same type and value.
+     * 
+     * When used on objects, asserts the two variables are 
+     * references to the same object.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -311,7 +314,10 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that two variables are not the same.
+     * Asserts that two variables are not the same type and value.
+     * 
+     * When used on objects, asserts the two variables are not
+     * references to the same object.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -337,7 +343,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that two variables are equal.
+     * Asserts that two variables are equal when serialized.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -366,7 +372,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that two variables are not equal.
+     * Asserts that two variables are not equal when serialized.
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -395,7 +401,7 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Assert that an object property meets criteria.
+     * Asserts that an object property meets criteria.
      * 
      * The object property may be public, protected, or private.
      * 

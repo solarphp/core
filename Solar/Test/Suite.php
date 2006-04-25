@@ -171,7 +171,8 @@ class Solar_Test_Suite extends Solar_Base {
                 
                 $len = strlen($this->_dir);
                 $class = substr($path, $len, -4); // drops .php
-                $class = 'Test_' . str_replace(DIRECTORY_SEPARATOR, '_', $class);
+                $class = 'Test_' . str_replace(DIRECTORY_SEPARATOR,
+                    '_', $class);
                 $this->addTestMethods($class);
             }
         }
@@ -181,6 +182,8 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Adds the test methods from a given test class.
      * 
+     * Skips abstract and interface classes.
+     * 
      * @param string $class The Test_* class name to add methods from.
      * 
      * @return void
@@ -189,9 +192,12 @@ class Solar_Test_Suite extends Solar_Base {
     public function addTestMethods($class)
     {
         if (class_exists($class)) {
-            /** @todo check if abstract */
-            /** @todo check if extends Solar_Test */
+            
             $reflect = new ReflectionClass($class);
+            if ($reflect->isAbstract() || $reflect->isInterface()) {
+                continue;
+            }
+            
             $methods = $reflect->getMethods();
             foreach ($methods as $method) {
                 $name = $method->getName();
@@ -205,7 +211,7 @@ class Solar_Test_Suite extends Solar_Base {
     
     /**
      * 
-     * Runs the test suite (or the sub-test).
+     * Runs the test suite (or the sub-test series).
      * 
      * Returns an array of statistics with these keys:
      * 
@@ -243,8 +249,6 @@ class Solar_Test_Suite extends Solar_Base {
         );
         
         $this->_test = array();
-        
-        $this->_info['plan'] = 0;
         
         // running all tests, or just a sub-test series?
         if ($this->_sub) {
@@ -293,7 +297,8 @@ class Solar_Test_Suite extends Solar_Base {
                 } catch (Solar_Test_Exception_Todo $e) {
                     $this->_done('todo', $name, $e->getMessage());
                 } catch (Solar_Test_Exception_Fail $e) {
-                    $this->_done('fail', $name, $e->getMessage(), $e->__toString());
+                    $this->_done('fail', $name, $e->getMessage(),
+                        $e->__toString());
                 }
                 
                 // method teardown
@@ -307,7 +312,7 @@ class Solar_Test_Suite extends Solar_Base {
         $this->_info['time'] = time() - $time;
         
         if (! $this->_quiet) {
-            $this->_echo($this->_formatInfo());
+            $this->_echo("\n" . $this->_formatInfo());
         }
         
         return $this->_info;
@@ -329,9 +334,11 @@ class Solar_Test_Suite extends Solar_Base {
         
         $text = array();
         $text[] = "$done/$plan tests, $time seconds";
+        
         $tmp = array();
-        foreach ($this->_info as $type => $list) {
-            $count = count($list);
+        $show = array('fail', 'todo', 'skip', 'pass');
+        foreach ($show as $type) {
+            $count = count($this->_info[$type]);
             $tmp[] = "$count $type";
         }
         $text[] = implode(', ', $tmp);

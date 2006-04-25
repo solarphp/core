@@ -18,26 +18,27 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testGet()
     {
         $expect = array(
-          '/path/1/',
-          '/path/2/',
-          '/path/3/',
+          '/path/foo/',
+          '/path/bar/',
+          '/path/baz/',
         );
 
         $stack = Solar::factory('Solar_PathStack');
-        $stack->set('/path/1:/path/2:/path/3');
+        $stack->set('/path/foo:/path/bar:/path/baz');
         $this->_assertSame($stack->get(), $expect);
     }
     
     public function testAdd_byArray()
     {
         $stack = Solar::factory('Solar_PathStack');
-        $stack->add(array('/path/1', '/path/2', '/path/3'));
+        $stack->add(array('/path/foo', '/path/bar', '/path/baz'));
 
         $expect = array(
-          "/path/1/",
-          "/path/2/",
-          "/path/3/",
+          "/path/foo/",
+          "/path/bar/",
+          "/path/baz/",
         );
+        
         $this->_assertSame($stack->get(), $expect);
     }
     
@@ -45,28 +46,28 @@ class Test_Solar_PathStack extends Solar_Test {
     {
         // add to the stack as a shell pathspec
         $stack = Solar::factory('Solar_PathStack');
-        $stack->add('/path/1:/path/2:/path/3');
+        $stack->add('/path/foo:/path/bar:/path/baz');
 
         $expect = array(
-          "/path/1/",
-          "/path/2/",
-          "/path/3/",
+          "/path/foo/",
+          "/path/bar/",
+          "/path/baz/",
         );
+        
         $this->_assertSame($stack->get(), $expect);
-
     }
     
     public function testAdd_byLifo()
     {
         $stack = Solar::factory('Solar_PathStack');
-        $stack->add('/path/1');
-        $stack->add('/path/2');
-        $stack->add('/path/3');
+        $stack->add('/path/foo');
+        $stack->add('/path/bar');
+        $stack->add('/path/baz');
 
         $expect = array(
-          "/path/3/",
-          "/path/2/",
-          "/path/1/",
+          "/path/baz/",
+          "/path/bar/",
+          "/path/foo/",
         );
         $this->_assertSame($stack->get(), $expect);
     }
@@ -74,13 +75,13 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testSet_byString()
     {
         $expect = array(
-          '/path/1/',
-          '/path/2/',
-          '/path/3/',
+          '/path/foo/',
+          '/path/bar/',
+          '/path/baz/',
         );
 
         $stack = Solar::factory('Solar_PathStack');
-        $stack->set('/path/1:/path/2:/path/3');
+        $stack->set('/path/foo:/path/bar:/path/baz');
         $this->_assertSame($stack->get(), $expect);
 
     }
@@ -88,9 +89,9 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testSet_byArray()
     {
         $expect = array(
-          '/path/1/',
-          '/path/2/',
-          '/path/3/',
+          '/path/foo/',
+          '/path/bar/',
+          '/path/baz/',
         );
         
         $stack = Solar::factory('Solar_PathStack');
@@ -100,36 +101,34 @@ class Test_Solar_PathStack extends Solar_Test {
     
     public function testFind()
     {
-        $this->_todo('rebuild using new file locations');
-        
-        /*
         // get the stack object FIRST
         $stack = Solar::factory('Solar_PathStack');
         
-        // NOW reset the include_path
-        $old_path = set_include_path(dirname(dirname(__FILE__)));
+        // now reset the include_path
+        $old_path = set_include_path(dirname(__FILE__) . '/PathStack');
         
-        // use the testing directory to look for __construct.phpt files
-        $dir = dirname(dirname(__FILE__));
+        // use the testing directory to look for files
         $path = array(
-            "Solar_Base",
-            "Solar_Debug_Timer",
-            "Solar_Debug_Var",
+            "a",
+            "b",
+            "c",
         );
 
-        $stack->set($path);
+        $stack->add($path[0]);
+        $stack->add($path[1]);
+        $stack->add($path[2]);
+        
+        // should find it at a
+        $actual = $stack->find('target1');
+        $this->_assertSame($actual, "{$path[0]}/target1");
 
-        // should find it at Solar_Base
-        $actual = $stack->find('__construct.phpt');
-        $this->_assertSame($actual, "{$path[0]}/__construct.phpt");
+        // should find it at b
+        $actual = $stack->find('target2');
+        $this->_assertSame($actual, "{$path[1]}/target2");
 
-        // should find it at Solar_Debug_Timer
-        $actual = $stack->find('start.phpt');
-        $this->_assertSame($actual, "{$path[1]}/start.phpt");
-
-        // should find it at Solar_Debug_Var
-        $actual = $stack->find('dump.phpt');
-        $this->_assertSame($actual, "{$path[2]}/dump.phpt");
+        // should find it at c
+        $actual = $stack->find('target3');
+        $this->_assertSame($actual, "{$path[2]}/target3");
 
         // should not find it at all
         $actual = $stack->find('no_such_file');
@@ -137,41 +136,39 @@ class Test_Solar_PathStack extends Solar_Test {
 
         // put the include_path back
         set_include_path($old_path);
-        */
     }
     
     public function testFindReal()
     {
-        $this->_todo('rebuild using new file locations');
-        
-        /*
         // use the testing directory to look for __construct.phpt files
-        $dir = dirname(dirname(__FILE__));
+        $dir = dirname(__FILE__) . "/PathStack";
         $path = array(
-            "$dir/Solar_Base",
-            "$dir/Solar_Debug_Timer",
-            "$dir/Solar_Debug_Var",
+            "$dir/a",
+            "$dir/b",
+            "$dir/c",
         );
-
+        
         $stack = Solar::factory('Solar_PathStack');
-        $stack->set($path);
+        $stack->add($path[0]);
+        $stack->add($path[1]);
+        $stack->add($path[2]);
+        
 
         // should find it at Solar_Base
-        $actual = $stack->findReal('__construct.phpt');
-        $this->_assertSame($actual, "{$path[0]}/__construct.phpt");
+        $actual = $stack->findReal('target1');
+        $this->_assertSame($actual, "{$path[0]}/target1");
 
         // should find it at Solar_Debug_Timer
-        $actual = $stack->findReal('start.phpt');
-        $this->_assertSame($actual, "{$path[1]}/start.phpt");
+        $actual = $stack->findReal('target2');
+        $this->_assertSame($actual, "{$path[1]}/target2");
 
         // should find it at Solar_Debug_Var
-        $actual = $stack->findReal('dump.phpt');
-        $this->_assertSame($actual, "{$path[2]}/dump.phpt");
+        $actual = $stack->findReal('target3');
+        $this->_assertSame($actual, "{$path[2]}/target3");
 
         // should not find it at all
         $actual = $stack->findReal('no_such_file');
         $this->_assertFalse($actual);
-        */
     }
 }
 ?>

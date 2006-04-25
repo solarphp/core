@@ -1,0 +1,27 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Test_Suite::$_config -- 
+
+* Solar_Test_Suite::$_dir -- 
+
+* Solar_Test_Suite::$_log -- 
+
+* Solar_Test_Suite::$_plan -- 
+
+* Solar_Test_Suite::$_quiet -- 
+
+* Solar_Test_Suite::$_sub -- 
+
+* Solar_Test_Suite::$_test -- 
+
+* Solar_Test_Suite::$_var -- 
+
+++ Private
+
+None.

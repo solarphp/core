@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: setup
+
+return: unknown
+
+</function>
+
+Setup before each method test.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Setup before each method test.

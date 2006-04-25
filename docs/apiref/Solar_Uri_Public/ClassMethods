@@ -12,8 +12,6 @@ Inherited Methods:
 
 * Solar_Base::locale() -- Looks up locale strings based on a key.
 
-* Solar_Uri::pathEncode() -- Converts an array of path elements into a string.
-
 * Solar_Uri::quick() -- Returns a URI based on the specified string.
 
 * Solar_Uri::set() -- Sets properties from a specified URI.
@@ -27,6 +25,8 @@ Inherited Methods:
 Inherited Methods:
 
 * Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Uri::_pathEncode() -- Converts an array of path elements into a string.
 
 ++ Private
 

@@ -1,0 +1,22 @@
+HomePage | The Solar_Test_Suite Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_dir
+  $_log
+  $_plan
+  $_quiet
+  $_sub
+  $_test
+  $_var
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  addTestMethods()
+  apiVersion()
+  displayLog()
+  findTests()
+  locale()
+  log()
+  out()
+  run()

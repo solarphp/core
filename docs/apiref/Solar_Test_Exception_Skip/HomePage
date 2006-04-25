@@ -1,0 +1,15 @@
++ The Solar_Test_Exception_Skip Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Test_Exception::HomePage Solar_Test_Exception]
+
+   * Solar_Test_Exception_Skip
+
+++ Overview
+
+Exception to note a skipped test.

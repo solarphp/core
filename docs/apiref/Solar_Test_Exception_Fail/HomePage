@@ -1,0 +1,15 @@
++ The Solar_Test_Exception_Fail Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Test_Exception::HomePage Solar_Test_Exception]
+
+   * Solar_Test_Exception_Fail
+
+++ Overview
+
+Exception to note a failed test.

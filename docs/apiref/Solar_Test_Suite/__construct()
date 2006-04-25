@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Test_Suite
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Test_Suite: Solar_Test_Suite instance

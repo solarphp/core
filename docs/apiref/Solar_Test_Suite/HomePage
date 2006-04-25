@@ -1,0 +1,21 @@
++ The Solar_Test_Suite Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Test_Suite
+
+++ Overview
+
+Class for running suites of unit tests.
+
+Expects a directory structure like this:
+
+Test/
+  Solar.php      -- Test_Solar
+  Solar/         
+    Base.php     -- Test_Solar_Base
+    Example.php  -- Test_Solar_Example
+    Example/     
+      Sub.php    -- Test_Solar_Example_Sub

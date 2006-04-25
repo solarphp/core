@@ -14,10 +14,10 @@ ApiRef | API Reference
  ClassMethods | Class Methods
   __construct()
   _exception()
+  _pathEncode()
   apiVersion()
   fetch()
   locale()
-  pathEncode()
   quick()
   set()
   setPath()

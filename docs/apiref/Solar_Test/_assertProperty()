@@ -1,0 +1,35 @@
+<function>
+
+access:   protected
+
+name: _assertProperty
+
+param: object, $object
+
+param: string, $property
+
+param: string, $test
+
+param: mixed, $expect, NULL
+
+return: bool
+
+</function>
+
+Assert that an object property meets criteria.
+
+* Parameters:
+
+ * object //$object//: The object to test.
+
+ * string //$property//: The property to inspect.
+
+ * string //$test//: The Solar_Test_Assert method to call.
+
+ * mixed //$expect//: The expected result from the test method.
+
+* Returns bool: The assertion result.
+
+Assert that an object property meets criteria.
+
+The object property may be public, protected, or private.

@@ -1,0 +1,33 @@
++ Class Methods
+
+++ Public
+
+* Solar_Test_Suite::__construct() -- 
+
+* Solar_Test_Suite::addTestMethods() -- 
+
+* Solar_Test_Suite::displayLog() -- 
+
+* Solar_Test_Suite::findTests() -- Recursively iterates through a directory looking for test classes.
+
+* Solar_Test_Suite::log() -- 
+
+* Solar_Test_Suite::out() -- 
+
+* Solar_Test_Suite::run() -- 
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

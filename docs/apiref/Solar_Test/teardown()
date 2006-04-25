@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: teardown
+
+return: unknown
+
+</function>
+
+Teardown after each method test.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Teardown after each method test.

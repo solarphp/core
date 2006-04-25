@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: __destruct
+
+return: unknown
+
+</function>
+
+Teardown after the entire unit test.
+
+* Parameters: none.
+
+* Returns unknown: unknown
+
+Teardown after the entire unit test.

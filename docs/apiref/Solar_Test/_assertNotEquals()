@@ -1,0 +1,25 @@
+<function>
+
+access:   protected
+
+name: _assertNotEquals
+
+param: mixed, $actual
+
+param: mixed, $expect
+
+return: bool
+
+</function>
+
+Assert that two variables are not equal.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+ * mixed //$expect//: The expected result.
+
+* Returns bool: The assertion result.
+
+Assert that two variables are not equal.

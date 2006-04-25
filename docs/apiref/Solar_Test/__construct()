@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: unknown, $config, NULL
+
+return: Solar_Test
+
+</function>
+
+Setup before the entire unit test.
+
+* Parameters:
+
+ * unknown //$config//: 
+
+* Returns Solar_Test: Solar_Test instance
+
+Setup before the entire unit test.

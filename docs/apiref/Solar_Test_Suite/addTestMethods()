@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: addTestMethods
+
+param: unknown, $class
+
+return: unknown
+
+</function>
+
+
+
+* Parameters:
+
+ * unknown //$class//: 
+
+* Returns unknown: unknown

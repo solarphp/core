@@ -30,9 +30,9 @@ Solar::loadClass('Solar_Test');
  *   Solar.php      -- Test_Solar
  *   Solar/         
  *     Base.php     -- Test_Solar_Base
- *     Example.php  -- Test_Solar_Example
- *     Example/     
- *       Sub.php    -- Test_Solar_Example_Sub
+ *     Uri.php      -- Test_Solar_Uri
+ *     Uri/     
+ *       Action.php -- Test_Solar_Uri_Action
  * 
  * @category Solar
  * 
@@ -41,25 +41,88 @@ Solar::loadClass('Solar_Test');
  */
 class Solar_Test_Suite extends Solar_Base {
     
+    /**
+     * 
+     * User-defined configuration values.
+     * 
+     * Keys are:
+     * 
+     * : \\dir\\ : (string) The directory where tests are located.
+     * 
+     * : \\sub\\ : (string) The class name of a sub-test to run instead
+     *   of the full suite.  The "Test_" prefix is not needed.
+     * 
+     * @var array
+     * 
+     */
     protected $_config = array(
         'dir' => '', // where tests are located
         'sub' => '', // only run these sub-tests
     );
     
-    protected $_dir; // source directory
+    /**
+     * 
+     * The directory where tests are located.
+     * 
+     * @var string
+     * 
+     */
+    protected $_dir;
     
-    protected $_sub; // sub-test class name (with or without Test_ prefix)
+    /**
+     * 
+     * Run this class name sub-test instead of the full suite.
+     * 
+     * @var string
+     * 
+     */
+    protected $_sub;
     
-    protected $_log; // array of log messages
+    /**
+     * 
+     * The log of pass/skip/todo/fail messages.
+     * 
+     * @var array
+     * 
+     */
+    protected $_info;
     
-    protected $_test; // class => array(method, method, ...)
+    /**
+     * 
+     * The test classes (and their methods) to run.
+     * 
+     * In the form of array($class => array($method1, $method2, ...)).
+     * 
+     * @var array
+     * 
+     */
+    protected $_test;
     
-    protected $_plan; // number of test methods
+    /**
+     * 
+     * Whether or not to silence output.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_quiet;
     
-    protected $_quiet; // silence "ok" output
-    
+    /**
+     * 
+     * A Solar_Debug_Var instance.
+     * 
+     * @var Solar_Debug_Var
+     * 
+     */
     protected $_var; // Solar_Debug_Var
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
     public function __construct($config = null)
     {
         // main construction
@@ -114,6 +177,15 @@ class Solar_Test_Suite extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Adds the test methods from a given test class.
+     * 
+     * @param string $class The Test_* class name to add methods from.
+     * 
+     * @return void
+     * 
+     */
     public function addTestMethods($class)
     {
         if (class_exists($class)) {
@@ -125,17 +197,45 @@ class Solar_Test_Suite extends Solar_Base {
                 $name = $method->getName();
                 if (substr($name, 0, 4) == 'test') {
                     $this->_test[$class][] = $name;
-                    $this->_plan ++;
+                    $this->_info['plan'] ++;
                 }
             }
         }
     }
     
+    /**
+     * 
+     * Runs the test suite (or the sub-test).
+     * 
+     * Returns an array of statistics with these keys:
+     * 
+     * : \\plan\\ : (int) The planned number of tests.
+     * 
+     * : \\done\\ : (int) The number of tests actually done.
+     * 
+     * : \\time\\ : (int) The time, in seconds, it took to run all tests.
+     * 
+     * : \\pass\\ : (array) Log of tests that passed.
+     * 
+     * : \\skip\\ : (array) Log of tests that were skipped.
+     * 
+     * : \\todo\\ : (array) Log of tests that are incomplete.
+     * 
+     * : \\fail\\ : (array) Log of tests that failed.
+     * 
+     * @param bool $quiet True to suppress output, false to display.
+     * 
+     * @return array A statistics array.
+     * 
+     */
     public function run($quiet = false)
     {
-        $this->_quiet = $quiet;
+        $this->_quiet = (bool) $quiet;
         
-        $this->_log = array(
+        $this->_info = array(
+            'plan' => 0,
+            'done' => 0,
+            'time' => 0,
             'pass' => array(),
             'skip' => array(),
             'todo' => array(),
@@ -144,7 +244,7 @@ class Solar_Test_Suite extends Solar_Base {
         
         $this->_test = array();
         
-        $this->_plan = 0;
+        $this->_info['plan'] = 0;
         
         // running all tests, or just a sub-test series?
         if ($this->_sub) {
@@ -166,18 +266,10 @@ class Solar_Test_Suite extends Solar_Base {
             $this->findTests($iter);
         }
         
-        $before = time();
-        
-        $this->out("1..{$this->_plan}");
-        $i = 0;
-        
+        // run the tests
+        $time = time();
+        $this->_echo("1..{$this->_info['plan']}");
         foreach ($this->_test as $class => $methods) {
-            
-            /**
-             * @todo: check to see if we should run the class test at all;
-             * if not, advance $i by the number of test methods in that class,
-             * then loop to the next class.
-             */
             
             // class setup
             $test = Solar::factory($class);
@@ -185,24 +277,23 @@ class Solar_Test_Suite extends Solar_Base {
             // test each method in the class
             foreach ($methods as $method) {
                 
-                
                 // info
-                $i ++;
+                $this->_info['done'] ++;
                 $name = "$class::$method";
                 
                 // method setup
                 $test->setup();
                 
-                // test and log
+                // test and save
                 try {
                     $test->$method();
-                    $this->log('pass', $i, $name);
+                    $this->_done('pass', $name);
                 } catch (Solar_Test_Exception_Skip $e) {
-                    $this->log('skip', $i, $name, $e->getMessage());
+                    $this->_done('skip', $name, $e->getMessage());
                 } catch (Solar_Test_Exception_Todo $e) {
-                    $this->log('todo', $i, $name, $e->getMessage());
+                    $this->_done('todo', $name, $e->getMessage());
                 } catch (Solar_Test_Exception_Fail $e) {
-                    $this->log('fail', $i, $name, $e->getMessage(), $e->__toString());
+                    $this->_done('fail', $name, $e->getMessage(), $e->__toString());
                 }
                 
                 // method teardown
@@ -213,57 +304,68 @@ class Solar_Test_Suite extends Solar_Base {
             unset($test);
         }
         
-        $this->displayLog($i, time() - $before);
-    }
-    
-    public function displayLog($numTests, $time)
-    {
-        // skip if in "quiet" mode and all went well.
-        if ($this->_quiet &&
-            $numTests == $this->_plan &&
-            count($this->_log['fail']) == 0 &&
-            count($this->_log['todo']) == 0) {
-            // all went well!
-            return;
+        $this->_info['time'] = time() - $time;
+        
+        if (! $this->_quiet) {
+            $this->_echo($this->_formatInfo());
         }
         
-        echo "\n$numTests/{$this->_plan} tests, $time seconds\n";
+        return $this->_info;
+        
+    }
+    
+    /**
+     * 
+     * Returns the info stats as text.
+     * 
+     * @return string
+     * 
+     */
+    protected function _formatInfo()
+    {
+        $done = $this->_info['done'];
+        $plan = $this->_info['plan'];
+        $time = $this->_info['time'];
+        
+        $text = array();
+        $text[] = "$done/$plan tests, $time seconds";
         $tmp = array();
-        foreach ($this->_log as $type => $list) {
+        foreach ($this->_info as $type => $list) {
             $count = count($list);
             $tmp[] = "$count $type";
         }
-        echo implode(', ', $tmp) . "\n";
+        $text[] = implode(', ', $tmp);
         
         $show = array('fail', 'todo', 'skip');
         foreach ($show as $type) {
-            foreach ($this->_log[$type] as $name => $note) {
-                echo strtoupper($type) . " $name ($note)\n";
+            foreach ($this->_info[$type] as $name => $note) {
+                $text[] = strtoupper($type) . " $name ($note)";
             }
         }
-        echo "\n";
+        
+        return implode("\n", $text);
     }
     
-    public function out($spec, $diag = false)
-    {
-        if (! trim($spec)) {
-            return;
-        }
-        
-        if (substr($spec, 0, 2) == 'ok' && $this->_quiet) {
-            return;
-        }
-        
-        if ($diag) {
-            echo "# " . str_replace("\n", "\n# ", trim($spec)) . "\n";
-        } else {
-            echo "$spec\n";
-        }
-    }
-    
-    public function log($type, $num, $name, $note = null, $diag = null)
+    /**
+     * 
+     * Formats a test result, echoes it, and saves the info.
+     * 
+     * @param string $type Pass, todo, skip, or fail.
+     * 
+     * @param string $name The test name.
+     * 
+     * @param string $note Additional note about the test.
+     * 
+     * @param string $diag Diagnostics for the test.
+     * 
+     * @return void
+     * 
+     */
+    protected function _done($type, $name, $note = null, $diag = null)
     {
         $text = '';
+        $num = $this->_info['done'];
+        
         switch ($type) {
         case 'pass':
             $text = "ok $num - $name";
@@ -289,9 +391,30 @@ class Solar_Test_Suite extends Solar_Base {
             $diag = $this->_var->dump($diag);
         }
         
-        $this->out($text);
-        $this->out($diag, true);
-        $this->_log[$type][$name] = $note;
+        $this->_echo($text);
+        $this->_echo($diag, true);
+        $this->_info[$type][$name] = $note;
     }
+    
+    /**
+     * 
+     * Echoes output, but only when not in quiet mode.
+     * 
+     * @return void
+     * 
+     */
+    public function _echo($spec, $diag = false)
+    {
+        if (! trim($spec) || $this->_quiet) {
+            return;
+        }
+        
+        if ($diag) {
+            echo "# " . str_replace("\n", "\n# ", trim($spec)) . "\n";
+        } else {
+            echo "$spec\n";
+        }
+    }
+    
 }
 ?>

@@ -1,8 +1,7 @@
 <?php
-define('SOLAR_CONFIG_PATH', dirname(__FILE__) . '/config.inc.php');
-
-require 'Solar.php';
-Solar::start();
+require_once 'Solar.php';
+$config = dirname(__FILE__) . '/config.inc.php');
+Solar::start($config);
 
 // configure and run the suite
 $config = array(
@@ -10,8 +9,9 @@ $config = array(
     'sub' => isset($argv[1]) ? trim($argv[1]) : '',
 );
 $suite = Solar::factory('Solar_Test_Suite', $config);
-$suite->run();
+$info = $suite->run();
 
 // done
 Solar::stop();
+return $info;
 ?>

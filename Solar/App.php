@@ -132,6 +132,15 @@ abstract class Solar_App extends Solar_Controller_Page {
     
     /**
      * 
+     * Error messages, usually for the 'error' action/view.
+     * 
+     * @var array
+     * 
+     */
+    public $errors;
+    
+    /**
+     * 
      * Sets up the Solar_App environment.
      * 
      * Registers 'sql', 'user', and 'content' objects, and sets the
@@ -160,6 +169,18 @@ abstract class Solar_App extends Solar_Controller_Page {
         
         // set the layout title
         $this->layout_title = get_class($this);
+    }
+    
+    public function _preAction()
+    {
+        // generic security check
+        $class = get_class($this);
+        $action = $this->_action;
+        $allow = Solar::registry('user')->access->allow($class, $action);
+        if (! $allow) {
+            $this->errors[] = $this->locale('ERR_NOT_ALLOWED_ACCESS');
+            $this->_action = 'error';
+        }
     }
 }
 ?>

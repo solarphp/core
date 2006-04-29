@@ -80,7 +80,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected true, actually not-true',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -103,7 +103,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected not-true, actually true',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -126,7 +126,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected false, actually not-false',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -149,7 +149,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected not-false, actually false',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -172,7 +172,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected null, actually not-null',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -195,7 +195,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected not-null, actually null',
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -220,7 +220,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected object, actually ' . gettype($actual),
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         }
@@ -233,10 +233,7 @@ abstract class Solar_Test extends Solar_Base {
         
         if (!($actual instanceof $expect)) {
             $this->_fail(
-                "Expected instance of class '$expect', actually not",
-                array(
-                    'actual' => var_export($actual, true),
-                )
+                "Expected instance of class '$expect', actually '" . get_class($actual) . "'"
             );
         }
         
@@ -260,7 +257,7 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 "Expected object, actually "  . gettype($actual),
                 array(
-                    'actual' => var_export($actual, true),
+                    'actual' => $this->_export($actual),
                 )
             );
         }
@@ -273,10 +270,7 @@ abstract class Solar_Test extends Solar_Base {
         
         if ($actual instanceof $expect) {
             $this->_fail(
-                "Expected instance not-of class '$expect', actually is",
-                array(
-                    'actual' => var_export($actual, true),
-                )
+                "Expected instance not-of class '$expect', actually is"
             );
         }
         
@@ -303,8 +297,8 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected same, actually not-same',
                 array(
-                    'expect' => var_export($expect, true),
-                    'actual' => var_export($actual, true),
+                    'expect' => $this->_export($expect),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -332,8 +326,8 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected not-same, actually same',
                 array(
-                    'expect' => var_export($expect, true),
-                    'actual' => var_export($actual, true),
+                    'expect' => $this->_export($expect),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -361,8 +355,8 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected equals, actually not-equals',
                 array(
-                    'expect' => var_export($expect, true),
-                    'actual' => var_export($actual, true),
+                    'expect' => $this->_export($expect),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -390,8 +384,8 @@ abstract class Solar_Test extends Solar_Base {
             $this->_fail(
                 'Expected not-equals, actually equals',
                 array(
-                    'expect' => var_export($expect, true),
-                    'actual' => var_export($actual, true),
+                    'expect' => $this->_export($expect),
+                    'actual' => $this->_export($actual),
                 )
             );
         } else {
@@ -510,7 +504,6 @@ abstract class Solar_Test extends Solar_Base {
         ));
     }
     
-    
     /**
      * 
      * Throws an exception indicating a skipped test.
@@ -530,6 +523,20 @@ abstract class Solar_Test extends Solar_Base {
             'text'  => ($text ? $text : $this->locale('ERR_SKIP')),
             'info'  => $info,
         ));
+    }
+    
+    /**
+     * 
+     * Returns the output from var_export() for a variable.
+     * 
+     * @param mixed $var The variable to run through var_export().
+     * 
+     * @return string
+     * 
+     */
+    protected function _export($var)
+    {
+        return stripslashes(var_export($var, true));
     }
 }
 ?>

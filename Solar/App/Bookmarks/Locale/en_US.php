@@ -56,5 +56,5 @@ return array(
     'ORDER_TAGS_DESC'    => 'Tags (desc)',
     'ORDER_SUBJ'         => 'Title',
     'ORDER_SUBJ_DESC'    => 'Title (desc)',
-    
+    'ERR_NOT_OWNER'      => 'You do not own this bookmark.',
 ) ?>

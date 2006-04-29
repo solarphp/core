@@ -156,15 +156,6 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * An array of error messages.
-     * 
-     * @var array
-     * 
-     */
-    public $err;
-    
-    /**
-     * 
      * The current form processing object.
      * 
      * @var Solar_Form

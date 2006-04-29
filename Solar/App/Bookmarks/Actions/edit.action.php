@@ -19,14 +19,14 @@
 
 // must be logged in to proceed
 if ($this->_user->auth->status != 'VALID') {
-    $this->err[] = 'You are not logged in.';
+    $this->errors[] = 'You are not logged in.';
     return $this->_forward('error');
 }
 
 // get the bookmark ID (0 means a new bookmark)
 $id = (int) $this->_info('id', 0);
 if (! $id) {
-    $this->err[] = 'No bookmark selected for editing.';
+    $this->errors[] = 'No bookmark selected for editing.';
     return $this->_forward('error');
 }
 
@@ -34,7 +34,7 @@ if (! $id) {
 // must be the item owner to edit it
 $item = $this->_bookmarks->fetch($id);
 if ($this->_user->auth->handle != $item['owner_handle']) {
-    $this->err[] = 'You do not own this bookmark, or it does not exist.';
+    $this->errors[] = 'You do not own this bookmark, or it does not exist.';
     return $this->_forward('error');
 }
 

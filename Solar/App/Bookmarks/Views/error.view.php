@@ -19,7 +19,7 @@
 ?>
 <h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <div style="color: red;">
-<?php foreach ($this->err as $text): ?>
+<?php foreach ($this->errors as $text): ?>
     <p><?php echo $this->escape($text) ?></p>
 <?php endforeach ?>
 </div>

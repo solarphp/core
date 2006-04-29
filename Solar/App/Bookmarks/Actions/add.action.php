@@ -19,7 +19,7 @@
 
 // must be logged in to proceed
 if ($this->_user->auth->status != 'VALID') {
-    $this->err[] = 'You are not logged in.';
+    $this->errors[] = 'You are not logged in.';
     return $this->_forward('error');
 }
 

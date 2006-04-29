@@ -482,7 +482,6 @@ abstract class Solar_Test extends Solar_Base {
         ));
     }
     
-    
     /**
      * 
      * Throws an exception indicating an incomplete test.

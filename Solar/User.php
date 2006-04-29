@@ -40,8 +40,7 @@ class Solar_User extends Solar_Base {
     protected $_config = array(
         'auth' => null,
         'role' => null,
-        'pref' => null,
-        'perm' => null
+        'access' => null
     );
     
     /**
@@ -64,21 +63,12 @@ class Solar_User extends Solar_Base {
     
     /**
      * 
-     * User preferences object.
+     * Authorized access object.
      * 
      * @var object
      * 
      */
-    public $pref;
-    
-    /**
-     * 
-     * User permissions object.
-     * 
-     * @var object
-     * 
-     */
-    public $perm;
+    public $access;
     
     /**
      * 
@@ -100,6 +90,9 @@ class Solar_User extends Solar_Base {
         // set up the roles object.
         $this->role = Solar::dependency('Solar_User_Role', $this->_config['role']);
         
+        // set up the access object.
+        $this->access = Solar::dependency('Solar_User_Access', $this->_config['access']);
+        
         // start up authentication
         $this->auth->start();
         
@@ -112,7 +105,11 @@ class Solar_User extends Solar_Base {
             // no, user is not valid.  
             // clear out any previous roles.
             $this->role->reset();
+            $this->access->reset();
         }
+        
+        // load up the access list for the handle and roles
+        $this->access->fetch($this->auth->handle, $this->role->list);
     }
 }
 ?>

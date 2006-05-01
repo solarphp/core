@@ -191,20 +191,21 @@ class Solar_Test_Suite extends Solar_Base {
      */
     public function addTestMethods($class)
     {
-        if (class_exists($class)) {
-            
-            $reflect = new ReflectionClass($class);
-            if ($reflect->isAbstract() || $reflect->isInterface()) {
-                continue;
-            }
-            
-            $methods = $reflect->getMethods();
-            foreach ($methods as $method) {
-                $name = $method->getName();
-                if (substr($name, 0, 4) == 'test') {
-                    $this->_test[$class][] = $name;
-                    $this->_info['plan'] ++;
-                }
+        if (! class_exists($class)) {
+            return;
+        }
+        
+        $reflect = new ReflectionClass($class);
+        if ($reflect->isAbstract() || $reflect->isInterface()) {
+            return;
+        }
+        
+        $methods = $reflect->getMethods();
+        foreach ($methods as $method) {
+            $name = $method->getName();
+            if (substr($name, 0, 4) == 'test') {
+                $this->_test[$class][] = $name;
+                $this->_info['plan'] ++;
             }
         }
     }
@@ -276,7 +277,25 @@ class Solar_Test_Suite extends Solar_Base {
         foreach ($this->_test as $class => $methods) {
             
             // class setup
-            $test = Solar::factory($class);
+            try {
+                $test = Solar::factory($class);
+            } catch (Solar_Test_Exception_Skip $e) {
+                $this->_info['done'] ++;
+                $this->_done('skip', $class, $e->getMessage());
+                $this->_info['done'] += count($methods) - 1;
+                continue;
+            } catch (Solar_Test_Exception_Todo $e) {
+                $this->_info['done'] ++;
+                $this->_done('todo', $class, $e->getMessage());
+                $this->_info['done'] += count($methods) - 1;
+                continue;
+            } catch (Solar_Test_Exception_Fail $e) {
+                $this->_info['done'] ++;
+                $this->_done('fail', $class, $e->getMessage(),
+                    $e->__toString());
+                $this->_info['done'] += count($methods) - 1;
+                continue;
+            }
             
             // test each method in the class
             foreach ($methods as $method) {

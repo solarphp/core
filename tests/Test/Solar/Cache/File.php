@@ -1,9 +1,4 @@
 <?php
-class Coyote extends Solar_Base {
-    public $acme = 'Acme Industries, LLC';
-    protected $meal = 'Roadrunner';
-}
-
 class Test_Solar_Cache_File extends Solar_Test {
     
     protected $_cache;
@@ -144,7 +139,7 @@ class Test_Solar_Cache_File extends Solar_Test {
     public function testSave_Object()
     {
         $id = 'coyote';
-        $data = new Coyote();
+        $data = Solar::factory('Solar_Test_Example');
         $this->assertTrue($this->_cache->save($id, $data));
         $this->assertEquals($this->_cache->fetch($id), $data);
     }

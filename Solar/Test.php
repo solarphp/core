@@ -24,7 +24,7 @@
  * @package Solar_Test
  * 
  */
-abstract class Solar_Test extends Solar_Base {
+class Solar_Test extends Solar_Base {
     
     /**
      * 
@@ -74,10 +74,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertTrue($actual)
+    public function assertTrue($actual)
     {
         if ($actual !== true) {
-            $this->_fail(
+            $this->fail(
                 'Expected true, actually not-true',
                 array(
                     'actual' => $this->_export($actual),
@@ -97,10 +97,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotTrue($actual)
+    public function assertNotTrue($actual)
     {
         if ($actual === true) {
-            $this->_fail(
+            $this->fail(
                 'Expected not-true, actually true',
                 array(
                     'actual' => $this->_export($actual),
@@ -120,10 +120,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertFalse($actual)
+    public function assertFalse($actual)
     {
         if ($actual !== false) {
-            $this->_fail(
+            $this->fail(
                 'Expected false, actually not-false',
                 array(
                     'actual' => $this->_export($actual),
@@ -143,10 +143,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotFalse($actual)
+    public function assertNotFalse($actual)
     {
         if ($actual === false) {
-            $this->_fail(
+            $this->fail(
                 'Expected not-false, actually false',
                 array(
                     'actual' => $this->_export($actual),
@@ -166,10 +166,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNull($actual)
+    public function assertNull($actual)
     {
         if ($actual !== null) {
-            $this->_fail(
+            $this->fail(
                 'Expected null, actually not-null',
                 array(
                     'actual' => $this->_export($actual),
@@ -189,10 +189,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotNull($actual)
+    public function assertNotNull($actual)
     {
         if ($actual === null) {
-            $this->_fail(
+            $this->fail(
                 'Expected not-null, actually null',
                 array(
                     'actual' => $this->_export($actual),
@@ -214,10 +214,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertInstance($actual, $expect)
+    public function assertInstance($actual, $expect)
     {
         if (! is_object($actual)) {
-            $this->_fail(
+            $this->fail(
                 'Expected object, actually ' . gettype($actual),
                 array(
                     'actual' => $this->_export($actual),
@@ -226,13 +226,13 @@ abstract class Solar_Test extends Solar_Base {
         }
         
         if (! class_exists($expect, false)) {
-            $this->_fail(
+            $this->fail(
                 "Expected class '$expect' not loaded for comparison"
             );
         }
         
         if (!($actual instanceof $expect)) {
-            $this->_fail(
+            $this->fail(
                 "Expected instance of class '$expect', actually '" . get_class($actual) . "'"
             );
         }
@@ -251,10 +251,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotInstance($actual, $expect)
+    public function assertNotInstance($actual, $expect)
     {
         if (! is_object($actual)) {
-            $this->_fail(
+            $this->fail(
                 "Expected object, actually "  . gettype($actual),
                 array(
                     'actual' => $this->_export($actual),
@@ -263,13 +263,13 @@ abstract class Solar_Test extends Solar_Base {
         }
         
         if (! class_exists($expect, false)) {
-            $this->_fail(
+            $this->fail(
                 "Expected class '$expect' not loaded for comparison"
             );
         }
         
         if ($actual instanceof $expect) {
-            $this->_fail(
+            $this->fail(
                 "Expected instance not-of class '$expect', actually is"
             );
         }
@@ -286,19 +286,27 @@ abstract class Solar_Test extends Solar_Base {
      * 
      * @param mixed $actual The variable to test.
      * 
-     * @param mixed $expect The expected result.
+     * @param mixed $expect The expected value.
      * 
      * @return bool The assertion result.
      * 
      */
-    protected function _assertSame($actual, $expect)
+    public function assertSame($actual, $expect)
     {
+        if (is_array($actual)) {
+            $this->_ksort($actual);
+        }
+        
+        if (is_array($expect)) {
+            $this->_ksort($expect);
+        }
+        
         if ($actual !== $expect) {
-            $this->_fail(
+            $this->fail(
                 'Expected same, actually not-same',
                 array(
-                    'expect' => $this->_export($expect),
                     'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
                 )
             );
         } else {
@@ -320,14 +328,22 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotSame($actual, $expect)
+    public function assertNotSame($actual, $expect)
     {
+        if (is_array($actual)) {
+            $this->_ksort($actual);
+        }
+        
+        if (is_array($expect)) {
+            $this->_ksort($expect);
+        }
+        
         if ($actual === $expect) {
-            $this->_fail(
+            $this->fail(
                 'Expected not-same, actually same',
                 array(
-                    'expect' => $this->_export($expect),
                     'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
                 )
             );
         } else {
@@ -337,26 +353,31 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Asserts that two variables are equal when serialized.
-     * 
+     * Asserts that two variables are equal; type is not strict.
+     *
      * @param mixed $actual The variable to test.
      * 
-     * @param mixed $expect The expected result.
+     * @param mixed $expect The expected value.
      * 
      * @return bool The assertion result.
      * 
      */
-    protected function _assertEquals($actual, $expect)
+    public function assertEquals($actual, $expect)
     {
-        $exp = serialize($expect);
-        $act = serialize($actual);
+        if (is_array($actual)) {
+            $this->_ksort($actual);
+        }
         
-        if ($exp != $act) {
-            $this->_fail(
+        if (is_array($expect)) {
+            $this->_ksort($expect);
+        }
+        
+        if ($actual != $expect) {
+            $this->fail(
                 'Expected equals, actually not-equals',
                 array(
-                    'expect' => $this->_export($expect),
                     'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
                 )
             );
         } else {
@@ -366,26 +387,31 @@ abstract class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Asserts that two variables are not equal when serialized.
+     * Asserts that two variables are not equal; type is not strict.
      * 
      * @param mixed $actual The variable to test.
      * 
-     * @param mixed $expect The expected result.
+     * @param mixed $expect The expected value.
      * 
      * @return bool The assertion result.
      * 
      */
-    protected function _assertNotEquals($actual, $expect)
+    public function assertNotEquals($actual, $expect)
     {
-        $exp = serialize($expect);
-        $act = serialize($actual);
+        if (is_array($actual)) {
+            $this->_ksort($actual);
+        }
         
-        if ($exp == $act) {
-            $this->_fail(
+        if (is_array($expect)) {
+            $this->_ksort($expect);
+        }
+        
+        if ($actual == $expect) {
+            $this->fail(
                 'Expected not-equals, actually equals',
                 array(
-                    'expect' => $this->_export($expect),
                     'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
                 )
             );
         } else {
@@ -410,10 +436,10 @@ abstract class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    protected function _assertProperty($object, $property, $test, $expect = null)
+    public function assertProperty($object, $property, $test, $expect = null)
     {
         if (! is_object($object)) {
-            $this->_fail("Expected object, actually " . gettype($object));
+            $this->fail("Expected object, actually " . gettype($object));
         }
         
         // introspect the object and look for the property
@@ -450,14 +476,14 @@ abstract class Solar_Test extends Solar_Base {
         
         // did we find $object->$property?
         if (! $found) {
-            $this->_fail(
+            $this->fail(
                 "Did not find expected property '$property' " .
                 "in object of class '$class'"
             );
         }
         
         // test the property value
-        $method = '_assert' . ucfirst($test);
+        $method = 'assert' . ucfirst($test);
         return $this->$method($actual, $expect);
     }
     
@@ -472,7 +498,7 @@ abstract class Solar_Test extends Solar_Base {
      * @return void
      * 
      */
-    protected function _fail($text = null, $info = null)
+    public function fail($text = null, $info = null)
     {
         throw Solar::factory('Solar_Test_Exception_Fail', array(
             'class' => get_class($this),
@@ -493,7 +519,7 @@ abstract class Solar_Test extends Solar_Base {
      * @return void
      * 
      */
-    protected function _todo($text = null, $info = null)
+    public function todo($text = null, $info = null)
     {
         throw Solar::factory('Solar_Test_Exception_Todo', array(
             'class' => get_class($this),
@@ -514,7 +540,7 @@ abstract class Solar_Test extends Solar_Base {
      * @return void
      * 
      */
-    protected function _skip($text = null, $info = null)
+    public function skip($text = null, $info = null)
     {
         throw Solar::factory('Solar_Test_Exception_Skip', array(
             'class' => get_class($this),
@@ -536,6 +562,27 @@ abstract class Solar_Test extends Solar_Base {
     protected function _export($var)
     {
         return stripslashes(var_export($var, true));
+    }
+    
+    /**
+     * 
+     * Recrsively [[php ksort()]] an array.
+     * 
+     * Used so that order of array elements does not affect equality.
+     *
+     * @param array $array The array to sort.
+     * 
+     * @return void
+     * 
+     */
+    protected function _ksort(&$array)
+    {
+        ksort($array);
+        foreach($array as $key => $val) {
+            if (is_array($val)) {
+                $this->_ksort($array[$key]);
+            }
+        }
     }
 }
 ?>

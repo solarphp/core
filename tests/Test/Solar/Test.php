@@ -536,7 +536,7 @@ class Test_Solar_Test extends Solar_Test {
     public function testAssertProperty_private()
     {
         $example = Solar::factory('Solar_Test_Example');
-        $expect = 'nothing to see here';
+        $expect = 'invisible';
         $this->assertProperty($example, '_private_var', 'equals', $expect);
     }
     

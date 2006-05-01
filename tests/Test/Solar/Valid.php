@@ -1,17 +1,5 @@
 <?php
 
-class customValid {
-    static public function staticIsInt($val)
-    {
-        return is_int($val);
-    }
-    
-    public function isInt($val)
-    {
-        return is_int($val);
-    }
-}
-
 class Test_Solar_Valid extends Solar_Test {
     
     protected $_valid;
@@ -132,8 +120,8 @@ class Test_Solar_Valid extends Solar_Test {
     {
         $callbacks = array(
             'function()'        => 'is_int',
-            'static::method()'  => array('customValid', 'staticIsInt'),
-            '$object->method()' => array(new customValid(), 'isInt'),
+            'static::method()'  => array('Solar_Test_Example', 'staticValidIsInt'),
+            '$object->method()' => array(Solar::factory('Solar_Test_Example'), 'validIsInt'),
         );
             
         // good

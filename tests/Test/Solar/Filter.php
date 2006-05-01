@@ -1,20 +1,8 @@
 <?php
 
-function test_filter_callback($value, $find, $with)
+function solar_test_filter_callback($value, $find, $with)
 {
     return str_replace($find, $with, $value);
-}
-
-class Test_Filter_Callback {
-    public function exec($value, $find, $with)
-    {
-        return str_replace($find, $with, $value);
-    }
-
-    public static function execStatic($value, $find, $with)
-    {
-        return str_replace($find, $with, $value);
-    }
 }
 
 class Test_Solar_Filter extends Solar_Test {
@@ -187,7 +175,7 @@ class Test_Solar_Filter extends Solar_Test {
     {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
-        $after = $filter->callback($before, 'test_filter_callback', ' ', '@');
+        $after = $filter->callback($before, 'solar_test_filter_callback', ' ', '@');
         $this->assertSame($after, 'abc@123@,./');
     }
     
@@ -195,7 +183,8 @@ class Test_Solar_Filter extends Solar_Test {
     {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
-        $after = $filter->callback($before, array('Test_Filter_Callback', 'execStatic'), ' ', '@');
+        Solar::loadClass('Solar_Test_Example');
+        $after = $filter->callback($before, array('Solar_Test_Example', 'staticFilterCallback'), ' ', '@');
         $this->assertSame($after, 'abc@123@,./');
     }
 
@@ -203,8 +192,8 @@ class Test_Solar_Filter extends Solar_Test {
     {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
-        $obj = new Test_Filter_Callback();
-        $after = $filter->callback($before, array($obj, 'exec'), ' ', '@');
+        $obj = Solar::factory('Solar_Test_Example');
+        $after = $filter->callback($before, array($obj, 'filterCallback'), ' ', '@');
         $this->assertSame($after, 'abc@123@,./');
     }
     

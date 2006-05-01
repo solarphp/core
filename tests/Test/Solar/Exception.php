@@ -29,16 +29,16 @@ class Test_Solar_Exception extends Solar_Test {
     public function test__construct()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertInstance($e, 'Solar_Exception');
-        $this->_assertProperty($e, '_class', 'same', $this->_config['class']);
-        $this->_assertProperty($e, 'code', 'same', $this->_config['code']);
-        $this->_assertProperty($e, 'message', 'same', $this->_config['text']);
-        $this->_assertProperty($e, '_info', 'same', $this->_config['info']);
+        $this->assertInstance($e, 'Solar_Exception');
+        $this->assertProperty($e, '_class', 'same', $this->_config['class']);
+        $this->assertProperty($e, 'code', 'same', $this->_config['code']);
+        $this->assertProperty($e, 'message', 'same', $this->_config['text']);
+        $this->assertProperty($e, '_info', 'same', $this->_config['info']);
     }
     
     public function test__toString()
     {
-        $this->_skip('filesystem-specific');
+        $this->skip('filesystem-specific');
         
         /*
         $e = Solar::factory('Solar_Exception', $this->_config);
@@ -60,54 +60,54 @@ Stack trace:
         
         Solar::dump($e->__toString());
         
-        $this->_assertSame($e->__toString(), $expect);
+        $this->assertSame($e->__toString(), $expect);
         */
     }
     
     public function testGetInfo()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getInfo(), $this->_config['info']);
+        $this->assertSame($e->getInfo(), $this->_config['info']);
     }
     
     public function testGetClass()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getClass(), $this->_config['class']);
+        $this->assertSame($e->getClass(), $this->_config['class']);
     }
     
     public function testGetClassCode()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getClassCode(), $this->_config['class'] . '::' . $this->_config['code']);
+        $this->assertSame($e->getClassCode(), $this->_config['class'] . '::' . $this->_config['code']);
     }
     
     public function testGetMessage()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getMessage(), $this->_config['text']);
+        $this->assertSame($e->getMessage(), $this->_config['text']);
     }
     
     public function testGetCode()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getCode(), $this->_config['code']);
+        $this->assertSame($e->getCode(), $this->_config['code']);
     }
     
     public function testGetFile()
     {
-        $this->_skip('filesystem-specific, always reports "Solar.php"');
+        $this->skip('filesystem-specific, always reports "Solar.php"');
     }
     
     public function testGetLine()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
-        $this->_assertSame($e->getLine(), 416); // the line in Solar::factory() method
+        $this->assertSame($e->getLine(), 416); // the line in Solar::factory() method
     }
     
     public function testGetTrace()
     {
-        $this->_skip('filesystem-specific');
+        $this->skip('filesystem-specific');
         
         /*
         $e = Solar::factory('Solar_Exception', $this->_config);
@@ -135,13 +135,13 @@ Stack trace:
           ),
         );
 
-        $this->_assertSame($e->getTrace(), $expect);
+        $this->assertSame($e->getTrace(), $expect);
         */
     }
     
     public function testGetTraceAsString()
     {
-        $this->_skip('filesystem-specific');
+        $this->skip('filesystem-specific');
         
         /*
         $e = Solar::factory('Solar_Exception', $this->_config);
@@ -149,7 +149,7 @@ Stack trace:
         $expect = "#0 " . __FILE__ . "(14): Solar::factory('Solar_Exception', Array)
         #1 {main}";
 
-        $this->_assertSame($e->getTraceAsString(), $expect);
+        $this->assertSame($e->getTraceAsString(), $expect);
         */
     }
     
@@ -172,12 +172,12 @@ Stack trace:
                 // throw a Solar-wide specific exception based on an error code string
                 $example->exceptionFromCode($code);
             } catch (Exception $e) {
-                $this->_assertInstance($e, "Solar_Exception_$name");
+                $this->assertInstance($e, "Solar_Exception_$name");
                 // make sure the class and code works
-                $this->_assertSame($e->getClass(), 'Solar_Test_Example');
-                $this->_assertSame($e->getCode(), $code);
+                $this->assertSame($e->getClass(), 'Solar_Test_Example');
+                $this->assertSame($e->getCode(), $code);
                 // make sure the automatic translation works
-                $this->_assertSame($e->getMessage(), $example->locale($code));
+                $this->assertSame($e->getMessage(), $example->locale($code));
             }
         }
     }

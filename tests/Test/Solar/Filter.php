@@ -35,7 +35,7 @@ class Test_Solar_Filter extends Solar_Test {
     public function test__construct()
     {
         $filter = Solar::factory('Solar_Filter');
-        $this->_assertInstance($filter, 'Solar_Filter');
+        $this->assertInstance($filter, 'Solar_Filter');
     }
     
     public function testAlpha()
@@ -43,7 +43,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->alpha($before);
-        $this->_assertSame($after, 'abc');
+        $this->assertSame($after, 'abc');
     }
     
     public function testStripAlpha()
@@ -51,7 +51,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->stripAlpha($before);
-        $this->_assertSame($after, ' 123 ,./');
+        $this->assertSame($after, ' 123 ,./');
     }
     
     public function testAlnum()
@@ -59,7 +59,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->alnum($before);
-        $this->_assertSame($after, 'abc123');
+        $this->assertSame($after, 'abc123');
     }
     
     public function testStripAlnum()
@@ -67,7 +67,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->stripAlnum($before);
-        $this->_assertSame($after, '  ,./');
+        $this->assertSame($after, '  ,./');
     }
     
     public function testBlank()
@@ -75,7 +75,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = "abc \n 123 \t ,./";
         $after = $filter->blank($before);
-        $this->_assertSame($after, " \n  \t ");
+        $this->assertSame($after, " \n  \t ");
     }
     
     public function testStripBlank()
@@ -83,7 +83,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = "abc \n 123 \t ,./";
         $after = $filter->stripBlank($before);
-        $this->_assertSame($after, "abc123,./");
+        $this->assertSame($after, "abc123,./");
     }
     
     public function testNumeric()
@@ -91,7 +91,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->numeric($before);
-        $this->_assertSame($after, '123');
+        $this->assertSame($after, '123');
     }
     
     public function testStripNumeric()
@@ -99,7 +99,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->stripNumeric($before);
-        $this->_assertSame($after, 'abc  ,./');
+        $this->assertSame($after, 'abc  ,./');
     }
     
     public function testWord()
@@ -107,7 +107,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc _ 123 - ,./';
         $after = $filter->word($before);
-        $this->_assertSame($after, 'abc_123');
+        $this->assertSame($after, 'abc_123');
     }
     
     public function testStripWord()
@@ -115,7 +115,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc _ 123 - ,./';
         $after = $filter->stripWord($before);
-        $this->_assertSame($after, '   - ,./');
+        $this->assertSame($after, '   - ,./');
     }
     
     public function testFormatDate()
@@ -123,7 +123,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'Nov 7, 1979, 12:34pm';
         $after = $filter->formatDate($before);
-        $this->_assertSame($after, '1979-11-07');
+        $this->assertSame($after, '1979-11-07');
     }
     
     public function testFormatTime()
@@ -131,7 +131,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'Nov 7, 1979, 12:34pm';
         $after = $filter->formatTime($before);
-        $this->_assertSame($after, '12:34:00');
+        $this->assertSame($after, '12:34:00');
     }
     
     public function testFormatTimestamp()
@@ -139,7 +139,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'Nov 7, 1979, 12:34pm';
         $after = $filter->formatTimestamp($before);
-        $this->_assertSame($after, '1979-11-07T12:34:00');
+        $this->assertSame($after, '1979-11-07T12:34:00');
     }
     
     public function testPregReplace()
@@ -147,7 +147,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->pregReplace($before, '/[^a-z]/', '@');
-        $this->_assertSame($after, 'abc@@@@@@@@');
+        $this->assertSame($after, 'abc@@@@@@@@');
     }
     
     public function testStrReplace()
@@ -155,7 +155,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->strReplace($before, ' ', '@');
-        $this->_assertSame($after, 'abc@123@,./');
+        $this->assertSame($after, 'abc@123@,./');
     }
     
     public function testTrim()
@@ -163,7 +163,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = '  abc 123 ,./  ';
         $after = $filter->trim($before);
-        $this->_assertSame($after, 'abc 123 ,./');
+        $this->assertSame($after, 'abc 123 ,./');
     }
     
     public function testCast()
@@ -179,7 +179,7 @@ class Test_Solar_Filter extends Solar_Test {
 
         foreach ($types as $type) {
             $after = $filter->cast($before, $type);
-            $this->_assertSame(gettype($after), $type);
+            $this->assertSame(gettype($after), $type);
         }
     }
     
@@ -188,7 +188,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->callback($before, 'test_filter_callback', ' ', '@');
-        $this->_assertSame($after, 'abc@123@,./');
+        $this->assertSame($after, 'abc@123@,./');
     }
     
     public function testCallback_staticMethod()
@@ -196,7 +196,7 @@ class Test_Solar_Filter extends Solar_Test {
         $filter = Solar::factory('Solar_Filter');
         $before = 'abc 123 ,./';
         $after = $filter->callback($before, array('Test_Filter_Callback', 'execStatic'), ' ', '@');
-        $this->_assertSame($after, 'abc@123@,./');
+        $this->assertSame($after, 'abc@123@,./');
     }
 
     public function testCallback_objectMethod()
@@ -205,7 +205,7 @@ class Test_Solar_Filter extends Solar_Test {
         $before = 'abc 123 ,./';
         $obj = new Test_Filter_Callback();
         $after = $filter->callback($before, array($obj, 'exec'), ' ', '@');
-        $this->_assertSame($after, 'abc@123@,./');
+        $this->assertSame($after, 'abc@123@,./');
     }
     
     public function testMultiple()
@@ -223,7 +223,7 @@ class Test_Solar_Filter extends Solar_Test {
 
         $after = $filter->multiple($before, $multi);
 
-        $this->_assertSame($after, '1979-11-07T12:34:00');
+        $this->assertSame($after, '1979-11-07T12:34:00');
     }
 }
 ?>

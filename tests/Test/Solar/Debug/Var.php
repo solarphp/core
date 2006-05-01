@@ -47,12 +47,12 @@ EXPECT;
     public function test__construct()
     {
         $var = Solar::factory('Solar_Debug_Var', array('output' => 'text'));
-        $this->_assertInstance($var, 'Solar_Debug_Var');
+        $this->assertInstance($var, 'Solar_Debug_Var');
     }
     
     public function testDump_arrayAsText()
     {
-        $this->_assertSame(
+        $this->assertSame(
             $this->_var_text->dump($this->_actual_array),
             $this->_expect_array
         );
@@ -60,7 +60,7 @@ EXPECT;
     
     public function testDump_stringAsText()
     {
-        $this->_assertSame(
+        $this->assertSame(
             $this->_var_text->dump($this->_actual_string),
             $this->_expect_string
         );
@@ -72,7 +72,7 @@ EXPECT;
                 . htmlspecialchars($this->_expect_array)
                 . '</pre>';
         
-        $this->_assertSame(
+        $this->assertSame(
             $this->_var_html->dump($this->_actual_array),
             $expect
         );
@@ -84,7 +84,7 @@ EXPECT;
                 . htmlspecialchars($this->_expect_string)
                 . '</pre>';
         
-        $this->_assertSame(
+        $this->assertSame(
             $this->_var_html->dump($this->_actual_string),
             $expect
         );

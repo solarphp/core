@@ -48,18 +48,18 @@ class Test_Solar_Uri extends Solar_Test {
     
     public function test__construct()
     {
-        $this->_assertInstance($this->_uri, $this->_class);
+        $this->assertInstance($this->_uri, $this->_class);
     }
     
     public function test_config()
     {
-        $this->_assertSame($this->_uri->scheme, 'http');
-        $this->_assertSame($this->_uri->host, 'example.com');
-        $this->_assertSame($this->_uri->port, null);
-        $this->_assertSame($this->_uri->user, null);
-        $this->_assertSame($this->_uri->pass, null);
-        $this->_assertSame($this->_uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
-        $this->_assertSame($this->_uri->query, array('foo'=>'bar', 'baz'=>'dib'));
+        $this->assertSame($this->_uri->scheme, 'http');
+        $this->assertSame($this->_uri->host, 'example.com');
+        $this->assertSame($this->_uri->port, null);
+        $this->assertSame($this->_uri->user, null);
+        $this->assertSame($this->_uri->pass, null);
+        $this->assertSame($this->_uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
+        $this->assertSame($this->_uri->query, array('foo'=>'bar', 'baz'=>'dib'));
     }
     
     public function testSet()
@@ -88,22 +88,22 @@ class Test_Solar_Uri extends Solar_Test {
         // import the URI spec and test that it imported properly
         $this->_uri->set($spec);
         // $assert->setLabel('Initial import');
-        $this->_assertSame($this->_uri->scheme, $scheme);
-        $this->_assertSame($this->_uri->host, $host);
-        $this->_assertSame($this->_uri->port, $port);
-        $this->_assertSame($this->_uri->path, explode('/', $path));
-        $this->_assertSame($this->_uri->query, $query);
+        $this->assertSame($this->_uri->scheme, $scheme);
+        $this->assertSame($this->_uri->host, $host);
+        $this->assertSame($this->_uri->port, $port);
+        $this->assertSame($this->_uri->path, explode('/', $path));
+        $this->assertSame($this->_uri->query, $query);
 
         // npw export in full, then re-import and check again.
         // do this to make sure there are no translation errors.
         $spec = $this->_uri->fetch(true);
         $this->_uri->set($spec);
         // $assert->setLabel('Retranslation');
-        $this->_assertSame($this->_uri->scheme, $scheme);
-        $this->_assertSame($this->_uri->host, $host);
-        $this->_assertSame($this->_uri->port, $port);
-        $this->_assertSame($this->_uri->path, explode('/', $path));
-        $this->_assertSame($this->_uri->query, $query);
+        $this->assertSame($this->_uri->scheme, $scheme);
+        $this->assertSame($this->_uri->host, $host);
+        $this->assertSame($this->_uri->port, $port);
+        $this->assertSame($this->_uri->path, explode('/', $path));
+        $this->assertSame($this->_uri->query, $query);
     }
     
     public function testFetch()
@@ -143,11 +143,11 @@ class Test_Solar_Uri extends Solar_Test {
 
         // full fetch
         // $assert->setLabel('full');
-        $this->_assertSame($this->_uri->fetch(true), $expect_full);
+        $this->assertSame($this->_uri->fetch(true), $expect_full);
 
         // partial fetch
         // $assert->setLabel('part');
-        $this->_assertSame($this->_uri->fetch(), $expect_part);
+        $this->assertSame($this->_uri->fetch(), $expect_part);
     }
     
     public function testQuick()
@@ -156,24 +156,24 @@ class Test_Solar_Uri extends Solar_Test {
         // partial
         $expect = '/path/to/index.php?foo=bar';
         $actual = $this->_uri->quick("http://example.com$expect");
-        $this->_assertSame($actual, $expect);
+        $this->assertSame($actual, $expect);
 
         // full
         $expect = 'http://example.com/path/to/index.php?foo=bar';
         $actual = $this->_uri->quick($expect, true);
-        $this->_assertSame($actual, $expect);
+        $this->assertSame($actual, $expect);
     }
     
     public function testSetQuery()
     {
         $this->_uri->setQuery('a=b&c=d');
-        $this->_assertSame($this->_uri->query, array('a' => 'b', 'c' => 'd'));
+        $this->assertSame($this->_uri->query, array('a' => 'b', 'c' => 'd'));
     }
     
     public function testSetPath()
     {
         $this->_uri->setPath('/very/special/example/');
-        $this->_assertSame($this->_uri->path, array('very', 'special', 'example'));
+        $this->assertSame($this->_uri->path, array('very', 'special', 'example'));
     }
 }
 ?>

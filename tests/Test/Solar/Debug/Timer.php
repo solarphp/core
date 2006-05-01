@@ -4,7 +4,7 @@ class Test_Solar_Debug_Timer extends Solar_Test {
     public function test__construct()
     {
         $timer = Solar::factory('Solar_Debug_Timer');
-        $this->_assertInstance($timer, 'Solar_Debug_Timer');
+        $this->assertInstance($timer, 'Solar_Debug_Timer');
     }
     
     public function testAll()
@@ -28,14 +28,14 @@ class Test_Solar_Debug_Timer extends Solar_Test {
         $profile = $timer->profile();
         
         // make sure we hit all the marks
-        $this->_assertTrue(count($profile) == count($mark));
+        $this->assertTrue(count($profile) == count($mark));
         
         foreach ($profile as $val) {
             // make sure the profiled times are near the
             // times we marked
             $key = $val['name'];
             $diff = abs($val['time'] - $mark[$key]);
-            $this->_assertTrue($diff <= 0.0005);
+            $this->assertTrue($diff <= 0.0005);
         }
     }
 }

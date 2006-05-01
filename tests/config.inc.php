@@ -13,7 +13,7 @@ $config['Solar_Debug_Var']['output'] = 'text';
 
 $config['Solar_Sql'] = array(
     'driver' => 'Solar_Sql_Driver_Sqlite',
-    'name'   => dirname(__FILE__) . '/solar_test.sq3',
+    'name'   => '/tmp/solar_test_' . time() . '.sq3',
 );
 
 return $config;

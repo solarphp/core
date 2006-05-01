@@ -25,7 +25,7 @@ class Test_Solar_PathStack extends Solar_Test {
 
         $stack = Solar::factory('Solar_PathStack');
         $stack->set('/path/foo:/path/bar:/path/baz');
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
     }
     
     public function testAdd_byArray()
@@ -39,7 +39,7 @@ class Test_Solar_PathStack extends Solar_Test {
           "/path/baz/",
         );
         
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
     }
     
     public function testAdd_byString()
@@ -54,7 +54,7 @@ class Test_Solar_PathStack extends Solar_Test {
           "/path/baz/",
         );
         
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
     }
     
     public function testAdd_byLifo()
@@ -69,7 +69,7 @@ class Test_Solar_PathStack extends Solar_Test {
           "/path/bar/",
           "/path/foo/",
         );
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
     }
     
     public function testSet_byString()
@@ -82,7 +82,7 @@ class Test_Solar_PathStack extends Solar_Test {
 
         $stack = Solar::factory('Solar_PathStack');
         $stack->set('/path/foo:/path/bar:/path/baz');
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
 
     }
     
@@ -96,7 +96,7 @@ class Test_Solar_PathStack extends Solar_Test {
         
         $stack = Solar::factory('Solar_PathStack');
         $stack->set($expect);
-        $this->_assertSame($stack->get(), $expect);
+        $this->assertSame($stack->get(), $expect);
     }
     
     public function testFind()
@@ -120,19 +120,19 @@ class Test_Solar_PathStack extends Solar_Test {
         
         // should find it at a
         $actual = $stack->find('target1');
-        $this->_assertSame($actual, "{$path[0]}/target1");
+        $this->assertSame($actual, "{$path[0]}/target1");
 
         // should find it at b
         $actual = $stack->find('target2');
-        $this->_assertSame($actual, "{$path[1]}/target2");
+        $this->assertSame($actual, "{$path[1]}/target2");
 
         // should find it at c
         $actual = $stack->find('target3');
-        $this->_assertSame($actual, "{$path[2]}/target3");
+        $this->assertSame($actual, "{$path[2]}/target3");
 
         // should not find it at all
         $actual = $stack->find('no_such_file');
-        $this->_assertFalse($actual);
+        $this->assertFalse($actual);
 
         // put the include_path back
         set_include_path($old_path);
@@ -156,19 +156,19 @@ class Test_Solar_PathStack extends Solar_Test {
 
         // should find it at Solar_Base
         $actual = $stack->findReal('target1');
-        $this->_assertSame($actual, "{$path[0]}/target1");
+        $this->assertSame($actual, "{$path[0]}/target1");
 
         // should find it at Solar_Debug_Timer
         $actual = $stack->findReal('target2');
-        $this->_assertSame($actual, "{$path[1]}/target2");
+        $this->assertSame($actual, "{$path[1]}/target2");
 
         // should find it at Solar_Debug_Var
         $actual = $stack->findReal('target3');
-        $this->_assertSame($actual, "{$path[2]}/target3");
+        $this->assertSame($actual, "{$path[2]}/target3");
 
         // should not find it at all
         $actual = $stack->findReal('no_such_file');
-        $this->_assertFalse($actual);
+        $this->assertFalse($actual);
     }
 }
 ?>

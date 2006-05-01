@@ -29,17 +29,17 @@ class Test_Solar_Cache_File extends Solar_Test {
         $data = 'Wile E. Coyote';
         
         // data has not been stored yet
-        $this->_assertFalse($this->_cache->fetch($id));
+        $this->assertFalse($this->_cache->fetch($id));
         
         // store it
-        $this->_assertTrue($this->_cache->save($id, $data));
+        $this->assertTrue($this->_cache->save($id, $data));
         
         // and we should be able to fetch now
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertSame($this->_cache->fetch($id), $data);
         
         // delete it, should not be able to fetch again
         $this->_cache->delete($id);
-        $this->_assertFalse($this->_cache->fetch($id));
+        $this->assertFalse($this->_cache->fetch($id));
     }
     
     public function testDeleteAll()
@@ -49,11 +49,11 @@ class Test_Solar_Cache_File extends Solar_Test {
         
         foreach ($list as $id) {
             // data has not been stored yet
-            $this->_assertFalse($this->_cache->fetch($id));
+            $this->assertFalse($this->_cache->fetch($id));
             // so store some data
-            $this->_assertTrue($this->_cache->save($id, $data));
+            $this->assertTrue($this->_cache->save($id, $data));
             // and we should be able to fetch now
-            $this->_assertSame($this->_cache->fetch($id), $data);
+            $this->assertSame($this->_cache->fetch($id), $data);
         }
         
         // delete everything
@@ -61,7 +61,7 @@ class Test_Solar_Cache_File extends Solar_Test {
         
         // should not be able to fetch again
         foreach ($list as $id) {
-            $this->_assertFalse($this->_cache->fetch($id));
+            $this->assertFalse($this->_cache->fetch($id));
         }
     }
     
@@ -71,23 +71,23 @@ class Test_Solar_Cache_File extends Solar_Test {
         $data = 'Wile E. Coyote';
         
         // data has not been stored yet
-        $this->_assertFalse($this->_cache->fetch($id));
+        $this->assertFalse($this->_cache->fetch($id));
         
         // store it
-        $this->_assertTrue($this->_cache->save($id, $data));
+        $this->assertTrue($this->_cache->save($id, $data));
         
         // and we should be able to fetch now
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertSame($this->_cache->fetch($id), $data);
         
         // deactivate then try to fetch
         $this->_cache->setActive(false);
-        $this->_assertFalse($this->_cache->isActive());
-        $this->_assertFalse($this->_cache->fetch($id));
+        $this->assertFalse($this->_cache->isActive());
+        $this->assertFalse($this->_cache->fetch($id));
         
         // re-activate then try to fetch
         $this->_cache->setActive(true);
-        $this->_assertTrue($this->_cache->isActive());
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertTrue($this->_cache->isActive());
+        $this->assertSame($this->_cache->fetch($id), $data);
     }
     
     public function testGetLife()
@@ -96,36 +96,36 @@ class Test_Solar_Cache_File extends Solar_Test {
         $data = 'Wile E. Coyote';
         
         // configured from setup
-        $this->_assertSame($this->_cache->getLife(), $this->_config['life']);
+        $this->assertSame($this->_cache->getLife(), $this->_config['life']);
         
         // store something
-        $this->_assertTrue($this->_cache->save($id, $data));
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertTrue($this->_cache->save($id, $data));
+        $this->assertSame($this->_cache->fetch($id), $data);
         
         // wait until just before the lifetime,
         // we should still get data
         sleep($this->_cache->getLife() - 1);
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertSame($this->_cache->fetch($id), $data);
         
         // wait until just after the lifetime,
         // we should get nothing
         sleep(2);
-        $this->_assertFalse($this->_cache->fetch($id));
+        $this->assertFalse($this->_cache->fetch($id));
         
     }
     
     public function testIsActive()
     {
         // should be active by default
-        $this->_assertTrue($this->_cache->isActive());
+        $this->assertTrue($this->_cache->isActive());
         
         // turn it off
         $this->_cache->setActive(false);
-        $this->_assertFalse($this->_cache->isActive());
+        $this->assertFalse($this->_cache->isActive());
         
         // turn it back on
         $this->_cache->setActive(true);
-        $this->_assertTrue($this->_cache->isActive());
+        $this->assertTrue($this->_cache->isActive());
     }
     
     public function testSave_Array()
@@ -137,24 +137,24 @@ class Test_Solar_Cache_File extends Solar_Test {
             'eats' => 'Roadrunner',
             'flag' => 'Not again!',
         );
-        $this->_assertTrue($this->_cache->save($id, $data));
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertTrue($this->_cache->save($id, $data));
+        $this->assertSame($this->_cache->fetch($id), $data);
     }
     
     public function testSave_Object()
     {
         $id = 'coyote';
         $data = new Coyote();
-        $this->_assertTrue($this->_cache->save($id, $data));
-        $this->_assertEquals($this->_cache->fetch($id), $data);
+        $this->assertTrue($this->_cache->save($id, $data));
+        $this->assertEquals($this->_cache->fetch($id), $data);
     }
     
     public function testSave_String()
     {
         $id = 'coyote';
         $data = 'Wile E. Coyote';
-        $this->_assertTrue($this->_cache->save($id, $data));
-        $this->_assertSame($this->_cache->fetch($id), $data);
+        $this->assertTrue($this->_cache->save($id, $data));
+        $this->assertSame($this->_cache->fetch($id), $data);
     }
 }
 ?>

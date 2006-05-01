@@ -29,7 +29,7 @@ function skeleton($class, $methods) {
         $text[] = "    ";
         $text[] = "    public function test$method()";
         $text[] = "    {";
-        $text[] = "        \$this->_todo('incomplete');";
+        $text[] = "        \$this->todo('incomplete');";
         $text[] = "    }";
     }
     
@@ -47,6 +47,7 @@ if (! isset($argv[1])) {
 // ---------------------------------------------------------------------
 
 // start Solar
+error_reporting(E_STRICT | E_ALL);
 require_once 'Solar.php';
 Solar::start(false);
 
@@ -61,7 +62,7 @@ Solar::loadClass($class);
 $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
 $file = "$dir$sub.php";
 if (is_readable($file)) {
-    die("STOP: Test already exists.");
+    die("STOP: Test already exists ($file).");
 }
 
 if (! is_dir(dirname($file))) {

@@ -23,7 +23,7 @@ class Test_Solar_Valid extends Solar_Test {
     
     public function test__construct()
     {
-        $this->_assertInstance($this->_valid, 'Solar_Valid');
+        $this->assertInstance($this->_valid, 'Solar_Valid');
     }
     
     public function testAlnum()
@@ -37,7 +37,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->alnum($val));
+            $this->assertTrue($this->_valid->alnum($val));
         }
         
         // bad, or are blank
@@ -47,7 +47,7 @@ class Test_Solar_Valid extends Solar_Test {
             "non:alpha-numeric's",
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->alnum($val));
+            $this->assertFalse($this->_valid->alnum($val));
         }
         
         // blanks allowed
@@ -60,7 +60,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->alnum($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->alnum($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -72,7 +72,7 @@ class Test_Solar_Valid extends Solar_Test {
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->alpha($val));
+            $this->assertTrue($this->_valid->alpha($val));
         }
         
         // bad, or are blank
@@ -85,7 +85,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->alpha($val));
+            $this->assertFalse($this->_valid->alpha($val));
         }
         
         
@@ -96,7 +96,7 @@ class Test_Solar_Valid extends Solar_Test {
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->alpha($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->alpha($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -112,7 +112,7 @@ class Test_Solar_Valid extends Solar_Test {
             'multi'   => " \t \n \r ",
         );
         foreach ($test as $key => $val) {
-            $this->_assertTrue($this->_valid->blank($val));
+            $this->assertTrue($this->_valid->blank($val));
         }
         
         // bad
@@ -124,7 +124,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->blank($val));
+            $this->assertFalse($this->_valid->blank($val));
         }
     }
     
@@ -142,7 +142,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($callbacks as $callbackName => $callback) {
             foreach ($test as $val) {
-                $this->_assertTrue($this->_valid->callback($val, $callback));
+                $this->assertTrue($this->_valid->callback($val, $callback));
             }
         }
         
@@ -155,7 +155,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($callbacks as $callbackName => $callback) {
             foreach ($test as $val) {
-                $this->_assertFalse($this->_valid->callback($val, $callback));
+                $this->assertFalse($this->_valid->callback($val, $callback));
             }
         }
     }
@@ -168,7 +168,7 @@ class Test_Solar_Valid extends Solar_Test {
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->ctype($val, 'alpha'));
+            $this->assertTrue($this->_valid->ctype($val, 'alpha'));
         }
         
         // bad, or are blank
@@ -181,7 +181,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->ctype($val, 'alpha'));
+            $this->assertFalse($this->_valid->ctype($val, 'alpha'));
         }
         
         
@@ -192,7 +192,7 @@ class Test_Solar_Valid extends Solar_Test {
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->ctype($val, 'alpha', Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->ctype($val, 'alpha', Solar_Valid::OR_BLANK));
         }
     }
     
@@ -208,7 +208,7 @@ class Test_Solar_Valid extends Solar_Test {
             "something+else@example.com",
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->email($val));
+            $this->assertTrue($this->_valid->email($val));
         }
         
         // bad, or are blank
@@ -221,7 +221,7 @@ class Test_Solar_Valid extends Solar_Test {
             " ",
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->email($val));
+            $this->assertFalse($this->_valid->email($val));
         }
         
         
@@ -237,7 +237,7 @@ class Test_Solar_Valid extends Solar_Test {
             "nobody1234567890@yahoo.co.uk",
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->email($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->email($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -252,11 +252,11 @@ class Test_Solar_Valid extends Solar_Test {
         
         // test that a valid value returns null
         $result = $this->_valid->feedback(5, $params);
-        $this->_assertNull($result);
+        $this->assertNull($result);
         
         // test that an invalid value returns the message
         $result = $this->_valid->feedback(1, $params);
-        $this->_assertSame($result, $message);
+        $this->assertSame($result, $message);
     }
     
     public function testInKeys()
@@ -274,13 +274,13 @@ class Test_Solar_Valid extends Solar_Test {
         // good
         $test = array_keys($opts);
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->inKeys($val, $opts));
+            $this->assertTrue($this->_valid->inKeys($val, $opts));
         }
         
         // bad, or are blank
         $test = array('a', 'b', 'c', '', ' ');
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->inKeys($val, $opts));
+            $this->assertFalse($this->_valid->inKeys($val, $opts));
         }
         
         
@@ -289,7 +289,7 @@ class Test_Solar_Valid extends Solar_Test {
         $test[] = " ";
         $test[] = "\r";
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->inKeys($val, $opts, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->inKeys($val, $opts, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -308,13 +308,13 @@ class Test_Solar_Valid extends Solar_Test {
         // good
         $test = $opts;
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->inList($val, $opts));
+            $this->assertTrue($this->_valid->inList($val, $opts));
         }
         
         // bad, or are blank
         $test = array('a', 'b', 'c', '', ' ');
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->inList($val, $opts));
+            $this->assertFalse($this->_valid->inList($val, $opts));
         }
         
         
@@ -323,7 +323,7 @@ class Test_Solar_Valid extends Solar_Test {
         $test[] = "";
         $test[] = " ";
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->inList($val, $opts, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->inList($val, $opts, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -338,7 +338,7 @@ class Test_Solar_Valid extends Solar_Test {
             '-123',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->integer($val));
+            $this->assertTrue($this->_valid->integer($val));
         }
         
         // bad, or are blank
@@ -350,7 +350,7 @@ class Test_Solar_Valid extends Solar_Test {
             '0000123.456000',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->integer($val));
+            $this->assertFalse($this->_valid->integer($val));
         }
         
         
@@ -364,7 +364,7 @@ class Test_Solar_Valid extends Solar_Test {
             '-123',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->integer($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->integer($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -380,7 +380,7 @@ class Test_Solar_Valid extends Solar_Test {
             '127.0.0.1',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->ipv4($val));
+            $this->assertTrue($this->_valid->ipv4($val));
         }
         
         // bad, or are blank
@@ -399,7 +399,7 @@ class Test_Solar_Valid extends Solar_Test {
             'a.b.c.d',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->ipv4($val));
+            $this->assertFalse($this->_valid->ipv4($val));
         }
         
         
@@ -414,7 +414,7 @@ class Test_Solar_Valid extends Solar_Test {
             '127.0.0.1',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->ipv4($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->ipv4($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -429,7 +429,7 @@ class Test_Solar_Valid extends Solar_Test {
             '9999-12-31',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoDate($val));
+            $this->assertTrue($this->_valid->isoDate($val));
         }
         
         // bad, or are blank
@@ -446,7 +446,7 @@ class Test_Solar_Valid extends Solar_Test {
             '9999.12:31',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->isoDate($val));
+            $this->assertFalse($this->_valid->isoDate($val));
         }
         
         
@@ -459,7 +459,7 @@ class Test_Solar_Valid extends Solar_Test {
             '9999-12-31',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoDate($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->isoDate($val, Solar_Valid::OR_BLANK));
         }
         
     }
@@ -474,7 +474,7 @@ class Test_Solar_Valid extends Solar_Test {
             '24:00:00',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoTime($val));
+            $this->assertTrue($this->_valid->isoTime($val));
         }
         
         // bad, or are blank
@@ -490,7 +490,7 @@ class Test_Solar_Valid extends Solar_Test {
             '12:34'
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->isoTime($val));
+            $this->assertFalse($this->_valid->isoTime($val));
         }
         
         
@@ -503,7 +503,7 @@ class Test_Solar_Valid extends Solar_Test {
             '24:00:00',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoTime($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->isoTime($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -516,7 +516,7 @@ class Test_Solar_Valid extends Solar_Test {
             '2004-02-29T24:00:00',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoTimestamp($val));
+            $this->assertTrue($this->_valid->isoTimestamp($val));
         }
         
         // bad, or are blank
@@ -533,7 +533,7 @@ class Test_Solar_Valid extends Solar_Test {
             '9999.12:31 ab:cd:ef',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->isoTimestamp($val));
+            $this->assertFalse($this->_valid->isoTimestamp($val));
         }
         
         
@@ -545,7 +545,7 @@ class Test_Solar_Valid extends Solar_Test {
             '2004-02-29T24:00:00',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->isoTimestamp($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->isoTimestamp($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -558,7 +558,7 @@ class Test_Solar_Valid extends Solar_Test {
             'xx_YY',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->localeCode($val));
+            $this->assertTrue($this->_valid->localeCode($val));
         }
         
         // bad, or are blank
@@ -571,7 +571,7 @@ class Test_Solar_Valid extends Solar_Test {
             'America/Chicago',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->localeCode($val));
+            $this->assertFalse($this->_valid->localeCode($val));
         }
         
         
@@ -583,7 +583,7 @@ class Test_Solar_Valid extends Solar_Test {
             'xx_YY',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->localeCode($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->localeCode($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -597,7 +597,7 @@ class Test_Solar_Valid extends Solar_Test {
             1, 2, 3,
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->max($val, $max));
+            $this->assertTrue($this->_valid->max($val, $max));
         }
         
         // bad, or are blank
@@ -606,7 +606,7 @@ class Test_Solar_Valid extends Solar_Test {
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->max($val, $max));
+            $this->assertFalse($this->_valid->max($val, $max));
         }
         
         // blanks allowed
@@ -615,7 +615,7 @@ class Test_Solar_Valid extends Solar_Test {
             1, 2, 3,
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->max($val, $max, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->max($val, $max, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -631,7 +631,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->maxLength($val, $len));
+            $this->assertTrue($this->_valid->maxLength($val, $len));
         }
         
         // bad, or are blank
@@ -642,7 +642,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->maxLength($val, $len));
+            $this->assertFalse($this->_valid->maxLength($val, $len));
         }
         
         // blanks allowed
@@ -653,7 +653,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->maxLength($val, $len, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->maxLength($val, $len, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -667,7 +667,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->mimeType($val));
+            $this->assertTrue($this->_valid->mimeType($val));
         }
         
         // bad, or are blank
@@ -683,7 +683,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->mimeType($val));
+            $this->assertFalse($this->_valid->mimeType($val));
         }
         
         
@@ -696,13 +696,13 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->mimeType($val, null, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->mimeType($val, null, Solar_Valid::OR_BLANK));
         }
         
         // only certain types allowed
         $allowed = array('text/plain', 'text/html', 'text/xhtml+xml');
-        $this->_assertTrue($this->_valid->mimeType('text/html', $allowed));
-        $this->_assertFalse($this->_valid->mimeType('application/vnd.ms-powerpoint', $allowed));
+        $this->assertTrue($this->_valid->mimeType('text/html', $allowed));
+        $this->assertFalse($this->_valid->mimeType('application/vnd.ms-powerpoint', $allowed));
     }
     
     public function testMin()
@@ -715,7 +715,7 @@ class Test_Solar_Valid extends Solar_Test {
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->min($val, $min));
+            $this->assertTrue($this->_valid->min($val, $min));
         }
         
         // bad, or are blank
@@ -724,7 +724,7 @@ class Test_Solar_Valid extends Solar_Test {
             0, 1, 2, 3, ' ', ''
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->min($val, $min));
+            $this->assertFalse($this->_valid->min($val, $min));
         }
         
         // blanks allowed
@@ -733,7 +733,7 @@ class Test_Solar_Valid extends Solar_Test {
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->min($val, $min, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->min($val, $min, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -749,7 +749,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->minLength($val, $len));
+            $this->assertTrue($this->_valid->minLength($val, $len));
         }
         
         // bad, or are blank
@@ -760,7 +760,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->minLength($val, $len));
+            $this->assertFalse($this->_valid->minLength($val, $len));
         }
         
         // blanks allowed
@@ -772,7 +772,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->minLength($val, $len, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->minLength($val, $len, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -790,7 +790,7 @@ class Test_Solar_Valid extends Solar_Test {
             '4', 5, 6, '7'
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->multiple($val, $multi));
+            $this->assertTrue($this->_valid->multiple($val, $multi));
         }
         
         // bad, or are blank
@@ -799,7 +799,7 @@ class Test_Solar_Valid extends Solar_Test {
             1, 2, 3, 5.5, 8, 9, 10
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->multiple($val, $multi));
+            $this->assertFalse($this->_valid->multiple($val, $multi));
         }
         
         // we don't test "allowed-blank" in multiple,
@@ -818,7 +818,7 @@ class Test_Solar_Valid extends Solar_Test {
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->notBlank($val));
+            $this->assertTrue($this->_valid->notBlank($val));
         }
         
         // bad
@@ -831,7 +831,7 @@ class Test_Solar_Valid extends Solar_Test {
             'multi'   => " \t \n \r ",
         );
         foreach ($test as $key => $val) {
-            $this->_assertFalse($this->_valid->notBlank($val));
+            $this->assertFalse($this->_valid->notBlank($val));
         }
         
     }
@@ -848,7 +848,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->notZero($val));
+            $this->assertTrue($this->_valid->notZero($val));
         }
         
         // bad (are in fact zero, or are blank)
@@ -858,7 +858,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $key => $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->notZero($val));
+            $this->assertFalse($this->_valid->notZero($val));
         }
         
         
@@ -873,7 +873,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->notZero($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->notZero($val, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -888,7 +888,7 @@ class Test_Solar_Valid extends Solar_Test {
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->range($val, $min, $max));
+            $this->assertTrue($this->_valid->range($val, $min, $max));
         }
         
         // bad, or are blank
@@ -897,7 +897,7 @@ class Test_Solar_Valid extends Solar_Test {
             0, 1, 2, 3, 7, 8, 9,
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->range($val, $min, $max));
+            $this->assertFalse($this->_valid->range($val, $min, $max));
         }
         
         // blanks allowed
@@ -906,7 +906,7 @@ class Test_Solar_Valid extends Solar_Test {
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->range($val, $min, $max, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->range($val, $min, $max, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -924,7 +924,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->rangeLength($val, $min, $max));
+            $this->assertTrue($this->_valid->rangeLength($val, $min, $max));
         }
         
         // bad, or are blank
@@ -935,7 +935,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->rangeLength($val, $min, $max));
+            $this->assertFalse($this->_valid->rangeLength($val, $min, $max));
         }
         
         // blanks allowed
@@ -947,13 +947,13 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->rangeLength($val, $min, $max, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->rangeLength($val, $min, $max, Solar_Valid::OR_BLANK));
         }
     }
     
     public function testRegex()
     {
-        $this->_skip('all other tests use regex extensively');
+        $this->skip('all other tests use regex extensively');
     }
     
     public function testScope()
@@ -997,12 +997,12 @@ class Test_Solar_Valid extends Solar_Test {
         
         // good
         foreach ($good as $val) {
-            $this->_assertTrue($this->_valid->scope($val, $size, $scope));
+            $this->assertTrue($this->_valid->scope($val, $size, $scope));
         }
         
         // bad, or are blank
         foreach ($bad as $val) {
-            $this->_assertFalse($this->_valid->scope($val, $size, $scope));
+            $this->assertFalse($this->_valid->scope($val, $size, $scope));
         }
         
         // blanks allowed
@@ -1010,7 +1010,7 @@ class Test_Solar_Valid extends Solar_Test {
         $test[] = "";
         $test[] = " ";
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->scope($val, $size, $scope, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->scope($val, $size, $scope, Solar_Valid::OR_BLANK));
         }
     }
     
@@ -1023,7 +1023,7 @@ class Test_Solar_Valid extends Solar_Test {
             'a1s_2sd and another',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->sepWords($val));
+            $this->assertTrue($this->_valid->sepWords($val));
         }
         
         // bad, or are blank
@@ -1033,7 +1033,7 @@ class Test_Solar_Valid extends Solar_Test {
             'ab-db cd-ef',
         );
         foreach ($test as $val) {
-            $this->_assertFalse($this->_valid->sepWords($val));
+            $this->assertFalse($this->_valid->sepWords($val));
         }
         
         // blanks allowed
@@ -1044,7 +1044,7 @@ class Test_Solar_Valid extends Solar_Test {
             'a1s_2sd and another',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->sepWords($val, ' ', Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->sepWords($val, ' ', Solar_Valid::OR_BLANK));
         }
         
         // alternative separator
@@ -1054,7 +1054,7 @@ class Test_Solar_Valid extends Solar_Test {
             'a1s_2sd,and,another',
         );
         foreach ($test as $val) {
-            $this->_assertTrue($this->_valid->sepWords($val, ','));
+            $this->assertTrue($this->_valid->sepWords($val, ','));
         }
     }
     
@@ -1071,7 +1071,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->uri($val));
+            $this->assertTrue($this->_valid->uri($val));
         }
         
         // bad, or are blank
@@ -1082,7 +1082,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->uri($val));
+            $this->assertFalse($this->_valid->uri($val));
         }
         
         // blanks allowed
@@ -1093,14 +1093,14 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->uri($val, null, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->uri($val, null, Solar_Valid::OR_BLANK));
         }
         
         // only certain schemes allowed
         $test = "http://example.com/path/to/file.php/info?foo=bar&baz=dib#zim";
-        $this->_assertTrue($this->_valid->uri($test, 'http'));
-        $this->_assertTrue($this->_valid->uri($test, array('ftp', 'http', 'news')));
-        $this->_assertFalse($this->_valid->uri($test, array('ftp', 'mms', 'gopher')));
+        $this->assertTrue($this->_valid->uri($test, 'http'));
+        $this->assertTrue($this->_valid->uri($test, array('ftp', 'http', 'news')));
+        $this->assertFalse($this->_valid->uri($test, array('ftp', 'mms', 'gopher')));
     }
     
     public function testWord()
@@ -1113,7 +1113,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->word($val));
+            $this->assertTrue($this->_valid->word($val));
         }
         
         // bad, or are blank
@@ -1124,7 +1124,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertFalse($this->_valid->word($val));
+            $this->assertFalse($this->_valid->word($val));
         }
         
         // blanks allowed
@@ -1136,7 +1136,7 @@ class Test_Solar_Valid extends Solar_Test {
         );
         foreach ($test as $val) {
             // $assert->setLabel("'$val'");
-            $this->_assertTrue($this->_valid->word($val, Solar_Valid::OR_BLANK));
+            $this->assertTrue($this->_valid->word($val, Solar_Valid::OR_BLANK));
         }
     }
 }

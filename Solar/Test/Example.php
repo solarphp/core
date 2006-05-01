@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Example for testing Solar class-to-file hierarchy, locales, and exceptions.
+ * Example class to support unit tests.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Example for testing Solar class-to-file hierarchy, locales, and exceptions.
+ * Example class to support unit tests.
  * 
  * @category Solar
  * 
@@ -38,6 +38,24 @@ class Solar_Test_Example extends Solar_Base {
         'baz' => 'dib',
         'zim' => 'gir',
     );
+    
+    /**
+     * 
+     * Protected variable for testing.
+     * 
+     * @var string
+     * 
+     */
+    private $_protected_var = 'semi-visible';
+    
+    /**
+     * 
+     * Private variable for testing.
+     * 
+     * @var string
+     * 
+     */
+    private $_private_var = 'invisible';
     
     /**
      * 
@@ -98,6 +116,26 @@ class Solar_Test_Example extends Solar_Base {
      */
     public function exceptionFromCode($code) {
         throw $this->_exception($code);
+    }
+    
+    public function filterCallback($value, $find, $with)
+    {
+        return str_replace($find, $with, $value);
+    }
+
+    public static function staticFilterCallback($value, $find, $with)
+    {
+        return str_replace($find, $with, $value);
+    }
+    
+    public function validIsInt($val)
+    {
+        return is_int($val);
+    }
+    
+    static public function staticValidIsInt($val)
+    {
+        return is_int($val);
     }
 }
 ?>

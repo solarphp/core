@@ -11,3 +11,5 @@
 ++ Overview
 
 Helper for a formatted timestamp using [[php date()]] conventions.
+
+Default format is "Y-m-d\TH:i:s".

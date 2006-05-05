@@ -93,7 +93,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
-     * Form CSS class to use for failure/success statuses.
+     * Form CSS classes to use for failure/success statuses.
      * 
      * @var array
      * 
@@ -137,24 +137,13 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         'name'     => '',
         'value'    => '',
         'label'    => '',
+        'descr'    => '',
         'attribs'  => array(),
         'options'  => array(),
         'disable'  => false,
         'require'  => false,
         'feedback' => array(),
     );
-    
-    /**
-     * 
-     * Forcibly disable (or enable) elements?
-     * 
-     * If null, does not affect elements.  If false, all elements are
-     * disabled.  If true, all elements are enabled.
-     * 
-     * @var bool
-     * 
-     */
-    protected $_disable = null;
     
     /**
      * 
@@ -225,26 +214,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
-     * Sets the default 'disable' flag for elements.
-     * 
-     * @param bool $flag True to force-enable, false to force-disable, null to
-     * leave element 'disable' keys alone.
-     * 
-     * @return Solar_View_Helper_Form
-     * 
-     */
-    public function disable($flag)
-    {
-        if ($flag === null) {
-            $this->_disable = null;
-        } else {
-            $this->_flag = (bool) $flag;
-        }
-        return $this;
-    }
-    
-    /**
-     * 
      * Sets a form-tag attribute.
      * 
      * @param string $key The attribute name.
@@ -272,6 +241,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     public function addFeedback($spec)
     {
         $this->_feedback = array_merge($this->_feedback, (array) $spec);
+        return $this;
     }
     
     /**
@@ -312,10 +282,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
-     * Sets the form status.
+     * Sets the form validation status.
      * 
      * @param bool $flag True if you want to say the form is valid,
-     * false if you want to say it is not valid.
+     * false if you want to say it is not valid, null if you want to 
+     * say that validation has not been attempted.
      * 
      * @return Solar_View_Helper_Form
      * 
@@ -328,6 +299,19 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             $this->_status = (bool) $flag;
         }
         return $this;
+    }
+    
+    /**
+     * 
+     * Gets the form validation status.
+     * 
+     * @return bool True if the form is currently valid, false if not,
+     * null if validation has not been attempted.
+     * 
+     */
+    public function getStatus()
+    {
+        return $this->_status;
     }
     
     /**
@@ -441,12 +425,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             
             if ($type == 'element') {
                 
-                // global 'disable' for elements
-                // (if null then leave to the element to decide)
-                if (is_bool($this->_disable)) {
-                    $info['disable'] = $this->_disable;
-                }
-                
                 // setup
                 $star     = $info['require'] ? '*' : '';
                 $label    = $this->_view->escape($info['label']);
@@ -472,11 +450,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 // handle differently if we're in a group.
                 if ($in_group) {
                     $feedback .= $this->listFeedback($info['feedback']);
-                    $form[] = "\t\t$element";
+                    $form[] = "        $element";
                 } else {
                     $feedback = $this->listFeedback($info['feedback']);
-                    $form[] = "\t<dt>$star<label for=\"$id\">$label</label></dt>";
-                    $form[] = "\t<dd>$element$feedback</dd>";
+                    $form[] = "    <dt>$star<label for=\"$id\">$label</label></dt>";
+                    $form[] = "    <dd>$element$feedback</dd>";
                     $form[] = '';
                 }
                 
@@ -486,8 +464,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 $label = $info[1];
                 if ($flag) {
                     $in_group = true;
-                    $form[] = "\t<dt><label>$label</label></dt>";
-                    $form[] = "\t<dd>";
+                    $form[] = "    <dt><label>$label</label></dt>";
+                    $form[] = "    <dd>";
                     $feedback = '';
                 } else {
                     $in_group = false;
@@ -533,7 +511,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             }
             
             foreach ((array) $spec as $text) {
-                $list[] = '<li>'. $this->_view->escape($text) . '</li>';
+                $list[] = '    <li>'. $this->_view->escape($text) . '</li>';
             }
             $list[] = '</ul>';
             return "\n" . implode("\n", $list) . "\n";

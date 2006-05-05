@@ -4,7 +4,7 @@ access:   public
 
 name: image
 
-param: string, $src
+param: string|Solar_Uri_Public, $src
 
 param: array, $attribs, array ()
 
@@ -12,14 +12,17 @@ return: string
 
 </function>
 
-Outputs an <img ... /> tag.
+Returns an <img ... /> tag.
 
 * Parameters:
 
- * string //$src//: The public href to the image.
+ * string|Solar_Uri_Public //$src//: The href to the image source.
 
  * array //$attribs//: Additional attributes for the tag.
 
 * Returns string: An <img ... /> tag.
 
-Outputs an <img ... /> tag.
+Returns an <img ... /> tag.
+
+If an "alt" attribute is not specified, will add it from the
+image [[php basename()]].

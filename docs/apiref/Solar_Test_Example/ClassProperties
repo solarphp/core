@@ -10,4 +10,6 @@ None.
 
 ++ Private
 
-None.
+* Solar_Test_Example::$_private_var -- Private variable for testing.
+
+* Solar_Test_Example::$_protected_var -- Protected variable for testing.

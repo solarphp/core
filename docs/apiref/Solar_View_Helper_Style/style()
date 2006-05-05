@@ -23,3 +23,6 @@ Returns a <style>...</style> tag.
 * Returns string: The <style>...</style> tag.
 
 Returns a <style>...</style> tag.
+
+Adds "media" attribute if not specified, and always uses
+"type" attribute of "text/css".

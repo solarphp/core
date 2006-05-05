@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Assert.php 1041 2006-04-04 15:12:36Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -145,6 +145,8 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Recursively iterates through a directory looking for test classes.
      * 
+     * Skips dot-files and files that start with lower-case letters.
+     * 
      * @param RecursiveDirectoryIterator $iter Directory iterator.
      * 
      * @return void
@@ -156,8 +158,9 @@ class Solar_Test_Suite extends Solar_Base {
         
             $path = $iter->current()->getPathname();
             $file = basename($path);
+            $skip = $file != ucfirst($file);
             
-            if ($iter->isDot() || $file[0] == '.') {
+            if ($iter->isDot() || $file[0] == '.' || $skip) {
                 continue;
             }
     
@@ -233,6 +236,8 @@ class Solar_Test_Suite extends Solar_Base {
      * @param bool $quiet True to suppress output, false to display.
      * 
      * @return array A statistics array.
+     * 
+     * @todo change this from class-based discover to file-based?
      * 
      */
     public function run($quiet = false)
@@ -425,6 +430,11 @@ class Solar_Test_Suite extends Solar_Base {
     /**
      * 
      * Echoes output, but only when not in quiet mode.
+     * 
+     * @param string $spec The string to echo.
+     * 
+     * @param bool $diag If true, echoes as diagnostic lines (i.e.,
+     * prefixed with hash marks).
      * 
      * @return void
      * 

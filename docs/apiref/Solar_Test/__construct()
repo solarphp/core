@@ -4,7 +4,7 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_Test
 
@@ -14,7 +14,7 @@ Setup before the entire unit test.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-defined configuration values.
 
 * Returns Solar_Test: Solar_Test instance
 

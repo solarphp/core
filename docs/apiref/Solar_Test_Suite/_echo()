@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: _echo
+
+param: string, $spec
+
+param: bool, $diag, false
+
+return: void
+
+</function>
+
+Echoes output, but only when not in quiet mode.
+
+* Parameters:
+
+ * string //$spec//: The string to echo.
+
+ * bool //$diag//: If true, echoes as diagnostic lines (i.e., prefixed with hash marks).
+
+* Returns void
+
+Echoes output, but only when not in quiet mode.

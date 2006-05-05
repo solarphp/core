@@ -4,16 +4,34 @@ access:   public
 
 name: run
 
-param: unknown, $quiet, false
+param: bool, $quiet, false
 
-return: unknown
+return: array
 
 </function>
 
-
+Runs the test suite (or the sub-test series).
 
 * Parameters:
 
- * unknown //$quiet//: 
+ * bool //$quiet//: True to suppress output, false to display.
 
-* Returns unknown: unknown
+* Returns array: A statistics array.
+
+Runs the test suite (or the sub-test series).
+
+Returns an array of statistics with these keys:
+
+: \\plan\\ : (int) The planned number of tests.
+
+: \\done\\ : (int) The number of tests actually done.
+
+: \\time\\ : (int) The time, in seconds, it took to run all tests.
+
+: \\pass\\ : (array) Log of tests that passed.
+
+: \\skip\\ : (array) Log of tests that were skipped.
+
+: \\todo\\ : (array) Log of tests that are incomplete.
+
+: \\fail\\ : (array) Log of tests that failed.

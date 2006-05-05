@@ -941,7 +941,46 @@ class Test_Solar_Valid extends Solar_Test {
     
     public function testRegex()
     {
-        $this->skip('all other tests use regex extensively');
+        $expr = '/^[\+\-]?[0-9]+$/';
+        
+        // good
+        $test = array(
+            "+1234567890",
+            1234567890,
+            -123456789.0,
+            -1234567890,
+            '-123',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_valid->regex($val, $expr));
+        }
+        
+        // bad, or are blank
+        $test = array(
+            ' ', '',
+            "-abc.123",
+            "123.abc",
+            "123,456",
+            '0000123.456000',
+        );
+        foreach ($test as $val) {
+            $this->assertFalse($this->_valid->regex($val, $expr));
+        }
+        
+        
+        // blanks allowed
+        $test = array(
+            "", ' ',
+            "+1234567890",
+            1234567890,
+            -123456789.0,
+            -1234567890,
+            '-123',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($this->_valid->regex($val, $expr, Solar_Valid::OR_BLANK));
+        }
+
     }
     
     public function testScope()

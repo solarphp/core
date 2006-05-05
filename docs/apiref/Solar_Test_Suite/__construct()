@@ -4,16 +4,18 @@ access:   public
 
 name: __construct
 
-param: unknown, $config, NULL
+param: array, $config, NULL
 
 return: Solar_Test_Suite
 
 </function>
 
-
+Constructor.
 
 * Parameters:
 
- * unknown //$config//: 
+ * array //$config//: User-defined configuration values.
 
 * Returns Solar_Test_Suite: Solar_Test_Suite instance
+
+Constructor.

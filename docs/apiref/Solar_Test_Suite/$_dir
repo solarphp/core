@@ -1,1 +1,3 @@
-protected  $_dir
+protected string $_dir
+
+The directory where tests are located.

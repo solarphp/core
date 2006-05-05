@@ -159,6 +159,24 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
     
     /**
      * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        // http://www.frontbase.com/cgi-bin/WebObjects/FrontBase.woa
+        //   /2/wa/supportPage?currentPage=Newsletters&itemId=1000143
+        $this->exec("DROP INDEX $name");
+    }
+    
+    /**
+     * 
      * Creates a sequence, optionally starting at a certain number.
      * 
      * @param string $name The sequence name to create.

@@ -137,6 +137,22 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
     
     /**
      * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        $this->exec("DROP INDEX $name ON $table");
+    }
+    
+    /**
+     * 
      * Creates a sequence, optionally starting at a certain number.
      * 
      * @param string $name The sequence name to create.
@@ -149,7 +165,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
-        $this->exec("CREATE TABLE $name (id INT NOT NULL)");
+        $this->exec("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
     

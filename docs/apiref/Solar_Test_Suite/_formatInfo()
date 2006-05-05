@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _formatInfo
+
+return: string
+
+</function>
+
+Returns the info stats as text.
+
+* Parameters: none.
+
+* Returns string
+
+Returns the info stats as text.

@@ -1,47 +1,21 @@
-This is a convenience method that loads locale strings for the class, and returns those strings based on the translation key.  Related reading includes [Main::LocaleFiles locale files] and the [Solar_Locale::HomePage Solar_Locale class].
+This is a convenience method that loads locale strings for the class and returns those strings based on the translation key.
 
-If you request a key that does not exist in the class-specific locale file, or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the \\Solar/Locale/*\\ directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
+If you request a key that does not exist in the class-specific [Main::LocaleFiles locale file], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the \\Solar/Locale/*\\ directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
 
-++ Examples
+++ Usage
 
-+++ The Hard Way
++++ Define Where Locale Files Are
 
-The longhand way of doing localization, using only the Solar arch-class, looks something like this:
-
-<code type="php">
-require_once 'Solar.php';
-Solar::start();
-
-// load the translation file for the 'Example' class
-// based on the current locale code
-Solar::shared('locale')->load('Example', '/path/to/files/Locale/');
-
-// get a translation for the ERR_EXAMPLE key
-$string = Solar::locale('Example', 'ERR_EXAMPLE');
-</code>
-
-If you change locale codes, you need to re-load the strings:
+By default, Solar_Base extended classes will look for the locale files in the same directory as the class, in the \\Locale/\\ subdirectory.  
+First, you need to have defined $_config['locale'] in the class as the path to your locale files.
 
 <code type="php">
-// change locale codes to Espanol
-Solar::shared('locale')->setCode('es_ES');
-
-// this string will be blank because the es_ES strings have not
-// been loaded yet
-$string = Solar::locale('Example', 'ERR_EXAMPLE');
-
-// need to reload strings for the current locale
-Solar::shared('locale')->load('Example', '/path/to/files/Locale/');
-
-// now we'll get a translation for the ERR_EXAMPLE key
-$string = Solar::locale('Example', 'ERR_EXAMPLE');
+class Example_Class extends Solar_Base {
+}
+// this will use the locale files in Example/Class/Locale/*
 </code>
 
-+++ The Easy Way
-
-The Solar_Base::locale() method does all the above work for you.
-
-First, you need to have defined $_config['locale'] as the path to your locale files.
+You can specify a non-default location by setting the $_config['locale'] value.
 
 <code type="php">
 class Example extends Solar_Base {
@@ -51,7 +25,9 @@ class Example extends Solar_Base {
 }
 </code>
 
-Now you can use the Solar_Base::locale() method.
++++ Calling The locale() Method
+
+Once you have defined the locale file location, you can use the Solar_Base::locale() method.
 
 <code type="php">
 require_once 'Solar.php';
@@ -73,7 +49,7 @@ $example = Solar::factory('Example');
 $string = $example->locale('ERR_EXAMPLE');
 
 // change the code and get another translation
-Solar::shared('locale')->setCode('es_ES');
+Solar::setLocale('es_ES');
 $string = $example->locale('ERR_EXAMPLE');
 </code>
 

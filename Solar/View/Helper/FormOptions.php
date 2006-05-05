@@ -65,7 +65,7 @@ class Solar_View_Helper_FormOptions extends Solar_View_Helper_FormElement {
         }
         
         // now build the XHTML
-        return implode("\n    ", $list);
+        return implode("\n", $list);
     }
 }
 ?>

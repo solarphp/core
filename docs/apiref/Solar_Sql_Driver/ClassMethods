@@ -12,6 +12,8 @@
 
 * Solar_Sql_Driver::createSequence() -- Creates a sequence, optionally starting at a certain number.
 
+* Solar_Sql_Driver::dropIndex() -- Drops an index.
+
 * Solar_Sql_Driver::dropSequence() -- Drops a sequence.
 
 * Solar_Sql_Driver::exec() -- Prepares and executes an SQL statement with bound data.

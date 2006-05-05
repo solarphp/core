@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: assertNotSame
+
+param: mixed, $actual
+
+param: mixed, $expect
+
+return: bool
+
+</function>
+
+Asserts that two variables are not the same type and value.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+ * mixed //$expect//: The non-expected result.
+
+* Returns bool: The assertion result.
+
+Asserts that two variables are not the same type and value.
+
+When used on objects, asserts the two variables are not
+references to the same object.

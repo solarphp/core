@@ -4,8 +4,6 @@
 
 * Solar_App_Bookmarks::$backlink -- A link back to the previous page: list results, bookmarked page, etc.
 
-* Solar_App_Bookmarks::$err -- An array of error messages.
-
 * Solar_App_Bookmarks::$feed -- Feed information.
 
 * Solar_App_Bookmarks::$formdata -- The current form processing object.
@@ -25,6 +23,8 @@
 * Solar_App_Bookmarks::$tags_in_use -- The list of all tags in use by the current owner_handle.
 
 Inherited Properties:
+
+* Solar_App::$errors() -- Error messages, usually for the 'error' action/view.
 
 * Solar_App::$layout_base() -- The <base> href value for the layout <head> block.
 

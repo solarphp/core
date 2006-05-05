@@ -24,7 +24,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Role.php 655 2006-01-13 16:53:40Z pmjones $
+ * @version $Id$
  * 
  */
 

@@ -166,6 +166,22 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
     
     /**
      * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        $this->exec("DROP INDEX $name");
+    }
+    
+    /**
+     * 
      * Gets a sequence number; creates the sequence if it does not exist.
      * 
      * @param string $name The sequence name.

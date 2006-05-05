@@ -6,7 +6,7 @@ name: anchor
 
 param: Solar_Uri|string, $spec
 
-param: string, $text
+param: string, $text, NULL
 
 param: array, $attribs, array ()
 
@@ -28,5 +28,5 @@ Returns a anchor href tag.
 
 Returns a anchor href tag.
 
-If the $text link text is empty, will just return the
-href value, not an <a href="">...</a> tag.
+If the $text link text is empty, will return only the href
+value (no attributes) instead of an <a href="">...</a> tag.

@@ -22,6 +22,10 @@
 
 * Solar_View::getHelper() -- Returns the internal helper object; creates it as needed.
 
+* Solar_View::getHelperPath() -- Returns the helper directory path stack.
+
+* Solar_View::getTemplatePath() -- Returns the template directory path stack.
+
 * Solar_View::newHelper() -- Creates a new standalone helper object.
 
 * Solar_View::setHelperPath() -- Reset the helper directory path stack.

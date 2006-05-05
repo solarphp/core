@@ -45,16 +45,26 @@ class Solar_View_Helper_Attribs extends Solar_View_Helper {
      */
     public function attribs($attribs)
     {
-        $xhtml = array();
+        $xhtml = '';
         foreach ((array) $attribs as $key => $val) {
+            
+            // skip empty values
+            if (empty($val)) {
+                continue;
+            }
+            
+            // space-separate multiple values
             if (is_array($val)) {
                 $val = implode(' ', $val);
             }
-            $key     = $this->_view->escape($key);
-            $val     = $this->_view->escape($val);
-            $xhtml[] = "$key=\"$val\"";
+            
+            // add the attribute
+            $xhtml .= ' ' . $this->_view->escape($key)
+                   .  '="' . $this->_view->escape($val) . '"';
         }
-        return ' ' . implode(' ', $xhtml);
+        
+        // done
+        return $xhtml;
     }
 }
 ?>

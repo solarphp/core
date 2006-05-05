@@ -16,7 +16,7 @@ ApiRef | API Reference
   $_user
   $_view
   $backlink
-  $err
+  $errors
   $feed
   $formdata
   $layout_base

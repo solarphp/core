@@ -171,6 +171,16 @@ abstract class Solar_App extends Solar_Controller_Page {
         $this->layout_title = get_class($this);
     }
     
+    /**
+     * 
+     * Checks to see if user is allowed access.
+     * 
+     * On access failure, changes $this->_action to 'error' and adds
+     * an error message stating the user is not allowed access.
+     * 
+     * @return void
+     * 
+     */
     public function _preAction()
     {
         // generic security check

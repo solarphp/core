@@ -183,14 +183,14 @@ abstract class Solar_Sql_Driver extends Solar_Base {
             $this->_config['pass']
         );
         
+        // always use exceptions.
+        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION);
+            
         // force names to lower case
         $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
         
         /** @todo Are there other portability attribs to consider? */
-        
-        // always use exceptions.
-        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE,
-            PDO::ERRMODE_EXCEPTION);
     }
     
     /**
@@ -242,7 +242,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * @param array $data An associative array of data to bind to the
      * placeholders.
      * 
-     * @return object A PDOStatement object.
+     * @return mixed A PDOStatement object, or a count of rows affected.
      * 
      */
     public function exec($stmt, $data = array())
@@ -256,8 +256,9 @@ abstract class Solar_Sql_Driver extends Solar_Base {
         
         // execute
         if (in_array(strtoupper($cmd), $this->_direct)) {
-            // execute directly
-            return $this->_pdo->exec($stmt);
+            // execute schema modifications directly
+            $this->_pdo->exec($stmt);
+            return true;
         } else {
             // prepare and execute
             $obj = $this->_pdo->prepare($stmt);
@@ -342,6 +343,26 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      */
     public function listTables()
+    {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => __FUNCTION__)
+        );
+    }
+    
+    
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
     {
         throw $this->_exception(
             'ERR_METHOD_NOT_IMPLEMENTED',

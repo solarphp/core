@@ -4,6 +4,8 @@
 
 * Solar_Sql_Driver_Mssql::buildSelect() -- Adds a LIMIT clause (or equivalent) to a SELECT statement.
 
+* Solar_Sql_Driver_Mssql::dropIndex() -- Drops an index.
+
 * Solar_Sql_Driver_Mssql::listTables() -- Returns a list of database tables.
 
 * Solar_Sql_Driver_Mssql::nextSequence() -- Gets a sequence number; creates the sequence if it does not exist.

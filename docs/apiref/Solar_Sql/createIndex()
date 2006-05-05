@@ -8,9 +8,11 @@ param: string, $table
 
 param: string, $name
 
-param: string|array, $info
+param: bool, $unique, false
 
-return: string
+param: array, $cols, NULL
+
+return: void
 
 </function>
 
@@ -22,9 +24,11 @@ Creates a portable index on a table.
 
  * string //$name//: The name of the index (1-28 chars).
 
- * string|array //$info//: Information about the index.
+ * bool //$unique//: Whether or not the index is unique.
 
-* Returns string: An SQL string.
+ * array //$cols//: The columns in the index.  If empty, uses the $name parameters as the column name.
+
+* Returns void
 
 Creates a portable index on a table.
 

@@ -7,7 +7,6 @@ ApiRef | API Reference
  ClassMethods | Class Methods
   __construct()
   _buildColDef()
-  _buildIdxDef()
   _exception()
   _validIdentifier()
   addColumn()

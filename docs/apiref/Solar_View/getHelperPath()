@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: getHelperPath
+
+return: array
+
+</function>
+
+Returns the helper directory path stack.
+
+* Parameters: none.
+
+* Returns array: The path stack of helper directories.
+
+Returns the helper directory path stack.

@@ -1,0 +1,11 @@
++ The Solar_User_Access_File Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Access_File
+
+++ Overview
+
+Class for reading access privileges from a text file.

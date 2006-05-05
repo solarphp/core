@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_Image::image() -- Outputs an <img ... /> tag.
+* Solar_View_Helper_Image::image() -- Returns an <img ... /> tag.
 
 Inherited Methods:
 

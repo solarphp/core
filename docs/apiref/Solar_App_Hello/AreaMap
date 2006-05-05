@@ -14,6 +14,7 @@ ApiRef | API Reference
   $_query
   $_view
   $code
+  $errors
   $layout_base
   $layout_bottom
   $layout_left

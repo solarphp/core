@@ -1,0 +1,33 @@
+<function>
+
+access:   protected
+
+name: _done
+
+param: string, $type
+
+param: string, $name
+
+param: string, $note, NULL
+
+param: string, $diag, NULL
+
+return: void
+
+</function>
+
+Formats a test result, echoes it, and saves the info.
+
+* Parameters:
+
+ * string //$type//: Pass, todo, skip, or fail.
+
+ * string //$name//: The test name.
+
+ * string //$note//: Additional note about the test.
+
+ * string //$diag//: Diagnostics for the test.
+
+* Returns void
+
+Formats a test result, echoes it, and saves the info.

@@ -118,24 +118,68 @@ class Solar_Test_Example extends Solar_Base {
         throw $this->_exception($code);
     }
     
+    /**
+     * 
+     * Used for testing Solar_Filter::callback() as an instance method.
+     * 
+     * @param string $value The value to filter.
+     * 
+     * @param mixed $find Find this string in the value.
+     * 
+     * @param mixed $with Replace with this string.
+     * 
+     * @return string The filtered value.
+     * 
+     */
     public function filterCallback($value, $find, $with)
     {
         return str_replace($find, $with, $value);
     }
-
+    
+    /**
+     * 
+     * Used for testing Solar_Filter::callback() as a static method.
+     * 
+     * @param string $value The value to filter.
+     * 
+     * @param mixed $find Find this string in the value.
+     * 
+     * @param mixed $with Replace with this string.
+     * 
+     * @return string The filtered value.
+     * 
+     */
     public static function staticFilterCallback($value, $find, $with)
     {
         return str_replace($find, $with, $value);
     }
     
-    public function validIsInt($val)
+    /**
+     * 
+     * Used for testing Solar_Valid::callback() as an instance method.
+     * 
+     * @param mixed $value The value to validate with is_int().
+     * 
+     * @return bool True if $value is_int(), false if not.
+     * 
+     */
+    public function validIsInt($value)
     {
-        return is_int($val);
+        return is_int($value);
     }
     
-    static public function staticValidIsInt($val)
+    /**
+     * 
+     * Used for testing Solar_Valid::callback() as a static method.
+     * 
+     * @param mixed $value The value to validate with is_int().
+     * 
+     * @return bool True if $value is_int(), false if not.
+     * 
+     */
+    static public function staticValidIsInt($value)
     {
-        return is_int($val);
+        return is_int($value);
     }
 }
 ?>

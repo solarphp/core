@@ -4,6 +4,8 @@
 
 * Solar_Sql_Driver_Fbsql::buildSelect() -- Adds a LIMIT clause (or equivalent) to a SELECT statement.
 
+* Solar_Sql_Driver_Fbsql::dropIndex() -- Drops an index.
+
 * Solar_Sql_Driver_Fbsql::limit() -- Adds a LIMIT clause (or equivalent) to an SQL statement.
 
 * Solar_Sql_Driver_Fbsql::listTables() -- Returns the SQL statement to get a list of database tables.

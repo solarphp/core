@@ -20,6 +20,11 @@ class Test_Solar_Uri_Action extends Test_Solar_Uri {
     public function testQuick()
     {
         // partial
+        $actual = $this->_uri->quick('/controller/action/id?foo=bar');
+        $expect = '/index.php/controller/action/id?foo=bar';
+        $this->assertSame($actual, $expect);
+        
+        // semi-partial
         $expect = '/index.php/controller/action/id?foo=bar';
         $actual = $this->_uri->quick($expect);
         $this->assertSame($actual, $expect);

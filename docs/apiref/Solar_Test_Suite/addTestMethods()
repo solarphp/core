@@ -4,16 +4,20 @@ access:   public
 
 name: addTestMethods
 
-param: unknown, $class
+param: string, $class
 
-return: unknown
+return: void
 
 </function>
 
-
+Adds the test methods from a given test class.
 
 * Parameters:
 
- * unknown //$class//: 
+ * string //$class//: The Test_* class name to add methods from.
 
-* Returns unknown: unknown
+* Returns void
+
+Adds the test methods from a given test class.
+
+Skips abstract and interface classes.

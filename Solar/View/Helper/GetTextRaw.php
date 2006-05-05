@@ -72,15 +72,15 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      * Returns a localized string WITH NO ESCAPING.
      * 
-     * Alternatively, use this method to reset the default class, or
-     * get a localized string from another class withour resetting the
-     * default.
+     * Alternatively, use this method to reset the default locale class,
+     * or get a localized string from another class without resetting
+     * the default.
      * 
-     * To set a new default class, use the class name with two colons
-     * and no key (e.g. 'New_Default_Class::').
+     * To set a new default locale class, use the class name with two
+     * colons and no key (e.g. 'New_Default_Class::').
      * 
-     * To use a key from another class, prefix with that class name and
-     * two colons (e.g. 'Non_Default_Class::KEY_NAME').
+     * To use a key from another locale class, prefix the key with that
+     * class name and two colons (e.g. 'Non_Default_Class::KEY_NAME').
      * 
      * @param string $key The locale key to look up from the default
      * class, or a class name and key, or a class name to set as the new

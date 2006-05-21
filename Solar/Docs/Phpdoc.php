@@ -24,6 +24,9 @@
  * Supported technical information tags are:
  * 
  * <code>
+ * @category name                # category for the package
+ * @package name                 # class package name
+ * @subpackage name              # class subpackage name
  * @param type [$name] [summary] # method parameter
  * @return type [summary]        # method return
  * @see summary                  # name of another element that can be documented
@@ -389,17 +392,19 @@ class Solar_Docs_Phpdoc extends Solar_Base {
 
 /**
  * 
- * WHAT WE PROBABLY WILL:
+ * WHAT WE PROBABLY WILL SUPPORT:
  * @author name <author@email>
  * @copyright name date
  * @deprecated summary
  * @deprec summary
  * @example /path/to/example
- * @license url name
+ * @license href name text
+ * @link href text
  * @since version|date
  * @staticvar name type summary
+ * @version version
  * 
- * WHAT WE PROBABLY WILL NOT:
+ * WHAT WE PROBABLY WILL NOT SUPPORT:
  * @access       public or private
  * @global       type $globalvarname 
  *  or
@@ -408,12 +413,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  *  or
  * @name         $globalvaralias
  * @magic        phpdoc.de compatibility
- * @package      package name
- * @subpackage   sub package name, groupings inside of a project
- * @version      version
  * @internal     private information for advanced developers only
  * @static       static method or property
- * @link         URL
  * @ignore
  * {@code}
  * {@docRoot}

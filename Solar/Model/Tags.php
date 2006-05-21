@@ -63,7 +63,7 @@ class Solar_Model_Tags extends Solar_Sql_Table {
         }
         
         // make sure each tag is unique (no double-entries)
-        $tmp = array_unique($tmp);
+        $tags = array_unique($tags);
         
         // return as space-separated text
         return implode(' ', $tmp);

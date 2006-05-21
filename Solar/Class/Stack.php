@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Stack.php 1158 2006-05-16 01:29:47Z pmjones $
+ * @version $Id$
  * 
  */
 

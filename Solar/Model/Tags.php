@@ -59,14 +59,14 @@ class Solar_Model_Tags extends Solar_Sql_Table {
             $tags = preg_replace('/[ ]{2,}/', ' ', $tags);
             
             // convert to array for easy processing
-            $tmp = explode(' ', $tags);
+            $tags = explode(' ', $tags);
         }
         
         // make sure each tag is unique (no double-entries)
         $tags = array_unique($tags);
         
         // return as space-separated text
-        return implode(' ', $tmp);
+        return implode(' ', $tags);
     }
     
     /**

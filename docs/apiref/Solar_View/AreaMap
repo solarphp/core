@@ -21,6 +21,8 @@ ApiRef | API Reference
   escape()
   fetch()
   getHelper()
+  getHelperPath()
+  getTemplatePath()
   locale()
   newHelper()
   setHelperPath()

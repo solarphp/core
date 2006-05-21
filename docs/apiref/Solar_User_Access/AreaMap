@@ -1,0 +1,14 @@
+HomePage | The Solar_User_Access Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_driver
+  $list
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  allow()
+  apiVersion()
+  fetch()
+  locale()
+  reset()

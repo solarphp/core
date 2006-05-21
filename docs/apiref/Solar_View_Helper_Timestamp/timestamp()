@@ -18,7 +18,7 @@ Outputs a formatted timestamp using [[php date()]] conventions.
 
  * string //$spec//: Any date-time string suitable for strtotime().
 
- * string //$format//: An optional custom [[php date()]] formatting string; null by default.
+ * string //$format//: An optional custom [[php date()]] formatting string.
 
 * Returns string: The formatted date string.
 

@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Log_Adapter_File::$_config -- User-defined configuration values.
+
+* Solar_Log_Adapter_File::$_file -- The path to the log file.
+
+Inherited Properties:
+
+* Solar_Log_Adapter::$_events() -- The event types this instance will recognize, default '*'.
+
+++ Private
+
+None.

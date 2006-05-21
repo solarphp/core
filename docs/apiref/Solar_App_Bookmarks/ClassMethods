@@ -12,6 +12,8 @@ Inherited Methods:
 
 * Solar_Controller_Page::__set() -- Try to force users to define what their view variables are.
 
+* Solar_App::_preAction() -- Checks to see if user is allowed access.
+
 * Solar_Controller_Page::addFlash() -- Appends a "read-once" session value for this class and key.
 
 * Solar_Base::apiVersion() -- Reports the API version for this class.
@@ -43,8 +45,6 @@ Inherited Methods:
 * Solar_Controller_Page::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
 
 * Solar_Controller_Page::_postAction() -- Executes just after the last action, and just before the view.
-
-* Solar_Controller_Page::_preAction() -- Executes just before the first action.
 
 * Solar_Controller_Page::_query() -- Retrieves the TAINTED value of a query request key by name.
 

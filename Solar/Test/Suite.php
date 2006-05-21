@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Assert.php 1041 2006-04-04 15:12:36Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -49,15 +49,15 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * : \\dir\\ : (string) The directory where tests are located.
      * 
-     * : \\sub\\ : (string) The class name of a sub-test to run instead
-     *   of the full suite.  The "Test_" prefix is not needed.
+     * : \\log\\ : (dependency) A Solar_Log dependency for logging test
+     *   results.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'dir' => '', // where tests are located
-        'sub' => '', // only run these sub-tests
+        'dir' => '',
+        'log' => null,
     );
     
     /**
@@ -68,15 +68,6 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      */
     protected $_dir;
-    
-    /**
-     * 
-     * Run this class name sub-test instead of the full suite.
-     * 
-     * @var string
-     * 
-     */
-    protected $_sub;
     
     /**
      * 
@@ -100,12 +91,12 @@ class Solar_Test_Suite extends Solar_Base {
     
     /**
      * 
-     * Whether or not to silence output.
+     * A Solar_Log instance.
      * 
-     * @var bool
+     * @var Solar_Log
      * 
      */
-    protected $_quiet;
+    protected $_log;
     
     /**
      * 
@@ -114,7 +105,7 @@ class Solar_Test_Suite extends Solar_Base {
      * @var Solar_Debug_Var
      * 
      */
-    protected $_var; // Solar_Debug_Var
+    protected $_var;
     
     /**
      * 
@@ -131,19 +122,31 @@ class Solar_Test_Suite extends Solar_Base {
         // where are the tests located?
         $this->_dir = Solar::fixdir($this->_config['dir']);
         
-        // set the sub-test class name (drop Test_* prefix)
-        $this->_sub = trim($this->_config['sub']);
-        if ($this->_sub && substr($this->_sub, 0, 5) == 'Test_') {
-            $this->_sub = substr($this->_sub, 5);
-        }
-        
         // keep a Solar_Debug_Var object around for later
         $this->_var = Solar::factory('Solar_Debug_Var');
+        
+        // logging
+        if (! empty($this->_config['log'])) {
+            // retain the passed log dependency
+            $this->_log = Solar::dependency('Solar_Log', $this->_config['log']);
+        } else {
+            // create a new log object
+            $log_config = array(
+                'adapter' => 'Solar_Log_Adapter_Echo',
+                'format' => '%m',
+                'events' => 'test',
+                'output' => 'text',
+            );
+            $this->_log = Solar::factory('Solar_Log', $log_config);
+        }
     }
     
     /**
      * 
      * Recursively iterates through a directory looking for test classes.
+     * 
+     * Skips dot-files and files that do not start with upper-case
+     * letters.
      * 
      * @param RecursiveDirectoryIterator $iter Directory iterator.
      * 
@@ -157,18 +160,17 @@ class Solar_Test_Suite extends Solar_Base {
             $path = $iter->current()->getPathname();
             $file = basename($path);
             
-            if ($iter->isDot() || $file[0] == '.') {
+            // skip files not starting with a capital letter
+            if ($iter->isDot() ||
+                ! ctype_alpha($file[0]) ||
+                $file != ucfirst($file)) {
                 continue;
             }
     
             if ($iter->isDir() && $iter->hasChildren()) {
-            
                 $this->findTests($iter->getChildren());
-                
             } elseif ($iter->isFile()) {
-                
                 require_once $path;
-                
                 $len = strlen($this->_dir);
                 $class = substr($path, $len, -4); // drops .php
                 $class = 'Test_' . str_replace(DIRECTORY_SEPARATOR,
@@ -184,15 +186,17 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Skips abstract and interface classes.
      * 
-     * @param string $class The Test_* class name to add methods from.
+     * @param string $class The class name to add methods from,
+     * typically a Test_* class.
      * 
-     * @return void
+     * @return int The number of methods added, or boolean false if the
+     * class did not exist.
      * 
      */
     public function addTestMethods($class)
     {
         if (! class_exists($class)) {
-            return;
+            return false;
         }
         
         $reflect = new ReflectionClass($class);
@@ -200,19 +204,23 @@ class Solar_Test_Suite extends Solar_Base {
             return;
         }
         
+        $count = 0;
         $methods = $reflect->getMethods();
         foreach ($methods as $method) {
             $name = $method->getName();
             if (substr($name, 0, 4) == 'test') {
                 $this->_test[$class][] = $name;
                 $this->_info['plan'] ++;
+                $count++;
             }
         }
+        
+        return $count;
     }
     
     /**
      * 
-     * Runs the test suite (or the sub-test series).
+     * Runs the test suite (or the sub-test series) and logs as it goes.
      * 
      * Returns an array of statistics with these keys:
      * 
@@ -230,15 +238,14 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * : \\fail\\ : (array) Log of tests that failed.
      * 
-     * @param bool $quiet True to suppress output, false to display.
-     * 
      * @return array A statistics array.
      * 
+     * @todo change this from class-based discover to file-based?
+     * 
      */
-    public function run($quiet = false)
+    public function run($series = null)
     {
-        $this->_quiet = (bool) $quiet;
-        
+        // reset
         $this->_info = array(
             'plan' => 0,
             'done' => 0,
@@ -248,12 +255,11 @@ class Solar_Test_Suite extends Solar_Base {
             'todo' => array(),
             'fail' => array(),
         );
-        
         $this->_test = array();
         
-        // running all tests, or just a sub-test series?
-        if ($this->_sub) {
-            $class = $this->_sub;
+        // running all tests, or just a sub-series?
+        if ($series) {
+            $class = $series;
             $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
             $dir = $this->_dir . Solar::fixdir($sub);
             $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
@@ -273,7 +279,7 @@ class Solar_Test_Suite extends Solar_Base {
         
         // run the tests
         $time = time();
-        $this->_echo("1..{$this->_info['plan']}");
+        $this->_log("1..{$this->_info['plan']}");
         foreach ($this->_test as $class => $methods) {
             
             // class setup
@@ -307,7 +313,7 @@ class Solar_Test_Suite extends Solar_Base {
                 // method setup
                 $test->setup();
                 
-                // test and save
+                // run test method and mark as "done"
                 try {
                     $test->$method();
                     $this->_done('pass', $name);
@@ -330,29 +336,12 @@ class Solar_Test_Suite extends Solar_Base {
         
         $this->_info['time'] = time() - $time;
         
-        if (! $this->_quiet) {
-            $this->_echo("\n" . $this->_formatInfo());
-        }
-        
-        return $this->_info;
-        
-    }
-    
-    /**
-     * 
-     * Returns the info stats as text.
-     * 
-     * @return string
-     * 
-     */
-    protected function _formatInfo()
-    {
+        // report summary
         $done = $this->_info['done'];
         $plan = $this->_info['plan'];
         $time = $this->_info['time'];
         
-        $text = array();
-        $text[] = "$done/$plan tests, $time seconds";
+        $this->_log("$done/$plan tests, $time seconds");
         
         $tmp = array();
         $show = array('fail', 'todo', 'skip', 'pass');
@@ -360,23 +349,24 @@ class Solar_Test_Suite extends Solar_Base {
             $count = count($this->_info[$type]);
             $tmp[] = "$count $type";
         }
-        $text[] = implode(', ', $tmp);
+        $this->_log(implode(', ', $tmp));
         
         $show = array('fail', 'todo', 'skip');
         foreach ($show as $type) {
             foreach ($this->_info[$type] as $name => $note) {
-                $text[] = strtoupper($type) . " $name ($note)";
+                $this->_log(strtoupper($type) . " $name ($note)");
             }
         }
         
-        return implode("\n", $text);
+        // done, return the run information
+        return $this->_info;
     }
     
     /**
      * 
-     * Formats a test result, echoes it, and saves the info.
+     * Formats a test line, logs it, and saves the info.
      * 
-     * @param string $type Pass, todo, skip, or fail.
+     * @param string $type Pass, skip, todo, or fail.
      * 
      * @param string $name The test name.
      * 
@@ -417,30 +407,27 @@ class Solar_Test_Suite extends Solar_Base {
             $diag = $this->_var->dump($diag);
         }
         
-        $this->_echo($text);
-        $this->_echo($diag, true);
+        $diag = trim($diag);
+        if ($diag) {
+            $text = "$text\n# " . str_replace("\n", "\n# ", trim($diag));
+        }
+        
+        $this->_log($text);
         $this->_info[$type][$name] = $note;
     }
     
     /**
      * 
-     * Echoes output, but only when not in quiet mode.
+     * Saves a message to the log.
+     * 
+     * @param string $spec The log message.
      * 
      * @return void
      * 
      */
-    public function _echo($spec, $diag = false)
+    protected function _log($spec)
     {
-        if (! trim($spec) || $this->_quiet) {
-            return;
-        }
-        
-        if ($diag) {
-            echo "# " . str_replace("\n", "\n# ", trim($spec)) . "\n";
-        } else {
-            echo "$spec\n";
-        }
+        $this->_log->save('test', $spec);
     }
-    
 }
 ?>

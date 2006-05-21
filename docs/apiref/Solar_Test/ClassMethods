@@ -6,9 +6,41 @@
 
 * Solar_Test::__destruct() -- Teardown after the entire unit test.
 
+* Solar_Test::assertEquals() -- Asserts that two variables are equal; type is not strict.
+
+* Solar_Test::assertFalse() -- Asserts that a variable is boolean false.
+
+* Solar_Test::assertInstance() -- Asserts that a object is an instance of a class.
+
+* Solar_Test::assertNotEquals() -- Asserts that two variables are not equal; type is not strict.
+
+* Solar_Test::assertNotFalse() -- Asserts that a variable is not boolean false.
+
+* Solar_Test::assertNotInstance() -- Asserts that a object is not an instance of a class.
+
+* Solar_Test::assertNotNull() -- Asserts that a variable is not PHP null.
+
+* Solar_Test::assertNotSame() -- Asserts that two variables are not the same type and value.
+
+* Solar_Test::assertNotTrue() -- Asserts that a variable is not boolean true.
+
+* Solar_Test::assertNull() -- Asserts that a variable is PHP null.
+
+* Solar_Test::assertProperty() -- Asserts that an object property meets criteria.
+
+* Solar_Test::assertSame() -- Asserts that two variables have the same type and value.
+
+* Solar_Test::assertTrue() -- Asserts that a variable is boolean true.
+
+* Solar_Test::fail() -- Throws an exception indicating a failed test.
+
 * Solar_Test::setup() -- Setup before each method test.
 
+* Solar_Test::skip() -- Throws an exception indicating a skipped test.
+
 * Solar_Test::teardown() -- Teardown after each method test.
+
+* Solar_Test::todo() -- Throws an exception indicating an incomplete test.
 
 Inherited Methods:
 
@@ -18,37 +50,9 @@ Inherited Methods:
 
 ++ Protected
 
-* Solar_Test::_assertEquals() -- Assert that two variables are equal.
+* Solar_Test::_export() -- Returns the output from var_export() for a variable.
 
-* Solar_Test::_assertFalse() -- Assert that a variable is boolean false.
-
-* Solar_Test::_assertInstance() -- Assert that a object is an instance of a class.
-
-* Solar_Test::_assertNotEquals() -- Assert that two variables are not equal.
-
-* Solar_Test::_assertNotFalse() -- Assert that a variable is not boolean false.
-
-* Solar_Test::_assertNotInstance() -- Assert that a object is not an instance of a class.
-
-* Solar_Test::_assertNotNull() -- Assert that a variable is not PHP null.
-
-* Solar_Test::_assertNotSame() -- Assert that two variables are not the same.
-
-* Solar_Test::_assertNotTrue() -- Assert that a variable is not boolean true.
-
-* Solar_Test::_assertNull() -- Assert that a variable is PHP null.
-
-* Solar_Test::_assertProperty() -- Assert that an object property meets criteria.
-
-* Solar_Test::_assertSame() -- Assert that two variables are the same.
-
-* Solar_Test::_assertTrue() -- Assert that a variable is boolean true.
-
-* Solar_Test::_fail() -- Throws an exception indicating a failed test.
-
-* Solar_Test::_skip() -- Throws an exception indicating a skipped test.
-
-* Solar_Test::_todo() -- Throws an exception indicating an incomplete test.
+* Solar_Test::_ksort() -- Recrsively [[php ksort()]] an array.
 
 Inherited Methods:
 

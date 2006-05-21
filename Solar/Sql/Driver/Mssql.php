@@ -152,6 +152,23 @@ class Solar_Sql_Driver_Mssql extends Solar_Sql_Driver {
     
     /**
      * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        // http://www.w3schools.com/sql/sql_drop.asp
+        $this->exec("DROP INDEX {$table}.{$name}");
+    }
+    
+    /**
+     * 
      * Creates a sequence, optionally starting at a certain number.
      * 
      * @param string $name The sequence name to create.

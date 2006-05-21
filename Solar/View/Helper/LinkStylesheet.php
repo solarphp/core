@@ -47,6 +47,9 @@ class Solar_View_Helper_LinkStylesheet extends Solar_View_Helper {
         settype($attribs, 'array');
         $attribs['rel'] = 'stylesheet';
         $attribs['type'] = 'text/css';
+        if (empty($attribs['media'])) {
+            $attribs['media'] = 'screen';
+        }
         $attribs['href'] = $this->_view->publicHref($href, true);
         return $this->_view->link($attribs);
     }

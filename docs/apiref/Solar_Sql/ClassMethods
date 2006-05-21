@@ -56,8 +56,6 @@ Inherited Methods:
 
 * Solar_Sql::_buildColDef() -- Builds a column definition string.
 
-* Solar_Sql::_buildIdxDef() -- Builds an index definition string.
-
 * Solar_Sql::_validIdentifier() -- Check if a table, column, or index name is a valid identifier.
 
 Inherited Methods:

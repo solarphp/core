@@ -1,0 +1,31 @@
++ Class Methods
+
+++ Public
+
+Inherited Methods:
+
+* Solar_Log_Adapter::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Log_Adapter::getEvents() -- Gets the list of events this adapter recognizes.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+* Solar_Log_Adapter::save() -- Public interface to save (write) an event and message to the log.
+
+* Solar_Log_Adapter::setEvents() -- Sets the list of events this adapter recognizes.
+
+++ Protected
+
+* Solar_Log_Adapter_Echo::_save() -- Echos the log message.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+* Solar_Log_Adapter::_getTime() -- Gets the current timestamp in ISO-8601 format (yyyy-mm-ddThh:ii:ss).
+
+++ Private
+
+None.

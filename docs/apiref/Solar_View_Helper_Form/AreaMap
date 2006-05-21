@@ -6,7 +6,6 @@ ApiRef | API Reference
   $_config
   $_default_attribs
   $_default_info
-  $_disable
   $_feedback
   $_hidden
   $_stack
@@ -21,10 +20,10 @@ ApiRef | API Reference
   apiVersion()
   auto()
   beginGroup()
-  disable()
   endGroup()
   fetch()
   form()
+  getStatus()
   listFeedback()
   locale()
   reset()

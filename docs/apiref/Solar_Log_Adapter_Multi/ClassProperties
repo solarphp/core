@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Log_Adapter_Multi::$_adapters -- An array of adapter instances.
+
+* Solar_Log_Adapter_Multi::$_config -- User-defined configuration values.
+
+Inherited Properties:
+
+* Solar_Log_Adapter::$_events() -- The event types this instance will recognize, default '*'.
+
+++ Private
+
+None.

@@ -10,7 +10,7 @@ param: string, $stmt
 
 param: array, $data, array ()
 
-return: object
+return: mixed
 
 </function>
 
@@ -22,6 +22,6 @@ Prepares and executes an SQL statement with bound data.
 
  * array //$data//: An associative array of data to bind to the placeholders.
 
-* Returns object: A PDOStatement object.
+* Returns mixed: A PDOStatement object, or a count of rows affected.
 
 Prepares and executes an SQL statement with bound data.

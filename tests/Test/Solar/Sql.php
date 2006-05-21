@@ -94,14 +94,14 @@ abstract class Test_Solar_Sql extends Solar_Test {
         $this->assertProperty($this->_sql, '_driver', 'instance', $this->_config['driver']);
     }
     
-    public function testQuery_prepared()
+    public function testQuery_preparedQueryPlain()
     {
         $this->_insertData();
         $result = $this->_sql->query("SELECT COUNT(*) FROM $this->_table_name");
         $this->assertInstance($result, 'PDOStatement');
     }
     
-    public function testQuery_preparedBind()
+    public function testQuery_preparedQueryBind()
     {
         $this->_insertData();
         $data = array('id' => 1);
@@ -110,10 +110,10 @@ abstract class Test_Solar_Sql extends Solar_Test {
         $this->assertInstance($result, 'PDOStatement');
     }
     
-    public function testQuery_direct()
+    public function testQuery_exec()
     {
         $result = $this->_sql->query("DROP TABLE $this->_table_name");
-        $this->assertSame(0, $result);
+        $this->assertTrue($result);
     }
     
     public function testBegin()
@@ -330,10 +330,16 @@ abstract class Test_Solar_Sql extends Solar_Test {
         $this->assertSame($result, '1');
     }
     
+    /**
+     * @todo redo this so it creates a column of every type,
+     * also tests failed table creaton attempts.
+     */
+    /*
     public function testCreateTable()
     {
         $this->skip('table created before every test');
     }
+    */
     
     public function testDropTable()
     {

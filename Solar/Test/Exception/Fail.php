@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Exception.php 1041 2006-04-04 15:12:36Z pmjones $
+ * @version $Id$
  * 
  */
 

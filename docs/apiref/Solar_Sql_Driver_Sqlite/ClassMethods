@@ -4,6 +4,8 @@
 
 * Solar_Sql_Driver_Sqlite::buildSelect() -- Builds a SELECT statement from its component parts.
 
+* Solar_Sql_Driver_Sqlite::dropIndex() -- Drops an index.
+
 * Solar_Sql_Driver_Sqlite::listTables() -- Returns the SQL statement to get a list of database tables.
 
 * Solar_Sql_Driver_Sqlite::nextSequence() -- Gets a sequence number; creates the sequence if it does not exist.

@@ -1,0 +1,23 @@
+<function>
+
+access:   protected
+
+name: _ksort
+
+param: array, &$array
+
+return: void
+
+</function>
+
+Recrsively [[php ksort()]] an array.
+
+* Parameters:
+
+ * array //$array//: The array to sort.
+
+* Returns void
+
+Recrsively [[php ksort()]] an array.
+
+Used so that order of array elements does not affect equality.

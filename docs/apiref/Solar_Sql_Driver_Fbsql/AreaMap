@@ -17,6 +17,7 @@ ApiRef | API Reference
   buildSelect()
   commit()
   createSequence()
+  dropIndex()
   dropSequence()
   exec()
   limit()

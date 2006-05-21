@@ -1,3 +1,5 @@
 protected array $_config
 
 The default date() format string.
+
+Default format is "Y-m-d\TH:i:s".

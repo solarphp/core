@@ -68,7 +68,7 @@ class Solar_View extends Solar_Base {
      * 
      * Path stack for helpers.
      * 
-     * @var Solar_PathStack
+     * @var Solar_Path_Stack
      * 
      */
     protected $_helper_path;
@@ -77,7 +77,7 @@ class Solar_View extends Solar_Base {
      * 
      * Path stack for templates.
      * 
-     * @var Solar_PathStack
+     * @var Solar_Path_Stack
      * 
      */
     protected $_template_path;
@@ -98,11 +98,11 @@ class Solar_View extends Solar_Base {
         Solar::loadClass('Solar_View_Helper');
         
         // set the fallback helper path
-        $this->_helper_path = Solar::factory('Solar_PathStack'); 
+        $this->_helper_path = Solar::factory('Solar_Path_Stack'); 
         $this->setHelperPath($this->_config['helper_path']);
         
         // set the fallback template path
-        $this->_template_path = Solar::factory('Solar_PathStack'); 
+        $this->_template_path = Solar::factory('Solar_Path_Stack'); 
         $this->setTemplatePath($this->_config['template_path']);
         
         // special setup
@@ -124,9 +124,6 @@ class Solar_View extends Solar_Base {
     {
         if ($key[0] != '_') {
             $this->$key = $val;
-            return true;
-        } else {
-            return false;
         }
     }
     
@@ -273,6 +270,18 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
+     * Returns the helper directory path stack.
+     * 
+     * @return array The path stack of helper directories.
+     * 
+     */
+    public function getHelperPath()
+    {
+        return $this->_helper_path->get();
+    }
+    
+    /**
+     * 
      * Returns the internal helper object; creates it as needed.
      * 
      * @param string $name The helper name.  If this helper has not
@@ -295,12 +304,13 @@ class Solar_View extends Solar_Base {
      * 
      * @param string $name The helper name.
      * 
+     * @param array $config Configuration array for the helper object.
+     * 
      * @return Solar_View_Helper
      * 
      */
-    public function newHelper($name)
+    public function newHelper($name, $config = null)
     {
-        $key = $name;
         $name = ucfirst($name);
         $class = "Solar_View_Helper_$name";
         
@@ -335,10 +345,11 @@ class Solar_View extends Solar_Base {
             }
         }
         
-        // got the class, let's load it up
-        $config = array('_view' => $this);
-        $this->_helper[$key] = new $class($config);
-        return $this->_helper[$key];
+        // got the class. instantiate and return.
+        settype($config, 'array');
+        $config['_view'] = $this;
+        $helper = new $class($config);
+        return $helper;
     }
     
     /**
@@ -387,6 +398,18 @@ class Solar_View extends Solar_Base {
     public function addTemplatePath($path)
     {
         return $this->_template_path->add($path);
+    }
+    
+    /**
+     * 
+     * Returns the template directory path stack.
+     * 
+     * @return array The path stack of template directories.
+     * 
+     */
+    public function getTemplatePath()
+    {
+        return $this->_template_path->get();
     }
     
     /**

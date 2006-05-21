@@ -1,11 +1,11 @@
 <?php
 /**
  * 
- * Stack for finding files in user-defined fallback paths.
+ * Stack for finding files in user-defined path hierarchies.
  * 
  * @category Solar
  * 
- * @package Solar_PathStack
+ * @package Solar_Path_Stack
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Class for finding files in user-defined fallback path stacks.
+ * Stack for finding files in user-defined path hierarchies.
  * 
  * As you add directory paths, they are searched first when you call
  * find($file).  This allows users to add override paths so their files will
@@ -25,10 +25,10 @@
  * 
  * @category Solar
  * 
- * @package Solar_PathStack
+ * @package Solar_Path_Stack
  * 
  */
-class Solar_PathStack {
+class Solar_Path_Stack {
     
     /**
      * 
@@ -58,18 +58,18 @@ class Solar_PathStack {
      * For example:
      * 
      * <code type="php">
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add(array('path/1', 'path/2', 'path/3'));
      * // $stack->get() reveals that the directory search order will be
      * // 'path/1/', 'path/2/', 'path/3/'.
      * 
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add('path/1:path/2:path/3');
      * // $stack->get() reveals that the directory search order will be
      * // 'path/1/', 'path/2/', 'path/3/', because this is the way the
      * // filesystem expects a path definition to work.
      * 
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add('path/1');
      * $stack->add('path/2');
      * $stack->add('path/3');
@@ -114,7 +114,7 @@ class Solar_PathStack {
      * For example:
      * 
      * <code type="php">
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add('path/1');
      * $stack->add('path/2');
      * $stack->add('path/3');
@@ -148,7 +148,7 @@ class Solar_PathStack {
      * For example:
      * 
      * <code type="php">
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add('path/1');
      * $stack->add('path/2');
      * $stack->add('path/3');
@@ -181,14 +181,14 @@ class Solar_PathStack {
      * 
      * Finds a file in the path stack using realpath().
      * 
-     * While slower than Solar_PathStack::find(), this helps to protect
+     * While slower than Solar_Path_Stack::find(), this helps to protect
      * against directory traversal attacks.  It only works with absolute
      * paths; relative paths will fail.
      * 
      * For example:
      * 
      * <code type="php">
-     * $stack = Solar::factory('Solar_PathStack');
+     * $stack = Solar::factory('Solar_Path_Stack');
      * $stack->add('/path/1');
      * $stack->add('/path/2');
      * $stack->add('/path/3');

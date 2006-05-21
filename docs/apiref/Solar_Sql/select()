@@ -18,7 +18,7 @@ Select rows from the database.
 
 * Parameters:
 
- * string //$type//: How to return the results: all, assoc, col, one, pair, row, result (the default), string (to just get the command string), or a class name to create with the result.
+ * string //$type//: How to return the results: all, assoc, col, one, pair, pdo, row, result (the default), string (to just get the command string).
 
  * array|string //$spec//: An array of component parts for a SELECT, or a literal query string (SELECT or non-select).
 

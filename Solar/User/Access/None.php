@@ -13,7 +13,7 @@
  * 
  * @license LGPL
  * 
- * @version $Id: Role.php 655 2006-01-13 16:53:40Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -33,6 +33,10 @@ class Solar_User_Access_None extends Solar_Base {
     /**
      * 
      * Fetch access privileges for a user handle and roles.
+     * 
+     * @param string $handle The user handle.
+     * 
+     * @param array $roles The user roles.
      * 
      * @return array
      * 

@@ -21,6 +21,7 @@ ApiRef | API Reference
   exception()
   factory()
   fileExists()
+  files()
   fixdir()
   get()
   getFlash()

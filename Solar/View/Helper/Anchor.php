@@ -35,8 +35,8 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
      * 
      * Returns a anchor href tag.
      * 
-     * If the $text link text is empty, will just return the
-     * href value, not an <a href="">...</a> tag.
+     * If the $text link text is empty, will return only the href
+     * value (no attributes) instead of an <a href="">...</a> tag.
      * 
      * @param Solar_Uri|string $spec The anchor href specification.
      * 
@@ -47,7 +47,7 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
      * @return string
      * 
      */
-    public function anchor($spec, $text, $attribs = array())
+    public function anchor($spec, $text = null, $attribs = array())
     {
         if ($spec instanceof Solar_Uri) {
             // fetch the full href, not just the path/query/fragment
@@ -55,12 +55,17 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
         } else {
             $href = $spec;
         }
-        settype($attribs, 'array');
-        unset($attribs['href']);
-        $href = $this->_view->escape($href);
-        $text = $this->_view->getText($text);
-        $attr = $this->_view->attribs($attribs);
-        return "<a href=\"$href\"$attr>$text</a>";
+        
+        if (empty($text)) {
+            return $this->_view->escape($href);
+        } else {
+            settype($attribs, 'array');
+            unset($attribs['href']);
+            $href = $this->_view->escape($href);
+            $text = $this->_view->getText($text);
+            $attr = $this->_view->attribs($attribs);
+            return "<a href=\"$href\"$attr>$text</a>";
+        }
     }
 }
 ?>

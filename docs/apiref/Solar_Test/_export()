@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _export
+
+param: mixed, $var
+
+return: string
+
+</function>
+
+Returns the output from var_export() for a variable.
+
+* Parameters:
+
+ * mixed //$var//: The variable to run through var_export().
+
+* Returns string
+
+Returns the output from var_export() for a variable.

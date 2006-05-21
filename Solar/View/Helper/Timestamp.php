@@ -24,6 +24,8 @@ Solar::loadClass('Solar_View_Helper');
  * 
  * Helper for a formatted timestamp using [[php date()]] conventions.
  * 
+ * Default format is "Y-m-d\TH:i:s".
+ * 
  * @category Solar
  * 
  * @package Solar_View
@@ -37,11 +39,13 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * 
      * The default date() format string.
      * 
+     * Default format is "Y-m-d\TH:i:s".
+     * 
      * @var array
      * 
      */
     protected $_config = array(
-        'format' => DATE_RFC822,
+        'format' => 'Y-m-d\TH:i:s',
     );
     
     /**
@@ -54,7 +58,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * strtotime().
      * 
      * @param string $format An optional custom [[php date()]]
-     * formatting string; null by default.
+     * formatting string.
      * 
      * @return string The formatted date string.
      * 

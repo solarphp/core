@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: todo
+
+param: string, $text, NULL
+
+param: array, $info, NULL
+
+return: void
+
+</function>
+
+Throws an exception indicating an incomplete test.
+
+* Parameters:
+
+ * string //$text//: The incomplete-test message.
+
+ * array //$info//: Additional info for the exception.
+
+* Returns void
+
+Throws an exception indicating an incomplete test.

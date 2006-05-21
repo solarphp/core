@@ -11,7 +11,7 @@
  * 
  * @license http://www.gnu.org/copyleft/lesser.html LGPL
  * 
- * @version $Id: Assert.php 1041 2006-04-04 15:12:36Z pmjones $
+ * @version $Id$
  * 
  */
 
@@ -30,12 +30,13 @@ class Solar_Test extends Solar_Base {
      * 
      * Setup before the entire unit test.
      * 
+     * @param array $config User-defined configuration values.
+     * 
      */
     public function __construct($config = null)
     {
         parent::__construct($config);
     }
-    
     
     /**
      * 
@@ -45,7 +46,6 @@ class Solar_Test extends Solar_Base {
     public function __destruct()
     {
     }
-    
     
     /**
      * 

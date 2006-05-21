@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+* Solar_User_Access::$list -- The access list for a handle and roles.
+
+++ Protected
+
+* Solar_User_Access::$_config -- User-supplied configuration values.
+
+* Solar_User_Access::$_driver -- A driver object instance.
+
+++ Private
+
+None.

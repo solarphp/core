@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: allow
+
+param: string, $class, '*'
+
+param: string, $action, '*'
+
+param: string, $submit, '*'
+
+return: bool
+
+</function>
+
+Tells whether or not to allow access to a class/action/submit combination.
+
+* Parameters:
+
+ * string //$class//: The class name of the control; use '*' for all classes.
+
+ * string //$action//: The action within that class; use '*' for all actions.
+
+ * string //$submit//: The submission value within the action; use '*' for all submissions.
+
+* Returns bool: True if the current handle or role is allowed  access, false if not.
+
+Tells whether or not to allow access to a class/action/submit combination.

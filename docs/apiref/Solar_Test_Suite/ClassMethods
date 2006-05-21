@@ -2,19 +2,13 @@
 
 ++ Public
 
-* Solar_Test_Suite::__construct() -- 
+* Solar_Test_Suite::__construct() -- Constructor.
 
-* Solar_Test_Suite::addTestMethods() -- 
-
-* Solar_Test_Suite::displayLog() -- 
+* Solar_Test_Suite::addTestMethods() -- Adds the test methods from a given test class.
 
 * Solar_Test_Suite::findTests() -- Recursively iterates through a directory looking for test classes.
 
-* Solar_Test_Suite::log() -- 
-
-* Solar_Test_Suite::out() -- 
-
-* Solar_Test_Suite::run() -- 
+* Solar_Test_Suite::run() -- Runs the test suite (or the sub-test series) and logs as it goes.
 
 Inherited Methods:
 
@@ -23,6 +17,10 @@ Inherited Methods:
 * Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
+
+* Solar_Test_Suite::_done() -- Formats a test line, logs it, and saves the info.
+
+* Solar_Test_Suite::_log() -- Saves a message to the log.
 
 Inherited Methods:
 

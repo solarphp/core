@@ -1,0 +1,6 @@
+protected array $_events
+
+The event types this instance will recognize, default '*'.
+
+If you try to save an event type not in this list, the adapter
+should not record it.

@@ -1,1 +1,5 @@
-protected  $_test
+protected array $_test
+
+The test classes (and their methods) to run.
+
+In the form of array($class => array($method1, $method2, ...)).

@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: assertSame
+
+param: mixed, $actual
+
+param: mixed, $expect
+
+return: bool
+
+</function>
+
+Asserts that two variables have the same type and value.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+ * mixed //$expect//: The expected value.
+
+* Returns bool: The assertion result.
+
+Asserts that two variables have the same type and value.
+
+When used on objects, asserts the two variables are 
+references to the same object.

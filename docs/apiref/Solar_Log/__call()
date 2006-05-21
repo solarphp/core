@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: __call
+
+param: unknown, $method
+
+param: unknown, $params
+
+return: unknown
+
+</function>
+
+Magic shorthand for saving an event using a method name.
+
+* Parameters:
+
+ * unknown //$method//: 
+
+ * unknown //$params//: 
+
+* Returns unknown: unknown
+
+Magic shorthand for saving an event using a method name.
+
+<code type="php">
+// these are equivalent:
+$log->save('info', 'informational message');
+$log->info('informational message');
+</code>

@@ -16,6 +16,6 @@ Test/
   Solar.php      -- Test_Solar
   Solar/         
     Base.php     -- Test_Solar_Base
-    Example.php  -- Test_Solar_Example
-    Example/     
-      Sub.php    -- Test_Solar_Example_Sub
+    Uri.php      -- Test_Solar_Uri
+    Uri/     
+      Action.php -- Test_Solar_Uri_Action

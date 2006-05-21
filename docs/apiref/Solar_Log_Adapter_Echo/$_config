@@ -1,0 +1,16 @@
+protected array $_config
+
+User-defined configuration values.
+
+Keys are:
+
+: \\events\\ : (string|array) The event types this instance
+should recognize; a comma-separated string of events, or
+a sequential array.  Default is all events ('*').
+
+: \\format\\ : (string) The line format for each saved event.
+  Use '%t' for the timestamp, '%e' for the event type, '%m' for
+  the event description, and '%%' for a literal percent.  Default
+  is '%t %e %m'.
+
+: \\output\\ : (string) THe output format, 'text' or 'html'.

@@ -48,7 +48,7 @@ class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement {
         $radios = array();
         
         // default value if none are checked.
-        $radios[] = $this->_view->formHidden(array('name' => $this->_name, 'value' => null)) . "\n";
+        $radios[] = $this->_view->formHidden(array('name' => $this->_name, 'value' => null));
         
         // add radio buttons.
         foreach ($this->_options as $opt_value => $opt_label) {

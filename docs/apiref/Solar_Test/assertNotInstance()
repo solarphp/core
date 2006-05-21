@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: assertNotInstance
+
+param: object, $actual
+
+param: string, $expect
+
+return: bool
+
+</function>
+
+Asserts that a object is not an instance of a class.
+
+* Parameters:
+
+ * object //$actual//: The object to test.
+
+ * string //$expect//: The non-expected class name.
+
+* Returns bool: The assertion result.
+
+Asserts that a object is not an instance of a class.

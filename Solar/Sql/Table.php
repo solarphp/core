@@ -496,6 +496,13 @@ class Solar_Sql_Table extends Solar_Base {
             'valid'   => array(),
         );
         
+        // baseline index definition
+        $baseidx = array(
+            'name'    => null,
+            'type'    => 'normal',
+            'cols'    => null,
+        );
+        
         // auto-added columns and indexes
         $autocol = array();
         $autoidx = array();
@@ -509,7 +516,10 @@ class Solar_Sql_Table extends Solar_Base {
                 'autoinc' => true,
             );
             
-            $autoidx['id'] = 'unique';
+            $autoidx['id'] = array(
+                'type' => 'unique',
+                'cols' => 'id',
+            );
         }
         
         // auto-add a "created" column to track when created
@@ -519,7 +529,10 @@ class Solar_Sql_Table extends Solar_Base {
                 'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
             );
             
-            $autoidx['created'] = 'normal';
+            $autoidx['created'] = array(
+                'type' => 'normal',
+                'cols' => 'created',
+            );
         }
         
         // auto-add an "updated" column and index
@@ -530,7 +543,10 @@ class Solar_Sql_Table extends Solar_Base {
                 'default' => array('callback', 'date', 'Y-m-d\TH:i:s'),
             );
             
-            $autoidx['updated'] = 'normal';
+            $autoidx['updated'] = array(
+                'type' => 'normal',
+                'cols' => 'updated',
+            );
         }
         
         // merge the auto-added items on top of the rest
@@ -566,6 +582,33 @@ class Solar_Sql_Table extends Solar_Base {
             // save back into the column info
             $this->_col[$name] = $info;
         }
+        
+        // fix up each index to have a full set of info
+        foreach ($this->_idx as $key => $val) {
+            
+            if (is_int($key) && is_string($val)) {
+                // array('col')
+                $info = array(
+                    'name' => $val,
+                    'type' => 'normal',
+                    'cols' => array($val),
+                );
+            } elseif (is_string($key) && is_string($val)) {
+                // array('col' => 'unique')
+                $info = array(
+                    'name' => $key,
+                    'type' => $val,
+                    'cols' => array($key),
+                );
+            } else {
+                // array('alt' => array('type' => 'normal', 'cols' => array(...)))
+                $info = array_merge($baseidx, (array) $val);
+                $info['name'] = (string) $key;
+                settype($info['cols'], 'array');
+            }
+            
+            $this->_idx[$key] = $info;
+        }
     }
     
     /**
@@ -599,7 +642,12 @@ class Solar_Sql_Table extends Solar_Base {
         foreach ($this->_idx as $name => $info) {
             try {
                 // create this index
-                $result = $this->_sql->createIndex($this->_name, $name, $info);
+                $this->_sql->createIndex(
+                    $this->_name,
+                    $info['name'],
+                    $info['type'] == 'unique',
+                    $info['cols']
+                );
             } catch (Exception $e) {
                 /** @todo Does this throw a TableNotCreated exception too? */
                 // cancel the whole deal.

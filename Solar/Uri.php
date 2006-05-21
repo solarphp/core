@@ -172,8 +172,10 @@ class Solar_Uri extends Solar_Base {
         $ssl = Solar::server('HTTPS', 'off');
         $scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
         
-        // get the current host
-        $host = Solar::server('HTTP_HOST');
+        // get the current host, using a dummy host name if needed.
+        // we need a host name so that parse_url() works properly.
+        // we remove the dummy host name at the end of this method.
+        $host = Solar::server('HTTP_HOST', 'example.com');
         
         // force to the current uri?
         $uri = trim($uri);
@@ -250,6 +252,12 @@ class Solar_Uri extends Solar_Base {
         $this->fragment = $elem['fragment'];
         $this->setPath($elem['path']);
         $this->setQuery($elem['query']);
+        
+        // remove any dummy host name
+        if (! Solar::server('HTTP_HOST')) {
+            $this->scheme = null;
+            $this->host = null;
+        }
     }
     
     /**

@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _log
+
+param: string, $spec
+
+return: void
+
+</function>
+
+Saves a message to the log.
+
+* Parameters:
+
+ * string //$spec//: The log message.
+
+* Returns void
+
+Saves a message to the log.

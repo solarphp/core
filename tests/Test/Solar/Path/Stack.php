@@ -1,6 +1,6 @@
 <?php
 
-class Test_Solar_PathStack extends Solar_Test {
+class Test_Solar_Path_Stack extends Solar_Test {
     
     public function __construct($config = null)
     {
@@ -23,14 +23,14 @@ class Test_Solar_PathStack extends Solar_Test {
           '/path/baz/',
         );
 
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->set('/path/foo:/path/bar:/path/baz');
         $this->assertSame($stack->get(), $expect);
     }
     
     public function testAdd_byArray()
     {
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->add(array('/path/foo', '/path/bar', '/path/baz'));
 
         $expect = array(
@@ -45,7 +45,7 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testAdd_byString()
     {
         // add to the stack as a shell pathspec
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->add('/path/foo:/path/bar:/path/baz');
 
         $expect = array(
@@ -59,7 +59,7 @@ class Test_Solar_PathStack extends Solar_Test {
     
     public function testAdd_byLifo()
     {
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->add('/path/foo');
         $stack->add('/path/bar');
         $stack->add('/path/baz');
@@ -80,7 +80,7 @@ class Test_Solar_PathStack extends Solar_Test {
           '/path/baz/',
         );
 
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->set('/path/foo:/path/bar:/path/baz');
         $this->assertSame($stack->get(), $expect);
 
@@ -94,7 +94,7 @@ class Test_Solar_PathStack extends Solar_Test {
           '/path/baz/',
         );
         
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->set($expect);
         $this->assertSame($stack->get(), $expect);
     }
@@ -102,10 +102,10 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testFind()
     {
         // get the stack object FIRST
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         
         // now reset the include_path
-        $old_path = set_include_path(dirname(__FILE__) . '/PathStack');
+        $old_path = set_include_path(dirname(__FILE__) . '/Stack');
         
         // use the testing directory to look for files
         $path = array(
@@ -141,14 +141,14 @@ class Test_Solar_PathStack extends Solar_Test {
     public function testFindReal()
     {
         // use the testing directory to look for __construct.phpt files
-        $dir = dirname(__FILE__) . "/PathStack";
+        $dir = dirname(__FILE__) . "/Stack";
         $path = array(
             "$dir/a",
             "$dir/b",
             "$dir/c",
         );
         
-        $stack = Solar::factory('Solar_PathStack');
+        $stack = Solar::factory('Solar_Path_Stack');
         $stack->add($path[0]);
         $stack->add($path[1]);
         $stack->add($path[2]);

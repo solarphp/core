@@ -1,0 +1,5 @@
+//Inherited from Solar_App::$errors.//
+
+public array $errors
+
+Error messages, usually for the 'error' action/view.

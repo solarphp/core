@@ -3,20 +3,18 @@ ApiRef | API Reference
  ClassProperties | Class Properties
   $_config
   $_dir
+  $_info
   $_log
-  $_plan
-  $_quiet
   $_sub
   $_test
   $_var
  ClassMethods | Class Methods
   __construct()
+  _done()
   _exception()
+  _log()
   addTestMethods()
   apiVersion()
-  displayLog()
   findTests()
   locale()
-  log()
-  out()
   run()

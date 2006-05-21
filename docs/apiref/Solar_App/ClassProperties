@@ -2,6 +2,8 @@
 
 ++ Public
 
+* Solar_App::$errors -- Error messages, usually for the 'error' action/view.
+
 * Solar_App::$layout_base -- The <base> href value for the layout <head> block.
 
 * Solar_App::$layout_bottom -- An array of content for the layout <div id="bottom"> block.

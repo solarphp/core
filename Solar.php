@@ -312,11 +312,6 @@ class Solar {
      */
     public static function loadClass($class)
     {
-        // pre-empt searching for the class
-        if (class_exists($class)) {
-            return;
-        }
-        
         // did we ask for a non-blank class?
         if (trim($class) == '') {
             throw Solar::exception(
@@ -325,6 +320,11 @@ class Solar {
                 'No class named for loading',
                 array('class' => $class)
             );
+        }
+        
+        // pre-empt further searching for the class
+        if (class_exists($class)) {
+            return;
         }
         
         // convert the class name to a file path.
@@ -347,7 +347,7 @@ class Solar {
     
     /**
      * 
-     * Uses [[php include()]] to run a script in an isolated scope.
+     * Uses [[php include()]] to run a script in a limited scope.
      * 
      * @param string $file The file to include.
      * 
@@ -704,6 +704,27 @@ class Solar {
     public static function session($key = null, $default = null)
     {
         return Solar::_super('_SESSION', $key, $default);
+    }
+    
+    /**
+     * 
+     * Safely gets the value of an element from the $_FILES array.
+     * 
+     * Returns an empty array if the requested key does not exist.
+     * 
+     * @param string $key The array element; if null, returns the whole
+     * array.
+     * 
+     * @param mixed $default If the requested array element is
+     * not set, return this value.
+     * 
+     * @return mixed The array element value (if set), or the
+     * $default value (if not).
+     * 
+     */
+    public static function files($key = null, $default = array())
+    {
+        return Solar::_super('_FILES', $key, $default);
     }
     
     /**

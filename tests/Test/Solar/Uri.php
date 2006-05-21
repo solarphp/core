@@ -13,11 +13,11 @@ class Test_Solar_Uri extends Solar_Test {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_server = $_SERVER;
-        $this->_get = $_GET;
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
+        $this->_server = $_SERVER;
+        $this->_get = $_GET;
         $_SERVER['HTTP_HOST']    = 'example.com';
         $_SERVER['SCRIPT_NAME']  = '/path/to/index.php';
         $_SERVER['PATH_INFO']    = '/appname/action';
@@ -34,6 +34,7 @@ class Test_Solar_Uri extends Solar_Test {
     {
         $_GET = $this->_get;
         $_SERVER = $this->_server;
+        parent::__destruct();
     }
     
     public function setup()

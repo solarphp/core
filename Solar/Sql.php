@@ -121,14 +121,18 @@ class Solar_Sql extends Solar_Base {
      * 
      * Generic query executor.
      * 
-     * @param string $cmd The query command to execute.
+     * @param string $stmt The text of the SQL statement, with
+     * placeholders.
      * 
-     * @return object A PDOStatement result.
+     * @param array $data An associative array of data to bind to the
+     * placeholders.
+     * 
+     * @return mixed A PDOStatement object, or a count of rows affected.
      * 
      */
-    public function query($cmd)
+    public function query($stmt, $data = array())
     {
-        return $this->_driver->exec($cmd);
+        return $this->_driver->exec($stmt, $data);
     }
     
     /**
@@ -196,7 +200,8 @@ class Solar_Sql extends Solar_Base {
         $stmt .= 'VALUES (:' . implode(', :', $fields) . ')';
         
         // execute the statement
-        return $this->_driver->exec($stmt, $data);
+        $result = $this->_driver->exec($stmt, $data);
+        return $result->rowCount();
     }
     
     /**
@@ -228,12 +233,15 @@ class Solar_Sql extends Solar_Base {
         }
         $stmt .= implode(', ', $tmp);
         
-        // add the where clause, execute, and return
+        // add the where clause
         if ($where) {
             $where = $this->quoteMulti($where, ' AND ' );
             $stmt .= " WHERE $where";
         }
-        return $this->_driver->exec($stmt, $data);
+        
+        // execute the statement
+        $result = $this->_driver->exec($stmt, $data);
+        return $result->rowCount();
     }
     
     /**
@@ -253,7 +261,8 @@ class Solar_Sql extends Solar_Base {
         if ($where) {
             $where = $this->quoteMulti($where, ' AND ');
         }
-        return $this->_driver->exec("DELETE FROM $table WHERE $where");
+        $result = $this->_driver->exec("DELETE FROM $table WHERE $where");
+        return $result->rowCount();
     }
     
     /**
@@ -261,8 +270,8 @@ class Solar_Sql extends Solar_Base {
      * Select rows from the database.
      * 
      * @param string $type How to return the results: all, assoc, col,
-     * one, pair, row, result (the default), string (to just get the
-     * command string), or a class name to create with the result.
+     * one, pair, pdo, row, result (the default), string (to just get the
+     * command string).
      * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string (SELECT or non-select).
@@ -331,7 +340,7 @@ class Solar_Sql extends Solar_Base {
         // the PDOStatement result object
         case 'pdo':
         case 'pdostatement':
-        case 'statment':
+        case 'statement':
             $data = $result;
             break;
             
@@ -382,7 +391,7 @@ class Solar_Sql extends Solar_Base {
     public function createSequence($name, $start = 1)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_driver->createSequence($this, $name, $start);
+        $result = $this->_driver->createSequence($name, $start);
         return $result;
     }
     
@@ -559,7 +568,7 @@ class Solar_Sql extends Solar_Base {
     public function addColumn($table, $name, $info)
     {
         $coldef = $this->_buildColDef($name, $info);
-        $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
+        $stmt = "ALTER TABLE $table ADD COLUMN $name $coldef";
         return $this->_driver->exec($stmt);
     }
     
@@ -604,13 +613,23 @@ class Solar_Sql extends Solar_Base {
      * 
      * @param string $name The name of the index (1-28 chars).
      * 
-     * @param string|array $info Information about the index.
+     * @param bool $unique Whether or not the index is unique.
      * 
-     * @return string An SQL string.
+     * @param array $cols The columns in the index.  If empty, uses the
+     * $name parameters as the column name.
+     * 
+     * @return void
      * 
      */
-    public function createIndex($table, $name, $info)
+    public function createIndex($table, $name, $unique = false,
+        $cols = null)
     {
+        // are there any columns for the index?
+        if (empty($cols)) {
+            // take the column name from the index name
+            $cols = $name;
+        }
+        
         // check the table name length
         $len = strlen($table);
         if ($len < 1 || $len > $this->_len['tbl']) {
@@ -625,14 +644,29 @@ class Solar_Sql extends Solar_Base {
         if ($len < 1 || $len > $this->_len['idx']) {
             throw $this->_exception(
                 'ERR_IDX_NAME_LENGTH',
-                array('table' => $table, 'idx' => $name)
+                array('table' => $table, 'index' => $name)
             );
         }
         
-        // build a definition statement, execute, and return
-        $stmt = $this->_buildIdxDef($table, $name, $info);
-        return $this->_driver->exec($stmt);
+        // create a string of column names
+        $cols = implode(', ', (array) $cols);
+        
+        // we prefix all index names with the table name,
+        // and suffix all index names with '__i'.  this
+        // is to soothe PostgreSQL, which demands that index
+        // names not collide, even when they indexes are on
+        // different tables.
+        $fullname = $table . '__' . $name . '__i';
+        
+        // create index entry
+        if ($unique) {
+            $cmd = "CREATE UNIQUE INDEX $fullname ON $table ($cols)";
+        } else {
+            $cmd = "CREATE INDEX $fullname ON $table ($cols)";
+        }
+        return $this->_driver->exec($cmd);
     }
+    
     
     /**
      * 
@@ -647,7 +681,8 @@ class Solar_Sql extends Solar_Base {
      */
     public function dropIndex($table, $name)
     {
-        return $this->_driver->exec("DROP INDEX $name ON $table");
+        $fullname = $table . '__' . $name . '__i';
+        return $this->_driver->dropIndex($table, $fullname);
     }
     
     
@@ -758,6 +793,7 @@ class Solar_Sql extends Solar_Base {
      * quoted values.
      * 
      */
+    // rename to quoteIntoMany()?
     public function quoteMulti($list, $sep = null)
     {
         $text = array();
@@ -774,7 +810,8 @@ class Solar_Sql extends Solar_Base {
         }
         
         // return the condition list
-        return implode($sep, $text);
+        $result = implode($sep, $text);
+        return $result;
     }
     
     
@@ -903,69 +940,6 @@ class Solar_Sql extends Solar_Base {
         
         // done
         return $coldef;
-    }
-    
-    /**
-     * 
-     * Builds an index definition string.
-     * 
-     * @param string $table The table name.
-     * 
-     * @param string $name The index name.
-     * 
-     * @param array $info The index information.
-     * 
-     * @return string The index definition string.
-     * 
-     */
-    protected function _buildIdxDef($table, $name, $info)
-    {
-        // we prefix all index names with the table name,
-        // and suffix all index names with '__i'.  this
-        // is to soothe PostgreSQL, which demands that index
-        // names not collide, even when they indexes are on
-        // different tables.
-        $fullname = $table . '__' . $name . '__i';
-        
-        // build up the index information for type and columns
-        $type = null;
-        $cols = null;
-        if (is_string($info)) {
-        
-            // shorthand for index names: colname => index_type
-            $type = trim($info);
-            $cols = trim($name);
-            
-        } elseif (is_array($info)) {
-        
-            // longhand: index_name => array('type' => ..., 'cols' => ...)
-            $type = (isset($info['type'])) ? $info['type'] : 'normal';
-            $cols = (isset($info['cols'])) ? $info['cols'] : null;
-            
-        }
-        
-        // are there any columns for the index?
-        if (! $cols) {
-            throw $this->_exception(
-                'ERR_IDX_NO_COLS',
-                array('table' => $table, 'idx' => $name)
-            );
-        }
-        
-        // create a string of column names
-        $list = implode(', ', (array) $cols);
-        
-        // create index entry
-        if ($type == 'unique') {
-            return "CREATE UNIQUE INDEX $fullname ON $table ($list)";
-        } elseif ($type == 'normal') {
-            return "CREATE INDEX $fullname ON $table ($list)";
-        } else {
-            throw $this->_exception(
-                'ERR_IDX_TYPE_UNKNOWN',
-                array('table' => $table, 'idx' => $name, 'type' => $type)
-            );
-        }
     }
     
     /**

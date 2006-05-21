@@ -13,6 +13,7 @@ ApiRef | API Reference
   $_name
   $_query
   $_view
+  $errors
   $layout_base
   $layout_bottom
   $layout_left

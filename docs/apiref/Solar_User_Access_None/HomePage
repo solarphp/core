@@ -1,0 +1,11 @@
++ The Solar_User_Access_None Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_User_Access_None
+
+++ Overview
+
+Class for denying all access to all users.

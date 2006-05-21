@@ -1,8 +1,8 @@
-//Inherited from Solar_Controller_Page::_preAction().//
+//Inherited from Solar_App::_preAction().//
 
 <function>
 
-access:   protected
+access:   public
 
 name: _preAction
 
@@ -10,10 +10,13 @@ return: void
 
 </function>
 
-Executes just before the first action.
+Checks to see if user is allowed access.
 
 * Parameters: none.
 
 * Returns void
 
-Executes just before the first action.
+Checks to see if user is allowed access.
+
+On access failure, changes $this->_action to 'error' and adds
+an error message stating the user is not allowed access.

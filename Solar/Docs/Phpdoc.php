@@ -10,7 +10,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -21,19 +21,26 @@
  * Parses a single PHPDoc comment block into summary, narrative, and
  * technical portions.
  * 
- * Supported technical information tags are:
+ * Supported technical tags are:
  * 
  * <code>
- * @category name                # category for the package
- * @package name                 # class package name
- * @subpackage name              # class subpackage name
- * @param type [$name] [summary] # method parameter
- * @return type [summary]        # method return
- * @see summary                  # name of another element that can be documented
- * @todo summary                 # todo item
- * @var type [summary]           # class property
- * @throws class [summary]       # exceptions thrown by method
- * @exception class [summary]    # alias to @throws
+ * For classes:
+ *   @category name                # category for the package
+ *   @package name                 # class package name
+ *   @subpackage name              # class subpackage name
+ * 
+ * For properties:
+ *   @var type [summary]           # class property
+ * 
+ * For methods:
+ *   @param type [$name] [summary] # method parameter
+ *   @return type [summary]        # method return
+ *   @throws class [summary]       # exceptions thrown by method
+ *   @exception class [summary]    # alias to @throws
+ * 
+ * General-purpose:
+ *   @see name                     # "see also" this element name
+ *   @todo summary                 # todo item
  * </code>
  * 
  * @category Solar

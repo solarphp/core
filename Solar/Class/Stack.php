@@ -93,7 +93,7 @@ class Solar_Class_Stack extends Solar_Base {
             $list = array_reverse($list);
         }
         
-        foreach ($list as $class) {
+        foreach ((array) $list as $class) {
             $class = trim($class);
             if (! $class) {
                 continue;

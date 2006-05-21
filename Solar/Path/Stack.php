@@ -94,7 +94,7 @@ class Solar_Path_Stack {
             $path = array_reverse($path);
         }
         
-        foreach ($path as $dir) {
+        foreach ((array) $path as $dir) {
             $dir = trim($dir);
             if (! $dir) {
                 continue;

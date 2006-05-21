@@ -197,7 +197,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     public function addFiles($base, $class = null)
     {
-        $classmap = Solar::factory('Solar_Class_Map');
+        $map = Solar::factory('Solar_Class_Map');
         $source = $map->fetch($base, $class);
         foreach ($source as $class => $file) {
             require_once($file);
@@ -408,7 +408,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * @param string $class The class to check.
      * 
-     * @param ReflectionMethod The method to check.
+     * @param ReflectionMethod $method The method to check.
      * 
      * @return string The class from which the method was inherited, but only
      * if the modifiers, parameters, and comments are identical.
@@ -441,7 +441,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * @param string $class The class to check.
      * 
-     * @param ReflectionProperty The property to check.
+     * @param ReflectionProperty $property The property to check.
      * 
      * @return string The class from which the property was inherited, but only
      * if the modifiers and comments are identical.

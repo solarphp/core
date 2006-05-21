@@ -63,7 +63,7 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
      * If the $text link text is empty, will just return the
      * href value, not an <a href="">...</a> anchor tag.
      * 
-     * @param string|Solar_Uri_Action The action specification.
+     * @param string|Solar_Uri_Action $spec The action specification.
      * 
      * @param string $text A locale translation key.
      * 

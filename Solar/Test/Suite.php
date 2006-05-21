@@ -238,6 +238,9 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * : \\fail\\ : (array) Log of tests that failed.
      * 
+     * @param string $series The sub-test series to run, typically a
+     * class name (not including the 'Test_' prefix).
+     * 
      * @return array A statistics array.
      * 
      * @todo change this from class-based discover to file-based?

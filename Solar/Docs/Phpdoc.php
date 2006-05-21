@@ -305,6 +305,64 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
+     * Parses an @category line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseCategory($line)
+    {
+        $this->_info['category'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses an @package line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parsePackage($line)
+    {
+        $this->_info['package'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses an @subpackage line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseSubpackage($line)
+    {
+        $this->_info['subpackage'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses a one-part block line.
+     * 
+     * Strips everything after the first space.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return string
+     * 
+     */
+    protected function _1part($line)
+    {
+        return preg_replace('/^(\S+)(\s.*)/', '$1', trim($line));
+    }
+    
+    /**
+     * 
      * Parses a two-part block line.
      * 
      * @param string $line The block line.

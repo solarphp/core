@@ -51,8 +51,8 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      */
     protected $_config = array(
-        'area_name' => 'Solar_App_Bookmarks',
-        'content'   => 'content',
+        'area_name'    => 'Solar_App_Bookmarks',
+        'content'      => 'content',
     );
     
     /**

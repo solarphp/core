@@ -65,35 +65,35 @@ class Test_Solar_View extends Solar_Test {
         $this->assertEquals($actual, $expect);
     }
     
-    public function testSetHelperPath()
+    public function testSetHelperClass()
     {
-        $this->_view->setHelperPath('path/foo/');
-        $actual = $this->_view->getHelperPath();
+        $this->_view->setHelperClass('Other_Helper_Foo');
+        $actual = $this->_view->getHelperClass();
         $expect = array(
-            0 => 'path/foo/',
-            1 => 'Solar/View/Helper/',
+            0 => 'Other_Helper_Foo_',
+            1 => 'Solar_View_Helper_',
         );
         $this->assertSame($actual, $expect);
     }
     
-    public function testAddHelperPath()
+    public function testAddHelperClass()
     {
-        $this->_view->addHelperPath('path/foo/');
-        $this->_view->addHelperPath('path/bar/');
-        $actual = $this->_view->getHelperPath();
+        $this->_view->addHelperClass('Other_Helper_Foo');
+        $this->_view->addHelperClass('Other_Helper_Bar');
+        $actual = $this->_view->getHelperClass();
         $expect = array (
-            0 => 'path/bar/',
-            1 => 'path/foo/',
-            2 => 'Solar/View/Helper/',
+            0 => 'Other_Helper_Bar_',
+            1 => 'Other_Helper_Foo_',
+            2 => 'Solar_View_Helper_',
         );
         $this->assertSame($actual, $expect);
     }
     
-    public function testGetHelperPath()
+    public function testGetHelperClass()
     {
-        $actual = $this->_view->getHelperPath();
+        $actual = $this->_view->getHelperClass();
         $expect = array (
-            0 => 'Solar/View/Helper/',
+            0 => 'Solar_View_Helper_',
         );
         $this->assertSame($actual, $expect);
     }

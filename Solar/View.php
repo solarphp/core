@@ -39,7 +39,7 @@ class Solar_View extends Solar_Base {
      */
     protected $_config = array(
         'template_path' => array(),
-        'helper_path'   => array(),
+        'helper_class'  => array(),
         'escape'        => array(),
     );
     
@@ -66,12 +66,12 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Path stack for helpers.
+     * Class stack for helpers.
      * 
-     * @var Solar_Path_Stack
+     * @var Solar_Class_Stack
      * 
      */
-    protected $_helper_path;
+    protected $_helper_class;
     
     /**
      * 
@@ -98,8 +98,8 @@ class Solar_View extends Solar_Base {
         Solar::loadClass('Solar_View_Helper');
         
         // set the fallback helper path
-        $this->_helper_path = Solar::factory('Solar_Path_Stack'); 
-        $this->setHelperPath($this->_config['helper_path']);
+        $this->_helper_class = Solar::factory('Solar_Class_Stack'); 
+        $this->setHelperClass($this->_config['helper_class']);
         
         // set the fallback template path
         $this->_template_path = Solar::factory('Solar_Path_Stack'); 
@@ -241,53 +241,62 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Reset the helper directory path stack.
+     * Reset the helper class stack.
      * 
-     * @param string|array $path The directories to set for the stack.
+     * @param string|array $list The classes to set for the stack.
      * 
      * @return void
      * 
+     * @see Solar_Class_Stack::set()
+     * 
+     * @see Solar_Class_Stack::add()
+     * 
      */
-    public function setHelperPath($path = null)
+    public function setHelperClass($list = null)
     {
-        $this->_helper_path->set('Solar/View/Helper/');
-        $this->_helper_path->add($path);
+        $this->_helper_class->set('Solar_View_Helper');
+        $this->_helper_class->add($list);
     }
     
     /**
      * 
      * Add to the helper directory path stack.
      * 
-     * @param string|array $path The directories to add to the stack.
+     * @param string|array $list The classes to add to the stack.
      * 
      * @return void
      * 
+     * @see Solar_Class_Stack::add()
+     * 
      */
-    public function addHelperPath($path)
+    public function addHelperClass($list)
     {
-        $this->_helper_path->add($path);
+        $this->_helper_class->add($list);
     }
     
     /**
      * 
-     * Returns the helper directory path stack.
+     * Returns the helper class stack.
      * 
-     * @return array The path stack of helper directories.
+     * @return array The stack of helper classes.
+     * 
+     * @see Solar_Class_Stack::get()
      * 
      */
-    public function getHelperPath()
+    public function getHelperClass()
     {
-        return $this->_helper_path->get();
+        return $this->_helper_class->get();
     }
     
     /**
      * 
-     * Returns the internal helper object; creates it as needed.
+     * Returns an internal helper object; creates it as needed.
      * 
      * @param string $name The helper name.  If this helper has not
-     * been created yet, this method creates it automatically.
+     * been created yet, this method creates it after loading it from
+     * the helper class stack.
      * 
-     * @return Solar_View_Helper
+     * @return object An internal helper object.
      * 
      */
     public function getHelper($name)
@@ -306,46 +315,14 @@ class Solar_View extends Solar_Base {
      * 
      * @param array $config Configuration array for the helper object.
      * 
-     * @return Solar_View_Helper
+     * @return object A new standalone helper object.
+     * 
+     * @see Solar_Class_Stack::load()
      * 
      */
     public function newHelper($name, $config = null)
     {
-        $name = ucfirst($name);
-        $class = "Solar_View_Helper_$name";
-        
-        // has the class been loaded?
-        if (! class_exists($class, false)) {
-        
-            // look for the named file in the helper stack.
-            $file = $this->_helper_path->find("$name.php");
-            if (! $file) {
-                throw $this->_exception(
-                    'ERR_HELPER_FILE_NOT_FOUND',
-                    array(
-                        'name' => $name,
-                        'path' => $this->_helper_path->get()
-                    )
-                );
-            }
-            
-            // load the file
-            require $file;
-            
-            // check if the class exists now
-            if (! class_exists($class, false)) {
-                throw $this->_exception(
-                    'ERR_HELPER_CLASS_NOT_FOUND',
-                    array(
-                        'name'  => $name,
-                        'file'  => $file,
-                        'class' => $class,
-                    )
-                );
-            }
-        }
-        
-        // got the class. instantiate and return.
+        $class = $this->_helper_class->load($name);
         settype($config, 'array');
         $config['_view'] = $this;
         $helper = new $class($config);
@@ -382,6 +359,10 @@ class Solar_View extends Solar_Base {
      * 
      * @param string|array $path The directories to set for the stack.
      * 
+     * @return void
+     * 
+     * @see Solar_Path_Stack::set()
+     * 
      */
     public function setTemplatePath($path = null)
     {
@@ -394,6 +375,10 @@ class Solar_View extends Solar_Base {
      * 
      * @param string|array $path The directories to add to the stack.
      * 
+     * @return void
+     * 
+     * @see Solar_Path_Stack::add()
+     * 
      */
     public function addTemplatePath($path)
     {
@@ -405,6 +390,8 @@ class Solar_View extends Solar_Base {
      * Returns the template directory path stack.
      * 
      * @return array The path stack of template directories.
+     * 
+     * @see Solar_Path_Stack::get()
      * 
      */
     public function getTemplatePath()

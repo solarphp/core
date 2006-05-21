@@ -9,7 +9,7 @@
  * 
  * @author Matthew Weier O'Phinney <mweierophinney@gmail.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 

@@ -332,14 +332,14 @@ class Solar_Docs_Phpdoc extends Solar_Base {
 /**
  * 
  * WHAT WE PROBABLY WILL:
- * @author       author name <author@email>
- * @copyright    name date
- * @deprecated   summary
- * @deprec       (alias to @deprecated)
- * @example      /path/to/example
- * @license      url name
- * @since        (a version or a date)
- * @staticvar    type summary (static variable usage in a function)
+ * @author name <author@email>
+ * @copyright name date
+ * @deprecated summary
+ * @deprec summary
+ * @example /path/to/example
+ * @license url name
+ * @since version|date
+ * @staticvar name type summary
  * 
  * WHAT WE PROBABLY WILL NOT:
  * @access       public or private
@@ -354,7 +354,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * @subpackage   sub package name, groupings inside of a project
  * @version      version
  * @internal     private information for advanced developers only
- * @static
+ * @static       static method or property
  * @link         URL
  * @ignore
  * {@code}

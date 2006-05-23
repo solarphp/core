@@ -13,5 +13,3 @@ Gets the cache lifetime in seconds.
 * Parameters: none.
 
 * Returns int: The cache lifetime in seconds.
-
-Gets the cache lifetime in seconds.

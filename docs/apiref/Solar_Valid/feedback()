@@ -22,8 +22,6 @@ Validate a value using a callback, and return a message if validation fails.
 
 * Returns string|void: The feedback message if validation fails, or null if the validation succeeded.  Note that this is the opposite of all other Solar_Valid returns.
 
-Validate a value using a callback, and return a message if validation fails.
-
 This method is the **opposite** of all other Solar_Valid methods,
 because it returns a message if validation fails, but returns
 null if validation succeeds.  This is useful for Solar_Sql_Table

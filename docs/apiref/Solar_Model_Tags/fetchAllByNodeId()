@@ -17,5 +17,3 @@ Fetch all tags on one node_id.
  * int //$node_id//: The node_id to fetch tags for.
 
 * Returns array: An array of tags on that node.
-
-Fetch all tags on one node_id.

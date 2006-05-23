@@ -2,4 +2,6 @@
 
 public string $port
 
-The port number (e.g., '80').
+The port number (e.
+
+., '80').

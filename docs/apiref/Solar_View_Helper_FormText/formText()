@@ -17,5 +17,3 @@ Generates a 'text' element.
  * array //$info//: An array of element information.
 
 * Returns string: The element XHTML.
-
-Generates a 'text' element.

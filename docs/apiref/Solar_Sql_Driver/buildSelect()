@@ -18,7 +18,5 @@ Build an SQL SELECT command string from its component parts.
 
 * Returns string: An SQL SELECT command string.
 
-Build an SQL SELECT command string from its component parts.
-
 We use this so that drivers can append or wrap with LIMIT
 clauses or emulation.

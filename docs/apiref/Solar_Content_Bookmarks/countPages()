@@ -22,7 +22,5 @@ Fetches a total count and pages of bookmarks in the content store.
 
 * Returns array: A array with keys 'count' (total number of  bookmarks) and 'pages' (number of pages).
 
-Fetches a total count and pages of bookmarks in the content store.
-
 You can specify an owner_handle (username) and/or a list of
 tags to limit the count.

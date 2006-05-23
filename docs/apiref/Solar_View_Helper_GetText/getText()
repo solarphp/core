@@ -21,5 +21,3 @@ Returns a localized string, with escaping applied.
  * int|float //$num//: A number to help determine if the translation should return singluar or plural.
 
 * Returns string: The translated locale string.
-
-Returns a localized string, with escaping applied.

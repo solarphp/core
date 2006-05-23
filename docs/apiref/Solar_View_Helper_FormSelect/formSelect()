@@ -17,5 +17,3 @@ Generates 'select' list of options.
  * array //$info//: An array of element information.
 
 * Returns string: The element XHTML.
-
-Generates 'select' list of options.

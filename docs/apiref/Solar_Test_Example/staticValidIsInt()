@@ -17,5 +17,3 @@ Used for testing Solar_Valid::callback() as a static method.
  * mixed //$value//: The value to validate with is_int().
 
 * Returns bool: True if $value is_int(), false if not.
-
-Used for testing Solar_Valid::callback() as a static method.

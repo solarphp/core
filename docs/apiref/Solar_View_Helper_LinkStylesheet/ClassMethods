@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_LinkStylesheet::linkStylesheet() -- Returns a <link rel="stylesheet" ... /> tag.
+* Solar_View_Helper_LinkStylesheet::linkStylesheet() -- Returns a <link rel="stylesheet" .
 
 Inherited Methods:
 

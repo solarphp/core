@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-defined configuration.
 
-* Returns Solar_Log_Adapter_Echo: Solar_Log_Adapter_Echo instance
-
-Constructor.
+* Returns Solar_Log_Adapter_Echo

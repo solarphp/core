@@ -17,5 +17,3 @@ Deletes a cache entry.
  * string //$key//: The entry ID.
 
 * Returns void
-
-Deletes a cache entry.

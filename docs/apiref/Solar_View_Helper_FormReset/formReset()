@@ -17,5 +17,3 @@ Generates a 'reset' button.
  * array //$info//: An array of element information.
 
 * Returns string: The element XHTML.
-
-Generates a 'reset' button.

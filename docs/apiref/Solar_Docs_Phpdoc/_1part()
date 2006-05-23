@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _1part
+
+param: string, $line
+
+return: string
+
+</function>
+
+Parses a one-part block line.
+
+* Parameters:
+
+ * string //$line//: The block line.
+
+* Returns string
+
+Strips everything after the first space.

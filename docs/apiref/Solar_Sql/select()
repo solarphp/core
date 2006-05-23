@@ -25,5 +25,3 @@ Select rows from the database.
  * array //$data//: An associative array of data to bind into the SELECT statement.
 
 * Returns mixed: The query results for the return type requested.
-
-Select rows from the database.

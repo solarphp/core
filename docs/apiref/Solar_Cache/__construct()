@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Cache: Solar_Cache instance
-
-Constructor.
+* Returns Solar_Cache

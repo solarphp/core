@@ -4,11 +4,11 @@ access:   public
 
 name: __call
 
-param: unknown, $method
+param: string, $method
 
-param: unknown, $params
+param: array, $params
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,13 +16,11 @@ Magic shorthand for saving an event using a method name.
 
 * Parameters:
 
- * unknown //$method//: 
+ * string //$method//: The event type.
 
- * unknown //$params//: 
+ * array //$params//: Additional parameters; only the first paramter is used (the message to log).
 
-* Returns unknown: unknown
-
-Magic shorthand for saving an event using a method name.
+* Returns void
 
 <code type="php">
 // these are equivalent:

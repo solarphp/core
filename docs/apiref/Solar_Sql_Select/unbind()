@@ -17,5 +17,3 @@ Unsets bound data.
  * mixed //$spec//: The key to unset.  If a string, unsets that one bound value; if an array, unsets the list of values; if empty, unsets all bound values (the default).
 
 * Returns Solar_Sql_Select
-
-Unsets bound data.

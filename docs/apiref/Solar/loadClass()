@@ -17,5 +17,3 @@ Loads a class file from the include_path.
  * string //$class//: A Solar (or other) class name.
 
 * Returns void
-
-Loads a class file from the include_path.

@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_Link::link() -- Returns a <link ... /> tag.
+* Solar_View_Helper_Link::link() -- Returns a <link .
 
 Inherited Methods:
 

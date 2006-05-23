@@ -18,7 +18,5 @@ Adds a LIMIT clause (or equivalent) to a SELECT statement.
 
 * Returns void
 
-Adds a LIMIT clause (or equivalent) to a SELECT statement.
-
 Still not great, but much more efficient than old way.
 http://lists.bestpractical.com/pipermail/rt-devel/2005-June/007339.html

@@ -17,5 +17,3 @@ Drops a table from the database.
  * string //$table//: The table name.
 
 * Returns mixed
-
-Drops a table from the database.

@@ -21,5 +21,3 @@ Validate against a callback function or method.
  * callback //$callback//: A string or array suitable for use as the first argument to [[php call_user_func_array()]].
 
 * Returns bool: True if valid, false if not.
-
-Validate against a callback function or method.

@@ -17,5 +17,3 @@ Strips all numbers from a value.
  * mixed //$value//: The value to be filtered.
 
 * Returns string: The filtered value.
-
-Strips all numbers from a value.

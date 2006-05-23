@@ -25,5 +25,3 @@ Applies a [[php str_replace()]] filter.
  * string //$replace//: Replace with this string.
 
 * Returns string: The filtered value.
-
-Applies a [[php str_replace()]] filter.

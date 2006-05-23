@@ -14,8 +14,6 @@ Gets the current activity state of the cache (on or off).
 
 * Returns bool: True if active, false if not.
 
-Gets the current activity state of the cache (on or off).
-
 Example:
 
 <code type="php">

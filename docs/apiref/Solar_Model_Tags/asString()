@@ -18,8 +18,6 @@ Normalizes tag strings.
 
 * Returns string: A space-separated string of tags.
 
-Normalizes tag strings.
-
 Converts "+" to " ", trims extra spaces, and removes duplicates,
 but otherwise keeps them in order and space-separated.
 

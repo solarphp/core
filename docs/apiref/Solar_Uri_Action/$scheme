@@ -2,4 +2,6 @@
 
 public string $scheme
 
-The scheme (e.g. 'http' or 'https').
+The scheme (e.
+
+. 'http' or 'https').

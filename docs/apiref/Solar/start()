@@ -17,5 +17,3 @@ Starts Solar: loads configuration values and and sets up the environment.
  * mixed //$config//: An alternative configuration parameter.
 
 * Returns void
-
-Starts Solar: loads configuration values and and sets up the environment.

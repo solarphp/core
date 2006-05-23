@@ -17,5 +17,3 @@ Fetches the roles for a user.
  * string //$handle//: User handle to get roles for.
 
 * Returns array: An array of roles discovered in the table.
-
-Fetches the roles for a user.

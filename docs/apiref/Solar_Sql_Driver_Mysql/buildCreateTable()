@@ -21,5 +21,3 @@ Builds a CREATE TABLE command string.
  * string //$cols//: The column definitions.
 
 * Returns string: A CREATE TABLE command string.
-
-Builds a CREATE TABLE command string.

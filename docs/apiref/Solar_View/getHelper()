@@ -6,16 +6,14 @@ name: getHelper
 
 param: string, $name
 
-return: Solar_View_Helper
+return: object
 
 </function>
 
-Returns the internal helper object; creates it as needed.
+Returns an internal helper object; creates it as needed.
 
 * Parameters:
 
- * string //$name//: The helper name.  If this helper has not been created yet, this method creates it automatically.
+ * string //$name//: The helper name.  If this helper has not been created yet, this method creates it after loading it from the helper class stack.
 
-* Returns Solar_View_Helper
-
-Returns the internal helper object; creates it as needed.
+* Returns object: An internal helper object.

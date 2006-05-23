@@ -25,5 +25,3 @@ Gets the translated locale string for a class and key.
  * mixed //$num//: Helps determine whether to get a singular or plural translation.
 
 * Returns string: A translated locale string.
-
-Gets the translated locale string for a class and key.

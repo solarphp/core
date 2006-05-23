@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Model_Areas: Solar_Model_Areas instance
-
-Constructor.
+* Returns Solar_Model_Areas

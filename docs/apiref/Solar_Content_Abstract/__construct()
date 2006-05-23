@@ -10,12 +10,12 @@ return: Solar_Content_Abstract
 
 </function>
 
-Constructor
+
 
 * Parameters:
 
  * array //$config//: User-defined configuration values.
 
-* Returns Solar_Content_Abstract: Solar_Content_Abstract instance
+* Returns Solar_Content_Abstract
 
-Constructor
+onstructor

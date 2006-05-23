@@ -17,5 +17,3 @@ Allows reading of protected properties.
  * string //$key//: The property name.
 
 * Returns mixed: The property value.
-
-Allows reading of protected properties.

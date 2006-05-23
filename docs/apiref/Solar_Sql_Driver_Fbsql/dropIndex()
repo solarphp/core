@@ -21,5 +21,3 @@ Drops an index.
  * string //$name//: The full index name.
 
 * Returns void
-
-Drops an index.

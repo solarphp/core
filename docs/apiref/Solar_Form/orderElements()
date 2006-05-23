@@ -17,5 +17,3 @@ Reorders the existing elements.
  * array //$list//: The order in which elements should be placed; each value in the array is an element name.
 
 * Returns void
-
-Reorders the existing elements.

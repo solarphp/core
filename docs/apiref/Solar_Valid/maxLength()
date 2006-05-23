@@ -25,5 +25,3 @@ Validate that a string is no longer than a certain length.
  * bool //$blank//: Allow blank values to be valid.
 
 * Returns bool: True if valid, false if not.
-
-Validate that a string is no longer than a certain length.

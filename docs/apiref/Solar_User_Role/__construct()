@@ -16,6 +16,4 @@ Constructor to set up the storage driver.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_User_Role: Solar_User_Role instance
-
-Constructor to set up the storage driver.
+* Returns Solar_User_Role

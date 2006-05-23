@@ -23,5 +23,3 @@ Validates and updates data in the table based on a WHERE clause.
  * string //$where//: An SQL WHERE clause limiting the updated rows.
 
 * Returns array: The data as updated.
-
-Validates and updates data in the table based on a WHERE clause.

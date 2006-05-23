@@ -26,7 +26,5 @@ Validate that the value is a key in the list of allowed options.
 
 * Returns bool: True if valid, false if not.
 
-Validate that the value is a key in the list of allowed options.
-
 Given the keys of the array (second parameter), the value
 (first parameter) must match at least one of those keys.

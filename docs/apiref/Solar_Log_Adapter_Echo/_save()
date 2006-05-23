@@ -21,5 +21,3 @@ Echos the log message.
  * string //$descr//: A description of the event.
 
 * Returns mixed: Boolean false if the event was not saved (usually because it was not recognized), or a non-empty value if it was saved.
-
-Echos the log message.

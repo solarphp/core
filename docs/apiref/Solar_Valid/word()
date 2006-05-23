@@ -22,7 +22,5 @@ Validate that a value is composed only of "word" characters.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is composed only of "word" characters.
-
 These include a-z, A-Z, 0-9, and underscore, indicated by a 
 regular expression "\w".

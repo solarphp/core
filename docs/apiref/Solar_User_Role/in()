@@ -17,5 +17,3 @@ Check to see if a user is in a role.
  * string //$role//: The role to check.
 
 * Returns void
-
-Check to see if a user is in a role.

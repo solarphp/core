@@ -24,8 +24,6 @@ Convenience method for returning exceptions with localized text.
 
 * Returns object: A Solar_Exception object.
 
-Convenience method for returning exceptions with localized text.
-
 This method attempts to automatically load and throw exceptions
 based on the error code, falling back to generic Solar exceptions
 when no specific exception classes exist.  For example, if a

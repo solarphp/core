@@ -17,5 +17,3 @@ Asserts that a variable is not boolean false.
  * mixed //$actual//: The variable to test.
 
 * Returns bool: The assertion result.
-
-Asserts that a variable is not boolean false.

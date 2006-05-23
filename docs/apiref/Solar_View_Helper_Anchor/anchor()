@@ -26,7 +26,5 @@ Returns a anchor href tag.
 
 * Returns string
 
-Returns a anchor href tag.
-
 If the $text link text is empty, will return only the href
 value (no attributes) instead of an <a href="">...</a> tag.

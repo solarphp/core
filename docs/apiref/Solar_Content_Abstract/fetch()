@@ -17,5 +17,3 @@ Fetch one master node by ID.
  * int //$id//: The master node ID.
 
 * Returns array: The master node data.
-
-Fetch one master node by ID.

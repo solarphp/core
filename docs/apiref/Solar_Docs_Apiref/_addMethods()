@@ -1,0 +1,19 @@
+<function>
+
+access:   protected
+
+name: _addMethods
+
+param: string, $class
+
+return: void
+
+</function>
+
+Adds the method reflections for a given class.
+
+* Parameters:
+
+ * string //$class//: The class name.
+
+* Returns void

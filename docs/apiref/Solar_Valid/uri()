@@ -26,7 +26,5 @@ Validate a value as a URI per RFC2396.
 
 * Returns bool: True if the value is a URI and is one of the allowed schemes, false if not.
 
-Validate a value as a URI per RFC2396.
-
 The value must match a generic URI format; e.g.,
 ``http://example.com``, ``mms://example.org``, and so on.

@@ -29,5 +29,3 @@ Formats a test line, logs it, and saves the info.
  * string //$diag//: Diagnostics for the test.
 
 * Returns void
-
-Formats a test line, logs it, and saves the info.

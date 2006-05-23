@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: parseSee
+
+param: string, $line
+
+return: void
+
+</function>
+
+Parses an @see line into $this->_info.
+
+* Parameters:
+
+ * string //$line//: The block line.
+
+* Returns void

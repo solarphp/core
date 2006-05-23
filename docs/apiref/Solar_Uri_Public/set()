@@ -19,5 +19,3 @@ Sets properties from a specified URI.
  * string //$uri//: The URI to parse.  If null, defaults to the current URI.
 
 * Returns void
-
-Sets properties from a specified URI.

@@ -21,5 +21,3 @@ APR compatible MD5 encryption.
  * string //$salt//: The salt to use for encryption.
 
 * Returns string: The APR MD5 encrypted string.
-
-APR compatible MD5 encryption.

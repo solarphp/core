@@ -19,5 +19,3 @@ Prepares an info array and imports to the properties.
  * array //$info//: An array of element information.
 
 * Returns void
-
-Prepares an info array and imports to the properties.

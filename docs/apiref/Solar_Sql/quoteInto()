@@ -22,8 +22,6 @@ Quotes a value and places into a piece of text at a placeholder.
 
 * Returns mixed: An SQL-safe quoted value (or string of separated values) placed into the orignal text.
 
-Quotes a value and places into a piece of text at a placeholder.
-
 The placeholder is a question-mark; all placeholders will be replaced
 with the quoted value.   For example:
 

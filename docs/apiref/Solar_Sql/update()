@@ -26,6 +26,4 @@ Updates a table with specified data based on a WHERE clause.
 
 * Returns int: The number of rows affected.
 
-Updates a table with specified data based on a WHERE clause.
-
 Automatically applies Solar_Sql::quote() to the data values for you.

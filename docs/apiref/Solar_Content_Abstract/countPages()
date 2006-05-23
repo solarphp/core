@@ -21,5 +21,3 @@ Fetch a total count and pages of master nodes in the content store.
  * string|array //$where//: A set of multiWhere() conditions to determine which nodes are fetched.
 
 * Returns array: A array with keys 'count' (total number of  bookmarks) and 'pages' (number of pages).
-
-Fetch a total count and pages of master nodes in the content store.

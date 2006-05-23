@@ -8,7 +8,7 @@
 
 * Solar_View::__set() -- Disallows setting of underscore-prefixed variables.
 
-* Solar_View::addHelperPath() -- Add to the helper directory path stack.
+* Solar_View::addHelperClass() -- Add to the helper directory path stack.
 
 * Solar_View::addTemplatePath() -- Add to the template directory path stack.
 
@@ -20,15 +20,15 @@
 
 * Solar_View::fetch() -- Fetches template output.
 
-* Solar_View::getHelper() -- Returns the internal helper object; creates it as needed.
+* Solar_View::getHelper() -- Returns an internal helper object; creates it as needed.
 
-* Solar_View::getHelperPath() -- Returns the helper directory path stack.
+* Solar_View::getHelperClass() -- Returns the helper class stack.
 
 * Solar_View::getTemplatePath() -- Returns the template directory path stack.
 
 * Solar_View::newHelper() -- Creates a new standalone helper object.
 
-* Solar_View::setHelperPath() -- Reset the helper directory path stack.
+* Solar_View::setHelperClass() -- Reset the helper class stack.
 
 * Solar_View::setTemplatePath() -- Reset the template directory path stack.
 

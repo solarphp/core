@@ -22,8 +22,6 @@ Creates a portable table.
 
 * Returns string: An SQL string.
 
-Creates a portable table.
-
 The $cols parameter should be in this format:
 
 <code type="php">

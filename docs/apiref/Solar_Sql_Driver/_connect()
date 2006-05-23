@@ -13,5 +13,3 @@ Creates a PDO object and connects to the database.
 * Parameters: none.
 
 * Returns void
-
-Creates a PDO object and connects to the database.

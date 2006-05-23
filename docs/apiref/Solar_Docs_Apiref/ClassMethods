@@ -1,0 +1,39 @@
++ Class Methods
+
+++ Public
+
+* Solar_Docs_Apiref::__construct() -- Constructor.
+
+* Solar_Docs_Apiref::addClass() -- Adds a class to the API docs.
+
+* Solar_Docs_Apiref::addFiles() -- Adds classes from a file hierarchy.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Docs_Apiref::_addMethods() -- Adds the method reflections for a given class.
+
+* Solar_Docs_Apiref::_addParents() -- Adds the inheritance hierarchy for a given class.
+
+* Solar_Docs_Apiref::_addProperties() -- Adds the property reflections for a given class.
+
+* Solar_Docs_Apiref::_getParameters() -- Returns the parameters for a ReflectionMethod.
+
+* Solar_Docs_Apiref::_isInheritedMethod() -- Reports the class, if any, a method is inherited from and identical to.
+
+* Solar_Docs_Apiref::_isInheritedProperty() -- Reports the class, if any, a property is inherited from and identical to.
+
+* Solar_Docs_Apiref::_log() -- Saves a message to the log.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

@@ -18,6 +18,4 @@ Adds a WHERE condition to the query by OR.
 
 * Returns Solar_Sql_Select
 
-Adds a WHERE condition to the query by OR.
-
 Otherwise identical to where().

@@ -17,5 +17,3 @@ Automatically adds multiple pieces to the form.
  * Solar_Form|array //$spec//: If a Solar_Form object, adds attributes, elements and feedback from the object properties.  If an array, treats it as a a collection of element info arrays and adds them.
 
 * Returns Solar_View_Helper_Form
-
-Automatically adds multiple pieces to the form.

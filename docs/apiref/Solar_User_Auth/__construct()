@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: An array of user-defined configuration values.
 
-* Returns Solar_User_Auth: Solar_User_Auth instance
-
-Constructor.
+* Returns Solar_User_Auth

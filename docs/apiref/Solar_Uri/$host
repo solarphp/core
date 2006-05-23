@@ -1,3 +1,5 @@
 public string $host
 
-The host specification (e.g., 'example.com').
+The host specification (e.
+
+., 'example.com').

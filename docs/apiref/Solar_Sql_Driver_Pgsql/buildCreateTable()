@@ -24,7 +24,5 @@ Builds a CREATE TABLE command string.
 
 * Returns string: A CREATE TABLE command string.
 
-Builds a CREATE TABLE command string.
-
 We use this so that certain drivers can append table types
 to the creation statment (e.g. MySQL).

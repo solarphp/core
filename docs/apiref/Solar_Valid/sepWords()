@@ -26,7 +26,5 @@ Validate that a value is composed of separated words.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is composed of separated words.
-
 These include a-z, A-Z, 0-9, and underscore, indicated by a 
 regular expression "\w".  By default, the separator is a space.

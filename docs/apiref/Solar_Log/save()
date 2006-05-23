@@ -22,8 +22,6 @@ Saves (writes) an event and message to the log.
 
 * Returns mixed: Boolean false if the event was not saved, or a non-empty value if the event was saved (typically boolean true).
 
-Saves (writes) an event and message to the log.
-
 <code type="php">
 // these are equivalent:
 $log->save('info', 'informational message');

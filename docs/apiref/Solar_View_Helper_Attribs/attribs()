@@ -17,5 +17,3 @@ Converts an associative array to an attribute string.
  * array //$attribs//: From this array, each key-value pair is  converted to an attribute name and value.
 
 * Returns string: The XHTML for the attributes.
-
-Converts an associative array to an attribute string.

@@ -1,0 +1,20 @@
++ Class Properties
+
+++ Public
+
+* Solar_Docs_Apiref::$api -- The entire API as a structured array.
+
+++ Protected
+
+* Solar_Docs_Apiref::$_config -- User-defined configuration values.
+
+* Solar_Docs_Apiref::$_ignore -- When generating log notices, ignore these class methods and
+properties.
+
+* Solar_Docs_Apiref::$_log -- Solar_Log instance.
+
+* Solar_Docs_Apiref::$_phpdoc -- Class for parsing PHPDoc comment blocks.
+
+++ Private
+
+None.

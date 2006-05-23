@@ -21,5 +21,3 @@ Validate a handle and passwd.
  * string //$passwd//: The plain-text passwd to use.
 
 * Returns bool: True on success, false on failure.
-
-Validate a handle and passwd.

@@ -22,8 +22,6 @@ Applies multiple filters to a value.
 
 * Returns mixed: The filtered value.
 
-Applies multiple filters to a value.
-
 Applies multiple filters to a value. $filters should be an array of
 arrays, with each subarray consisting of at least one element. The first
 element should be the filter type; this is the name of a valid

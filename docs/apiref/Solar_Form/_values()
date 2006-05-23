@@ -25,5 +25,3 @@ Recursively pulls values from elements into an associative array.
  * array //$values//: The values array into which we will place the element value.  Note that it becomes a reference to sub-elements as the recursive function creates new sub-elements based on the form element name.
 
 * Returns void
-
-Recursively pulls values from elements into an associative array.

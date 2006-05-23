@@ -19,5 +19,3 @@ Sets the number of rows per page.
  * int //$val//: The number of rows per page.
 
 * Returns void
-
-Sets the number of rows per page.

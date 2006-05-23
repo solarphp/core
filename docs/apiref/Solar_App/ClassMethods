@@ -2,10 +2,6 @@
 
 ++ Public
 
-* Solar_App::_preAction() -- Checks to see if user is allowed access.
-
-* Solar_App::_setup() -- Sets up the Solar_App environment.
-
 Inherited Methods:
 
 * Solar_Controller_Page::__construct() -- Constructor.
@@ -29,6 +25,10 @@ Inherited Methods:
 * Solar_Controller_Page::setFlash() -- Sets a "read-once" session value for this class and a key.
 
 ++ Protected
+
+* Solar_App::_preAction() -- Checks to see if user is allowed access.
+
+* Solar_App::_setup() -- Sets up the Solar_App environment.
 
 Inherited Methods:
 

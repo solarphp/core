@@ -22,8 +22,6 @@ Returns the output of "var_dump()" with a label.
 
 * Returns string: The labeled results of var_dump().
 
-Returns the output of "var_dump()" with a label.
-
 Buffers the [[php var_dump]] for a variable,
 applies some simple formatting for readability,
 and [[php echo]]s it with an optional label.

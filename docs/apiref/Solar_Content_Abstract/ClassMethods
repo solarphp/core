@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_Content_Abstract::__construct() -- Constructor
+* Solar_Content_Abstract::__construct() -- 
 
 * Solar_Content_Abstract::countPages() -- Fetch a total count and pages of master nodes in the content store.
 

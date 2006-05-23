@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-specified configuration.
 
-* Returns Solar_View_Helper_Timestamp: Solar_View_Helper_Timestamp instance
-
-Constructor.
+* Returns Solar_View_Helper_Timestamp

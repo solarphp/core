@@ -18,8 +18,6 @@ Adds a HAVING condition to the query by AND.
 
 * Returns Solar_Sql_Select
 
-Adds a HAVING condition to the query by AND.
-
 If a value is passed as the second param, it will be quoted
 and replaced into the condition wherever a question-mark
 appears.

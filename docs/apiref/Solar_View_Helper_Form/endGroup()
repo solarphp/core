@@ -13,5 +13,3 @@ Ends a group of form elements.
 * Parameters: none.
 
 * Returns Solar_View_Helper_Form
-
-Ends a group of form elements.

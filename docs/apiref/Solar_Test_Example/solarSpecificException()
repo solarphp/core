@@ -13,5 +13,3 @@ Throws ERR_FILE_NOT_FOUND for this class.
 * Parameters: none.
 
 * Returns void
-
-Throws ERR_FILE_NOT_FOUND for this class.

@@ -17,5 +17,3 @@ Returns one area row by name.
  * string //$name//: The area name to fetch by.
 
 * Returns array: An array of row data.
-
-Returns one area row by name.

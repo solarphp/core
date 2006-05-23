@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_View_Helper_Style::style() -- Returns a <style>...</style> tag.
+* Solar_View_Helper_Style::style() -- Returns a <style>.
 
 Inherited Methods:
 

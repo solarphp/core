@@ -19,5 +19,3 @@ Drops a sequence.
  * string //$name//: The sequence name to drop.
 
 * Returns void
-
-Drops a sequence.

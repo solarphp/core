@@ -13,5 +13,3 @@ Increments the iterator key.
 * Parameters: none.
 
 * Returns int: The incremented iterator key.
-
-Increments the iterator key.

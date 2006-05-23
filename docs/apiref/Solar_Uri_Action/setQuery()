@@ -20,6 +20,4 @@ Sets the Solar_Uri::$query array from a string.
 
 * Returns void
 
-Sets the Solar_Uri::$query array from a string.
-
 This will overwrite any previous values.

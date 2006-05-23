@@ -21,5 +21,3 @@ Creates a sequence, optionally starting at a certain number.
  * int //$start//: The first sequence number to return.
 
 * Returns void
-
-Creates a sequence, optionally starting at a certain number.

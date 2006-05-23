@@ -13,5 +13,3 @@ Returns the current locale code.
 * Parameters: none.
 
 * Returns string: The current locale code, e.g., 'en_US'.
-
-Returns the current locale code.

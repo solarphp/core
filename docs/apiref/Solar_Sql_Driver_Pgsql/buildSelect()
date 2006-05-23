@@ -18,6 +18,4 @@ Builds a SELECT statement from its component parts.
 
 * Returns void
 
-Builds a SELECT statement from its component parts.
-
 Adds LIMIT clause.

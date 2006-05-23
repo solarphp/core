@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-specified configuration.
 
-* Returns Solar_View_Helper: Solar_View_Helper instance
-
-Constructor.
+* Returns Solar_View_Helper

@@ -22,8 +22,6 @@ Uses a callback to filter a value.
 
 * Returns mixed: The filtered value.
 
-Uses a callback to filter a value.
-
 Uses a callback to filter a value. If $callback is uncallable,
 returns the $value untransformed.  Allows arbitrary parameters to
 be passed to the callback function, as long as the value to be

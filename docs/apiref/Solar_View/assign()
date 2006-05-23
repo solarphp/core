@@ -18,8 +18,6 @@ Sets variables for the view.
 
 * Returns bool: True on success, false on failure.
 
-Sets variables for the view.
-
 This method is overloaded; you can assign all the properties of
 an object, an associative array, or a single value by name.
 

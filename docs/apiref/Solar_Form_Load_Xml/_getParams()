@@ -17,5 +17,3 @@ Gets parameters for a filter or validation rule.
  * array //$params//: The array of parameters.
 
 * Returns array
-
-Gets parameters for a filter or validation rule.

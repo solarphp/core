@@ -17,5 +17,3 @@ Drops a sequence from the database.
  * string //$name//: The sequence name to drop; this will be  automatically suffixed with '__s' for portability reasons.
 
 * Returns void
-
-Drops a sequence from the database.

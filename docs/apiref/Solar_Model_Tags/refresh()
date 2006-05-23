@@ -21,5 +21,3 @@ return: void
  * string|array //$tags//: A space-separated string of tags, or a sequential array of tags.  These are the replacement tags.
 
 * Returns void
-
-"Refreshes" the tags for a node_id by diff.

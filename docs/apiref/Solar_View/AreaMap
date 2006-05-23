@@ -4,7 +4,7 @@ ApiRef | API Reference
   $_config
   $_escape
   $_helper
-  $_helper_path
+  $_helper_class
   $_template_path
  ClassMethods | Class Methods
   __call()
@@ -13,7 +13,7 @@ ApiRef | API Reference
   _exception()
   _run()
   _setup()
-  addHelperPath()
+  addHelperClass()
   addTemplatePath()
   apiVersion()
   assign()
@@ -21,10 +21,10 @@ ApiRef | API Reference
   escape()
   fetch()
   getHelper()
-  getHelperPath()
+  getHelperClass()
   getTemplatePath()
   locale()
   newHelper()
-  setHelperPath()
+  setHelperClass()
   setTemplatePath()
   template()

@@ -4,19 +4,19 @@
 
 Inherited Properties:
 
-* Solar_Uri::$fragment() -- The fragment portion (e.g., "#subsection").
+* Solar_Uri::$fragment() -- The fragment portion (e.
 
-* Solar_Uri::$host() -- The host specification (e.g., 'example.com').
+* Solar_Uri::$host() -- The host specification (e.
 
 * Solar_Uri::$pass() -- The password, if any.
 
-* Solar_Uri::$path() -- The path portion (e.g., 'path/to/index.php').
+* Solar_Uri::$path() -- The path portion (e.
 
-* Solar_Uri::$port() -- The port number (e.g., '80').
+* Solar_Uri::$port() -- The port number (e.
 
 * Solar_Uri::$query() -- Query string elements split apart into an array.
 
-* Solar_Uri::$scheme() -- The scheme (e.g. 'http' or 'https').
+* Solar_Uri::$scheme() -- The scheme (e.
 
 * Solar_Uri::$user() -- The username, if any.
 

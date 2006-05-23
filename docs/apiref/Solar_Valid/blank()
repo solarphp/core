@@ -18,8 +18,6 @@ Validate that a value is empty when trimmed of all whitespace.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is empty when trimmed of all whitespace.
-
 The value is assessed as a string; thus, if you pass a numeric
 zero, the value will not validate, becuse string '0' does not 
 trim down to an empty string.

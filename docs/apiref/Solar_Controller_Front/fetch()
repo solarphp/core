@@ -17,5 +17,3 @@ Fetches the output of a page/action/info specification URI.
  * Solar_Uri_Action|string //$spec//: An action URI for the front controller.  E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
 
 * Returns string: The output of the page action.
-
-Fetches the output of a page/action/info specification URI.

@@ -23,5 +23,3 @@ Fetch the parts of a master node ID.
  * array //$order//: Return in this order.
 
 * Returns array: A list of nodes of this type that are parent_id the $master_id node.
-
-Fetch the parts of a master node ID.

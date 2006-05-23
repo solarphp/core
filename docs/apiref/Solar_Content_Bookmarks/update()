@@ -19,5 +19,3 @@ Update a master node and its tags.
  * array //$data//: The node data.
 
 * Returns array: The updated data.
-
-Update a master node and its tags.

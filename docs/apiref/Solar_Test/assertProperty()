@@ -30,6 +30,4 @@ Asserts that an object property meets criteria.
 
 * Returns bool: The assertion result.
 
-Asserts that an object property meets criteria.
-
 The object property may be public, protected, or private.

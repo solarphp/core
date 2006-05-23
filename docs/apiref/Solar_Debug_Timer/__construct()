@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values. If the 'auto_start' key is true, this will start the timer.
 
-* Returns Solar_Debug_Timer: Solar_Debug_Timer instance
-
-Constructor.
+* Returns Solar_Debug_Timer

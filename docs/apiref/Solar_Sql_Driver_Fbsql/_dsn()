@@ -16,6 +16,4 @@ Creates a PDO-style DSN.
 
 * Returns string: A PDO-style DSN.
 
-Creates a PDO-style DSN.
-
 E.g., "mysql:host=127.0.0.1;dbname=test"

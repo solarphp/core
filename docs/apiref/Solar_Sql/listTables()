@@ -13,5 +13,3 @@ Returns a list of table names in the database.
 * Parameters: none.
 
 * Returns array
-
-Returns a list of table names in the database.

@@ -19,5 +19,3 @@ Collects action, pathinfo, and query values.
  * string //$spec//: The action specification.
 
 * Returns void
-
-Collects action, pathinfo, and query values.

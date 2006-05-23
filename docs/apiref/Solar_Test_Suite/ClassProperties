@@ -14,8 +14,6 @@ None.
 
 * Solar_Test_Suite::$_log -- A Solar_Log instance.
 
-* Solar_Test_Suite::$_sub -- Run this class name sub-test instead of the full suite.
-
 * Solar_Test_Suite::$_test -- The test classes (and their methods) to run.
 
 * Solar_Test_Suite::$_var -- A Solar_Debug_Var instance.

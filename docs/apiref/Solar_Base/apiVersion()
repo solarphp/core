@@ -14,7 +14,5 @@ Reports the API version for this class.
 
 * Returns string: A PHP-standard version number.
 
-Reports the API version for this class.
-
 If you don't override this method, your classes will use the same
 API version string as the Solar package itself.

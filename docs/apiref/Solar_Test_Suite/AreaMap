@@ -5,7 +5,6 @@ ApiRef | API Reference
   $_dir
   $_info
   $_log
-  $_sub
   $_test
   $_var
  ClassMethods | Class Methods

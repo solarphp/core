@@ -17,5 +17,3 @@ Sets the locale code and clears out previous locale strings.
  * string //$code//: A locale code, e.g., 'en_US'.
 
 * Returns void
-
-Sets the locale code and clears out previous locale strings.

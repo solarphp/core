@@ -19,5 +19,3 @@ Redirects to another page and action.
  * Solar_Uri_Action|string //$spec//: The URI to redirect to.
 
 * Returns void
-
-Redirects to another page and action.

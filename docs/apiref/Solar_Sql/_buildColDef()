@@ -22,8 +22,6 @@ Builds a column definition string.
 
 * Returns string: The column definition string.
 
-Builds a column definition string.
-
 The $info parameter should be in this format:
 
 $info = array(

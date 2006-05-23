@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _run
+
+return: void
+
+</function>
+
+Loads the class file in a limited scope.
+
+* Parameters: none.
+
+* Returns void

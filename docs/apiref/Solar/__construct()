@@ -12,6 +12,4 @@ Constructor is disabled to enforce a singleton pattern.
 
 * Parameters: none.
 
-* Returns Solar: Solar instance
-
-Constructor is disabled to enforce a singleton pattern.
+* Returns Solar

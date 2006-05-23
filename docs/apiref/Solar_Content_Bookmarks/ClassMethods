@@ -14,7 +14,7 @@
 
 Inherited Methods:
 
-* Solar_Content_Abstract::__construct() -- Constructor
+* Solar_Content_Abstract::__construct() -- 
 
 * Solar_Base::apiVersion() -- Reports the API version for this class.
 

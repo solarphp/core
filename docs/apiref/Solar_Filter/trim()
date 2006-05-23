@@ -21,5 +21,3 @@ Trims characters from the beginning and end of a value.
  * string //$chars//: Trim these characters.
 
 * Returns string: The filtered value.
-
-Trims characters from the beginning and end of a value.

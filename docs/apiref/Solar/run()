@@ -10,12 +10,10 @@ return: mixed
 
 </function>
 
-Uses [[php include()]] to run a script in an isolated scope.
+Uses [[php include()]] to run a script in a limited scope.
 
 * Parameters:
 
  * string //$file//: The file to include.
 
 * Returns mixed: The return value of the included file.
-
-Uses [[php include()]] to run a script in an isolated scope.

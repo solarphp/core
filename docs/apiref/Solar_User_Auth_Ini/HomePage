@@ -8,6 +8,8 @@
 
 ++ Overview
 
-Authenticate against .ini style files.
+Authenticate against .
+
+ni style files.
 
 Format for each line is "username = plainpassword\n";

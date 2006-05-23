@@ -13,5 +13,3 @@ Returns the current iterator key.
 * Parameters: none.
 
 * Returns int: The current iterator key.
-
-Returns the current iterator key.

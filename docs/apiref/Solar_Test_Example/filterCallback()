@@ -25,5 +25,3 @@ Used for testing Solar_Filter::callback() as an instance method.
  * mixed //$with//: Replace with this string.
 
 * Returns string: The filtered value.
-
-Used for testing Solar_Filter::callback() as an instance method.

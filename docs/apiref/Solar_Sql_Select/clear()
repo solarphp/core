@@ -17,5 +17,3 @@ Clears query properties.
  * string //$key//: The property to clear; if empty, clears all query properties.
 
 * Returns Solar_Sql_Select
-
-Clears query properties.

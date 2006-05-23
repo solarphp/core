@@ -19,5 +19,3 @@ Returns the file name for an action.
  * string //$action//: The action name.
 
 * Returns string: A file name for the action.
-
-Returns the file name for an action.

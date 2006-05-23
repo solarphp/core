@@ -2,7 +2,7 @@
 
 <function>
 
-access:   public
+access:   protected
 
 name: _preAction
 
@@ -15,8 +15,6 @@ Checks to see if user is allowed access.
 * Parameters: none.
 
 * Returns void
-
-Checks to see if user is allowed access.
 
 On access failure, changes $this->_action to 'error' and adds
 an error message stating the user is not allowed access.

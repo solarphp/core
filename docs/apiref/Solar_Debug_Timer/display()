@@ -18,7 +18,5 @@ Outputs the current profile.
 
 * Returns void
 
-Outputs the current profile.
-
 This dumps the profile information as a table; see the
 [HomePage home page for this class] for an example.

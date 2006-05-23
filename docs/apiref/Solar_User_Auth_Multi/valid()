@@ -21,5 +21,3 @@ Validates a username and password.
  * string //$passwd//: The plain-text password to use.
 
 * Returns bool: True on success, false on failure.
-
-Validates a username and password.

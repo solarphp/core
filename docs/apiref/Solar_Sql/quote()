@@ -18,8 +18,6 @@ Safely quotes a value for an SQL statement.
 
 * Returns string: An SQL-safe quoted value (or a string of  separated-and-quoted values).
 
-Safely quotes a value for an SQL statement.
-
 If an array is passed as the value, the array values are quoted
 and then returned as a comma-separated string; this is useful 
 for generating IN() lists.

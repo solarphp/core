@@ -21,5 +21,3 @@ Returns an href to a public resource.
  * bool //$raw//: Return the resource string without escaping (default false).
 
 * Returns string
-
-Returns an href to a public resource.

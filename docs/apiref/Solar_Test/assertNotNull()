@@ -17,5 +17,3 @@ Asserts that a variable is not PHP null.
  * mixed //$actual//: The variable to test.
 
 * Returns bool: The assertion result.
-
-Asserts that a variable is not PHP null.

@@ -6,7 +6,5 @@ Keys are:
 
 : \\dir\\ : (string) The directory where tests are located.
 
-: \\sub\\ : (string) The class name of a sub-test to run instead
-  of the full suite.  The "Test_" prefix is not needed.
-
-: \\log\\ : (object) A Solar_Log object for logging test results.
+: \\log\\ : (dependency) A Solar_Log dependency for logging test
+  results.

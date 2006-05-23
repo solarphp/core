@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Class_Map::$_base -- The path to the base of the class hierarchy.
+
+* Solar_Class_Map::$_map -- The class-to-file mappings.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- User-provided configuration values.
+
+++ Private
+
+None.

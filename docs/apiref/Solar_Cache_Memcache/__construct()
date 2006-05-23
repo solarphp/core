@@ -16,9 +16,7 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Cache_Memcache: Solar_Cache_Memcache instance
-
-Constructor.
+* Returns Solar_Cache_Memcache
 
 Config keys are:
 

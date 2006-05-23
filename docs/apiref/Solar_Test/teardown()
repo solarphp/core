@@ -4,7 +4,7 @@ access:   public
 
 name: teardown
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,6 +12,4 @@ Teardown after each method test.
 
 * Parameters: none.
 
-* Returns unknown: unknown
-
-Teardown after each method test.
+* Returns void

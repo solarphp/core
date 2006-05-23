@@ -17,5 +17,3 @@ Inserts or updates a master node.
  * array //$data//: The node data.
 
 * Returns array: The data as inserted or updated.
-
-Inserts or updates a master node.

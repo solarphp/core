@@ -12,7 +12,7 @@ None.
 
 * Solar_View::$_helper -- Instantiated helper objects.
 
-* Solar_View::$_helper_path -- Path stack for helpers.
+* Solar_View::$_helper_class -- Class stack for helpers.
 
 * Solar_View::$_template_path -- Path stack for templates.
 

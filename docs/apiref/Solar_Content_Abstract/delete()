@@ -17,5 +17,3 @@ Delete a master node and its tags.
  * int //$id//: The master node ID to delete.
 
 * Returns void
-
-Delete a master node and its tags.

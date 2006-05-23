@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Sql_Table: Solar_Sql_Table instance
-
-Constructor.
+* Returns Solar_Sql_Table

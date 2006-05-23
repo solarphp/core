@@ -25,5 +25,3 @@ Validate that a value is formatted as a MIME type.
  * bool //$blank//: Allow blank values to be valid.
 
 * Returns bool: True if valid, false if not.
-
-Validate that a value is formatted as a MIME type.

@@ -22,8 +22,6 @@ Adds a Solar_Filter method callback for an element.
 
 * Returns void
 
-Adds a Solar_Filter method callback for an element.
-
 All pre-filters are applied via 
 Solar_Filter::multiple() and should conform to the 
 specifications for that method.

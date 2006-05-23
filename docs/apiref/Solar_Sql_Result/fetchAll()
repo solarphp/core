@@ -13,5 +13,3 @@ Returns all rows from the result source.
 * Parameters: none.
 
 * Returns array: An array of row elements.
-
-Returns all rows from the result source.

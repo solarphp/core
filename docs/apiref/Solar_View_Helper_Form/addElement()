@@ -17,5 +17,3 @@ Adds a single element to the form.
  * array //$info//: The element information.
 
 * Returns Solar_View_Helper_Form
-
-Adds a single element to the form.

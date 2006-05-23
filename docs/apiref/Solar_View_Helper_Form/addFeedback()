@@ -17,5 +17,3 @@ Adds to the form-level feedback message array.
  * string|array //$spec//: The feedback message(s).
 
 * Returns Solar_View_Helper_Form
-
-Adds to the form-level feedback message array.

@@ -21,5 +21,3 @@ Drops a column from a table in the database.
  * string //$name//: The column name to drop.
 
 * Returns mixed
-
-Drops a column from a table in the database.

@@ -1,0 +1,21 @@
++ Class Methods
+
+++ Public
+
+* Solar_Path_Stack::add() -- Adds one or more directories to the stack.
+
+* Solar_Path_Stack::find() -- Finds a file in the path stack.
+
+* Solar_Path_Stack::findReal() -- Finds a file in the path stack using realpath().
+
+* Solar_Path_Stack::get() -- Gets a copy of the current stack.
+
+* Solar_Path_Stack::set() -- Clears the stack and adds one or more directories.
+
+++ Protected
+
+None.
+
+++ Private
+
+None.

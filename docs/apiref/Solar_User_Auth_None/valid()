@@ -12,7 +12,7 @@ return: bool
 
 </function>
 
-Validate a username and password.  Always fails.
+Validate a username and password.
 
 * Parameters:
 
@@ -22,4 +22,4 @@ Validate a username and password.  Always fails.
 
 * Returns bool: True on success, false on failure.
 
-Validate a username and password.  Always fails.
+Always fails.

@@ -14,7 +14,7 @@ return: void
 
 </function>
 
-Sets one element in the form.  Appends if element does not exist.
+Sets one element in the form.
 
 * Parameters:
 
@@ -26,4 +26,4 @@ Sets one element in the form.  Appends if element does not exist.
 
 * Returns void
 
-Sets one element in the form.  Appends if element does not exist.
+Appends if element does not exist.

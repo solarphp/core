@@ -21,5 +21,3 @@ Deletes rows from the table based on a WHERE clause.
  * string|array //$where//: The SQL WHERE clause to limit which rows are deleted.
 
 * Returns int: The number of rows affected.
-
-Deletes rows from the table based on a WHERE clause.

@@ -21,5 +21,3 @@ Safely gets the value of $_SERVER['PATH_INFO'] element.
  * mixed //$default//: If the requested array element is not set, return this value.
 
 * Returns mixed: The array element value (if set), or the $default value (if not).
-
-Safely gets the value of $_SERVER['PATH_INFO'] element.

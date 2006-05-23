@@ -21,5 +21,3 @@ Creates a sequence in the database.
  * string //$start//: The starting sequence number.
 
 * Returns void
-
-Creates a sequence in the database.

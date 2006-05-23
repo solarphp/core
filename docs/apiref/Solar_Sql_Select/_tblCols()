@@ -21,5 +21,3 @@ Adds to the internal table-to-column mapping array.
  * string|array //$cols//: The list of columns; preferably as an array, but possibly as a comma-separated string.
 
 * Returns void
-
-Adds to the internal table-to-column mapping array.

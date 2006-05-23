@@ -17,5 +17,3 @@ Gets the next sequence number; creates the sequence if needed.
  * string //$name//: The sequence name to increment.
 
 * Returns int: The next sequence number.
-
-Gets the next sequence number; creates the sequence if needed.

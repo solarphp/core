@@ -17,5 +17,3 @@ Displays the output of an page/action/info specification URI.
  * string //$spec//: A page/action/info spec for the front controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
 
 * Returns string: The output of the page action.
-
-Displays the output of an page/action/info specification URI.

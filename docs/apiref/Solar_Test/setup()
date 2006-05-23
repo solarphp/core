@@ -4,7 +4,7 @@ access:   public
 
 name: setup
 
-return: unknown
+return: void
 
 </function>
 
@@ -12,6 +12,4 @@ Setup before each method test.
 
 * Parameters: none.
 
-* Returns unknown: unknown
-
-Setup before each method test.
+* Returns void

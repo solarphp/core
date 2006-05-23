@@ -22,8 +22,6 @@ Quote multiple text-and-value pieces.
 
 * Returns string: An SQL-safe string composed of the list keys and quoted values.
 
-Quote multiple text-and-value pieces.
-
 The placeholder is a question-mark; all placeholders will be replaced
 with the quoted value.   For example:
 

@@ -21,5 +21,3 @@ Appends a "read-once" session value for this class and key.
  * mixed //$val//: The flash value to add to the key; this will result in the flash becoming an array.
 
 * Returns void
-
-Appends a "read-once" session value for this class and key.

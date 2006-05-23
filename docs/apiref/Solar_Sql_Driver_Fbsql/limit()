@@ -26,8 +26,6 @@ Adds a LIMIT clause (or equivalent) to an SQL statement.
 
 * Returns string: The modified SQL query.
 
-Adds a LIMIT clause (or equivalent) to an SQL statement.
-
 This method is dumb; it adds the clause to any kind of statement.
 You should not call it directly; use exec() with the optional $count
 and $offset parameters instead.

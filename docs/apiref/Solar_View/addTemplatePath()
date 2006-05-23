@@ -6,7 +6,7 @@ name: addTemplatePath
 
 param: string|array, $path
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,6 +16,4 @@ Add to the template directory path stack.
 
  * string|array //$path//: The directories to add to the stack.
 
-* Returns unknown: unknown
-
-Add to the template directory path stack.
+* Returns void

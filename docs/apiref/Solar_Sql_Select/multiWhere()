@@ -22,6 +22,4 @@ Adds multiple WHERE conditions to the query.
 
 * Returns Solar_Sql_Select
 
-Adds multiple WHERE conditions to the query.
-
 Otherwise identical to where()/orWhere().

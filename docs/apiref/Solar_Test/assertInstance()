@@ -21,5 +21,3 @@ Asserts that a object is an instance of a class.
  * string //$expect//: The expected class name.
 
 * Returns bool: The assertion result.
-
-Asserts that a object is an instance of a class.

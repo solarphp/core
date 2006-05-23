@@ -22,8 +22,6 @@ Validate that a value is an ISO 8601 timestamp string.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is an ISO 8601 timestamp string.
-
 The format is "yyyy-mm-ddThh:ii:ss" (note the literal "T" in the
 middle, which acts as a separator).
 

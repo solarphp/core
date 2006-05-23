@@ -25,5 +25,3 @@ Adds a Solar_Valid method callback as a validation for an element.
  * string //$message//: The feedback message to use if validation fails.
 
 * Returns void
-
-Adds a Solar_Valid method callback as a validation for an element.

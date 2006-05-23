@@ -21,5 +21,3 @@ Returns a dependency object.
  * mixed //$spec//: If an object, check to make sure it's an instance of $class. If a string, treat as a Solar::registry() key. Otherwise, use this as a config param to Solar::factory() to create a $class object.
 
 * Returns object: The dependency object.
-
-Returns a dependency object.

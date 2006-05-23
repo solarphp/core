@@ -17,5 +17,3 @@ Throws a user-specified error code for this class.
  * string //$code//: The error code to throw.
 
 * Returns void
-
-Throws a user-specified error code for this class.

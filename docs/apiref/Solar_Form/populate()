@@ -17,5 +17,3 @@ Populates form elements with specified values.
  * array //$submit//: The source data array for populating form values as array(name => value); if null, will populate from $_POST or $_GET as determined from the Solar_Form::$attribs['method'] value.
 
 * Returns void
-
-Populates form elements with specified values.

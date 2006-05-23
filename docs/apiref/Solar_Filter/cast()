@@ -21,5 +21,3 @@ Uses [[php settype()]] to cast a value as a PHP variable type.
  * string //$type//: A valid variable type: 'array', 'bool', 'boolean', 'int', 'integer', 'float', 'double', 'string',  'object', 'null',
 
 * Returns mixed: The filtered value.
-
-Uses [[php settype()]] to cast a value as a PHP variable type.

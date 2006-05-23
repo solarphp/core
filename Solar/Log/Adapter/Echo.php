@@ -38,15 +38,16 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      * Keys are:
      * 
      * : \\events\\ : (string|array) The event types this instance
-     * should recognize; a comma-separated string of events, or
-     * a sequential array.  Default is all events ('*').
+     *   should recognize; a comma-separated string of events, or
+     *   a sequential array.  Default is all events ('*').
      * 
      * : \\format\\ : (string) The line format for each saved event.
      *   Use '%t' for the timestamp, '%e' for the event type, '%m' for
      *   the event description, and '%%' for a literal percent.  Default
      *   is '%t %e %m'.
      * 
-     * : \\output\\ : (string) THe output format, 'text' or 'html'.
+     * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+     *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
      * @var array
      * 
@@ -54,9 +55,26 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
     protected $_config = array(
         'events' => '*',
         'format' => '%t %e %m', // time, event, message
-        'output' => 'html',
+        'output' => null,
     );
-    
+
+    /**
+     * 
+     * Constructor.  Detect output mode by SAPI if none is specified.
+     * 
+     * @param array $config User-defined configuration.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        if (empty($this->_config['output'])) {
+            $mode = (PHP_SAPI == 'cli') ? 'text' 
+                                        : 'html';
+            $this->_config['output'] = $mode;
+        }
+    }
+
     /**
      * 
      * Echos the log message.
@@ -76,12 +94,14 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
             array('%t', '%e', '%m', '%%'),
             array($this->_getTime(), $event, $descr, '%'),
             $this->_config['format']
-        ) . "\n";
-    
+        );
+
         if (strtolower($this->_config['output']) == 'html') {
-            $text = nl2br(htmlspecialchars($text));
+            $text = htmlspecialchars($text) . '<br />';
+        } else {
+            $text .= PHP_EOL;
         }
-        
+    
         echo $text;
         return true;
     }

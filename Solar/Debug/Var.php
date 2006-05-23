@@ -34,15 +34,33 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\output\\ : (string) Output mode.  Default is 'html'; anything else is
-     * treated as 'text' (plain text).
+     * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+     *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'output' => 'html',
+        'output' => null,
     );
+    
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        if (empty($this->_config['output'])) {
+            $mode = (PHP_SAPI == 'cli') ? 'text' 
+                                        : 'html';
+            $this->_config['output'] = $mode;
+        }
+    }
     
     /**
      * 
@@ -79,7 +97,7 @@ class Solar_Debug_Var extends Solar_Base {
         $output = preg_replace("/\]\=\>\n(\s+)/m", "] => ", $output);
         
         // was this for HTML?
-        if ($this->_config['output'] == 'html') {
+        if (strtolower($this->_config['output']) == 'html') {
             $output = '<pre>' . htmlspecialchars($output) . '</pre>';
         }
         

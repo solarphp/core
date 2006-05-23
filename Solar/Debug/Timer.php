@@ -32,14 +32,19 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\html\\ : (bool) enable/disable encoding output for HTML
+     * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+     *   or 'text' for plain text.  Default autodetects by SAPI version.
+     * 
+     * : \\auto_start\\ : (bool) 
+     * 
+     * : \\auto_display\\ : (bool) 
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'locale'       => 'Solar/Debug/Locale/',
-        'output'       => 'html',
+        'output'       => null,
         'auto_start'   => false,
         'auto_display' => false,
     );
@@ -73,6 +78,13 @@ class Solar_Debug_Timer extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        if (empty($this->_config['output'])) {
+            $mode = (PHP_SAPI == 'cli') ? 'text' 
+                                        : 'html';
+            $this->_config['output'] = $mode;
+        }
+        
         if ($this->_config['auto_start']) {
             $this->start();
         }

@@ -35,9 +35,11 @@ class Solar_Debug_Timer extends Solar_Base {
      * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
      *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
-     * : \\auto_start\\ : (bool) 
+     * : \\auto_start\\ : (bool) When true, starts the timer at 
+     *   __construct() time.  Default false.
      * 
-     * : \\auto_display\\ : (bool) 
+     * : \\auto_display\\ : (bool) When true, calls display() at
+     *   __destruct() time.  Default false.
      * 
      * @var array
      * 

@@ -90,8 +90,15 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         
         // find narrative and technical portions
         $pos = strpos($block, "\n@");
-        $narr = trim(substr($block, 0, $pos));
-        $tech = trim(substr($block, $pos));
+        if ($pos === false) {
+            // apparently no technical section
+            $narr = $block;
+            $tech = '';
+        } else {
+            // there appears to be a technical section
+            $narr = trim(substr($block, 0, $pos));
+            $tech = trim(substr($block, $pos));
+        }
         
         // load the formal technical info array
         $this->_loadInfo($tech);

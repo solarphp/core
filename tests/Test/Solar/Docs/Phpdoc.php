@@ -47,6 +47,12 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
          * @todo Do this later.
          */';
     
+    protected $_method_block_nontechnical = '
+        /**
+         * This is the inital summary line; note how it passes over
+         * two lines. No technical data follows.
+         */';
+         
     protected $_param_block = '
         /**
          * 
@@ -356,6 +362,17 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         $this->assertSame($actual, $expect);
     }
     
+    public function testParse_methodNonTechnical()
+    {
+        $expect = array(
+            'summ' => "This is the inital summary line; note how it passes over\ntwo lines.",
+            'narr' => "No technical data follows.",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($this->_method_block_nontechnical);
+        $this->assertSame($actual, $expect);
+    }
     public function testParseParam()
     {
         $expect = array(

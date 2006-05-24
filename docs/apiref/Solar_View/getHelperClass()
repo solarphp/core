@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: getHelperClass
+
+return: array
+
+</function>
+
+Returns the helper class stack.
+
+* Parameters: none.
+
+* Returns array: The stack of helper classes.

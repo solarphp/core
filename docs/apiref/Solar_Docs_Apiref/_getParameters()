@@ -6,7 +6,7 @@ name: _getParameters
 
 param: string, $class
 
-param: Object id #15, $method
+param: ReflectionMethod, $method
 
 param: array, $tech
 
@@ -20,7 +20,7 @@ Returns the parameters for a ReflectionMethod.
 
  * string //$class//: The class name.
 
- * Object id #15 //$method//: A ReflectionMethod object to get parameters for.
+ * ReflectionMethod //$method//: A ReflectionMethod object to get parameters for.
 
  * array //$tech//: A technical information array derived from Solar_Docs_Phpdoc.
 

@@ -6,7 +6,7 @@ name: _isInheritedProperty
 
 param: string, $class
 
-param: Object id #39, $property
+param: ReflectionProperty, $property
 
 return: string
 
@@ -18,6 +18,6 @@ Reports the class, if any, a property is inherited from and identical to.
 
  * string //$class//: The class to check.
 
- * Object id #39 //$property//: The property to check.
+ * ReflectionProperty //$property//: The property to check.
 
 * Returns string: The class from which the property was inherited, but only if the modifiers and comments are identical.

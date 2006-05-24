@@ -6,7 +6,7 @@ name: _isInheritedMethod
 
 param: string, $class
 
-param: Object id #10, $method
+param: ReflectionMethod, $method
 
 return: string
 
@@ -18,6 +18,6 @@ Reports the class, if any, a method is inherited from and identical to.
 
  * string //$class//: The class to check.
 
- * Object id #10 //$method//: The method to check.
+ * ReflectionMethod //$method//: The method to check.
 
 * Returns string: The class from which the method was inherited, but only if the modifiers, parameters, and comments are identical.

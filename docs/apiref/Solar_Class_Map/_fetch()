@@ -4,7 +4,7 @@ access:   protected
 
 name: _fetch
 
-param: Object id #40, $iter
+param: RecursiveDirectoryIterator, $iter
 
 return: void
 
@@ -14,7 +14,7 @@ Recursively iterates through a directory looking for class files.
 
 * Parameters:
 
- * Object id #40 //$iter//: Directory iterator.
+ * RecursiveDirectoryIterator //$iter//: Directory iterator.
 
 * Returns void
 

@@ -87,7 +87,7 @@ class Solar {
     
     /**
      * 
-     * Where the Solar.php file is located.
+     * Where the Solar arch-class is in the filesystem.
      * 
      * @var string
      * 

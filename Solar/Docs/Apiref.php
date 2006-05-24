@@ -498,8 +498,17 @@ class Solar_Docs_Apiref extends Solar_Base {
             
             // add the type
             if ($param->getClass()) {
-                // the type comes from a typehint
+                
+                // the type comes from a typehint.
                 $params[$name]['type'] = $param->getClass();
+                
+                // hack, because of return differences between PHP5.1.4
+                // and earlier PHP5.1.x versions.  otherwise you get
+                // things like "Object id #31" as the type.
+                if (is_object($params[$name]['type'])) {
+                    $params[$name]['type'] = $params[$name]['type']->name;
+                }
+                
             } elseif (! empty($tech['param'][$name]['type'])) {
                 // the type comes from the tech docs
                 $params[$name]['type'] = $tech['param'][$name]['type'];

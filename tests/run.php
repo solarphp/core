@@ -1,5 +1,21 @@
 <?php
-// assume Solar is on the include_path.
+/**
+ * 
+ * Load the Solar.php file.
+ * 
+ * If Solar.php is already in the include_path, then everything is
+ * fine.  However, if it's not in the include_path, we need to check
+ * two other locations:
+ * 
+ * # One directory-level above this one; this is good for SVN checkouts
+ *   and for tarball downloads when the include_path has not been set
+ *   yet.
+ * 
+ * # Three directory-levels above this one; this is good for when Solar
+ *   has been PEAR-installed but is, for some reason, not on the
+ *   include_path.
+ * 
+ */
 @include_once 'Solar.php';
 
 if (! class_exists('Solar')) {
@@ -20,9 +36,11 @@ if (! class_exists('Solar')) {
     throw Exception('Cannot find Solar.php.');
 }
 
-// set the include-path to wherever Solar is
-
-// proceed with testing
+/**
+ * 
+ * Now we can proceed with the actual testing.
+ * 
+ */
 $config = dirname(__FILE__) . '/config.inc.php';
 Solar::start($config);
 
@@ -40,7 +58,9 @@ $suite = Solar::factory('Solar_Test_Suite', $config);
 $series = isset($argv[1]) ? trim($argv[1]) : null;
 $suite->run($series);
 
-// done
+// put the include_path back
 ini_set('include_path', $old_include_path);
+
+// done!
 Solar::stop();
 ?>

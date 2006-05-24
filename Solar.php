@@ -87,6 +87,15 @@ class Solar {
     
     /**
      * 
+     * Where the Solar.php file is located.
+     * 
+     * @var string
+     * 
+     */
+    public static $dir = null;
+    
+    /**
+     * 
      * Object registry.
      * 
      * Objects are registered using Solar::register(); the registry
@@ -161,6 +170,9 @@ class Solar {
         if (Solar::$_status) {
             return;
         }
+        
+        // where is Solar in the filesystem?
+        Solar::$dir = dirname(__FILE__);
         
         // needed for exceptions
         Solar::loadClass('Solar_Exception');
@@ -816,7 +828,7 @@ class Solar {
      * @param array $info Additional error information in an associative
      * array.
      * 
-     * @return object A Solar_Exception object.
+     * @return Solar_Exception
      * 
      */
     public static function exception($class, $code, $text = '', $info = array())

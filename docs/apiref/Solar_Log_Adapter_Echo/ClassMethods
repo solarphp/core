@@ -2,9 +2,9 @@
 
 ++ Public
 
-Inherited Methods:
+* Solar_Log_Adapter_Echo::__construct() -- Constructor.
 
-* Solar_Log_Adapter::__construct() -- Constructor.
+Inherited Methods:
 
 * Solar_Base::apiVersion() -- Reports the API version for this class.
 

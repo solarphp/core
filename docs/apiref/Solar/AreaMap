@@ -4,6 +4,7 @@ ApiRef | API Reference
   $_locale_code
   $_status
   $config
+  $dir
   $locale
   $registry
  ClassMethods | Class Methods

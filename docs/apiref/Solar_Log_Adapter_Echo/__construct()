@@ -1,5 +1,3 @@
-//Inherited from Solar_Log_Adapter::__construct().//
-
 <function>
 
 access:   public
@@ -19,3 +17,5 @@ Constructor.
  * array //$config//: User-defined configuration.
 
 * Returns Solar_Log_Adapter_Echo
+
+Detect output mode by SAPI if none is specified.

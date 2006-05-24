@@ -12,7 +12,7 @@ param: string, $text, ''
 
 param: array, $info, array ()
 
-return: object
+return: Solar_Exception
 
 </function>
 
@@ -28,4 +28,4 @@ Generates a simple exception, but does not throw it.
 
  * array //$info//: Additional error information in an associative array.
 
-* Returns object: A Solar_Exception object.
+* Returns Solar_Exception

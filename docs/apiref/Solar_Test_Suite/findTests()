@@ -4,7 +4,7 @@ access:   public
 
 name: findTests
 
-param: Object id #33, $iter, NULL
+param: Object id #31, $iter, NULL
 
 return: void
 
@@ -14,7 +14,7 @@ Recursively iterates through a directory looking for test classes.
 
 * Parameters:
 
- * Object id #33 //$iter//: Directory iterator.
+ * Object id #31 //$iter//: Directory iterator.
 
 * Returns void
 

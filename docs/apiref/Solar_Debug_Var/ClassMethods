@@ -2,11 +2,11 @@
 
 ++ Public
 
+* Solar_Debug_Var::__construct() -- Constructor.
+
 * Solar_Debug_Var::dump() -- Returns the output of "var_dump()" with a label.
 
 Inherited Methods:
-
-* Solar_Base::__construct() -- Constructor.
 
 * Solar_Base::apiVersion() -- Reports the API version for this class.
 

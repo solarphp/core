@@ -13,5 +13,3 @@ Fetches a default blank node of this type.
 * Parameters: none.
 
 * Returns array: An array of default data for a master node.
-
-Fetches a default blank node of this type.

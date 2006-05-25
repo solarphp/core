@@ -44,7 +44,7 @@
 
 * Solar::registry() -- Accesses an object in the registry.
 
-* Solar::run() -- Uses [[php include()]] to run a script in an isolated scope.
+* Solar::run() -- Uses [[php include()]] to run a script in a limited scope.
 
 * Solar::server() -- Safely gets the value of an element from the $_SERVER array.
 

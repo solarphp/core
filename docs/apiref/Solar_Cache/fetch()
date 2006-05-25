@@ -18,8 +18,6 @@ Gets cache entry data.
 
 * Returns mixed: Boolean false on failure, string on success.
 
-Gets cache entry data.
-
 Use this to retrieve the cache entry identifed by key.  The
 key can be any scalar value:  a web page name, an integer ID,
 a simple name, and so on.

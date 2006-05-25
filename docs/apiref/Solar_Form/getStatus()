@@ -13,5 +13,3 @@ Gets the current form status.
 * Parameters: none.
 
 * Returns bool
-
-Gets the current form status.

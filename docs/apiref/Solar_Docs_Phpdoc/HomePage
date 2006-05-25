@@ -1,0 +1,34 @@
++ The Solar_Docs_Phpdoc Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Docs_Phpdoc
+
+++ Overview
+
+Parses a single PHPDoc comment block into summary, narrative, and
+technical portions.
+
+Supported technical tags are:
+
+<code>
+For classes:
+  @category name                # category for the package
+  @package name                 # class package name
+  @subpackage name              # class subpackage name
+
+For properties:
+  @var type [summary]           # class property
+
+For methods:
+  @param type [$name] [summary] # method parameter
+  @return type [summary]        # method return
+  @throws class [summary]       # exceptions thrown by method
+  @exception class [summary]    # alias to @throws
+
+General-purpose:
+  @see name                     # "see also" this element name
+  @todo summary                 # todo item
+</code>

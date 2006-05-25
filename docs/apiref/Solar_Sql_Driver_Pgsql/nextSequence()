@@ -17,5 +17,3 @@ Gets a sequence number; creates the sequence if it does not exist.
  * string //$name//: The sequence name.
 
 * Returns int: The next sequence number.
-
-Gets a sequence number; creates the sequence if it does not exist.

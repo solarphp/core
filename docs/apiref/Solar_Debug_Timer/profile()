@@ -13,5 +13,3 @@ Returns profiling information as an array.
 * Parameters: none.
 
 * Returns array: An array of profile information.
-
-Returns profiling information as an array.

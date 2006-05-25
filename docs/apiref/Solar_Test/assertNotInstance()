@@ -21,5 +21,3 @@ Asserts that a object is not an instance of a class.
  * string //$expect//: The non-expected class name.
 
 * Returns bool: The assertion result.
-
-Asserts that a object is not an instance of a class.

@@ -20,9 +20,9 @@
 
 * Solar_Form::reset() -- Resets the form object to its originally-configured state.
 
-* Solar_Form::setElement() -- Sets one element in the form.  Appends if element does not exist.
+* Solar_Form::setElement() -- Sets one element in the form.
 
-* Solar_Form::setElements() -- Sets multiple elements in the form.  Appends if they do not exist.
+* Solar_Form::setElements() -- Sets multiple elements in the form.
 
 * Solar_Form::setStatus() -- Forcibly sets the form status.
 

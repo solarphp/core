@@ -14,8 +14,6 @@ Deletes all entries from the cache.
 
 * Returns void
 
-Deletes all entries from the cache.
-
 Example:
 
 <code type="php">

@@ -17,5 +17,3 @@ Forcibly sets the form status.
  * bool //$flag//: True if you want to say the form is valid, false if you want to say it is not valid.
 
 * Returns void
-
-Forcibly sets the form status.

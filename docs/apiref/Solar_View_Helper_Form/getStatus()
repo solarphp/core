@@ -13,5 +13,3 @@ Gets the form validation status.
 * Parameters: none.
 
 * Returns bool: True if the form is currently valid, false if not, null if validation has not been attempted.
-
-Gets the form validation status.

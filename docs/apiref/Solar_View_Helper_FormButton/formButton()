@@ -17,5 +17,3 @@ Generates a 'button' element.
  * array //$info//: An array of element information.
 
 * Returns string: The element XHTML.
-
-Generates a 'button' element.

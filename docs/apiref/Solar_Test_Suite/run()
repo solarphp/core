@@ -4,17 +4,19 @@ access:   public
 
 name: run
 
+param: string, $series, NULL
+
 return: array
 
 </function>
 
 Runs the test suite (or the sub-test series) and logs as it goes.
 
-* Parameters: none.
+* Parameters:
+
+ * string //$series//: The sub-test series to run, typically a class name (not including the 'Test_' prefix).
 
 * Returns array: A statistics array.
-
-Runs the test suite (or the sub-test series) and logs as it goes.
 
 Returns an array of statistics with these keys:
 

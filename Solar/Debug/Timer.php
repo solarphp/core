@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -32,14 +32,21 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\html\\ : (bool) enable/disable encoding output for HTML
+     * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+     *   or 'text' for plain text.  Default autodetects by SAPI version.
+     * 
+     * : \\auto_start\\ : (bool) When true, starts the timer at 
+     *   __construct() time.  Default false.
+     * 
+     * : \\auto_display\\ : (bool) When true, calls display() at
+     *   __destruct() time.  Default false.
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'locale'       => 'Solar/Debug/Locale/',
-        'output'       => 'html',
+        'output'       => null,
         'auto_start'   => false,
         'auto_display' => false,
     );
@@ -73,6 +80,13 @@ class Solar_Debug_Timer extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        if (empty($this->_config['output'])) {
+            $mode = (PHP_SAPI == 'cli') ? 'text' 
+                                        : 'html';
+            $this->_config['output'] = $mode;
+        }
+        
         if ($this->_config['auto_start']) {
             $this->start();
         }

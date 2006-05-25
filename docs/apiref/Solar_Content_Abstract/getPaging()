@@ -13,5 +13,3 @@ Gets the number of rows per page.
 * Parameters: none.
 
 * Returns int: The number of rows per page.
-
-Gets the number of rows per page.

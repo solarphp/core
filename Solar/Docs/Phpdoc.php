@@ -10,7 +10,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -21,16 +21,26 @@
  * Parses a single PHPDoc comment block into summary, narrative, and
  * technical portions.
  * 
- * Supported technical information tags are:
+ * Supported technical tags are:
  * 
  * <code>
- * @param type [$name] [summary] # method parameter
- * @return type [summary]        # method return
- * @see summary                  # name of another element that can be documented
- * @todo summary                 # todo item
- * @var type [summary]           # class property
- * @throws class [summary]       # exceptions thrown by method
- * @exception class [summary]    # alias to @throws
+ * For classes:
+ *   @category name                # category for the package
+ *   @package name                 # class package name
+ *   @subpackage name              # class subpackage name
+ * 
+ * For properties:
+ *   @var type [summary]           # class property
+ * 
+ * For methods:
+ *   @param type [$name] [summary] # method parameter
+ *   @return type [summary]        # method return
+ *   @throws class [summary]       # exceptions thrown by method
+ *   @exception class [summary]    # alias to @throws
+ * 
+ * General-purpose:
+ *   @see name                     # "see also" this element name
+ *   @todo summary                 # todo item
  * </code>
  * 
  * @category Solar
@@ -80,8 +90,15 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         
         // find narrative and technical portions
         $pos = strpos($block, "\n@");
-        $narr = trim(substr($block, 0, $pos));
-        $tech = trim(substr($block, $pos));
+        if ($pos === false) {
+            // apparently no technical section
+            $narr = $block;
+            $tech = '';
+        } else {
+            // there appears to be a technical section
+            $narr = trim(substr($block, 0, $pos));
+            $tech = trim(substr($block, $pos));
+        }
         
         // load the formal technical info array
         $this->_loadInfo($tech);
@@ -305,6 +322,64 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
+     * Parses an @category line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseCategory($line)
+    {
+        $this->_info['category'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses an @package line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parsePackage($line)
+    {
+        $this->_info['package'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses an @subpackage line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseSubpackage($line)
+    {
+        $this->_info['subpackage'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses a one-part block line.
+     * 
+     * Strips everything after the first space.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return string
+     * 
+     */
+    protected function _1part($line)
+    {
+        return preg_replace('/^(\S+)(\s.*)/', '$1', trim($line));
+    }
+    
+    /**
+     * 
      * Parses a two-part block line.
      * 
      * @param string $line The block line.
@@ -331,17 +406,19 @@ class Solar_Docs_Phpdoc extends Solar_Base {
 
 /**
  * 
- * WHAT WE PROBABLY WILL:
- * @author       author name <author@email>
- * @copyright    name date
- * @deprecated   summary
- * @deprec       (alias to @deprecated)
- * @example      /path/to/example
- * @license      url name
- * @since        (a version or a date)
- * @staticvar    type summary (static variable usage in a function)
+ * WHAT WE PROBABLY WILL SUPPORT:
+ * @author name <author@email>
+ * @copyright name date
+ * @deprecated summary
+ * @deprec summary
+ * @example /path/to/example
+ * @license href name text
+ * @link href text
+ * @since version|date
+ * @staticvar name type summary
+ * @version version
  * 
- * WHAT WE PROBABLY WILL NOT:
+ * WHAT WE PROBABLY WILL NOT SUPPORT:
  * @access       public or private
  * @global       type $globalvarname 
  *  or
@@ -350,12 +427,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  *  or
  * @name         $globalvaralias
  * @magic        phpdoc.de compatibility
- * @package      package name
- * @subpackage   sub package name, groupings inside of a project
- * @version      version
  * @internal     private information for advanced developers only
- * @static
- * @link         URL
+ * @static       static method or property
  * @ignore
  * {@code}
  * {@docRoot}

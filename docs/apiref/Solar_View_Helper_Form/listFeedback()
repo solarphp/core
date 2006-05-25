@@ -21,5 +21,3 @@ Returns a feedback array (form-level or element-level) as an unordered list.
  * string //$class//: The class to use for the <ul> tag.
 
 * Returns Solar_View_Helper_Form
-
-Returns a feedback array (form-level or element-level) as an unordered list.

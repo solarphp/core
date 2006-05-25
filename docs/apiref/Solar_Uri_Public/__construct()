@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Uri_Public: Solar_Uri_Public instance
-
-Constructor.
+* Returns Solar_Uri_Public

@@ -22,8 +22,6 @@ Forces a value to a timestamp format using [[php date()]].
 
 * Returns string: The filtered value.
 
-Forces a value to a timestamp format using [[php date()]].
-
 Takes a string value time and formats it according to $format.
 The [[php date()]] function is used to create the new value, and $format
 should be a format that works with that function.

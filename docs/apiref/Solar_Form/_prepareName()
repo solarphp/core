@@ -21,5 +21,3 @@ Prepares a name as an array key, if needed.
  * string //$array//: The array name, if any, into which we place the element.
 
 * Returns string: The prepared element name.
-
-Prepares a name as an array key, if needed.

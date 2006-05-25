@@ -19,5 +19,3 @@ Deletes rows in the table based on a WHERE clause.
  * string //$where//: An SQL WHERE clause limiting the deleted rows.
 
 * Returns void
-
-Deletes rows in the table based on a WHERE clause.

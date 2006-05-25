@@ -20,7 +20,5 @@ Converts an array of path elements into a string.
 
 * Returns string: A URI path string.
 
-Converts an array of path elements into a string.
-
 Does not use [[php urlencode()]]; instead, only converts
 characters found in Solar_Uri::$_encode_path.

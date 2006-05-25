@@ -1,0 +1,49 @@
+public array $api
+
+The entire API as a structured array.
+
+<code>
+$api = array(
+    classname => array(
+        summ => string,
+        narr => string,
+        tech => array(...),
+        from => array(...),
+        properties => array(
+            propertyname => array(
+                name => string,
+                summ => string,
+                narr => string,
+                tech => array(...),
+                type => string,
+                access => string,
+                static => bool,
+                from => string,
+            ), // propertyname
+        ), // properties
+        methods => array(
+            methodname => array(
+                name => string,
+                summ => string,
+                narr => string,
+                tech => array(...),
+                access => string,
+                static => bool,
+                final => bool,
+                return => string,
+                from => string,
+                params => array(
+                    paramname => array(
+                        name => string,
+                        type => string,
+                        summ => string,
+                        byref => bool,
+                        optional => bool,
+                        default => mixed,
+                    ), // paramname
+                ), // params
+            ), // methodname
+        ), // methods
+    ), // classname
+); // $this->api
+</code>

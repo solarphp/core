@@ -15,5 +15,3 @@ Fixes the $col and $idx properties after user setup.
 * Parameters: none.
 
 * Returns void
-
-Fixes the $col and $idx properties after user setup.

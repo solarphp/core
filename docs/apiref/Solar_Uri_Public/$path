@@ -2,4 +2,6 @@
 
 public string $path
 
-The path portion (e.g., 'path/to/index.php').
+The path portion (e.
+
+., 'path/to/index.php').

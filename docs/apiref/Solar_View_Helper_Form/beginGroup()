@@ -17,5 +17,3 @@ Begins a group of form elements under a single label.
  * string //$label//: The label text.
 
 * Returns Solar_View_Helper_Form
-
-Begins a group of form elements under a single label.

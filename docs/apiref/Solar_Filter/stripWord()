@@ -17,5 +17,3 @@ Strips word characters from a value.
  * mixed //$value//: The value to be filtered.
 
 * Returns string: The filtered value.
-
-Strips word characters from a value.

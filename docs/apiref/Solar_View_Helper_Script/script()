@@ -21,5 +21,3 @@ Returns a <script></script> tag.
  * array //$attribs//: Additional attributes for the <script> tag.
 
 * Returns string: The <script></script> tag.
-
-Returns a <script></script> tag.

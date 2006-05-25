@@ -21,5 +21,3 @@ Sets a limit count and offset to the query.
  * int //$offset//: Start returning after this many rows.
 
 * Returns Solar_Sql_Select
-
-Sets a limit count and offset to the query.

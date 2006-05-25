@@ -17,5 +17,3 @@ Accesses an object in the registry.
  * string //$key//: The registered name.
 
 * Returns object: The object registered under $key.
-
-Accesses an object in the registry.

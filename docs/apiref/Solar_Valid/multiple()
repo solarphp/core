@@ -21,5 +21,3 @@ Check the value against multiple callback validations.
  * array //$validations//: A sequential array of validations; each element can be a string method name, or an array where element 0 is the string method name and elements 1-N is are the arguments for that method.  The method must be a Solar_Valid method.
 
 * Returns bool: True if the value passes all validations, false if not.
-
-Check the value against multiple callback validations.

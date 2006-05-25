@@ -21,5 +21,3 @@ Adds multiple feedback messages to elements.
  * string //$array//: Rename each element as a key in this array.
 
 * Returns void
-
-Adds multiple feedback messages to elements.

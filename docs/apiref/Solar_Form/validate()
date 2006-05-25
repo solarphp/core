@@ -18,8 +18,6 @@ Performs filtering and validation on each form element.
 
 * Returns bool: True if all elements are valid, false if not.
 
-Performs filtering and validation on each form element.
-
 Updates the feedback keys for each element that fails validation.
 Values are either pulled from the submitted form or from the array
 passed in $submit.

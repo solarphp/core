@@ -26,8 +26,6 @@ Adds a portable column to a table in the database.
 
 * Returns mixed
 
-Adds a portable column to a table in the database.
-
 The $info parameter should be in this format:
 
 <code type="php">

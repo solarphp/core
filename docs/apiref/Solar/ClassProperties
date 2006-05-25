@@ -4,6 +4,8 @@
 
 * Solar::$config -- The values read in from the configuration file.
 
+* Solar::$dir -- Where the Solar arch-class is in the filesystem.
+
 * Solar::$locale -- Locale strings for all classes.
 
 * Solar::$registry -- Object registry.

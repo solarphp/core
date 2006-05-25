@@ -17,5 +17,3 @@ Generates a set of radio button elements.
  * array //$info//: An array of element information.
 
 * Returns string: The element XHTML.
-
-Generates a set of radio button elements.

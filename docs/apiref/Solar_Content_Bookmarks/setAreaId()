@@ -20,6 +20,4 @@ Sets the area ID from which nodes will be fetched.
 
 * Returns void
 
-Sets the area ID from which nodes will be fetched.
-
 If set to an empty value, nodes will be fetched from all areas.

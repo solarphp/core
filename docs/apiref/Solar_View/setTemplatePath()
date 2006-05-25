@@ -6,7 +6,7 @@ name: setTemplatePath
 
 param: string|array, $path, NULL
 
-return: unknown
+return: void
 
 </function>
 
@@ -16,6 +16,4 @@ Reset the template directory path stack.
 
  * string|array //$path//: The directories to set for the stack.
 
-* Returns unknown: unknown
-
-Reset the template directory path stack.
+* Returns void

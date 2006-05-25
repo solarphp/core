@@ -21,5 +21,3 @@ Disallows setting of underscore-prefixed variables.
  * string //$val//: The variable value.
 
 * Returns void
-
-Disallows setting of underscore-prefixed variables.

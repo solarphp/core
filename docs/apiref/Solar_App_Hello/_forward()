@@ -19,5 +19,3 @@ Forwards internally to another action.
  * string //$action//: The action name.
 
 * Returns void
-
-Forwards internally to another action.

@@ -21,5 +21,3 @@ Throws an exception indicating an incomplete test.
  * array //$info//: Additional info for the exception.
 
 * Returns void
-
-Throws an exception indicating an incomplete test.

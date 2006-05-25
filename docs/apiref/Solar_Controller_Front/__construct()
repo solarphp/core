@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-provided configuration values.
 
-* Returns Solar_Controller_Front: Solar_Controller_Front instance
-
-Constructor.
+* Returns Solar_Controller_Front

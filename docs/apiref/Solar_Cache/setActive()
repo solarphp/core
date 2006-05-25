@@ -18,8 +18,6 @@ Makes the cache active (true) or inactive (false).
 
 * Returns void
 
-Makes the cache active (true) or inactive (false).
-
 Example:
 
 <code type="php">

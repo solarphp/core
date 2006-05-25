@@ -1,9 +1,7 @@
-//Inherited from Solar_Base::$_config.//
-
 protected array $_config
 
-User-provided configuration values.
+User-defined configuration options.
 
-Default config keys are:
+Keys are:
 
-: \\locale\\ : (string) Directory where locale files for the class are kept
+: \\helper_class\\ : (array) An array of fallback helper classes.

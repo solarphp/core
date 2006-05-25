@@ -25,5 +25,3 @@ Loads Solar_Form elements based on Solar_Sql_Table columns.
  * string //$array_name//: Load the table columns as elements of this array-name within the form.
 
 * Returns Solar_Form|false: Solar_Form object, or boolean false on error.
-
-Loads Solar_Form elements based on Solar_Sql_Table columns.

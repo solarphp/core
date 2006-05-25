@@ -13,5 +13,3 @@ Roll back a transaction and return to autocommit mode.
 * Parameters: none.
 
 * Returns void
-
-Roll back a transaction and return to autocommit mode.

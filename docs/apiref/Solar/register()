@@ -25,5 +25,3 @@ Registers an object under a unique name.
  * mixed //$config//: If lazy-loading, use this as the config.
 
 * Returns void
-
-Registers an object under a unique name.

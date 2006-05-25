@@ -22,6 +22,4 @@ Fetches a bookmark by owner_handle (username) and URI.
 
 * Returns array: The node data.
 
-Fetches a bookmark by owner_handle (username) and URI.
-
 Useful for seeing if an owner has already bookmarked a URI.

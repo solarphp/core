@@ -13,5 +13,3 @@ Gets the area ID from which nodes are being fetched.
 * Parameters: none.
 
 * Returns int: The area ID.
-
-Gets the area ID from which nodes are being fetched.

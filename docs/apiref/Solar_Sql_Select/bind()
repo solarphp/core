@@ -21,5 +21,3 @@ Adds data to bind into the query.
  * mixed //$val//: The value to use for the replacement key.
 
 * Returns Solar_Sql_Select
-
-Adds data to bind into the query.

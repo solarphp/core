@@ -11,7 +11,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -51,8 +51,8 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      */
     protected $_config = array(
-        'area_name' => 'Solar_App_Bookmarks',
-        'content'   => 'content',
+        'area_name'    => 'Solar_App_Bookmarks',
+        'content'      => 'content',
     );
     
     /**

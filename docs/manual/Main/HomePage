@@ -8,9 +8,9 @@ The current release is version @package_version@ as of @package_date@.  You can 
 
 Solar is a "simple object library and application repository" for PHP5.  That is, Solar is a combined class library, component suite, and application development framework.
 
-Solar provides simple, [SolarGoals easy-to-comprehend] classes and components for the common aspects of web-based rapid application development, all under the [http://www.gnu.org/licenses/lgpl.html LGPL].
+Solar provides simple, [SolarGoals easy-to-comprehend] classes and components for the common aspects of web-based rapid application development, all under the open-source [http://opensource.org/licenses/bsd-license.php BSD License].
 
-Solar is designed for developers who intend to distribute their applications world-wide.
+Solar is designed for developers who intend to distribute their PHP5 applications world-wide.
 
 You can visit our [http://solarphp.com/channel.php PEAR channel] to review releases and change logs.
 

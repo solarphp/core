@@ -13,5 +13,3 @@ Returns the SQL statement to get a list of database tables.
 * Parameters: none.
 
 * Returns string: The SQL statement.
-
-Returns the SQL statement to get a list of database tables.

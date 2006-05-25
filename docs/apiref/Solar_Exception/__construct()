@@ -16,6 +16,4 @@ Constructor.
 
  * array //$config//: User-defined configuration with keys for 'class', 'code', 'text', and 'info'.
 
-* Returns Solar_Exception: Solar_Exception instance
-
-Constructor.
+* Returns Solar_Exception

@@ -1,0 +1,11 @@
++ The Solar_Class_Map Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Class_Map
+
+++ Overview
+
+Creates an array of class-to-file mappings for a class hierarchy.

@@ -19,5 +19,3 @@ Increments and returns the sequence value for a column.
  * string //$name//: The column name.
 
 * Returns int: The next sequence number for the column.
-
-Increments and returns the sequence value for a column.

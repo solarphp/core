@@ -17,5 +17,3 @@ Check if a table, column, or index name is a valid identifier.
  * string //$word//: The word to check.
 
 * Returns bool: True if valid, false if not.
-
-Check if a table, column, or index name is a valid identifier.

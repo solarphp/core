@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_User_Auth_None::valid() -- Validate a username and password.  Always fails.
+* Solar_User_Auth_None::valid() -- Validate a username and password.
 
 Inherited Methods:
 

@@ -6,7 +6,7 @@ name: addTestMethods
 
 param: string, $class
 
-return: void
+return: int
 
 </function>
 
@@ -14,10 +14,8 @@ Adds the test methods from a given test class.
 
 * Parameters:
 
- * string //$class//: The Test_* class name to add methods from.
+ * string //$class//: The class name to add methods from, typically a Test_* class.
 
-* Returns void
-
-Adds the test methods from a given test class.
+* Returns int: The number of methods added, or boolean false if the class did not exist.
 
 Skips abstract and interface classes.

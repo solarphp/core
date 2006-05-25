@@ -21,5 +21,3 @@ Asserts that two variables are not equal; type is not strict.
  * mixed //$expect//: The expected value.
 
 * Returns bool: The assertion result.
-
-Asserts that two variables are not equal; type is not strict.

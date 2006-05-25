@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: get
+
+return: void
+
+</function>
+
+Gets a copy of the current stack.
+
+* Parameters: none.
+
+* Returns void

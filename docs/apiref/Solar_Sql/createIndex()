@@ -30,8 +30,6 @@ Creates a portable index on a table.
 
 * Returns void
 
-Creates a portable index on a table.
-
 The $info parameter should be in this format:
 
 <code type="php">

@@ -21,5 +21,3 @@ Sets cache entry data.
  * mixed //$data//: The data to write into the entry.
 
 * Returns bool: True on success, false on failure.
-
-Sets cache entry data.

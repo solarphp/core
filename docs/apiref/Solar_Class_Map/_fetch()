@@ -1,0 +1,22 @@
+<function>
+
+access:   protected
+
+name: _fetch
+
+param: RecursiveDirectoryIterator, $iter
+
+return: void
+
+</function>
+
+Recursively iterates through a directory looking for class files.
+
+* Parameters:
+
+ * RecursiveDirectoryIterator //$iter//: Directory iterator.
+
+* Returns void
+
+Skips CVS directories, and all files and dirs not starting with
+a capital letter (such as dot-files).

@@ -21,5 +21,3 @@ Convenience method to instantiate and configure an object.
  * array //$config//: Additional configuration array for the class.
 
 * Returns object: A new instance of the requested class.
-
-Convenience method to instantiate and configure an object.

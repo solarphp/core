@@ -21,5 +21,3 @@ Looks up locale strings based on a key.
  * string //$num//: If 1, returns a singular string; otherwise, returns a plural string (if one exists).
 
 * Returns string: The locale string, or the original $key if no string found.
-
-Looks up locale strings based on a key.

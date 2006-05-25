@@ -17,5 +17,3 @@ Validates and inserts data into the table.
  * array //$data//: An associative array of data to be inserted, in the format (field => value).
 
 * Returns array: The data as inserted.
-
-Validates and inserts data into the table.

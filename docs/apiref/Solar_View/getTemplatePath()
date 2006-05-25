@@ -13,5 +13,3 @@ Returns the template directory path stack.
 * Parameters: none.
 
 * Returns array: The path stack of template directories.
-
-Returns the template directory path stack.

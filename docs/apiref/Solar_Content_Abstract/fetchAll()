@@ -29,5 +29,3 @@ Fetch a list of nodes of the master node type.
  * int //$page//: Which page-number of results to fetch.
 
 * Returns array: The list of nodes.
-
-Fetch a list of nodes of the master node type.

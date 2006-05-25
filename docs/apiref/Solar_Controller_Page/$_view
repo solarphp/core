@@ -1,3 +1,5 @@
 protected string $_view
 
-The name of the view to be rendered after the action, minus the .view.php suffix.
+The name of the view to be rendered after the action, minus the .
+
+iew.php suffix.

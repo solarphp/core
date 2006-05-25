@@ -12,12 +12,12 @@ return: Solar_Content_Bookmarks
 
 </function>
 
-Constructor
+
 
 * Parameters:
 
  * array //$config//: User-defined configuration values.
 
-* Returns Solar_Content_Bookmarks: Solar_Content_Bookmarks instance
+* Returns Solar_Content_Bookmarks
 
-Constructor
+onstructor

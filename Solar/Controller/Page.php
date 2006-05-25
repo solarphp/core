@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -55,6 +55,21 @@ Solar::loadClass('Solar_Uri_Action');
  * 
  */
 abstract class Solar_Controller_Page extends Solar_Base {
+    
+    /**
+     * 
+     * User-defined configuration options.
+     * 
+     * Keys are:
+     * 
+     * : \\helper_class\\ : (array) An array of fallback helper classes.
+     * 
+     * @var array
+     * 
+     */
+    protected $_config = array(
+        'helper_class' => null,
+    );
     
     /**
      * 
@@ -217,6 +232,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
             );
         }
         
+        // make sure we have a helper_class key; it might have been
+        // left out of extended classes.
+        if (empty($this->_config['helper_class'])) {
+            $this->_config['helper_class'] = null;
+        }
+        
         // now do the parent construction
         parent::__construct($config);
         
@@ -275,8 +296,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // collect action, query, and info
         $this->_collect($spec);
         
-        // run the pre-action, forward to the first action (which may
-        // trigger other actions), and run the post-action.
+        // we need this class name for later
+        $class = get_class($this);
+
+        // run the pre-action code, forward to the first action (which
+        // may trigger other actions), and run the post-action code.
         $this->_preAction();
         $this->_forward($this->_action);
         $this->_postAction();
@@ -284,10 +308,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set up a view object for the page content
         $view = Solar::factory('Solar_View');
         $view->addTemplatePath($this->_dir . 'Views/');
-        $view->addHelperPath($this->_dir . 'Helpers/');
+        
+        // add helpers from user-defined locations, but give preference
+        // to the helpers for this class.
+        $view->addHelperClass($this->_config['helper_class']);
+        $view->addHelperClass($class . '_Helper');
         
         // set the locale class for the getText helper
-        $class = get_class($this);
         $view->getTextRaw("$class::");
         
         // assign variables
@@ -304,11 +331,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // using a layout.  render the view.
             $content = $view->fetch($this->_view . '.view.php');
             
-            // re-use the same view object for the layout,
-            // adding the layout path to the end of the current
-            // path stack.
+            // re-use the same view object for the layout, adding the
+            // layout path to the template path stack so it has 
+            // preference.
             $view->addTemplatePath($this->_layout_dir);
-            $view->addHelperPath($this->_layout_dir . 'Helpers/');
             
             // return the page content inside the layout.
             $view->assign($this->_layout_var, $content);

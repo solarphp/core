@@ -1,0 +1,31 @@
++ Class Methods
+
+++ Public
+
+* Solar_Class_Stack::add() -- Adds one or more classes to the stack.
+
+* Solar_Class_Stack::get() -- Gets a copy of the current stack.
+
+* Solar_Class_Stack::load() -- Loads a class using the class stack prefixes.
+
+* Solar_Class_Stack::set() -- Clears the stack and adds one or more classes.
+
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Class_Stack::_run() -- Loads the class file in a limited scope.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

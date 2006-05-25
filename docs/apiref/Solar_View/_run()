@@ -13,5 +13,3 @@ Runs a template script (allowing access to $this).
 * Parameters: none.
 
 * Returns void
-
-Runs a template script (allowing access to $this).

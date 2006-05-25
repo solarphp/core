@@ -18,8 +18,6 @@ Deletes a cache entry.
 
 * Returns void
 
-Deletes a cache entry.
-
 Example:
 
 <code type="php">

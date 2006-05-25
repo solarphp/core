@@ -25,5 +25,3 @@ Fetches all rows by arbitrary criteria.
  * int //$page//: The page number of rows to fetch.
 
 * Returns array: An array of rows.
-
-Fetches all rows by arbitrary criteria.

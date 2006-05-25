@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: addClass
+
+param: string, $class
+
+return: void
+
+</function>
+
+Adds a class to the API docs.
+
+* Parameters:
+
+ * string //$class//: The class to add to the docs.
+
+* Returns void

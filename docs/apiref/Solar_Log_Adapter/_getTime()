@@ -13,5 +13,3 @@ Gets the current timestamp in ISO-8601 format (yyyy-mm-ddThh:ii:ss).
 * Parameters: none.
 
 * Returns string: The current timestamp.
-
-Gets the current timestamp in ISO-8601 format (yyyy-mm-ddThh:ii:ss).

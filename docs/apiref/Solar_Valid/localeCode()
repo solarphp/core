@@ -22,8 +22,6 @@ Validate that a value is a locale code.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is a locale code.
-
 Note that this overrides Solar_Base::locale().
 
 The format is two lower-case letters, an underscore, and two upper-case

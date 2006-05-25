@@ -21,5 +21,3 @@ Outputs a formatted timestamp using [[php date()]] conventions.
  * string //$format//: An optional custom [[php date()]] formatting string.
 
 * Returns string: The formatted date string.
-
-Outputs a formatted timestamp using [[php date()]] conventions.

@@ -6,7 +6,7 @@ access: final  public
 
 name: getTrace
 
-return: unknown
+return: void
 
 </function>
 
@@ -14,4 +14,4 @@ return: unknown
 
 * Parameters: none.
 
-* Returns unknown: unknown
+* Returns void

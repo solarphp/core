@@ -47,6 +47,12 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
          * @todo Do this later.
          */';
     
+    protected $_method_block_nontechnical = '
+        /**
+         * This is the inital summary line; note how it passes over
+         * two lines. No technical data follows.
+         */';
+         
     protected $_param_block = '
         /**
          * 
@@ -102,6 +108,31 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         // partial line
         'Solar_Exception',
     );
+    
+    // category lines
+    protected $_category = array(
+        // correct
+        'Test',
+        // has extras
+        'Test with extra characters',
+    );
+    
+    // package lines
+    protected $_package = array(
+        // correct
+        'Test_Solar',
+        // has extras
+        'Test_Solar with extra characters',
+    );
+    
+    // subpackage lines
+    protected $_subpackage = array(
+        // correct
+        'Test_Solar_Docs',
+        // has extras
+        'Test_Solar_Docs with extra characters',
+    );
+    
     
     public function __construct($config = null)
     {
@@ -331,7 +362,18 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_param()
+    public function testParse_methodNonTechnical()
+    {
+        $expect = array(
+            'summ' => "This is the inital summary line; note how it passes over\ntwo lines.",
+            'narr' => "No technical data follows.",
+            'tech' => array(),
+        );
+        
+        $actual = $this->_phpdoc->parse($this->_method_block_nontechnical);
+        $this->assertSame($actual, $expect);
+    }
+    public function testParseParam()
     {
         $expect = array(
             'summ' => "This is the inital summary line; note how it passes over\ntwo lines.",
@@ -347,8 +389,8 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         $actual = $this->_phpdoc->parse($this->_param_block);
         $this->assertSame($actual, $expect);
     }
-    
-    public function testParse_throwsFull()
+
+    public function testParseThrows_full()
     {
         $expect = array(
             'throws' => array(
@@ -363,7 +405,7 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
     }
     
-    public function testParse_throwsNoSummary()
+    public function testParseThrows_noSummary()
     {
         $expect = array(
             'throws' => array(
@@ -376,6 +418,48 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         
         $this->_phpdoc->parseThrows($this->_throws[1]);
         $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+    }
+    
+    public function testParseCategory()
+    {
+        $expect = array('category' => 'Test');
+        
+        // correctly formatted
+        $this->_phpdoc->parseCategory($this->_category[0]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
+        // has extra spaces
+        $this->_phpdoc->parseCategory($this->_category[1]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
+    }
+    
+    public function testParsePackage()
+    {
+        $expect = array('package' => 'Test_Solar');
+        
+        // correctly formatted
+        $this->_phpdoc->parsePackage($this->_package[0]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
+        // has extra spaces
+        $this->_phpdoc->parsePackage($this->_package[1]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
+    }
+    
+    public function testParseSubpackage()
+    {
+        $expect = array('subpackage' => 'Test_Solar_Docs');
+        
+        // correctly formatted
+        $this->_phpdoc->parseSubpackage($this->_subpackage[0]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
+        // has extra spaces
+        $this->_phpdoc->parseSubpackage($this->_subpackage[1]);
+        $this->assertProperty($this->_phpdoc, '_info', 'same', $expect);
+        
     }
 }
 ?>

@@ -13,5 +13,3 @@ Removes all entries from the cache.
 * Parameters: none.
 
 * Returns void
-
-Removes all entries from the cache.

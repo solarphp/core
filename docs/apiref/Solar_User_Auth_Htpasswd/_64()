@@ -21,5 +21,3 @@ Convert to allowed 64 characters for encryption.
  * int //$count//: The number of characters.
 
 * Returns string: The converted value.
-
-Convert to allowed 64 characters for encryption.

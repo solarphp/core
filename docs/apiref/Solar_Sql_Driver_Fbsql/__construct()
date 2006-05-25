@@ -18,6 +18,4 @@ Constructor.
 
  * mixed //$config//: If array, is merged with the default $_config property array and any values from the Solar.config.php file.  If string, is loaded from that file and merged with values from Solar.config.php file.  If boolean false, no config overrides are performed (class defaults only).
 
-* Returns Solar_Sql_Driver_Fbsql: Solar_Sql_Driver_Fbsql instance
-
-Constructor.
+* Returns Solar_Sql_Driver_Fbsql

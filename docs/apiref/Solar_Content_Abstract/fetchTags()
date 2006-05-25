@@ -17,5 +17,3 @@ Fetches a list of all tags on all master nodes of this type.
  * string|array //$where//: A set of multiWhere() conditions to determine which nodes are fetched.
 
 * Returns array: An array of tags.
-
-Fetches a list of all tags on all master nodes of this type.

@@ -21,5 +21,3 @@ Try to force users to define what their view variables are.
  * mixed //$val//: The property value.
 
 * Returns void
-
-Try to force users to define what their view variables are.

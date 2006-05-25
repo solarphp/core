@@ -22,6 +22,4 @@ Inserts a row of data into a table.
 
 * Returns int: The number of rows affected, typically 1.
 
-Inserts a row of data into a table.
-
 Automatically applies Solar_Sql::quote() to the data values for you.

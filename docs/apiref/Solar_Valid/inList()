@@ -26,7 +26,5 @@ Validate that a value is in a list of allowed values.
 
 * Returns bool: True if valid, false if not.
 
-Validate that a value is in a list of allowed values.
-
 Strict checking is enforced, so a string "1" is not the same as
 an integer 1.  This helps to avoid matching 0 and empty, etc.

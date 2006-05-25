@@ -17,5 +17,3 @@ Returns the output from var_export() for a variable.
  * mixed //$var//: The variable to run through var_export().
 
 * Returns string
-
-Returns the output from var_export() for a variable.

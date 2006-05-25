@@ -13,5 +13,3 @@ Leave autocommit mode and begin a transaction.
 * Parameters: none.
 
 * Returns void
-
-Leave autocommit mode and begin a transaction.

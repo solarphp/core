@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: parseParam
+
+param: string, $line
+
+return: void
+
+</function>
+
+Parses an @param line into $this->_info.
+
+* Parameters:
+
+ * string //$line//: The block line.
+
+* Returns void
+
+Multiple @param tags are allowed.

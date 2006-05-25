@@ -1,0 +1,3 @@
+protected Solar_Class_Stack $_helper_class
+
+Class stack for helpers.

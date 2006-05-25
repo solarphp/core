@@ -17,5 +17,3 @@ Saves a message to the log.
  * string //$spec//: The log message.
 
 * Returns void
-
-Saves a message to the log.

@@ -21,5 +21,3 @@ Support method to save (write) an event and message to the log.
  * string //$descr//: A description of the event.
 
 * Returns mixed: Boolean false if the event was not saved (usually because it was not recognized), or a non-empty value if it was saved.
-
-Support method to save (write) an event and message to the log.

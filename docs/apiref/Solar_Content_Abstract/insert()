@@ -17,5 +17,3 @@ Insert a new master node and its tags.
  * array //$data//: The node data.
 
 * Returns array: The inserted data.
-
-Insert a new master node and its tags.

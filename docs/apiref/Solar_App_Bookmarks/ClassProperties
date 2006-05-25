@@ -64,11 +64,11 @@ Inherited Properties:
 
 * Solar_Controller_Page::$_action() -- The action being requested of (performed by) the application.
 
-* Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc. are located.
+* Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc.
 
 * Solar_Controller_Page::$_info() -- Application request parameters collected from the URI pathinfo.
 
-* Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .layout.php suffix.
+* Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .
 
 * Solar_Controller_Page::$_layout_dir() -- Where the layout directory is located.
 
@@ -78,7 +78,7 @@ Inherited Properties:
 
 * Solar_Controller_Page::$_query() -- Application request parameters collected from the URI query string.
 
-* Solar_Controller_Page::$_view() -- The name of the view to be rendered after the action, minus the .view.php suffix.
+* Solar_Controller_Page::$_view() -- The name of the view to be rendered after the action, minus the .
 
 ++ Private
 

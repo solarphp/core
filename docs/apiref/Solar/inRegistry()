@@ -17,5 +17,3 @@ Check to see if an object name already exists in the registry.
  * string //$key//: The name to check.
 
 * Returns bool
-
-Check to see if an object name already exists in the registry.

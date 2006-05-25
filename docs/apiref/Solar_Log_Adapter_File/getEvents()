@@ -15,5 +15,3 @@ Gets the list of events this adapter recognizes.
 * Parameters: none.
 
 * Returns array: The list of recognized events.
-
-Gets the list of events this adapter recognizes.

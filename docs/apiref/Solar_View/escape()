@@ -17,5 +17,3 @@ Built-in helper for escaping output.
  * scalar //$value//: The value to escape.
 
 * Returns string: The escaped value.
-
-Built-in helper for escaping output.

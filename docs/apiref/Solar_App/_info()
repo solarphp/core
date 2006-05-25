@@ -24,7 +24,5 @@ Retrieve the TAINTED value of a pathinfo request key by name.
 
 * Returns mixed: The value of that info key.
 
-Retrieve the TAINTED value of a pathinfo request key by name.
-
 Note that this value is direct user input; you should sanitize it with
 Solar_Valid or Solar_Filter (or some other technique) before using it.

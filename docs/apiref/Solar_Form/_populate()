@@ -21,5 +21,3 @@ Recursive method to map the submitted values into elements.
  * string //$elem//: The name of the current element mapped from the array of submitted values.  E.g., $src['foo']['bar']['baz'] maps to "foo[bar][baz]".
 
 * Returns void
-
-Recursive method to map the submitted values into elements.

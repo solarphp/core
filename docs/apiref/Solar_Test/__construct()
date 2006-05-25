@@ -16,6 +16,4 @@ Setup before the entire unit test.
 
  * array //$config//: User-defined configuration values.
 
-* Returns Solar_Test: Solar_Test instance
-
-Setup before the entire unit test.
+* Returns Solar_Test

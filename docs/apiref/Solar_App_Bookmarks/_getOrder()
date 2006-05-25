@@ -13,5 +13,3 @@ Returns a safe SQL ORDER value from the 'order' query parameter.
 * Parameters: none.
 
 * Returns string
-
-Returns a safe SQL ORDER value from the 'order' query parameter.

@@ -10,7 +10,7 @@
 
 * Solar_User_Role::$_driver -- The driver instance.
 
-* Solar_User_Role::$_loaded -- Have we attempted to load the list of roles yet?
+* Solar_User_Role::$_loaded -- 
 
 ++ Private
 

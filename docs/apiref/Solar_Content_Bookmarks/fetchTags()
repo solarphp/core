@@ -18,6 +18,4 @@ Fetches a list of all bookmark tags.
 
 * Returns array: An array where the key is the tag name and the value is the number of times that tag appears.
 
-Fetches a list of all bookmark tags.
-
 You can specify an owner_handle (username) to limit the list.

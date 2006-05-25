@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: parseCategory
+
+param: string, $line
+
+return: void
+
+</function>
+
+Parses an @category line into $this->_info.
+
+* Parameters:
+
+ * string //$line//: The block line.
+
+* Returns void

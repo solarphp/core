@@ -17,5 +17,3 @@ Sets the limit and count by page number.
  * int //$page//: Limit results to this page number.
 
 * Returns Solar_Sql_Select
-
-Sets the limit and count by page number.

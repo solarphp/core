@@ -21,5 +21,3 @@ Sets a form-tag attribute.
  * string //$val//: The attribute value.
 
 * Returns Solar_View_Helper_Form
-
-Sets a form-tag attribute.

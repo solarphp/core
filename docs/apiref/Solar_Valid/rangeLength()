@@ -29,5 +29,3 @@ Validate that the length of a value is within a given range.
  * bool //$blank//: Allow blank values to be valid.
 
 * Returns bool: True if valid, false if not.
-
-Validate that the length of a value is within a given range.

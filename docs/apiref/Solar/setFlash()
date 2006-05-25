@@ -26,8 +26,6 @@ Sets a "read-once" session value for a class and key.
 
 * Returns void
 
-Sets a "read-once" session value for a class and key.
-
 Taken from ideas popularized by Ruby on Rails, a "flash" is a session
 value that propagates only until it is read, at which time it
 is removed from the session.  This is useful for forwarding

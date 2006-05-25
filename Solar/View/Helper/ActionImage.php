@@ -9,9 +9,9 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Action.php 1041 2006-04-04 15:12:36Z pmjones $
+ * @version $Id$
  * 
  */
 

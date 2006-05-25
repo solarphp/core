@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -149,7 +149,7 @@ abstract class Solar_App extends Solar_Controller_Page {
      * @return void
      * 
      */
-    public function _setup()
+    protected function _setup()
     {
         // register a Solar_Sql object if not already
         if (! Solar::inRegistry('sql')) {
@@ -181,7 +181,7 @@ abstract class Solar_App extends Solar_Controller_Page {
      * @return void
      * 
      */
-    public function _preAction()
+    protected function _preAction()
     {
         // generic security check
         $class = get_class($this);

@@ -17,5 +17,3 @@ Makes the query SELECT DISTINCT.
  * bool //$flag//: Whether or not the SELECT is DISTINCT (default true).
 
 * Returns Solar_Sql_Select
-
-Makes the query SELECT DISTINCT.

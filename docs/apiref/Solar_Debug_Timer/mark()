@@ -18,8 +18,6 @@ Marks the time.
 
 * Returns void
 
-Marks the time.
-
 Use this to mark the profile to see how much time has
 elapsed since the last mark.  Labels do not have to be
 unique, but should be distinctive enough so you can tell

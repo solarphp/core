@@ -17,5 +17,3 @@ Refresh the list of roles for the given user.
  * string //$handle//: The username to fetch roles for.
 
 * Returns array: The list of roles for the authenticated user.
-
-Refresh the list of roles for the given user.

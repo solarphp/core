@@ -15,5 +15,3 @@ Returns the class name that threw the exception.
 * Parameters: none.
 
 * Returns string
-
-Returns the class name that threw the exception.

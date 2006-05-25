@@ -17,5 +17,3 @@ Returns a URI based on the object properties.
  * bool //$full//: If true, returns a full URI with scheme, user, pass, host, and port.  Otherwise, just returns the path, query, and fragment.  Default false.
 
 * Returns string: An action URI string.
-
-Returns a URI based on the object properties.

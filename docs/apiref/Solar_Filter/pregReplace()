@@ -25,5 +25,3 @@ Applies a [[php preg_replace()]] filter.
  * string //$replace//: Replace the found pattern with this string.
 
 * Returns string: The filtered value.
-
-Applies a [[php preg_replace()]] filter.

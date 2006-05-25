@@ -1,0 +1,35 @@
+<function>
+
+access:   public
+
+name: set
+
+param: array|string, $list
+
+return: void
+
+</function>
+
+Clears the stack and adds one or more classes.
+
+* Parameters:
+
+ * array|string //$list//: The classes to add to the stack after clearing it.
+
+* Returns void
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_Class_Stack');
+$stack->add('Base1');
+$stack->add('Base2');
+$stack->add('Base3');
+
+// $stack->get() reveals that the directory search order is
+// 'Base3_', 'Base2_', 'Base1_'.
+
+$stack->set('Another_Base');
+
+// $stack->get() is now array('Another_Base_').
+</code>

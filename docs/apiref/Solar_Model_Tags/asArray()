@@ -18,6 +18,4 @@ Normalizes tag arrays.
 
 * Returns string: A space-separated string of tags.
 
-Normalizes tag arrays.
-
 Also converts strings to a normalized tag array.

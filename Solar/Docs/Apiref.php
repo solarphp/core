@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -197,7 +197,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     public function addFiles($base, $class = null)
     {
-        $classmap = Solar::factory('Solar_Class_Map');
+        $map = Solar::factory('Solar_Class_Map');
         $source = $map->fetch($base, $class);
         foreach ($source as $class => $file) {
             require_once($file);
@@ -408,7 +408,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * @param string $class The class to check.
      * 
-     * @param ReflectionMethod The method to check.
+     * @param ReflectionMethod $method The method to check.
      * 
      * @return string The class from which the method was inherited, but only
      * if the modifiers, parameters, and comments are identical.
@@ -441,7 +441,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * @param string $class The class to check.
      * 
-     * @param ReflectionProperty The property to check.
+     * @param ReflectionProperty $property The property to check.
      * 
      * @return string The class from which the property was inherited, but only
      * if the modifiers and comments are identical.
@@ -498,8 +498,17 @@ class Solar_Docs_Apiref extends Solar_Base {
             
             // add the type
             if ($param->getClass()) {
-                // the type comes from a typehint
+                
+                // the type comes from a typehint.
                 $params[$name]['type'] = $param->getClass();
+                
+                // hack, because of return differences between PHP5.1.4
+                // and earlier PHP5.1.x versions.  otherwise you get
+                // things like "Object id #31" as the type.
+                if (is_object($params[$name]['type'])) {
+                    $params[$name]['type'] = $params[$name]['type']->name;
+                }
+                
             } elseif (! empty($tech['param'][$name]['type'])) {
                 // the type comes from the tech docs
                 $params[$name]['type'] = $tech['param'][$name]['type'];

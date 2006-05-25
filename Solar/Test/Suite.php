@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @license http://www.gnu.org/copyleft/lesser.html LGPL
+ * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
  * 
@@ -237,6 +237,9 @@ class Solar_Test_Suite extends Solar_Base {
      * : \\todo\\ : (array) Log of tests that are incomplete.
      * 
      * : \\fail\\ : (array) Log of tests that failed.
+     * 
+     * @param string $series The sub-test series to run, typically a
+     * class name (not including the 'Test_' prefix).
      * 
      * @return array A statistics array.
      * 

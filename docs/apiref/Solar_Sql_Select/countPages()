@@ -17,5 +17,3 @@ Get the count of rows and number of pages for the current query.
  * string //$col//: The column to COUNT() on.  Default is 'id'.
 
 * Returns array: An associative array with keys 'count' (the total number of rows) and 'pages' (the number of pages based on $this->_paging).
-
-Get the count of rows and number of pages for the current query.

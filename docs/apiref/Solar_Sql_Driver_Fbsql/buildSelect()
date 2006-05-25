@@ -17,5 +17,3 @@ Adds a LIMIT clause (or equivalent) to a SELECT statement.
  * array //$parts//: The SELECT statement parts.
 
 * Returns void
-
-Adds a LIMIT clause (or equivalent) to a SELECT statement.

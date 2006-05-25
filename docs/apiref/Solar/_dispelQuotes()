@@ -17,5 +17,3 @@ A stripslashes() alias that supports array_walk_recursive().
  * string //$value//: The value to strip slashes from.
 
 * Returns void
-
-A stripslashes() alias that supports array_walk_recursive().

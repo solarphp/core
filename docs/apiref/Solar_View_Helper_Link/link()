@@ -10,7 +10,7 @@ return: string
 
 </function>
 
-Returns a <link ... /> tag.
+Returns a <link .
 
 * Parameters:
 
@@ -18,4 +18,4 @@ Returns a <link ... /> tag.
 
 * Returns string: The <link ... /> tag.
 
-Returns a <link ... /> tag.
+. /> tag.

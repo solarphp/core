@@ -21,5 +21,3 @@ Validate that a value is only letters (upper or lower case) and digits.
  * bool //$blank//: Allow blank values to be valid.
 
 * Returns bool: True if valid, false if not.
-
-Validate that a value is only letters (upper or lower case) and digits.

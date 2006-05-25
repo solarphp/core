@@ -19,5 +19,3 @@ Validates and recasts an array of input/update data in-place.
  * array //$data//: An associative array of data as (field => value). Note that this is a reference; the array will be modified in-place.
 
 * Returns void
-
-Validates and recasts an array of input/update data in-place.

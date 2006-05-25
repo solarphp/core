@@ -22,7 +22,5 @@ Resets any authentication data in the session.
 
 * Returns void
 
-Resets any authentication data in the session.
-
 Typically used for idling, expiration, and logout.  Calls
 [[php session_regenerate_id()]] to clear previous session.

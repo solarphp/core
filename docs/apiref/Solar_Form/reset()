@@ -14,8 +14,6 @@ Resets the form object to its originally-configured state.
 
 * Returns void
 
-Resets the form object to its originally-configured state.
-
 This clears out all elements, filters, validations, and feedback,
 as well as all submitted values.  Use this method to "start over
 again" using the same form object.

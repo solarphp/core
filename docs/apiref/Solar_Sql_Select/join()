@@ -25,5 +25,3 @@ Adds a JOIN table and columns to the query.
  * array|string //$cols//: The columns to select from the joined table.
 
 * Returns Solar_Sql_Select
-
-Adds a JOIN table and columns to the query.

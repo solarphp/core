@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Docs_Phpdoc::$_info -- Where the technical information from block tags is stored.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- User-provided configuration values.
+
+++ Private
+
+None.

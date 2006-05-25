@@ -18,6 +18,4 @@ Sets the Solar_Uri::$path array from a string.
 
 * Returns void
 
-Sets the Solar_Uri::$path array from a string.
-
 This will overwrite any previous values.

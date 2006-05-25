@@ -8,7 +8,7 @@ param: string, $name
 
 param: array, $config, NULL
 
-return: Solar_View_Helper
+return: object
 
 </function>
 
@@ -20,6 +20,4 @@ Creates a new standalone helper object.
 
  * array //$config//: Configuration array for the helper object.
 
-* Returns Solar_View_Helper
-
-Creates a new standalone helper object.
+* Returns object: A new standalone helper object.

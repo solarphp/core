@@ -13,5 +13,3 @@ Builds a baseline multiWhere() clause for master nodes of this type.
 * Parameters: none.
 
 * Returns array
-
-Builds a baseline multiWhere() clause for master nodes of this type.

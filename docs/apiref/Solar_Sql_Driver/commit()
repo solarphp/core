@@ -13,5 +13,3 @@ Commit a transaction and return to autocommit mode.
 * Parameters: none.
 
 * Returns void
-
-Commit a transaction and return to autocommit mode.

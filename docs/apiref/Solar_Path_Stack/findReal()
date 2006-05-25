@@ -1,0 +1,40 @@
+<function>
+
+access:   public
+
+name: findReal
+
+param: string, $file
+
+return: mixed
+
+</function>
+
+Finds a file in the path stack using realpath().
+
+* Parameters:
+
+ * string //$file//: The file to find using the directory stack.
+
+* Returns mixed: The absolute path to the file, or flase if not found using the stack.
+
+While slower than Solar_Path_Stack::find(), this helps to protect
+against directory traversal attacks.  It only works with absolute
+paths; relative paths will fail.
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_Path_Stack');
+$stack->add('/path/1');
+$stack->add('/path/2');
+$stack->add('/path/3');
+
+$file = $stack->findReal('file.php');
+// $file is now the first instance of 'file.php' found from the         
+// directory stack, looking first in 'path/3/file.php', then            
+// 'path/2/file.php', then finally 'path/1/file.php'.
+//
+// note that this will be the realpath() to the file from the
+// filesystem root.
+</code>

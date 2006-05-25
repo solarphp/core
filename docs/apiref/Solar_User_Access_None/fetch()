@@ -21,5 +21,3 @@ Fetch access privileges for a user handle and roles.
  * array //$roles//: The user roles.
 
 * Returns array
-
-Fetch access privileges for a user handle and roles.

@@ -31,5 +31,3 @@ Convenience method to select rows from this table.
  * int //$page//: The page number of rows to fetch.
 
 * Returns mixed
-
-Convenience method to select rows from this table.

@@ -22,6 +22,4 @@ Adds multiple HAVING conditions to the query.
 
 * Returns Solar_Sql_Select
 
-Adds multiple HAVING conditions to the query.
-
 Otherwise identical to having()/orHaving().

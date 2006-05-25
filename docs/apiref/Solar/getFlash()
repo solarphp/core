@@ -25,5 +25,3 @@ Retrieves a "read-once" session value, thereby removing the value.
  * mixed //$val//: If the class and key do not exist, return this value.  Default null.
 
 * Returns mixed: The "read-once" value.
-
-Retrieves a "read-once" session value, thereby removing the value.

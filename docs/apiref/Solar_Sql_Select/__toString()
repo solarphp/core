@@ -13,5 +13,3 @@ Returns this object as an SQL statement string.
 * Parameters: none.
 
 * Returns string: An SQL statement string.
-
-Returns this object as an SQL statement string.

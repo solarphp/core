@@ -26,7 +26,5 @@ Validate a value against a regular expression.
 
 * Returns bool: True if the value matches the expression, false if not.
 
-Validate a value against a regular expression.
-
 Uses [[php preg_match()]] to compare the value against the given
 regular epxression.

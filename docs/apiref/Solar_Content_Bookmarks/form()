@@ -17,5 +17,3 @@ Returns a bookmark data-entry form processor.
  * array //$data//: The default data for the form.
 
 * Returns Solar_Form
-
-Returns a bookmark data-entry form processor.

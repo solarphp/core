@@ -17,5 +17,3 @@ Fetch roles for a user.
  * string //$handle//: Username to get roles for.
 
 * Returns array: An array of roles discovered in LDAP.
-
-Fetch roles for a user.

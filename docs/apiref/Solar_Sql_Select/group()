@@ -17,5 +17,3 @@ Adds grouping to the query.
  * string|array //$spec//: The column(s) to group by.
 
 * Returns Solar_Sql_Select
-
-Adds grouping to the query.

@@ -19,5 +19,3 @@ Inserts or updates a single row based on its ID.
  * array //$data//: An associative array of data to be saved, in the format (field => value).
 
 * Returns array: The data as inserted or updated.
-
-Inserts or updates a single row based on its ID.

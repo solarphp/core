@@ -21,5 +21,3 @@ Executes a helper method with arbitrary parameters.
  * array //$args//: The parameters passed to the helper.
 
 * Returns string: The helper output.
-
-Executes a helper method with arbitrary parameters.

@@ -21,5 +21,3 @@ Fetches the access list from the driver into $this->list.
  * array //$roles//: The user roles to fetch access controls for.
 
 * Returns void
-
-Fetches the access list from the driver into $this->list.

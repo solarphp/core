@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-defined configuration with keys for 'class', 'code', 'text', and 'info'.
 
-* Returns Solar_Test_Exception_Todo: Solar_Test_Exception_Todo instance
-
-Constructor.
+* Returns Solar_Test_Exception_Todo

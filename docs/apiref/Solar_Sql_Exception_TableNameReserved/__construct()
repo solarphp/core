@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-defined configuration with keys for 'class', 'code', 'text', and 'info'.
 
-* Returns Solar_Sql_Exception_TableNameReserved: Solar_Sql_Exception_TableNameReserved instance
-
-Constructor.
+* Returns Solar_Sql_Exception_TableNameReserved

@@ -6,7 +6,7 @@ name: files
 
 param: string, $key, NULL
 
-param: unknown, $default, array ()
+param: mixed, $default, array ()
 
 return: mixed
 
@@ -18,10 +18,8 @@ Safely gets the value of an element from the $_FILES array.
 
  * string //$key//: The array element; if null, returns the whole array.
 
- * unknown //$default//: 
+ * mixed //$default//: If the requested array element is not set, return this value.
 
 * Returns mixed: The array element value (if set), or the $default value (if not).
-
-Safely gets the value of an element from the $_FILES array.
 
 Returns an empty array if the requested key does not exist.

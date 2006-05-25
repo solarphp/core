@@ -30,7 +30,5 @@ Fetches a list of bookmarks from the content store.
 
 * Returns array: The list of bookmarks.
 
-Fetches a list of bookmarks from the content store.
-
 You can specify an owner_handle (username) and/or a list of
 tags to filter the list.

@@ -17,5 +17,3 @@ Fetches template output.
  * string //$name//: The template to process.
 
 * Returns string: The template output.
-
-Fetches template output.

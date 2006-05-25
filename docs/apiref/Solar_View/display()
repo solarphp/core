@@ -17,5 +17,3 @@ Displays a template directly.
  * string //$name//: The template to display.
 
 * Returns void
-
-Displays a template directly.

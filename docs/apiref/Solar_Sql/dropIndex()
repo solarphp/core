@@ -21,5 +21,3 @@ Drops an index from a table in the database.
  * string //$name//: The index name to drop.
 
 * Returns mixed
-
-Drops an index from a table in the database.

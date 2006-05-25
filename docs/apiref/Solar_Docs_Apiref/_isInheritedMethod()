@@ -1,0 +1,23 @@
+<function>
+
+access:   protected
+
+name: _isInheritedMethod
+
+param: string, $class
+
+param: ReflectionMethod, $method
+
+return: string
+
+</function>
+
+Reports the class, if any, a method is inherited from and identical to.
+
+* Parameters:
+
+ * string //$class//: The class to check.
+
+ * ReflectionMethod //$method//: The method to check.
+
+* Returns string: The class from which the method was inherited, but only if the modifiers, parameters, and comments are identical.

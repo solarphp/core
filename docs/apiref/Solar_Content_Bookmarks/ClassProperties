@@ -20,7 +20,7 @@ Inherited Properties:
 
 * Solar_Content_Abstract::$_paging() -- When fetching, get this many rows per page.
 
-* Solar_Content_Abstract::$_parts() -- What node types are acceptable as parts of this master node type?
+* Solar_Content_Abstract::$_parts() -- 
 
 ++ Private
 

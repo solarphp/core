@@ -18,6 +18,4 @@ Constructor.
 
  * array //$config//: User-specified configuration.
 
-* Returns Solar_View_Helper_FormButton: Solar_View_Helper_FormButton instance
-
-Constructor.
+* Returns Solar_View_Helper_FormButton

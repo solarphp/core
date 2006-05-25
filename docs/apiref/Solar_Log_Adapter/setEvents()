@@ -17,5 +17,3 @@ Sets the list of events this adapter recognizes.
  * array|string //$list//: The event types this instance should recognize; a comma-separated string of events, or a sequential array.
 
 * Returns void
-
-Sets the list of events this adapter recognizes.

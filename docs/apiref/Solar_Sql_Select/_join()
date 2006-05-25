@@ -29,5 +29,3 @@ Support method for adding JOIN clauses.
  * array|string //$cols//: The columns to select from the joined table.
 
 * Returns Solar_Sql_Select
-
-Support method for adding JOIN clauses.

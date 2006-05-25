@@ -18,8 +18,6 @@ return: string
 
 * Returns string: The "fixed" directory string.
 
-"Fixes" a directory string for the operating system.
-
 Use slashes anywhere you need a directory separator.
 Then run the string through fixdir() and the slashes will be converted
 to the proper separator (e.g. '\' on Windows).

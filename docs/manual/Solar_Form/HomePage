@@ -51,7 +51,7 @@ $form->setElements(array(
 $submit = Solar::post('submit');
 
 // handle submissions based on the localized button values
-if ($op == Solar::locale('Solar', 'SUBMIT_SAVE')) {
+if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE')) {
     
     // populate the form with submitted values
     $form->populate();

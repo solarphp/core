@@ -19,5 +19,3 @@ Safely quotes a value for an SQL statement.
  * mixed //$val//: The value to quote.
 
 * Returns mixed: An SQL-safe quoted value.
-
-Safely quotes a value for an SQL statement.

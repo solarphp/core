@@ -17,5 +17,3 @@ Fetch the results based on the current query properties.
  * string //$type//: The type of fetch to perform (all, one, row, etc).
 
 * Returns mixed: The query results.
-
-Fetch the results based on the current query properties.

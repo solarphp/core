@@ -17,5 +17,3 @@ Sets the number of rows per page.
  * int //$rows//: The number of rows to page at.
 
 * Returns Solar_Sql_Select
-
-Sets the number of rows per page.

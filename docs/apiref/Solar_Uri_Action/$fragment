@@ -2,4 +2,6 @@
 
 public string $fragment
 
-The fragment portion (e.g., "#subsection").
+The fragment portion (e.
+
+., "#subsection").

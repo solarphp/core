@@ -13,5 +13,3 @@ Performs some security on globals, removes magic quotes if turned on.
 * Parameters: none.
 
 * Returns void
-
-Performs some security on globals, removes magic quotes if turned on.

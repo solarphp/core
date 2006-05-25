@@ -22,8 +22,6 @@ Inserts/updates cache entry data.
 
 * Returns bool: True on success, false on failure.
 
-Inserts/updates cache entry data.
-
 This method stores data to the cache with its own entry
 identifier.  If the entry does not exist, it is created; if
 the entry does already exist, it is updated with the new data.

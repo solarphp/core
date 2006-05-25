@@ -24,7 +24,5 @@ Public interface to save (write) an event and message to the log.
 
 * Returns mixed: Boolean false if the event was not saved (usually because it was not recognized), or a non-empty value if it was saved.
 
-Public interface to save (write) an event and message to the log.
-
 This is the public interface for saving an event; adapters should
 override the protected _save() method to perform the "real" save.

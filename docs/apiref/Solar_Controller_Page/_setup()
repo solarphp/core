@@ -13,5 +13,3 @@ Hook for extended setup behaviors.
 * Parameters: none.
 
 * Returns void
-
-Hook for extended setup behaviors.

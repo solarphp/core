@@ -13,5 +13,3 @@ Executes just before the first action.
 * Parameters: none.
 
 * Returns void
-
-Executes just before the first action.

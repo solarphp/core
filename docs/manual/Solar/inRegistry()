@@ -3,7 +3,7 @@
 This methods lets you check if a unique registered name exists.
 
 <code type="php">
-$exists = Solar::inRegistry('example');
+$exists = Solar::isRegistered('example');
 if (! $exists) {
     // doesn't exist, so register it as a lazy-load
     Solar::register('example', 'Solar_Example');

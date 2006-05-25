@@ -475,7 +475,7 @@ class Solar {
     public static function registry($key)
     {
         // has the shared object already been loaded?
-        if (! Solar::inRegistry($key)) {
+        if (! Solar::isRegistered($key)) {
             throw Solar::exception(
                 'Solar',
                 'ERR_NOT_IN_REGISTRY',
@@ -512,7 +512,7 @@ class Solar {
      */
     public static function register($key, $spec, $config = null)
     {
-        if (Solar::inRegistry($key)) {
+        if (Solar::isRegistered($key)) {
             // name already exists in registry
             $class = get_class(Solar::$registry[$key]);
             throw Solar::exception(
@@ -549,7 +549,7 @@ class Solar {
      * @return bool
      * 
      */
-    public static function inRegistry($key)
+    public static function isRegistered($key)
     {
         return ! empty(Solar::$registry[$key]);
     }

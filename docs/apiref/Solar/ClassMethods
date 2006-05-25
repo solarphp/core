@@ -30,7 +30,7 @@
 
 * Solar::getLocale() -- Returns the current locale code.
 
-* Solar::inRegistry() -- Check to see if an object name already exists in the registry.
+* Solar::isRegistered() -- Check to see if an object name already exists in the registry.
 
 * Solar::loadClass() -- Loads a class file from the include_path.
 

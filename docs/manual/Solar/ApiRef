@@ -32,7 +32,7 @@
 
  * Solar::register()
  
- * Solar::inRegistry()
+ * Solar::isRegistered()
  
  * Solar::registry()
  

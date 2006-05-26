@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * No role source; always returns an empty array.
+ * Adapter to fetch roles from no source at all; always returns an empty array.
  * 
  * @category Solar
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Abstract role adapter class.
+ */
+Solar::loadClass('Solar_Role_Adapter');
+
+/**
  * 
- * No role source; always returns an empty array.
+ * Adapter to fetch roles from no source at all; always returns an empty array.
  * 
  * @category Solar
  * 
  * @package Solar_User
  * 
  */
-class Solar_User_Role_None extends Solar_Base {
+class Solar_Role_Adapter_None extends Solar_Role_Adapter {
     
     /**
      * 

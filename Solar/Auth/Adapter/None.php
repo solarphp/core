@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Authentication adapter class.
+ */
+Solar::loadClass('Solar_Auth_Adapter');
+
+/**
  * 
  * Authenticate against nothing; defaults all authentication to "failed."
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  */
-class Solar_User_Auth_None extends Solar_Base {
+class Solar_Auth_Adapter_None extends Solar_Auth_Adapter {
     
     /**
      * 
@@ -37,7 +42,7 @@ class Solar_User_Auth_None extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function valid($handle, $passwd)
+    public function isValid($handle, $passwd)
     {
         return false;
     }

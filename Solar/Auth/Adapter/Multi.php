@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,10 +21,10 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  */
-class Solar_User_Auth_Multi extends Solar_Base {
+class Solar_Auth_Adapter_Multi extends Solar_Auth_Adapter {
     
     /**
      * 
@@ -32,25 +32,25 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\drivers\\ : (array) The array of driver classes and optional configs.
+     * : \\adapters\\ : (array) The array of adapter classes and optional configs.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'drivers' => array(
-            'Solar_User_Auth_None'
+        'adapters' => array(
+            'Solar_Auth_None'
         )
     );
     
     /**
      * 
-     * An array of the multiple driver instances.
+     * An array of the multiple adapter instances.
      * 
      * @var array
      * 
      */
-    protected $_driver = array();
+    protected $_adapter = array();
     
     /**
      * 
@@ -64,13 +64,13 @@ class Solar_User_Auth_Multi extends Solar_Base {
         // basic construction
         parent::__construct($config);
         
-        // make sure the drivers config is an array
-        settype($this->_config['drivers'], 'array');
+        // make sure the adapters config is an array
+        settype($this->_config['adapters'], 'array');
         
-        // instantiate the driver objects
-        foreach ($this->_config['drivers'] as $key => $info) {
+        // instantiate the adapter objects
+        foreach ($this->_config['adapters'] as $key => $info) {
             
-            // is the driver value an array (for custom configs)
+            // is the adapter value an array (for custom configs)
             // or a string (for default configs)?
             if (is_array($info)) {
                 $class = $info[0];
@@ -80,8 +80,8 @@ class Solar_User_Auth_Multi extends Solar_Base {
                 $opts = null;
             }
             
-            // add the driver instance
-            $this->_driver[] = Solar::factory($class, $opts);
+            // add the adapter instance
+            $this->_adapter[] = Solar::factory($class, $opts);
         }
     }
     
@@ -96,10 +96,10 @@ class Solar_User_Auth_Multi extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function valid($handle, $passwd)
+    public function isValid($handle, $passwd)
     {
-        foreach ($this->_driver as $driver) {
-            if ($driver->valid($handle, $passwd)) {
+        foreach ($this->_adapter as $adapter) {
+            if ($adapter->isValid($handle, $passwd)) {
                 return true;
             }
         }

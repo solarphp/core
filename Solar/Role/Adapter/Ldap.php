@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Get roles (groups) from an LDAP server.
+ * Adapter to fetch roles from an LDAP server.
  * 
  * @category Solar
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Abstract role adapter class.
+ */
+Solar::loadClass('Solar_Role_Adapter');
+
+/**
  * 
- * Get roles (groups) from an LDAP server.
+ * Adapter to fetch roles from an LDAP server.
  * 
  * @category Solar
  * 
  * @package Solar_User
  * 
  */
-class Solar_User_Role_Ldap extends Solar_Base {
+class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
     
     /**
      * 

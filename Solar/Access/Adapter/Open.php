@@ -5,9 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User_Access
+ * @package Solar_Access
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -18,17 +16,20 @@
  */
 
 /**
+ * Abstract access adapter class.
+ */
+Solar::loadClass('Solar_Access_Adapter');
+
+/**
  * 
  * Class for allowing open access to all users.
  * 
  * @category Solar
  * 
- * @package Solar
- * 
- * @subpackage Solar_User
+ * @package Solar_Access
  * 
  */
-class Solar_User_Access_Open extends Solar_Base {
+class Solar_Access_Adapter_Open extends Solar_Access_Adapter {
     
     /**
      * 

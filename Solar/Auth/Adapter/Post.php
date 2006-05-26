@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -14,6 +14,11 @@
  * @version $Id$
  * 
  */
+
+/**
+ * Authentication adapter class.
+ */
+Solar::loadClass('Solar_Auth_Adapter');
 
 /**
  * 
@@ -25,10 +30,10 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  */
-class Solar_User_Auth_Post extends Solar_Base {
+class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
     
     /**
      * 
@@ -36,17 +41,17 @@ class Solar_User_Auth_Post extends Solar_Base {
      * 
      * Keys are:
      * 
-     * url => (string) URL to the HTTP service, e.g. "https://example.com/login.php".
+     * : \\url\\ : (string) URL to the HTTP service, e.g. "https://example.com/login.php".
      * 
-     * handle => (string) The handle element name.
+     * : \\handle\\ : (string) The handle element name.
      * 
-     * passwd => (string) The passwd element name.
+     * : \\passwd\\ : (string) The passwd element name.
      * 
-     * headers => (array) Additional headers to use in the POST request.
+     * : \\headers\\ : (array) Additional headers to use in the POST request.
      * 
-     * replies => (array) Key-value pairs where the key is the server reply
-     * string, and the value is a boolean indicating if it indicates success
-     * or failure to authenticate.
+     * : \\replies\\ : (array) Key-value pairs where the key is the server reply
+     *   string, and the value is a boolean indicating if it indicates success
+     *   or failure to authenticate.
      * 
      * @var array
      * 
@@ -61,16 +66,16 @@ class Solar_User_Auth_Post extends Solar_Base {
     
     /**
      * 
-     * Validate a handle and passwd.
+     * Validates a handle and passwd.
      * 
-     * @param string $handle Username to authenticate.
+     * @param string $handle Username handle to authenticate.
      * 
      * @param string $passwd The plain-text passwd to use.
      * 
      * @return bool True on success, false on failure.
      * 
      */
-    public function valid($handle, $passwd)
+    public function isValid($handle, $passwd)
     {
         // parse out URL elements
         $url = parse_url($this->_config['url']);
@@ -82,10 +87,10 @@ class Solar_User_Auth_Post extends Solar_Base {
         
         // set up the basic headers
         $tmp = array(
-            'Host'            => $url['host'],
-            'Connection'      => 'close',
-            'Content-Type'    => 'application/x-www-form-urlencoded',
-            'Content-Length'  => strlen($content),
+            'Host'           => $url['host'],
+            'Connection'     => 'close',
+            'Content-Type'   => 'application/x-www-form-urlencoded',
+            'Content-Length' => strlen($content),
         );
         
         // add user-defined headers

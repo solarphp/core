@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Get user roles from an SQL database table.
+ * Adapter to fetch roles from an SQL database table.
  * 
  * @category Solar
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Abstract role adapter class.
+ */
+Solar::loadClass('Solar_Role_Adapter');
+
+/**
  * 
- * Get user roles from an SQL database table.
+ * Adapter to fetch roles from an SQL database table.
  * 
  * @category Solar
  * 
  * @package Solar_User
  * 
  */
-class Solar_User_Role_Sql extends Solar_Base {
+class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
     
     /**
      * 

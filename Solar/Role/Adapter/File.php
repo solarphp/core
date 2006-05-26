@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Get roles from a Unix-style groups file.
+ * Adapter to fetch roles from a Unix-style groups file.
  * 
  * @category Solar
  * 
@@ -18,8 +18,13 @@
  */
 
 /**
+ * Abstract role adapter class.
+ */
+Solar::loadClass('Solar_Role_Adapter');
+
+/**
  * 
- * Get roles from a Unix-style groups file.
+ * Adapter to fetch roles from a Unix-style groups file.
  * 
  * The file format is "group:user1,user2,user3\n".  Example:
  * 
@@ -34,7 +39,7 @@
  * @package Solar_User
  * 
  */
-class Solar_User_Role_File extends Solar_Base {
+class Solar_Role_Adapter_File extends Solar_Role_Adapter {
     
     /**
      * 
@@ -51,7 +56,6 @@ class Solar_User_Role_File extends Solar_Base {
         'file' => null
     );
     
-        
     /**
      * 
      * Fetches the roles for a username.

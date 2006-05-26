@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Get roles from multiple sources and return as a single list.
+ * Adapter to fetch roles from multiple sources and return as a single list.
  * 
  * @category Solar
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Abstract role adapter class.
+ */
+Solar::loadClass('Solar_Role_Adapter');
+
+/**
  * 
- * Get roles from multiple sources and return as a single list.
+ * Adapter to fetch roles from multiple sources and return as a single list.
  * 
  * @category Solar
  * 
  * @package Solar_User
  * 
  */
-class Solar_User_Role_Multi extends Solar_Base {
+class Solar_Role_Adapter_Multi extends Solar_Role_Adapter {
     
     /**
      * 

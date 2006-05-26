@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,15 +16,20 @@
  */
 
 /**
+ * Authentication adapter class.
+ */
+Solar::loadClass('Solar_Auth_Adapter');
+
+/**
  * 
  * Authenticate against an IMAP or POP3 mail server.
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  */
-class Solar_User_Auth_Mail extends Solar_Base {
+class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
     
     /**
      * 
@@ -77,7 +82,7 @@ class Solar_User_Auth_Mail extends Solar_Base {
      * @todo Check the server status with fsockopen().
      * 
      */
-    public function valid($handle, $passwd)
+    public function isValid($handle, $passwd)
     {
         $mailbox = '{' . $this->_config['mailbox'] . '}';
         $conn = @imap_open($mailbox, $handle, $passwd, OP_HALFOPEN);

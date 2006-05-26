@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -14,6 +14,11 @@
  * @version $Id$
  * 
  */
+
+/**
+ * Authentication adapter class.
+ */
+Solar::loadClass('Solar_Auth_Adapter');
 
 /**
  * 
@@ -32,10 +37,10 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Auth
  * 
  */
-class Solar_User_Auth_Htpasswd extends Solar_Base {
+class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
     
     /**
      * 
@@ -63,7 +68,7 @@ class Solar_User_Auth_Htpasswd extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    public function valid($handle, $passwd)
+    public function isValid($handle, $passwd)
     {
         // force the full, real path to the file
         $file = realpath($this->_config['file']);

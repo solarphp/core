@@ -85,13 +85,13 @@ class Solar_User extends Solar_Base {
         parent::__construct($config);
         
         // set up an authentication object.
-        $this->auth = Solar::dependency('Solar_User_Auth', $this->_config['auth']);
+        $this->auth = Solar::dependency('Solar_Auth', $this->_config['auth']);
         
         // set up the roles object.
-        $this->role = Solar::dependency('Solar_User_Role', $this->_config['role']);
+        $this->role = Solar::dependency('Solar_Role', $this->_config['role']);
         
         // set up the access object.
-        $this->access = Solar::dependency('Solar_User_Access', $this->_config['access']);
+        $this->access = Solar::dependency('Solar_Access', $this->_config['access']);
         
         // start up authentication
         $this->auth->start();
@@ -100,7 +100,7 @@ class Solar_User extends Solar_Base {
         if ($this->auth->status == 'VALID') {
             // yes, the user is authenticated as valid.
             // load up any roles for the user.
-            $this->role->fetch($this->auth->handle);
+            $this->role->load($this->auth->handle);
         } else {
             // no, user is not valid.  
             // clear out any previous roles.
@@ -109,7 +109,7 @@ class Solar_User extends Solar_Base {
         }
         
         // load up the access list for the handle and roles
-        $this->access->fetch($this->auth->handle, $this->role->list);
+        $this->access->load($this->auth->handle, $this->role->list);
     }
 }
 ?>

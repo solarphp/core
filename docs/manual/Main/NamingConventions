@@ -11,6 +11,7 @@ When reasonable, methods in Solar classes should conform to these names when the
 ||~ Method Name ||~ Usage ||~ Examples ||
 || get          || gets the value of a property || $obj->getProperty() ||
 || set          || sets the value of a property || $obj->setProperty($value) ||
+|| load         || loads a property value from an external source || $role->load($handle) ||
 || fetch        || fetches one entry from storage (instead of get/find/retrieve) || $cache->fetch($id) ||
 || fetchAll     || fetches multiple entries from storage || $table->fetchAll() ||
 || fetchBy      || fetches one entry from storage, using alternative criteria (instead of fetchWith/fetchFor) || $table->fetchByName($name) ||

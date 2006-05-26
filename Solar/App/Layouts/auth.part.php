@@ -53,5 +53,6 @@
     ?>
 <?php endif; ?>
 <p><?php
-    echo nl2br(wordwrap($this->escape(Solar::registry('user')->auth->getFlash('status_text')), 20));
+    $status = Solar::registry('user')->auth->getFlash('status_text');
+    echo nl2br(wordwrap($this->escape($status), 20));
 ?></p>

@@ -46,7 +46,7 @@ if ($this->_user->auth->handle != $item['owner_handle']) {
 // otherwise, return the list for the user.
 //
 
-$href = $this->getFlash('backlink');
+$href = $this->_flash->get('backlink');
 if (! $href) {
     // probably browsed directly to this page; return to the user's list
     $uri = Solar::factory('Solar_Uri_Action');
@@ -54,7 +54,7 @@ if (! $href) {
 }
 
 // keep the backlink for the next page load
-$this->setFlash('backlink', $href);
+$this->_flash->set('backlink', $href);
 
 // ---------------------------------------------------------------------
 // 

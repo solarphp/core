@@ -40,7 +40,7 @@ $this->list = $this->_bookmarks->fetchAll($tags, $owner_handle, $order, $page);
 $total = $this->_bookmarks->countPages($tags, $owner_handle);
 
 // flash forward the backlink in case we go to edit
-$this->setFlash('backlink', Solar::server('REQUEST_URI'));
+$this->_flash->set('backlink', Solar::server('REQUEST_URI'));
 
 // assign everything else for the view
 $this->pages        = $total['pages'];

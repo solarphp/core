@@ -37,7 +37,7 @@ $existing = $this->_bookmarks->fetchByOwnerUri(
 // if the user *does* already have that URI bookmarked,
 // redirect to the existing bookmark.
 if (! empty($existing['id'])) {
-    $this->setFlash('backlink', $uri);
+    $this->_flash->set('backlink', $uri);
     $this->_redirect("bookmarks/edit/{$existing['id']}");
 }
 

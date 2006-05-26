@@ -24,7 +24,7 @@ if ($this->_user->auth->status != 'VALID') {
 }
 
 // build a link for _redirect() calls and the backlink.
-$href = $this->getFlash('backlink');
+$href = $this->_flash->get('backlink');
 if (! $href) {
     // probably browsed to this page directly.  link to the user's list.
     $uri = Solar::factory('Solar_Uri_Action');
@@ -32,7 +32,7 @@ if (! $href) {
 }
 
 // keep the backlink for the next page load
-$this->setFlash('backlink', $href);
+$this->_flash->set('backlink', $href);
 
 // build the basic form, populated with the bookmark data
 // from the database
@@ -67,7 +67,7 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
         $id = $result['id'];
         
         // tell the edit controller that we added successfully
-        $this->setFlash('add_ok', true);
+        $this->_flash->set('add_ok', true);
         
         // redirect to editing
         $this->_redirect("bookmarks/edit/$id");

@@ -132,6 +132,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * Flash-messaging object.
+     * 
+     * @var Solar_Flash
+     * 
+     */
+    protected $_flash;
+    
+    /**
+     * 
      * Application request parameters collected from the URI pathinfo.
      * 
      * @var string
@@ -237,6 +246,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (empty($this->_config['helper_class'])) {
             $this->_config['helper_class'] = null;
         }
+        
+        // create the flash object
+        $this->_flash = Solar::factory(
+            'Solar_Flash',
+            array('class' => $class)
+        );
         
         // now do the parent construction
         parent::__construct($config);
@@ -355,59 +370,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
-    }
-    
-    /**
-     * 
-     * Sets a "read-once" session value for this class and a key.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The value for the key; previous values will
-     * be overwritten.
-     * 
-     * @return void
-     * 
-     */
-    public function setFlash($key, $val)
-    {
-        Solar::setFlash(get_class($this), $key, $val);
-    }
-    
-    /**
-     * 
-     * Appends a "read-once" session value for this class and key.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The flash value to add to the key; this will
-     * result in the flash becoming an array.
-     * 
-     * @return void
-     * 
-     */
-    public function addFlash($key, $val)
-    {
-        Solar::addFlash(get_class($this), $key, $val);
-    }
-    
-    /**
-     * 
-     * Retrieves a "read-once" session value, thereby removing the value.
-     * 
-     * @param string $class The related class for the flash.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val If the class and key do not exist, return
-     * this value.  Default null.
-     * 
-     * @return mixed The "read-once" value.
-     * 
-     */
-    public function getFlash($key, $val = null)
-    {
-        return Solar::getFlash(get_class($this), $key, $val);
     }
     
     /**

@@ -91,6 +91,15 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
+     * Flash-messaging object.
+     * 
+     * @var Solar_Flash
+     * 
+     */
+    protected $_flash;
+    
+    /**
+     * 
      * The source of auth credentials, either 'get' or 'post'.
      * 
      * @var string
@@ -186,6 +195,12 @@ class Solar_Auth extends Solar_Base {
             // default to post
             $this->_source = 'post';
         }
+        
+        // create the flash object
+        $this->_flash = Solar::factory(
+            'Solar_Flash',
+            array('class' => get_class($this))
+        );
     }
     
     /**
@@ -342,51 +357,14 @@ class Solar_Auth extends Solar_Base {
         session_regenerate_id(true);
         
         // flash forward any messages
-        $this->setFlash('status_text', $this->locale($this->status));
-    }
-    
-    
-    /**
-     * 
-     * Sets a "read-once" session value for this class and a key.
-     * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The value for the key; previous values will
-     * be overwritten.
-     * 
-     * @return void
-     * 
-     */
-    public function setFlash($key, $val)
-    {
-        Solar::setFlash(get_class($this), $key, $val);
+        $this->_flash->set('status_text', $this->locale($this->status));
     }
     
     /**
      * 
-     * Appends a "read-once" session value for this class and key.
+     * Retrieves a "read-once" session value fopr Solar_Auth.
      * 
-     * @param string $key The specific type of information for the class.
-     * 
-     * @param mixed $val The flash value to add to the key; this will
-     * result in the flash becoming an array.
-     * 
-     * @return void
-     * 
-     */
-    public function addFlash($key, $val)
-    {
-        Solar::addFlash(get_class($this), $key, $val);
-    }
-    
-    /**
-     * 
-     * Retrieves a "read-once" session value, thereby removing the value.
-     * 
-     * @param string $class The related class for the flash.
-     * 
-     * @param string $key The specific type of information for the class.
+     * @param string $key The specific type of information.
      * 
      * @param mixed $val If the class and key do not exist, return
      * this value.  Default null.
@@ -396,8 +374,7 @@ class Solar_Auth extends Solar_Base {
      */
     public function getFlash($key, $val = null)
     {
-        return Solar::getFlash(get_class($this), $key, $val);
+        return $this->_flash->get($key, $val);
     }
-    
 }
 ?>

@@ -16,6 +16,11 @@
  */
 
 /**
+ * The abstract cache adapter.
+ */
+Solar::loadClass('Solar_Cache_Adapter');
+
+/**
  * 
  * Memcache cache controller.
  * 
@@ -38,11 +43,19 @@
  * @package Solar_Cache
  * 
  */
-class Solar_Cache_Memcache extends Solar_Base {
+class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
     
     /**
      * 
      * User-provided configuration.
+     * 
+     * Keys are:
+     * 
+     * : \\host\\ : (string) The memcached host name, default 'localhost'.
+     * 
+     * : \\port\\ : (int) The memcached port number, default 11211.
+     * 
+     * : \\life\\ : (int) The cache entry lifetime in seconds, default 60.
      * 
      * @var array
      * 
@@ -80,21 +93,11 @@ class Solar_Cache_Memcache extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_config['life'] = (int) $this->_config['life'];
         $this->_memcache = new Memcache;
-        $this->_memcache->connect($this->_config['host'], $this->_config['port']);
-    }
-    
-    /**
-     * 
-     * Gets the cache lifetime in seconds.
-     * 
-     * @return int The cache lifetime in seconds.
-     * 
-     */
-    public function getLife()
-    {
-        return $this->_config['life'];
+        $this->_memcache->connect(
+            $this->_config['host'],
+            $this->_config['port']
+        );
     }
     
     /**
@@ -110,7 +113,7 @@ class Solar_Cache_Memcache extends Solar_Base {
      */
     public function save($key, $data)
     {
-        return $this->_memcache->set($key, $data, null, $this->_config['life']);
+        return $this->_memcache->set($key, $data, null, $this->_life);
     }
     
     /**

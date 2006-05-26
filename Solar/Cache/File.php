@@ -16,6 +16,11 @@
  */
 
 /**
+ * The abstract cache adapter.
+ */
+Solar::loadClass('Solar_Cache_Adapter');
+
+/**
  * 
  * File-based cache controller.
  * 
@@ -45,7 +50,7 @@
  * @todo Add CRC32 to check for cache corruption?
  * 
  */
-class Solar_Cache_File extends Solar_Base {
+class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     
     /**
      * 
@@ -70,6 +75,15 @@ class Solar_Cache_File extends Solar_Base {
     
     /**
      * 
+     * Path to the cache directory.
+     * 
+     * @var string
+     * 
+     */
+    protected $_path;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -81,25 +95,13 @@ class Solar_Cache_File extends Solar_Base {
         parent::__construct($config);
         
         // keep local values so they can't be changed
-        $this->_config['path'] = Solar::fixdir($this->_config['path']);
-        $this->_config['life'] = (int) $this->_config['life'];
+        $this->_path = Solar::fixdir($this->_config['path']);
         
-        // make sure the cache directory is there
-        if (! is_dir($this->_config['path'])) {
-            mkdir($this->_config['path']);
+        // make sure the cache directory is there; create it if
+        // necessary.
+        if (! is_dir($this->_path)) {
+            mkdir($this->_path, 0777, true);
         }
-    }
-    
-    /**
-     * 
-     * Gets the cache lifetime in seconds.
-     * 
-     * @return int The cache lifetime in seconds.
-     * 
-     */
-    public function getLife()
-    {
-        return $this->_config['life'];
     }
     
     /**
@@ -241,7 +243,7 @@ class Solar_Cache_File extends Solar_Base {
     public function deleteAll()
     {
         // open the directory
-        $dir = dir($this->_config['path']);
+        $dir = dir($this->_path);
         
         // did it exist?
         if ($dir) {
@@ -253,7 +255,7 @@ class Solar_Cache_File extends Solar_Base {
             while (false !== ($file = $dir->read())) {
                 // delete the file (suppress errors so that . and ..
                 // don't throw warnings) ...
-                @unlink($this->_config['path'] . $file);
+                @unlink($this->_path . $file);
                 // ... and any serial marker.
                 @unlink($file . '.serial');
             }
@@ -274,7 +276,7 @@ class Solar_Cache_File extends Solar_Base {
      */
     public function entry($key)
     {
-        return $this->_config['path'] . md5($key);
+        return $this->_path . md5($key);
     }
 } 
 

@@ -32,7 +32,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\driver\\ : (string) The driver class to use, e.g. 'Solar_Sql_Driver_Mysql'.
+     * : \\adapter\\ : (string) The adapter class to use, e.g. 'Solar_Sql_Adapter_Mysql'.
      * 
      * : \\host\\ : (string) Host specification (typically '127.0.0.1').
      * 
@@ -50,7 +50,7 @@ class Solar_Sql extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'driver' => 'Solar_Sql_Driver_Sqlite',
+        'adapter' => 'Solar_Sql_Adapter_Sqlite',
         'host'   => '127.0.0.1',
         'port'   => null,
         'user'   => null,
@@ -66,7 +66,7 @@ class Solar_Sql extends Solar_Base {
      * @var object
      * 
      */
-    protected $_driver = null;
+    protected $_adapter = null;
     
     /**
      * 
@@ -105,16 +105,16 @@ class Solar_Sql extends Solar_Base {
         // baseline exception class
         Solar::loadClass('Solar_Sql_Exception');
         
-        // baseline driver class
-        Solar::loadClass('Solar_Sql_Driver');
+        // baseline adapter class
+        Solar::loadClass('Solar_Sql_Adapter');
         
         // basic construction
         parent::__construct($config);
         
-        // create the driver object
+        // create the adapter object
         $config = $this->_config;
-        unset($config['driver']);
-        $this->_driver = Solar::factory($this->_config['driver'], $config);
+        unset($config['adapter']);
+        $this->_adapter = Solar::factory($this->_config['adapter'], $config);
     }
     
     /**
@@ -132,7 +132,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function query($stmt, $data = array())
     {
-        return $this->_driver->exec($stmt, $data);
+        return $this->_adapter->exec($stmt, $data);
     }
     
     /**
@@ -144,7 +144,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function begin()
     {
-        return $this->_driver->begin();
+        return $this->_adapter->begin();
     }
     
     /**
@@ -156,7 +156,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function commit()
     {
-        return $this->_driver->commit();
+        return $this->_adapter->commit();
     }
     
     /**
@@ -168,7 +168,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function rollback()
     {
-        return $this->_driver->rollback();
+        return $this->_adapter->rollback();
     }
     
     /**
@@ -200,7 +200,7 @@ class Solar_Sql extends Solar_Base {
         $stmt .= 'VALUES (:' . implode(', :', $fields) . ')';
         
         // execute the statement
-        $result = $this->_driver->exec($stmt, $data);
+        $result = $this->_adapter->exec($stmt, $data);
         return $result->rowCount();
     }
     
@@ -240,7 +240,7 @@ class Solar_Sql extends Solar_Base {
         }
         
         // execute the statement
-        $result = $this->_driver->exec($stmt, $data);
+        $result = $this->_adapter->exec($stmt, $data);
         return $result->rowCount();
     }
     
@@ -261,7 +261,7 @@ class Solar_Sql extends Solar_Base {
         if ($where) {
             $where = $this->quoteMulti($where, ' AND ');
         }
-        $result = $this->_driver->exec("DELETE FROM $table WHERE $where");
+        $result = $this->_adapter->exec("DELETE FROM $table WHERE $where");
         return $result->rowCount();
     }
     
@@ -286,7 +286,7 @@ class Solar_Sql extends Solar_Base {
     {
         // build the statement from its component parts if needed
         if (is_array($spec)) {
-            $stmt = $this->_driver->buildSelect($spec);
+            $stmt = $this->_adapter->buildSelect($spec);
         } else {
             $stmt = $spec;
         }
@@ -298,7 +298,7 @@ class Solar_Sql extends Solar_Base {
         }
         
         // execute and get the PDOStatement result object
-        $result = $this->_driver->exec($stmt, $data);
+        $result = $this->_adapter->exec($stmt, $data);
         
         // return data based on the select type
         switch ($lctype) {
@@ -391,7 +391,7 @@ class Solar_Sql extends Solar_Base {
     public function createSequence($name, $start = 1)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_driver->createSequence($name, $start);
+        $result = $this->_adapter->createSequence($name, $start);
         return $result;
     }
     
@@ -408,7 +408,7 @@ class Solar_Sql extends Solar_Base {
     public function dropSequence($name)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_driver->dropSequence($name);
+        $result = $this->_adapter->dropSequence($name);
         return $result;
     }
     
@@ -425,7 +425,7 @@ class Solar_Sql extends Solar_Base {
     public function nextSequence($name)
     {
         $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_driver->nextSequence($name);
+        $result = $this->_adapter->nextSequence($name);
         return $result;
     }
     
@@ -454,7 +454,8 @@ class Solar_Sql extends Solar_Base {
      * );
      * </code>
      * 
-     * For available field types, see Solar_Sql_Driver::$_native.
+     * For available field types, see Solar_Sql_Adapter::$_native.
+     * 
      * @param string $table The name of the table to create.
      * 
      * @param array $cols Array of columns to create.
@@ -509,8 +510,8 @@ class Solar_Sql extends Solar_Base {
         } else {
             // no errors, execute and return
             $cols = implode(",\n\t", $coldef);
-            $stmt = $this->_driver->buildCreateTable($table, $cols);
-            $result = $this->_driver->exec($stmt);
+            $stmt = $this->_adapter->buildCreateTable($table, $cols);
+            $result = $this->_adapter->exec($stmt);
             return $result;
         }
     }
@@ -526,7 +527,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function dropTable($table)
     {
-        return $this->_driver->exec("DROP TABLE $table");
+        return $this->_adapter->exec("DROP TABLE $table");
     }
     
     /**
@@ -538,7 +539,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function listTables()
     {
-        return $this->_driver->listTables($this);
+        return $this->_adapter->listTables($this);
     }
     
     /**
@@ -569,7 +570,7 @@ class Solar_Sql extends Solar_Base {
     {
         $coldef = $this->_buildColDef($name, $info);
         $stmt = "ALTER TABLE $table ADD COLUMN $name $coldef";
-        return $this->_driver->exec($stmt);
+        return $this->_adapter->exec($stmt);
     }
     
     /**
@@ -585,7 +586,7 @@ class Solar_Sql extends Solar_Base {
      */
     public function dropColumn($table, $name)
     {
-        return $this->_driver->exec("ALTER TABLE $table DROP COLUMN $name");
+        return $this->_adapter->exec("ALTER TABLE $table DROP COLUMN $name");
     }
     
     /**
@@ -664,7 +665,7 @@ class Solar_Sql extends Solar_Base {
         } else {
             $cmd = "CREATE INDEX $fullname ON $table ($cols)";
         }
-        return $this->_driver->exec($cmd);
+        return $this->_adapter->exec($cmd);
     }
     
     
@@ -682,7 +683,7 @@ class Solar_Sql extends Solar_Base {
     public function dropIndex($table, $name)
     {
         $fullname = $table . '__' . $name . '__i';
-        return $this->_driver->dropIndex($table, $fullname);
+        return $this->_adapter->dropIndex($table, $fullname);
     }
     
     
@@ -722,11 +723,11 @@ class Solar_Sql extends Solar_Base {
             // quote array values, not keys, and only one level's worth
             // (i.e., non-recursive) ... then combine with commas.
             foreach ($val as $k => $v) {
-                $val[$k] = $this->_driver->quote($v);
+                $val[$k] = $this->_adapter->quote($v);
             }
             return implode(', ', $val);
         } else {
-            return $this->_driver->quote($val);
+            return $this->_adapter->quote($val);
         }
     }
     
@@ -879,7 +880,7 @@ class Solar_Sql extends Solar_Base {
         $require = (bool) $require;
         
         // is it a recognized column type?
-        $native = $this->_driver->nativeColTypes();
+        $native = $this->_adapter->nativeColTypes();
         if (! array_key_exists($type, $native)) {
             throw $this->_exception(
                 'ERR_COL_TYPE_UNKNOWN',

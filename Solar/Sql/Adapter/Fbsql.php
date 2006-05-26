@@ -24,7 +24,7 @@
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
+class Solar_Sql_Adapter_Fbsql extends Solar_Sql_Adapter {
     
     /**
      * 
@@ -50,7 +50,7 @@ class Solar_Sql_Driver_Fbsql extends Solar_Sql_Driver {
     
     /**
      * 
-     * The PDO driver type.
+     * The PDO adapter type.
      * 
      * @var string
      * 

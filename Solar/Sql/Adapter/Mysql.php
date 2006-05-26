@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for connecting to SQLite databases.
+ * Class for MySQL behaviors.
  * 
  * @category Solar
  * 
@@ -17,14 +17,14 @@
 
 /**
  * 
- * Class for connecting to SQLite databases.
+ * Class for MySQL behaviors.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
+class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
@@ -34,46 +34,28 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      * 
      */
     protected $_native = array(
-        'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
+        'bool'      => 'DECIMAL(1,0)',
+        'char'      => 'CHAR(:size) BINARY',
+        'varchar'   => 'VARCHAR(:size) BINARY',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC(:size,:scope)',
+        'numeric'   => 'DECIMAL(:size,:scope)',
         'float'     => 'DOUBLE',
-        'clob'      => 'CLOB',
-        'date'      => 'DATE',
-        'time'      => 'TIME',
-        'timestamp' => 'TIMESTAMP'
+        'clob'      => 'LONGTEXT',
+        'date'      => 'CHAR(10)',
+        'time'      => 'CHAR(8)',
+        'timestamp' => 'CHAR(19)'
     );
     
     /**
      * 
-     * The PDO driver type.
+     * The PDO adapter type.
      * 
      * @var string
      * 
      */
-    protected $_pdo_type = 'sqlite';
-    
-    /**
-     * 
-     * Creates a PDO-style DSN.
-     * 
-     * E.g., "mysql:host=127.0.0.1;dbname=test"
-     * 
-     * @return string A PDO-style DSN.
-     * 
-     */
-    protected function _dsn()
-    {
-        $dsn = array();
-        if (! empty($this->_config['name'])) {
-            $dsn[] = $this->_config['name'];
-        }
-        return $this->_pdo_type . ':' . implode(';', $dsn);
-    }
+    protected $_pdo_type = 'mysql';
     
     /**
      * 
@@ -100,7 +82,15 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
         $offset = ! empty($parts['limit']['offset'])
             ? (int) $parts['limit']['offset']
             : 0;
-            
+      
+        /*
+            // for mysql 3.23.x?
+            if ($count > 0) {
+                $offset = ($offset > 0) ? $offset : 0;    
+                $stmt .= "LIMIT $offset, $count";
+            }
+        */
+        
         // add the count and offset
         if ($count > 0) {
             $stmt .= " LIMIT $count";
@@ -115,21 +105,50 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
     
     /**
      * 
-     * Returns the SQL statement to get a list of database tables.
+     * Returns a list of database tables.
      * 
-     * @return string The SQL statement.
+     * @return array The list of tables in the database.
      * 
      */
     public function listTables()
     {
-        // copied from PEAR DB
-        $cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
-            "UNION ALL SELECT name FROM sqlite_temp_master " .
-            "WHERE type='table' ORDER BY name";
-        
-        $result = $this->exec($cmd);
+        $result = $this->exec('SHOW TABLES');
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
+    }
+    
+    /**
+     * 
+     * Builds a CREATE TABLE command string.
+     * 
+     * @param string $name The table name to create.
+     * 
+     * @param string $cols The column definitions.
+     * 
+     * @return string A CREATE TABLE command string.
+     * 
+     */
+    public function buildCreateTable($name, $cols)
+    {
+        $stmt = parent::buildCreateTable($name, $cols);
+        $stmt .= " TYPE=InnoDB"; // for transactions
+        return $stmt;
+    }
+    
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        $this->exec("DROP INDEX $name ON $table");
     }
     
     /**
@@ -146,7 +165,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
     public function createSequence($name, $start = 1)
     {
         $start -= 1;
-        $this->exec("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
+        $this->exec("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
         $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
     
@@ -166,22 +185,6 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
     
     /**
      * 
-     * Drops an index.
-     * 
-     * @param string $table The table of the index.
-     * 
-     * @param string $name The full index name.
-     * 
-     * @return void
-     * 
-     */
-    public function dropIndex($table, $name)
-    {
-        $this->exec("DROP INDEX $name");
-    }
-    
-    /**
-     * 
      * Gets a sequence number; creates the sequence if it does not exist.
      * 
      * @param string $name The sequence name.
@@ -191,7 +194,7 @@ class Solar_Sql_Driver_Sqlite extends Solar_Sql_Driver {
      */
     public function nextSequence($name)
     {
-        $cmd = "INSERT INTO $name (id) VALUES (NULL)";
+        $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.

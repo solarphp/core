@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract base class for specific RDBMS driver information.
+ * Abstract base class for specific RDBMS adapters.
  * 
  * @category Solar
  * 
@@ -17,14 +17,14 @@
 
 /**
  * 
- * Abstract base class for specific RDBMS driver information.
+ * Abstract base class for specific RDBMS adapters.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-abstract class Solar_Sql_Driver extends Solar_Base {
+abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
@@ -116,9 +116,9 @@ abstract class Solar_Sql_Driver extends Solar_Base {
     
     /**
      * 
-     * The PDO driver DSN type.
+     * The PDO adapter DSN type.
      * 
-     * This might not be the same as the Solar driver type.
+     * This might not be the same as the Solar adapter type.
      * 
      * @var string
      * 
@@ -386,7 +386,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Builds a CREATE TABLE command string.
      * 
-     * We use this so that certain drivers can append table types
+     * We use this so that certain adapters can append table types
      * to the creation statment (e.g. MySQL).
      * 
      * @param string $name The table name to create.
@@ -405,7 +405,7 @@ abstract class Solar_Sql_Driver extends Solar_Base {
      * 
      * Build an SQL SELECT command string from its component parts.
      * 
-     * We use this so that drivers can append or wrap with LIMIT
+     * We use this so that adapters can append or wrap with LIMIT
      * clauses or emulation.
      * 
      * @param array $parts The parts of the SELECT statement, generally

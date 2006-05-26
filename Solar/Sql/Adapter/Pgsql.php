@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for MySQL behaviors.
+ * Class for connecting to PostgreSQL databases.
  * 
  * @category Solar
  * 
@@ -17,14 +17,14 @@
 
 /**
  * 
- * Class for MySQL behaviors.
+ * Class for connecting to PostgreSQL databases.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
+class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**
      * 
@@ -34,15 +34,15 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      * 
      */
     protected $_native = array(
-        'bool'      => 'DECIMAL(1,0)',
-        'char'      => 'CHAR(:size) BINARY',
-        'varchar'   => 'VARCHAR(:size) BINARY',
+        'bool'      => 'BOOLEAN',
+        'char'      => 'CHAR(:size)',
+        'varchar'   => 'VARCHAR(:size)',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'DECIMAL(:size,:scope)',
-        'float'     => 'DOUBLE',
-        'clob'      => 'LONGTEXT',
+        'numeric'   => 'NUMERIC(:size,:scope)',
+        'float'     => 'DOUBLE PRECISION',
+        'clob'      => 'TEXT',
         'date'      => 'CHAR(10)',
         'time'      => 'CHAR(8)',
         'timestamp' => 'CHAR(19)'
@@ -50,12 +50,41 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
     
     /**
      * 
-     * The PDO driver type.
+     * The PDO adapter type.
      * 
      * @var string
      * 
      */
-    protected $_pdo_type = 'mysql';
+    protected $_pdo_type = 'pgsql';
+    
+    /**
+     * 
+     * Creates a PDO-style DSN.
+     * 
+     * Per http://php.net/manual/en/ref.pdo-pgsql.connection.php
+     * 
+     * @return string A PDO-style DSN.
+     * 
+     */
+    protected function _dsn()
+    {
+        $dsn = array();
+        
+        if (! empty($this->_config['host'])) {
+            $dsn[] = 'host=' . $this->_config['host'];
+        }
+        
+        if (! empty($this->_config['port'])) {
+            $dsn[] = 'port=' . $this->_config['port'];
+        }
+        
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
+        }
+        
+        return $this->_pdo_type . ':' . implode(' ', $dsn);
+    }
+    
     
     /**
      * 
@@ -82,15 +111,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         $offset = ! empty($parts['limit']['offset'])
             ? (int) $parts['limit']['offset']
             : 0;
-      
-        /*
-            // for mysql 3.23.x?
-            if ($count > 0) {
-                $offset = ($offset > 0) ? $offset : 0;    
-                $stmt .= "LIMIT $offset, $count";
-            }
-        */
-        
+            
         // add the count and offset
         if ($count > 0) {
             $stmt .= " LIMIT $count";
@@ -105,34 +126,30 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
     
     /**
      * 
-     * Returns a list of database tables.
+     * Returns the SQL statement to get a list of database tables.
      * 
-     * @return array The list of tables in the database.
+     * @return string The SQL statement.
      * 
      */
     public function listTables()
     {
-        $result = $this->exec('SHOW TABLES');
+        // copied from PEAR DB
+        $cmd = "SELECT c.relname AS table_name " .
+            "FROM pg_class c, pg_user u " .
+            "WHERE c.relowner = u.usesysid AND c.relkind = 'r' " .
+            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
+            "AND c.relname !~ '^(pg_|sql_)' " .
+            "UNION " .
+            "SELECT c.relname AS table_name " .
+            "FROM pg_class c " .
+            "WHERE c.relkind = 'r' " .
+            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
+            "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " .
+            "AND c.relname !~ '^pg_'";
+        
+        $result = $this->exec($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
-    }
-    
-    /**
-     * 
-     * Builds a CREATE TABLE command string.
-     * 
-     * @param string $name The table name to create.
-     * 
-     * @param string $cols The column definitions.
-     * 
-     * @return string A CREATE TABLE command string.
-     * 
-     */
-    public function buildCreateTable($name, $cols)
-    {
-        $stmt = parent::buildCreateTable($name, $cols);
-        $stmt .= " TYPE=InnoDB"; // for transactions
-        return $stmt;
     }
     
     /**
@@ -148,7 +165,10 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      */
     public function dropIndex($table, $name)
     {
-        $this->exec("DROP INDEX $name ON $table");
+        // postgres index names are for the entire database,
+        // not for a single table.
+        // http://www.postgresql.org/docs/7.4/interactive/sql-dropindex.html
+        $this->exec("DROP INDEX $name");
     }
     
     /**
@@ -164,9 +184,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      */
     public function createSequence($name, $start = 1)
     {
-        $start -= 1;
-        $this->exec("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
-        $this->exec("INSERT INTO $name (id) VALUES ($start)");
+        $this->exec("CREATE SEQUENCE $name START $start");
     }
     
     /**
@@ -180,7 +198,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      */
     public function dropSequence($name)
     {
-        $this->exec("DROP TABLE $name");
+        $this->exec("DROP SEQUENCE $name");
     }
     
     /**
@@ -194,7 +212,9 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
      */
     public function nextSequence($name)
     {
-        $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
+        // first, try to get the next sequence number, assuming
+        // the sequence exists.
+        $cmd = "SELECT NEXTVAL($name)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
@@ -212,7 +232,7 @@ class Solar_Sql_Driver_Mysql extends Solar_Sql_Driver {
         }
         
         // get the sequence number
-        return $this->_pdo->lastInsertID();
+        return $this->_pdo->lastInsertID($name);
     }
 }
 ?>

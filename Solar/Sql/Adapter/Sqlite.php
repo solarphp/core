@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for connecting to PostgreSQL databases.
+ * Class for connecting to SQLite databases.
  * 
  * @category Solar
  * 
@@ -17,14 +17,14 @@
 
 /**
  * 
- * Class for connecting to PostgreSQL databases.
+ * Class for connecting to SQLite databases.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
+class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
@@ -41,27 +41,27 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
         'numeric'   => 'NUMERIC(:size,:scope)',
-        'float'     => 'DOUBLE PRECISION',
-        'clob'      => 'TEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+        'float'     => 'DOUBLE',
+        'clob'      => 'CLOB',
+        'date'      => 'DATE',
+        'time'      => 'TIME',
+        'timestamp' => 'TIMESTAMP'
     );
     
     /**
      * 
-     * The PDO driver type.
+     * The PDO adapter type.
      * 
      * @var string
      * 
      */
-    protected $_pdo_type = 'pgsql';
+    protected $_pdo_type = 'sqlite';
     
     /**
      * 
      * Creates a PDO-style DSN.
      * 
-     * Per http://php.net/manual/en/ref.pdo-pgsql.connection.php
+     * E.g., "mysql:host=127.0.0.1;dbname=test"
      * 
      * @return string A PDO-style DSN.
      * 
@@ -69,22 +69,11 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
     protected function _dsn()
     {
         $dsn = array();
-        
-        if (! empty($this->_config['host'])) {
-            $dsn[] = 'host=' . $this->_config['host'];
-        }
-        
-        if (! empty($this->_config['port'])) {
-            $dsn[] = 'port=' . $this->_config['port'];
-        }
-        
         if (! empty($this->_config['name'])) {
-            $dsn[] = 'dbname=' . $this->_config['name'];
+            $dsn[] = $this->_config['name'];
         }
-        
-        return $this->_pdo_type . ':' . implode(' ', $dsn);
+        return $this->_pdo_type . ':' . implode(';', $dsn);
     }
-    
     
     /**
      * 
@@ -134,41 +123,13 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
     public function listTables()
     {
         // copied from PEAR DB
-        $cmd = "SELECT c.relname AS table_name " .
-            "FROM pg_class c, pg_user u " .
-            "WHERE c.relowner = u.usesysid AND c.relkind = 'r' " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
-            "AND c.relname !~ '^(pg_|sql_)' " .
-            "UNION " .
-            "SELECT c.relname AS table_name " .
-            "FROM pg_class c " .
-            "WHERE c.relkind = 'r' " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " .
-            "AND c.relname !~ '^pg_'";
+        $cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
+            "UNION ALL SELECT name FROM sqlite_temp_master " .
+            "WHERE type='table' ORDER BY name";
         
         $result = $this->exec($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
-    }
-    
-    /**
-     * 
-     * Drops an index.
-     * 
-     * @param string $table The table of the index.
-     * 
-     * @param string $name The full index name.
-     * 
-     * @return void
-     * 
-     */
-    public function dropIndex($table, $name)
-    {
-        // postgres index names are for the entire database,
-        // not for a single table.
-        // http://www.postgresql.org/docs/7.4/interactive/sql-dropindex.html
-        $this->exec("DROP INDEX $name");
     }
     
     /**
@@ -184,7 +145,9 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      */
     public function createSequence($name, $start = 1)
     {
-        $this->exec("CREATE SEQUENCE $name START $start");
+        $start -= 1;
+        $this->exec("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
+        $this->exec("INSERT INTO $name (id) VALUES ($start)");
     }
     
     /**
@@ -198,7 +161,23 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      */
     public function dropSequence($name)
     {
-        $this->exec("DROP SEQUENCE $name");
+        $this->exec("DROP TABLE $name");
+    }
+    
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        $this->exec("DROP INDEX $name");
     }
     
     /**
@@ -212,9 +191,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
      */
     public function nextSequence($name)
     {
-        // first, try to get the next sequence number, assuming
-        // the sequence exists.
-        $cmd = "SELECT NEXTVAL($name)";
+        $cmd = "INSERT INTO $name (id) VALUES (NULL)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
@@ -232,7 +209,7 @@ class Solar_Sql_Driver_Pgsql extends Solar_Sql_Driver {
         }
         
         // get the sequence number
-        return $this->_pdo->lastInsertID($name);
+        return $this->_pdo->lastInsertID();
     }
 }
 ?>

@@ -186,7 +186,7 @@ abstract class Solar_App extends Solar_Controller_Page {
         // generic security check
         $class = get_class($this);
         $action = $this->_action;
-        $allow = Solar::registry('user')->access->allow($class, $action);
+        $allow = Solar::registry('user')->access->isAllowed($class, $action);
         if (! $allow) {
             $this->errors[] = $this->locale('ERR_NOT_ALLOWED_ACCESS');
             $this->_action = 'error';

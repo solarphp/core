@@ -195,35 +195,6 @@ $form->setElement('contact_me', $info);
 
 (Note that this is Solar_Template output, which uses a hidden value to indicate the unchecked value; the later checkbox value, if checked, will override the hidden value on form submission.)
 
-+++ \\listsep\\ string
-
-The 'listsep' string is a hint to the form output generator as to how radio buttons should be separated.  Note that this is only a hint, and may or may not be honored by different output generators (although it is honored by Solar_Template).  For example, this radio button set...
-
-<code type="php">
-$info = array(
-    'type' => 'radio',
-    'value' => 'n',
-    'options' => array(
-        'y' => 'Yes',
-        'n' => 'No',
-        's' => 'Sometimes',
-    ),
-    'listsep' => "\n<br />\n",
-);
-$form->setElement('contact_me', $info);
-</code>
-
-... might generate output something like this (note the interspersed <br /> tags):
-
-<code type="html">
-<label><input type="radio" name="contact_me" value="y">Yes</label>
-<br />
-<label><input type="radio" name="contact_me" value="n" checked="checked">No</label>
-<br />
-<label><input type="radio" name="contact_me" value="s">Sometimes</label>
-</code>
-
-
 +++ \\attribs\\ array
 
 This is an array of XHTML attributes to apply to the element.  In the case of 'select' elements, this will apply to the <select> tag and not to the <option> tags.  For example, a textarea element can specify the cols and rows ...

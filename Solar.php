@@ -561,8 +561,8 @@ class Solar {
      * 
      * @param string $class The dependency object should be an instance of this class.
      * 
-     * @param mixed $spec If an object, check to make sure it's an instance of $class. If a string,
-     * treat as a Solar::registry() key. Otherwise, use this as a config
+     * @param mixed $spec If an object, check to make sure it's an instance of $class.
+     * If a string, treat as a Solar::registry() key. Otherwise, use this as a config
      * param to Solar::factory() to create a $class object.
      * 
      * @return object The dependency object.

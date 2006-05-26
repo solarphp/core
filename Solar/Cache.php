@@ -36,14 +36,16 @@ class Solar_Cache extends Solar_Base {
      * 
      * : \\adapter\\ : (string) The adapter class, default 'Solar_Cache_Adapter_File'.
      * 
-     * Remaining keys are passed to the adapter class as config keys.
+     * : \\config\\ : (array) Construction-time config keys to pass to the adapter
+     *   to override Solar.config.php values.  Default is null.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'active' => true,
+        'active'  => true,
         'adapter' => 'Solar_Cache_Adapter_File',
+        'config'  => null,
     );
     
     /**
@@ -80,12 +82,9 @@ class Solar_Cache extends Solar_Base {
         $this->_active = (bool) $this->_config['active'];
         
         // instantiate an adapter object
-        $config = $this->_config;
-        unset($config['adapter']);
-        unset($config['active']);
         $this->_adapter = Solar::factory(
             $this->_config['adapter'],
-            $config
+            $this->_config['config']
         );
     }
     

@@ -34,29 +34,15 @@ class Solar_Sql extends Solar_Base {
      * 
      * : \\adapter\\ : (string) The adapter class to use, e.g. 'Solar_Sql_Adapter_Mysql'.
      * 
-     * : \\host\\ : (string) Host specification (typically '127.0.0.1').
-     * 
-     * : \\port\\ : (string) Port number for the host name.
-     * 
-     * : \\user\\ : (string) Connect to the database as this username.
-     * 
-     * : \\pass\\ : (string) Password associated with the username.
-     * 
-     * : \\name\\ : (string) Database name (or file path, or TNS name).
-     * 
-     * : \\mode\\ : (string) For SQLite, an octal file mode.
+     * : \\config\\ : (array) Construction-time config keys to pass to the adapter
+     *   to override Solar.config.php values.  Default is null.
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
-        'host'   => '127.0.0.1',
-        'port'   => null,
-        'user'   => null,
-        'pass'   => null,
-        'name'   => null,
-        'mode'   => null,
+        'config'  => null,
     );
     
     /**
@@ -102,19 +88,14 @@ class Solar_Sql extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // baseline exception class
-        Solar::loadClass('Solar_Sql_Exception');
-        
-        // baseline adapter class
-        Solar::loadClass('Solar_Sql_Adapter');
-        
         // basic construction
         parent::__construct($config);
         
         // create the adapter object
-        $config = $this->_config;
-        unset($config['adapter']);
-        $this->_adapter = Solar::factory($this->_config['adapter'], $config);
+        $this->_adapter = Solar::factory(
+            $this->_config['adapter'],
+            $this->_config['config']
+        );
     }
     
     /**

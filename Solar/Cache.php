@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for cache control.
+ * Facade class for cache adapters.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Class for cache control.
+ * Facade class for cache adapters.
  * 
  * @category Solar
  * 
@@ -34,26 +34,35 @@ class Solar_Cache extends Solar_Base {
      * 
      * : \\active\\ : (bool) Whether the cache is active or not when instantiated.
      * 
-     * : \\driver\\ : (string) The driver class, default 'Solar_Cache_File'.
+     * : \\adapter\\ : (string) The adapter class, default 'Solar_Cache_Adapter_File'.
      * 
-     * Remaining keys are passed to the driver class as config keys.
+     * Remaining keys are passed to the adapter class as config keys.
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'active' => true,
-        'driver' => 'Solar_Cache_File',
+        'adapter' => 'Solar_Cache_Adapter_File',
     );
     
     /**
      * 
-     * The instantiated driver object.
+     * The instantiated adapter object.
      * 
      * @var object
      * 
      */
-    protected $_driver;
+    protected $_adapter;
+    
+    /**
+     * 
+     * Whether or not the cache is active.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_active;
     
     /**
      * 
@@ -67,12 +76,15 @@ class Solar_Cache extends Solar_Base {
         // basic config option settings
         parent::__construct($config);
         
-        // instantiate a driver object
+        // are we active?
+        $this->_active = (bool) $this->_config['active'];
+        
+        // instantiate an adapter object
         $config = $this->_config;
-        unset($config['driver']);
+        unset($config['adapter']);
         unset($config['active']);
-        $this->_driver = Solar::factory(
-            $this->_config['driver'],
+        $this->_adapter = Solar::factory(
+            $this->_config['adapter'],
             $config
         );
     }
@@ -100,7 +112,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function setActive($flag)
     {
-        $this->_config['active'] = (bool) $flag;
+        $this->_active = (bool) $flag;
     }
     
     /**
@@ -122,7 +134,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function isActive()
     {
-        return $this->_config['active'];
+        return $this->_active;
     }
     
     /**
@@ -134,7 +146,7 @@ class Solar_Cache extends Solar_Base {
      */
     public function getLife()
     {
-        return $this->_driver->getLife();
+        return $this->_adapter->getLife();
     }
     
     
@@ -179,7 +191,7 @@ class Solar_Cache extends Solar_Base {
     public function save($key, $data)
     {
         if ($this->isActive()) {
-            return $this->_driver->save($key, $data);
+            return $this->_adapter->save($key, $data);
         } else {
             return false;
         }
@@ -194,7 +206,7 @@ class Solar_Cache extends Solar_Base {
      * a simple name, and so on.
      * 
      * If the cache entry does not exist, or if it has passed its
-     * lifetime (defined in the driver's config keys), the
+     * lifetime (defined in the adapter's config keys), the
      * function will return boolean false; otherwise, it will return
      * the contents of the cache entry.
      * 
@@ -221,7 +233,7 @@ class Solar_Cache extends Solar_Base {
     public function fetch($key)
     {
         if ($this->isActive()) {
-            return $this->_driver->fetch($key);
+            return $this->_adapter->fetch($key);
         } else {
             return false;
         }
@@ -251,7 +263,7 @@ class Solar_Cache extends Solar_Base {
     public function delete($key)
     {
         if ($this->isActive()) {
-            return $this->_driver->delete($key);
+            return $this->_adapter->delete($key);
         }
     }
     
@@ -274,18 +286,18 @@ class Solar_Cache extends Solar_Base {
     public function deleteAll()
     {
         if ($this->isActive()) {
-            return $this->_driver->deleteAll();
+            return $this->_adapter->deleteAll();
         }
     }
     
     /**
      * 
-     * Returns the driver-specific name for the entry key.
+     * Returns the adapter-specific name for the entry key.
      * 
-     * Cache drivers do not always use the identifier you specify for
-     * cache entries.  For example, the [Solar_Cache_File:HomePage file driver]
+     * Cache adapters do not always use the identifier you specify for
+     * cache entries.  For example, the [Solar_Cache_File:HomePage file adapter]
      * names the cache entries based on an MD5 hash of the entry ID. 
-     * This method tells you what the driver is using as the name for
+     * This method tells you what the adapter is using as the name for
      * the cache entry.
      * 
      * <code type="php">
@@ -294,18 +306,18 @@ class Solar_Cache extends Solar_Base {
      * // create an entry ID named for the current URI
      * $id = Solar::server('REQUEST_URI');
      * 
-     * // find out what the underlying cache driver uses as the entry name
+     * // find out what the underlying cache adapter uses as the entry name
      * $real_name = $cache->entry($id);
      * </code>
      * 
      * @param string $key The entry ID.
      * 
-     * @return mixed The driver-specific name for the entry key.
+     * @return mixed The adapter-specific name for the entry key.
      * 
      */
     public function entry($key)
     {
-        return $this->_driver->entry($key);
+        return $this->_adapter->entry($key);
     }
 }
 ?>

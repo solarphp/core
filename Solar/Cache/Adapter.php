@@ -91,7 +91,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * @return mixed Boolean false on failure, string on success.
      * 
      */
-    public function fetch($key);
+    abstract public function fetch($key);
     
     /**
      * 
@@ -104,7 +104,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function save($key, $data);
+    abstract public function save($key, $data);
     
     /**
      * 

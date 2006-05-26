@@ -1,10 +1,10 @@
 <?php
-class Test_Solar_Cache_File extends Solar_Test {
+class Test_Solar_Cache_Adapter_File extends Solar_Test {
     
     protected $_cache;
     
     protected $_config = array(
-        'driver' => 'Solar_Cache_File',
+        'adapter' => 'Solar_Cache_Adapter_File',
         'path'   => '/tmp/Solar_Cache_Testing',
         'life'   => 7, // 7 seconds
     );

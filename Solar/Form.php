@@ -192,7 +192,6 @@ class Solar_Form extends Solar_Base {
         'require'  => false,
         'disable'  => false,
         'options'  => array(),
-        'listsep'  => null,
         'attribs'  => array(),
         'feedback' => array(),
     );

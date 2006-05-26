@@ -32,30 +32,36 @@ class Solar_User_Auth extends Solar_Base {
      * 
      * Keys are:
      * 
-     * driver => (string) The driver class, e.g. 'Solar_User_Auth_File'.
+     * : \\driver\\ : (string) The driver class, e.g. 'Solar_User_Auth_File'.
      * 
-     * config => (array) Config for the authentication driver.
+     * : \\config\\ : (array) Config for the authentication driver.
      * 
-     * expire => (int) Authentication lifetime in seconds; zero is
-     * forever.  Default is 14400 (4 hours).
+     * : \\expire\\ : (int) Authentication lifetime in seconds; zero is
+     *   forever.  Default is 14400 (4 hours).
      * 
-     * idle => (int) Maximum allowed idle time in seconds; zero is
-     * forever.  Default is 1800 (30 minutes).
+     * : \\idle\\ : (int) Maximum allowed idle time in seconds; zero is
+     *   forever.  Default is 1800 (30 minutes).
      * 
-     * allow => (bool) Whether or not to allow automatic login/logout.
+     * : \\allow\\ : (bool) Whether or not to allow automatic login/logout.
      * 
-     * post_handle => (string) Username key in $_POST array.
+     * : \\source\\ : (string) The source for auth credentials, 'get'
+     *     (for Solar::get() method) or 'post' (for Solar::post() method).
+     *     Default is 'post'.
      * 
-     * post_passwd => (string) Password key in $_POST array.
+     * : \\source_handle\\ : (string) Username key in the credential array source,
+     *   default 'handle'.
      * 
-     * post_submit => (string) Submission key in $_POST array,
-     * e.g. 'submit'.
+     * : \\source_passwd\\ : (string) Password key in the credential array source,
+     *   default 'passwd'.
      * 
-     * submit_login => (string) The submission-key value to indicate a
-     * login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * : \\source_submit\\ : (string) Submission key in the credential array source,
+     *   default 'submit'.
      * 
-     * submit_logout => (string) The submission-key value to indicate a
-     * login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * : \\submit_login\\ : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * 
+     * : \\submit_logout\\ : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
      * @var array
      * 
@@ -67,9 +73,10 @@ class Solar_User_Auth extends Solar_Base {
         'expire'        => 14400,
         'idle'          => 1800,
         'allow'         => true,
-        'post_handle'   => 'handle',
-        'post_passwd'   => 'passwd',
-        'post_submit'   => 'submit',
+        'source'        => 'post',
+        'source_handle' => 'handle',
+        'source_passwd' => 'passwd',
+        'source_submit' => 'submit',
         'submit_login'  => null,
         'submit_logout' => null,
     );
@@ -82,6 +89,15 @@ class Solar_User_Auth extends Solar_Base {
      * 
      */
     protected $_driver = null;
+    
+    /**
+     * 
+     * The source of auth credentials, either 'get' or 'post'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_source;
     
     /**
      * 
@@ -152,7 +168,6 @@ class Solar_User_Auth extends Solar_Base {
      */
     public $handle;
     
-    
     /**
      * 
      * Constructor.
@@ -165,6 +180,13 @@ class Solar_User_Auth extends Solar_Base {
         $this->_config['submit_login']  = $this->locale('SUBMIT_LOGIN');
         $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
         parent::__construct($config);
+        
+        // make sure the source is either 'get' or 'post'.
+        $this->_source = strtolower($this->_config['source']);
+        if ($this->_source != 'get' && $this->_source != 'post') {
+            // default to post
+            $this->_source = 'post';
+        }
     }
     
     
@@ -216,15 +238,16 @@ class Solar_User_Auth extends Solar_Base {
         if ($this->allow) {
         
             // get the submit value
-            $submit = Solar::post($this->_config['post_submit']);
+            $method = strtolower($this->_config['source']);
+            $submit = Solar::$method($this->_config['source_submit']);
             
             // check for a login request.
             if ($submit == $this->_config['submit_login']) {
                 
                 // check the storage driver to see if the handle
                 // and passwd credentials are valid.
-                $handle = Solar::post($this->_config['post_handle']);
-                $passwd = Solar::post($this->_config['post_passwd']);
+                $handle = Solar::post($this->_config['source_handle']);
+                $passwd = Solar::post($this->_config['source_passwd']);
                 $result = $this->_driver->valid($handle, $passwd);
                 if ($result === true) {
                     $this->reset('VALID', $handle);

@@ -5,8 +5,10 @@ class Test_Solar_Cache_Adapter_File extends Solar_Test {
     
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_File',
-        'path'   => '/tmp/Solar_Cache_Testing',
-        'life'   => 7, // 7 seconds
+        'config'  => array(
+            'path'   => '/tmp/Solar_Cache_Testing',
+            'life'   => 7, // 7 seconds
+        ),
     );
     
     public function setup()
@@ -91,7 +93,7 @@ class Test_Solar_Cache_Adapter_File extends Solar_Test {
         $data = 'Wile E. Coyote';
         
         // configured from setup
-        $this->assertSame($this->_cache->getLife(), $this->_config['life']);
+        $this->assertSame($this->_cache->getLife(), $this->_config['config']['life']);
         
         // store something
         $this->assertTrue($this->_cache->save($id, $data));
@@ -106,7 +108,6 @@ class Test_Solar_Cache_Adapter_File extends Solar_Test {
         // we should get nothing
         sleep(2);
         $this->assertFalse($this->_cache->fetch($id));
-        
     }
     
     public function testIsActive()

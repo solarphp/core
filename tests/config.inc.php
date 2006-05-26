@@ -13,9 +13,15 @@ $config['Solar_Test_Example'] = array(
 
 $config['Solar_Debug_Var']['output'] = 'text';
 
-$config['Solar_Sql'] = array(
-    'driver' => 'Solar_Sql_Driver_Sqlite',
-    'name'   => '/tmp/solar_test_' . time() . '.sq3',
+$config['Solar_Sql_Adapter_Sqlite'] = array(
+    'name' => ':memory:',
+);
+
+$config['Solar_Sql_Adapter_Mysql'] = array(
+    'name'   => 'test',
+    'user'   => null,
+    'pass'   => null,
+    'host'   => '127.0.0.1',
 );
 
 return $config;

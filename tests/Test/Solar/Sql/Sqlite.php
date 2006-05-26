@@ -5,8 +5,7 @@ require_once realpath(dirname(__FILE__) . '/../Sql.php');
 class Test_Solar_Sql_Sqlite extends Test_Solar_Sql {
     
     protected $_config = array(
-        'driver' => 'Solar_Sql_Driver_Sqlite',
-        'name'   => '/tmp/Test_Solar_Sql_Sqlite.sq3',
+        'adapter' => 'Solar_Sql_Adapter_Sqlite',
     );
     
     protected $_quote_expect = "'\"foo\" bar ''baz'''";
@@ -16,11 +15,6 @@ class Test_Solar_Sql_Sqlite extends Test_Solar_Sql {
     protected $_quote_multi_expect = "id = 1 AND foo = 'bar' AND zim IN('dib', 'gir', 'baz')";
     
     protected $_quote_into_expect = "foo = '''bar'''";
-    
-    public function _destruct()
-    {
-        unlink('/tmp/Test_Solar_Sql_Sqlite.sq3');
-    }
     
     public function testDropColumn()
     {

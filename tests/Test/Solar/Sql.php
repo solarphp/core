@@ -89,9 +89,9 @@ abstract class Test_Solar_Sql extends Solar_Test {
         $this->assertInstance($this->_sql, 'Solar_Sql');
     }
     
-    public function testDriver()
+    public function testAdapter()
     {
-        $this->assertProperty($this->_sql, '_driver', 'instance', $this->_config['driver']);
+        $this->assertProperty($this->_sql, '_adapter', 'instance', $this->_config['adapter']);
     }
     
     public function testQuery_preparedQueryPlain()

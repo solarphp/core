@@ -5,11 +5,7 @@ require_once realpath(dirname(__FILE__) . '/../Sql.php');
 class Test_Solar_Sql_Mysql extends Test_Solar_Sql {
     
     protected $_config = array(
-        'driver' => 'Solar_Sql_Driver_Mysql',
-        'name'   => 'test',
-        'user'   => null,
-        'pass'   => null,
-        'host'   => '127.0.0.1',
+        'adapter' => 'Solar_Sql_Adapter_Mysql',
     );
     
     protected $_quote_expect = "'\\\"foo\\\" bar \\'baz\\''";

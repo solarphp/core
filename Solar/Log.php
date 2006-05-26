@@ -37,9 +37,10 @@
  * $log->save('event_name', 'message text');
  * 
  * </code>
+ * 
  * @category Solar
  * 
- * @package Solar_Cache
+ * @package Solar_Log
  * 
  */
 class Solar_Log extends Solar_Base {

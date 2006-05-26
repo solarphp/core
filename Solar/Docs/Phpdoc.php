@@ -76,6 +76,12 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         // clear out prior info
         $this->_info = array();
         
+        // fix line-endings from windows
+        $block = str_replace("\r\n", "\n", $block);
+        
+        // fix line-endings from mac os 9 and previous
+        $block = str_replace("\r", "\n", $block);
+        
         // remove the leading comment indicator (slash-star-star)
         $block = preg_replace('/^\s*\/\*\*\s*$/m', '', $block);
         

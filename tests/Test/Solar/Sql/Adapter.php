@@ -1,6 +1,6 @@
 <?php
 
-abstract class Test_Solar_Sql extends Solar_Test {
+abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     
     protected $_config = array();
     

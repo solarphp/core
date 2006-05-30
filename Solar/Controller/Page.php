@@ -311,28 +311,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // collect action, query, and info
         $this->_collect($spec);
         
-        // we need this class name for later
-        $class = get_class($this);
-
         // run the pre-action code, forward to the first action (which
         // may trigger other actions), and run the post-action code.
         $this->_preAction();
         $this->_forward($this->_action);
         $this->_postAction();
         
-        // set up a view object for the page content
-        $view = Solar::factory('Solar_View');
-        $view->addTemplatePath($this->_dir . 'Views/');
-        
-        // add helpers from user-defined locations, but give preference
-        // to the helpers for this class.
-        $view->addHelperClass($this->_config['helper_class']);
-        $view->addHelperClass($class . '_Helper');
-        
-        // set the locale class for the getText helper
-        $view->getTextRaw("$class::");
-        
-        // assign variables
+        // get a view object and assign variables
+        $view = $this->_newView();
         $view->assign($this);
         
         // are we using a layout?
@@ -370,6 +356,33 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
+    }
+    
+    /**
+     * 
+     * Creates and returns a new Solar_View object.
+     * 
+     * @return Solar_View
+     * 
+     */
+    protected function _newView()
+    {
+        $class = get_class($this);
+        $view = Solar::factory('Solar_View');
+        
+        // add the views for this page controller
+        $view->addTemplatePath($this->_dir . 'Views/');
+        
+        // add helpers from user-defined locations, but give preference
+        // to the helpers for this page controller.
+        $view->addHelperClass($this->_config['helper_class']);
+        $view->addHelperClass($class . '_Helper');
+        
+        // set the locale class for the getText helper
+        $view->getTextRaw("$class::");
+        
+        // done!
+        return $view;
     }
     
     /**

@@ -43,7 +43,7 @@ class Solar_Auth extends Solar_Base {
      * : \\idle\\ : (int) Maximum allowed idle time in seconds; zero is
      *   forever.  Default is 1800 (30 minutes).
      * 
-     * : \\allow\\ : (bool) Whether or not to allow automatic login/logout.
+     * : \\allow\\ : (bool) Whether or not to allow login/logout attempts.
      * 
      * : \\source\\ : (string) The source for auth credentials, 'get'
      *   (for Solar::get() method) or 'post' (for Solar::post() method).

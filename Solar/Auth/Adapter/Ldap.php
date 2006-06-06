@@ -74,17 +74,16 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
 
     /**
      * 
-     * Validate a username and password.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username to authenticate.
-     * 
-     * @param string $passwd The plain-text password to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         // connect
         $conn = @ldap_connect($this->_config['url']);
         

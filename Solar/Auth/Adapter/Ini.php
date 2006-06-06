@@ -24,7 +24,16 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * Authenticate against .ini style files.
  * 
- * Format for each line is "username = plainpassword\n";
+ * Each group is a user handle, with keys for 'passwd', 'name', 'email',
+ * and 'uri'.  For example:
+ * 
+ * <code>
+ * [pmjones]
+ * passwd = plaintextpass
+ * name = Paul M. Jones
+ * email = pmjones@solarphp.com
+ * uri = http://paul-m-jones.com/
+ * </code>
  * 
  * @category Solar
  * 
@@ -39,32 +48,28 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
      * 
      * Keys are:
      * 
-     * : \\file\\ : (string) Path to password file.
-     * 
-     * : \\group\\ : (string) The group in which usernames reside.
+     * : \\file\\ : (string) Path to .ini file.
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'file' => null,
-        'group' => 'users',
     );
     
     
     /**
      * 
-     * Validate a username and password.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username to authenticate.
-     * 
-     * @param string $passwd The plain-text password to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         // force the full, real path to the .ini file
         $file = realpath($this->_config['file']);
         
@@ -79,20 +84,20 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
         // parse the file into an array
         $data = parse_ini_file($file, true);
         
-        // get a list of users from the [users] group
-        $list = (array) $data[$this->_config['group']];
-        
-        // by default the user is not valid
-        $valid = false;
+        // get user info for the handle
+        $user = (! empty($data[$handle])) ? $data[$handle] : array();
         
         // there must be an entry for the username,
         // and the plain-text password must match.
-        if (! empty($list[$handle]) && $list[$handle] == $passwd) {
-            $valid = true;
+        if (! empty($user['passwd']) && $user['passwd'] == $passwd) {
+            // set additional values
+            $this->_name  = (! empty($user['name']))  ? $user['name']  : null;
+            $this->_email = (! empty($user['email'])) ? $user['email'] : null;
+            $this->_uri   = (! empty($user['uri']))   ? $user['uri']   : null;
+            return true;
+        } else {
+            return false;
         }
-        
-        // done!
-        return $valid;
     }
 }
 ?>

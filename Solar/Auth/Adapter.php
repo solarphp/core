@@ -28,15 +28,295 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Validates a user handle and password.
+     * Information for "common" handle + passwd authentication adapters.
      * 
-     * @param string $handle The user handle.
+     * Keys are:
      * 
-     * @param string $passwd The plain-text password.
+     * : \\source\\ : (string) The source for auth credentials, 'get'
+     *   (for Solar::get() method) or 'post' (for Solar::post() method).
+     *   Default is 'post'.
+     * 
+     * : \\source_handle\\ : (string) Username key in the credential array source,
+     *   default 'handle'.
+     * 
+     * : \\source_passwd\\ : (string) Password key in the credential array source,
+     *   default 'passwd'.
+     * 
+     * : \\source_submit\\ : (string) Submission key in the credential array source,
+     *   default 'submit'.
+     * 
+     * : \\submit_login\\ : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * 
+     * : \\submit_logout\\ : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * 
+     * @var array
+     * 
+     * @see Solar_Auth_Adapter::setCommon()
+     * 
+     */
+    protected $_common = array(
+        'source'        => 'post',
+        'source_handle' => 'handle',
+        'source_passwd' => 'passwd',
+        'source_submit' => 'submit',
+        'submit_login'  => null,
+        'submit_logout' => null,
+    );
+    
+    /**
+     * 
+     * Whether or not this is a Single Sign-On adapter, for services
+     * such as TypeKey or OpenID (as opposed to "common" handle + passwd
+     * services).
+     * 
+     * @var bool
+     * 
+     * @see Solar_Auth_Adapter::isSingleSignon()
+     * 
+     */
+    protected $_sso = false;
+    
+    /**
+     * 
+     * The unique user handle as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_handle;
+    
+    /**
+     * 
+     * The user password.
+     * 
+     * @var string
+     * 
+     */
+    protected $_passwd;
+    
+    /**
+     * 
+     * The user "display name" or "full name" as derived from the
+     * authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_name;
+    
+    /**
+     * 
+     * The user email address as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_email;
+    
+    /**
+     * 
+     * The user URI as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_uri;
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        $this->_common['submit_login']  = $this->locale('SUBMIT_LOGIN');
+        $this->_common['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        parent::__construct($config);
+    }
+    
+    /**
+     * 
+     * Verifies user credentials for the adapter.
+     * 
+     * Typical credentials are $this->_handle and $this->_passwd, but
+     * single sign-on systems may use different credential sources.
+     * 
+     * 
+     * Adapters should set $this->_handle, $this->_email, and
+     * $this->_name if verfication is successful.
      * 
      * @return bool True if valid, false if not.
      * 
      */
-    abstract public function isValid($handle, $passwd);
+    protected function _verify()
+    {
+        return false;
+    }
+    
+    /**
+     * 
+     * Sets information for "common" handle + passwd authentication
+     * systems.
+     * 
+     * @param array $_common
+     * 
+     * @see Solar_Auth_Adapter::$_common
+     * 
+     */
+    public function setCommon($common)
+    {
+        $base = array(
+            'source'        => 'post',
+            'source_handle' => 'handle',
+            'source_passwd' => 'passwd',
+            'source_submit' => 'submit',
+            'submit_login'  => $this->locale('SUBMIT_LOGIN'),
+            'submit_logout' => $this->locale('SUBMIT_LOGOUT'),
+        );
+        
+        $this->_common = array_merge($base, $common);
+        
+        // make sure the source is either 'get' or 'post'.
+        if ($this->_common['source'] != 'get' && $this->_common['source'] != 'post') {
+            // default to post
+            $this->_common['source'] = 'post';
+        }
+        
+    }
+    
+    /**
+     * 
+     * Tells if this adapter is for SSO services such as TypeKey or 
+     * OpenID.
+     * 
+     * @return bool
+     * 
+     * @see Solar_Auth_Adapter::$_sso
+     * 
+     */
+    public function isSingleSignon()
+    {
+        return $this->_sso;
+    }
+    
+    /**
+     * 
+     * Tells if the current page load appears to be the result of
+     * an attempt to log in.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoginRequest()
+    {
+        $method = strtolower($this->_common['source']);
+        $submit = Solar::$method($this->_common['source_submit']);
+        return $submit == $this->_common['submit_login'];
+    }
+    
+    /**
+     * 
+     * Tells if the current page load appears to be the result of
+     * an attempt to log out.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLogoutRequest()
+    {
+        $method = strtolower($this->_common['source']);
+        $submit = Solar::$method($this->_common['source_submit']);
+        return $submit == $this->_common['submit_logout'];
+    }
+    
+    /**
+     * 
+     * Checks to see if login credentials are valid for the adapter.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoginValid()
+    {
+        $method = strtolower($this->_common['source']);
+        $submit = Solar::$method($this->_common['source_submit']);
+        $this->reset();
+        $this->_handle = Solar::$method($this->_common['source_handle']);
+        $this->_passwd = Solar::$method($this->_common['source_passwd']);
+        $result = $this->_verify();
+        if ($result !== true) {
+            // not verified, clear out all user data
+            $this->reset();
+        }
+        return $result;
+    }
+    
+    /**
+     * 
+     * Clears handle, passwd, email, name, and uri properties.
+     * 
+     * @return void
+     * 
+     */
+    public function reset()
+    {
+        $this->_handle = null;
+        $this->_passwd = null;
+        $this->_email  = null;
+        $this->_name   = null;
+        $this->_uri    = null;
+    }
+    
+    /**
+     * 
+     * Returns the current user handle.
+     * 
+     * @return string
+     * 
+     */
+    public function getHandle()
+    {
+        return $this->_handle;
+    }
+    
+    /**
+     * 
+     * Returns the current user email address.
+     * 
+     * @return string
+     * 
+     */
+    public function getEmail()
+    {
+        return $this->_email;
+    }
+    
+    /**
+     * 
+     * Returns the current user "full name" or "display name".
+     * 
+     * @return string
+     * 
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+    
+    /**
+     * 
+     * Returns the current user URI.
+     * 
+     * @return string
+     * 
+     */
+    public function getUri()
+    {
+        return $this->_uri;
+    }
 }
 ?>

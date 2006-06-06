@@ -59,17 +59,16 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
     
     /**
      * 
-     * Validates a username handle and password.
-     * 
-     * @param string $handle The username handle.
-     * 
-     * @param string $passwd The plain-text password.
+     * Verifies a username handle and password.
      * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         // force the full, real path to the file
         $file = realpath($this->_config['file']);
         

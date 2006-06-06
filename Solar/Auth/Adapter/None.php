@@ -33,16 +33,12 @@ class Solar_Auth_Adapter_None extends Solar_Auth_Adapter {
     
     /**
      * 
-     * Validate a username and password.  Always fails.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username to authenticate.
-     * 
-     * @param string $passwd The plain-text password to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
         return false;
     }

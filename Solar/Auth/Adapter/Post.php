@@ -66,17 +66,16 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
     
     /**
      * 
-     * Validates a handle and passwd.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username handle to authenticate.
-     * 
-     * @param string $passwd The plain-text passwd to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         // parse out URL elements
         $url = parse_url($this->_config['url']);
         

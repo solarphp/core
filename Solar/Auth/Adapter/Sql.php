@@ -28,6 +28,8 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * @package Solar_Auth
  * 
+ * @todo add support for email, name, uri retrieval
+ * 
  */
 class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
     
@@ -62,17 +64,16 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
     
     /**
      * 
-     * Validate a handle and passwd.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username handle to authenticate.
-     * 
-     * @param string $passwd The plain-text passwd to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         

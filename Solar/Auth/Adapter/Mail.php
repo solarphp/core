@@ -68,22 +68,20 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
         parent::__construct($config);
     }
 
-
     /**
      * 
-     * Validates a username and password.
+     * Verifies a username handle and password.
      * 
-     * @param string $handle Username to authenticate.
-     * 
-     * @param string $passwd The password to use.
-     * 
-     * @return bool True on success, false on failure.
+     * @return bool True if valid, false if not.
      * 
      * @todo Check the server status with fsockopen().
      * 
      */
-    public function isValid($handle, $passwd)
+    protected function _verify()
     {
+        $handle = $this->_handle;
+        $passwd = $this->_passwd;
+        
         $mailbox = '{' . $this->_config['mailbox'] . '}';
         $conn = @imap_open($mailbox, $handle, $passwd, OP_HALFOPEN);
         if (is_resource($conn)) {

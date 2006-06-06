@@ -38,6 +38,10 @@ Solar::loadClass('Solar_Test');
  * 
  * @package Solar_Test
  * 
+ * @todo test if notice/warning/error was generated, and fail on same
+ * 
+ * @todo test if no assertions are called and fail on same
+ * 
  */
 class Solar_Test_Suite extends Solar_Base {
     

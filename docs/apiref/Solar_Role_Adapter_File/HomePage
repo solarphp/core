@@ -1,0 +1,21 @@
++ The Solar_Role_Adapter_File Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Role_Adapter::HomePage Solar_Role_Adapter]
+
+  * Solar_Role_Adapter_File
+
+++ Overview
+
+Adapter to fetch roles from a Unix-style groups file.
+
+The file format is "group:user1,user2,user3\n".  Example:
+
+<code>
+sysadmin:pmjones
+writer:pmjones,boshag,agtsmith
+editor:pmjones,agtsmith
+</code>

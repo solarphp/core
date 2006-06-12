@@ -1,0 +1,16 @@
+<function>
+
+access:   public
+
+name: isLoginRequest
+
+return: bool
+
+</function>
+
+Tells if the current page load appears to be the result of
+an attempt to log in.
+
+* Parameters: none.
+
+* Returns bool

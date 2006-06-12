@@ -43,9 +43,11 @@ $config['Solar']['ini_set'] = array(
 * Default database connection.
 */
 $config['Solar_Sql'] = array(
-	'driver' => 'Solar_Sql_Driver_Sqlite',
-	'file'   => "$docroot/solar.sqlite",
-	'mode'   => '0666',
+	'adapter' => 'Solar_Sql_adapter_Sqlite',
+	'config'  => array(
+    	'file'   => "$docroot/solar.sqlite",
+    	'mode'   => '0666',
+	)
 );
 
 
@@ -53,7 +55,7 @@ $config['Solar_Sql'] = array(
 * User authentication source.
 */
 $config['Solar_User_Auth'] = array(
-	'driver' => 'Solar_User_Auth_Htpasswd',
+	'adapter' => 'Solar_User_Auth_Htpasswd',
 	'config' => array(
 		'file' => "$docroot/htpasswd.conf",
 	),

@@ -1,0 +1,23 @@
+<function>
+
+access:  static protected
+
+name: _64
+
+param: string, $value
+
+param: int, $count
+
+return: string
+
+</function>
+
+Convert to allowed 64 characters for encryption.
+
+* Parameters:
+
+ * string //$value//: The value to convert.
+
+ * int //$count//: The number of characters.
+
+* Returns string: The converted value.

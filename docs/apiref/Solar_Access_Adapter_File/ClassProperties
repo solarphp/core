@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Access_Adapter_File::$_config -- User-provided configuration values.
+
+++ Private
+
+None.

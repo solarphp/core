@@ -1,0 +1,13 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Role_Adapter_Ldap::$_config -- Array of user configuration values.
+
+++ Private
+
+None.

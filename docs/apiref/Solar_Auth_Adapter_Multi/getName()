@@ -1,0 +1,17 @@
+//Inherited from Solar_Auth_Adapter::getName().//
+
+<function>
+
+access:   public
+
+name: getName
+
+return: string
+
+</function>
+
+Returns the current user "full name" or "display name".
+
+* Parameters: none.
+
+* Returns string

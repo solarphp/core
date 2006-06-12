@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Auth_Adapter_Multi
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-supplied configuration.
+
+* Returns Solar_Auth_Adapter_Multi

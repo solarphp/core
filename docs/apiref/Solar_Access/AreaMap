@@ -1,0 +1,14 @@
+HomePage | The Solar_Access Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_adapter
+  $_config
+  $list
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  isAllowed()
+  load()
+  locale()
+  reset()

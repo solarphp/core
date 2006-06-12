@@ -1,0 +1,5 @@
+protected string $_pdo_type
+
+The PDO adapter DSN type.
+
+This might not be the same as the Solar adapter type.

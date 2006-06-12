@@ -1,4 +1,4 @@
-Solar_Sql is a facade class for connecting to and querying SQL databases.  It uses PDO-based driver classes so that you can interact with !MySQL, !PostgreSQL, SQLite, Microsoft SQL Server, and so on.  
+Solar_Sql is a facade class for connecting to and querying SQL databases.  It uses PDO-based adapter classes so that you can interact with !MySQL, !PostgreSQL, SQLite, Microsoft SQL Server, and so on.  
 
 In addition, all Solar_Sql functions are supported on all databases, so you never need to know the specifics of a particular database backend.  If your Solar_Sql calls work on one database, they should work on all databases (with some exceptions for how you write your queries; more on that in the "Portability" section below).
 
@@ -11,11 +11,13 @@ Solar::start();
 
 // configure
 $config = array(
-    'driver' => 'Solar_Sql_Driver_Mysql',
-    'host'   => '127.0.0.1',
-    'user'   => 'username',
-    'pass'   => 'password',
-    'name'   => 'database_name',
+    'adapter' => 'Solar_Sql_Adapter_Mysql',
+    'config'  => array(
+        'host'   => '127.0.0.1',
+        'user'   => 'username',
+        'pass'   => 'password',
+        'name'   => 'database_name',
+    ),
 );
 
 // instantiate
@@ -29,11 +31,13 @@ $config = array();
 // ...
 
 $config['Solar_Sql'] = array(
-    'driver' => 'Solar_Sql_Driver_Mysql',
-    'host'   => '127.0.0.1',
-    'user'   => 'username',
-    'pass'   => 'password',
-    'name'   => 'database_name',
+    'adapter' => 'Solar_Sql_Adapter_Mysql',
+    'config'  => array(
+        'host'   => '127.0.0.1',
+        'user'   => 'username',
+        'pass'   => 'password',
+        'name'   => 'database_name',
+    ),
 );
 // ...
 return $config;

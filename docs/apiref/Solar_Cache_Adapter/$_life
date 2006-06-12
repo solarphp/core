@@ -1,0 +1,3 @@
+protected int $_life
+
+The lifetime of each cache entry in seconds.

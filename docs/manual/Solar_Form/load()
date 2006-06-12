@@ -11,7 +11,7 @@ Example use:
 $form = Solar::factory('Solar_Form');
 
 // use Solar_Form_Load_Xml as the loader
-$driver = 'Solar_Form_Load_Xml';
+$adapter = 'Solar_Form_Load_Xml';
 
 // the loader needs to know where the XML file
 // with the form description is.
@@ -19,7 +19,7 @@ $source = '/path/to/form.xml';
 
 // load elements and attributes from the external
 // source
-$form->load($driver, $source);
+$form->load($adapter, $source);
 
 // populate, validate, and get values
 $form->populate();

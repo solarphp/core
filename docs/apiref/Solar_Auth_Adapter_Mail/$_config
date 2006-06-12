@@ -1,0 +1,8 @@
+protected array $_config
+
+User-supplied configuration values.
+
+Keys are:
+
+: \\mailbox\\ : (string) An imap_open() mailbox string, e.g.
+"mail.example.com:143/imap" or "mail.example.com:110/pop3".

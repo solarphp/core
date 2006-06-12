@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _verify
+
+return: bool
+
+</function>
+
+Verifies a username handle and password.
+
+* Parameters: none.
+
+* Returns bool: True if valid, false if not.

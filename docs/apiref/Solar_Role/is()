@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: is
+
+param: string, $role, NULL
+
+return: bool
+
+</function>
+
+Check to see if a user is in a role.
+
+* Parameters:
+
+ * string //$role//: The role to check.
+
+* Returns bool: True if the user is in the role, or false if not.

@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+* Solar_Access::$list -- The access list for a handle and roles.
+
+++ Protected
+
+* Solar_Access::$_adapter -- A adapter object instance.
+
+* Solar_Access::$_config -- User-supplied configuration values.
+
+++ Private
+
+None.

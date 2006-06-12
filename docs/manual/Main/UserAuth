@@ -20,11 +20,13 @@ $config = array();
 
 // SQL connection
 $config['Solar_Sql'] = array(
-	'driver' => 'Solar_Sql_Driver_Mysql',
-	'host'   => '127.0.0.1',
-	'user'   => 'username',
-	'pass'   => 'password',
-	'name'   => 'database',
+	'adapter' => 'Solar_Sql_Adapter_Mysql',
+	'config'  => array(
+    	'host'   => '127.0.0.1',
+    	'user'   => 'username',
+    	'pass'   => 'password',
+    	'name'   => 'database',
+	),
 );
 
 // Front controller HREF prefix
@@ -34,7 +36,7 @@ $config['Solar_Uri_Action']['path'] = '/index.php';
 $config['Solar_Uri_Public']['path'] = '/public';
 
 // Authentication source
-$config['Solar_User']['auth']['driver'] = 'Solar_User_Auth_Htpasswd';
+$config['Solar_User']['auth']['adapter'] = 'Solar_Auth_Adapter_Htpasswd';
 $config['Solar_User']['auth']['config']['file'] = '/home/username/htpasswd.conf';
 
 // Done!
@@ -50,18 +52,18 @@ Attempt to log in with your username and password.
 
 ++ Other authentication sources
 
-* [Solar_User_Auth_Htpasswd::HomePage Solar_User_Auth_Htpasswd]
-
-* [Solar_User_Auth_Ini::HomePage Solar_User_Auth_Ini]
-
-* [Solar_User_Auth_Ldap::HomePage Solar_User_Auth_Ldap]
-
-* [Solar_User_Auth_Mail::HomePage Solar_User_Auth_Mail]
-
-* [Solar_User_Auth_Multi::HomePage Solar_User_Auth_Multi]
-
-* [Solar_User_Auth_None::HomePage Solar_User_Auth_None]
-
-* [Solar_User_Auth_Post::HomePage Solar_User_Auth_Post]
-
-* [Solar_User_Auth_Sql::HomePage Solar_User_Auth_Sql]
+* [Solar_Auth_Adapter_Htpasswd::HomePage Solar_User_Auth_Htpasswd]
+         
+* [Solar_Auth_Adapter_Ini::HomePage Solar_Auth_Adapter_Ini]
+         
+* [Solar_Auth_Adapter_Ldap::HomePage Solar_Auth_Adapter_Ldap]
+         
+* [Solar_Auth_Adapter_Mail::HomePage Solar_Auth_Adapter_Mail]
+         
+* [Solar_Auth_Adapter_Multi::HomePage Solar_Auth_Adapter_Multi]
+         
+* [Solar_Auth_Adapter_None::HomePage Solar_Auth_Adapter_None]
+         
+* [Solar_Auth_Adapter_Post::HomePage Solar_Auth_Adapter_Post]
+         
+* [Solar_Auth_Adapter_Sql::HomePage Solar_Auth_Adapter_Sql]

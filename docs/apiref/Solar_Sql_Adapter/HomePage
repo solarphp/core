@@ -1,0 +1,11 @@
++ The Solar_Sql_Adapter Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Sql_Adapter
+
+++ Overview
+
+Abstract base class for specific RDBMS adapters.

@@ -1,0 +1,25 @@
+HomePage | The Solar_Auth_Adapter_Sql Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_common
+  $_config
+  $_email
+  $_handle
+  $_name
+  $_passwd
+  $_uri
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _verify()
+  apiVersion()
+  getEmail()
+  getHandle()
+  getName()
+  getUri()
+  isLoginRequest()
+  isLoginValid()
+  isLogoutRequest()
+  locale()
+  reset()
+  setCommon()

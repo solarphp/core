@@ -1,0 +1,6 @@
+public string $name
+
+Convenience reference to $_SESSION['Solar_Auth']['name'].
+
+This is the "display name" or "full name" of the currently
+authenticated user.  May or may not be populated by the adapter.

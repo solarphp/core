@@ -1,0 +1,10 @@
+HomePage | The Solar_Role_Adapter_Sql Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  fetch()
+  locale()

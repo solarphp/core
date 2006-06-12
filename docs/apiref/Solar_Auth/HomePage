@@ -1,0 +1,11 @@
++ The Solar_Auth Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Auth
+
+++ Overview
+
+Class for checking user authentication credentials.

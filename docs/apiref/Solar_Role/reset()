@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: reset
+
+return: void
+
+</function>
+
+Resets the role list to nothing.
+
+* Parameters: none.
+
+* Returns void

@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: deleteAll
+
+return: void
+
+</function>
+
+Removes all cache entries.
+
+* Parameters: none.
+
+* Returns void

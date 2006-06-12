@@ -56,11 +56,13 @@ $config = array();
 
 // SQL connection
 $config['Solar_Sql'] = array(
-	'driver' => 'Solar_Sql_Driver_Mysql',
-	'host'   => '127.0.0.1',
-	'user'   => 'username',
-	'pass'   => 'password',
-	'name'   => 'database',
+	'adapter' => 'Solar_Sql_Adapter_Mysql',
+	array(
+    	'host'   => '127.0.0.1',
+    	'user'   => 'username',
+    	'pass'   => 'password',
+    	'name'   => 'database',
+	),
 );
 
 // Your front controller href

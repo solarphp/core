@@ -1,0 +1,29 @@
+protected array $_native
+
+Map of Solar generic column types to RDBMS native declarations.
+
+The available column types are:
+
+: \\bool\\ : A true/false boolean, generally stored as an integer 1 or 0.
+
+: \\char\\ : A fixed-length string of 1-255 characters.
+
+: \\varchar\\ : A variable-length string of 1-255 characters.
+
+: \\smallint\\ : A 2-byte integer, value range (-32767 ... +32768).
+
+: \\int\\ : A 4-byte integer, value range (-2,147,483,648 ... +2,147,483,647).
+
+: \\bigint\\ : An 8-byte integer, value range roughly (-9,223,372,036,854,780,000... +9,223,372,036,854,779,999).
+
+: \\numeric\\ : A fixed-point decimal number.
+
+: \\float\\ : A double-precision floating-point decimal number.
+
+: \\clob\\ : A character large object with a size of up to 2,147,483,647 bytes (about 2 GB).
+
+: \\date\\ : An ISO 8601 date stored as a 10-character string; e.g., '1979-11-07'.
+
+: \\time\\ : An ISO 8601 time stored as an 8-character string; e.g., '12:34:56'.
+
+: \\timestamp\\ : An ISO 8601 timestamp stored as a 19-character string (no zone offset); e.g., '1979-11-07T12:34:56'.

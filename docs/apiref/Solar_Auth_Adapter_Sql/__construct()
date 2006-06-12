@@ -1,0 +1,21 @@
+//Inherited from Solar_Auth_Adapter::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Auth_Adapter_Sql
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-defined configuration values.
+
+* Returns Solar_Auth_Adapter_Sql

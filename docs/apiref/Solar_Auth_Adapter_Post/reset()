@@ -1,0 +1,17 @@
+//Inherited from Solar_Auth_Adapter::reset().//
+
+<function>
+
+access:   public
+
+name: reset
+
+return: void
+
+</function>
+
+Clears handle, passwd, email, name, and uri properties.
+
+* Parameters: none.
+
+* Returns void

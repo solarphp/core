@@ -1,0 +1,5 @@
+//Inherited from Solar_Auth_Adapter::$_passwd.//
+
+protected string $_passwd
+
+The user password.

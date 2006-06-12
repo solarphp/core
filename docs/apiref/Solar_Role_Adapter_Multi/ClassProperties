@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Role_Adapter_Multi::$_adapter -- An array of the multiple adapter instances.
+
+* Solar_Role_Adapter_Multi::$_config -- User-provided configuration values.
+
+++ Private
+
+None.

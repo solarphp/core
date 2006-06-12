@@ -1,0 +1,18 @@
+//Inherited from Solar_Auth_Adapter::isLogoutRequest().//
+
+<function>
+
+access:   public
+
+name: isLogoutRequest
+
+return: bool
+
+</function>
+
+Tells if the current page load appears to be the result of
+an attempt to log out.
+
+* Parameters: none.
+
+* Returns bool

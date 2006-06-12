@@ -1,0 +1,17 @@
+//Inherited from Solar_Auth_Adapter::getUri().//
+
+<function>
+
+access:   public
+
+name: getUri
+
+return: string
+
+</function>
+
+Returns the current user URI.
+
+* Parameters: none.
+
+* Returns string

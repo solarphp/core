@@ -1,0 +1,25 @@
+HomePage | The Solar_Auth Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_adapter
+  $_config
+  $_flash
+  $_source
+  $active
+  $allow
+  $email
+  $handle
+  $initial
+  $name
+  $status
+  $uri
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  getFlash()
+  isValid()
+  locale()
+  reset()
+  start()
+  updateIdleExpire()

@@ -1,0 +1,11 @@
+protected array $_config
+
+User-provided configuration.
+
+Keys are:
+
+: \\host\\ : (string) The memcached host name, default 'localhost'.
+
+: \\port\\ : (int) The memcached port number, default 11211.
+
+: \\life\\ : (int) The cache entry lifetime in seconds, default 60.

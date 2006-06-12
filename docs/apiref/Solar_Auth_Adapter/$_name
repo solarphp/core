@@ -1,0 +1,4 @@
+protected string $_name
+
+The user "display name" or "full name" as derived from the
+authentication source.

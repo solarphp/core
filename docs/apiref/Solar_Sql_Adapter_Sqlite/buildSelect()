@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: buildSelect
+
+param: array, $parts
+
+return: void
+
+</function>
+
+Builds a SELECT statement from its component parts.
+
+* Parameters:
+
+ * array //$parts//: The component parts of the statement.
+
+* Returns void
+
+Adds LIMIT clause.

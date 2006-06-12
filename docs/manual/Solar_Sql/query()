@@ -1,4 +1,4 @@
-This is the most-direct way to interact with the database; you simply pass an SQL statement to the method, and the underlying [Solar_Sql_Driver::HomePage Solar_Sql_Driver] class uses [[php PDO]] to execute the statement and return a result.
+This is the most-direct way to interact with the database; you simply pass an SQL statement to the method, and the underlying [Solar_Sql_Adapter::HomePage Solar_Sql_Adapter] class uses [[php PDO]] to execute the statement and return a result.
 
 <code type="php">
 $sql = Solar::factory('Solar_Sql');

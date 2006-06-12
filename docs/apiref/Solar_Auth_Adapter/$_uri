@@ -1,0 +1,3 @@
+protected string $_uri
+
+The user URI as derived from the authentication source.

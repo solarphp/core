@@ -67,19 +67,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Whether or not this is a Single Sign-On adapter, for services
-     * such as TypeKey or OpenID (as opposed to "common" handle + passwd
-     * services).
-     * 
-     * @var bool
-     * 
-     * @see Solar_Auth_Adapter::isSingleSignon()
-     * 
-     */
-    protected $_sso = false;
-    
-    /**
-     * 
      * The unique user handle as derived from the authentication source.
      * 
      * @var string
@@ -145,7 +132,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Typical credentials are $this->_handle and $this->_passwd, but
      * single sign-on systems may use different credential sources.
      * 
-     * 
      * Adapters should set $this->_handle, $this->_email, and
      * $this->_name if verfication is successful.
      * 
@@ -185,22 +171,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             // default to post
             $this->_common['source'] = 'post';
         }
-        
-    }
-    
-    /**
-     * 
-     * Tells if this adapter is for SSO services such as TypeKey or 
-     * OpenID.
-     * 
-     * @return bool
-     * 
-     * @see Solar_Auth_Adapter::$_sso
-     * 
-     */
-    public function isSingleSignon()
-    {
-        return $this->_sso;
     }
     
     /**

@@ -224,6 +224,8 @@ class Solar_Auth extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        $this->_config['submit_login']  = $this->locale('SUBMIT_LOGIN');
+        $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
         parent::__construct($config);
         
         // instantiate an adapter object. we do this here instead of in
@@ -235,22 +237,17 @@ class Solar_Auth extends Solar_Base {
             $this->_config['config']
         );
         
-        // is the adapter a "common" handle + passwd system, or 
-        // a single sign-on system?
-        if (! $this->_adapter->isSingleSignon()) {
-            // set the common source* and submit* config values to the
-            // non SSO adapters so they can look at the request
-            // properly.
-            $common = array(
-                'source'        => $this->_config['source'],
-                'source_handle' => $this->_config['source_handle'],
-                'source_passwd' => $this->_config['source_passwd'],
-                'source_submit' => $this->_config['source_submit'],
-                'submit_login'  => $this->_config['submit_login'],
-                'submit_logout' => $this->_config['submit_logout'],
-            );
-            $this->_adapter->setCommon($common);
-        }
+        // set the common source* and submit* config values to the
+        // so non-SSO methods can look at the request properly.
+        $common = array(
+            'source'        => $this->_config['source'],
+            'source_handle' => $this->_config['source_handle'],
+            'source_passwd' => $this->_config['source_passwd'],
+            'source_submit' => $this->_config['source_submit'],
+            'submit_login'  => $this->_config['submit_login'],
+            'submit_logout' => $this->_config['submit_logout'],
+        );
+        $this->_adapter->setCommon($common);
         
         // create the flash object
         $this->_flash = Solar::factory(

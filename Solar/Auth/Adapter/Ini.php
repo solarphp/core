@@ -30,8 +30,8 @@ Solar::loadClass('Solar_Auth_Adapter');
  * <code>
  * [pmjones]
  * passwd = plaintextpass
- * name = Paul M. Jones
  * email = pmjones@solarphp.com
+ * name = Paul M. Jones
  * uri = http://paul-m-jones.com/
  * </code>
  * 

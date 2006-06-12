@@ -15,7 +15,7 @@
  * 
  */
 ?>
-<?php if (Solar::registry('user')->auth->status == 'VALID'): ?>
+<?php if (Solar::registry('user')->auth->isValid()): ?>
     <p>
         <?php echo $this->getText('Solar::TEXT_AUTH_USERNAME') ?><br />
         <strong><?php echo $this->escape(Solar::registry('user')->auth->handle) ?></strong>

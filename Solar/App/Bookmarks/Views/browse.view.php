@@ -81,7 +81,7 @@
         <p><?php echo $this->getText('NO_BOOKMARKS_FOUND') ?></p>
     <?php endif ?>
     
-    <?php if (Solar::registry('user')->auth->status == 'VALID'): ?>
+    <?php if (Solar::registry('user')->auth->isValid()): ?>
         <hr />
         
         <!-- Add a new bookmark -->

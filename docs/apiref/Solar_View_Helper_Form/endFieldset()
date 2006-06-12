@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: endFieldset
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Ends a <fieldset> block.
+
+* Parameters: none.
+
+* Returns Solar_View_Helper_Form

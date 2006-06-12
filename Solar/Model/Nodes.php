@@ -132,6 +132,12 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'default' => 0,
         );
         
+        // status assigned to this node (public, draft, moderate, etc)
+        $this->_col['status'] = array(
+            'type'    => 'varchar',
+            'size'    => '32',
+        );
+        
         // email related to this part
         $this->_col['email'] = array(
             'type'    => 'varchar',
@@ -200,6 +206,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'rating'       => 'normal',
             'uri'          => 'normal',
             'email'        => 'normal',
+            'status'       => 'normal',
         );
     }
     

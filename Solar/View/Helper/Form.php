@@ -389,6 +389,34 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
+     * Begins a <fieldset> block with a legend/caption.
+     * 
+     * @param string $legend The legend or caption for the fieldset.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function beginFieldset($legend)
+    {
+        $this->_stack[] = array('fieldset', array(true, $legend));
+        return $this;
+    }
+    
+    /**
+     * 
+     * Ends a <fieldset> block.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function endFieldset()
+    {
+        $this->_stack[] = array('fieldset', array(false, null));
+        return $this;
+    }
+    
+    /**
+     * 
      * Builds and returns the form output.
      * 
      * @return string
@@ -470,6 +498,17 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 } else {
                     $in_group = false;
                     $form[] = "$feedback</dd>";
+                    $form[] = '';
+                }
+                
+            } elseif ($type == 'fieldset') {
+                
+                $flag = $info[0];
+                $legend = $info[1];
+                if ($flag) {
+                    $form[] = "    <fieldset><legend>$legend</legend>";
+                } else {
+                    $form[] = "    </fieldset>";
                     $form[] = '';
                 }
             }

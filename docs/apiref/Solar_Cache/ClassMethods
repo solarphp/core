@@ -8,7 +8,7 @@
 
 * Solar_Cache::deleteAll() -- Deletes all entries from the cache.
 
-* Solar_Cache::entry() -- Returns the driver-specific name for the entry key.
+* Solar_Cache::entry() -- Returns the adapter-specific name for the entry key.
 
 * Solar_Cache::fetch() -- Gets cache entry data.
 

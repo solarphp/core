@@ -20,7 +20,7 @@ Inherited Properties:
 
 * Solar_Sql_Table::$_paging() -- The numer of rows per page when selecting.
 
-* Solar_Sql_Table::$_sql() -- The SQL object.
+* Solar_Sql_Table::$_sql() -- A Solar_Sql dependency object.
 
 ++ Private
 

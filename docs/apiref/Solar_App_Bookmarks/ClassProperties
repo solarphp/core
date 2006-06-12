@@ -66,6 +66,8 @@ Inherited Properties:
 
 * Solar_Controller_Page::$_dir() -- Base directory under which actions, views, etc.
 
+* Solar_Controller_Page::$_flash() -- Flash-messaging object.
+
 * Solar_Controller_Page::$_info() -- Application request parameters collected from the URI pathinfo.
 
 * Solar_Controller_Page::$_layout() -- The name of the layout to use for the view, minus the .

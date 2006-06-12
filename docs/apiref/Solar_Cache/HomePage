@@ -8,4 +8,4 @@
 
 ++ Overview
 
-Class for cache control.
+Facade class for cache adapters.

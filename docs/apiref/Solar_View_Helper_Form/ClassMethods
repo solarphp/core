@@ -12,7 +12,11 @@
 
 * Solar_View_Helper_Form::auto() -- Automatically adds multiple pieces to the form.
 
+* Solar_View_Helper_Form::beginFieldset() -- Begins a <fieldset> block with a legend/caption.
+
 * Solar_View_Helper_Form::beginGroup() -- Begins a group of form elements under a single label.
+
+* Solar_View_Helper_Form::endFieldset() -- Ends a <fieldset> block.
 
 * Solar_View_Helper_Form::endGroup() -- Ends a group of form elements.
 

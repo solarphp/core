@@ -2,8 +2,6 @@
 
 ++ Public
 
-* Solar::addFlash() -- Appends a "read-once" session value to a class and key.
-
 * Solar::apiVersion() -- Returns the API version for Solar.
 
 * Solar::config() -- Safely gets a configuration group array or element value.
@@ -26,8 +24,6 @@
 
 * Solar::get() -- Safely gets the value of an element from the $_GET array.
 
-* Solar::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
-
 * Solar::getLocale() -- Returns the current locale code.
 
 * Solar::isRegistered() -- Check to see if an object name already exists in the registry.
@@ -49,8 +45,6 @@
 * Solar::server() -- Safely gets the value of an element from the $_SERVER array.
 
 * Solar::session() -- Safely gets the value of an element from the $_SESSION array.
-
-* Solar::setFlash() -- Sets a "read-once" session value for a class and key.
 
 * Solar::setLocale() -- Sets the locale code and clears out previous locale strings.
 

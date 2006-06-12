@@ -23,7 +23,7 @@ key can be any scalar value:  a web page name, an integer ID,
 a simple name, and so on.
 
 If the cache entry does not exist, or if it has passed its
-lifetime (defined in the driver's config keys), the
+lifetime (defined in the adapter's config keys), the
 function will return boolean false; otherwise, it will return
 the contents of the cache entry.
 

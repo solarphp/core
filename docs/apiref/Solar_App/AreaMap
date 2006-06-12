@@ -6,6 +6,7 @@ ApiRef | API Reference
   $_action_info
   $_config
   $_dir
+  $_flash
   $_info
   $_layout
   $_layout_dir
@@ -34,16 +35,14 @@ ApiRef | API Reference
   _exception()
   _forward()
   _info()
+  _newView()
   _postAction()
   _preAction()
   _query()
   _redirect()
   _run()
   _setup()
-  addFlash()
   apiVersion()
   display()
   fetch()
-  getFlash()
   locale()
-  setFlash()

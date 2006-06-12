@@ -36,4 +36,4 @@ $cols = array(
 );
 </code>
 
-For available field types, see Solar_Sql_Driver::$_native.
+For available field types, see Solar_Sql_Adapter::$_native.

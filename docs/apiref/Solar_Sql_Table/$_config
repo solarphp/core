@@ -4,7 +4,6 @@ User-provided configuration.
 
 Keys are:
 
-sql => (string|array) Name of the shared SQL object, or array of (driver,
-options) to create a standalone SQL object.
+: \\sql\\ : => (dependency) A Solar_Sql dependency object.
 
-locale => (string) Path to locale files.
+: \\locale\\ : => (string) Path to locale files.

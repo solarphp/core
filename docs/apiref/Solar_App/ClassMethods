@@ -10,19 +10,13 @@ Inherited Methods:
 
 * Solar_Controller_Page::__set() -- Try to force users to define what their view variables are.
 
-* Solar_Controller_Page::addFlash() -- Appends a "read-once" session value for this class and key.
-
 * Solar_Base::apiVersion() -- Reports the API version for this class.
 
 * Solar_Controller_Page::display() -- Executes the requested action and displays its output.
 
 * Solar_Controller_Page::fetch() -- Executes the requested action and returns its output with layout.
 
-* Solar_Controller_Page::getFlash() -- Retrieves a "read-once" session value, thereby removing the value.
-
 * Solar_Base::locale() -- Looks up locale strings based on a key.
-
-* Solar_Controller_Page::setFlash() -- Sets a "read-once" session value for this class and a key.
 
 ++ Protected
 
@@ -41,6 +35,8 @@ Inherited Methods:
 * Solar_Controller_Page::_forward() -- Forwards internally to another action.
 
 * Solar_Controller_Page::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
+
+* Solar_Controller_Page::_newView() -- Creates and returns a new Solar_View object.
 
 * Solar_Controller_Page::_postAction() -- Executes just after the last action, and just before the view.
 

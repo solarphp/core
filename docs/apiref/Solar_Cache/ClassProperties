@@ -6,9 +6,11 @@ None.
 
 ++ Protected
 
-* Solar_Cache::$_config -- User-provided configuration.
+* Solar_Cache::$_active -- Whether or not the cache is active.
 
-* Solar_Cache::$_driver -- The instantiated driver object.
+* Solar_Cache::$_adapter -- The instantiated adapter object.
+
+* Solar_Cache::$_config -- User-provided configuration.
 
 ++ Private
 

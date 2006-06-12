@@ -148,7 +148,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Sets information for "common" handle + passwd authentication
      * systems.
      * 
-     * @param array $_common
+     * @param array $common The common adapter information for source, 
+     * source_handle, etc.
      * 
      * @see Solar_Auth_Adapter::$_common
      * 

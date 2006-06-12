@@ -1,7 +1,0 @@
-+ The Solar_PathStack Class
-
-Class for finding files in user-defined fallback path stacks.
-
-As you add directory paths, they are searched first when you call
-find($file).  This allows users to add override paths so their files will
-be used instead of default files.

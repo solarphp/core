@@ -1,3 +1,0 @@
-protected object $_memcache
-
-A memcache client object.

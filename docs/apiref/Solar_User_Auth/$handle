@@ -1,5 +1,0 @@
-public string $handle
-
-Convenience reference to $_SESSION['Solar_User_Auth']['handle'].
-
-This is the currently authenticated handle.

@@ -13,7 +13,7 @@ class Test_Solar_Cache_Adapter_File extends Solar_Test {
     
     public function setup()
     {
-        // create a Solar_Cache with the Solar_Cache_File driver
+        // create a Solar_Cache with the Solar_Cache_File adapter
         $this->_cache = Solar::factory('Solar_Cache', $this->_config);
         
         // remove all previous entries

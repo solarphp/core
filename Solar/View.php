@@ -52,7 +52,7 @@ class Solar_View extends Solar_Base {
      */
     protected $_escape = array(
         'quotes'  => ENT_COMPAT,
-        'charset' => 'iso-8859-1',
+        'charset' => 'UTF-8',
     );
     
     /**

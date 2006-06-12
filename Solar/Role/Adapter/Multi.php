@@ -37,25 +37,25 @@ class Solar_Role_Adapter_Multi extends Solar_Role_Adapter {
      * 
      * Keys are:
      * 
-     * : \\drivers\\ : (array) The array of driver classes and optional configs.
+     * : \\adapters\\ : (array) The array of adapter classes and optional configs.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'drivers' => array(
+        'adapters' => array(
             'Solar_User_Role_None'
         )
     );
     
     /**
      * 
-     * An array of the multiple driver instances.
+     * An array of the multiple adapter instances.
      * 
      * @var array
      * 
      */
-    protected $_driver = array();
+    protected $_adapter = array();
     
     /**
      * 
@@ -69,13 +69,13 @@ class Solar_Role_Adapter_Multi extends Solar_Role_Adapter {
         // basic config
         parent::__construct($config);
         
-        // make sure the drivers config is an array
-        settype($this->_config['drivers'], 'array');
+        // make sure the adapters config is an array
+        settype($this->_config['adapters'], 'array');
         
-        // instantiate the driver objects
-        foreach ($this->_config['drivers'] as $key => $info) {
+        // instantiate the adapter objects
+        foreach ($this->_config['adapters'] as $key => $info) {
             
-            // is the driver value an array (for custom configs)
+            // is the adapter value an array (for custom configs)
             // or a string (for default configs)?
             if (is_array($info)) {
                 $class = $info[0];
@@ -85,14 +85,14 @@ class Solar_Role_Adapter_Multi extends Solar_Role_Adapter {
                 $opts = null;
             }
             
-            // add the driver instance
-            $this->_driver[] = Solar::factory($class, $opts);
+            // add the adapter instance
+            $this->_adapter[] = Solar::factory($class, $opts);
         }
     }
     
     /**
      * 
-     * Fetches the roles from each of the drivers.
+     * Fetches the roles from each of the adapters.
      * 
      * @param string $handle User handle to get roles for.
      * 
@@ -104,8 +104,8 @@ class Solar_Role_Adapter_Multi extends Solar_Role_Adapter {
         // the list of all roles
         $list = array();
         
-        // loop through all the drivers and collect roles
-        foreach ($this->_driver as $obj) {
+        // loop through all the adapters and collect roles
+        foreach ($this->_adapter as $obj) {
         
             // fetch the role list
             $result = $obj->fetch($handle);

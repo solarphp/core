@@ -97,7 +97,7 @@ class Solar_User extends Solar_Base {
         $this->auth->start();
         
         // is this a valid authenticated user?
-        if ($this->auth->status == 'VALID') {
+        if ($this->auth->isValid()) {
             // yes, the user is authenticated as valid.
             // load up any roles for the user.
             $this->role->load($this->auth->handle);

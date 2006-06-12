@@ -69,11 +69,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertProperty($this->_auth, '_common', 'same', $expect);
     }
     
-    public function testIsSingleSignon()
-    {
-        $this->assertFalse($this->_auth->isSingleSignon());
-    }
-    
     public function testIsLoginRequest_true()
     {
         // fake the POST parameters

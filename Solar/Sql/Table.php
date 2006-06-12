@@ -32,10 +32,9 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Keys are:
      * 
-     * sql => (string|array) Name of the shared SQL object, or array of (driver,
-     * options) to create a standalone SQL object.
+     * : \\sql\\ : => (dependency) A Solar_Sql dependency object.
      * 
-     * locale => (string) Path to locale files.
+     * : \\locale\\ : => (string) Path to locale files.
      * 
      * @var array
      * 
@@ -112,9 +111,9 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
-     * The SQL object.
+     * A Solar_Sql dependency object.
      * 
-     * @var object
+     * @var Solar_Sql
      * 
      */
     protected $_sql = null;

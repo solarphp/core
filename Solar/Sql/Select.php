@@ -991,5 +991,65 @@ class Solar_Sql_Select extends Solar_Base {
             );
         }
     }
+
+
+    /**
+     * 
+     * Safely quotes a value for an SQL statement.
+     * 
+     * @param mixed $val The value to quote.
+     * 
+     * @return string An SQL-safe quoted value (or a string of 
+     * separated-and-quoted values).
+     * 
+     * @see Solar_Sql::quote()
+     * 
+     */
+    public function quote($val)
+    {
+        return $this->_sql->quote($val);
+    }
+    
+    /**
+     * 
+     * Quotes a value and places into a piece of text at a placeholder.
+     * 
+     * @param string $txt The text with a placeholder.
+     * 
+     * @param mixed $val The value to quote.
+     * 
+     * @return mixed An SQL-safe quoted value (or string of separated values)
+     * placed into the orignal text.
+     * 
+     * @see Solar_Sql::quoteInto()
+     * 
+     */
+    public function quoteInto($txt, $val)
+    {
+        $val = $this->_sql->quoteInto($txt, $val);
+    }
+    
+    /**
+     * 
+     * Quote multiple text-and-value pieces.
+     * 
+     * @param array $list A series of key-value pairs where the key is
+     * the placeholder text and the value is the value to be quoted into
+     * it.  If the key is an integer, it is assumed that the value is
+     * piece of literal text to be used and not quoted.
+     * 
+     * @param string $sep Return the list pieces separated with this string
+     * (e.g. ' AND '), default null.
+     * 
+     * @return string An SQL-safe string composed of the list keys and
+     * quoted values.
+     * 
+     * @see Solar_Sql::quoteMulti()
+     * 
+     */
+    public function quoteMulti($list, $sep = null)
+    {
+        return $this->_sql->quoteMulti($list, $sep);
+    }
 }
 ?>

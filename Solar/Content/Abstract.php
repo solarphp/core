@@ -332,10 +332,10 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             foreach ($this->_parts as $part) {
                 // JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
                 $join = $part . '_nodes';
-                $type = $this->_content->sql->quote($part);
+                $type = $select->quote($part);
                 $count = $part . '_count';
                 
-                $select->join(
+                $select->leftJoin(
                     // this table
                     "nodes AS $join",
                     // on these conditions

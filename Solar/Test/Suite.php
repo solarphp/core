@@ -286,7 +286,7 @@ class Solar_Test_Suite extends Solar_Base {
         
         // run the tests
         $time = time();
-        $this->_log("1..{$this->_info['plan']}");
+        $this->_log('test', "1..{$this->_info['plan']}");
         foreach ($this->_test as $class => $methods) {
             
             // class setup
@@ -348,7 +348,7 @@ class Solar_Test_Suite extends Solar_Base {
         $plan = $this->_info['plan'];
         $time = $this->_info['time'];
         
-        $this->_log("$done/$plan tests, $time seconds");
+        $this->_log('test', "$done/$plan tests, $time seconds");
         
         $tmp = array();
         $show = array('fail', 'todo', 'skip', 'pass');
@@ -356,12 +356,12 @@ class Solar_Test_Suite extends Solar_Base {
             $count = count($this->_info[$type]);
             $tmp[] = "$count $type";
         }
-        $this->_log(implode(', ', $tmp));
+        $this->_log('test', implode(', ', $tmp));
         
         $show = array('fail', 'todo', 'skip');
         foreach ($show as $type) {
             foreach ($this->_info[$type] as $name => $note) {
-                $this->_log(strtoupper($type) . " $name ($note)");
+                $this->_log('test', strtoupper($type) . " $name ($note)");
             }
         }
         
@@ -386,26 +386,26 @@ class Solar_Test_Suite extends Solar_Base {
      */
     protected function _done($type, $name, $note = null, $diag = null)
     {
-        $text = '';
+        $message = '';
         $num = $this->_info['done'];
         
         switch ($type) {
         case 'pass':
-            $text = "ok $num - $name";
+            $message = "ok $num - $name";
             break;
         
         case 'skip':
-            $text = "ok $num - $name # SKIP"
+            $message = "ok $num - $name # SKIP"
                   . ($note ? " $note" : "");
             break;
         
         case 'todo':
-            $text = "not ok $num - $name # TODO"
+            $message = "not ok $num - $name # TODO"
                   . ($note ? " $note" : "");
             break;
         
         case 'fail':
-            $text = "not ok $num - $name"
+            $message = "not ok $num - $name"
                   . ($note ? " $note" : "");
             break;
         }
@@ -416,25 +416,11 @@ class Solar_Test_Suite extends Solar_Base {
         
         $diag = trim($diag);
         if ($diag) {
-            $text = "$text\n# " . str_replace("\n", "\n# ", trim($diag));
+            $message = "$message\n# " . str_replace("\n", "\n# ", trim($diag));
         }
         
-        $this->_log($text);
+        $this->_log('test', $message);
         $this->_info[$type][$name] = $note;
-    }
-    
-    /**
-     * 
-     * Saves a message to the log.
-     * 
-     * @param string $spec The log message.
-     * 
-     * @return void
-     * 
-     */
-    protected function _log($spec)
-    {
-        $this->_log->save('test', $spec);
     }
 }
 ?>

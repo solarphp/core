@@ -53,30 +53,60 @@ abstract class Solar_Base {
      * 
      * Default config keys are:
      * 
-     * : \\locale\\ : (string) Directory where locale files for the class are kept
+     * : \\locale\\ : (string) Directory where locale files for the 
+     *   class are kept.
+     * 
+     * : \\log\\ : (dependency) A Solar_Log dependency.
      * 
      * @var array
      * 
      */
     protected $_config = array(
         'locale' => null,
+        'log'    => null,
     );
+    
+    /**
+     * 
+     * Internal log object if one was specified in config.
+     * 
+     * @var Solar_Log
+     * 
+     * @see Solar_Log::HomePage
+     * 
+     */
+    protected $_log = null;
     
     /**
      * 
      * Constructor.
      * 
-     * @param mixed $config If array, is merged with the default
-     * $_config property array and any values from the
-     * Solar.config.php file.  If string, is loaded from that file
-     * and merged with values from Solar.config.php file.  If boolean
-     * false, no config overrides are performed (class defaults
-     * only).
+     * If the $config param is an array, it is merged with the default
+     * $_config property array and any values from the Solar.config.php
+     * file.
+     * 
+     * If the $config param is a string, is loaded from that file
+     * and merged with values from Solar.config.php file.
+     
+     * If the $config param is boolean false, no config overrides are
+     * performed (class defaults only).
+     * 
+     * The Solar.config.php values are inherited along class parent
+     * lines; e.g., all classes descending from Solar_Base use the 
+     * Solar_Base config file values until overridden.
+     * 
+     * @param mixed $config User-defined configuration values.
      * 
      */
     public function __construct($config = null)
     {
-        $class = get_class($this);
+        // get the stack of classes leading to this one
+        $class  = get_class($this);
+        $stack  = array($class);
+        $parent = $class;
+        while ($parent = get_parent_class($parent)) {
+            array_unshift($stack, $parent);
+        }
         
         if ($config === false) {
             // don't attempt to override class defaults at all,
@@ -86,9 +116,12 @@ abstract class Solar_Base {
             // normal behavior: merge from Solar.config.php,
             // then from construction-time config.
             
-            // Solar.config.php values override class defaults
-            $solar = Solar::config($class, null, array());
-            $this->_config = array_merge($this->_config, $solar);
+            // Solar.config.php values override class defaults.
+            // Parent-class config values are inherited.
+            foreach ($stack as $class) {
+                $solar = Solar::config($class, null, array());
+                $this->_config = array_merge($this->_config, $solar);
+            }
             
             // load construction-time config from a file?
             if (is_string($config)) {
@@ -109,6 +142,11 @@ abstract class Solar_Base {
         
         // load the locale strings
         $this->locale('');
+        
+        // get the log object if one was specified
+        if (! empty($this->_config['log'])) {
+            $this->_log = Solar::dependency('Solar_Log', $this->_log);
+        }
     }
     
     /**
@@ -265,6 +303,27 @@ abstract class Solar_Base {
         
         // final fallback to generic Solar_Exception
         return Solar::factory('Solar_Exception', $config);
+    }
+    
+    /**
+     * 
+     * Convenience method for saving messages to the log.
+     * 
+     * @param string $event The log event type.
+     * 
+     * @param string $message The log message.
+     * 
+     * @return boolean True if saved, false if not, null if logging
+     * not enabled.
+     * 
+     * @see Solar_Log::save()
+     * 
+     */
+    protected function _log($event, $message)
+    {
+        if (! empty($this->_log)) {
+            return $this->_log->save($event, $message);
+        }
     }
 }
 ?>

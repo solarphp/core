@@ -121,7 +121,6 @@ class Solar_Log extends Solar_Base {
      * Saves (writes) an event and message to the log.
      * 
      * <code type="php">
-     * // these are equivalent:
      * $log->save('info', 'informational message');
      * $log->save('critical', 'critical message');
      * $log->save('my special event type', 'describing the event');

@@ -85,8 +85,17 @@ class Solar_Model_Tags extends Solar_Sql_Table {
     {
         // normalize to string...
         $tags = $this->asString($tags);
-        // ... and convert to array
-        return explode(' ', $tags);
+        
+        // ... and convert to array.  for some reason,
+        // if we explode on an empty tag string, we get
+        // one array element of an empty string.  that
+        // screws things up, so check if there are actually
+        // tags in the string.
+        if ($tags) {
+            return explode(' ', $tags);
+        } else {
+            return array();
+        }
     }
     
     /**

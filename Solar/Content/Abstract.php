@@ -357,33 +357,21 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetch the parts of a master node ID.
+     * Fetch the parts of a parent node ID.
      * 
-     * @param int $master_id The master node ID.
+     * @param int $parent_id The parent node ID.
      * 
      * @param array $order Return in this order.
      * 
-     * @return array A list of nodes of this type that are parent_id
-     * the $master_id node.
+     * @return array A list of nodes that are children of
+     * the $parent_id node.
      * 
      */
-    public function fetchParts($master_id, $order = null)
+    public function fetchParts($parent_id, $order = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
-        
-        // limit to one area?
-        if ($this->_area_id) {
-            $where['nodes.area_id = ?'] = $this->_area_id;
-        }
-        
-        // limit to one type
-        $where['nodes.type = ?'] = $this->_type;
-        
-        // limit to parts of the master node ID
-        $where['nodes.parent_id = ?'] = $master_id;
-        
-        // order and return
+        $select->where('nodes.parent_id = ?', $parent_id);
         $select->order($order);
         return $select->fetch('all');
     }

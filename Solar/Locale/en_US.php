@@ -24,6 +24,7 @@ return array(
     'FORMAT_TIME'                => '%r', // strftime: 12-hour am/pm
     
     // page submissions
+    'SUBMIT_ADD'                 => 'Add',
     'SUBMIT_CANCEL'              => 'Cancel',
     'SUBMIT_CREATE'              => 'Create',
     'SUBMIT_DELETE'              => 'Delete',

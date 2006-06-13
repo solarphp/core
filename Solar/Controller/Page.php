@@ -201,7 +201,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the view to be rendered after the action, minus the .view.php suffix.
+     * The name of the view to be rendered after the action.
      * 
      * @var string
      * 
@@ -546,7 +546,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _info($key, $val = null)
     {
-        if (array_key_exists($key, $this->_info)) {
+        if (array_key_exists($key, $this->_info) && $this->_info[$key] !== null) {
             return $this->_info[$key];
         } else {
             return $val;
@@ -570,7 +570,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _query($key, $val = null)
     {
-        if (array_key_exists($key, $this->_query)) {
+        if (array_key_exists($key, $this->_query) && $this->_query[$key] !== null) {
             return $this->_query[$key];
         } else {
             return $val;

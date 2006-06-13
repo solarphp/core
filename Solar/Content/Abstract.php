@@ -202,11 +202,14 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         if ($this->_parts) {
             // join each table and get a count
             foreach ($this->_parts as $part) {
-                // JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
+                // we left-join so that an absences of a part-type does
+                // not return 0 rows for the main type
+                // 
+                // LEFT JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
                 $join = $part . '_nodes';
-                $type = $this->_content->sql->quote($part);
+                $type = $select->quote($part);
                 $count = $part . '_count';
-                $select->join(
+                $select->leftJoin(
                     // this table
                     "nodes AS $join",
                     // on these conditions

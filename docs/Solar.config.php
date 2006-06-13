@@ -54,8 +54,8 @@ $config['Solar_Sql'] = array(
 /**
 * User authentication source.
 */
-$config['Solar_User_Auth'] = array(
-	'adapter' => 'Solar_User_Auth_Htpasswd',
+$config['Solar_Auth'] = array(
+	'adapter' => 'Solar_Auth_Adapter_Htpasswd',
 	'config' => array(
 		'file' => "$docroot/htpasswd.conf",
 	),

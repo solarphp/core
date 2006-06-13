@@ -2,7 +2,7 @@
 
 ++ Class Names
 
-All Solar class names start with \\Solar_\\ and map directly to their filesystem location, where the underscore represents a new directory.  For example, the \\Solar_User_Auth_Sql\\ class is located at \\Solar/User/Auth/Sql.php\\.  This makes it possible to use \\Solar::loadClass()\\ and \\Solar::factory()\\ to automatically load and configure new instances.
+All Solar class names start with \\Solar_\\ and map directly to their filesystem location, where the underscore represents a new directory.  For example, the \\Solar_Auth_Adapter_Sql\\ class is located at \\Solar/Auth/Adapter/Sql.php\\.  This makes it possible to use \\Solar::loadClass()\\ and \\Solar::factory()\\ to automatically load and configure new instances.
 
 ++ Method Names
 

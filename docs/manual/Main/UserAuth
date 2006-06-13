@@ -52,7 +52,7 @@ Attempt to log in with your username and password.
 
 ++ Other authentication sources
 
-* [Solar_Auth_Adapter_Htpasswd::HomePage Solar_User_Auth_Htpasswd]
+* [Solar_Auth_Adapter_Htpasswd::HomePage Solar_Auth_Adapter_Htpasswd]
          
 * [Solar_Auth_Adapter_Ini::HomePage Solar_Auth_Adapter_Ini]
          

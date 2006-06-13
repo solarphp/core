@@ -16,6 +16,8 @@ Here are some of the more interesting class documentation areas to get you start
 
 * [Solar_App::HomePage Solar_App]
 
+* [Solar_Auth::HomePage Solar_Auth]
+
 * [Solar_Base::HomePage Solar_Base]
 
 * [Solar_Cache::HomePage Solar_Cache]
@@ -36,13 +38,11 @@ Here are some of the more interesting class documentation areas to get you start
 
 * [Solar_Sql_Table::HomePage Solar_Sql_Table]
 
+* [Solar_Role::HomePage Solar_Role]
+
 * [Solar_Uri::HomePage Solar_Uri]
 
 * [Solar_User::HomePage Solar_User]
-
-* [Solar_User_Auth::HomePage Solar_User_Auth]
-
-* [Solar_User_Role::HomePage Solar_User_Role]
 
 * [Solar_Valid::HomePage Solar_Valid]
 

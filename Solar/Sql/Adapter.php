@@ -446,7 +446,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 $list[] = $tmp;
             }
             // add the list of all joins
-            $stmt .= implode("\n\t", $list) . "\n";
+            $stmt .= implode("\n", $list) . "\n";
         }
         
         // with these where conditions

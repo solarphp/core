@@ -198,6 +198,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->from($this->_content->nodes, '*');
         $select->multiWhere($this->_masterWhere());
         
+        // join back to the area to get its name
+        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
+        
         // get part counts?
         if ($this->_parts) {
             // join each table and get a count
@@ -326,6 +329,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
         
+        // join back to the area to get its name
+        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
+        
         // get part counts?
         if ($this->_parts) {
             // join each table and get a count
@@ -371,6 +377,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
+        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
         $select->where('nodes.parent_id = ?', $parent_id);
         $select->order($order);
         return $select->fetch('all');

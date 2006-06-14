@@ -294,8 +294,15 @@ class Solar_Auth extends Solar_Base {
         $this->name    =& $_SESSION['Solar_Auth']['name'];
         $this->uri     =& $_SESSION['Solar_Auth']['uri'];
         
-        if ($this->allow && $this->_adapter->isLoginRequest()) {
-            // process login requests
+        // update idle and expire times no matter what
+        $this->updateIdleExpire();
+        
+        // if current auth is not valid, and processing is allowed,
+        // process login attempts
+        if (! $this->isValid() && $this->allow &&
+            $this->_adapter->isLoginRequest()) {
+                
+            // check the login validity
             if ($this->_adapter->isLoginValid()) {
                 $this->reset('VALID');
                 $this->handle = $this->_adapter->getHandle();
@@ -305,12 +312,14 @@ class Solar_Auth extends Solar_Base {
             } else {
                 $this->reset('WRONG');
             }
-        } elseif ($this->allow && $this->_adapter->isLogoutRequest()) {
-            // process logout requests
+            
+        }
+        
+        // if current auth **is** valid, and processing is allowed,
+        // process logout attempts.
+        if ($this->isValid() && $this->allow &&
+            $this->_adapter->isLogoutRequest()) {
             $this->reset();
-        } else {
-            // update current idle and expire times
-            $this->updateIdleExpire();
         }
     }
     
@@ -399,12 +408,12 @@ class Solar_Auth extends Solar_Base {
         $this->email   = null;
         
         if ($status == 'VALID') {
-            // newly valid, so restart the timers
+            // restart the timers
             $now = time();
             $this->initial = $now;
             $this->active  = $now;
         } else {
-            // not valid, so clear the adapter values too
+            // clear the adapter values too
             $this->_adapter->reset();
         }
         

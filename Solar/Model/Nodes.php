@@ -105,7 +105,7 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'size'    => 32,
         );
         
-        // the locale for this part
+        // the locale for this node
         $this->_col['locale'] = array(
             'type'    => 'char',
             'size'    => 5,
@@ -138,18 +138,24 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'size'    => '32',
         );
         
-        // email related to this part
+        // email related to this node
         $this->_col['email'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'valid'   => 'email',
         );
         
-        // uri related to this part
+        // uri related to this node
         $this->_col['uri'] = array(
             'type'    => 'varchar',
             'size'    => 255,
             'valid'   => 'uri',
+        );
+        
+        // display-name, nickname, or related title name for this node
+        $this->_col['moniker'] = array(
+            'type'    => 'varchar',
+            'size'    => 255,
         );
         
         // the node "subject" or title

@@ -89,6 +89,8 @@ class Solar_Flash extends Solar_Base {
         if (! isset($_SESSION['Solar_Flash'][$this->_class])) {
             $_SESSION['Solar_Flash'][$this->_class] = array();
         }
+        
+        $this->list =& $_SESSION['Solar_Flash'][$this->_class];
     }
     
     /**

@@ -19,7 +19,7 @@
 ?>
 <h1><?php echo $this->getText('BOOKMARKS') ?></h1>
 <h2><?php echo $this->getText('EDIT_ITEM') ?></h2>
-<p>[ <?php echo $this->action($this->backlink, 'BACKLINK') ?> ]</p>
+<p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php
     $attribs = array(

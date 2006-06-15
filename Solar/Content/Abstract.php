@@ -103,6 +103,17 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
+     * With fetchAll(), use this as the default order.
+     * 
+     * @var string
+     * 
+     * @see Solar_Content_Abstract::fetchAll()
+     * 
+     */
+    protected $_order = null;
+    
+    /**
+     * 
      * Constructor
      * 
      * @param array $config User-defined configuration values.
@@ -193,13 +204,18 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     public function fetchAll($tags = null, $where = null, $order = null,
         $page = null)
     {
+        // set the default order if needed
+        if (! $order) {
+            $order = $this->_order;
+        }
+        
+        // get a Select tool
         $select = Solar::factory('Solar_Sql_Select');
-        $select->paging = $this->_paging;
+        $select->setPaging($this->_paging);
+        
+        // basic node selection
         $select->from($this->_content->nodes, '*');
         $select->multiWhere($this->_masterWhere());
-        
-        // join back to the area to get its name
-        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
         
         // get part counts?
         if ($this->_parts) {
@@ -329,9 +345,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
         
-        // join back to the area to get its name
-        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
-        
         // get part counts?
         if ($this->_parts) {
             // join each table and get a count
@@ -377,7 +390,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
-        $select->join('areas', 'areas.id = nodes.area_id', "name AS area_name");
         $select->where('nodes.parent_id = ?', $parent_id);
         $select->order($order);
         return $select->fetch('all');
@@ -541,13 +553,10 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * Generates a data-entry form for a master node.
      * 
-     * @param int|array $data An existing node ID, or an array of data to
-     * pre-populate into the form.  The array should have a key
-     * 'bookmarks' with a sub-array using keys for 'uri', 'subj', 'summ',
-     * 'tags', and 'pos'.  If empty, default values are pre-populated
-     * into the form.
+     * @param array $data An array of "column => value" data to
+     * pre-populate into the form.
      * 
-     * @return object A Solar_Form object.
+     * @return Solar_Form
      * 
      */
     public function form($data = null)

@@ -246,12 +246,12 @@ class Solar_App_Bookmarks extends Solar_App {
         case 'created_asc':
         case 'ts':
         case 'ts_asc':
-            $order = 'created ASC';
+            $order = 'nodes.created ASC';
             break;
         
         case 'created_desc':
         case 'ts_desc':
-            $order = 'created DESC';
+            $order = 'nodes.created DESC';
             break;
             
         // title
@@ -259,12 +259,12 @@ class Solar_App_Bookmarks extends Solar_App {
         case 'subj_asc':
         case 'title':
         case 'title_asc':
-            $order = 'LOWER(subj) ASC';
+            $order = 'LOWER(nodes.subj) ASC';
             break;
         
         case 'subj_desc':
         case 'title_desc':
-            $order = 'LOWER(subj) DESC';
+            $order = 'LOWER(nodes.subj) DESC';
             break;
         
         // tags
@@ -272,22 +272,22 @@ class Solar_App_Bookmarks extends Solar_App {
         case 'tag_asc':
         case 'tags':
         case 'tags_asc':
-            $order = 'LOWER(tags) ASC';
+            $order = 'LOWER(nodes.tags) ASC';
             break;
             
         case 'tag_desc':
         case 'tags_desc':
-            $order = 'LOWER(tags) DESC';
+            $order = 'LOWER(nodes.tags) DESC';
             break;
         
         // pos
         case 'pos':
         case 'pos_asc':
-            $order = 'pos ASC';
+            $order = 'nodes.pos ASC';
             break;
         
         case 'pos_desc':
-            $order = 'pos DESC';
+            $order = 'nodes.pos DESC';
             break;
         
         // owner handle (username)
@@ -295,17 +295,17 @@ class Solar_App_Bookmarks extends Solar_App {
         case 'owner_asc':
         case 'user':
         case 'user_asc':
-            $order = 'LOWER(owner_handle) ASC';
+            $order = 'LOWER(nodes.owner_handle) ASC';
             break;
         
         case 'owner_desc':
         case 'user_desc':
-            $order = 'LOWER(owner_handle) DESC';
+            $order = 'LOWER(nodes.owner_handle) DESC';
             break;
         
         // default
         default:
-            $order = 'created DESC';
+            $order = 'nodes.created DESC';
             break;
         
         }

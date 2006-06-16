@@ -63,6 +63,12 @@ class Solar_Model_Areas extends Solar_Sql_Table {
             'size'    => 255,
         );
         
+        // area summary description or tagline
+        $this->_col['summ'] = array(
+            'type'    => 'varchar',
+            'size'    => 255,
+        );
+        
         // serialized preferences
         $this->_col['prefs'] = array(
             'type'    => 'clob',

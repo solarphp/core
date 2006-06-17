@@ -134,6 +134,20 @@ class Solar {
      */
     public static $locale = array();
     
+    /**
+     * 
+     * Parent hierarchy for all classes.
+     * 
+     * We keep track of this so configs, locale strings, etc. can be
+     * inherited properly from parent classes.
+     * 
+     * Although this property is public, you generally shouldn't need
+     * to manipulate it in any way.
+     * 
+     * @var array
+     * 
+     */
+    public static $parents = array();
     
     /**
      * 
@@ -267,6 +281,8 @@ class Solar {
      * 
      * Gets the translated locale string for a class and key.
      * 
+     * Loads locale string files on-demand.
+     * 
      * @param string $class The class of the translation.
      * 
      * @param string $key The translation key.
@@ -279,23 +295,37 @@ class Solar {
      */
     public static function locale($class, $key, $num = 1)
     {
-        // if the key does not exist for the class,
-        // return the key itself.
-        if (! isset(Solar::$locale[$class][$key])) {
-            return $key;
+        // find all parents of this class, including this class
+        $stack = Solar::parents($class, true);
+        
+        // go through all classes and find the first matching
+        // translation key
+        foreach ($stack as $class) {
+            
+            // do we need to load locale strings for the class?
+            if (! array_key_exists($class, Solar::$locale)) {
+                Solar::_loadLocale($class);
+            }
+        
+            // does the key exist for the class?
+            if (! empty(Solar::$locale[$class][$key])) {
+                
+                // get the translation of the key and force
+                // to an array.
+                $string = (array) Solar::$locale[$class][$key];
+        
+                // return the number-appropriate version of the
+                // translated key, if multiple values exist.
+                if ($num != 1 && ! empty($string[1])) {
+                    return $string[1];
+                } else {
+                    return $string[0];
+                }
+            }
         }
         
-        // get the translation of the key and force
-        // to an array.
-        $string = (array) Solar::$locale[$class][$key];
-        
-        // return the number-appropriate version of the
-        // translated key, if multiple values exist.
-        if ($num != 1 && isset($string[1])) {
-            return $string[1];
-        } else {
-            return $string[0];
-        }
+        // never found a translation, return the requested key.
+        return $key;
     }
     
     /**
@@ -314,6 +344,7 @@ class Solar {
         // reset the strings
         Solar::$locale = array();
         
+        /*
         // load the base Solar locale strings
         $dir = Solar::fixdir(Solar::$config['locale']);
         $file = $dir . Solar::$_locale_code . '.php';
@@ -329,6 +360,7 @@ class Solar {
             Solar::$locale['Solar'] = array();
             return false;
         }
+        */
     }
     
     /**
@@ -888,6 +920,45 @@ class Solar {
     
     /**
      * 
+     * Returns an array of the parent classes for a given class.
+     * 
+     * Parents in "reverse" order ... element 0 is the immediate parent,
+     * element 1 the grandparent, etc.
+     * 
+     * @param string $class The class to find parents for.
+     * 
+     * @param bool $include_class If true, the class name is element 0,
+     * the parent is element 1, the grandparent is element 2, etc.
+     * 
+     * @return array
+     * 
+     */
+    public static function parents($class, $include_class = false)
+    {
+        // do we need to load the parent stack?
+        if (empty(Solar::$parents[$class])) {
+            // get the stack of classes leading to this one
+            Solar::$parents[$class] = array();
+            $parent = $class;
+            while ($parent = get_parent_class($parent)) {
+                Solar::$parents[$class][] = $parent;
+            }
+        }
+        
+        // get the parent stack
+        $stack = Solar::$parents[$class];
+        
+        // add the class itself?
+        if ($include_class) {
+            array_unshift($stack, $class);
+        }
+        
+        // done
+        return $stack;
+    }
+    
+    /**
+     * 
      * Performs some security on globals, removes magic quotes if turned on.
      * 
      * @return void
@@ -1016,6 +1087,37 @@ class Solar {
             return $default;
             
         }
-    }    
+    }
+    
+    /**
+     * 
+     * Loads locale strings for a given class.
+     * 
+     * For example, a Solar_Example_Class must have locale strings
+     * located at Solar/Example/Class/Locale/*.
+     * 
+     * @param string $class The class to load strings for.
+     * 
+     * @return void
+     * 
+     */
+    protected static function _loadLocale($class)
+    {
+        // build the file name
+        $base = str_replace('_', '/', $class);
+        $file = Solar::fixdir($base . '/Locale/')
+              . Solar::getLocale() . '.php';
+        
+        // can we find the file?
+        if (Solar::fileExists($file)) {
+            // put the locale values into the shared locale array
+            Solar::$locale[$class] = (array) include $file;
+        } else {
+            // could not find file.
+            // fail silently, as it's often the case that the
+            // translation file simply doesn't exist.
+            Solar::$locale[$class] = array();
+        }
+    }
 }
 ?>

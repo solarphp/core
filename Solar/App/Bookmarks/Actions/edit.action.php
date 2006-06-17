@@ -72,7 +72,7 @@ $form->populate();
 $submit = Solar::post('submit');
 
 // OP: Save
-if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
+if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
     
     // force owner and editor values
     $data = $form->values('bookmark');
@@ -107,12 +107,12 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
 }
 
 // OP: Cancel
-if ($submit == Solar::locale('Solar', 'SUBMIT_CANCEL')) {
+if ($submit == $this->locale('SUBMIT_CANCEL')) {
     $this->_redirect($href);
 }
 
 // OP: Delete
-if ($submit == Solar::locale('Solar', 'SUBMIT_DELETE')) {
+if ($submit == $this->locale('SUBMIT_DELETE')) {
     $values = $form->values();
     $id = $values['bookmark']['id'];
     $this->_bookmarks->delete($id);

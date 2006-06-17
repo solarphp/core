@@ -52,7 +52,7 @@ $form->populate();
 $submit = Solar::post('submit');
 
 // OP: Save
-if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
+if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
     
     // force owner and editor handles
     $data = $form->values('bookmark');
@@ -84,7 +84,7 @@ if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
 }
 
 // OP: Cancel
-if ($submit == Solar::locale('Solar', 'SUBMIT_CANCEL')) {
+if ($submit == $this->locale('SUBMIT_CANCEL')) {
     $this->_redirect($href);
 }
 

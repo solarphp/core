@@ -52,7 +52,7 @@ $form->populate();
 
 // check for a 'Save' operation
 $submit = Solar::post('submit');
-if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE') && $form->validate()) {
+if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
     
     // save the data
     try {

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar_Exception
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,9 +16,9 @@
  */
 
 /**
- * Solar_Base generic exception.
+ * Generic Solar_Exception.
  */
-Solar::loadClass('Solar_Base_Exception');
+Solar::loadClass('Solar_Exception');
 
 /**
  * 
@@ -29,5 +29,5 @@ Solar::loadClass('Solar_Base_Exception');
  * @package Solar_Exception
  * 
  */
-class Solar_Base_Exception_FileNotReadable extends Solar_Base_Exception {}
+class Solar_Exception_FileNotReadable extends Solar_Exception {}
 ?>

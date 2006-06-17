@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception class.
+ * Generic exception class.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Exception class.
+ * Generic exception class.
  * 
  * @category Solar
  * 

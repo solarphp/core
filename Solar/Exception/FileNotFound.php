@@ -1,11 +1,11 @@
 <?php
 /**
  * 
- * Exception: connection to a resource failed.
+ * Exception: file cannot be found.
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar_Exception
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,18 +16,18 @@
  */
 
 /**
- * Solar_Base generic exception.
+ * Generic Solar_Exception.
  */
-Solar::loadClass('Solar_Base_Exception');
+Solar::loadClass('Solar_Exception');
 
 /**
  * 
- * Exception: connection to a resource failed.
+ * Exception: file cannot be found.
  * 
  * @category Solar
  * 
  * @package Solar_Exception
  * 
  */
-class Solar_Base_Exception_ConnectionFailed extends Solar_Base_Exception {}
+class Solar_Exception_FileNotFound extends Solar_Exception {}
 ?>

@@ -1,11 +1,11 @@
 <?php
 /**
  * 
- * Exception: file cannot be found.
+ * Exception: a class or object method is not callable.
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar_Exception
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -16,18 +16,18 @@
  */
 
 /**
- * Solar_Base generic exception.
+ * Generic Solar_Exception.
  */
-Solar::loadClass('Solar_Base_Exception');
+Solar::loadClass('Solar_Exception');
 
 /**
  * 
- * Exception: file cannot be found.
+ * Exception: a class or object method is not callable.
  * 
  * @category Solar
  * 
  * @package Solar_Exception
  * 
  */
-class Solar_Base_Exception_FileNotFound extends Solar_Base_Exception {}
+class Solar_Exception_MethodNotCallable extends Solar_Exception {}
 ?>

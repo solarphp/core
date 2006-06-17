@@ -199,6 +199,7 @@ abstract class Solar_Base {
             
             // can we find the file?
             if (Solar::fileExists($file)) {
+                // put the locale values into the shared locale array
                 Solar::$locale[$class] = (array) include $file;
             } else {
                 // could not find file.

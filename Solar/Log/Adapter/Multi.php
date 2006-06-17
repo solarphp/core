@@ -112,6 +112,8 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
      * 
      * Attempts to save the log message to each log in the collection.
      * 
+     * @param string $class The class name reporting the event.
+     * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
@@ -121,14 +123,14 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
      * how many logs saved the message.
      * 
      */
-    protected function _save($event, $descr)
+    protected function _save($class, $event, $descr)
     {
         // was the message saved in at least one sub-log?
         $count = false;
         
         // loop through all sub-log adapters and save the event
         foreach ($this->_adapters as $log) {
-            $result = $log->save($event, $descr);
+            $result = $log->save($class, $event, $descr);
             if ($result !== false) {
                 $count ++;
             }

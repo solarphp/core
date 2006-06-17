@@ -126,6 +126,8 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * This is the public interface for saving an event; adapters should
      * override the protected _save() method to perform the "real" save.
      * 
+     * @param string $class The class name reporting the event.
+     * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
@@ -136,14 +138,16 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * 
      * @see Solar_Log_Adapter::_save()
      * 
+     * @todo support wildcard-suffix events (e.g., "event-*").
+     * 
      */
-    public function save($event, $descr)
+    public function save($class, $event, $descr)
     {
         $save = in_array($event, $this->_events) ||
                 in_array('*', $this->_events);
         
         if ($save) {
-            return $this->_save($event, $descr);
+            return $this->_save($class, $event, $descr);
         } else {
             return false;
         }
@@ -152,6 +156,8 @@ abstract class Solar_Log_Adapter extends Solar_Base {
     /**
      * 
      * Support method to save (write) an event and message to the log.
+     * 
+     * @param string $class The class name saving the message.
      * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
@@ -162,6 +168,6 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * saved.
      * 
      */
-    abstract protected function _save($event, $descr);
+    abstract protected function _save($class, $event, $descr);
 }
 ?>

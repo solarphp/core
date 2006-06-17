@@ -45,9 +45,9 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      *   e.g. '/www/username/logs/solar.log'.
      * 
      * : \\format\\ : (string) The line format for each saved event.
-     *   Use '%t' for the timestamp, '%e' for the event type, '%m' for
-     *   the event description, and '%%' for a literal percent.  Default
-     *   is '%t %e %m'.
+     *   Use '%t' for the timestamp, '%e' for the class name, '%e' for
+     *   the event type, '%m' for the event description, and '%%' for a
+     *   literal percent.  Default is '%t %c %e %m'.
      * 
      * @var array
      * 
@@ -88,6 +88,8 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * 
      * Appends to the file, and uses an exclusive lock (LOCK_EX).
      * 
+     * @param string $class The class name reporting the event.
+     * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
@@ -97,11 +99,11 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * saved.
      * 
      */
-    protected function _save($event, $descr)
+    protected function _save($class, $event, $descr)
     {
         $text = str_replace(
-            array('%t', '%e', '%m', '%%'),
-            array($this->_getTime(), $event, $descr, '%'),
+            array('%t', '%c', '%e', '%m', '%%'),
+            array($this->_getTime(), $class, $event, $descr, '%'),
             $this->_config['format']
         ) . "\n";
     

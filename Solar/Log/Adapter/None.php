@@ -35,6 +35,8 @@ class Solar_Log_Adapter_None extends Solar_Log_Adapter {
      * 
      * Support method to save (write) an event and message to the log.
      * 
+     * @param string $class The class name reporting the event.
+     * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
@@ -44,7 +46,7 @@ class Solar_Log_Adapter_None extends Solar_Log_Adapter {
      * saved.
      * 
      */
-    protected function _save($event, $descr)
+    protected function _save($class, $event, $descr)
     {
         return true;
     }

@@ -33,8 +33,8 @@
  * 
  * // write/record/report/etc an event in the log.
  * // note that we don't do "priority levels" here, just
- * // event types.
- * $log->save('event_name', 'message text');
+ * // class names and event types.
+ * $log->save('class_name', 'event_name', 'message text');
  * 
  * </code>
  * 
@@ -126,6 +126,8 @@ class Solar_Log extends Solar_Base {
      * $log->save('my special event type', 'describing the event');
      * </code>
      * 
+     * @param string $class The class name logging the event.
+     * 
      * @param string $event The event type (typically 'debug', 'info',
      * 'notice', 'severe', 'critical', etc).
      * 
@@ -135,9 +137,9 @@ class Solar_Log extends Solar_Base {
      * non-empty value if the event was saved (typically boolean true).
      * 
      */
-    public function save($event, $message)
+    public function save($class, $event, $message)
     {
-        return $this->_adapter->save($event, $message);
+        return $this->_adapter->save($class, $event, $message);
     }
 }
 ?>

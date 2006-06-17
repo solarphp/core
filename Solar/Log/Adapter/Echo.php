@@ -42,9 +42,9 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      *   a sequential array.  Default is all events ('*').
      * 
      * : \\format\\ : (string) The line format for each saved event.
-     *   Use '%t' for the timestamp, '%e' for the event type, '%m' for
-     *   the event description, and '%%' for a literal percent.  Default
-     *   is '%t %e %m'.
+     *   Use '%t' for the timestamp, '%e' for the class name, '%e' for
+     *   the event type, '%m' for the event description, and '%%' for a
+     *   literal percent.  Default is '%t %c %e %m'.
      * 
      * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
      *   or 'text' for plain text.  Default autodetects by SAPI version.
@@ -54,7 +54,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      */
     protected $_config = array(
         'events' => '*',
-        'format' => '%t %e %m', // time, event, message
+        'format' => '%t %c %e %m', // time, class, event, message
         'output' => null,
     );
 
@@ -79,6 +79,8 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      * 
      * Echos the log message.
      * 
+     * @param string $class The class name reporting the event.
+     * 
      * @param string $event The event type (e.g. 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
@@ -88,11 +90,11 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      * saved.
      * 
      */
-    protected function _save($event, $descr)
+    protected function _save($class, $event, $descr)
     {
         $text = str_replace(
-            array('%t', '%e', '%m', '%%'),
-            array($this->_getTime(), $event, $descr, '%'),
+            array('%t', '%c', '%e', '%m', '%%'),
+            array($this->_getTime(), $class, $event, $descr, '%'),
             $this->_config['format']
         );
 

@@ -43,7 +43,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      */
     protected $_config = array(
-        'class' => 'Solar',
+        'class' => 'Solar_Base',
     );
     
     /**
@@ -115,17 +115,8 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
             $class = $this->_class;
         }
         
-        
         // get the translation
-        $string = Solar::locale($class, $key, $num);
-        
-        if ($string == $key) {
-            // no translation found.
-            // fall back to the generic Solar locale strings.
-            $string = Solar::locale('Solar', $key, $num);
-        }
-        
-        return $string;
+        return Solar::locale($class, $key, $num);
     }
 }
 ?>

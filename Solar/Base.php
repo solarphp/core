@@ -25,8 +25,8 @@
  * * Construction-time reading of [Main:ConfigFile config file] options 
  *   for itself, and merging of those options with any options passed   
  *   for instantation, along with the class-defined $_config defaults,  
- *   into the Solar_Base::$_config property.                            
- *                                                                     
+ *   into the Solar_Base::$_config property.
+ * 
  * * A Solar_Base::locale() convenience method to return class-specific
  *   locale strings.  This method...
  * 
@@ -40,6 +40,8 @@
  * * A Solar_Base::_exception() convenience method to generate
  *   exception objects with translated strings from the locale file
  * 
+ * * A Solar_Base::_log() convenience method to save log messages
+ * 
  * @category Solar
  * 
  * @package Solar
@@ -51,31 +53,11 @@ abstract class Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Default config keys are:
-     * 
-     * : \\locale\\ : (string) Directory where locale files for the 
-     *   class are kept.
-     * 
-     * : \\log\\ : (dependency) A Solar_Log dependency.
-     * 
      * @var array
      * 
      */
     protected $_config = array(
-        'locale' => null,
-        'log'    => null,
     );
-    
-    /**
-     * 
-     * Internal log object if one was specified in config.
-     * 
-     * @var Solar_Log
-     * 
-     * @see Solar_Log::HomePage
-     * 
-     */
-    protected $_log = null;
     
     /**
      * 
@@ -85,9 +67,9 @@ abstract class Solar_Base {
      * $_config property array and any values from the Solar.config.php
      * file.
      * 
-     * If the $config param is a string, is loaded from that file
+     * If the $config param is a string, config is loaded from that file
      * and merged with values from Solar.config.php file.
-     
+     * 
      * If the $config param is boolean false, no config overrides are
      * performed (class defaults only).
      * 
@@ -100,48 +82,30 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        // get the stack of classes leading to this one
-        $class  = get_class($this);
-        $stack  = array($class);
-        $parent = $class;
-        while ($parent = get_parent_class($parent)) {
-            array_unshift($stack, $parent);
-        }
+        $class = get_class($this);
         
-        if ($config === false) {
-            // don't attempt to override class defaults at all,
-            // usually for testing.
-        } else {
-            
-            // normal behavior: merge from Solar.config.php,
-            // then from construction-time config.
-            
-            // Solar.config.php values override class defaults.
-            // Parent-class config values are inherited.
-            foreach ($stack as $class) {
-                $solar = Solar::config($class, null, array());
-                $this->_config = array_merge($this->_config, $solar);
-            }
+        // only process configs if construction-time config is
+        // non-false.
+        if ($config !== false) {
             
             // load construction-time config from a file?
             if (is_string($config)) {
                 $config = Solar::run($config);
             }
+        
+            // get the parents of this class, including this class
+            $stack = Solar::parents($class, true);
             
-            // construction-time values override Solar.config.php
+            // Merge from config file.
+            // Parent-class config file values are inherited.
+            foreach ($stack as $class) {
+                $solar = Solar::config($class, null, array());
+                $this->_config = array_merge($this->_config, $solar);
+            }
+            
+            // construction-time values override config file values.
             $this->_config = array_merge($this->_config, (array) $config);
         }
-        
-        // auto-define the locale directory if needed
-        if (empty($this->_config['locale'])) {
-            // converts "Solar_Test_Example" to
-            // "Solar/Test/Example/Locale/"
-            $this->_config['locale'] = str_replace('_', '/', $class);
-            $this->_config['locale'] .= '/Locale/';
-        }
-        
-        // load the locale strings
-        $this->locale('');
         
         // get the log object if one was specified
         if (! empty($this->_config['log'])) {
@@ -181,46 +145,8 @@ abstract class Solar_Base {
      */
     public function locale($key, $num = 1)
     {
-        // is a locale directory specified?
-        if (empty($this->_config['locale'])) {
-            // use the generic Solar locale strings
-            return Solar::locale('Solar', $key, $num);
-        }
-        
-        // the name of this class
         $class = get_class($this);
-        
-        // do we need to load locale strings? we check for loading here
-        // because the locale may have changed during runtime.
-        if (! array_key_exists($class, Solar::$locale)) {
-            // load the base Solar locale strings
-            $dir = Solar::fixdir($this->_config['locale']);
-            $file = $dir . Solar::getLocale() . '.php';
-            
-            // can we find the file?
-            if (Solar::fileExists($file)) {
-                // put the locale values into the shared locale array
-                Solar::$locale[$class] = (array) include $file;
-            } else {
-                // could not find file.
-                // fail silently, as it's often the case that the
-                // translation file simply doesn't exist.
-                Solar::$locale[$class] = array();
-            }
-        }
-        
-        // get a translation for the current class
-        $string = Solar::locale($class, $key, $num);
-        
-        // is the translation the same as the key?
-        if ($string != $key) {
-            // found a translation (i.e., different from the key)
-            return $string;
-        } else {
-            // no translation found.
-            // fall back to the generic Solar locale strings.
-            return Solar::locale('Solar', $key, $num);
-        }
+        return Solar::locale($class, $key, $num);
     }
     
     /**
@@ -304,27 +230,6 @@ abstract class Solar_Base {
         
         // final fallback to generic Solar_Exception
         return Solar::factory('Solar_Exception', $config);
-    }
-    
-    /**
-     * 
-     * Convenience method for saving messages to the log.
-     * 
-     * @param string $event The log event type.
-     * 
-     * @param string $message The log message.
-     * 
-     * @return boolean True if saved, false if not, null if logging
-     * not enabled.
-     * 
-     * @see Solar_Log::save()
-     * 
-     */
-    protected function _log($event, $message)
-    {
-        if (! empty($this->_log)) {
-            return $this->_log->save($event, $message);
-        }
     }
 }
 ?>

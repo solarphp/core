@@ -83,6 +83,12 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'require' => true,
         );
         
+        // node has been assigned to this username by the owner/editor
+        $this->_col['assign_handle'] = array(
+            'type'    => 'varchar',
+            'size'    => 255,
+        );
+        
         // username of the most-recent editor
         $this->_col['editor_handle'] = array(
             'type'    => 'varchar',
@@ -201,18 +207,19 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
                 'cols' => array('area_id', 'name'),
             ),
             // other indexes
-            'area_id'      => 'normal',
-            'name'         => 'normal',
-            'parent_id'    => 'normal',
-            'owner_handle' => 'normal',
-            'type'         => 'normal',
-            'locale'       => 'normal',
-            'tags'         => 'normal',
-            'pos'          => 'normal',
-            'rating'       => 'normal',
-            'uri'          => 'normal',
-            'email'        => 'normal',
-            'status'       => 'normal',
+            'area_id'       => 'normal',
+            'name'          => 'normal',
+            'parent_id'     => 'normal',
+            'owner_handle'  => 'normal',
+            'assign_handle' => 'normal',
+            'type'          => 'normal',
+            'locale'        => 'normal',
+            'tags'          => 'normal',
+            'pos'           => 'normal',
+            'rating'        => 'normal',
+            'uri'           => 'normal',
+            'email'         => 'normal',
+            'status'        => 'normal',
         );
     }
     

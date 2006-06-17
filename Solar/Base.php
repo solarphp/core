@@ -27,20 +27,10 @@
  *   for instantation, along with the class-defined $_config defaults,  
  *   into the Solar_Base::$_config property.
  * 
- * * A Solar_Base::locale() convenience method to return class-specific
- *   locale strings.  This method...
- * 
- *  # Automatically loads the translated strings from the correct file,
- * 
- *  # Automatically re-loads them if the locale code changes,
- * 
- *  # Automatically falls back to the "generic" Solar-wide translations
- *    if a class-specific translation key does not exist.
+ * * A Solar_Base::locale() convenience method to return locale strings.
  * 
  * * A Solar_Base::_exception() convenience method to generate
  *   exception objects with translated strings from the locale file
- * 
- * * A Solar_Base::_log() convenience method to save log messages
  * 
  * @category Solar
  * 
@@ -56,8 +46,7 @@ abstract class Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
-    );
+    protected $_config = array();
     
     /**
      * 

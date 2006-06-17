@@ -286,7 +286,7 @@ class Solar_Test_Suite extends Solar_Base {
         
         // run the tests
         $time = time();
-        $this->_log('test', "1..{$this->_info['plan']}");
+        $this->_log("1..{$this->_info['plan']}");
         foreach ($this->_test as $class => $methods) {
             
             // class setup
@@ -348,7 +348,7 @@ class Solar_Test_Suite extends Solar_Base {
         $plan = $this->_info['plan'];
         $time = $this->_info['time'];
         
-        $this->_log('test', "$done/$plan tests, $time seconds");
+        $this->_log("$done/$plan tests, $time seconds");
         
         $tmp = array();
         $show = array('fail', 'todo', 'skip', 'pass');
@@ -356,12 +356,12 @@ class Solar_Test_Suite extends Solar_Base {
             $count = count($this->_info[$type]);
             $tmp[] = "$count $type";
         }
-        $this->_log('test', implode(', ', $tmp));
+        $this->_log(implode(', ', $tmp));
         
         $show = array('fail', 'todo', 'skip');
         foreach ($show as $type) {
             foreach ($this->_info[$type] as $name => $note) {
-                $this->_log('test', strtoupper($type) . " $name ($note)");
+                $this->_log(strtoupper($type) . " $name ($note)");
             }
         }
         
@@ -419,8 +419,30 @@ class Solar_Test_Suite extends Solar_Base {
             $message = "$message\n# " . str_replace("\n", "\n# ", trim($diag));
         }
         
-        $this->_log('test', $message);
+        $this->_log($message);
         $this->_info[$type][$name] = $note;
+    }
+    
+    
+    /**
+     * 
+     * Saves an event and message to the log.
+     * 
+     * @param string $event The log event type.
+     * 
+     * @param string $message The log message.
+     * 
+     * @return boolean True if saved, false if not, null if logging
+     * not enabled.
+     * 
+     * @see Solar_Test_Suite::$_log
+     * 
+     * @see Solar_Log::save()
+     * 
+     */
+    protected function _log($message)
+    {
+        $this->_log->save(get_class($this), 'test', $message);
     }
 }
 ?>

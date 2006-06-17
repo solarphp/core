@@ -543,7 +543,7 @@ class Solar_Docs_Apiref extends Solar_Base {
     protected function _log($class, $message)
     {
         $message = "$class: $message";
-        $this->_log->save('docs', $message);
+        $this->_log->save(get_class($this), 'docs', $message);
     }
 }
 ?>

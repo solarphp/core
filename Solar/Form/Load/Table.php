@@ -201,7 +201,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                     $info['valid'] = array(
                         array(
                             $method,
-                            Solar::locale('Solar', $code),
+                            $this->locale($code),
                             Solar_Valid::OR_BLANK
                         )
                     );

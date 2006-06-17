@@ -409,13 +409,13 @@ class Solar_Form extends Solar_Base {
             
             // see if we have an method-specific validation message
             $key = 'VALID_' . strtoupper($method);
-            $args[1] = Solar::locale('Solar', $key);
+            $args[1] = $this->locale($key);
             
             // if the message is the same as the key,
             // there was no method-specific validation
             // message.  revert to the generic default.
             if ($key == $args[1]) {
-                $args[1] = Solar::locale('Solar', 'ERR_INVALID');
+                $args[1] = $this->locale('ERR_INVALID');
             }
         }
         

@@ -142,83 +142,22 @@ abstract class Solar_Base {
      * 
      * Convenience method for returning exceptions with localized text.
      * 
-     * This method attempts to automatically load and throw exceptions
-     * based on the error code, falling back to generic Solar exceptions
-     * when no specific exception classes exist.  For example, if a
-     * class named 'Solar_Example' throws an error code 'ERR_FILE_NOT_FOUND',
-     * attempts will be made to find these exception classes in this order:
-     * 
-     * # Example_Exception_FileNotFound (class specific)
-     * 
-     * # Solar_Exception_FileNotFound (Solar specific)
-     * 
-     * # Example_Exception (class generic)
-     * 
-     * # Solar_Exception (Solar generic)
-     * 
-     * The final fallback is always the Solar_Exception class.
-     * 
      * @param string $code The error code; does additional duty as the
      * locale string key and the exception class name suffix.
      * 
      * @param array $info An array of error-specific data.
      * 
-     * @return object A Solar_Exception object.
+     * @return Solar_Exception An instanceof Solar_Exception.
      * 
      */
     protected function _exception($code, $info = array())
     {
-        // exception configuration
-        $config = array(
-            'class' => get_class($this),
-            'code'  => $code,
-            'text'  => $this->locale($code),
-            'info'  => $info,
+        return Solar::exception(
+            get_class($this),
+            $code,
+            $this->locale($code),
+            (array) $info
         );
-        
-        // the base exception class for this class
-        $base = get_class($this) . '_Exception';
-        
-        // drop 'ERR_' and 'EXCEPTION_' prefixes from the code
-        // to get a suffix for the exception class
-        $suffix = $code;
-        if (substr($suffix, 0, 4) == 'ERR_') {
-            $suffix = substr($suffix, 4);
-        } elseif (substr($suffix, 0, 10) == 'EXCEPTION_') {
-            $suffix = substr($suffix, 10);
-        }
-        
-        // convert suffix to StudlyCaps
-        $suffix = str_replace('_', ' ', $suffix);
-        $suffix = ucwords(strtolower($suffix));
-        $suffix = str_replace(' ', '', $suffix);
-        
-        // look for Class_Exception_StudlyCapsSuffix
-        try {
-            $obj = Solar::factory("{$base}_$suffix", $config);
-            return $obj;
-        } catch (Exception $e) {
-            // do nothing
-        }
-        
-        // fall back to Solar_Exception_StudlyCapsSuffix
-        try {
-            $obj = Solar::factory("Solar_Exception_$suffix", $config);
-            return $obj;
-        } catch (Exception $e) {
-            // do nothing
-        }
-        
-        // look for generic Class_Exception
-        try {
-            $obj = Solar::factory($base, $config);
-            return $obj;
-        } catch (Exception $e) {
-            // do nothing
-        }
-        
-        // final fallback to generic Solar_Exception
-        return Solar::factory('Solar_Exception', $config);
     }
 }
 ?>

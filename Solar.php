@@ -188,9 +188,6 @@ class Solar {
         // where is Solar in the filesystem?
         Solar::$dir = dirname(__FILE__);
         
-        // needed for exceptions
-        Solar::loadClass('Solar_Exception');
-        
         // needed for all sub-classes
         Solar::loadClass('Solar_Base');
         
@@ -298,6 +295,12 @@ class Solar {
         // find all parents of this class, including this class
         $stack = Solar::parents($class, true);
         
+        // add the vendor namespace to the stack for vendor-wide strings
+        $pos = strpos($class, '_');
+        if ($pos !== false) {
+            $stack[] = substr($class, 0, $pos);
+        }
+        
         // go through all classes and find the first matching
         // translation key
         foreach ($stack as $class) {
@@ -343,24 +346,6 @@ class Solar {
         
         // reset the strings
         Solar::$locale = array();
-        
-        /*
-        // load the base Solar locale strings
-        $dir = Solar::fixdir(Solar::$config['locale']);
-        $file = $dir . Solar::$_locale_code . '.php';
-        
-        // can we find the file?
-        if (Solar::fileExists($file)) {
-            Solar::$locale['Solar'] = (array) include $file;
-            return true;
-        } else {
-            // could not find file.
-            // fail silently, as it's often the case that the
-            // translation file simply doesn't exist.
-            Solar::$locale['Solar'] = array();
-            return false;
-        }
-        */
     }
     
     /**
@@ -852,6 +837,25 @@ class Solar {
      * 
      * Generates a simple exception, but does not throw it.
      * 
+     * This method attempts to automatically load an exception class
+     * based on the error code, falling back to parent exceptions
+     * when no specific exception classes exist.  For example, if a
+     * class named 'Vendor_Example' extended from 'Vendor_Base' throws an
+     * exception or error coded as 'ERR_FILE_NOT_FOUND', the method will
+     * attempt to return these exception classes in this order:
+     * 
+     * # Vendor_Example_Exception_FileNotFound (class specific)
+     * 
+     * # Vendor_Base_Exception_FileNotFound (parent specific)
+     * 
+     * # Vendor_Example_Exception (class generic)
+     * 
+     * # Vendor_Base_Exception (parent generic)
+     * 
+     * # Vendor_Exception (generic for all of vendor)
+     * 
+     * The final fallback is always the generic Solar_Exception class.
+     * 
      * @param string $class The class that generated the exception.
      * 
      * @param mixed $code A scalar error code, generally a string.
@@ -864,14 +868,65 @@ class Solar {
      * @return Solar_Exception
      * 
      */
-    public static function exception($class, $code, $text = '', $info = array())
+    public static function exception($class, $code, $text = '',
+        $info = array())
     {
-        return Solar::factory('Solar_Exception', array(
+        // drop 'ERR_' and 'EXCEPTION_' prefixes from the code
+        // to get a suffix for the exception class
+        $suffix = $code;
+        if (substr($suffix, 0, 4) == 'ERR_') {
+            $suffix = substr($suffix, 4);
+        } elseif (substr($suffix, 0, 10) == 'EXCEPTION_') {
+            $suffix = substr($suffix, 10);
+        }
+        
+        // convert "STUDLY_CAP_SUFFIX" to "Studly Cap Suffix" ...
+        $suffix = ucwords(strtolower(str_replace('_', ' ', $suffix)));
+        
+        // ... then convert to "StudlyCapSuffix"
+        $suffix = str_replace(' ', '', $suffix);
+        
+        // build config array from params
+        $config = array(
             'class' => $class,
             'code'  => $code,
-            'text'  => $text,
-            'info'  => $info,
-        ));
+            'test'  => $text,
+            'info'  => (array) $info,
+        );
+        
+        // get all parent classes, including the class itself
+        $stack = Solar::parents($class, true);
+        
+        // add the vendor namespace, (e.g., 'Solar') to the stack as a
+        // final fallback, even though it's not strictly part of the
+        // hierarchy, for generic vendor-wide exceptions.
+        $pos = strpos($class, '_');
+        if ($pos !== false) {
+            $stack[] = substr($class, 0, $pos);
+        }
+        
+        // track through class stack and look for specific exceptions
+        foreach ($stack as $class) {
+            try {
+                $obj = Solar::factory("{$class}_Exception_$suffix", $config);
+                return $obj;
+            } catch (Exception $e) {
+                // do nothing
+            }
+        }
+        
+        // track through class stack and look for generic exceptions
+        foreach ($stack as $class) {
+            try {
+                $obj = Solar::factory("{$class}_Exception", $config);
+                return $obj;
+            } catch (Exception $e) {
+                // do nothing
+            }
+        }
+        
+        // last resort: a generic Solar exception
+        return Solar::factory('Solar_Exception', $config);
     }
     
     /**
@@ -901,9 +956,9 @@ class Solar {
      * 
      * "Fixes" a directory string for the operating system.
      * 
-     * Use slashes anywhere you need a directory separator.
-     * Then run the string through fixdir() and the slashes will be converted
-     * to the proper separator (e.g. '\' on Windows).
+     * Use slashes anywhere you need a directory separator. Then run the
+     * string through fixdir() and the slashes will be converted to the
+     * proper separator (e.g. '\' on Windows).
      * 
      * Always adds a final trailing separator.
      * 

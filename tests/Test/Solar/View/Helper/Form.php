@@ -372,6 +372,59 @@ EXPECT;
         $this->assertSame($helper, $this->_view->getHelper('form'));
     }
     
+    public function testBeginFieldset()
+    {
+        $helper = $this->_view->getHelper('form');
+        $helper->beginFieldset('legend');
+        
+        // make sure the group-begin was added properly to the stack
+        $expect = array(
+            0 => array(
+                0 => 'fieldset',
+                1 => array(
+                    0 => true,
+                    1 => 'legend',
+                ),
+            ),
+        );
+        $this->assertProperty($helper, '_stack', 'same', $expect);
+        
+        // check for fluency
+        $this->assertInstance($helper, 'Solar_View_Helper_Form');
+        $this->assertSame($helper, $this->_view->getHelper('form'));
+    }
+    
+    public function testEndFieldset()
+    {
+        $helper = $this->_view->getHelper('form');
+        $helper->beginFieldset('legend');
+        $helper->endFieldset();
+        
+        // make sure the group-begin was added properly to the stack
+        $expect = array(
+            0 => array(
+                0 => 'fieldset',
+                1 => array(
+                    0 => true,
+                    1 => 'legend',
+                ),
+            ),
+            1 => array(
+                0 => 'fieldset',
+                1 => array(
+                    0 => false,
+                    1 => null,
+                ),
+            ),
+        );
+        $this->assertProperty($helper, '_stack', 'same', $expect);
+        
+        // check for fluency
+        $this->assertInstance($helper, 'Solar_View_Helper_Form');
+        $this->assertSame($helper, $this->_view->getHelper('form'));
+    }
+    
+    
     public function testFetch()
     {
         $helper = $this->_view->form();

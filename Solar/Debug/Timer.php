@@ -45,7 +45,6 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'locale'       => 'Solar/Debug/Locale/',
         'output'       => null,
         'auto_start'   => false,
         'auto_display' => false,

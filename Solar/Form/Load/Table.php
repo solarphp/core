@@ -38,9 +38,7 @@ class Solar_Form_Load_Table extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
-        'locale' => 'Solar/Form/Locale/'
-    );
+    protected $_config = array();
     
     /**
      * 

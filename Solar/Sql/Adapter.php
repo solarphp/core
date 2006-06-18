@@ -48,7 +48,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     protected $_config = array(
-        'locale' => 'Solar/Sql/Locale/',
         'host'   => null,
         'port'   => null,
         'user'   => null,

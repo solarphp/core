@@ -211,7 +211,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                 // look for 'inKeys' or 'inList' validation.
                 foreach ($info['valid'] as $v) {
                     if ($v[0] == 'inKeys' || $v[0] == 'inList') {
-                        $info['options'] = $v[2];
+                        $info['options'] = $this->_autoOptions($v[0], $v[2]);
                         break;
                     }
                 }
@@ -227,7 +227,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                 // look for 'inKeys' or 'inList' validation.
                 foreach ($info['valid'] as $v) {
                     if ($v[0] == 'inKeys' || $v[0] == 'inList') {
-                        $info['options'] = $v[2];
+                        $info['options'] = $this->_autoOptions($v[0], $v[2]);
                         break;
                     }
                 }
@@ -256,6 +256,36 @@ class Solar_Form_Load_Table extends Solar_Base {
         );
         
         return $result;
+    }
+    
+    /**
+     * 
+     * Builds an option list from inKeys and inList validations.
+     * 
+     * The 'inKeys' options are not changed.
+     * 
+     * The 'inList' options are generally sequential, so the label
+     * and the value are made to be identical (based on the label).
+     * 
+     * @param string $type The validation type, 'inKeys' or 'inList'.
+     * 
+     * @param array $opts The options provided by the validation.
+     * 
+     * @return array
+     * 
+     */
+    protected function _autoOptions($type, $opts)
+    {
+        // leave the labels and values alone
+        if ($type == 'inKeys') {
+            return $opts;
+        }
+        
+        // make the form display the labels as both labels and values
+        if ($type == 'inList') {
+            $vals = array_values($opts);
+            return array_combine($vals, $vals);
+        }
     }
 }
 ?>

@@ -890,7 +890,7 @@ class Solar {
         $config = array(
             'class' => $class,
             'code'  => $code,
-            'test'  => $text,
+            'text'  => $text,
             'info'  => (array) $info,
         );
         

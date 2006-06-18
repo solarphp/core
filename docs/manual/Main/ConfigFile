@@ -53,23 +53,23 @@ As a simple example, the [Solar::HomePage Solar arch-class] can be configured th
 // Solar.config.php
 return array(
 
-  // config options for the Solar class
-  'Solar' => array(
-  
+    // config options for the Solar class
+    'Solar' => array(
+
     // ini settings
     'ini_set' => array(
-      'error_reporting' => true,
-      'html_errors'     => true,
+        'error_reporting' => true,
+        'html_errors'     => true,
     ),
-    
+
     // custom start scripts
     'start' => array(
-      '/path/to/custom/start.php',
+        '/path/to/custom/start.php',
     ),
 
     // custom stop scripts
     'stop' => array(
-      '/path/to/custom/stop.php',
+        '/path/to/custom/stop.php',
     ),
 
 );
@@ -81,14 +81,14 @@ return array(
 $config = array();
 
 $config['Solar']['ini_set']['display_errors'] = true;
-$config['Solar']['ini_set']['html_errors'] = true;
-$config['Solar']['start'][] = '/path/to/custom/start.php';
-$config['Solar']['stop'][] = '/path/to/custom/stop.php';
+$config['Solar']['ini_set']['html_errors']    = true;
+$config['Solar']['start'][]                   = '/path/to/custom/start.php';
+$config['Solar']['stop'][]                    = '/path/to/custom/stop.php';
 
 return $config;
 </code>
 
-Remember, you always have to return an array from the config file.
+Remember, you always have to return an array from the config file; if you do not, Solar won't be able to receive the config values you entered.
 
 ++ Complex Example
 
@@ -102,18 +102,17 @@ The following is a more-complex example of a Solar configuration file.  Even tho
 $config = array();
 
 /**
- * Document root.
- */
-$docroot = $_SERVER['DOCUMENT_ROOT'];
-
-/**
  * Default database connection via the 'Solar_Sql' class.
  */
 $config['Solar_Sql'] = array(
     'adapter'  => 'Solar_Sql_Adapter_Sqlite',
-    'config'   => array(
-        'name' => "$docroot/solar.sqlite",
-    ),
+);
+
+/**
+ * The SQLite adapter uses these default values.
+ */
+$config['Solar_Sql_Adapter_Sqlite'] = array(
+    'name' => "$docroot/solar.sqlite",
 );
 
 /**
@@ -121,9 +120,14 @@ $config['Solar_Sql'] = array(
  */
 $config['Solar_Auth'] = array(
     'adapter' => 'Solar_Auth_Adapter_Htpasswd',
-    'config'  => array(
-        'file' => "$docroot/htpasswd.conf",
-    ),
+);
+
+/**
+ * The Htpasswd adapter uses these default values.
+ */
+$docroot = $_SERVER['DOCUMENT_ROOT'];
+$config['Solar_Auth_Adapter_Htpasswd'] = array(
+    'file' => "$docroot/htpasswd.conf",
 );
 
 /**

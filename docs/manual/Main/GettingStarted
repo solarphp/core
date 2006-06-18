@@ -54,17 +54,6 @@ $ vi Solar.config.php
 <code type="php">
 $config = array();
 
-// SQL connection
-$config['Solar_Sql'] = array(
-	'adapter' => 'Solar_Sql_Adapter_Mysql',
-	array(
-    	'host'   => '127.0.0.1',
-    	'user'   => 'username',
-    	'pass'   => 'password',
-    	'name'   => 'database',
-	),
-);
-
 // Your front controller href
 $config['Solar_Uri_Action']['path'] = '/index.php/';
 
@@ -77,16 +66,20 @@ return $config;
     
 ++ Browse to "Hello World"
 
-``http://example.com/index.php/hello``
+http://localhost/index.php/hello
 
 
 ++ Move your config file outside the web root
+
+First, move the file ...
 
 <code type="bash">
 $ cd /home/username/public_html
 $ mv Solar.config.php /home/username
 $ vi index.php
 </code>
+
+... then edit index.php front-controller so that Solar::start() knows the new file location.
 
 <code type="php">
 // Path to PEAR libraries, where Solar is installed

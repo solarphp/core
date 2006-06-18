@@ -253,7 +253,7 @@ $info = array(
     'valid' => array(
     
         // text must be only characters a-z, A-Z, and 0-9.
-        // uses Solar::locale('Solar', 'VALID_ALNUM') as the 
+        // uses $this->locale('VALID_ALNUM') as the 
         // feedback message.
         array('alnum', null),
         

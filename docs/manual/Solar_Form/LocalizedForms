@@ -66,10 +66,10 @@ $form->setElements(array(
         'type'  => 'submit',
         
         // a localized label (generic from Solar)
-        'label' => Solar::locale('Solar', 'LABEL_SUBMIT'),
+        'label' => $this->locale('LABEL_SUBMIT'),
         
         // a localized operation value (generic from Solar)
-        'value' => Solar::locale('Solar', 'SUBMIT_SAVE'),
+        'value' => $this->locale('SUBMIT_SAVE'),
         
     ),
 );
@@ -83,7 +83,7 @@ $submit = Solar::post('submit');
 // process a 'Save' submission.  Note that we check against
 // the localized value of the operation, not a hard-coded
 // string.
-if ($submit == Solar::locale('Solar', 'SUBMIT_SAVE')) {
+if ($submit == $this->locale('SUBMIT_SAVE')) {
     
     // validate the user input
     if ($form->validate()) {

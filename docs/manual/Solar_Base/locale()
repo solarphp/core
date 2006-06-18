@@ -4,25 +4,14 @@ If you request a key that does not exist in the class-specific [Main::LocaleFile
 
 ++ Usage
 
-+++ Define Where Locale Files Are
++++ Where Locale Files Are Located
 
-By default, Solar_Base extended classes will look for the locale files in the same directory as the class, in the \\Locale/\\ subdirectory.  
-First, you need to have defined $_config['locale'] in the class as the path to your locale files.
+Solar looks for locale files in the same directory as the class, under the \\Locale/\\ subdirectory.  
 
 <code type="php">
 class Example_Class extends Solar_Base {
 }
 // this will use the locale files in Example/Class/Locale/*
-</code>
-
-You can specify a non-default location by setting the $_config['locale'] value.
-
-<code type="php">
-class Example extends Solar_Base {
-    protected $_config = array(
-        'locale' => '/path/to/files/Locale/'
-    );
-}
 </code>
 
 +++ Calling The locale() Method

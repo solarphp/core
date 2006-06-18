@@ -10,16 +10,12 @@ Please note that this list is mostly informal, and may be subject to change with
 
 # New classes (in no particular order)
 
- * Solar_Log for event logging (c.f. [http://pear.php.net/Log PEAR Log])
- 
  * Solar_Text_Markup family of classes for transforming BBCode, !ReST, Textile, Wiki, etc (c.f. [http://pear.php.net/Text_Wiki PEAR Text_Wiki])
  
  * Solar_Text_Diff for a difference engine (c.f. [http://pear.php.net/Text_Diff PEAR Text_Diff])
  
  * Solar_User_Prefs for user preferences collection
  
- * Solar_User_Perms for user permissions collection
-
 # New apps based on the generic content model:
 
  * Solar_App_Todo (simple to-do lists)
@@ -28,5 +24,7 @@ Please note that this list is mostly informal, and may be subject to change with
 
  * Solar_App_Wiki (the follow-on to [http://yawiki.com YaWiki])
 
- * Solar_App_Blog (using the Wiki engine)
+ * Solar_App_Forum (using the wiki engine)
+
+ * Solar_App_Blog (using the wiki engine)
  

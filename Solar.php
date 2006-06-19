@@ -11,8 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * Copyright (c) 2005-2006, Paul M. Jones.
- * All rights reserved.
+ * Copyright (c) 2005-2006, Paul M. Jones.  All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions

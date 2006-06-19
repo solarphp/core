@@ -134,8 +134,7 @@ abstract class Solar_Base {
      */
     public function locale($key, $num = 1)
     {
-        $class = get_class($this);
-        return Solar::locale($class, $key, $num);
+        return Solar::locale(get_class($this), $key, $num);
     }
     
     /**
@@ -152,10 +151,11 @@ abstract class Solar_Base {
      */
     protected function _exception($code, $info = array())
     {
+        $class = get_class($this);
         return Solar::exception(
-            get_class($this),
+            $class,
             $code,
-            $this->locale($code),
+            Solar::locale($class, $code),
             (array) $info
         );
     }

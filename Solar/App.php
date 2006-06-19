@@ -156,15 +156,15 @@ abstract class Solar_App extends Solar_Controller_Page {
             Solar::register('sql', Solar::factory('Solar_Sql'));
         }
         
+        // register a Solar_Content object if not already.
+        if (! Solar::isRegistered('content')) {
+            Solar::register('content', Solar::factory('Solar_Content'));
+        }
+        
         // register a Solar_User object if not already.
         // this will trigger the authentication process.
         if (! Solar::isRegistered('user')) {
             Solar::register('user', Solar::factory('Solar_User'));
-        }
-        
-        // register a Solar_Content object if not already.
-        if (! Solar::isRegistered('content')) {
-            Solar::register('content', Solar::factory('Solar_Content'));
         }
         
         // set the layout title

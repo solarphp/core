@@ -71,5 +71,26 @@ class Solar_App_Hello extends Solar_App {
      * 
      */
     public $text;
+    
+    /**
+     * 
+     * Overrides the general Solar_App setup so that we don't need a
+     * database connection. This is because we want the simplest
+     * possible hello-world example.
+     * 
+     * Thanks, Clay Loveless, for suggesting this.
+     * 
+     */
+    protected function _setup()
+    {
+        // register a Solar_User object if not already.
+        // this will trigger the authentication process.
+        if (! Solar::isRegistered('user')) {
+            Solar::register('user', Solar::factory('Solar_User'));
+        }
+        
+        // set the layout title
+        $this->layout_title = get_class($this);
+    }
 }
 ?>

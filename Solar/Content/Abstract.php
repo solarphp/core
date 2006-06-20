@@ -479,6 +479,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         // force the type
         $data['type'] = $this->_type;
         
+        // force the IP address
+        $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
+        
         // force the area?
         if ($this->_area_id) {
             $data['area_id'] = $this->_area_id;
@@ -507,6 +510,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     {
         // force the type
         $data['type'] = $this->_type;
+        
+        // force the IP address
+        $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
         
         // force the area?
         if ($this->_area_id) {

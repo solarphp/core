@@ -343,11 +343,11 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         // using tags?
         $tags = $this->_content->tags->asArray($tags);
         if ($tags) {
-            $this->_selectTags($tags);
+            $this->_selectTags($select, $tags);
         }
         
         // return the count
-        return $select->countPages();
+        return $select->countPages('nodes.id');
     }
     
     /**

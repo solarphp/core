@@ -366,23 +366,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // get part counts?
         if ($this->_parts) {
-            // join each table and get a count
-            foreach ($this->_parts as $part) {
-                // JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
-                $join = $part . '_nodes';
-                $type = $select->quote($part);
-                $count = $part . '_count';
-                
-                $select->leftJoin(
-                    // this table
-                    "nodes AS $join",
-                    // on these conditions
-                    "$join.parent_id = nodes.id AND $join.type = $type",
-                    // with these columns
-                    "COUNT($join.id) AS $count"
-                );
-            }
-            $select->group('nodes.id');
+            $this->_selectPartCounts($select, $this->_parts);
         }
         
         // add conditions

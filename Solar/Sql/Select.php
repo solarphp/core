@@ -810,7 +810,7 @@ class Solar_Sql_Select extends Solar_Base {
         // some of them may not have columns.
         $count = 0;
         foreach ($this->_tbl_cols as $tbl => $cols) {
-            if (count($cols) > 1) {
+            if (count($cols) > 0) {
                 $count ++;
             }
         }

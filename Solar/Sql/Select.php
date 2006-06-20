@@ -297,12 +297,14 @@ class Solar_Sql_Select extends Solar_Base {
      * @param string $name The alias name for the sub-select.
      * 
      * @param array|string $cols The columns to retrieve from the 
-     * sub-select.
+     * sub-select; by default, '*' (all columns).  This is unlike the
+     * normal from() and join() methods, which by default select no
+     * columns.
      * 
      * @return Solar_Sql_Select
      * 
      */
-    public function fromSelect($spec, $name, $cols = null)
+    public function fromSelect($spec, $name, $cols = '*')
     {
         // the $spec may be a select object, or a string
         if ($spec instanceof self) {
@@ -898,15 +900,6 @@ class Solar_Sql_Select extends Solar_Base {
         $this->_parts['from'] = array();
         $this->_parts['join'] = array();
         
-        // how many sources actually select columns?
-        // we need this for deconfliction later.
-        $count = 0;
-        foreach ($this->_sources as $source) {
-            if (count($source['cols']) > 0) {
-                $count ++;
-            }
-        }
-        
         // build from sources.
         foreach ($this->_sources as $source) {
             
@@ -927,7 +920,8 @@ class Solar_Sql_Select extends Solar_Base {
             // determine a prefix for the columns from this source
             if ($source['type'] == 'select' ||
                 $source['name'] != $source['orig']) {
-                // use the alias name, not the original name
+                // use the alias name, not the original name, for sub-
+                // selects, and where aliases are explicitly named.
                 $prefix = $source['name'];
             } else {
                 // use the original name
@@ -938,32 +932,18 @@ class Solar_Sql_Select extends Solar_Base {
             // along the way.
             foreach ($source['cols'] as $col) {
         
-                // is the column name manually aliased?
-                $aliased = stripos($col, ' AS ');
-                
-                // is it starred?  (we convert position zero to a
-                // boolean true).
-                $starpos = strpos($col, '*');
-                $starred = is_int($starpos) ? true : false;
-                
                 // does it use a function?
                 $parens = strpos($col, '(');
                 
                 // choose our column-name deconfliction strategy
                 if ($prefix == '' || $parens) {
-                    // no prefix (generally because of countPage()).
+                    // no prefix (generally because of countPages()).
                     // if there are parens in the name, it's a function,
                     // so don't prefix it.
                     $this->_parts['cols'][] = $col;
-                } elseif ($starred || $aliased || $count == 1) {
-                    // there is a * in the column name, or it is
-                    // manually aliased, or there's only one source
-                    // to begin with.  minimal deconfliction, forcing
-                    // only the prefix.
-                    $this->_parts['cols'][] = "{$prefix}.$col";
                 } else {
-                    // full deconfliction
-                    $this->_parts['cols'][] = "{$prefix}.$col AS {$prefix}__$col";
+                    // auto deconfliction
+                    $this->_parts['cols'][] = "{$prefix}.$col";
                 }
             }
         }

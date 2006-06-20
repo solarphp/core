@@ -138,14 +138,14 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Tracks which columns are being select from each table and join.
+     * Record sources, typically "from", "select", and "join".
      * 
-     * We use this for automated deconfliction.
+     * We use this for automated deconfliction of column names.
      * 
      * @var array
      * 
      */
-    protected $_tbl_cols = array();
+    protected $_sources = array();
     
     /**
      * 
@@ -266,13 +266,59 @@ class Solar_Sql_Select extends Solar_Base {
             $name = $spec;
         }
         
-        // add the table to the 'from' list
-        if (! in_array($name, $this->_parts['from'])) {
-            $this->_parts['from'][] = $name;
+        // convert to an array with keys 'orig' and 'alias'
+        $name = $this->_origAlias($name);
+        
+        // save in the sources list, overwriting previous values
+        $this->_addSource(
+            'from',
+            $name['alias'],
+            $name['orig'],
+            null,
+            null,
+            $cols
+        );
+        
+        // done
+        return $this;
+    }
+    
+    /**
+     * 
+     * Adds a sub-select and columns to the query.
+     * 
+     * The format is "FROM ($select) AS $name"; an alias name is
+     * always required so we can deconflict columns properly.
+     * 
+     * @param string|Solar_Sql_Select $spec If a Solar_Sql_Select
+     * object, use as the sub-select; if a string, the sub-select
+     * command string.
+     * 
+     * @param string $name The alias name for the sub-select.
+     * 
+     * @param array|string $cols The columns to retrieve from the 
+     * sub-select.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function fromSelect($spec, $name, $cols = null)
+    {
+        // the $spec may be a select object, or a string
+        if ($spec instanceof self) {
+            // get the select object as a string.
+            $spec = $spec->__toString();
         }
         
-        // add to the columns from this table
-        $this->_tblCols($name, $cols);
+        // save in the sources list, overwriting previous values
+        $this->_addSource(
+            'select',
+            $name,
+            $spec,
+            null,
+            null,
+            $cols
+        );
         
         // done
         return $this;
@@ -703,7 +749,7 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Clears query properties.
+     * Clears query properties and record sources.
      * 
      * @param string $key The property to clear; if empty, clears all
      * query properties.
@@ -713,24 +759,69 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function clear($key = null)
     {
-        $list = array_keys($this->_parts);
-        
         if (empty($key)) {
-            // clear all
-            foreach ($list as $key) {
-                $this->_parts[$key] = array();
-            }
-        } elseif (in_array($key, $list)) {
-            // clear some
-            $this->_parts[$key] = array();
+            // clear all parts
+            $this->_parts = array(
+                'distinct' => false,
+                'cols'     => array(),
+                'from'     => array(),
+                'join'     => array(),
+                'where'    => array(),
+                'group'    => array(),
+                'having'   => array(),
+                'order'    => array(),
+                'limit'    => array(
+                    'count'  => 0,
+                    'offset' => 0
+                ),
+            );
+            
+            // clear all table/join sources
+            $this->_sources = array();
+            
+            // done
+            return $this;
         }
         
-        // make sure limit has a count and offset
-        if (empty($this->_parts['limit'])) {
+        $key = strtolower($key);
+        switch ($key) {
+            
+        case 'distinct':
+            $this->_parts['distinct'] = false;
+            break;
+        
+        case 'from':
+            $this->_parts['from'] = array();
+            foreach ($this->_sources as $skey => $sval) {
+                if ($sval['type'] == 'from' || $sval['type'] == 'select') {
+                    unset($this->_sources[$skey]);
+                }
+            }
+            break;
+        
+        case 'join':
+            $this->_parts['join'] = array();
+            foreach ($this->_sources as $skey => $sval) {
+                if ($sval['type'] == 'join') {
+                    unset($this->_sources[$skey]);
+                }
+            }
+            break;
+        
+        case 'limit':
             $this->_parts['limit'] = array(
-                'count' => 0,
+                'count'  => 0,
                 'offset' => 0
             );
+            break;
+        
+        case 'cols':
+        case 'where':
+        case 'group':
+        case 'having':
+        case 'order':
+            $this->_parts[$key] = array();
+            break;
         }
         
         // done
@@ -802,37 +893,52 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function fetch($type = 'result')
     {
-        // build up the $parts['cols'] from scratch.
+        // build from scratch using the table and record sources.
         $this->_parts['cols'] = array();
+        $this->_parts['from'] = array();
+        $this->_parts['join'] = array();
         
-        // how many tables/joins to get columns from?
-        // it's not as easy as simply counting tables, because
-        // some of them may not have columns.
+        // how many sources actually select columns?
+        // we need this for deconfliction later.
         $count = 0;
-        foreach ($this->_tbl_cols as $tbl => $cols) {
-            if (count($cols) > 0) {
+        foreach ($this->_sources as $source) {
+            if (count($source['cols']) > 0) {
                 $count ++;
             }
         }
         
-        // add table/join column names with deconfliction
-        foreach ($this->_tbl_cols as $tbl => $cols) {
+        // build from sources.
+        foreach ($this->_sources as $source) {
             
-            // set up a table/join prefix.
-            // is the table/join aliased?
-            $pos = stripos($tbl, ' AS ');
-            if ($pos) {
-                // yes, use the alias portion as the prefix
-                $prefix = trim(substr($tbl, $pos + 4));
-            } else {
-                // no, just use the table/join name as the prefix.
-                $prefix = trim($tbl);
+            // build the from and join parts.  note that we don't
+            // build from 'cols' sources, since they are just named
+            // columns without reference to a particular from or join.
+            $build = ucfirst($source['type']);
+            if ($build != 'Cols') {
+                $method = "_build$build";
+                $this->$method(
+                    $source['name'],
+                    $source['orig'],
+                    $source['join'],
+                    $source['cond']
+                );
             }
             
-            // add each of the columns, deconflicting as we go
-            foreach ($cols as $col) {
+            // determine a prefix for the columns from this source
+            if ($source['type'] == 'select' ||
+                $source['name'] != $source['orig']) {
+                // use the alias name, not the original name
+                $prefix = $source['name'];
+            } else {
+                // use the original name
+                $prefix = $source['orig'];
+            }
             
-                // is the column name aliased?
+            // add each of the columns from the source, deconflicting
+            // along the way.
+            foreach ($source['cols'] as $col) {
+        
+                // is the column name manually aliased?
                 $aliased = stripos($col, ' AS ');
                 
                 // is it starred?  (we convert position zero to a
@@ -845,23 +951,24 @@ class Solar_Sql_Select extends Solar_Base {
                 
                 // choose our column-name deconfliction strategy
                 if ($prefix == '' || $parens) {
-                    // if there's no table/join, we can't prefix it.
-                    // similarly, if there are parens in the name,
-                    // it's a function, so leave it alone too.
+                    // no prefix (generally because of countPage()).
+                    // if there are parens in the name, it's a function,
+                    // so don't prefix it.
                     $this->_parts['cols'][] = $col;
                 } elseif ($starred || $aliased || $count == 1) {
                     // there is a * in the column name, or it is
-                    // manually aliased, or there's only one table
+                    // manually aliased, or there's only one source
                     // to begin with.  minimal deconfliction, forcing
                     // only the prefix.
                     $this->_parts['cols'][] = "{$prefix}.$col";
                 } else {
+                    // full deconfliction
                     $this->_parts['cols'][] = "{$prefix}.$col AS {$prefix}__$col";
                 }
             }
         }
         
-        // perform the select query and return the results
+        // perform the fetch
         return $this->_sql->select($type, $this->_parts, $this->_bind);
     }
     
@@ -877,122 +984,39 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function countPages($col = 'id')
     {
-        // make a self-cloned copy so that all settings are identical
         $select = clone($this);
-        
-        // clear any order (for Postgres, noted by 4bgjnsn)
+        $select->clear('limit');
         $select->clear('order');
         
-        // clear any limits
-        $select->clear('limit');
+        // clear all columns so there are no name conflicts
+        foreach ($select->_sources as $key => $val) {
+            $select->_sources[$key]['cols'] = array();
+        }
         
-        // set a single COUNT column.
-        // 
-        // note that this works because we are already in a Select 
-        // class; this wouldn't work externally because $_tbl_cols is 
-        // protected.
-        $select->_tbl_cols = array('' => array("COUNT($col)"));
+        // add a single COUNT() column
+        $select->_addSource(
+            'cols', // type
+            null,         // name
+            null,         // orig
+            null,         // join
+            null,         // cond
+            "COUNT($col)"
+        );
         
-        // select the count of rows and free the cloned copy
-        $result = $select->fetch('one');
-        unset($select);
-        
-        // $result is the row-count; how many pages does it convert to?
+        // get the count and calculate pages
+        $count = $select->fetch('one');
         $pages = 0;
-        if ($result > 0) {
-            $pages = ceil($result / $this->_paging);
+        if ($count > 0) {
+            $pages = ceil($count / $this->_paging);
         }
         
         // done!
         return array(
-            'count' => $result,
-            'pages' => $pages
+            'count' => $count,
+            'pages' => $pages,
         );
     }
     
-    /**
-     * 
-     * Support method for adding JOIN clauses.
-     * 
-     * @param string $type The type of join; empty for a plain JOIN, or
-     * "LEFT", "INNER", etc.
-     * 
-     * @param string|Solar_Sql_Table $spec If a Solar_Sql_Table
-     * object, the table to join to; if a string, the table name to
-     * join to.
-     * 
-     * @param string $cond Join on this condition.
-     * 
-     * @param array|string $cols The columns to select from the
-     * joined table.
-     * 
-     * @return Solar_Sql_Select
-     * 
-     */
-    protected function _join($type, $spec, $cond, $cols)
-    {
-        // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Table) {
-            
-            // get the table name
-            $name = $spec->name;
-            
-            // add all columns?
-            if ($cols == '*') {
-                $cols = array_keys($spec->col);
-            }
-            
-        } else {
-            $name = $spec;
-        }
-        
-        $this->_parts['join'][] = array(
-            'type' => $type,
-            'name' => $name,
-            'cond' => $cond
-        );
-        
-        // add to the columns from this joined table
-        $this->_tblCols($name, $cols);
-    }
-    
-    /**
-     * 
-     * Adds to the internal table-to-column mapping array.
-     * 
-     * @param string $tbl The table/join the columns come from.
-     * 
-     * @param string|array $cols The list of columns; preferably as
-     * an array, but possibly as a comma-separated string.
-     * 
-     * @return void
-     * 
-     */
-    protected function _tblCols($tbl, $cols)
-    {
-        if (is_string($cols)) {
-            $cols = explode(',', $cols);
-        } else {
-            settype($cols, 'array');
-        }
-        
-        // trim everything up ...
-        array_walk($cols, 'trim');
-        
-        // ... and merge them into the tbl_cols mapping.
-        if (empty($this->_tbl_cols[$tbl])) {
-            // this table/join not previously used
-            $this->_tbl_cols[$tbl] = $cols;
-        } else {
-            // merge with existing columns for this table/join
-            $this->_tbl_cols[$tbl] = array_merge(
-                $this->_tbl_cols[$tbl],
-                $cols
-            );
-        }
-    }
-
-
     /**
      * 
      * Safely quotes a value for an SQL statement.
@@ -1050,6 +1074,205 @@ class Solar_Sql_Select extends Solar_Base {
     public function quoteMulti($list, $sep = null)
     {
         return $this->_sql->quoteMulti($list, $sep);
+    }
+    
+    // -----------------------------------------------------------------
+    // 
+    // Protected support functions
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Returns an identifier as an "original" name and an "alias".
+     * 
+     * Effectively splits the identifier at "AS", so that "foo AS bar"
+     * becomes array('orig' => 'foo', 'alias' => 'bar').
+     * 
+     * @param string $name The string identifier.
+     * 
+     * @return array The $name string as an array with keys 'name' and
+     * 'alias'.
+     * 
+     */
+    protected function _origAlias($name)
+    {
+        // does the name have an "AS" alias?
+        $pos = stripos($name, ' AS ');
+        if ($pos !== false) {
+            return array(
+                'orig'  => trim(substr($name, 0, $pos)),
+                'alias' => trim(substr($name, $pos + 4)),
+            );
+        } else {
+            return array(
+                'orig'  => trim($name),
+                'alias' => trim($name),
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Support method for adding JOIN clauses.
+     * 
+     * @param string $type The type of join; empty for a plain JOIN, or
+     * "LEFT", "INNER", etc.
+     * 
+     * @param string|Solar_Sql_Table $spec If a Solar_Sql_Table
+     * object, the table to join to; if a string, the table name to
+     * join to.
+     * 
+     * @param string $cond Join on this condition.
+     * 
+     * @param array|string $cols The columns to select from the
+     * joined table.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    protected function _join($type, $spec, $cond, $cols)
+    {
+        // the $spec may be a table object, or a string.
+        if ($spec instanceof Solar_Sql_Table) {
+            
+            // get the table name
+            $name = $spec->name;
+            
+            // add all columns?
+            if ($cols == '*') {
+                $cols = array_keys($spec->col);
+            }
+            
+        } else {
+            $name = $spec;
+        }
+        
+        // convert to an array of orig and alias
+        $name = $this->_origAlias($name);
+        
+        // save in the sources list, overwriting previous values
+        $this->_addSource(
+            'join',
+            $name['alias'],
+            $name['orig'],
+            $type,
+            $cond,
+            $cols
+        );
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * Adds a row source (from table, from select, or join) to the 
+     * sources array.
+     * 
+     * @param string $type The source type: 'from', 'join', or 'select'.
+     * 
+     * @param string $name The alias name.
+     * 
+     * @param string $orig The source origin, either a table name or a 
+     * sub-select statement.
+     * 
+     * @param string $join If $type is 'join', the type of join ('left',
+     * 'inner', or null for a regular join).
+     * 
+     * @param string $cond If $type is 'join', the join conditions.
+     * 
+     * @param array $cols The columns to select from the source.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addSource($type, $name, $orig, $join, $cond, $cols)
+    {
+        if (is_string($cols)) {
+            $cols = explode(',', $cols);
+        }
+        
+        settype($cols, 'array');
+        foreach ($cols as $key => $val) {
+            $cols[$key] = trim($val);
+        }
+        
+        $this->_sources[$name] = array(
+            'type' => $type,
+            'name' => $name,
+            'orig' => $orig,
+            'join' => $join,
+            'cond' => $cond,
+            'cols' => $cols,
+        );
+    }
+    
+    /**
+     * 
+     * Builds $this->_parts['from'] using a 'from' source.
+     * 
+     * @param string $name The table alias.
+     * 
+     * @param string $orig The original table name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildFrom($name, $orig)
+    {
+        if ($name == $orig) {
+            $this->_parts['from'][] = $name;
+        } else {
+            $this->_parts['from'][] = "$orig AS $name";
+        }
+    }
+    
+    /**
+     * 
+     * Builds $this->_parts['join'] using a 'join' source.
+     * 
+     * @param string $name The table alias.
+     * 
+     * @param string $orig The original table name.
+     * 
+     * @param string $join The join type (null, 'left', 'inner', etc).
+     * 
+     * @param string $cond Join conditions.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildJoin($name, $orig, $join, $cond)
+    {
+        $tmp = array(
+            'type' => $join,
+            'name' => null,
+            'cond' => $cond,
+        );
+        
+        if ($name == $orig) {
+            $tmp['name'] = $name;
+        } else {
+            $tmp['name'] = "$orig AS $name";
+        }
+        
+        $this->_parts['join'][] = $tmp;
+    }
+    
+    /**
+     * 
+     * Builds $this->_parts['from'] using a 'select' source.
+     * 
+     * @param string $name The subselect alias.
+     * 
+     * @param string $orig The subselect command string.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildSelect($name, $orig)
+    {
+        $this->_parts['from'][] = "($orig) AS $name";
     }
 }
 ?>

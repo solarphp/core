@@ -348,46 +348,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // return the count
         return $select->countPages();
-        
-        /*
-        // if not using tags, it's real easy.  if using tags, it's going
-        // to be ugly.
-        if (! $tags) {
-            
-            // yay, not using tags!
-            return $select->countPages();
-            
-        } else {
-            
-            // using tags. this is going to be a hog.
-            // force the tags to an array (for the IN comparison)
-            $tags = $this->_content->tags->asArray($tags);
-            
-            // build the select statement
-            $select->join($this->_content->tags, 'tags.node_id = nodes.id');
-            $select->where('tags.name IN (?)', $tags);
-            $select->group('nodes.id');
-            $select->having('COUNT(nodes.id) = ?', count($tags));
-            
-            // fetch all rows and count how many we got (fat, stupid, slow)
-            $all = $select->fetch('all');
-            $result = count($all);
-            unset($all);
-            
-            // $result is the row-count; how many pages does it convert to?
-            $pages = 0;
-            if ($result > 0) {
-                $pages = ceil($result / $this->_paging);
-            }
-            
-            // done!
-            return array(
-                'count' => $result,
-                'pages' => $pages
-            );
-            
-        }
-        */
     }
     
     /**

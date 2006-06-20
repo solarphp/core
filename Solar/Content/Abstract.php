@@ -329,25 +329,24 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     public function countPages($tags = null, $where = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
-        $select->paging = $this->_paging;
-        
-        // only get the ID
         $select->from($this->_content->nodes, 'id');
-        
-        // master conditions
         $select->multiWhere($this->_masterWhere());
-        
-        // user conditions
         $select->multiWhere($where);
         
         // using tags?
         $tags = $this->_content->tags->asArray($tags);
         if ($tags) {
+            // add tags to the query
             $this->_selectTags($select, $tags);
+            // wrap as a sub-select
+            $wrap = Solar::factory('Solar_Sql_Select');
+            $wrap->fromSelect($select, 'nodes');
+            $wrap->setPaging($this->_paging);
+            return $wrap->countPages('nodes.id');
+        } else {
+            // no need for subselect
+            return $select->countPages('nodes.id');
         }
-        
-        // return the count
-        return $select->countPages('nodes.id');
     }
     
     /**

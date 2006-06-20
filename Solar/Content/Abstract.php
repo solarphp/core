@@ -209,59 +209,107 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             $order = $this->_order;
         }
         
-        // get a Select tool
-        $select = Solar::factory('Solar_Sql_Select');
-        $select->setPaging($this->_paging);
-        
-        // basic node selection
-        $select->from($this->_content->nodes, '*');
-        $select->multiWhere($this->_masterWhere());
-        
-        // get part counts?
-        if ($this->_parts) {
-            // join each table and get a count
-            foreach ($this->_parts as $part) {
-                // we left-join so that an absences of a part-type does
-                // not return 0 rows for the main type
-                // 
-                // LEFT JOIN nodes AS comment_nodes ON comment_nodes.parent_id = nodes.id
-                $join = $part . '_nodes';
-                $type = $select->quote($part);
-                $count = $part . '_count';
-                $select->leftJoin(
-                    // this table
-                    "nodes AS $join",
-                    // on these conditions
-                    "$join.parent_id = nodes.id AND $join.type = $type",
-                    // with these columns
-                    "COUNT($join.id) AS $count"
-                );
-            }
-        }
-        
-        // looking for certain tags?
         if (! empty($tags)) {
             // force the tags to an array (for the IN(...) clause)
             $tags = $this->_content->tags->asArray($tags);
+        }
+        
+        // getting just tags, or just part-counts, is fine as a normal select.
+        // but getting tagged part-counts requires a sub-select.
+        if ($tags && $this->_parts) {
             
-            // build and return the select statement
-            $select->join($this->_content->tags, 'tags.node_id = nodes.id');
-            $select->where('tags.name IN (?)', $tags);
-            $select->having("COUNT(nodes.id) = ?", count($tags));
+            // create the tags inner select
+            $subselect = Solar::factory('Solar_Sql_Select');
+            
+            $subselect->from($this->_content->nodes, '*')
+                      ->multiWhere($this->_masterWhere())
+                      ->multiWhere($where);
+                      
+            $this->_selectTags($subselect, $tags);
+            
+            // wrap in a part-count outer select
+            $select = Solar::factory('Solar_Sql_Select');
+            $select->fromSelect($subselect, 'nodes');
+            $this->_selectPartCounts($select, $this->_parts);
+            
+        } else {
+            
+            $select = Solar::factory('Solar_Sql_Select');
+            
+            $select->from($this->_content->nodes, '*')
+                   ->multiWhere($this->_masterWhere())
+                   ->multiWhere($where);
+            
+            if ($tags) {
+                $this->_selectTags($select, $tags);
+            } elseif ($this->_parts) {
+                $this->_selectPartCounts($select, $this->_parts);
+            }
+            
         }
         
-        // if either tags or part, group by ID
-        if ($this->_parts || ! empty($tags)) {
-            $select->group('nodes.id');
-        }
-        
-        // add the custom pieces
-        $select->multiWhere($where);
+        $select->setPaging($this->_paging);
         $select->order($order);
         $select->limitPage($page);
         
-        // return all rows
         return $select->fetch('all');
+    }
+    
+    /**
+     * 
+     * Given an existing select object, add part-count selection to it.
+     * 
+     * Note that this acts on the object reference directly.
+     * 
+     * @param Solar_Sql_Select $select The select object.
+     * 
+     * @param array $parts The parts to get counts for.
+     * 
+     * @return void
+     * 
+     */
+    protected function _selectPartCounts($select, $parts)
+    {
+        // join each table and get a count
+        foreach ($parts as $part) {
+            // we left-join so that an absences of a part-type does
+            // not return 0 rows for the main type
+            // 
+            // LEFT JOIN nodes AS comment_parts ON comment_parts.parent_id = nodes.id
+            $join = $part . '_parts';
+            $type = $select->quote($part);
+            $count = $part . '_count';
+            $select->leftJoin(
+                // this table
+                "nodes AS $join",
+                // on these conditions
+                "$join.parent_id = nodes.id AND $join.type = $type",
+                // with these columns
+                "COUNT($join.id) AS $count"
+            );
+        }
+        $select->group('nodes.id');
+    }
+    
+    /**
+     * 
+     * Given an existing select object, add tag-based selection to it.
+     * 
+     * Note that this acts on the object reference directly.
+     * 
+     * @param Solar_Sql_Select $select The select object.
+     * 
+     * @param array $tags Select nodes with these tags.
+     * 
+     * @return void
+     * 
+     */
+    protected function _selectTags($select, $tags)
+    {
+        $select->join($this->_content->tags, 'tags.node_id = nodes.id')
+               ->where('tags.name IN (?)', $tags)
+               ->having("COUNT(nodes.id) = ?", count($tags))
+               ->group("nodes.id");
     }
     
     /**
@@ -292,6 +340,16 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         // user conditions
         $select->multiWhere($where);
         
+        // using tags?
+        $tags = $this->_content->tags->asArray($tags);
+        if ($tags) {
+            $this->_selectTags($tags);
+        }
+        
+        // return the count
+        return $select->countPages();
+        
+        /*
         // if not using tags, it's real easy.  if using tags, it's going
         // to be ugly.
         if (! $tags) {
@@ -329,6 +387,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             );
             
         }
+        */
     }
     
     /**

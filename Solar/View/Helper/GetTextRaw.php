@@ -43,7 +43,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      */
     protected $_config = array(
-        'class' => 'Solar_Base',
+        'class' => 'Solar',
     );
     
     /**

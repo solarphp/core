@@ -23,6 +23,9 @@
  * formats, and provides a built-in escaping mechanism for values,
  * along with lazy-loading and persistence of helper objects.
  * 
+ * Also supports "partial" templates with variables extracted within
+ * the partial-template scope.
+ * 
  * @category Solar
  * 
  * @package Solar_View
@@ -72,6 +75,33 @@ class Solar_View extends Solar_Base {
      * 
      */
     protected $_helper_class;
+    
+    /**
+     * 
+     * The name of the current partial file.
+     * 
+     * @var string
+     * 
+     */
+    protected $_partial_file;
+    
+    /**
+     * 
+     * Variables to be extracted within a partial.
+     * 
+     * @var array
+     * 
+     */
+    protected $_partial_vars;
+    
+    /**
+     * 
+     * The name of the current template file.
+     * 
+     * @var string
+     * 
+     */
+    protected $_template_file;
     
     /**
      * 
@@ -349,7 +379,7 @@ class Solar_View extends Solar_Base {
     
     // -----------------------------------------------------------------
     //
-    // Templates
+    // Templates and partials
     //
     // -----------------------------------------------------------------
     
@@ -424,21 +454,19 @@ class Solar_View extends Solar_Base {
      */
     public function fetch($name)
     {
-        $file = $this->template($name);
+        // save externally and unset from local scope
+        $this->_template_file = $this->template($name);
+        unset($name);
+        
+        // run the template
         ob_start();
-        $this->_run($file);
+        require $this->_template_file;
         return ob_get_clean();
     }
     
     /**
      * 
      * Returns the path to the requested template script.
-     * 
-     * Used inside a template script like so:
-     * 
-     * <code>
-     * include $this->template($name);
-     * </code>
      * 
      * @param string $name The template name to look for in the template path.
      * 
@@ -460,16 +488,36 @@ class Solar_View extends Solar_Base {
     
     /**
      * 
-     * Runs a template script (allowing access to $this).
+     * Executes a partial template in its own scope, optionally with 
+     * variables into its within its scope.
      * 
-     * @param string $file The template script to run.
+     * Note that when you don't need scope separation, using a call to
+     * "include $this->template($name)" is faster.
+     * 
+     * @param string $name The partial template to process.
+     * 
+     * @param array $vars Additional variables to extract within the 
+     * partial template scope.
      * 
      * @return void
      * 
      */
-    protected function _run()
+    public function partial($name, $vars = null)
     {
-        require func_get_arg(0);
+        // save externally and unset from local scope
+        $this->_partial_file = $this->template($name);
+        unset($name);
+        
+        // save externally and remove from local scope
+        $this->_partial_vars = (array) $vars;
+        unset($vars);
+        
+        // disallow resetting of $this and inject vars into local scope
+        unset($this->_partial_vars['this']);
+        extract($this->_partial_vars);
+        
+        // run the template
+        require $this->_partial_file;
     }
 }
 ?>

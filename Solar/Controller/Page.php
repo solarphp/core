@@ -29,14 +29,10 @@ Solar::loadClass('Solar_Uri_Action');
  * <code>
  * Example.php
  * Example/
- *   Actions/
- *     list.action.php
- *     item.action.php
- *     edit.action.php
  *   Views/
- *     list.view.php
- *     item.view.php
- *     edit.view.php
+ *     list.php
+ *     item.php
+ *     edit.php
  *   Locale/
  *     en_US.php
  *     pt_BR.php
@@ -45,9 +41,6 @@ Solar::loadClass('Solar_Uri_Action');
  * Note that models are not included in the application itself; this is
  * for class-name deconfliction reasons.  Your models should be stored 
  * elsewhere in the Solar hierarchy, e.g. Example_Model_Name.
- * 
- * Note also that the Public directory will need a symlink in the public
- * web directory.
  * 
  * @category Solar
  * 
@@ -82,38 +75,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The info variables to use for actions.
-     * 
-     * The format of this array is key-value pairs, where the key is
-     * the action name, and the value is a slash-separated string of
-     * $_info keys.  For example:
-     * 
-     * <code type="php">
-     * $this->_action_info = array(
-     *     'item' => 'id', // "item/:id"
-     *     'list' => 'year/month', // "list/:year/:month"
-     * );
-     * </code>
-     * 
-     * You can then call $this->_info('id') for the 'item' action,
-     * or $this->_info('year') and $this->_info('month') in the 'list'
-     * action.
-     * 
-     * If you want default values, you can do this:
-     * 
-     * <code type="php">
-     * $this->_action_info = array(
-     *     'list' => 'year=2005/month=01',
-     * );
-     * </code>
-     * 
-     * @var string
-     * 
-     */
-    protected $_action_info = array();
-    
-    /**
-     * 
      * The action being requested of (performed by) the application.
      * 
      * @var string
@@ -143,7 +104,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Application request parameters collected from the URI pathinfo.
      * 
-     * @var string
+     * @var array
      * 
      */
     protected $_info = array();
@@ -234,13 +195,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // fix the basedir
         $this->_dir = Solar::fixdir($this->_dir);
         
-        // auto-set the locale directory
-        if (empty($this->_config['locale'])) {
-            $this->_config['locale'] = Solar::fixdir(
-                $this->_dir . 'Locale/'
-            );
-        }
-        
         // make sure we have a helper_class key; it might have been
         // left out of extended classes.
         if (empty($this->_config['helper_class'])) {
@@ -314,7 +268,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // run the pre-action code, forward to the first action (which
         // may trigger other actions), and run the post-action code.
         $this->_preAction();
-        $this->_forward($this->_action);
+        $this->_forward($this->_action, $this->_info);
         $this->_postAction();
         
         // get a view object and assign variables
@@ -325,12 +279,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (! $this->_layout) {
             
             // no layout, just render the view.
-            return $view->fetch($this->_view . '.view.php');
+            return $view->fetch($this->_view . '.php');
             
         } else {
             
-            // using a layout.  render the view.
-            $content = $view->fetch($this->_view . '.view.php');
+            // using a layout.
+            $content = $view->fetch($this->_view . '.php');
             
             // re-use the same view object for the layout, adding the
             // layout path to the template path stack so it has 
@@ -412,13 +366,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
             
             // no spec, use the current URI
             $uri = Solar::factory('Solar_Uri_Action');
-            $info = $uri->path;
+            $this->_info = $uri->path;
             $this->_query = $uri->query;
             
         } elseif ($spec instanceof Solar_Uri_Action) {
             
             // pull from a Solar_Uri_Action object
-            $info = $spec->path;
+            $this->_info = $spec->path;
             $this->_query = $spec->query;
             
         } else {
@@ -426,69 +380,28 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // a string, assumed to be a page/action/info?query spec.
             $uri = Solar::factory('Solar_Uri_Action');
             $uri->set($spec);
-            $info = $uri->path;
+            $this->_info = $uri->path;
             $this->_query = $uri->query;
+            
         }
         
         // remove the page name from the info
-        if (! empty($info[0]) && $info[0] == $this->_name) {
-            array_shift($info);
+        if (! empty($this->_info[0]) && $this->_info[0] == $this->_name) {
+            array_shift($this->_info);
         }
         
-        // do we have an initial info element?
-        if (! empty($info[0])) {
-            
-            // look at it to see if it's a known action
-            if (! empty($this->_action_info[$info[0]])) {
-                
-                // it's in the _action_info mapping; save it
-                // and remove it from the info map.
-                $this->_action = array_shift($info);
-                
-            } else {
-                
-                // not a mapped action; is it in the Actions/ directory?
-                $file = $this->_actionFile($info[0]);
-                if (Solar::fileExists($file)) {
-                    // yes; save it, and remove from info map
-                    $this->_action = array_shift($info);
-                }
+        // do we have an initial info element as an action method?
+        if (! empty($this->_info[0])) {
+            $method = $this->_actionMethod($this->_info[0]);
+            if ($method) {
+                // save it and remove from info
+                $this->_action = array_shift($this->_info);
             }
         }
         
-        // do we have an action yet?
+        // if no action yet, use the default
         if (! $this->_action) {
-            // no, so use the default
             $this->_action = $this->_action_default;
-        }
-        
-        // move $info to $this->_info so we always have the originals
-        $this->_info = $info;
-        
-        // import $this->_action_info mapped variables to $this->_info as well
-        if (! empty($this->_action_info[$this->_action])) {
-            $map = trim($this->_action_info[$this->_action], '/');
-            $parts = explode('/', $map);
-            foreach ($parts as $key => $val) {
-                
-                // 0 is the name, 1 is the default value
-                $tmp = explode('=', $val);
-                $tmp[0] = trim($tmp[0]);
-                if (empty($tmp[1])) {
-                    $tmp[1] = null;
-                } else {
-                    $tmp[1] = trim($tmp[1]);
-                }
-                
-                // set the info value
-                if (empty($info[$key])) {
-                    // use default value
-                    $this->_info[$tmp[0]] = $tmp[1];
-                } else {
-                    // user-provided value
-                    $this->_info[$tmp[0]] = $info[$key];
-                }
-            }
         }
     }
     
@@ -514,51 +427,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
     }
     
-    
-    /**
-     * 
-     * Includes a file in an isolated scope (but with access to $this).
-     * 
-     * @param string The file to include.
-     * 
-     * @return mixed The return from the included file.
-     * 
-     */
-    protected function _run()
-    {
-        return require func_get_arg(0);
-    }
-    
-    /**
-     * 
-     * Retrieve the TAINTED value of a pathinfo request key by name.
-     * 
-     * Note that this value is direct user input; you should sanitize it with
-     * Solar_Valid or Solar_Filter (or some other technique) before using it.
-     * 
-     * @param string $key The info key.
-     * 
-     * @param mixed $val If the key does not exist, use this value
-     * as a default in its place.
-     * 
-     * @return mixed The value of that info key.
-     * 
-     */
-    protected function _info($key, $val = null)
-    {
-        if (array_key_exists($key, $this->_info) && $this->_info[$key] !== null) {
-            return $this->_info[$key];
-        } else {
-            return $val;
-        }
-    }
-    
     /**
      * 
      * Retrieves the TAINTED value of a query request key by name.
      * 
-     * Note that this value is direct user input; you should sanitize it with
-     * Solar_Valid or Solar_Filter (or some other technique) before using it.
+     * Note that this value is direct user input; you should sanitize it
+     * with Solar_Valid or Solar_Filter (or some other technique) before
+     * using it.
      * 
      * @param string $key The query key.
      * 
@@ -617,16 +492,24 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Forwards internally to another action.
      * 
+     * Note that this inserts the TAINTED user input from $this->_info
+     * as the action method parameters; your action methods should
+     * sanitize these values appropriately.
+     * 
+     * Also resets $this->_view to the requested action name.
+     * 
      * @param string $action The action name.
+     * 
+     * @param array $params Parameters to pass to the action method.
      * 
      * @return void
      * 
      */
-    protected function _forward($action)
+    protected function _forward($action, $params = null)
     {
-        // find the file
-        $file = $this->_actionFile($action);
-        if (! Solar::fileExists($file)) {
+        // does a related action-method exist?
+        $method = $this->_actionMethod($action);
+        if (! $method) {
             throw $this->_exception(
                 'ERR_ACTION_NOT_FOUND',
                 array(
@@ -637,36 +520,51 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // set the view to the most-recent action (this one ;-).
         // we do so before running the script so that the script
-        // can override the view if needed.  note that this means
-        // the view dirs need to match the action dirs.  also,
-        // replace dashes with slashes for subdirectories.
-        $this->_view = str_replace('-', '/', $action);
+        // can override the view if needed.  essentially, just
+        // drop the 'Action' suffix.
+        $this->_view = substr($method, 0, -6);
         
         // run the action script, which may itself _forward() to
-        // other actions.
-        $this->_run($file);
+        // other actions.  pass all pathinfo parameters in order.
+        if (empty($params)) {
+            // speed boost
+            return $this->$method();
+        } else {
+            // somewhat slower
+            return call_user_func_array(
+                array($this, $method),
+                (array) $params
+            );
+        }
     }
     
     /**
      * 
-     * Returns the file name for an action.
+     * Returns the method name for an action.
      * 
      * @param string $action The action name.
      * 
-     * @return string A file name for the action.
+     * @return string The method name, or boolean false if the action
+     * method does not exist.
      * 
      */
-    protected function _actionFile($action)
+    protected function _actionMethod($action)
     {
-        // filter the name so we don't get file traversals
-        $file = preg_replace('/[^a-z0-9-]/i', '', $action);
+        // convert example-name and example_name to ExampleName
+        $method = str_replace(array('_', '-'), ' ', $action);
+        $method = ucwords(trim($method));
+        $method = str_replace(' ', '', $method);
         
-        // convert dashes to slashes;
-        // e.g., foo-bar-baz => foo/bar/baz.action.php
-        $file = str_replace('-', '/', $file) . '.action.php';
+        // convert ExampleName to exampleNameAction
+        $method[0] = strtolower($method[0]);
+        $method .= 'Action';
         
-        // done
-        return $this->_dir . "Actions/$file";
+        // does it exist?
+        if (method_exists($this, $method)) {
+            return $method;
+        } else {
+            return false;
+        }
     }
 }
 ?>

@@ -295,9 +295,16 @@ class Solar {
         $stack = Solar::parents($class, true);
         
         // add the vendor namespace to the stack for vendor-wide strings
+        // and add Solar as the final fallback.
         $pos = strpos($class, '_');
         if ($pos !== false) {
-            $stack[] = substr($class, 0, $pos);
+            $vendor = substr($class, 0, $pos);
+            $stack[] = $vendor;
+            if ($vendor != 'Solar') {
+                $stack[] = 'Solar';
+            }
+        } else {
+            $stack[] = 'Solar';
         }
         
         // go through all classes and find the first matching

@@ -80,6 +80,8 @@ class Solar_App_Hello extends Solar_App {
      * 
      * Thanks, Clay Loveless, for suggesting this.
      * 
+     * @return void
+     * 
      */
     protected function _setup()
     {
@@ -93,11 +95,21 @@ class Solar_App_Hello extends Solar_App {
         $this->layout_title = get_class($this);
     }
     
-    public function mainAction()
+    /**
+     * 
+     * Resets to the requested locale code and shows translated output
+     * as an HTML file.
+     * 
+     * @param string $code The requested locale code.
+     * 
+     * @return void
+     * 
+     */
+    public function mainAction($code = 'en_US')
     {
-        // get the locale code, default is en_US
-        $this->code = $this->_query('code', 'en_US');
-
+        // set the code from input
+        $this->code = $code;
+        
         // reset the locale strings to the new code
         Solar::setLocale($this->code);
 
@@ -108,10 +120,20 @@ class Solar_App_Hello extends Solar_App {
         $this->layout_title = 'Solar: Hello World!';
     }
     
-    public function rssAction()
+    /**
+     * 
+     * Resets to the requested locale code and shows translated output
+     * as an RSS file.
+     * 
+     * @param string $code The requested locale code.
+     * 
+     * @return void
+     * 
+     */
+    public function rssAction($code = 'en_US')
     {
-        // get the locale code, default is en_US
-        $this->code = $this->_query('code', 'en_US');
+        // set the code from input
+        $this->code = $code;
 
         // reset the locale strings to the new code
         Solar::setLocale($this->code);
@@ -119,7 +141,7 @@ class Solar_App_Hello extends Solar_App {
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');
 
-        // turn off the site layout
+        // turn off the site layout so RSS is not mangled
         $this->_layout = false;
     }
 }

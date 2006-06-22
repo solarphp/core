@@ -299,26 +299,17 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * Pathinfo mappings for each controller action.
+     * Adds a new bookmark for a signed-in user.
      * 
-     * @var array
+     * @return void
      * 
      */
-    protected $_action_info = array(
-        'tag'       => 'tags',
-        'user'      => 'owner_handle/tags',
-        'edit'      => 'id',
-        'quick'     => 'uri/subj',
-        'user-feed' => 'owner_handle/tags',
-        'tag-feed'  => 'tags',
-    );
-    
     public function addAction()
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
             $this->errors[] = 'You are not logged in.';
-            return $this->_forward('error');
+            return $this->errorAction();
         }
 
         // build a link for _redirect() calls and the backlink.
@@ -396,19 +387,28 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->backlink = $href;
     }
     
+    /**
+     * 
+     * Allows a signed-in user to edit an existing bookmark.
+     * 
+     * @param int $id The bookmark node ID.
+     * 
+     * @return void
+     * 
+     */
     public function editAction($id = null)
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
             $this->errors[] = 'You are not logged in.';
-            return $this->_forward('error');
+            return $this->errorAction();
         }
 
         // get the bookmark ID (0 means a new bookmark)
         $id = (int) $id;
         if (! $id) {
             $this->errors[] = 'No bookmark selected for editing.';
-            return $this->_forward('error');
+            return $this->errorAction();
         }
 
 
@@ -416,7 +416,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $item = $this->_bookmarks->fetch($id);
         if ($this->_user->auth->handle != $item['owner_handle']) {
             $this->errors[] = 'You do not own this bookmark, or it does not exist.';
-            return $this->_forward('error');
+            return $this->errorAction();
         }
 
         // ---------------------------------------------------------------------
@@ -510,6 +510,13 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->backlink = $href;
     }
     
+    /**
+     * 
+     * Shows an error page.
+     * 
+     * @return void
+     * 
+     */
     public function errorAction()
     {
         // $this->errors[] should already have been set by the calling controller.
@@ -517,12 +524,24 @@ class Solar_App_Bookmarks extends Solar_App {
         // processing for all errors.
     }
     
+    /**
+     * 
+     * Handles JavaScript bookmarking requests from offsite.
+     * 
+     * @param string $uri The URI to bookmark.
+     * 
+     * @param string $subj The title for the bookmark, typically the
+     * page title from the bookmarked page.
+     * 
+     * @return void
+     * 
+     */
     public function quickAction($uri = null, $subj = null)
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
             $this->errors[] = 'You are not logged in.';
-            return $this->_forward('error');
+            return $this->errorAction();
         }
 
         // get the quickmark info from the query
@@ -587,6 +606,16 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->backlink = $uri;
     }
     
+    /**
+     * 
+     * Shows a list of bookmarks filtered by tag, regardless of owner.
+     * 
+     * @param string|array $tags The tags to show; either a space- (or
+     * plus-) separated list of tags, or a sequential array of tags.
+     * 
+     * @return void
+     * 
+     */
     public function tagAction($tags = null)
     {
         // allow uri to set the "count" for each page (default 10)
@@ -633,10 +662,21 @@ class Solar_App_Bookmarks extends Solar_App {
         );
     }
     
+    /**
+     * 
+     * Shows an RSS feed of bookmarks filtered by tag, regardless of 
+     * owner.
+     * 
+     * @param string|array $tags The tags to show; either a space- (or
+     * plus-) separated list of tags, or a sequential array of tags.
+     * 
+     * @return void
+     * 
+     */
     public function tagFeedAction($tags = null)
     {
         // build the local variables
-        $this->_forward('tag');
+        $this->tagAction($tags);
 
         // explicitly pick a different view script
         $this->_view = 'feed';
@@ -653,6 +693,19 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->_layout = false;
     }
     
+    /**
+     * 
+     * Shows all bookmarks for an owner, optionally filtered by tag.
+     * 
+     * @param string $owner_handle The owner to show bookmarks for.
+     * 
+     * @param string|array $tags An optional set of tags to filter by;
+     * either a space- (or plus-) separated list of tags, or a
+     * sequential array of tags.
+     * 
+     * @return void
+     * 
+     */
     public function userAction($owner_handle = null, $tags = null)
     {
         // allow uri to set the "count" for each page (default 10)
@@ -703,10 +756,24 @@ class Solar_App_Bookmarks extends Solar_App {
         );
     }
     
+    /**
+     * 
+     * Shows all bookmarks for an owner as an RSS feed, optionally 
+     * filtered by tag.
+     * 
+     * @param string $owner_handle The owner to show bookmarks for.
+     * 
+     * @param string|array $tags An optional set of tags to filter by;
+     * either a space- (or plus-) separated list of tags, or a
+     * sequential array of tags.
+     * 
+     * @return void
+     * 
+     */
     public function userFeedAction($owner_handle = null, $tags = null)
     {
         // build the local vars
-        $this->_forward('user');
+        $this->userAction($owner_handle, $tags);
 
         // explicitly use a different view
         $this->_view = 'feed';

@@ -56,7 +56,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * The master node type.
+     * The node type this class is intended to work with.
      * 
      * @var string
      * 
@@ -65,7 +65,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Array of columns needed for forms related to the master node type.
+     * Array of columns needed for forms related to the node type.
      * 
      * @var array
      * 
@@ -85,7 +85,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * What node types are acceptable as parts of this master node type?
+     * What node types are acceptable as parts of this node type?
      * 
      * @var array
      * 
@@ -185,7 +185,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetch a list of nodes of the master node type.
+     * Fetch a list of nodes of the node type.
      * 
      * @param string|array $tags Fetch nodes with all these tags; if
      * empty, ignores tags.
@@ -222,7 +222,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             $subselect = Solar::factory('Solar_Sql_Select');
             
             $subselect->from($this->_content->nodes, '*')
-                      ->multiWhere($this->_masterWhere())
+                      ->multiWhere($this->_where())
                       ->multiWhere($where);
                       
             $this->_selectTags($subselect, $tags);
@@ -237,7 +237,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             $select = Solar::factory('Solar_Sql_Select');
             
             $select->from($this->_content->nodes, '*')
-                   ->multiWhere($this->_masterWhere())
+                   ->multiWhere($this->_where())
                    ->multiWhere($where);
             
             if ($tags) {
@@ -314,9 +314,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetch a total count and pages of master nodes in the content store.
+     * Fetch a total count and pages of nodes in the content store.
      * 
-     * @param string|array $tags Count master nodes with all these
+     * @param string|array $tags Count nodes with all these
      * tags; if empty, counts for all tags.
      * 
      * @param string|array $where A set of multiWhere() conditions to
@@ -330,7 +330,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, 'id');
-        $select->multiWhere($this->_masterWhere());
+        $select->multiWhere($this->_where());
         $select->multiWhere($where);
         
         // using tags?
@@ -351,11 +351,11 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetch one master node by ID.
+     * Fetch one node by ID.
      * 
-     * @param int $id The master node ID.
+     * @param int $id The node ID.
      * 
-     * @return array The master node data.
+     * @return array The node data.
      * 
      */
     public function fetch($id)
@@ -369,7 +369,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         }
         
         // add conditions
-        $select->multiWhere($this->_masterWhere());
+        $select->multiWhere($this->_where());
         $select->where('nodes.id = ?', $id);
         
         // get the row
@@ -382,17 +382,20 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * @param int $parent_id The parent node ID.
      * 
+     * @param string $where Additional WHERE conditions.
+     * 
      * @param array $order Return in this order.
      * 
      * @return array A list of nodes that are children of
      * the $parent_id node.
      * 
      */
-    public function fetchParts($parent_id, $order = null)
+    public function fetchParts($parent_id, $where = null, $order = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
         $select->where('nodes.parent_id = ?', $parent_id);
+        $select->multiWhere($where);
         $select->order($order);
         return $select->fetch('all');
     }
@@ -401,7 +404,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * Fetches a default blank node of this type.
      * 
-     * @return array An array of default data for a master node.
+     * @return array An array of default data for a node.
      * 
      */
     public function fetchDefault()
@@ -414,7 +417,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetches a list of all tags on all master nodes of this type.
+     * Fetches a list of all tags on all nodes of this type.
      * 
      * @param string|array $where A set of multiWhere() conditions to
      * determine which nodes are fetched.
@@ -434,7 +437,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->join('nodes', 'tags.node_id = nodes.id');
         
         // add master conditions
-        $select->multiWhere($this->_masterWhere());
+        $select->multiWhere($this->_where());
         
         // add user conditions
         $select->multiWhere($where);
@@ -449,7 +452,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Inserts or updates a master node.
+     * Inserts or updates a node.
      * 
      * @param array $data The node data.
      * 
@@ -467,7 +470,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Insert a new master node and its tags.
+     * Insert a new node and its tags.
      * 
      * @param array $data The node data.
      * 
@@ -499,7 +502,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Update a master node and its tags.
+     * Update a node and its tags.
      * 
      * @param array $data The node data.
      * 
@@ -536,9 +539,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Delete a master node and its tags.
+     * Delete a node and its tags.
      * 
-     * @param int $id The master node ID to delete.
+     * @param int $id The node ID to delete.
      * 
      * @return void
      * 
@@ -546,7 +549,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     public function delete($id)
     {
         // delete the node
-        $where = $this->_masterWhere();
+        $where = $this->_where();
         $where['nodes.id = ?'] = $id;
         $this->_content->nodes->delete($where);
         
@@ -559,7 +562,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Generates a data-entry form for a master node.
+     * Generates a data-entry form for a node.
      * 
      * @param array $data An array of "column => value" data to
      * pre-populate into the form.
@@ -603,12 +606,12 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Builds a baseline multiWhere() clause for master nodes of this type.
+     * Returns a baseline WHERE clause for nodes of $this->_type.
      * 
      * @return array
      * 
      */
-    protected function _masterWhere()
+    protected function _where()
     {
         $where = array();
         
@@ -619,9 +622,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // limit to one type
         $where['nodes.type = ?'] = $this->_type;
-        
-        // limit to master nodes
-        $where['nodes.parent_id = ?'] = 0;
         
         // done
         return $where;

@@ -66,22 +66,6 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * Pathinfo mappings for each controller action.
-     * 
-     * @var array
-     * 
-     */
-    protected $_action_info = array(
-        'tag'       => 'tags',
-        'user'      => 'owner_handle/tags',
-        'edit'      => 'id',
-        'quick'     => 'uri/subj',
-        'user-feed' => 'owner_handle/tags',
-        'tag-feed'  => 'tags',
-    );
-    
-    /**
-     * 
      * The total number of pages in the query.
      * 
      * @var int
@@ -311,6 +295,433 @@ class Solar_App_Bookmarks extends Solar_App {
         }
         
         return $order;
+    }
+    
+    /**
+     * 
+     * Pathinfo mappings for each controller action.
+     * 
+     * @var array
+     * 
+     */
+    protected $_action_info = array(
+        'tag'       => 'tags',
+        'user'      => 'owner_handle/tags',
+        'edit'      => 'id',
+        'quick'     => 'uri/subj',
+        'user-feed' => 'owner_handle/tags',
+        'tag-feed'  => 'tags',
+    );
+    
+    public function addAction()
+    {
+        // must be logged in to proceed
+        if (! $this->_user->auth->isValid()) {
+            $this->errors[] = 'You are not logged in.';
+            return $this->_forward('error');
+        }
+
+        // build a link for _redirect() calls and the backlink.
+        $href = $this->_flash->get('backlink');
+        if (! $href) {
+            // probably browsed to this page directly.  link to the user's list.
+            $uri = Solar::factory('Solar_Uri_Action');
+            $href = $uri->quick("bookmarks/user/{$this->_user->auth->handle}");
+        }
+
+        // keep the backlink for the next page load
+        $this->_flash->set('backlink', $href);
+
+        // build the basic form, populated with the bookmark data
+        // from the database
+        $item = $this->_bookmarks->fetchDefault();
+        $form = $this->_bookmarks->form($item);
+
+        // now populate the the submitted POST values to the form
+        $form->populate();
+
+
+        // ---------------------------------------------------------------------
+        // 
+        // operations
+        // 
+
+        // what operation are we performing?
+        $submit = Solar::post('submit');
+
+        // OP: Save
+        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+    
+            // force owner and editor handles
+            $data = $form->values('bookmark');
+            $data['owner_handle'] = $this->_user->auth->handle;
+            $data['editor_handle'] = $this->_user->auth->handle;
+    
+            // save the data
+            try {
+                $result = $this->_bookmarks->save($data);
+        
+                // retain the id
+                $id = $result['id'];
+        
+                // tell the edit controller that we added successfully
+                $this->_flash->set('add_ok', true);
+        
+                // redirect to editing
+                $this->_redirect("bookmarks/edit/$id");
+        
+            } catch (Solar_Exception $e) {
+        
+                // exception on save()
+                // we should not have gotten to this point,
+                // but need to be aware of possible problems.
+                $form->setStatus(false);
+                $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
+        
+            }
+        }
+
+        // OP: Cancel
+        if ($submit == $this->locale('SUBMIT_CANCEL')) {
+            $this->_redirect($href);
+        }
+
+        // ---------------------------------------------------------------------
+        // 
+        // completion
+        // 
+
+        // assign data for the view
+        $this->formdata = $form;
+        $this->backlink = $href;
+    }
+    
+    public function editAction($id = null)
+    {
+        // must be logged in to proceed
+        if (! $this->_user->auth->isValid()) {
+            $this->errors[] = 'You are not logged in.';
+            return $this->_forward('error');
+        }
+
+        // get the bookmark ID (0 means a new bookmark)
+        $id = (int) $id;
+        if (! $id) {
+            $this->errors[] = 'No bookmark selected for editing.';
+            return $this->_forward('error');
+        }
+
+
+        // must be the item owner to edit it
+        $item = $this->_bookmarks->fetch($id);
+        if ($this->_user->auth->handle != $item['owner_handle']) {
+            $this->errors[] = 'You do not own this bookmark, or it does not exist.';
+            return $this->_forward('error');
+        }
+
+        // ---------------------------------------------------------------------
+        // 
+        // build a link for _redirect() calls and the backlink.
+        // 
+        // if we came from a tag or user page, return there.
+        // otherwise, return the list for the user.
+        //
+
+        $href = $this->_flash->get('backlink');
+        if (! $href) {
+            // probably browsed directly to this page; return to the user's list
+            $uri = Solar::factory('Solar_Uri_Action');
+            $href = $uri->quick("bookmarks/user/{$this->_user->auth->handle}");
+        }
+
+        // keep the backlink for the next page load
+        $this->_flash->set('backlink', $href);
+
+        // ---------------------------------------------------------------------
+        // 
+        // operations
+        // 
+
+        // build the basic form, populated with the bookmark data
+        // from the database
+        $form = $this->_bookmarks->form($item);
+
+        // now populate the the submitted POST values to the form
+        $form->populate();
+
+        // what operation are we performing?
+        $submit = Solar::post('submit');
+
+        // OP: Save
+        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+    
+            // force owner and editor values
+            $data = $form->values('bookmark');
+            $data['owner_handle'] = $this->_user->auth->handle;
+            $data['editor_handle'] = $this->_user->auth->handle;
+    
+            // save the data
+            try {
+        
+                // attempt the save, may throw an exception
+                $result = $this->_bookmarks->save($data);
+        
+                // retain the id
+                $id = $data['id'];
+    
+                // if new, return to the backlink
+                if ($id == 0) {
+                    $this->_redirect($href);
+                }
+        
+            } catch (Solar_Sql_Table_Exception $e) {
+        
+                // exception on save()
+                // we should not have gotten to this point,
+                // but need to be aware of possible problems.
+                $form->setStatus(false);
+                $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
+        
+                // add bookmark[*] element feedback
+                $form->addFeedback($e->getInfo(), 'bookmark');
+            }
+        }
+
+        // OP: Cancel
+        if ($submit == $this->locale('SUBMIT_CANCEL')) {
+            $this->_redirect($href);
+        }
+
+        // OP: Delete
+        if ($submit == $this->locale('SUBMIT_DELETE')) {
+            $values = $form->values();
+            $id = $values['bookmark']['id'];
+            $this->_bookmarks->delete($id);
+            $this->_redirect($href);
+        }
+
+        // ---------------------------------------------------------------------
+        // 
+        // completion
+        // 
+
+        // assign data for the view
+        $this->formdata = $form;
+        $this->backlink = $href;
+    }
+    
+    public function errorAction()
+    {
+        // $this->errors[] should already have been set by the calling controller.
+        // nothing else to do, but we keep this file in case we need generic
+        // processing for all errors.
+    }
+    
+    public function quickAction($uri = null, $subj = null)
+    {
+        // must be logged in to proceed
+        if (! $this->_user->auth->isValid()) {
+            $this->errors[] = 'You are not logged in.';
+            return $this->_forward('error');
+        }
+
+        // get the quickmark info from the query
+        $uri = $this->_query('uri');
+        $subj = $this->_query('subj');
+
+        // we need to see if the user already has the same URI in
+        // his bookmarks so that we don't add it twice.
+        $existing = $this->_bookmarks->fetchByOwnerUri(
+            $this->_user->auth->handle,
+            $uri
+        );
+
+        // if the user *does* already have that URI bookmarked,
+        // redirect to the existing bookmark.
+        if (! empty($existing['id'])) {
+            $this->_flash->set('backlink', $uri);
+            $this->_redirect("bookmarks/edit/{$existing['id']}");
+        }
+
+        // get a blank bookmark item, build the basic form
+        $item = $this->_bookmarks->fetchDefault();
+        $item['uri'] = $uri;
+        $item['subj'] = $subj;
+        $form = $this->_bookmarks->form($item);
+
+        // overwrite form defaults with submissions
+        $form->populate();
+
+        // check for a 'Save' operation
+        $submit = Solar::post('submit');
+        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+    
+            // save the data
+            try {
+    
+                // get the form values
+                $data = $form->values('bookmark');
+                $data['owner_handle'] = $this->_user->auth->handle;
+                $data['editor_handle'] = $this->_user->auth->handle;
+        
+                // save
+                $result = $this->_bookmarks->save($data);
+        
+                // redirect to the source URI (external)
+                $this->_redirect($data['uri']);
+        
+            } catch (Solar_Exception $e) {
+        
+                // exception on save()
+                // we should not have gotten to this point,
+                // but need to be aware of possible problems.
+                $form->setStatus(false);
+                $form->feedback[] = $e->getClass() . ' -- ' . $e->getMessage();
+                echo $e;
+        
+            }
+        }
+
+        // assign data for the view
+        $this->formdata = $form;
+        $this->backlink = $uri;
+    }
+    
+    public function tagAction($tags = null)
+    {
+        // allow uri to set the "count" for each page (default 10)
+        $this->_bookmarks->setPaging($this->_query('paging', 10));
+
+        // the requested owner_handle (none)
+        $owner_handle = null;
+
+        // the requested ordering of list results
+        $order = $this->_getOrder();
+
+        // what page-number of the results are we looking for?
+        // (regardless of RSS or HTML)
+        $page = $this->_query('page', 1);
+
+        // get the list of results
+        $this->list = $this->_bookmarks->fetchAll($tags, $owner_handle, $order, $page);
+
+        // get the total pages and row-count
+        $total = $this->_bookmarks->countPages($tags, $owner_handle);
+
+        // flash forward the backlink in case we go to edit
+        $this->_flash->set('backlink', Solar::server('REQUEST_URI'));
+
+        // assign everything else for the view
+        $this->pages        = $total['pages'];
+        $this->order        = Solar::get('order', 'created_desc');
+        $this->page         = $page;
+        $this->owner_handle = null; // requested owner_handle
+        $this->tags         = $tags; // the requested tags
+        $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags
+
+        // use the 'browse' view
+        $this->_view = 'browse';
+
+        // RSS feed link for the page
+        $uri = Solar::factory('Solar_Uri_Action');
+        $uri->path[1] = 'tag-feed';
+        $this->layout_link[] = array(
+            'rel'   => 'alternate',
+            'type'  => 'application/rss+xml',
+            'title' => Solar::server('PATH_INFO'),
+            'href'  => $uri->fetch(),
+        );
+    }
+    
+    public function tagFeedAction($tags = null)
+    {
+        // build the local variables
+        $this->_forward('tag');
+
+        // explicitly pick a different view script
+        $this->_view = 'feed';
+
+        // assign to the view
+        $this->feed['title'] = 'tag';
+        $this->feed['descr'] = $this->tags;
+
+        $uri = Solar::factory('Solar_Uri_Action');
+        $uri->info[1] = 'tag';
+        $this->feed['link'] = $uri->fetch(true);
+
+        // explicitly use a one-step view (i.e., no layout)
+        $this->_layout = false;
+    }
+    
+    public function userAction($owner_handle = null, $tags = null)
+    {
+        // allow uri to set the "count" for each page (default 10)
+        $this->_bookmarks->setPaging($this->_query('paging', 10));
+
+        // the requested ordering of list results
+        $order = $this->_getOrder();
+
+        // which page number?
+        $page = $this->_query('page', 1);
+
+        // get the list of results
+        $this->list = $this->_bookmarks->fetchAll($tags, $owner_handle, $order, $page);
+
+        // get the total pages and row-count
+        $total = $this->_bookmarks->countPages($tags, $owner_handle);
+
+        // flash forward the backlink in case we go to edit
+        $this->_flash->set('backlink', Solar::server('REQUEST_URI'));
+
+        // set the view
+        $this->_view = 'browse';
+
+        // assign view vars
+        $this->pages        = $total['pages'];
+        $this->order        = Solar::get('order', 'created_desc');
+        $this->page         = $page;
+        $this->owner_handle = $owner_handle; // requested owner_handle
+        $this->tags         = $tags; // the requested tags
+        $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags for this user
+
+        // set the RSS feed link for the layout
+        $uri = Solar::factory('Solar_Uri_Action');
+        $uri->path[1] = 'user-feed';
+
+        if ($tags) {
+            // there are tags requested, so the RSS should show all pages
+            // (i.e., page zero) and ignore the rows-per-page settings.
+            $uri->query['page'] = 'all';
+            unset($uri->query['rows_per_page']);
+        }
+
+        $this->layout_link[] = array(
+            'rel'   => 'alternate',
+            'type'  => 'application/rss+xml',
+            'title' => Solar::server('PATH_INFO'),
+            'href'  => $uri->fetch(),
+        );
+    }
+    
+    public function userFeedAction($owner_handle = null, $tags = null)
+    {
+        // build the local vars
+        $this->_forward('user');
+
+        // explicitly use a different view
+        $this->_view = 'feed';
+
+        // assign vars
+        $this->feed['title'] = 'user';
+        $this->feed['descr'] = $this->owner_handle . '/' . $this->tags;
+        $this->feed['date'] = date(DATE_RSS);
+
+        $uri = Solar::factory('Solar_Uri_Action');
+        $uri->info[1] = 'user';
+        $this->feed['link'] = $uri->fetch(true);
+
+        // explicitly use a one-step view (no layout)
+        $this->_layout = false;
     }
 }
 ?>

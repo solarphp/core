@@ -20,18 +20,12 @@
 ?>
 <!-- list of tags in use -->
 <div id="taglist">
-    <?php
-        /** The list of tags in the system */
-        include $this->template('browse/tags.part.php');
-    ?>
+    <?php $this->partial('_tags.php') ?>
 </div>
 
 <!-- ordering -->
 <div id="ordering">
-    <?php
-        /** The order-by links */
-        include $this->template('browse/order.part.php');
-    ?>
+    <?php $this->partial('_order.php') ?>
 </div>
 
 <h1><?php echo $this->getText('BOOKMARKS') ?></h1>
@@ -50,8 +44,7 @@
     <!-- output the list of results -->
     <?php if ($this->list): ?>
         <?php foreach ($this->list as $item) {
-            /** Each bookmark item on the page */
-            include $this->template('browse/item.part.php');
+            $this->partial('_item.php', $item);
         } ?>
         
         <!-- previous / page-count / next -->

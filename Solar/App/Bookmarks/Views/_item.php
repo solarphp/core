@@ -21,24 +21,24 @@
                 <p>
                     <!-- title -->
                     <span style="font-size: 120%; font-weight: bold;"><?php
-                        echo $this->anchor($item['uri'], $item['subj']);
+                        echo $this->anchor($uri, $subj);
                     ?></span>
                     
                     <!-- description -->
-                    <?php if (trim($item['summ']) != ''): ?>
+                    <?php if (trim($summ) != ''): ?>
                     
-                    <br /><?php echo nl2br(wordwrap($this->escape($item['summ']), 72)) ?>
+                    <br /><?php echo nl2br(wordwrap($this->escape($summ), 72)) ?>
                     <?php endif ?>
                     
                     <!-- pos and uri -->
                     <br /><span style="font-size: 90%;"><?php
                     
                         // pos
-                        echo $this->getText('POS') . ' ' . $this->escape($item['pos']);
+                        echo $this->getText('POS') . ' ' . $this->escape($pos);
                         
                         // from uri
                         echo ' ' . $this->getText('FROM') . ' ';
-                        $cut = $item['uri'];
+                        $cut = $uri;
                         if (strlen($cut) > 72) {
                             // if longer than 72 chars, only show 64 chars, cut in the middle
                             $cut = substr($cut, 0, 48) . '...' . substr($cut, -16);
@@ -48,9 +48,9 @@
                     
                     <!-- date added by user -->
                     <br /><?php
-                        echo $this->getText('ON') . ' ' . $this->escape($this->timestamp($item['created']) . ' ');
+                        echo $this->getText('ON') . ' ' . $this->escape($this->timestamp($created) . ' ');
                         echo $this->getText('BY') . ' ';
-                        echo $this->action("bookmarks/user/{$item['owner_handle']}", $item['owner_handle']);
+                        echo $this->action("bookmarks/user/$owner_handle", $owner_handle);
                     ?></span>
                     
                     <!-- tags and edit link -->
@@ -58,14 +58,14 @@
                     
                         // tags
                         echo $this->getText('TAGGED');
-                        $tags = explode(' ', $item['tags']);
+                        $tags = explode(' ', $tags);
                         foreach ($tags as $tag) {
                             echo '&nbsp;' . $this->action("bookmarks/tag/$tag", $tag);
                         }
                         
                         // edit link
-                        if (Solar::registry('user')->auth->handle == $item['owner_handle']) {
-                            echo '&nbsp;...&nbsp;' . $this->action("bookmarks/edit/{$item['id']}", 'SUBMIT_EDIT');
+                        if (Solar::registry('user')->auth->handle == $owner_handle) {
+                            echo '&nbsp;...&nbsp;' . $this->action("bookmarks/edit/$id", 'SUBMIT_EDIT');
                         }
                     ?>
                 </p>

@@ -29,7 +29,7 @@ Solar::loadClass('Solar_Uri_Action');
  * <code>
  * Example.php
  * Example/
- *   Views/
+ *   View/
  *     list.php
  *     item.php
  *     edit.php
@@ -111,7 +111,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the layout to use for the view, minus the .layout.php suffix.
+     * The name of the layout to use for the view, minus the .php suffix.
      * 
      * Default is 'twoColRight'.
      * 
@@ -124,12 +124,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Where the layout directory is located.
      * 
-     * Default is 'Solar/App/Layouts/'.
+     * Default is 'Solar/App/Layout/'.
      * 
      * @var string
      * 
      */
-    protected $_layout_dir = 'Solar/App/Layouts/';
+    protected $_layout_dir = 'Solar/App/Layout/';
     
     /**
      * 
@@ -272,7 +272,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_postAction();
         
         // get a view object and assign variables
-        $view = $this->_newView();
+        $view = $this->_viewInstance();
         $view->assign($this);
         
         // are we using a layout?
@@ -283,17 +283,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
             
         } else {
             
-            // using a layout.
-            $content = $view->fetch($this->_view . '.php');
+            // using a layout. execute the view and retain the output.
+            $output = $view->fetch($this->_view . '.php');
             
-            // re-use the same view object for the layout, adding the
-            // layout path to the template path stack so it has 
-            // preference.
-            $view->addTemplatePath($this->_layout_dir);
+            // get a layout object and assign properties of the view
+            $layout = $this->_layoutInstance();
+            $layout->assign($view);
             
-            // return the page content inside the layout.
-            $view->assign($this->_layout_var, $content);
-            return $view->fetch($this->_layout . '.layout.php');
+            // assign the view output and render the layout
+            $layout->assign($this->_layout_var, $output);
+            return $layout->fetch($this->_layout . '.php');
+            
         }
     }
     
@@ -314,23 +314,95 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Creates and returns a new Solar_View object.
+     * Creates and returns a new Solar_View object for a view.
      * 
      * @return Solar_View
      * 
      */
-    protected function _newView()
+    protected function _viewInstance()
     {
-        $class = get_class($this);
         $view = Solar::factory('Solar_View');
+        $class = get_class($this);
         
-        // add the views for this page controller
-        $view->addTemplatePath($this->_dir . 'Views/');
+        // stack of helper classes
+        $helper = array();
         
-        // add helpers from user-defined locations, but give preference
-        // to the helpers for this page controller.
-        $view->addHelperClass($this->_config['helper_class']);
-        $view->addHelperClass($class . '_Helper');
+        // stack of template paths
+        $template = array();
+        
+        // find the class-level templates (Vendor/App/Example/View)
+        $template[] = $this->_dir . 'View';
+        
+        // find the vendor-level templates (Vendor/App/View)
+        $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'View';
+        
+        // add the template paths to the view object
+        $view->addTemplatePath($template);
+        
+        // find the class-level helpers (Vendor_App_Example_Helper)
+        $helper[] = $class . '_Helper';
+        
+        // find the parent-level helpers (Vendor_App_Helper)
+        $pos = strrpos($class, '_');
+        $helper[] = substr($class, 0, -$pos) . '_Helper';
+        
+        // find the vendor-level helpers (Vendor_View_Helper)
+        $pos = strpos($class, '_');
+        $vendor = substr($class, 0, $pos);
+        if ($vendor != 'Solar') {
+            $helper[] = $vendor . '_View_Helper';
+        }
+        
+        // add the helper classes to the view object
+        $view->addHelperClass($helper);
+        
+        // set the locale class for the getText helper
+        $view->getTextRaw("$class::");
+        
+        // done!
+        return $view;
+    }
+    
+    /**
+     * 
+     * Creates and returns a new Solar_View object for a layout.
+     * 
+     * @return Solar_View
+     * 
+     */
+    protected function _layoutInstance()
+    {
+        $view = Solar::factory('Solar_View');
+        $class = get_class($this);
+        
+        // stack of helper classes
+        $helper = array();
+        
+        // stack of template paths
+        $template = array();
+        
+        // find the class-level templates (Vendor/App/Example/Layout)
+        $template[] = $this->_dir . 'Layout';
+        
+        // find the vendor-level templates (Vendor/App/Layout)
+        $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'Layout';
+        
+        // add the template paths to the view object
+        $view->addTemplatePath($template);
+        
+        // find the parent-level helpers (Vendor_App_Helper)
+        $pos = strrpos($class, '_');
+        $helper[] = substr($class, 0, -$pos) . '_Helper';
+        
+        // find the vendor-level helpers (Vendor_View_Helper)
+        $pos = strpos($class, '_');
+        $vendor = substr($class, 0, $pos);
+        if ($vendor != 'Solar') {
+            $helper[] = $vendor . '_View_Helper';
+        }
+        
+        // add the helper class names to the view object
+        $view->addHelperClass($helper);
         
         // set the locale class for the getText helper
         $view->getTextRaw("$class::");
@@ -425,6 +497,31 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _postAction()
     {
+    }
+    
+    /**
+     * 
+     * Retrieves the TAINTED value of a path-info value by position.
+     * 
+     * Note that this value is direct user input; you should sanitize it
+     * with Solar_Valid or Solar_Filter (or some other technique) before
+     * using it.
+     * 
+     * @param int $key The path-info position number.
+     * 
+     * @param mixed $val If the key does not exist, use this value
+     * as a default in its place.
+     * 
+     * @return mixed The value of that query key.
+     * 
+     */
+    protected function _info($key, $val = null)
+    {
+        if (array_key_exists($key, $this->_info) && $this->_info[$key] !== null) {
+            return $this->_info[$key];
+        } else {
+            return $val;
+        }
     }
     
     /**

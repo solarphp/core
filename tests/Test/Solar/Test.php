@@ -528,7 +528,6 @@ class Test_Solar_Test extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'gaz',
-            'locale' => 'Solar/Test/Example/Locale/'
         );
         $this->assertProperty($example, '_config', 'equals', $expect);
     }

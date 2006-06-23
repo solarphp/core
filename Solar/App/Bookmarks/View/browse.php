@@ -20,15 +20,17 @@
 ?>
 <!-- list of tags in use -->
 <div id="taglist">
+    <h3><?php echo $this->getText('HEADING_TAGLIST') ?></h3>
     <?php $this->partial('_tags.php') ?>
 </div>
 
 <!-- ordering -->
-<div id="ordering">
+<div id="order">
+    <h3><?php echo $this->getText('HEADING_ORDER') ?></h3>
     <?php $this->partial('_order.php') ?>
 </div>
 
-<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
+<h1><?php echo $this->getText('HEADING_BOOKMARKS') ?></h1>
 
 <!-- results -->
 <div id="bookmarks">
@@ -79,7 +81,7 @@
         
         <!-- Add a new bookmark -->
         <p><?php
-            echo $this->action("bookmarks/add", 'ADD_NEW_BOOKMARK');
+            echo $this->action("bookmarks/add", 'ACTION_ADD');
         ?></p>
         
         <!-- QuickMark link -->
@@ -89,7 +91,7 @@
             $href = $uri->fetch(true);
             $js = "javascript:location.href='$href?uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
             echo $this->getText('DRAG_THIS') . ': ';
-            echo $this->anchor($js, 'QUICKMARK');
+            echo $this->anchor($js, 'ACTION_QUICK');
         ?></p>
     <?php endif ?>
 </div>

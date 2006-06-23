@@ -17,7 +17,6 @@
  * 
  */
 ?>
-        <h3><?php echo $this->getText('TAG_LIST') ?></h3>
         <?php
             if ($this->owner_handle) {
                 $action = "bookmarks/user/{$this->owner_handle}";

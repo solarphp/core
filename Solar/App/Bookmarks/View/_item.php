@@ -34,10 +34,10 @@
                     <br /><span style="font-size: 90%;"><?php
                     
                         // pos
-                        echo $this->getText('POS') . ' ' . $this->escape($pos);
+                        echo $this->getText('LABEL_POS') . ' ' . $this->escape($pos);
                         
                         // from uri
-                        echo ' ' . $this->getText('FROM') . ' ';
+                        echo ' ' . $this->getText('LABEL_URI') . ' ';
                         $cut = $uri;
                         if (strlen($cut) > 72) {
                             // if longer than 72 chars, only show 64 chars, cut in the middle
@@ -48,8 +48,8 @@
                     
                     <!-- date added by user -->
                     <br /><?php
-                        echo $this->getText('ON') . ' ' . $this->escape($this->timestamp($created) . ' ');
-                        echo $this->getText('BY') . ' ';
+                        echo $this->getText('LABEL_CREATED') . ' ' . $this->escape($this->timestamp($created) . ' ');
+                        echo $this->getText('LABEL_OWNER_HANDLE') . ' ';
                         echo $this->action("bookmarks/user/$owner_handle", $owner_handle);
                     ?></span>
                     
@@ -57,7 +57,7 @@
                     <br /><?php
                     
                         // tags
-                        echo $this->getText('TAGGED');
+                        echo $this->getText('LABEL_TAGS');
                         $tags = explode(' ', $tags);
                         foreach ($tags as $tag) {
                             echo '&nbsp;' . $this->action("bookmarks/tag/$tag", $tag);

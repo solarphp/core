@@ -20,7 +20,7 @@
 	padding: 4px 0;
 }
 
-#ordering {
+#order {
 	float: right;
 	margin: 0 12px;
 	padding: 8px;
@@ -28,21 +28,21 @@
 	background: #eee;
 }
 
-#ordering h3 {
+#order h3 {
 	margin: 4px 0;
 }
 
-#ordering ul {
+#order ul {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-#ordering ul li {
+#order ul li {
 	padding: 4px 0;
 }
 
-#ordering ul li.selected {
+#order ul li.selected {
 	font-weight: bold;
 }
 

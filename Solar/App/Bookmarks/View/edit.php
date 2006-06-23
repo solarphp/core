@@ -17,8 +17,8 @@
  * 
  */
 ?>
-<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
-<h2><?php echo $this->getText('EDIT_ITEM') ?></h2>
+<h1><?php echo $this->getText('HEADING_BOOKMARKS') ?></h1>
+<h2><?php echo $this->getText('HEADING_EDIT') ?></h2>
 <p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php

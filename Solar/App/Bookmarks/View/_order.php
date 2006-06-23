@@ -17,7 +17,6 @@
  * 
  */
 ?>
-        <h3><?php echo $this->getText('ORDERED_BY') ?></h3>
         <ul>
         <?php
             $tmp = array(

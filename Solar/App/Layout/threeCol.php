@@ -1,11 +1,11 @@
 <?php
 /**
  * 
- * 2-column (narrow left) Solar_View layout template for a Solar site.
+ * 3-column Solar_View layout template for a Solar site.
  * 
  * @category Solar
  * 
- * @package Solar_Layout
+ * @package Solar_App
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
 
     <head>
         <?php
-            include $this->template('head.part.php');
+            include $this->template('_head.php');
         ?>
     </head>
     
@@ -36,15 +36,20 @@
         <table id="container" cellspacing="0">
             <tr>
                 <td id="left">
-                    <?php
-                        include $this->template('auth.part.php');
-                        foreach ((array) $this->layout_left as $val) {
-                            echo $val;
-                        }
-                    ?>
+                    <?php foreach ((array) $this->layout_left as $val) {
+                        echo $val;
+                    } ?>
                 </td>
                 <td id="content">
                     <?php echo $this->layout_content ?>
+                </td>
+                <td id="right">
+                    <?php
+                        include $this->template('_auth.php');
+                        foreach ((array) $this->layout_right as $val) {
+                            echo $val;
+                        }
+                    ?>
                 </td>
             </tr>
         </table>

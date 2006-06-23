@@ -192,5 +192,18 @@ abstract class Solar_App extends Solar_Controller_Page {
             $this->_action = 'error';
         }
     }
+    
+    /**
+     * 
+     * Shows a generic error page.
+     * 
+     * @return void
+     * 
+     */
+    public function errorAction()
+    {
+        // no code needed, just dumps $this->errors via the 'error.php'
+        // view
+    }
 }
 ?>

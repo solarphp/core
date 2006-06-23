@@ -252,37 +252,8 @@ class Solar_Test_Suite extends Solar_Base {
      */
     public function run($series = null)
     {
-        // reset
-        $this->_info = array(
-            'plan' => 0,
-            'done' => 0,
-            'time' => 0,
-            'pass' => array(),
-            'skip' => array(),
-            'todo' => array(),
-            'fail' => array(),
-        );
-        $this->_test = array();
-        
-        // running all tests, or just a sub-series?
-        if ($series) {
-            $class = $series;
-            $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
-            $dir = $this->_dir . Solar::fixdir($sub);
-            $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
-            if (is_readable($file)) {
-                require_once $file;
-                $this->addTestMethods("Test_$class");
-            }
-        } else {
-            $dir = $this->_dir;
-        }
-        
-        // find all remaining tests
-        if (is_dir($dir)) {
-            $iter = new RecursiveDirectoryIterator($dir);
-            $this->findTests($iter);
-        }
+        // prepare
+        $this->_prepare($series);
         
         // run the tests
         $time = time();
@@ -343,6 +314,48 @@ class Solar_Test_Suite extends Solar_Base {
         
         $this->_info['time'] = time() - $time;
         
+        // report, then return the run information
+        $this->_report();
+        return $this->_info;
+    }
+    
+    protected function _prepare($series = null)
+    {
+        // reset
+        $this->_info = array(
+            'plan' => 0,
+            'done' => 0,
+            'time' => 0,
+            'pass' => array(),
+            'skip' => array(),
+            'todo' => array(),
+            'fail' => array(),
+        );
+        $this->_test = array();
+        
+        // running all tests, or just a sub-series?
+        if ($series) {
+            $class = $series;
+            $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
+            $dir = $this->_dir . Solar::fixdir($sub);
+            $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
+            if (is_readable($file)) {
+                require_once $file;
+                $this->addTestMethods("Test_$class");
+            }
+        } else {
+            $dir = $this->_dir;
+        }
+        
+        // find all remaining tests
+        if (is_dir($dir)) {
+            $iter = new RecursiveDirectoryIterator($dir);
+            $this->findTests($iter);
+        }
+    }
+    
+    protected function _report()
+    {
         // report summary
         $done = $this->_info['done'];
         $plan = $this->_info['plan'];
@@ -364,11 +377,7 @@ class Solar_Test_Suite extends Solar_Base {
                 $this->_log(strtoupper($type) . " $name ($note)");
             }
         }
-        
-        // done, return the run information
-        return $this->_info;
     }
-    
     /**
      * 
      * Formats a test line, logs it, and saves the info.

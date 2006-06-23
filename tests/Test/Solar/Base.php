@@ -11,7 +11,6 @@ class Test_Solar_Base extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'gir',
-            'locale' => 'Solar/Test/Example/Locale/',
         );
         $this->assertProperty($example, '_config', 'same', $expect);
         
@@ -21,7 +20,6 @@ class Test_Solar_Base extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'gaz',
-            'locale' => 'Solar/Test/Example/Locale/',
         );
         $this->assertProperty($example, '_config', 'same', $expect);
         
@@ -33,7 +31,6 @@ class Test_Solar_Base extends Solar_Test {
             'foo' => 'bar',
             'baz' => 'dib',
             'zim' => 'irk',
-            'locale' => 'Solar/Test/Example/Locale/',
         );
         $this->assertProperty($example, '_config', 'same', $expect);
     }

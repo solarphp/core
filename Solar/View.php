@@ -228,7 +228,25 @@ class Solar_View extends Solar_Base {
             return true;
         }
         
-        // assign from object public properties
+        // assign from Solar_View object properties.
+        // 
+        // objects of a class have access to the protected and
+        // private properties of other objects of the same class.
+        // this means get_object_vars() will get all the internals 
+        // of the assigned Solar_View object, overwriting the 
+        // internals of this object.  check for underscores to make 
+        // sure we don't do this.  yes, this means we check both
+        // here and at __set(), which sucks.
+        if (is_object($spec) && $spec instanceof Solar_View) {
+            foreach (get_object_vars($spec) as $key => $val) {
+                if ($key[0] != "_") {
+                    $this->$key = $val;
+                }
+            }
+            return true;
+        }
+        
+        // assign from object properties (not Solar_View)
         if (is_object($spec)) {
             foreach (get_object_vars($spec) as $key => $val) {
                 $this->$key = $val;

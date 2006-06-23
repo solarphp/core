@@ -1,6 +1,0 @@
-protected bool $_disable
-
-Forcibly disable (or enable) elements?
-
-If null, does not affect elements.  If false, all elements are
-disabled.  If true, all elements are enabled.

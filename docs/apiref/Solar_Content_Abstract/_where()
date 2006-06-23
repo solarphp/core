@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _where
+
+return: array
+
+</function>
+
+Returns a baseline WHERE clause for nodes of $this->_type.
+
+* Parameters: none.
+
+* Returns array

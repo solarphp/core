@@ -10,13 +10,13 @@
 
 * Solar comes with support for the following database backends; while not required, you will probably want one of them installed:
 
- * Microsoft SQL
+ * Microsoft SQL Server 2000 or later
 
- * !MySQL
+ * !MySQL 4.1 or later
 
- * !PostgreSQL
+ * !PostgreSQL 7.3 or later
 
- * SQLite
+ * SQLite 3 or later
 
 ++ Direct Download
 

@@ -14,6 +14,8 @@ Inherited Methods:
 
 ++ Protected
 
+* Solar_Form_Load_Table::_autoOptions() -- Builds an option list from inKeys and inList validations.
+
 Inherited Methods:
 
 * Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.

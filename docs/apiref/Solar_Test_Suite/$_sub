@@ -1,3 +1,0 @@
-protected string $_sub
-
-Run this class name sub-test instead of the full suite.

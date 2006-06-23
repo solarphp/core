@@ -4,35 +4,35 @@
 
 * Solar_Content_Abstract::__construct() -- 
 
-* Solar_Content_Abstract::countPages() -- Fetch a total count and pages of master nodes in the content store.
+* Solar_Content_Abstract::countPages() -- Fetch a total count and pages of nodes in the content store.
 
-* Solar_Content_Abstract::delete() -- Delete a master node and its tags.
+* Solar_Content_Abstract::delete() -- Delete a node and its tags.
 
-* Solar_Content_Abstract::fetch() -- Fetch one master node by ID.
+* Solar_Content_Abstract::fetch() -- Fetch one node by ID.
 
-* Solar_Content_Abstract::fetchAll() -- Fetch a list of nodes of the master node type.
+* Solar_Content_Abstract::fetchAll() -- Fetch a list of nodes of the node type.
 
 * Solar_Content_Abstract::fetchDefault() -- Fetches a default blank node of this type.
 
-* Solar_Content_Abstract::fetchParts() -- Fetch the parts of a master node ID.
+* Solar_Content_Abstract::fetchParts() -- Fetch the parts of a parent node ID.
 
-* Solar_Content_Abstract::fetchTags() -- Fetches a list of all tags on all master nodes of this type.
+* Solar_Content_Abstract::fetchTags() -- Fetches a list of all tags on all nodes of this type.
 
-* Solar_Content_Abstract::form() -- Generates a data-entry form for a master node.
+* Solar_Content_Abstract::form() -- Generates a data-entry form for a node.
 
 * Solar_Content_Abstract::getAreaId() -- Gets the area ID from which nodes are being fetched.
 
 * Solar_Content_Abstract::getPaging() -- Gets the number of rows per page.
 
-* Solar_Content_Abstract::insert() -- Insert a new master node and its tags.
+* Solar_Content_Abstract::insert() -- Insert a new node and its tags.
 
-* Solar_Content_Abstract::save() -- Inserts or updates a master node.
+* Solar_Content_Abstract::save() -- Inserts or updates a node.
 
 * Solar_Content_Abstract::setAreaId() -- Sets the area ID from which nodes will be fetched.
 
 * Solar_Content_Abstract::setPaging() -- Sets the number of rows per page.
 
-* Solar_Content_Abstract::update() -- Update a master node and its tags.
+* Solar_Content_Abstract::update() -- Update a node and its tags.
 
 Inherited Methods:
 
@@ -42,7 +42,11 @@ Inherited Methods:
 
 ++ Protected
 
-* Solar_Content_Abstract::_masterWhere() -- Builds a baseline multiWhere() clause for master nodes of this type.
+* Solar_Content_Abstract::_selectPartCounts() -- Given an existing select object, add part-count selection to it.
+
+* Solar_Content_Abstract::_selectTags() -- Given an existing select object, add tag-based selection to it.
+
+* Solar_Content_Abstract::_where() -- Returns a baseline WHERE clause for nodes of $this->_type.
 
 Inherited Methods:
 

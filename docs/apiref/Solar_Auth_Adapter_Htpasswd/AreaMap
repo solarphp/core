@@ -5,7 +5,7 @@ ApiRef | API Reference
   $_config
   $_email
   $_handle
-  $_name
+  $_moniker
   $_passwd
   $_uri
  ClassMethods | Class Methods
@@ -17,7 +17,7 @@ ApiRef | API Reference
   apiVersion()
   getEmail()
   getHandle()
-  getName()
+  getMoniker()
   getUri()
   isLoginRequest()
   isLoginValid()

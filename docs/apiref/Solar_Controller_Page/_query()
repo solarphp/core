@@ -22,5 +22,6 @@ Retrieves the TAINTED value of a query request key by name.
 
 * Returns mixed: The value of that query key.
 
-Note that this value is direct user input; you should sanitize it with
-Solar_Valid or Solar_Filter (or some other technique) before using it.
+Note that this value is direct user input; you should sanitize it
+with Solar_Valid or Solar_Filter (or some other technique) before
+using it.

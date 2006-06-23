@@ -10,7 +10,7 @@ return: array
 
 </function>
 
-Insert a new master node and its tags.
+Insert a new node and its tags.
 
 * Parameters:
 

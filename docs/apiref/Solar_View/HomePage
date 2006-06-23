@@ -13,3 +13,6 @@ Provides a Template View pattern implementation for Solar.
 This implementation is good for all (X)HTML and XML template
 formats, and provides a built-in escaping mechanism for values,
 along with lazy-loading and persistence of helper objects.
+
+Also supports "partial" templates with variables extracted within
+the partial-template scope.

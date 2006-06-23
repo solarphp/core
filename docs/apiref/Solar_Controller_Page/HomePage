@@ -15,14 +15,10 @@ Expects a directory structure like this example:
 <code>
 Example.php
 Example/
-  Actions/
-    list.action.php
-    item.action.php
-    edit.action.php
-  Views/
-    list.view.php
-    item.view.php
-    edit.view.php
+  View/
+    list.php
+    item.php
+    edit.php
   Locale/
     en_US.php
     pt_BR.php
@@ -31,6 +27,3 @@ Example/
 Note that models are not included in the application itself; this is
 for class-name deconfliction reasons.  Your models should be stored 
 elsewhere in the Solar hierarchy, e.g. Example_Model_Name.
-
-Note also that the Public directory will need a symlink in the public
-web directory.

@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: addAction
+
+return: void
+
+</function>
+
+Adds a new bookmark for a signed-in user.
+
+* Parameters: none.
+
+* Returns void

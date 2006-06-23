@@ -10,7 +10,7 @@ return: array
 
 </function>
 
-Inserts or updates a master node.
+Inserts or updates a node.
 
 * Parameters:
 

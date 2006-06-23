@@ -12,7 +12,7 @@
 
 * Solar_Auth::$initial -- Convenience reference to $_SESSION['Solar_Auth']['initial'].
 
-* Solar_Auth::$name -- Convenience reference to $_SESSION['Solar_Auth']['name'].
+* Solar_Auth::$moniker -- Convenience reference to $_SESSION['Solar_Auth']['moniker'].
 
 * Solar_Auth::$status -- Convenience reference to $_SESSION['Solar_Auth']['status'].
 

@@ -12,7 +12,7 @@ None.
 
 * Solar_Auth_Adapter::$_handle -- The unique user handle as derived from the authentication source.
 
-* Solar_Auth_Adapter::$_name -- The user "display name" or "full name" as derived from the
+* Solar_Auth_Adapter::$_moniker -- The user "display name" or "full name" as derived from the
 authentication source.
 
 * Solar_Auth_Adapter::$_passwd -- The user password.

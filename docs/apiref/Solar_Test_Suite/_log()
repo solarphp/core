@@ -4,16 +4,16 @@ access:   protected
 
 name: _log
 
-param: string, $spec
+param: string, $message
 
-return: void
+return: boolean
 
 </function>
 
-Saves a message to the log.
+Saves an event and message to the log.
 
 * Parameters:
 
- * string //$spec//: The log message.
+ * string //$message//: The log message.
 
-* Returns void
+* Returns boolean: True if saved, false if not, null if logging not enabled.

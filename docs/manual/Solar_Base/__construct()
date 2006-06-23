@@ -7,7 +7,7 @@ When you extend the constructor, make sure the only parameter is "$config = null
 For example:
 
 <code type="php">
-class Example extends Solar_Base {
+class Solar_Test_Example extends Solar_Base {
     protected $_config = array(
         'opt_1' => 'foo',
         'opt_2' => 'bar',
@@ -16,11 +16,14 @@ class Example extends Solar_Base {
 
     public __construct($config = null)
     {
-        // set up the 'locale' option for $config ...
-        $this->_config['locale'] = dirname(__FILE__) . '/Locale/';
+        // pre-parent setup code
+        // ...
         
-        // ... and continue construction.
+        // parent construction
         parent::__construct($config);
+        
+        // post-parent setup
+        // ...
     }
 }
 </code>

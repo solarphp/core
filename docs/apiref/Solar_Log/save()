@@ -4,6 +4,8 @@ access:   public
 
 name: save
 
+param: string, $class
+
 param: string, $event
 
 param: string, $message
@@ -16,6 +18,8 @@ Saves (writes) an event and message to the log.
 
 * Parameters:
 
+ * string //$class//: The class name logging the event.
+
  * string //$event//: The event type (typically 'debug', 'info', 'notice', 'severe', 'critical', etc).
 
  * string //$message//: A text description of the event.
@@ -23,7 +27,6 @@ Saves (writes) an event and message to the log.
 * Returns mixed: Boolean false if the event was not saved, or a non-empty value if the event was saved (typically boolean true).
 
 <code type="php">
-// these are equivalent:
 $log->save('info', 'informational message');
 $log->save('critical', 'critical message');
 $log->save('my special event type', 'describing the event');

@@ -1,0 +1,26 @@
+<function>
+
+access:  static public
+
+name: parents
+
+param: string, $class
+
+param: bool, $include_class, false
+
+return: array
+
+</function>
+
+Returns an array of the parent classes for a given class.
+
+* Parameters:
+
+ * string //$class//: The class to find parents for.
+
+ * bool //$include_class//: If true, the class name is element 0, the parent is element 1, the grandparent is element 2, etc.
+
+* Returns array
+
+Parents in "reverse" order ... element 0 is the immediate parent,
+element 1 the grandparent, etc.

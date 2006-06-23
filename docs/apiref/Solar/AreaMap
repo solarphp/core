@@ -6,12 +6,14 @@ ApiRef | API Reference
   $config
   $dir
   $locale
+  $parents
   $registry
  ClassMethods | Class Methods
   __construct()
   _dispelQuotes()
   _dispelSybase()
   _globalsQuotes()
+  _loadLocale()
   _super()
   apiVersion()
   config()
@@ -28,6 +30,7 @@ ApiRef | API Reference
   isRegistered()
   loadClass()
   locale()
+  parents()
   pathinfo()
   post()
   register()

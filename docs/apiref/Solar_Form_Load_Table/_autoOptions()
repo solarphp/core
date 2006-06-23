@@ -1,0 +1,28 @@
+<function>
+
+access:   protected
+
+name: _autoOptions
+
+param: string, $type
+
+param: array, $opts
+
+return: array
+
+</function>
+
+Builds an option list from inKeys and inList validations.
+
+* Parameters:
+
+ * string //$type//: The validation type, 'inKeys' or 'inList'.
+
+ * array //$opts//: The options provided by the validation.
+
+* Returns array
+
+The 'inKeys' options are not changed.
+
+The 'inList' options are generally sequential, so the label
+and the value are made to be identical (based on the label).

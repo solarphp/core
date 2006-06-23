@@ -12,6 +12,6 @@ a sequential array.  Default is all events ('*').
   e.g. '/www/username/logs/solar.log'.
 
 : \\format\\ : (string) The line format for each saved event.
-  Use '%t' for the timestamp, '%e' for the event type, '%m' for
-  the event description, and '%%' for a literal percent.  Default
-  is '%t %e %m'.
+  Use '%t' for the timestamp, '%e' for the class name, '%e' for
+  the event type, '%m' for the event description, and '%%' for a
+  literal percent.  Default is '%t %c %e %m'.

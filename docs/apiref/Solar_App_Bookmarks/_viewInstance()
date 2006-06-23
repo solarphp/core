@@ -1,0 +1,17 @@
+//Inherited from Solar_Controller_Page::_viewInstance().//
+
+<function>
+
+access:   protected
+
+name: _viewInstance
+
+return: Solar_View
+
+</function>
+
+Creates and returns a new Solar_View object for a view.
+
+* Parameters: none.
+
+* Returns Solar_View

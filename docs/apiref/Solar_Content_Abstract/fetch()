@@ -10,10 +10,10 @@ return: array
 
 </function>
 
-Fetch one master node by ID.
+Fetch one node by ID.
 
 * Parameters:
 
- * int //$id//: The master node ID.
+ * int //$id//: The node ID.
 
-* Returns array: The master node data.
+* Returns array: The node data.

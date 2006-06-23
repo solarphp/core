@@ -6,7 +6,9 @@
 
  * [Solar_Exception::HomePage Solar_Exception]
 
-  * Solar_Test_Example_Exception
+  * [Solar_Test_Exception::HomePage Solar_Test_Exception]
+
+   * Solar_Test_Example_Exception
 
 ++ Overview
 

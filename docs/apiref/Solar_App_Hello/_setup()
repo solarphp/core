@@ -1,5 +1,3 @@
-//Inherited from Solar_App::_setup().//
-
 <function>
 
 access:   protected
@@ -10,11 +8,14 @@ return: void
 
 </function>
 
-Sets up the Solar_App environment.
+Overrides the general Solar_App setup so that we don't need a
+database connection.
 
 * Parameters: none.
 
 * Returns void
 
-Registers 'sql', 'user', and 'content' objects, and sets the
-layout title to the class name.
+This is because we want the simplest
+possible hello-world example.
+
+Thanks, Clay Loveless, for suggesting this.

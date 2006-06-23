@@ -16,7 +16,7 @@ return: array
 
 </function>
 
-Fetch a list of nodes of the master node type.
+Fetch a list of nodes of the node type.
 
 * Parameters:
 

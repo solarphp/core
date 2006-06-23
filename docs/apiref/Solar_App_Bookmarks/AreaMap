@@ -3,7 +3,6 @@ ApiRef | API Reference
  ClassProperties | Class Properties
   $_action
   $_action_default
-  $_action_info
   $_bookmarks
   $_config
   $_dir
@@ -42,20 +41,28 @@ ApiRef | API Reference
   __construct()
   __get()
   __set()
-  _actionFile()
+  _actionMethod()
   _collect()
   _exception()
   _forward()
   _getOrder()
   _info()
-  _newView()
+  _layoutInstance()
   _postAction()
   _preAction()
   _query()
   _redirect()
-  _run()
   _setup()
+  _viewInstance()
+  addAction()
   apiVersion()
   display()
+  editAction()
+  errorAction()
   fetch()
   locale()
+  quickAction()
+  tagAction()
+  tagFeedAction()
+  userAction()
+  userFeedAction()

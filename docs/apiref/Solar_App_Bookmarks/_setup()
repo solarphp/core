@@ -1,6 +1,6 @@
 <function>
 
-access:   public
+access:   protected
 
 name: _setup
 
@@ -13,3 +13,7 @@ Extended setup.
 * Parameters: none.
 
 * Returns void
+
+Checks to make sure a bookmarks area exists, gets a user object
+to check priviliges, sets up a bookmarks model, and adds a 
+bookmarks stylesheet.

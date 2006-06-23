@@ -20,7 +20,7 @@ Inherited Methods:
 
 * Solar_Test_Suite::_done() -- Formats a test line, logs it, and saves the info.
 
-* Solar_Test_Suite::_log() -- Saves a message to the log.
+* Solar_Test_Suite::_log() -- Saves an event and message to the log.
 
 Inherited Methods:
 

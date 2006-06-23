@@ -28,6 +28,9 @@
 
 * Solar_View::newHelper() -- Creates a new standalone helper object.
 
+* Solar_View::partial() -- Executes a partial template in its own scope, optionally with 
+variables into its within its scope.
+
 * Solar_View::setHelperClass() -- Reset the helper class stack.
 
 * Solar_View::setTemplatePath() -- Reset the template directory path stack.
@@ -41,8 +44,6 @@ Inherited Methods:
 * Solar_Base::locale() -- Looks up locale strings based on a key.
 
 ++ Protected
-
-* Solar_View::_run() -- Runs a template script (allowing access to $this).
 
 * Solar_View::_setup() -- Allows specialized setup for extended classes.
 

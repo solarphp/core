@@ -3,7 +3,6 @@ ApiRef | API Reference
  ClassProperties | Class Properties
   $_action
   $_action_default
-  $_action_info
   $_config
   $_dir
   $_flash
@@ -33,19 +32,21 @@ ApiRef | API Reference
   __construct()
   __get()
   __set()
-  _actionFile()
+  _actionMethod()
   _collect()
   _exception()
   _forward()
   _info()
-  _newView()
+  _layoutInstance()
   _postAction()
   _preAction()
   _query()
   _redirect()
-  _run()
   _setup()
+  _viewInstance()
   apiVersion()
   display()
   fetch()
   locale()
+  mainAction()
+  rssAction()

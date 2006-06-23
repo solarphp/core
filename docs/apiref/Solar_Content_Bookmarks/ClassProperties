@@ -18,6 +18,8 @@ Inherited Properties:
 
 * Solar_Content_Abstract::$_content() -- Solar_Content dependency.
 
+* Solar_Content_Abstract::$_order() -- With fetchAll(), use this as the default order.
+
 * Solar_Content_Abstract::$_paging() -- When fetching, get this many rows per page.
 
 * Solar_Content_Abstract::$_parts() -- 

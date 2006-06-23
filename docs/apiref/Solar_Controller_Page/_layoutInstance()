@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _layoutInstance
+
+return: Solar_View
+
+</function>
+
+Creates and returns a new Solar_View object for a layout.
+
+* Parameters: none.
+
+* Returns Solar_View

@@ -5,13 +5,16 @@ ApiRef | API Reference
   $_config
   $_content
   $_form
+  $_order
   $_paging
   $_parts
   $_type
  ClassMethods | Class Methods
   __construct()
   _exception()
-  _masterWhere()
+  _selectPartCounts()
+  _selectTags()
+  _where()
   apiVersion()
   countPages()
   delete()

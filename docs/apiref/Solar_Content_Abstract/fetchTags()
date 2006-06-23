@@ -10,7 +10,7 @@ return: array
 
 </function>
 
-Fetches a list of all tags on all master nodes of this type.
+Fetches a list of all tags on all nodes of this type.
 
 * Parameters:
 

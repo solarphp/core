@@ -8,7 +8,7 @@
 
 * Solar_Sql_Select::bind() -- Adds data to bind into the query.
 
-* Solar_Sql_Select::clear() -- Clears query properties.
+* Solar_Sql_Select::clear() -- Clears query properties and record sources.
 
 * Solar_Sql_Select::countPages() -- Get the count of rows and number of pages for the current query.
 
@@ -17,6 +17,8 @@
 * Solar_Sql_Select::fetch() -- Fetch the results based on the current query properties.
 
 * Solar_Sql_Select::from() -- Adds a FROM table and columns to the query.
+
+* Solar_Sql_Select::fromSelect() -- Adds a sub-select and columns to the query.
 
 * Solar_Sql_Select::getPaging() -- Gets the number of rows per page.
 
@@ -44,6 +46,12 @@
 
 * Solar_Sql_Select::order() -- Adds a row order to the query.
 
+* Solar_Sql_Select::quote() -- Safely quotes a value for an SQL statement.
+
+* Solar_Sql_Select::quoteInto() -- Quotes a value and places into a piece of text at a placeholder.
+
+* Solar_Sql_Select::quoteMulti() -- Quote multiple text-and-value pieces.
+
 * Solar_Sql_Select::setPaging() -- Sets the number of rows per page.
 
 * Solar_Sql_Select::unbind() -- Unsets bound data.
@@ -58,9 +66,18 @@ Inherited Methods:
 
 ++ Protected
 
+* Solar_Sql_Select::_addSource() -- Adds a row source (from table, from select, or join) to the 
+sources array.
+
+* Solar_Sql_Select::_buildFrom() -- Builds $this->_parts['from'] using a 'from' source.
+
+* Solar_Sql_Select::_buildJoin() -- Builds $this->_parts['join'] using a 'join' source.
+
+* Solar_Sql_Select::_buildSelect() -- Builds $this->_parts['from'] using a 'select' source.
+
 * Solar_Sql_Select::_join() -- Support method for adding JOIN clauses.
 
-* Solar_Sql_Select::_tblCols() -- Adds to the internal table-to-column mapping array.
+* Solar_Sql_Select::_origAlias() -- Returns an identifier as an "original" name and an "alias".
 
 Inherited Methods:
 

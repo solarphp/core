@@ -4,6 +4,7 @@ ApiRef | API Reference
   $_config
  ClassMethods | Class Methods
   __construct()
+  _autoOptions()
   _exception()
   apiVersion()
   fetch()

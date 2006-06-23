@@ -6,7 +6,9 @@ access:   public
 
 name: fetchParts
 
-param: int, $master_id
+param: int, $parent_id
+
+param: string, $where, NULL
 
 param: array, $order, NULL
 
@@ -14,12 +16,14 @@ return: array
 
 </function>
 
-Fetch the parts of a master node ID.
+Fetch the parts of a parent node ID.
 
 * Parameters:
 
- * int //$master_id//: The master node ID.
+ * int //$parent_id//: The parent node ID.
+
+ * string //$where//: Additional WHERE conditions.
 
  * array //$order//: Return in this order.
 
-* Returns array: A list of nodes of this type that are parent_id the $master_id node.
+* Returns array: A list of nodes that are children of the $parent_id node.

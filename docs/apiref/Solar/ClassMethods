@@ -32,6 +32,8 @@
 
 * Solar::locale() -- Gets the translated locale string for a class and key.
 
+* Solar::parents() -- Returns an array of the parent classes for a given class.
+
 * Solar::pathinfo() -- Safely gets the value of $_SERVER['PATH_INFO'] element.
 
 * Solar::post() -- Safely gets the value of an element from the $_POST array.
@@ -59,6 +61,8 @@
 * Solar::_dispelSybase() -- A str_replace() for Sybase quotes; supports array_walk_recursive().
 
 * Solar::_globalsQuotes() -- Performs some security on globals, removes magic quotes if turned on.
+
+* Solar::_loadLocale() -- Loads locale strings for a given class.
 
 * Solar::_super() -- Fetches a superglobal value by key, or a default value.
 

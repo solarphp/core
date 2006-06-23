@@ -1,3 +1,0 @@
-protected bool $_quiet
-
-Whether or not to silence output.

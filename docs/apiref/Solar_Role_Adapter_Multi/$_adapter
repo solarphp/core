@@ -1,3 +1,0 @@
-protected array $_adapter
-
-An array of the multiple adapter instances.

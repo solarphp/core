@@ -1,3 +1,0 @@
-protected array $_native
-
-Map of Solar generic column types to RDBMS native declarations.

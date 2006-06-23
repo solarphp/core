@@ -1,0 +1,27 @@
+//Inherited from Solar_Content_Abstract::_selectTags().//
+
+<function>
+
+access:   protected
+
+name: _selectTags
+
+param: Solar_Sql_Select, $select
+
+param: array, $tags
+
+return: void
+
+</function>
+
+Given an existing select object, add tag-based selection to it.
+
+* Parameters:
+
+ * Solar_Sql_Select //$select//: The select object.
+
+ * array //$tags//: Select nodes with these tags.
+
+* Returns void
+
+Note that this acts on the object reference directly.

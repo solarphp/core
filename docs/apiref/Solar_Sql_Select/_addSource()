@@ -1,0 +1,40 @@
+<function>
+
+access:   protected
+
+name: _addSource
+
+param: string, $type
+
+param: string, $name
+
+param: string, $orig
+
+param: string, $join
+
+param: string, $cond
+
+param: array, $cols
+
+return: void
+
+</function>
+
+Adds a row source (from table, from select, or join) to the 
+sources array.
+
+* Parameters:
+
+ * string //$type//: The source type: 'from', 'join', or 'select'.
+
+ * string //$name//: The alias name.
+
+ * string //$orig//: The source origin, either a table name or a  sub-select statement.
+
+ * string //$join//: If $type is 'join', the type of join ('left', 'inner', or null for a regular join).
+
+ * string //$cond//: If $type is 'join', the join conditions.
+
+ * array //$cols//: The columns to select from the source.
+
+* Returns void

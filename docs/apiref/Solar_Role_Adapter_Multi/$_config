@@ -1,7 +1,0 @@
-protected array $_config
-
-User-provided configuration values.
-
-Keys are:
-
-: \\adapters\\ : (array) The array of adapter classes and optional configs.

@@ -2,6 +2,12 @@
 
 ++ Public
 
+* Solar_App_Hello::mainAction() -- Resets to the requested locale code and shows translated output
+as an HTML file.
+
+* Solar_App_Hello::rssAction() -- Resets to the requested locale code and shows translated output
+as an RSS file.
+
 Inherited Methods:
 
 * Solar_Controller_Page::__construct() -- Constructor.
@@ -20,9 +26,12 @@ Inherited Methods:
 
 ++ Protected
 
+* Solar_App_Hello::_setup() -- Overrides the general Solar_App setup so that we don't need a
+database connection.
+
 Inherited Methods:
 
-* Solar_Controller_Page::_actionFile() -- Returns the file name for an action.
+* Solar_Controller_Page::_actionMethod() -- Returns the method name for an action.
 
 * Solar_Controller_Page::_collect() -- Collects action, pathinfo, and query values.
 
@@ -30,9 +39,9 @@ Inherited Methods:
 
 * Solar_Controller_Page::_forward() -- Forwards internally to another action.
 
-* Solar_Controller_Page::_info() -- Retrieve the TAINTED value of a pathinfo request key by name.
+* Solar_Controller_Page::_info() -- Retrieves the TAINTED value of a path-info value by position.
 
-* Solar_Controller_Page::_newView() -- Creates and returns a new Solar_View object.
+* Solar_Controller_Page::_layoutInstance() -- Creates and returns a new Solar_View object for a layout.
 
 * Solar_Controller_Page::_postAction() -- Executes just after the last action, and just before the view.
 
@@ -42,9 +51,7 @@ Inherited Methods:
 
 * Solar_Controller_Page::_redirect() -- Redirects to another page and action.
 
-* Solar_Controller_Page::_run() -- Includes a file in an isolated scope (but with access to $this).
-
-* Solar_App::_setup() -- Sets up the Solar_App environment.
+* Solar_Controller_Page::_viewInstance() -- Creates and returns a new Solar_View object for a view.
 
 ++ Private
 

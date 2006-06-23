@@ -5,14 +5,18 @@ ApiRef | API Reference
   $_config
   $_paging
   $_parts
+  $_sources
   $_sql
-  $_tbl_cols
  ClassMethods | Class Methods
   __construct()
   __toString()
+  _addSource()
+  _buildFrom()
+  _buildJoin()
+  _buildSelect()
   _exception()
   _join()
-  _tblCols()
+  _origAlias()
   apiVersion()
   bind()
   clear()
@@ -20,6 +24,7 @@ ApiRef | API Reference
   distinct()
   fetch()
   from()
+  fromSelect()
   getPaging()
   group()
   having()
@@ -34,6 +39,9 @@ ApiRef | API Reference
   orHaving()
   orWhere()
   order()
+  quote()
+  quoteInto()
+  quoteMulti()
   setPaging()
   unbind()
   where()

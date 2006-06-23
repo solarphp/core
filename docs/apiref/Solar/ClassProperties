@@ -8,6 +8,8 @@
 
 * Solar::$locale -- Locale strings for all classes.
 
+* Solar::$parents -- Parent hierarchy for all classes.
+
 * Solar::$registry -- Object registry.
 
 ++ Protected

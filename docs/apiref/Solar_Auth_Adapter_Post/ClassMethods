@@ -12,7 +12,7 @@ Inherited Methods:
 
 * Solar_Auth_Adapter::getHandle() -- Returns the current user handle.
 
-* Solar_Auth_Adapter::getName() -- Returns the current user "full name" or "display name".
+* Solar_Auth_Adapter::getMoniker() -- Returns the current user "full name" or "display name".
 
 * Solar_Auth_Adapter::getUri() -- Returns the current user URI.
 
@@ -26,7 +26,7 @@ an attempt to log out.
 
 * Solar_Base::locale() -- Looks up locale strings based on a key.
 
-* Solar_Auth_Adapter::reset() -- Clears handle, passwd, email, name, and uri properties.
+* Solar_Auth_Adapter::reset() -- Clears handle, passwd, email, moniker, and uri properties.
 
 * Solar_Auth_Adapter::setCommon() -- Sets information for "common" handle + passwd authentication
 systems.

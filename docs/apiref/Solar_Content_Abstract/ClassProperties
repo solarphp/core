@@ -12,13 +12,15 @@ None.
 
 * Solar_Content_Abstract::$_content -- Solar_Content dependency.
 
-* Solar_Content_Abstract::$_form -- Array of columns needed for forms related to the master node type.
+* Solar_Content_Abstract::$_form -- Array of columns needed for forms related to the node type.
+
+* Solar_Content_Abstract::$_order -- With fetchAll(), use this as the default order.
 
 * Solar_Content_Abstract::$_paging -- When fetching, get this many rows per page.
 
 * Solar_Content_Abstract::$_parts -- 
 
-* Solar_Content_Abstract::$_type -- The master node type.
+* Solar_Content_Abstract::$_type -- The node type this class is intended to work with.
 
 ++ Private
 

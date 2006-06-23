@@ -14,9 +14,9 @@ None.
 
 * Solar_Sql_Select::$_parts -- The component parts of a select statement.
 
-* Solar_Sql_Select::$_sql -- Internal Solar_Sql object.
+* Solar_Sql_Select::$_sources -- Record sources, typically "from", "select", and "join".
 
-* Solar_Sql_Select::$_tbl_cols -- Tracks which columns are being select from each table and join.
+* Solar_Sql_Select::$_sql -- Internal Solar_Sql object.
 
 ++ Private
 

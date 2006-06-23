@@ -24,7 +24,7 @@ $log = Solar::factory('Solar_Log', $config);
 
 // write/record/report/etc an event in the log.
 // note that we don't do "priority levels" here, just
-// event types.
-$log->save('event_name', 'message text');
+// class names and event types.
+$log->save('class_name', 'event_name', 'message text');
 
 </code>

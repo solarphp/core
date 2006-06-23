@@ -10,7 +10,7 @@ return: Solar_Sql_Select
 
 </function>
 
-Clears query properties.
+Clears query properties and record sources.
 
 * Parameters:
 

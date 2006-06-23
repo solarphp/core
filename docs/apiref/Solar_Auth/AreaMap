@@ -10,7 +10,7 @@ ApiRef | API Reference
   $email
   $handle
   $initial
-  $name
+  $moniker
   $status
   $uri
  ClassMethods | Class Methods

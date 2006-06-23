@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: errorAction
+
+return: void
+
+</function>
+
+Shows an error page.
+
+* Parameters: none.
+
+* Returns void

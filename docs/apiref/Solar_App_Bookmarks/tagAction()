@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: tagAction
+
+param: string|array, $tags, NULL
+
+return: void
+
+</function>
+
+Shows a list of bookmarks filtered by tag, regardless of owner.
+
+* Parameters:
+
+ * string|array //$tags//: The tags to show; either a space- (or plus-) separated list of tags, or a sequential array of tags.
+
+* Returns void

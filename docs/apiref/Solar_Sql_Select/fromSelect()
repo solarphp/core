@@ -1,0 +1,30 @@
+<function>
+
+access:   public
+
+name: fromSelect
+
+param: string|Solar_Sql_Select, $spec
+
+param: string, $name
+
+param: array|string, $cols, '*'
+
+return: Solar_Sql_Select
+
+</function>
+
+Adds a sub-select and columns to the query.
+
+* Parameters:
+
+ * string|Solar_Sql_Select //$spec//: If a Solar_Sql_Select object, use as the sub-select; if a string, the sub-select command string.
+
+ * string //$name//: The alias name for the sub-select.
+
+ * array|string //$cols//: The columns to retrieve from the  sub-select; by default, '*' (all columns).  This is unlike the normal from() and join() methods, which by default select no columns.
+
+* Returns Solar_Sql_Select
+
+The format is "FROM ($select) AS $name"; an alias name is
+always required so we can deconflict columns properly.

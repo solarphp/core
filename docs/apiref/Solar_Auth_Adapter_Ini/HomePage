@@ -14,13 +14,13 @@ Authenticate against .
 
 ni style files.
 
-Each group is a user handle, with keys for 'passwd', 'name', 'email',
+Each group is a user handle, with keys for 'passwd', 'moniker', 'email',
 and 'uri'.  For example:
 
 <code>
 [pmjones]
 passwd = plaintextpass
 email = pmjones@solarphp.com
-name = Paul M. Jones
+moniker = Paul M. Jones
 uri = http://paul-m-jones.com/
 </code>

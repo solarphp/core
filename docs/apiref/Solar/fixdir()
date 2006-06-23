@@ -18,8 +18,8 @@ return: string
 
 * Returns string: The "fixed" directory string.
 
-Use slashes anywhere you need a directory separator.
-Then run the string through fixdir() and the slashes will be converted
-to the proper separator (e.g. '\' on Windows).
+Use slashes anywhere you need a directory separator. Then run the
+string through fixdir() and the slashes will be converted to the
+proper separator (e.g. '\' on Windows).
 
 Always adds a final trailing separator.

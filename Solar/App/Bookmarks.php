@@ -178,10 +178,14 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * Extended setup.
      * 
+     * Checks to make sure a bookmarks area exists, gets a user object
+     * to check priviliges, sets up a bookmarks model, and adds a 
+     * bookmarks stylesheet.
+     * 
      * @return void
      * 
      */
-    public function _setup()
+    protected function _setup()
     {
         parent::_setup();
         

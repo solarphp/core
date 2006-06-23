@@ -37,7 +37,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * 
      * Keys are:
      * 
-     * : \\url\\ : (string) URL to the LDAP server, e.g. "ldaps://example.com:389".
+     * : \\uri\\ : (string) URL to the LDAP server, e.g. "ldaps://example.com:389".
      * 
      * : \\format\\ : (string) Sprintf() format string for the LDAP query; %s
      * represents the username.  Example: "uid=%s,dc=example,dc=com".
@@ -46,7 +46,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * 
      */
     protected $_config = array(
-        'url'    => null,
+        'uri'    => null,
         'format' => null,
     );
     
@@ -85,7 +85,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
         $passwd = $this->_passwd;
         
         // connect
-        $conn = @ldap_connect($this->_config['url']);
+        $conn = @ldap_connect($this->_config['uri']);
         
         // did the connection work?
         if (! $conn) {

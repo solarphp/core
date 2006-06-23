@@ -193,7 +193,7 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['name'].
+     * Convenience reference to $_SESSION['Solar_Auth']['moniker'].
      * 
      * This is the "display name" or "full name" of the currently
      * authenticated user.  May or may not be populated by the adapter.
@@ -201,7 +201,7 @@ class Solar_Auth extends Solar_Base {
      * @var string
      * 
      */
-    public $name;
+    public $moniker;
     
     /**
      * 
@@ -280,7 +280,7 @@ class Solar_Auth extends Solar_Base {
                 'active'  => null,
                 'handle'  => null,
                 'email'   => null,
-                'name'    => null,
+                'moniker' => null,
                 'uri'     => null,
             );
         }
@@ -291,7 +291,7 @@ class Solar_Auth extends Solar_Base {
         $this->active  =& $_SESSION['Solar_Auth']['active'];
         $this->handle  =& $_SESSION['Solar_Auth']['handle'];
         $this->email   =& $_SESSION['Solar_Auth']['email'];
-        $this->name    =& $_SESSION['Solar_Auth']['name'];
+        $this->moniker =& $_SESSION['Solar_Auth']['moniker'];
         $this->uri     =& $_SESSION['Solar_Auth']['uri'];
         
         // update idle and expire times no matter what
@@ -305,10 +305,10 @@ class Solar_Auth extends Solar_Base {
             // check the login validity
             if ($this->_adapter->isLoginValid()) {
                 $this->reset('VALID');
-                $this->handle = $this->_adapter->getHandle();
-                $this->name   = $this->_adapter->getName();
-                $this->email  = $this->_adapter->getEmail();
-                $this->uri    = $this->_adapter->getUri();
+                $this->handle  = $this->_adapter->getHandle();
+                $this->moniker = $this->_adapter->getMoniker();
+                $this->email   = $this->_adapter->getEmail();
+                $this->uri     = $this->_adapter->getUri();
             } else {
                 $this->reset('WRONG');
             }
@@ -404,7 +404,7 @@ class Solar_Auth extends Solar_Base {
         $this->initial = null;
         $this->active  = null;
         $this->handle  = null;
-        $this->name    = null;
+        $this->moniker = null;
         $this->email   = null;
         
         if ($status == 'VALID') {

@@ -24,14 +24,14 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * Authenticate against .ini style files.
  * 
- * Each group is a user handle, with keys for 'passwd', 'name', 'email',
+ * Each group is a user handle, with keys for 'passwd', 'moniker', 'email',
  * and 'uri'.  For example:
  * 
  * <code>
  * [pmjones]
  * passwd = plaintextpass
  * email = pmjones@solarphp.com
- * name = Paul M. Jones
+ * moniker = Paul M. Jones
  * uri = http://paul-m-jones.com/
  * </code>
  * 
@@ -91,7 +91,7 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
         // and the plain-text password must match.
         if (! empty($user['passwd']) && $user['passwd'] == $passwd) {
             // set additional values
-            $this->_name  = (! empty($user['name']))  ? $user['name']  : null;
+            $this->_moniker  = (! empty($user['moniker']))  ? $user['moniker']  : null;
             $this->_email = (! empty($user['email'])) ? $user['email'] : null;
             $this->_uri   = (! empty($user['uri']))   ? $user['uri']   : null;
             return true;

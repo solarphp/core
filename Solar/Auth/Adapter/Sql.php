@@ -28,7 +28,7 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * @package Solar_Auth
  * 
- * @todo add support for email, name, uri retrieval
+ * @todo add support for email, moniker, uri retrieval
  * 
  */
 class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {

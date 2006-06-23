@@ -91,7 +91,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * @var string
      * 
      */
-    protected $_name;
+    protected $_moniker;
     
     /**
      * 
@@ -133,7 +133,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * single sign-on systems may use different credential sources.
      * 
      * Adapters should set $this->_handle, $this->_email, and
-     * $this->_name if verfication is successful.
+     * $this->_moniker if verfication is successful.
      * 
      * @return bool True if valid, false if not.
      * 
@@ -228,7 +228,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Clears handle, passwd, email, name, and uri properties.
+     * Clears handle, passwd, email, moniker, and uri properties.
      * 
      * @return void
      * 
@@ -238,7 +238,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_handle = null;
         $this->_passwd = null;
         $this->_email  = null;
-        $this->_name   = null;
+        $this->_moniker   = null;
         $this->_uri    = null;
     }
     
@@ -273,9 +273,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * @return string
      * 
      */
-    public function getName()
+    public function getMoniker()
     {
-        return $this->_name;
+        return $this->_moniker;
     }
     
     /**

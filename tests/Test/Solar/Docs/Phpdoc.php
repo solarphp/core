@@ -139,7 +139,7 @@ class Test_Solar_Docs_Phpdoc extends Solar_Test {
         parent::__construct($config);
     }
     
-    public function _destruct()
+    public function __destruct()
     {
         parent::__destruct();
     }

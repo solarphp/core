@@ -7,7 +7,7 @@ class Test_Solar_Class_Map extends Solar_Test {
         parent::__construct($config);
     }
     
-    public function _destruct()
+    public function __destruct()
     {
         parent::__destruct();
     }

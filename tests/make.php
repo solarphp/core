@@ -9,7 +9,7 @@ function skeleton($class, $methods) {
     $text[] = "        parent::__construct(\$config);";
     $text[] = "    }";
     $text[] = "    ";
-    $text[] = "    public function _destruct()";
+    $text[] = "    public function __destruct()";
     $text[] = "    {";
     $text[] = "        parent::__destruct();";
     $text[] = "    }";

@@ -14,7 +14,7 @@ abstract class Test_Solar_Log_Adapter extends Solar_Test {
         $this->_adapter = 'Solar_Log_Adapter_' . substr(get_class($this), 23);
     }
     
-    public function _destruct()
+    public function __destruct()
     {
         parent::__destruct();
     }

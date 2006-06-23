@@ -32,7 +32,7 @@ class Test_Solar_View_Helper_Form extends Solar_Test {
         parse_str($_SERVER['QUERY_STRING'], $_GET);
     }
     
-    public function _destruct()
+    public function __destruct()
     {
         $_GET = $this->_get;
         $_SERVER = $this->_server;

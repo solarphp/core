@@ -35,7 +35,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
     }
     
-    public function _destruct()
+    public function __destruct()
     {
         parent::__destruct();
     }

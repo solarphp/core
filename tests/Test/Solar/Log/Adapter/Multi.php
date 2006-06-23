@@ -37,9 +37,10 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     
     public function testSave_recognized()
     {
-        $this->_log->save('info', 'some information');
-        $this->_log->save('debug', 'a debug description');
-        $this->_log->save('notice', 'note this message');
+        $class = get_class($this);
+        $this->_log->save($class, 'info', 'some information');
+        $this->_log->save($class, 'debug', 'a debug description');
+        $this->_log->save($class, 'notice', 'note this message');
         
         // the debug log
         $actual = file_get_contents($this->_config['adapters'][0]['file']);
@@ -54,9 +55,10 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     
     public function testSave_notRecognized()
     {
-        $this->_log->save('debug', 'recognized');
-        $this->_log->save('info', 'recognized');
-        $this->_log->save('qwert', 'not recognized');
+        $class = get_class($this);
+        $this->_log->save($class, 'debug', 'recognized');
+        $this->_log->save($class, 'info', 'recognized');
+        $this->_log->save($class, 'qwert', 'not recognized');
         
         // the debug log
         $actual = file_get_contents($this->_config['adapters'][0]['file']);

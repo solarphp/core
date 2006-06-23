@@ -13,9 +13,10 @@ class Test_Solar_Log_Adapter_Echo extends Test_Solar_Log_Adapter {
     public function testSave_recognized()
     {
         ob_start();
-        $this->_log->save('info', 'some information');
-        $this->_log->save('debug', 'a debug description');
-        $this->_log->save('notice', 'note this message');
+        $class = get_class($this);
+        $this->_log->save($class, 'info', 'some information');
+        $this->_log->save($class, 'debug', 'a debug description');
+        $this->_log->save($class, 'notice', 'note this message');
         $actual = ob_get_clean();
         $expect = "info some information\ndebug a debug description\nnotice note this message\n";
         $this->assertSame($actual, $expect);
@@ -24,7 +25,8 @@ class Test_Solar_Log_Adapter_Echo extends Test_Solar_Log_Adapter {
     public function testSave_notRecognized()
     {
         ob_start();
-        $this->_log->save('qwert', 'not recognized');
+        $class = get_class($this);
+        $this->_log->save($class, 'qwert', 'not recognized');
         $actual = ob_get_clean();
         $expect = '';
         $this->assertEquals($actual, $expect);

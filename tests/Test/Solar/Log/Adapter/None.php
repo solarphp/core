@@ -11,19 +11,22 @@ class Test_Solar_Log_Adapter_None extends Test_Solar_Log_Adapter {
     
     public function testSave_recognized()
     {
-        $actual = $this->_log->save('info', 'some information');
+        $class = get_class($this);
+        
+        $actual = $this->_log->save($class, 'info', 'some information');
         $this->assertTrue($actual);
         
-        $actual = $this->_log->save('debug', 'a debug description');
+        $actual = $this->_log->save($class, 'debug', 'a debug description');
         $this->assertTrue($actual);
         
-        $actual = $this->_log->save('notice', 'note this message');
+        $actual = $this->_log->save($class, 'notice', 'note this message');
         $this->assertTrue($actual);
     }
     
     public function testSave_notRecognized()
     {
-        $actual = $this->_log->save('qwert', 'not recognized');
+        $class = get_class($this);
+        $actual = $this->_log->save($class, 'qwert', 'not recognized');
         $this->assertFalse($actual);
     }
 }

@@ -14,7 +14,7 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     protected $_email = null;
     
-    protected $_name = null;
+    protected $_moniker = null;
     
     protected $_uri = null;
     
@@ -135,7 +135,7 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertProperty($this->_auth, '_handle', 'null');
         $this->assertProperty($this->_auth, '_passwd', 'null');
         $this->assertProperty($this->_auth, '_email', 'null');
-        $this->assertProperty($this->_auth, '_name', 'null');
+        $this->assertProperty($this->_auth, '_moniker', 'null');
         $this->assertProperty($this->_auth, '_uri', 'null');
     }
     
@@ -157,12 +157,12 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_restorePost();
     }
     
-    public function testGetName()
+    public function testGetMoniker()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getName(), $this->_name);
+        $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
         $this->_restorePost();
     }
     

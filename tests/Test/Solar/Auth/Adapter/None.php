@@ -38,12 +38,12 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->_restorePost();
     }
     
-    public function testGetName()
+    public function testGetMoniker()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getName(), $this->_name);
+        $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
         $this->_restorePost();
     }
     

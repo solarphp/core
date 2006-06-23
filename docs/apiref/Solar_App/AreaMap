@@ -43,5 +43,6 @@ ApiRef | API Reference
   _viewInstance()
   apiVersion()
   display()
+  errorAction()
   fetch()
   locale()

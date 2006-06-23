@@ -2,7 +2,7 @@
 
 access:   public
 
-name: rssAction
+name: actionMain
 
 param: string, $code, 'en_US'
 
@@ -11,7 +11,7 @@ return: void
 </function>
 
 Resets to the requested locale code and shows translated output
-as an RSS file.
+as an HTML file.
 
 * Parameters:
 

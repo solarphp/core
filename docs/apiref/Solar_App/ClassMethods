@@ -2,6 +2,8 @@
 
 ++ Public
 
+* Solar_App::errorAction() -- Shows a generic error page.
+
 Inherited Methods:
 
 * Solar_Controller_Page::__construct() -- Constructor.

@@ -56,5 +56,7 @@ return array(
     'ORDER_TAGS_DESC'    => 'Tags (desc)',
     'ORDER_SUBJ'         => 'Title',
     'ORDER_SUBJ_DESC'    => 'Title (desc)',
-    'ERR_NOT_OWNER'      => 'You do not own this bookmark.',
+    'ERR_NOT_OWNER'      => 'You do not own this bookmark, or it does not exist.',
+    'ERR_NOT_SELECTED'   => 'No bookmark selected.',
+    'ERR_NOT_LOGGED_IN'  => 'You are not signed in.',
 ) ?>

@@ -105,7 +105,7 @@ class Solar_App_Hello extends Solar_App {
      * @return void
      * 
      */
-    public function mainAction($code = 'en_US')
+    public function actionMain($code = 'en_US')
     {
         // set the code from input
         $this->code = $code;
@@ -130,7 +130,7 @@ class Solar_App_Hello extends Solar_App {
      * @return void
      * 
      */
-    public function rssAction($code = 'en_US')
+    public function actionRss($code = 'en_US')
     {
         // set the code from input
         $this->code = $code;

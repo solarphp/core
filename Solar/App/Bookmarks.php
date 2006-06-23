@@ -312,8 +312,8 @@ class Solar_App_Bookmarks extends Solar_App {
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = 'You are not logged in.';
-            return $this->errorAction();
+            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            return $this->_forward('error');
         }
 
         // build a link for _redirect() calls and the backlink.
@@ -404,23 +404,22 @@ class Solar_App_Bookmarks extends Solar_App {
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = 'You are not logged in.';
-            return $this->errorAction();
+            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            return $this->_forward('error');
         }
 
         // get the bookmark ID (0 means a new bookmark)
         $id = (int) $id;
         if (! $id) {
-            $this->errors[] = 'No bookmark selected for editing.';
-            return $this->errorAction();
+            $this->errors[] = $this->locale('ERR_NOT_SELECTED');
+            return $this->_forward('error');
         }
-
 
         // must be the item owner to edit it
         $item = $this->_bookmarks->fetch($id);
         if ($this->_user->auth->handle != $item['owner_handle']) {
-            $this->errors[] = 'You do not own this bookmark, or it does not exist.';
-            return $this->errorAction();
+            $this->errors[] = $this->locale('ERR_NOT_OWNER');
+            return $this->_forward('error');
         }
 
         // ---------------------------------------------------------------------
@@ -516,20 +515,6 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * Shows an error page.
-     * 
-     * @return void
-     * 
-     */
-    public function errorAction()
-    {
-        // $this->errors[] should already have been set by the calling controller.
-        // nothing else to do, but we keep this file in case we need generic
-        // processing for all errors.
-    }
-    
-    /**
-     * 
      * Handles JavaScript bookmarking requests from offsite.
      * 
      * @param string $uri The URI to bookmark.
@@ -544,8 +529,8 @@ class Solar_App_Bookmarks extends Solar_App {
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = 'You are not logged in.';
-            return $this->errorAction();
+            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            return $this->_forward('error');
         }
 
         // get the quickmark info from the query
@@ -680,7 +665,7 @@ class Solar_App_Bookmarks extends Solar_App {
     public function tagFeedAction($tags = null)
     {
         // build the local variables
-        $this->tagAction($tags);
+        $this->_forward('tags', array($tags));
 
         // explicitly pick a different view script
         $this->_view = 'feed';
@@ -777,7 +762,7 @@ class Solar_App_Bookmarks extends Solar_App {
     public function userFeedAction($owner_handle = null, $tags = null)
     {
         // build the local vars
-        $this->userAction($owner_handle, $tags);
+        $this->_forward('user', array($owner_handle, $tags));
 
         // explicitly use a different view
         $this->_view = 'feed';

@@ -1,24 +1,21 @@
 <?php
 /**
  * 
- * Solar_View template for displaying major errors.
+ * Generic application view for displaying major errors.
  * 
  * @category Solar
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_Bookmarks
- * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: error.php 1344 2006-06-22 23:00:03Z pmjones $
  * 
  */
 ?>
-<h1><?php echo $this->getText('BOOKMARKS') ?></h1>
-<div style="color: red;">
+<div class='error'>
 <?php foreach ($this->errors as $text): ?>
     <p><?php echo $this->escape($text) ?></p>
 <?php endforeach ?>

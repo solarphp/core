@@ -554,7 +554,7 @@ class Test_Solar_Test extends Solar_Test {
         try {
             $this->todo('incomplete');
             throw new Exception('did not throw Solar_Test_Exception_Todo');
-        } catch (Solar_Test_Exception_Todo $e) {
+        } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Test_Exception_Todo');
         }
     }
@@ -564,7 +564,7 @@ class Test_Solar_Test extends Solar_Test {
         try {
             $this->skip('skipped');
             throw new Exception('did not throw Solar_Test_Exception_Skip');
-        } catch (Solar_Test_Exception_Skip $e) {
+        } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Test_Exception_Skip');
         }
     }

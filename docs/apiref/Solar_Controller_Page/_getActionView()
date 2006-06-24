@@ -2,7 +2,7 @@
 
 access:   protected
 
-name: _actionFile
+name: _getActionView
 
 param: string, $action
 
@@ -10,10 +10,10 @@ return: string
 
 </function>
 
-Returns the file name for an action.
+Returns the view name for an action.
 
 * Parameters:
 
  * string //$action//: The action name.
 
-* Returns string: A file name for the action.
+* Returns string: The related view name.

@@ -1,10 +1,10 @@
-//Inherited from Solar_Controller_Page::_actionMethod().//
+//Inherited from Solar_Controller_Page::_getActionMethod().//
 
 <function>
 
 access:   protected
 
-name: _actionMethod
+name: _getActionMethod
 
 param: string, $action
 

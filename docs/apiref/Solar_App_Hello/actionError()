@@ -1,10 +1,10 @@
-//Inherited from Solar_App::errorAction().//
+//Inherited from Solar_App::actionError().//
 
 <function>
 
 access:   public
 
-name: errorAction
+name: actionError
 
 return: void
 

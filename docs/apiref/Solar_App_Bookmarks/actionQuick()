@@ -2,7 +2,7 @@
 
 access:   public
 
-name: quickAction
+name: actionQuick
 
 param: string, $uri, NULL
 

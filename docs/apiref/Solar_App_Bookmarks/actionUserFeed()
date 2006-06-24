@@ -2,7 +2,7 @@
 
 access:   public
 
-name: userFeedAction
+name: actionUserFeed
 
 param: string, $owner_handle, NULL
 

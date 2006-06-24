@@ -2,20 +2,20 @@
 
 ++ Public
 
-* Solar_App_Bookmarks::addAction() -- Adds a new bookmark for a signed-in user.
+* Solar_App_Bookmarks::actionAdd() -- Adds a new bookmark for a signed-in user.
 
-* Solar_App_Bookmarks::editAction() -- Allows a signed-in user to edit an existing bookmark.
+* Solar_App_Bookmarks::actionEdit() -- Allows a signed-in user to edit an existing bookmark.
 
-* Solar_App_Bookmarks::quickAction() -- Handles JavaScript bookmarking requests from offsite.
+* Solar_App_Bookmarks::actionQuick() -- Handles JavaScript bookmarking requests from offsite.
 
-* Solar_App_Bookmarks::tagAction() -- Shows a list of bookmarks filtered by tag, regardless of owner.
+* Solar_App_Bookmarks::actionTag() -- Shows a list of bookmarks filtered by tag, regardless of owner.
 
-* Solar_App_Bookmarks::tagFeedAction() -- Shows an RSS feed of bookmarks filtered by tag, regardless of 
+* Solar_App_Bookmarks::actionTagFeed() -- Shows an RSS feed of bookmarks filtered by tag, regardless of 
 owner.
 
-* Solar_App_Bookmarks::userAction() -- Shows all bookmarks for an owner, optionally filtered by tag.
+* Solar_App_Bookmarks::actionUser() -- Shows all bookmarks for an owner, optionally filtered by tag.
 
-* Solar_App_Bookmarks::userFeedAction() -- Shows all bookmarks for an owner as an RSS feed, optionally 
+* Solar_App_Bookmarks::actionUserFeed() -- Shows all bookmarks for an owner as an RSS feed, optionally 
 filtered by tag.
 
 Inherited Methods:
@@ -26,11 +26,11 @@ Inherited Methods:
 
 * Solar_Controller_Page::__set() -- Try to force users to define what their view variables are.
 
+* Solar_App::actionError() -- Shows a generic error page.
+
 * Solar_Base::apiVersion() -- Reports the API version for this class.
 
 * Solar_Controller_Page::display() -- Executes the requested action and displays its output.
-
-* Solar_App::errorAction() -- Shows a generic error page.
 
 * Solar_Controller_Page::fetch() -- Executes the requested action and returns its output with layout.
 
@@ -44,11 +44,13 @@ Inherited Methods:
 
 Inherited Methods:
 
-* Solar_Controller_Page::_actionMethod() -- Returns the method name for an action.
-
 * Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 * Solar_Controller_Page::_forward() -- Forwards internally to another action.
+
+* Solar_Controller_Page::_getActionMethod() -- Returns the method name for an action.
+
+* Solar_Controller_Page::_getActionView() -- Returns the view name for an action.
 
 * Solar_Controller_Page::_info() -- Retrieves the TAINTED value of a path-info value by position.
 

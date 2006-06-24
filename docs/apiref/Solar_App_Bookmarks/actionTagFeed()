@@ -2,7 +2,7 @@
 
 access:   public
 
-name: tagFeedAction
+name: actionTagFeed
 
 param: string|array, $tags, NULL
 

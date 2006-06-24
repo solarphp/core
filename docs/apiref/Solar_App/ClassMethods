@@ -2,7 +2,7 @@
 
 ++ Public
 
-* Solar_App::errorAction() -- Shows a generic error page.
+* Solar_App::actionError() -- Shows a generic error page.
 
 Inherited Methods:
 
@@ -28,11 +28,13 @@ Inherited Methods:
 
 Inherited Methods:
 
-* Solar_Controller_Page::_actionMethod() -- Returns the method name for an action.
-
 * Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
 
 * Solar_Controller_Page::_forward() -- Forwards internally to another action.
+
+* Solar_Controller_Page::_getActionMethod() -- Returns the method name for an action.
+
+* Solar_Controller_Page::_getActionView() -- Returns the view name for an action.
 
 * Solar_Controller_Page::_info() -- Retrieves the TAINTED value of a path-info value by position.
 

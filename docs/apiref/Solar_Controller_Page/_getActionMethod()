@@ -2,7 +2,7 @@
 
 access:   protected
 
-name: _actionMethod
+name: _getActionMethod
 
 param: string, $action
 

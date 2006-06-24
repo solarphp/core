@@ -2,7 +2,7 @@
 
 access:   public
 
-name: errorAction
+name: actionError
 
 return: void
 

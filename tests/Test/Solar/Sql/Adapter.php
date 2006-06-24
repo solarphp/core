@@ -383,38 +383,47 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     
     public function testCreateIndex_singleNormal()
     {
-        $this->_sql->createIndex($this->_table_name, 'id');
+        $result = $this->_sql->createIndex($this->_table_name, 'id');
+        $this->assertNotNull($result);
     }
     
     public function testCreateIndex_singleUnique()
     {
-        $this->_sql->createIndex($this->_table_name, 'id', true);
+        $result = $this->_sql->createIndex($this->_table_name, 'id', true);
+        $this->assertNotNull($result);
     }
     
     public function testCreateIndex_multiNormal()
     {
-        $this->_sql->createIndex($this->_table_name, 'multi', false, array('id', 'name'));
+        $result = $this->_sql->createIndex($this->_table_name, 'multi', false, array('id', 'name'));
+        $this->assertNotNull($result);
     }
     
     public function testCreateIndex_multiUnique()
     {
-        $this->_sql->createIndex($this->_table_name, 'multi', false, array('id', 'name'));
+        $result = $this->_sql->createIndex($this->_table_name, 'multi', false, array('id', 'name'));
+        $this->assertNotNull($result);
     }
     
     public function testCreateIndex_altnameNormal()
     {
-        $this->_sql->createIndex($this->_table_name, 'alt_name', true, 'id');
+        $result = $this->_sql->createIndex($this->_table_name, 'alt_name', true, 'id');
+        $this->assertNotNull($result);
     }
     
     public function testCreateIndex_altnameUnique()
     {
-        $this->_sql->createIndex($this->_table_name, 'alt_name', true, 'id');
+        $result = $this->_sql->createIndex($this->_table_name, 'alt_name', true, 'id');
+        $this->assertNotNull($result);
     }
     
     public function testDropIndex()
     {
-        $this->_sql->createIndex($this->_table_name, 'id');
-        $this->_sql->dropIndex($this->_table_name, 'id');
+        $result = $this->_sql->createIndex($this->_table_name, 'id');
+        $this->assertNotNull($result);
+        
+        $result = $this->_sql->dropIndex($this->_table_name, 'id');
+        $this->assertNull($result);
     }
     
     public function testQuote()

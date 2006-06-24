@@ -42,27 +42,16 @@ Solar::loadClass('Solar_Uri_Action');
  * for class-name deconfliction reasons.  Your models should be stored 
  * elsewhere in the Solar hierarchy, e.g. Example_Model_Name.
  * 
+ * When you call Solar_Controller_Page::fetch(), methods are executed 
+ * in this order:
+ * 
+ * * _load() to load class properties from an 
  * @category Solar
  * 
  * @package Solar_Controller
  * 
  */
 abstract class Solar_Controller_Page extends Solar_Base {
-    
-    /**
-     * 
-     * User-defined configuration options.
-     * 
-     * Keys are:
-     * 
-     * : \\helper_class\\ : (array) An array of fallback helper classes.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array(
-        'helper_class' => null,
-    );
     
     /**
      * 
@@ -162,7 +151,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the view to be rendered after the action.
+     * The name of the view to be rendered after all actions.
      * 
      * @var string
      * 
@@ -194,12 +183,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // fix the basedir
         $this->_dir = Solar::fixdir($this->_dir);
-        
-        // make sure we have a helper_class key; it might have been
-        // left out of extended classes.
-        if (empty($this->_config['helper_class'])) {
-            $this->_config['helper_class'] = null;
-        }
         
         // create the flash object
         $this->_flash = Solar::factory(
@@ -262,15 +245,46 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     public function fetch($spec = null)
     {
-        // collect action, query, and info
-        $this->_collect($spec);
+        // load action, info, and query properties
+        $this->_load($spec);
         
-        // run the pre-action code, forward to the first action (which
-        // may trigger other actions), and run the post-action code.
-        $this->_preAction();
+        // prerun hook
+        $this->_preRun();
+        
+        // actions
         $this->_forward($this->_action, $this->_info);
+        
+        // postrun hook
         $this->_postAction();
         
+        // return a rendered view
+        return $this->_render();
+    }
+    
+    /**
+     * 
+     * Executes the requested action and displays its output.
+     * 
+     * @param string $spec The action specification string, e.g.:
+     * "tags/php+framework" or "user/pmjones/php+framework?page=3"
+     * 
+     * @return void
+     * 
+     */
+    public function display($spec = null)
+    {
+        echo $this->fetch($spec);
+    }
+    
+    /**
+     * 
+     * Renders the view based on page properties.
+     * 
+     * @return string The results of the action + view + layout.
+     * 
+     */
+    protected function _render()
+    {
         // get a view object and assign variables
         $view = $this->_viewInstance();
         $view->assign($this);
@@ -299,22 +313,25 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes the requested action and displays its output.
-     * 
-     * @param string $spec The action specification string, e.g.:
-     * "tags/php+framework" or "user/pmjones/php+framework?page=3"
-     * 
-     * @return void
-     * 
-     */
-    public function display($spec = null)
-    {
-        echo $this->fetch($spec);
-    }
-    
-    /**
-     * 
      * Creates and returns a new Solar_View object for a view.
+     * 
+     * Automatically sets up a template-path stack for you, searching
+     * for view files in this order:
+     * 
+     * # Vendor/App/Example/View/
+     * 
+     * # Vendor/App/View
+     * 
+     * Automatically sets up a helper-class stack for you, searching
+     * for helper classes in this order:
+     * 
+     * # Vendor_App_Example_Helper_
+     * 
+     * # Vendor_App_Helper_
+     * 
+     * # Vendor_View_Helper_
+     * 
+     * # Solar_View_Helper_ (this is part of Solar_View to begin with)
      * 
      * @return Solar_View
      * 
@@ -336,7 +353,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // find the vendor-level templates (Vendor/App/View)
         $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'View';
         
-        // add the template paths to the view object
+        // add the template paths to the view object.
+        // the order of searching will be:
+        // Vendor/App/Example/View, Vendor/App/View
         $view->addTemplatePath($template);
         
         // find the class-level helpers (Vendor_App_Example_Helper)
@@ -353,7 +372,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $helper[] = $vendor . '_View_Helper';
         }
         
-        // add the helper classes to the view object
+        // add the helper classes to the view object.
+        // the order of searching will be:
+        // Vendor_App_Example_Helper_*, Vendor_App_Helper_*,
+        // Vendor_View_Helper_*, Solar_View_Helper_*
         $view->addHelperClass($helper);
         
         // set the locale class for the getText helper
@@ -367,6 +389,23 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Creates and returns a new Solar_View object for a layout.
      * 
+     * Automatically sets up a template-path stack for you, searching
+     * for view files in this order:
+     * 
+     * # Vendor/App/Example/Layout/
+     * 
+     * # Vendor/App/Layout
+     * 
+     * Automatically sets up a helper-class stack for you, searching
+     * for helper classes in this order:
+     * 
+     * # Vendor_App_Helper_
+     * 
+     * # Vendor_View_Helper_
+     * 
+     * # Solar_View_Helper_ (this is part of Solar_View to begin with)
+     * 
+     * @return Solar_View
      * @return Solar_View
      * 
      */
@@ -424,14 +463,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Collects action, pathinfo, and query values.
+     * Loads properties from an action specification.
      * 
      * @param string $spec The action specification.
      * 
      * @return void
      * 
      */
-    protected function _collect($spec)
+    protected function _load($spec)
     {
         // process the page/action/info specification
         if (! $spec) {
@@ -479,7 +518,16 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes just before the first action.
+     * Executes after collection but before the first action.
+     * 
+     */
+    protected function _preRun()
+    {
+    }
+    
+    /**
+     * 
+     * Executes just before each action.
      * 
      * @return void
      * 
@@ -490,12 +538,21 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes just after the last action, and just before the view.
+     * Executes just after each action.
      * 
      * @return void
      * 
      */
     protected function _postAction()
+    {
+    }
+    
+    /**
+     * 
+     * Executes after the last action and before rendering.
+     * 
+     */
+    protected function _postRun()
     {
     }
     
@@ -621,18 +678,26 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // drop the 'Action' suffix.
         $this->_view = substr($method, 0, -6);
         
+        // run this before every action
+        $this->_preAction();
+        
         // run the action script, which may itself _forward() to
         // other actions.  pass all pathinfo parameters in order.
         if (empty($params)) {
             // speed boost
-            return $this->$method();
+            $this->$method();
         } else {
             // somewhat slower
-            return call_user_func_array(
+            call_user_func_array(
                 array($this, $method),
                 (array) $params
             );
         }
+        
+        // run this after every action
+        $this->_postAction();
+        
+        // done!
     }
     
     /**

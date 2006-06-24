@@ -22,6 +22,10 @@ Inherited Methods:
 
 * Solar_Test_Suite::_log() -- Saves an event and message to the log.
 
+* Solar_Test_Suite::_prepare() -- Prepares class properties for a test run.
+
+* Solar_Test_Suite::_report() -- Generates a report from class properties.
+
 Inherited Methods:
 
 * Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.

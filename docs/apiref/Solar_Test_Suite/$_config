@@ -8,3 +8,6 @@ Keys are:
 
 : \\log\\ : (dependency) A Solar_Log dependency for logging test
   results.
+
+: \\error_reporting\\ : (int) The level of error reporting we 
+  want to catch; default is E_ALL|E_STRICT.

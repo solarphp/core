@@ -1,7 +1,5 @@
+//Inherited from Solar_Base::$_config.//
+
 protected array $_config
 
-User-defined configuration options.
-
-Keys are:
-
-: \\helper_class\\ : (array) An array of fallback helper classes.
+User-provided configuration values.

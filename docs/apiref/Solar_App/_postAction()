@@ -10,7 +10,7 @@ return: void
 
 </function>
 
-Executes just after the last action, and just before the view.
+Executes just after each action.
 
 * Parameters: none.
 

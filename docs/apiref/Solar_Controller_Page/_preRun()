@@ -2,13 +2,13 @@
 
 access:   protected
 
-name: _preAction
+name: _preRun
 
 return: void
 
 </function>
 
-Executes just before each action.
+Executes after collection but before the first action.
 
 * Parameters: none.
 

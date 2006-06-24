@@ -27,3 +27,8 @@ Example/
 Note that models are not included in the application itself; this is
 for class-name deconfliction reasons.  Your models should be stored 
 elsewhere in the Solar hierarchy, e.g. Example_Model_Name.
+
+When you call Solar_Controller_Page::fetch(), methods are executed 
+in this order:
+
+* _load() to load class properties from an

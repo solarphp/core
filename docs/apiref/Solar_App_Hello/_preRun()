@@ -1,0 +1,17 @@
+//Inherited from Solar_Controller_Page::_preRun().//
+
+<function>
+
+access:   protected
+
+name: _preRun
+
+return: void
+
+</function>
+
+Executes after collection but before the first action.
+
+* Parameters: none.
+
+* Returns void

@@ -6,6 +6,8 @@ None.
 
 ++ Protected
 
+* Solar_Test::$_assert_count -- A running count of how many times an assert*() method is called.
+
 Inherited Properties:
 
 * Solar_Base::$_config() -- User-provided configuration values.

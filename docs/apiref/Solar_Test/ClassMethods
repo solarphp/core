@@ -32,7 +32,13 @@
 
 * Solar_Test::assertTrue() -- Asserts that a variable is boolean true.
 
+* Solar_Test::error() -- Error handler for this test; throws a test failure.
+
 * Solar_Test::fail() -- Throws an exception indicating a failed test.
+
+* Solar_Test::getAssertCount() -- Returns the number of assertions made by this test.
+
+* Solar_Test::resetAssertCount() -- Resets the assertion counter to zero.
 
 * Solar_Test::setup() -- Setup before each method test.
 

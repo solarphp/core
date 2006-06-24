@@ -2,13 +2,13 @@
 
 access:   protected
 
-name: _preAction
+name: _report
 
 return: void
 
 </function>
 
-Executes just before each action.
+Generates a report from class properties.
 
 * Parameters: none.
 

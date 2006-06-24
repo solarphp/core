@@ -1,0 +1,17 @@
+//Inherited from Solar_Controller_Page::_render().//
+
+<function>
+
+access:   protected
+
+name: _render
+
+return: string
+
+</function>
+
+Renders the view based on page properties.
+
+* Parameters: none.
+
+* Returns string: The results of the action + view + layout.

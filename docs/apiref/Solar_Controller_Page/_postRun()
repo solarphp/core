@@ -2,13 +2,13 @@
 
 access:   protected
 
-name: _preAction
+name: _postRun
 
 return: void
 
 </function>
 
-Executes just before each action.
+Executes after the last action and before rendering.
 
 * Parameters: none.
 

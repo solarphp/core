@@ -1,0 +1,15 @@
+<function>
+
+access: final  public
+
+name: getAssertCount
+
+return: int
+
+</function>
+
+Returns the number of assertions made by this test.
+
+* Parameters: none.
+
+* Returns int

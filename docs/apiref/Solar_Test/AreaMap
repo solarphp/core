@@ -1,6 +1,7 @@
 HomePage | The Solar_Test Class
 ApiRef | API Reference
  ClassProperties | Class Properties
+  $_assert_count
   $_config
  ClassMethods | Class Methods
   __construct()
@@ -22,8 +23,11 @@ ApiRef | API Reference
   assertProperty()
   assertSame()
   assertTrue()
+  error()
   fail()
+  getAssertCount()
   locale()
+  resetAssertCount()
   setup()
   skip()
   teardown()

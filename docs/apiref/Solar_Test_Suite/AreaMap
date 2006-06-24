@@ -12,6 +12,8 @@ ApiRef | API Reference
   _done()
   _exception()
   _log()
+  _prepare()
+  _report()
   addTestMethods()
   apiVersion()
   findTests()

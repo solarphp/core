@@ -13,3 +13,19 @@ Creates and returns a new Solar_View object for a layout.
 * Parameters: none.
 
 * Returns Solar_View
+
+Automatically sets up a template-path stack for you, searching
+for view files in this order:
+
+# Vendor/App/Example/Layout/
+
+# Vendor/App/Layout
+
+Automatically sets up a helper-class stack for you, searching
+for helper classes in this order:
+
+# Vendor_App_Helper_
+
+# Vendor_View_Helper_
+
+# Solar_View_Helper_ (this is part of Solar_View to begin with)

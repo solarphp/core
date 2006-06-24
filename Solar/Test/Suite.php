@@ -38,10 +38,6 @@ Solar::loadClass('Solar_Test');
  * 
  * @package Solar_Test
  * 
- * @todo test if notice/warning/error was generated, and fail on same
- * 
- * @todo test if no assertions are called and fail on same
- * 
  */
 class Solar_Test_Suite extends Solar_Base {
     
@@ -92,6 +88,15 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      */
     protected $_test;
+    
+    /**
+     * 
+     * The current test-case object, used for error handling.
+     * 
+     * @var Solar_Test
+     * 
+     */
+    protected $_test_case;
     
     /**
      * 
@@ -289,10 +294,41 @@ class Solar_Test_Suite extends Solar_Base {
                 // method setup
                 $test->setup();
                 
-                // run test method and mark as "done"
+                // run test method and check validity
                 try {
+                    
+                    // turn on all error reporting
+                    $reporting = ini_get('error_reporting');
+                    ini_set('error_reporting', E_ALL | E_STRICT);
+                    
+                    // turn off error display so that the exceptions
+                    // are the only thing generating output
+                    $display = ini_get('display_errors');
+                    ini_set('display_errors', false);
+                    
+                    // set the error handler for the test
+                    set_error_handler(array($test, 'error'));
+            
+                    // run the test
                     $test->$method();
-                    $this->_done('pass', $name);
+                    
+                    // check for non-exception failures
+                    if (! $test->getAssertCount()) {
+                        // no assertions made, which means nothing was
+                        // actually tested.
+                        $this->_done('todo', $name, 'made no assertions');
+                    } else {
+                        // no non-exception failures, so it passes.
+                        $this->_done('pass', $name);
+                    }
+                    
+                    // return to previous error handler
+                    restore_error_handler();
+                    
+                    // return to previous error display and reporting
+                    ini_set('display_errors', $display);
+                    ini_set('error_reporting', $reporting);
+                    
                 } catch (Solar_Test_Exception_Skip $e) {
                     $this->_done('skip', $name, $e->getMessage());
                 } catch (Solar_Test_Exception_Todo $e) {
@@ -304,6 +340,9 @@ class Solar_Test_Suite extends Solar_Base {
                 
                 // method teardown
                 $test->teardown();
+                
+                // reset the assertion counter for the next pass
+                $test->resetAssertCount();
             }
             
             // class teardown

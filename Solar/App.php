@@ -200,7 +200,7 @@ abstract class Solar_App extends Solar_Controller_Page {
      * @return void
      * 
      */
-    public function errorAction()
+    public function actionError()
     {
         // no code needed, just dumps $this->errors via the 'error.php'
         // view

@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Access.php 1227 2006-05-26 03:18:10Z pmjones $
+ * @version $Id$
  * 
  */
 

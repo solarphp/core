@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: File.php 1225 2006-05-26 01:40:19Z pmjones $
+ * @version $Id$
  * 
  */
 

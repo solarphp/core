@@ -308,11 +308,11 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function addAction()
+    public function actionAdd()
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            $this->errors[] = 'ERR_NOT_LOGGED_IN';
             return $this->_forward('error');
         }
 
@@ -375,17 +375,17 @@ class Solar_App_Bookmarks extends Solar_App {
         
             }
         }
-
+        
         // OP: Cancel
         if ($submit == $this->locale('SUBMIT_CANCEL')) {
             $this->_redirect($href);
         }
-
+        
         // ---------------------------------------------------------------------
         // 
         // completion
         // 
-
+        
         // assign data for the view
         $this->formdata = $form;
         $this->backlink = $href;
@@ -400,25 +400,25 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function editAction($id = null)
+    public function actionEdit($id = null)
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            $this->errors[] = 'ERR_NOT_LOGGED_IN';
             return $this->_forward('error');
         }
 
         // get the bookmark ID (0 means a new bookmark)
         $id = (int) $id;
         if (! $id) {
-            $this->errors[] = $this->locale('ERR_NOT_SELECTED');
+            $this->errors[] = 'ERR_NOT_SELECTED';
             return $this->_forward('error');
         }
 
         // must be the item owner to edit it
         $item = $this->_bookmarks->fetch($id);
         if ($this->_user->auth->handle != $item['owner_handle']) {
-            $this->errors[] = $this->locale('ERR_NOT_OWNER');
+            $this->errors[] = 'ERR_NOT_OWNER';
             return $this->_forward('error');
         }
 
@@ -525,11 +525,11 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function quickAction($uri = null, $subj = null)
+    public function actionQuick($uri = null, $subj = null)
     {
         // must be logged in to proceed
         if (! $this->_user->auth->isValid()) {
-            $this->errors[] = $this->locale('ERR_NOT_LOGGED_IN');
+            $this->errors[] = 'ERR_NOT_LOGGED_IN';
             return $this->_forward('error');
         }
 
@@ -605,7 +605,7 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function tagAction($tags = null)
+    public function actionTag($tags = null)
     {
         // allow uri to set the "count" for each page (default 10)
         $this->_bookmarks->setPaging($this->_query('paging', 10));
@@ -662,7 +662,7 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function tagFeedAction($tags = null)
+    public function actionTagFeed($tags = null)
     {
         // build the local variables
         $this->_forward('tags', array($tags));
@@ -695,7 +695,7 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function userAction($owner_handle = null, $tags = null)
+    public function actionUser($owner_handle = null, $tags = null)
     {
         // allow uri to set the "count" for each page (default 10)
         $this->_bookmarks->setPaging($this->_query('paging', 10));
@@ -759,7 +759,7 @@ class Solar_App_Bookmarks extends Solar_App {
      * @return void
      * 
      */
-    public function userFeedAction($owner_handle = null, $tags = null)
+    public function actionUserFeed($owner_handle = null, $tags = null)
     {
         // build the local vars
         $this->_forward('user', array($owner_handle, $tags));

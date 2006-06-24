@@ -503,7 +503,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // do we have an initial info element as an action method?
         if (! empty($this->_info[0])) {
-            $method = $this->_actionMethod($this->_info[0]);
+            $method = $this->_getActionMethod($this->_info[0]);
             if ($method) {
                 // save it and remove from info
                 $this->_action = array_shift($this->_info);
@@ -662,7 +662,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _forward($action, $params = null)
     {
         // does a related action-method exist?
-        $method = $this->_actionMethod($action);
+        $method = $this->_getActionMethod($action);
         if (! $method) {
             throw $this->_exception(
                 'ERR_ACTION_NOT_FOUND',
@@ -673,7 +673,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // set the view to the requested action
-        $this->_view = $this->_actionView($action);
+        $this->_view = $this->_getActionView($action);
         
         // run this before every action
         $this->_preAction();
@@ -707,15 +707,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * method does not exist.
      * 
      */
-    protected function _actionMethod($action)
+    protected function _getActionMethod($action)
     {
-        // convert example-name and example_name to actionExampleName
+        // convert example-name and example_name to "actionExampleName"
         $word = str_replace(array('_', '-'), ' ', $action);
         $word = ucwords(trim($word));
-        $word[0] = strtolower($word[0]);
-        $word = str_replace(' ', '', $word) . 'Action';
-        
-        //$word = 'action' . str_replace(' ', '', $word);
+        $word = 'action' . str_replace(' ', '', $word);
         
         // does it exist?
         if (method_exists($this, $word)) {
@@ -734,9 +731,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @return string The related view name.
      * 
      */
-    protected function _actionView($action)
+    protected function _getActionView($action)
     {
-        // convert example-name and example_name to ExampleName
+        // convert example-name and example_name to exampleName
         $word = str_replace(array('_', '-'), ' ', $action);
         $word = ucwords(trim($word));
         $word = str_replace(' ', '', $word);

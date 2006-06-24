@@ -37,9 +37,9 @@
     <!-- output the owner_handle and tag-search, if any -->
     <?php if ($this->owner_handle || $this->tags): ?>
         <h2><?php
-            if ($this->owner_handle) echo $this->getText('USER') . ': ' . $this->escape($this->owner_handle);
+            if ($this->owner_handle) echo $this->getText('HEADING_USER') . ': ' . $this->escape($this->owner_handle);
             if ($this->owner_handle && $this->tags) echo "<br />\n";
-            if ($this->tags) echo $this->getText('TAGS') . ': ' . $this->escape($this->tags);
+            if ($this->tags) echo $this->getText('HEADING_TAGS') . ': ' . $this->escape($this->tags);
         ?></h2>
     <?php endif ?>
     

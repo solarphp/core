@@ -672,11 +672,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
             );
         }
         
-        // set the view to the most-recent action (this one ;-).
-        // we do so before running the script so that the script
-        // can override the view if needed.  essentially, just
-        // drop the 'Action' suffix.
-        $this->_view = substr($method, 0, -6);
+        // set the view to the requested action
+        $this->_view = $this->_actionView($action);
         
         // run this before every action
         $this->_preAction();
@@ -712,21 +709,39 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _actionMethod($action)
     {
-        // convert example-name and example_name to ExampleName
-        $method = str_replace(array('_', '-'), ' ', $action);
-        $method = ucwords(trim($method));
-        $method = str_replace(' ', '', $method);
+        // convert example-name and example_name to actionExampleName
+        $word = str_replace(array('_', '-'), ' ', $action);
+        $word = ucwords(trim($word));
+        $word[0] = strtolower($word[0]);
+        $word = str_replace(' ', '', $word) . 'Action';
         
-        // convert ExampleName to exampleNameAction
-        $method[0] = strtolower($method[0]);
-        $method .= 'Action';
+        //$word = 'action' . str_replace(' ', '', $word);
         
         // does it exist?
-        if (method_exists($this, $method)) {
-            return $method;
+        if (method_exists($this, $word)) {
+            return $word;
         } else {
             return false;
         }
+    }
+    
+    /**
+     * 
+     * Returns the view name for an action.
+     * 
+     * @param string $action The action name.
+     * 
+     * @return string The related view name.
+     * 
+     */
+    protected function _actionView($action)
+    {
+        // convert example-name and example_name to ExampleName
+        $word = str_replace(array('_', '-'), ' ', $action);
+        $word = ucwords(trim($word));
+        $word = str_replace(' ', '', $word);
+        $word[0] = strtolower($word[0]);
+        return $word;
     }
 }
 ?>

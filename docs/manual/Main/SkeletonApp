@@ -6,98 +6,8 @@ Because Solar is geared toward distributing applications, you need to create you
 $ mkdir /home/username/Vendor
 </code>
 
-Make sure the front-controller has that directory in the include_path along with Solar itself.
 
-<code type="bash">
-$ vi /home/username/public_html/index.php
-</code>
-
-<code type="php">
-// Path to PEAR libraries, where Solar is installed,
-// **and** to the Vendor library.
-set_include_path('/home/username/pear/php:/home/username/Vendor');
-
-// Load and start Solar
-// ...
-</code>
-
-
-++ Vendor library setup
-
-In general, your vendor library should be structured like the Solar library.  Since we're doing an application skeleton, we'll need a an "App/" directory.
-
-<code type="bash">
-$ cd /home/username/Vendor
-$ mkdir App
-</code>
-
-The Vendor directory now looks like this.
-
-<code>
-Vendor/
-    App/
-</code>
-
-We'll call our application "Example"; it needs a directory, and subdirectories for its Actions and Views. 
-<code type="bash">
-$ cd App
-$ touch Example.php
-$ mkdir Example
-$ mkdir Example/Actions
-$ mkdir Example/Views
-</code>
-
-The Vendor directory now looks like this.
-
-<code>
-Vendor/
-    App/
-        Example.php
-        Example/
-            Actions/
-            Views/
-</code>
-
-++ Page-Controller
-
-Edit your Example.php page controller to make it extend Solar_App; give it a default action of 'index' and a view-variable of 'output'.
-
-<code type="bash">
-$ vi Example.php
-</code>
-
-<code type="php">
-Solar::loadClass('Solar_App');
-class Vendor_App_Example extends Solar_App {
-    protected $_action_default = 'index';
-    public $output = '';
-}
-</code>
-
-++ Index Action and View
-
-Create the 'index' action for the 'Example' page.
-
-<code type="bash">
-$ vi Example/Actions/index.action.php
-</code>
-
-<code type="php">
-$this->output = "I am the vendor example";
-</code>
-
-
-Now create the related view.
-
-<code type="bash">
-$ vi Example/Views/index.view.php
-</code>
-
-<code type="php">
-echo $this->escape($this->output);
-</code>
-
-++ Front-Controller Recognition
+++ Config and Front Controller
 
 Edit Solar.config.php to recognize your vendor directory (along with the Solar directory) for page controllers.
 
@@ -121,5 +31,135 @@ $config['Solar_Controller_Front']['classes'] = array(
 return $config;
 </code>
 
-Now you should be able to browse to ``http://example.com/index.php/example/`` and see some output.
+Also, make sure the front-controller bootstrap script has the Vendor directory in the include_path along with Solar itself.
+
+<code type="bash">
+$ vi /home/username/public_html/index.php
+</code>
+
+<code type="php">
+// Path to PEAR libraries, where Solar is installed,
+// **and** to the Vendor library.
+set_include_path('/home/username/pear/php:/home/username/Vendor');
+
+// Load and start Solar
+// ...
+</code>
+
+
+++ App Directory Setup
+
+In general, your vendor library should be structured like the Solar library.  Since we're doing an application skeleton, we'll need a an "App/" directory.
+
+<code type="bash">
+$ cd /home/username/Vendor
+$ mkdir App
+</code>
+
+The Vendor directory now looks like this.
+
+<code>
+Vendor/
+    App/
+</code>
+
+We'll call our application "Example"; it needs a directory, and subdirectories for its locale files, view files, etc.
+ 
+<code type="bash">
+$ cd App
+$ touch Example.php
+$ mkdir Example
+$ mkdir Example/Helper
+$ mkdir Example/Layout
+$ mkdir Example/Locale
+$ mkdir Example/View
+</code>
+
+The Vendor directory now looks like this.
+
+<code>
+Vendor/
+    App/
+        Example.php
+        Example/
+            Helper/
+            Layout/
+            Locale/
+            View/
+</code>
+
+++ Page Controller and Action
+
+Edit your Example.php page controller to make it extend Solar_App; give it a default action of 'index', a view-variable of 'output', and a method for the 'index' action.
+
+<code type="bash">
+$ vi Example.php
+</code>
+
+<code type="php">
+Solar::loadClass('Solar_App');
+class Vendor_App_Example extends Solar_App {
+
+    protected $_action_default = 'index';
+    
+    public $output = '';
+    
+    public function actionIndex() {
+        $this->output = "I am the vendor example";
+    }
+}
+</code>
+
+++ View
+
+Now create the related view for the index action.
+
+<code type="bash">
+$ vi Example/View/index.php
+</code>
+
+<code type="php">
+echo $this->escape($this->output);
+</code>
+
+
+Now you should be able to browse to http://localhost/index.php/example/ and see some output.
+
+++ Localization
+
+Create a [Main::LocaleFile locale file] for US English in your \\Locale/\\ directory:
+
+<code type="bash">
+$ vi Example/Locale/en_US.php
+</code>
+
+<code type="php">
+return array(
+    'TEXT_EXAMPLE' => 'I am a translated vendor example',
+)
+</code>
+
+Now edit actionIndex() to use a locale key instead of a hard-coded string ...
+
+<code type="bash">
+$ vi Example.php
+</code>
+
+<code type="php">
+public function actionIndex() {
+    $this->output = 'TEXT_EXAMPLE';
+}
+</code>
+
+... and edit your view file to translate that key with the [Solar_View_Helper_GetText::HomePage getText() helper].
+
+<code type="bash">
+$ vi Example/View/index.php
+</code>
+
+<code type="php">
+echo $this->getText($this->output);
+</code>
+
+Now when you browse to http://localhost/index.php/example/ you will see the translated output.  If you add other locale files, such as es_ES.php, and use Solar::setLocale() to change locale codes, those translations will appear instead.
 

@@ -247,8 +247,6 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * @return array A statistics array.
      * 
-     * @todo change this from class-based discover to file-based?
-     * 
      */
     public function run($series = null)
     {
@@ -319,6 +317,16 @@ class Solar_Test_Suite extends Solar_Base {
         return $this->_info;
     }
     
+    /**
+     * 
+     * Prepares class properties for a test run.
+     * 
+     * @param string $series The sub-test series to run, typically a
+     * class name (not including the 'Test_' prefix).
+     * 
+     * @return void
+     * 
+     */
     protected function _prepare($series = null)
     {
         // reset
@@ -378,6 +386,7 @@ class Solar_Test_Suite extends Solar_Base {
             }
         }
     }
+    
     /**
      * 
      * Formats a test line, logs it, and saves the info.

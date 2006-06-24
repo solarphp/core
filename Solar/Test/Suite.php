@@ -95,15 +95,6 @@ class Solar_Test_Suite extends Solar_Base {
     
     /**
      * 
-     * The current test-case object, used for error handling.
-     * 
-     * @var Solar_Test
-     * 
-     */
-    protected $_test_case;
-    
-    /**
-     * 
      * A Solar_Log instance.
      * 
      * @var Solar_Log

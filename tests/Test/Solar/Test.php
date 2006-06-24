@@ -544,10 +544,8 @@ class Test_Solar_Test extends Solar_Test {
         try {
             $this->fail('failed');
             throw new Exception('did not throw Solar_Test_Exception_Fail');
-        } catch (Solar_Test_Exception_Fail $e) {
-            // success :-)
         } catch (Exception $e) {
-            $this->fail($e->getMessage());
+            $this->assertInstance($e, 'Solar_Test_Exception_Fail');
         }
     }
     
@@ -557,9 +555,7 @@ class Test_Solar_Test extends Solar_Test {
             $this->todo('incomplete');
             throw new Exception('did not throw Solar_Test_Exception_Todo');
         } catch (Solar_Test_Exception_Todo $e) {
-            // success :-)
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
+            $this->assertInstance($e, 'Solar_Test_Exception_Todo');
         }
     }
     
@@ -569,9 +565,7 @@ class Test_Solar_Test extends Solar_Test {
             $this->skip('skipped');
             throw new Exception('did not throw Solar_Test_Exception_Skip');
         } catch (Solar_Test_Exception_Skip $e) {
-            // success :-)
-        } catch (Exception $e) {
-            $this->fail($e->getMessage());
+            $this->assertInstance($e, 'Solar_Test_Exception_Skip');
         }
     }
 }

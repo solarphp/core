@@ -52,12 +52,16 @@ class Solar_Test_Suite extends Solar_Base {
      * : \\log\\ : (dependency) A Solar_Log dependency for logging test
      *   results.
      * 
+     * : \\error_reporting\\ : (int) The level of error reporting we 
+     *   want to catch; default is E_ALL|E_STRICT.
+     * 
      * @var array
      * 
      */
     protected $_config = array(
-        'dir' => '',
-        'log' => null,
+        'dir'             => '',
+        'log'             => null,
+        'error_reporting' => null,
     );
     
     /**
@@ -125,6 +129,9 @@ class Solar_Test_Suite extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        // set error_reporting
+        $this->_config['error_reporting'] = E_ALL | E_STRICT;
+        
         // main construction
         parent::__construct($config);
         
@@ -299,7 +306,7 @@ class Solar_Test_Suite extends Solar_Base {
                     
                     // turn on all error reporting
                     $reporting = ini_get('error_reporting');
-                    ini_set('error_reporting', E_ALL | E_STRICT);
+                    ini_set('error_reporting', $this->_config['error_reporting']);
                     
                     // turn off error display so that the exceptions
                     // are the only thing generating output

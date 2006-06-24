@@ -1,0 +1,21 @@
+//Inherited from Solar_Controller_Page::_getActionView().//
+
+<function>
+
+access:   protected
+
+name: _getActionView
+
+param: string, $action
+
+return: string
+
+</function>
+
+Returns the view name for an action.
+
+* Parameters:
+
+ * string //$action//: The action name.
+
+* Returns string: The related view name.

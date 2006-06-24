@@ -2,7 +2,7 @@
 
 access:   public
 
-name: addAction
+name: actionAdd
 
 return: void
 

@@ -2,7 +2,7 @@
 
 access:   public
 
-name: tagAction
+name: actionTag
 
 param: string|array, $tags, NULL
 

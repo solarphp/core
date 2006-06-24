@@ -2,7 +2,7 @@
 
 access:   public
 
-name: editAction
+name: actionEdit
 
 param: int, $id, NULL
 

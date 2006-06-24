@@ -2,7 +2,7 @@
 
 access:   public
 
-name: userAction
+name: actionUser
 
 param: string, $owner_handle, NULL
 

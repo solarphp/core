@@ -28,6 +28,15 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
+     * A running count of how many times an assert*() method is called.
+     * 
+     * @var int
+     * 
+     */
+    protected $_assert_count = 0;
+    
+    /**
+     * 
      * Setup before the entire unit test.
      * 
      * @param array $config User-defined configuration values.
@@ -67,6 +76,30 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
+     * Returns the number of assertions made by this test.
+     * 
+     * @return int
+     * 
+     */
+    final public function getAssertCount()
+    {
+        return $this->_assert_count;
+    }
+    
+    /**
+     * 
+     * Resets the assertion counter to zero.
+     * 
+     * @return void
+     * 
+     */
+    final public function resetAssertCount()
+    {
+        $this->_assert_count = 0;
+    }
+    
+    /**
+     * 
      * Asserts that a variable is boolean true.
      * 
      * @param mixed $actual The variable to test.
@@ -76,6 +109,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertTrue($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual !== true) {
             $this->fail(
                 'Expected true, actually not-true',
@@ -99,6 +134,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotTrue($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual === true) {
             $this->fail(
                 'Expected not-true, actually true',
@@ -122,6 +159,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertFalse($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual !== false) {
             $this->fail(
                 'Expected false, actually not-false',
@@ -145,6 +184,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotFalse($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual === false) {
             $this->fail(
                 'Expected not-false, actually false',
@@ -168,6 +209,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNull($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual !== null) {
             $this->fail(
                 'Expected null, actually not-null',
@@ -191,6 +234,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotNull($actual)
     {
+        $this->_assert_count ++;
+        
         if ($actual === null) {
             $this->fail(
                 'Expected not-null, actually null',
@@ -216,6 +261,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertInstance($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (! is_object($actual)) {
             $this->fail(
                 'Expected object, actually ' . gettype($actual),
@@ -253,6 +300,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotInstance($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (! is_object($actual)) {
             $this->fail(
                 "Expected object, actually "  . gettype($actual),
@@ -293,6 +342,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertSame($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (is_array($actual)) {
             $this->_ksort($actual);
         }
@@ -330,6 +381,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotSame($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (is_array($actual)) {
             $this->_ksort($actual);
         }
@@ -364,6 +417,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertEquals($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (is_array($actual)) {
             $this->_ksort($actual);
         }
@@ -398,6 +453,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertNotEquals($actual, $expect)
     {
+        $this->_assert_count ++;
+        
         if (is_array($actual)) {
             $this->_ksort($actual);
         }
@@ -438,6 +495,8 @@ class Solar_Test extends Solar_Base {
      */
     public function assertProperty($object, $property, $test, $expect = null)
     {
+        $this->_assert_count ++;
+        
         if (! is_object($object)) {
             $this->fail("Expected object, actually " . gettype($object));
         }

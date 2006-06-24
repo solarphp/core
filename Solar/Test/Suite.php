@@ -362,6 +362,13 @@ class Solar_Test_Suite extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Generates a report from class properties.
+     * 
+     * @return void
+     * 
+     */
     protected function _report()
     {
         // report summary

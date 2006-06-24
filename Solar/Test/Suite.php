@@ -129,7 +129,8 @@ class Solar_Test_Suite extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // set error_reporting
+        // set error_reporting here; doing so in the property 
+        // declaration generates errors.
         $this->_config['error_reporting'] = E_ALL | E_STRICT;
         
         // main construction

@@ -609,6 +609,51 @@ class Solar_Test extends Solar_Base {
         ));
     }
     
+    
+    /**
+     * 
+     * Error handler for this test; throws a test failure.
+     * 
+     * @param int $code The PHP error level code.
+     * 
+     * @param string $text The PHP error string.
+     * 
+     * @param string $file The file where the error occurred.
+     * 
+     * @param int $line The line number in that file.
+     * 
+     * @return void
+     * 
+     */
+    public function error($code, $text, $file, $line)
+    {
+        // if using @ to suppress error reporting, don't fail.
+        if (ini_get('error_reporting') == 0) {
+            return;
+        }
+        
+        // figure out the error level
+        $type = array(
+            E_STRICT       => 'PHP Strict',
+            E_WARNING      => 'PHP Warning',
+            E_NOTICE       => 'PHP Notice',
+            E_USER_ERROR   => 'PHP User Error',
+            E_USER_WARNING => 'PHP User Warning',
+            E_USER_NOTICE  => 'PHP User Notice',
+        );
+        
+        if (empty($type[$code])) {
+            $level = 'Unknown PHP Error';
+        } else {
+            $level = $type[$code];
+        }
+        
+        // throw a failure
+        $this->fail("$level: $text", array(
+            'file' => $file,
+            'line' => $line,
+        ));
+    }
     /**
      * 
      * Returns the output from var_export() for a variable.

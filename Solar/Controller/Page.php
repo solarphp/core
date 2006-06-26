@@ -429,6 +429,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // add the template paths to the view object
         $view->addTemplatePath($template);
         
+        // find the class-level helpers (Vendor_App_Example_Helper)
+        $helper[] = $class . '_Helper';
+        
         // find the parent-level helpers (Vendor_App_Helper)
         $pos = strrpos($class, '_');
         $helper[] = substr($class, 0, -$pos) . '_Helper';

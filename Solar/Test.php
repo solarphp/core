@@ -37,6 +37,15 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
+     * Variable dumper for debug output.
+     * 
+     * @var Solar_Debug_Var
+     * 
+     */
+    protected $_debug;
+    
+    /**
+     * 
      * Setup before the entire unit test.
      * 
      * @param array $config User-defined configuration values.
@@ -45,6 +54,7 @@ class Solar_Test extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->_debug = Solar::factory('Solar_Debug_Var');
     }
     
     /**
@@ -609,7 +619,6 @@ class Solar_Test extends Solar_Base {
         ));
     }
     
-    
     /**
      * 
      * Error handler for this test; throws a test failure.
@@ -654,18 +663,19 @@ class Solar_Test extends Solar_Base {
             'line' => $line,
         ));
     }
+    
     /**
      * 
-     * Returns the output from var_export() for a variable.
+     * Returns the output from Solar_Debug_Var::dump() for a variable.
      * 
-     * @param mixed $var The variable to run through var_export().
+     * @param mixed $var The variable dump.
      * 
      * @return string
      * 
      */
     protected function _export($var)
     {
-        return stripslashes(var_export($var, true));
+        return trim($this->_debug->dump($var));
     }
     
     /**

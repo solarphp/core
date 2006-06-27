@@ -30,22 +30,22 @@
  * 
  * <code type="php">
  * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
- * $array = Solar::factory('Solar_Array', array('data' => $data));
+ * $struct = Solar::factory('Solar_Struct', array('data' => $data));
  * 
- * echo $array['foo']; // 'bar'
- * echo $array->foo;   // 'bar'
+ * echo $struct['foo']; // 'bar'
+ * echo $struct->foo;   // 'bar'
  * 
- * echo count($array); // 3
+ * echo count($struct); // 3
  * 
- * foreach ($array as $key => $val) {
+ * foreach ($struct as $key => $val) {
  *     echo "$key=$val ";
  * } // foo=bar  baz=dib zim=gir
  * 
- * $array->zim = 'irk';
- * echo $array['zim']; // 'irk'
+ * $struct->zim = 'irk';
+ * echo $struct['zim']; // 'irk'
  * 
- * $array->noSuchKey = 'nothing';
- * echo $array->noSuchKey; // null
+ * $struct->noSuchKey = 'nothing';
+ * echo $struct->noSuchKey; // null
  * </code>
  * 
  * The one problem is that casting the object to an array will not
@@ -56,9 +56,9 @@
  * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
  * $object = Solar::factory('Solar_Array', array('data' => $data));
  * 
- * $array = (array) $object; // $array = array();
+ * $struct = (array) $object; // $struct = array();
  * 
- * $array = $object->toArray(); // $array = array('foo' => 'bar', ...)
+ * $struct = $object->toArray(); // $struct = array('foo' => 'bar', ...)
  * </code>
  * 
  * @category Solar

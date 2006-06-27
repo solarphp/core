@@ -151,7 +151,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->assertSame($result, 1);
         
         $result = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
-        $this->assertSame($result, $data);
+        $this->assertSame($result->toArray(), $data);
     }
     
     public function testUpdate()
@@ -167,7 +167,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
         $expect = array('id' => '1', 'name' => 'Bar');
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testDelete()
@@ -190,7 +190,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
         // did it work?
         $actual = $this->_sql->select('all', "SELECT * FROM $this->_table_name ORDER BY id");
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testSelect_all()
@@ -205,7 +205,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             array('id' => '5', 'name' => 'Zim'),
             array('id' => '6', 'name' => 'Gir'),
         );
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testSelect_assoc()
@@ -284,7 +284,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $data = array('id' => 5);
         $actual = $this->_sql->select('row', $cmd, $data);
         $expect = array('id' => '5', 'name' => 'Zim');
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testSelect_string()
@@ -369,7 +369,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1', 'name' => 'Foo', 'email' => 'nobody@example.com');
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testDropColumn()
@@ -378,7 +378,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_sql->dropColumn($this->_table_name, 'name');
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1');
-        $this->assertSame($actual, $expect);
+        $this->assertSame($actual->toArray(), $expect);
     }
     
     public function testCreateIndex_singleNormal()

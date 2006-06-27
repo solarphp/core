@@ -54,7 +54,7 @@
  * 
  * <code type="php">
  * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
- * $object = Solar::factory('Solar_Array', array('data' => $data));
+ * $object = Solar::factory('Solar_Struct', array('data' => $data));
  * 
  * $struct = (array) $object; // $struct = array();
  * 
@@ -63,7 +63,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Array
+ * @package Solar_Struct
  * 
  */
 class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterator {

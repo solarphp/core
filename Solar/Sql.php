@@ -284,12 +284,20 @@ class Solar_Sql extends Solar_Base {
         // return data based on the select type
         switch ($lctype) {
         
-        // return all rows
+        // return Solar_Sql_Rowset object
         case 'all':
+            $data = Solar::factory(
+                'Solar_Sql_Rowset',
+                array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
+            );
+            break;
+        
+        // return all as a sequential array
+        case 'array':
             $data = $result->fetchAll(PDO::FETCH_ASSOC);
             break;
             
-        // return data as an array keyed on the first column
+        // return all as an array keyed on the first column
         case 'assoc':
             $data = array();
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -333,9 +341,13 @@ class Solar_Sql extends Solar_Base {
             );
             break;
         
-        // return the first row
+        // return a Solar_Sql_Row object
         case 'row':
-            $data = $result->fetch(PDO::FETCH_ASSOC);
+            // $data = $result->fetch(PDO::FETCH_ASSOC);
+            $data = Solar::factory(
+                'Solar_Sql_Row',
+                array('data' => $result->fetch(PDO::FETCH_ASSOC))
+            );
             break;
         
         // not a recognized select type

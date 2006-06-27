@@ -71,7 +71,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      * 
      * @param int $page Which page-number of results to fetch.
      * 
-     * @return array The list of bookmarks.
+     * @return Solar_Sql_Rowset The list of bookmarks.
      * 
      */
     public function fetchAll($tags = null, $handle = null, $order = null,
@@ -148,7 +148,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      * 
      * @param string $uri The URI to look form
      * 
-     * @return array The node data.
+     * @return Solar_Sql_Row
      * 
      */
     public function fetchByOwnerUri($handle, $uri)
@@ -158,7 +158,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
         $where['nodes.owner_handle = ?'] = $handle;
         $where['nodes.uri = ?']          = $uri;
         $result = parent::fetchAll($tags, $where);
-        if ($result) {
+        if (count($result) > 1) {
             return $result[0];
         }
     }

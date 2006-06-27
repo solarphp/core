@@ -347,23 +347,19 @@ class Solar_App_Bookmarks extends Solar_App {
         // OP: Save
         if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
     
-            // force owner and editor handles
-            $data = $form->values('bookmark');
-            $data['owner_handle'] = $this->_user->auth->handle;
-            $data['editor_handle'] = $this->_user->auth->handle;
+            // load data from the form input
+            $item->load($form->values('bookmark'));
+            
+            // force these values
+            $item->owner_handle = $this->_user->auth->handle;
+            $item->editor_handle = $this->_user->auth->handle;
     
             // save the data
             try {
-                $result = $this->_bookmarks->save($data);
-        
-                // retain the id
-                $id = $result['id'];
-        
-                // tell the edit controller that we added successfully
+                
+                $item->save();
                 $this->_flash->set('add_ok', true);
-        
-                // redirect to editing
-                $this->_redirect("bookmarks/edit/$id");
+                $this->_redirect("bookmarks/edit/{$item->id}");
         
             } catch (Solar_Exception $e) {
         
@@ -417,7 +413,7 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // must be the item owner to edit it
         $item = $this->_bookmarks->fetch($id);
-        if ($this->_user->auth->handle != $item['owner_handle']) {
+        if ($this->_user->auth->handle != $item->owner_handle) {
             $this->errors[] = 'ERR_NOT_OWNER';
             return $this->_forward('error');
         }
@@ -458,24 +454,28 @@ class Solar_App_Bookmarks extends Solar_App {
         // OP: Save
         if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
     
-            // force owner and editor values
-            $data = $form->values('bookmark');
-            $data['owner_handle'] = $this->_user->auth->handle;
-            $data['editor_handle'] = $this->_user->auth->handle;
+            // load the item with form input
+            $item->load($form->values('bookmark'));
+            
+            // force these values
+            $item->owner_handle = $this->_user->auth->handle;
+            $item->editor_handle = $this->_user->auth->handle;
     
             // save the data
             try {
         
                 // attempt the save, may throw an exception
-                $result = $this->_bookmarks->save($data);
+                $item->save();
         
+                /*
                 // retain the id
-                $id = $data['id'];
-    
+                $id = $item->id;
+                
                 // if new, return to the backlink
                 if ($id == 0) {
                     $this->_redirect($href);
                 }
+                */
         
             } catch (Solar_Sql_Table_Exception $e) {
         
@@ -546,15 +546,15 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // if the user *does* already have that URI bookmarked,
         // redirect to the existing bookmark.
-        if (! empty($existing['id'])) {
+        if (! empty($existing->id)) {
             $this->_flash->set('backlink', $uri);
             $this->_redirect("bookmarks/edit/{$existing['id']}");
         }
 
         // get a blank bookmark item, build the basic form
         $item = $this->_bookmarks->fetchDefault();
-        $item['uri'] = $uri;
-        $item['subj'] = $subj;
+        $item->uri = $uri;
+        $item->subj = $subj;
         $form = $this->_bookmarks->form($item);
 
         // overwrite form defaults with submissions
@@ -568,15 +568,15 @@ class Solar_App_Bookmarks extends Solar_App {
             try {
     
                 // get the form values
-                $data = $form->values('bookmark');
-                $data['owner_handle'] = $this->_user->auth->handle;
-                $data['editor_handle'] = $this->_user->auth->handle;
+                $item->load($form->values('bookmark'));
+                $item->owner_handle = $this->_user->auth->handle;
+                $item->editor_handle = $this->_user->auth->handle;
         
                 // save
-                $result = $this->_bookmarks->save($data);
+                $item->save();
         
                 // redirect to the source URI (external)
-                $this->_redirect($data['uri']);
+                $this->_redirect($item->uri);
         
             } catch (Solar_Exception $e) {
         

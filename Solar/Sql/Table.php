@@ -16,6 +16,11 @@
  */
 
 /**
+ * Needed for instanceof comparisons.
+ */
+Solar::loadClass('Solar_Sql_Row');
+
+/**
  * 
  * Class for representing an SQL table.
  * 
@@ -320,12 +325,19 @@ class Solar_Sql_Table extends Solar_Base {
         $order = null, $page = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
-        return $select->from($this->_name, array_keys($this->_col))
-                      ->multiWhere($where)
-                      ->order($order)
-                      ->setPaging($this->_paging)
-                      ->limitPage($page)
-                      ->fetch($type);
+        
+        $result = $select->from($this->_name, array_keys($this->_col))
+                         ->multiWhere($where)
+                         ->order($order)
+                         ->setPaging($this->_paging)
+                         ->limitPage($page)
+                         ->fetch($type);
+        
+        if ($result instanceof Solar_Sql_Row) {
+            $result->setSave($this);
+        }
+        
+        return $result;
     }
     
     /**
@@ -356,7 +368,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $id The primary key ID value.
      * 
-     * @return array A row array.
+     * @return Solar_Sql_Row
      * 
      */
     public function fetch($id)
@@ -375,7 +387,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @param int $page The page number of rows to fetch.
      * 
-     * @return array An array of rows.
+     * @return Solar_Sql_Rowset
      * 
      */
     public function fetchAll($where = null, $order = null, $page = null)
@@ -387,7 +399,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Returns a default row of column keys and default values.
      * 
-     * @return array An array of default row data.
+     * @return Solar_Sql_Row
      * 
      */
     public function fetchDefault()
@@ -437,7 +449,9 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // done!
-        return $data;
+        $row = Solar::factory('Solar_Sql_Row', array('data' => $data));
+        $row->setSave($this);
+        return $row;
     }
     
     

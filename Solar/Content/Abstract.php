@@ -198,7 +198,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * @param int $page Which page-number of results to fetch.
      * 
-     * @return array The list of nodes.
+     * @return Solar_Sql_Rowset
      * 
      */
     public function fetchAll($tags = null, $where = null, $order = null,
@@ -252,7 +252,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->order($order);
         $select->limitPage($page);
         
-        return $select->fetch('all');
+        $all = $select->fetch('all');
+        $all->setSave($this);
+        return $all;
     }
     
     /**
@@ -355,7 +357,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * @param int $id The node ID.
      * 
-     * @return array The node data.
+     * @return Solar_Sql_Row
      * 
      */
     public function fetch($id)
@@ -373,7 +375,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->where('nodes.id = ?', $id);
         
         // get the row
-        return $select->fetch('row');
+        $row = $select->fetch('row');
+        $row->setSave($this);
+        return $row;
     }
     
     /**
@@ -386,8 +390,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * @param array $order Return in this order.
      * 
-     * @return array A list of nodes that are children of
-     * the $parent_id node.
+     * @return Solar_Sql_Rowset A list of nodes that are children of
+     * the $parent_id node.  The parts are not save()-able.
      * 
      */
     public function fetchParts($parent_id, $where = null, $order = null)
@@ -404,15 +408,16 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * Fetches a default blank node of this type.
      * 
-     * @return array An array of default data for a node.
+     * @return Solar_Sql_Row A default row for this type.
      * 
      */
     public function fetchDefault()
     {
-        $data = $this->_content->nodes->fetchDefault();
-        $data['area_id'] = $this->_area_id;
-        $data['type']    = $this->_type;
-        return $data;
+        $row = $this->_content->nodes->fetchDefault();
+        $row->area_id = $this->_area_id;
+        $row->type    = $this->_type;
+        $row->setSave($this);
+        return $row;
     }
     
     /**

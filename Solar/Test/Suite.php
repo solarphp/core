@@ -426,8 +426,8 @@ class Solar_Test_Suite extends Solar_Base {
         
         $show = array('fail', 'todo', 'skip');
         foreach ($show as $type) {
-            foreach ($this->_info[$type] as $name => $note) {
-                $this->_log(strtoupper($type) . " $name ($note)");
+            foreach ($this->_info[$type] as $name => $info) {
+                $this->_log(strtoupper($type) . " $info[0] $name ($info[1])");
             }
         }
     }
@@ -483,7 +483,7 @@ class Solar_Test_Suite extends Solar_Base {
         }
         
         $this->_log($message);
-        $this->_info[$type][$name] = $note;
+        $this->_info[$type][$name] = array($num, $note);
     }
     
     

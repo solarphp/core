@@ -83,7 +83,7 @@ class Solar_Sql_Row extends Solar_Struct {
      * 
      * @see Solar_Sql_Row::setSave()
      * 
-     * @see Solar_Sql_Row::setSave()
+     * @see Solar_Sql_Row::getSave()
      * 
      */
     public function save()
@@ -108,9 +108,9 @@ class Solar_Sql_Row extends Solar_Struct {
      */
     public function setSave($obj)
     {
-        if (is_null($obj))
+        if (is_null($obj)) {
             $this->_save = null;
-        if (is_callable(array($obj, 'save'))) {
+        } elseif (is_callable(array($obj, 'save'))) {
             $this->_save = $obj;
         } else {
             $this->_save = null;

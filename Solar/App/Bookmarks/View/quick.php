@@ -18,7 +18,7 @@
  */
 ?>
 <h1><?php echo $this->getText('HEADING_BOOKMARKS') ?></h1>
-<h2><?php echo $this->getText('TITLE_QUICKMARK') ?></h2>
+<h2><?php echo $this->getText('HEADING_QUICK') ?></h2>
 <p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php

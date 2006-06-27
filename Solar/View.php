@@ -16,6 +16,11 @@
  */
 
 /**
+ * Needed when extracting variables in partial().
+ */
+Solar::loadClass('Solar_Struct');
+
+/**
  * 
  * Provides a Template View pattern implementation for Solar.
  * 
@@ -526,8 +531,15 @@ class Solar_View extends Solar_Base {
         $this->_partial_file = $this->template($name);
         unset($name);
         
-        // save externally and remove from local scope
-        $this->_partial_vars = (array) $vars;
+        // save externally and remove from local scope.
+        // special case for Solar_Struct and other objects.
+        if ($vars instanceof Solar_Struct) {
+            $this->_partial_vars = $vars->toArray();
+        } elseif (is_object($vars)) {
+            $this->_partial_vars = get_object_vars($vars);
+        } else {
+            $this->_partial_vars = (array) $vars;
+        }
         unset($vars);
         
         // disallow resetting of $this and inject vars into local scope

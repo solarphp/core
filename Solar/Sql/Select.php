@@ -888,7 +888,8 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Fetch the results based on the current query properties.
      * 
-     * @param string $type The type of fetch to perform (all, one, row, etc).
+     * @param string $type The type of fetch to perform (all, one, row,
+     * etc).  Default is 'result'.
      * 
      * @return mixed The query results.
      * 

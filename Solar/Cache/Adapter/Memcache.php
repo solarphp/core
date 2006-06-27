@@ -57,6 +57,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * 
      * : \\life\\ : (int) The cache entry lifetime in seconds, default 60.
      * 
+     * : \\timeout\\ : (int) The timeout before the server connection is
+     *   considered a miss, in seconds.  Default is 1 second, and should 
+     *   not really be changed for reasons other than testing purposes.
+     * 
      * @var array
      * 
      */
@@ -64,6 +68,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         'host' => 'localhost',
         'port' => 11211,
         'life' => 60,
+        'timeout' => 1,
     );
     
     /**
@@ -96,7 +101,8 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         $this->_memcache = new Memcache;
         $this->_memcache->connect(
             $this->_config['host'],
-            $this->_config['port']
+            $this->_config['port'],
+            $this->_config['timeout']
         );
     }
     

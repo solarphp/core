@@ -1,0 +1,5 @@
+//Inherited from Solar_Struct::$_data.//
+
+protected array $_data
+
+The row data in colname => value format.

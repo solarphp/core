@@ -1,0 +1,7 @@
+//Inherited from Solar_Struct::$_valid.//
+
+protected array $_valid
+
+
+
+terator: is the current position valid?

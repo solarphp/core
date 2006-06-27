@@ -8,6 +8,8 @@ None.
 
 * Solar_Test::$_assert_count -- A running count of how many times an assert*() method is called.
 
+* Solar_Test::$_debug -- Variable dumper for debug output.
+
 Inherited Properties:
 
 * Solar_Base::$_config() -- User-provided configuration values.

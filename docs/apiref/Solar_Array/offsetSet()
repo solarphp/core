@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: offsetSet
+
+param: string, $key
+
+param: string, $val
+
+return: void
+
+</function>
+
+ArrayAccess: set a key value.
+
+* Parameters:
+
+ * string //$key//: The requested key.
+
+ * string //$val//: The value to set it to.
+
+* Returns void

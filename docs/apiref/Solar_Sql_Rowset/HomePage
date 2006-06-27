@@ -1,0 +1,15 @@
++ The Solar_Sql_Rowset Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Struct::HomePage Solar_Struct]
+
+  * [Solar_Sql_Row::HomePage Solar_Sql_Row]
+
+   * Solar_Sql_Rowset
+
+++ Overview
+
+Represents multiple Solar_Sql_Row objects from a SELECT.

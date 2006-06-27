@@ -1,0 +1,28 @@
+HomePage | The Solar_Struct Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_config
+  $_count
+  $_data
+  $_valid
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  __isset()
+  __set()
+  __unset()
+  _exception()
+  apiVersion()
+  count()
+  current()
+  key()
+  load()
+  locale()
+  next()
+  offsetExists()
+  offsetGet()
+  offsetSet()
+  offsetUnset()
+  rewind()
+  toArray()
+  valid()

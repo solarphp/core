@@ -10,7 +10,7 @@ param: string, $where, NULL
 
 param: array, $order, NULL
 
-return: array
+return: Solar_Sql_Rowset
 
 </function>
 
@@ -24,4 +24,4 @@ Fetch the parts of a parent node ID.
 
  * array //$order//: Return in this order.
 
-* Returns array: A list of nodes that are children of the $parent_id node.
+* Returns Solar_Sql_Rowset: A list of nodes that are children of the $parent_id node.  The parts are not save()-able.

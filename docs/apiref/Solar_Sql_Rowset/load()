@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: load
+
+param: array, $data
+
+return: void
+
+</function>
+
+Load new data (not allowed).
+
+* Parameters:
+
+ * array //$data//: An array of new data.
+
+* Returns void

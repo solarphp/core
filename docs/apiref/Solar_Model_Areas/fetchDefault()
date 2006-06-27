@@ -6,7 +6,7 @@ access:   public
 
 name: fetchDefault
 
-return: array
+return: Solar_Sql_Row
 
 </function>
 
@@ -14,4 +14,4 @@ Returns a default row of column keys and default values.
 
 * Parameters: none.
 
-* Returns array: An array of default row data.
+* Returns Solar_Sql_Row

@@ -12,7 +12,7 @@ param: string|array, $order, NULL
 
 param: int, $page, NULL
 
-return: array
+return: Solar_Sql_Rowset
 
 </function>
 
@@ -28,7 +28,7 @@ Fetches a list of bookmarks from the content store.
 
  * int //$page//: Which page-number of results to fetch.
 
-* Returns array: The list of bookmarks.
+* Returns Solar_Sql_Rowset: The list of bookmarks.
 
 You can specify an owner_handle (username) and/or a list of
 tags to filter the list.

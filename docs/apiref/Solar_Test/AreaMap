@@ -3,6 +3,7 @@ ApiRef | API Reference
  ClassProperties | Class Properties
   $_assert_count
   $_config
+  $_debug
  ClassMethods | Class Methods
   __construct()
   __destruct()

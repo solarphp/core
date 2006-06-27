@@ -12,7 +12,7 @@ param: string|array, $order, NULL
 
 param: int, $page, NULL
 
-return: array
+return: Solar_Sql_Rowset
 
 </function>
 
@@ -28,4 +28,4 @@ Fetch a list of nodes of the node type.
 
  * int //$page//: Which page-number of results to fetch.
 
-* Returns array: The list of nodes.
+* Returns Solar_Sql_Rowset

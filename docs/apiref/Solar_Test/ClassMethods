@@ -56,7 +56,7 @@ Inherited Methods:
 
 ++ Protected
 
-* Solar_Test::_export() -- Returns the output from var_export() for a variable.
+* Solar_Test::_export() -- Returns the output from Solar_Debug_Var::dump() for a variable.
 
 * Solar_Test::_ksort() -- Recrsively [[php ksort()]] an array.
 

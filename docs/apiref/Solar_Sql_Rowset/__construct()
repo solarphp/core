@@ -1,0 +1,21 @@
+//Inherited from Solar_Struct::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Sql_Rowset
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-defined values.
+
+* Returns Solar_Sql_Rowset

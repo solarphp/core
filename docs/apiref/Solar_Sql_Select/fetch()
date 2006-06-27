@@ -14,6 +14,6 @@ Fetch the results based on the current query properties.
 
 * Parameters:
 
- * string //$type//: The type of fetch to perform (all, one, row, etc).
+ * string //$type//: The type of fetch to perform (all, one, row, etc).  Default is 'result'.
 
 * Returns mixed: The query results.

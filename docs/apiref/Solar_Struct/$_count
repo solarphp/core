@@ -1,0 +1,3 @@
+protected int $_count
+
+Countable: cached value for count().

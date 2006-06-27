@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: key
+
+return: mixed
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns mixed
+
+terator: what is the key at the current position?

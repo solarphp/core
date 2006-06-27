@@ -1,0 +1,5 @@
+//Inherited from Solar_Sql_Row::$_save.//
+
+protected object $_save
+
+Source object for save() calls.

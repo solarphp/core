@@ -1,0 +1,17 @@
+//Inherited from Solar_Struct::next().//
+
+<function>
+
+access:   public
+
+name: next
+
+return: void
+
+</function>
+
+Iterator: move to the next position.
+
+* Parameters: none.
+
+* Returns void

@@ -1,0 +1,19 @@
+//Inherited from Solar_Struct::valid().//
+
+<function>
+
+access:   public
+
+name: valid
+
+return: void
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns void
+
+terator: is the current position valid?

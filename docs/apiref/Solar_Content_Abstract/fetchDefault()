@@ -4,7 +4,7 @@ access:   public
 
 name: fetchDefault
 
-return: array
+return: Solar_Sql_Row
 
 </function>
 
@@ -12,4 +12,4 @@ Fetches a default blank node of this type.
 
 * Parameters: none.
 
-* Returns array: An array of default data for a node.
+* Returns Solar_Sql_Row: A default row for this type.

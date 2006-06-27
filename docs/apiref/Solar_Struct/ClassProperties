@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Struct::$_config -- User-defined configuration values.
+
+* Solar_Struct::$_count -- Countable: cached value for count().
+
+* Solar_Struct::$_data -- The row data in colname => value format.
+
+* Solar_Struct::$_valid -- 
+
+++ Private
+
+None.

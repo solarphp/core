@@ -6,7 +6,7 @@ name: fetch
 
 param: int, $id
 
-return: array
+return: Solar_Sql_Row
 
 </function>
 
@@ -16,4 +16,4 @@ Fetches one row from the table by its primary key ID.
 
  * int //$id//: The primary key ID value.
 
-* Returns array: A row array.
+* Returns Solar_Sql_Row

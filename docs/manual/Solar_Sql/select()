@@ -40,26 +40,3 @@ $result = $sql->select('result', $cmd, $data);
 // the result will be from this statement:
 // SELECT * FROM table WHERE foo = 'double quote\"ed' AND zim = 'single quote\'ed'
 </code>
-
-++ Return Types
-
-The \\$type\\ parameter determines how the results of the SELECT command are returned.
-
-: \\all\\ : Returns all rows as a sequential array. Each element is an associative array representing a row; the row array is keyed on the column name.
-
-: \\assoc\\ : Returns all rows as an associative array keyed on the first column. Each element is an associative array representing a row; the row array is keyed on the column name.
-
-: \\col\\ : Returns a sequential array made up of the first column of each row; useful for getting a series of single values.
-
-: \\one\\ : Returns the very first value in the first row; useful for getting a single value, such as a COUNT.
-
-: \\pairs\\ : Returns an associative array; the key is the first column, and the value is the second column.  Useful for building option lists or other key-value pairs.
-
-: \\pdostatement\\ : Returns the executed PDOStatement result for direct manipulation.  (You can also use 'pdo' or 'statement' as an alias for 'pdostatement'.)
-
-: \\row\\ : Returns only the first row as an associative array; elements are keyed on the column names.
-
-: \\result\\ : Returns a [Solar_Sql_Result::HomePage Solar_Sql_Result] object.
-
-: \\string\\ : Returns the SQL statement as a string, and does not execute the query.  Useful for debugging SQL commands.
-

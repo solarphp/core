@@ -1,0 +1,23 @@
+//Inherited from Solar_Struct::__isset().//
+
+<function>
+
+access:   public
+
+name: __isset
+
+param: string, $key
+
+return: void
+
+</function>
+
+
+
+* Parameters:
+
+ * string //$key//: The requested data key.
+
+* Returns void
+
+oes a certain key exist in the data?

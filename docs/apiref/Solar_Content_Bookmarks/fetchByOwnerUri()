@@ -8,7 +8,7 @@ param: string, $handle
 
 param: string, $uri
 
-return: array
+return: Solar_Sql_Row
 
 </function>
 
@@ -20,6 +20,6 @@ Fetches a bookmark by owner_handle (username) and URI.
 
  * string //$uri//: The URI to look form
 
-* Returns array: The node data.
+* Returns Solar_Sql_Row
 
 Useful for seeing if an owner has already bookmarked a URI.

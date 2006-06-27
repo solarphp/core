@@ -12,7 +12,7 @@ param: string|array, $order, NULL
 
 param: int, $page, NULL
 
-return: array
+return: Solar_Sql_Rowset
 
 </function>
 
@@ -26,4 +26,4 @@ Fetches all rows by arbitrary criteria.
 
  * int //$page//: The page number of rows to fetch.
 
-* Returns array: An array of rows.
+* Returns Solar_Sql_Rowset

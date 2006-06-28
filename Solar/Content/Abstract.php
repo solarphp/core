@@ -411,9 +411,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @return Solar_Sql_Row A default row for this type.
      * 
      */
-    public function fetchDefault()
+    public function fetchNew()
     {
-        $row = $this->_content->nodes->fetchDefault();
+        $row = $this->_content->nodes->fetchNew();
         $row->area_id = $this->_area_id;
         $row->type    = $this->_type;
         $row->setSave($this);
@@ -582,7 +582,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // what data should we populate into the form?
         if (empty($data)) {
-            $data = $this->fetchDefault();
+            $data = $this->fetchNew();
         }
         
         // set the form element labels and descriptions

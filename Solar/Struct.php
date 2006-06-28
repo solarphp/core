@@ -118,7 +118,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_data = $this->_config['data'];
+        $this->_data = (array) $this->_config['data'];
     }
     
     /**

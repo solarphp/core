@@ -133,25 +133,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the layout to use for the view, minus the .php suffix.
-     * 
-     * Default is 'twoColRight'.
+     * The name of the layout to be rendered.
      * 
      * @var string
      * 
      */
-    protected $_layout = 'twoColRight';
-    
-    /**
-     * 
-     * Where the layout directory is located.
-     * 
-     * Default is 'Solar/App/Layout/'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_layout_dir = 'Solar/App/Layout/';
+    protected $_layout = null;
     
     /**
      * 
@@ -184,7 +171,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the view to be rendered after all actions.
+     * The name of the view to be rendered.
      * 
      * @var string
      * 

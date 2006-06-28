@@ -76,8 +76,8 @@ class Solar_Form_Load_Table extends Solar_Base {
             settype($list, 'array');
         }
         
-        // default values
-        $default = $table->fetchDefault();
+        // default row values
+        $default = $table->fetchNew();
         
         // loop through the list of requested columns and collect elements
         $elements = array();

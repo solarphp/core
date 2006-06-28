@@ -216,7 +216,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function insert($data)
     {
         // set defaults
-        $data = array_merge((array) $this->fetchDefault(), (array) $data);
+        $data = array_merge($this->fetchNew()->toArray(), (array) $data);
         
         // auto-add sequential values
         foreach ($this->_col as $colname => $colinfo) {
@@ -267,7 +267,7 @@ class Solar_Sql_Table extends Solar_Base {
         
         // disallow the changing of primary key data
         foreach (array_keys($data) as $field) {
-            if ($this->_col[$field]['primary']) {
+            if (! empty($this->_col[$field]['primary'])) {
                 $retain[$field] = $data[$field];
                 unset($data[$field]);
             }
@@ -397,12 +397,12 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
-     * Returns a default row of column keys and default values.
+     * Returns a new row of column keys and default values.
      * 
      * @return Solar_Sql_Row
      * 
      */
-    public function fetchDefault()
+    public function fetchNew()
     {
         // the array of default data
         $data = array();

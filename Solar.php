@@ -458,10 +458,33 @@ class Solar {
      */
     public static function fileExists($file)
     {
-        $fp = @fopen($file, 'r', true);
-        $ok = ($fp) ? true : false;
-        @fclose($fp);
-        return $ok;
+        // old version
+        // $fp = @fopen($file, 'r', true);
+        // $ok = ($fp) ? true : false;
+        // @fclose($fp);
+        // return $ok;
+        
+        // new version: 10x faster?
+        
+        $file = trim($file);
+        
+        if (! $file) {
+            return false;
+        }
+                
+        if ($file[0] == DIRECTORY_SEPARATOR) {
+            return file_exists($file);
+        }
+                
+        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
+        foreach ($path as $dir) {
+            $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+            if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
+                return true;
+            }
+        }
+                
+        return false;
     }
     
     /**

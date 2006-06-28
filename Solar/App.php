@@ -33,6 +33,15 @@ abstract class Solar_App extends Solar_Controller_Page {
     
     /**
      * 
+     * Default layout to be rendered.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout = 'twoColRight';
+    
+    /**
+     * 
      * The <title> tag value for the layout <head> block.
      * 
      * @var string

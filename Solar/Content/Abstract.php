@@ -362,6 +362,21 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      */
     public function fetch($id)
     {
+        $where = array('nodes.id = ?' => (int) $id);
+        return $this->fetchWhere($where);
+    }
+    
+    /**
+     * 
+     * Fetch one node by arbitrary WHERE clause.
+     * 
+     * @param string|array WHERE conditions.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     */
+    public function fetchWhere($where)
+    {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
         
@@ -370,9 +385,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             $this->_selectPartCounts($select, $this->_parts);
         }
         
-        // add conditions
+        // add master and user conditions
         $select->multiWhere($this->_where());
-        $select->where('nodes.id = ?', $id);
+        $select->multiWhere($where);
         
         // get the row
         $row = $select->fetch('row');
@@ -422,7 +437,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetches a list of all tags on all nodes of this type.
+     * Fetches a list of all tags on all nodes of this type with a
+     * count of how many each tag occurs.
      * 
      * @param string|array $where A set of multiWhere() conditions to
      * determine which nodes are fetched.

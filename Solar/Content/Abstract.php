@@ -375,7 +375,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @return Solar_Sql_Row
      * 
      */
-    public function fetchWhere($where)
+    public function fetchWhere($where, $order = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
@@ -389,6 +389,11 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->multiWhere($this->_where());
         $select->multiWhere($where);
         
+	// add order
+	if ($order) {
+	    $select->order($order);
+	}
+	
         // get the row
         $row = $select->fetch('row');
         $row->setSave($this);

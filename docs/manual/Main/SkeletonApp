@@ -1,5 +1,9 @@
 + Minimal Application Skeleton
 
+[[toc]]
+
+++ Your Directory Location
+
 Because Solar is geared toward distributing applications, you need to create your own "vendor" ("master" or "channel") directory where your classes will be stored.  This directory name will be the prefix on all your class names.  It can be anywhere in the file system.
 
 <code type="bash">
@@ -90,15 +94,15 @@ Vendor/
 
 ++ Page Controller and Action
 
-Edit your Example.php page controller to make it extend Solar_App; give it a default action of 'index', a view-variable of 'output', and a method for the 'index' action.
+Edit your Example.php page controller to make it extend [Solar_Controller_Page::HomePage Solar_Controller_Page]; give it a default action of 'index', a view-variable of 'output', and a method for the 'index' action.
 
 <code type="bash">
 $ vi Example.php
 </code>
 
 <code type="php">
-Solar::loadClass('Solar_App');
-class Vendor_App_Example extends Solar_App {
+Solar::loadClass('Solar_Controller_Page');
+class Vendor_App_Example extends Solar_Controller_Page {
 
     protected $_action_default = 'index';
     
@@ -118,14 +122,21 @@ Now create the related view for the index action.
 $ vi Example/View/index.php
 </code>
 
-<code type="php">
-echo $this->escape($this->output);
+<code type="html">
+<html>
+    <head>
+        <title>Skeleton App</title>
+    </head>
+    <body>
+        <p><?php echo $this->escape($this->output) ?>
+    </body>
+</html>
 </code>
 
 
 Now you should be able to browse to http://localhost/index.php/example/ and see some output.
 
-++ Localization
+++ Locale
 
 Create a [Main::LocaleFile locale file] for US English in your \\Locale/\\ directory:
 
@@ -146,9 +157,9 @@ $ vi Example.php
 </code>
 
 <code type="php">
-public function actionIndex() {
-    $this->output = 'TEXT_EXAMPLE';
-}
+    public function actionIndex() {
+        $this->output = 'TEXT_EXAMPLE';
+    }
 </code>
 
 ... and edit your view file to translate that key with the [Solar_View_Helper_GetText::HomePage getText() helper].
@@ -157,9 +168,79 @@ public function actionIndex() {
 $ vi Example/View/index.php
 </code>
 
-<code type="php">
-echo $this->getText($this->output);
+<code type="html">
+<html>
+    <head>
+        <title>Skeleton App</title>
+    </head>
+    <body>
+        <p><?php echo $this->getText($this->output) ?>
+    </body>
+</html>
 </code>
 
 Now when you browse to http://localhost/index.php/example/ you will see the translated output.  If you add other locale files, such as es_ES.php, and use Solar::setLocale() to change locale codes, those translations will appear instead.
 
+++ Layout
+
+Notice that our view script has more to it than just the "core" page content (the $this->output portion).  Normally you will want to be able to use the same header and footer portions across all actions in your applications.  Let's create a "layout" file to do that for us.
+
+Create a basic layout file called "main.php":
+
+<code type="bash">
+$ vi Example/Layout/main.php
+</code>
+
+<code type="html">
+<?php /* header portion */ ?>
+<html>
+    <head>
+        <title>Skeleton App Layout</title>
+    </head>
+    <body>
+        
+        <h1>Skeleton Application</h1>
+        
+        <?php
+            /* page controller output */
+            echo $this->layout_content;
+        ?>
+        
+<?php /* footer portion */ ?>        
+    </body>
+</html>
+</code>
+
+Now go back and edit your view script so that it only generates the bare minimum of output:
+
+<code type="bash">
+$ vi Example/View/index.php
+</code>
+
+<code type="html">
+        <p><?php echo $this->getText($this->output) ?>
+</code>
+
+Finally, tell your page-controller class what layout to use by setting the $this->_layout property.
+
+<code type="bash">
+$ vi Example.php
+</code>
+
+<code type="php">
+Solar::loadClass('Solar_Controller_Page');
+class Vendor_App_Example extends Solar_Controller_Page {
+    
+    protected $_layout = 'main';
+    
+    protected $_action_default = 'index';
+    
+    public $output = '';
+    
+    public function actionIndex() {
+        $this->output = 'TEXT_EXAMPLE';
+    }
+}
+</code>
+
+Now when you browse to http://localhost/index.php/example/ you will see the new page with a heading, and the translated output from the action.  All other views in your page-controller will use the same layout, unless you change the $this->_layout property to a different layout.  (To turn off layout use, just set $this->_layout to an empty value.)

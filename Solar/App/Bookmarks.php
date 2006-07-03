@@ -329,7 +329,7 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // build the basic form, populated with the bookmark data
         // from the database
-        $item = $this->_bookmarks->fetchDefault();
+        $item = $this->_bookmarks->fetchNew();
         $form = $this->_bookmarks->form($item);
 
         // now populate the the submitted POST values to the form
@@ -543,7 +543,7 @@ class Solar_App_Bookmarks extends Solar_App {
             $this->_user->auth->handle,
             $uri
         );
-
+        
         // if the user *does* already have that URI bookmarked,
         // redirect to the existing bookmark.
         if (! empty($existing->id)) {
@@ -552,7 +552,7 @@ class Solar_App_Bookmarks extends Solar_App {
         }
 
         // get a blank bookmark item, build the basic form
-        $item = $this->_bookmarks->fetchDefault();
+        $item = $this->_bookmarks->fetchNew();
         $item->uri = $uri;
         $item->subj = $subj;
         $form = $this->_bookmarks->form($item);
@@ -665,7 +665,7 @@ class Solar_App_Bookmarks extends Solar_App {
     public function actionTagFeed($tags = null)
     {
         // build the local variables
-        $this->_forward('tags', array($tags));
+        $this->_forward('tag', array($tags));
 
         // explicitly pick a different view script
         $this->_view = 'feed';

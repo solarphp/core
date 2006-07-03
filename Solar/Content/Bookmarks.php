@@ -153,14 +153,10 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
      */
     public function fetchByOwnerUri($handle, $uri)
     {
-        $tags = null;
         $where = array();
         $where['nodes.owner_handle = ?'] = $handle;
         $where['nodes.uri = ?']          = $uri;
-        $result = parent::fetchAll($tags, $where);
-        if (count($result) > 1) {
-            return $result[0];
-        }
+        return $this->fetchWhere($where);
     }
     
     /**

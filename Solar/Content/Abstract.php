@@ -389,11 +389,11 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->multiWhere($this->_where());
         $select->multiWhere($where);
         
-	// add order
-	if ($order) {
-	    $select->order($order);
-	}
-	
+        // add order
+        if ($order) {
+            $select->order($order);
+        }
+        
         // get the row
         $row = $select->fetch('row');
         $row->setSave($this);

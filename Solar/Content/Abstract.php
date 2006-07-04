@@ -411,7 +411,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @param array $order Return in this order.
      * 
      * @return Solar_Sql_Rowset A list of nodes that are children of
-     * the $parent_id node.  The parts are not save()-able.
+     * the $parent_id node. The parts are not save()-able.
      * 
      */
     public function fetchParts($parent_id, $where = null, $order = null)
@@ -422,6 +422,28 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->multiWhere($where);
         $select->order($order);
         return $select->fetch('all');
+    }
+    
+    /**
+     * 
+     * Fetch the parts of a parent node ID by their type.
+     * 
+     * @param int $parent_id The parent node ID.
+     * 
+     * @param array $type The part-type(s) to fetch.
+     * 
+     * @param array $order Return in this order.
+     * 
+     * @return Solar_Sql_Rowset A list of nodes that are children of
+     * the $parent_id node. The parts are not save()-able.
+     * 
+     */
+    public function fetchPartsByType($parent_id, $type, $order = null)
+    {
+        $where = array(
+            'nodes.type IN (?)' => (array) $type
+        );
+        return $this->fetchParts($parent_id, $where, $order);
     }
     
     /**
@@ -511,6 +533,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         // force the IP address
         $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
         
+        // force the created timestamp
+        $data['created'] = date('Y-m-d\TH:i:s');
+        
         // force the area?
         if ($this->_area_id) {
             $data['area_id'] = $this->_area_id;
@@ -542,6 +567,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // force the IP address
         $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
+        
+        // force the updated timestamp
+        $data['updated'] = date('Y-m-d\TH:i:s');
         
         // force the area?
         if ($this->_area_id) {

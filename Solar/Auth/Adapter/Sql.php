@@ -123,7 +123,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
                ->where("{$this->_config['passwd_col']} = ?", $md5)
                ->multiWhere($this->_config['where']);
                
-        // get the results (a count of rows)
+        // get the results
         $rows = $select->fetch('all');
         
         // if we get back exactly 1 row, the user is authenticated;

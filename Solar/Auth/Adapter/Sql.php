@@ -57,6 +57,9 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * : \\salt\\ : (string) A salt prefix to make cracking passwords harder.
      * 
+     * : \\where\\ : (string|array) Additional _multiWhere() conditions to use
+     *   when selecting rows for authentication.
+     * 
      * @var array
      * 
      */
@@ -69,6 +72,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         'moniker_col' => null,
         'uri_col'     => null,
         'salt'        => null,
+        'where'       => array(),
     );
     
     /**
@@ -116,7 +120,8 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         // build the select
         $select->from($this->_config['table'], $cols)
                ->where("{$this->_config['handle_col']} = ?", $handle)
-               ->where("{$this->_config['passwd_col']} = ?", $md5);
+               ->where("{$this->_config['passwd_col']} = ?", $md5)
+               ->multiWhere($this->_config['where']);
                
         // get the results (a count of rows)
         $rows = $select->fetch('all');

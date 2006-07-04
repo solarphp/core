@@ -185,7 +185,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         $this->_data[$key] = null;
     }
     
-    
     /**
      * 
      * Returns a copy of the object data as an array.
@@ -211,6 +210,11 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         // get the *original* data keys
         $keys = array_keys($this->_config['data']);
+        
+        // if $data is a struct, convert to array
+        if ($data instanceof Solar_Struct) {
+            $data = $data->toArray();
+        }
         
         // only set values for original keys
         foreach ($keys as $key) {

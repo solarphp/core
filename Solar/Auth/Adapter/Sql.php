@@ -49,17 +49,26 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * : \\passwd_col\\ : (string) Name of the column with the MD5-hashed passwd.
      * 
+     * : \\email_col\\ : (string) Name of the column with the email address.
+     * 
+     * : \\moniker_col\\ : (string) Name of the column with the display name (moniker).
+     * 
+     * : \\uri_col\\ : (string) Name of the column with the website URI.
+     * 
      * : \\salt\\ : (string) A salt prefix to make cracking passwords harder.
      * 
      * @var array
      * 
      */
     protected $_config = array(
-        'sql'        => 'sql',
-        'table'      => 'members',
-        'handle_col' => 'handle',
-        'passwd_col' => 'passwd',
-        'salt'       => null
+        'sql'         => 'sql',
+        'table'       => 'members',
+        'handle_col'  => 'handle',
+        'passwd_col'  => 'passwd',
+        'email_col'   => null,
+        'moniker_col' => null,
+        'uri_col'     => null,
+        'salt'        => null,
     );
     
     /**
@@ -77,28 +86,51 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
-        // build the SQL statement
-        $stmt = "SELECT COUNT({$this->_config['handle_col']})"
-              . " FROM {$this->_config['table']}"
-              . " WHERE {$this->_config['handle_col']} = :handle"
-              . " AND {$this->_config['passwd_col']} = :passwd";
-        
-        // build the placeholder data
-        $data = array(
-            'handle' => $handle,
-            'passwd' => md5($this->_config['salt'] . $passwd)
+        // get a selection tool using the dependency object
+        $select = Solar::factory(
+            'Solar_Sql_Select',
+            array('sql' => $obj)
         );
         
+        // always get the user handle
+        $cols = array($this->_config['handle_col']);
+        
+        // get the display name (moniker)?
+        if ($this->_config['moniker_col']) {
+            $cols[] = $this->_config['moniker_col'];
+        }
+        
+        // get the email address?
+        if ($this->_config['email_col']) {
+            $cols[] = $this->_config['email_col'];
+        }
+        
+        // get the uri website?
+        if ($this->_config['uri_col']) {
+            $cols[] = $this->_config['uri_col'];
+        }
+        
+        // salt and hash the password
+        $md5 = md5($this->_config['salt'] . $passwd);
+        
+        // build the select
+        $select->from($this->_config['table'], $cols)
+               ->where("{$this->_config['handle_col']} = ?", $handle)
+               ->where("{$this->_config['passwd_col']} = ?", $md5);
+               
         // get the results (a count of rows)
-        $result = $obj->select('one', $stmt, $data);
+        $rows = $select->fetch('all');
         
         // if we get back exactly 1 row, the user is authenticated;
-        // otherwise, it's more or less than exactly 1 row, or it's an
-        // error object.
-        if ($result == 1) {
+        // otherwise, it's more or less than exactly 1 row.
+        if (count($rows) == 1) {
+            $row = $rows->current();
+            $this->_email   = $row[$this->_config['email_col']];
+            $this->_moniker = $row[$this->_config['moniker_col']];
+            $this->_uri     = $row[$this->_config['uri_col']];
             return true;
         } else {
-            return $result;
+            return false;
         }
     }
 }

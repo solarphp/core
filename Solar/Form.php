@@ -631,10 +631,15 @@ class Solar_Form extends Solar_Base {
      */
     public function setStatus($flag)
     {
+        $this->feedback = array();
         if ($flag === null) {
             $this->_status = null;
+        } elseif ((bool) $flag) {
+            $this->_status = true;
+            $this->feedback = array($this->_config['success']);
         } else {
-            $this->_status = (bool) $flag;
+            $this->_status = false;
+            $this->feedback = array($this->_config['failure']);
         }
     }
     

@@ -199,21 +199,24 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Loads the object data from an array.
+     * Loads the object data from an array or another struct.
      * 
-     * @param array $data The data to load into the object.
+     * @param array|Solar_Struct $spec The data to load into the object.
      * 
      * @return void
      * 
      */
-    public function load($data)
+    public function load($spec)
     {
         // get the *original* data keys
         $keys = array_keys($this->_config['data']);
         
-        // if $data is a struct, convert to array
-        if ($data instanceof Solar_Struct) {
-            $data = $data->toArray();
+        // force to array
+        if ($spec instanceof Solar_Struct) {
+            // we can do this because they're the same class
+            $data = $spec->_data;
+        } else {
+            $data = (array) $spec;
         }
         
         // only set values for original keys

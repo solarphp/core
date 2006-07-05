@@ -198,7 +198,7 @@ class Solar_Sql_Table extends Solar_Base {
         if (empty($data['id'])) {
             return $this->insert($data);
         } else {
-            $where = array('id', $data['id']);
+            $where = $this->_sql->quoteInto('id = ?', $data['id']);
             return $this->update($data, $where);
         }
     }
@@ -452,6 +452,22 @@ class Solar_Sql_Table extends Solar_Base {
         $row = Solar::factory('Solar_Sql_Row', array('data' => $data));
         $row->setSave($this);
         return $row;
+    }
+    
+    /**
+     * 
+     * Fetches one row by arbitrary criteria.
+     * 
+     * @param string|array $where A Solar_Sql_Select::multiWhere() parameter.
+     * 
+     * @param string|array $order A Solar_Sql_Select::order() parameter.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     */
+    public function fetchWhere($where = null, $order = null)
+    {
+        return $this->select('row', $where, $order);
     }
     
     

@@ -1006,7 +1006,8 @@ class Solar {
      * Parents in "reverse" order ... element 0 is the immediate parent,
      * element 1 the grandparent, etc.
      * 
-     * @param string $class The class to find parents for.
+     * @param string|object $spec The class or object to find parents
+     * for.
      * 
      * @param bool $include_class If true, the class name is element 0,
      * the parent is element 1, the grandparent is element 2, etc.
@@ -1014,8 +1015,14 @@ class Solar {
      * @return array
      * 
      */
-    public static function parents($class, $include_class = false)
+    public static function parents($spec, $include_class = false)
     {
+        if (is_object($spec)) {
+            $class = get_class($spec);
+        } else {
+            $class = $spec;
+        }
+        
         // do we need to load the parent stack?
         if (empty(Solar::$parents[$class])) {
             // get the stack of classes leading to this one

@@ -95,11 +95,6 @@ abstract class Solar_Base {
             // construction-time values override config file values.
             $this->_config = array_merge($this->_config, (array) $config);
         }
-        
-        // get the log object if one was specified
-        if (! empty($this->_config['log'])) {
-            $this->_log = Solar::dependency('Solar_Log', $this->_log);
-        }
     }
     
     /**

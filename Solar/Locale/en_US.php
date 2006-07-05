@@ -92,5 +92,8 @@ return array(
     'LABEL_SUBMIT'               => 'Action',
     'LABEL_HANDLE'               => 'Username',
     'LABEL_PASSWD'               => 'Password',
+    'LABEL_EMAIL'                => 'Email',
+    'LABEL_MONIKER'              => 'Display Name',
+    'LABEL_URI'                  => 'Website',
 );
 ?>

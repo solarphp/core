@@ -6,8 +6,6 @@ abstract class Test_Solar_Log_Adapter extends Solar_Test {
     
     protected $_log;
     
-    protected $_config = array();
-    
     public function __construct($config = null)
     {
         parent::__construct($config);

@@ -4,7 +4,7 @@ require_once realpath(dirname(__FILE__) . '/../Adapter.php');
 
 class Test_Solar_Sql_Adapter_Sqlite extends Test_Solar_Sql_Adapter {
     
-    protected $_config = array(
+    protected $_Test_Solar_Sql_Adapter_Sqlite = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
     );
     

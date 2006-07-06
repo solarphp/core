@@ -4,7 +4,7 @@ require_once realpath(dirname(__FILE__) . '/../Adapter.php');
 
 class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     
-    protected $_config = array(
+    protected $_Test_Solar_Log_Adapter_Multi = array(
         'adapters' => array(
             array(
                 'adapter' => 'Solar_Log_Adapter_File',

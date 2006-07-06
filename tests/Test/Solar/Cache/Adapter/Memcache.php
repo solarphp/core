@@ -3,7 +3,7 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
     
     protected $_cache;
     
-    protected $_config = array(
+    protected $_Test_Solar_Cache_Adapter_Memcache = array(
         'adapter' => 'Solar_Cache_Adapter_Memcache',
         'config'  => array(
             'host' => '72.51.38.220',

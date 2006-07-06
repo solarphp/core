@@ -3,7 +3,7 @@ class Test_Solar_Cache_Adapter_File extends Solar_Test {
     
     protected $_cache;
     
-    protected $_config = array(
+    protected $_Test_Solar_Cache_Adapter_File = array(
         'adapter' => 'Solar_Cache_Adapter_File',
         'config'  => array(
             'path'   => '/tmp/Solar_Cache_Testing',

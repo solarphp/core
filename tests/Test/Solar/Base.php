@@ -2,9 +2,8 @@
 
 class Test_Solar_Base extends Solar_Test {
     
-    public function test__construct()
+    public function test__construct_1()
     {
-        // does the class create the locale config?
         // note that the boolean false cancels config overrides.
         $example = Solar::factory('Solar_Test_Example', false);
         $expect = array(
@@ -13,7 +12,10 @@ class Test_Solar_Base extends Solar_Test {
             'zim' => 'gir',
         );
         $this->assertProperty($example, '_config', 'same', $expect);
-        
+    }
+    
+    public function test__construct_2()
+    {
         // does the class merge Solar.config.php overrides?
         $example = Solar::factory('Solar_Test_Example');
         $expect = array(
@@ -23,6 +25,10 @@ class Test_Solar_Base extends Solar_Test {
         );
         $this->assertProperty($example, '_config', 'same', $expect);
         
+    }
+    
+    public function test__construct_3()
+    {
         // does the class merge internal config with Solar.config.php
         // and the factory-time config?
         $config = array('zim' => 'irk');

@@ -4,7 +4,7 @@ require_once realpath(dirname(__FILE__) . '/../Adapter.php');
 
 class Test_Solar_Sql_Adapter_Mysql extends Test_Solar_Sql_Adapter {
     
-    protected $_config = array(
+    protected $_Test_Solar_Sql_Adapter_Mysql = array(
         'adapter' => 'Solar_Sql_Adapter_Mysql',
     );
     

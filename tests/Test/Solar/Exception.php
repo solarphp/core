@@ -2,7 +2,7 @@
 
 class Test_Solar_Exception extends Solar_Test {
     
-    protected $_config = array(
+    protected $_Test_Solar_Exception = array(
         'class' => 'Solar_Test_Example',
         'code'  => 'ERR_CODE',
         'text'  => 'Error message',

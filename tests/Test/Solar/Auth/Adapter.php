@@ -6,8 +6,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     protected $_class;
     
-    protected $_config = array();
-    
     protected $_post;
     
     protected $_handle = 'pmjones';

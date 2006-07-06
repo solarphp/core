@@ -141,11 +141,11 @@ class Test_Solar_View_Helper_Form extends Solar_Test {
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
 
-<dl>
-    <dt><label for="baz"></label></dt>
-    <dd><input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" /></dd>
+        <dl>
+            <dt><label for="baz"></label></dt>
+            <dd><input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" /></dd>
 
-</dl>
+        </dl>
 </form>
 EXPECT;
         $this->assertSame(trim($actual), trim($expect));
@@ -452,11 +452,11 @@ EXPECT;
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
 
-<dl>
-    <dt><label for="baz"></label></dt>
-    <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
+        <dl>
+            <dt><label for="baz"></label></dt>
+            <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
 
-</dl>
+        </dl>
 </form>
 EXPECT;
         $this->assertSame(trim($actual), trim($expect));

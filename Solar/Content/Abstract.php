@@ -225,6 +225,13 @@ abstract class Solar_Content_Abstract extends Solar_Base {
                       ->multiWhere($this->_where())
                       ->multiWhere($where);
                       
+            // join for area name
+            $subselect->join(
+                $this->_content->areas,
+                'nodes.area_id = areas.id',
+                'name AS area_name'
+            );
+            
             $this->_selectTags($subselect, $tags);
             
             // wrap in a part-count outer select
@@ -239,6 +246,13 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             $select->from($this->_content->nodes, '*')
                    ->multiWhere($this->_where())
                    ->multiWhere($where);
+            
+            // join for area name
+            $select->join(
+                $this->_content->areas,
+                'nodes.area_id = areas.id',
+                'name AS area_name'
+            );
             
             if ($tags) {
                 $this->_selectTags($select, $tags);
@@ -380,6 +394,13 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
         
+        // join for area name
+        $select->join(
+            $this->_content->areas,
+            'nodes.area_id = areas.id',
+            'name AS area_name'
+        );
+        
         // get part counts?
         if ($this->_parts) {
             $this->_selectPartCounts($select, $this->_parts);
@@ -418,6 +439,12 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');
+        // join for area name
+        $select->join(
+            $this->_content->areas,
+            'nodes.area_id = areas.id',
+            'name AS area_name'
+        );
         $select->where('nodes.parent_id = ?', $parent_id);
         $select->multiWhere($where);
         $select->order($order);

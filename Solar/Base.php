@@ -41,7 +41,7 @@ abstract class Solar_Base {
     
     /**
      * 
-     * User-provided configuration values.
+     * Collection point for configuration values.
      * 
      * @var array
      * 
@@ -71,28 +71,44 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        $class = get_class($this);
+        $parents = array_reverse(Solar::parents($this, true));
         
-        // only process configs if construction-time config is
-        // non-false.
-        if ($config !== false) {
+        if ($config === false) {
             
-            // load construction-time config from a file?
+            // properties only, no config file
+            foreach ($parents as $class) {
+                $var = "_$class"; // e.g., $_Solar_Test_Example
+                $prop = empty($this->$var) ? null : $this->$var;
+                $this->_config = array_merge(
+                    // current values
+                    $this->_config,
+                    // override with class property config
+                    (array) $prop
+                );
+            }
+            
+        } else {
+            
+            // merge from config file too
+            foreach ($parents as $class) {
+                $var = "_$class";
+                $prop = empty($this->$var) ? null : $this->$var;
+                $this->_config = array_merge(
+                    // current values
+                    $this->_config,
+                    // override with class property config
+                    (array) $prop,
+                    // override with solar config for the class
+                    Solar::config($class, null, array())
+                );
+            }
+        
+            // is construct-time config a file name?
             if (is_string($config)) {
                 $config = Solar::run($config);
             }
         
-            // get the parents of this class, including this class
-            $stack = Solar::parents($class, true);
-            
-            // Merge from config file.
-            // Parent-class config file values are inherited.
-            foreach ($stack as $class) {
-                $solar = Solar::config($class, null, array());
-                $this->_config = array_merge($this->_config, $solar);
-            }
-            
-            // construction-time values override config file values.
+            // final override with construct-time config
             $this->_config = array_merge($this->_config, (array) $config);
         }
     }

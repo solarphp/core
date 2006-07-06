@@ -93,6 +93,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
+     * Tracks element IDs so we can have unique IDs for each element.
+     * 
+     * @var array
+     * 
+     */
+    protected $_id_count = array();
+    
+    /**
+     * 
      * CSS classes to use for element types.
      * 
      * @var array
@@ -290,16 +299,24 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         // auto-set ID?
         if (empty($info['attribs']['id'])) {
             // convert name[key][subkey] to name-key-subkey
-            $id = str_replace(
+            $info['attribs']['id'] = str_replace(
                     array('[', ']'),
                     array('-', ''),
                     $info['name']
             );
-            
-            $info['attribs']['id'] = $id;
+        }
+        
+        // is this id already in use?
+        $id = $info['attribs']['id'];
+        if (empty($this->_id_count[$id])) {
+            // not used yet, start tracking it
+            $this->_id_count[$id] = 1;
         } else {
-            // keep the user-specified ID
-            $id = $info['attribs']['id'];
+            // already in use, increment the count.
+            // e.g., 'this-id' becomes 'this-id-1',
+            // next one is 'this-id-2', etc.
+            $id .= "-" . $this->_id_count[$id] ++;
+            $info['attribs']['id'] = $id;
         }
         
         // auto-set CSS classes for the element?
@@ -313,7 +330,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             }
             
             // also use the element ID for further overrides
-            $info['attribs']['class'] .= $id;
+            $info['attribs']['class'] .= $info['attribs']['id'];
         }
         
         // place in the stack, or as hidden?
@@ -486,13 +503,20 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $form[] = $this->listFeedback($this->_feedback, $class);
         
         // the hidden elements
-        foreach ($this->_hidden as $info) {
-            $form[] = $this->_view->formHidden($info);
+        if ($this->_hidden) {
+            // wrap in a hidden fieldset for XHTML-Strict compliance
+            $form[] = '    <fieldset style="display: none;">';
+            foreach ($this->_hidden as $info) {
+                $form[] = '        ' . $this->_view->formHidden($info);
+            }
+            $form[] = '    </fieldset>';
+            $form[] = '    ';
         }
         
         // loop through the stack
-        $in_group = false;
-        $form[] = '<dl>';
+        $in_dl       = false;
+        $in_fieldset = false;
+        $in_group    = false;
         
         foreach ($this->_stack as $key => $val) {
             
@@ -500,6 +524,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             $info = $val[1];
             
             if ($type == 'element') {
+                
+                // be sure we're in a <dl> block
+                if (! $in_dl) {
+                    $form[] = '        <dl>';
+                    $in_dl = true;
+                }
                 
                 // setup
                 $star     = $info['require'] ? '*' : '';
@@ -526,26 +556,35 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 // handle differently if we're in a group.
                 if ($in_group) {
                     $feedback .= $this->listFeedback($info['feedback']);
-                    $form[] = "        $element";
+                    $form[] = "                $element";
                 } else {
                     $feedback = $this->listFeedback($info['feedback']);
-                    $form[] = "    <dt>$star<label for=\"$id\">$label</label></dt>";
-                    $form[] = "    <dd>$element$feedback</dd>";
+                    $form[] = "            <dt>$star<label for=\"$id\">$label</label></dt>";
+                    $form[] = "            <dd>$element$feedback</dd>";
                     $form[] = '';
                 }
                 
             } elseif ($type == 'group') {
             
+                // be sure we're in a <dl> block
+                if (! $in_dl) {
+                    $form[] = '        <dl>';
+                    $in_dl = true;
+                }
+                
                 $flag = $info[0];
                 $label = $info[1];
                 if ($flag) {
                     $in_group = true;
-                    $form[] = "    <dt><label>$label</label></dt>";
-                    $form[] = "    <dd>";
+                    $form[] = "            <dt><label>$label</label></dt>";
+                    $form[] = "            <dd>";
                     $feedback = '';
                 } else {
                     $in_group = false;
-                    $form[] = "$feedback</dd>";
+                    if ($feedback) {
+                        $form[] = "            $feedback";
+                    }
+                    $form[] = "            </dd>";
                     $form[] = '';
                 }
                 
@@ -555,16 +594,26 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 $legend = $info[1];
                 if ($flag) {
                     $form[] = "    <fieldset><legend>$legend</legend>";
+                    $form[] = "        <dl>";
+                    $in_fieldset = true;
+                    $in_dl = true;
                 } else {
+                    $form[] = "        </dl>";
                     $form[] = "    </fieldset>";
                     $form[] = '';
+                    $in_dl = false;
+                    $in_fieldset = false;
                 }
             }
-            /** @todo add split() for </dl><dl> output? */
-            
         }
-        $form[] = '</dl>';
         
+        if ($in_dl) {
+            $form[] = '        </dl>';
+        }
+        
+        if ($in_fieldset) {
+            $form[] = '    </fieldset>';
+        }
         
         // and add a closing form tag.
         $form[] = '</form>';
@@ -623,6 +672,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $this->_hidden = array();
         $this->_stack = array();
         $this->_status = null;
+        $this->_id_count = array();
         
         return $this;
     }

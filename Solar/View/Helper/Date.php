@@ -40,7 +40,7 @@ class Solar_View_Helper_Date extends Solar_View_Helper {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_View_Helper_Date = array(
         'format' => 'Y-m-d',
     );
     

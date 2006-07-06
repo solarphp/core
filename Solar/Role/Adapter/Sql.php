@@ -48,7 +48,7 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Role_Adapter_Sql = array(
         'sql'        => 'sql',
         'table'      => 'member_roles',
         'handle_col' => 'handle',

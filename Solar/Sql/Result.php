@@ -38,7 +38,7 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Sql_Result = array(
         'PDOStatement' => null,
     );
     

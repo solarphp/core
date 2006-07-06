@@ -59,7 +59,7 @@ class Solar_Log extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Log = array(
         'adapter' => 'Solar_Log_Adapter_None',
     );
     

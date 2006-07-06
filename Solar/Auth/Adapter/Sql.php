@@ -63,7 +63,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Auth_Adapter_Sql = array(
         'sql'         => 'sql',
         'table'       => 'members',
         'handle_col'  => 'handle',

@@ -40,7 +40,7 @@ class Solar_Debug_Var extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Debug_Var = array(
         'output' => null,
     );
     

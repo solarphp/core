@@ -52,7 +52,7 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Role_Adapter_File = array(
         'file' => null
     );
     

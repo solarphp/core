@@ -39,7 +39,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Content_Abstract = array(
         'content' => 'content',
         'area_id' => null,
         'paging'  => 10,

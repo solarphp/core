@@ -42,7 +42,7 @@ class Solar_Cache extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Cache = array(
         'active'  => true,
         'adapter' => 'Solar_Cache_Adapter_File',
         'config'  => null,

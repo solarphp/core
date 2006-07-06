@@ -64,7 +64,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Cache_Adapter_Memcache = array(
         'host' => 'localhost',
         'port' => 11211,
         'life' => 60,

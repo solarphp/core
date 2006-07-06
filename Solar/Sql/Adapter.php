@@ -47,7 +47,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Sql_Adapter = array(
         'host'   => null,
         'port'   => null,
         'user'   => null,

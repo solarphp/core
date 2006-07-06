@@ -37,7 +37,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Cache_Adapter = array(
         'life'   => 0,
     );
     

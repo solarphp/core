@@ -50,7 +50,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Docs_Apiref = array(
         'phpdoc'  => null,
         'log'     => null,
         'unknown' => 'void',

@@ -33,15 +33,6 @@ class Solar_Form_Load_Table extends Solar_Base {
     
     /**
      * 
-     * User-defined configuration array.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array();
-    
-    /**
-     * 
      * Loads Solar_Form elements based on Solar_Sql_Table columns.
      * 
      * @param Solar_Sql_Table $table Load form elements from this table object.

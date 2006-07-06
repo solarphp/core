@@ -51,7 +51,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Access_Adapter_File = array(
         'file'   => '/path/to/access.txt',
     );
     

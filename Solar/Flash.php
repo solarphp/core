@@ -44,7 +44,7 @@ class Solar_Flash extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Flash = array(
         'class' => 'Solar',
     );
     

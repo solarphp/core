@@ -77,7 +77,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * : \\data\\ : (array) Key-value pairs.
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Struct = array(
         'data' => array(),
     );
     

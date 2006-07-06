@@ -69,7 +69,7 @@ class Solar_Auth extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Auth = array(
         'adapter'        => 'Solar_Auth_Adapter_None',
         'config'        => null,
         'expire'        => 14400,
@@ -224,8 +224,8 @@ class Solar_Auth extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        $this->_config['submit_login']  = $this->locale('SUBMIT_LOGIN');
-        $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        $this->_Solar_Auth['submit_login']  = $this->locale('SUBMIT_LOGIN');
+        $this->_Solar_Auth['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
         parent::__construct($config);
         
         // instantiate an adapter object. we do this here instead of in

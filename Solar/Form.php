@@ -47,7 +47,7 @@ class Solar_Form extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Form = array(
         'attribs' => array(
             'action'  => null,
             'method'  => 'post',
@@ -224,9 +224,9 @@ class Solar_Form extends Solar_Base {
     public function __construct($config = null)
     {
         // programmatic defaults
-        $this->_config['attribs']['action'] = Solar::server('REQUEST_URI');
-        $this->_config['success'] = $this->locale('SUCCESS_FORM');
-        $this->_config['failure'] = $this->locale('FAILURE_FORM');
+        $this->_Solar_Form['attribs']['action'] = Solar::server('REQUEST_URI');
+        $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
+        $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
         
         // "real" contruction
         parent::__construct($config);

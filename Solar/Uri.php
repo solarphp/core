@@ -38,7 +38,7 @@ class Solar_Uri extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Uri = array(
         'path' => '',
     );
     

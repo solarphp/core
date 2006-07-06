@@ -33,7 +33,7 @@ class Solar_Test_Example extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Test_Example = array(
         'foo' => 'bar',
         'baz' => 'dib',
         'zim' => 'gir',

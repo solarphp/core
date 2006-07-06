@@ -44,7 +44,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Sql_Table = array(
         'sql'    => 'sql',
         'paging' => 10,
     );

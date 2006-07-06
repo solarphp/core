@@ -44,7 +44,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_View_Helper_Timestamp = array(
         'format' => 'Y-m-d\TH:i:s',
     );
     

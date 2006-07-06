@@ -53,7 +53,7 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Role_Adapter_Ldap = array(
         'url'    => null,
         'basedn' => null,
         'filter' => null,

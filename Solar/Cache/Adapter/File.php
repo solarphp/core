@@ -68,7 +68,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Cache_Adapter_File = array(
         'path'   => '/tmp/Solar_Cache_File/',
         'life'   => 3600
     );

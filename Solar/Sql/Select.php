@@ -91,7 +91,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Sql_Select = array(
         'sql'    => 'sql',
         'paging' => 10,
     );

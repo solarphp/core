@@ -58,7 +58,7 @@ class Solar_Test_Suite extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Test_Suite = array(
         'dir'             => '',
         'log'             => null,
         'error_reporting' => null,
@@ -122,7 +122,7 @@ class Solar_Test_Suite extends Solar_Base {
     {
         // set error_reporting here; doing so in the property 
         // declaration generates errors.
-        $this->_config['error_reporting'] = E_ALL | E_STRICT;
+        $this->_Solar_Test_Suite['error_reporting'] = E_ALL | E_STRICT;
         
         // main construction
         parent::__construct($config);

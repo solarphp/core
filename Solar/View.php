@@ -45,7 +45,7 @@ class Solar_View extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_View = array(
         'template_path' => array(),
         'helper_class'  => array(),
         'escape'        => array(),

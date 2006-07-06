@@ -28,15 +28,6 @@ class Solar_Form_Load_Xml extends Solar_Base {
     
     /**
      * 
-     * User-defined configuration array.
-     * 
-     * @var array
-     * 
-     */
-    protected $_config = array();
-    
-    /**
-     * 
      * Array of element attribute names.
      * 
      * Used by Solar_Form_Load_Xml::fetch() to get element attributes.

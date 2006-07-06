@@ -39,7 +39,7 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Log_Adapter = array(
         'events' => '*',
     );
     

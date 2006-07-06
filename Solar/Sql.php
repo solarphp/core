@@ -40,7 +40,7 @@ class Solar_Sql extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Sql = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
         'config'  => null,
     );

@@ -51,7 +51,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      * @var array
      */
-    protected $_config = array(
+    protected $_Solar_View_Helper_Form = array(
         'attribs' => array(),
     );
     
@@ -570,6 +570,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             $this->_default_attribs,
             $this->_config['attribs']
         );
+        
         $this->_feedback = array();
         $this->_hidden = array();
         $this->_stack = array();

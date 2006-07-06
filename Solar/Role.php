@@ -41,7 +41,7 @@ class Solar_Role extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Role = array(
         'adapter' => 'Solar_Role_Adapter_None',
         'config'  => null,
         'refresh' => false,

@@ -49,7 +49,7 @@ class Solar_Uri_Public extends Solar_Uri {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Uri_Public = array(
         'path' => '/public/',
     );
 }

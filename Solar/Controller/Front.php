@@ -49,7 +49,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Controller_Front = array(
         'classes' => array('Solar_App'),
         'default' => 'hello',
     );

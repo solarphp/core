@@ -52,7 +52,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      * @var array
      * 
      */
-    protected $_config = array(
+    protected $_Solar_Log_Adapter_Echo = array(
         'events' => '*',
         'format' => '%t %c %e %m', // time, class, event, message
         'output' => null,

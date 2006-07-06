@@ -32,7 +32,7 @@ class Solar_Access extends Solar_Base {
      * 
      * @var array
      */
-    protected $_config = array(
+    protected $_Solar_Access = array(
         'adapter' => 'Solar_Access_Adapter_Open',
         'config' => null,
     );

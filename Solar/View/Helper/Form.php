@@ -93,12 +93,34 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
-     * Form CSS classes to use for failure/success statuses.
+     * CSS classes to use for element types.
      * 
      * @var array
      * 
      */
-    protected $_class = array(
+    protected $_type_css = array(
+        'button'   => 'input-button',
+        'checkbox' => 'input-checkbox',
+        'file'     => 'input-file',
+        'hidden'   => 'input-hidden',
+        'options'  => 'input-option',
+        'password' => 'input-password',
+        'radio'    => 'input-radio',
+        'reset'    => 'input-reset',
+        'select'   => 'input-select',
+        'submit'   => 'input-submit',
+        'text'     => 'input-text',
+        'textarea' => 'input-textarea',
+    );
+    
+    /**
+     * 
+     * CSS classes to use for failure/success status messages.
+     * 
+     * @var array
+     * 
+     */
+    protected $_status_css = array(
         0 => 'failure',
         1 => 'success',
     );
@@ -265,10 +287,36 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             throw $this->_exception('ERR_NO_ELEMENT_NAME');
         }
         
+        // auto-set ID?
         if (empty($info['attribs']['id'])) {
-            $info['attribs']['id'] = $info['name'];
+            // convert name[key][subkey] to name-key-subkey
+            $id = str_replace(
+                    array('[', ']'),
+                    array('-', ''),
+                    $info['name']
+            );
+            
+            $info['attribs']['id'] = $id;
+        } else {
+            // keep the user-specified ID
+            $id = $info['attribs']['id'];
         }
         
+        // auto-set CSS classes for the element?
+        if (empty($info['attribs']['class'])) {
+            
+            // get a CSS class for the element type
+            if (! empty($this->_type_css[$info['type']])) {
+                $info['attribs']['class'] = $this->_type_css[$info['type']] . ' ';
+            } else {
+                $info['attribs']['class'] = '';
+            }
+            
+            // also use the element ID for further overrides
+            $info['attribs']['class'] .= $id;
+        }
+        
+        // place in the stack, or as hidden?
         if (strtolower($info['type']) == 'hidden') {
             // hidden elements are a special case
             $this->_hidden[] = $info;
@@ -431,7 +479,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         // the form-level feedback list, with the proper status
         // class.
         if (is_bool($this->_status)) {
-            $class = $this->_class[(int) $this->_status];
+            $class = $this->_status_css[(int) $this->_status];
         } else {
             $class = null;
         }

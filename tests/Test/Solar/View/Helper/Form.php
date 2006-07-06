@@ -78,6 +78,7 @@ class Test_Solar_View_Helper_Form extends Solar_Test {
                     'descr' => '',
                     'attribs' => array(
                         'id' => 'test',
+                        'class' => 'input-button test',
                     ),
                     'options' => array(),
                     'disable' => false,
@@ -142,7 +143,7 @@ class Test_Solar_View_Helper_Form extends Solar_Test {
 
 <dl>
     <dt><label for="baz"></label></dt>
-    <dd><input type="text" name="baz" value="dib" size="10" id="baz" /></dd>
+    <dd><input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" /></dd>
 
 </dl>
 </form>
@@ -208,6 +209,7 @@ EXPECT;
                     'descr' => '',
                     'attribs' => array(
                         'id' => 'test',
+                        'class' => 'input-button test',
                     ),
                     'options' => array(),
                     'disable' => false,
@@ -275,7 +277,10 @@ EXPECT;
                     'value' => 'dib',
                     'label' => '',
                     'descr' => '',
-                    'attribs' => array('id' => 'baz'),
+                    'attribs' => array(
+                        'id' => 'baz',
+                        'class' => 'input-text baz',
+                    ),
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
@@ -309,7 +314,10 @@ EXPECT;
                     'value' => 'dib',
                     'label' => '',
                     'descr' => '',
-                    'attribs' => array('id' => 'baz'),
+                    'attribs' => array(
+                        'id' => 'baz',
+                        'class' => 'input-text baz',
+                    ),
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
@@ -446,7 +454,7 @@ EXPECT;
 
 <dl>
     <dt><label for="baz"></label></dt>
-    <dd><input type="text" name="baz" value="dib" id="baz" /></dd>
+    <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
 
 </dl>
 </form>

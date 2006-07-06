@@ -64,7 +64,7 @@ class Solar_View_Helper_ActionImage extends Solar_View_Helper {
      * 
 	 * @param string $src The href to the image source.
 	 * 
-	 * @param array $attribs Additional attributes for the tag.
+	 * @param array $attribs Additional attributes for the image tag.
 	 * 
      * @return string An <a href="..."><img ... /></a> tag set.
      * 

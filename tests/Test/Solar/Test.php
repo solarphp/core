@@ -521,6 +521,46 @@ class Test_Solar_Test extends Solar_Test {
         }
     }
     
+    public function testAssertRegex()
+    {
+        $actual = "foo bar baz dib zim gir";
+        
+        // should pass
+        $expect = "/zim/";
+        $this->assertRegex($actual, $expect);
+        
+        // should fail
+        try {
+            $expect = '/meat/';
+            $this->assertRegex($actual, $expect);
+            throw new exception('asserted a match where there was none');
+        } catch (Solar_Test_Exception_Fail $e) {
+            // do nothing, it passed :-)
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+    
+    public function testAssertNotRegex()
+    {
+        $actual = "foo bar baz dib zim gir";
+        
+        // should pass
+        $expect = "/meat/";
+        $this->assertNotRegex($actual, $expect);
+        
+        // should fail
+        try {
+            $expect = '/zim/';
+            $this->assertNotRegex($actual, $expect);
+            throw new exception('asserted no match where there was one');
+        } catch (Solar_Test_Exception_Fail $e) {
+            // do nothing, it passed :-)
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
+    
     public function testAssertProperty_protected()
     {
         $example = Solar::factory('Solar_Test_Example');

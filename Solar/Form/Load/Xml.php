@@ -72,7 +72,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
         $xml = simplexml_load_file($filename);
         if (false === $xml) {
             // return an error here
-            return $this->_exception(
+            throw $this->_exception(
                 'ERR_BAD_XML',
                 array(
                     'filename' => $filename

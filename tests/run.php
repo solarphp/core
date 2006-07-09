@@ -33,7 +33,7 @@ if (! class_exists('Solar')) {
 
 if (! class_exists('Solar')) {
     // not in any of the known configurations.
-    throw Exception('Cannot find Solar.php.');
+    throw new Exception('Cannot find Solar.php.');
 }
 
 /**

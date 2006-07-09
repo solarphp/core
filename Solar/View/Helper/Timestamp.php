@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a formatted timestamp using date() conventions.
+ * Helper for a formatted timestamp using date() format codes.
  * 
  * @category Solar
  * 
@@ -22,7 +22,7 @@ Solar::loadClass('Solar_View_Helper');
  
 /**
  * 
- * Helper for a formatted timestamp using [[php date()]] conventions.
+ * Helper for a formatted timestamp using [[php date()]] format codes.
  * 
  * Default format is "Y-m-d\TH:i:s".
  * 
@@ -50,7 +50,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
     
     /**
      * 
-     * Outputs a formatted timestamp using [[php date()]] conventions.
+     * Outputs a formatted timestamp using [[php date()]] format codes.
      * 
      * @access public
      * 

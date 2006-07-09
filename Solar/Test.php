@@ -488,6 +488,62 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
+     * Asserts that a value matches a regular expression pattern
+     * using [[php preg_match()]].
+     * 
+     * @param mixed $actual The variable to test.
+     * 
+     * @param mixed $expect The regular expression pattern.
+     * 
+     * @return bool The assertion result.
+     * 
+     */
+    public function assertRegex($actual, $expect)
+    {
+        $this->_assert_count ++;
+        if (! preg_match($expect, $actual)) {
+            $this->fail(
+                'Expected pattern match, actually not a match',
+                array(
+                    'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
+                )
+            );
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * 
+     * Asserts that a value does not match a regular expression pattern
+     * using [[php preg_match()]].
+     * 
+     * @param mixed $actual The variable to test.
+     * 
+     * @param mixed $expect The regular expression pattern.
+     * 
+     * @return bool The assertion result.
+     * 
+     */
+    public function assertNotRegex($actual, $expect)
+    {
+        $this->_assert_count ++;
+        if (preg_match($expect, $actual)) {
+            $this->fail(
+                'Expected no pattern match, actually matches',
+                array(
+                    'actual' => $this->_export($actual),
+                    'expect' => $this->_export($expect),
+                )
+            );
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * 
      * Asserts that an object property meets criteria.
      * 
      * The object property may be public, protected, or private.

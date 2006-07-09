@@ -74,7 +74,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
         
         // does the file exist?
         if (! file_exists($file)) {
-            return $this->_exception(
+            throw $this->_exception(
                 'ERR_FILE_NOT_FOUND',
                 array('file' => $file)
             );
@@ -83,7 +83,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
         // open the file
         $fp = @fopen($file, 'r');
         if (! $fp) {
-            return $this->_exception(
+            throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
                 array('file' => $file)
             );

@@ -303,7 +303,7 @@ class Solar_Auth extends Solar_Base {
             $this->_adapter->isLoginRequest()) {
                 
             // check the login validity
-            if ($this->_adapter->isLoginValid()) {
+            if ($this->_adapter->isLoginValid() === true) {
                 $this->reset('VALID');
                 $this->handle  = $this->_adapter->getHandle();
                 $this->moniker = $this->_adapter->getMoniker();

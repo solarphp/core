@@ -218,7 +218,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->reset();
         $this->_handle = Solar::$method($this->_common['source_handle']);
         $this->_passwd = Solar::$method($this->_common['source_passwd']);
-        $result = $this->_verify();
+        $result = (bool) $this->_verify();
         if ($result !== true) {
             // not verified, clear out all user data
             $this->reset();

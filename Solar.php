@@ -54,6 +54,14 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 }
 
 /**
+ * Make sure Solar_Base is loaded even before Solar::start() is called.
+ */
+if (! class_exists('Solar_Base')) {
+    require dirname(__FILE__) . DIRECTORY_SEPARATOR
+          . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
+}
+
+/**
  * 
  * The Solar arch-class provides static methods needed throughout the Solar environment.
  * 
@@ -153,6 +161,8 @@ class Solar {
      * 
      * @var string 
      * 
+     * @todo Keep the locale code in $_SESSION?
+     * 
      */
     protected static $_locale_code = 'en_US';
     
@@ -171,8 +181,6 @@ class Solar {
      * 
      * @return void
      * 
-     * @todo Keep the locale code in $_SESSION?
-     * 
      */
     public static function start($config = null)
     {
@@ -183,9 +191,6 @@ class Solar {
         
         // where is Solar in the filesystem?
         Solar::$dir = dirname(__FILE__);
-        
-        // needed for all sub-classes
-        Solar::loadClass('Solar_Base');
         
         // do some security on globals, and turn off all magic quotes
         Solar::_globalsQuotes();

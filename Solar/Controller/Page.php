@@ -276,7 +276,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_forward($this->_action, $this->_info);
         
         // postrun hook
-        $this->_postAction();
+        $this->_postRun();
         
         // return a rendered view
         return $this->_render();
@@ -685,22 +685,26 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _forward($action, $params = null)
     {
+        // set the current action on entry
+        $this->_action = $action;
+        
+        // run this before every action, may change the
+        // requested action.
+        $this->_preAction();
+        
         // does a related action-method exist?
-        $method = $this->_getActionMethod($action);
+        $method = $this->_getActionMethod($this->_action);
         if (! $method) {
             throw $this->_exception(
                 'ERR_ACTION_NOT_FOUND',
                 array(
-                    'action' => $action,
+                    'action' => $this->_action,
                 )
             );
         }
         
         // set the view to the requested action
-        $this->_view = $this->_getActionView($action);
-        
-        // run this before every action
-        $this->_preAction();
+        $this->_view = $this->_getActionView($this->_action);
         
         // run the action script, which may itself _forward() to
         // other actions.  pass all pathinfo parameters in order.
@@ -718,7 +722,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // run this after every action
         $this->_postAction();
         
-        // done!
+        // set the current action on exit so that $this->_action is
+        // always the **first** action requested.
+        $this->_action = $action;
     }
     
     /**

@@ -182,7 +182,8 @@ abstract class Solar_App extends Solar_Controller_Page {
     
     /**
      * 
-     * Checks to see if user is allowed access.
+     * Checks to see if user is allowed access to the requested action
+     * for this controller.
      * 
      * On access failure, changes $this->_action to 'error' and adds
      * an error message stating the user is not allowed access.
@@ -192,10 +193,11 @@ abstract class Solar_App extends Solar_Controller_Page {
      */
     protected function _preAction()
     {
-        // generic security check
-        $class = get_class($this);
-        $action = $this->_action;
-        $allow = Solar::registry('user')->access->isAllowed($class, $action);
+        $allow = Solar::registry('user')->access->isAllowed(
+            get_class($this),
+            $this->_action
+        );
+        
         if (! $allow) {
             $this->errors[] = $this->locale('ERR_NOT_ALLOWED_ACCESS');
             $this->_action = 'error';

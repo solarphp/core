@@ -26,15 +26,15 @@ Solar::loadClass('Solar_Access_Adapter');
  * 
  * The file format is:
  *
- * 0:flag 1:type 2:name 3:page 4:action 5:submit
+ * 0:flag 1:type 2:name 3:class 4:action 5:submit
  * 
  * E.g.:
  * 
  * <code>
  * deny handle * * * *
- * allow role sysadmin * * * *
- * allow handle + bookmarks * *
- * deny user boshag bookmarks edit *
+ * allow role sysadmin * * *
+ * allow handle + Solar_App_Bookmarks * *
+ * deny user boshag Solar_App_Bookmarks edit *
  * </code>
  * 
  * @category Solar
@@ -78,7 +78,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         
         // get the access source and split into lines
         $src = file_get_contents($this->_config['file']);
-        $src = preg_replace('/[ \t]{2,}/', ' ', $src);
+        $src = preg_replace('/[ \t]{2,}/', ' ', trim($src));
         $lines = explode("\n", $src);
         
         foreach ($lines as $line) {

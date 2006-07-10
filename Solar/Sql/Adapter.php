@@ -292,13 +292,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    public function createSequence($name, $start = 1)
-    {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => __FUNCTION__)
-        );
-    }
+    abstract public function createSequence($name, $start = 1);
     
     /**
      * 
@@ -309,13 +303,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    public function dropSequence($name)
-    {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => __FUNCTION__)
-        );
-    }
+    abstract public function dropSequence($name);
     
     /**
      * 
@@ -326,13 +314,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return int The next sequence number.
      * 
      */
-    public function nextSequence($name)
-    {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => __FUNCTION__)
-        );
-    }
+    abstract public function nextSequence($name);
     
     /**
      * 
@@ -341,14 +323,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array A sequential array of table names in the database.
      * 
      */
-    public function listTables()
-    {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => __FUNCTION__)
-        );
-    }
-    
+    abstract public function listTables();
     
     /**
      * 
@@ -361,13 +336,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    public function dropIndex($table, $name)
-    {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => __FUNCTION__)
-        );
-    }
+    abstract public function dropIndex($table, $name);
     
     /**
      * 

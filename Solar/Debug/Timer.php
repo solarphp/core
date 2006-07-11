@@ -214,17 +214,17 @@ class Solar_Debug_Timer extends Solar_Base {
     
     /**
      * 
-     * Outputs the current profile.
+     * Fetches the current profile formatted as a table.
      * 
-     * This dumps the profile information as a table; see the
+     * This fetches the profile information as a table; see the
      * [HomePage home page for this class] for an example.
      * 
      * @param string $title A title for the output.
      * 
-     * @return void
+     * @return string
      * 
      */
-    public function display($title = null)
+    public function fetch($title = null)
     {
         // get the profile info
         $profile = $this->profile();
@@ -275,7 +275,24 @@ class Solar_Debug_Timer extends Solar_Base {
             $output = '<pre>' . htmlspecialchars($output) . '</pre>';
         }
         
-        echo $output;
+        return $output;
+    }
+    
+    /**
+     * 
+     * Displays formatted output of the current profile.
+     * 
+     * This displays the profile information as a table; see the
+     * [HomePage home page for this class] for an example.
+     * 
+     * @param string $title A title for the output.
+     * 
+     * @return void
+     * 
+     */
+    public function display($title = null)
+    {
+        echo $this->fetch($title);
     }
 }
 ?>

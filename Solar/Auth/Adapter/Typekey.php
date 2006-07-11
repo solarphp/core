@@ -29,8 +29,11 @@ Solar::loadClass('Solar_Auth_Adapter');
  * Requires that PHP have been compiled using "--enable-bcmath" or
  * '--with-gmp'.
  * 
- * Generously donated by Mashery (http://mashery.com) and based largely
- * on PEAR Auth_Typekey proposal by Daiji Hirata.
+ * Based largely on PEAR Auth_Typekey proposal by Daiji Hirata, in
+ * particular the DSA signature verification methods.  See the original
+ * code at <http://www.uva.ne.jp/Auth_TypeKey/Auth_TypeKey.phps>.
+ * 
+ * Developed for, and then donated by, Mashery.com <http://mashery.com>.
  * 
  * For more info on TypeKey, see:
  * 
@@ -42,10 +45,9 @@ Solar::loadClass('Solar_Auth_Adapter');
  *
  * @package Solar_Auth
  * 
- * @author Daiji Hirata <hirata@uva.ne.jp> The DSA verification methods
- * from <http://www.uva.ne.jp/Auth_TypeKey/Auth_TypeKey.phps>.
+ * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
- * @author Paul M. Jones <pmjones@solarphp.com> Update to PHP5 and 
+ * @author Paul M. Jones <pmjones@mashery.com> Update to PHP5 and 
  * integration into Solar.
  *
  */

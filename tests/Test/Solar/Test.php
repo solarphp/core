@@ -521,18 +521,18 @@ class Test_Solar_Test extends Solar_Test {
         }
     }
     
-    public function testAssertRegex()
+    public function testAssertRegexp()
     {
         $actual = "foo bar baz dib zim gir";
         
         // should pass
         $expect = "/zim/";
-        $this->assertRegex($actual, $expect);
+        $this->assertRegexp($actual, $expect);
         
         // should fail
         try {
             $expect = '/meat/';
-            $this->assertRegex($actual, $expect);
+            $this->assertRegexp($actual, $expect);
             throw new exception('asserted a match where there was none');
         } catch (Solar_Test_Exception_Fail $e) {
             // do nothing, it passed :-)
@@ -541,18 +541,18 @@ class Test_Solar_Test extends Solar_Test {
         }
     }
     
-    public function testAssertNotRegex()
+    public function testAssertNotRegexp()
     {
         $actual = "foo bar baz dib zim gir";
         
         // should pass
         $expect = "/meat/";
-        $this->assertNotRegex($actual, $expect);
+        $this->assertNotRegexp($actual, $expect);
         
         // should fail
         try {
             $expect = '/zim/';
-            $this->assertNotRegex($actual, $expect);
+            $this->assertNotRegexp($actual, $expect);
             throw new exception('asserted no match where there was one');
         } catch (Solar_Test_Exception_Fail $e) {
             // do nothing, it passed :-)

@@ -7,8 +7,10 @@
  * 
  * @package Solar_Auth
  * 
- * @author Paul M. Jones <pmjones@solarphp.com>
+ * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id: Htpasswd.php 1449 2006-07-09 01:28:55Z pmjones $
@@ -40,11 +42,12 @@ Solar::loadClass('Solar_Auth_Adapter');
  *
  * @package Solar_Auth
  * 
- * @author Paul M. Jones <pmjones@mashery.com>
- *
- * @author Daiji Hirata <hirata@php.net> The DSA verification methods
+ * @author Daiji Hirata <hirata@uva.ne.jp> The DSA verification methods
  * from <http://www.uva.ne.jp/Auth_TypeKey/Auth_TypeKey.phps>.
  * 
+ * @author Paul M. Jones <pmjones@solarphp.com> Update to PHP5 and 
+ * integration into Solar.
+ *
  */
 class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     
@@ -315,8 +318,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Converts a binary to a decimal value using GMP functions.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     *
      * @param string $bin The original binary value string.
      *
      * @return string Decimal value string converted from $bin.
@@ -382,8 +383,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * Converts a hex value string to a decimal value string using
      * bcmath functions.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     *
      * @param string $hex The original hex value string.
      *
      * @return string Decimal string converted from $hex.
@@ -405,8 +404,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * Converts a binary value string to a decimal value string using
      * bcmath functions.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     *
      * @param string $bin The original binary value string.
      *
      * @return string Decimal value string converted from $bin.
@@ -427,8 +424,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Inverts two values using bcmath functions.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     *
      * @param string $x
      * 
      * @param string $y
@@ -458,8 +453,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * Finds the extended greatest-common-denominator of two values
      * using bcmath functions.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     *
      * @param string $x
      * 
      * @param string $y

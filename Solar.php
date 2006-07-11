@@ -463,24 +463,18 @@ class Solar {
      */
     public static function fileExists($file)
     {
-        // old version
-        // $fp = @fopen($file, 'r', true);
-        // $ok = ($fp) ? true : false;
-        // @fclose($fp);
-        // return $ok;
-        
-        // new version: 10x faster?
-        
+        // no file requested?
         $file = trim($file);
-        
         if (! $file) {
             return false;
         }
-                
+        
+        // using an absolute path for the file?
         if ($file[0] == DIRECTORY_SEPARATOR) {
             return file_exists($file);
         }
-                
+        
+        // using a relative path on the file
         $path = explode(PATH_SEPARATOR, ini_get('include_path'));
         foreach ($path as $dir) {
             $dir = rtrim($dir, DIRECTORY_SEPARATOR);
@@ -488,7 +482,8 @@ class Solar {
                 return true;
             }
         }
-                
+        
+        // never found it
         return false;
     }
     

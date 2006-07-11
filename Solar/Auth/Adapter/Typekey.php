@@ -266,8 +266,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * Uses $this->_msg, $this->_key, and $this->_sig as the data
      * sources.
      * 
-     * @author Daiji Hirata <hirata@php.net>
-     * 
      * @return bool True if the message signature is verified using the
      * DSA public key.
      * 
@@ -340,8 +338,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Uses $this->_msg, $this->_key, and $this->_sig as the data
      * sources.
-     * 
-     * @author Daiji Hirata <hirata@php.net>
      * 
      * @return bool True if the message signature is verified using the
      * DSA public key.

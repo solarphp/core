@@ -498,7 +498,7 @@ class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    public function assertRegexp($actual, $expect)
+    public function assertRegex($actual, $expect)
     {
         $this->_assert_count ++;
         if (! preg_match($expect, $actual)) {
@@ -526,7 +526,7 @@ class Solar_Test extends Solar_Base {
      * @return bool The assertion result.
      * 
      */
-    public function assertNotRegexp($actual, $expect)
+    public function assertNotRegex($actual, $expect)
     {
         $this->_assert_count ++;
         if (preg_match($expect, $actual)) {

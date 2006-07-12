@@ -47,8 +47,7 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
- * @author Paul M. Jones <pmjones@mashery.com> Update to PHP5 and 
- * integration into Solar.
+ * @author Paul M. Jones <pmjones@mashery.com>
  *
  */
 class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {

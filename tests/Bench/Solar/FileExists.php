@@ -14,6 +14,7 @@ class Bench_Solar_FileExists extends Solar_Test_Bench {
     
     public function benchExplodeInclPath()
     {
+        clearstatcache();
         $path = explode(PATH_SEPARATOR, ini_get('include_path'));
         foreach ($path as $dir) {
         
@@ -38,6 +39,8 @@ class Bench_Solar_FileExists extends Solar_Test_Bench {
     
     public function benchNoExplodeInclPath()
     {
+        clearstatcache();
+        
         $shortpath = str_replace('.' . PATH_SEPARATOR, '', ini_get('include_path'));
     
         if (strpos($shortpath, PATH_SEPARATOR) === false) {

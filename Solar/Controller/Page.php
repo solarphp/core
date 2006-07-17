@@ -278,37 +278,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // postrun hook
         $this->_postRun();
         
-        // return a rendered view
-        return $this->_render();
-    }
-    
-    /**
-     * 
-     * Executes the requested action and displays its output.
-     * 
-     * @param string $spec The action specification string, e.g.:
-     * "tags/php+framework" or "user/pmjones/php+framework?page=3"
-     * 
-     * @return void
-     * 
-     */
-    public function display($spec = null)
-    {
-        echo $this->fetch($spec);
-    }
-    
-    /**
-     * 
-     * Renders the view based on page properties.
-     * 
-     * @return string The results of the action + view + layout.
-     * 
-     */
-    protected function _render()
-    {
         // get a view object and assign variables
         $view = $this->_viewInstance();
         $view->assign($this);
+        $this->_preView($view);
         
         // are we using a layout?
         if (! $this->_layout) {
@@ -324,12 +297,28 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // get a layout object and assign properties of the view
             $layout = $this->_layoutInstance();
             $layout->assign($view);
+            $this->_preLayout($layout);
             
             // assign the view output and render the layout
             $layout->assign($this->_layout_var, $output);
             return $layout->fetch($this->_layout . '.php');
             
         }
+    }
+    
+    /**
+     * 
+     * Executes the requested action and displays its output.
+     * 
+     * @param string $spec The action specification string, e.g.:
+     * "tags/php+framework" or "user/pmjones/php+framework?page=3"
+     * 
+     * @return void
+     * 
+     */
+    public function display($spec = null)
+    {
+        echo $this->fetch($spec);
     }
     
     /**
@@ -427,7 +416,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * # Solar_View_Helper_ (this is part of Solar_View to begin with)
      * 
      * @return Solar_View
-     * @return Solar_View
      * 
      */
     protected function _layoutInstance()
@@ -472,17 +460,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // done!
         return $view;
-    }
-    
-    /**
-     * 
-     * Hook for extended setup behaviors.
-     * 
-     * @return void
-     * 
-     */
-    protected function _setup()
-    {
     }
     
     /**
@@ -538,46 +515,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (! $this->_action) {
             $this->_action = $this->_action_default;
         }
-    }
-    
-    /**
-     * 
-     * Executes after collection but before the first action.
-     * 
-     */
-    protected function _preRun()
-    {
-    }
-    
-    /**
-     * 
-     * Executes just before each action.
-     * 
-     * @return void
-     * 
-     */
-    protected function _preAction()
-    {
-    }
-    
-    /**
-     * 
-     * Executes just after each action.
-     * 
-     * @return void
-     * 
-     */
-    protected function _postAction()
-    {
-    }
-    
-    /**
-     * 
-     * Executes after the last action and before rendering.
-     * 
-     */
-    protected function _postRun()
-    {
     }
     
     /**
@@ -668,13 +605,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Forwards internally to another action.
+     * Forwards internally to another action, using pre- and post-
+     * action hooks, and resets $this->_view to the requested action.
      * 
-     * Note that this inserts the TAINTED user input from $this->_info
-     * as the action method parameters; your action methods should
-     * sanitize these values appropriately.
-     * 
-     * Also resets $this->_view to the requested action name.
+     * You should generally use "return $this->_forward(...)" instead
+     * of just $this->_forward; otherwise, script execution will come
+     * back to where you called the forwarding.
      * 
      * @param string $action The action name.
      * 
@@ -769,6 +705,93 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $word = str_replace(' ', '', $word);
         $word[0] = strtolower($word[0]);
         return $word;
+    }
+    
+    
+    // -----------------------------------------------------------------
+    // 
+    // Behavior hooks.
+    // 
+    // -----------------------------------------------------------------
+    
+    
+    /**
+     * 
+     * Executes after construction.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
+    }
+    
+    /**
+     * 
+     * Executes before the first action.
+     * 
+     */
+    protected function _preRun()
+    {
+    }
+    
+    /**
+     * 
+     * Executes before each action.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preAction()
+    {
+    }
+    
+    /**
+     * 
+     * Executes after each action.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postAction()
+    {
+    }
+    
+    /**
+     * 
+     * Executes after the last action.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postRun()
+    {
+    }
+    
+    /**
+     * 
+     * Pre-processing for rendering the page view.
+     * 
+     * @param $view Solar_View The Solar_View object for the page.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preView($view)
+    {
+    }
+    
+    /**
+     * 
+     * Pre-processing for rendering the layout.
+     * 
+     * @param Solar_View The Solar_View object for the layout.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preLayout($layout)
+    {
     }
 }
 ?>

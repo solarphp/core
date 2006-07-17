@@ -495,7 +495,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @return void
      * 
      */
-    final protected function _autoSetup()
+    protected function _autoSetup()
     {
         // make sure there's a table name.  defaults to the
         // part after the last underscore, then converts camelCaps 
@@ -649,7 +649,7 @@ class Solar_Sql_Table extends Solar_Base {
      * successfully created.
      * 
      */
-    final protected function _autoCreate()
+    protected function _autoCreate()
     {
         // is a table with the same name already there?
         $tmp = $this->_sql->listTables();
@@ -685,8 +685,29 @@ class Solar_Sql_Table extends Solar_Base {
             }
         }
         
+        // post-creation
+        try {
+            $this->_postCreate();
+        } catch (Exception $e) {
+            /** @todo Does this throw a TableNotCreated exception too? */
+            // cancel the whole deal.
+            $this->_sql->dropTable($this->_name);
+            throw $e;
+        }
+        
         // creation of the table and its indexes is complete
         return true;
+    }
+    
+    /**
+     * 
+     * Additional table-creation tasks, such as inserting rows.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postCreate()
+    {
     }
     
     /**
@@ -701,7 +722,7 @@ class Solar_Sql_Table extends Solar_Base {
      * @todo Better error codes and exceptions?
      * 
      */
-    final protected function _autoValid(&$data)
+    protected function _autoValid(&$data)
     {
         // object methods for validation
         $valid = Solar::factory('Solar_Valid');

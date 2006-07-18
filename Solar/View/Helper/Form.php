@@ -38,8 +38,6 @@ Solar::loadClass('Solar_View_Helper');
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @todo Rename to FormLayout? FormRender?
- * 
  */
 class Solar_View_Helper_Form extends Solar_View_Helper {
     

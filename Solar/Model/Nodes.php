@@ -170,18 +170,17 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'size'    => 255,
         );
         
-        // summary description of the node
-        $this->_col['summ'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
-        
         // mime type of the body
         $this->_col['mime'] = array(
             'type'    => 'varchar',
             'size'    => 64,
             'default' => 'text/plain',
             'valid'   => 'mimeType',
+        );
+        
+        // summary description of the node
+        $this->_col['summ'] = array(
+            'type'    => 'clob',
         );
         
         // the actual node content

@@ -1,5 +1,0 @@
-//Inherited from Solar_Controller_Page::$_info.//
-
-protected array $_info
-
-Application request parameters collected from the URI pathinfo.

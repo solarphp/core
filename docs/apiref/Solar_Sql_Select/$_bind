@@ -1,3 +1,0 @@
-protected array $_bind
-
-Data to bind into the query as key => value pairs.

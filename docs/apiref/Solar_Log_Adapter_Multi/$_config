@@ -1,8 +1,0 @@
-protected array $_config
-
-User-defined configuration values.
-
-Keys are:
-
-: \\adapters\\ : (array) An array of arrays, where each sub-array
-is a separate adapter configuration.

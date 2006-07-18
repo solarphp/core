@@ -1,7 +1,0 @@
-protected array $_config
-
-User-provided configuration.
-
-Config keys are:
-
-: \\life\\ : (int) The lifetime of each cache entry in seconds.

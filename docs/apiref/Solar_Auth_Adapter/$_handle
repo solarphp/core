@@ -1,3 +1,0 @@
-protected string $_handle
-
-The unique user handle as derived from the authentication source.

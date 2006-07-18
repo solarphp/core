@@ -1,3 +1,0 @@
-//Inherited from Exception::$message.//
-
-protected  $message

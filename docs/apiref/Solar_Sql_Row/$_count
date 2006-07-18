@@ -1,5 +1,0 @@
-//Inherited from Solar_Struct::$_count.//
-
-protected int $_count
-
-Countable: cached value for count().

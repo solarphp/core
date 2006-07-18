@@ -1,5 +1,0 @@
-//Inherited from Solar_Base::$_config.//
-
-protected array $_config
-
-User-provided configuration values.

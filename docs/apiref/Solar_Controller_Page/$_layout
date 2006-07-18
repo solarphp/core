@@ -1,7 +1,0 @@
-protected string $_layout
-
-The name of the layout to use for the view, minus the .
-
-hp suffix.
-
-Default is 'twoColRight'.

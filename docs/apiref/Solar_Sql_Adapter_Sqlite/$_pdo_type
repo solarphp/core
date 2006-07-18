@@ -1,3 +1,0 @@
-protected string $_pdo_type
-
-The PDO adapter type.

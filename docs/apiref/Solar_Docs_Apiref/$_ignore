@@ -1,4 +1,0 @@
-protected string $_ignore
-
-When generating log notices, ignore these class methods and
-properties.

@@ -1,3 +1,0 @@
-protected bool $_status
-
-The validation status of the form.

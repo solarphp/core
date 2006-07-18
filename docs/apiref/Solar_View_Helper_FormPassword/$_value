@@ -1,5 +1,0 @@
-//Inherited from Solar_View_Helper_FormElement::$_value.//
-
-protected string $_value
-
-The form element value.

@@ -1,5 +1,0 @@
-//Inherited from Solar_Content_Abstract::$_order.//
-
-protected string $_order
-
-With fetchAll(), use this as the default order.

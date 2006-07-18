@@ -1,3 +1,0 @@
-protected Solar_Debug_Var $_debug
-
-Variable dumper for debug output.

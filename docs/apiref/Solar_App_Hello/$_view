@@ -1,5 +1,0 @@
-//Inherited from Solar_Controller_Page::$_view.//
-
-protected string $_view
-
-The name of the view to be rendered after all actions.

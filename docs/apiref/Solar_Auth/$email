@@ -1,6 +1,0 @@
-public string $email
-
-Convenience reference to $_SESSION['Solar_Auth']['email'].
-
-This is the email address of the currently authenticated user. 
-May or may not be populated by the adapter.

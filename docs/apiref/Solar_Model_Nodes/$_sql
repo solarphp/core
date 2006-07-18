@@ -1,5 +1,0 @@
-//Inherited from Solar_Sql_Table::$_sql.//
-
-protected Solar_Sql $_sql
-
-A Solar_Sql dependency object.

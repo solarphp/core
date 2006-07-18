@@ -1,7 +1,0 @@
-protected  $_config
-
-User-defined configuration values.
-
-Keys are:
-
-: \\data\\ : (array) Key-value pairs.

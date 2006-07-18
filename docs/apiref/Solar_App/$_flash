@@ -1,5 +1,0 @@
-//Inherited from Solar_Controller_Page::$_flash.//
-
-protected Solar_Flash $_flash
-
-Flash-messaging object.

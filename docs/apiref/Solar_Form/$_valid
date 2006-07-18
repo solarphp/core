@@ -1,3 +1,0 @@
-protected array $_valid
-
-The array of validations for the form elements.

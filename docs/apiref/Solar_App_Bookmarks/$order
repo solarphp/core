@@ -1,3 +1,0 @@
-public string $order
-
-The requested bookmark order (subj, tags, created, etc).

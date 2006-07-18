@@ -1,9 +1,0 @@
-protected array $_config
-
-User-provided configuration.
-
-Keys are:
-
-: \\sql\\ : => (dependency) A Solar_Sql dependency object.
-
-: \\locale\\ : => (string) Path to locale files.

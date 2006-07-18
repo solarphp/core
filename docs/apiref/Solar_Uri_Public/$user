@@ -1,5 +1,0 @@
-//Inherited from Solar_Uri::$user.//
-
-public string $user
-
-The username, if any.

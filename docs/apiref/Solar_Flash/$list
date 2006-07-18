@@ -1,3 +1,0 @@
-public array $list
-
-Convenience reference to $_SESSION['Solar_Flash'][$this->_class].

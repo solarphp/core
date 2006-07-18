@@ -1,7 +1,0 @@
-//Inherited from Solar_Uri::$path.//
-
-public string $path
-
-The path portion (e.
-
-., 'path/to/index.php').

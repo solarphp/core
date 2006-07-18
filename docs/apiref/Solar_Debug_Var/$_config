@@ -1,8 +1,0 @@
-protected array $_config
-
-User-provided configuration.
-
-Keys are:
-
-: \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
-  or 'text' for plain text.  Default autodetects by SAPI version.

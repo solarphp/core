@@ -1,7 +1,0 @@
-//Inherited from Solar_Uri::$_encode_path.//
-
-protected array $_encode_path
-
-Url-encode only these characters in path elements.
-
-Characters are ' ' (space), '/', '?', '&', and '#'.

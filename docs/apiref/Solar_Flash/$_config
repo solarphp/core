@@ -1,8 +1,0 @@
-protected array $_config
-
-User-defined configuration values.
-
-Keys are:
-
-: \\class\\ : Flash messages are for this class.  Default is
-  'Solar'.

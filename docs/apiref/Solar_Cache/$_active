@@ -1,3 +1,0 @@
-protected bool $_active
-
-Whether or not the cache is active.

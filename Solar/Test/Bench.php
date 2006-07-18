@@ -35,14 +35,18 @@ class Solar_Test_Bench extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\loops\\ : (int) The number of times the benchmarking methods
-     *   should be run; default 1000.
+     * : \\loop\\ : (int) The number of times the benchmarking methods
+     *   should be run when using loop().  Default 1000.
+     * 
+     * : \\time\\ : (int) The time in minutes each method should run
+     *   when using time().  Default 1.
      * 
      * @var array
      * 
      */
     protected $_Solar_Test_Bench = array(
-        'loops'   => 1000,
+        'loop'   => 1000,
+        'time'   => 1,
     );
     
     /**
@@ -69,29 +73,22 @@ class Solar_Test_Bench extends Solar_Base {
     
     /**
      * 
-     * Runs all the benchmark methods in this class.
+     * Runs all the benchmark methods a certain number of loops.
      * 
-     * @param int $loops Run benchmark methods this number of times.
+     * @param int $loops Loop benchmark methods this number of times.
      * 
-     * @return string The Solar_Debug_Timer profile table.
+     * @return string The Solar_Debug_Timer profile table; smaller diffs
+     * are better.
      * 
      */
-    public function run($loops = null)
+    public function loop($loops = null)
     {
         if (empty($loops)) {
             $loops = $this->_config['loops'];
         }
         
         // get the list of bench*() methods
-        $reflect = new ReflectionClass($this);
-        $bench = array();
-        $methods = $reflect->getMethods();
-        foreach ($methods as $method) {
-            $name = $method->getName();
-            if (substr($name, 0, 5) == 'bench') {
-                $bench[] = $name;
-            }
-        }
+        $bench = $this->_getMethods();
         
         // get a timer object
         $timer = Solar::factory(
@@ -123,6 +120,79 @@ class Solar_Test_Bench extends Solar_Base {
         
         // done!
         return $timer->fetch();
+    }
+    
+    /**
+     * 
+     * Runs all the benchmark methods a certain number of minutes.
+     * 
+     * @param int $mins Run each method for this many minutes.
+     * 
+     * @return string The number of times each method ran in the
+     * allotted time; larger numbers are better.
+     * 
+     */
+    public function time($mins = null)
+    {
+        if (empty($mins)) {
+            $mins = $this->_config['mins'];
+        }
+        
+        // eventual report text
+        $report = '';
+        
+        // get the list of bench*() methods
+        $bench = $this->_getMethods();
+        
+        // pre-run
+        $this->setup();
+        
+        // run each benchmark method...
+        $list = array();
+        foreach ($bench as $method) {
+            
+            $secs = $mins * 60;
+            $stop = time() + $secs;
+            set_time_limit($secs + 1);
+            
+            // ... for the number of minutes specified.
+            $count = 0;
+            while (time() <= $stop) {
+                $this->$method();
+                ++ $count;
+            }
+            
+            // save the report line
+            $report .= "$method ran $count iterations in $mins minutes "
+                     . sprintf("(%d/second)\n", $count / $mins / 60);
+        }
+        
+        // post-run
+        $this->teardown();
+        
+        // done!
+        return $report;
+    }
+    
+    /**
+     * 
+     * Returns a list of benchmark methods in this class.
+     * 
+     * @return array An array of benchmark method names.
+     * 
+     */
+    protected function _getMethods()
+    {
+        $reflect = new ReflectionClass($this);
+        $list = array();
+        $methods = $reflect->getMethods();
+        foreach ($methods as $method) {
+            $name = $method->getName();
+            if (substr($name, 0, 5) == 'bench') {
+                $list[] = $name;
+            }
+        }
+        return $list;
     }
 }
 

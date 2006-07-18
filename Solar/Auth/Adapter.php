@@ -113,6 +113,15 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
+     * The most-recent error code.
+     * 
+     * @var string
+     * 
+     */
+    protected $_err = null;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -213,6 +222,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isLoginValid()
     {
+        $this->_err = null;
         $method = strtolower($this->_common['source']);
         $submit = Solar::$method($this->_common['source_submit']);
         $this->reset();
@@ -235,11 +245,24 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function reset()
     {
-        $this->_handle = null;
-        $this->_passwd = null;
-        $this->_email  = null;
-        $this->_moniker   = null;
-        $this->_uri    = null;
+        $this->_err     = null;
+        $this->_handle  = null;
+        $this->_passwd  = null;
+        $this->_email   = null;
+        $this->_moniker = null;
+        $this->_uri     = null;
+    }
+    
+    /**
+     * 
+     * Returns the most recent error code.
+     * 
+     * @return string
+     * 
+     */
+    public function getErrCode()
+    {
+        return $this->_err;
     }
     
     /**

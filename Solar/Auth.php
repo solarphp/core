@@ -310,7 +310,14 @@ class Solar_Auth extends Solar_Base {
                 $this->email   = $this->_adapter->getEmail();
                 $this->uri     = $this->_adapter->getUri();
             } else {
-                $this->reset('WRONG');
+                $code = $this->_adapter->getErrCode();
+                if ($err) {
+                    // use adapter-specific error code
+                    $this->reset($code);
+                } else {
+                    // generic error
+                    $this->reset('WRONG');
+                }
             }
             
         }

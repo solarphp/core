@@ -65,10 +65,18 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      *   within this many seconds of "now". Default is 10 seconds, to
      *   allow for long network latency periods.
      * 
+     * : \\cache\\ : (dependency) A Solar_Cache dependency for storing 
+     *   the TypeKey public key data.
+     * 
+     * : \\cache_key\\ : (string) When using a cache, the entry key for
+     *   the TypeKey public key data.  Default 'typekey_pubkey'.
+     * 
      */
     protected $_Solar_Auth_Adapter_Typekey = array(
-        'token'  => null,
-        'window' => 10,
+        'token'     => null,
+        'window'    => 10,
+        'cache'     => null,
+        'cache_key' => 'typekey_pubkey',
     );
     
     /**
@@ -119,6 +127,15 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     
     /**
      * 
+     * Cache for the TypeKey public key data.
+     * 
+     * @var Solar_Cache
+     * 
+     */
+    protected $_cache;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -138,6 +155,10 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         }
         
         parent::__construct($config);
+        
+        if ($this->_config['cache']) {
+            $this->_cache = Solar::dependency($this->_config['cache']);
+        }
     }
     
     /**
@@ -181,12 +202,29 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      */
     protected protected function _fetchKeyData()
     {
+        $cache_key = $this->_config['cache_key'];
+        if ($this->_cache) {
+            $info = $this->_cache->get($cache_key);
+            if ($info) {
+                // cache hit
+                return $info;
+            }
+        }
+        
+        // cache miss, or no cache.  get from typekey.
         $src = file_get_contents('http://www.typekey.com/extras/regkeys.txt');
         $lines = explode(' ', trim($src));
         foreach ($lines as $line) {
             $val = explode('=', $line);
             $info[$val[0]] = $val[1];
         }
+        
+        // save in the cache?
+        if ($this->_cache) {
+            $this->_cache->save($cache_key, $info);
+        }
+        
+        // done
         return $info;
     }
     
@@ -206,6 +244,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      */
     public function isLoginValid()
     {
+        // no errors yet ;-)
+        $this->_err = null;
+        
         // get data from the login.
         $email = $_GET['email'];
         $name  = $_GET['name'];
@@ -225,25 +266,31 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         // get the TypeKey public key data
         $this->_key = $this->_fetchKeyData();
         
-        // verify credentials and time-window
-        $window = time() - $ts <= $this->_config['window'];
-        $verify = $this->_verify();
+        // by default, not valid
+        $valid = false;
         
-        // are both conditions matched?
-        $result = $window && $verify;
-        if ($result) {
-            // save user data
+        // verification routine
+        if (time() - $ts > $this->_config['window']) {
+            // not within the allowed time window for verification.
+            // possible replay attack.
+            $this->reset();
+            $this->_err = 'ERR_TIME_WINDOW';
+            $valid = false;
+        } elseif ($this->_verify()) {
+            // verified, save user data
             $this->_handle  = $name;  // username
             $this->_email   = $email; // email
             $this->_moniker = $nick;  // display name
             $this->_uri     = null;   // not supported by TypeKey
+            $valid = true;
         } else {
-            // clear out user data
+            // not verified, clear out user data
             $this->reset();
+            $valid = false;
         }
         
         // done!
-        return $result;
+        return $valid;
     }
     
     /**

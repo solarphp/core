@@ -204,7 +204,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     {
         $cache_key = $this->_config['cache_key'];
         if ($this->_cache) {
-            $info = $this->_cache->get($cache_key);
+            $info = $this->_cache->fetch($cache_key);
             if ($info) {
                 // cache hit
                 return $info;

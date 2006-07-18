@@ -324,7 +324,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         $key = $this->_key;
         $sig = $this->_sig;
         
-        list($r_sig, $s_sig) = explode(":", $sig );
+        list($r_sig, $s_sig) = explode(":", $sig);
         $r_sig = base64_decode($r_sig);
         $s_sig = base64_decode($s_sig);
         
@@ -468,14 +468,14 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Inverts two values using bcmath functions.
      * 
-     * @param string $x
+     * @param string $x First value.
      * 
-     * @param string $y
+     * @param string $y Second value.
      *
      * @return string The inverse of $x and $y.
      *
      */
-    protected function _bc_invert ($x, $y) 
+    protected function _bc_invert($x, $y) 
     {
         while (bccomp($x, 0)<0) { 
             $x = bcadd($x, $y);
@@ -497,14 +497,14 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * Finds the extended greatest-common-denominator of two values
      * using bcmath functions.
      * 
-     * @param string $x
+     * @param string $x First value.
      * 
-     * @param string $y
+     * @param string $y Second value.
      *
      * @return array Extended GCD of $x and $y.
      *
      */
-    protected function _bc_exgcd ($x, $y) 
+    protected function _bc_exgcd($x, $y) 
     {
         $a0 = 1; $a1 = 0;
         

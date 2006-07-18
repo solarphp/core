@@ -384,7 +384,9 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * Fetch one node by arbitrary WHERE clause.
      * 
-     * @param string|array WHERE conditions.
+     * @param string|array $where WHERE conditions.
+     * 
+     * @param string $order Optional ORDER clause.
      * 
      * @return Solar_Sql_Row
      * 

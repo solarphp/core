@@ -792,7 +792,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Use this to pre-process the Solar_View object, or to manipulate
      * controller properties with view helpers.
      * 
-     * @param $view Solar_View The Solar_View object for rendering the
+     * @param Solar_View $view The Solar_View object for rendering the
      * page view script.
      * 
      * @return void

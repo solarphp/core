@@ -57,13 +57,21 @@ if (! $name) {
     exit(1);
 }
 
-// how many times?
-$loop = isset($argv[2]) ? trim($argv[2]) : null;
+// by loops or by times?
+$mins = isset($argv[3]) ? trim($argv[3]) : null;
+if ($mins == 'min' or $mins == 'mins') {
+    $method = 'time';
+} else {
+    $method = 'loop';
+}
+
+// how many?
+$spec = isset($argv[2]) ? trim($argv[2]) : null;
 
 // run it
 $class = "Bench_$name";
 $bench = Solar::factory($class);
-echo $bench->run($loop) . "\n";
+echo $bench->$method($spec) . "\n";
 
 // put the include_path back
 ini_set('include_path', $old_include_path);

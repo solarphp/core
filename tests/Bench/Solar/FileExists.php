@@ -10,6 +10,7 @@ class Bench_Solar_FileExists extends Solar_Test_Bench {
         $fp = @fopen($this->file, 'r', true);
         $ok = ($fp) ? true : false;
         @fclose($fp);
+        return $ok;
     }
     
     public function benchExplodeInclPath()

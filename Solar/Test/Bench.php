@@ -73,7 +73,7 @@ class Solar_Test_Bench extends Solar_Base {
     
     /**
      * 
-     * Runs all the benchmark methods a certain number of loops.
+     * Runs each benchmark method for a certain number of loops.
      * 
      * @param int $loops Loop benchmark methods this number of times.
      * 
@@ -124,7 +124,7 @@ class Solar_Test_Bench extends Solar_Base {
     
     /**
      * 
-     * Runs all the benchmark methods a certain number of minutes.
+     * Runs each benchmark method for a certain number of minutes.
      * 
      * @param int $mins Run each method for this many minutes.
      * 

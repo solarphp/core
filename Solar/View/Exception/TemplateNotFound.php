@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Exception.php 1186 2006-05-21 15:38:37Z pmjones $
+ * @version $Id$
  * 
  */
 

@@ -11,7 +11,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
- * @version $Id: pt_BR.php $
+ * @version $Id$
  *
  */
 return array(

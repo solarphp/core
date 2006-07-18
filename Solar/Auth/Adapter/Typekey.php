@@ -13,7 +13,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Htpasswd.php 1449 2006-07-09 01:28:55Z pmjones $
+ * @version $Id$
  * 
  */
 

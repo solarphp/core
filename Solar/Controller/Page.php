@@ -75,8 +75,8 @@ Solar::loadClass('Solar_Uri_Action');
  *   rendering
  * 
  * * Solar_Controller_Page::_render() to render the view and layout; 
- *   this in its turn calls Solar_Controller_Page::_viewInstance() for 
- *   the view object, and Solar_Controller_Page::_layoutInstance() for 
+ *   this in its turn calls Solar_Controller_Page::_getView() for 
+ *   the view object, and Solar_Controller_Page::_getLayout() for 
  *   the layout object.
  * 
  * @category Solar
@@ -272,38 +272,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // prerun hook
         $this->_preRun();
         
-        // actions
+        // action chain, with pre- and post-action hooks
         $this->_forward($this->_action, $this->_info);
         
         // postrun hook
         $this->_postRun();
         
-        // get a view object and assign variables
-        $view = $this->_viewInstance();
-        $view->assign($this);
-        $this->_preView($view);
-        
-        // are we using a layout?
-        if (! $this->_layout) {
-            
-            // no layout, just render the view.
-            return $view->fetch($this->_view . '.php');
-            
-        } else {
-            
-            // using a layout. execute the view and retain the output.
-            $output = $view->fetch($this->_view . '.php');
-            
-            // get a layout object and assign properties of the view
-            $layout = $this->_layoutInstance();
-            $layout->assign($view);
-            $this->_preLayout($layout);
-            
-            // assign the view output and render the layout
-            $layout->assign($this->_layout_var, $output);
-            return $layout->fetch($this->_layout . '.php');
-            
-        }
+        // render the view and layout, with pre- and post-render hooks
+        return $this->_render();
     }
     
     /**
@@ -319,6 +295,47 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
+    }
+    
+    /**
+     * 
+     * Renders the view with layout with pre- and post-rendering.
+     * 
+     * @return string The results of the view and layout scripts.
+     * 
+     */
+    public function _render()
+    {
+        // get a view object and assign variables
+        $view = $this->_getView();
+        $this->_preRender($view);
+        $view->assign($this);
+        
+        try {
+            $output = $view->fetch($this->_view . '.php');
+        } catch (Solar_View_Exception_TemplateNotFound $e) {
+            $view->errors[] = $this->locale('ERR_VIEW_NOT_FOUND');
+            $view->errors[] = $this->_view . '.php';
+            $output = $view->fetch('error.php');
+        }
+        
+        // are we using a layout?
+        if (! $this->_layout) {
+            
+            // no layout, just use the post-render filter on the view.
+            return $this->_postRender($output);
+            
+        } else {
+            
+            // using a layout. get a layout object and assign $this
+            // again, then assign the output on top of that.
+            $layout = $this->_getLayout();
+            $layout->assign($this);
+            $layout->assign($this->_layout_var, $output);
+            
+            // use the post-render filter on the layout.
+            return $this->_postRender($layout->fetch($this->_layout . '.php'));
+        }
     }
     
     /**
@@ -346,7 +363,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @return Solar_View
      * 
      */
-    protected function _viewInstance()
+    protected function _getView()
     {
         $view = Solar::factory('Solar_View');
         $class = get_class($this);
@@ -418,9 +435,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @return Solar_View
      * 
      */
-    protected function _layoutInstance()
+    protected function _getLayout()
     {
-        $view = Solar::factory('Solar_View');
+        $layout = Solar::factory('Solar_View');
         $class = get_class($this);
         
         // stack of helper classes
@@ -436,7 +453,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'Layout';
         
         // add the template paths to the view object
-        $view->addTemplatePath($template);
+        $layout->addTemplatePath($template);
         
         // find the class-level helpers (Vendor_App_Example_Helper)
         $helper[] = $class . '_Helper';
@@ -453,13 +470,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // add the helper class names to the view object
-        $view->addHelperClass($helper);
+        $layout->addHelperClass($helper);
         
         // set the locale class for the getText helper
-        $view->getTextRaw("$class::");
+        $layout->getTextRaw("$class::");
         
         // done!
-        return $view;
+        return $layout;
     }
     
     /**
@@ -659,7 +676,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_postAction();
         
         // set the current action on exit so that $this->_action is
-        // always the **first** action requested.
+        // always the **first** action requested when we finally exit.
         $this->_action = $action;
     }
     
@@ -770,28 +787,37 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Pre-processing for rendering the page view.
+     * Executes before rendering the page view and layout.
      * 
-     * @param $view Solar_View The Solar_View object for the page.
+     * Use this to pre-process the Solar_View object, or to manipulate
+     * controller properties with view helpers.
+     * 
+     * @param $view Solar_View The Solar_View object for rendering the
+     * page view script.
      * 
      * @return void
      * 
      */
-    protected function _preView($view)
+    protected function _preRender($view)
     {
     }
     
     /**
      * 
-     * Pre-processing for rendering the layout.
+     * Executes after rendering the page view and layout.
      * 
-     * @param Solar_View The Solar_View object for the layout.
+     * Use this to do a final filter or maniuplation of the output text
+     * from the view and layout scripts.  By default, it leaves the 
+     * rendered output alone and returns it as-is.
      * 
-     * @return void
+     * @param string $output The output from the rendered view and layout.
+     * 
+     * @return string The filtered output.
      * 
      */
-    protected function _preLayout($layout)
+    protected function _postRender($output)
     {
+        return $output;
     }
 }
 ?>

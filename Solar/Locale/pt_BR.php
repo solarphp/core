@@ -9,6 +9,8 @@
  * 
  * @author Marcelo Santos Araujo <marcelosaraujo@gmail.com>
  * 
+ * @author Rodrigo Moraes <http://tipos.org>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -23,7 +25,8 @@ return array(
     'FORMAT_DATE'                => '%d/%m/%Y', // strftime(): Mar 19, 2005
     'FORMAT_TIME'                => '%R', // strftime: 12-hour am/pm
     
-    // submit operations         
+    // page submissions
+    'SUBMIT_ADD'                 => 'Adicionar',	
     'SUBMIT_CANCEL'              => 'Cancelar',
     'SUBMIT_CREATE'              => 'Criar',
     'SUBMIT_DELETE'              => 'Remover',
@@ -60,7 +63,6 @@ return array(
     'VALID_EMAIL'                => 'Por favor, entre com um endereço de email válido.',
     'VALID_INKEYS'               => 'Por favor, selecione um valor diferente.',
     'VALID_INLIST'               => 'Por favor, selecione um valor diferente.',
-    'VALID_SCOPE'              => 'Este valor náo está contido em um escopo apropriado.',
     'VALID_INTEGER'              => 'Por favor, utilize apenas números inteiros.',
     'VALID_ISODATE'              => 'Por favor, entre com uma data no formato "yyyy-mm-dd".',
     'VALID_ISOTIMESTAMP'         => 'Por favor, entre com a data e o tempo (data-tempo) no formato "yyyy-mm-ddThh:ii:ss".',
@@ -71,6 +73,9 @@ return array(
     'VALID_MINLENGTH'            => 'Por favor, entre com uma string maior.',
     'VALID_NOTZERO'              => 'Este valor não pode ser zero.',
     'VALID_NOTBLANK'             => 'Este valor não pode ser deixado em branco.',
+    'VALID_RANGE'                => 'Este valor está fora dos limites permitidos.',
+    'VALID_RANGELENGTH'          => 'Este valor é muito curto ou muito longo.',
+    'VALID_SCOPE'                => 'Este valor náo está contido em um escopo apropriado.',
     'VALID_SEPWORDS'             => 'Por favor, utilize apenas letras (A-Z), números (0-9), underscores (_), e separadores.',
     'VALID_URI'                  => 'Por favor, entre com um endereço web válido.',
     'VALID_WORD'                 => 'Por favor, utilize apenas letras (A-Z), números (0-9), e underscores (_).',
@@ -86,8 +91,11 @@ return array(
     'TEXT_AUTH_USERNAME'         => 'Logado como',
     
     // generic form element labels  
-    'LABEL_SUBMIT'               => 'Acão',
+    'LABEL_SUBMIT'               => 'Ação',
     'LABEL_HANDLE'               => 'Usuário',
     'LABEL_PASSWD'               => 'Senha',
+    'LABEL_EMAIL'                => 'E-mail',
+    'LABEL_MONIKER'              => 'Nome',
+    'LABEL_URI'                  => 'Site',
 );
 ?>

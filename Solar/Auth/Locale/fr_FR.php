@@ -19,7 +19,7 @@ return array(
     'ANON'    => '',
     'LOGOUT'  => 'Merci pour votre visite.',
     'WRONG'   => 'Votre identifiant et votre mot de passe ne corresmondent pas. Merci de recommencer.',
-    'EXPIRED' => 'Votre session a expiré.  Merci de vous reconnecter.',
-    'IDLED'   => 'Votre session a été inutilisée pendant trop longtemps.  Merci de vous reconnecter.'
+    'EXPIRED' => 'Votre session a expirÃ©.  Merci de vous reconnecter.',
+    'IDLED'   => 'Votre session a Ã©tÃ© inutilisÃ©e pendant trop longtemps.  Merci de vous reconnecter.'
 );
 ?>

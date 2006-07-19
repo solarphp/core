@@ -24,13 +24,19 @@
  * 
  * * Construction-time reading of [Main:ConfigFile config file] options 
  *   for itself, and merging of those options with any options passed   
- *   for instantation, along with the class-defined $_config defaults,  
+ *   for instantation, along with the class-defined config defaults,  
  *   into the Solar_Base::$_config property.
  * 
  * * A Solar_Base::locale() convenience method to return locale strings.
  * 
  * * A Solar_Base::_exception() convenience method to generate
  *   exception objects with translated strings from the locale file
+ * 
+ * Note that you do not define config defaults in $_config directly; 
+ * instead, you use a protected property named for the class, with an
+ * underscore prefix.  For exmple, a "Vendor_Class_Name" class would 
+ * define the default config array in "$_Vendor_Class_Name".  This 
+ * convention lets child classes inherit parent config keys and values.
  * 
  * @category Solar
  * 
@@ -43,6 +49,14 @@ abstract class Solar_Base {
      * 
      * Collection point for configuration values.
      * 
+     * Note that you do not define config defaults in $_config directly; 
+     * instead, you use a protected property named for the class, with 
+     * an underscore prefix.
+     * 
+     * For exmple, a "Vendor_Class_Name" class would define the default 
+     * config array in "$_Vendor_Class_Name".  This convention lets 
+     * child classes inherit parent config keys and values.
+     * 
      * @var array
      * 
      */
@@ -52,9 +66,8 @@ abstract class Solar_Base {
      * 
      * Constructor.
      * 
-     * If the $config param is an array, it is merged with the default
-     * $_config property array and any values from the Solar.config.php
-     * file.
+     * If the $config param is an array, it is merged with the class
+     * config array and any values from the Solar.config.php file.
      * 
      * If the $config param is a string, config is loaded from that file
      * and merged with values from Solar.config.php file.

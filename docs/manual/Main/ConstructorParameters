@@ -6,15 +6,18 @@ Most classes in the PHP world use a sequential set of parameters for constructor
 
 <code type="php">
 class Normal_Example {
+
     public $a = null;
     public $b = null;
     public $c = null;
+    
     public function __construct($a, $b, $c)
     {
         $this->a = $a;
         $this->b = $b;
         $this->c = $c;
     }
+
 }
 
 $example = new Normal_Example('one', 'two', 'three')
@@ -24,11 +27,16 @@ In comparison, Solar classes can be instantiated like this:
 
 <code type="php">
 class Solar_Test_Example extends Solar_Base {
-    protected $_config = array(
+
+    // note that the config property is named for the class
+    // with an underscore prefix.  this lets us collect the
+    // parent config defaults as well.
+    protected $_Solar_Test_Example = array(
         'a' => null,
         'b' => null,
         'c' => null,
     );
+
 }
 
 $config = array(

@@ -4,7 +4,7 @@ The [Solar_Base::HomePage Solar_Base] class is a lightweight base class from whi
 
 ||~ Description ||~ See Also ||
 || A standard constructor that reads from the ConfigFile then combines the instantiation-time ConstructorParameters with the default property values for the class. || Solar_Base::__construct() ||
-|| A single property to hold the initial configuration of the class. || Solar_Base::$_config ||
+|| A single property to collect configuration values for the class and its parents. || Solar_Base::$_config ||
 || A method for finding and returning exceptions with localized message text. || Solar_Base::_exception() ||
 || A method for finding and returning localized text strings. || Solar_Base::locale() ||
 || A method for finding the API version of the class. || Solar_Base::apiVersion() ||

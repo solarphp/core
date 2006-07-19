@@ -52,14 +52,6 @@
  
  * Solar::pathinfo()
 
-* Read-Once Flashes
-
- * Solar::setFlash()
- 
- * Solar::addFlash()
- 
- * Solar::getFlash()
-
 * File-Related
 
  * Solar::fileExists()

@@ -1,3 +1,0 @@
-protected Solar_Uri_Public $_uri
-
-Internal URI object for creating links.

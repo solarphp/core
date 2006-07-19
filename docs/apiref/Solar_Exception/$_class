@@ -1,3 +1,0 @@
-protected array $_class
-
-Class where the exception originated.

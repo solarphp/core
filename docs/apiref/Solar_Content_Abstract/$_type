@@ -1,3 +1,0 @@
-protected string $_type
-
-The node type this class is intended to work with.

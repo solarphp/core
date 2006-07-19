@@ -1,3 +1,0 @@
-protected string $_order
-
-With fetchAll(), use this as the default order.

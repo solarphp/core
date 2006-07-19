@@ -1,5 +1,0 @@
-//Inherited from Solar_Sql_Table::$_name.//
-
-protected string $_name
-
-The table name.

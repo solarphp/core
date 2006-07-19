@@ -1,3 +1,0 @@
-protected Solar_Log_Adapter $_adapter
-
-The internal Solar_Log_Adapter instance.

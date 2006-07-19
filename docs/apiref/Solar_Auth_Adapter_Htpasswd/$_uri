@@ -1,5 +1,0 @@
-//Inherited from Solar_Auth_Adapter::$_uri.//
-
-protected string $_uri
-
-The user URI as derived from the authentication source.

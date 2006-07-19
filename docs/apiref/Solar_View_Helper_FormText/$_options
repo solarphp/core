@@ -1,5 +1,0 @@
-//Inherited from Solar_View_Helper_FormElement::$_options.//
-
-protected array $_options
-
-Options for checkbox, select, and radio elements.

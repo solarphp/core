@@ -1,3 +1,0 @@
-protected array $_data
-
-The row data in colname => value format.

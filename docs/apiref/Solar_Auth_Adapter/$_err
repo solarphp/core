@@ -1,3 +1,0 @@
-protected string $_err
-
-The most-recent error code.

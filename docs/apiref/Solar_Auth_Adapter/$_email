@@ -1,3 +1,0 @@
-protected string $_email
-
-The user email address as derived from the authentication source.

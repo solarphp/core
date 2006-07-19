@@ -1,3 +1,0 @@
-protected string $_query
-
-Application request parameters collected from the URI query string.

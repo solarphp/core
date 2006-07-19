@@ -1,3 +1,0 @@
-//Inherited from Exception::$line.//
-
-protected  $line

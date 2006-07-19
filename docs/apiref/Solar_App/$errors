@@ -1,3 +1,0 @@
-public array $errors
-
-Error messages, usually for the 'error' action/view.

@@ -1,5 +1,0 @@
-//Inherited from Solar_Sql_Table::$_paging.//
-
-protected int $_paging
-
-The numer of rows per page when selecting.

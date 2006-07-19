@@ -1,9 +1,0 @@
-public array $parents
-
-Parent hierarchy for all classes.
-
-We keep track of this so configs, locale strings, etc. can be
-inherited properly from parent classes.
-
-Although this property is public, you generally shouldn't need
-to manipulate it in any way.

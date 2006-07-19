@@ -1,3 +1,0 @@
-public string $layout_title
-
-The <title> tag value for the layout <head> block.

@@ -1,5 +1,0 @@
-//Inherited from Solar_Exception::$_info.//
-
-protected array $_info
-
-User-defined information array.

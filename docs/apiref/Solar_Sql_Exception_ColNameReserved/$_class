@@ -1,5 +1,0 @@
-//Inherited from Solar_Exception::$_class.//
-
-protected array $_class
-
-Class where the exception originated.

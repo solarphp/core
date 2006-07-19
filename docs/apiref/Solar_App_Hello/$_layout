@@ -1,5 +1,0 @@
-//Inherited from Solar_App::$_layout.//
-
-protected string $_layout
-
-Default layout to be rendered.

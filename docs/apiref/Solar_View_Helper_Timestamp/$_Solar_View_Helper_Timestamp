@@ -1,5 +1,0 @@
-protected array $_Solar_View_Helper_Timestamp
-
-The default date() format string.
-
-Default format is "Y-m-d\TH:i:s".

@@ -1,5 +1,0 @@
-//Inherited from Solar_View_Helper_FormElement::$_info.//
-
-protected array $_info
-
-Default form element information.

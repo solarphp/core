@@ -1,6 +1,0 @@
-public int $active
-
-Convenience reference to $_SESSION['Solar_Auth']['active'].
-
-This is the Unix time at which the authenticated handle was last
-valid().

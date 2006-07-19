@@ -1,5 +1,0 @@
-//Inherited from Solar_App::$layout_script.//
-
-public array $layout_script
-
-An array of <script> tag values for the layout <head> block.

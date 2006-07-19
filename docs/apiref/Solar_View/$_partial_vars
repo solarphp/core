@@ -1,3 +1,0 @@
-protected array $_partial_vars
-
-Variables to be extracted within a partial.

@@ -1,3 +1,0 @@
-protected string $_key
-
-Public key as fetched from TypeKey server.

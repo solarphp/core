@@ -1,7 +1,0 @@
-+ The Solar_Path_Stack Class
-
-Stack for finding files in user-defined path hierarchies.
-
-As you add directory paths, they are searched first when you call
-find($file).  This allows users to add override paths so their files will
-be used instead of default files.

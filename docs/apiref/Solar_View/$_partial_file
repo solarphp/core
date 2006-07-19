@@ -1,3 +1,0 @@
-protected string $_partial_file
-
-The name of the current partial file.

@@ -1,3 +1,0 @@
-protected string $_template_file
-
-The name of the current template file.

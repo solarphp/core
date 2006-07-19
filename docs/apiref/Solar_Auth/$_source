@@ -1,3 +1,0 @@
-protected string $_source
-
-The source of auth credentials, either 'get' or 'post'.

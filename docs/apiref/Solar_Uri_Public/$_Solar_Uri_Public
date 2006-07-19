@@ -1,7 +1,0 @@
-protected array $_Solar_Uri_Public
-
-User-provided configuration values.
-
-Keys are:
-
-: \\path\\ : (string) A path prefix specifically for public resources, e.g. '/public/'.

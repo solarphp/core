@@ -1,3 +1,0 @@
-protected array $_filter
-
-The array of pre-filters for the form elements.

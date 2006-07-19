@@ -1,3 +1,0 @@
-protected string $_sig
-
-DSA signature extracted from login attempt $_GET vars.

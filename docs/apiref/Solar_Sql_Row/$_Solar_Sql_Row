@@ -1,9 +1,0 @@
-protected  $_Solar_Sql_Row
-
-User-defined configuration values.
-
-Keys are:
-
-: \\data\\ : (array) Key-value pairs of colname => value.
-
-: \\save\\ : (object) Source object for save() calls.

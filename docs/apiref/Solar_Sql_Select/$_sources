@@ -1,5 +1,0 @@
-protected array $_sources
-
-Record sources, typically "from", "select", and "join".
-
-We use this for automated deconfliction of column names.

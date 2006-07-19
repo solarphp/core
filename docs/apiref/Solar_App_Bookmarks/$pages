@@ -1,3 +1,0 @@
-public int $pages
-
-The total number of pages in the query.

@@ -1,3 +1,0 @@
-protected string $_file
-
-The path to the log file.

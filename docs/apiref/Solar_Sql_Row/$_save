@@ -1,3 +1,0 @@
-protected object $_save
-
-Source object for save() calls.

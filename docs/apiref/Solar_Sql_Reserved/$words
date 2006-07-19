@@ -1,3 +1,0 @@
-public array $words
-
-The array of words reserved across all supported databases.

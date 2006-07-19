@@ -1,3 +1,0 @@
-protected array $_status_css
-
-CSS classes to use for failure/success status messages.

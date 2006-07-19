@@ -1,5 +1,0 @@
-//Inherited from Solar_Sql_Adapter::$_pdo.//
-
-protected object $_pdo
-
-A portable database object for accessing the RDBMS.

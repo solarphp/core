@@ -118,7 +118,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_data = (array) $this->_config['data'];
+        $this->load($this->_config['data']);
     }
     
     /**
@@ -150,9 +150,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __set($key, $val)
     {
-        if (array_key_exists($key, $this->_data)) {
-            $this->_data[$key] = $val;
-        }
+        $this->_data[$key] = $val;
     }
     
     /**
@@ -182,7 +180,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __unset($key)
     {
-        $this->_data[$key] = null;
+        unset($this->_data[$key]);
     }
     
     /**
@@ -199,18 +197,19 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Loads the object data from an array or another struct.
+     * Loads the struct with data from an array or another struct.
      * 
      * @param array|Solar_Struct $spec The data to load into the object.
+     * 
+     * @param bool $reset Reset the data array first so that only keys
+     * in the $spec will be in the struct.  Default false, so that $spec
+     * keys are merged with existing struct keys.
      * 
      * @return void
      * 
      */
-    public function load($spec)
+    public function load($spec, $reset = false)
     {
-        // get the *original* data keys
-        $keys = array_keys($this->_config['data']);
-        
         // force to array
         if ($spec instanceof Solar_Struct) {
             // we can do this because they're the same class
@@ -219,11 +218,13 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
             $data = (array) $spec;
         }
         
-        // only set values for original keys
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $data)) {
-                $this->_data[$key] = $data[$key];
-            }
+        // load new data
+        if ($reset) {
+            // clear out previous values
+            $this->_data = $spec;
+        } else {
+            // merge new values with old
+            $this->_data = array_merge($this->_data, $spec);
         }
     }
     

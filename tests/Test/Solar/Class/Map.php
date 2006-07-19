@@ -37,6 +37,7 @@ class Test_Solar_Class_Map extends Solar_Test {
         $actual = $map->fetch($base, 'Solar_Test');
         $expect = array (
             "Solar_Test" => "$base/Solar/Test.php",
+            "Solar_Test_Bench" => "$base/Solar/Test/Bench.php",
             "Solar_Test_Example" => "$base/Solar/Test/Example.php",
             "Solar_Test_Example_Exception" => "$base/Solar/Test/Example/Exception.php",
             "Solar_Test_Example_Exception_CustomCondition" => "$base/Solar/Test/Example/Exception/CustomCondition.php",

@@ -214,22 +214,17 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         // force to array
         if ($spec instanceof Solar_Struct) {
             // we can do this because they're the same class
-            echo 'from struct ';
             $data = $spec->toArray();
         } else {
-            echo 'from array ';
             $data = (array) $spec;
         }
         
         // load new data
         if ($reset) {
             // clear out previous values
-            echo "reset ";
             $this->_data = $data;
         } else {
             // merge new values with old
-            echo "merge ";
-            Solar::dump($data);
             $this->_data = array_merge($this->_data, $data);
         }
     }

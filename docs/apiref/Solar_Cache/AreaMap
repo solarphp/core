@@ -1,0 +1,20 @@
+HomePage | The Solar_Cache Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Cache
+  $_active
+  $_adapter
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  delete()
+  deleteAll()
+  entry()
+  fetch()
+  getLife()
+  isActive()
+  locale()
+  save()
+  setActive()

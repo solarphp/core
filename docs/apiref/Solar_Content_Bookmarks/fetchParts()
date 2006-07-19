@@ -1,0 +1,29 @@
+//Inherited from Solar_Content_Abstract::fetchParts().//
+
+<function>
+
+access:   public
+
+name: fetchParts
+
+param: int, $parent_id
+
+param: string, $where, NULL
+
+param: array, $order, NULL
+
+return: Solar_Sql_Rowset
+
+</function>
+
+Fetch the parts of a parent node ID.
+
+* Parameters:
+
+ * int //$parent_id//: The parent node ID.
+
+ * string //$where//: Additional WHERE conditions.
+
+ * array //$order//: Return in this order.
+
+* Returns Solar_Sql_Rowset: A list of nodes that are children of the $parent_id node. The parts are not save()-able.

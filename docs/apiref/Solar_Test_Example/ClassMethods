@@ -1,0 +1,39 @@
++ Class Methods
+
+++ Public
+
+* Solar_Test_Example::classGenericException() -- Throws ERR_GENERIC_CONDITION for this class.
+
+* Solar_Test_Example::classSpecificException() -- Throws ERR_CUSTOM_CONDITION for this class.
+
+* Solar_Test_Example::exceptionFromCode() -- Throws a user-specified error code for this class.
+
+* Solar_Test_Example::filterCallback() -- Used for testing Solar_Filter::callback() as an instance method.
+
+* Solar_Test_Example::solarGenericException() -- Throws ERR_NO_SUCH_CONDITION for this class.
+
+* Solar_Test_Example::solarSpecificException() -- Throws ERR_FILE_NOT_FOUND for this class.
+
+* Solar_Test_Example::staticFilterCallback() -- Used for testing Solar_Filter::callback() as a static method.
+
+* Solar_Test_Example::staticValidIsInt() -- Used for testing Solar_Valid::callback() as a static method.
+
+* Solar_Test_Example::validIsInt() -- Used for testing Solar_Valid::callback() as an instance method.
+
+Inherited Methods:
+
+* Solar_Base::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

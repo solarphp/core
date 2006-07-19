@@ -1,0 +1,17 @@
++ The Solar_Test_Example_Exception_CustomCondition Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Test_Exception::HomePage Solar_Test_Exception]
+
+   * [Solar_Test_Example_Exception::HomePage Solar_Test_Example_Exception]
+
+    * Solar_Test_Example_Exception_CustomCondition
+
+++ Overview
+
+Example for testing Solar class-to-file hierarchy, locales, and exceptions.

@@ -1,0 +1,13 @@
++ The Solar_Sql_Adapter_Sqlite Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Sql_Adapter::HomePage Solar_Sql_Adapter]
+
+  * Solar_Sql_Adapter_Sqlite
+
+++ Overview
+
+Class for connecting to SQLite databases.

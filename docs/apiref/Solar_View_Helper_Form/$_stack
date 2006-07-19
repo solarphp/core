@@ -1,0 +1,3 @@
+protected array $_stack
+
+Stack of element and layout pieces for the form.

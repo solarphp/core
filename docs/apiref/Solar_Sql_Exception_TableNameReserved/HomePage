@@ -1,0 +1,15 @@
++ The Solar_Sql_Exception_TableNameReserved Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_Sql_Exception::HomePage Solar_Sql_Exception]
+
+   * Solar_Sql_Exception_TableNameReserved
+
+++ Overview
+
+Exception: table name is a reserved word.

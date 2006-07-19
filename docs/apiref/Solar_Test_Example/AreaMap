@@ -1,0 +1,21 @@
+HomePage | The Solar_Test_Example Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Test_Example
+  $_config
+  $_private_var
+  $_protected_var
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  classGenericException()
+  classSpecificException()
+  exceptionFromCode()
+  filterCallback()
+  locale()
+  solarGenericException()
+  solarSpecificException()
+  staticFilterCallback()
+  staticValidIsInt()
+  validIsInt()

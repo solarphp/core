@@ -1,0 +1,27 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Row::$_Solar_Sql_Row -- User-defined configuration values.
+
+* Solar_Sql_Row::$_save -- Source object for save() calls.
+
+Inherited Properties:
+
+* Solar_Struct::$_Solar_Struct() -- User-defined configuration values.
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_Struct::$_count() -- Countable: cached value for count().
+
+* Solar_Struct::$_data() -- The row data in colname => value format.
+
+* Solar_Struct::$_valid() -- 
+
+++ Private
+
+None.

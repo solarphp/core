@@ -1,0 +1,23 @@
+<function>
+
+access:   protected
+
+name: _exception
+
+param: string, $code
+
+param: array, $info, array ()
+
+return: Solar_Exception
+
+</function>
+
+Convenience method for returning exceptions with localized text.
+
+* Parameters:
+
+ * string //$code//: The error code; does additional duty as the locale string key and the exception class name suffix.
+
+ * array //$info//: An array of error-specific data.
+
+* Returns Solar_Exception: An instanceof Solar_Exception.

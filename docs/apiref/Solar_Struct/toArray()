@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: toArray
+
+return: array
+
+</function>
+
+Returns a copy of the object data as an array.
+
+* Parameters: none.
+
+* Returns array

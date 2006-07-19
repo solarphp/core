@@ -1,0 +1,30 @@
+HomePage | The Solar_Auth_Adapter_Htpasswd Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Auth_Adapter_Htpasswd
+  $_common
+  $_config
+  $_email
+  $_err
+  $_handle
+  $_moniker
+  $_passwd
+  $_uri
+ ClassMethods | Class Methods
+  _64()
+  __construct()
+  _apr1()
+  _exception()
+  _verify()
+  apiVersion()
+  getEmail()
+  getErrCode()
+  getHandle()
+  getMoniker()
+  getUri()
+  isLoginRequest()
+  isLoginValid()
+  isLogoutRequest()
+  locale()
+  reset()
+  setCommon()

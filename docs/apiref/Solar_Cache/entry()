@@ -1,0 +1,35 @@
+<function>
+
+access:   public
+
+name: entry
+
+param: string, $key
+
+return: mixed
+
+</function>
+
+Returns the adapter-specific name for the entry key.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+* Returns mixed: The adapter-specific name for the entry key.
+
+Cache adapters do not always use the identifier you specify for
+cache entries.  For example, the [Solar_Cache_File:HomePage file adapter]
+names the cache entries based on an MD5 hash of the entry ID. 
+This method tells you what the adapter is using as the name for
+the cache entry.
+
+<code type="php">
+$cache = Solar::factory('Solar_Cache');
+
+// create an entry ID named for the current URI
+$id = Solar::server('REQUEST_URI');
+
+// find out what the underlying cache adapter uses as the entry name
+$real_name = $cache->entry($id);
+</code>

@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: setup
+
+return: void
+
+</function>
+
+Executes this code before running any benchmarks.
+
+* Parameters: none.
+
+* Returns void

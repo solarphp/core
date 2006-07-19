@@ -1,0 +1,8 @@
+protected array $_Solar_Flash
+
+User-defined configuration values.
+
+Keys are:
+
+: \\class\\ : Flash messages are for this class.  Default is
+  'Solar'.

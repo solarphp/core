@@ -1,0 +1,31 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View::$_Solar_View -- User-provided configuration values.
+
+* Solar_View::$_escape -- Parameters for escaping.
+
+* Solar_View::$_helper -- Instantiated helper objects.
+
+* Solar_View::$_helper_class -- Class stack for helpers.
+
+* Solar_View::$_partial_file -- The name of the current partial file.
+
+* Solar_View::$_partial_vars -- Variables to be extracted within a partial.
+
+* Solar_View::$_template_file -- The name of the current template file.
+
+* Solar_View::$_template_path -- Path stack for templates.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

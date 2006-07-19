@@ -1,0 +1,23 @@
+<function>
+
+access:   protected
+
+name: _buildFrom
+
+param: string, $name
+
+param: string, $orig
+
+return: void
+
+</function>
+
+Builds $this->_parts['from'] using a 'from' source.
+
+* Parameters:
+
+ * string //$name//: The table alias.
+
+ * string //$orig//: The original table name.
+
+* Returns void

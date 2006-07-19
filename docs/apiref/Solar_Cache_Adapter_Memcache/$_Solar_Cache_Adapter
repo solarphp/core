@@ -1,0 +1,9 @@
+//Inherited from Solar_Cache_Adapter::$_Solar_Cache_Adapter.//
+
+protected array $_Solar_Cache_Adapter
+
+User-provided configuration.
+
+Config keys are:
+
+: \\life\\ : (int) The lifetime of each cache entry in seconds.

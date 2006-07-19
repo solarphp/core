@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: solarGenericException
+
+return: void
+
+</function>
+
+Throws ERR_NO_SUCH_CONDITION for this class.
+
+* Parameters: none.
+
+* Returns void

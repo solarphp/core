@@ -1,0 +1,24 @@
+//Inherited from Solar_Uri::_pathEncode().//
+
+<function>
+
+access:   protected
+
+name: _pathEncode
+
+param: array, $spec
+
+return: string
+
+</function>
+
+Converts an array of path elements into a string.
+
+* Parameters:
+
+ * array //$spec//: The path elements.
+
+* Returns string: A URI path string.
+
+Does not use [[php urlencode()]]; instead, only converts
+characters found in Solar_Uri::$_encode_path.

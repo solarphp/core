@@ -1,0 +1,5 @@
+protected bool $_full
+
+
+
+ave we filled Solar_Sql_Result::$_rows with all results?

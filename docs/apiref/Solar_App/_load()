@@ -1,0 +1,21 @@
+//Inherited from Solar_Controller_Page::_load().//
+
+<function>
+
+access:   protected
+
+name: _load
+
+param: string, $spec
+
+return: void
+
+</function>
+
+Loads properties from an action specification.
+
+* Parameters:
+
+ * string //$spec//: The action specification.
+
+* Returns void

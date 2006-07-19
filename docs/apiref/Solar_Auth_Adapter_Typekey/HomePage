@@ -1,0 +1,28 @@
++ The Solar_Auth_Adapter_Typekey Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Auth_Adapter::HomePage Solar_Auth_Adapter]
+
+  * Solar_Auth_Adapter_Typekey
+
+++ Overview
+
+Authentication adapter for TypeKey.
+
+Requires that PHP have been compiled using "--enable-bcmath" or
+'--with-gmp'.
+
+Based largely on PEAR Auth_Typekey proposal by Daiji Hirata, in
+particular the DSA signature verification methods.  See the original
+code at <http://www.uva.ne.jp/Auth_TypeKey/Auth_TypeKey.phps>.
+
+Developed for, and then donated by, Mashery.com <http://mashery.com>.
+
+For more info on TypeKey, see:
+
+* http://www.sixapart.com/typekey/api
+
+* http://www.sixapart.com/movabletype/docs/tk-apps

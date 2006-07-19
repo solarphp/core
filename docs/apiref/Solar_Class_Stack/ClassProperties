@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Class_Stack::$_stack -- The class stack.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

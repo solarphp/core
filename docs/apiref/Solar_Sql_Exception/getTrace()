@@ -1,0 +1,17 @@
+//Inherited from Exception::getTrace().//
+
+<function>
+
+access: final  public
+
+name: getTrace
+
+return: void
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns void

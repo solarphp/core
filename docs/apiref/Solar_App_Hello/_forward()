@@ -1,0 +1,30 @@
+//Inherited from Solar_Controller_Page::_forward().//
+
+<function>
+
+access:   protected
+
+name: _forward
+
+param: string, $action
+
+param: array, $params, NULL
+
+return: void
+
+</function>
+
+Forwards internally to another action, using pre- and post-
+action hooks, and resets $this->_view to the requested action.
+
+* Parameters:
+
+ * string //$action//: The action name.
+
+ * array //$params//: Parameters to pass to the action method.
+
+* Returns void
+
+You should generally use "return $this->_forward(...)" instead
+of just $this->_forward; otherwise, script execution will come
+back to where you called the forwarding.

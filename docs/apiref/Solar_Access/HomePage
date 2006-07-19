@@ -1,0 +1,11 @@
++ The Solar_Access Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Access
+
+++ Overview
+
+Facade class for reading access privileges.

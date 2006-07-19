@@ -1,0 +1,3 @@
+protected object $_adapter
+
+Object to use for a specific RDBMS behaviors.

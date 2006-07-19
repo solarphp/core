@@ -1,0 +1,21 @@
+//Inherited from Solar_Struct::offsetGet().//
+
+<function>
+
+access:   public
+
+name: offsetGet
+
+param: string, $key
+
+return: mixed
+
+</function>
+
+ArrayAccess: get a key value.
+
+* Parameters:
+
+ * string //$key//: The requested key.
+
+* Returns mixed

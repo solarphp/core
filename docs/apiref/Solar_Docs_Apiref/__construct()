@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Docs_Apiref
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-defined configuration.
+
+* Returns Solar_Docs_Apiref

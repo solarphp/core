@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: isoTimestamp
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is an ISO 8601 timestamp string.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+The format is "yyyy-mm-ddThh:ii:ss" (note the literal "T" in the
+middle, which acts as a separator).
+
+Also checks that the date itself is valid (e.g., no Feb 30).

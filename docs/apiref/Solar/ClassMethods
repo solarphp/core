@@ -1,0 +1,71 @@
++ Class Methods
+
+++ Public
+
+* Solar::apiVersion() -- Returns the API version for Solar.
+
+* Solar::config() -- Safely gets a configuration group array or element value.
+
+* Solar::cookie() -- Safely gets the value of an element from the $_COOKIE array.
+
+* Solar::dependency() -- Returns a dependency object.
+
+* Solar::dump() -- Dumps a variable to output.
+
+* Solar::exception() -- Generates a simple exception, but does not throw it.
+
+* Solar::factory() -- Convenience method to instantiate and configure an object.
+
+* Solar::fileExists() -- Hack for [[php file_exists()]] that checks the include_path.
+
+* Solar::files() -- Safely gets the value of an element from the $_FILES array.
+
+* Solar::fixdir() -- "Fixes" a directory string for the operating system.
+
+* Solar::get() -- Safely gets the value of an element from the $_GET array.
+
+* Solar::getLocale() -- Returns the current locale code.
+
+* Solar::isRegistered() -- Check to see if an object name already exists in the registry.
+
+* Solar::loadClass() -- Loads a class file from the include_path.
+
+* Solar::locale() -- Gets the translated locale string for a class and key.
+
+* Solar::parents() -- Returns an array of the parent classes for a given class.
+
+* Solar::pathinfo() -- Safely gets the value of $_SERVER['PATH_INFO'] element.
+
+* Solar::post() -- Safely gets the value of an element from the $_POST array.
+
+* Solar::register() -- Registers an object under a unique name.
+
+* Solar::registry() -- Accesses an object in the registry.
+
+* Solar::run() -- Uses [[php include()]] to run a script in a limited scope.
+
+* Solar::server() -- Safely gets the value of an element from the $_SERVER array.
+
+* Solar::session() -- Safely gets the value of an element from the $_SESSION array.
+
+* Solar::setLocale() -- Sets the locale code and clears out previous locale strings.
+
+* Solar::start() -- Starts Solar: loads configuration values and and sets up the environment.
+
+* Solar::stop() -- Stops Solar: run stop scripts.
+
+++ Protected
+
+* Solar::_dispelQuotes() -- A stripslashes() alias that supports array_walk_recursive().
+
+* Solar::_dispelSybase() -- A str_replace() for Sybase quotes; supports array_walk_recursive().
+
+* Solar::_globalsQuotes() -- Performs some security on globals, removes magic quotes if turned on.
+
+* Solar::_loadLocale() -- Loads locale strings for a given class.
+
+* Solar::_super() -- Fetches a superglobal value by key, or a default value.
+
+++ Private
+
+* Solar::__construct() -- Constructor is disabled to enforce a singleton pattern.

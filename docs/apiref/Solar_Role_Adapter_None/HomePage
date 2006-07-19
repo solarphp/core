@@ -1,0 +1,13 @@
++ The Solar_Role_Adapter_None Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Role_Adapter::HomePage Solar_Role_Adapter]
+
+  * Solar_Role_Adapter_None
+
+++ Overview
+
+Adapter to fetch roles from no source at all; always returns an empty array.

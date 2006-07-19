@@ -1,0 +1,9 @@
+protected array $_Solar_Controller_Front
+
+User-defined configuration array.
+
+Keys are:
+
+: \\classes\\ : (array) Base class names for page controllers.
+
+: \\default\\ : (string) The default page name to load.

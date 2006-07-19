@@ -1,0 +1,5 @@
+//Inherited from Solar_Auth_Adapter::$_email.//
+
+protected string $_email
+
+The user email address as derived from the authentication source.

@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: fetchNew
+
+return: Solar_Sql_Row
+
+</function>
+
+Returns a new row of column keys and default values.
+
+* Parameters: none.
+
+* Returns Solar_Sql_Row

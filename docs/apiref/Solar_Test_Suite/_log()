@@ -1,0 +1,19 @@
+<function>
+
+access:   protected
+
+name: _log
+
+param: string, $message
+
+return: boolean
+
+</function>
+
+Saves an event and message to the log.
+
+* Parameters:
+
+ * string //$message//: The log message.
+
+* Returns boolean: True if saved, false if not, null if logging not enabled.

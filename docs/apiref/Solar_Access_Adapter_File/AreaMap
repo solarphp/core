@@ -1,0 +1,11 @@
+HomePage | The Solar_Access_Adapter_File Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Access_Adapter_File
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  fetch()
+  locale()

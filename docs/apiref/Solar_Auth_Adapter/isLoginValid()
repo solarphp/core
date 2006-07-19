@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: isLoginValid
+
+return: bool
+
+</function>
+
+Checks to see if login credentials are valid for the adapter.
+
+* Parameters: none.
+
+* Returns bool

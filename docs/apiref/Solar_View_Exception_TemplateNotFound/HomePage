@@ -1,0 +1,15 @@
++ The Solar_View_Exception_TemplateNotFound Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * [Solar_View_Exception::HomePage Solar_View_Exception]
+
+   * Solar_View_Exception_TemplateNotFound
+
+++ Overview
+
+Solar_View exception for template-not-found.

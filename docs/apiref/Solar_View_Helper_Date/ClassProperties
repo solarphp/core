@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_Date::$_Solar_View_Helper_Date -- The default date() format string.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

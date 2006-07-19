@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: quote
+
+param: mixed, $val
+
+return: string
+
+</function>
+
+Safely quotes a value for an SQL statement.
+
+* Parameters:
+
+ * mixed //$val//: The value to quote.
+
+* Returns string: An SQL-safe quoted value (or a string of  separated-and-quoted values).

@@ -1,0 +1,42 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Auth_Adapter_Typekey::$_Solar_Auth_Adapter_Typekey -- User-defined configuration.
+
+* Solar_Auth_Adapter_Typekey::$_cache -- Cache for the TypeKey public key data.
+
+* Solar_Auth_Adapter_Typekey::$_ext -- 
+
+* Solar_Auth_Adapter_Typekey::$_key -- Public key as fetched from TypeKey server.
+
+* Solar_Auth_Adapter_Typekey::$_msg -- A reconstructed "message" to be verified for validity.
+
+* Solar_Auth_Adapter_Typekey::$_sig -- DSA signature extracted from login attempt $_GET vars.
+
+Inherited Properties:
+
+* Solar_Auth_Adapter::$_common() -- Information for "common" handle + passwd authentication adapters.
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_Auth_Adapter::$_email() -- The user email address as derived from the authentication source.
+
+* Solar_Auth_Adapter::$_err() -- The most-recent error code.
+
+* Solar_Auth_Adapter::$_handle() -- The unique user handle as derived from the authentication source.
+
+* Solar_Auth_Adapter::$_moniker() -- The user "display name" or "full name" as derived from the
+authentication source.
+
+* Solar_Auth_Adapter::$_passwd() -- The user password.
+
+* Solar_Auth_Adapter::$_uri() -- The user URI as derived from the authentication source.
+
+++ Private
+
+None.

@@ -1,0 +1,30 @@
+<function>
+
+access:   public
+
+name: anchor
+
+param: Solar_Uri|string, $spec
+
+param: string, $text, NULL
+
+param: array, $attribs, array ()
+
+return: string
+
+</function>
+
+Returns a anchor href tag.
+
+* Parameters:
+
+ * Solar_Uri|string //$spec//: The anchor href specification.
+
+ * string //$text//: A locale translation key.
+
+ * array //$attribs//: Attributes for the anchor.
+
+* Returns string
+
+If the $text link text is empty, will return only the href
+value (no attributes) instead of an <a href="">...</a> tag.

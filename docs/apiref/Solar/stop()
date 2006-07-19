@@ -1,0 +1,15 @@
+<function>
+
+access:  static public
+
+name: stop
+
+return: void
+
+</function>
+
+Stops Solar: run stop scripts.
+
+* Parameters: none.
+
+* Returns void

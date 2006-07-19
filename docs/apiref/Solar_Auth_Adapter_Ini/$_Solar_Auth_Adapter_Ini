@@ -1,0 +1,7 @@
+protected array $_Solar_Auth_Adapter_Ini
+
+User-provided configuration values.
+
+Keys are:
+
+: \\file\\ : (string) Path to .ini file.

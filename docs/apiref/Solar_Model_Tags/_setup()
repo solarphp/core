@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: void
+
+</function>
+
+Schema setup.
+
+* Parameters: none.
+
+* Returns void

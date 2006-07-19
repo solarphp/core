@@ -1,0 +1,34 @@
+<function>
+
+access:   public
+
+name: feedback
+
+param: mixed, $value
+
+param: array, $args
+
+return: string|void
+
+</function>
+
+Validate a value using a callback, and return a message if validation fails.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * array //$args//: An array of at least two elements; 0 is the Solar_Valid method to call, 1 is the feedback message to return if validation fails, and all remaining elements are additional parameters to pass to the Solar_Valid method.
+
+* Returns string|void: The feedback message if validation fails, or null if the validation succeeded.  Note that this is the opposite of all other Solar_Valid returns.
+
+This method is the **opposite** of all other Solar_Valid methods,
+because it returns a message if validation fails, but returns
+null if validation succeeds.  This is useful for Solar_Sql_Table
+and Solar_Form validation checking, and other places where
+you need automated validation with feedback messaging.
+
+The $args param is a sequential array, in the format of array('method',
+'message', ...) where additional parameters are passed to the callback.
+This is so that Solar_Form and other similar systems can use a
+consistent format for storing validation requirements.

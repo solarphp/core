@@ -1,0 +1,3 @@
+public object $access
+
+Authorized access object.

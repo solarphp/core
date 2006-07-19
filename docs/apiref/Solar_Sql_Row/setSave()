@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: setSave
+
+param: object, $obj
+
+return: void
+
+</function>
+
+Sets the source object for save() calls.
+
+* Parameters:
+
+ * object //$obj//: A source object with a save() method.  Use null to explicitly turn off saving.
+
+* Returns void

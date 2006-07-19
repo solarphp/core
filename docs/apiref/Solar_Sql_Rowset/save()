@@ -1,0 +1,17 @@
+//Inherited from Solar_Sql_Row::save().//
+
+<function>
+
+access:   public
+
+name: save
+
+return: void
+
+</function>
+
+Saves the current values via the $this->_save object.
+
+* Parameters: none.
+
+* Returns void

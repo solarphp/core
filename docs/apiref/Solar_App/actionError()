@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: actionError
+
+return: void
+
+</function>
+
+Shows a generic error page.
+
+* Parameters: none.
+
+* Returns void

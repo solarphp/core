@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: nativeColTypes
+
+return: array
+
+</function>
+
+Returns a list of native column types.
+
+* Parameters: none.
+
+* Returns array

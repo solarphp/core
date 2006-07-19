@@ -1,0 +1,37 @@
++ Class Properties
+
+++ Public
+
+* Solar_Auth::$active -- Convenience reference to $_SESSION['Solar_Auth']['active'].
+
+* Solar_Auth::$allow -- Whether or not to allow authentication actions (login/logout).
+
+* Solar_Auth::$email -- Convenience reference to $_SESSION['Solar_Auth']['email'].
+
+* Solar_Auth::$handle -- Convenience reference to $_SESSION['Solar_Auth']['handle'].
+
+* Solar_Auth::$initial -- Convenience reference to $_SESSION['Solar_Auth']['initial'].
+
+* Solar_Auth::$moniker -- Convenience reference to $_SESSION['Solar_Auth']['moniker'].
+
+* Solar_Auth::$status -- Convenience reference to $_SESSION['Solar_Auth']['status'].
+
+* Solar_Auth::$uri -- Convenience reference to $_SESSION['Solar_Auth']['uri'].
+
+++ Protected
+
+* Solar_Auth::$_Solar_Auth -- User-supplied configuration values.
+
+* Solar_Auth::$_adapter -- An adapter object instance.
+
+* Solar_Auth::$_flash -- Flash-messaging object.
+
+* Solar_Auth::$_source -- The source of auth credentials, either 'get' or 'post'.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

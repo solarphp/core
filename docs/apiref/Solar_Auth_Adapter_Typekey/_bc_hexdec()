@@ -1,0 +1,20 @@
+<function>
+
+access:   protected
+
+name: _bc_hexdec
+
+param: string, $hex
+
+return: string
+
+</function>
+
+Converts a hex value string to a decimal value string using
+bcmath functions.
+
+* Parameters:
+
+ * string //$hex//: The original hex value string.
+
+* Returns string: Decimal string converted from $hex.

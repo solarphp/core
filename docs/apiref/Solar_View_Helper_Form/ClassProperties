@@ -1,0 +1,39 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_View_Helper_Form::$_Solar_View_Helper_Form -- User-provided configuration values.
+
+* Solar_View_Helper_Form::$_attribs -- Attributes for the form tag.
+
+* Solar_View_Helper_Form::$_default_attribs -- Default form tag attributes.
+
+* Solar_View_Helper_Form::$_default_info -- Default info for each element.
+
+* Solar_View_Helper_Form::$_feedback -- Collection of form-level feedback messages.
+
+* Solar_View_Helper_Form::$_hidden -- Collection of hidden elements.
+
+* Solar_View_Helper_Form::$_id_count -- Tracks element IDs so we can have unique IDs for each element.
+
+* Solar_View_Helper_Form::$_stack -- Stack of element and layout pieces for the form.
+
+* Solar_View_Helper_Form::$_status -- The current failure/success status.
+
+* Solar_View_Helper_Form::$_status_css -- CSS classes to use for failure/success status messages.
+
+* Solar_View_Helper_Form::$_type_css -- CSS classes to use for element types.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

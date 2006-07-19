@@ -1,0 +1,14 @@
++ The Solar_Test_Bench Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Test_Bench
+
+++ Overview
+
+Class for benchmarking the speed of different methods.
+
+Benchmark methods are prefixed with "bench" and are automatically
+run $loops number of times when you call Solar_Test_Bench::run($loops).

@@ -1,0 +1,17 @@
+//Inherited from Solar_Struct::rewind().//
+
+<function>
+
+access:   public
+
+name: rewind
+
+return: void
+
+</function>
+
+Iterator: move to the first position.
+
+* Parameters: none.
+
+* Returns void

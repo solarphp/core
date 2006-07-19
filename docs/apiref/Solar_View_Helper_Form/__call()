@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: __call
+
+param: string, $type
+
+param: array, $args
+
+return: string
+
+</function>
+
+Magic __call() for addElement() using element helpers.
+
+* Parameters:
+
+ * string //$type//: The form element type (text, radio, etc).
+
+ * array //$args//: Arguments passed to the method call; only the first argument is used, the $info array.
+
+* Returns string: The form element helper output.
+
+Allows $this->elementName() internally, and
+$this->form()->elementType() externally.

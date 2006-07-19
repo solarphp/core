@@ -1,0 +1,27 @@
+<function>
+
+access:   protected
+
+name: _values
+
+param: string, $key
+
+param: mixed, $val
+
+param: array, &$values
+
+return: void
+
+</function>
+
+Recursively pulls values from elements into an associative array.
+
+* Parameters:
+
+ * string //$key//: The current array key for the values array.  If this has square brackets in it, that's a sign we need to keep creating sub-elements for the values array.
+
+ * mixed //$val//: The element value to put into the values array, once we stop creating sub-elements based on the element name.
+
+ * array //$values//: The values array into which we will place the element value.  Note that it becomes a reference to sub-elements as the recursive function creates new sub-elements based on the form element name.
+
+* Returns void

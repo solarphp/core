@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: group
+
+param: string|array, $spec
+
+return: Solar_Sql_Select
+
+</function>
+
+Adds grouping to the query.
+
+* Parameters:
+
+ * string|array //$spec//: The column(s) to group by.
+
+* Returns Solar_Sql_Select

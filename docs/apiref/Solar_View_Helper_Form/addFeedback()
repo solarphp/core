@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: addFeedback
+
+param: string|array, $spec
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Adds to the form-level feedback message array.
+
+* Parameters:
+
+ * string|array //$spec//: The feedback message(s).
+
+* Returns Solar_View_Helper_Form

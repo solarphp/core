@@ -1,0 +1,3 @@
+protected Solar_Log $_log
+
+A Solar_Log instance.

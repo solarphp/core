@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: fetchAllNames
+
+return: array
+
+</function>
+
+Returns an array of area names and titles.
+
+* Parameters: none.
+
+* Returns array

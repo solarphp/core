@@ -1,0 +1,27 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Test_Suite::$_Solar_Test_Suite -- User-defined configuration values.
+
+* Solar_Test_Suite::$_dir -- The directory where tests are located.
+
+* Solar_Test_Suite::$_info -- The log of pass/skip/todo/fail messages.
+
+* Solar_Test_Suite::$_log -- A Solar_Log instance.
+
+* Solar_Test_Suite::$_test -- The test classes (and their methods) to run.
+
+* Solar_Test_Suite::$_var -- A Solar_Debug_Var instance.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

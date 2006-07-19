@@ -1,0 +1,5 @@
+protected int $_area_id
+
+The default area ID to fetch nodes from.
+
+If empty, will fetch from all areas.

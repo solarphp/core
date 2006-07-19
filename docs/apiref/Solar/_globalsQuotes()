@@ -1,0 +1,15 @@
+<function>
+
+access:  static protected
+
+name: _globalsQuotes
+
+return: void
+
+</function>
+
+Performs some security on globals, removes magic quotes if turned on.
+
+* Parameters: none.
+
+* Returns void

@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: string, $base
+
+param: string, $class, NULL
+
+return: array
+
+</function>
+
+Gets the class-to-file map for a class hierarchy.
+
+* Parameters:
+
+ * string //$base//: The path to the top of the class hierarchy, typically the base PEAR directory.
+
+ * string //$class//: Start mapping with this class.
+
+* Returns array: The class-to-file mappings.

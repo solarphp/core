@@ -1,0 +1,3 @@
+protected array $_form
+
+Columns used in the data-entry form.

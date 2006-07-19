@@ -1,0 +1,21 @@
+//Inherited from Solar_Controller_Page::_redirect().//
+
+<function>
+
+access:   protected
+
+name: _redirect
+
+param: Solar_Uri_Action|string, $spec
+
+return: void
+
+</function>
+
+Redirects to another page and action.
+
+* Parameters:
+
+ * Solar_Uri_Action|string //$spec//: The URI to redirect to.
+
+* Returns void

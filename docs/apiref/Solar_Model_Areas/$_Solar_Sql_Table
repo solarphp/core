@@ -1,0 +1,11 @@
+//Inherited from Solar_Sql_Table::$_Solar_Sql_Table.//
+
+protected array $_Solar_Sql_Table
+
+User-provided configuration.
+
+Keys are:
+
+: \\sql\\ : => (dependency) A Solar_Sql dependency object.
+
+: \\locale\\ : => (string) Path to locale files.

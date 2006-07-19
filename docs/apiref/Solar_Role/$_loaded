@@ -1,0 +1,5 @@
+protected bool $_loaded
+
+
+
+ave we attempted to load the list of roles yet?

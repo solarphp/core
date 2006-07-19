@@ -1,0 +1,27 @@
+<function>
+
+access:   protected
+
+name: _getParameters
+
+param: string, $class
+
+param: ReflectionMethod, $method
+
+param: array, $tech
+
+return: array
+
+</function>
+
+Returns the parameters for a ReflectionMethod.
+
+* Parameters:
+
+ * string //$class//: The class name.
+
+ * ReflectionMethod //$method//: A ReflectionMethod object to get parameters for.
+
+ * array //$tech//: A technical information array derived from Solar_Docs_Phpdoc.
+
+* Returns array: An array of parameter specifications.

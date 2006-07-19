@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _preRun
+
+return: void
+
+</function>
+
+Executes before the first action.
+
+* Parameters: none.
+
+* Returns void

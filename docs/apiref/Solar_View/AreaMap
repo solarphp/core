@@ -1,0 +1,34 @@
+HomePage | The Solar_View Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_View
+  $_config
+  $_escape
+  $_helper
+  $_helper_class
+  $_partial_file
+  $_partial_vars
+  $_template_file
+  $_template_path
+ ClassMethods | Class Methods
+  __call()
+  __construct()
+  __set()
+  _exception()
+  _setup()
+  addHelperClass()
+  addTemplatePath()
+  apiVersion()
+  assign()
+  display()
+  escape()
+  fetch()
+  getHelper()
+  getHelperClass()
+  getTemplatePath()
+  locale()
+  newHelper()
+  partial()
+  setHelperClass()
+  setTemplatePath()
+  template()

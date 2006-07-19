@@ -1,0 +1,17 @@
+HomePage | The Solar_Cache_Adapter Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Cache_Adapter
+  $_config
+  $_life
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  delete()
+  deleteAll()
+  entry()
+  fetch()
+  getLife()
+  locale()
+  save()

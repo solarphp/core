@@ -1,0 +1,13 @@
++ The Solar_Log_Adapter_None Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Log_Adapter::HomePage Solar_Log_Adapter]
+
+  * Solar_Log_Adapter_None
+
+++ Overview
+
+Log adapter to ignore all messages.

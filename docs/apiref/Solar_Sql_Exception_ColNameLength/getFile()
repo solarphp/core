@@ -1,0 +1,17 @@
+//Inherited from Exception::getFile().//
+
+<function>
+
+access: final  public
+
+name: getFile
+
+return: void
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns void

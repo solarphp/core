@@ -1,0 +1,21 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Cache::$_Solar_Cache -- User-provided configuration.
+
+* Solar_Cache::$_active -- Whether or not the cache is active.
+
+* Solar_Cache::$_adapter -- The instantiated adapter object.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

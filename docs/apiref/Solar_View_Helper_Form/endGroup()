@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: endGroup
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Ends a group of form elements.
+
+* Parameters: none.
+
+* Returns Solar_View_Helper_Form

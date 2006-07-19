@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Role_Adapter_Ldap
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User defined configuration values.
+
+* Returns Solar_Role_Adapter_Ldap

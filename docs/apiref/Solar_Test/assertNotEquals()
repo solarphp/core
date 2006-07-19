@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: assertNotEquals
+
+param: mixed, $actual
+
+param: mixed, $expect
+
+return: bool
+
+</function>
+
+Asserts that two variables are not equal; type is not strict.
+
+* Parameters:
+
+ * mixed //$actual//: The variable to test.
+
+ * mixed //$expect//: The expected value.
+
+* Returns bool: The assertion result.

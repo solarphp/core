@@ -1,0 +1,8 @@
+protected array $_Solar_Log_Adapter_Multi
+
+User-defined configuration values.
+
+Keys are:
+
+: \\adapters\\ : (array) An array of arrays, where each sub-array
+is a separate adapter configuration.

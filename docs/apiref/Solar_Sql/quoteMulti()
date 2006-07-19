@@ -1,0 +1,39 @@
+<function>
+
+access:   public
+
+name: quoteMulti
+
+param: array, $list
+
+param: string, $sep, NULL
+
+return: string
+
+</function>
+
+Quote multiple text-and-value pieces.
+
+* Parameters:
+
+ * array //$list//: A series of key-value pairs where the key is the placeholder text and the value is the value to be quoted into it.  If the key is an integer, it is assumed that the value is piece of literal text to be used and not quoted.
+
+ * string //$sep//: Return the list pieces separated with this string (e.g. ' AND '), default null.
+
+* Returns string: An SQL-safe string composed of the list keys and quoted values.
+
+The placeholder is a question-mark; all placeholders will be replaced
+with the quoted value.   For example:
+
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
+$list = array(
+     "WHERE date > ?"   => '2005-01-01',
+     "  AND date < ?"   => '2005-02-01',
+     "  AND type IN(?)" => array('a', 'b', 'c'),
+);
+$safe = $sql->quoteMulti($list);
+
+// $safe == "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+</code>

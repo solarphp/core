@@ -1,0 +1,13 @@
++ The Solar_Content_Bookmarks Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Content_Abstract::HomePage Solar_Content_Abstract]
+
+  * Solar_Content_Bookmarks
+
+++ Overview
+
+Content class for bookmark nodes.

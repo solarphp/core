@@ -1,0 +1,19 @@
+<function>
+
+access:  static public
+
+name: loadClass
+
+param: string, $class
+
+return: void
+
+</function>
+
+Loads a class file from the include_path.
+
+* Parameters:
+
+ * string //$class//: A Solar (or other) class name.
+
+* Returns void

@@ -1,0 +1,9 @@
+public array $registry
+
+Object registry.
+
+Objects are registered using Solar::register(); the registry
+array is keyed on the name of the registered object.
+
+Although this property is public, you generally shouldn't need
+to manipulate it in any way.

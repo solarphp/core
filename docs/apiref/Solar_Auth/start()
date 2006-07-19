@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: start
+
+return: void
+
+</function>
+
+Start a session with authentication.
+
+* Parameters: none.
+
+* Returns void

@@ -1,0 +1,64 @@
++ Class Methods
+
+++ Public
+
+* Solar_Controller_Page::__construct() -- Constructor.
+
+* Solar_Controller_Page::__get() -- Try to force users to define what their view variables are.
+
+* Solar_Controller_Page::__set() -- Try to force users to define what their view variables are.
+
+* Solar_Controller_Page::_render() -- Renders the view with layout with pre- and post-rendering.
+
+* Solar_Controller_Page::display() -- Executes the requested action and displays its output.
+
+* Solar_Controller_Page::fetch() -- Executes the requested action and returns its output with layout.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Controller_Page::_forward() -- Forwards internally to another action, using pre- and post-
+action hooks, and resets $this->_view to the requested action.
+
+* Solar_Controller_Page::_getActionMethod() -- Returns the method name for an action.
+
+* Solar_Controller_Page::_getActionView() -- Returns the view name for an action.
+
+* Solar_Controller_Page::_getLayout() -- Creates and returns a new Solar_View object for a layout.
+
+* Solar_Controller_Page::_getView() -- Creates and returns a new Solar_View object for a view.
+
+* Solar_Controller_Page::_info() -- Retrieves the TAINTED value of a path-info value by position.
+
+* Solar_Controller_Page::_load() -- Loads properties from an action specification.
+
+* Solar_Controller_Page::_postAction() -- Executes after each action.
+
+* Solar_Controller_Page::_postRender() -- Executes after rendering the page view and layout.
+
+* Solar_Controller_Page::_postRun() -- Executes after the last action.
+
+* Solar_Controller_Page::_preAction() -- Executes before each action.
+
+* Solar_Controller_Page::_preRender() -- Executes before rendering the page view and layout.
+
+* Solar_Controller_Page::_preRun() -- Executes before the first action.
+
+* Solar_Controller_Page::_query() -- Retrieves the TAINTED value of a query request key by name.
+
+* Solar_Controller_Page::_redirect() -- Redirects to another page and action.
+
+* Solar_Controller_Page::_setup() -- Executes after construction.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

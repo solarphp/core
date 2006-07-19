@@ -1,0 +1,19 @@
+<function>
+
+access:  static public
+
+name: staticValidIsInt
+
+param: mixed, $value
+
+return: bool
+
+</function>
+
+Used for testing Solar_Valid::callback() as a static method.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate with is_int().
+
+* Returns bool: True if $value is_int(), false if not.

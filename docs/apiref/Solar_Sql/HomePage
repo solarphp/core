@@ -1,0 +1,11 @@
++ The Solar_Sql Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Sql
+
+++ Overview
+
+Class for connecting to SQL databases and performing standard operations.

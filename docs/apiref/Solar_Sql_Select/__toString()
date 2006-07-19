@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: __toString
+
+return: string
+
+</function>
+
+Returns this object as an SQL statement string.
+
+* Parameters: none.
+
+* Returns string: An SQL statement string.

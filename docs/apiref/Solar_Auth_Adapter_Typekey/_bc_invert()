@@ -1,0 +1,23 @@
+<function>
+
+access:   protected
+
+name: _bc_invert
+
+param: string, $x
+
+param: string, $y
+
+return: string
+
+</function>
+
+Inverts two values using bcmath functions.
+
+* Parameters:
+
+ * string //$x//: First value.
+
+ * string //$y//: Second value.
+
+* Returns string: The inverse of $x and $y.

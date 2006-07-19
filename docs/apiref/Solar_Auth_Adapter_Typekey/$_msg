@@ -1,0 +1,3 @@
+protected string $_msg
+
+A reconstructed "message" to be verified for validity.

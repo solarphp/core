@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: quote
+
+param: mixed, $val
+
+return: string
+
+</function>
+
+Safely quotes a value for an SQL statement.
+
+* Parameters:
+
+ * mixed //$val//: The value to quote.
+
+* Returns string: An SQL-safe quoted value (or a string of  separated-and-quoted values).
+
+If an array is passed as the value, the array values are quoted
+and then returned as a comma-separated string; this is useful 
+for generating IN() lists.
+
+<code type="php">
+$sql = Solar::factory('Solar_Sql');
+
+$safe = $sql->quote('foo"bar"');
+// $safe == "'foo\"bar\"'"
+
+$safe = $sql->quote(array('one', 'two', 'three'));
+// $safe == "'one', 'two', 'three'"
+</code>

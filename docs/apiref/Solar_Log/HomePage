@@ -1,0 +1,30 @@
++ The Solar_Log Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Log
+
+++ Overview
+
+Facade for a log adapter.
+
+Example:
+
+<code type="php">
+
+// example setup of a single adapter
+$config = array(
+    'adapter' => 'Solar_Log_Adapter_File',
+    'events'  => '*',
+    'file'    => '/path/to/file.log',
+);
+$log = Solar::factory('Solar_Log', $config);
+
+// write/record/report/etc an event in the log.
+// note that we don't do "priority levels" here, just
+// class names and event types.
+$log->save('class_name', 'event_name', 'message text');
+
+</code>

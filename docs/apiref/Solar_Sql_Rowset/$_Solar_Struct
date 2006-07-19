@@ -1,0 +1,9 @@
+//Inherited from Solar_Struct::$_Solar_Struct.//
+
+protected  $_Solar_Struct
+
+User-defined configuration values.
+
+Keys are:
+
+: \\data\\ : (array) Key-value pairs.

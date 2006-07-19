@@ -1,0 +1,13 @@
+protected array $_Solar_Role_Adapter_Sql
+
+User-supplied configuration values.
+
+Keys are:
+
+: \\sql\\ : (dependency) A Solar_Sql dependency.
+
+: \\table\\ : (string) The table where roles are stored.
+
+: \\handle_col\\ : (string) The column for user handles.
+
+: \\role_col\\ : (string) The column for roles.

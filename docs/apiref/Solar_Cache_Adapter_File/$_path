@@ -1,0 +1,3 @@
+protected string $_path
+
+Path to the cache directory.

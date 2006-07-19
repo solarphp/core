@@ -1,0 +1,5 @@
+//Inherited from Solar_Auth_Adapter::$_handle.//
+
+protected string $_handle
+
+The unique user handle as derived from the authentication source.

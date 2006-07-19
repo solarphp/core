@@ -1,0 +1,23 @@
+<function>
+
+access:  static public
+
+name: config
+
+param: string, $group
+
+param: string, $elem, NULL
+
+return: mixed
+
+</function>
+
+Safely gets a configuration group array or element value.
+
+* Parameters:
+
+ * string //$group//: The name of the group.
+
+ * string //$elem//: The name of the element in the group.
+
+* Returns mixed: The value of the configuration group or element.

@@ -1,0 +1,3 @@
+public array $layout_top
+
+An array of content for the layout <div id="top"> block.

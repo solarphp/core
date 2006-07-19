@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: set
+
+param: string, $uri, NULL
+
+return: void
+
+</function>
+
+Sets properties from a specified URI.
+
+* Parameters:
+
+ * string //$uri//: The URI to parse.  If null, defaults to the current URI.
+
+* Returns void

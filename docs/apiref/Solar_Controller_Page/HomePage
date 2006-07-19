@@ -1,0 +1,66 @@
++ The Solar_Controller_Page Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * Solar_Controller_Page
+
+++ Overview
+
+Abstract page controller class.
+
+Expects a directory structure similar to the following:
+
+<code>
+Vendor/              # your vendor namespace
+  App/               # subdirectory for page controllers
+    Helper/          # shared helper classes
+      ...
+    Layout/          # shared layout files
+      ...                                 
+    Locale/          # shared locale files
+      ...                                 
+    View/            # shared view scripts
+      ...
+    Example.php      # an example page controller app
+    Example/
+      Helper/        # helper classes specific to the page
+        ...
+      Layout/        # layout files to override shared layouts
+        ...
+      Locale/        # locale files
+        en_US.php
+        pt_BR.php
+      View/          # view scripts
+        _item.php    # partial template
+        list.php     # full template
+        edit.php
+</code>
+
+Note that models are not included in the application itself; this is
+for class-name deconfliction reasons.  Your models should be stored 
+elsewhere in the Solar hierarchy, e.g. Vendor_Model_Name.
+
+When you call Solar_Controller_Page::fetch(), these intercept methods
+are run in the following order:
+
+* Solar_Controller_Page::_load() to load class properties from the 
+  fetch() URI specification
+
+* Solar_Controller_Page::_preRun() before the first action
+
+* Solar_Controller_Page::_preAction() before each action (including
+  _forward()-ed actions)
+
+* ... The action method itself runs here ...
+
+* Solar_Controller_Page::_postAction() after each action
+
+* Solar_Controller_Page::_postRun() after the last action, and before
+  rendering
+
+* Solar_Controller_Page::_render() to render the view and layout; 
+  this in its turn calls Solar_Controller_Page::_getView() for 
+  the view object, and Solar_Controller_Page::_getLayout() for 
+  the layout object.

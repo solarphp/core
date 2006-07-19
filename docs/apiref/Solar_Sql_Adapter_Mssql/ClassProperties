@@ -1,0 +1,25 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Sql_Adapter_Mssql::$_native -- Map of Solar generic column types to RDBMS native declarations.
+
+* Solar_Sql_Adapter_Mssql::$_pdo_type -- The PDO adapter type.
+
+Inherited Properties:
+
+* Solar_Sql_Adapter::$_Solar_Sql_Adapter() -- User-provided configuration.
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_Sql_Adapter::$_direct() -- Execute these commands directly, without preparation.
+
+* Solar_Sql_Adapter::$_pdo() -- A portable database object for accessing the RDBMS.
+
+++ Private
+
+None.

@@ -1,0 +1,27 @@
+<function>
+
+access:  static protected
+
+name: _super
+
+param: string, $type
+
+param: string, $key, NULL
+
+param: mixed, $default, NULL
+
+return: mixed
+
+</function>
+
+Fetches a superglobal value by key, or a default value.
+
+* Parameters:
+
+ * string //$type//: The superglobal variable name to fetch from; e.g., '_SERVER' for $_SERVER or '_GET' for $_GET.
+
+ * string //$key//: The superglobal array key to retrieve; if null, will return the entire superglobal array for that type.
+
+ * mixed //$default//: If the requested superglobal array key does not exist, return this value instead.
+
+* Returns mixed: The value of the superglobal type array key, or the default value if the key did not exist.

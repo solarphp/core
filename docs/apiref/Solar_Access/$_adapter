@@ -1,0 +1,3 @@
+protected object $_adapter
+
+A adapter object instance.

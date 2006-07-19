@@ -1,0 +1,29 @@
+<function>
+
+access:  static public
+
+name: locale
+
+param: string, $class
+
+param: string, $key
+
+param: mixed, $num, 1
+
+return: string
+
+</function>
+
+Gets the translated locale string for a class and key.
+
+* Parameters:
+
+ * string //$class//: The class of the translation.
+
+ * string //$key//: The translation key.
+
+ * mixed //$num//: Helps determine whether to get a singular or plural translation.
+
+* Returns string: A translated locale string.
+
+Loads locale string files on-demand.

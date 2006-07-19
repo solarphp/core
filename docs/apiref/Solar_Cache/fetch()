@@ -1,0 +1,43 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: string, $key
+
+return: mixed
+
+</function>
+
+Gets cache entry data.
+
+* Parameters:
+
+ * string //$key//: The entry ID.
+
+* Returns mixed: Boolean false on failure, string on success.
+
+Use this to retrieve the cache entry identifed by key.  The
+key can be any scalar value:  a web page name, an integer ID,
+a simple name, and so on.
+
+If the cache entry does not exist, or if it has passed its
+lifetime (defined in the adapter's config keys), the
+function will return boolean false; otherwise, it will return
+the contents of the cache entry.
+
+For example, to get a cache entry identified by a web page
+name, you could do this:
+
+<code type="php">
+// create a cache object
+$cache = Solar::factory('Solar_Cache');
+
+// get the request URI as an identifier
+$id = Solar::server('REQUEST_URI');
+
+// fetch the result and dump it to screen
+$result = $cache->fetch($id);
+Solar::dump($result);
+</code>

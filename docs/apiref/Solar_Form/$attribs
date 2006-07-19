@@ -1,0 +1,9 @@
+public array $attribs
+
+Attributes for the form tag itself.
+
+The \\$attribs\\ array holds HTML attributes for the
+form itself (not for individual elements) such as
+\\action\\, \\method\\, and \\enctype\\.  Note that these
+are "hints" for the presentation of the form, and may not
+be honored by the view.

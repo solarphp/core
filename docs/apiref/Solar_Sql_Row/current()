@@ -1,0 +1,17 @@
+//Inherited from Solar_Struct::current().//
+
+<function>
+
+access:   public
+
+name: current
+
+return: mixed
+
+</function>
+
+Iterator: get the current key value.
+
+* Parameters: none.
+
+* Returns mixed

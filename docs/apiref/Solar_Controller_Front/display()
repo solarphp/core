@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: display
+
+param: string, $spec, NULL
+
+return: string
+
+</function>
+
+Displays the output of an page/action/info specification URI.
+
+* Parameters:
+
+ * string //$spec//: A page/action/info spec for the front controller. E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
+
+* Returns string: The output of the page action.

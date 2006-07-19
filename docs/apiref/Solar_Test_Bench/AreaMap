@@ -1,0 +1,15 @@
+HomePage | The Solar_Test_Bench Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Test_Bench
+  $_config
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _getMethods()
+  apiVersion()
+  locale()
+  loop()
+  setup()
+  teardown()
+  time()

@@ -1,0 +1,40 @@
+HomePage | The Solar_Controller_Page Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_action
+  $_action_default
+  $_config
+  $_dir
+  $_flash
+  $_info
+  $_layout
+  $_layout_var
+  $_name
+  $_query
+  $_view
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  __set()
+  _exception()
+  _forward()
+  _getActionMethod()
+  _getActionView()
+  _getLayout()
+  _getView()
+  _info()
+  _load()
+  _postAction()
+  _postRender()
+  _postRun()
+  _preAction()
+  _preRender()
+  _preRun()
+  _query()
+  _redirect()
+  _render()
+  _setup()
+  apiVersion()
+  display()
+  fetch()
+  locale()

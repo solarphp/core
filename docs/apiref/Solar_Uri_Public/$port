@@ -1,0 +1,7 @@
+//Inherited from Solar_Uri::$port.//
+
+public string $port
+
+The port number (e.
+
+., '80').

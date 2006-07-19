@@ -1,0 +1,17 @@
+//Inherited from Exception::getCode().//
+
+<function>
+
+access: final  public
+
+name: getCode
+
+return: void
+
+</function>
+
+
+
+* Parameters: none.
+
+* Returns void

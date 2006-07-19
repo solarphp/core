@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: nextSequence
+
+param: string, $name
+
+return: int
+
+</function>
+
+Gets the next sequence number; creates the sequence if needed.
+
+* Parameters:
+
+ * string //$name//: The sequence name to increment.
+
+* Returns int: The next sequence number.

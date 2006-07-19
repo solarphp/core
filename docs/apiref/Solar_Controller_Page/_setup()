@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _setup
+
+return: void
+
+</function>
+
+Executes after construction.
+
+* Parameters: none.
+
+* Returns void

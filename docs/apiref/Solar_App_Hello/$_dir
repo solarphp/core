@@ -1,0 +1,7 @@
+//Inherited from Solar_Controller_Page::$_dir.//
+
+protected string $_dir
+
+Base directory under which actions, views, etc.
+
+are located.

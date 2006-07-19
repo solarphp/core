@@ -1,0 +1,15 @@
+protected array $_len
+
+Max identifier lengths for table, column, and index names.
+
+The total length cannot exceed 63 (the Postgres limit).
+
+Reserve 3 chars for suffixes ("__i" for indexes, "__s" for
+sequences).
+
+Reserve 2 chars for table__index separator (again, because
+Postgres needs unique names for indexes even on different tables).
+
+This leaves 58 characters to split between table name and col/idx
+name.  Figure tables need more "space", so they get 30 and
+tables/indexes get 28.

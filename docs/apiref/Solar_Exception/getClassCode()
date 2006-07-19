@@ -1,0 +1,15 @@
+<function>
+
+access: final  public
+
+name: getClassCode
+
+return: string
+
+</function>
+
+Returns the class name and code together.
+
+* Parameters: none.
+
+* Returns string

@@ -1,0 +1,3 @@
+protected string $_layout
+
+The name of the layout to be rendered.

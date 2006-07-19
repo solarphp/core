@@ -1,0 +1,13 @@
+HomePage | The Solar_View_Helper_GetTextRaw Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_View_Helper_GetTextRaw
+  $_class
+  $_config
+  $_view
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  getTextRaw()
+  locale()

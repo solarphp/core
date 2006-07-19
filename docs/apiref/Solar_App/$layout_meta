@@ -1,0 +1,3 @@
+public array $layout_meta
+
+An array of <meta> tag values for the layout <head> block.

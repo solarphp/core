@@ -1,0 +1,34 @@
+//Inherited from Solar_Base::__construct().//
+
+<function>
+
+access:   public
+
+name: __construct
+
+param: mixed, $config, NULL
+
+return: Solar_Role_Adapter_None
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * mixed //$config//: User-defined configuration values.
+
+* Returns Solar_Role_Adapter_None
+
+If the $config param is an array, it is merged with the class
+config array and any values from the Solar.config.php file.
+
+If the $config param is a string, config is loaded from that file
+and merged with values from Solar.config.php file.
+
+If the $config param is boolean false, no config overrides are
+performed (class defaults only).
+
+The Solar.config.php values are inherited along class parent
+lines; e.g., all classes descending from Solar_Base use the 
+Solar_Base config file values until overridden.

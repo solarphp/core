@@ -1,0 +1,5 @@
+protected array $_idx
+
+
+
+he index specification array for all indexes on this table:

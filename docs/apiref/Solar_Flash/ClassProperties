@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+* Solar_Flash::$list -- Convenience reference to $_SESSION['Solar_Flash'][$this->_class].
+
+++ Protected
+
+* Solar_Flash::$_Solar_Flash -- User-defined configuration values.
+
+* Solar_Flash::$_class -- The class for flashes.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

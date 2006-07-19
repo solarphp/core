@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_View_Helper::$_view() -- Reference to the parent Solar_View object.
+
+++ Private
+
+None.

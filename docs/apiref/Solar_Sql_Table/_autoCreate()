@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _autoCreate
+
+return: bool
+
+</function>
+
+Creates the table in the database if it does not already exist.
+
+* Parameters: none.
+
+* Returns bool: False if the table already existed and didn't need to be created, or true if the table did not exist and was successfully created.

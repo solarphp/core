@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: setTemplatePath
+
+param: string|array, $path, NULL
+
+return: void
+
+</function>
+
+Reset the template directory path stack.
+
+* Parameters:
+
+ * string|array //$path//: The directories to set for the stack.
+
+* Returns void

@@ -1,0 +1,19 @@
+//Inherited from Solar_Sql_Adapter::$_Solar_Sql_Adapter.//
+
+protected array $_Solar_Sql_Adapter
+
+User-provided configuration.
+
+Keys are:
+
+: \\host\\ : (string) Host specification (typically 'localhost').
+
+: \\port\\ : (string) Port number for the host name.
+
+: \\user\\ : (string) Connect to the database as this username.
+
+: \\pass\\ : (string) Password associated with the username.
+
+: \\name\\ : (string) Database name (or file path, or TNS name).
+
+: \\mode\\ : (string) For SQLite, an octal file mode.

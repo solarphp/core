@@ -1,0 +1,6 @@
+public string $uri
+
+Convenience reference to $_SESSION['Solar_Auth']['uri'].
+
+This is the URI for the currently authenticated user.  May or
+may not be populated by the adapter.

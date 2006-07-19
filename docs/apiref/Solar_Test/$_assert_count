@@ -1,0 +1,3 @@
+protected int $_assert_count
+
+A running count of how many times an assert*() method is called.

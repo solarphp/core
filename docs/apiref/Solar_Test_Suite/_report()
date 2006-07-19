@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _report
+
+return: void
+
+</function>
+
+Generates a report from class properties.
+
+* Parameters: none.
+
+* Returns void

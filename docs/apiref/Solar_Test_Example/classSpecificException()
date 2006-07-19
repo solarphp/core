@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: classSpecificException
+
+return: void
+
+</function>
+
+Throws ERR_CUSTOM_CONDITION for this class.
+
+* Parameters: none.
+
+* Returns void

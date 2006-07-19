@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: __destruct
+
+return: void
+
+</function>
+
+Destructor.
+
+* Parameters: none.
+
+* Returns void
+
+If the 'auto_display' config key is true, this will display the profile.

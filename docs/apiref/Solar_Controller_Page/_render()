@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: _render
+
+return: string
+
+</function>
+
+Renders the view with layout with pre- and post-rendering.
+
+* Parameters: none.
+
+* Returns string: The results of the view and layout scripts.

@@ -1,0 +1,15 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

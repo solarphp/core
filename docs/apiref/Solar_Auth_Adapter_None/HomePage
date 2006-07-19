@@ -1,0 +1,13 @@
++ The Solar_Auth_Adapter_None Class
+
+++ Inheritance
+
+* [Solar_Base::HomePage Solar_Base]
+
+ * [Solar_Auth_Adapter::HomePage Solar_Auth_Adapter]
+
+  * Solar_Auth_Adapter_None
+
+++ Overview
+
+Authenticate against nothing; defaults all authentication to "failed.

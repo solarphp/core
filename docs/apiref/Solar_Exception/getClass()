@@ -1,0 +1,15 @@
+<function>
+
+access: final  public
+
+name: getClass
+
+return: string
+
+</function>
+
+Returns the class name that threw the exception.
+
+* Parameters: none.
+
+* Returns string

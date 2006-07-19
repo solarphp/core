@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: newHelper
+
+param: string, $name
+
+param: array, $config, NULL
+
+return: object
+
+</function>
+
+Creates a new standalone helper object.
+
+* Parameters:
+
+ * string //$name//: The helper name.
+
+ * array //$config//: Configuration array for the helper object.
+
+* Returns object: A new standalone helper object.

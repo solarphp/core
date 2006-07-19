@@ -1,0 +1,31 @@
+<function>
+
+access:   public
+
+name: rangeLength
+
+param: mixed, $value
+
+param: mixed, $min
+
+param: mixed, $max
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that the length of a value is within a given range.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * mixed //$min//: The minimum valid length.
+
+ * mixed //$max//: The maximum valid length.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.

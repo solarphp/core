@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: beginFieldset
+
+param: string, $legend
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Begins a <fieldset> block with a legend/caption.
+
+* Parameters:
+
+ * string //$legend//: The legend or caption for the fieldset.
+
+* Returns Solar_View_Helper_Form

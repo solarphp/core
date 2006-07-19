@@ -1,0 +1,26 @@
+HomePage | The Solar_Uri_Action Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Uri
+  $_Solar_Uri_Action
+  $_config
+  $_encode_path
+  $fragment
+  $host
+  $pass
+  $path
+  $port
+  $query
+  $scheme
+  $user
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  _pathEncode()
+  apiVersion()
+  fetch()
+  locale()
+  quick()
+  set()
+  setPath()
+  setQuery()

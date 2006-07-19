@@ -1,0 +1,22 @@
+<function>
+
+access:  static protected
+
+name: _loadLocale
+
+param: string, $class
+
+return: void
+
+</function>
+
+Loads locale strings for a given class.
+
+* Parameters:
+
+ * string //$class//: The class to load strings for.
+
+* Returns void
+
+For example, a Solar_Example_Class must have locale strings
+located at Solar/Example/Class/Locale/*.

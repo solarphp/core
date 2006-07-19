@@ -1,0 +1,56 @@
++ Class Methods
+
+++ Public
+
+* Solar_View::__call() -- Executes a helper method with arbitrary parameters.
+
+* Solar_View::__construct() -- Constructor.
+
+* Solar_View::__set() -- Disallows setting of underscore-prefixed variables.
+
+* Solar_View::addHelperClass() -- Add to the helper directory path stack.
+
+* Solar_View::addTemplatePath() -- Add to the template directory path stack.
+
+* Solar_View::assign() -- Sets variables for the view.
+
+* Solar_View::display() -- Displays a template directly.
+
+* Solar_View::escape() -- Built-in helper for escaping output.
+
+* Solar_View::fetch() -- Fetches template output.
+
+* Solar_View::getHelper() -- Returns an internal helper object; creates it as needed.
+
+* Solar_View::getHelperClass() -- Returns the helper class stack.
+
+* Solar_View::getTemplatePath() -- Returns the template directory path stack.
+
+* Solar_View::newHelper() -- Creates a new standalone helper object.
+
+* Solar_View::partial() -- Executes a partial template in its own scope, optionally with 
+variables into its within its scope.
+
+* Solar_View::setHelperClass() -- Reset the helper class stack.
+
+* Solar_View::setTemplatePath() -- Reset the template directory path stack.
+
+* Solar_View::template() -- Returns the path to the requested template script.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_View::_setup() -- Allows specialized setup for extended classes.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

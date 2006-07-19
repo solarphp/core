@@ -1,0 +1,19 @@
+HomePage | The Solar_Debug_Timer Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Debug_Timer
+  $_config
+  $_marks
+  $_maxlen
+ ClassMethods | Class Methods
+  __construct()
+  __destruct()
+  _exception()
+  apiVersion()
+  display()
+  fetch()
+  locale()
+  mark()
+  profile()
+  start()
+  stop()

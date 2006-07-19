@@ -1,0 +1,53 @@
+HomePage | The Solar_App Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_action
+  $_action_default
+  $_config
+  $_dir
+  $_flash
+  $_info
+  $_layout
+  $_layout_var
+  $_name
+  $_query
+  $_view
+  $errors
+  $layout_base
+  $layout_bottom
+  $layout_left
+  $layout_link
+  $layout_meta
+  $layout_object
+  $layout_right
+  $layout_script
+  $layout_style
+  $layout_title
+  $layout_top
+ ClassMethods | Class Methods
+  __construct()
+  __get()
+  __set()
+  _exception()
+  _forward()
+  _getActionMethod()
+  _getActionView()
+  _getLayout()
+  _getView()
+  _info()
+  _load()
+  _postAction()
+  _postRender()
+  _postRun()
+  _preAction()
+  _preRender()
+  _preRun()
+  _query()
+  _redirect()
+  _render()
+  _setup()
+  actionError()
+  apiVersion()
+  display()
+  fetch()
+  locale()

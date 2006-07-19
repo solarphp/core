@@ -1,0 +1,37 @@
+HomePage | The Solar_Test Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_assert_count
+  $_config
+  $_debug
+ ClassMethods | Class Methods
+  __construct()
+  __destruct()
+  _exception()
+  _export()
+  _ksort()
+  apiVersion()
+  assertEquals()
+  assertFalse()
+  assertInstance()
+  assertNotEquals()
+  assertNotFalse()
+  assertNotInstance()
+  assertNotNull()
+  assertNotRegex()
+  assertNotSame()
+  assertNotTrue()
+  assertNull()
+  assertProperty()
+  assertRegex()
+  assertSame()
+  assertTrue()
+  error()
+  fail()
+  getAssertCount()
+  locale()
+  resetAssertCount()
+  setup()
+  skip()
+  teardown()
+  todo()

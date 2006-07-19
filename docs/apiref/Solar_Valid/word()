@@ -1,0 +1,26 @@
+<function>
+
+access:   public
+
+name: word
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is composed only of "word" characters.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+These include a-z, A-Z, 0-9, and underscore, indicated by a 
+regular expression "\w".

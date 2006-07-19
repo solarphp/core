@@ -1,0 +1,74 @@
++ Class Methods
+
+++ Public
+
+* Solar_Auth_Adapter_Typekey::isLoginRequest() -- Is the current page-load a login request?
+
+We can tell because there will be certain GET params in place:
+
+<code>
+&ts=1149633028
+&email=clay%40mashery.
+
+* Solar_Auth_Adapter_Typekey::isLoginValid() -- Is the current login attempt valid?
+
+The signature must pass DSA verification, and the timestamp of
+the signature must be within the time-window (this is to avoid
+replay attacks).
+
+Inherited Methods:
+
+* Solar_Auth_Adapter::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Auth_Adapter::getEmail() -- Returns the current user email address.
+
+* Solar_Auth_Adapter::getErrCode() -- Returns the most recent error code.
+
+* Solar_Auth_Adapter::getHandle() -- Returns the current user handle.
+
+* Solar_Auth_Adapter::getMoniker() -- Returns the current user "full name" or "display name".
+
+* Solar_Auth_Adapter::getUri() -- Returns the current user URI.
+
+* Solar_Auth_Adapter::isLogoutRequest() -- Tells if the current page load appears to be the result of
+an attempt to log out.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+* Solar_Auth_Adapter::reset() -- Clears handle, passwd, email, moniker, and uri properties.
+
+* Solar_Auth_Adapter::setCommon() -- Sets information for "common" handle + passwd authentication
+systems.
+
+++ Protected
+
+* Solar_Auth_Adapter_Typekey::_bc_bindec() -- Converts a binary value string to a decimal value string using
+bcmath functions.
+
+* Solar_Auth_Adapter_Typekey::_bc_exgcd() -- Finds the extended greatest-common-denominator of two values
+using bcmath functions.
+
+* Solar_Auth_Adapter_Typekey::_bc_hexdec() -- Converts a hex value string to a decimal value string using
+bcmath functions.
+
+* Solar_Auth_Adapter_Typekey::_bc_invert() -- Inverts two values using bcmath functions.
+
+* Solar_Auth_Adapter_Typekey::_fetchKeyData() -- Fetches the public key data from TypeKey.
+
+* Solar_Auth_Adapter_Typekey::_gmp_bindec() -- Converts a binary to a decimal value using GMP functions.
+
+* Solar_Auth_Adapter_Typekey::_verify() -- Verifies login using either GMP or bcmath functions.
+
+* Solar_Auth_Adapter_Typekey::_verify_bc() -- DSA verification using bcmath.
+
+* Solar_Auth_Adapter_Typekey::_verify_gmp() -- DSA verification using GMP.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

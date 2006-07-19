@@ -1,0 +1,15 @@
+protected array $_Solar_Cache_Adapter_Memcache
+
+User-provided configuration.
+
+Keys are:
+
+: \\host\\ : (string) The memcached host name, default 'localhost'.
+
+: \\port\\ : (int) The memcached port number, default 11211.
+
+: \\life\\ : (int) The cache entry lifetime in seconds, default 60.
+
+: \\timeout\\ : (int) The timeout before the server connection is
+  considered a miss, in seconds.  Default is 1 second, and should 
+  not really be changed for reasons other than testing purposes.

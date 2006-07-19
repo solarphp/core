@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: orderElements
+
+param: array, $list
+
+return: void
+
+</function>
+
+Reorders the existing elements.
+
+* Parameters:
+
+ * array //$list//: The order in which elements should be placed; each value in the array is an element name.
+
+* Returns void

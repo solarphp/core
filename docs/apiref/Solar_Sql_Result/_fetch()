@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _fetch
+
+return: bool
+
+</function>
+
+Support method to populate Solar_Sql_Result::$_rows from the result source.
+
+* Parameters: none.
+
+* Returns bool: True if a row was populated, false if not.

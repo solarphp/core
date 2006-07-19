@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: time
+
+param: int, $mins, NULL
+
+return: string
+
+</function>
+
+Runs each benchmark method for a certain number of minutes.
+
+* Parameters:
+
+ * int //$mins//: Run each method for this many minutes.
+
+* Returns string: The number of times each method ran in the allotted time; larger numbers are better.

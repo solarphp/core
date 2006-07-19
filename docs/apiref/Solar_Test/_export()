@@ -1,0 +1,19 @@
+<function>
+
+access:   protected
+
+name: _export
+
+param: mixed, $var
+
+return: string
+
+</function>
+
+Returns the output from Solar_Debug_Var::dump() for a variable.
+
+* Parameters:
+
+ * mixed //$var//: The variable dump.
+
+* Returns string

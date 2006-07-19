@@ -1,0 +1,43 @@
+<function>
+
+access:   public
+
+name: add
+
+param: array|string, $list
+
+return: void
+
+</function>
+
+Adds one or more classes to the stack.
+
+* Parameters:
+
+ * array|string //$list//: The classes to add to the stack.
+
+* Returns void
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_Class_Stack');
+$stack->add(array('Base1', 'Base2', 'Base3'));
+// $stack->get() reveals that the class search order will be
+// 'Base1_', 'Base2_', 'Base3_'.
+
+$stack = Solar::factory('Solar_Class_Stack');
+$stack->add('Base1, Base2, Base3');
+// $stack->get() reveals that the directory search order will be
+// 'Base1_', 'Base2_', 'Base3_', because this is the way the
+// filesystem expects a path definition to work.
+
+$stack = Solar::factory('Solar_Class_Stack');
+$stack->add('Base1');
+$stack->add('Base2');
+$stack->add('Base3');
+// $stack->get() reveals that the directory search order will be
+// 'Base3_', 'Base2_', 'Base1_', because the later adds
+// override the newer ones.
+
+</code>

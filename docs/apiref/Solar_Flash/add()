@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: add
+
+param: string, $key
+
+param: mixed, $val
+
+return: void
+
+</function>
+
+Appends a "read-once" session value to a class and key.
+
+* Parameters:
+
+ * string //$key//: The specific type of information for the class.
+
+ * mixed //$val//: The flash value to add to the key; this will result in the flash becoming an array.
+
+* Returns void

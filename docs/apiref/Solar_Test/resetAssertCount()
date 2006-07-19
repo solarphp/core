@@ -1,0 +1,15 @@
+<function>
+
+access: final  public
+
+name: resetAssertCount
+
+return: void
+
+</function>
+
+Resets the assertion counter to zero.
+
+* Parameters: none.
+
+* Returns void

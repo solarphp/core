@@ -1,0 +1,33 @@
+<function>
+
+access:   public
+
+name: load
+
+param: string, $name
+
+return: string
+
+</function>
+
+Loads a class using the class stack prefixes.
+
+* Parameters:
+
+ * string //$name//: The class to load using the class stack.
+
+* Returns string: The full name of the loaded class.
+
+For example:
+
+<code type="php">
+$stack = Solar::factory('Solar_Class_Stack');
+$stack->add('Base1');
+$stack->add('Base2');
+$stack->add('Base3');
+
+$class = $stack->load('Name');
+// $class is now the first instance of '*_Name' found from the         
+// class stack, looking first for 'Base3_Name', then            
+// 'Base2_Name', then finally 'Base1_Name'.
+</code>

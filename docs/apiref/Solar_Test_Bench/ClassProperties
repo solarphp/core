@@ -1,0 +1,17 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Test_Bench::$_Solar_Test_Bench -- User-defined configuration.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

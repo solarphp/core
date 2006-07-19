@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Cache_Adapter_Memcache::$_Solar_Cache_Adapter_Memcache -- User-provided configuration.
+
+* Solar_Cache_Adapter_Memcache::$_memcache -- A memcache client object.
+
+Inherited Properties:
+
+* Solar_Cache_Adapter::$_Solar_Cache_Adapter() -- User-provided configuration.
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_Cache_Adapter::$_life() -- The lifetime of each cache entry in seconds.
+
+++ Private
+
+None.

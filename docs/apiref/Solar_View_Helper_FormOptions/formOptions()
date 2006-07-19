@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: formOptions
+
+param: array, $info
+
+return: string
+
+</function>
+
+Generates a list of options.
+
+* Parameters:
+
+ * array //$info//: An array of element information.
+
+* Returns string: The element XHTML.

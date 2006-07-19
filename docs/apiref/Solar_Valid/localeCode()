@@ -1,0 +1,28 @@
+<function>
+
+access:   public
+
+name: localeCode
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is a locale code.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Note that this overrides Solar_Base::locale().
+
+The format is two lower-case letters, an underscore, and two upper-case
+letters.

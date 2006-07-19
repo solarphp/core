@@ -1,0 +1,12 @@
+HomePage | The Solar_View_Helper_Date Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_View_Helper_Date
+  $_config
+  $_view
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  date()
+  locale()

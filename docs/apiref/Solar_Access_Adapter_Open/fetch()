@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: fetch
+
+param: string, $handle
+
+param: array, $roles
+
+return: array
+
+</function>
+
+Fetch access privileges for a user handle and roles.
+
+* Parameters:
+
+ * string //$handle//: The user handle.
+
+ * array //$roles//: The user roles.
+
+* Returns array

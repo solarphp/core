@@ -1,0 +1,23 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Cache_Adapter_File::$_Solar_Cache_Adapter_File -- User-provided configuration.
+
+* Solar_Cache_Adapter_File::$_path -- Path to the cache directory.
+
+Inherited Properties:
+
+* Solar_Cache_Adapter::$_Solar_Cache_Adapter() -- User-provided configuration.
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+* Solar_Cache_Adapter::$_life() -- The lifetime of each cache entry in seconds.
+
+++ Private
+
+None.

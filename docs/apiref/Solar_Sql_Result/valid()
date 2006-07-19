@@ -1,0 +1,17 @@
+<function>
+
+access:   public
+
+name: valid
+
+return: bool
+
+</function>
+
+Determines if the current iterator key is valid.
+
+* Parameters: none.
+
+* Returns bool: True if valid, false if not.
+
+Also populates the current row from the result source.

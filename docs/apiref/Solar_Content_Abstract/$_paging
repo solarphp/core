@@ -1,0 +1,3 @@
+protected string $_paging
+
+When fetching, get this many rows per page.

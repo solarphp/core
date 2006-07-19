@@ -1,0 +1,11 @@
+protected array $_config
+
+Collection point for configuration values.
+
+Note that you do not define config defaults in $_config directly; 
+instead, you use a protected property named for the class, with 
+an underscore prefix.
+
+For exmple, a "Vendor_Class_Name" class would define the default 
+config array in "$_Vendor_Class_Name".  This convention lets 
+child classes inherit parent config keys and values.

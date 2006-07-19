@@ -1,0 +1,3 @@
+protected array $_id_count
+
+Tracks element IDs so we can have unique IDs for each element.

@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: load
+
+param: string, $handle
+
+return: void
+
+</function>
+
+Load the list of roles for the given user from the adapter.
+
+* Parameters:
+
+ * string //$handle//: The username to load roles for.
+
+* Returns void

@@ -1,0 +1,50 @@
+<function>
+
+access:  static public
+
+name: exception
+
+param: string, $class
+
+param: mixed, $code
+
+param: string, $text, ''
+
+param: array, $info, array ()
+
+return: Solar_Exception
+
+</function>
+
+Generates a simple exception, but does not throw it.
+
+* Parameters:
+
+ * string //$class//: The class that generated the exception.
+
+ * mixed //$code//: A scalar error code, generally a string.
+
+ * string //$text//: Any error message text.
+
+ * array //$info//: Additional error information in an associative array.
+
+* Returns Solar_Exception
+
+This method attempts to automatically load an exception class
+based on the error code, falling back to parent exceptions
+when no specific exception classes exist.  For example, if a
+class named 'Vendor_Example' extended from 'Vendor_Base' throws an
+exception or error coded as 'ERR_FILE_NOT_FOUND', the method will
+attempt to return these exception classes in this order:
+
+# Vendor_Example_Exception_FileNotFound (class specific)
+
+# Vendor_Base_Exception_FileNotFound (parent specific)
+
+# Vendor_Example_Exception (class generic)
+
+# Vendor_Base_Exception (parent generic)
+
+# Vendor_Exception (generic for all of vendor)
+
+The final fallback is always the generic Solar_Exception class.

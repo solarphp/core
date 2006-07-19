@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: insert
+
+param: array, $data
+
+return: array
+
+</function>
+
+Validates and inserts data into the table.
+
+* Parameters:
+
+ * array //$data//: An associative array of data to be inserted, in the format (field => value).
+
+* Returns array: The data as inserted.

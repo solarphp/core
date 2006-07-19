@@ -1,0 +1,18 @@
+<function>
+
+access:   protected
+
+name: _verify_gmp
+
+return: bool
+
+</function>
+
+DSA verification using GMP.
+
+* Parameters: none.
+
+* Returns bool: True if the message signature is verified using the DSA public key.
+
+Uses $this->_msg, $this->_key, and $this->_sig as the data
+sources.

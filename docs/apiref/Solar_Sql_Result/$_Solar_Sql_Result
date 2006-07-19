@@ -1,0 +1,8 @@
+protected array $_Solar_Sql_Result
+
+User-defined configuration keys.
+
+Keys are:
+
+: \\PDOStatement\\ : (object) A PDOStatement object to be used as the
+result source.

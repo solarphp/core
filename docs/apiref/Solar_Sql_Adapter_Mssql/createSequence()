@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: createSequence
+
+param: string, $name
+
+param: int, $start, 1
+
+return: void
+
+</function>
+
+Creates a sequence, optionally starting at a certain number.
+
+* Parameters:
+
+ * string //$name//: The sequence name to create.
+
+ * int //$start//: The first sequence number to return.
+
+* Returns void

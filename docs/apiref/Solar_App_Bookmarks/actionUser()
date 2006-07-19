@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: actionUser
+
+param: string, $owner_handle, NULL
+
+param: string|array, $tags, NULL
+
+return: void
+
+</function>
+
+Shows all bookmarks for an owner, optionally filtered by tag.
+
+* Parameters:
+
+ * string //$owner_handle//: The owner to show bookmarks for.
+
+ * string|array //$tags//: An optional set of tags to filter by; either a space- (or plus-) separated list of tags, or a sequential array of tags.
+
+* Returns void

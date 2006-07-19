@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: reset
+
+return: void
+
+</function>
+
+Resets the current access controls to a blank array.
+
+* Parameters: none.
+
+* Returns void

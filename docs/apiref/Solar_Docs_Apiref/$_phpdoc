@@ -1,0 +1,3 @@
+protected Solar_Docs_Phpdoc $_phpdoc
+
+Class for parsing PHPDoc comment blocks.

@@ -1,0 +1,29 @@
+<function>
+
+access:   public
+
+name: formatTime
+
+param: string, $value
+
+param: string, $format, 'H:i:s'
+
+return: string
+
+</function>
+
+Forces a value to a time format using [[php date()]].
+
+* Parameters:
+
+ * string //$value//: The value to be filtered.  If an integer, it is used as a Unix timestamp; otherwise, converted to a Unix timestamp using [[php strtotime()]].
+
+ * string //$format//: A timestamp format string appropriate for date(); default is ISO 8601 format (e.g., '12:34:56').
+
+* Returns string: The filtered value.
+
+Takes a string value time and formats it according to $format.
+The [[php date()]] function is used to create the new value, and $format
+should be a format that works with that function.
+
+The value should be a format that [[php strtotime()]] understands.

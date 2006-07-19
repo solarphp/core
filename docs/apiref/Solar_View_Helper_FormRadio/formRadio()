@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: formRadio
+
+param: array, $info
+
+return: string
+
+</function>
+
+Generates a set of radio button elements.
+
+* Parameters:
+
+ * array //$info//: An array of element information.
+
+* Returns string: The element XHTML.

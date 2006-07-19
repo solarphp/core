@@ -1,0 +1,21 @@
+<function>
+
+access:   protected
+
+name: _verify
+
+return: bool
+
+</function>
+
+Verifies user credentials for the adapter.
+
+* Parameters: none.
+
+* Returns bool: True if valid, false if not.
+
+Typical credentials are $this->_handle and $this->_passwd, but
+single sign-on systems may use different credential sources.
+
+Adapters should set $this->_handle, $this->_email, and
+$this->_moniker if verfication is successful.

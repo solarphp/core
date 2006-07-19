@@ -1,0 +1,3 @@
+protected string $_passwd
+
+The user password.

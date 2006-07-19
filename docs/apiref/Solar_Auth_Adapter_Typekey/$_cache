@@ -1,0 +1,3 @@
+protected Solar_Cache $_cache
+
+Cache for the TypeKey public key data.

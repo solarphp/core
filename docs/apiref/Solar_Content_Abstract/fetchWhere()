@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: fetchWhere
+
+param: string|array, $where
+
+param: string, $order, NULL
+
+return: Solar_Sql_Row
+
+</function>
+
+Fetch one node by arbitrary WHERE clause.
+
+* Parameters:
+
+ * string|array //$where//: WHERE conditions.
+
+ * string //$order//: Optional ORDER clause.
+
+* Returns Solar_Sql_Row

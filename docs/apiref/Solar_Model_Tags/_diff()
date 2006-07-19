@@ -1,0 +1,36 @@
+<function>
+
+access:   protected
+
+name: _diff
+
+param: array, $old
+
+param: array, $new
+
+return: array
+
+</function>
+
+Determines the diff (delete/insert matrix) between two tag sets.
+
+* Parameters:
+
+ * array //$old//: The old (previous) set of tags.
+
+ * array //$new//: The new (current) set of tags.
+
+* Returns array: An associative array of two keys: 'del' (where the value is a sequential array of tags removed from the old set) and 'ins' (where the value is a sequential array of tags to be added from the new set).
+
+<code>
+$old = array('a', 'b', 'c');
+$new = array('c', 'd', 'e');
+
+// perform the diff
+$diff = $this->_diff($old, $new);
+
+// the results are:
+// $diff['del'] == array('a', 'b');
+// $diff['ins'] == array('d', 'e');
+// 'c' doesn't show up becuase it's present in both sets
+</code>

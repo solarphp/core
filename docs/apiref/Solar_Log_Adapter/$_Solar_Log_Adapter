@@ -1,0 +1,9 @@
+protected array $_Solar_Log_Adapter
+
+User-defined configuration values.
+
+Keys are:
+
+: \\events\\ : (string|array) The event types this instance
+should recognize; a comma-separated string of events, or
+a sequential array.  Default is all events ('*').

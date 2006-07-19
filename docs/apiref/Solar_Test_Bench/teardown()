@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: teardown
+
+return: void
+
+</function>
+
+Executes this code after running all benchmarks.
+
+* Parameters: none.
+
+* Returns void

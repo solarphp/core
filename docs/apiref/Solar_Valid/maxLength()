@@ -1,0 +1,27 @@
+<function>
+
+access:   public
+
+name: maxLength
+
+param: mixed, $value
+
+param: mixed, $max
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a string is no longer than a certain length.
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * mixed //$max//: The value must have no more than this many characters.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.

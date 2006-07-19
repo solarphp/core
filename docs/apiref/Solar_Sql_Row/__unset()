@@ -1,0 +1,21 @@
+//Inherited from Solar_Struct::__unset().//
+
+<function>
+
+access:   public
+
+name: __unset
+
+param: string, $key
+
+return: void
+
+</function>
+
+Sets a key in the data to null.
+
+* Parameters:
+
+ * string //$key//: The requested data key.
+
+* Returns void

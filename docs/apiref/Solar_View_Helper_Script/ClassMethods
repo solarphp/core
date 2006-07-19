@@ -1,0 +1,23 @@
++ Class Methods
+
+++ Public
+
+* Solar_View_Helper_Script::script() -- Returns a <script></script> tag.
+
+Inherited Methods:
+
+* Solar_View_Helper::__construct() -- Constructor.
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

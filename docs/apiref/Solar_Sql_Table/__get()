@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: __get
+
+param: string, $key, NULL
+
+return: mixed
+
+</function>
+
+Allows reading of protected properties.
+
+* Parameters:
+
+ * string //$key//: The property name.
+
+* Returns mixed: The property value.

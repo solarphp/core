@@ -1,0 +1,25 @@
+<function>
+
+access:   public
+
+name: linkStylesheet
+
+param: string, $href
+
+param: array, $attribs, NULL
+
+return: string
+
+</function>
+
+Returns a <link rel="stylesheet" .
+
+* Parameters:
+
+ * string //$href//: The source href for the stylesheet.
+
+ * array //$attribs//: Additional attributes for the <link> tag.
+
+* Returns string: The <link ... /> tag.
+
+. /> tag.

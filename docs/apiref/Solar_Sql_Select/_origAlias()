@@ -1,0 +1,22 @@
+<function>
+
+access:   protected
+
+name: _origAlias
+
+param: string, $name
+
+return: array
+
+</function>
+
+Returns an identifier as an "original" name and an "alias".
+
+* Parameters:
+
+ * string //$name//: The string identifier.
+
+* Returns array: The $name string as an array with keys 'name' and 'alias'.
+
+Effectively splits the identifier at "AS", so that "foo AS bar"
+becomes array('orig' => 'foo', 'alias' => 'bar').

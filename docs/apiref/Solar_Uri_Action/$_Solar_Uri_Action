@@ -1,0 +1,7 @@
+protected array $_Solar_Uri_Action
+
+User-provided configuration values.
+
+Keys are:
+
+: \\path\\ : (string) A path prefix specifically for actions, e.g. '/index.php/'.

@@ -1,0 +1,7 @@
+public array $config
+
+The values read in from the configuration file.
+
+Default keys are:
+
+: \\locale_code\\ : (string) The locale code Solar is using, default 'en_US'.

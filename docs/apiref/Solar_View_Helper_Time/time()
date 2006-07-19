@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: time
+
+param: string, $spec
+
+param: string, $format, NULL
+
+return: string
+
+</function>
+
+Outputs a formatted time using [[php date()]] format codes.
+
+* Parameters:
+
+ * string //$spec//: Any date-time string suitable for strtotime().
+
+ * string //$format//: An optional custom [[php date()]] formatting string; null by default.
+
+* Returns string: The formatted date string.

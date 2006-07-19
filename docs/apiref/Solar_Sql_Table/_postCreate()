@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _postCreate
+
+return: void
+
+</function>
+
+Additional table-creation tasks, such as inserting rows.
+
+* Parameters: none.
+
+* Returns void

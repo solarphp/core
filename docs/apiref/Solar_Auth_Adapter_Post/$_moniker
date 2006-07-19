@@ -1,0 +1,6 @@
+//Inherited from Solar_Auth_Adapter::$_moniker.//
+
+protected string $_moniker
+
+The user "display name" or "full name" as derived from the
+authentication source.

@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: beginGroup
+
+param: string, $label, NULL
+
+return: Solar_View_Helper_Form
+
+</function>
+
+Begins a group of form elements under a single label.
+
+* Parameters:
+
+ * string //$label//: The label text.
+
+* Returns Solar_View_Helper_Form

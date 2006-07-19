@@ -1,0 +1,5 @@
+//Inherited from Solar_View_Helper_FormElement::$_attribs.//
+
+protected array $_attribs
+
+The form element attributes (checked, selected, readonly, etc).

@@ -1,0 +1,10 @@
+//Inherited from Solar_Uri::$_Solar_Uri.//
+
+protected array $_Solar_Uri
+
+User-provided configuration values.
+
+Keys are:
+
+: \\path\\ : (string) A path prefix.  Generally needed only
+for specific URI subclasses, e.g. Solar_Uri_Action.

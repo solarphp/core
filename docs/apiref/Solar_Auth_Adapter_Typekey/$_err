@@ -1,0 +1,5 @@
+//Inherited from Solar_Auth_Adapter::$_err.//
+
+protected string $_err
+
+The most-recent error code.

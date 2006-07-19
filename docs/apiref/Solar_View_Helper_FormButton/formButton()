@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: formButton
+
+param: array, $info
+
+return: string
+
+</function>
+
+Generates a 'button' element.
+
+* Parameters:
+
+ * array //$info//: An array of element information.
+
+* Returns string: The element XHTML.

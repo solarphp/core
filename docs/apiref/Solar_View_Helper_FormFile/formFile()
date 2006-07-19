@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: formFile
+
+param: array, $info
+
+return: string
+
+</function>
+
+Generates a 'file' element.
+
+* Parameters:
+
+ * array //$info//: An array of element information.
+
+* Returns string: The element XHTML.

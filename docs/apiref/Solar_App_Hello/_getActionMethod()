@@ -1,0 +1,21 @@
+//Inherited from Solar_Controller_Page::_getActionMethod().//
+
+<function>
+
+access:   protected
+
+name: _getActionMethod
+
+param: string, $action
+
+return: string
+
+</function>
+
+Returns the method name for an action.
+
+* Parameters:
+
+ * string //$action//: The action name.
+
+* Returns string: The method name, or boolean false if the action method does not exist.

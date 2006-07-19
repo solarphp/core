@@ -1,0 +1,22 @@
+<function>
+
+access:   protected
+
+name: _preRender
+
+param: Solar_View, $view
+
+return: void
+
+</function>
+
+Executes before rendering the page view and layout.
+
+* Parameters:
+
+ * Solar_View //$view//: The Solar_View object for rendering the page view script.
+
+* Returns void
+
+Use this to pre-process the Solar_View object, or to manipulate
+controller properties with view helpers.

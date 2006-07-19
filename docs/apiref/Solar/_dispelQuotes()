@@ -1,0 +1,19 @@
+<function>
+
+access:  static protected
+
+name: _dispelQuotes
+
+param: string, &$value
+
+return: void
+
+</function>
+
+A stripslashes() alias that supports array_walk_recursive().
+
+* Parameters:
+
+ * string //$value//: The value to strip slashes from.
+
+* Returns void

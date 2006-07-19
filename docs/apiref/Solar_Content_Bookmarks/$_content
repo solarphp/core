@@ -1,0 +1,5 @@
+//Inherited from Solar_Content_Abstract::$_content.//
+
+protected Solar_Content $_content
+
+Solar_Content dependency.

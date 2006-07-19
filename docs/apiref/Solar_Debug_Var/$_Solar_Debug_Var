@@ -1,0 +1,8 @@
+protected array $_Solar_Debug_Var
+
+User-provided configuration.
+
+Keys are:
+
+: \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+  or 'text' for plain text.  Default autodetects by SAPI version.

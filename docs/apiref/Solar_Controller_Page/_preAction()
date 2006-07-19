@@ -1,0 +1,15 @@
+<function>
+
+access:   protected
+
+name: _preAction
+
+return: void
+
+</function>
+
+Executes before each action.
+
+* Parameters: none.
+
+* Returns void

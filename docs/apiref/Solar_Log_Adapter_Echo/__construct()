@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: __construct
+
+param: array, $config, NULL
+
+return: Solar_Log_Adapter_Echo
+
+</function>
+
+Constructor.
+
+* Parameters:
+
+ * array //$config//: User-defined configuration.
+
+* Returns Solar_Log_Adapter_Echo
+
+Detect output mode by SAPI if none is specified.

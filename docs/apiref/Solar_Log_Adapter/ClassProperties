@@ -1,0 +1,19 @@
++ Class Properties
+
+++ Public
+
+None.
+
+++ Protected
+
+* Solar_Log_Adapter::$_Solar_Log_Adapter -- User-defined configuration values.
+
+* Solar_Log_Adapter::$_events -- The event types this instance will recognize, default '*'.
+
+Inherited Properties:
+
+* Solar_Base::$_config() -- Collection point for configuration values.
+
+++ Private
+
+None.

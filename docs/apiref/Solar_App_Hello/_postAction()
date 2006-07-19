@@ -1,0 +1,17 @@
+//Inherited from Solar_Controller_Page::_postAction().//
+
+<function>
+
+access:   protected
+
+name: _postAction
+
+return: void
+
+</function>
+
+Executes after each action.
+
+* Parameters: none.
+
+* Returns void

@@ -1,0 +1,27 @@
+<function>
+
+access:  static public
+
+name: staticFilterCallback
+
+param: string, $value
+
+param: mixed, $find
+
+param: mixed, $with
+
+return: string
+
+</function>
+
+Used for testing Solar_Filter::callback() as a static method.
+
+* Parameters:
+
+ * string //$value//: The value to filter.
+
+ * mixed //$find//: Find this string in the value.
+
+ * mixed //$with//: Replace with this string.
+
+* Returns string: The filtered value.

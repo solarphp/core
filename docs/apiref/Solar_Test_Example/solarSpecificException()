@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: solarSpecificException
+
+return: void
+
+</function>
+
+Throws ERR_FILE_NOT_FOUND for this class.
+
+* Parameters: none.
+
+* Returns void

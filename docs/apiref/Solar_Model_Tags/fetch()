@@ -1,0 +1,21 @@
+//Inherited from Solar_Sql_Table::fetch().//
+
+<function>
+
+access:   public
+
+name: fetch
+
+param: int, $id
+
+return: Solar_Sql_Row
+
+</function>
+
+Fetches one row from the table by its primary key ID.
+
+* Parameters:
+
+ * int //$id//: The primary key ID value.
+
+* Returns Solar_Sql_Row

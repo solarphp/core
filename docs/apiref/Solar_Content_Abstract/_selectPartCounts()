@@ -1,0 +1,25 @@
+<function>
+
+access:   protected
+
+name: _selectPartCounts
+
+param: Solar_Sql_Select, $select
+
+param: array, $parts
+
+return: void
+
+</function>
+
+Given an existing select object, add part-count selection to it.
+
+* Parameters:
+
+ * Solar_Sql_Select //$select//: The select object.
+
+ * array //$parts//: The parts to get counts for.
+
+* Returns void
+
+Note that this acts on the object reference directly.

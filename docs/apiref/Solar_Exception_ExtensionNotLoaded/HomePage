@@ -1,0 +1,13 @@
++ The Solar_Exception_ExtensionNotLoaded Class
+
+++ Inheritance
+
+* Exception
+
+ * [Solar_Exception::HomePage Solar_Exception]
+
+  * Solar_Exception_ExtensionNotLoaded
+
+++ Overview
+
+Exception: a required PHP extension is not loaded.

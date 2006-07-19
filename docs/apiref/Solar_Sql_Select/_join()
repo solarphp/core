@@ -1,0 +1,31 @@
+<function>
+
+access:   protected
+
+name: _join
+
+param: string, $type
+
+param: string|Solar_Sql_Table, $spec
+
+param: string, $cond
+
+param: array|string, $cols
+
+return: Solar_Sql_Select
+
+</function>
+
+Support method for adding JOIN clauses.
+
+* Parameters:
+
+ * string //$type//: The type of join; empty for a plain JOIN, or "LEFT", "INNER", etc.
+
+ * string|Solar_Sql_Table //$spec//: If a Solar_Sql_Table object, the table to join to; if a string, the table name to join to.
+
+ * string //$cond//: Join on this condition.
+
+ * array|string //$cols//: The columns to select from the joined table.
+
+* Returns Solar_Sql_Select

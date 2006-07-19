@@ -1,0 +1,17 @@
+<function>
+
+access:   protected
+
+name: _dsn
+
+return: string
+
+</function>
+
+Creates a PDO-style DSN.
+
+* Parameters: none.
+
+* Returns string: A PDO-style DSN.
+
+Per http://php.net/manual/en/ref.pdo-pgsql.connection.php

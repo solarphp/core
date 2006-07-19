@@ -1,0 +1,27 @@
+<function>
+
+access:   public
+
+name: isoTime
+
+param: mixed, $value
+
+param: bool, $blank, false
+
+return: bool
+
+</function>
+
+Validate that a value is an ISO 8601 time string (hh:ii::ss format).
+
+* Parameters:
+
+ * mixed //$value//: The value to validate.
+
+ * bool //$blank//: Allow blank values to be valid.
+
+* Returns bool: True if valid, false if not.
+
+Per note from Chris Drozdowski about ISO 8601, allows two
+midnight times ... 00:00:00 for the beginning of the day, and
+24:00:00 for the end of the day.

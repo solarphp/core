@@ -1,0 +1,67 @@
++ Class Methods
+
+++ Public
+
+* Solar_Sql::__construct() -- Constructor.
+
+* Solar_Sql::addColumn() -- Adds a portable column to a table in the database.
+
+* Solar_Sql::begin() -- Leave autocommit mode and begin a transaction.
+
+* Solar_Sql::commit() -- Commit a transaction and return to autocommit mode.
+
+* Solar_Sql::createIndex() -- Creates a portable index on a table.
+
+* Solar_Sql::createSequence() -- Creates a sequence in the database.
+
+* Solar_Sql::createTable() -- Creates a portable table.
+
+* Solar_Sql::delete() -- Deletes rows from the table based on a WHERE clause.
+
+* Solar_Sql::dropColumn() -- Drops a column from a table in the database.
+
+* Solar_Sql::dropIndex() -- Drops an index from a table in the database.
+
+* Solar_Sql::dropSequence() -- Drops a sequence from the database.
+
+* Solar_Sql::dropTable() -- Drops a table from the database.
+
+* Solar_Sql::insert() -- Inserts a row of data into a table.
+
+* Solar_Sql::listTables() -- Returns a list of table names in the database.
+
+* Solar_Sql::nextSequence() -- Gets the next number in a sequence; creates the sequence if it does not exist.
+
+* Solar_Sql::query() -- Generic query executor.
+
+* Solar_Sql::quote() -- Safely quotes a value for an SQL statement.
+
+* Solar_Sql::quoteInto() -- Quotes a value and places into a piece of text at a placeholder.
+
+* Solar_Sql::quoteMulti() -- Quote multiple text-and-value pieces.
+
+* Solar_Sql::rollback() -- Roll back a transaction and return to autocommit mode.
+
+* Solar_Sql::select() -- Select rows from the database.
+
+* Solar_Sql::update() -- Updates a table with specified data based on a WHERE clause.
+
+Inherited Methods:
+
+* Solar_Base::apiVersion() -- Reports the API version for this class.
+
+* Solar_Base::locale() -- Looks up locale strings based on a key.
+
+++ Protected
+
+* Solar_Sql::_buildColDef() -- Builds a column definition string.
+
+* Solar_Sql::_validIdentifier() -- Check if a table, column, or index name is a valid identifier.
+
+Inherited Methods:
+
+* Solar_Base::_exception() -- Convenience method for returning exceptions with localized text.
+
+++ Private
+
+None.

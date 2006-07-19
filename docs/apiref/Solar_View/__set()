@@ -1,0 +1,23 @@
+<function>
+
+access:   public
+
+name: __set
+
+param: string, $key
+
+param: string, $val
+
+return: void
+
+</function>
+
+Disallows setting of underscore-prefixed variables.
+
+* Parameters:
+
+ * string //$key//: The variable name.
+
+ * string //$val//: The variable value.
+
+* Returns void

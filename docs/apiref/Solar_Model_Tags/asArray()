@@ -1,0 +1,21 @@
+<function>
+
+access:   public
+
+name: asArray
+
+param: string|array, $tags
+
+return: string
+
+</function>
+
+Normalizes tag arrays.
+
+* Parameters:
+
+ * string|array //$tags//: A space-separated string of tags, or a sequential array of tags.
+
+* Returns string: A space-separated string of tags.
+
+Also converts strings to a normalized tag array.

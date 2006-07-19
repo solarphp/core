@@ -1,0 +1,15 @@
+<function>
+
+access:   public
+
+name: getStatus
+
+return: bool
+
+</function>
+
+Gets the current form status.
+
+* Parameters: none.
+
+* Returns bool

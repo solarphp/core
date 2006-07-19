@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: limitPage
+
+param: int, $page, NULL
+
+return: Solar_Sql_Select
+
+</function>
+
+Sets the limit and count by page number.
+
+* Parameters:
+
+ * int //$page//: Limit results to this page number.
+
+* Returns Solar_Sql_Select

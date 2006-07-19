@@ -1,0 +1,18 @@
+HomePage | The Solar_Role Class
+ApiRef | API Reference
+ ClassProperties | Class Properties
+  $_Solar_Role
+  $_adapter
+  $_config
+  $_loaded
+  $list
+ ClassMethods | Class Methods
+  __construct()
+  _exception()
+  apiVersion()
+  is()
+  isAll()
+  isAny()
+  load()
+  locale()
+  reset()

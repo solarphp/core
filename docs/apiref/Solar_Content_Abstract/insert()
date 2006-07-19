@@ -1,0 +1,19 @@
+<function>
+
+access:   public
+
+name: insert
+
+param: array, $data
+
+return: array
+
+</function>
+
+Insert a new node and its tags.
+
+* Parameters:
+
+ * array //$data//: The node data.
+
+* Returns array: The inserted data.

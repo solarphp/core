@@ -41,8 +41,6 @@ class Test_Solar_Struct extends Solar_Test {
     {
         $struct = $this->_getStruct();
         $this->assertInstance($struct, 'Solar_Struct');
-        Solar::dump($struct);
-        
     }
     
     public function test__get_existing()

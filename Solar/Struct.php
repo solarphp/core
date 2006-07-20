@@ -23,9 +23,6 @@
  * ($foo['bar']) and object notation ($foo->bar).  This helps with 
  * moving data among form objects, view helpers, SQL objects, etc.
  * 
- * Once set at construction time, the data keys cannot be added to,
- * changed, or removed.
- * 
  * Examples:
  * 
  * <code type="php">
@@ -48,7 +45,7 @@
  * echo $struct->noSuchKey; // null
  * </code>
  * 
- * The one problem is that casting the object to an array will not
+ * One problem is that casting the object to an array will not
  * reveal the data; you'll get an empty array.  Instead, you should use
  * the toArray() method to get a copy of the object data.
  * 
@@ -61,6 +58,25 @@
  * $struct = $object->toArray(); // $struct = array('foo' => 'bar', ...)
  * </code>
  * 
+ * Another problem is that you can't use object notation inside double-
+ * quotes directly; you need to wrap in braces.
+ * 
+ * <code type="php">
+ * echo "$struct->foo";   // won't work
+ * echo "{$struct->foo}"; // will work
+ * </code>
+ * 
+ * A third problem is that you can't address keys inside a foreach() 
+ * loop directly using array notation; you have to use object notation.
+ * Originally reported by Antti Holvikari.
+ * 
+ * <code type="php">
+ * // will not work
+ * foreach ($struct['subarray'] as $key => $val) { ... }
+ * 
+ * // will work
+ * foreach ($struct->subarray as $key => $val) { ... }
+ * </code>
  * @category Solar
  * 
  * @package Solar_Struct

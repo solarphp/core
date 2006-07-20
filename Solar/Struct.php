@@ -83,7 +83,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * The row data in colname => value format.
+     * The keys/properties in name => value format.
      * 
      * @var array
      * 

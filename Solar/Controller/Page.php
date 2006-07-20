@@ -158,7 +158,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var string
      * 
      */
-    protected $_name;
+    protected $_name = null;
     
     /**
      * 
@@ -168,6 +168,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      */
     protected $_query = array();
+    
+    /**
+     * 
+     * Name of the form element with a 'submit' value.
+     * 
+     * @var string
+     * 
+     * @see Solar_Controller_Page::_submit()
+     * 
+     */
+    protected $_submit_key = 'submit';
     
     /**
      * 
@@ -678,6 +689,43 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set the current action on exit so that $this->_action is
         // always the **first** action requested when we finally exit.
         $this->_action = $action;
+    }
+    
+    /**
+     * 
+     * Reports whether or not user requested a specific submit type.
+     * 
+     * By default, looks for $_submit_key in Solar::post() to get the
+     * value of the submit request.
+     * 
+     * Checks against "SUBMIT_$type" locale string for matching.  E.g.,
+     * $this->_isSubmit('save') checks Solar::post('submit') against 
+     * $this->locale('SUBMIT_SAVE').
+     * 
+     * @param string $type The submit type; e.g., 'save', 'delete', 
+     * 'preview', etc.
+     * 
+     * @param string $submit_key If not empty, check against this
+     * Solar::post() key instead $this->_submit_key.  Default null.
+     * 
+     * @return bool
+     * 
+     */
+    protected function _isSubmit($type, $submit_key = null)
+    {
+        $locale_key = 'SUBMIT_' . strtoupper($type);
+        
+        if (empty($submit_key)) {
+            $submit_key = $this->_submit_key;
+        }
+        
+        $submit = Solar::post($submit_key, false);
+        $locale = $this->locale($locale_key);
+        
+        // $submit must be non-empty, and must match locale string.
+        // not enough just to match the locale string, as it might
+        // be empty.
+        return $submit && $submit == $locale;
     }
     
     /**

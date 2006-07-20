@@ -109,8 +109,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_data = $this->_config['data'];
-        // $this->load($this->_config['data']); // why won't this work?
+        $this->_data = (array) $this->_config['data'];
     }
     
     /**
@@ -204,8 +203,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         // force to array
         if ($spec instanceof Solar_Struct) {
-            // we can do this because they're the same class
-            $data = $spec->toArray();
+            // we can do this because $spec is of the same class
+            $data = $spec->_data;
         } else {
             $data = (array) $spec;
         }

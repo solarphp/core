@@ -125,10 +125,13 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
      * 
      * @param array $data An array of new data.
      * 
+     * @param bool $reset Blank out the data array first so that only keys
+     * in the $spec will be in the struct.
+     * 
      * @return void
      * 
      */
-    public function load($data)
+    public function load($data, $reset = false)
     {
     }
 }

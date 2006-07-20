@@ -92,15 +92,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Countable: cached value for count().
-     * 
-     * @var int
-     * 
-     */
-    protected $_count = null;
-    
-    /**
-     * 
      * Iterator: is the current position valid?
      * 
      * @var array
@@ -296,10 +287,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function count()
     {
-        if (is_null($this->_count)) {
-            $this->_count = count($this->_data);
-        }
-        return $this->_count;
+        return count($this->_data);
     }
     
     /**

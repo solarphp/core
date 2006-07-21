@@ -125,6 +125,24 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
+     * The object class returned by fetch(), fetchNew(), and fetchWhere().
+     * 
+     * @var string
+     * 
+     */
+    protected $_row_class = 'Solar_Sql_Row';
+    
+    /**
+     * 
+     * The object class returned by fetchAll().
+     * 
+     * @var string
+     * 
+     */
+    protected $_all_class = 'Solar_Sql_Rowset';
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -326,12 +344,20 @@ class Solar_Sql_Table extends Solar_Base {
     {
         $select = Solar::factory('Solar_Sql_Select');
         
+        if ($type == 'all') {
+            $class = $this->_all_class;
+        } elseif ($type == 'row') {
+            $class = $this->_row_class;
+        } else {
+            $class = null;
+        }
+        
         $result = $select->from($this->_name, array_keys($this->_col))
                          ->multiWhere($where)
                          ->order($order)
                          ->setPaging($this->_paging)
                          ->limitPage($page)
-                         ->fetch($type);
+                         ->fetch($type, $class);
         
         if ($result instanceof Solar_Sql_Row) {
             $result->setSave($this);

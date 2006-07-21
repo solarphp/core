@@ -253,7 +253,7 @@ class Solar_Sql extends Solar_Base {
      * Available selection types are:
      * 
      * ||~ $type      ||~ returns ||
-     * ||  \\all\\    ||  Solar_Sql_Rowset object of all rows ||
+     * ||  \\all\\    ||  Solar_Sql_Rowset object of all rows; return class can be set using $class ||
      * ||  \\array\\  ||  A sequential array of all rows ||
      * ||  \\assoc\\  ||  An assoc. array of all rows keyed on first column ||
      * ||  \\col\\    ||  A sequential array of the first column of each row ||
@@ -261,7 +261,7 @@ class Solar_Sql extends Solar_Base {
      * ||  \\pairs\\  ||  An assoc. array of keys (first col) and values (second col) ||
      * ||  \\pdo\\    ||  A PDOStatement object ||
      * ||  \\result\\ ||  A Solar_Sql_Result object ||
-     * ||  \\row\\    ||  A Solar_Sql_Row object of the first row ||
+     * ||  \\row\\    ||  A Solar_Sql_Row object of the first row; return class can be set using $class ||
      * ||  \\string\\ ||  The SQL SELECT command as a string ||
      * 
      * @param string $type How to return the results.
@@ -272,10 +272,13 @@ class Solar_Sql extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
+     * @param string $class If selecting $type 'all' or 'row', use this
+     * class for the return object.
+     * 
      * @return mixed The query results for the return type requested.
      * 
      */
-    public function select($type, $spec, $data = array())
+    public function select($type, $spec, $data = array(), $class = null)
     {
         // build the statement from its component parts if needed
         if (is_array($spec)) {
@@ -298,8 +301,11 @@ class Solar_Sql extends Solar_Base {
         
         // return Solar_Sql_Rowset object
         case 'all':
+            if (empty($class)) {
+                $class = 'Solar_Sql_Rowset';
+            }
             $data = Solar::factory(
-                'Solar_Sql_Rowset',
+                $class,
                 array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
             );
             break;
@@ -355,9 +361,11 @@ class Solar_Sql extends Solar_Base {
         
         // return a Solar_Sql_Row object
         case 'row':
-            // $data = $result->fetch(PDO::FETCH_ASSOC);
+            if (empty($class)) {
+                $class = 'Solar_Sql_Row';
+            }
             $data = Solar::factory(
-                'Solar_Sql_Row',
+                $class,
                 array('data' => $result->fetch(PDO::FETCH_ASSOC))
             );
             break;

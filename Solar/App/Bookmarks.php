@@ -341,11 +341,8 @@ class Solar_App_Bookmarks extends Solar_App {
         // operations
         // 
 
-        // what operation are we performing?
-        $submit = Solar::post('submit');
-
         // OP: Save
-        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+        if ($this->_isSubmit('save') && $form->validate()) {
     
             // load data from the form input
             $item->load($form->values('bookmark'));
@@ -373,7 +370,7 @@ class Solar_App_Bookmarks extends Solar_App {
         }
         
         // OP: Cancel
-        if ($submit == $this->locale('SUBMIT_CANCEL')) {
+        if ($this->_isSubmit('cancel')) {
             $this->_redirect($href);
         }
         
@@ -448,11 +445,8 @@ class Solar_App_Bookmarks extends Solar_App {
         // now populate the the submitted POST values to the form
         $form->populate();
 
-        // what operation are we performing?
-        $submit = Solar::post('submit');
-
-        // OP: Save
-        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+        // Save?
+        if ($this->_isSubmit('save') && $form->validate()) {
     
             // load the item with form input
             $item->load($form->values('bookmark'));
@@ -467,16 +461,6 @@ class Solar_App_Bookmarks extends Solar_App {
                 // attempt the save, may throw an exception
                 $item->save();
         
-                /*
-                // retain the id
-                $id = $item->id;
-                
-                // if new, return to the backlink
-                if ($id == 0) {
-                    $this->_redirect($href);
-                }
-                */
-        
             } catch (Solar_Sql_Table_Exception $e) {
         
                 // exception on save()
@@ -490,13 +474,13 @@ class Solar_App_Bookmarks extends Solar_App {
             }
         }
 
-        // OP: Cancel
-        if ($submit == $this->locale('SUBMIT_CANCEL')) {
+        // Cancel?
+        if ($this->_isSubmit('cancel')) {
             $this->_redirect($href);
         }
 
-        // OP: Delete
-        if ($submit == $this->locale('SUBMIT_DELETE')) {
+        // Delete?
+        if ($this->_isSubmit('delete')) {
             $values = $form->values();
             $id = $values['bookmark']['id'];
             $this->_bookmarks->delete($id);
@@ -561,8 +545,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $form->populate();
 
         // check for a 'Save' operation
-        $submit = Solar::post('submit');
-        if ($submit == $this->locale('SUBMIT_SAVE') && $form->validate()) {
+        if ($this->_isSubmit('save') && $form->validate()) {
     
             // save the data
             try {

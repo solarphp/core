@@ -1,0 +1,1651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.9" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Solar</name>
+ <channel>solarphp.com</channel>
+ <summary>Simple object library and application repository for PHP.</summary>
+ <description>Solar is a class library and application component suite for PHP 5 (and
+is PHP5 E_STRICT compliant). Solar provides simple, easy-to-comprehend
+classes and components for the common aspects of web-based rapid
+application development.
+
+Solar is designed for developers who intend to distribute their
+applications to the whole world.  This means, for example, the database
+driver functions work exactly the same way for each supported database. 
+It also means that localization support is built in from the start.
+
+Please visit http://solarphp.com/ for more information.
+ </description>
+ <lead>
+  <name>Paul M. Jones</name>
+  <user>pmjones</user>
+  <email>pmjones@solarphp.com</email>
+  <active>yes</active>
+ </lead>
+ <contributor>
+  <name>Matthew Weier O&apos;Phinney</name>
+  <user>weierophinney</user>
+  <email>mweierophinney@gmail.com</email>
+  <active>yes</active>
+ </contributor>
+ <contributor>
+  <name>Jean-Eric Laurent</name>
+  <user>jelaurent</user>
+  <email>jel@jelaurent.com</email>
+  <active>yes</active>
+ </contributor>
+ <helper>
+  <name>Clay Loveless</name>
+  <user>clay</user>
+  <email>clay@killersoft.com</email>
+  <active>yes</active>
+ </helper>
+ <helper>
+  <name>Jeff Surgeson</name>
+  <user>jsurgeson</user>
+  <email>solar@3hex.com</email>
+  <active>yes</active>
+ </helper>
+ <date>2006-07-21</date>
+ <time>13:20:32</time>
+ <version>
+  <release>0.22.0</release>
+  <api>0.22.0</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD</license>
+ <notes>* General
+
+    * Per note from Rodrigo Moraes, Solar_Sql selections of &apos;all&apos; or
+      &apos;row&apos; now let you select the class of the return object. Defaults
+      are Solar_Sql_Rowset for &apos;all&apos; and Solar_Sql_Row for &apos;row&apos;.
+      Affects Solar_Sql, Solar_Sql_Rowset, Solar_Sql_Select, and
+      Solar_Sql_Table.
+
+* New classes:
+
+    * Solar_View_Helper_Meta, Solar_View_Helper_MetaName, and
+      Solar_View_Helper_MetaHttp for &lt;meta ... /&gt; tag construction,
+      based on work by Jeff Surgeson and Rodrigo Moraes.
+      
+* Solar_Content_Abstract
+
+    * Method delete() now deletes node parts, and disallows deletion
+      where $id is empty or zero
+    
+* Solar_Controller_Page
+
+    * Added _isSubmit() method to check submission values. Previously,
+      you would check if (Solar::post(&apos;submit&apos;) ==
+      $this-&gt;locale(&apos;SUBMIT_SAVE&apos;)). Now you use check if
+      ($this-&gt;_isSubmit(&apos;save&apos;)).
+
+* Solar_Struct
+
+    * Per email with Antti Holvikari, keys are now settable instead of
+      being set-once.
+    
+    * Method load() now lets you reset the data entirely using a second
+      $reset parameter (set to boolean true) instead of merging with
+      existing keys (the default behavior)
+
+* Solar_Sql
+
+    * Method select(&apos;all&apos;) and select(&apos;row&apos;) now support setting the
+      class of the returned object using a 4th param, $class.
+
+* Solar_Sql_Rowset
+
+    * New property $_row_class sets the class of individual row objects.
+    
+* Solar_Sql_Select
+
+    * Method fetch() has a 2nd param, $class, to set the class of &apos;all&apos;
+      and &apos;row&apos; return objects
+
+* Solar_Sql_Table
+
+    * Two new properties, $_all_class and $_row_class, to define what
+      fetchAll() and fetch/fetchNew/fetchWhere() should use as the
+      return class type</notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="ba8d5c68ef5e0a76c7ddbae8d90e65ed" name="docs/Solar.config.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2e50c2e56f19322f6f8b60df2d99c97f" name="docs/_htaccess" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="67325e0d963cdb6c1be96b627aa29381" name="docs/manual/Main/AboutSolar" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fdd381725b50b20c67ac9dfcf3cf8c61" name="docs/manual/Main/AreaMap" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c4ee44db80f157c302ef1329d9b48cb2" name="docs/manual/Main/BaseClass" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a59461668dded699f066e227aca69062" name="docs/manual/Main/BeNice" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="385ecc8a00cdb584d7a4af744e065cb1" name="docs/manual/Main/ConfigFile" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="225d1f497e5a40fb3d6426685654f131" name="docs/manual/Main/ConstructorParameters" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9e50f2c4029e461657c2e30a626e88c8" name="docs/manual/Main/DownloadSolar" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f3adb765cfc1f5baf09f515d0e6703b9" name="docs/manual/Main/GettingStarted" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ce153f2c63a01a1f38a1c9b32ea4b1df" name="docs/manual/Main/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ef3270c53687e0ba1eb284f22cde57a0" name="docs/manual/Main/LocaleFiles" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="aceab628722357e4e805127b45f9efe1" name="docs/manual/Main/MailingList" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="48e4f323ac09ed10a16dc005efde5ac8" name="docs/manual/Main/NamingConventions" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="28500b38e5478da8b6e0bd00351f474f" name="docs/manual/Main/SkeletonApp" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="127163285fc06f5a3d1f44d05ca1422d" name="docs/manual/Main/SolarDocs" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="eece9799d977a34a88362dafa6add3bd" name="docs/manual/Main/SolarGoals" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f00acefb6b5b0a4f6b5c29964fc5bd56" name="docs/manual/Main/SolarStandards" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6722add3bfa0648a164d5e71650a4f2c" name="docs/manual/Main/StyleGuide" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5330b02490650493efd48ccdfb7615cb" name="docs/manual/Main/TodoList" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5df5196a4fef98b02f1699e041edb1a9" name="docs/manual/Main/UserAuth" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dd29719077cfb3914b8b6ab0592cd4e4" name="docs/manual/Solar/$config" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7e94cfdd67289f9af14093a07ed9607c" name="docs/manual/Solar/ApiRef" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="02ee4be03d7c51c7c20e6e965377ed6d" name="docs/manual/Solar/config()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="215a31308986c4d7c052cda3bfa0362d" name="docs/manual/Solar/cookie()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5b3c84487039bfba0a1c879dd7beba58" name="docs/manual/Solar/dependency()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1d0f0fce05da94a743b494f15c7dc14e" name="docs/manual/Solar/exception()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fbb791cbc6fb001d3ceca0bd63423d61" name="docs/manual/Solar/factory()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="cd06d87e4467c01cd479f8c398ffc508" name="docs/manual/Solar/get()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bca05dce21fae6bc0b72706c01252bc3" name="docs/manual/Solar/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="cbfb85c240f85e733dfa1e8cda0e03d6" name="docs/manual/Solar/inRegistry()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c36c46188897ef9afed82e51921e2e50" name="docs/manual/Solar/loadClass()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a8ca9a785dfe5daef25d1e250c19d47c" name="docs/manual/Solar/locale()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="75b3b495d4c3182d46f2bbbcbf85bf1d" name="docs/manual/Solar/pathinfo()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a98210f36cfebcd652159dd0248f5e1b" name="docs/manual/Solar/post()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="048142637c6bada30b5b4c907bcaddaf" name="docs/manual/Solar/register()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="164ee4182cbbc70c52fed5dc4f7df1c6" name="docs/manual/Solar/registry()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="51b962aafd21883411422e8877a8fc9e" name="docs/manual/Solar/run()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="63d083ecbbc832cdad87992c3a0c9c0a" name="docs/manual/Solar/server()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="97596894405669f72c6c8b016b31c954" name="docs/manual/Solar/session()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a6c0296269bad35c8b447bc5f7ce3bf4" name="docs/manual/Solar/start()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0486707f9b90305d30400bfd8c867ec7" name="docs/manual/Solar/stop()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="336b14a2e85918e2b4ec33f600e0b4c8" name="docs/manual/Solar_Base/$_config" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="08034a9055595ab5be3ea33f65471bbe" name="docs/manual/Solar_Base/locale()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d80b152b01f49b58819b0df404bacb03" name="docs/manual/Solar_Base/__construct()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6e481bbd70a57625ea823067ea9f179d" name="docs/manual/Solar_Cache/AreaMap" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f678b77405d0dae4c683e41e81709850" name="docs/manual/Solar_Cache/CustomAdapters" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d1d6c82df95254a62491149fe45f7ea1" name="docs/manual/Solar_Cache/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4585b0c77790a065089ec083eeef54b0" name="docs/manual/Solar_Debug_Timer/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7317aa4f634a3805cbb08910c536351e" name="docs/manual/Solar_Debug_Timer/profile()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="52d546add71bf10366863b409cf3a132" name="docs/manual/Solar_Debug_Var/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7cc3896eabef3969f667beeca26ce33e" name="docs/manual/Solar_Form/addFeedback()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fc5c22964584777ffa19d19d10f44013" name="docs/manual/Solar_Form/AreaMap" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8d1264e6c125dd8fd30cfe80bc5ab8d1" name="docs/manual/Solar_Form/FormDescriptor" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bccec09409d6babc162128a1f09900ac" name="docs/manual/Solar_Form/GettingStarted" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="41c3a9580d0467834bf91ecd899d3632" name="docs/manual/Solar_Form/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d0db7e51ef8a12761ae06f39b13a0750" name="docs/manual/Solar_Form/load()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="50b268db3e59faafd107dc2848338ea8" name="docs/manual/Solar_Form/LocalizedForms" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8d49c0fe0096ad3aa8fedcf133a798c7" name="docs/manual/Solar_Form/populate()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="20481487ddd2011daa9b320123c2b10f" name="docs/manual/Solar_Form/reset()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="488e7e4103e912e960f0d0ef901c10fe" name="docs/manual/Solar_Form/setElement()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="11f5c399f968032a4699051644002b7d" name="docs/manual/Solar_Form/setElements()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="30845950be78ad209880a33b54cd879c" name="docs/manual/Solar_Form/UserManual" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d35c8e08029d4ab2ea08bb4eafd75712" name="docs/manual/Solar_Form/validate()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1c2654c70a16878db8a0c10f4e9b8c7b" name="docs/manual/Solar_Form/values()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ea2265f9f659c5430675540a80782983" name="docs/manual/Solar_Sql/ApiRef" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c4007982321bddb960edfc0547bd5d70" name="docs/manual/Solar_Sql/delete()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="092cbb87791d6094129d75cf47d1aa5f" name="docs/manual/Solar_Sql/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="01d27c5711b6c1733176e0674886e160" name="docs/manual/Solar_Sql/insert()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a7e683a1b25e3bd4aedf0af64a93aead" name="docs/manual/Solar_Sql/query()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c5494ed3887e48e04600696d1326d166" name="docs/manual/Solar_Sql/select()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="96c5cd88317382fc7dcddb6a234e9e41" name="docs/manual/Solar_Sql/update()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="aee0d7c224e770662135d30b9992e065" name="docs/manual/Solar_Uri/ClassProperties" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="deb02931acac10499531d2f7d9712777" name="docs/manual/Solar_Uri/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8d1b326c74c12a05af3dac2237015803" name="docs/manual/Solar_Valid/callback()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2847680ef8acd94931a3b895868bff2f" name="docs/manual/Solar_Valid/HomePage" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9e3ece7d15dd754cd320122f4b2ac851" name="docs/manual/Solar_Valid/multiple()" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="be46855a6efd5659672d85f2c1a4c7d9" name="docs/migrate/0.8.0-0.9.0/docs/bookmarks.txt" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c66d311608bb085caa5dd183378e3bc5" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql.txt" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a3abb6c0cd4baa05a70d9004758a7d3a" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_select.txt" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="79e846ff1f676a91d8f571eee8a75530" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_table.txt" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7f5a1c2d9a39a04a90499be8bef7b190" name="docs/migrate/0.8.0-0.9.0/scripts/migrate_bookmarks.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e363b85a7a041e1f13459a2e0c4041af" name="docs/migrate/0.12.0-0.13.0/notes.txt" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9bdb8e7bc6f1024526ddf7b36b017263" name="docs/migrate/0.14.0-0.15.0/content.sql" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c40d36e8d6ea776a8ab9eddf482661ed" name="docs/migrate/0.15.2-0.16.0/content.sql" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a7fae1cbb41518f5ba3c9f0811e6af68" name="docs/migrate/0.19.0-0.20.0/content.sql" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8feb27c97a2042b57cf27ebb065e1eb7" name="docs/migrate/0.20.0-0.21.0/content.sql.php" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e4a9ac365f82963185432255dad20a10" name="docs/other/content_schema.graffle" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8e1992c4a20f0e5bb556f3fbf0506c71" name="docs/other/content_schema.png" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f5742fff39403d74f45290cd6fed80ed" name="docs/other/content_schema.xls" role="doc">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7a775047a0dc90384404c22b0eab1ea3" name="Solar/Access.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f129ec48510293c2a6bbc945d382dc36" name="Solar/App.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9d56f09b05e7ebb5c321d3b3daf1efc6" name="Solar/Auth.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6192eb2d95d3feb56bdaeea4b5e0735a" name="Solar/Base.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="67ecb6c8e8e1e714c2c4390f632f0e8d" name="Solar/Cache.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="143d0398d755c12bbdf79c207b673a8f" name="Solar/Content.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="41fffb91e406b15022e245900033212e" name="Solar/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a8a27147a2ca9d08f3107a41fdfea5ae" name="Solar/Filter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="873268df9d5d19240c6300d55dbdd1c0" name="Solar/Flash.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f1e05b11263251f2d15081dc20469546" name="Solar/Form.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6e6d53363ab12ed94f75392aa1f123d7" name="Solar/Log.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="82269866ea1d3e94358a9d3c140fc5f9" name="Solar/Role.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="78115dc53be0d790d5d9e5f015e9e86e" name="Solar/Sql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3dff020bdf88dda5c8e2ce142b25f15f" name="Solar/Struct.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4432c036506906734519005a33233233" name="Solar/Test.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d0be33afa9d299d184163b3269b4da03" name="Solar/Uri.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ded7e8dea6284fdeef4d88e30e56e960" name="Solar/User.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="90cdf9c6867ca22236da97b1fb3b0b39" name="Solar/Valid.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4e950d3455384b087e85ac52518a8d29" name="Solar/View.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8db6294a8547d67e6326e0731a9bcf74" name="Solar/Access/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d5a4ec62b5589c65d352d97912eacc68" name="Solar/Access/Adapter/File.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2e9be8eaf365c0c2f0b27397e6e45c84" name="Solar/Access/Adapter/None.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6b7be9c9a01c21ef9e3b5cf741d801d3" name="Solar/Access/Adapter/Open.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8291e4610fb366a615b15f408ee00f00" name="Solar/App/Bookmarks.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="224fe30d206290854d782dc8ae35ba87" name="Solar/App/Hello.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9469503826afd658d9240ada26506ad8" name="Solar/App/Bookmarks/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a3b89cd8f37d60e01a84723b40005d3d" name="Solar/App/Bookmarks/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5d3c4508d4e1ce5ee4836b526f038450" name="Solar/App/Bookmarks/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="edb6e6a0bbba964757714de5390d9360" name="Solar/App/Bookmarks/View/add.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6fca413136a6c30538e68dc7cd7a3566" name="Solar/App/Bookmarks/View/browse.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9d4472ff85acb011895d803d633588d8" name="Solar/App/Bookmarks/View/edit.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bdd98a647338a45ceb1a314f10d39707" name="Solar/App/Bookmarks/View/feed.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b96f04d4f87dc9feeb293f4381ee8057" name="Solar/App/Bookmarks/View/quick.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a331afdc3b1c5b9c3e0bbffe47e6ad44" name="Solar/App/Bookmarks/View/_item.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="42f97686abd146e0db9e16b26f2ae460" name="Solar/App/Bookmarks/View/_order.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e7256c30125ec4f329a9c41d77a302d0" name="Solar/App/Bookmarks/View/_tags.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ea8ff5f98da0426694c7ced488f88b8d" name="Solar/App/Hello/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="40c515123230fc3efb3c3651b9251f6d" name="Solar/App/Hello/Locale/es_ES.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f80addf5ad508e2c0b649a6565a9d18d" name="Solar/App/Hello/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="67fc58e234f54016d075eba01309eab6" name="Solar/App/Hello/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fa3184c71546917f7ddf1128302d2608" name="Solar/App/Hello/View/main.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3b2441db83f3d41a0577f0b4504c7618" name="Solar/App/Hello/View/rss.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a108957cc0a9074b2e08d88135c52ac6" name="Solar/App/Layout/threeCol.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bee3d148e0bdd9bc64fdcc5109163c0d" name="Solar/App/Layout/twoColLeft.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9ee4b5d1c7240bde132f2afb40e12dad" name="Solar/App/Layout/twoColRight.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3b9203becd4457a1a95bf393be115de5" name="Solar/App/Layout/_auth.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e4dd43d36839afc8af17939f83999b49" name="Solar/App/Layout/_head.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6a99c575ab87f8c7d1ed1e52e7e349ce" name="Solar/App/Public/images/placeholder" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6a99c575ab87f8c7d1ed1e52e7e349ce" name="Solar/App/Public/scripts/placeholder" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6f18864511305b0a592049b0dbaea7b9" name="Solar/App/Public/styles/bookmarks.css" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9307d995e174a21b1234496ac3a0bfc4" name="Solar/App/Public/styles/default.css" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="82ac95213a4e6979f98909f02de966ac" name="Solar/App/View/error.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bae6000269c580cd8daddd5e4301d061" name="Solar/Auth/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="07f4ec275f87e9f2517a3d8df5e4bf96" name="Solar/Auth/Adapter/Htpasswd.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="904e9daed11bfb998f01ee1aa0855109" name="Solar/Auth/Adapter/Ini.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dd3e21e8cbbfc7700b85bacc46695485" name="Solar/Auth/Adapter/Ldap.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="65a2145d267cdf51495bbeca62e555d0" name="Solar/Auth/Adapter/Mail.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dffab527289c5fcfc53614519b5e5c30" name="Solar/Auth/Adapter/None.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="630407455575cbed2221276ccd9d161a" name="Solar/Auth/Adapter/Post.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1300ffb4a0e2b34473dfc841f6412190" name="Solar/Auth/Adapter/Sql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1a407f1b3b66fb3d35b3101647d0dd2f" name="Solar/Auth/Adapter/Typekey.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3ba0cd0bc170c21e3765427dde9cee30" name="Solar/Auth/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="19a599dd202b7e43e5e13ad4ad18070c" name="Solar/Auth/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fb3c9b07270022fa3ff1c668ac550f36" name="Solar/Auth/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="420802ca4dde23b4b5d034a867b63f0f" name="Solar/Cache/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="61dc5510eaf9973ac96dd6aace14adab" name="Solar/Cache/Adapter/File.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b70da6c35e493f37c6e6e3f06040de63" name="Solar/Cache/Adapter/Memcache.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="acedaf0746e11225f66a2fbf59b759d5" name="Solar/Class/Map.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="79d29fb830dc95822f414f794f87e1b0" name="Solar/Class/Stack.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="287e330ddb43636534b2523655490e7e" name="Solar/Content/Abstract.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="62bc75f867314d027325471638e2928a" name="Solar/Content/Bookmarks.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d5894bc9983525b628f5e201eee2eafd" name="Solar/Content/Bookmarks/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c6c5af242a71c0787ddd613f4cdfecff" name="Solar/Content/Bookmarks/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="459770598d8a040bfb7e64be06514f03" name="Solar/Content/Bookmarks/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="43cb3130c8757cb1ef5d1a7ce704f72c" name="Solar/Controller/Front.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5820c27526cbbbb1532d47879760b280" name="Solar/Controller/Page.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e129022e293d07a43b418c8386f8817e" name="Solar/Debug/Timer.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d0c6ad9dfd6db8bcc6be8fb5c283af9d" name="Solar/Debug/Var.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e55b3fb0cc68ad71438b8bb88ede8925" name="Solar/Debug/Timer/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fb79a63d0543311545e49bb529bf1d5e" name="Solar/Debug/Timer/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e01cf130391440ec2a24512e5bdb1a91" name="Solar/Debug/Timer/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2c71b5d0ce39b34f68cb1ca419a52ab0" name="Solar/Docs/Apiref.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="975ec326cd7017f2c763fefda6363c9e" name="Solar/Docs/Phpdoc.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fd242c6dd8a1b9b4c91d74889eff9fca" name="Solar/Exception/ConnectionFailed.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d00b402fe91647cdcddd3326a45c7916" name="Solar/Exception/ExtensionNotLoaded.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5670b7f6e1efa292a56277853d7c91ec" name="Solar/Exception/FileNotFound.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0ec9ecce60af176298db3bfb85e4ca13" name="Solar/Exception/FileNotReadable.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ec731bfef2dfcb0fdab22812df979446" name="Solar/Exception/MethodNotCallable.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="044b82fb68e5817591e29915d9cfe00b" name="Solar/Exception/MethodNotImplemented.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3c16af037c88e191b5b57dbe7d015feb" name="Solar/Form/Load/Table.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="491214535909046fb16832733c47ebd1" name="Solar/Form/Load/Xml.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6bc28d48240dfd04cffed7c80a7855f8" name="Solar/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ec92448d88c5c738b6d129f852d69fde" name="Solar/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="666869c5af6cf93d1c484db992463aa1" name="Solar/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="aef1a45ebb792f8ac002fa0cae0daaa7" name="Solar/Log/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="716c60989770164f9a1cfb38c1237814" name="Solar/Log/Adapter/Echo.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="03488a8c581c840ecce17f5b4e0e7d0e" name="Solar/Log/Adapter/File.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d23c70f7344035c0425116dc42d281a6" name="Solar/Log/Adapter/Multi.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ab52a91ed740c4a3b302b63a8e1ac34a" name="Solar/Log/Adapter/None.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="20259c45518e771841fae0d5a423331e" name="Solar/Model/Areas.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="849dc0bc9f3659b01743af9e881f373b" name="Solar/Model/Nodes.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="35534e543290465c0ec0648a4f1c0c2d" name="Solar/Model/Tags.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a6c770e995fbe5b2cbf63e2e829a92fc" name="Solar/Model/Areas/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2a6931aba20bfa90115b342fb7ed32d5" name="Solar/Model/Areas/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e77b65e79ad528b041ca153d7c5d36bf" name="Solar/Model/Nodes/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6d884888586ff97b1ea4cdd57502862f" name="Solar/Model/Nodes/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3ae2c08b3e97a92d6d83294cd956d72d" name="Solar/Model/Tags/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="14dcabc35a1c853e26e2e89730774b4f" name="Solar/Model/Tags/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8fc3428c749fdedb13ee00af3a1df4c5" name="Solar/Path/Stack.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="506d21e0281537ebad9b82fc9d8adf45" name="Solar/Role/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a18c078997c2778324d7e45c49c6a83a" name="Solar/Role/Adapter/File.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="80cafe74387416ccf83659c15844d4ba" name="Solar/Role/Adapter/Ldap.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="475069203ef56816b2403216ebc3d7ba" name="Solar/Role/Adapter/None.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d23ae8b322167304401f93710473f0ba" name="Solar/Role/Adapter/Sql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7ee1527a7fbb34d3ac018bee9c09a660" name="Solar/Sql/Adapter.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="814f87d3717fde74bd43ddbc6a6b113e" name="Solar/Sql/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8b711193b66316d7eaba6b6bc4f7f15d" name="Solar/Sql/Reserved.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e7c73dfcdba72fe0430eeaa08ed173fc" name="Solar/Sql/Result.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1b1ce0ff4abc3132f28339b57f5a4769" name="Solar/Sql/Row.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="649c3d5c2f570df4e93c8006b6867e96" name="Solar/Sql/Rowset.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9a3b21c2310e099f65e2e1e233c0ab45" name="Solar/Sql/Select.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c00354dadb808bf29d442361504723c9" name="Solar/Sql/Table.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d0d37912c02ea2b4e6a5bc5d3ed18262" name="Solar/Sql/Adapter/Mssql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="66deecebff80979f65e3db9bbae6c45d" name="Solar/Sql/Adapter/Mysql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a2dcdc17ef72820a3f55c9f4d595fe34" name="Solar/Sql/Adapter/Pgsql.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0fde6d4a8bc1e1e06906a4a59b121961" name="Solar/Sql/Adapter/Sqlite.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2e8f5e17ec6fcc74f63d2f2e434ec126" name="Solar/Sql/Adapter/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6506dcb33dcfb83736e486ab879ae513" name="Solar/Sql/Adapter/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="cbe12c4b2bf4990c7fdd2a72bb6227b8" name="Solar/Sql/Adapter/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4f87a100111a3c162ab4c6ba9242b780" name="Solar/Sql/Exception/ColNameLength.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="519b0b3ca7c99689cf991da26be9fd27" name="Solar/Sql/Exception/ColNameReserved.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e7b11e4cab4bf3db60c65afc0487da87" name="Solar/Sql/Exception/ColScope.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4046d375f91681f2b337fd33b0d33f4d" name="Solar/Sql/Exception/ColSize.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="23fba3334f16c90c23bdf4bd64296718" name="Solar/Sql/Exception/ColTypeUnknown.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f37aa9bef7c25b32792ab3597044de99" name="Solar/Sql/Exception/IdxNameLength.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5f12bfbaaf2c326a6a10d009c3f9f53d" name="Solar/Sql/Exception/IdxNoColumns.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2ab505629ad9ef5a5629d6af0a4c3100" name="Solar/Sql/Exception/IdxTypeUnknown.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="34b53a8c08c2c5e6b378c8760864ee97" name="Solar/Sql/Exception/TableNameLength.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="be556926e1c30e69447fb681af12b4e7" name="Solar/Sql/Exception/TableNameReserved.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="81dc834ed5348a5919751afe0e10fa31" name="Solar/Sql/Exception/TableNotCreated.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a9f04785425cc99ba3bbb45c8a971957" name="Solar/Sql/Table/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ba6bddea242598bd9439807780ec05ff" name="Solar/Test/Bench.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4dd4b6eabfedfb92bdddea8f511fb88d" name="Solar/Test/Example.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9e180fb64c3cae8d52366b9fad126009" name="Solar/Test/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3ef4dce1a23f11fd1e518c1f6bacb76a" name="Solar/Test/Suite.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ed6806471980e2a9e9d6cfd5e1404919" name="Solar/Test/Example/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1b49b4f1d32628d43cad86ba37b87ee5" name="Solar/Test/Example/Exception/CustomCondition.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b18318c019033639d6e385c1e3a2c951" name="Solar/Test/Example/Locale/en_US.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="90e35c9f689c8b1ae4f812b0a6b257f5" name="Solar/Test/Example/Locale/es_ES.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="67d5dc2e6f68ffff9a9624104fe2ba23" name="Solar/Test/Example/Locale/fr_FR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="bad6d9e98405698b015577bdfe93e492" name="Solar/Test/Example/Locale/it_IT.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0509876689ef450ca28fe8980c658792" name="Solar/Test/Example/Locale/pt_BR.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6812c985cb6759390a1dc3ad7d2b1248" name="Solar/Test/Exception/Fail.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f04f53a119b98e04f646ecd5517b6ea4" name="Solar/Test/Exception/Skip.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0d8875e9aad1c98398905d38554ae0ce" name="Solar/Test/Exception/Todo.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f8564ceef9ca7410c78c31c3abd53df6" name="Solar/Uri/Action.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="eb6d1bbbcddfc0ab0c05ade862a8aa6d" name="Solar/Uri/Public.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="621cd2bad9efcace5c7cbdd18af1f8ea" name="Solar/View/Exception.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="89ea8025432eb6ee47419e9dc31ef952" name="Solar/View/Helper.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="28c281a401327c87c577cfdee6185fcb" name="Solar/View/Exception/TemplateNotFound.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="fcf80977a3a83613bf85207a51b878fe" name="Solar/View/Helper/Action.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ebfa84a4a8d3cfbf612f1d928bad12fd" name="Solar/View/Helper/ActionImage.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9ab34ba4d183dddfd2b092afbf6f81e6" name="Solar/View/Helper/Anchor.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4c0b764f2df25a779885043d9a33376d" name="Solar/View/Helper/AnchorImage.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="460aa6e691b790819396e177a5d213c8" name="Solar/View/Helper/Attribs.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b9ec92e9ec6ac34cf78118033da56f4e" name="Solar/View/Helper/Date.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="353da49d32f35f883b485bb5243be624" name="Solar/View/Helper/Form.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4167fd61072f8f2e21af0c8f3502e74c" name="Solar/View/Helper/FormButton.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="412b035383708c1aac7afea2c6425e8d" name="Solar/View/Helper/FormCheckbox.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2e89a370e9c24fe0fe59711d12fe6d6a" name="Solar/View/Helper/FormElement.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="52476fefe6cb0172843a2c96c20d884b" name="Solar/View/Helper/FormFile.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f85ff0df82048bc0e8aaace6d9e9f291" name="Solar/View/Helper/FormHidden.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dc12d08d29d81c5c1ddeda58b68c484b" name="Solar/View/Helper/FormOptions.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ee134efbff5451e2eaf19fcb4dcfbe47" name="Solar/View/Helper/FormPassword.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b05d4962e4e08367cbfe68d4851f1d06" name="Solar/View/Helper/FormRadio.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3da9ea7fb80ccc81a6d151094d523061" name="Solar/View/Helper/FormReset.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a91e71c4a8192805e37ba0ad406116b3" name="Solar/View/Helper/FormSelect.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a7d113dfe53faa95c443d352a716eeec" name="Solar/View/Helper/FormSubmit.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="04374ac5591d0664a395f019fabd1b79" name="Solar/View/Helper/FormText.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a21732dc3feeff736b56e7e2e46c0c2f" name="Solar/View/Helper/FormTextarea.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0047ff1f450871ea101483914d8f6309" name="Solar/View/Helper/GetText.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="18b3131a0669f9b9503edcd9cfe43bad" name="Solar/View/Helper/GetTextRaw.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9eaa0f4937ade807d88041d228e2810e" name="Solar/View/Helper/Image.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="501ba3f22eb5ad5128112daaeaf847a1" name="Solar/View/Helper/Link.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="b23b7c476ab3491e1d1e4cb6abee99f3" name="Solar/View/Helper/LinkStylesheet.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="21e9016109192c35a70823abe55aab1a" name="Solar/View/Helper/Meta.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="08e0efb18e8b45d40fe4d34fb7ed0556" name="Solar/View/Helper/MetaHttp.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="166b21d82f144b83b9969f2840634f71" name="Solar/View/Helper/MetaName.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="69a1c53a6f5c24ae139cf2293cade356" name="Solar/View/Helper/PublicHref.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c2aeb3aeba0cd1400af6143510a57ded" name="Solar/View/Helper/Script.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="06861b179c4f94423b4f237e9496b859" name="Solar/View/Helper/Style.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="630736b1096841144a00697e2ee356c7" name="Solar/View/Helper/Time.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="66d66bece967b9d24395f028c31450e2" name="Solar/View/Helper/Timestamp.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d7c0588810785199ba7e9ddc510eaa08" name="tests/bench.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1badd15639f83857fbb9ec5b072f69ac" name="tests/config.inc.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="441aa87f5dcabeb11a1655bdd178e68c" name="tests/make.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c459b092fa67420f108c0d3085d351d5" name="tests/test.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f200cfa00a924b95a0919f1d7724f8bd" name="tests/Bench/Solar/FileExists.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3392ca9c9e7d52889b4b7b42ebb382d3" name="tests/Bench/Solar/LoadClass.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0533479d67eed711b128f2aa95abe6d1" name="tests/Test/Solar/Base.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5514b15fff64aded515366bd0237bf8a" name="tests/Test/Solar/Content.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c5dfdcdd8d869da6fb489f0fe68d9fec" name="tests/Test/Solar/Exception.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6c4fa91947677a0cc17d6a4885f4908d" name="tests/Test/Solar/Filter.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9b64f91edbf558049f5c2ae29bd65178" name="tests/Test/Solar/Struct.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="4139374ed00de9fd5762f8954ca343ae" name="tests/Test/Solar/Test.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="49eb4428eb56a8279f3faa739e22f2ef" name="tests/Test/Solar/Uri.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a3e76a579ffd2b966e86c0fd1c58b753" name="tests/Test/Solar/Valid.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f1172451a9e0a2378d7cba2e8727dc33" name="tests/Test/Solar/View.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="92c63b09d294d182e1ff15bfb5c30a0e" name="tests/Test/Solar/Auth/Adapter.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6d060e2f334b9a6c160aab073b4ee074" name="tests/Test/Solar/Auth/users.htpasswd" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="9538606d4ee2dd2e3e0f2ce598a062d2" name="tests/Test/Solar/Auth/users.ini" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="811bac329a7de37bc8e8892ae3d2fd3f" name="tests/Test/Solar/Auth/Adapter/Htpasswd.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="af3aaa8f092343158b16a4a9589b4d7c" name="tests/Test/Solar/Auth/Adapter/Ini.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3be413755f8fe640cf3e7a5fbb8d2769" name="tests/Test/Solar/Auth/Adapter/None.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="920aad653338f617682191add702887f" name="tests/Test/Solar/Auth/Adapter/Sql.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c2aa1c4ce65a7c19504316e41afc588c" name="tests/Test/Solar/Cache/Adapter/File.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2ce4b084448ff4f810d4ce41382adb44" name="tests/Test/Solar/Class/Map.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="82d7955cf7efc10126dcf3ddaf1e1202" name="tests/Test/Solar/Class/Stack.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="ea2f76f4fa668b87be9d255bec690a6d" name="tests/Test/Solar/Debug/Timer.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dc16e457710db9b9e2d56f38617016a8" name="tests/Test/Solar/Debug/Var.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="852274ed0da8ec2c38cb4400fc5c1b53" name="tests/Test/Solar/Docs/Phpdoc.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="337c9546837351e9ab76a4a316a09159" name="tests/Test/Solar/Form/Load/Table.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5b8ffa6b2d003d4c3d961a4815e97142" name="tests/Test/Solar/Log/Adapter.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="cbb2167f47b0c6f15a3cc0abe46a3799" name="tests/Test/Solar/Log/Adapter/Echo.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="21e6781d4e0deb0c719324afaa62900e" name="tests/Test/Solar/Log/Adapter/File.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e52e593fd93ecf4bda2d9eb0e5440c66" name="tests/Test/Solar/Log/Adapter/Multi.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="2505d9a041603c2cc714eef6ae76ad14" name="tests/Test/Solar/Log/Adapter/None.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0e2de88f8c44ba6bfa75b5ce03467cd5" name="tests/Test/Solar/Path/Stack.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/a/target1" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/a/target2" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/a/target3" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/b/target2" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/b/target3" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="d41d8cd98f00b204e9800998ecf8427e" name="tests/Test/Solar/Path/Stack/c/target3" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="a7f05c2eefa59176d006b124cea97a10" name="tests/Test/Solar/Sql/Adapter.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f954a8ca6a0529465502e4090ccb8a49" name="tests/Test/Solar/Sql/Adapter/Mysql.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1d9345e67ad885a14271b769b309f939" name="tests/Test/Solar/Sql/Adapter/Sqlite.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="059a92a6fda2ef2c8cee433f16c54190" name="tests/Test/Solar/Uri/Action.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="abde948265c6b029c2a04ef8a326da42" name="tests/Test/Solar/Uri/Public.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c310cf5a802ade78c599ef7d22986ae8" name="tests/Test/Solar/View/Helper.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6bebcf2dbfd8a8e2a11d13ae5c651281" name="tests/Test/Solar/View/Helper/Action.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="22f3c5f025e8165c8e97e4795886e5a1" name="tests/Test/Solar/View/Helper/ActionImage.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dd4eb3fb7b5da365f99d87aa61d72a71" name="tests/Test/Solar/View/Helper/Anchor.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="59b14dfae7990bb56377bec9c5fe6d7d" name="tests/Test/Solar/View/Helper/Attribs.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="8abcc18069d09ba8bab687247e025a07" name="tests/Test/Solar/View/Helper/Date.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="444f83070e4511a5ebe60fc6eb659d12" name="tests/Test/Solar/View/Helper/Form.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="13614ce2b1511bcc25de69eb41bdb0e8" name="tests/Test/Solar/View/Helper/FormButton.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f4531f45e1e44ac87d57847dff7b602e" name="tests/Test/Solar/View/Helper/FormCheckbox.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="3bdd0eecbe11dec3f86bbc03a73ea6bb" name="tests/Test/Solar/View/Helper/FormFile.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="66f54286846a68b7ddefad2cd30b81da" name="tests/Test/Solar/View/Helper/FormHidden.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="f1cc31bcdb5f0bfce082a316a11453c7" name="tests/Test/Solar/View/Helper/FormOptions.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="889aef90750c3a174edc97a8c37d2298" name="tests/Test/Solar/View/Helper/FormPassword.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="457494b574bc7a2ec148af1d118c0e4f" name="tests/Test/Solar/View/Helper/FormRadio.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="def64b2516e6ad73955044fafa3dc784" name="tests/Test/Solar/View/Helper/FormReset.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="aa5a559f1024d8808308c65b62abb12d" name="tests/Test/Solar/View/Helper/FormSelect.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7bb92a1a26eba021025de38ee0da5224" name="tests/Test/Solar/View/Helper/FormSubmit.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="7360da2a940f7fae2c8891b4acacf069" name="tests/Test/Solar/View/Helper/FormText.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1ec208338751e81e6310a25971e677bb" name="tests/Test/Solar/View/Helper/FormTextarea.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="e066ded605c454d6728c91b6f49ef781" name="tests/Test/Solar/View/Helper/GetText.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="dfa2b5ec442fa2bf03173ee2b18e59e3" name="tests/Test/Solar/View/Helper/GetTextRaw.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="1fce36c96f44fcb4e053e3c9dd42c836" name="tests/Test/Solar/View/Helper/Image.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="584559cdfe805389a53a8aca5d9dae89" name="tests/Test/Solar/View/Helper/Link.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="019354207a0e300c908d43a8711c9df2" name="tests/Test/Solar/View/Helper/LinkStylesheet.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="0f23222fcda793c1684bcc5c89d52a69" name="tests/Test/Solar/View/Helper/Meta.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="09ef091e6aab5c2621d1f15f3fda0b1a" name="tests/Test/Solar/View/Helper/MetaHttp.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="af916aa3897f13a994e15c61d4667f45" name="tests/Test/Solar/View/Helper/MetaName.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="665e4b1d7a5ed83477e6b735cde4f1f7" name="tests/Test/Solar/View/Helper/PublicHref.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="6d5d7c166237153abc92f4f798812e2f" name="tests/Test/Solar/View/Helper/Script.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="91bb7d1c32ae46cd2fcdba91f620ba12" name="tests/Test/Solar/View/Helper/Style.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="42cf1527f775d39b70eb3b9a8f0cbe01" name="tests/Test/Solar/View/Helper/Time.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="5391f1c9fe187d29fd87464f39c6a2b2" name="tests/Test/Solar/View/Helper/Timestamp.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="cd51d4f072e2b2c1fee7ba62739b714a" name="tests/Test/Solar/View/templates/test.view.php" role="test">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+   <file baseinstalldir="/" md5sum="c125bdc801a11abc4235303e145b3b45" name="Solar.php" role="php">
+    <tasks:replace from="@package_version@" to="version" type="package-info" />
+    <tasks:replace from="@package_date@" to="date" type="package-info" />
+   </file>
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.1.2</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.6</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.22.0</release>
+    <api>0.22.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2006-07-21</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD</license>
+   <notes>* General
+
+    * Per note from Rodrigo Moraes, Solar_Sql selections of &apos;all&apos; or
+      &apos;row&apos; now let you select the class of the return object. Defaults
+      are Solar_Sql_Rowset for &apos;all&apos; and Solar_Sql_Row for &apos;row&apos;.
+      Affects Solar_Sql, Solar_Sql_Rowset, Solar_Sql_Select, and
+      Solar_Sql_Table.
+
+* New classes:
+
+    * Solar_View_Helper_Meta, Solar_View_Helper_MetaName, and
+      Solar_View_Helper_MetaHttp for &lt;meta ... /&gt; tag construction,
+      based on work by Jeff Surgeson and Rodrigo Moraes.
+      
+* Solar_Content_Abstract
+
+    * Method delete() now deletes node parts, and disallows deletion
+      where $id is empty or zero
+    
+* Solar_Controller_Page
+
+    * Added _isSubmit() method to check submission values. Previously,
+      you would check if (Solar::post(&apos;submit&apos;) ==
+      $this-&gt;locale(&apos;SUBMIT_SAVE&apos;)). Now you use check if
+      ($this-&gt;_isSubmit(&apos;save&apos;)).
+
+* Solar_Struct
+
+    * Per email with Antti Holvikari, keys are now settable instead of
+      being set-once.
+    
+    * Method load() now lets you reset the data entirely using a second
+      $reset parameter (set to boolean true) instead of merging with
+      existing keys (the default behavior)
+
+* Solar_Sql
+
+    * Method select(&apos;all&apos;) and select(&apos;row&apos;) now support setting the
+      class of the returned object using a 4th param, $class.
+
+* Solar_Sql_Rowset
+
+    * New property $_row_class sets the class of individual row objects.
+    
+* Solar_Sql_Select
+
+    * Method fetch() has a 2nd param, $class, to set the class of &apos;all&apos;
+      and &apos;row&apos; return objects
+
+* Solar_Sql_Table
+
+    * Two new properties, $_all_class and $_row_class, to define what
+      fetchAll() and fetch/fetchNew/fetchWhere() should use as the
+      return class type</notes>
+  </release>
+ </changelog>
+</package>

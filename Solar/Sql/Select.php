@@ -891,10 +891,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @param string $type The type of fetch to perform (all, one, row,
      * etc).  Default is 'result'.
      * 
+     * @param string $class When fetching 'all' or 'row', use this as 
+     * the return class.
+     * 
      * @return mixed The query results.
      * 
      */
-    public function fetch($type = 'result')
+    public function fetch($type = 'result', $class = null)
     {
         // build from scratch using the table and record sources.
         $this->_parts['cols'] = array();
@@ -950,7 +953,7 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // perform the fetch
-        return $this->_sql->select($type, $this->_parts, $this->_bind);
+        return $this->_sql->select($type, $this->_parts, $this->_bind, $class);
     }
     
     /**

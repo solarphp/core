@@ -24,7 +24,7 @@
 <?php
     $attribs = array(
         // using raw string for delete confirmation to avoid double-escaping
-        'onclick' => "return confirm('" . $this->getText('CONFIRM_DELETE', null, true) . "')"
+        'onclick' => "return confirm('" . $this->getTextRaw('CONFIRM_DELETE') . "')"
     );
     
     echo $this->form()

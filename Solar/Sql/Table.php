@@ -475,7 +475,7 @@ class Solar_Sql_Table extends Solar_Base {
         }
         
         // done!
-        $row = Solar::factory('Solar_Sql_Row', array('data' => $data));
+        $row = Solar::factory($this->_row_class, array('data' => $data));
         $row->setSave($this);
         return $row;
     }

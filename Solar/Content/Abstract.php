@@ -622,7 +622,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Delete a node and its tags.
+     * Delete a node, its parts, and its tags.
      * 
      * @param int $id The node ID to delete.
      * 
@@ -631,12 +631,22 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      */
     public function delete($id)
     {
-        // delete the node
+        // disallow deletion of all nodes at once.
+        if (empty($id) || $id == '0') {
+            return;
+        }
+        
+        // delete the node.
         $where = $this->_where();
         $where['nodes.id = ?'] = $id;
         $this->_content->nodes->delete($where);
         
-        // now delete the tags.
+        // delete its parts.
+        $where = $this->_where();
+        $where['nodes.parent_id = ?'] = $id;
+        $this->_content->nodes->delete($where);
+        
+        // delete its tags.
         $where = array(
             'tags.node_id = ?' => $id,
         );

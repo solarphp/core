@@ -33,7 +33,16 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
     
     /**
      * 
-     * Instantiated Solar_Sql_Row objects.
+     * The class of individual row objects.
+     * 
+     * @var string
+     * 
+     */
+    protected $_row_class = 'Solar_Sql_Row';
+    
+    /**
+     * 
+     * Individual row objects.
      * 
      * @var array
      * 
@@ -53,7 +62,7 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
     {
         if (empty($this->_rows[$key])) {
             $this->_rows[$key] = Solar::factory(
-                'Solar_Sql_Row',
+                $this->_row_class,
                 array(
                     'data' => $this->_data[$key],
                     'save' => $this->_save,

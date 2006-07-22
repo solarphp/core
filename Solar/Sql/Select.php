@@ -62,7 +62,7 @@ Solar::loadClass('Solar_Sql_Table');
  * // get a Solar_Sql_Result object (the default)
  * $result = $select->fetch(); // or fetch('result')
  * 
- * // alternatively, fetch all rows as an array
+ * // alternatively, get a Solar_Sql_Rowset object
  * $rows = $select->fetch('all');
  * 
  * // find out the count of rows, and how many pages there are.

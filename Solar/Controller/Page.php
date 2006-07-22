@@ -401,7 +401,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // find the parent-level helpers (Vendor_App_Helper)
         $pos = strrpos($class, '_');
-        $helper[] = substr($class, 0, -$pos) . '_Helper';
+        $helper[] = substr($class, 0, $pos) . '_Helper';
         
         // find the vendor-level helpers (Vendor_View_Helper)
         $pos = strpos($class, '_');
@@ -471,7 +471,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // find the parent-level helpers (Vendor_App_Helper)
         $pos = strrpos($class, '_');
-        $helper[] = substr($class, 0, -$pos) . '_Helper';
+        $helper[] = substr($class, 0, $pos) . '_Helper';
         
         // find the vendor-level helpers (Vendor_View_Helper)
         $pos = strpos($class, '_');

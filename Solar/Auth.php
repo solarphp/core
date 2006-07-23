@@ -311,7 +311,7 @@ class Solar_Auth extends Solar_Base {
                 $this->uri     = $this->_adapter->getUri();
             } else {
                 $code = $this->_adapter->getErrCode();
-                if ($err) {
+                if ($code) {
                     // use adapter-specific error code
                     $this->reset($code);
                 } else {

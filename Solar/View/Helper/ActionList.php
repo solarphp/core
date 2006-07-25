@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for <ul>, <ol>, and <li> tags.
+ * Helper for lists of action links.
  * 
  * @category Solar
  * 
@@ -22,7 +22,7 @@ Solar::loadClass('Solar_View_Helper');
  
 /**
  * 
- * Helper for meta tags.
+ * Helper for lists of action links.
  * 
  * @category Solar
  * 
@@ -59,7 +59,7 @@ class Solar_View_Helper_ActionList extends Solar_View_Helper {
     
     /**
      * 
-     * Returns a list of ol, ul, or dl items.
+     * Helper for lists of action links.
      * 
      * @param array $items An array of list items in href => text format.
      * 

@@ -61,10 +61,10 @@ class Solar_View_Helper_ActionList extends Solar_View_Helper {
      * 
      * Returns a list of ol, ul, or dl items.
      * 
-     * @param string $type The list type, 'ul' or 'ol'.  Default
-     * is 'ul'.
-     * 
      * @param array $items An array of list items in href => text format.
+     * 
+     * @param string $action The current (selected) action href in the
+     * list items.
      * 
      * @param array $display Additional options for building the list.
      * 

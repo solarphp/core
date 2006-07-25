@@ -9,7 +9,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Meta.php 1524 2006-07-21 17:21:02Z pmjones $
+ * @version $Id$
  * 
  */
 

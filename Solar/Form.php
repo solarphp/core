@@ -212,7 +212,7 @@ class Solar_Form extends Solar_Base {
      * @var Solar_Valid
      * 
      */
-    protected $_obj_vaild;
+    protected $_obj_valid;
     
     /**
      * 
@@ -647,7 +647,8 @@ class Solar_Form extends Solar_Base {
      * 
      * Gets the current form status.
      * 
-     * @return bool
+     * @return bool True if valid, false if not valid, null if validation
+     * has not been attempted.
      * 
      */
     public function getStatus()

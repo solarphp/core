@@ -128,14 +128,16 @@ class Solar_Controller_Front extends Solar_Base {
             $uri->set($spec);
         }
         
-        // pull the page name off the top of the path, convert
-        // from "pageName" to "PageName".
+        // pull the page name off the top of the path, use the default
+        // if none specified
         $page = array_shift($uri->path);
         if (trim($page) == '') {
-            // no page specified, use the default.
             $page = $this->_default;
         }
-        $page = ucfirst($page);
+        
+        // convert from "pageName, page-name, page_name" to "PageName"
+        $page = str_replace(array('_', '-'), ' ', $page);
+        $page = str_replace(' ', '', ucwords(trim($page)));
         
         // does the page map to a known class?
         $list = (array) $this->_classes;

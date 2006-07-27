@@ -60,6 +60,12 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
      */
     public function offsetGet($key)
     {
+        // don't return rows that don't exist in the original data
+        if (empty($this->_data[$key])) {
+            return null;
+        }
+        
+        // load the row if needed
         if (empty($this->_rows[$key])) {
             $this->_rows[$key] = Solar::factory(
                 $this->_row_class,
@@ -69,6 +75,8 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
                 )
             );
         }
+        
+        // return the row
         return $this->_rows[$key];
     }
     

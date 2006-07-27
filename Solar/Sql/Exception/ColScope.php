@@ -16,6 +16,11 @@
  */
 
 /**
+ * Base SQL exception.
+ */
+Solar::loadClass('Solar_Sql_Exception');
+
+/**
  * 
  * Exception: column scope is too large or too small for its size.
  * 

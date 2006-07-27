@@ -16,6 +16,11 @@
  */
 
 /**
+ * Base SQL exception.
+ */
+Solar::loadClass('Solar_Sql_Exception');
+
+/**
  * 
  * Exception: column name is a reserved word.
  * 

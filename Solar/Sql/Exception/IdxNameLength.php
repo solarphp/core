@@ -16,6 +16,11 @@
  */
 
 /**
+ * Base SQL exception.
+ */
+Solar::loadClass('Solar_Sql_Exception');
+
+/**
  * 
  * Exception: index name is too long or too short.
  * 

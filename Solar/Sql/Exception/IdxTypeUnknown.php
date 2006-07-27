@@ -16,6 +16,11 @@
  */
 
 /**
+ * Base SQL exception.
+ */
+Solar::loadClass('Solar_Sql_Exception');
+
+/**
  * 
  * Exception: index type is unknown (should be 'normal' or 'unique').
  * 

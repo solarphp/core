@@ -87,9 +87,9 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
         // loop through each line, find the group, then see if the user
         // is on the line anywhere
         foreach ($lines as $line) {
-        
+            
             // break apart at first ':'
-            $pos = strpos(':', $line);
+            $pos = strpos($line, ':');
             
             // the group name is the part before the ':'
             $group = substr($line, 0, $pos);

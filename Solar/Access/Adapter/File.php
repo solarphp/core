@@ -69,9 +69,6 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
     public function fetch($handle, $roles)
     {
         $handle = trim($handle);
-        if (! $handle) {
-            $handle = '*';
-        }
         
         // eventual access list for the handle and roles
         $list = array();

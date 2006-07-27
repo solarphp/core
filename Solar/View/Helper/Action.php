@@ -70,7 +70,7 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
      * @return string
      * 
      */
-    public function action($spec, $text = null)
+    public function action($spec, $text = null, $attribs = null)
     {
         if ($spec instanceof Solar_Uri_Action) {
             // already an action uri object
@@ -82,13 +82,18 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
         
         // escape the href itself
         $href = $this->_view->escape($href);
-        
         // return the href, or an anchor?
         if (empty($text)) {
             return $href;
         } else {
+            // build attribs, after dropping any 'href' attrib
+            settype($attribs, 'array');
+            unset($attribs['href']);
+            $attribs = $this->_view->attribs($attribs);
+            
+            // escape text and return
             $text = $this->_view->getText($text);
-            return "<a href=\"$href\">$text</a>";
+            return "<a href=\"$href\"$attribs>$text</a>";
         }
     }
 }

@@ -24,6 +24,21 @@ class Test_Solar_View_Helper_Action extends Test_Solar_View_Helper {
         $this->assertSame($actual, $expect);
     }
     
+    public function testAction_linkFromStringWithAttribs()
+    {
+        $attribs = array('foo' => 'bar');
+        
+        // no translation key
+        $actual = $this->_view->action('/controller/action/id', 'example', $attribs);
+        $expect = '<a href="/index.php/controller/action/id" foo="bar">example</a>';
+        $this->assertSame($actual, $expect);
+        
+        // translation key
+        $actual = $this->_view->action('/controller/action/id', 'ACTION_BROWSE', $attribs);
+        $expect = '<a href="/index.php/controller/action/id" foo="bar">Browse</a>';
+        $this->assertSame($actual, $expect);
+    }
+    
     public function testAction_hrefFromUri()
     {
         $uri = Solar::factory('Solar_Uri_Action');

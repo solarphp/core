@@ -15,14 +15,22 @@
  * 
  */
  
-// title
-if (! empty($this->layout_title)) {
-    echo "<title>" . $this->escape($this->layout_title) . "</title>\n";
+// meta elements
+if (! empty($this->layout_meta)) {
+    foreach ((array) $this->layout_meta as $val) {
+        echo "    " . $this->meta($val) . "\n";
+    }
 }
 
-/** @todo meta */
+// title
+if (! empty($this->layout_title)) {
+    echo "    " . $this->title($this->layout_title) . "\n";
+}
 
-/** @todo base */
+// base url
+if (! empty($this->layout_base)) {
+    echo "    " . $this->base($this->layout_base) . "\n";
+}
 
 // links
 if (! empty($this->layout_link)) {

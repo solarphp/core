@@ -338,14 +338,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
             
         } else {
             
-            // using a layout. get a layout object and assign $this
-            // again, then assign the output on top of that.
-            $layout = $this->_getLayout();
-            $layout->assign($this);
-            $layout->assign($this->_layout_var, $output);
+            // using a layout.  reset the view to use Layout templates.
+            $this->_setViewLayout($view);
             
-            // use the post-render filter on the layout.
-            return $this->_postRender($layout->fetch($this->_layout . '.php'));
+            // assign the output
+            $view->assign($this->_layout_var, $output);
+            
+            // use the post-render filter on the layout
+            return $this->_postRender($view->fetch($this->_layout . '.php'));
         }
     }
     
@@ -425,36 +425,26 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Creates and returns a new Solar_View object for a layout.
+     * Points an existing Solar_View object to the Layout templates.
+     * 
+     * This effectively re-uses the Solar_View object from the page
+     * (with its helper objects and data) to build the layout.  This
+     * helps to transfer JavaScript and other layout data back up to
+     * the layout with zero effort.
      * 
      * Automatically sets up a template-path stack for you, searching
-     * for view files in this order:
+     * for layout files in this order:
      * 
      * # Vendor/App/Example/Layout/
      * 
      * # Vendor/App/Layout
      * 
-     * Automatically sets up a helper-class stack for you, searching
-     * for helper classes in this order:
-     * 
-     * # Vendor_App_Helper_
-     * 
-     * # Vendor_View_Helper_
-     * 
-     * # Solar_View_Helper_ (this is part of Solar_View to begin with)
-     * 
      * @return Solar_View
      * 
      */
-    protected function _getLayout()
+    protected function _setViewLayout(Solar_View $view)
     {
-        $layout = Solar::factory('Solar_View');
-        $class = get_class($this);
-        
-        // stack of helper classes
-        $helper = array();
-        
-        // stack of template paths
+        // stack of template paths for layouts
         $template = array();
         
         // find the class-level templates (Vendor/App/Example/Layout)
@@ -464,30 +454,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'Layout';
         
         // add the template paths to the view object
-        $layout->addTemplatePath($template);
-        
-        // find the class-level helpers (Vendor_App_Example_Helper)
-        $helper[] = $class . '_Helper';
-        
-        // find the parent-level helpers (Vendor_App_Helper)
-        $pos = strrpos($class, '_');
-        $helper[] = substr($class, 0, $pos) . '_Helper';
-        
-        // find the vendor-level helpers (Vendor_View_Helper)
-        $pos = strpos($class, '_');
-        $vendor = substr($class, 0, $pos);
-        if ($vendor != 'Solar') {
-            $helper[] = $vendor . '_View_Helper';
-        }
-        
-        // add the helper class names to the view object
-        $layout->addHelperClass($helper);
-        
-        // set the locale class for the getText helper
-        $layout->getTextRaw("$class::");
-        
-        // done!
-        return $layout;
+        $view->setTemplatePath($template);
     }
     
     /**

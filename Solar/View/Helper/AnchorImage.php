@@ -39,14 +39,17 @@ class Solar_View_Helper_AnchorImage extends Solar_View_Helper {
      * 
      * @param string $src The href to the image source.
      * 
-     * @param array $attribs Additional attributes for the image.
+     * @param array $a_attribs Additional attributes for the anchor.
+     * 
+     * @param array $img_attribs Additional attributes for the image.
      * 
      * @return string An <a href="..."><img ... /></a> tag set.
      * 
      * @see Solar_View_Helper_Image
      * 
      */
-    public function anchorImage($spec, $src, $attribs = array())
+    public function anchorImage($spec, $src, $a_attribs = array(),
+        $img_attribs = array())
     {
         if ($spec instanceof Solar_Uri) {
             // fetch the full href, not just the path/query/fragment
@@ -55,14 +58,19 @@ class Solar_View_Helper_AnchorImage extends Solar_View_Helper {
             $href = $spec;
         }
         
-        // escape the href itself
+        // escape the anchor href itself
         $href = $this->_view->escape($href);
         
         // get the <img /> tag
-        $img = $this->_view->image($src, $attribs);
+        $img = $this->_view->image($src, $img_attribs);
         
-        // done!
-        return "<a href=\"$href\">$img</a>";
+        // get the anchor attribs
+        settype($a_attribs, 'array');
+        unset($a_attribs['href']);
+        $attr = $this->_view->attribs($a_attribs);
+        
+        // build the full anchor/img tag set
+        return "<a href=\"$href\"$attr>$img</a>";
     }
 }
 ?>

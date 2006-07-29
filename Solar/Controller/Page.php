@@ -76,8 +76,8 @@ Solar::loadClass('Solar_Uri_Action');
  * 
  * * Solar_Controller_Page::_render() to render the view and layout; 
  *   this in its turn calls Solar_Controller_Page::_getView() for 
- *   the view object, and Solar_Controller_Page::_getLayout() for 
- *   the layout object.
+ *   the view object, and Solar_Controller_Page::_setViewLayout() to 
+ *   reset the view object to use layout templates.
  * 
  * @category Solar
  * 
@@ -103,15 +103,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      */
     protected $_action = null;
-    
-    /**
-     * 
-     * Base directory under which actions, views, etc. are located.
-     * 
-     * @var string
-     * 
-     */
-    protected $_dir = null;
     
     /**
      * 
@@ -206,15 +197,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $this->_name = substr($class, $pos);
             $this->_name[0] = strtolower($this->_name[0]);
         }
-        
-        // auto-set the base directory, relative to the include path
-        if (empty($this->_dir)) {
-            // class-to-file conversion as an added directory
-            $this->_dir = str_replace('_', '/', $class);
-        }
-        
-        // fix the basedir
-        $this->_dir = Solar::fixdir($this->_dir);
         
         // create the flash object
         $this->_flash = Solar::factory(
@@ -377,43 +359,42 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _getView()
     {
         $view = Solar::factory('Solar_View');
+        
+        // get the current class
         $class = get_class($this);
         
-        // stack of helper classes
-        $helper = array();
-        
-        // stack of template paths
-        $template = array();
-        
-        // find the class-level templates (Vendor/App/Example/View)
-        $template[] = $this->_dir . 'View';
-        
-        // find the vendor-level templates (Vendor/App/View)
-        $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'View';
-        
-        // add the template paths to the view object.
-        // the order of searching will be:
-        // Vendor/App/Example/View, Vendor/App/View
-        $view->addTemplatePath($template);
-        
-        // find the class-level helpers (Vendor_App_Example_Helper)
-        $helper[] = $class . '_Helper';
-        
-        // find the parent-level helpers (Vendor_App_Helper)
+        // get the parent-level class
         $pos = strrpos($class, '_');
-        $helper[] = substr($class, 0, $pos) . '_Helper';
+        $parent = substr($class, 0, $pos);
         
-        // find the vendor-level helpers (Vendor_View_Helper)
+        // who's the vendor?
         $pos = strpos($class, '_');
         $vendor = substr($class, 0, $pos);
-        if ($vendor != 'Solar') {
-            $helper[] = $vendor . '_View_Helper';
-        }
         
-        // add the helper classes to the view object.
+        // add template paths to the view object.
+        // the order of searching will be:
+        // Vendor/App/Example/View, Vendor/App/View, Solar/App/View
+        $template = array();
+        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$class}_View");
+        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$parent}_View");
+        if ($vendor != 'Solar') {
+            // non-Solar vendor, add Solar views as final fallback
+            $template[] = str_replace('_', DIRECTORY_SEPARATOR, 'Solar_App_View');
+        }
+        $view->addTemplatePath($template);
+        
+        // add helper classes to the view object.
         // the order of searching will be:
         // Vendor_App_Example_Helper_*, Vendor_App_Helper_*,
         // Vendor_View_Helper_*, Solar_View_Helper_*
+        $helper = array();
+        $helper[] = $class . '_Helper';
+        $helper[] = $parent . '_Helper';
+        $helper[] = $vendor . '_View_Helper';
+        if ($vendor != 'Solar') {
+            // non-Solar vendor, add Solar helpers as final fallback
+            $helper[] = 'Solar_View_Helper';
+        }
         $view->addHelperClass($helper);
         
         // set the locale class for the getText helper
@@ -437,23 +418,36 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * # Vendor/App/Example/Layout/
      * 
-     * # Vendor/App/Layout
+     * # Vendor/App/Layout/
+     * 
+     * # Solar/App/Layout/
      * 
      * @return Solar_View
      * 
      */
     protected function _setViewLayout(Solar_View $view)
     {
-        // stack of template paths for layouts
+        // get the current class
+        $class = get_class($this);
+        
+        // get the parent-level class
+        $pos = strrpos($class, '_');
+        $parent = substr($class, 0, $pos);
+        
+        // who's the vendor?
+        $pos = strpos($class, '_');
+        $vendor = substr($class, 0, $pos);
+        
+        // reset template paths in the view object.
+        // the order of searching will be:
+        // Vendor/App/Example/Layout, Vendor/App/Layout, Solar/App/Layout
         $template = array();
-        
-        // find the class-level templates (Vendor/App/Example/Layout)
-        $template[] = $this->_dir . 'Layout';
-        
-        // find the vendor-level templates (Vendor/App/Layout)
-        $template[] = dirname($this->_dir) . DIRECTORY_SEPARATOR . 'Layout';
-        
-        // add the template paths to the view object
+        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$class}_Layout");
+        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$parent}_Layout");
+        if ($vendor != 'Solar') {
+            // non-Solar vendor, add Solar views as final fallback
+            $template[] = str_replace('_', DIRECTORY_SEPARATOR, 'Solar_App_Layout');
+        }
         $view->setTemplatePath($template);
     }
     

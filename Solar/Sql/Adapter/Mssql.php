@@ -35,6 +35,8 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
+     * http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tsqlref/ts_da-db_7msw.asp
+     * 
      * @var array
      * 
      */

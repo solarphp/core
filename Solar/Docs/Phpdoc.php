@@ -21,6 +21,8 @@
  * Parses a single PHPDoc comment block into summary, narrative, and
  * technical portions.
  * 
+ * http://java.sun.com/j2se/javadoc/writingdoccomments/index.html#format
+ * 
  * Supported technical tags are:
  * 
  * <code>

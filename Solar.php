@@ -470,8 +470,9 @@ class Solar {
         }
         
         // using an absolute path for the file?
-        // dual check for Unix '/' and Windows '\'
-        if ($file[0] == '/' || $file[0] == '\\') {
+        // dual check for Unix '/' and Windows '\',
+        // or Windows drive letter and a ':'.
+        if ($file[0] == '/' || $file[0] == '\\' || $file[1] == ':') {
             return file_exists($file);
         }
         

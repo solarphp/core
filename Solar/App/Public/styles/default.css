@@ -24,10 +24,12 @@ option {
     font-family: "Lucida Sans", Verdana, sans-serif;
 }
 
-input[type="text"],
-input[type="password"],
-textarea {
+
+.input-text,
+.input-password,
+.input-textarea {
     font-family: "Lucida Sans Typewriter", "Courier New", monospace;
+	font-size: 12px;
 }
 
 /* main layout */

@@ -354,6 +354,7 @@ class Solar_View extends Solar_Base {
      */
     public function getHelper($name)
     {
+        $name[0] = strtolower($name[0]);
         if (empty($this->_helper[$name])) {
             $this->_helper[$name] = $this->newHelper($name);
         }
@@ -375,6 +376,7 @@ class Solar_View extends Solar_Base {
      */
     public function newHelper($name, $config = null)
     {
+        $name[0] = strtolower($name[0]);
         $class = $this->_helper_class->load($name);
         settype($config, 'array');
         $config['_view'] = $this;

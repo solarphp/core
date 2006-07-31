@@ -44,7 +44,7 @@
     <?php endif ?>
     
     <!-- output the list of results -->
-    <?php if ($this->list): ?>
+    <?php if (count($this->list)): ?>
         <?php foreach ($this->list as $item) {
             $this->partial('_item.php', $item);
         } ?>

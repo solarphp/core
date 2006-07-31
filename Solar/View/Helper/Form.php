@@ -98,12 +98,14 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
-     * CSS classes to use for element types.
+     * CSS classes to use for element and feedback types.
+     * 
+     * Array format is type => css-class.
      * 
      * @var array
      * 
      */
-    protected $_type_css = array(
+    protected $_css_class = array(
         'button'   => 'input-button',
         'checkbox' => 'input-checkbox',
         'file'     => 'input-file',
@@ -116,18 +118,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         'submit'   => 'input-submit',
         'text'     => 'input-text',
         'textarea' => 'input-textarea',
-    );
-    
-    /**
-     * 
-     * CSS classes to use for failure/success status messages.
-     * 
-     * @var array
-     * 
-     */
-    protected $_status_css = array(
-        0 => 'failure',
-        1 => 'success',
+        'failure'  => 'failure',
+        'success'  => 'success',
+        'require'  => 'require',
     );
     
     /**
@@ -319,8 +312,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         if (empty($info['attribs']['class'])) {
             
             // get a CSS class for the element type
-            if (! empty($this->_type_css[$info['type']])) {
-                $info['attribs']['class'] = $this->_type_css[$info['type']] . ' ';
+            if (! empty($this->_css_class[$info['type']])) {
+                $info['attribs']['class'] = $this->_css_class[$info['type']] . ' ';
             } else {
                 $info['attribs']['class'] = '';
             }
@@ -491,8 +484,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         
         // the form-level feedback list, with the proper status
         // class.
-        if (is_bool($this->_status)) {
-            $class = $this->_status_css[(int) $this->_status];
+        if ($this->_status === true) {
+            $class = $this->_css_class['success'];
+        } elseif ($this->_status === false) {
+            $class = $this->_css_class['failure'];
         } else {
             $class = null;
         }
@@ -545,6 +540,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     }
                 }
                 
+                /**
+                 * @todo add $this->_css_class['require'] to $info['attribs']['class']
+                 * and to the <dt> and <dd> elements
+                 */
+                 
                 // get the element output
                 $element = $helper->$method($info);
                 

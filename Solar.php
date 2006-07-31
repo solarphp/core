@@ -470,14 +470,16 @@ class Solar {
         }
         
         // using an absolute path for the file?
-        if ($file[0] == DIRECTORY_SEPARATOR) {
+        // dual check for Unix '/' and Windows '\'
+        if ($file[0] == '/' || $file[0] == '\\') {
             return file_exists($file);
         }
         
         // using a relative path on the file
         $path = explode(PATH_SEPARATOR, ini_get('include_path'));
         foreach ($path as $dir) {
-            $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+            // strip Unix '/' and Windows '\'
+            $dir = rtrim($dir, '\\/');
             if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
                 return true;
             }

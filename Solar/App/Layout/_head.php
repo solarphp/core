@@ -59,5 +59,8 @@ if (! empty($this->layout_script)) {
     }
 }
 
+// Helper-required scripts
+echo $this->js()->fetch();
+
 /** @todo object */
 ?>

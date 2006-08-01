@@ -155,5 +155,17 @@ class Solar_Flash extends Solar_Base {
         }
         return $val;
     }
+    
+    /**
+     * 
+     * Resets (clears) all flash keys and values.
+     * 
+     * @return void
+     * 
+     */
+    public function reset()
+    {
+        $this->list = array();
+    }
 }
 ?>

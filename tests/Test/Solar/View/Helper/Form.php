@@ -76,6 +76,7 @@ class Test_Solar_View_Helper_Form extends Solar_Test {
                     'value' => 'push me',
                     'label' => '',
                     'descr' => '',
+                    'status' => null,
                     'attribs' => array(
                         'id' => 'test',
                         'class' => 'input-button test',
@@ -207,6 +208,7 @@ EXPECT;
                     'value' => 'push me',
                     'label' => '',
                     'descr' => '',
+                    'status' => null,
                     'attribs' => array(
                         'id' => 'test',
                         'class' => 'input-button test',
@@ -277,6 +279,7 @@ EXPECT;
                     'value' => 'dib',
                     'label' => '',
                     'descr' => '',
+                    'status' => null,
                     'attribs' => array(
                         'id' => 'baz',
                         'class' => 'input-text baz',
@@ -314,6 +317,7 @@ EXPECT;
                     'value' => 'dib',
                     'label' => '',
                     'descr' => '',
+                    'status' => null,
                     'attribs' => array(
                         'id' => 'baz',
                         'class' => 'input-text baz',

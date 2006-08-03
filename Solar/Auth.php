@@ -153,7 +153,7 @@ class Solar_Auth extends Solar_Base {
      * codes are:
      * 
      * : \\ANON\\ : The user is anonymous/unauthenticated (no attempt to 
-     * authenticate)
+     *   authenticate)
      * 
      * : \\EXPIRED\\ : The max time for authentication has expired
      * 

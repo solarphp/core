@@ -490,7 +490,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         $r = $this->_bc_exgcd($x, $y);
         if ($r[2] == 1) {
             $a = $r[0];
-            while (bccomp($a, 0)<0) {
+            while (bccomp($a, 0) < 0) {
                 $a = bcadd($a, $y);
             }
             return $a;
@@ -519,7 +519,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         
         $c = 0;
         
-        while($y > 0) {
+        while ($y > 0) {
             $q = bcdiv($x, $y, 0);
             $r = bcmod($x, $y);
             

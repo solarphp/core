@@ -415,13 +415,16 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         $u1 = bcmod(bcmul($hash_m, $w), $key['q']);
         $u2 = bcmod(bcmul($s1, $w), $key['q']);
 
-        $v = bcmod( 
-                 bcmod( 
-                     bcmul(
-                         bcmod(bcpowmod($key['g'], $u1, $key['p']), $key['p']),
-                         bcmod(bcpowmod($key['pub_key'], $u2, $key['p']), $key['p'])),
-                     $key['p']),
-                 $key['q']);
+        $v = bcmod(
+                bcmod(
+                    bcmul(
+                        bcmod(bcpowmod($key['g'], $u1, $key['p']), $key['p']),
+                        bcmod(bcpowmod($key['pub_key'], $u2, $key['p']), $key['p'])
+                    ),
+                    $key['p']
+                ),
+             $key['q']
+        );
 
         return (bool) bccomp($v, $s1) == 0;
     }

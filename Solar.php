@@ -237,7 +237,7 @@ class Solar {
         
         // start the session if one hasn't been started already,
         // and if we're not in the command-line environment.
-        if (PHP_SAPI != 'cli' && session_id() === '') {
+        if (session_id() === '') {
             session_start();
         }
         

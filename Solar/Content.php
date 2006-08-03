@@ -30,6 +30,22 @@ class Solar_Content extends Solar_Base {
     
     /**
      * 
+     * User-provided configuration values.
+     * 
+     * Keys are:
+     * 
+     * : \\sql\\ : (dependency) A Solar_Sql dependency injection, passed
+     *   into the table objects at creation time.
+     * 
+     * @param array
+     * 
+     */
+    protected $_Solar_Content = array(
+        'sql' => 'sql',
+    );
+    
+    /**
+     * 
      * A table object representing the broad areas of content.
      * 
      * @var Solar_Model_Areas
@@ -65,9 +81,9 @@ class Solar_Content extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->areas = Solar::factory('Solar_Model_Areas');
-        $this->nodes = Solar::factory('Solar_Model_Nodes');
-        $this->tags  = Solar::factory('Solar_Model_Tags');
+        $this->areas = Solar::factory('Solar_Model_Areas', $this->_config);
+        $this->nodes = Solar::factory('Solar_Model_Nodes', $this->_config);
+        $this->tags  = Solar::factory('Solar_Model_Tags', $this->_config);
     }
 }
 ?>

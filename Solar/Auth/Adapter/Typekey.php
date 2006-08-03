@@ -157,7 +157,10 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         parent::__construct($config);
         
         if ($this->_config['cache']) {
-            $this->_cache = Solar::dependency($this->_config['cache']);
+            $this->_cache = Solar::dependency(
+                'Solar_Cache',
+                $this->_config['cache']
+            );
         }
     }
     

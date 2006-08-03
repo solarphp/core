@@ -172,10 +172,16 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
     {
         $form = parent::form($data);
         $form->elements['bookmark[uri]']['attribs']['size']  = 48;
+        $form->elements['bookmark[uri]']['require'] = true;
+        
         $form->elements['bookmark[subj]']['attribs']['size'] = 48;
+
         $form->elements['bookmark[summ]']['attribs']['rows'] = 6;
         $form->elements['bookmark[summ]']['attribs']['cols'] = 48;
+
         $form->elements['bookmark[tags]']['attribs']['size'] = 48;
+        $form->elements['bookmark[tags]']['require'] = true;
+
         $form->elements['bookmark[pos]']['attribs']['size'] = 5;
         return $form;
     }

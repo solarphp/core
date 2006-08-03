@@ -164,21 +164,25 @@ class Solar_Form extends Solar_Base {
      * : \\value\\ : (string) The default or selected value(s) for the element.
      * 
      * : \\descr\\ : (string) A longer description of the element, e.g. a tooltip
-     * or help text.
+     *   or help text.
+     * 
+     * : \\status\\ : (bool) Whether or not the particular elements has
+     *   passed or failed validation (true or false), or null if there
+     *   has been no attempt at validation.
      * 
      * : \\require\\ : (bool) Whether or not the element is required.
      * 
      * : \\disable\\ : (bool) If disabled, the element is read-only (but is still
-     * submitted with other elements).
+     *   submitted with other elements).
      * 
      * : \\options\\ : (array) The list of allowed values as options for this element
-     * as an associative array in the form (value => label).
+     *   as an associative array in the form (value => label).
      * 
      * : \\attribs\\ : (array) Additional XHTML attributes for the element in the
-     * form (attribute => value).
+     *   form (attribute => value).
      * 
      * : \\feedback\\ : (array) An array of feedback messages for this element,
-     * generally based on validation of previous user input.
+     *   generally based on validation of previous user input.
      * 
      * @var array
      * 
@@ -189,6 +193,7 @@ class Solar_Form extends Solar_Base {
         'label'    => null,
         'descr'    => null,
         'value'    => null,
+        'status'   => null,
         'require'  => false,
         'disable'  => false,
         'options'  => array(),
@@ -548,6 +553,9 @@ class Solar_Form extends Solar_Base {
                     // no, add the feedback message
                     $validated = false;
                     $this->elements[$name]['feedback'][] = $feedback;
+                    $this->elements[$name]['status'] = false;
+                } else {
+                    $this->elements[$name]['status'] = true;
                 }
                 
             } // inner loop of validations
@@ -621,7 +629,9 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Forcibly sets the form status.
+     * Forcibly sets the overall form validation status.
+     * 
+     * Does not set individual element status values.
      * 
      * @param bool $flag True if you want to say the form is valid,
      * false if you want to say it is not valid.
@@ -645,7 +655,7 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Gets the current form status.
+     * Gets the current overall form validation status.
      * 
      * @return bool True if valid, false if not valid, null if validation
      * has not been attempted.

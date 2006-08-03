@@ -101,7 +101,7 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
         $codes = range(100, 599);
         $this->_valid_callbacks = array_merge($this->_valid_callbacks, $codes);
         $this->_ajax_options = array_merge($this->_ajax_options,
-                                          $this->valid_callbacks);
+                                          $this->_valid_callbacks);
     }
 
     /**

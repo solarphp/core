@@ -482,8 +482,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $form = array();
         $form[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
         
-        // the form-level feedback list, with the proper status
-        // class.
+        // what status class should we use?
         if ($this->_status === true) {
             $class = $this->_css_class['success'];
         } elseif ($this->_status === false) {
@@ -491,6 +490,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         } else {
             $class = null;
         }
+        
+        // add form feedback with proper status class
         $form[] = $this->listFeedback($this->_feedback, $class);
         
         // the hidden elements
@@ -523,7 +524,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 }
                 
                 // setup
-                $star     = $info['require'] ? '*' : '';
                 $label    = $this->_view->escape($info['label']);
                 $id       = $this->_view->escape($info['attribs']['id']);
                 $method   = 'form' . ucfirst($info['type']);
@@ -544,7 +544,19 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                  * @todo add $this->_css_class['require'] to $info['attribs']['class']
                  * and to the <dt> and <dd> elements
                  */
-                 
+                if ($info['require']) {
+                    $require = ' class="' . $this->_css_class['require'] . '"';
+                    if (empty($info['attribs']['class'])) {
+                        // start a class string
+                        $info['attribs']['class'] = $this->_css_class['require'];
+                    } else {
+                        // add to existing class string
+                        $info['attribs']['class'] .= ' ' . $this->_css_class['require'];
+                    }
+                } else {
+                    $require = '';
+                }
+                
                 // get the element output
                 $element = $helper->$method($info);
                 
@@ -555,8 +567,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     $form[] = "                $element";
                 } else {
                     $feedback = $this->listFeedback($info['feedback']);
-                    $form[] = "            <dt>$star<label for=\"$id\">$label</label></dt>";
-                    $form[] = "            <dd>$element$feedback</dd>";
+                    $form[] = "            <dt$require><label$require for=\"$id\">$label</label></dt>";
+                    $form[] = "            <dd$require>$element$feedback</dd>";
                     $form[] = '';
                 }
                 

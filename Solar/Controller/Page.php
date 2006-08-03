@@ -422,10 +422,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * # Solar/App/Layout/
      * 
+     * @param Solar_View $view The Solar_View object to modify.
+     * 
      * @return Solar_View
      * 
      */
-    protected function _setViewLayout(Solar_View $view)
+    protected function _setViewLayout($view)
     {
         // get the current class
         $class = get_class($this);

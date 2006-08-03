@@ -158,6 +158,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         'value'    => '',
         'label'    => '',
         'descr'    => '',
+        'status'   => null,
         'attribs'  => array(),
         'options'  => array(),
         'disable'  => false,
@@ -313,13 +314,28 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             
             // get a CSS class for the element type
             if (! empty($this->_css_class[$info['type']])) {
-                $info['attribs']['class'] = $this->_css_class[$info['type']] . ' ';
+                $info['attribs']['class'] = $this->_css_class[$info['type']];
             } else {
                 $info['attribs']['class'] = '';
             }
             
             // also use the element ID for further overrides
-            $info['attribs']['class'] .= $info['attribs']['id'];
+            $info['attribs']['class'] .= ' ' . $info['attribs']['id'];
+            
+            // passed validation?
+            if ($info['status'] === true) {
+                $info['attribs']['class'] .= ' ' . $this->_css_class['success'];
+            }
+            
+            // failed validation?
+            if ($info['status'] === false) {
+                $info['attribs']['class'] .= ' ' . $this->_css_class['failure'];
+            }
+            
+            // required?
+            if ($info['require']) {
+                $info['attribs']['class'] .= ' ' . $this->_css_class['require'];
+            }
         }
         
         // place in the stack, or as hidden?
@@ -540,36 +556,33 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     }
                 }
                 
-                /**
-                 * @todo add $this->_css_class['require'] to $info['attribs']['class']
-                 * and to the <dt> and <dd> elements
-                 */
-                if ($info['require']) {
-                    $require = ' class="' . $this->_css_class['require'] . '"';
-                    if (empty($info['attribs']['class'])) {
-                        // start a class string
-                        $info['attribs']['class'] = $this->_css_class['require'];
-                    } else {
-                        // add to existing class string
-                        $info['attribs']['class'] .= ' ' . $this->_css_class['require'];
-                    }
-                } else {
-                    $require = '';
-                }
-                
                 // get the element output
                 $element = $helper->$method($info);
                 
                 // add the element and its feedback;
                 // handle differently if we're in a group.
                 if ($in_group) {
+                    
                     $feedback .= $this->listFeedback($info['feedback']);
                     $form[] = "                $element";
+                    
                 } else {
+                    
+                    // is the element required?
+                    if ($info['require']) {
+                        $require = ' class="' . $this->_css_class['require'] . '"';
+                    } else {
+                        $require = '';
+                    }
+                    
+                    // get the feedback list
                     $feedback = $this->listFeedback($info['feedback']);
+                    
+                    // add the form element
                     $form[] = "            <dt$require><label$require for=\"$id\">$label</label></dt>";
                     $form[] = "            <dd$require>$element$feedback</dd>";
                     $form[] = '';
+                    
                 }
                 
             } elseif ($type == 'group') {

@@ -67,6 +67,8 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
      * 
      * @param string $text A locale translation key.
      * 
+     * @param string $attribs Additional attributes for the anchor.
+     * 
      * @return string
      * 
      */

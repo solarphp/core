@@ -38,7 +38,7 @@ class Solar_View_Helper_Base extends Solar_View_Helper {
      * 
      * Returns a <base ... /> tag.
      * 
-     * @param string|Solar_Uri The base HREF.
+     * @param string|Solar_Uri $spec The base HREF.
      * 
      * @return string The <base ... /> tag.
      * 

@@ -194,13 +194,14 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Fetches the public key data from TypeKey.
      * 
+     * If a cache object was injected at construction time, uses
+     * a cached version of the public key instead of hitting the
+     * TypeKey server.
+     * 
      * The URI used is "http://www.typekey.com/extras/regkeys.txt".
      * 
      * @return array An array with keys 'p', 'q', 'g', and 'pub_key'
      * as extracted from the fetched key string.
-     * 
-     * @todo We should cache the results of this so we don't hit
-     * their server all the time.
      * 
      */
     protected protected function _fetchKeyData()

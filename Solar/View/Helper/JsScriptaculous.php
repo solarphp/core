@@ -9,8 +9,6 @@
  *
  * @author Clay Loveless <clay@killersoft.com>
  *
- * @author Paul M. Jones <pmjones@solarphp.com>
- *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
  * @version $Id$
@@ -64,6 +62,8 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Method interface
      *
+     * @return Solar_View_Helper_JsScriptaculous
+     *
      */
     public function jsScriptaculous()
     {
@@ -83,11 +83,14 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      * as possible, func_get_args() is used as needed to adjust how parameters
      * are treated.
      *
-     * @param string $name
+     * @param string $name Name of script.aculo.us effect
      *
-     * @param string $selector
+     * @param string $selector CSS selector to attach effect to
      *
-     * @param array $options
+     * @param array $options Assoc array of options to be converted to JavaScript
+     * format for passing to script.aculo.us.
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function effect($name, $selector, $options = array())
@@ -134,9 +137,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for core script.aculo.us Highlight effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector to highlight
      *
-     * @param array $options
+     * @param array $options Assoc array of Highlight effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function highlight($selector, $options = array())
@@ -150,9 +155,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for core script.aculo.us Opacity effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to adjust opacity of
      *
-     * @param array $options
+     * @param array $options Assoc array of Opacity effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function opacity($selector, $options = array())
@@ -166,11 +173,13 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for core script.aculo.us Scale effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to scale
      *
-     * @param int $percent
+     * @param int $percent Percentage value to scale element
      *
-     * @param array $options
+     * @param array $options Assoc array of Scale effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function scale($selector, $percent, $options = array())
@@ -184,13 +193,15 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for core script.aculo.us MoveBy effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to move
      *
-     * @param int $y
+     * @param int $y Pixels along y axis to move element from its current position
      *
-     * @param int $x
+     * @param int $x Pixels along x axis to move element from its current position
      *
-     * @param array $options
+     * @param array $options Assoc array of MoveBy effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function moveBy($selector, $y = 0, $x = 0, $options = array())
@@ -204,11 +215,15 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for core script.aculo.us Parallel effect.
      *
-     * @param array $subeffects
+     * @param array $subeffects Array of sub-effects to set up to be run in
+     * parallel
      *
-     * @param array $options
+     * @param array $options Assoc array of options to be passed the the parallel
+     * execution handler
      *
      * @todo Figure out the best way to handle this effect.
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function parallel($subeffects = array(), $options = array())
@@ -224,9 +239,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Appear effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to appear
      *
-     * @param array $options
+     * @param array $options Assoc array of Appear effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function appear($selector, $options = array())
@@ -240,9 +257,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Fade effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to fade
      *
-     * @param array $options
+     * @param array $options Assoc array of Fade effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function fade($selector, $options = array())
@@ -256,9 +275,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Puff effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to puff
      *
-     * @param array $options
+     * @param array $options Assoc array of Puff effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function puff($selector, $options = array())
@@ -272,9 +293,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination DropOut effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to drop out
      *
-     * @param array $options
+     * @param array $options Assoc array of DropOut effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function dropOut($selector, $options = array())
@@ -288,9 +311,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Shake effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to shake
      *
-     * @param array $options
+     * @param array $options Assoc array of Shake effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function shake($selector, $options = array())
@@ -304,9 +329,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination SwitchOff effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to switch off
      *
-     * @param array $options
+     * @param array $options Assoc array of SwitchOff effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function switchOff($selector, $options = array())
@@ -320,9 +347,12 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination BlindDown effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to run the BlindDown
+     * effect on
      *
-     * @param array $options
+     * @param array $options Assoc array of BlindDown effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function blindDown($selector, $options = array())
@@ -336,9 +366,12 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination BlindUp effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to run the BlindUp effect
+     * on
      *
-     * @param array $options
+     * @param array $options Assoc array of BlindUp effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function blindUp($selector, $options = array())
@@ -352,9 +385,12 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination SlideDown effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to run the SlideDown
+     * effect on
      *
-     * @param array $options
+     * @param array $options Assoc array of SlideDown effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function slideDown($selector, $options = array())
@@ -368,9 +404,12 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination SlideUp effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to run the SlideUp effect
+     * on
      *
-     * @param array $options
+     * @param array $options Assoc array of SlideUp effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function slideUp($selector, $options = array())
@@ -384,9 +423,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Pulsate effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to pulsate
      *
-     * @param array $options
+     * @param array $options Assoc array of Pulsate effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function pulsate($selector, $options = array())
@@ -400,9 +441,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Squish effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to squish
      *
-     * @param array $options
+     * @param array $options Assoc array of Squish effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function squish($selector, $options = array())
@@ -416,9 +459,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Fold effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to fold
      *
-     * @param array $options
+     * @param array $options Assoc array of Fold effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function fold($selector, $options = array())
@@ -432,9 +477,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Grow effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to grow
      *
-     * @param array $options
+     * @param array $options Assoc array of Grow effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function grow($selector, $options = array())
@@ -448,9 +495,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Convenience method for combination Shrink effect.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to shrink
      *
-     * @param array $options
+     * @param array $options Assoc array of Shrink effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function shrink($selector, $options = array())
@@ -466,11 +515,13 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * $effect can be one of 'appear', 'slide', or 'blind'
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to toggle
      *
-     * @param string $effect
+     * @param string $effect Type of effect transition to use when toggling
      *
-     * @param array $options
+     * @param array $options Assoc array of Toggle effect options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function toggle($selector, $effect = 'appear', $options = array())
@@ -486,9 +537,11 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Makes the element with the CSS selector specified by $selector draggable.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element to make draggable
      *
-     * @param array $options
+     * @param array $options Assoc array of draggable element options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function draggable($selector, $options = array())
@@ -508,9 +561,12 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      * an Ajax call by default. The action called gets the DOM ID of the
      * dropped element as a parameter.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element that should receive
+     * dropped items
      *
-     * @param array $options
+     * @param array $options Assoc array of options for droppable item
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function droppable($selector, $options = array())
@@ -553,11 +609,15 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      * and makes an Ajax call whenever the sort order has changed. By default,
      * the action called gets the serialized sortable element as parameters.
      *
-     * @param string $selector
+     * @param string $selector CSS selector of element containing sortable items
      *
-     * @param string $url
+     * @param string $url URL to call via Ajax when sort order is changed
      *
-     * @param array $options
+     * @param array $options Assoc array of sortable controller options
+     *
+     * @return Solar_View_Helper_JsScriptaculous
+     *
+     * @todo Finish this method
      *
      */
     public function sortable($selector, $url, $options = array())
@@ -573,13 +633,18 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Autocompleting text input field (server powered)
      *
-     * @param string $selector
+     * @param string $selector CSS selector of input field to attach completion
+     * control to
      *
-     * @param string $divToPopulate
+     * @param string $divToPopulate Div id to populate with auto-completion
+     * choices
      *
-     * @param string $url
+     * @param string $url URL to query on server for auto-completion options
      *
-     * @param array $options
+     * @param array $options Assoc array of options for the auto-completion
+     * control
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function autocompleter($selector, $divToPopulate, $url,
@@ -595,13 +660,18 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
      * Autocompleting text input field (local)
      *
-     * @param string $selector
+     * @param string $selector CSS selector of input field to attach completion
+     * control to
      *
-     * @param string $divToPopulate
+     * @param string $divToPopulate Div id to populate with auto-completion
+     * choices
      *
-     * @param array $choices
+     * @param array $choices Array of choices to perform completion against
      *
-     * @param array $options
+     * @param array $options Assoc array of optionqs for the auto-completion
+     * control
+     *
+     * @return Solar_View_Helper_JsScriptaculous
      *
      */
     public function autocompleterLocal($selector, $divToPopulate,

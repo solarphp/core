@@ -46,6 +46,7 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      *
      * Method interface
      *
+     * @return Child JsLibrary object
      */
     public function jsLibrary()
     {
@@ -57,7 +58,9 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      * Add the specified JavaScript file to the Helper_Js file list
      * if it's not already present.
      *
-     * @param string $file
+     * @param string $file Name of .js file needed by Helper class
+     *
+     * @return Child JsLibrary object
      *
      */
     protected function _needsFile($file = null)
@@ -73,11 +76,11 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      *
      * Utility method: Structure a well-formed method call
      *
-     * @param string $method
+     * @param string $method JavaScript method name
      *
      * @access protected
      *
-     * @return string
+     * @return string Properly quoted string
      *
      */
     protected function _methodOptionToStr($method)
@@ -92,11 +95,11 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      *
      * Utility method: Generate options for suitable for JavaScript
      *
-     * @param array $options
+     * @param array $options Assoc array of options to be converted
      *
      * @access protected
      *
-     * @return string
+     * @return string JavaScript code representing key->value pairs of $options
      *
      */
     protected function _optionsForJs($options = array())
@@ -114,11 +117,12 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      *
      * Manipulate the input option for output in a JavaScript
      *
-     * @param mixed $option
+     * @param mixed $option String or array of values to be prepped for
+     * JavaScript use
      *
      * @access protected
      *
-     * @return string
+     * @return string Properly formatted JavaScript code
      *
      */
     protected function _arrayOrStringForJs($option)

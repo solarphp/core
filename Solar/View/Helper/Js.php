@@ -90,7 +90,8 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      *
      * Build and return JavaScript for page header
      *
-     * @return string
+     * @return string Block of JavaScript with <script src ...> and inline script
+     * chunks as needed.
      *
      */
     public function fetch()
@@ -169,6 +170,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      *
      * Method interface
      *
+     * @return Solar_View_Helper_Js
      */
     public function js()
     {
@@ -180,9 +182,10 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      * Add the specified JavaScript file to the Helper_Js file list
      * if it's not already present.
      *
-     * Paths should be releative to the '/public' directory of the application.
+     * Paths should be releative to the 'path' configuration value for the
+     * corresponding Solar_View_Helper class.
      *
-     * @param string $file
+     * @param string $file Name of .js file to add to the header of the page.
      *
      */
     public function addFile($file)
@@ -199,6 +202,8 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
     /**
      *
      * Resets the helper entirely.
+     *
+     * @return Solar_View_Helper_Js
      *
      */
     public function reset()

@@ -108,6 +108,8 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
      *
      * Method interface
      *
+     * @return Solar_View_Helper_JsPrototype
+     *
      */
     public function jsPrototype()
     {
@@ -122,6 +124,8 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
      *
      * @static
      *
+     * @return string JavaScript eval() function string
+     *
      */
     public static function evaluate()
     {
@@ -132,15 +136,15 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
      *
      * Create a valid Observer function in JavaScript
      *
-     * @param string $class
+     * @param string $class Class name to observe
      *
-     * @param string $name
+     * @param string $name Argument to pass to new object
      *
-     * @param array $options
+     * @param array $options Assoc array of options for remote function
      *
      * @access private
      *
-     * @return string
+     * @return string JavaScript source
      *
      */
     private function _buildObserver($class, $name, $options = array())
@@ -162,11 +166,11 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
      *
      * Build a list of callbacks from valid possible callbacks.
      *
-     * @param array $options
+     * @param array $options Assoc array
      *
      * @access private
      *
-     * @return array
+     * @return array Array of callbacks.
      *
      */
     private function _buildCallbacks($options)

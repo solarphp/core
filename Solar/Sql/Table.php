@@ -291,10 +291,8 @@ class Solar_Sql_Table extends Solar_Base {
             }
         }
         
-        // set the "updated" timestamp
-        if (empty($data['updated'])) {
-            $data['updated'] = date('Y-m-d\TH:i:s');
-        }
+        // forcibly set the "updated" timestamp
+        $data['updated'] = date('Y-m-d\TH:i:s');
         
         // validate and recast the data
         $result = $this->_autoValid($data);

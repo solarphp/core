@@ -193,7 +193,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $content = Solar::dependency('Solar_Content', $this->_config['content']);
         $name = $this->_config['area_name'];
         $area = $content->areas->fetchByName($name);
-        if (empty($area)) {
+        if (! $area->id) {
             // area didn't exist, create it.
             $data = array('name'  => $name);
             $area = $content->areas->insert($data);

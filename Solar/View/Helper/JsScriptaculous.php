@@ -186,7 +186,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function highlight($selector, $options = array())
     {
         $this->effect('Highlight', $selector, $options);
-
         return $this;
     }
 
@@ -204,7 +203,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function opacity($selector, $options = array())
     {
         $this->effect('Opacity', $selector, $options);
-
         return $this;
     }
 
@@ -224,7 +222,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function scale($selector, $percent, $options = array())
     {
         $this->effect('Scale', $selector, $percent, $options);
-
         return $this;
     }
 
@@ -246,7 +243,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function moveBy($selector, $y = 0, $x = 0, $options = array())
     {
         $this->effect('MoveBy', $selector, $y, $x, $options);
-
         return $this;
     }
 
@@ -268,7 +264,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function parallel($subeffects = array(), $options = array())
     {
         //$this->effect('MoveBy', $selector, $y, $x, $options);
-
         return $this;
     }
 
@@ -288,7 +283,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function appear($selector, $options = array())
     {
         $this->effect('Appear', $selector, $options);
-
         return $this;
     }
 
@@ -306,7 +300,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function fade($selector, $options = array())
     {
         $this->effect('Fade', $selector, $options);
-
         return $this;
     }
 
@@ -324,7 +317,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function puff($selector, $options = array())
     {
         $this->effect('Puff', $selector, $options);
-
         return $this;
     }
 
@@ -342,7 +334,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function dropOut($selector, $options = array())
     {
         $this->effect('DropOut', $selector, $options);
-
         return $this;
     }
 
@@ -360,7 +351,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function shake($selector, $options = array())
     {
         $this->effect('Shake', $selector, $options);
-
         return $this;
     }
 
@@ -378,7 +368,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function switchOff($selector, $options = array())
     {
         $this->effect('SwitchOff', $selector, $options);
-
         return $this;
     }
 
@@ -397,7 +386,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function blindDown($selector, $options = array())
     {
         $this->effect('BlindDown', $selector, $options);
-
         return $this;
     }
 
@@ -416,7 +404,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function blindUp($selector, $options = array())
     {
         $this->effect('BlindUp', $selector, $options);
-
         return $this;
     }
 
@@ -435,7 +422,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function slideDown($selector, $options = array())
     {
         $this->effect('SlideDown', $selector, $options);
-
         return $this;
     }
 
@@ -454,7 +440,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function slideUp($selector, $options = array())
     {
         $this->effect('SlideUp', $selector, $options);
-
         return $this;
     }
 
@@ -472,7 +457,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function pulsate($selector, $options = array())
     {
         $this->effect('Pulsate', $selector, $options);
-
         return $this;
     }
 
@@ -490,7 +474,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function squish($selector, $options = array())
     {
         $this->effect('Squish', $selector, $options);
-
         return $this;
     }
 
@@ -508,7 +491,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function fold($selector, $options = array())
     {
         $this->effect('Fold', $selector, $options);
-
         return $this;
     }
 
@@ -526,7 +508,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function grow($selector, $options = array())
     {
         $this->effect('Grow', $selector, $options);
-
         return $this;
     }
 
@@ -544,7 +525,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function shrink($selector, $options = array())
     {
         $this->effect('Shrink', $selector, $options);
-
         return $this;
     }
 
@@ -566,7 +546,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function toggle($selector, $effect = 'appear', $options = array())
     {
         $this->effect('Toggle', $selector, $effect, $options);
-
         return $this;
     }
 
@@ -660,7 +639,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      *
     public function sortable($selector, $url, $options = array())
     {
-
         return $this;
     }
      */
@@ -690,7 +668,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     {
         $this->_needsFile('effects.js');
         $this->_needsFile('controls.js');
-
         return $this;
     }
      */
@@ -717,7 +694,6 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     {
         $this->_needsFile('effects.js');
         $this->_needsFile('controls.js');
-
         return $this;
     }
      */

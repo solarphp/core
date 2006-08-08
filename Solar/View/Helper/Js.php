@@ -84,6 +84,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->reset();
     }
 
     /**
@@ -132,7 +133,18 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
                             if (!empty($a['options'])) {
                                 $f .= ', ' . $this->_optionsForJs($a['options']);
                             }
-                            $f .= ")});";
+                            $f .= ")});\n";
+                            break;
+
+                        case 'inplaceeditor':
+                            $f .= "    \$\$('$selector').each(function(li){new Ajax.{$a['name']}(li";
+                            if (isset($a['url'])) {
+                                $f .= ', ' . $this->_arrayOrStringForJs($a['url']);
+                            }
+                            if (isset($a['options']) && !empty($a['options'])) {
+                                $f .= ', ' . $this->_arrayOrStringForJs($a['options']);
+                            }
+                            $f .= ")});\n";
                             break;
 
                         default:
@@ -144,7 +156,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
             if ($f != '') {
                 $load = "Event.observe(window, 'load', function() {\n";
-                $load .= $f;
+                $load .= rtrim($f);
                 $load .= "\n});\n";
                 if ($this->scripts === null) {
                     $this->scripts = array();

@@ -82,46 +82,46 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      * To maintain compatibility with script.aculo.us documentation as much
      * as possible, func_get_args() is used as needed to adjust how parameters
      * are treated.
-     * 
+     *
      * For $options, the core effects all support the following settings
      * (copied from <http://wiki.script.aculo.us/scriptaculous/show/CoreEffects>):
-     * 
+     *
      * : duration  	: (float) Duration of the effect in seconds.
      *                Defaults to 1.0.
-     * 
+     *
      * : fps        : (int) Target this many frames per second. Default to 25.
      *                Can't be higher than 100.
-     * 
+     *
      * : transition : (string) Sets a function that modifies the current point of
      *                the animation, which is between 0 and 1. Following transitions
      *                are supplied: Effect.Transitions.sinoidal (default),
      *                Effect.Transitions.linear, Effect.Transitions.reverse,
      *                Effect.Transitions.wobble and Effect.Transitions.flicker.
-     * 
+     *
      * : from       : (float) Sets the starting point of the transition
      *                between 0.0 and 1.0. Defaults to 0.0.
-     * 
+     *
      * : to         : (float) Sets the end point of the transition
      *                between 0.0 and 1.0. Defaults to 1.0.
-     * 
+     *
      * : sync       : (bool) Sets whether the effect should render new frames
      *                automatically (which it does by default). If true,
      *                you can render frames manually by calling the
      *                render() instance method of an effect. This is
      *                used by Effect.Parallel().
-     * 
+     *
      * : queue      : Sets queuing options. When used with a string, can
      *                be 'front' or 'end' to queue the effect in the
      *                global effects queue at the beginning or end, or a
      *                queue parameter object that can have
      *                {position:'front/end', scope:'scope', limit:1}.
      *                For more info on this, see Effect Queues.
-     * 
+     *
      * : direction  : Sets the direction of the transition. Values can
      *                be either 'top-left', 'top-right', 'bottom-left',
      *               'bottom-right' or 'center' (Default). Applicable
      *               only on Grow and Shrink effects.
-     * 
+     *
      * @param string $name Name of script.aculo.us effect
      *
      * @param string $selector CSS selector to attach effect to
@@ -701,6 +701,104 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
 
     /** IN-PLACE EDITING CONTROLS **/
 
+    /**
+     *
+     * In-place editing allows for AJAX-backed "on-the-fly" editing of
+     * textfields. Attaching an in-place editor to a block of text will allow
+     * it to be clicked on, which will convert the textfield to a input field
+     * (if a single line of text) or a textarea field (if a multi-line block
+     * of text).
+     *
+     * For $options, in-place editor controls support the following settings
+     * (copied from http://wiki.script.aculo.us/scriptaculous/show/Ajax.InPlaceEditor)
+     *
+     * : okButton       : (bool) If a submit button is shown in edit mode.
+     *                    Defaults to true.
+     * : okText         : (string) Text of submit button that submits the
+     *                    changed value to the server. Defaults to "ok"
+     * : cancelLink     : (bool) If a cancel link is shown in edit mode.
+     *                    Defaults to true.
+     * : savingText     : (string) Text shown while updated value is sent to
+     *                    the server. Defaults to "Saving..."
+     * : clickToEditText: (string) Text shown during mouseover of the editable
+     *                    text. Defaults to "Click to edit"
+     * : formId         : (string) The id given to the form element. Defaults
+     *                    to the id of the element to edit plus 'InPlaceForm'
+     * : externalControl: (string) ID of an element that acts as an external
+     *                    control used to enter edit mode. The external control
+     *                    will be hidden when entering edit mode, and shown
+     *                    again when leaving edit mode. Defaults to null.
+     * : rows           : (int) The row height of the input field. Any value
+     *                    greater than 1 results in a multiline textarea for
+     *                    input. Defaults to 1.
+     * : onComplete     : (string) JavaScript code to run if update successful
+     *                    with server. Defaults to
+     *                    "function(transport, element) {new Effect.Highlight(element, {startcolor: this.options.highlightcolor});}"
+     * : onFailure      : (string) JavaScript code to run if update failed with
+     *                    server. Defaults to
+     *                    "function(transport) {alert("Error communicating with the server: " + transport.responseText.stripTags());}"
+     * : cols           : (int) The number of columns the text area should span.
+     *                    Works for both single line and multi-line. No default
+     *                    value.
+     * : size           : (int) Synonym for 'cols' when using single-line (rows=1)
+     *                    input. No default value.
+     * : highlightcolor : (string) The highlight color on mouseover. Defaults
+     *                    to value of Ajax.InPlaceEditor.defaultHighlightColor.
+     * : highlightendcolor : (string) The color the highlight fades to. Defaults
+     *                    to #FFFFFF.
+     * : savingClassName: (string) CSS class added to the element while
+     *                    displaying "Saving..." (removed when server responds)
+     *                    Defaults to "inplaceeditor-saving"
+     * : formClassName  : (string) CSS class used for the in place edit form.
+     *                    Defaults to "inplaceeditor-form"
+     * : LoadTextURL    : (string) Will cause the text for the edit box to be
+     *                    loaded from the server. Useful if your text is
+     *                    actually Wiki markup, Markdown, Textile, etc., and
+     *                    formatted for display on the server. Defaults to null.
+     * : loadingText    : (string) If the loadTextURL option is specified,
+     *                    then this text is displayed while the text is being
+     *                    loaded from the server. Defaults to "Loading..."
+     * : callback       : (string) JavaScript function that will get executed
+     *                    just before the request is sent to the server. Should
+     *                    return parameters to be sent in the URL. Will get two
+     *                    paramters, the entire form and the value of the
+     *                    text control. Defaults to
+     *                    "function(form) {Form.serialize(form)}"
+     * : ajaxOptions    : (array) Options specified to all AJAX calls (loading
+     *                    and saving text). These options are passed through to
+     *                    the Prototype AJAX classes.
+     *
+     * The URL on the server-side gets the new value as the parameter "value"
+     * via POST method, and should send the new value as the body of the response.
+     * Server-side processing of markup formats like Markdown should be done if
+     * necessary, with the output of that processing sent as the response.
+     *
+     * @param string $selector CSS selector of block to attach in-place editor
+     * to
+     *
+     * @param string $url URL to submit the changed value to.  The server should
+     * respond with the updated value.
+     *
+     * @param array $options Associative array of options for the in-place
+     * editor control.
+     *
+     * @return Solar_View_Helper_JsScriptaculous
+     *
+     */
+    public function inPlaceEditor($selector, $url, $options = array())
+    {
+        $this->_needsFile('controls.js');
+        
+        $details = array(
+            'type'  => 'inplaceeditor',
+            'name'  => 'InPlaceEditor',
+            'url'   => $url,
+            'options' => $options
+        );
+        $this->_view->js()->selectors[$selector][] = $details;
+
+        return $this;
+    }
 
 }
 ?>

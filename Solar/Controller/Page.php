@@ -194,7 +194,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // auto-set the name; e.g. Solar_App_Something => 'something'
         if (empty($this->_name)) {
             $pos = strrpos($class, '_');
-            $this->_name = substr($class, $pos);
+            $this->_name = substr($class, $pos + 1);
             $this->_name[0] = strtolower($this->_name[0]);
         }
         

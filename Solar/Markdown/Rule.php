@@ -107,7 +107,7 @@ abstract class Solar_Markdown_Rule extends Solar_Base {
                 $this->_getToken($key),
                 $val,
                 $text
-            )
+            );
         }
         
         return $text;
@@ -154,7 +154,7 @@ abstract class Solar_Markdown_Rule extends Solar_Base {
     protected function _getTokenString($key)
     {
         return $this->_delim
-             . md5($this->_class . ':' $key)
+             . md5($this->_class . ':' . $key)
              . $this->_delim;
     }
 }

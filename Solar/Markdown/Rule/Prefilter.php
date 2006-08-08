@@ -13,7 +13,7 @@ class Solar_Markdown_Rule_Prefilter extends Solar_Markdown_Rule {
      */
     public function filter($text)
     {
-        // Standardize line endings
+        // Standardize DOS and Mac OS 9 line endings
         $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
         // Make sure $text ends with a couple of newlines:
@@ -22,7 +22,9 @@ class Solar_Markdown_Rule_Prefilter extends Solar_Markdown_Rule {
         // Convert tabs to spaces in a surprisingly nice-looking way.
         $text = $this->_tabsToSpaces($text);
 
-        // Strip any lines consisting only of spaces and tabs.
+        // Convert lines consisting only of spaces and tabs to simple
+        // newlines.
+        //
         // This makes subsequent regexen easier to write, because we can
         // match consecutive blank lines with /\n+/ instead of something
         // contorted like /[ \t]*\n+/ .

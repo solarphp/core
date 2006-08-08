@@ -8,7 +8,7 @@ abstract class Solar_Markdown_Rule extends Solar_Base {
      * @var string
      * 
      */
-    protected $_delim = "\x00";
+    protected $_delim = "\xFF";
     
     /**
      * 
@@ -151,7 +151,7 @@ abstract class Solar_Markdown_Rule extends Solar_Base {
      * @return string The delimited token string for the key.
      * 
      */
-    protected function _getTokenString($key)
+    protected function _getToken($key)
     {
         return $this->_delim
              . md5($this->_class . ':' . $key)

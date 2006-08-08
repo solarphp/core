@@ -7,6 +7,8 @@ abstract class Test_Solar_Markdown_Rule extends Solar_Test {
     
     protected $_text;
     
+    var $_token = "\xFF.{32}\xFF";
+    
     public function __construct($config = null)
     {
         parent::__construct($config);

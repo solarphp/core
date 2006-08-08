@@ -47,7 +47,8 @@ class Solar_Markdown_Rule_HeaderSetext extends Solar_Markdown_Rule {
         $tag = $this->_config['top'];
         return $this->_tokenize("<$tag>")
              . $matches[1]
-             . $this->_tokenize("</$tag>");
+             . $this->_tokenize("</$tag>")
+             . "\n\n";
     }
     
     /**
@@ -64,7 +65,8 @@ class Solar_Markdown_Rule_HeaderSetext extends Solar_Markdown_Rule {
         $tag = $this->_config['sub'];
         return $this->_tokenize("<$tag>")
              . $matches[1]
-             . $this->_tokenize("</$tag>");
+             . $this->_tokenize("</$tag>")
+             . "\n\n";
     }
 }
 ?>

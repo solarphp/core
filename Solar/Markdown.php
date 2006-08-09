@@ -43,31 +43,31 @@ class Solar_Markdown extends Solar_Base {
         'rules'   => array(
             
             // pre-filters
-            'Solar_Markdown_Rule_Prefilter',
+            'Solar_Markdown_Plugin_Prefilter',
             
             // blocks
-            'Solar_Markdown_Rule_HeaderSetext',
-            'Solar_Markdown_Rule_HeaderAtx',
-            'Solar_Markdown_Rule_HorizRule',
-            // 'Solar_Markdown_Rule_List',
-            // 'Solar_Markdown_Rule_CodeBlock',
-            // 'Solar_Markdown_Rule_Blockquote',
-            // 'Solar_Markdown_Rule_Html',
-            // 'Solar_Markdown_Rule_Paragraphs',
+            'Solar_Markdown_Plugin_HeaderSetext',
+            'Solar_Markdown_Plugin_HeaderAtx',
+            'Solar_Markdown_Plugin_HorizRule',
+            // 'Solar_Markdown_Plugin_List',
+            // 'Solar_Markdown_Plugin_CodeBlock',
+            // 'Solar_Markdown_Plugin_Blockquote',
+            // 'Solar_Markdown_Plugin_Html',
+            // 'Solar_Markdown_Plugin_Paragraphs',
             
             // spans
-            // 'Solar_Markdown_Rule_CodeSpan',
-            // 'Solar_Markdown_Rule_EscapeSpecialChars',
-            // 'Solar_Markdown_Rule_Image',
-            // 'Solar_Markdown_Rule_LinkDefined',
-            // 'Solar_Markdown_Rule_LinkInline',
-            // 'Solar_Markdown_Rule_Uri',
-            // 'Solar_Markdown_Rule_EncodeAmpsAndAngles',
-            // 'Solar_Markdown_Rule_ItalicsAndBold',
-            // 'Solar_Markdown_Rule_Break',
+            // 'Solar_Markdown_Plugin_CodeSpan',
+            // 'Solar_Markdown_Plugin_EscapeSpecialChars',
+            // 'Solar_Markdown_Plugin_Image',
+            // 'Solar_Markdown_Plugin_LinkDefined',
+            // 'Solar_Markdown_Plugin_LinkInline',
+            // 'Solar_Markdown_Plugin_Uri',
+            // 'Solar_Markdown_Plugin_EncodeAmpsAndAngles',
+            // 'Solar_Markdown_Plugin_ItalicsAndBold',
+            // 'Solar_Markdown_Plugin_Break',
             
             // post-filters
-            // 'Solar_Markdown_Rule_Postfilter',
+            // 'Solar_Markdown_Plugin_Postfilter',
         ),
     );
     

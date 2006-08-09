@@ -1,7 +1,7 @@
 <?php
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Rule.php';
+require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Plugin.php';
 
-class Test_Solar_Markdown_Rule_HeaderSetext extends Test_Solar_Markdown_Rule {
+class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin {
     
     // should show no changes
     public function testFilter()

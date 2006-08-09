@@ -1,14 +1,5 @@
 <?php
-abstract class Solar_Markdown_Rule extends Solar_Base {
-    
-    /**
-     * 
-     * The token delimiter to use when replacing parsed text.
-     * 
-     * @var string
-     * 
-     */
-    protected $_delim = "\xFF";
+abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
@@ -153,9 +144,9 @@ abstract class Solar_Markdown_Rule extends Solar_Base {
      */
     protected function _getToken($key)
     {
-        return $this->_delim
+        return "\x0E"  // ctrl-n, "shift out"
              . md5($this->_class . ':' . $key)
-             . $this->_delim;
+             . "\x0F"; // ctrl-o, "shift in"
     }
 }
 ?>

@@ -1,8 +1,8 @@
 <?php
-Solar::loadClass('Solar_Markdown_Rule');
-class Solar_Markdown_Rule_HeaderSetext extends Solar_Markdown_Rule {
+Solar::loadClass('Solar_Markdown_Plugin');
+class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     
-    protected $_Solar_Markdown_Rule_HeaderSetext = array(
+    protected $_Solar_Markdown_Plugin_HeaderSetext = array(
         'top' => 'h1',
         'sub' => 'h2',
     );

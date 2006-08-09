@@ -1,5 +1,5 @@
 <?php
-abstract class Test_Solar_Markdown_Rule extends Solar_Test {
+abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
     protected $_class;
     
@@ -7,7 +7,7 @@ abstract class Test_Solar_Markdown_Rule extends Solar_Test {
     
     protected $_text;
     
-    var $_token = "\xFF.{32}\xFF";
+    var $_token = "\x0E.{32}\x0F";
     
     public function __construct($config = null)
     {

@@ -13,7 +13,7 @@ class Solar_Markdown_Plugin_HorizRule extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        return preg_replace(
+        return preg_replace_callback(
             array('{^[ ]{0,2}([ ]?\*[ ]?){3,}[ \t]*$}mx',
                   '{^[ ]{0,2}([ ]? -[ ]?){3,}[ \t]*$}mx',
                   '{^[ ]{0,2}([ ]? _[ ]?){3,}[ \t]*$}mx'),

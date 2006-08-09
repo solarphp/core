@@ -36,14 +36,16 @@ class Solar_Markdown extends Solar_Base {
      * 
      * : rules : (array) An array of rules to process, in order.
      * 
-     * : setup : (array) Contruction-time config arrays for the rules.
-     * 
      * @var array
      * 
      */
     protected $_Solar_Markdown = array(
         'rules'   => array(
+            
+            // pre-filters
             'Solar_Markdown_Rule_Prefilter',
+            
+            // blocks
             'Solar_Markdown_Rule_HeaderSetext',
             'Solar_Markdown_Rule_HeaderAtx',
             'Solar_Markdown_Rule_HorizRule',
@@ -52,6 +54,8 @@ class Solar_Markdown extends Solar_Base {
             // 'Solar_Markdown_Rule_Blockquote',
             // 'Solar_Markdown_Rule_Html',
             // 'Solar_Markdown_Rule_Paragraphs',
+            
+            // spans
             // 'Solar_Markdown_Rule_CodeSpan',
             // 'Solar_Markdown_Rule_EscapeSpecialChars',
             // 'Solar_Markdown_Rule_Image',
@@ -61,9 +65,10 @@ class Solar_Markdown extends Solar_Base {
             // 'Solar_Markdown_Rule_EncodeAmpsAndAngles',
             // 'Solar_Markdown_Rule_ItalicsAndBold',
             // 'Solar_Markdown_Rule_Break',
+            
+            // post-filters
             // 'Solar_Markdown_Rule_Postfilter',
         ),
-        'setup' => array();
     );
     
     protected $_rules = array();

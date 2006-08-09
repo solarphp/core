@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Pluggable text-to-XHTML converter based on Mardown rules.
+ * Pluggable text-to-XHTML converter based on Markdown.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Pluggable text-to-XHTML converter based on Mardown rules.
+ * Pluggable text-to-XHTML converter based on Markdown.
  * 
  * @todo add (c) notes for Gruber and Fortin
  * 
@@ -34,13 +34,13 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : rules : (array) An array of rules to process, in order.
+     * : plugins : (array) An array of plugins to process, in order.
      * 
      * @var array
      * 
      */
     protected $_Solar_Markdown = array(
-        'rules'   => array(
+        'plugins'   => array(
             
             // pre-filters
             'Solar_Markdown_Plugin_Prefilter',
@@ -49,7 +49,7 @@ class Solar_Markdown extends Solar_Base {
             'Solar_Markdown_Plugin_HeaderSetext',
             'Solar_Markdown_Plugin_HeaderAtx',
             'Solar_Markdown_Plugin_HorizRule',
-            // 'Solar_Markdown_Plugin_List',
+            'Solar_Markdown_Plugin_List',
             // 'Solar_Markdown_Plugin_CodeBlock',
             // 'Solar_Markdown_Plugin_Blockquote',
             // 'Solar_Markdown_Plugin_Html',
@@ -71,32 +71,32 @@ class Solar_Markdown extends Solar_Base {
         ),
     );
     
-    protected $_rules = array();
+    protected $_plugins = array();
     
     public function __construct($config = null)
     {
         parent::__construct($config);
-        foreach ($this->_config['rules'] as $class)
-            if (! empty($this->_config['setup'][$class]) {
+        foreach ($this->_config['plugins'] as $class) {
+            if (! empty($this->_config['setup'][$class])) {
                 $config = $this->_config['setup'][$class];
             } else {
                 $config = null;
             }
-            $this->_rules[$class] = Solar::factory($class, $config);
+            $this->_plugins[$class] = Solar::factory($class, $config);
         }
     }
     
     public function transform($text)
     {
-        foreach ($this->_rules as $rule) {
-            $text = $rule->filter($text);
+        foreach ($this->_plugins as $plugin) {
+            $text = $plugin->filter($text);
         }
-        foreach ($this->_rules as $rule) {
-            $text = $rule->parse($text);
+        foreach ($this->_plugins as $plugin) {
+            $text = $plugin->parse($text);
         }
         
-        foreach ($this->_rules as $rule) {
-            $text = $rule->render($text);
+        foreach ($this->_plugins as $plugin) {
+            $text = $plugin->render($text);
         }
         
         return $text;

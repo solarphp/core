@@ -1,6 +1,6 @@
 <?php
 Solar::loadClass('Solar_Markdown_Plugin');
-class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
+class Solar_Markdown_Plugin_HeaderAtx extends Solar_Markdown_Plugin {
     
     /**
      * 
@@ -50,7 +50,8 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
         $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
         return $this->_tokenize("<$tag>")
              . $matches[2]
-             . $this->_tokenize("</$tag>");
+             . $this->_tokenize("</$tag>")
+             . "\n\n";
     }
 }
 ?>

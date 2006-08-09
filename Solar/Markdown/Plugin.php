@@ -148,5 +148,20 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
              . md5($this->_class . ':' . $key)
              . "\x0F"; // ctrl-o, "shift in"
     }
+    
+    /**
+     * 
+     * Removes one level of leading tabs or space from a line.
+     * 
+     * @param string $text A line of text.
+     * 
+     * @return string The same text without leading whitespace.
+     * 
+     */
+    protected function _outdent($text)
+    {
+        return preg_replace("/^(\\t|[ ]{1,$this->_tab_width})/m", "", $text);
+    }
+    
 }
 ?>

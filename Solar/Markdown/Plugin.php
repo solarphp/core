@@ -163,5 +163,10 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return preg_replace("/^(\\t|[ ]{1,$this->_tab_width})/m", "", $text);
     }
     
+    protected function _escape($text)
+    {
+        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    }
+    
 }
 ?>

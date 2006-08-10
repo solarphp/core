@@ -2,6 +2,8 @@
 Solar::loadClass('Solar_Markdown_Plugin');
 class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
+    protected $_is_block = true;
+    
     protected $_list_level = 0;
     
     /**
@@ -185,15 +187,12 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         $leading_space =& $matches[2];
 
         if ($leading_line || preg_match('/\n{2,}/', $item)) {
-            // $item = _RunBlockGamut(_Outdent($item));
-            $item = $this->parse($this->_outdent($item));
-        }
-        else {
-            # Recursion for sub-lists:
-            //$item = _DoLists(_Outdent($item));
+            $item = $this->_processBlocks($this->_outdent($item));
+        } else {
+            // Recursion for sub-lists:
             $item = $this->parse($this->_outdent($item));
             $item = preg_replace('/\n+$/', '', $item);
-            // $item = _RunSpanGamut($item);
+            $item = $this->_processSpans($item);
         }
 
         return $this->_tokenize("<li>")

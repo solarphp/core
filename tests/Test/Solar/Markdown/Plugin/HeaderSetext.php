@@ -1,14 +1,33 @@
 <?php
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Plugin.php';
+require_once Solar::dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'Plugin.php';
 
 class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin {
     
+    public function testIsBlock()
+    {
+        $this->assertTrue($this->_plugin->isBlock());
+    }
+    
+    public function testIsSpan()
+    {
+        $this->assertFalse($this->_plugin->isSpan());
+    }
+    
     // should show no changes
-    public function testFilter()
+    public function testPrepare()
     {
         $source = "foo bar baz";
         $expect = $source;
-        $actual = $this->_rule->filter($source);
+        $actual = $this->_plugin->prepare($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    // should show no changes
+    public function testCleanup()
+    {
+        $source = "foo bar baz";
+        $expect = $source;
+        $actual = $this->_plugin->cleanup($source);
         $this->assertSame($actual, $expect);
     }
     
@@ -26,7 +45,7 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_rule->parse($source);
+        $actual = $this->_plugin->parse($source);
         $this->assertRegex($actual, "/$expect/");
     }
     
@@ -44,8 +63,8 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_rule->parse($source);
-        $actual = $this->_rule->render($result);
+        $result = $this->_plugin->parse($source);
+        $actual = $this->_plugin->render($result);
         
         $this->assertSame($actual, $expect);
     }
@@ -64,7 +83,7 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_rule->parse($source);
+        $actual = $this->_plugin->parse($source);
         $this->assertRegex($actual, "/$expect/");
     }
     
@@ -82,8 +101,8 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_rule->parse($source);
-        $actual = $this->_rule->render($result);
+        $result = $this->_plugin->parse($source);
+        $actual = $this->_plugin->render($result);
         
         $this->assertSame($actual, $expect);
     }

@@ -2,6 +2,8 @@
 Solar::loadClass('Solar_Markdown_Plugin');
 class Solar_Markdown_Plugin_HeaderAtx extends Solar_Markdown_Plugin {
     
+    protected $_is_block = true;
+    
     /**
      * 
      * Turns setext and atx-style headers into XHTML <h?> tags.
@@ -49,7 +51,7 @@ class Solar_Markdown_Plugin_HeaderAtx extends Solar_Markdown_Plugin {
     {
         $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
         return $this->_tokenize("<$tag>")
-             . $matches[2]
+             . $this->_processSpans($matches[2])
              . $this->_tokenize("</$tag>")
              . "\n\n";
     }

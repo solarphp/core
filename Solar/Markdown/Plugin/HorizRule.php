@@ -2,6 +2,8 @@
 Solar::loadClass('Solar_Markdown_Plugin');
 class Solar_Markdown_Plugin_HorizRule extends Solar_Markdown_Plugin {
     
+    protected $_is_block = true;
+    
     /**
      * 
      * Replaces markup for horizontal rules.

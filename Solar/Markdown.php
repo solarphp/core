@@ -40,19 +40,17 @@ class Solar_Markdown extends Solar_Base {
      * 
      */
     protected $_Solar_Markdown = array(
-        'plugins'   => array(
-            
-            // pre-filters
+        
+        // pre-processing to the source as a whole
+        'plugins' => array(
             'Solar_Markdown_Plugin_Prefilter',
-            
-            // blocks
+            'Solar_Markdown_Plugin_Html',
             'Solar_Markdown_Plugin_HeaderSetext',
             'Solar_Markdown_Plugin_HeaderAtx',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
-            // 'Solar_Markdown_Plugin_CodeBlock',
-            // 'Solar_Markdown_Plugin_Blockquote',
-            // 'Solar_Markdown_Plugin_Html',
+            'Solar_Markdown_Plugin_CodeBlock',
+            'Solar_Markdown_Plugin_BlockQuote',
             // 'Solar_Markdown_Plugin_Paragraphs',
             
             // spans
@@ -71,34 +69,73 @@ class Solar_Markdown extends Solar_Base {
         ),
     );
     
+    // plugin class => object
     protected $_plugins = array();
+    
+    // list of block-type plugins
+    protected $_blocks = array();
+    
+    // list of span-type plugins
+    protected $_spans = array();
     
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        $config = array('_markdown' => $this);
         foreach ($this->_config['plugins'] as $class) {
-            if (! empty($this->_config['setup'][$class])) {
-                $config = $this->_config['setup'][$class];
-            } else {
-                $config = null;
-            }
+            // save the plugin object
             $this->_plugins[$class] = Solar::factory($class, $config);
+            
+            // is it a block plugin?
+            if ($this->_plugins[$class]->isBlock()) {
+                $this->_blocks[] = $class;
+            }
+            
+            // is it a span plugin?
+            if ($this->_plugins[$class]->isSpan()) {
+                $this->_spans[] = $class;
+            }
         }
     }
     
     public function transform($text)
     {
+        // let each plugin prepare the source text for parsing
         foreach ($this->_plugins as $plugin) {
-            $text = $plugin->filter($text);
-        }
-        foreach ($this->_plugins as $plugin) {
-            $text = $plugin->parse($text);
+            $text = $plugin->prepare($text);
         }
         
+        // run the block parsing plugins; these should process spans
+        // as needed.
+        $text = $this->processBlocks($text);
+        
+        // let each plugin clean up the source after parsing
+        foreach ($this->_plugins as $plugin) {
+            $text = $plugin->cleanup($text);
+        }
+        
+        // render the tokens from each plugin back into the text
         foreach ($this->_plugins as $plugin) {
             $text = $plugin->render($text);
         }
         
+        return $text;
+    }
+    
+    public function processBlocks($text)
+    {
+        foreach ($this->_blocks as $class) {
+            $text = $this->_plugins[$class]->parse($text);
+        }
+        return $text;
+    }
+    
+    public function processSpans($text)
+    {
+        foreach ($this->_spans as $class) {
+            $text = $this->_plugins[$class]->parse($text);
+        }
         return $text;
     }
 }

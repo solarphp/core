@@ -1,6 +1,10 @@
 <?php
 abstract class Solar_Markdown_Plugin extends Solar_Base {
     
+    protected $_Solar_Markdown_Plugin = array(
+        '_markdown' => null,
+    );
+    
     /**
      * 
      * Array of token keys with text values to replace them at
@@ -40,6 +44,37 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
+     * "Parent" Markdown object.
+     * 
+     * @var Solar_Markdown
+     * 
+     */
+    protected $_markdown;
+    
+    /**
+     * 
+     * Is this a block-level plugin?
+     * 
+     * (It is possible for a plugin to be neither block nor span.)
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_block = false;
+    
+    /**
+     * 
+     * Is this a span-level plugin?
+     * 
+     * (It is possible for a plugin to be neither block nor span.)
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_span = false;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -53,7 +88,35 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Pre-filters the source text before any parsing occurs.
+     * Is this a block-level plugin?
+     * 
+     * Reports the value of $this->_is_block.
+     * 
+     * @var bool
+     * 
+     */
+    public function isBlock()
+    {
+        return (bool) $this->_is_block;
+    }
+    
+    /**
+     * 
+     * Is this a span-level plugin?
+     * 
+     * Reports the value of $this->_is_span.
+     * 
+     * @var bool
+     * 
+     */
+    public function isSpan()
+    {
+        return (bool) $this->_is_span;
+    }
+    
+    /**
+     * 
+     * Prepares the source text before any parsing occurs.
      * 
      * Returns the text as-is.
      * 
@@ -62,7 +125,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * @return string $text The text after being filtered.
      * 
      */
-    public function filter($text)
+    public function prepare($text)
     {
         return $text;
     }
@@ -84,7 +147,23 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      
     /**
      * 
-     * Places tokenized values back into the source text.
+     * Cleans up the source text after all parsing occurs.
+     * 
+     * Returns the text as-is.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string $text The text after being filtered.
+     * 
+     */
+    public function cleanup($text)
+    {
+        return $text;
+    }
+    
+    /**
+     * 
+     * Renders tokenized values back into the source text.
      * 
      * @param string $text The source text.
      * 
@@ -102,20 +181,6 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         }
         
         return $text;
-    }
-   
-    /**
-     * 
-     * Support callback for processing parsed text.
-     * 
-     * @param array $matches The matches from the regular expression.
-     * 
-     * @return string The replacement text for the matches.
-     * 
-     */
-    protected function _parse($matches)
-    {
-        return $this->_tokenize($matches[0]);
     }
     
     /**
@@ -135,11 +200,11 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Gets the delimited token string for a given token key.
+     * Returns a delimited token key for this class.
      * 
      * @param int $key The token key number.
      * 
-     * @return string The delimited token string for the key.
+     * @return string The delimited token key.
      * 
      */
     protected function _getToken($key)
@@ -164,9 +229,12 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _outdent($text)
     {
-        return preg_replace("/^(\\t|[ ]{1,$this->_tab_width})/m", "", $text);
+        return preg_replace(
+            "/^(\\t|[ ]{1,$this->_tab_width})/m",
+            "",
+            $text
+        );
     }
-    
     
     /**
      * 
@@ -180,6 +248,34 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     protected function _escape($text)
     {
         return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    }
+    
+    /**
+     * 
+     * Uses the "parent" Markdown object to parse blocks.
+     * 
+     * @param string $text Source text.
+     * 
+     * @return string The source text after block parsing.
+     * 
+     */
+    protected function _processBlocks($text)
+    {
+        return $this->_config['_markdown']->processBlocks($text);
+    }
+    
+    /**
+     * 
+     * Uses the "parent" Markdown object to parse spans.
+     * 
+     * @param string $text Source text.
+     * 
+     * @return string The source text after span parsing.
+     * 
+     */
+    protected function _processSpans($text)
+    {
+        return $this->_config['_markdown']->processSpans($text);
     }
 }
 ?>

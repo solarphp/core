@@ -2,6 +2,8 @@
 Solar::loadClass('Solar_Markdown_Plugin');
 class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
     
+    protected $_is_block = true;
+    
     /**
      * 
      * Makes <pre><code>...</code></pre> blocks.

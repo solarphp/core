@@ -11,7 +11,7 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
      * @return string $text The text after being filtered.
      * 
      */
-    public function filter($text)
+    public function prepare($text)
     {
         // Standardize DOS and Mac OS 9 line endings
         $text = str_replace(array("\r\n", "\r"), "\n", $text);

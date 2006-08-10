@@ -1,9 +1,11 @@
 <?php
 abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
+    protected $_markdown;
+    
     protected $_class;
     
-    protected $_rule;
+    protected $_plugin;
     
     protected $_text;
     
@@ -17,22 +19,44 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
     public function setup()
     {
-        $this->_rule = Solar::factory($this->_class);
+        // limit Markdown to the one plugin we're testing
+        $config['plugins'] = array($this->_class);
+        $this->_markdown = Solar::factory('Solar_Markdown', $config);
+        
+        // build the plugin
+        $config['_markdown'] = $this->_markdown;
+        $this->_plugin = Solar::factory($this->_class, $config);
+        
     }
     
     public function test__construct()
     {
-        $this->assertInstance($this->_rule, $this->_class);
+        $this->assertInstance($this->_plugin, $this->_class);
     }
     
-    public function testFilter()
+    public function testIsBlock()
     {
-        $this->todo('needs a filter test');
+        $this->todo('needs an isBlock() test');
+    }
+    
+    public function testIsSpan()
+    {
+        $this->todo('needs an isSpan() test');
+    }
+    
+    public function testPrepare()
+    {
+        $this->todo('needs a prepare() test');
     }
     
     public function testParse()
     {
-        $this->todo('needs a parse test');
+        $this->todo('needs a parse() test');
+    }
+    
+    public function testCleanup()
+    {
+        $this->todo('needs a cleanup() test');
     }
     
     public function testRender()

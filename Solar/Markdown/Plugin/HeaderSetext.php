@@ -7,6 +7,8 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
         'sub' => 'h2',
     );
     
+    protected $_is_block = true;
+    
     /**
      * 
      * Turns setext-style headers into XHTML <h?> tags.
@@ -46,7 +48,7 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     {
         $tag = $this->_config['top'];
         return $this->_tokenize("<$tag>")
-             . $matches[1]
+             . $this->_processSpans($matches[1])
              . $this->_tokenize("</$tag>")
              . "\n\n";
     }
@@ -64,7 +66,7 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     {
         $tag = $this->_config['sub'];
         return $this->_tokenize("<$tag>")
-             . $matches[1]
+             . $this->_processSpans($matches[1])
              . $this->_tokenize("</$tag>")
              . "\n\n";
     }

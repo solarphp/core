@@ -151,11 +151,15 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Removes one level of leading tabs or space from a line.
+     * Removes one level of leading tabs or space from a text block.
      * 
-     * @param string $text A line of text.
+     * E.g., if a block of text is indented by 3 tabs, it will be
+     * returned as indented with only 2 tabs.
      * 
-     * @return string The same text without leading whitespace.
+     * @param string $text A block of text.
+     * 
+     * @return string The same text out-dented by one level of tabs
+     * or spaces.
      * 
      */
     protected function _outdent($text)

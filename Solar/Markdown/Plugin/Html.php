@@ -4,6 +4,12 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     protected $_is_block = true;
     
+    public function prepare($text)
+    {
+        // pre-remove HTML blocks
+        return $this->parse($text);
+    }
+    
     /**
      * 
      * Removes blocks of HTML proper.

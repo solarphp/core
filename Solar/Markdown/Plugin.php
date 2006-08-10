@@ -163,10 +163,19 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return preg_replace("/^(\\t|[ ]{1,$this->_tab_width})/m", "", $text);
     }
     
+    
+    /**
+     * 
+     * Escapes text using htmlspecialchars() with ENT_COMPAT and UTF-8.
+     * 
+     * @param string $text A line of text.
+     * 
+     * @return string The same text without leading whitespace.
+     * 
+     */
     protected function _escape($text)
     {
         return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
     }
-    
 }
 ?>

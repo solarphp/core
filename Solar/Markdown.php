@@ -28,6 +28,8 @@
  */
 class Solar_Markdown extends Solar_Base {
     
+    protected $_count = 0;
+    
     /**
      * 
      * Default configuration for the class.
@@ -41,20 +43,22 @@ class Solar_Markdown extends Solar_Base {
      */
     protected $_Solar_Markdown = array(
         
-        // pre-processing to the source as a whole
         'plugins' => array(
+            // pre-processing to the source as a whole
             'Solar_Markdown_Plugin_Prefilter',
-            'Solar_Markdown_Plugin_Html',
+            
+            // blocks
             'Solar_Markdown_Plugin_HeaderSetext',
             'Solar_Markdown_Plugin_HeaderAtx',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
             'Solar_Markdown_Plugin_CodeBlock',
             'Solar_Markdown_Plugin_BlockQuote',
-            // 'Solar_Markdown_Plugin_Paragraphs',
+            'Solar_Markdown_Plugin_Html',
+            'Solar_Markdown_Plugin_Paragraph',
             
             // spans
-            // 'Solar_Markdown_Plugin_CodeSpan',
+            'Solar_Markdown_Plugin_CodeSpan',
             // 'Solar_Markdown_Plugin_EscapeSpecialChars',
             // 'Solar_Markdown_Plugin_Image',
             // 'Solar_Markdown_Plugin_LinkDefined',
@@ -63,9 +67,6 @@ class Solar_Markdown extends Solar_Base {
             // 'Solar_Markdown_Plugin_EncodeAmpsAndAngles',
             // 'Solar_Markdown_Plugin_ItalicsAndBold',
             // 'Solar_Markdown_Plugin_Break',
-            
-            // post-filters
-            // 'Solar_Markdown_Plugin_Postfilter',
         ),
     );
     
@@ -103,6 +104,7 @@ class Solar_Markdown extends Solar_Base {
     {
         // let each plugin prepare the source text for parsing
         foreach ($this->_plugins as $plugin) {
+            $plugin->reset();
             $text = $plugin->prepare($text);
         }
         
@@ -110,14 +112,9 @@ class Solar_Markdown extends Solar_Base {
         // as needed.
         $text = $this->processBlocks($text);
         
-        // let each plugin clean up the source after parsing
+        // let each plugin clean up the rendered source
         foreach ($this->_plugins as $plugin) {
             $text = $plugin->cleanup($text);
-        }
-        
-        // render the tokens from each plugin back into the text
-        foreach ($this->_plugins as $plugin) {
-            $text = $plugin->render($text);
         }
         
         return $text;

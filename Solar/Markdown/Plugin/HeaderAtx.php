@@ -50,9 +50,9 @@ class Solar_Markdown_Plugin_HeaderAtx extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
-        return $this->_tokenize("<$tag>")
+        return "<$tag>"
              . $this->_processSpans($matches[2])
-             . $this->_tokenize("</$tag>")
+             . "</$tag>"
              . "\n\n";
     }
 }

@@ -4,10 +4,42 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     protected $_is_block = true;
     
+    /**
+     * 
+     * Returns a delimited token representing a piece of HTML.
+     * 
+     * @param string $text The text to represent as a token.
+     * 
+     * @return string A delimited token identifier.
+     * 
+     */
+    protected function _tokenize($text)
+    {
+        $key = hash('md5', $this->_class . ':' . $this->_count++);
+        $this->_token[$key] = $text;
+        return "\x0E$key\x0F";
+    }
+    
     public function prepare($text)
     {
         // pre-remove HTML blocks
         return $this->parse($text);
+    }
+    
+    // find and replace tokens until we can't find any more ;-)
+    public function cleanup($text)
+    {
+        $regex = "/\x0E(.*?)\x0F/";
+        while (preg_match_all($regex, $text, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $val) {
+                $text = str_replace(
+                    $val[0],
+                    $this->_token[$val[1]],
+                    $text
+                );
+            }
+        }
+        return $text;
     }
     
     /**

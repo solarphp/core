@@ -60,10 +60,7 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
             $bq
         );
 
-        return $this->_tokenize("<blockquote>") . "\n"
-             . $bq
-             . $this->_tokenize("</blockquote>")
-             . "\n\n";
+        return "<blockquote>\n$bq\n</blockquote>\n\n";
     }
     
     protected function _trimPreSpaces($matches) {

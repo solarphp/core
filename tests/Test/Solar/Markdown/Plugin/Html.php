@@ -22,15 +22,6 @@ class Test_Solar_Markdown_Plugin_Html extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    // should show no changes
-    public function testCleanup()
-    {
-        $source = "foo bar baz";
-        $expect = $source;
-        $actual = $this->_plugin->cleanup($source);
-        $this->assertSame($actual, $expect);
-    }
-    
     public function testParse()
     {
         $source = <<<EOT
@@ -48,7 +39,7 @@ EOT;
         $this->assertRegex($actual, "/$expect/");
     }
     
-    public function testRender()
+    public function testCleanup()
     {
         $source = <<<EOT
 foo bar
@@ -73,7 +64,7 @@ foo bar
 baz dib
 EOT;
         $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
+        $actual = $this->_plugin->cleanup($result);
         $this->assertSame($actual, $expect);
     }
 }

@@ -41,31 +41,11 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = $this->_token . "Top-Level Header" . $this->_token . "\n";
-        $expect[] = "baz dib";
-        $expect = implode("\n", $expect);
-        
-        $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
-    }
-    
-    public function testRender()
-    {
-        $source = array();
-        $source[] = "foo bar";
-        $source[] = "Top-Level Header";
-        $source[] = "================";
-        $source[] = "baz dib";
-        $source = implode("\n", $source);
-        
-        $expect[] = "foo bar";
         $expect[] = "<h1>Top-Level Header</h1>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
-        
+        $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
     
@@ -79,31 +59,11 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = $this->_token . "Sub-Level Header" . $this->_token . "\n";
-        $expect[] = "baz dib";
-        $expect = implode("\n", $expect);
-        
-        $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
-    }
-    
-    public function testRender_sub()
-    {
-        $source = array();
-        $source[] = "foo bar";
-        $source[] = "Sub-Level Header";
-        $source[] = "----------------";
-        $source[] = "baz dib";
-        $source = implode("\n", $source);
-        
-        $expect[] = "foo bar";
         $expect[] = "<h2>Sub-Level Header</h2>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
-        
+        $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
 }

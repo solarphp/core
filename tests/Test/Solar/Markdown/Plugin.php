@@ -9,7 +9,7 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
     protected $_text;
     
-    var $_token = "\x0E.{32}\x0F";
+    var $_token = "\x0E.*?\x0F";
     
     public function __construct($config = null)
     {
@@ -59,9 +59,9 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
         $this->todo('needs a cleanup() test');
     }
     
-    public function testRender()
+    protected function _tag($tag)
     {
-        $this->todo('needs a render test');
+        return "\s*<$tag>\s*";
     }
 }
 ?>

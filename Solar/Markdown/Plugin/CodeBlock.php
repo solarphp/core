@@ -43,7 +43,7 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
      */
     protected function _parse($matches)
     {
-        $code = $this->_outdent($matches[1]);
+        $code = $this->_escape($this->_outdent($matches[1]));
         
         // trim leading newlines and trailing whitespace
         $code = preg_replace(
@@ -52,13 +52,7 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
             $code
         );
 
-        $result = "<pre><code>"
-                . $this->_escape($code)
-                . "</code></pre>";
-
-        return "\n\n"
-             . $this->_tokenize($result)
-             . "\n\n";
+        return "\n\n<pre><code>" . $code . "\n</code></pre>\n\n";
     }
 }
 ?>

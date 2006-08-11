@@ -47,9 +47,9 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         $tag = $this->_config['top'];
-        return $this->_tokenize("<$tag>")
+        return "<$tag>"
              . $this->_processSpans($matches[1])
-             . $this->_tokenize("</$tag>")
+             . "</$tag>"
              . "\n\n";
     }
     
@@ -65,9 +65,9 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     protected function _parse_sub($matches)
     {
         $tag = $this->_config['sub'];
-        return $this->_tokenize("<$tag>")
+        return "<$tag>"
              . $this->_processSpans($matches[1])
-             . $this->_tokenize("</$tag>")
+             . "</$tag>"
              . "\n\n";
     }
 }

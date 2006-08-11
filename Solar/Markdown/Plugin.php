@@ -17,7 +17,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * The name of this class.
+     * The plugin class.
      * 
      * @var string
      * 
@@ -114,6 +114,11 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return (bool) $this->_is_span;
     }
     
+    public function reset()
+    {
+        $this->_token = array();
+    }
+    
     /**
      * 
      * Prepares the source text before any parsing occurs.
@@ -163,55 +168,16 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Renders tokenized values back into the source text.
+     * Checks if a text value is an HTML token.
      * 
-     * @param string $text The source text.
+     * @param string $text The text value to check.
      * 
-     * @return string The source text with replaced token values.
-     * 
-     */
-    public function render($text)
-    {
-        foreach ($this->_token as $key => $val) {
-            $text = str_replace(
-                $this->_getToken($key),
-                $val,
-                $text
-            );
-        }
-        
-        return $text;
-    }
-    
-    /**
-     * 
-     * Returns a delimited token representing a piece of text.
-     * 
-     * @param string $text The text to represent as a token.
-     * 
-     * @return string A delimited token identifier.
+     * @return bool True if $text is an HTML token, false if not.
      * 
      */
-    protected function _tokenize($text)
+    protected function _isToken($text)
     {
-        $this->_token[$this->_count] = $text;
-        return $this->_getToken($this->_count ++);
-    }
-    
-    /**
-     * 
-     * Returns a delimited token key for this class.
-     * 
-     * @param int $key The token key number.
-     * 
-     * @return string The delimited token key.
-     * 
-     */
-    protected function _getToken($key)
-    {
-        return "\x0E"  // ctrl-n, "shift out"
-             . md5($this->_class . ':' . $key)
-             . "\x0F"; // ctrl-o, "shift in"
+        return preg_match("/^\x0E.*?\x0F$/", $text);
     }
     
     /**

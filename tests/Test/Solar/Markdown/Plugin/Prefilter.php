@@ -68,14 +68,5 @@ class Test_Solar_Markdown_Plugin_Prefilter extends Test_Solar_Markdown_Plugin {
         $expect = $text;
         $this->assertSame($actual, $text);
     }
-    
-    public function testRender()
-    {
-        $text = 'foo bar baz dib zim gir';
-        $result = $this->_plugin->parse($text);
-        $actual = $this->_plugin->render($result);
-        $expect = $text;
-        $this->assertSame($actual, $expect);
-    }
 }
 ?>

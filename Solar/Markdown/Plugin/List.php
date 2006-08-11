@@ -6,6 +6,12 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
     protected $_list_level = 0;
     
+    public function reset()
+    {
+        parent::reset();
+        $this->_list_level = 0;
+    }
+    
     /**
      * 
      * Makes ordered (numbered) and unordered (bulleted) XHTML lists.
@@ -66,7 +72,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
                         (?:(?<=\n\n)|\A\n?)
                         '.$whole_list.'
                     }mx',
-                    array($this, '_parse'),
+                    array($this, '_parseNested'),
                     $text
                 );
             }
@@ -99,21 +105,32 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         // Turn double returns into triple returns, so that we can make a
         // paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
-        
-        // process the list items and tokenize
         $result = $this->_processItems($list, $marker_any);
-        $result = "\n"
-                . $this->_tokenize("<$list_type>")
-                . "\n"
-                . $result
-                . $this->_tokenize("</$list_type>")
-                . "\n\n";
-        
-        // done
+        $result = "<$list_type>" . $result . "</$list_type>\n";
         return $result;
     }
-
-
+    
+    protected function _parseNested($matches)
+    {
+        # Re-usable patterns to match list item bullets and number markers:
+        $marker_ul  = '[*+-]';
+        $marker_ol  = '\d+[.]';
+        $marker_any = "(?:$marker_ul|$marker_ol)";
+    
+        $list = $matches[1];
+        $list_type = preg_match("/$marker_ul/", $matches[3]) ? "ul" : "ol";
+    
+        $marker_any = ( $list_type == "ul" ? $marker_ul : $marker_ol );
+    
+        # Turn double returns into triple returns, so that we can make a
+        # paragraph for the last item in a list, if necessary:
+        $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
+        $result = $this->_processItems($list, $marker_any);
+        $result = "<$list_type>\n" . $result . "</$list_type>\n"; // extra \n?
+        return $result;
+    }
+    
+    
     /**
      * 
      * Process the contents of a single ordered or unordered
@@ -194,11 +211,8 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
             $item = preg_replace('/\n+$/', '', $item);
             $item = $this->_processSpans($item);
         }
-
-        return $this->_tokenize("<li>")
-              . $item
-              . $this->_tokenize("</li>")
-              . "\n";
+        
+        return "<li>$item</li>\n";
     }
 }
 ?>

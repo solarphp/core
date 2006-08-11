@@ -39,26 +39,31 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $source[] = "* bar";
         $source[] = "* baz";
         $source[] = "";
+        $source[] = "sep";
+        $source[] = "";
         $source[] = "1. dib";
         $source[] = "2. zim";
         $source[] = "3. gir";
         $source = implode("\n", $source). "\n\n";
         
         $expect = array();
-        $expect[] = $this->_token; // <ul>
-        $expect[] = $this->_token . "foo" . $this->_token;
-        $expect[] = $this->_token . "bar" . $this->_token;
-        $expect[] = $this->_token . "baz" . $this->_token;
-        $expect[] = $this->_token; // </ul>
-        $expect[] = $this->_token; // <ol>
-        $expect[] = $this->_token . "dib" . $this->_token;
-        $expect[] = $this->_token . "zim" . $this->_token;
-        $expect[] = $this->_token . "gir" . $this->_token;
-        $expect[] = $this->_token; // </ol>
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "foo" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "bar" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "baz" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul');
+        $expect[] = "";
+        $expect[] = "sep";
+        $expect[] = "";
+        $expect[] = $this->_tag('ol');
+        $expect[] = $this->_tag('li') . "dib" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "zim" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "gir" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ol');
         $expect = implode("\n*", $expect);
         
         $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
+        $this->assertRegex($actual, "@$expect@");
     }
     
     // parse a nested list series
@@ -73,24 +78,25 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source). "\n\n";
         
         $expect = array();
-        $expect[] = $this->_token; // <ul>
-        $expect[] = $this->_token . "foo";
-        $expect[] = $this->_token; // another <ul>
-        $expect[] = $this->_token . "bar" . $this->_token;
-        $expect[] = $this->_token . "baz" . $this->_token;
-        $expect[] = $this->_token . $this->_token; // </ul></li>
-        $expect[] = $this->_token . "dib";
-        $expect[] = $this->_token; // another <ul>
-        $expect[] = $this->_token . "zim" . $this->_token;
-        $expect[] = $this->_token . "gir" . $this->_token;
-        $expect[] = $this->_token . $this->_token; // </ul></li>
-        $expect[] = $this->_token; // </ul>
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "foo";
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "bar" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "baz" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul') . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "dib";
+        $expect[] = $this->_tag('ul');
+        $expect[] = $this->_tag('li') . "zim" . $this->_tag('/li');
+        $expect[] = $this->_tag('li') . "gir" . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul') . $this->_tag('/li');
+        $expect[] = $this->_tag('/ul');
         $expect = implode('\s*', $expect);
         
         $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
+        $this->assertRegex($actual, "@$expect@");
     }
     
+    /*
     // parse a nested list series
     public function testParse_mixedNested()
     {
@@ -120,35 +126,6 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $actual = $this->_plugin->parse($source);
         $this->assertRegex($actual, "/$expect/");
     }
-    
-    public function testRender()
-    {
-        $source[] = "1. foo";
-        $source[] = "\t* bar";
-        $source[] = "\t* baz";
-        $source[] = "2. dib";
-        $source[] = "\t* zim";
-        $source[] = "\t* gir";
-        $source = implode("\n", $source). "\n\n";
-        
-        $expect = array();
-        $expect[] = "<ol>";
-        $expect[] = "<li>foo";
-        $expect[] = "<ul>";
-        $expect[] = "<li>bar</li>";
-        $expect[] = "<li>baz</li>";
-        $expect[] = "</ul></li>";
-        $expect[] = "<li>dib";
-        $expect[] = "<ul>";
-        $expect[] = "<li>zim</li>";
-        $expect[] = "<li>gir</li>";
-        $expect[] = "</ul></li>";
-        $expect[] = "</ol>";
-        $expect = implode('\s*', $expect);
-        
-        $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
-        $this->assertRegex($actual, '{' . $expect . '}');
-    }
+    */
 }
 ?>

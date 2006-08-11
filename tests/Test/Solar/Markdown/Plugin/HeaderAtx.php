@@ -46,35 +46,6 @@ class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = $this->_token . "1" . $this->_token . "\n";
-        $expect[] = $this->_token . "2" . $this->_token . "\n";
-        $expect[] = $this->_token . "3" . $this->_token . "\n";
-        $expect[] = $this->_token . "4" . $this->_token . "\n";
-        $expect[] = $this->_token . "5" . $this->_token . "\n";
-        $expect[] = $this->_token . "6" . $this->_token . "\n";
-        $expect[] = $this->_token . "# 7" . $this->_token . "\n";
-        $expect[] = "baz dib";
-        $expect = implode("\n", $expect);
-        
-        $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
-    }
-    
-    public function testRender()
-    {
-        $source = array();
-        $source[] = "foo bar";
-        $source[] = "# 1";
-        $source[] = "## 2";
-        $source[] = "### 3";
-        $source[] = "#### 4";
-        $source[] = "##### 5";
-        $source[] = "###### 6";
-        $source[] = "####### 7";
-        $source[] = "baz dib";
-        $source = implode("\n", $source);
-        
-        $expect[] = "foo bar";
         $expect[] = "<h1>1</h1>\n";
         $expect[] = "<h2>2</h2>\n";
         $expect[] = "<h3>3</h3>\n";
@@ -85,34 +56,11 @@ class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
-        
+        $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
     
     public function testParse_trailingHashes()
-    {
-        $source = array();
-        $source[] = "foo bar";
-        $source[] = "# 1 #";
-        $source[] = "# 2 ##";
-        $source[] = "# 5 ###";
-        $source[] = "baz dib";
-        $source = implode("\n", $source);
-        
-        $expect[] = "foo bar";
-        $expect[] = $this->_token . "1" . $this->_token . "\n";
-        $expect[] = $this->_token . "2" . $this->_token . "\n";
-        $expect[] = $this->_token . "5" . $this->_token . "\n";
-        $expect[] = "baz dib";
-        $expect = implode("\n", $expect);
-        
-        $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
-    }
-    
-    public function testRender_trailingHashes()
     {
         $source = array();
         $source[] = "foo bar";
@@ -129,11 +77,8 @@ class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $result = $this->_plugin->parse($source);
-        $actual = $this->_plugin->render($result);
-        
+        $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
-    
 }
 ?>

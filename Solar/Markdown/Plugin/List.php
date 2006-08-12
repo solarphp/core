@@ -25,7 +25,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        $less_than_tab = $this->_tab_width - 1;
+        $less_than_tab = $this->_getTabWidth() - 1;
 
         # Re-usable patterns to match list item bullets and number markers:
         $marker_ul  = '[*+-]';

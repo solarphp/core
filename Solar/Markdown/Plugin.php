@@ -2,56 +2,13 @@
 abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     protected $_Solar_Markdown_Plugin = array(
-        '_markdown' => null,
+        // the "parent" markdown object
+        'markdown' => null,
     );
     
+    // characters this plugin uses for parsing, which should be
+    // escaped by other plugins.
     protected $_chars = '';
-    
-    /**
-     * 
-     * Array of token keys with text values to replace them at
-     * rendering time.
-     * 
-     * @var array
-     * 
-     */
-    protected $_token = array();
-    
-    /**
-     * 
-     * The plugin class.
-     * 
-     * @var string
-     * 
-     */
-    protected $_class = null;
-    
-    /**
-     * 
-     * The current token count.
-     * 
-     * @var int
-     * 
-     */
-    protected $_count = 0;
-    
-    /**
-     * 
-     * Number of spaces per tab.
-     * 
-     * @var int
-     * 
-     */
-    protected $_tab_width = 4;
-    
-    /**
-     * 
-     * "Parent" Markdown object.
-     * 
-     * @var Solar_Markdown
-     * 
-     */
-    protected $_markdown;
     
     /**
      * 
@@ -77,19 +34,6 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-        $this->_class = get_class($this);
-    }
-    
-    /**
-     * 
      * Is this a block-level plugin?
      * 
      * Reports the value of $this->_is_block.
@@ -100,11 +44,6 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     public function isBlock()
     {
         return (bool) $this->_is_block;
-    }
-    
-    public function getChars()
-    {
-        return $this->_chars;
     }
     
     /**
@@ -121,9 +60,27 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return (bool) $this->_is_span;
     }
     
+    /**
+     * 
+     * Get the list of characters this plugin uses for parsing.
+     * 
+     * @return string
+     * 
+     */
+    public function getChars()
+    {
+        return $this->_chars;
+    }
+    
+    /**
+     * 
+     * Resets this plugin to its original state (for multiple parsings).
+     * 
+     * @return void
+     * 
+     */
     public function reset()
     {
-        $this->_token = array();
     }
     
     /**
@@ -175,20 +132,6 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Checks if a text value is an HTML token.
-     * 
-     * @param string $text The text value to check.
-     * 
-     * @return bool True if $text is an HTML token, false if not.
-     * 
-     */
-    protected function _isToken($text)
-    {
-        return preg_match("/^\x0E.*?\x0F$/", $text);
-    }
-    
-    /**
-     * 
      * Removes one level of leading tabs or space from a text block.
      * 
      * E.g., if a block of text is indented by 3 tabs, it will be
@@ -202,8 +145,9 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _outdent($text)
     {
+        $tab_width = $this->_getTabWidth();
         return preg_replace(
-            "/^(\\t|[ ]{1,$this->_tab_width})/m",
+            "/^(\\t|[ ]{1,$tab_width})/m",
             "",
             $text
         );
@@ -211,21 +155,30 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Escapes text using htmlspecialchars() with ENT_COMPAT and UTF-8.
+     * Escapes HTML in source text.
      * 
-     * @param string $text A line of text.
+     * @param string $text Source text.
      * 
-     * @return string The same text without leading whitespace.
+     * @return string The escaped text.
      * 
      */
     protected function _escapeHtml($text)
     {
-        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+        return $this->_config['markdown']->escapeHtml($text);
     }
     
+    /**
+     * 
+     * Escapes special Markdown characters.
+     * 
+     * @param string $text Source text.
+     * 
+     * @return string The escaped text.
+     * 
+     */
     protected function _escapeChars($text)
     {
-        return $this->_config['_markdown']->escapeChars($text);
+        return $this->_config['markdown']->escapeChars($text);
     }
     
     /**
@@ -239,7 +192,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _processBlocks($text)
     {
-        return $this->_config['_markdown']->processBlocks($text);
+        return $this->_config['markdown']->processBlocks($text);
     }
     
     /**
@@ -253,7 +206,20 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _processSpans($text)
     {
-        return $this->_config['_markdown']->processSpans($text);
+        return $this->_config['markdown']->processSpans($text);
+    }
+    
+    
+    /**
+     * 
+     * Returns the number of spaces per tab.
+     * 
+     * @return int
+     * 
+     */
+    protected function _getTabWidth()
+    {
+        return $this->_config['markdown']->getTabWidth();
     }
 }
 ?>

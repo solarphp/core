@@ -8,38 +8,26 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
      * 
      * Returns a delimited token representing a piece of HTML.
      * 
-     * @param string $text The text to represent as a token.
+     * @param string $text The text to represent as an HTML token.
      * 
      * @return string A delimited token identifier.
      * 
      */
-    protected function _tokenize($text)
+    protected function _toHtmlToken($text)
     {
-        $key = hash('md5', $this->_class . ':' . $this->_count++);
-        $this->_token[$key] = $text;
-        return "\x0E$key\x0F";
+        return $this->_config['markdown']->toHtmlToken($text);
     }
     
+    // pre-remove HTML blocks
     public function prepare($text)
     {
-        // pre-remove HTML blocks
         return $this->parse($text);
     }
     
-    // find and replace tokens until we can't find any more ;-)
+    // replace all HTML blocks
     public function cleanup($text)
     {
-        $regex = "/\x0E(.*?)\x0F/";
-        while (preg_match_all($regex, $text, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $val) {
-                $text = str_replace(
-                    $val[0],
-                    $this->_token[$val[1]],
-                    $text
-                );
-            }
-        }
-        return $text;
+        return $this->_config['markdown']->unHtmlToken($text);
     }
     
     /**
@@ -53,7 +41,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        $less_than_tab = $this->_tab_width - 1;
+        $less_than_tab = $this->_getTabWidth() - 1;
 
         // Hashify HTML blocks:
         // We only want to do this for block-level HTML tags, such as headers,
@@ -170,7 +158,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         return "\n\n"
-             . $this->_tokenize($matches[1])
+             . $this->_config['markdown']->toHtmlToken($matches[1])
              ."\n\n";
     }
 }

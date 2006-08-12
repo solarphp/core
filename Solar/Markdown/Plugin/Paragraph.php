@@ -23,7 +23,7 @@ class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
         
         // Wrap <p> tags around apparent paragraphs.
         foreach ($grafs as $key => $value) {
-            if (! $this->_isToken($value)) {
+            if (! $this->_config['markdown']->isHtmlToken($value)) {
                 $value = $this->_processSpans($value);
                 $value = preg_replace('/^([ \t]*)/', '<p>', $value);
                 $value .= "</p>";
@@ -31,14 +31,16 @@ class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
             }
         }
         
-        /*
+        /* // WHY DO THIS?
+         * 
         // Unhashify HTML blocks
         foreach ($grafs as $key => $value) {
             if (isset( $this->_html_blocks[$value] )) {
                 $grafs[$key] = $this->_html_blocks[$value];
             }
         }
-        */
+         * 
+         */
         
         return implode("\n\n", $grafs);
     }

@@ -28,13 +28,6 @@
  */
 class Solar_Markdown extends Solar_Base {
     
-    protected $_count = 0;
-    
-    protected $_esc = array();
-    
-    protected $_bs_esc = array();
-    
-    
     /**
      * 
      * Default configuration for the class.
@@ -48,9 +41,12 @@ class Solar_Markdown extends Solar_Base {
      */
     protected $_Solar_Markdown = array(
         
+        'tab_width' => 4,
+        
         'plugins' => array(
             // pre-processing to the source as a whole
             'Solar_Markdown_Plugin_Prefilter',
+            'Solar_Markdown_Plugin_StripLinkDefs',
             
             // blocks
             'Solar_Markdown_Plugin_HeaderSetext',
@@ -75,52 +71,107 @@ class Solar_Markdown extends Solar_Base {
         ),
     );
     
+    // left-delimiter for html tokens
+    protected $_html_ldelim = "\x0E";
+    
+    // right-delimiter for html tokens
+    protected $_html_rdelim = "\x0F";
+    
+    // escaped-character delimiter
+    protected $_char_delim = "\x1B";
+    
+    // count of html entries so we don't have to count($this->_html)
+    // all the time
+    protected $_count = 0;
+    
+    // array of html entries
+    protected $_html = array();
+    
+    // array of defined link references keyed on the link name,
+    // with sub-keys for 'title' and 'href'
+    protected $_link = array();
+    
+    // array of char => escape
+    protected $_esc = array();
+    
+    // array of \char => escape
+    protected $_bs_esc = array();
+    
     // plugin class => object
-    protected $_plugins = array();
+    protected $_plugin = array();
     
     // list of block-type plugins
-    protected $_blocks = array();
+    protected $_block_class = array();
     
     // list of span-type plugins
-    protected $_spans = array();
+    protected $_span_class = array();
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
         $chars = '';
-        $config = array('_markdown' => $this);
+        $config = array('markdown' => $this);
+        
         foreach ($this->_config['plugins'] as $class) {
             // save the plugin object
-            $this->_plugins[$class] = Solar::factory($class, $config);
+            $this->_plugin[$class] = Solar::factory($class, $config);
             
             // is it a block plugin?
-            if ($this->_plugins[$class]->isBlock()) {
-                $this->_blocks[] = $class;
+            if ($this->_plugin[$class]->isBlock()) {
+                $this->_block_class[] = $class;
             }
             
             // is it a span plugin?
-            if ($this->_plugins[$class]->isSpan()) {
-                $this->_spans[] = $class;
+            if ($this->_plugin[$class]->isSpan()) {
+                $this->_span_class[] = $class;
             }
             
             // assemble character list
-            $chars .= $this->_plugins[$class]->getChars();
+            $chars .= $this->_plugin[$class]->getChars();
         }
         
-        // build the escape tables
+        // build the character escape tables
         $k = strlen($chars);
         for ($i = 0; $i < $k; ++ $i) {
+            
             $char = $chars[$i];
-            // \x1B is ESC
-            $this->_esc[$char] = "\x1B$char\x1B";
-            $this->_bs_esc["\\$char"] = md5("\x1B\\$char\x1B");
+            
+            $this->_esc[$char] = $this->_char_delim . $char.
+                $this->_char_delim;
+            
+            $this->_bs_esc["\\$char"] = md5(
+                $this->_char_delim . "\\$char" . $this->_char_delim
+            );
+            
         }
     }
     
+    /**
+     * 
+     * Transforms source text using plugins.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The transformed text.
+     * 
+     */
     public function transform($text)
     {
+        // reset from previous transformations
+        $this->_count = 0;
+        $this->_html = array();
+        $this->_link = array();
+        
         // let each plugin prepare the source text for parsing
-        foreach ($this->_plugins as $plugin) {
+        foreach ($this->_plugin as $plugin) {
             $plugin->reset();
             $text = $plugin->prepare($text);
         }
@@ -130,34 +181,151 @@ class Solar_Markdown extends Solar_Base {
         $text = $this->processBlocks($text);
         
         // let each plugin clean up the rendered source
-        foreach ($this->_plugins as $plugin) {
+        foreach ($this->_plugin as $plugin) {
             $text = $plugin->cleanup($text);
         }
         
-        // finally, unescape special chars
-        return $this->unescapeChars($text);
+        // finally, unescape all special chars in the text.
+        return $this->unEscapeChars($text);
     }
     
+    /**
+     * 
+     * Processes text through all block-type plugins.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The processed text.
+     * 
+     */
     public function processBlocks($text)
     {
-        foreach ($this->_blocks as $class) {
-            $text = $this->_plugins[$class]->parse($text);
+        foreach ($this->_block_class as $class) {
+            $text = $this->_plugin[$class]->parse($text);
         }
         return $text;
     }
     
+    /**
+     * 
+     * Processes text through all span-type plugins.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The processed text.
+     * 
+     */
     public function processSpans($text)
     {
-        foreach ($this->_spans as $class) {
-            $text = $this->_plugins[$class]->parse($text);
+        foreach ($this->_span_class as $class) {
+            $text = $this->_plugin[$class]->parse($text);
         }
         return $text;
     }
     
-    public function escapeChars($text)
+    /**
+     * 
+     * Saves a pieces of text as HTML and returns a delimited token.
+     * 
+     * When you convert a piece of text an HTML token, that HTML will
+     * no longer be processed by remaining plugins.
+     * 
+     * @param string $text The text to retain as HTML.
+     * 
+     * @return An HTML token.
+     * 
+     */
+    public function toHtmlToken($text)
     {
-        $list = $this->explodeTags($text);
+        $key = $this->_html_ldelim
+             . $this->_count
+             . $this->_html_rdelim;
         
+        $this->_html[$this->_count ++] = $text;
+        return $key;
+    }
+    
+    /**
+     * 
+     * Is a piece of text a delimited HTML token?
+     * 
+     * @param string $text The text to check.
+     * 
+     * @return bool True if a token, false if not.
+     * 
+     */
+    public function isHtmlToken($text)
+    {
+        return preg_match(
+            "/^{$this->_html_ldelim}.*?{$this->_html_rdelim}$/",
+            $text
+        );
+    }
+    
+    /**
+     * 
+     * Replaces all HTML tokens in source text with saved HTML.
+     * 
+     * @param string $text The text to do replacements in.
+     * 
+     * @return string The source text with HTML in place of tokens.
+     * 
+     */
+    public function unHtmlToken($text, $token = null)
+    {
+        if ($token) {
+            // replace one token
+            $find = "{$this->_html_ldelim}$token{$this->_html_rdelim}";
+            $repl = $this->_html[$token];
+            $text = str_replace($find, $repl, $text);
+        } else {
+            // replace all tokens
+            $regex = "/{$this->_html_ldelim}(.*?){$this->_html_rdelim}/";
+            while (preg_match_all($regex, $text, $matches, PREG_SET_ORDER)) {
+                foreach ($matches as $val) {
+                    $text = str_replace(
+                        $val[0],
+                        $this->_html[$val[1]],
+                        $text
+                    );
+                }
+            }
+        }
+        
+        return $text;
+    }
+    
+    /**
+     * 
+     * Escapes HTML in source text.
+     * 
+     * Uses htmlspecialchars() with ENT_COMPAT and UTF-8.
+     * 
+     * @param string $text Source text.
+     * 
+     * @return string The escaped text.
+     * 
+     */
+    public function escapeHtml($text)
+    {
+        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    }
+    
+    /**
+     * 
+     * Escapes special Markdown characters so they are not recognized
+     * when parsing.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The processed text.
+     * 
+     */
+    public function escapeChars($text, $ignore = '')
+    {
+        $list = $this->_explodeTags($text);
+        
+        // reset text and rebuild from the list
         $text = '';
         
         foreach ($list as $item) {
@@ -171,7 +339,19 @@ class Solar_Markdown extends Solar_Base {
         return $text;
     }
     
-    public function _escapeChars($text, $backslash = true)
+    /**
+     * 
+     * Support method for escapeChars().
+     * 
+     * @param string $text The source text.
+     * 
+     * @param bool $backslash Escape backslashed characters instead of
+     * plain ones?
+     * 
+     * @return string The processed text.
+     * 
+     */
+    public function _escapeChars($text, $ignore = array(), $backslash = true)
     {
         if ($backslash) {
             $chars = $this->_bs_esc;
@@ -186,7 +366,19 @@ class Solar_Markdown extends Solar_Base {
         );
     }
     
-    public function unescapeChars($text)
+    /**
+     * 
+     * Un-escapes special Markdown characters.
+     * 
+     * @param string $text The source text.
+     * 
+     * @param bool $backslash Escape backslashed characters instead of
+     * plain ones?
+     * 
+     * @return string The processed text.
+     * 
+     */
+    public function unEscapeChars($text)
     {
         $chars = array_flip($this->_esc);
         $text = str_replace(
@@ -205,21 +397,25 @@ class Solar_Markdown extends Solar_Base {
         return $text;
     }
     
-    #
-    #   Parameter:  String containing HTML markup.
-    #   Returns:    An array of the tokens comprising the input
-    #               string. Each token is either a tag (possibly with nested,
-    #               tags contained therein, such as <a href="<MTFoo>">, or a
-    #               run of text between tags. Each element of the array is a
-    #               two-element array; the first is either 'tag' or 'text';
-    #               the second is the actual value.
-    #
-    #
-    #   Regular expression derived from the _tokenize() subroutine in 
-    #   Brad Choate's MTRegex plugin.
-    #   <http://www.bradchoate.com/past/mtregex.php>
-    // explodes source text into tags and text
-    protected function explodeTags($str)
+    /**
+     * 
+     * Explodes source text into tags and text
+     * 
+     * Parameter:  String containing HTML markup.
+     * Returns:    An array of the tokens comprising the input
+     *             string. Each token is either a tag (possibly with nested,
+     *             tags contained therein, such as <a href="<MTFoo>">, or a
+     *             run of text between tags. Each element of the array is a
+     *             two-element array; the first is either 'tag' or 'text';
+     *             the second is the actual value.
+     * 
+     * 
+     * Regular expression derived from the _tokenize() subroutine in 
+     * Brad Choate's MTRegex plugin.
+     * <http://www.bradchoate.com/past/mtregex.php>
+     * 
+     */
+    protected function _explodeTags($str)
     {
         $index = 0;
         $list = array();
@@ -240,6 +436,40 @@ class Solar_Markdown extends Solar_Base {
         }
 
         return $list;
+    }
+    
+    /**
+     * 
+     * Returns the number of spaces per tab.
+     * 
+     * @return int
+     * 
+     */
+    public function getTabWidth()
+    {
+        return (int) $this->_config['tab_width'];
+    }
+    
+    public function setLink($name, $href, $title = null)
+    {
+        $this->_link[$name] = array(
+            'href'  => $href,
+            'title' => $title,
+        );
+    }
+    
+    public function getLink($name)
+    {
+        if (! empty($this->_link[$name])) {
+            return $this->_link[$name];
+        } else {
+            return false;
+        }
+    }
+    
+    public function getLinks()
+    {
+        return $this->_link;
     }
 }
 ?>

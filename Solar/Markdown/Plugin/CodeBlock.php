@@ -15,15 +15,17 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
+        $tab_width = $this->_getTabWidth();
+        
         $text = preg_replace_callback('{
                 (?:\n\n|\A)
-                (                                        # $1 = the code block -- one or more lines, starting with a space/tab
+                (                                 # $1 = the code block -- one or more lines, starting with a space/tab
                   (?:
-                    (?:[ ]{'.$this->_tab_width.'} | \t)  # Lines must start with a tab or a tab-width of spaces
+                    (?:[ ]{'.$tab_width.'} | \t)  # Lines must start with a tab or a tab-width of spaces
                     .*\n+
                   )+
                 )
-                ((?=^[ ]{0,'.$this->_tab_width.'}\S)|\Z) # Lookahead for non-space at line-start, or end of doc
+                ((?=^[ ]{0,'.$tab_width.'}\S)|\Z) # Lookahead for non-space at line-start, or end of doc
             }xm',
             array($this, '_parse'),
             $text

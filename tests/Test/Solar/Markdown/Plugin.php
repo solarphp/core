@@ -24,7 +24,7 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
         $this->_markdown = Solar::factory('Solar_Markdown', $config);
         
         // build the plugin
-        $config['_markdown'] = $this->_markdown;
+        $config['markdown'] = $this->_markdown;
         $this->_plugin = Solar::factory($this->_class, $config);
         
     }

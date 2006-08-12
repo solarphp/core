@@ -72,7 +72,8 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
         // appropriate number of space between each blocks.
         $lines = explode("\n", $text);
         $text = "";
-    
+        $tab_width = $this->_getTabWidth();
+        
         foreach ($lines as $line) {
             // Split in blocks.
             $blocks = explode("\t", $line);
@@ -81,7 +82,7 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
             unset($blocks[0]); # Do not add first block twice.
             foreach ($blocks as $block) {
                 // Calculate amount of space, insert spaces, insert block.
-                $amount = $this->_tab_width - strlen($line) % $this->_tab_width;
+                $amount = $tab_width - strlen($line) % $tab_width;
                 $line .= str_repeat(" ", $amount) . $block;
             }
             $text .= "$line\n";

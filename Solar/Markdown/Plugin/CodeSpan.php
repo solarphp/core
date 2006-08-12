@@ -4,6 +4,8 @@ class Solar_Markdown_Plugin_CodeSpan extends Solar_Markdown_Plugin {
     
     protected $_is_span = true;
     
+    protected $_chars = '`';
+    
     #
     #     *    Backtick quotes are used for <code></code> spans.
     #
@@ -31,7 +33,7 @@ class Solar_Markdown_Plugin_CodeSpan extends Solar_Markdown_Plugin {
     public function parse($text)
     {
         $text = preg_replace_callback('@
-                (?<!\\\) # Character before opening ` can\'t be a backslash
+                (?<!\\\) # Character before opening ` cannot be a backslash
                 (`+)     # $1 = Opening run of `
                 (.+?)    # $2 = The code block
                 (?<!`)   
@@ -50,7 +52,8 @@ class Solar_Markdown_Plugin_CodeSpan extends Solar_Markdown_Plugin {
         $c = $matches[2];
         $c = preg_replace('/^[ \t]*/', '', $c); # leading whitespace
         $c = preg_replace('/[ \t]*$/', '', $c); # trailing whitespace
-        $c = $this->_escape($c);
+        $c = $this->_escapeHtml($c);
+        $c = $this->_escapeChars($c);
         return "<code>$c</code>";
     }
 }

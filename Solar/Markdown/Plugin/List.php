@@ -6,6 +6,8 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
     protected $_list_level = 0;
     
+    protected $_chars = '-+*';
+    
     public function reset()
     {
         parent::reset();

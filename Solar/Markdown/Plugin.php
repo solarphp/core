@@ -5,6 +5,8 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         '_markdown' => null,
     );
     
+    protected $_chars = '';
+    
     /**
      * 
      * Array of token keys with text values to replace them at
@@ -98,6 +100,11 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     public function isBlock()
     {
         return (bool) $this->_is_block;
+    }
+    
+    public function getChars()
+    {
+        return $this->_chars;
     }
     
     /**
@@ -211,9 +218,14 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * @return string The same text without leading whitespace.
      * 
      */
-    protected function _escape($text)
+    protected function _escapeHtml($text)
     {
         return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+    }
+    
+    protected function _escapeChars($text)
+    {
+        return $this->_config['_markdown']->escapeChars($text);
     }
     
     /**

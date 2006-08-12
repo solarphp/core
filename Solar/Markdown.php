@@ -30,6 +30,11 @@ class Solar_Markdown extends Solar_Base {
     
     protected $_count = 0;
     
+    protected $_esc = array();
+    
+    protected $_bs_esc = array();
+    
+    
     /**
      * 
      * Default configuration for the class.
@@ -82,7 +87,7 @@ class Solar_Markdown extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        
+        $chars = '';
         $config = array('_markdown' => $this);
         foreach ($this->_config['plugins'] as $class) {
             // save the plugin object
@@ -97,6 +102,18 @@ class Solar_Markdown extends Solar_Base {
             if ($this->_plugins[$class]->isSpan()) {
                 $this->_spans[] = $class;
             }
+            
+            // assemble character list
+            $chars .= $this->_plugins[$class]->getChars();
+        }
+        
+        // build the escape tables
+        $k = strlen($chars);
+        for ($i = 0; $i < $k; ++ $i) {
+            $char = $chars[$i];
+            // \x1B is ESC
+            $this->_esc[$char] = "\x1B$char\x1B";
+            $this->_bs_esc["\\$char"] = md5("\x1B\\$char\x1B");
         }
     }
     
@@ -117,7 +134,8 @@ class Solar_Markdown extends Solar_Base {
             $text = $plugin->cleanup($text);
         }
         
-        return $text;
+        // finally, unescape special chars
+        return $this->unescapeChars($text);
     }
     
     public function processBlocks($text)
@@ -134,6 +152,94 @@ class Solar_Markdown extends Solar_Base {
             $text = $this->_plugins[$class]->parse($text);
         }
         return $text;
+    }
+    
+    public function escapeChars($text)
+    {
+        $list = $this->explodeTags($text);
+        
+        $text = '';
+        
+        foreach ($list as $item) {
+            if ($item[0] == 'tag') {
+                $text .= $this->_escapeChars($item[1]);
+            } else {
+                $text .= $this->_escapeChars($item[1], true);
+            }
+        }
+        
+        return $text;
+    }
+    
+    public function _escapeChars($text, $backslash = true)
+    {
+        if ($backslash) {
+            $chars = $this->_bs_esc;
+        } else {
+            $chars = $this->_esc;
+        }
+        
+        return str_replace(
+            array_keys($chars),
+            array_values($chars),
+            $text
+        );
+    }
+    
+    public function unescapeChars($text)
+    {
+        $chars = array_flip($this->_esc);
+        $text = str_replace(
+            array_keys($chars),
+            array_values($chars),
+            $text
+        );
+        
+        $chars = array_flip($this->_bs_esc);
+        $text = str_replace(
+            array_keys($chars),
+            array_values($chars),
+            $text
+        );
+        
+        return $text;
+    }
+    
+    #
+    #   Parameter:  String containing HTML markup.
+    #   Returns:    An array of the tokens comprising the input
+    #               string. Each token is either a tag (possibly with nested,
+    #               tags contained therein, such as <a href="<MTFoo>">, or a
+    #               run of text between tags. Each element of the array is a
+    #               two-element array; the first is either 'tag' or 'text';
+    #               the second is the actual value.
+    #
+    #
+    #   Regular expression derived from the _tokenize() subroutine in 
+    #   Brad Choate's MTRegex plugin.
+    #   <http://www.bradchoate.com/past/mtregex.php>
+    // explodes source text into tags and text
+    protected function explodeTags($str)
+    {
+        $index = 0;
+        $list = array();
+
+        $match = '(?s:<!(?:--.*?--\s*)+>)|'.    # comment
+                 '(?s:<\?.*?\?>)|'.             # processing instruction
+                                                # regular tags
+                 '(?:<[/!$]?[-a-zA-Z0-9:]+\b(?>[^"\'>]+|"[^"]*"|\'[^\']*\')*>)'; 
+                 
+        $parts = preg_split("{($match)}", $str, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
+        foreach ($parts as $part) {
+            if (++$index % 2 && $part != '') {
+                $list[] = array('text', $part);
+            } else {
+                $list[] = array('tag', $part);
+            }
+        }
+
+        return $list;
     }
 }
 ?>

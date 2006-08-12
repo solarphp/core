@@ -4,6 +4,8 @@ class Solar_Markdown_Plugin_HeaderAtx extends Solar_Markdown_Plugin {
     
     protected $_is_block = true;
     
+    protected $_chars = '#';
+    
     /**
      * 
      * Turns setext and atx-style headers into XHTML <h?> tags.

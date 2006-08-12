@@ -4,6 +4,8 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
     
     protected $_is_block = true;
     
+    protected $_chars = '>';
+    
     /**
      * 
      * Makes <blockquote> blocks.

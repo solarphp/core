@@ -10,6 +10,21 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     // escaped by other plugins.
     protected $_chars = '';
     
+    // for nested brackets
+    protected $_nested_brackets_depth = 6;
+    
+    // the regex for nested brackets
+    protected $_nested_brackets = '';
+    
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->_nested_brackets = 
+            str_repeat('(?>[^\[\]]+|\[', $this->_nested_brackets_depth).
+            str_repeat('\])*', $this->_nested_brackets_depth);
+        
+    }
+
     /**
      * 
      * Is this a block-level plugin?

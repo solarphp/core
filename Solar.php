@@ -1002,6 +1002,28 @@ class Solar {
         return rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     
+    
+    /**
+     * 
+     * Convenience method for dirname() and higher-level directories.
+     * 
+     * @param string $file Get the dirname() of this file.
+     * 
+     * @param int $up Move up in the directory structure this many 
+     * times, default 0.
+     * 
+     * @return string The dirname() of the file.
+     * 
+     */
+    public static function dirname($file, $up = 0)
+    {
+        $dir = dirname($file);
+        while ($up --) {
+            $dir = dirname($dir);
+        }
+        return $dir;
+    }
+    
     /**
      * 
      * Returns an array of the parent classes for a given class.

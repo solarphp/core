@@ -66,7 +66,7 @@ class Solar_Markdown extends Solar_Base {
             'Solar_Markdown_Plugin_Uri',
             // 'Solar_Markdown_Plugin_EncodeAmpsAndAngles',
             'Solar_Markdown_Plugin_EmStrong',
-            // 'Solar_Markdown_Plugin_Break',
+            'Solar_Markdown_Plugin_Break',
         ),
     );
     

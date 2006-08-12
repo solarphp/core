@@ -4,22 +4,22 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     
     protected $_is_span = true;
     
-    protected $_chars = '![]()';
+    protected $_chars = '![]()"\'';
     
     public function parse($text)
     {
         // First, handle reference-style labeled images: ![alt text][id]
         $text = preg_replace_callback('{
-            (                # wrap whole match in $1
+            (                                   # wrap whole match in $1
               !\[
-                ('.$this->_nested_brackets.')        # alt text = $2
+                ('.$this->_nested_brackets.')   # alt text = $2
               \]
 
-              [ ]?                # one optional space
-              (?:\n[ ]*)?        # one optional newline followed by spaces
-
-              \[
-                (.*?)        # id = $3
+              [ ]?                              # one optional space
+              (?:\n[ ]*)?                       # one optional newline followed by spaces
+                            
+              \[            
+                (.*?)                           # id = $3
               \]
 
             )
@@ -31,20 +31,20 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         # Next, handle inline images:  ![alt text](url "optional title")
         # Don't forget: encode * and _
         $text = preg_replace_callback('{
-            (                # wrap whole match in $1
+            (                                   # wrap whole match in $1
               !\[
-                ('.$this->_nested_brackets.')        # alt text = $2
+                ('.$this->_nested_brackets.')   # alt text = $2
               \]
-              \(            # literal paren
-                [ \t]*
-                <?(\S+?)>?    # src url = $3
-                [ \t]*
-                (            # $4
-                  ([\'"])    # quote char = $5
-                  (.*?)        # title = $6
-                  \5        # matching quote
-                  [ \t]*
-                )?            # title is optional
+              \(                                # literal paren
+                [ \t]*      
+                <?(\S+?)>?                      # src url = $3
+                [ \t]*      
+                (                               # $4
+                  ([\'"])                       # quote char = $5
+                  (.*?)                         # title = $6
+                  \5                            # matching quote
+                  [ \t]*    
+                )?                              # title is optional
               \)
             )
             }xs',
@@ -62,7 +62,8 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         $name        = strtolower(trim($matches[3]));
 
         if (empty($name)) {
-            $name = strtolower($alt); # for shortcut links like ![this][].
+            // for shortcut links like ![this][].
+            $name = strtolower($alt);
         }
 
         $link = $this->_config['markdown']->getLink($name);

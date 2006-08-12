@@ -1,0 +1,70 @@
+<?php
+require_once Solar::dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'Plugin.php';
+
+class Test_Solar_Markdown_Plugin_Link extends Test_Solar_Markdown_Plugin {
+    
+    public function testIsBlock()
+    {
+        $this->assertFalse($this->_plugin->isBlock());
+    }
+    
+    public function testIsSpan()
+    {
+        $this->assertTrue($this->_plugin->isSpan());
+    }
+    
+    // should show no changes
+    public function testPrepare()
+    {
+        $source = "foo bar baz";
+        $expect = $source;
+        $actual = $this->_plugin->prepare($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    // should show no changes
+    public function testCleanup()
+    {
+        $source = "foo bar baz";
+        $expect = $source;
+        $actual = $this->_plugin->cleanup($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse()
+    {
+        $source = 'foo bar [display text](/path/to/file_name.html) baz dib';
+        $expect = 'foo bar <a href="/path/to/file_name.html">display text</a> baz dib';
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_inlineWithTitle()
+    {
+        $source = 'foo bar [display text](/path/to/file_name.html "with title") baz dib';
+        $expect = 'foo bar <a href="/path/to/file_name.html" title="with title">display text</a> baz dib';
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_reference()
+    {
+        $this->_markdown->setLink('display text', '/path/to/file_name.html', 'with title');
+        
+        $source = 'foo bar [display text][] baz dib';
+        $expect = 'foo bar <a href="/path/to/file_name.html" title="with title">display text</a> baz dib';
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_referenceDifferentAlt()
+    {
+        $this->_markdown->setLink('display text', '/path/to/file_name.html', 'with title');
+        
+        $source = 'foo bar [inline-text][display text] baz dib';
+        $expect = 'foo bar <a href="/path/to/file_name.html" title="with title">inline-text</a> baz dib';
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+}
+?>

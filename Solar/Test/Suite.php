@@ -153,8 +153,8 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Recursively iterates through a directory looking for test classes.
      * 
-     * Skips dot-files and files that do not start with upper-case
-     * letters.
+     * Skips dot-files, files that do not start with upper-case
+     * letters, and files that do not end in ".php".
      * 
      * @param RecursiveDirectoryIterator $iter Directory iterator.
      * 
@@ -168,16 +168,31 @@ class Solar_Test_Suite extends Solar_Base {
             $path = $iter->current()->getPathname();
             $file = basename($path);
             
-            // skip files not starting with a capital letter
+            // skip dotfiles, files not starting with a capital letter,
+            // and files not ending in ".php"
             if ($iter->isDot() ||
                 ! ctype_alpha($file[0]) ||
-                $file != ucfirst($file)) {
+                $file != ucfirst($file) ||
+                substr($file, -4) != '.php') {
                 continue;
             }
-    
+            
+            // skip dirs not starting with a capital letter
+            if ($iter->isDir()) {
+                $tmp = explode(DIRECTORY_SEPARATOR, $path);
+                $last = array_pop($tmp);
+                if (! ctype_alpha($last[0]) ||
+                    $last != ucfirst($last)) {
+                    // dirname does not start with capital letter
+                    continue;
+                }
+            }
+            
             if ($iter->isDir() && $iter->hasChildren()) {
+                // recursively find tests in child dirs
                 $this->findTests($iter->getChildren());
             } elseif ($iter->isFile()) {
+                // passed all checks, must be a test file
                 require_once $path;
                 $len = strlen($this->_dir);
                 $class = substr($path, $len, -4); // drops .php

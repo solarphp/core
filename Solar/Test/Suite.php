@@ -168,12 +168,10 @@ class Solar_Test_Suite extends Solar_Base {
             $path = $iter->current()->getPathname();
             $file = basename($path);
             
-            // skip dotfiles, files not starting with a capital letter,
-            // and files not ending in ".php"
+            // skip dotfiles and files not starting with a capital letter,
             if ($iter->isDot() ||
                 ! ctype_alpha($file[0]) ||
-                $file != ucfirst($file) ||
-                substr($file, -4) != '.php') {
+                $file != ucfirst($file)) {
                 continue;
             }
             
@@ -192,8 +190,8 @@ class Solar_Test_Suite extends Solar_Base {
             if ($iter->isDir() && $iter->hasChildren()) {
                 // recursively find tests in child dirs
                 $this->findTests($iter->getChildren());
-            } elseif ($iter->isFile()) {
-                // passed all checks, must be a test file
+            } elseif ($iter->isFile() && substr($file, -4) == ".php") {
+                // looks like a test file
                 require_once $path;
                 $len = strlen($this->_dir);
                 $class = substr($path, $len, -4); // drops .php

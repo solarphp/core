@@ -177,9 +177,9 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * @return string The escaped text.
      * 
      */
-    protected function _escapeHtml($text)
+    protected function _escape($text)
     {
-        return $this->_config['markdown']->escapeHtml($text);
+        return $this->_config['markdown']->escape($text);
     }
     
     /**
@@ -191,9 +191,9 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * @return string The escaped text.
      * 
      */
-    protected function _escapeChars($text)
+    protected function _encode($text)
     {
-        return $this->_config['markdown']->escapeChars($text);
+        return $this->_config['markdown']->encode($text);
     }
     
     /**

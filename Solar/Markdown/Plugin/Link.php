@@ -67,15 +67,18 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
         $link = $this->_config['markdown']->getLink($name);
         if ($link) {
             
-            $href = $this->_escapeHtml($link['href']);
+            $href = $this->_escape($link['href']);
             $result = "<a href=\"$href\"";
             
             if ($link['title']) {
-                $title = $this->_escapeHtml($link['title']);
+                $title = $this->_escape($link['title']);
                 $result .=  " title=\"$title\"";
             }
             
-            $result .= ">" . $this->_escapeHtml($alt_text) . "</a>";
+            $result .= ">" . $this->_escape($alt_text) . "</a>";
+            
+            // encode special Markdown characters
+            $result = $this->_encode($result);
             
         } else {
             $result = $whole_match;
@@ -87,17 +90,20 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
     
     function _parseInline($matches)
     {
-        $alt_text    = $this->_escapeHtml($matches[2]);
-        $href        = $this->_escapeHtml($matches[3]);
+        $alt_text = $this->_escape($matches[2]);
+        $href     = $this->_escape($matches[3]);
 
-        $result = "<a href=\"$href\"";
+        $result   = "<a href=\"$href\"";
         
         if (! empty($matches[6])) {
-            $title = $this->_escapeHtml($matches[6]);
+            $title = $this->_escape($matches[6]);
             $result .=  " title=\"$title\"";
         }
     
         $result .= ">$alt_text</a>";
+        
+        // encode special Markdown characters
+        $result = $this->_encode($result);
 
         return $result;
     }

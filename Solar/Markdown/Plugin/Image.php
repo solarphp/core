@@ -69,12 +69,12 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         $link = $this->_config['markdown']->getLink($name);
         if ($link) {
             
-            $href   = $this->_escapeHtml($link['href']);
-            $alt    = $this->_escapeHtml($alt);
+            $href   = $this->_escape($link['href']);
+            $alt    = $this->_escape($alt);
             $result = "<img src=\"$href\" alt=\"$alt\"";
             
             if (! empty($link['title'])) {
-                $title = $this->_escapeHtml($link['title']);
+                $title = $this->_escape($link['title']);
                 $result .=  " title=\"$title\"";
             }
             
@@ -85,6 +85,9 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
             $result = $whole_match;
         }
 
+        // encode special Markdown characters
+        $result = $this->_encode($result);
+        
         return $result;
     }
     
@@ -95,17 +98,20 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         $alt         = $matches[2];
         $href        = $matches[3];
         
-        $alt    = $this->_escapeHtml($alt);
-        $href   = $this->_escapeHtml($href);
+        $alt    = $this->_escape($alt);
+        $href   = $this->_escape($href);
         
         $result = "<img src=\"$href\" alt=\"$alt\"";
         
         if (! empty($matches[6])) {
-            $title = $this->_escapeHtml($matches[6]);
+            $title = $this->_escape($matches[6]);
             $result .=  " title=\"$title\"";
         }
         
         $result .= " />";
+        
+        // encode special Markdown characters
+        $result = $this->_encode($result);
         
         return $result;
     }

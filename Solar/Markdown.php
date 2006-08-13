@@ -43,8 +43,12 @@ class Solar_Markdown extends Solar_Base {
         
         'tab_width' => 4,
         
+        'chars' => '*_',
+        
+        'tidy' => false,
+        
         'plugins' => array(
-            // pre-processing to the source as a whole
+            // pre-processing on the source as a whole
             'Solar_Markdown_Plugin_Prefilter',
             'Solar_Markdown_Plugin_StripLinkDefs',
             
@@ -60,11 +64,11 @@ class Solar_Markdown extends Solar_Base {
             
             // spans
             'Solar_Markdown_Plugin_CodeSpan',
-            // 'Solar_Markdown_Plugin_EscapeSpecialChars',
+            'Solar_Markdown_Plugin_Encode',
             'Solar_Markdown_Plugin_Image',
             'Solar_Markdown_Plugin_Link',
             'Solar_Markdown_Plugin_Uri',
-            // 'Solar_Markdown_Plugin_EncodeAmpsAndAngles',
+            'Solar_Markdown_Plugin_AmpsAngles',
             'Solar_Markdown_Plugin_EmStrong',
             'Solar_Markdown_Plugin_Break',
         ),
@@ -116,7 +120,8 @@ class Solar_Markdown extends Solar_Base {
     {
         parent::__construct($config);
         
-        $chars = '';
+        $chars = $this->_config['chars'];
+        
         $config = array('markdown' => $this);
         
         foreach ($this->_config['plugins'] as $class) {
@@ -140,15 +145,10 @@ class Solar_Markdown extends Solar_Base {
         // build the character escape tables
         $k = strlen($chars);
         for ($i = 0; $i < $k; ++ $i) {
-            
             $char = $chars[$i];
-            
-            $this->_esc[$char] = $this->_char_delim . $char.
-                $this->_char_delim;
-            
-            $this->_bs_esc["\\$char"] = md5(
-                $this->_char_delim . "\\$char" . $this->_char_delim
-            );
+            $delim = $this->_char_delim . $i. $this->_char_delim;
+            $this->_esc[$char] = $delim;
+            $this->_bs_esc["\\$char"] = $delim;
             
         }
     }
@@ -184,8 +184,14 @@ class Solar_Markdown extends Solar_Base {
             $text = $plugin->cleanup($text);
         }
         
-        // finally, unescape all special chars in the text.
-        return $this->unEscapeChars($text);
+        // replace any remaining HTML tokens
+        $text = $this->unHtmlToken($text);
+        
+        // replace all special chars in the text.
+        $text = $this->unEncode($text);
+        
+        // tidy everything up and return
+        return $this->_tidy($text);
     }
     
     /**
@@ -305,22 +311,22 @@ class Solar_Markdown extends Solar_Base {
      * @return string The escaped text.
      * 
      */
-    public function escapeHtml($text)
+    public function escape($text)
     {
         return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
     }
     
     /**
      * 
-     * Escapes special Markdown characters so they are not recognized
+     * Encodes special Markdown characters so they are not recognized
      * when parsing.
      * 
      * @param string $text The source text.
      * 
-     * @return string The processed text.
+     * @return string The encoded text.
      * 
      */
-    public function escapeChars($text, $ignore = '')
+    public function encode($text)
     {
         $list = $this->_explodeTags($text);
         
@@ -329,9 +335,9 @@ class Solar_Markdown extends Solar_Base {
         
         foreach ($list as $item) {
             if ($item[0] == 'tag') {
-                $text .= $this->_escapeChars($item[1]);
+                $text .= $this->_encode($item[1], true);
             } else {
-                $text .= $this->_escapeChars($item[1], true);
+                $text .= $this->_encode($item[1]);
             }
         }
         
@@ -340,22 +346,23 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
-     * Support method for escapeChars().
+     * Support method for encode().
      * 
      * @param string $text The source text.
      * 
-     * @param bool $backslash Escape backslashed characters instead of
-     * plain ones?
+     * @param bool $in_tag Escaping inside a tag?
      * 
-     * @return string The processed text.
+     * @return string The encoded text.
      * 
      */
-    public function _escapeChars($text, $ignore = array(), $backslash = true)
+    public function _encode($text, $in_tag = false)
     {
-        if ($backslash) {
-            $chars = $this->_bs_esc;
-        } else {
+        if ($in_tag) {
+            // inside a tag
             $chars = $this->_esc;
+        } else {
+            // outside a tag, or between tags
+            $chars = $this->_bs_esc;
         }
         
         return str_replace(
@@ -367,26 +374,19 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
-     * Un-escapes special Markdown characters.
+     * Un-encodes special Markdown characters.
      * 
-     * @param string $text The source text.
+     * @param string $text The text with encocded characters.
      * 
-     * @param bool $backslash Escape backslashed characters instead of
-     * plain ones?
-     * 
-     * @return string The processed text.
+     * @return string The un-encoded text.
      * 
      */
-    public function unEscapeChars($text)
+    public function unEncode($text)
     {
+        // because the bs_esc table uses the same values (just
+        // different keys), this will catch both regular and
+        // backslashes chars.
         $chars = array_flip($this->_esc);
-        $text = str_replace(
-            array_keys($chars),
-            array_values($chars),
-            $text
-        );
-        
-        $chars = array_flip($this->_bs_esc);
         $text = str_replace(
             array_keys($chars),
             array_values($chars),
@@ -469,6 +469,27 @@ class Solar_Markdown extends Solar_Base {
     public function getLinks()
     {
         return $this->_link;
+    }
+    
+    protected function _tidy($text)
+    {
+        if (! extension_loaded('tidy') ||
+            $this->_config['tidy'] === false) {
+                
+            // no extension, or tidy explicitly disabled
+            return $text;
+        }
+        
+        // tidy up the text
+        $tidy = new tidy;
+        $tidy->parseString($text, $this->_config['tidy'], 'utf8');
+        $tidy->cleanRepair();
+        
+        // get only the body portion
+        $text = tidy_get_body($tidy);
+        
+        // remove <body> and </body>
+        return substr($text, 6, -7);
     }
 }
 ?>

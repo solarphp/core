@@ -11,6 +11,8 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
     var $_token = "\x0E.*?\x0F";
     
+    var $_encode = "\x1B.*?\x1B";
+    
     public function __construct($config = null)
     {
         parent::__construct($config);

@@ -45,7 +45,7 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
      */
     protected function _parse($matches)
     {
-        $code = $this->_escapeHtml($this->_outdent($matches[1]));
+        $code = $this->_escape($this->_outdent($matches[1]));
         
         // trim leading newlines and trailing whitespace
         $code = preg_replace(

@@ -179,7 +179,8 @@ class Solar_Test_Suite extends Solar_Base {
             
             // skip dirs not starting with a capital letter
             if ($iter->isDir()) {
-                $tmp = explode(DIRECTORY_SEPARATOR, $path);
+                $dir = dirname($path);
+                $tmp = explode(DIRECTORY_SEPARATOR, $dir);
                 $last = array_pop($tmp);
                 if (! ctype_alpha($last[0]) ||
                     $last != ucfirst($last)) {

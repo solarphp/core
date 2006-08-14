@@ -53,7 +53,7 @@ class Test_Solar_View_Helper_Js extends Solar_Test {
                                     ->addFile('bar.js');
 
         // one second highlight of #test
-        $this->_view->jsScriptaculous()->highlight('#test', array('duration' => 1));
+        $this->_view->jsScriptaculous()->effect->highlight('#test', array('duration' => 1));
 
         $actual = $helper->fetch();
 

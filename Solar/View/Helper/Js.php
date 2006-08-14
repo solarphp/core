@@ -110,51 +110,9 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         $f = '';
         if (!empty($this->selectors)) {
 
-            // Let's make nicely (and accurately) formatted options
-            $json = Solar::factory('Solar_Json');
-
             foreach ($this->selectors as $selector => $actions) {
                 foreach ($actions as $a) {
-                    switch ($a['type']) {
-                        case 'effect':
-                            $f .= "    \$\$('$selector').each(function(li){new Effect.{$a['name']}(li";
-                            switch ($a['name']) {
-                                case 'Scale':
-                                    $f .= ", {$a['percent']}";
-                                    break;
-
-                                case 'MoveBy':
-                                    $f .= ", {$a['y']}, {$a['x']}";
-                                    break;
-
-                                case 'Toggle':
-                                    $f .= ", {$a['effect']}";
-                                    break;
-
-                                default:
-                                    break;
-                            }
-                            if (!empty($a['options'])) {
-                                $f .= ', ' . $json->encode($a['options']);
-                            }
-                            $f .= ")});\n";
-                            break;
-
-                        case 'inplaceeditor':
-                            $f .= "    \$\$('$selector').each(function(li){new Ajax.{$a['name']}(li";
-                            if (isset($a['url'])) {
-                                $f .= ', ' . $json->encode($a['url']);
-                            }
-                            if (isset($a['options']) && !empty($a['options'])) {
-                                 $f .= ', ' . $json->encode($a['options']);
-                            }
-                            $f .= ")});\n";
-                            break;
-
-                        default:
-
-                            break;
-                    }
+                    $f .= $this->_view->getHelper($a['type'])->fetch($selector, $a);
                 }
             }
 

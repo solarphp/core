@@ -1,7 +1,9 @@
 <?php
 /**
  *
- * Helper for {@link http://prototype.conio.net Prototype} JavaScript library
+ * Helper for [Prototype][] JavaScript library
+ *
+ * [Prototype]: http://prototype.conio.net
  *
  * @category Solar
  *
@@ -22,7 +24,9 @@ Solar::loadClass('Solar_View_Helper_JsLibrary');
 
 /**
  *
- * Helper for {@link http://prototype.conio.net Prototype} JavaScript library
+ * Helper for [Prototype][] JavaScript library
+ *
+ * [Prototype]: http://prototype.conio.net
  *
  * @category Solar
  *

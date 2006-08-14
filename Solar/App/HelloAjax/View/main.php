@@ -18,8 +18,8 @@
  */
 ?>
 <p id="hello"><?php echo $this->escape($this->text) ?></p>
-<?php $this->jsScriptaculous()->highlight('#hello', array('duration' => 1.0));?>
-<?php $this->jsScriptaculous()->inPlaceEditor('#hello', 'index.php', array(
+<?php $this->jsScriptaculous()->effect->highlight('#hello', array('duration' => 1.0));?>
+<?php $this->jsScriptaculous()->control->inPlaceEditor('#hello', 'index.php', array(
     'rows' => 15,
     'cols' => 40,
     'ajaxOptions' => array(

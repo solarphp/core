@@ -4,20 +4,6 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     protected $_is_block = true;
     
-    /**
-     * 
-     * Returns a delimited token representing a piece of HTML.
-     * 
-     * @param string $text The text to represent as an HTML token.
-     * 
-     * @return string A delimited token identifier.
-     * 
-     */
-    protected function _toHtmlToken($text)
-    {
-        return $this->_config['markdown']->toHtmlToken($text);
-    }
-    
     // pre-remove HTML blocks
     public function prepare($text)
     {
@@ -27,7 +13,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     // replace all HTML blocks
     public function cleanup($text)
     {
-        return $this->_config['markdown']->unHtmlToken($text);
+        return $this->_unHtmlToken($text);
     }
     
     /**
@@ -158,7 +144,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         return "\n\n"
-             . $this->_config['markdown']->toHtmlToken($matches[1])
+             . $this->_toHtmlToken($matches[1])
              ."\n\n";
     }
 }

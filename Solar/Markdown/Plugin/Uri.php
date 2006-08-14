@@ -41,6 +41,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
         $href = $this->_escape($matches[1]);
         return "<a href=\"$href\">$href</a>";
     }
+    
     /**
      *
      *    Input: an email address, e.g. "foo@example.com"

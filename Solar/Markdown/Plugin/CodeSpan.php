@@ -53,8 +53,10 @@ class Solar_Markdown_Plugin_CodeSpan extends Solar_Markdown_Plugin {
         $c = preg_replace('/^[ \t]*/', '', $c); # leading whitespace
         $c = preg_replace('/[ \t]*$/', '', $c); # trailing whitespace
         $c = $this->_escape($c);
-        $c = $this->_encode($c);
-        return "<code>$c</code>";
+        // $c = $this->_encode($c); // save as HTML instead?
+        // return "<code>$c</code>";
+        $c = "<code>$c</code>";
+        return $this->_toHtmlToken($c);
     }
 }
 ?>

@@ -40,14 +40,14 @@ class Test_Solar_Markdown_Plugin_CodeSpan extends Test_Solar_Markdown_Plugin {
         $source[] = "plain `code` plain `code`";
         $source = implode("\n", $source);
         
-        $expect[] = "<code>code</code>";
-        $expect[] = "<code>code</code>";
-        $expect[] = "<code>`code`</code>";
-        $expect[] = "plain <code>code</code> plain <code>code</code>";
+        $expect[] = $this->_token;
+        $expect[] = $this->_token;
+        $expect[] = $this->_token;
+        $expect[] = "plain $this->_token plain $this->_token";
         $expect = implode("\n", $expect);
         
         $actual = $this->_plugin->parse($source);
-        $this->assertSame($actual, $expect);
+        $this->assertRegex($actual, "@$expect@");
     }
 }
 ?>

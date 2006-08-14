@@ -32,7 +32,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
         $text = preg_replace_callback("{
                 (                                   # wrap whole match in $1
                   \\[                           
-                    (".$this->_nested_brackets.")    # link text = $2
+                    (".$this->_nested_brackets.")   # link text = $2
                   \\]                           
                   \\(                               # literal paren
                     [ \\t]*                     

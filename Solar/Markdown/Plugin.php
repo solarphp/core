@@ -177,9 +177,9 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * @return string The escaped text.
      * 
      */
-    protected function _escape($text)
+    protected function _escape($text, $quotes = ENT_COMPAT)
     {
-        return $this->_config['markdown']->escape($text);
+        return $this->_config['markdown']->escape($text, $quotes);
     }
     
     /**
@@ -235,6 +235,21 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     protected function _getTabWidth()
     {
         return $this->_config['markdown']->getTabWidth();
+    }
+    
+    protected function _toHtmlToken($text)
+    {
+        return $this->_config['markdown']->toHtmlToken($text);
+    }
+    
+    protected function _isHtmlToken($text)
+    {
+        return $this->_config['markdown']->isHtmlToken($text);
+    }
+    
+    protected function _unHtmlToken($text, $token = null)
+    {
+        return $this->_config['markdown']->unHtmlToken($text, $token);
     }
 }
 ?>

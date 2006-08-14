@@ -17,9 +17,9 @@ class Test_Solar_Markdown_Plugin_StripLinkDefs extends Test_Solar_Markdown_Plugi
     {
         $source   = array();
         $source[] = "foo bar";
-        $source[] = "[a]: href1";
-        $source[] = "[b]: href2 \"Title2\"";
-        $source[] = "[c]: href3\n    \"Title3\"";
+        $source[] = "[a]:         href1";
+        $source[] = "[b]:         href2 \"Title2\"";
+        $source[] = "[c]:         href3\n    \"Title3\"";
         $source[] = "[UpperCase]: href4";
         $source[] = "baz dib";
         $source = implode("\n", $source);

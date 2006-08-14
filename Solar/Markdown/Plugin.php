@@ -34,6 +34,8 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * : markdown : (Solar_Markdown) The "parent" Markdown object.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Markdown_Plugin = array(
         'markdown' => null,

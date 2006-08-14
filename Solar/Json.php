@@ -432,7 +432,7 @@ class Solar_Json extends Solar_Base {
             default:
                 $m = array();
 
-                if (is_numeric($str)) {
+                if (is_numeric($str) || ctype_digit($str) || ctype_xdigit($str)) {
                     // Return float or int, or null as appropriate
                     if (in_array($this->_level, array(self::IN_ARR, self::IN_OBJ))) {
                         return ((float) $str == (integer) $str)
@@ -445,7 +445,6 @@ class Solar_Json extends Solar_Base {
 
                 } elseif (preg_match('/^("|\').*(\1)$/s', $str, $m)
                             && $m[1] == $m[2]) {
-
                     // STRINGS RETURNED IN UTF-8 FORMAT
                     $delim = substr($str, 0, 1);
                     $chrs = substr($str, 1, -1);
@@ -621,6 +620,18 @@ class Solar_Json extends Solar_Base {
                                 } elseif (preg_match('/^\s*(\w+)\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {
                                     // name:value pair, where name is unquoted
                                     $key = $parts[1];
+                                    $val = $this->_json_decode($parts[2]);
+
+                                    if ($asArray) {
+                                        $obj[$key] = $val;
+                                    } else {
+                                        $obj->$key = $val;
+                                    }
+                                } elseif (preg_match('/^\s*(["\']["\'])\s*:\s*(\S.*),?$/Uis', $slice, $parts)) {
+                                    // "":value pair
+                                    //$key = $this->_json_decode($parts[1]);
+                                    // use string that matches ext/json
+                                    $key = '_empty_';
                                     $val = $this->_json_decode($parts[2]);
 
                                     if ($asArray) {

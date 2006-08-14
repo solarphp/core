@@ -13,9 +13,15 @@
  */
 class Test_Solar_Json extends Solar_Test {
 
+    /**
+     * Json Checker Test Suite dir
+     */
+    protected $t;
+
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->t = dirname(__FILE__).'/Json/testsuite/';
     }
 
     public function setup()
@@ -643,70 +649,30 @@ class Test_Solar_Json extends Solar_Test {
                                                 'bypass_ext' => true,
                                                 'bypass_mb' => true
                                                 ));
-        $before = '[
-    "JSON Test Pattern pass1",
-    {"object with 1 member":["array with 1 element"]},
-    {},
-    [],
-    -42,
-    true,
-    false,
-    null,
-    {
-        "integer": 1234567890,
-        "real": -9876.543210,
-        "e": 0.123456789e-12,
-        "E": 1.234567890E+34,
-        "":  23456789012E666,
-        "zero": 0,
-        "one": 1,
-        "space": " ",
-        "quote": "\"",
-        "backslash": "\\",
-        "controls": "\b\f\n\r\t",
-        "slash": "/ & \/",
-        "alpha": "abcdefghijklmnopqrstuvwyz",
-        "ALPHA": "ABCDEFGHIJKLMNOPQRSTUVWYZ",
-        "digit": "0123456789",
-        "special": "`1~!@#$%^&*()_+-={\':[,]}|;.</>?",
-        "hex": "\u0123\u4567\u89AB\uCDEF\uabcd\uef4A",
-        "true": true,
-        "false": false,
-        "null": null,
-        "array":[  ],
-        "object":{  },
-        "address": "50 St. James Street",
-        "url": "http://www.JSON.org/",
-        "comment": "// /* <!-- --",
-        "# -- --> */": " ",
-        " s p a c e d " :[1,2 , 3
-
-,
-
-4 , 5        ,          6           ,7        ],
-        "compact": [1,2,3,4,5,6,7],
-        "jsontext": "{\"object with 1 member\":[\"array with 1 element\"]}",
-        "quotes": "&#34; \u0022 %22 0x22 034 &#x22;",
-        "\/\\\"\uCAFE\uBABE\uAB98\uFCDE\ubcda\uef4A\b\f\n\r\t`1~!@#$%^&*()_+-=[]{}|;:\',./<>?"
-: "A key can be any string"
-    },
-    0.5 ,98.6
-,
-99.44
-,
-
-1066
-
-
-,"rosebud"]';
-        //var_dump($json->decode($before));
-        $this->todo();
-
+        $before = file_get_contents($this->t.'pass1.json');
+        $expect = file_get_contents($this->t.'pass1.json.txt');
+        $this->assertSame(serialize($json->decode($before)), $expect);
     }
 
     public function testDecode_stress_compat()
     {
-        $this->todo();
+
+        if (!function_exists('json_decode')) {
+            $this->skip('Skipping compatibility test, ext/json not installed');
+        } else {
+
+            $pjson = Solar::factory('Solar_Json', array(
+                                                    'bypass_ext' => true,
+                                                    'bypass_mb' => true
+                                                    ));
+
+            $njson = Solar::factory('Solar_Json');
+            $before = file_get_contents($this->t.'pass1.json');
+
+            $nexpect = serialize($njson->decode($before));
+            $pexpect = serialize($pjson->decode($before));
+            $this->assertSame($pexpect, $nexpect);
+        }
     }
 
     public function testDecode_failure()
@@ -716,89 +682,16 @@ class Test_Solar_Json extends Solar_Test {
                                                 'bypass_mb' => true
                                                 ));
 
-        $before = '"A JSON payload should be an object or array, not a string."';
-        $this->assertNull($json->decode($before));
 
-        $before = '["Unclosed array"';
-        $this->assertNull($json->decode($before));
+        $tests = scandir($this->t);
+        natsort($tests);
 
-        $before = '{unquoted_key: "keys must be quoted"}';
-        $this->assertNull($json->decode($before));
-
-        $before = '["extra comma",]';
-        $this->assertNull($json->decode($before));
-
-        $before = '["double extra comma",,]';
-        $this->assertNull($json->decode($before));
-
-        $before = '[   , "<-- missing value"]';
-        $this->assertNull($json->decode($before));
-
-        $before = '["Comma after the close"],';
-        $this->assertNull($json->decode($before));
-
-        $before = '["Extra close"]]';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Extra comma": true,}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Extra value after close": true} "misplaced quoted value"';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Illegal expression": 1 + 2}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Illegal invocation": alert()}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Numbers cannot have leading zeroes": 013}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Numbers cannot be hex": 0x14}';
-        $this->assertNull($json->decode($before));
-
-        $before = '["Illegal backslash escape: \x15"]';
-        $this->assertNull($json->decode($before));
-
-        $before = "[\"Illegal backslash escape: \'\"]";
-        $this->assertNull($json->decode($before));
-
-        $before = '["Illegal backslash escape: \017"]';
-        $this->assertNull($json->decode($before));
-
-        $before = '[[[[[[[[[[[[[[[[[[[["Too deep"]]]]]]]]]]]]]]]]]]]]';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Missing colon" null}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Double colon":: null}';
-        $this->assertNull($json->decode($before));
-
-        $before = '{"Comma instead of colon", null}';
-        $this->assertNull($json->decode($before));
-
-        $before = '["Colon instead of comma": false]';
-        $this->assertNull($json->decode($before));
-
-        $before = '["Bad value", truth]';
-        $this->assertNull($json->decode($before));
-
-        $before = "['single quote']";
-        $this->assertNull($json->decode($before));
-
-        $before = "[\"tab\tcharacter\tin\tstring\t\"]";
-        $this->assertNull($json->decode($before));
-
-        $before = "[\"tab\\\tcharacter\\\tin\\\tstring\\\t\"]";
-        $this->assertNull($json->decode($before));
-
-        $before = "[\"line\nbreak\"]";
-        $this->assertNull($json->decode($before));
-
-        $before = "[\"line\\\nbreak\"]";
-        $this->assertNull($json->decode($before));
+        foreach ($tests as $file) {
+            if (substr($file, 0, 4) == 'fail' && substr($file, -4) == 'json') {
+                $before = file_get_contents($this->t.$file);
+                $this->assertNull($json->decode($before));
+            }
+        }
     }
 
     public function testDecode_failure_compat()
@@ -814,117 +707,15 @@ class Test_Solar_Json extends Solar_Test {
 
             $njson = Solar::factory('Solar_Json');
 
-            $before = '"A JSON payload should be an object or array, not a string."';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Unclosed array"';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{unquoted_key: "keys must be quoted"}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["extra comma",]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["double extra comma",,]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '[   , "<-- missing value"]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Comma after the close"],';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Extra close"]]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Extra comma": true,}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Extra value after close": true} "misplaced quoted value"';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Illegal expression": 1 + 2}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Illegal invocation": alert()}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Numbers cannot have leading zeroes": 013}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Numbers cannot be hex": 0x14}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Illegal backslash escape: \x15"]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "[\"Illegal backslash escape: \'\"]";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Illegal backslash escape: \017"]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '[[[[[[[[[[[[[[[[[[[["Too deep"]]]]]]]]]]]]]]]]]]]]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Missing colon" null}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Double colon":: null}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '{"Comma instead of colon", null}';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Colon instead of comma": false]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = '["Bad value", truth]';
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "['single quote']";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "[\"tab\tcharacter\tin\tstring\t\"]";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "[\"tab\\tcharacter\\tin\\tstring\\t\"]";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "[\"line\nbreak\"]";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
-
-            $before = "[\"line\\nbreak\"]";
-            $this->assertSame($pjson->decode($before),
-                              $njson->decode($before));
+            $tests = scandir($this->t);
+            natsort($tests);
+    
+            foreach ($tests as $file) {
+                if (substr($file, 0, 4) == 'fail' && substr($file, -4) == 'json') {
+                    $before = file_get_contents($this->t.$file);
+                    $this->assertNull($json->decode($before));
+                }
+            }
 
         }
     }

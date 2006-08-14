@@ -7,6 +7,10 @@
  * 
  * @package Solar_Markdown
  * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -19,7 +23,23 @@
  * 
  * Pluggable text-to-XHTML converter based on Markdown.
  * 
- * @todo add (c) notes for Gruber and Fortin
+ * This package is ported from John Gruber's [Markdown][] script in Perl,
+ * with many thanks to Michel Fortin for his [PHP Markdown][] port to
+ * PHP 4.
+ * 
+ * [Markdown]: http://daringfireball.net/projects/markdown/
+ * [PHP Markdown]: http://www.michelf.com/projects/php-markdown/
+ * 
+ * Unlike Markdown and PHP Markdown, Solar_Markdown is plugin-aware.
+ * Every processing rule is a separate class, and classes can be strung
+ * together in a manner largely independent of each other (although the
+ * order of processing still matters a great deal).
+ * 
+ * This plugin awareness is based on my work from [Text_Wiki][].  The
+ * Text_Wiki project is capable of converting to any rendering format,
+ * whereas Solar_Markdown is targeted only at XHTML.  If you need to
+ * output to something other than XHTML, I suggest a two-step output
+ * process:  Markdown to XHTML, then XHTML to your final format.
  * 
  * @category Solar
  * 
@@ -34,7 +54,15 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : plugins : (array) An array of plugins to process, in order.
+     * : tab_width : (int) Number of spaces per tab.  Default 4.
+     * 
+     * : tidy : (bool|array) If false, do not use Tidy to post-process
+     *   the transformed output.  If true or an array, is a set of
+     *   config options to pass to Tidy when rendering output.
+     *   See also <http://php.net/tidy>.  Default true.
+     * 
+     * : plugins : (array) An array of plugins for the parser to use, in
+     *   order.
      * 
      * @var array
      * 
@@ -43,9 +71,7 @@ class Solar_Markdown extends Solar_Base {
         
         'tab_width' => 4,
         
-        'chars' => '*_',
-        
-        'tidy' => false,
+        'tidy' => true,
         
         'plugins' => array(
             // pre-processing on the source as a whole
@@ -64,40 +90,100 @@ class Solar_Markdown extends Solar_Base {
             
             // spans
             'Solar_Markdown_Plugin_CodeSpan',
-            'Solar_Markdown_Plugin_Encode',
             'Solar_Markdown_Plugin_Image',
             'Solar_Markdown_Plugin_Link',
             'Solar_Markdown_Plugin_Uri',
+            'Solar_Markdown_Plugin_Encode',
             'Solar_Markdown_Plugin_AmpsAngles',
             'Solar_Markdown_Plugin_EmStrong',
             'Solar_Markdown_Plugin_Break',
         ),
     );
     
-    // left-delimiter for html tokens
+    /**
+     * 
+     * Left-delimiter for HTML tokens.
+     * 
+     * @var string
+     * 
+     */
     protected $_html_ldelim = "\x0E";
     
-    // right-delimiter for html tokens
+    /**
+     * 
+     * Right-delimiter for HTML tokens.
+     * 
+     * @var string
+     * 
+     */
     protected $_html_rdelim = "\x0F";
     
-    // escaped-character delimiter
+    /**
+     * 
+     * Delimiter for encoded Markdown characters.
+     * 
+     * @var string
+     * 
+     */
     protected $_char_delim = "\x1B";
     
-    // count of html entries so we don't have to count($this->_html)
-    // all the time
-    protected $_count = 0;
-    
-    // array of html entries
+    /**
+     * 
+     * Array of HTML blocks represented by delimited token numbers.
+     * 
+     * Format is token => html.
+     * 
+     * @var array
+     * 
+     */
     protected $_html = array();
     
-    // array of defined link references keyed on the link name,
-    // with sub-keys for 'title' and 'href'
+    /**
+     * 
+     * Running count of $this->_html elements so we don't have to 
+     * count($this->_html) each time we add an HTML token.
+     * 
+     * @var int
+     * 
+     */
+    protected $_count = 0;
+    
+    /**
+     * 
+     * List of defined link references keyed on the link name.
+     * 
+     * Format is "link-name" => array('href' => ..., 'title' => ...).
+     * 
+     * Generally populated via the StripLinkDefs plugin.
+     * 
+     * @var array
+     * 
+     */
     protected $_link = array();
     
-    // array of char => escape
+    /**
+     * 
+     * Escape table for special Markdown characters.
+     * 
+     * Format is "$char" => "\x1B$char\x1B".
+     * 
+     * @var array
+     * 
+     */
     protected $_esc = array();
     
-    // array of \char => escape
+    /**
+     * 
+     * Escape table for backslashed special Markdown characters.
+     * 
+     * Format is "\\$char" => "\x1B$char\x1B".
+     * 
+     * Note that the backslash escape table and the normal escape table
+     * map to identical escape sequences.
+     * 
+     * @var array
+     * 
+     */
     protected $_bs_esc = array();
     
     // plugin class => object
@@ -109,9 +195,13 @@ class Solar_Markdown extends Solar_Base {
     // list of span-type plugins
     protected $_span_class = array();
     
+    protected $_chars = '.{}\\';
+        
     /**
      * 
      * Constructor.
+     * 
+     * Loads the plugins and builds a list of characters to encode.
      * 
      * @param array $config User-defined configuration values.
      * 
@@ -120,7 +210,11 @@ class Solar_Markdown extends Solar_Base {
     {
         parent::__construct($config);
         
-        $chars = $this->_config['chars'];
+        if ($this->_config['tidy'] !== false &&
+            ! extension_loaded('tidy')) {
+            // tidy requsted but not loaded
+            throw $this->_exception('ERR_TIDY_NOT_LOADED');
+        }
         
         $config = array('markdown' => $this);
         
@@ -139,13 +233,13 @@ class Solar_Markdown extends Solar_Base {
             }
             
             // assemble character list
-            $chars .= $this->_plugin[$class]->getChars();
+            $this->_chars .= $this->_plugin[$class]->getChars();
         }
         
         // build the character escape tables
-        $k = strlen($chars);
+        $k = strlen($this->_chars);
         for ($i = 0; $i < $k; ++ $i) {
-            $char = $chars[$i];
+            $char = $this->_chars[$i];
             $delim = $this->_char_delim . $i. $this->_char_delim;
             $this->_esc[$char] = $delim;
             $this->_bs_esc["\\$char"] = $delim;
@@ -155,7 +249,7 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
-     * Transforms source text using plugins.
+     * One-step transformation of source text using plugins.
      * 
      * @param string $text The source text.
      * 
@@ -163,6 +257,25 @@ class Solar_Markdown extends Solar_Base {
      * 
      */
     public function transform($text)
+    {
+        $text = $this->prepare($text);
+        $text = $this->processBlocks($text);
+        $text = $this->cleanup($text);
+        return $this->render($text);
+    }
+    
+    /**
+     * 
+     * Prepares the text for processing by running the prepare() 
+     * method of each plugin, in order, on the source text.
+     * 
+     * Also resets 
+     * @param string $text The source text.
+     * 
+     * @return string The source text after processing.
+     * 
+     */
+    public function prepare($text)
     {
         // reset from previous transformations
         $this->_count = 0;
@@ -175,23 +288,42 @@ class Solar_Markdown extends Solar_Base {
             $text = $plugin->prepare($text);
         }
         
-        // run the block parsing plugins; these should process spans
-        // as needed.
-        $text = $this->processBlocks($text);
-        
+        return $text;
+    }
+    
+    public function cleanup($text)
+    {
         // let each plugin clean up the rendered source
         foreach ($this->_plugin as $plugin) {
             $text = $plugin->cleanup($text);
         }
-        
+        return $text;
+    }
+    
+    public function render($text)
+    {
         // replace any remaining HTML tokens
         $text = $this->unHtmlToken($text);
         
         // replace all special chars in the text.
         $text = $this->unEncode($text);
         
-        // tidy everything up and return
-        return $this->_tidy($text);
+        if ($this->_config['tidy'] === false) {
+            // tidy explicitly disabled
+            return $text;
+        }
+        
+        // tidy up the text
+        $tidy = new tidy;
+        $opts = (array) $this->_config['tidy'];
+        $tidy->parseString($text, $opts, 'utf8');
+        $tidy->cleanRepair();
+        
+        // get only the body portion
+        $body = trim(tidy_get_body($tidy)->value);
+        
+        // remove <body> and </body>
+        return substr($body, 6, -7);
     }
     
     /**
@@ -304,16 +436,18 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Escapes HTML in source text.
      * 
-     * Uses htmlspecialchars() with ENT_COMPAT and UTF-8.
+     * Uses htmlspecialchars() with UTF-8.
      * 
      * @param string $text Source text.
+     * 
+     * @param int $quotes How to escape quotes; default ENT_COMPAT.
      * 
      * @return string The escaped text.
      * 
      */
-    public function escape($text)
+    public function escape($text, $quotes = ENT_COMPAT)
     {
-        return htmlspecialchars($text, ENT_COMPAT, 'UTF-8');
+        return htmlspecialchars($text, $quotes, 'UTF-8');
     }
     
     /**
@@ -469,27 +603,6 @@ class Solar_Markdown extends Solar_Base {
     public function getLinks()
     {
         return $this->_link;
-    }
-    
-    protected function _tidy($text)
-    {
-        if (! extension_loaded('tidy') ||
-            $this->_config['tidy'] === false) {
-                
-            // no extension, or tidy explicitly disabled
-            return $text;
-        }
-        
-        // tidy up the text
-        $tidy = new tidy;
-        $tidy->parseString($text, $this->_config['tidy'], 'utf8');
-        $tidy->cleanRepair();
-        
-        // get only the body portion
-        $text = tidy_get_body($tidy);
-        
-        // remove <body> and </body>
-        return substr($text, 6, -7);
     }
 }
 ?>

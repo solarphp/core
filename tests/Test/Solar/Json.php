@@ -761,7 +761,7 @@ class Test_Solar_Json extends Solar_Test {
         $before = '["Illegal backslash escape: \x15"]';
         $this->assertNull($json->decode($before));
 
-        $before = '["Illegal backslash escape: \'"]';
+        $before = "[\"Illegal backslash escape: \'\"]";
         $this->assertNull($json->decode($before));
 
         $before = '["Illegal backslash escape: \017"]';
@@ -791,13 +791,13 @@ class Test_Solar_Json extends Solar_Test {
         $before = "[\"tab\tcharacter\tin\tstring\t\"]";
         $this->assertNull($json->decode($before));
 
-        $before = "[\"tab\\tcharacter\\tin\\tstring\\t\"]";
+        $before = "[\"tab\\\tcharacter\\\tin\\\tstring\\\t\"]";
         $this->assertNull($json->decode($before));
 
         $before = "[\"line\nbreak\"]";
         $this->assertNull($json->decode($before));
 
-        $before = "[\"line\\nbreak\"]";
+        $before = "[\"line\\\nbreak\"]";
         $this->assertNull($json->decode($before));
     }
 
@@ -874,7 +874,7 @@ class Test_Solar_Json extends Solar_Test {
             $this->assertSame($pjson->decode($before),
                               $njson->decode($before));
 
-            $before = '["Illegal backslash escape: \'"]';
+            $before = "[\"Illegal backslash escape: \'\"]";
             $this->assertSame($pjson->decode($before),
                               $njson->decode($before));
 

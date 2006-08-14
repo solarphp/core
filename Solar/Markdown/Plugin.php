@@ -1,4 +1,29 @@
 <?php
+/**
+ * 
+ * Abstract class for Markdown plugins.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Abstract class for Markdown plugins.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**

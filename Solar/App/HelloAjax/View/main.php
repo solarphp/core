@@ -19,7 +19,16 @@
 ?>
 <p id="hello"><?php echo $this->escape($this->text) ?></p>
 <?php $this->jsScriptaculous()->highlight('#hello', array('duration' => 1.0));?>
-<?php $this->jsScriptaculous()->inPlaceEditor('#hello', 'index.php');?>
+<?php $this->jsScriptaculous()->inPlaceEditor('#hello', 'index.php', array(
+    'rows' => 15,
+    'cols' => 40,
+    'ajaxOptions' => array(
+        'method' => 'post',
+        'postBody' => 'thisvar=true',
+        'onSuccess' => 'function(t) { alert(t.responseText); }',
+        'on404' => 'function(t) { alert(\'Error 404: location not found\'); }'
+    )
+));?>
 <p><?php echo $this->escape($this->code) ?></p>
 <ul>
     <?php foreach ($this->list as $code): ?>

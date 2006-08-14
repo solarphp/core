@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Pluggable text-to-XHTML converter based on Markdown.
+ * Plugin-aware text-to-XHTML converter based on Markdown.
  * 
  * @category Solar
  * 
@@ -21,14 +21,11 @@
 
 /**
  * 
- * Pluggable text-to-XHTML converter based on Markdown.
+ * Plugin-aware text-to-XHTML converter based on Markdown.
  * 
  * This package is ported from John Gruber's [Markdown][] script in Perl,
  * with many thanks to Michel Fortin for his [PHP Markdown][] port to
  * PHP 4.
- * 
- * [Markdown]: http://daringfireball.net/projects/markdown/
- * [PHP Markdown]: http://www.michelf.com/projects/php-markdown/
  * 
  * Unlike Markdown and PHP Markdown, Solar_Markdown is plugin-aware.
  * Every processing rule is a separate class, and classes can be strung
@@ -40,6 +37,10 @@
  * whereas Solar_Markdown is targeted only at XHTML.  If you need to
  * output to something other than XHTML, I suggest a two-step output
  * process:  Markdown to XHTML, then XHTML to your final format.
+ * 
+ * [Markdown]: http://daringfireball.net/projects/markdown/
+ * 
+ * [PHP Markdown]: http://www.michelf.com/projects/php-markdown/
  * 
  * @category Solar
  * 
@@ -186,22 +187,57 @@ class Solar_Markdown extends Solar_Base {
      */
     protected $_bs_esc = array();
     
-    // plugin class => object
+    /**
+     * 
+     * Array of all plugin objects.
+     * 
+     * Format is class name => object instance.
+     * 
+     * @var array
+     * 
+     */
     protected $_plugin = array();
     
-    // list of block-type plugins
+    /**
+     * 
+     * Array of all block-type plugin class names.
+     * 
+     * Each plugin reports if it is a span or a block.
+     * 
+     * @var array
+     * 
+     */
     protected $_block_class = array();
     
-    // list of span-type plugins
+    /**
+     * 
+     * Array of all span-type plugin class names.
+     * 
+     * Each plugin reports if it is a span or a block.
+     * 
+     * @var array
+     * 
+     */
     protected $_span_class = array();
     
+    /**
+     * 
+     * Special characters that should be encoded by Markdown.
+     * 
+     * This list will grow as plugins are added; they each report their
+     * own list of special characters to be encoded.
+     * 
+     * @var array
+     * 
+     */
     protected $_chars = '.{}\\';
         
     /**
      * 
      * Constructor.
      * 
-     * Loads the plugins and builds a list of characters to encode.
+     * Loads the plugins, builds a list of characters to encode, and
+     * builds the list of block-type and span-type plugin classes.
      * 
      * @param array $config User-defined configuration values.
      * 
@@ -216,10 +252,15 @@ class Solar_Markdown extends Solar_Base {
             throw $this->_exception('ERR_TIDY_NOT_LOADED');
         }
         
+        // each plugin needs a reference back to this "parent" Markdown
+        // instance; this provides a central list of HTML blocks, named
+        // link references, block and span processing, etc.
         $config = array('markdown' => $this);
         
+        // load each plugin object
         foreach ($this->_config['plugins'] as $class) {
-            // save the plugin object
+            
+            // create an instance
             $this->_plugin[$class] = Solar::factory($class, $config);
             
             // is it a block plugin?
@@ -232,7 +273,8 @@ class Solar_Markdown extends Solar_Base {
                 $this->_span_class[] = $class;
             }
             
-            // assemble character list
+            // find out what characters this plugin thinks should be
+            // encoded as "special" Markdown characters.
             $this->_chars .= $this->_plugin[$class]->getChars();
         }
         
@@ -251,9 +293,13 @@ class Solar_Markdown extends Solar_Base {
      * 
      * One-step transformation of source text using plugins.
      * 
+     * Calls prepare(), processBlocks(), cleanup(), and render() on the
+     * source text.
+     * 
      * @param string $text The source text.
      * 
-     * @return string The transformed text.
+     * @return string The transformed text after all processing and
+     * rendering.
      * 
      */
     public function transform($text)
@@ -269,7 +315,10 @@ class Solar_Markdown extends Solar_Base {
      * Prepares the text for processing by running the prepare() 
      * method of each plugin, in order, on the source text.
      * 
-     * Also resets 
+     * Also calls the plugin's reset() method, and resets internal
+     * counters and arrays.  This is to support work with multiple
+     * separate text sources.
+     * 
      * @param string $text The source text.
      * 
      * @return string The source text after processing.
@@ -291,6 +340,35 @@ class Solar_Markdown extends Solar_Base {
         return $text;
     }
     
+    /**
+     * 
+     * Runs the source text through all block-type plugins.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The source text after processing.
+     * 
+     */
+    public function processBlocks($text)
+    {
+        foreach ($this->_block_class as $class) {
+            $text = $this->_plugin[$class]->parse($text);
+        }
+        return $text;
+    }
+    
+    /**
+     * 
+     * Runs the processed text through each plugin's cleanup() method.
+     * 
+     * This is so that the plugins can "clean up" after all main
+     * has been completed.
+     * 
+     * @param string $text The processed text.
+     * 
+     * @return string The processed text after cleanup.
+     * 
+     */
     public function cleanup($text)
     {
         // let each plugin clean up the rendered source
@@ -300,6 +378,21 @@ class Solar_Markdown extends Solar_Base {
         return $text;
     }
     
+    /**
+     * 
+     * Returns a final rendering of the processed text.
+     * 
+     * This replaces any remaining HTML tokens, un-encodes special
+     * Markdown characters, and optionally runs the text through
+     * [Tidy][].
+     * 
+     * [Tidy]: http://php.net/tidy
+     * 
+     * @param string $text The processed and cleaned text.
+     * 
+     * @return string The final rendering of the text.
+     * 
+     */
     public function render($text)
     {
         // replace any remaining HTML tokens
@@ -326,30 +419,22 @@ class Solar_Markdown extends Solar_Base {
         return substr($body, 6, -7);
     }
     
-    /**
-     * 
-     * Processes text through all block-type plugins.
-     * 
-     * @param string $text The source text.
-     * 
-     * @return string The processed text.
-     * 
-     */
-    public function processBlocks($text)
-    {
-        foreach ($this->_block_class as $class) {
-            $text = $this->_plugin[$class]->parse($text);
-        }
-        return $text;
-    }
+    // -----------------------------------------------------------------
+    // 
+    // General support methods for plugins.
+    // 
+    // -----------------------------------------------------------------
     
     /**
      * 
-     * Processes text through all span-type plugins.
+     * Runs the source text through all span-type plugins.
+     * 
+     * Generally this is called by block-type plugins, not by the
+     * Markdown engine directly.
      * 
      * @param string $text The source text.
      * 
-     * @return string The processed text.
+     * @return string The source text after processing.
      * 
      */
     public function processSpans($text)
@@ -362,10 +447,25 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
-     * Saves a pieces of text as HTML and returns a delimited token.
+     * Returns the number of spaces per tab.
      * 
-     * When you convert a piece of text an HTML token, that HTML will
-     * no longer be processed by remaining plugins.
+     * @return int
+     * 
+     */
+    public function getTabWidth()
+    {
+        return (int) $this->_config['tab_width'];
+    }
+    
+    // -----------------------------------------------------------------
+    // 
+    // HTML token processing support methods for plugins.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Saves a pieces of text as HTML and returns a delimited token.
      * 
      * @param string $text The text to retain as HTML.
      * 
@@ -408,29 +508,28 @@ class Solar_Markdown extends Solar_Base {
      * @return string The source text with HTML in place of tokens.
      * 
      */
-    public function unHtmlToken($text, $token = null)
+    public function unHtmlToken($text)
     {
-        if ($token) {
-            // replace one token
-            $find = "{$this->_html_ldelim}$token{$this->_html_rdelim}";
-            $repl = $this->_html[$token];
-            $text = str_replace($find, $repl, $text);
-        } else {
-            // replace all tokens
-            $regex = "/{$this->_html_ldelim}(.*?){$this->_html_rdelim}/";
-            while (preg_match_all($regex, $text, $matches, PREG_SET_ORDER)) {
-                foreach ($matches as $val) {
-                    $text = str_replace(
-                        $val[0],
-                        $this->_html[$val[1]],
-                        $text
-                    );
-                }
+        $regex = "/{$this->_html_ldelim}(.*?){$this->_html_rdelim}/";
+        
+        while (preg_match_all($regex, $text, $matches, PREG_SET_ORDER)) {
+            foreach ($matches as $val) {
+                $text = str_replace(
+                    $val[0],
+                    $this->_html[$val[1]],
+                    $text
+                );
             }
         }
         
         return $text;
     }
+    
+    // -----------------------------------------------------------------
+    // 
+    // Escaping for HTML and encoding for special Markdown characters.
+    // 
+    // -----------------------------------------------------------------
     
     /**
      * 
@@ -480,6 +579,30 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
+     * Un-encodes special Markdown characters.
+     * 
+     * @param string $text The text with encocded characters.
+     * 
+     * @return string The un-encoded text.
+     * 
+     */
+    public function unEncode($text)
+    {
+        // because the bs_esc table uses the same values (just
+        // different keys), this will catch both regular and
+        // backslashes chars.
+        $chars = array_flip($this->_esc);
+        $text = str_replace(
+            array_keys($chars),
+            array_values($chars),
+            $text
+        );
+        
+        return $text;
+    }
+    
+    /**
+     * 
      * Support method for encode().
      * 
      * @param string $text The source text.
@@ -508,44 +631,25 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
-     * Un-encodes special Markdown characters.
-     * 
-     * @param string $text The text with encocded characters.
-     * 
-     * @return string The un-encoded text.
-     * 
-     */
-    public function unEncode($text)
-    {
-        // because the bs_esc table uses the same values (just
-        // different keys), this will catch both regular and
-        // backslashes chars.
-        $chars = array_flip($this->_esc);
-        $text = str_replace(
-            array_keys($chars),
-            array_values($chars),
-            $text
-        );
-        
-        return $text;
-    }
-    
-    /**
-     * 
      * Explodes source text into tags and text
      * 
-     * Parameter:  String containing HTML markup.
-     * Returns:    An array of the tokens comprising the input
-     *             string. Each token is either a tag (possibly with nested,
-     *             tags contained therein, such as <a href="<MTFoo>">, or a
-     *             run of text between tags. Each element of the array is a
-     *             two-element array; the first is either 'tag' or 'text';
-     *             the second is the actual value.
-     * 
-     * 
      * Regular expression derived from the _tokenize() subroutine in 
-     * Brad Choate's MTRegex plugin.
-     * <http://www.bradchoate.com/past/mtregex.php>
+     * Brad Choate's [MTRegex][] plugin.
+     * 
+     * [MTRegex]: http://www.bradchoate.com/past/mtregex.php
+     * 
+     * From the original notes:
+     * 
+     * > Returns an array of the tokens comprising the input string.
+     * > Each token is either a tag (possibly with nested, tags
+     * > contained therein, such as <a href="<MTFoo>">, or a run of
+     * > text between tags. Each element of the array is a
+     * > two-element array; the first is either 'tag' or 'text'; the
+     * > second is the actual value.
+     * 
+     * @param string $str A string of HTML.
+     * 
+     * @return array The string exploded into tag and non-tag portions.
      * 
      */
     protected function _explodeTags($str)
@@ -571,18 +675,25 @@ class Solar_Markdown extends Solar_Base {
         return $list;
     }
     
+    // -----------------------------------------------------------------
+    // 
+    // Support methods for plugins, related to named link references.
+    // 
+    // -----------------------------------------------------------------
+    
     /**
      * 
-     * Returns the number of spaces per tab.
+     * Sets the value of a named link reference.
      * 
-     * @return int
+     * @param string $name The link reference name.
+     * 
+     * @param string $href The URI this link points to.
+     * 
+     * @param string $title Alternate title for the link.
+     * 
+     * @return void
      * 
      */
-    public function getTabWidth()
-    {
-        return (int) $this->_config['tab_width'];
-    }
-    
     public function setLink($name, $href, $title = null)
     {
         $this->_link[$name] = array(
@@ -591,6 +702,16 @@ class Solar_Markdown extends Solar_Base {
         );
     }
     
+    /**
+     * 
+     * Returns the href and title of a named link reference.
+     * 
+     * @param string $name The link reference name.
+     * 
+     * @return bool|array If the link reference exists, returns an 
+     * array with keys 'href' and 'title'.  If not, returns false.
+     * 
+     */
     public function getLink($name)
     {
         if (! empty($this->_link[$name])) {
@@ -600,6 +721,14 @@ class Solar_Markdown extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Returns an array of all defined link references.
+     * 
+     * @return array All links keyed by name, where each element is an
+     * array with keys 'href' and 'title'.
+     * 
+     */
     public function getLinks()
     {
         return $this->_link;

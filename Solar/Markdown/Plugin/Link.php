@@ -4,7 +4,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
     
     protected $_is_span = true;
     
-    protected $_chars = '[]()"\'';
+    protected $_chars = '[]()';
     
     # Turn Markdown link shortcuts into XHTML <a> tags.
     public function parse($text)

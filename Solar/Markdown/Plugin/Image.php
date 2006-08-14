@@ -4,7 +4,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     
     protected $_is_span = true;
     
-    protected $_chars = '![]()"\'';
+    protected $_chars = '![]()';
     
     public function parse($text)
     {

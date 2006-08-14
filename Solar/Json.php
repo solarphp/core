@@ -165,7 +165,12 @@ class Solar_Json extends Solar_Base {
 
         // Fall back to PHP-only method
         $this->_level = 0;
-        return $this->_json_decode($encodedValue, (bool) $asArray);
+        $checker = Solar::factory('Solar_Json_Checker');
+        if ($checker->isValid($encodedValue)) {
+            return $this->_json_decode($encodedValue, (bool) $asArray);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -383,19 +388,14 @@ class Solar_Json extends Solar_Base {
      * Similarly, a string of '1' should return null, not int(1), unless
      * nested inside of an array or object.
      *
-     * Note: The PHP-only decoder does not (yet) behave properly on all of the
-     * 28 tests for invalid JSON strings provided by JSON checker test suite.
-     * Future releases will focus on handling the various invalid JSON strings
-     * properly. In the meantime, if concerned about poorly-formed JSON strings,
-     * see the JSON checker test suite for a list of pitfalls at
-     * <http://www.json.org/JSON_checker/test.zip>
-     *
      * @param string $encodedValue String encoded in JSON format
      *
      * @param bool $asArray Optional argument to decode as an array.
      *
      * @return mixed decoded value
-     * @access   public
+     *
+     * @todo Rewrite this based off of method used in Solar_Json_Checker
+     *
      */
     protected function _json_decode($str, $asArray = false)
     {

@@ -109,6 +109,10 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         $load = '';
         $f = '';
         if (!empty($this->selectors)) {
+
+            // Let's make nicely (and accurately) formatted options
+            $json = Solar::factory('Solar_Json');
+
             foreach ($this->selectors as $selector => $actions) {
                 foreach ($actions as $a) {
                     switch ($a['type']) {
@@ -131,7 +135,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
                                     break;
                             }
                             if (!empty($a['options'])) {
-                                $f .= ', ' . $this->_optionsForJs($a['options']);
+                                $f .= ', ' . $json->encode($a['options']);
                             }
                             $f .= ")});\n";
                             break;
@@ -139,10 +143,10 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
                         case 'inplaceeditor':
                             $f .= "    \$\$('$selector').each(function(li){new Ajax.{$a['name']}(li";
                             if (isset($a['url'])) {
-                                $f .= ', ' . $this->_arrayOrStringForJs($a['url']);
+                                $f .= ', ' . $json->encode($a['url']);
                             }
                             if (isset($a['options']) && !empty($a['options'])) {
-                                $f .= ', ' . $this->_arrayOrStringForJs($a['options']);
+                                 $f .= ', ' . $json->encode($a['options']);
                             }
                             $f .= ")});\n";
                             break;

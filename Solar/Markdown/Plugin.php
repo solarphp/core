@@ -1,30 +1,49 @@
 <?php
 abstract class Solar_Markdown_Plugin extends Solar_Base {
     
+    /**
+     * 
+     * Default configuration values for this class.
+     * 
+     * Keys are:
+     * 
+     * : markdown : (Solar_Markdown) The "parent" Markdown object.
+     * 
+     */
     protected $_Solar_Markdown_Plugin = array(
-        // the "parent" markdown object
         'markdown' => null,
     );
     
-    // characters this plugin uses for parsing, which should be
-    // escaped by other plugins.
+    /**
+     * 
+     * The characters this plugin uses for parsing, which should be
+     * encoded by other other plugins.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '';
     
-    // for nested brackets
+    /**
+     * 
+     * The max depth for nested brackets.
+     * 
+     * @var int
+     * 
+     */
     protected $_nested_brackets_depth = 6;
     
-    // the regex for nested brackets
+    /**
+     * 
+     * The regular expression for nested brackets.
+     * 
+     * Built by the constructor  based on $_nested_brackets_depth.
+     * 
+     * @var string
+     * 
+     */
     protected $_nested_brackets = '';
     
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-        $this->_nested_brackets = 
-            str_repeat('(?>[^\[\]]+|\[', $this->_nested_brackets_depth).
-            str_repeat('\])*', $this->_nested_brackets_depth);
-        
-    }
-
     /**
      * 
      * Is this a block-level plugin?
@@ -47,6 +66,22 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected $_is_span = false;
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->_nested_brackets = 
+            str_repeat('(?>[^\[\]]+|\[', $this->_nested_brackets_depth).
+            str_repeat('\])*', $this->_nested_brackets_depth);
+        
+    }
+
     /**
      * 
      * Is this a block-level plugin?
@@ -116,12 +151,13 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Parses the source text using the regular expression.
+     * Parses the source text and replaces with HTML or tokens.
+     * 
+     * Returns the text as-is.
      * 
      * @param string $text The source text.
      * 
-     * @return string The text after parsed values have been replaced
-     * with delimited tokens.
+     * @return string The text after parsing.
      * 
      */
     public function parse($text)
@@ -198,7 +234,9 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Uses the "parent" Markdown object to parse blocks.
+     * Processes the text using block-type plugins.
+     * 
+     * Good for finding blocks within blocks.
      * 
      * @param string $text Source text.
      * 
@@ -212,7 +250,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Uses the "parent" Markdown object to parse spans.
+     * Processes the text using span-type plugins.
      * 
      * @param string $text Source text.
      * 
@@ -237,19 +275,46 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return $this->_config['markdown']->getTabWidth();
     }
     
+    /**
+     * 
+     * Converts a piece of text to a delimited HTML token.
+     * 
+     * @param string $text The text to save as an HTML token.
+     * 
+     * @return string A delimited HTML token.
+     * 
+     */
     protected function _toHtmlToken($text)
     {
         return $this->_config['markdown']->toHtmlToken($text);
     }
     
+    /**
+     * 
+     * Is a piece of text a delimited HTML token?
+     * 
+     * @param string $text The text to check as an HTML token.
+     * 
+     * @return bool True if a token, false if not.
+     * 
+     */
     protected function _isHtmlToken($text)
     {
         return $this->_config['markdown']->isHtmlToken($text);
     }
     
-    protected function _unHtmlToken($text, $token = null)
+    /**
+     * 
+     * Converts all delimited HTML tokens back into HTML.
+     * 
+     * @param string $text The text to un-tokenize.
+     * 
+     * @return string The text with HTML tokens replaced.
+     * 
+     */
+    protected function _unHtmlToken($text)
     {
-        return $this->_config['markdown']->unHtmlToken($text, $token);
+        return $this->_config['markdown']->unHtmlToken($text);
     }
 }
 ?>

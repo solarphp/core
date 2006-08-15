@@ -25,22 +25,24 @@
  * 
  * This package is ported from John Gruber's [Markdown][] script in Perl,
  * with many thanks to Michel Fortin for his [PHP Markdown][] port to
- * PHP 4.
+ * PHP 4.  Be sure to read up on [Markdown syntax][] as well.
  * 
  * Unlike Markdown and PHP Markdown, Solar_Markdown is plugin-aware.
  * Every processing rule is a separate class, and classes can be strung
  * together in a manner largely independent of each other (although the
- * order of processing still matters a great deal).
+ * order of processing still matters a great deal). The plugin
+ * architecture is based on Paul's work from [Text_Wiki][].
  * 
- * This plugin awareness is based on my work from [Text_Wiki][].  The
- * Text_Wiki project is capable of converting to any rendering format,
- * whereas Solar_Markdown is targeted only at XHTML.  If you need to
- * output to something other than XHTML, I suggest a two-step output
- * process:  Markdown to XHTML, then XHTML to your final format.
+ * While the Text_Wiki package is capable of converting to any rendering
+ * format, Solar_Markdown only converts to XHTML. If you need to render
+ * to something other than XHTML, you may wish to try a two-step output
+ * process: from Markdown to XHTML, then from XHTML to your preferred
+ * format.
  * 
- * [Markdown]: http://daringfireball.net/projects/markdown/
- * 
- * [PHP Markdown]: http://www.michelf.com/projects/php-markdown/
+ * [Markdown]:        http://daringfireball.net/projects/markdown/
+ * [Markdown syntax]: http://daringfireball.net/projects/markdown/syntax/
+ * [PHP Markdown]:    http://www.michelf.com/projects/php-markdown/
+ * [Text_Wiki]:       http://pear.php.net/Text_Wiki
  * 
  * @category Solar
  * 

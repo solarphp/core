@@ -1,17 +1,61 @@
 <?php
+/**
+ * 
+ * Block plugin to convert Setext-style headers into XHTML header tags.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     
-    protected $_Solar_Markdown_Plugin_HeaderSetext = array(
-        'top' => 'h1',
-        'sub' => 'h2',
-    );
-    
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
     /**
      * 
-     * Turns setext-style headers into XHTML <h?> tags.
+     * These should be encoded as special Markdown characters.
+     * 
+     * @var string
+     * 
+     */
+    $this->_chars = '-=';
+    
+    /**
+     * 
+     * Turns setext-style headers into XHTML header tags.
      * 
      * @param string $text Portion of the Markdown source text.
      * 
@@ -22,13 +66,13 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
     {
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n=+[ \t]*\n+ }mx',
-            array($this, '_parse'),
+            array($this, '_parseTop'),
             $text
         );
         
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n-+[ \t]*\n+ }mx',
-            array($this, '_parse_sub'),
+            array($this, '_parseSub'),
             $text
         );
         
@@ -44,12 +88,11 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parse($matches)
+    protected function _parseTop($matches)
     {
-        $tag = $this->_config['top'];
-        return "<$tag>"
+        return "<h1>"
              . $this->_processSpans($matches[1])
-             . "</$tag>"
+             . "</h1>"
              . "\n\n";
     }
     
@@ -62,12 +105,12 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parse_sub($matches)
+    protected function _parseSub($matches)
     {
         $tag = $this->_config['sub'];
-        return "<$tag>"
+        return "<h2>"
              . $this->_processSpans($matches[1])
-             . "</$tag>"
+             . "</h2>"
              . "\n\n";
     }
 }

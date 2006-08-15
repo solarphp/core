@@ -1,11 +1,75 @@
 <?php
+/**
+ * 
+ * Span plugin to insert emphasis and strong tags.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * Span plugin to insert emphasis and strong tags.
+ * 
+ * * `*foo*` and `_foo_` become `<em>foo</em>`.
+ * 
+ * * `**bar**` and `__bar__` become `<strong>bar</strong>`.
+ * 
+ * * `***zim***` and `___zim___` become `<strong><em>zim</em></strong>`.
+ * 
+ * * `**_zim_**` and `__*zim*__` become `<strong><em>zim</em></strong>`.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a span plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_span = true;
     
+    /**
+     * 
+     * Report these as special Markdown characters to be encoded.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '*_';
     
+    /**
+     * 
+     * Converts emphasis and strong text.
+     * 
+     * @param string $text The source text.
+     * 
+     * @param string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         # <strong> must go first:
@@ -42,11 +106,29 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Support callback for strong tags.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parseStrong($matches)
     {
         return "<strong>$matches[2]</strong>";
     }
     
+    /**
+     * 
+     * Support callback for em tags.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parseEm($matches)
     {
         return "<em>$matches[2]</em>";

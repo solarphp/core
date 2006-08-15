@@ -1,5 +1,38 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     
     /**
@@ -31,20 +64,6 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
         $text = preg_replace('/^[ \t]+$/m', '', $text);
         
         // done
-        return $text;
-    }
-    
-    /**
-     * 
-     * Returns the text as-is.
-     * 
-     * @param string $text The source text.
-     * 
-     * @return string The identical text.
-     * 
-     */
-    public function parse($text)
-    {
         return $text;
     }
     

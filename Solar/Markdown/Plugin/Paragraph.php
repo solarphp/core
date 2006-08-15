@@ -1,7 +1,47 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
     /**

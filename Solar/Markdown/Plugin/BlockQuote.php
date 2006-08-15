@@ -1,16 +1,64 @@
 <?php
+/**
+ * 
+ * Block plugin to convert email-style blockquotes to <blockquote> tags.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * Block plugin to convert email-style blockquotes to <blockquote> tags.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
+    /**
+     * 
+     * These should be encoded as special Markdown characters.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '>';
     
     /**
      * 
-     * Makes <blockquote> blocks.
+     * Makes <blockquote>...</blockquote> tags from email-style block
+     * quotes.
      * 
-     * @param string $text Portion of the Markdown source text.
+     * @param string $text The source text.
      * 
      * @return string The transformed XHTML.
      * 
@@ -65,6 +113,15 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
         return "<blockquote>\n$bq\n</blockquote>\n\n";
     }
     
+    /**
+     * 
+     * Trims 2 leading spaces from <pre> blocks.
+     * 
+     * @param array $matches Matches from _parse().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _trimPreSpaces($matches) {
         $pre = $matches[1];
         $pre = preg_replace('/^  /m', '', $pre);

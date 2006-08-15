@@ -1,11 +1,58 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
     protected $_list_level = 0;
     
+    /**
+     * 
+     * These should be encoded as special Markdown characters.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '-+*';
     
     public function reset()
@@ -112,6 +159,15 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         return $result;
     }
     
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parseNested($matches)
     {
         # Re-usable patterns to match list item bullets and number markers:

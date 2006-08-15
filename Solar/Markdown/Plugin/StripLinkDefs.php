@@ -1,5 +1,38 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
     
     /**
@@ -41,6 +74,15 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _prepare($matches)
     {
         $name  = strtolower($matches[1]);

@@ -73,9 +73,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Is this a block-level plugin?
-     * 
-     * (It is possible for a plugin to be neither block nor span.)
+     * This is **not** a block plugin.
      * 
      * @var bool
      * 
@@ -84,9 +82,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Is this a span-level plugin?
-     * 
-     * (It is possible for a plugin to be neither block nor span.)
+     * This is **not** a span plugin.
      * 
      * @var bool
      * 

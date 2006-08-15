@@ -1,11 +1,67 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a span plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_span = true;
     
+    /**
+     * 
+     * These should be encoded as special Markdown characters.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '![]()';
     
+    /**
+     * 
+     * _____
+     * 
+     * @param string $text The source text.
+     * 
+     * @param string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         // First, handle reference-style labeled images: ![alt text][id]
@@ -55,6 +111,15 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parseReference($matches)
     {
         $whole_match = $matches[1];
@@ -92,7 +157,16 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     }
     
     
-    function _parseInline($matches)
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _parseInline($matches)
     {
         $whole_match = $matches[1];
         $alt         = $matches[2];

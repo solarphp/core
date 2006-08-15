@@ -1,16 +1,73 @@
 <?php
+/**
+ * 
+ * Block plugin to save literal blocks of HTML.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * Block plugin to save literal blocks of HTML.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
-    // pre-remove HTML blocks
+    /**
+     * 
+     * When preparing text for parsing, remove pre-existing HTML blocks.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The transformed XHTML.
+     * 
+     */
     public function prepare($text)
     {
         return $this->parse($text);
     }
     
-    // replace all HTML blocks
+    /**
+     * 
+     * When cleaning up after parsing, replace all HTML tokens with
+     * their saved blocks.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The transformed XHTML.
+     * 
+     */
     public function cleanup($text)
     {
         return $this->_unHtmlToken($text);
@@ -18,7 +75,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Removes blocks of HTML proper.
+     * Removes HTML blocks and replaces with delimited tokens.
      * 
      * @param string $text Portion of the Markdown source text.
      * 
@@ -29,12 +86,11 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     {
         $less_than_tab = $this->_getTabWidth() - 1;
 
-        // Hashify HTML blocks:
-        // We only want to do this for block-level HTML tags, such as headers,
-        // lists, and tables. That's because we still want to wrap <p>s around
-        // "paragraphs" that are wrapped in non-block-level tags, such as anchors,
-        // phrase emphasis, and spans. The list of tags we're looking for is
-        // hard-coded:
+        // We only want to do this for block-level HTML tags, such as
+        // headers, lists, and tables. That's because we still want to
+        // wrap <p>s around "paragraphs" that are wrapped in
+        // non-block-level tags, such as anchors, phrase emphasis, and
+        // spans. The list of tags we're looking for is hard-coded:
         $block_tags_a = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|'.
                         'script|noscript|form|fieldset|iframe|math|ins|del';
         
@@ -49,11 +105,12 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
         //         </div>
         //     </div>
         //
-        // The outermost tags must start at the left margin for this to match, and
-        // the inner nested divs must be indented.
+        // The outermost tags must start at the left margin for this to
+        // match, and the inner nested divs must be indented.
         // 
-        // We need to do this before the next, more liberal match, because the next
-        // match will start at the first `<div>` and stop at the first `</div>`.
+        // We need to do this before the next, more liberal match,
+        // because the next match will start at the first `<div>` and
+        // stop at the first `</div>`.
         $text = preg_replace_callback("{
                     (                           # save in $1
                         ^                       # start of line  (with /m)
@@ -85,8 +142,8 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
             $text
         );
 
-        // Special case just for <hr />. It was easier to make a special case than
-        // to make the other regex more complicated.
+        // Special case just for <hr />. It was easier to make a special
+        // case than to make the other regex more complicated.
         $text = preg_replace_callback('{
                 (?:
                     (?<=\n\n)                   # Starting after a blank line

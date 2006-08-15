@@ -1,13 +1,69 @@
 <?php
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * _____
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a span plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_span = true;
     
     protected $_schemes = array('http', 'https', 'ftp');
     
+    /**
+     * 
+     * These should be encoded as special Markdown characters.
+     * 
+     * @var string
+     * 
+     */
     protected $_chars = '<>';
     
+    /**
+     * 
+     * _____
+     * 
+     * @param string $text The source text.
+     * 
+     * @param string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         
@@ -36,6 +92,15 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
         return $text;
     }
 
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parse($matches)
     {
         $href = $this->_escape($matches[1]);
@@ -80,6 +145,15 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
         return $addr;
     }
     
+    /**
+     * 
+     * Support callback for ____.
+     * 
+     * @param string $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _obfuscateEmail($matches) {
         $char = $matches[1];
         $r = rand(0, 100);

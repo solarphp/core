@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Span plugin to create anchors from inline URIs.
  * 
  * @category Solar
  * 
@@ -26,7 +26,21 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Span plugin to create anchors from inline URIs.
+ * 
+ * Syntax looks like this:
+ * 
+ *     <http://example.com>
+ * 
+ * That will create the following XHTML:
+ * 
+ *     <a href="http://example.com">http://example.com</a>
+ * 
+ * You can use this for emails as well ...
+ * 
+ *     <pmjones@example.com>
+ * 
+ * ... and the plugin will obfuscate the email address for you.
  * 
  * @category Solar
  * 
@@ -57,7 +71,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * _____
+     * Converts inline URIs to anchors.
      * 
      * @param string $text The source text.
      * 
@@ -94,7 +108,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
 
     /**
      * 
-     * Support callback for ____.
+     * Support callback for inline URIs.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 
@@ -108,20 +122,28 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     }
     
     /**
-     *
-     *    Input: an email address, e.g. "foo@example.com"
-     *
-     *    Output: the email address as a mailto link, with each character
-     *        of the address encoded as either a decimal or hex entity, in
-     *        the hopes of foiling most address harvesting spam bots. E.g.:
-     *
-     *      <a href="&#x6D;&#97;&#105;&#108;&#x74;&#111;:&#102;&#111;&#111;&#64;&#101;
-     *        x&#x61;&#109;&#x70;&#108;&#x65;&#x2E;&#99;&#111;&#109;">&#102;&#111;&#111;
-     *        &#64;&#101;x&#x61;&#109;&#x70;&#108;&#x65;&#x2E;&#99;&#111;&#109;</a>
-     *
-     *    Based by a filter by Matthew Wickline, posted to the BBEdit-Talk
-     *    mailing list: <http://tinyurl.com/yu7ue>
-     *
+     * 
+     * Support callback for parsing email addresses.
+     * 
+     * From the original notes:
+     * 
+     * > Input: an email address, e.g. "foo@example.com"
+     * >
+     * > Output: the email address as a mailto link, with each character
+     * > of the address encoded as either a decimal or hex entity, in
+     * > the hopes of foiling most address harvesting spam bots. E.g.:
+     * >
+     * >     <a href="&#x6D;&#97;&#105;&#108;&#x74;&#111;:&#102;&#111;&#111;&#64;&#101;
+     * >     x&#x61;&#109;&#x70;&#108;&#x65;&#x2E;&#99;&#111;&#109;">&#102;&#111;&#111;
+     * >     &#64;&#101;x&#x61;&#109;&#x70;&#108;&#x65;&#x2E;&#99;&#111;&#109;</a>
+     * >
+     * > Based by a filter by Matthew Wickline, posted to the BBEdit-Talk
+     * > mailing list: <http://tinyurl.com/yu7ue>
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string An obfuscated mailto anchor.
+     * 
      */
     protected function _parseEmail($matches)
     {
@@ -147,7 +169,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Support callback for ____.
+     * Obfuscates email addresses with hex and decimal entities.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 

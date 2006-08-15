@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Block plugin to form paragraphs of text with 2 newlines around it.
  * 
  * @category Solar
  * 
@@ -64,28 +64,15 @@ class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
         // Wrap <p> tags around apparent paragraphs.
         foreach ($grafs as $key => $value) {
             if (! $this->_isHtmlToken($value)) {
+                // not an HTML token, looks like a paragraph.
                 $value = $this->_processSpans($value);
                 $value = preg_replace('/^([ \t]*)/', '<p>', $value);
                 $value .= "</p>";
                 $grafs[$key] = $value;
             }
-            
-            // else {
-            //     $grafs[$key] = $this->_unHtmlToken($value);
-            // }
         }
         
-        /* // WHY DO THIS?
-         * 
-        // Unhashify HTML blocks
-        foreach ($grafs as $key => $value) {
-            if (isset( $this->_html_blocks[$value] )) {
-                $grafs[$key] = $this->_html_blocks[$value];
-            }
-        }
-         * 
-         */
-        
+        // done!
         return implode("\n\n", $grafs);
     }
 }

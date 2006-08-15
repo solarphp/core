@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Block plugin to create ordered and unordered lists.
  * 
  * @category Solar
  * 
@@ -26,7 +26,13 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Block plugin to create ordered and unordered lists.
+ * 
+ * Start a line with `-`, `+`, or `*` (and a space) to
+ * indicate an unordered bullet list.
+ * 
+ * Start a line with a number and period (and a space)
+ * (e.g. `1. `) to indicate a numbered list.
  * 
  * @category Solar
  * 
@@ -44,8 +50,6 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
      */
     protected $_is_block = true;
     
-    protected $_list_level = 0;
-    
     /**
      * 
      * These should be encoded as special Markdown characters.
@@ -54,6 +58,15 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
      * 
      */
     protected $_chars = '-+*';
+    
+    /**
+     * 
+     * Tracks the current level of nested lists.
+     * 
+     * @var int
+     * 
+     */
+    protected $_list_level = 0;
     
     public function reset()
     {
@@ -74,7 +87,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     {
         $less_than_tab = $this->_getTabWidth() - 1;
 
-        # Re-usable patterns to match list item bullets and number markers:
+        // Re-usable patterns to match list item bullets and number markers:
         $marker_ul  = '[*+-]';
         $marker_ol  = '\d+[.]';
         $marker_any = "(?:$marker_ul|$marker_ol)";
@@ -82,7 +95,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         $markers = array($marker_ul, $marker_ol);
 
         foreach ($markers as $marker) {
-            # Re-usable pattern to match any entire ul or ol list:
+            // Re-usable pattern to match any entire ul or ol list:
             $whole_list = '
                 (                                # $1 = whole list
                   (                              # $2
@@ -104,9 +117,8 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
                 )
             '; // mx
         
-            # We use a different prefix before nested lists than top-level lists.
-            # See extended comment in _ProcessListItems().
-    
+            // We use a different prefix before nested lists than top-level lists.
+            // See extended comment in _ProcessListItems().
             if ($this->_list_level) {
                 $text = preg_replace_callback('{
                         ^
@@ -115,8 +127,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
                     array($this, '_parse'),
                     $text
                 );
-            }
-            else {
+            } else {
                 $text = preg_replace_callback('{
                         (?:(?<=\n\n)|\A\n?)
                         '.$whole_list.'
@@ -161,7 +172,9 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Support callback for ____.
+     * Support callback for nested lists.
+     * 
+     * @todo How is this different from top-level lists?
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 
@@ -224,12 +237,12 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         // without resorting to mind-reading. Perhaps the solution is to
         // change the syntax rules such that sub-lists must start with a
         // starting cardinal number; e.g. "1." or "a.".
-    
         $this->_list_level ++;
 
-        # trim trailing blank lines:
+        // trim trailing blank lines:
         $list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
-
+        
+        // process items
         $list_str = preg_replace_callback('{
                 (\n)?                          # leading line = $1
                 (^[ \t]*)                      # leading whitespace = $2

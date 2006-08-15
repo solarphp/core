@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Span plugin for Markdown anchor shortcuts.
  * 
  * @category Solar
  * 
@@ -26,7 +26,25 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Span plugin for Markdown anchor shortcuts.
+ * 
+ * You can link to another page using `[display text](http://example.com)`.
+ * 
+ * Alternatively, you can use defined links:
+ * 
+ *     Show [this link][id].
+ * 
+ *     [id]: http://example.com
+ * 
+ * And a shorthand for defined links:
+ * 
+ *     Show the [example][].
+ *     
+ *     [example]: http://example.com
+ * 
+ * Named-reference link definitions are captured in the prepare() phase
+ * by the StripLinkDefs plugin, and are used by both the Link plugin and
+ * the Image plugin.
  * 
  * @category Solar
  * 
@@ -53,10 +71,9 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
      */
     protected $_chars = '[]()';
     
-    # Turn Markdown link shortcuts into XHTML <a> tags.
     /**
      * 
-     * _____
+     * Converts Markdown links into XHTML anchors.
      * 
      * @param string $text The source text.
      * 
@@ -111,7 +128,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Support callback for ____.
+     * Support callback for named-reference links.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 
@@ -152,10 +169,9 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
         return $result;
     }
     
-    
     /**
      * 
-     * Support callback for ____.
+     * Support callback for inline links.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 

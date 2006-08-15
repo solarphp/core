@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Pre-filters source text in the preparation phase.
  * 
  * @category Solar
  * 
@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Pre-filters source text in the preparation phase.
  * 
  * @category Solar
  * 
@@ -37,7 +37,12 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Pre-filters the source text before any parsing occurs.
+     * Pre-filters source text in the preparation phase.
+     * 
+     * Converts DOS and Mac OS pre-X line endings to Unix line endings,
+     * adds 2 newlines to the end of the source, and converts all
+     * whitespace-only lines to simple newlines.  Also converts tabs
+     * to spaces intelligently, keeping tab columns lined up.
      * 
      * @param string $text The source text.
      * 
@@ -100,7 +105,7 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
             $line = $blocks[0];
             unset($blocks[0]); # Do not add first block twice.
             foreach ($blocks as $block) {
-                // Calculate amount of space, insert spaces, insert block.
+                // Calculate width, insert spaces, insert block.
                 $amount = $tab_width - strlen($line) % $tab_width;
                 $line .= str_repeat(" ", $amount) . $block;
             }

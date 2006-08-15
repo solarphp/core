@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Strips named-link definitions in the preparation phase.
  * 
  * @category Solar
  * 
@@ -26,7 +26,13 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Strips named-link definitions in the preparation phase.
+ * 
+ * This is in support of the Link and Image plugins.
+ * 
+ * A named link reference looks like this:
+ * 
+ *     [name]: http://example.com "Optional Title"
  * 
  * @category Solar
  * 
@@ -76,7 +82,7 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Support callback for ____.
+     * Support callback for link definitions.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 

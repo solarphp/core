@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * _____
+ * Span plugin to place image tags.
  * 
  * @category Solar
  * 
@@ -26,7 +26,17 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Span plugin to place image tags.
+ * 
+ * Syntax is the same as the Link plugin, except you prefix with `!` to 
+ * indicate an image instead of an anchor.
+ * 
+ * Use `![image alt text](/path/to/image)` as an inline image, or
+ * `![image name][]` with a defined link.
+ * 
+ * Named-reference link definitions are captured in the prepare() phase
+ * by the StripLinkDefs plugin, and are used by both the Link plugin and
+ * the Image plugin.
  * 
  * @category Solar
  * 
@@ -55,7 +65,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * _____
+     * Span plugin to place image tags.
      * 
      * @param string $text The source text.
      * 
@@ -113,7 +123,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Support callback for ____.
+     * Support callback for named-reference images.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 
@@ -156,10 +166,9 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         return $result;
     }
     
-    
     /**
      * 
-     * Support callback for ____.
+     * Support callback for inline images.
      * 
      * @param string $matches Matches from preg_replace_callback().
      * 

@@ -524,7 +524,7 @@ class Solar_View extends Solar_Base {
      * @param array $vars Additional variables to extract within the 
      * partial template scope.
      * 
-     * @return void
+     * @return string The results of the partial template script.
      * 
      */
     public function partial($name, $vars = null)
@@ -549,7 +549,9 @@ class Solar_View extends Solar_Base {
         extract($this->_partial_vars);
         
         // run the template
+        ob_start();
         require $this->_partial_file;
+        return ob_get_clean();
     }
 }
 ?>

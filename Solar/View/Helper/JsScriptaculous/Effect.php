@@ -104,7 +104,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      * Method interface
      *
-     * @return Solar_View_Helper_JsScriptaculous_Effect
+     * @return object Solar_View_Helper_JsScriptaculous_Effect
      *
      */
     public function effect()
@@ -114,13 +114,19 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
 
     /**
      *
-     * Fetch method called by Solar_View_Helper_Js.
+     * Fetch method called by Solar_View_Helper_Js. Feeds generated JavaScript
+     * back into a single block of JavaScript to be inserted into a page
+     * header.
      *
+     * @param string $selector CSS selector to generate scripts for
+     *
+     * @param array $action Action details array created by a
+     * JsScriptaculous_Effect method.
      *
      */
     public function fetch($selector, $action)
     {
-        $out = "    \$\$('$selector').each(function(li){new Effect.{$action['name']}(li";
+        $out = "new Effect.{$action['name']}(el";
 
         switch ($action['name']) {
 
@@ -146,7 +152,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
             $out .= ', ' . $json->encode($action['options']);
         }
 
-        $out .= ")});\n";
+        $out .= ");";
 
         return $out;
     }

@@ -63,8 +63,10 @@ class Test_Solar_View_Helper_Js extends Solar_Test {
         $expect .= '    <script src="/public/Solar/scripts/scriptaculous/effects.js" type="text/javascript"></script>'."\n";
         $expect .= '<script type="text/javascript">'."\n";
         $expect .= "//<![CDATA[\n";
-        $expect .= "Event.observe(window, 'load', function() {\n";
-        $expect .= "    \$\$('#test').each(function(li){new Effect.Highlight(li, {\"duration\":1})});\n";
+        $expect .= "Event.observe(window,'load',function() {\n";
+        $expect .= "    \$\$('#test').each(function(el){\n";
+        $expect .= "        new Effect.Highlight(el, {\"duration\":1});\n";
+        $expect .= "    });\n";
         $expect .= "});\n";
         $expect .= "//]]>\n";
         $expect .= "</script>\n";

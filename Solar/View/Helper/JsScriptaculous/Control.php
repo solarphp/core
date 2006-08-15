@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * JsScriptaculous Controls helper class.
+ * JsScriptaculous Control helper class.
  *
  * @category Solar
  *
@@ -67,8 +67,14 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
     /**
      *
-     * Fetch method called by Solar_View_Helper_Js.
+     * Fetch method called by Solar_View_Helper_Js. Feeds generated JavaScript
+     * back into a single block of JavaScript to be inserted into a page
+     * header.
      *
+     * @param string $selector CSS selector to generate scripts for
+     *
+     * @param array $action Action details array created by a
+     * JsScriptaculous_Control method.
      *
      */
     public function fetch($selector, $action)
@@ -81,16 +87,18 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
             case 'InPlaceEditor':
 
                 // InPlaceEditor control extends Prototype's Ajax object
-                $out .= "    \$\$('$selector').each(function(li){new Ajax.{$action['name']}(li";
+                // 'el' is the element referred to in the CSS selector loop
+                $out .= "new Ajax.{$action['name']}(el";
 
                 if (isset($action['url'])) {
-                    $out .= ', ' . $json->encode($a['url']);
+                    $out .= ', ' . $json->encode($action['url']);
                 }
 
                 if (isset($action['options']) && !empty($action['options'])) {
                     $out .= ', ' . $json->encode($action['options']);
                 }
-                $out .= ")});\n";
+
+                $out .= ");";
 
                 break;
 
@@ -195,7 +203,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
         $this->_needsFile('controls.js');
 
         $details = array(
-            'type'  => 'JsScriptaculous_Control',
+            'type'  => $this->_type,
             'name'  => 'InPlaceEditor',
             'url'   => $url,
             'options' => $options

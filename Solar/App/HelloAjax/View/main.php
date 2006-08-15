@@ -17,6 +17,11 @@
  *
  */
 ?>
+<?php $this->JsPrototype()->event
+                          ->observe('#top', 'click', 'function() { location.href = "http://solarphp.com"; }')
+                          ->observe('#top', 'mouseover', 'function() { this.style.cursor = "pointer"; }')
+                          ->observe('#top', 'mouseout', 'function() { this.style.cursor = "auto"; }');?>
+
 <p id="hello"><?php echo $this->escape($this->text) ?></p>
 <?php $this->jsScriptaculous()->effect->highlight('#hello', array('duration' => 1.0));?>
 <?php $this->jsScriptaculous()->control->inPlaceEditor('#hello', 'index.php', array(

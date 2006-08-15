@@ -112,12 +112,27 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
      *
      * Method interface
      *
-     * @return Solar_View_Helper_JsPrototype
+     * @return object Solar_View_Helper_JsPrototype
      *
      */
     public function jsPrototype()
     {
         return $this;
+    }
+
+    /**
+     *
+     * Returns a JsPrototype helper object; creates it as needed.
+     *
+     * @param string $helper Name of JsPrototype class
+     *
+     * @return object A new standalone helper object.
+     *
+     */
+    protected function __get($helper)
+    {
+        $helperName = "JsPrototype_$helper";
+        return $this->_view->getHelper($helperName);
     }
 
     /**

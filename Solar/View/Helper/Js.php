@@ -76,6 +76,15 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
+     * Array of JavaScript objects and their corresponding rules
+     *
+     * @var array
+     *
+     */
+    public $objects;
+
+    /**
+     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -109,27 +118,41 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         $load = '';
         $f = '';
         if (!empty($this->selectors)) {
-
+            
             foreach ($this->selectors as $selector => $actions) {
+
+                // Wrap in selector loop
+                $f .= "    \$\$('$selector').each(function(el){\n";
+
                 foreach ($actions as $a) {
-                    $f .= $this->_view->getHelper($a['type'])->fetch($selector, $a);
+                    // add in loop with indent for easy reading
+                    $f .= '        '
+                       . trim($this->_view->getHelper($a['type'])->fetch($selector, $a))
+                       . "\n";
                 }
+
+                // Close off selector loop wrapper
+                $f .= "    });\n";
+
             }
 
+            // Register window onload event to process CSS selector actions
             if ($f != '') {
-                $load = "Event.observe(window, 'load', function() {\n";
-                $load .= rtrim($f);
-                $load .= "\n});\n";
-                if ($this->scripts === null) {
-                    $this->scripts = array();
-                }
-                $this->scripts[] = $load;
+                $f = "function() {\n" . rtrim($f) . "\n}";
+                $this->_view->JsPrototype()->event->observeObject('window', 'load', $f);
             }
         }
 
+        // Loop through registered object actions/observers
+        if (!empty($this->objects)) {
+            foreach ($this->objects as $object => $actions) {
+                foreach ($actions as $a) {
+                    $this->scripts[] = $this->_view->getHelper($a['type'])->fetch($object, $a, true);
+                }
+            }
+        }
 
-
-
+        // Gather all registered scripts for output
         if (!empty($this->scripts)) {
             $scripts = implode("\n\n", $this->scripts);
             $scripts = trim($scripts);
@@ -137,14 +160,14 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         }
 
         return $js;
-
     }
 
     /**
      *
      * Method interface
      *
-     * @return Solar_View_Helper_Js
+     * @return object Solar_View_Helper_Js
+     *
      */
     public function js()
     {
@@ -177,12 +200,13 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      *
      * Resets the helper entirely.
      *
-     * @return Solar_View_Helper_Js
+     * @return object Solar_View_Helper_Js
      *
      */
     public function reset()
     {
         $this->selectors = array();
+        $this->objects = array();
         $this->files = array();
         $this->scripts = array();
 

@@ -85,8 +85,9 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
      */
     protected function __get($helper)
     {
-        $helperName = "JsScriptaculous_$helper";
-        return $this->_view->getHelper($helperName);
+        // Because Solar_View_Helpers typically are *not* in sub-dirs
+        $helper = 'JsScriptaculous_' . ucfirst(strtolower($helper));
+        return $this->_view->getHelper($helper);
     }
 
 }

@@ -51,7 +51,7 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      * @var string
      * 
      */
-    $this->_chars = '-=';
+    protected $_chars = '-=';
     
     /**
      * 
@@ -107,7 +107,6 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      */
     protected function _parseSub($matches)
     {
-        $tag = $this->_config['sub'];
         return "<h2>"
              . $this->_processSpans($matches[1])
              . "</h2>"

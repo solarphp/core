@@ -1,4 +1,5 @@
-// From script.aculo.us 1.6.1, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html). 
+// From script.aculo.us 1.6.2, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html).
+
 Event.simulateMouse=function(element,eventName){var options=Object.extend({pointerX:0,pointerY:0,buttons:0},arguments[2]||{});var oEvent=document.createEvent("MouseEvents");oEvent.initMouseEvent(eventName,true,true,document.defaultView,options.buttons,options.pointerX,options.pointerY,options.pointerX,options.pointerY,false,false,false,false,0,$(element));if(this.mark)Element.remove(this.mark);this.mark=document.createElement('div');this.mark.appendChild(document.createTextNode(" "));document.body.appendChild(this.mark);this.mark.style.position='absolute';this.mark.style.top=options.pointerY+"px";this.mark.style.left=options.pointerX+"px";this.mark.style.width="5px";this.mark.style.height="5px;";this.mark.style.borderTop="1px solid red;"
 this.mark.style.borderLeft="1px solid red;"
 if(this.step)
@@ -25,6 +26,7 @@ catch(e){this.error(e);}},assertEnumEqual:function(expected,actual){var message=
 catch(e){this.error(e);}},assertNotEqual:function(expected,actual){var message=arguments[2]||"assertNotEqual";try{(expected!=actual)?this.pass():this.fail(message+': got "'+Test.Unit.inspect(actual)+'"');}
 catch(e){this.error(e);}},assertNull:function(obj){var message=arguments[1]||'assertNull'
 try{(obj==null)?this.pass():this.fail(message+': got "'+Test.Unit.inspect(obj)+'"');}
+catch(e){this.error(e);}},assertMatch:function(expected,actual){var message=arguments[2]||'assertMatch';var regex=new RegExp(expected);try{(regex.exec(actual))?this.pass():this.fail(message+' : regex: "'+Test.Unit.inspect(expected)+' did not match: '+Test.Unit.inspect(actual)+'"');}
 catch(e){this.error(e);}},assertHidden:function(element){var message=arguments[1]||'assertHidden';this.assertEqual("none",element.style.display,message);},assertNotNull:function(object){var message=arguments[1]||'assertNotNull';this.assert(object!=null,message);},assertInstanceOf:function(expected,actual){var message=arguments[2]||'assertInstanceOf';try{(actual instanceof expected)?this.pass():this.fail(message+": object was not an instance of the expected type");}
 catch(e){this.error(e);}},assertNotInstanceOf:function(expected,actual){var message=arguments[2]||'assertNotInstanceOf';try{!(actual instanceof expected)?this.pass():this.fail(message+": object was an instance of the not expected type");}
 catch(e){this.error(e);}},_isVisible:function(element){element=$(element);if(!element.parentNode)return true;this.assertNotNull(element);if(element.style&&Element.getStyle(element,'display')=='none')

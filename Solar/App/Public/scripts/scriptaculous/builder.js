@@ -1,4 +1,5 @@
-// From script.aculo.us 1.6.1, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html). 
+// From script.aculo.us 1.6.2, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html).
+
 var Builder={NODEMAP:{AREA:'map',CAPTION:'table',COL:'table',COLGROUP:'table',LEGEND:'fieldset',OPTGROUP:'select',OPTION:'select',PARAM:'object',TBODY:'table',TD:'table',TFOOT:'table',TH:'table',THEAD:'table',TR:'table'},node:function(elementName){elementName=elementName.toUpperCase();var parentTag=this.NODEMAP[elementName]||'div';var parentElement=document.createElement(parentTag);try{parentElement.innerHTML="<"+elementName+"></"+elementName+">";}catch(e){}
 var element=parentElement.firstChild||null;if(element&&(element.tagName!=elementName))
 element=element.getElementsByTagName(elementName)[0];if(!element)element=document.createElement(elementName);if(!element)return;if(arguments[1])

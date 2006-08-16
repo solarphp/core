@@ -18,10 +18,16 @@ class Test_Solar_Json extends Solar_Test {
      */
     protected $t;
 
+    /**
+     * View, used for Protaculous related JSON tests
+     */
+    protected $_view;
+
     public function __construct($config = null)
     {
         parent::__construct($config);
         $this->t = dirname(__FILE__).'/Json/testsuite/';
+        $this->_view = Solar::factory('Solar_View');
     }
 
     public function setup()
@@ -317,7 +323,31 @@ class Test_Solar_Json extends Solar_Test {
         }
     }
 
+    public function testEncode_deQuote()
+    {
+        $json = Solar::factory('Solar_Json', array(
+                                                'bypass_ext' => true,
+                                                'bypass_mb' => true
+                                                ));
 
+        $before = array(
+            'parameters'=> "Form.serialize('foo')",
+            'asynchronous' => true,
+            'onSuccess' => 'function(t) { ' . $this->_view->jsScriptaculous()->effect->highlight('#user-auth', array('duration' => 1.0), true) . '}',
+            'on404'     => 'function(t) { alert(\'Error 404: location not found\'); }',
+            'onFailure' => 'function(t) { alert(\'Ack!\'); }',
+            'requestHeaders' => array('X-Solar-Version', Solar::apiVersion(), 'X-Foo', 'Bar')
+        );
+
+        $after = $json->encode($before, array('onSuccess', 'on404', 'onFailure', 'parameters'));
+
+        $expect = <<< ENDEXPECT
+{"parameters":Form.serialize('foo'),"asynchronous":true,"onSuccess":function(t) { new Effect.Highlight(el, {"duration":1});},"on404":function(t) { alert('Error 404: location not found'); },"onFailure":function(t) { alert('Ack!'); },"requestHeaders":["X-Solar-Version","@package_version@","X-Foo","Bar"]}
+ENDEXPECT;
+
+        $this->assertSame($after, trim($expect));
+
+    }
 
     public function testDecode_null_and_bool()
     {
@@ -709,16 +739,19 @@ class Test_Solar_Json extends Solar_Test {
 
             $tests = scandir($this->t);
             natsort($tests);
-    
+
             foreach ($tests as $file) {
                 if (substr($file, 0, 4) == 'fail' && substr($file, -4) == 'json') {
                     $before = file_get_contents($this->t.$file);
-                    $this->assertNull($json->decode($before));
+                    $this->assertNull($pjson->decode($before));
+                    $this->assertNull($njson->decode($before));
                 }
             }
 
         }
     }
+
+
 
 }
 ?>

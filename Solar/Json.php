@@ -116,10 +116,13 @@ class Solar_Json extends Solar_Base {
      *
      * @param mixed $valueToEncode Value to be encoded into JSON format
      *
+     * @param array $deQuote Array of keys whose values should **not** be
+     * quoted in encoded string.
+     *
      * @return string JSON encoded value
      *
      */
-    public function encode($valueToEncode)
+    public function encode($valueToEncode, $deQuote = array())
     {
         if (!$this->_config['bypass_ext'] && function_exists('json_encode')) {
 
@@ -133,11 +136,54 @@ class Solar_Json extends Solar_Base {
                 error_reporting($old_errlevel);
             }
 
-            return $encoded;
+
+        } else {
+
+            // Fall back to PHP-only method
+            $encoded = $this->_json_encode($valueToEncode);
+
         }
 
-        // Fall back to PHP-only method
-        return $this->_json_encode($valueToEncode);
+        // Sometimes you just don't want some values quoted
+        if (!empty($deQuote)) {
+            $encoded = $this->_deQuote($encoded, $deQuote);
+        }
+
+        return $encoded;
+
+    }
+
+    /**
+     *
+     * Accepts a JSON-encoded string, and removes quotes around values of
+     * keys specified in the $keys array.
+     *
+     * Sometimes, such as when constructing behaviors on the fly for "onSuccess"
+     * handlers to an Ajax request, the value needs to **not** have quotes around
+     * it. This method will remove those quotes and perform stripslashes on any
+     * escaped quotes within the quoted value.
+     *
+     * @param string $encoded JSON-encoded string
+     *
+     * @param array $keys Array of keys whose values should be de-quoted
+     *
+     * @return string $encoded Cleaned string
+     *
+     */
+    protected function _deQuote($encoded, $keys)
+    {
+        foreach ($keys as $key) {
+            $pattern = "/(\"".$key."\"\:)(\".*(?:[^\\\]\"))/U";
+            $encoded = preg_replace_callback(
+                $pattern,
+                create_function(
+                    '$matches',
+                    'return $matches[1].stripslashes(substr($matches[2], 1, -1));'),
+                $encoded
+            );
+        }
+
+        return $encoded;
     }
 
     /**

@@ -176,14 +176,29 @@ class Solar_Json extends Solar_Base {
             $pattern = "/(\"".$key."\"\:)(\".*(?:[^\\\]\"))/U";
             $encoded = preg_replace_callback(
                 $pattern,
-                create_function(
-                    '$matches',
-                    'return $matches[1].stripslashes(substr($matches[2], 1, -1));'),
+                array($this, '_stripvalueslashes'),
                 $encoded
             );
         }
 
         return $encoded;
+    }
+
+    /**
+     *
+     * Method for use with preg_replace_callback in the _deQuote() method.
+     * Returns ["keymatch":][value] where value has had its leading and
+     * trailing double-quotes removed, and stripslashes() run on the rest of
+     * the value.
+     *
+     * @param array $matches Regexp matches
+     *
+     * @return string replacement string
+     *
+     */
+    protected function _stripvalueslashes($matches)
+    {
+        return $matches[1].stripslashes(substr($matches[2], 1, -1));
     }
 
     /**

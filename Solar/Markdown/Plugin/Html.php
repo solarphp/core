@@ -37,12 +37,30 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Run this plugin during the "prepare" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_prepare = true;
+    
+    /**
+     * 
      * This is a block plugin.
      * 
      * @var bool
      * 
      */
     protected $_is_block = true;
+    
+    /**
+     * 
+     * Run this plugin during the "cleanup" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_cleanup = true;
     
     /**
      * 

@@ -58,8 +58,6 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
      */
     protected $_is_span = true;
     
-    protected $_schemes = array('http', 'https', 'ftp');
-    
     /**
      * 
      * These should be encoded as special Markdown characters.
@@ -68,6 +66,15 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
      * 
      */
     protected $_chars = '<>';
+    
+    /**
+     * 
+     * Recognizes these URI schemes when parsing.
+     * 
+     * @var array
+     * 
+     */
+    protected $_schemes = array('http', 'https', 'ftp');
     
     /**
      * 

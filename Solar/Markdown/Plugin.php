@@ -43,6 +43,15 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
+     * The "parent" Markdown object.
+     * 
+     * @var Solar_Markdown
+     * 
+     */
+    protected $_markdown;
+    
+    /**
+     * 
      * The characters this plugin uses for parsing, which should be
      * encoded by other other plugins.
      * 
@@ -73,6 +82,15 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
+     * Do **not** run this plugin during the "prepare" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_prepare = false;
+    
+    /**
+     * 
      * This is **not** a block plugin.
      * 
      * @var bool
@@ -91,6 +109,15 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
+     * Do **not** run this plugin during the "cleanup" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_cleanup = false;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -99,19 +126,49 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
         $this->_nested_brackets = 
             str_repeat('(?>[^\[\]]+|\[', $this->_nested_brackets_depth).
             str_repeat('\])*', $this->_nested_brackets_depth);
         
+        if (! empty($this->_config['markdown'])) {
+            $this->setMarkdown($this->_config['markdown']);
+        }
     }
-
+    
+    /**
+     * 
+     * Sets the "parent" Markdown object.
+     * 
+     * @param Solar_Markdown $markdown The "parent" Markdown object.
+     * 
+     * @return void
+     * 
+     */
+    public function setMarkdown($markdown)
+    {
+        $this->_markdown = $markdown;
+    }
+    
+    /**
+     * 
+     * Run this plugin during the "prepare" phase?
+     * 
+     * @return bool
+     * 
+     */
+    public function isPrepare()
+    {
+        return (bool) $this->_is_prepare;
+    }
+    
     /**
      * 
      * Is this a block-level plugin?
      * 
      * Reports the value of $this->_is_block.
      * 
-     * @var bool
+     * @return bool
      * 
      */
     public function isBlock()
@@ -125,12 +182,24 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * Reports the value of $this->_is_span.
      * 
-     * @var bool
+     * @return bool
      * 
      */
     public function isSpan()
     {
         return (bool) $this->_is_span;
+    }
+    
+    /**
+     * 
+     * Run this plugin during the "cleanup" phase?
+     * 
+     * @return bool
+     * 
+     */
+    public function isCleanup()
+    {
+        return (bool) $this->_is_cleanup;
     }
     
     /**
@@ -238,7 +307,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _escape($text, $quotes = ENT_COMPAT)
     {
-        return $this->_config['markdown']->escape($text, $quotes);
+        return $this->_markdown->escape($text, $quotes);
     }
     
     /**
@@ -252,7 +321,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _encode($text)
     {
-        return $this->_config['markdown']->encode($text);
+        return $this->_markdown->encode($text);
     }
     
     /**
@@ -268,7 +337,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _processBlocks($text)
     {
-        return $this->_config['markdown']->processBlocks($text);
+        return $this->_markdown->processBlocks($text);
     }
     
     /**
@@ -282,7 +351,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _processSpans($text)
     {
-        return $this->_config['markdown']->processSpans($text);
+        return $this->_markdown->processSpans($text);
     }
     
     
@@ -295,7 +364,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _getTabWidth()
     {
-        return $this->_config['markdown']->getTabWidth();
+        return $this->_markdown->getTabWidth();
     }
     
     /**
@@ -309,7 +378,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _toHtmlToken($text)
     {
-        return $this->_config['markdown']->toHtmlToken($text);
+        return $this->_markdown->toHtmlToken($text);
     }
     
     /**
@@ -323,7 +392,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _isHtmlToken($text)
     {
-        return $this->_config['markdown']->isHtmlToken($text);
+        return $this->_markdown->isHtmlToken($text);
     }
     
     /**
@@ -337,7 +406,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      */
     protected function _unHtmlToken($text)
     {
-        return $this->_config['markdown']->unHtmlToken($text);
+        return $this->_markdown->unHtmlToken($text);
     }
 }
 ?>

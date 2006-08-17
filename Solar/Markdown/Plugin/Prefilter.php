@@ -37,6 +37,15 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Run this plugin during the "prepare" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_prepare = true;
+    
+    /**
+     * 
      * Pre-filters source text in the preparation phase.
      * 
      * Converts DOS and Mac OS pre-X line endings to Unix line endings,

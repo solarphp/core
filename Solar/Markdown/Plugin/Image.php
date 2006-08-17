@@ -141,7 +141,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
             $name = strtolower($alt);
         }
 
-        $link = $this->_config['markdown']->getLink($name);
+        $link = $this->_markdown->getLink($name);
         if ($link) {
             
             $href   = $this->_escape($link['href']);

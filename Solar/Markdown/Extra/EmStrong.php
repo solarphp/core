@@ -1,0 +1,62 @@
+<?php
+
+Solar::loadClass('Solar_Markdown_Plugin_EmStrong');
+
+class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {
+    
+    public function parse($text)
+    {
+        // <strong> must go first:
+        $text = preg_replace_callback(
+            array(
+                '{                                                  # __strong__
+                    ( (?<!\w) __ )                                  # $1: Marker (not preceded by alphanum)
+                    (?=\S)                                          # Not followed by whitespace 
+                    (?!__)                                          #   or two others marker chars.
+                    (                                               # $2: Content
+                        (?>                                         
+                            [^_]+?                                  # Anthing not em markers.
+                        |                                           
+                                                                    # Balence any regular _ emphasis inside.
+                            (?<![a-zA-Z0-9])_ (?=\S) (?! _) (.+?) 
+                            (?<=\S) _ (?![a-zA-Z0-9])
+                        )+?
+                    )
+                    (?<=\S) __                                      # End mark not preceded by whitespace.
+                    (?!\w)                                          # Not followed by alphanum.
+                }sx',                                               
+                '{                                                  # **strong**
+                    ( (?<!\*\*) \*\* )                              # $1: Marker (not preceded by two *)
+                    (?=\S)                                          # Not followed by whitespace 
+                    (?!\1)                                          #   or two others marker chars.
+                    (                                               # $2: Content
+                        (?>                                         
+                            [^*]+?                                  # Anthing not em markers.
+                        |                                           
+                                                                    # Balance any regular * emphasis inside.
+                            \* (?=\S) (?! \*) (.+?) (?<=\S) \*
+                        )+?
+                    )
+                    (?<=\S) \*\*                                    # End mark not preceded by whitespace.
+                }sx',
+            ),
+            array($this, '_parseStrong'),
+            $text
+        );
+        
+        // Then <em>:
+        $text = preg_replace_callback(
+            array(
+                '{ ( (?<!\w) _ ) (?=\S) (?! _)  (.+?) (?<=\S) _ (?!\w) }sx',
+                '{ ( (?<!\*)\* ) (?=\S) (?! \*) (.+?) (?<=\S) \* }sx',
+            ),
+            array($this, '_parseEm'),
+            $text
+        );
+
+        return $text;
+    }
+    
+}
+
+?>

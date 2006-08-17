@@ -43,6 +43,15 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Run this plugin during the "prepare" phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_prepare = true;
+    
+    /**
+     * 
      * Removes link definitions from source and saves for later use.
      * 
      * @param string $text Markdown source text.
@@ -96,7 +105,7 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
         $title = empty($matches[3]) ? null : $matches[3];
         
         // save the link
-        $this->_config['markdown']->setLink($name, $href, $title);
+        $this->_markdown->setLink($name, $href, $title);
         
         // done.
         // no return, it's supposed to be removed.

@@ -68,6 +68,13 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
      */
     protected $_list_level = 0;
     
+    /**
+     * 
+     * Resets for a new transformation.
+     * 
+     * @return void
+     * 
+     */
     public function reset()
     {
         parent::reset();

@@ -48,6 +48,12 @@
  * 
  * @package Solar_Markdown
  * 
+ * @todo How to configure plugins at the start?
+ * 
+ * @todo How to configure plugin settings after construction?
+ * 
+ * @todo How to send a plugin object in the config?
+ * 
  */
 class Solar_Markdown extends Solar_Base {
     
@@ -74,7 +80,7 @@ class Solar_Markdown extends Solar_Base {
         
         'tab_width' => 4,
         
-        'tidy' => true,
+        'tidy' => false,
         
         'plugins' => array(
             // pre-processing on the source as a whole
@@ -82,8 +88,7 @@ class Solar_Markdown extends Solar_Base {
             'Solar_Markdown_Plugin_StripLinkDefs',
             
             // blocks
-            'Solar_Markdown_Plugin_HeaderSetext',
-            'Solar_Markdown_Plugin_HeaderAtx',
+            'Solar_Markdown_Plugin_Header',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
             'Solar_Markdown_Plugin_CodeBlock',
@@ -224,6 +229,26 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
+     * Array of all plugin classes that need to prepare the text before
+     * processing.
+     * 
+     * @var array
+     * 
+     */
+    protected $_prepare_class = array();
+    
+    /**
+     * 
+     * Array of all plugin classes that need to clean up the text after
+     * processing.
+     * 
+     * @var array
+     * 
+     */
+    protected $_cleanup_class = array();
+    
+    /**
+     * 
      * Special characters that should be encoded by Markdown.
      * 
      * This list will grow as plugins are added; they each report their
@@ -248,36 +273,51 @@ class Solar_Markdown extends Solar_Base {
     {
         parent::__construct($config);
         
+        // use tidy?
         if ($this->_config['tidy'] !== false &&
             ! extension_loaded('tidy')) {
             // tidy requsted but not loaded
             throw $this->_exception('ERR_TIDY_NOT_LOADED');
         }
         
-        // each plugin needs a reference back to this "parent" Markdown
-        // instance; this provides a central list of HTML blocks, named
-        // link references, block and span processing, etc.
-        $config = array('markdown' => $this);
-        
         // load each plugin object
-        foreach ($this->_config['plugins'] as $class) {
+        foreach ($this->_config['plugins'] as $spec) {
             
-            // create an instance
-            $this->_plugin[$class] = Solar::factory($class, $config);
+            if (is_object($spec)) {
+                $class = get_class($spec);
+                $plugin = $spec;
+            } else {
+                $class = $spec;
+                $plugin = Solar::factory($class);
+            }
+            
+            // save the plygin
+            $this->_plugin[$class] = $plugin;
+            $plugin->setMarkdown($this);
+            
+            // does it need to prepare the text?
+            if ($plugin->isPrepare()) {
+                $this->_prepare_class[] = $class;
+            }
             
             // is it a block plugin?
-            if ($this->_plugin[$class]->isBlock()) {
+            if ($plugin->isBlock()) {
                 $this->_block_class[] = $class;
             }
             
             // is it a span plugin?
-            if ($this->_plugin[$class]->isSpan()) {
+            if ($plugin->isSpan()) {
                 $this->_span_class[] = $class;
+            }
+            
+            // does it need to clean up the text?
+            if ($plugin->isCleanup()) {
+                $this->_cleanup_class[] = $class;
             }
             
             // find out what characters this plugin thinks should be
             // encoded as "special" Markdown characters.
-            $this->_chars .= $this->_plugin[$class]->getChars();
+            $this->_chars .= $plugin->getChars();
         }
         
         // build the character escape tables
@@ -295,8 +335,8 @@ class Solar_Markdown extends Solar_Base {
      * 
      * One-step transformation of source text using plugins.
      * 
-     * Calls prepare(), processBlocks(), cleanup(), and render() on the
-     * source text.
+     * Calls reset(), prepare(), processBlocks(), cleanup(), and
+     * render() using the source text.
      * 
      * @param string $text The source text.
      * 
@@ -306,10 +346,31 @@ class Solar_Markdown extends Solar_Base {
      */
     public function transform($text)
     {
+        $this->reset();
         $text = $this->prepare($text);
         $text = $this->processBlocks($text);
         $text = $this->cleanup($text);
         return $this->render($text);
+    }
+    
+    /**
+     * 
+     * Resets Markdown and all its plugins for a new transformation.
+     * 
+     * @return void
+     * 
+     */
+    public function reset()
+    {
+        // reset from previous transformations
+        $this->_count = 0;
+        $this->_html = array();
+        $this->_link = array();
+        
+        // reset the plugins
+        foreach ($this->_plugin as $plugin) {
+            $plugin->reset();
+        }
     }
     
     /**
@@ -328,17 +389,10 @@ class Solar_Markdown extends Solar_Base {
      */
     public function prepare($text)
     {
-        // reset from previous transformations
-        $this->_count = 0;
-        $this->_html = array();
-        $this->_link = array();
-        
         // let each plugin prepare the source text for parsing
-        foreach ($this->_plugin as $plugin) {
-            $plugin->reset();
-            $text = $plugin->prepare($text);
+        foreach ($this->_prepare_class as $class) {
+            $text = $this->_plugin[$class]->prepare($text);
         }
-        
         return $text;
     }
     
@@ -374,8 +428,8 @@ class Solar_Markdown extends Solar_Base {
     public function cleanup($text)
     {
         // let each plugin clean up the rendered source
-        foreach ($this->_plugin as $plugin) {
-            $text = $plugin->cleanup($text);
+        foreach ($this->_cleanup_class as $class) {
+            $text = $this->_plugin[$class]->cleanup($text);
         }
         return $text;
     }

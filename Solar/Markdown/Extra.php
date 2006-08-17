@@ -4,6 +4,7 @@ class Solar_Markdown_Extra extends Solar_Markdown {
     
     protected $_Solar_Markdown_Extra = array(
         'plugins' => array(
+            
             // pre-processing on the source as a whole
             'Solar_Markdown_Plugin_Prefilter',
             'Solar_Markdown_Plugin_StripLinkDefs',
@@ -13,7 +14,7 @@ class Solar_Markdown_Extra extends Solar_Markdown {
             'Solar_Markdown_Extra_Table',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
-            // 'Solar_Markdown_Extra_DefList',
+            'Solar_Markdown_Extra_DefList',
             'Solar_Markdown_Plugin_CodeBlock',
             'Solar_Markdown_Plugin_BlockQuote',
             //'Solar_Markdown_Extra_Html',

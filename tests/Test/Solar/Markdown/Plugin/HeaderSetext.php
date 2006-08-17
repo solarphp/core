@@ -66,5 +66,55 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
+
+    public function testParse_atx()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "# 1";
+        $source[] = "## 2";
+        $source[] = "### 3";
+        $source[] = "#### 4";
+        $source[] = "##### 5";
+        $source[] = "###### 6";
+        $source[] = "####### 7";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>1</h1>\n";
+        $expect[] = "<h2>2</h2>\n";
+        $expect[] = "<h3>3</h3>\n";
+        $expect[] = "<h4>4</h4>\n";
+        $expect[] = "<h5>5</h5>\n";
+        $expect[] = "<h6>6</h6>\n";
+        $expect[] = "<h6># 7</h6>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_atxTrailingHashes()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "# 1 #";
+        $source[] = "# 2 ##";
+        $source[] = "# 5 ###";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>1</h1>\n";
+        $expect[] = "<h1>2</h1>\n";
+        $expect[] = "<h1>5</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
 }
 ?>

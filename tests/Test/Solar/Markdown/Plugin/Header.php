@@ -1,7 +1,7 @@
 <?php
 require_once Solar::dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'Plugin.php';
 
-class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
+class Test_Solar_Markdown_Plugin_Header extends Test_Solar_Markdown_Plugin {
     
     public function testIsBlock()
     {
@@ -35,6 +35,42 @@ class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
     {
         $source = array();
         $source[] = "foo bar";
+        $source[] = "Top-Level Header";
+        $source[] = "================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>Top-Level Header</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_sub()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Sub-Level Header";
+        $source[] = "----------------";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h2>Sub-Level Header</h2>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+
+    public function testParse_atx()
+    {
+        $source = array();
+        $source[] = "foo bar";
         $source[] = "# 1";
         $source[] = "## 2";
         $source[] = "### 3";
@@ -60,7 +96,7 @@ class Test_Solar_Markdown_Plugin_HeaderAtx extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_trailingHashes()
+    public function testParse_atxTrailingHashes()
     {
         $source = array();
         $source[] = "foo bar";

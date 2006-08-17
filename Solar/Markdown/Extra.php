@@ -9,8 +9,7 @@ class Solar_Markdown_Extra extends Solar_Markdown {
             'Solar_Markdown_Plugin_StripLinkDefs',
             
             // blocks
-            'Solar_Markdown_Extra_HeaderSetext',
-            // 'Solar_Markdown_Extra_HeaderAtx',
+            'Solar_Markdown_Extra_Header',
             'Solar_Markdown_Extra_Table',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',

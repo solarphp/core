@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Block plugin to convert Markdown headers into XHTML header tags.
+ * Block plugin to convert Markdown headers into XHTML headers.
  * 
  * @category Solar
  * 
@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * Block plugin to convert Markdown headers into XHTML header tags.
+ * Block plugin to convert Markdown headers into XHTML headers.
  * 
  * For Setext-style headers, this code ...
  * 
@@ -64,7 +64,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * @package Solar_Markdown
  * 
  */
-class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
+class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
     
     /**
      * 

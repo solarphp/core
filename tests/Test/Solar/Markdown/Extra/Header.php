@@ -1,7 +1,7 @@
 <?php
 require_once Solar::dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'Plugin.php';
 
-class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin {
+class Test_Solar_Markdown_Extra_Header extends Test_Solar_Markdown_Plugin {
     
     public function testIsBlock()
     {
@@ -66,7 +66,43 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $actual = $this->_plugin->parse($source);
         $this->assertSame($actual, $expect);
     }
-
+    
+    public function testParse_withId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Top-Level Header {#top}";
+        $source[] = "=======================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1 id=\"top\">Top-Level Header</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_subWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Sub-Level Header {#sub}";
+        $source[] = "-----------------------";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h2 id=\"sub\">Sub-Level Header</h2>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
     public function testParse_atx()
     {
         $source = array();
@@ -110,6 +146,40 @@ class Test_Solar_Markdown_Plugin_HeaderSetext extends Test_Solar_Markdown_Plugin
         $expect[] = "<h1>1</h1>\n";
         $expect[] = "<h1>2</h1>\n";
         $expect[] = "<h1>5</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_atxWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "### Header {#atx}";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h3 id=\"atx\">Header</h3>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+
+        $actual = $this->_plugin->parse($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_atxTrailingHashesWithId()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "### Header ### {#atx}";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h3 id=\"atx\">Header</h3>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         

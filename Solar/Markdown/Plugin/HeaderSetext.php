@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Block plugin to convert Setext-style headers into XHTML header tags.
+ * Block plugin to convert Markdown headers into XHTML header tags.
  * 
  * @category Solar
  * 
@@ -26,7 +26,38 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Block plugin to convert Markdown headers into XHTML header tags.
+ * 
+ * For Setext-style headers, this code ...
+ * 
+ *     Header 1
+ *     ========
+ *     
+ *     Header 2
+ *     --------
+ * 
+ * ... would become:
+ * 
+ *     <h1>Header 1</h1>
+ * 
+ *     <h2>Header 2</h2>
+ * 
+ * 
+ * For ATX-style headers, this code ...
+ * 
+ *     # Header 1
+ * 
+ *     ## Header 2
+ * 
+ *     ##### Header 5
+ * 
+ * ... would become:
+ * 
+ *     <h1>Header 1</h1>
+ * 
+ *     <h2>Header 2</h2>
+ * 
+ *     <h5>Header 5</h5>
  * 
  * @category Solar
  * 
@@ -51,7 +82,7 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      * @var string
      * 
      */
-    protected $_chars = '-=';
+    protected $_chars = '-=#';
     
     /**
      * 
@@ -64,15 +95,31 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
+        // setext top-level
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n=+[ \t]*\n+ }mx',
             array($this, '_parseTop'),
             $text
         );
         
+        // setext sub-level
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n-+[ \t]*\n+ }mx',
             array($this, '_parseSub'),
+            $text
+        );
+        
+        // atx
+        $text = preg_replace_callback(
+            "{
+                ^(\\#{1,6}) # $1 = string of #'s
+                [ \\t]*
+                (.+?)       # $2 = Header text
+                [ \\t]*
+                \\#*        # optional closing #'s (not counted)
+                \\n+
+            }xm",
+            array($this, '_parseAtx'),
             $text
         );
         
@@ -110,6 +157,25 @@ class Solar_Markdown_Plugin_HeaderSetext extends Solar_Markdown_Plugin {
         return "<h2>"
              . $this->_processSpans($matches[1])
              . "</h2>"
+             . "\n\n";
+    }
+    
+
+    /**
+     * 
+     * Support callback for ATX headers.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _parseAtx($matches)
+    {
+        $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
+        return "<$tag>"
+             . $this->_processSpans($matches[2])
+             . "</$tag>"
              . "\n\n";
     }
 }

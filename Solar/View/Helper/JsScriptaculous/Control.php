@@ -95,7 +95,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
                 }
 
                 if (isset($action['options']) && !empty($action['options'])) {
-                    $out .= ', ' . $json->encode($action['options']);
+                    $out .= ', ' . $json->encode($action['options'], array('callback'));
                 }
 
                 $out .= ");";

@@ -21,13 +21,13 @@
 <!-- list of tags in use -->
 <div id="taglist">
     <h3><?php echo $this->getText('HEADING_TAGLIST') ?></h3>
-    <?php $this->partial('_tags.php') ?>
+    <?php echo $this->partial('_tags.php') ?>
 </div>
 
 <!-- ordering -->
 <div id="order">
     <h3><?php echo $this->getText('HEADING_ORDER') ?></h3>
-    <?php $this->partial('_order.php') ?>
+    <?php echo $this->partial('_order.php') ?>
 </div>
 
 <h1><?php echo $this->getText('HEADING_BOOKMARKS') ?></h1>
@@ -46,7 +46,7 @@
     <!-- output the list of results -->
     <?php if (count($this->list)): ?>
         <?php foreach ($this->list as $item) {
-            $this->partial('_item.php', $item);
+            echo $this->partial('_item.php', $item);
         } ?>
         
         <!-- previous / page-count / next -->

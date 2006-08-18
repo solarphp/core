@@ -17,6 +17,7 @@ class Solar_Markdown_Extra extends Solar_Markdown {
             'Solar_Markdown_Extra_DefList',
             'Solar_Markdown_Plugin_CodeBlock',
             'Solar_Markdown_Plugin_BlockQuote',
+            'Solar_Markdown_Plugin_Html',
             //'Solar_Markdown_Extra_Html',
             'Solar_Markdown_Plugin_Paragraph',
             

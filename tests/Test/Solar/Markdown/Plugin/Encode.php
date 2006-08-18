@@ -30,5 +30,13 @@ class Test_Solar_Markdown_Plugin_Encode extends Test_Solar_Markdown_Plugin {
         $actual = $this->_plugin->cleanup($source);
         $this->assertSame($actual, $expect);
     }
+    
+    public function testParse()
+    {
+        $source = "\\.\\{\\}";
+        $actual = $this->_plugin->parse($source);
+        $expect = $this->_encode . $this->_encode . $this->_encode;
+        $this->assertRegex($actual, "@$expect@");
+    }
 }
 ?>

@@ -1,67 +1,218 @@
 <?php
+/**
+ * 
+ * Replaces wiki links in source text with XHTML anchors.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Plugin.php 1668 2006-08-17 21:04:58Z pmjones $
+ * 
+ */
 
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
 
+/**
+ * 
+ * Replaces wiki links in source text with XHTML anchors.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a span plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_span = true;
     
-    // list of which pages exist (true) and which don't (false)
+    /**
+     * 
+     * Array of which pages exist and which don't.
+     * 
+     * Format is page name => true/false.
+     * 
+     * @var array
+     * 
+     */
     protected $_pages;
     
-    // saved data for each link in the text
+    /**
+     * 
+     * Array of information for each link found in the source text.
+     * 
+     * Each element is an array with these keys:
+     * 
+     * `norm`:
+     * The normalized form of the page name.
+     * 
+     * `page`:
+     * The page name as entered in the source text.
+     * 
+     * `frag`:
+     * A fragment anchor for the target page (e.g., "#example").
+     * 
+     * `text`:
+     * The text to display in place of the page name.
+     * 
+     * `atch`:
+     * Attached suffix text to go on the end of the displayed text.
+     * 
+     * @var array
+     * 
+     */
     protected $_links;
     
-    // count of all links
+    /**
+     * 
+     * Running count of $this->_links, so we don't have to call count()
+     * on it all the time.
+     * 
+     * @var int
+     * 
+     */
     protected $_count = 0;
     
-    // this class name
+    /**
+     * 
+     * The name of this class, for identifying encoded keys in the
+     * source text.
+     * 
+     * @var string
+     * 
+     */
     protected $_class;
     
-    // attribs for anchor links. note that 'href' is special, in that
-    // it is an sprintf() format string.
+    /**
+     * 
+     * Attribs for 'read' and 'add' style links.
+     * 
+     * Note that 'href' is special, in that it is an sprintf() format 
+     * string.
+     * 
+     * @var array
+     * 
+     */
     protected $_attribs = array(
-        
-        // pages that exist
         'read' => array(
             'href' => 'index.php/wiki/read/Main/%s'
         ),
-        
-        // pages that do not exist
         'add' => array(
             'href' => 'index.php/wiki/add/Main/%s'
         ),
     );
     
+    /**
+     * 
+     * Callback to check if pages linked from the source text exist or 
+     * not.
+     * 
+     * @var callback
+     * 
+     */
     protected $_check_pages = false;
     
-    public function setCheckPagesCallback($callback)
-    {
-        protected $_check_pages = $callback;
-    }
-    
-    public function setAttrib($type, $key, $val)
-    {
-        $this->_attribs[$type][$key] = $val;
-    }
-    
-    public function setAttribs($type, $list)
-    {
-        $this->_attribs[$type] = $list;
-    }
-    
-    // gets the list of pages linked-to
-    public function getPages()
-    {
-        return array_keys($this->_pages);
-    }
-    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config Array of user-defined configuariont values.
+     * 
+     */
     public function __construct($config)
     {
         parent::__construct($config);
         $this->_class = get_class($this);
     }
     
+    /**
+     * 
+     * Sets the callback to check if pages exist.
+     * 
+     * The callback has to take exactly one paramter, an array keyed
+     * on page names, with the value being true or false.  It should
+     * return a similar array, saying whether or not each page in the
+     * array exists.
+     * 
+     * If left empty, the plugin will assume all links exist.
+     * 
+     * @param callback $callback The callback to check if pages exist.
+     * 
+     * @return array An array of which pages exist and which don't.
+     * 
+     */
+    public function setCheckPagesCallback($callback)
+    {
+        protected $_check_pages = $callback;
+    }
+    
+    /**
+     * 
+     * Sets one anchor attribute.
+     * 
+     * @param string $type The anchor type, generally 'read' or 'add'.
+     * 
+     * @param string $key The attribute key, e.g. 'href' or 'class'.
+     * 
+     * @param string $val The attribute value.
+     * 
+     * @return void
+     * 
+     */
+    public function setAttrib($type, $key, $val)
+    {
+        $this->_attribs[$type][$key] = $val;
+    }
+    
+    /**
+     * 
+     * Sets all attributes for one anchor type.
+     * 
+     * @param string $type The anchor type, generally 'read' or 'add'.
+     * 
+     * @param array $list The attributes to set in key => value format.
+     * 
+     * @return void
+     * 
+     */
+    public function setAttribs($type, $list)
+    {
+        $this->_attribs[$type] = $list;
+    }
+    
+    /**
+     * 
+     * Gets the list of pages found in the source text.
+     * 
+     * @return array
+     * 
+     */
+    public function getPages()
+    {
+        return array_keys($this->_pages);
+    }
+    
+    /**
+     * 
+     * Resets this plugin for a new transformation.
+     * 
+     * @return void
+     * 
+     */
     public function reset()
     {
         parent::reset();
@@ -70,12 +221,27 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         $this->_count = 0;
     }
     
+    /**
+     * 
+     * Parses the source text for wiki links.
+     * 
+     * Wiki links are in this format:
+     * 
+     *     [[wiki page]]
+     *     [[wiki page #anchor]]
+     *     [[wiki page]]s
+     *     [[wiki page | display this instead]]
+     * 
+     * Links are replaced with encoded placeholders.  At cleanup() time,
+     * the placeholders are transformed into XHTML anchors.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The parsed text.
+     * 
+     */
     public function parse($text)
     {
-        // [[wiki page]]
-        // [[wiki page #anchor]]
-        // [[wiki page]]s
-        // [[wiki page | display this instead]]
         $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\S*?)/';
         return preg_replace_callback(
             $regex,
@@ -84,6 +250,15 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         );
     }
     
+    /**
+     * 
+     * Support callback for parsing wiki links.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parse($matches)
     {
         $page = $matches[1];
@@ -112,6 +287,15 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         return "\x1B$key\x1B";
     }
     
+    /**
+     * 
+     * Normalizes a wiki page name.
+     * 
+     * @param string $page The page name from the source text.
+     * 
+     * @return string The normalized page name.
+     * 
+     */
     protected function _normalize($page)
     {
         // trim, force only the first letter to upper-case (leaving all
@@ -120,6 +304,15 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         return preg_replace('/\s+/', '_', ucfirst(trim($page)));
     }
     
+    /**
+     * 
+     * Cleans up text to replace encoded placeholders with anchors.
+     * 
+     * @param string $page The page name from the source text.
+     * 
+     * @return string The normalized page name.
+     * 
+     */
     public function cleanup($text)
     {
         // first, update $this->_pages against the data store to see
@@ -137,6 +330,15 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         );
     }
     
+    /**
+     * 
+     * Support callback for replacing placeholder with anchors.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _cleanup($matches)
     {
         $key = $matches[1];

@@ -42,6 +42,15 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Runs during the cleanup() phase.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_cleanup = true;
+    
+    /**
+     * 
      * Array of which pages exist and which don't.
      * 
      * Format is page name => true/false.
@@ -109,10 +118,10 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
      */
     protected $_attribs = array(
         'read' => array(
-            'href' => 'index.php/wiki/read/Main/%s'
+            'href' => '/wiki/read/%s'
         ),
         'add' => array(
-            'href' => 'index.php/wiki/add/Main/%s'
+            'href' => '/wiki/add/%s'
         ),
     );
     
@@ -157,7 +166,7 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
      */
     public function setCheckPagesCallback($callback)
     {
-        protected $_check_pages = $callback;
+        $this->_check_pages = $callback;
     }
     
     /**
@@ -242,7 +251,7 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\S*?)/';
+        $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\S*)?/';
         return preg_replace_callback(
             $regex,
             array($this, '_parse'),
@@ -262,8 +271,8 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         $page = $matches[1];
-        $frag = empty($matches[2]) ? null  : trim($matches[2]);
-        $text = empty($matches[3]) ? $page : trim($matches[3]);
+        $frag = empty($matches[2]) ? null  : trim($matches[2], "# \t");
+        $text = empty($matches[3]) ? $page : trim($matches[3], "| \t");
         $atch = empty($matches[4]) ? null  : trim($matches[4]);
         
         // normalize the page name
@@ -323,7 +332,7 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         
         // now go through and replace tokens
         $regex = "/\x1B{$this->_class}:(.*?)\x1B/";
-        $text = preg_replace_callback(
+        return preg_replace_callback(
             $regex,
             array($this, '_cleanup'),
             $text
@@ -352,6 +361,9 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         
         // anchor "#fragment"
         $frag = $tmp['frag'];
+        if ($frag) {
+            $frag = "#$frag";
+        }
         
         // optional display text
         $text = $tmp['text'];

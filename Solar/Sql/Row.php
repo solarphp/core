@@ -39,9 +39,11 @@ class Solar_Sql_Row extends Solar_Struct {
      * 
      * Keys are:
      * 
-     * : \\data\\ : (array) Key-value pairs of colname => value.
+     * `data`:
+     * (array) Key-value pairs of colname => value.
      * 
-     * : \\save\\ : (object) Source object for save() calls.
+     * `save`:
+     * (object) Source object for save() calls.
      * 
      */
     protected $_Solar_Sql_Row = array(

@@ -32,24 +32,30 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\source\\ : (string) The source for auth credentials, 'get'
-     *   (for Solar::get() method) or 'post' (for Solar::post() method).
-     *   Default is 'post'.
+     * `source`:
+     * (string) The source for auth credentials, 'get'
+     * (for Solar::get() method) or 'post' (for Solar::post() method).
+     * Default is 'post'.
      * 
-     * : \\source_handle\\ : (string) Username key in the credential array source,
-     *   default 'handle'.
+     * `source_handle`:
+     * (string) Username key in the credential array source,
+     * default 'handle'.
      * 
-     * : \\source_passwd\\ : (string) Password key in the credential array source,
-     *   default 'passwd'.
+     * `source_passwd`:
+     * (string) Password key in the credential array source,
+     * default 'passwd'.
      * 
-     * : \\source_submit\\ : (string) Submission key in the credential array source,
-     *   default 'submit'.
+     * `source_submit`:
+     * (string) Submission key in the credential array source,
+     * default 'submit'.
      * 
-     * : \\submit_login\\ : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * `submit_login`:
+     * (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGIN' locale key value.
      * 
-     * : \\submit_logout\\ : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * `submit_logout`:
+     * (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
      * @var array
      * 

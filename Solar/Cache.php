@@ -32,12 +32,15 @@ class Solar_Cache extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\active\\ : (bool) Whether the cache is active or not when instantiated.
+     * `active`:
+     * (bool) Whether the cache is active or not when instantiated.
      * 
-     * : \\adapter\\ : (string) The adapter class, default 'Solar_Cache_Adapter_File'.
+     * `adapter`:
+     * (string) The adapter class, default 'Solar_Cache_Adapter_File'.
      * 
-     * : \\config\\ : (array) Construction-time config keys to pass to the adapter
-     *   to override Solar.config.php values.  Default is null.
+     * `config`:
+     * (array) Construction-time config keys to pass to the adapter
+     * to override Solar.config.php values.  Default is null.
      * 
      * @var array
      * 

@@ -2,9 +2,9 @@ This arch-class stands over and above all
 other Solar classes in that it provides functionality needed
 throughout the entire environment.
 
-Unlike most other classes in Solar, the \\Solar\\ class is
+Unlike most other classes in Solar, the `Solar` class is
 composed entirely of static methods and objects.  This means you
-never need to instantiate a \\Solar\\ object proper; just include
+never need to instantiate a `Solar` object proper; just include
 it.
 
 <code type="php">

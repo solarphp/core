@@ -11,7 +11,7 @@ following URI ...
 http://example.com/path/to/script.php/foo/bar/baz?zim=gir
 </code>
 
-... the "path-info" is \\/foo/bar/baz\\.
+... the "path-info" is `/foo/bar/baz`.
 
 Path-info values are addressed by their integer position
 number, not by associative array key name (as with $_GET et.

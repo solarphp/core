@@ -57,17 +57,20 @@ class Solar_Json extends Solar_Base {
      *
      * Keys are:
      *
-     * : \\bypass_ext\\ : (bool) Flag to instruct Solar_Json to bypass
-     *                     native json extension, if installed.
+     * `bypass_ext`:
+     * (bool) Flag to instruct Solar_Json to bypass
+     * native json extension, if installed.
      *
-     * : \\bypass_mb\\ : (bool) Flag to instruct Solar_Json to bypass
-     *                   native mb_convert_encoding() function, if
-     *                   installed.
+     * `bypass_mb`:
+     * (bool) Flag to instruct Solar_Json to bypass
+     * native mb_convert_encoding() function, if
+     * installed.
      *
-     * : \\noerror\\ : (bool) Flag to instruct Solar_Json to return null
-     *                 for values it cannot encode rather than throwing
-     *                 an exceptions (PHP-only encoding) or PHP warnings
-     *                 (native json_encode() function).
+     * `noerror`:
+     * (bool) Flag to instruct Solar_Json to return null
+     * for values it cannot encode rather than throwing
+     * an exceptions (PHP-only encoding) or PHP warnings
+     * (native json_encode() function).
      *
      */
     protected $_Solar_Json = array(

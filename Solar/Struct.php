@@ -25,58 +25,51 @@
  * 
  * Examples:
  * 
- * <code type="php">
- * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
- * $struct = Solar::factory('Solar_Struct', array('data' => $data));
- * 
- * echo $struct['foo']; // 'bar'
- * echo $struct->foo;   // 'bar'
- * 
- * echo count($struct); // 3
- * 
- * foreach ($struct as $key => $val) {
- *     echo "$key=$val ";
- * } // foo=bar  baz=dib zim=gir
- * 
- * $struct->zim = 'irk';
- * echo $struct['zim']; // 'irk'
- * 
- * $struct->noSuchKey = 'nothing';
- * echo $struct->noSuchKey; // null
- * </code>
+ *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
+ *     $struct = Solar::factory('Solar_Struct', array('data' => $data));
+ *     
+ *     echo $struct['foo']; // 'bar'
+ *     echo $struct->foo;   // 'bar'
+ *     
+ *     echo count($struct); // 3
+ *     
+ *     foreach ($struct as $key => $val) {
+ *         echo "$key=$val ";
+ *     } // foo=bar  baz=dib zim=gir
+ *     
+ *     $struct->zim = 'irk';
+ *     echo $struct['zim']; // 'irk'
+ *     
+ *     $struct->noSuchKey = 'nothing';
+ *     echo $struct->noSuchKey; // null
  * 
  * One problem is that casting the object to an array will not
  * reveal the data; you'll get an empty array.  Instead, you should use
  * the toArray() method to get a copy of the object data.
  * 
- * <code type="php">
- * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
- * $object = Solar::factory('Solar_Struct', array('data' => $data));
- * 
- * $struct = (array) $object; // $struct = array();
- * 
- * $struct = $object->toArray(); // $struct = array('foo' => 'bar', ...)
- * </code>
+ *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
+ *     $object = Solar::factory('Solar_Struct', array('data' => $data));
+ *     
+ *     $struct = (array) $object; // $struct = array();
+ *     
+ *     $struct = $object->toArray(); // $struct = array('foo' => 'bar', ...)
  * 
  * Another problem is that you can't use object notation inside double-
  * quotes directly; you need to wrap in braces.
  * 
- * <code type="php">
- * echo "$struct->foo";   // won't work
- * echo "{$struct->foo}"; // will work
- * </code>
+ *     echo "$struct->foo";   // won't work
+ *     echo "{$struct->foo}"; // will work
  * 
  * A third problem is that you can't address keys inside a foreach() 
  * loop directly using array notation; you have to use object notation.
  * Originally reported by Antti Holvikari.
  * 
- * <code type="php">
- * // will not work
- * foreach ($struct['subarray'] as $key => $val) { ... }
+ *     // will not work
+ *     foreach ($struct['subarray'] as $key => $val) { ... }
+ *     
+ *     // will work
+ *     foreach ($struct->subarray as $key => $val) { ... }
  * 
- * // will work
- * foreach ($struct->subarray as $key => $val) { ... }
- * </code>
  * @category Solar
  * 
  * @package Solar_Struct
@@ -90,7 +83,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * Keys are:
      * 
-     * : \\data\\ : (array) Key-value pairs.
+     * `data`:
+     * (array) Key-value pairs.
      * 
      */
     protected $_Solar_Struct = array(

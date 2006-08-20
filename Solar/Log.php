@@ -51,8 +51,9 @@ class Solar_Log extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\adapter\\ : (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
-     *   Default is 'Solar_Log_Adapter_None'.
+     * `adapter`:
+     * (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
+     * Default is 'Solar_Log_Adapter_None'.
      * 
      * All other keys are passed to the adapter class as its $config values.
      * 

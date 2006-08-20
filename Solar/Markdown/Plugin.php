@@ -32,7 +32,8 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : markdown : (Solar_Markdown) The "parent" Markdown object.
+     * `markdown`:
+     * (Solar_Markdown) The "parent" Markdown object.
      * 
      * @var array
      * 

@@ -5,7 +5,7 @@ returned.  If the requested key does not exist in the $_COOKIE
 array, the default value is returned instead.
 
 For example, to get the 'remember_me' key from the $_COOKIE
-array, with \\false\\ as the default value, you would do this:
+array, with `false` as the default value, you would do this:
 
 <code type="php">
 $remember_me = Solar::cookie('remember_me', false);

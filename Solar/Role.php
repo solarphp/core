@@ -32,11 +32,14 @@ class Solar_Role extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\adapter\\ : (string) The adapter class to use.
+     * `adapter`:
+     * (string) The adapter class to use.
      * 
-     * : \\config\\ : (array) Config options for constructing the adapter class.
+     * `config`:
+     * (array) Config options for constructing the adapter class.
      * 
-     * : \\refresh\\ : (bool) Whether or not to refresh the roles on every load.
+     * `refresh`:
+     * (bool) Whether or not to refresh the roles on every load.
      * 
      * @var array
      * 

@@ -8,7 +8,7 @@ such as in a paged navigation system.
 
 The following is a simple example. Say that the page address is
 currently
-\\``http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor``\\.
+```http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor```.
 You can use Solar_Uri to parse this complex string very easily:
 
 <code type="php">

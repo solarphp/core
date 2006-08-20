@@ -44,7 +44,8 @@ class Solar_Uri_Public extends Solar_Uri {
      * 
      * Keys are:
      * 
-     * : \\path\\ : (string) A path prefix specifically for public resources, e.g. '/public/'.
+     * `path`:
+     * (string) A path prefix specifically for public resources, e.g. '/public/'.
      * 
      * @var array
      * 

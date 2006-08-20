@@ -23,25 +23,25 @@ you to set up the execution environment:
 
 ++ Alternative Configurations
 
-Note that the \\start()\\ is overloaded; you can pass in different
+Note that the `start()` is overloaded; you can pass in different
 value types for the $config parameter.
 
-* \\false\\ -- This will explicitly **not** load any
+* `false` -- This will explicitly **not** load any
   additional configuration; you will get only the default
   Solar::$config array values defined in the Solar class.
 
-* \\null\\ -- Equivalent to Solar::start(), this will cause
+* `null` -- Equivalent to Solar::start(), this will cause
   Solar to read the value of the SOLAR_CONFIG_PATH global constant
   as the path to a file; the return value of that file will be used
   for Solar::$config.
 
-* \\string\\ -- The string is treated as a path to a Solar.config.php
+* `string` -- The string is treated as a path to a Solar.config.php
   file; the return value from that file will be used for Solar::$config.
 
-* \\array\\ -- This will use the passed array for the Solar::$config
+* `array` -- This will use the passed array for the Solar::$config
   values.
 
-* \\object\\ -- The passed object will be cast as an array,
+* `object` -- The passed object will be cast as an array,
   and those values will be used for Solar::$config.
 
 Here are some examples of starting with alternative configuration parameters:

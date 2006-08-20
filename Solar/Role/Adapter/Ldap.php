@@ -37,18 +37,24 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
      * 
      * Keys are:
      * 
-     * : \\url\\ : (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
+     * `url`:
+     * (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".
      * 
-     * : \\basedn\\ : (string) The base DN for the LDAP search; example: "o=my company,c=us".
+     * `basedn`:
+     * (string) The base DN for the LDAP search; example: "o=my company,c=us".
      * 
-     * : \\filter\\ : (string) An sprintf() filter string for the LDAP search; %s represents the username.
+     * `filter`:
+     * (string) An sprintf() filter string for the LDAP search; %s represents the username.
      * Example: "uid=%s".
      * 
-     * : \\attrib\\ : (string) Use these attributes to find role names.
+     * `attrib`:
+     * (string) Use these attributes to find role names.
      * 
-     * : \\binddn\\ : (string) Bind to the LDAP server as this distinguished name.
+     * `binddn`:
+     * (string) Bind to the LDAP server as this distinguished name.
      * 
-     * : \\bindpw\\ : (string) Bind to the LDAP server as with this password.
+     * `bindpw`:
+     * (string) Bind to the LDAP server as with this password.
      * 
      * @var array
      * 

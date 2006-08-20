@@ -40,12 +40,15 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\phpdoc\\ : (dependency) A Solar_Docs_Phpdoc dependency.
+     * `phpdoc`:
+     * (dependency) A Solar_Docs_Phpdoc dependency.
      * 
-     * : \\log\\ : (dependency) A Solar_Log dependency.
+     * `log`:
+     * (dependency) A Solar_Log dependency.
      * 
-     * : \\unknown\\ : (string) When a type is unknown or not specified,
-     *   use this value instead.
+     * `unknown`:
+     * (string) When a type is unknown or not specified,
+     * use this value instead.
      * 
      * @var array
      * 

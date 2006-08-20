@@ -37,13 +37,17 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
      * 
      * Keys are:
      * 
-     * : \\sql\\ : (dependency) A Solar_Sql dependency.
+     * `sql`:
+     * (dependency) A Solar_Sql dependency.
      * 
-     * : \\table\\ : (string) The table where roles are stored.
+     * `table`:
+     * (string) The table where roles are stored.
      * 
-     * : \\handle_col\\ : (string) The column for user handles.
+     * `handle_col`:
+     * (string) The column for user handles.
      * 
-     * : \\role_col\\ : (string) The column for roles.
+     * `role_col`:
+     * (string) The column for roles.
      * 
      * @var array
      * 

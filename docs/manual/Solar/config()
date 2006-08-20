@@ -21,14 +21,14 @@ $config['Example'] = array(
 $example = Solar::config('Example');
 </code>
 
-If the 'Example' group does not exist, the config() method will return an empty array by default.  If you want to use a different default value when 'Example' does not exist, specify a \\null\\ element and the customized default value:
+If the 'Example' group does not exist, the config() method will return an empty array by default.  If you want to use a different default value when 'Example' does not exist, specify a `null` element and the customized default value:
 
 <code type="php">
 $default = Solar::object('Solar_Error');
 $example = Solar::config('Example', null, $default);
 </code>
 
-Thus, \\$example\\ will be a Solar_Error if 'Example' does not exist in the config file.
+Thus, `$example` will be a Solar_Error if 'Example' does not exist in the config file.
 
 
 ++ Reading A Single Group-Element
@@ -52,13 +52,13 @@ $config['Example'] = array(
 $flag_a = Solar::config('Example', 'flag_a');
 </code>
 
-If the 'Example' group does not exist, or if the 'flag_a' element does not exist in the 'Example' group, the config() method will return \\null\\ value by default.  If you want to use a different default value, specify a that value as the third parameter:
+If the 'Example' group does not exist, or if the 'flag_a' element does not exist in the 'Example' group, the config() method will return `null` value by default.  If you want to use a different default value, specify a that value as the third parameter:
 
 <code type="php">
 $flag_a = Solar::config('Example', 'flag_a', 'thars');
 </code>
 
-Thus, \\$flag_a\\ will be \\'thars'\\ if Solar::$config['Example']['flag_a'] does not exist.
+Thus, `$flag_a` will be `'thars'` if Solar::$config['Example']['flag_a'] does not exist.
 
 ++ Deep Reading
 

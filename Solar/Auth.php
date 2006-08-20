@@ -34,37 +34,48 @@ class Solar_Auth extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\adapter\\ : (string) The adapter class, e.g. 'Solar_Auth_Adapter_File'.
+     * `adapter`:
+     * (string) The adapter class, e.g. 'Solar_Auth_Adapter_File'.
      * 
-     * : \\config\\ : (array) Construction-time config keys to pass to the adapter
-     *   to override Solar.config.php values.  Default is null.
+     * `config`:
+     * (array) Construction-time config keys to pass to the adapter
+     * to override Solar.config.php values.  Default is null.
      * 
-     * : \\expire\\ : (int) Authentication lifetime in seconds; zero is
-     *   forever.  Default is 14400 (4 hours).
+     * `expire`:
+     * (int) Authentication lifetime in seconds; zero is
+     * forever.  Default is 14400 (4 hours).
      * 
-     * : \\idle\\ : (int) Maximum allowed idle time in seconds; zero is
-     *   forever.  Default is 1800 (30 minutes).
+     * `idle`:
+     * (int) Maximum allowed idle time in seconds; zero is
+     * forever.  Default is 1800 (30 minutes).
      * 
-     * : \\allow\\ : (bool) Whether or not to allow login/logout attempts.
+     * `allow`:
+     * (bool) Whether or not to allow login/logout attempts.
      * 
-     * : \\source\\ : (string) The source for auth credentials, 'get'
-     *   (for Solar::get() method) or 'post' (for Solar::post() method).
-     *   Default is 'post'.
+     * `source`:
+     * (string) The source for auth credentials, 'get'
+     * (for Solar::get() method) or 'post' (for Solar::post() method).
+     * Default is 'post'.
      * 
-     * : \\source_handle\\ : (string) Username key in the credential array source,
-     *   default 'handle'.
+     * `source_handle`:
+     * (string) Username key in the credential array source,
+     * default 'handle'.
      * 
-     * : \\source_passwd\\ : (string) Password key in the credential array source,
-     *   default 'passwd'.
+     * `source_passwd`:
+     * (string) Password key in the credential array source,
+     * default 'passwd'.
      * 
-     * : \\source_submit\\ : (string) Submission key in the credential array source,
-     *   default 'submit'.
+     * `source_submit`:
+     * (string) Submission key in the credential array source,
+     * default 'submit'.
      * 
-     * : \\submit_login\\ : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * `submit_login`:
+     * (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGIN' locale key value.
      * 
-     * : \\submit_logout\\ : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * `submit_logout`:
+     * (string) The submission-key value to indicate a
+     * login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
      * @var array
      * 
@@ -152,16 +163,21 @@ class Solar_Auth extends Solar_Base {
      * This is the status code of the current user authentication; the string
      * codes are:
      * 
-     * : \\ANON\\ : The user is anonymous/unauthenticated (no attempt to 
+     * `ANON`:
+     * The user is anonymous/unauthenticated (no attempt to 
      *   authenticate)
      * 
-     * : \\EXPIRED\\ : The max time for authentication has expired
+     * `EXPIRED`:
+     * The max time for authentication has expired
      * 
-     * : \\IDLED\\ : The authenticated user has been idle for too long
+     * `IDLED`:
+     * The authenticated user has been idle for too long
      * 
-     * : \\VALID\\ : The user is authenticated and has not timed out
+     * `VALID`:
+     * The user is authenticated and has not timed out
      * 
-     * : \\WRONG\\ : The user attempted authentication but failed
+     * `WRONG`:
+     * The user attempted authentication but failed
      * 
      * @var string
      * 

@@ -24,7 +24,7 @@ You can download Solar directly from this link:
 
 http://solarphp.com/get/Solar-@package_version@.tgz
 
-Then copy the \\Solar.php\\ file and \\Solar/\\ directory into your libraries.
+Then copy the `Solar.php` file and `Solar/` directory into your libraries.
 
 However, it's usually better to use the PEAR installer.
 
@@ -57,12 +57,12 @@ Because Solar is still in alpha, you need to specify the "-alpha" flag when inst
 
 +++ Bundled Documentation
 
-When PEAR installs the Solar classes, it will place the bundled documentation in a different location.  Typically, you will find the classes in \\/path/to/pear/\\, while documentation will be in \\/path/to/pear/docs/Solar/\\.
+When PEAR installs the Solar classes, it will place the bundled documentation in a different location.  Typically, you will find the classes in `/path/to/pear/`, while documentation will be in `/path/to/pear/docs/Solar/`.
 
 
 +++ Bundled Tests
 
-When PEAR installs the Solar classes, it will place the bundled test files in a different location.  Typically, you will find the classes in \\/path/to/pear/\\, while the test files will be in \\/path/to/pear/tests/Solar/\\.
+When PEAR installs the Solar classes, it will place the bundled test files in a different location.  Typically, you will find the classes in `/path/to/pear/`, while the test files will be in `/path/to/pear/tests/Solar/`.
 
 
 +++ Problems?

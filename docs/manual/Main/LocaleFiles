@@ -2,7 +2,7 @@
 
 Solar is designed with built-in localization support.  This means you can create a locale file for any Solar class and provide your own localized strings for output.
 
-As you scan through the Solar distribution, you will see that many class directories have a \\Locale/\\ subdirectory.  That subdirectory will have at least one file in it, \\en_US.php\\.  That contains the localization strings for the en_US locale.  As Solar gains acceptance, we expect to build more locale files for each localization (e.g., 'de_DE' for German, 'pt_BR' for Brazilian Portuguese, and so on).
+As you scan through the Solar distribution, you will see that many class directories have a `Locale/` subdirectory.  That subdirectory will have at least one file in it, `en_US.php`.  That contains the localization strings for the en_US locale.  As Solar gains acceptance, we expect to build more locale files for each localization (e.g., 'de_DE' for German, 'pt_BR' for Brazilian Portuguese, and so on).
 
 As with the ConfigFile, locale files are simply PHP scripts that return an array.  Thus, the simplest possible locale file is an empty array:
 
@@ -21,9 +21,9 @@ return array(
 
 (When creating a locale file, be sure to follow the NamingConventions regarding translation string keys.)
 
-If this locale file were associated with a class called \\Solar_Test_Example\\, you would retrieve the translated string by calling \\``Solar::locale('Solar_Test_Example', 'TEXT_HELLO')``\\.  Solar automatically finds the correct file and loads the strings for you.
+If this locale file were associated with a class called `Solar_Test_Example`, you would retrieve the translated string by calling ```Solar::locale('Solar_Test_Example', 'TEXT_HELLO')```.  Solar automatically finds the correct file and loads the strings for you.
 
-Alternatively, if you were working with a class extended from Solar_Base, you would call \\``$this->locale()``\\ with the same parameters (c.f. the Solar_Base::locale() method).
+Alternatively, if you were working with a class extended from Solar_Base, you would call ```$this->locale()``` with the same parameters (c.f. the Solar_Base::locale() method).
 
 
 ++ Plural Forms
@@ -37,7 +37,7 @@ return array(
 );
 </code>
 
-You then call the \\Solar::locale()\\ method with a numeric value, and Solar picks the proper translation based on the number.  For example:
+You then call the `Solar::locale()` method with a numeric value, and Solar picks the proper translation based on the number.  For example:
 
 <code type="php">
 // returns 'apples'
@@ -53,9 +53,9 @@ $text = Solar::locale('Solar_Test_Example', 'TEXT_APPLE', 5);
 
 ++ Nonexistent Keys
 
-If you use \\Solar::locale()\\ to request a translation key that does not exist for a specific class, Solar falls back along the class hierarchy to the translation keys found in parent classes.  This means that child classes can override as many or as few translation strings as they wish, because they always have recourse to the parent-class strings.
+If you use `Solar::locale()` to request a translation key that does not exist for a specific class, Solar falls back along the class hierarchy to the translation keys found in parent classes.  This means that child classes can override as many or as few translation strings as they wish, because they always have recourse to the parent-class strings.
 
-As a final fallback, \\Solar::locale()\\ will look in \\Solar/Locale/*\\ for vendor-wide translations; if it cannot find them there, it returns the key itself as the translation.  (This means no blank translation strings.)
+As a final fallback, `Solar::locale()` will look in `Solar/Locale/*` for vendor-wide translations; if it cannot find them there, it returns the key itself as the translation.  (This means no blank translation strings.)
 
 
 ++ Switching Locales

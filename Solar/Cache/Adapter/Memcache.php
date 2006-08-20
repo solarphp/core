@@ -51,15 +51,19 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * 
      * Keys are:
      * 
-     * : \\host\\ : (string) The memcached host name, default 'localhost'.
+     * `host`:
+     * (string) The memcached host name, default 'localhost'.
      * 
-     * : \\port\\ : (int) The memcached port number, default 11211.
+     * `port`:
+     * (int) The memcached port number, default 11211.
      * 
-     * : \\life\\ : (int) The cache entry lifetime in seconds, default 60.
+     * `life`:
+     * (int) The cache entry lifetime in seconds, default 60.
      * 
-     * : \\timeout\\ : (int) The timeout before the server connection is
-     *   considered a miss, in seconds.  Default is 1 second, and should 
-     *   not really be changed for reasons other than testing purposes.
+     * `timeout`:
+     * (int) The timeout before the server connection is
+     * considered a miss, in seconds.  Default is 1 second, and should 
+     * not really be changed for reasons other than testing purposes.
      * 
      * @var array
      * 
@@ -86,11 +90,14 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * 
      * Config keys are:
      * 
-     * : \\host\\ : (string) The hostname of the memcached server, default 'localhost' 
+     * `host`:
+     * (string) The hostname of the memcached server, default 'localhost' 
      * 
-     * : \\port\\ : (int) The port number for the memcached server, default 11211 
+     * `port`:
+     * (int) The port number for the memcached server, default 11211 
      * 
-     * : \\life\\ : (int) The lifetime of each cache entry in seconds, default 60 (1 minute) 
+     * `life`:
+     * (int) The lifetime of each cache entry in seconds, default 60 (1 minute) 
      * 
      * @param array $config User-provided configuration values.
      * 

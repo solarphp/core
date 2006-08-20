@@ -104,11 +104,11 @@ These are the element information array keys, and their expected values.  Rememb
 Note that you don't need to specify all of these keys for every element info array.  Thus, in many cases, you can get away with just specifying the type, label, and default value; if you want filtering and validation, of course, you'll need to add those too.
 
 
-+++ \\type\\ string
++++ `type` string
 
 The 'type' is the XHTML element type.  Strictly speaking, you can use any string you like here, in case your particular template or view system supports added element types.  In general, though, you can expect to use these values:
 
-||~ \\type\\ ||~ maps to... ||~ uses 'options'? ||
+||~ `type` ||~ maps to... ||~ uses 'options'? ||
 || button    || <input type="button" ... /> || no ||
 || checkbox  || <input type="checkbox" ... /> || yes ||
 || file      || <input type="file" ... /> || no ||
@@ -124,27 +124,27 @@ The 'type' is the XHTML element type.  Strictly speaking, you can use any string
 
 In some cases, you can use the 'options' key (described below) to tell the form output generator what options are available for the input type; e.g., in a select list, or a set of radio buttons, or the checked/unchecked values for a checkbox.
 
-+++ \\label\\ string
++++ `label` string
 
 This is a short descriptive label string for the form element.
 
-+++ \\descr\\ string
++++ `descr` string
 
 This is a longer description of the form element, generally for tooltips, help functions, and so on.
 
-+++ \\value\\ string or array
++++ `value` string or array
 
-The default value of the form element.  In cases where 'options' are used, this is the default selected or checked option key.  If the \\value\\ is an array and the element is a multiple-select, all the \\value\\ option keys should show as selected by default.
+The default value of the form element.  In cases where 'options' are used, this is the default selected or checked option key.  If the `value` is an array and the element is a multiple-select, all the `value` option keys should show as selected by default.
 
-+++ \\require\\ bool
++++ `require` bool
 
 A boolean flag indicating whether or not an element should be noted as "required" by the form output generator.  The output noting a field as "required" may change from system to system (Solar_Template by default shows a red ##red|*## by the label to note required items).
 
-+++ \\disable\\ bool
++++ `disable` bool
 
 A boolean flag indicating whether or not the element should be displayed as read-only by the form output generator.  If the element is disabled, the user should see the element and its value, but not be able to change it.
 
-+++ \\options\\ array
++++ `options` array
 
 The options array tells the form what values to allow for selection, and is treated differently by the different element types (and ignored most of them except for 'select', 'radio', and 'checkbox').
 
@@ -195,7 +195,7 @@ $form->setElement('contact_me', $info);
 
 (Note that this is Solar_Template output, which uses a hidden value to indicate the unchecked value; the later checkbox value, if checked, will override the hidden value on form submission.)
 
-+++ \\attribs\\ array
++++ `attribs` array
 
 This is an array of XHTML attributes to apply to the element.  In the case of 'select' elements, this will apply to the <select> tag and not to the <option> tags.  For example, a textarea element can specify the cols and rows ...
 
@@ -217,12 +217,12 @@ $form->setElement('body_text', $info);
 <textarea name="body_text" rows="24" cols="80">type something here</textarea>
 </code>
 
-+++ \\feedback\\ array
++++ `feedback` array
 
 This is an array of messages to give to the user, generally related to user input not passing validation rules.  Typically you will not need to specify feedback yourself; instead, the Solar_Form::validate() method will populate it for you.
 
 
-+++ \\filter\\ array
++++ `filter` array
 
 This is an array of [Solar_Filter::HomePage Solar_Filter] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).  Technically, these are passed as arguments to Solar_Filter::multiple(); among other things, this means that if the the requested callback method does not exist, it is assumed to be a PHP function.  For example:
 
@@ -237,13 +237,13 @@ $info = array(
 );
 </code>
 
-+++ \\validate\\ array
++++ `validate` array
 
 This is an array of [Solar_Valid::HomePage Solar_Valid] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).
 
 Note that this is actually an array of arrays.  That is, each element in the 'valid' array is itself an array, where element 0 is the Solar_Valid method name, element 1 is the feedback message if the user input is not valid, and additional elements are passed as added parameters to the Solar_Valid method.  
 
-> If you leave element 1 set to \\null\\, Solar will automatically use a localized error message related to the validation method.
+> If you leave element 1 set to `null`, Solar will automatically use a localized error message related to the validation method.
 
 For example:
 

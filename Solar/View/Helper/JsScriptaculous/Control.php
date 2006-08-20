@@ -131,61 +131,100 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
      * For $options, in-place editor controls support the following settings
      * [Ajax.InPlaceEditor][]
      *
-     * : okButton       : (bool) If a submit button is shown in edit mode.
-     *                    Defaults to true.
-     * : okText         : (string) Text of submit button that submits the
-     *                    changed value to the server. Defaults to "ok"
-     * : cancelLink     : (bool) If a cancel link is shown in edit mode.
-     *                    Defaults to true.
-     * : savingText     : (string) Text shown while updated value is sent to
-     *                    the server. Defaults to "Saving..."
-     * : clickToEditText: (string) Text shown during mouseover of the editable
-     *                    text. Defaults to "Click to edit"
-     * : formId         : (string) The id given to the form element. Defaults
-     *                    to the id of the element to edit plus 'InPlaceForm'
-     * : externalControl: (string) ID of an element that acts as an external
-     *                    control used to enter edit mode. The external control
-     *                    will be hidden when entering edit mode, and shown
-     *                    again when leaving edit mode. Defaults to null.
-     * : rows           : (int) The row height of the input field. Any value
-     *                    greater than 1 results in a multiline textarea for
-     *                    input. Defaults to 1.
-     * : onComplete     : (string) JavaScript code to run if update successful
-     *                    with server. Defaults to
-     *                    "function(transport, element) {new Effect.Highlight(element, {startcolor: this.options.highlightcolor});}"
-     * : onFailure      : (string) JavaScript code to run if update failed with
-     *                    server. Defaults to
-     *                    "function(transport) {alert("Error communicating with the server: " + transport.responseText.stripTags());}"
-     * : cols           : (int) The number of columns the text area should span.
-     *                    Works for both single line and multi-line. No default
-     *                    value.
-     * : size           : (int) Synonym for 'cols' when using single-line (rows=1)
-     *                    input. No default value.
-     * : highlightcolor : (string) The highlight color on mouseover. Defaults
-     *                    to value of Ajax.InPlaceEditor.defaultHighlightColor.
-     * : highlightendcolor : (string) The color the highlight fades to. Defaults
-     *                    to #FFFFFF.
-     * : savingClassName: (string) CSS class added to the element while
-     *                    displaying "Saving..." (removed when server responds)
-     *                    Defaults to "inplaceeditor-saving"
-     * : formClassName  : (string) CSS class used for the in place edit form.
-     *                    Defaults to "inplaceeditor-form"
-     * : LoadTextURL    : (string) Will cause the text for the edit box to be
-     *                    loaded from the server. Useful if your text is
-     *                    actually Wiki markup, Markdown, Textile, etc., and
-     *                    formatted for display on the server. Defaults to null.
-     * : loadingText    : (string) If the loadTextURL option is specified,
-     *                    then this text is displayed while the text is being
-     *                    loaded from the server. Defaults to "Loading..."
-     * : callback       : (string) JavaScript function that will get executed
-     *                    just before the request is sent to the server. Should
-     *                    return parameters to be sent in the URL. Will get two
-     *                    paramters, the entire form and the value of the
-     *                    text control. Defaults to
-     *                    "function(form) {Form.serialize(form)}"
-     * : ajaxOptions    : (array) Options specified to all AJAX calls (loading
-     *                    and saving text). These options are passed through to
-     *                    the Prototype AJAX classes.
+     * okButton:
+     * (bool) If a submit button is shown in edit mode.
+     * Defaults to true.
+     * 
+     * okText:
+     * (string) Text of submit button that submits the
+     * changed value to the server. Defaults to "ok"
+     * 
+     * cancelLink:
+     * (bool) If a cancel link is shown in edit mode.
+     * Defaults to true.
+     * 
+     * savingText:
+     * (string) Text shown while updated value is sent to
+     * the server. Defaults to "Saving..."
+     * 
+     * clickToEditText:
+     * (string) Text shown during mouseover of the editable
+     * text. Defaults to "Click to edit"
+     * 
+     * formId:
+     * (string) The id given to the form element. Defaults
+     * to the id of the element to edit plus 'InPlaceForm'
+     * 
+     * externalControl:
+     * (string) ID of an element that acts as an external
+     * control used to enter edit mode. The external control
+     * will be hidden when entering edit mode, and shown
+     * again when leaving edit mode. Defaults to null.
+     * 
+     * rows:
+     * (int) The row height of the input field. Any value
+     * greater than 1 results in a multiline textarea for
+     * input. Defaults to 1.
+     * 
+     * onComplete:
+     * (string) JavaScript code to run if update successful
+     * with server. Defaults to
+     * "function(transport, element) {new Effect.Highlight(element, {startcolor: this.options.highlightcolor});}"
+     * 
+     * onFailure:
+     * (string) JavaScript code to run if update failed with
+     * server. Defaults to
+     * "function(transport) {alert("Error communicating with the server: " + transport.responseText.stripTags());}"
+     * 
+     * cols:
+     * (int) The number of columns the text area should span.
+     * Works for both single line and multi-line. No default
+     * value.
+     * 
+     * size:
+     * (int) Synonym for 'cols' when using single-line (rows=1)
+     * input. No default value.
+     * 
+     * highlightcolor:
+     * (string) The highlight color on mouseover. Defaults
+     * to value of Ajax.InPlaceEditor.defaultHighlightColor.
+     * 
+     * highlightendcolor:
+     * (string) The color the highlight fades to. Defaults
+     * to #FFFFFF.
+     * 
+     * savingClassName:
+     * (string) CSS class added to the element while
+     * displaying "Saving..." (removed when server responds)
+     * Defaults to "inplaceeditor-saving"
+     * 
+     * formClassName:
+     * (string) CSS class used for the in place edit form.
+     * Defaults to "inplaceeditor-form"
+     * 
+     * LoadTextURL:
+     * (string) Will cause the text for the edit box to be
+     * loaded from the server. Useful if your text is
+     * actually Wiki markup, Markdown, Textile, etc., and
+     * formatted for display on the server. Defaults to null.
+     * 
+     * loadingText:
+     * (string) If the loadTextURL option is specified,
+     * then this text is displayed while the text is being
+     * loaded from the server. Defaults to "Loading..."
+     * 
+     * callback:
+     * (string) JavaScript function that will get executed
+     * just before the request is sent to the server. Should
+     * return parameters to be sent in the URL. Will get two
+     * paramters, the entire form and the value of the
+     * text control. Defaults to
+     * "function(form) {Form.serialize(form)}"
+     * 
+     * ajaxOptions:
+     * (array) Options specified to all AJAX calls (loading
+     * and saving text). These options are passed through to
+     * the Prototype AJAX classes.
      *
      * The URL on the server-side gets the new value as the parameter "value"
      * via POST method, and should send the new value as the body of the response.

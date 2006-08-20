@@ -138,7 +138,7 @@ Now you should be able to browse to http://localhost/index.php/example/ and see 
 
 ++ Locale
 
-Create a [Main::LocaleFile locale file] for US English in your \\Locale/\\ directory:
+Create a [Main::LocaleFile locale file] for US English in your `Locale/` directory:
 
 <code type="bash">
 $ vi Example/Locale/en_US.php

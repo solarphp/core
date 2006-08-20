@@ -44,7 +44,8 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      *
      * Keys are:
      *
-     * : \\life\\ : (int) The cache entry lifetime in seconds, default 0
+     * `life`:
+     * (int) The cache entry lifetime in seconds, default 0
      * (never expires).
      *
      * @var array

@@ -41,11 +41,13 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * Keys are:
      * 
-     * : \\area_name\\ : (string) The content area for the bookmarks
+     * `area_name`:
+     * (string) The content area for the bookmarks
      * app, default 'Solar_App_Bookmarks'.  Will be created automatically
      * if it does not exist.
      * 
-     * : \\content\\ : (dependency) A Solar_Content domain model dependency object.
+     * `content`:
+     * (dependency) A Solar_Content domain model dependency object.
      * 
      * @var array
      * 

@@ -32,7 +32,8 @@ class Solar_Uri extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\path\\ : (string) A path prefix.  Generally needed only
+     * `path`:
+     * (string) A path prefix.  Generally needed only
      * for specific URI subclasses, e.g. Solar_Uri_Action.
      * 
      * @var array

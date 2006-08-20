@@ -30,11 +30,14 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * User-defined configuaration values.
      * 
-     * : \\content\\ : (dependency) A Solar_Content dependency object.
+     * `content`:
+     * (dependency) A Solar_Content dependency object.
      * 
-     * : \\area_id\\ : (int) Only work with this area_id (if any).
+     * `area_id`:
+     * (int) Only work with this area_id (if any).
      * 
-     * : \\paging\\ : (int) The number of rows per page when fetching pages.
+     * `paging`:
+     * (int) The number of rows per page when fetching pages.
      * 
      * @var array
      * 

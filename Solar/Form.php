@@ -34,14 +34,17 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\attribs\\ : An array of <form> tag attributes; used for hinting
+     * `attribs`:
+     * An array of <form> tag attributes; used for hinting
      * the view on how to present the form.  Defaults are 'method="post"',
      * 'action=$_SERVER["REQUEST_URI"]', and 'enctype="multipart/form-data"'.
      * 
-     * : \\success\\ : The overall "success" message when validating form
+     * `success`:
+     * The overall "success" message when validating form
      * input. Default is Solar locale key SUCCESS_FORM.
      * 
-     * : \\failure\\ : The overall "failure" message when validating form
+     * `failure`:
+     * The overall "failure" message when validating form
      * input. Default is Solar locale key FAILURE_FORM.
      * 
      * @var array
@@ -70,9 +73,9 @@ class Solar_Form extends Solar_Base {
      * 
      * Attributes for the form tag itself.
      * 
-     * The \\$attribs\\ array holds HTML attributes for the
+     * The `$attribs` array holds HTML attributes for the
      * form itself (not for individual elements) such as
-     * \\action\\, \\method\\, and \\enctype\\.  Note that these
+     * `action`, `method`, and `enctype`.  Note that these
      * are "hints" for the presentation of the form, and may not
      * be honored by the view.
      * 
@@ -85,7 +88,7 @@ class Solar_Form extends Solar_Base {
      * 
      * The array of elements in this form.
      * 
-     * The \\$elements\\ array contains all elements in the form,
+     * The `$elements` array contains all elements in the form,
      * including their names, types, values, any feedback messages,
      * validation and filter callbacks, and so on. 
      * 
@@ -101,7 +104,7 @@ class Solar_Form extends Solar_Base {
      * 
      * Overall feedback about the state of the form.
      * 
-     * The \\$feedback\\ array stores feedback messages for
+     * The `$feedback` array stores feedback messages for
      * the form itself (not for individual elements). For example,
      * "Saved successfully." or "Please correct the noted errors."
      * Each array element is an additional feedback message.
@@ -155,33 +158,44 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\name\\ : (string) The name attribute.
+     * `name`:
+     * (string) The name attribute.
      * 
-     * : \\type\\ : (string) The input or type attribute ('text', 'select', etc).
+     * `type`:
+     * (string) The input or type attribute ('text', 'select', etc).
      * 
-     * : \\label\\ : (string) A short label for the element.
+     * `label`:
+     * (string) A short label for the element.
      * 
-     * : \\value\\ : (string) The default or selected value(s) for the element.
+     * `value`:
+     * (string) The default or selected value(s) for the element.
      * 
-     * : \\descr\\ : (string) A longer description of the element, e.g. a tooltip
+     * `descr`:
+     * (string) A longer description of the element, e.g. a tooltip
      *   or help text.
      * 
-     * : \\status\\ : (bool) Whether or not the particular elements has
+     * `status`:
+     * (bool) Whether or not the particular elements has
      *   passed or failed validation (true or false), or null if there
      *   has been no attempt at validation.
      * 
-     * : \\require\\ : (bool) Whether or not the element is required.
+     * `require`:
+     * (bool) Whether or not the element is required.
      * 
-     * : \\disable\\ : (bool) If disabled, the element is read-only (but is still
+     * `disable`:
+     * (bool) If disabled, the element is read-only (but is still
      *   submitted with other elements).
      * 
-     * : \\options\\ : (array) The list of allowed values as options for this element
+     * `options`:
+     * (array) The list of allowed values as options for this element
      *   as an associative array in the form (value => label).
      * 
-     * : \\attribs\\ : (array) Additional XHTML attributes for the element in the
+     * `attribs`:
+     * (array) Additional XHTML attributes for the element in the
      *   form (attribute => value).
      * 
-     * : \\feedback\\ : (array) An array of feedback messages for this element,
+     * `feedback`:
+     * (array) An array of feedback messages for this element,
      *   generally based on validation of previous user input.
      * 
      * @var array

@@ -37,13 +37,17 @@ class Solar_View_Helper_ActionList extends Solar_View_Helper {
      * 
      * Keys are:
      * 
-     * : \\list_type\\ : (string) Default 'ul', optionally 'ol'.
+     * `list_type`:
+     * (string) Default 'ul', optionally 'ol'.
      * 
-     * : \\list_class\\ : (string) Class for the list block.
+     * `list_class`:
+     * (string) Class for the list block.
      * 
-     * : \\item_class\\ : (string) Class for each unselected item.
+     * `item_class`:
+     * (string) Class for each unselected item.
      * 
-     * : \\selected_class\\ : (string) Class for the selected item.
+     * `selected_class`:
+     * (string) Class for the selected item.
      * 
      * @var array
      * 

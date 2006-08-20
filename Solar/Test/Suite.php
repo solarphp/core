@@ -47,13 +47,16 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\dir\\ : (string) The directory where tests are located.
+     * `dir`:
+     * (string) The directory where tests are located.
      * 
-     * : \\log\\ : (dependency) A Solar_Log dependency for logging test
-     *   results.
+     * `log`:
+     * (dependency) A Solar_Log dependency for logging test
+     * results.
      * 
-     * : \\error_reporting\\ : (int) The level of error reporting we 
-     *   want to catch; default is E_ALL|E_STRICT.
+     * `error_reporting`:
+     * (int) The level of error reporting we 
+     * want to catch; default is E_ALL|E_STRICT.
      * 
      * @var array
      * 
@@ -246,19 +249,26 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Returns an array of statistics with these keys:
      * 
-     * : \\plan\\ : (int) The planned number of tests.
+     * `plan`:
+     * (int) The planned number of tests.
      * 
-     * : \\done\\ : (int) The number of tests actually done.
+     * `done`:
+     * (int) The number of tests actually done.
      * 
-     * : \\time\\ : (int) The time, in seconds, it took to run all tests.
+     * `time`:
+     * (int) The time, in seconds, it took to run all tests.
      * 
-     * : \\pass\\ : (array) Log of tests that passed.
+     * `pass`:
+     * (array) Log of tests that passed.
      * 
-     * : \\skip\\ : (array) Log of tests that were skipped.
+     * `skip`:
+     * (array) Log of tests that were skipped.
      * 
-     * : \\todo\\ : (array) Log of tests that are incomplete.
+     * `todo`:
+     * (array) Log of tests that are incomplete.
      * 
-     * : \\fail\\ : (array) Log of tests that failed.
+     * `fail`:
+     * (array) Log of tests that failed.
      * 
      * @param string $series The sub-test series to run, typically a
      * class name (not including the 'Test_' prefix).

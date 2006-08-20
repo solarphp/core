@@ -47,7 +47,8 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
      * 
      * Keys are:
      * 
-     * : \\file\\ : (string) Where the roles file is located.
+     * `file`:
+     * (string) Where the roles file is located.
      * 
      * @var array
      * 

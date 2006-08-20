@@ -30,7 +30,7 @@ Because developers generally find it less-rewarding, initially, to spend time le
 
 Although English is the de-facto language of developers worldwide, end-users don't want to see English-only labels, buttons, and text.  Solar classes come with easy built-in text localization so that it's easy to translate into languages other than English.
 
-Solar is probably not the only PHP class library you are going to use. Because Solar classes are always named with a \\Solar_\\ prefix, you never need to worry about name conflicts or collisions from other libraries.  Similarly, any classes you build for yourself should have a unique namespace prefix (often called the \\Vendor_\\ prefix in the documentation).
+Solar is probably not the only PHP class library you are going to use. Because Solar classes are always named with a `Solar_` prefix, you never need to worry about name conflicts or collisions from other libraries.  Similarly, any classes you build for yourself should have a unique namespace prefix (often called the `Vendor_` prefix in the documentation).
 
 Solar-based applications should be self-contained; this means no external dependencies, and all internal dependencies should resolve themselves.  In practice, this means that all Solar classes are distributed in a single package.
 

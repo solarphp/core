@@ -39,26 +39,35 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * Keys are:
      * 
-     * : \\sql\\ : (string|array) How to get the SQL object.  If a string, is
+     * `sql`:
+     * (string|array) How to get the SQL object.  If a string, is
      * treated as a Solar::registry() object name.  If array, treated as
      * config for a standalone Solar_Sql object.
      * 
-     * : \\table\\ : (string) Name of the table holding authentication data.
+     * `table`:
+     * (string) Name of the table holding authentication data.
      * 
-     * : \\handle_col\\ : (string) Name of the column with the handle.
+     * `handle_col`:
+     * (string) Name of the column with the handle.
      * 
-     * : \\passwd_col\\ : (string) Name of the column with the MD5-hashed passwd.
+     * `passwd_col`:
+     * (string) Name of the column with the MD5-hashed passwd.
      * 
-     * : \\email_col\\ : (string) Name of the column with the email address.
+     * `email_col`:
+     * (string) Name of the column with the email address.
      * 
-     * : \\moniker_col\\ : (string) Name of the column with the display name (moniker).
+     * `moniker_col`:
+     * (string) Name of the column with the display name (moniker).
      * 
-     * : \\uri_col\\ : (string) Name of the column with the website URI.
+     * `uri_col`:
+     * (string) Name of the column with the website URI.
      * 
-     * : \\salt\\ : (string) A salt prefix to make cracking passwords harder.
+     * `salt`:
+     * (string) A salt prefix to make cracking passwords harder.
      * 
-     * : \\where\\ : (string|array) Additional _multiWhere() conditions to use
-     *   when selecting rows for authentication.
+     * `where`:
+     * (string|array) Additional _multiWhere() conditions to use
+     * when selecting rows for authentication.
      * 
      * @var array
      * 

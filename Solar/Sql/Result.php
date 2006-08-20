@@ -32,7 +32,8 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * 
      * Keys are:
      * 
-     * : \\PDOStatement\\ : (object) A PDOStatement object to be used as the
+     * `PDOStatement`:
+     * (object) A PDOStatement object to be used as the
      * result source.
      * 
      * @var array

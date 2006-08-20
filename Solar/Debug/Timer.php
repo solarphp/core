@@ -32,14 +32,15 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\output\\ : (string) Output mode.  Set to 'html' for HTML; 
+     * `output`:
+     * (string) Output mode.  Set to 'html' for HTML; 
      *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
-     * : \\auto_start\\ : (bool) When true, starts the timer at 
-     *   __construct() time.  Default false.
+     * `auto_start`:
+     * (bool) When true, starts the timer at __construct() time.  Default false.
      * 
-     * : \\auto_display\\ : (bool) When true, calls display() at
-     *   __destruct() time.  Default false.
+     * `auto_display`:
+     * (bool) When true, calls display() at __destruct() time.  Default false.
      * 
      * @var array
      * 
@@ -113,7 +114,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * Resets the profile and marks a new starting time.
      * 
      * This resets the profile and adds a new mark labeled
-     * \\__start\\.  Use it to start the timer.
+     * `__start`.  Use it to start the timer.
      * 
      * @return void
      * 
@@ -128,7 +129,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * Stops the timer.
      * 
-     * Use this to stop the timer, marking the time with the label \\__stop\\.
+     * Use this to stop the timer, marking the time with the label `__stop`.
      * 
      * @return void
      * 

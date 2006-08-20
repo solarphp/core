@@ -1,12 +1,12 @@
 This is a convenience method that loads locale strings for the class and returns those strings based on the translation key.
 
-If you request a key that does not exist in the class-specific [Main::LocaleFiles locale file], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the \\Solar/Locale/*\\ directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
+If you request a key that does not exist in the class-specific [Main::LocaleFiles locale file], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the `Solar/Locale/*` directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
 
 ++ Usage
 
 +++ Where Locale Files Are Located
 
-Solar looks for locale files in the same directory as the class, under the \\Locale/\\ subdirectory.  
+Solar looks for locale files in the same directory as the class, under the `Locale/` subdirectory.  
 
 <code type="php">
 class Example_Class extends Solar_Base {
@@ -42,7 +42,7 @@ Solar::setLocale('es_ES');
 $string = $example->locale('ERR_EXAMPLE');
 </code>
 
-Finally, if the requested key does not exist in the class-specific locale file, this method will "fall back" to the all-purpose Solar locale file, generally located in \\Solar/Locale/*\\, and look for the translation key there.
+Finally, if the requested key does not exist in the class-specific locale file, this method will "fall back" to the all-purpose Solar locale file, generally located in `Solar/Locale/*`, and look for the translation key there.
 
 +++ Singular/Plural
 

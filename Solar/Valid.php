@@ -712,8 +712,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * See a value has only a certain number of digits and decimals.
      * 
-     * The value must be numeric, can be no longer than the \\$size\\,
-     * and can have no more decimal places than the \\$scope\\.
+     * The value must be numeric, can be no longer than the `$size`,
+     * and can have no more decimal places than the `$scope`.
      * 
      * @param mixed $value The value to validate.
      * 

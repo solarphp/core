@@ -67,7 +67,8 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
      * 
      * Keys are:
      * 
-     * : \\adapters\\ : (array) An array of arrays, where each sub-array
+     * `adapters`:
+     * (array) An array of arrays, where each sub-array
      * is a separate adapter configuration.
      * 
      * @var array

@@ -32,7 +32,8 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * Config keys are:
      * 
-     * : \\life\\ : (int) The lifetime of each cache entry in seconds.
+     * `life`:
+     * (int) The lifetime of each cache entry in seconds.
      * 
      * @var array
      * 

@@ -1,6 +1,6 @@
 + Constructor Parameters
 
-All \\__construct()\\ methods in Solar have exactly one parameter:  an associative array.  That array is then populated into the protected \\$_config\\ property used in all classes descended from the Solar BaseClass.
+All `__construct()` methods in Solar have exactly one parameter:  an associative array.  That array is then populated into the protected `$_config` property used in all classes descended from the Solar BaseClass.
 
 Most classes in the PHP world use a sequential set of parameters for constructors; e.g., if you wanted to specify three pieces of information for a constructor, you would do something like this:
 

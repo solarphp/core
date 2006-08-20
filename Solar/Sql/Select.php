@@ -84,9 +84,11 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\sql\\ : (dependency) A Solar_Sql dependency object.
+     * `sql`:
+     * (dependency) A Solar_Sql dependency object.
      * 
-     * : \\paging\\ : (int) Number of rows per page.
+     * `paging`:
+     * (int) Number of rows per page.
      * 
      * @var array
      * 

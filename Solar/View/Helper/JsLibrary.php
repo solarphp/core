@@ -37,7 +37,8 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
      *
      * Keys are:
      *
-     * : \\events\\ : (array) An array of JavaScript events that the JavaScript
+     * `events`:
+     * (array) An array of JavaScript events that the JavaScript
      * environment is aware of. Used to manage quoting of strings generated
      * by Solar_Json.
      *

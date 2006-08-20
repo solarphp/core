@@ -42,9 +42,11 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\classes\\ : (array) Base class names for page controllers.
+     * `classes`:
+     * (array) Base class names for page controllers.
      * 
-     * : \\default\\ : (string) The default page name to load.
+     * `default`:
+     * (string) The default page name to load.
      * 
      * @var array
      * 

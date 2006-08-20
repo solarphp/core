@@ -63,15 +63,18 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : tab_width : (int) Number of spaces per tab.  Default 4.
+     * `tab_width`:
+     * (int) Number of spaces per tab.  Default 4.
      * 
-     * : tidy : (bool|array) If false, do not use Tidy to post-process
-     *   the transformed output.  If true or an array, is a set of
-     *   config options to pass to Tidy when rendering output.
-     *   See also <http://php.net/tidy>.  Default true.
+     * `tidy`:
+     * (bool|array) If false, do not use Tidy to post-process
+     * the transformed output.  If true or an array, is a set of
+     * config options to pass to Tidy when rendering output.
+     * See also <http://php.net/tidy>.  Default true.
      * 
-     * : plugins : (array) An array of plugins for the parser to use, in
-     *   order.
+     * `plugins`:
+     * (array) An array of plugins for the parser to use, in
+     * order.
      * 
      * @var array
      * 

@@ -37,9 +37,11 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\sql\\ : => (dependency) A Solar_Sql dependency object.
+     * `sql`:
+     * (dependency) A Solar_Sql dependency object.
      * 
-     * : \\locale\\ : => (string) Path to locale files.
+     * `locale`:
+     * (string) Path to locale files.
      * 
      * @var array
      * 

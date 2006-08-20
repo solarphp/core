@@ -20,9 +20,9 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 }
 </code>
 
-For example, if you document root is at \\/var/www/htdocs\\, then the default configuration file is located at \\/var/www/htdocs/Solar.config.php\\.
+For example, if you document root is at `/var/www/htdocs`, then the default configuration file is located at `/var/www/htdocs/Solar.config.php`.
 
-This location is easy to remember for development purposes, but is not always very secure in production environments.  As such, you can pre-define the \\SOLAR_CONFIG_PATH\\ constant before including the Solar class to point to a location outside the document root.
+This location is easy to remember for development purposes, but is not always very secure in production environments.  As such, you can pre-define the `SOLAR_CONFIG_PATH` constant before including the Solar class to point to a location outside the document root.
 
 <code type="php">
 define('SOLAR_CONFIG_PATH', '/path/to/another/config_file.php');

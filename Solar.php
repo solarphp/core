@@ -80,7 +80,8 @@ class Solar {
      * 
      * Default keys are:
      * 
-     * : \\locale_code\\ : (string) The locale code Solar is using, default 'en_US'.
+     * `locale_code`:
+     * (string) The locale code Solar is using, default 'en_US'.
      * 
      * @var array
      * 

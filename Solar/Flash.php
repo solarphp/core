@@ -38,8 +38,8 @@ class Solar_Flash extends Solar_Base {
      * 
      * Keys are:
      * 
-     * : \\class\\ : Flash messages are for this class.  Default is
-     *   'Solar'.
+     * `class`:
+     * Flash messages are for this class.  Default is 'Solar'.
      * 
      * @var array
      * 

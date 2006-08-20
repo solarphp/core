@@ -2,7 +2,7 @@
 
 ++ Set up a minimal authentication source
 
-For purposes of getting started, we'll use the Apache \\htpasswd\\ system for maintaining usernames and passwords.
+For purposes of getting started, we'll use the Apache `htpasswd` system for maintaining usernames and passwords.
 
 <code type="bash">
 $ htpasswd -c -s /home/username/htpasswd.conf username

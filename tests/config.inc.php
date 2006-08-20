@@ -24,5 +24,10 @@ $config['Solar_Sql_Adapter_Mysql'] = array(
     'host'   => '127.0.0.1',
 );
 
+$config['Test_Solar_Cache_Adapter_Apc']['run'] = false;
+$config['Test_Solar_Cache_Adapter_Eaccellerator']['run'] = false;
+$config['Test_Solar_Cache_Adapter_Memcache']['run'] = false;
+$config['Test_Solar_Cache_Adapter_Xcache']['run'] = false;
+
 return $config;
 ?>

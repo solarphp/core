@@ -333,7 +333,7 @@ class Test_Solar_Json extends Solar_Test {
         $before = array(
             'parameters'=> "Form.serialize('foo')",
             'asynchronous' => true,
-            'onSuccess' => 'function(t) { ' . $this->_view->jsScriptaculous()->effect->highlight('#user-auth', array('duration' => 1.0), true) . '}',
+            'onSuccess' => 'function(t) { new Effect.Highlight(el, {"duration":1});}',
             'on404'     => 'function(t) { alert(\'Error 404: location not found\'); }',
             'onFailure' => 'function(t) { alert(\'Ack!\'); }',
             'requestHeaders' => array('X-Solar-Version', Solar::apiVersion(), 'X-Foo', 'Bar')

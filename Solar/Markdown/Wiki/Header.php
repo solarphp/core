@@ -15,7 +15,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Header.php 1671 2006-08-17 21:30:21Z pmjones $
+ * @version $Id$
  * 
  */
 

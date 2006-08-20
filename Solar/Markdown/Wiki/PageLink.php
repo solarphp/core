@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Plugin.php 1668 2006-08-17 21:04:58Z pmjones $
+ * @version $Id$
  * 
  */
 

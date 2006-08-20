@@ -50,45 +50,6 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Valid callback opportunties
-     *
-     * @var array
-     *
-     */
-    protected $_valid_callbacks = array(
-        'uninitialized',
-        'loading',
-        'loaded',
-        'interactive',
-        'complete',
-        'failure',
-        'success'
-    );
-
-    /**
-     *
-     * Valid Ajax Callback Options
-     *
-     * @var array
-     *
-     */
-    protected $_ajax_options = array(
-        'before',
-        'after',
-        'condition',
-        'url',
-        'asynchronous',
-        'method',
-        'insertion',
-        'position',
-        'form',
-        'with',
-        'update',
-        'script'
-    );
-
-    /**
-     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -101,11 +62,6 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
         // JsPrototype always needs the prototype.js file
         $this->_needsFile('prototype.js');
 
-        // Callbacks are also valid on any HTTP response code
-        $codes = range(100, 599);
-        $this->_valid_callbacks = array_merge($this->_valid_callbacks, $codes);
-        $this->_ajax_options = array_merge($this->_ajax_options,
-                                          $this->_valid_callbacks);
     }
 
     /**
@@ -135,6 +91,92 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
         $helper = 'JsPrototype_' . ucfirst(strtolower($helper));
         return $this->_view->getHelper($helper);
     }
+
+
+
+
+
+
+
+
+    /**
+     *
+     * This method turns the form identified by the $selector into an Ajax.Updater,
+     * meaning that it will update an element on the page on success.
+     *
+     * **NOTE** The $selector must be a form with an id. For example:
+     *
+     *    <div id="foo-wrapper">
+     *
+     *      <form id="foo" ...>
+     *
+     *    </div>
+     *
+     * would be selected with:
+     *
+     *      $this->JsPrototype()->ajaxifyForm('#foo', '#foo-wrapper');
+     *
+     * If `$form` is null, the form action defaults to `$_SERVER['REQUEST_URI']`.
+     *
+     * @param string $selector CSS Selector of the form to ajaxify
+     *
+     * @param string $updateSelector CSS Selector of element to update.
+     *
+     * @param array $options Array of options for Ajax.Updater
+     *
+     * @return object Solar_View_Helper_JsPrototype
+     *
+     */
+    public function ajaxifyForm($selector, $updateSelector, $form = null, $options = array())
+    {
+
+        // Check for Solar_Form to get the action from a pre-defined Solar_Form obj
+        if ($form instanceof Solar_Form) {
+            $form_action = 'TBD';
+        } else {
+            $form_action = $_SERVER['REQUEST_URI'];
+        }
+
+        // Ajax default options
+        $defaults = array(
+            'parameters'    => 'Form.serialize(\''.substr($selector, 1).'\')',
+            'asynchronous'  => true,
+            '_deQuote'      => $this->getFunctionKeys()
+        );
+
+        $options = array_merge($defaults, $options);
+
+        // If parameters is still an object, dequote it in Solar_Json
+        if (substr($defaults['parameters'], 0, 14) == 'Form.serialize') {
+            $defaults['_deQuote'][] = 'parameters';
+        }
+
+        // Generate the new Ajax.Updater string
+        $ajax = $this->_view->JsPrototype()->ajax->updater($updateSelector, $form_action, $options);
+
+        // Create the observer function, which is the equivalent of adding onsubmit="...; return false;"
+        // to the <form> tag
+        $ajaxfunc = 'function(evt) { '.$ajax.' Event.stop(evt); }';
+
+        // Observe the form to trigger the Ajax.Updater when the submit button
+        // is clicked
+        $this->_view->JsPrototype()->event->observe($selector, 'submit', $ajaxfunc);
+
+        return $this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      *

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Replaces wiki links in source text with XHTML anchors.
+ * Replaces wiki and interwiki links in source text with XHTML anchors.
  * 
  * @category Solar
  * 
@@ -22,7 +22,37 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * Replaces wiki links in source text with XHTML anchors.
+ * Replaces wiki and interwiki links in source text with XHTML anchors.
+ * 
+ * Wiki links are in this format:
+ * 
+ *     [[wiki page]]
+ *     [[wiki page #anchor]]
+ *     [[wiki page]]s
+ *     [[wiki page | display this instead]]
+ *     [[wiki page #anchor | ]]
+ * 
+ * The "wiki page" name is normalized to "Wiki_page".  The last 
+ * example, the one with the blank display text, will not display
+ * the anchor fragment.
+ * 
+ * Page links are replaced with encoded placeholders.  At cleanup()
+ * time, the placeholders are transformed into XHTML anchors.
+ * 
+ * This plugin also supports Interwiki links, in this format:
+ * 
+ *     [[site::page]]
+ *     [[site::page #anchor]]
+ *     [[site::page]]s
+ *     [[site::page | display this instead]]
+ *     [[site::page #anchor | ]]
+ * 
+ * Site prefixes and page names are **not** normalize.  The last
+ * example, the one with the blank display text, will not display 
+ * the site prefix or the anchor fragment.
+ * 
+ * Interwiki links are replaced with HTML immediately and are not
+ * checked for existence.
  * 
  * @category Solar
  * 
@@ -228,16 +258,23 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
      * @return void
      * 
      */
-    public function setInterWiki($spec, $val = null)
+    public function setInterwiki($spec, $val = null)
     {
-        if (is_array($key)) {
+        if (is_array($spec)) {
             $this->_interwiki = array_merge($spec, $this->_interwiki);
         } else {
             $this->_interwiki[$spec] = $val;
         }
     }
     
-    public function getInterWiki()
+    /**
+     * 
+     * Gets the list of interwiki mappings.
+     * 
+     * @return array
+     * 
+     */
+    public function getInterwiki()
     {
         return $this->_interwiki;
     }
@@ -287,17 +324,7 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Parses the source text for wiki links.
-     * 
-     * Wiki links are in this format:
-     * 
-     *     [[wiki page]]
-     *     [[wiki page #anchor]]
-     *     [[wiki page]]s
-     *     [[wiki page | display this instead]]
-     * 
-     * Links are replaced with encoded placeholders.  At cleanup() time,
-     * the placeholders are transformed into XHTML anchors.
+     * Parses the source text for wiki page and interwiki links.
      * 
      * @param string $text The source text.
      * 
@@ -306,56 +333,12 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        $regex = '/\[\[(.*?)::(.*?)(\#.*?)?(\|.*?)?\]\](\S*)?/';
-        $text = preg_replace_callback(
-            $regex,
-            array($this, '_parseInterWiki'),
-            $text
-        );
-        
         $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\S*)?/';
-        $text = preg_replace_callback(
+        return preg_replace_callback(
             $regex,
             array($this, '_parse'),
             $text
         );
-        
-        return $text;
-    }
-    
-    /**
-     * 
-     * Support callback for parsing interwiki links.
-     * 
-     * @param array $matches Matches from preg_replace_callback().
-     * 
-     * @return string The replacement text.
-     * 
-     */
-    protected function _parseInterWiki($matches)
-    {
-        // does the requested interwiki site exist?
-        $site = trim($matches[1]);
-        if (empty($this->_interwiki[$site])) {
-            return $matches[0];
-        }
-        
-        $page = trim($matches[2]);
-        $frag = empty($matches[3]) ? null : '#' . trim($matches[3], "# \t");
-        $text = empty($matches[4]) ? $site . '::' . $page . $frag : trim($matches[4], "| \t");
-        $atch = empty($matches[5]) ? null : trim($matches[5]);
-        
-        if (empty($text)) {
-            // support for [[php::function() #anchor | ]] to get "function()"
-            $text = $page;
-        }
-        
-        $href = sprintf($this->_interwiki[$site], $page . $frag);
-        $html = '<a href="' . $this->_escape($href) . '">'
-              . $this->_escape($text . $atch)
-              . '</a>';
-              
-        return $html;
     }
     
     /**
@@ -373,6 +356,12 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         $frag = empty($matches[2]) ? null          : '#' . trim($matches[2], "# \t");
         $text = empty($matches[3]) ? $page . $frag : trim($matches[3], "| \t");
         $atch = empty($matches[4]) ? null          : trim($matches[4]);
+        
+        // is this an interwiki page?
+        $pos = strpos($page, '::');
+        if ($pos !== false) {
+            return $this->_interwiki($matches);
+        }
         
         // normalize the page name
         $norm = $this->_normalize($page);
@@ -414,6 +403,43 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Support callback for parsing interwiki links.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _interwiki($matches)
+    {
+        $pos = strpos($matches[1], '::');
+        $site = trim(substr($matches[1], 0, $pos));
+        $page = trim(substr($matches[1], $pos + 2));
+
+        // does the requested interwiki site exist?
+        if (empty($this->_interwiki[$site])) {
+            return $matches[0];
+        }
+        
+        $frag = empty($matches[2]) ? null : '#' . trim($matches[2], "# \t");
+        $text = empty($matches[3]) ? $site . '::' . $page . $frag : trim($matches[3], "| \t");
+        $atch = empty($matches[4]) ? null : trim($matches[4]);
+        
+        if (empty($text)) {
+            // support for [[php::function() #anchor | ]] to get "function()"
+            $text = $page;
+        }
+        
+        $href = sprintf($this->_interwiki[$site], $page . $frag);
+        $html = '<a href="' . $this->_escape($href) . '">'
+              . $this->_escape($text . $atch)
+              . '</a>';
+              
+        return $html;
+    }
+    
+    /**
+     * 
      * Cleans up text to replace encoded placeholders with anchors.
      * 
      * @param string $page The page name from the source text.
@@ -426,7 +452,7 @@ class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
         // first, update $this->_pages against the data store to see
         // which pages exist and which do not.
         if ($this->_check_pages) {
-            $this->_pages = call_user_func($_check_pages, $this->_pages);
+            $this->_pages = call_user_func($this->_check_pages, $this->_pages);
         }
         
         // now go through and replace tokens

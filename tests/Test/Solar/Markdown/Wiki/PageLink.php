@@ -5,6 +5,18 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
     
     protected $_encode = "\x1BSolar_Markdown_Wiki_PageLink:.*?\x1B";
     
+    protected function _transform($text)
+    {
+        // we need a special transform to process **spans** instead of
+        // blocks, seeing as WikiLink is a span and only gets processed
+        // inside a block.  so we need to fake it.
+        $text = $this->_markdown->prepare($text);
+        $text = $this->_markdown->processSpans($text);
+        $text = $this->_markdown->cleanup($text);
+        $text = $this->_markdown->render($text);
+        return $text;
+    }
+    
     public function testIsBlock()
     {
         $this->assertFalse($this->_plugin->isBlock());
@@ -71,18 +83,6 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $actual = $this->_plugin->parse($source);
         $expect = "foo {$this->_encode} bar";
         $this->assertRegex($actual, "@$expect@");
-    }
-    
-    protected function _transform($text)
-    {
-        // we need a special transform to process **spans** instead of
-        // blocks, seeing as WikiLink is a span and only gets processed
-        // inside a block.  so we need to fake it.
-        $text = $this->_markdown->prepare($text);
-        $text = $this->_markdown->processSpans($text);
-        $text = $this->_markdown->cleanup($text);
-        $text = $this->_markdown->render($text);
-        return $text;
     }
     
     public function testRender()
@@ -180,5 +180,60 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $expect = 'foo <a href="http://php.net/print#anchor">printers</a> bar';
         $this->assertSame($actual, $expect);
     }
+    
+    public function testParse_manyPerLine()
+    {
+        $source = 'foo [[page one]] '
+                . 'bar [[page two]] '
+                . 'baz [[page three]] '
+                . 'dib';
+        
+        $expect = 'foo <a href="/wiki/read/Page_one">page one</a> '
+                . 'bar <a href="/wiki/read/Page_two">page two</a> '
+                . 'baz <a href="/wiki/read/Page_three">page three</a> '
+                . 'dib';
+        
+        $actual = $this->_transform($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiManyPerLine()
+    {
+        $source = 'foo [[php::print()]] '
+                . 'bar [[php::echo | ]] '
+                . 'baz [[php::phpinfo()]] '
+                . 'dib';
+        
+        $expect = 'foo <a href="http://php.net/print()">php::print()</a> '
+                . 'bar <a href="http://php.net/echo">echo</a> '
+                . 'baz <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
+                . 'dib';
+        
+        $actual = $this->_transform($source);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_mixed()
+    {
+        $source = 'foo [[page one]] '
+                . 'bar [[php::print()]] '
+                . 'baz [[page two]] '
+                . 'dib [[php::echo | ]] '
+                . 'zim [[page three]] '
+                . 'gir [[php::phpinfo()]] '
+                . 'irk';
+        
+        $expect = 'foo <a href="/wiki/read/Page_one">page one</a> '
+                . 'bar <a href="http://php.net/print()">php::print()</a> '
+                . 'baz <a href="/wiki/read/Page_two">page two</a> '
+                . 'dib <a href="http://php.net/echo">echo</a> '
+                . 'zim <a href="/wiki/read/Page_three">page three</a> '
+                . 'gir <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
+                . 'irk';
+                
+        $actual = $this->_transform($source);
+        $this->assertSame($actual, $expect);
+    }
+    
 }
 ?>

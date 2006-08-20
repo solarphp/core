@@ -38,15 +38,14 @@ class Test_Solar_Markdown_Wiki extends Solar_Test {
     
     protected function _tidy($text)
     {
-        // // tidy up the text
-        // $tidy = new tidy;
-        // $tidy->parseString($text, array(), 'utf8');
-        // $tidy->cleanRepair();
-        // 
-        // // get only the body portion
-        // $body = tidy_get_body($tidy);
-        // return $body->value;
-        return $text;
+        // tidy up the text
+        $tidy = new tidy;
+        $tidy->parseString($text, array(), 'utf8');
+        $tidy->cleanRepair();
+        
+        // get only the body portion
+        $body = tidy_get_body($tidy);
+        return $body->value;
     }
     
     public function test_basic()

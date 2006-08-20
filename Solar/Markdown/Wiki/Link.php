@@ -59,7 +59,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * @package Solar_Markdown
  * 
  */
-class Solar_Markdown_Wiki_PageLink extends Solar_Markdown_Plugin {
+class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
     
     /**
      * 

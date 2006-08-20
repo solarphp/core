@@ -24,12 +24,11 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
             
             // spans
             'Solar_Markdown_Plugin_CodeSpan',
-            'Solar_Markdown_Wiki_PageLink',
+            'Solar_Markdown_Wiki_Link',
             'Solar_Markdown_Plugin_Image',
             'Solar_Markdown_Plugin_Link',
             'Solar_Markdown_Plugin_Uri',
             'Solar_Markdown_Plugin_Encode',
-            //'Solar_Markdown_Plugin_AmpsAngles', // should have been taken care of by filter
             'Solar_Markdown_Extra_EmStrong',
             'Solar_Markdown_Plugin_Break',
         ),

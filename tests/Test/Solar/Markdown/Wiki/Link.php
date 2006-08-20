@@ -1,9 +1,9 @@
 <?php
 require_once Solar::dirname(__FILE__, 1) . DIRECTORY_SEPARATOR . 'Plugin.php';
 
-class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
+class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     
-    protected $_encode = "\x1BSolar_Markdown_Wiki_PageLink:.*?\x1B";
+    protected $_encode = "\x1BSolar_Markdown_Wiki_Link:.*?\x1B";
     
     protected function _transform($text)
     {
@@ -181,7 +181,7 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_manyPerLine()
+    public function testRender_manyPerLine()
     {
         $source = 'foo [[page one]] '
                 . 'bar [[page two]] '
@@ -197,7 +197,7 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiManyPerLine()
+    public function testRender_interwikiManyPerLine()
     {
         $source = 'foo [[php::print()]] '
                 . 'bar [[php::echo | ]] '
@@ -213,7 +213,7 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_mixed()
+    public function testRender_mixed()
     {
         $source = 'foo [[page one]] '
                 . 'bar [[php::print()]] '
@@ -234,6 +234,5 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $actual = $this->_transform($source);
         $this->assertSame($actual, $expect);
     }
-    
 }
 ?>

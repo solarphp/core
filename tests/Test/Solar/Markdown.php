@@ -1,5 +1,5 @@
 <?php
-class Test_Solar_Markdown_Torture extends Solar_Test {
+class Test_Solar_Markdown extends Solar_Test {
     
     protected $_markdown;
     
@@ -43,9 +43,9 @@ class Test_Solar_Markdown_Torture extends Solar_Test {
         $this->_markdown = Solar::factory('Solar_Markdown');
     }
     
-    protected function _torture($method)
+    protected function _output($method)
     {
-        $dir = dirname(__FILE__) . '/torture/';
+        $dir = dirname(__FILE__) . '/Markdown/output/';
         $text_file = $dir . $this->_map[$method] . '.text';
         $html_file = $dir . $this->_map[$method] . '.html';
         $source = file_get_contents($text_file);
@@ -70,32 +70,32 @@ class Test_Solar_Markdown_Torture extends Solar_Test {
     
     public function test_Amps_and_angle_encoding()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Auto_links()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Backslash_escapes()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Blockquotes_with_code_blocks()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Hard_wrapped_paragraphs_with_list_like_lines()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Horizontal_rules()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     /**
@@ -112,62 +112,62 @@ class Test_Solar_Markdown_Torture extends Solar_Test {
     
     public function test_Inline_HTML_Simple()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Inline_HTML_comments()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Links_inline_style()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Links_reference_style()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Literal_quotes_in_titles()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Markdown_Documentation_Basics()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Markdown_Documentation_Syntax()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Nested_blockquotes()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Ordered_and_unordered_lists()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Strong_and_em_together()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Tabs()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
     
     public function test_Tidyness()
     {
-        $this->_torture(__FUNCTION__);
+        $this->_output(__FUNCTION__);
     }
 }
 ?>

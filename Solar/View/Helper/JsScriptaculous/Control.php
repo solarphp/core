@@ -80,7 +80,15 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
     public function fetch($selector, $action)
     {
         $out = '';
+        $dequote = array();
+
         $json = Solar::factory('Solar_Json');
+
+        // options whose values should not be quoted
+        if (isset($action['options']['_deQuote'])) {
+            $_dequote = $action['options']['_deQuote'];
+            unset($action['options']['_deQuote']);
+        }
 
         switch ($action['name']) {
 
@@ -95,7 +103,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
                 }
 
                 if (isset($action['options']) && !empty($action['options'])) {
-                    $out .= ', ' . $json->encode($action['options'], array('callback'));
+                    $out .= ', ' . $json->encode($action['options'], $_dequote);
                 }
 
                 $out .= ");";
@@ -202,6 +210,15 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
     {
         $this->_needsFile('controls.js');
 
+        // Merge default de-quoting options with any in-view defined values
+        if (isset($options['_deQuote']) && is_array($options['_deQuote'])) {
+            $options['_deQuote'] = array_merge(
+                                    $this->getFunctionKeys(),
+                                    $options['_deQuote']);
+        } else {
+            $options['_deQuote'] = $this->getFunctionKeys();
+        }
+
         $details = array(
             'type'  => $this->_type,
             'name'  => 'InPlaceEditor',
@@ -228,6 +245,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
      * @return Solar_View_Helper_JsScriptaculous
      *
      */
+    /*
     public function draggable($selector, $options = array())
     {
         $this->_needsFile('effects.js');
@@ -238,6 +256,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
         return $this;
     }
+    */
 
     /**
      * Makes the element with the CSS selector specified by $selector receive
@@ -253,6 +272,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
      * @return Solar_View_Helper_JsScriptaculous
      *
      */
+    /*
     public function droppable($selector, $options = array())
     {
         $this->_needsFile('effects.js');
@@ -286,6 +306,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
         return $this;
     }
+    */
 
     /**
      *

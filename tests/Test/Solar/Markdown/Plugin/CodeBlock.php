@@ -43,6 +43,27 @@ class Test_Solar_Markdown_Plugin_CodeBlock extends Test_Solar_Markdown_Plugin {
         $source[] = "baz dib";
         $source = implode("\n", $source);
         
+        $expect[] = "foo bar\n";
+        $expect[] = $this->_token . "\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "";
+        $source[] = "\tcode line 1";
+        $source[] = "\tcode line 2";
+        $source[] = "\tcode line 3";
+        $source[] = "";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
         $expect[] = "foo bar";
         $expect[] = "";
         $expect[] = "<pre><code>code line 1";
@@ -53,7 +74,7 @@ class Test_Solar_Markdown_Plugin_CodeBlock extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
 }

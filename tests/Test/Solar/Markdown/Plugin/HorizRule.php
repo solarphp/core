@@ -35,6 +35,24 @@ class Test_Solar_Markdown_Plugin_HorizRule extends Test_Solar_Markdown_Plugin {
     {
         $source = array();
         $source[] = "foo bar";
+        $source[] = "---";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect = array();
+        $expect[] = "foo bar\n";
+        $expect[] = $this->_token . "\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
         $source[] = "-";
         $source[] = "--";
         $source[] = "---";
@@ -53,11 +71,11 @@ class Test_Solar_Markdown_Plugin_HorizRule extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_starsUnderscores()
+    public function testRender_starsUnderscores()
     {
         $source = array();
         $source[] = "foo bar";
@@ -79,7 +97,7 @@ class Test_Solar_Markdown_Plugin_HorizRule extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
 }

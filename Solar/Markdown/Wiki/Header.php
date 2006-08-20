@@ -132,10 +132,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseH2($matches)
     {
-        return "<h2>"
-             . $this->_processSpans($matches[1])
-             . "</h2>"
-             . "\n\n";
+        return $this->_header('h2', $matches[1]);
     }
 
     /**
@@ -149,10 +146,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseH3($matches)
     {
-        return "<h3>"
-             . $this->_processSpans($matches[1])
-             . "</h3>"
-             . "\n\n";
+        return $this->_header('h3', $matches[1]);
     }
 
     /**
@@ -166,10 +160,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseH4($matches)
     {
-        return "<h4>"
-             . $this->_processSpans($matches[1])
-             . "</h4>"
-             . "\n\n";
+        return $this->_header('h4', $matches[1]);
     }
 
     /**
@@ -183,10 +174,27 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseH5($matches)
     {
-        return "<h5>"
-             . $this->_processSpans($matches[1])
-             . "</h5>"
-             . "\n\n";
+        return $this->_header('h5', $matches[1]);
+    }
+    
+    /**
+     * 
+     * Support callback for all headers.
+     * 
+     * @param string $tag The header tag ('h1', 'h5', etc).
+     * 
+     * @param string $text The header text.
+     * 
+     * @return string The replacement header HTML token.
+     * 
+     */
+    protected function _header($tag, $text)
+    {
+        $html = "<$tag>"
+              . $this->_processSpans($text)
+              . "</$tag>";
+        
+        return $this->_toHtmlToken($html) . "\n\n";
     }
 }
 ?>

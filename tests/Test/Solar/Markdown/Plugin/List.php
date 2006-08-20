@@ -31,8 +31,42 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $this->assertSame($actual, $expect);
     }
     
-    // parse a pair of simple lists
     public function testParse()
+    {
+        $source = array();
+        $source[] = 'foo';
+        $source[] = "";
+        $source[] = "* foo";
+        $source[] = "* bar";
+        $source[] = "* baz";
+        $source[] = "";
+        $source[] = "bar";
+        $source[] = "";
+        $source[] = "1. dib";
+        $source[] = "2. zim";
+        $source[] = "3. gir";
+        $source[] = "";
+        $source[] = "baz";
+        $source = implode("\n", $source). "\n\n";
+        
+        $expect = array();
+        $expect[] = 'foo';
+        $expect[] = "";
+        $expect[] = $this->_token;
+        $expect[] = "";
+        $expect[] = 'bar';
+        $expect[] = "";
+        $expect[] = $this->_token;
+        $expect[] = "";
+        $expect[] = 'baz';
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    // parse a pair of simple lists
+    public function testRender()
     {
         $source = array();
         $source[] = "* foo";
@@ -62,12 +96,12 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $expect[] = $this->_tag('/ol');
         $expect = implode("\n*", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertRegex($actual, "@$expect@");
     }
     
     // parse a nested list series
-    public function testParse_nested()
+    public function testRender_nested()
     {
         $source[] = "* foo";
         $source[] = "\t* bar";
@@ -92,40 +126,8 @@ class Test_Solar_Markdown_Plugin_List extends Test_Solar_Markdown_Plugin {
         $expect[] = $this->_tag('/ul');
         $expect = implode('\s*', $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertRegex($actual, "@$expect@");
     }
-    
-    /*
-    // parse a nested list series
-    public function testParse_mixedNested()
-    {
-        $source[] = "1. foo";
-        $source[] = "\t* bar";
-        $source[] = "\t* baz";
-        $source[] = "2. dib";
-        $source[] = "\t* zim";
-        $source[] = "\t* gir";
-        $source = implode("\n", $source). "\n\n";
-        
-        $expect = array();
-        $expect[] = $this->_token; // <ol>
-        $expect[] = $this->_token . "foo";
-        $expect[] = $this->_token; // <ul>
-        $expect[] = $this->_token . "bar" . $this->_token;
-        $expect[] = $this->_token . "baz" . $this->_token;
-        $expect[] = $this->_token . $this->_token; // </ul></li>
-        $expect[] = $this->_token . "dib";
-        $expect[] = $this->_token; // another <ul>
-        $expect[] = $this->_token . "zim" . $this->_token;
-        $expect[] = $this->_token . "gir" . $this->_token;
-        $expect[] = $this->_token . $this->_token; // </ul></li>
-        $expect[] = $this->_token; // </ol>
-        $expect = implode('\s*', $expect);
-        
-        $actual = $this->_plugin->parse($source);
-        $this->assertRegex($actual, "/$expect/");
-    }
-    */
 }
 ?>

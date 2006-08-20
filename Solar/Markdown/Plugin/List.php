@@ -173,8 +173,8 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         // paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
         $result = $this->_processItems($list, $marker_any);
-        $result = "<$list_type>" . $result . "</$list_type>\n";
-        return $result;
+        
+        return $this->_toHtmlToken("<$list_type>" . $result . "</$list_type>") . "\n";
     }
     
     /**
@@ -204,8 +204,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         # paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
         $result = $this->_processItems($list, $marker_any);
-        $result = "<$list_type>\n" . $result . "</$list_type>\n"; // extra \n?
-        return $result;
+        return $this->_toHtmlToken("<$list_type>\n" . $result . "</$list_type>") . "\n\n"; // extra \n?
     }
     
     

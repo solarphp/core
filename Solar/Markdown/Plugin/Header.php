@@ -136,11 +136,8 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
      * 
      */
     protected function _parseTop($matches)
-    {
-        return "<h1>"
-             . $this->_processSpans($matches[1])
-             . "</h1>"
-             . "\n\n";
+    {   
+        return $this->_header('h1', $matches[1]);
     }
     
     /**
@@ -154,13 +151,9 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseSub($matches)
     {
-        return "<h2>"
-             . $this->_processSpans($matches[1])
-             . "</h2>"
-             . "\n\n";
+        return $this->_header('h2', $matches[1]);
     }
     
-
     /**
      * 
      * Support callback for ATX headers.
@@ -173,10 +166,27 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
     protected function _parseAtx($matches)
     {
         $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
-        return "<$tag>"
-             . $this->_processSpans($matches[2])
-             . "</$tag>"
-             . "\n\n";
+        return $this->_header($tag, $matches[2]);
+    }
+    
+    /**
+     * 
+     * Support callback for all headers.
+     * 
+     * @param string $tag The header tag ('h1', 'h5', etc).
+     * 
+     * @param string $text The header text.
+     * 
+     * @return string The replacement header HTML token.
+     * 
+     */
+    protected function _header($tag, $text)
+    {
+        $html = "<$tag>"
+              . $this->_processSpans($text)
+              . "</$tag>";
+        
+        return $this->_toHtmlToken($html) . "\n\n";
     }
 }
 ?>

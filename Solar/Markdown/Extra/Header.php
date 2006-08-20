@@ -46,10 +46,11 @@ class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
             $id = '';
         }
         
-        return "<h1$id>"
-             . $this->_processSpans($matches[1])
-             . "</h1>"
-             . "\n\n";
+        $html = "<h1$id>"
+              . $this->_processSpans($matches[1])
+              . "</h1>";
+        
+        return $this->_toHtmlToken($html) . "\n\n";
     }
     
     protected function _parseSub($matches)
@@ -60,10 +61,11 @@ class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
             $id = '';
         }
         
-        return "<h2$id>"
-             . $this->_processSpans($matches[1])
-             . "</h2>"
-             . "\n\n";
+        $html = "<h2$id>"
+              . $this->_processSpans($matches[1])
+              . "</h2>";
+              
+        return $this->_toHtmlToken($html) . "\n\n";
     }
     
     protected function _parseAtx($matches)
@@ -76,10 +78,11 @@ class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
         
         $tag = 'h' . strlen($matches[1]); // h1, h2, h5, etc
         
-        return "<$tag$id>"
-             . $this->_processSpans($matches[2])
-             . "</$tag>"
-             . "\n\n";
+        $html = "<$tag$id>"
+              . $this->_processSpans($matches[2])
+              . "</$tag>";
+              
+        return $this->_toHtmlToken($html) . "\n\n";
     }
 }
 ?>

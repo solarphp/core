@@ -333,6 +333,21 @@ class Solar_Markdown extends Solar_Base {
     
     /**
      * 
+     * Returns an internal Markdow plugin object for direct manipulation
+     * and inspection.
+     * 
+     * @param string $text The plugin class name.
+     * 
+     * @return object The requested Markdown plugins.
+     * 
+     */
+    public function getPlugin($class)
+    {
+        return $this->_plugin[$class];
+    }
+    
+    /**
+     * 
      * One-step transformation of source text using plugins.
      * 
      * Calls reset(), prepare(), processBlocks(), cleanup(), and

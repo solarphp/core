@@ -110,7 +110,7 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
             $bq
         );
 
-        return "<blockquote>\n$bq\n</blockquote>\n\n";
+        return $this->_toHtmlToken("<blockquote>\n$bq\n</blockquote>") . "\n\n";
     }
     
     /**

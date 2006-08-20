@@ -97,7 +97,7 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
     {
         $source = 'foo [[page name#frag]] bar';
         $actual = $this->_transform($source);
-        $expect = 'foo <a href="/wiki/read/Page_name#frag">page name</a> bar';
+        $expect = 'foo <a href="/wiki/read/Page_name#frag">page name#frag</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
     
@@ -125,5 +125,60 @@ class Test_Solar_Markdown_Wiki_PageLink extends Test_Solar_Markdown_Plugin {
         $this->assertSame(trim($actual), trim($expect));
     }
     
+    public function testRender_comboCollapse()
+    {
+        $source = 'foo [[page name#frag | ]]s bar';
+        $actual = $this->_transform($source);
+        $expect = 'foo <a href="/wiki/read/Page_name#frag">page names</a> bar';
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    public function testParse_interwiki()
+    {
+        $source = 'foo [[php::print()]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print()">php::print()</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiFrag()
+    {
+        $source = 'foo [[php::print() #anchor]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print()#anchor">php::print()#anchor</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiText()
+    {
+        $source = 'foo [[php::print() | other]] bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print()">other</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiAtch()
+    {
+        $source = 'foo [[php::print]]ers bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print">php::printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiCombo()
+    {
+        $source = 'foo [[php::print()#anchor | print]]ers bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print()#anchor">printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParse_interwikiComboCollapse()
+    {
+        $source = 'foo [[php::print#anchor | ]]ers bar';
+        $actual = $this->_plugin->parse($source);
+        $expect = 'foo <a href="http://php.net/print#anchor">printers</a> bar';
+        $this->assertSame($actual, $expect);
+    }
 }
 ?>

@@ -87,7 +87,7 @@ class Solar_Markdown_Plugin_HorizRule extends Solar_Markdown_Plugin {
      */
     protected function _parse($matches)
     {
-        return "\n<hr />\n";
+        return "\n" . $this->_toHtmlToken("<hr />") . "\n";
     }
 }
 ?>

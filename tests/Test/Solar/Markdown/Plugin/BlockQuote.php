@@ -45,7 +45,30 @@ class Test_Solar_Markdown_Plugin_BlockQuote extends Test_Solar_Markdown_Plugin {
         $source[] = "baz dib";
         $source = implode("\n", $source);
         
-        $expect[] = "foo bar". "\n";
+        $expect[] = "foo bar\n";
+        $expect[] = $this->_token . "\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "";
+        $source[] = "> line 1";
+        $source[] = "> line 2";
+        $source[] = "> ";
+        $source[] = "> line 3";
+        $source[] = "> line 4";
+        $source[] = "";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar" . "\n";
         $expect[] = $this->_tag('blockquote');
         $expect[] = "  line 1";
         $expect[] = "  line 2";
@@ -57,12 +80,12 @@ class Test_Solar_Markdown_Plugin_BlockQuote extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertRegex($actual, "@$expect@");
     }
     
     
-    public function testParse_nested()
+    public function testRender_nested()
     {
         $source = array();
         $source[] = "foo bar";
@@ -94,7 +117,7 @@ class Test_Solar_Markdown_Plugin_BlockQuote extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\s+", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertRegex($actual, "@$expect@");
     }
 }

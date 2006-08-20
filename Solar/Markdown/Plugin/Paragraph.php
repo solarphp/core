@@ -68,7 +68,7 @@ class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
                 $value = $this->_processSpans($value);
                 $value = preg_replace('/^([ \t]*)/', '<p>', $value);
                 $value .= "</p>";
-                $grafs[$key] = $value;
+                $grafs[$key] = $this->_toHtmlToken($value);
             }
         }
         

@@ -96,7 +96,9 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
             $code
         );
 
-        return "\n\n<pre><code>" . $code . "\n</code></pre>\n\n";
+        return "\n\n"
+             . $this->_toHtmlToken("<pre><code>" . $code . "\n</code></pre>")
+             . "\n\n";
     }
 }
 ?>

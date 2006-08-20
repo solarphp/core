@@ -155,12 +155,12 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     protected function _parseEmail($matches)
     {
         $addr = $matches[1];
-        // _UnescapeSpecialChars(_UnslashQuotes('\\1'))
-        
         $addr = "mailto:" . $addr;
         $length = strlen($addr);
 
-        # leave ':' alone (to spot mailto: later)
+        // leave ':' alone (to spot mailto: later)
+        // this is super-slow; it makes the callback one time for each
+        // character in the string except ':'.
         $addr = preg_replace_callback(
             '/([^\:])/',
             array($this, '_obfuscateEmail'),
@@ -186,8 +186,8 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     protected function _obfuscateEmail($matches) {
         $char = $matches[1];
         $r = rand(0, 100);
-        # roughly 10% raw, 45% hex, 45% dec
-        # '@' *must* be encoded. I insist.
+        // roughly 10% raw, 45% hex, 45% dec
+        // '@' *must* be encoded. I insist.
         if ($r > 90 && $char != '@') return $char;
         if ($r < 45) return '&#x'.dechex(ord($char)).';';
         return '&#'.ord($char).';';

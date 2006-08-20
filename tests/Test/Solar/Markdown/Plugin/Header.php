@@ -41,15 +41,33 @@ class Test_Solar_Markdown_Plugin_Header extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = "<h1>Top-Level Header</h1>\n";
+        $expect[] = $this->_token . "\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
         $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "Top-Level Header";
+        $source[] = "================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = "<h1>Top-Level Header</h1>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_sub()
+    public function testRender_sub()
     {
         $source = array();
         $source[] = "foo bar";
@@ -63,11 +81,11 @@ class Test_Solar_Markdown_Plugin_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
 
-    public function testParse_atx()
+    public function testRender_atx()
     {
         $source = array();
         $source[] = "foo bar";
@@ -92,11 +110,11 @@ class Test_Solar_Markdown_Plugin_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_atxTrailingHashes()
+    public function testRender_atxTrailingHashes()
     {
         $source = array();
         $source[] = "foo bar";
@@ -113,7 +131,7 @@ class Test_Solar_Markdown_Plugin_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
 }

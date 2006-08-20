@@ -35,6 +35,24 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
     {
         $source = array();
         $source[] = "foo bar";
+        $source[] = "Top-Level Header";
+        $source[] = "================";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect[] = "foo bar";
+        $expect[] = $this->_token . "\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "foo bar";
         $source[] = "=====";
         $source[] = "Title";
         $source[] = "=====";
@@ -46,11 +64,11 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_superSection()
+    public function testRender_superSection()
     {
         $source = array();
         $source[] = "foo bar";
@@ -65,11 +83,11 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_section()
+    public function testRender_section()
     {
         $source = array();
         $source[] = "foo bar";
@@ -83,11 +101,11 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_subSection()
+    public function testRender_subSection()
     {
         $source = array();
         $source[] = "foo bar";
@@ -101,7 +119,7 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
 }

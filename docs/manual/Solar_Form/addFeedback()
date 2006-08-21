@@ -2,65 +2,67 @@ This method lets you add feedback messages to multiple elements at one time.  Th
 
 Note that this method works with feedback on **elements**; if you wish to add feedback about the form itself, use the Solar_Form::$feedback public property.
 
-++ Example
+--------------------
+Example
+--------------------
 
-<code type="php">
-require_once 'Solar.php';
-Solar::start();
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
 
-$form = Solar::factory('Solar_Form');
+    $form = Solar::factory('Solar_Form');
 
-$elements = array(
-    'name' => array (
-        'type' => 'text',
-        'label' => 'Your name:',
-    ),
-    'email' => array (
-        'type' => 'text',
-        'label' => 'Email address:',
-    ),
-);    
+    $elements = array(
+        'name' => array (
+            'type' => 'text',
+            'label' => 'Your name:',
+        ),
+        'email' => array (
+            'type' => 'text',
+            'label' => 'Email address:',
+        ),
+    );    
 
-$form->setElements($elements);
+    $form->setElements($elements);
 
-// for some reason, we want to one feedback message on the 'name',
-// and two messages on the 'email'.
-$feedback = array(
-    'name' => 'You really should type in your name.',
-    'email' => array(
-        'Be sure to type in your email.',
-        'And make it a real one, no fakes!'
-    ),
-);
+    // for some reason, we want to one feedback message on the 'name',
+    // and two messages on the 'email'.
+    $feedback = array(
+        'name' => 'You really should type in your name.',
+        'email' => array(
+            'Be sure to type in your email.',
+            'And make it a real one, no fakes!'
+        ),
+    );
 
-$form->addFeedback($feedback);
-</code>
+    $form->addFeedback($feedback);
+}}
 
 If you set the elements as part of an array, you will need to make sure the feedback is set as part of the same array.  For example:
 
-<code type="php">
-$form->setElements($elements, 'contact');
-$form->addFeedback($feedback, 'contact');
-</code>
+{{code: php
+    $form->setElements($elements, 'contact');
+    $form->addFeedback($feedback, 'contact');
+}}
 
 Of course, you can skip all this if you like and add the feedback directly as part of the element to begin with:
 
-<code type="php">
-$elements = array(
-    'name' => array (
-        'type' => 'text',
-        'label' => 'Your name:',
-        'feedback' => array(
-            'You really should type in your name.',
+{{code: php
+    $elements = array(
+        'name' => array (
+            'type' => 'text',
+            'label' => 'Your name:',
+            'feedback' => array(
+                'You really should type in your name.',
+            ),
         ),
-    ),
-    'email' => array (
-        'type' => 'text',
-        'label' => 'Email address:',
-        'feedback' => array(
-            'Be sure to type in your email.',
-            'And make it a real one, no fakes!',
+        'email' => array (
+            'type' => 'text',
+            'label' => 'Email address:',
+            'feedback' => array(
+                'Be sure to type in your email.',
+                'And make it a real one, no fakes!',
+            ),
         ),
-    ),
-);    
-</code>
+    );    
+}}

@@ -182,7 +182,7 @@ class Solar_Model_Tags extends Solar_Sql_Table {
      * // $diff['del'] == array('a', 'b');
      * // $diff['ins'] == array('d', 'e');
      * // 'c' doesn't show up becuase it's present in both sets
-     * </code>
+     * }}
      * 
      * @param array $old The old (previous) set of tags.
      * 

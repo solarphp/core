@@ -35,7 +35,7 @@ Solar::loadClass('Solar_Access_Adapter');
  * allow role sysadmin * * *
  * allow handle + Solar_App_Bookmarks * *
  * deny user boshag Solar_App_Bookmarks edit *
- * </code>
+ * }}
  * 
  * @category Solar
  * 

@@ -69,7 +69,7 @@ Solar::loadClass('Solar_Sql_Table');
  * // this comes back as an array('count' => ?, 'pages' => ?).
  * $total = $select->countPages();
  * 
- * </code>
+ * }}
  * 
  * @category Solar
  * 
@@ -408,7 +408,7 @@ class Solar_Sql_Select extends Solar_Base {
      * // equivalent security with named binding
      * $select->where('id = :id');
      * $select->bind('id', $id);
-     * </code>
+     * }}
      * 
      * @param string $cond The WHERE condition.
      * 
@@ -563,7 +563,7 @@ class Solar_Sql_Select extends Solar_Base {
      * // equivalent security with named binding
      * $select->having('COUNT(id) = :count');
      * $select->bind('count', $count);
-     * </code>
+     * }}
      * 
      * @param string $cond The HAVING condition.
      * 

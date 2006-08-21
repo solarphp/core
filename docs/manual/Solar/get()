@@ -7,7 +7,7 @@ value is returned instead.
 For example, to get the 'user_name' key from the $_GET array,
 with 'No Name' as the default value, you would do this:
 
-<code type="php">
-$name = Solar::get('user_name', 'No Name');
-</code>
+{{code: php
+    $name = Solar::get('user_name', 'No Name');
+}}
 

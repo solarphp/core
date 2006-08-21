@@ -21,13 +21,13 @@
  * 
  * An example front-controller "index.php" for your web root:
  * 
- * <code type="php">
- * require 'Solar.php';
- * Solar::start();
- * $front = Solar::factory('Solar_Controller_Front');
- * $front->display();
- * Solar::stop();
- * </code>
+ * {{code: php
+ *     require 'Solar.php';
+ *     Solar::start();
+ *     $front = Solar::factory('Solar_Controller_Front');
+ *     $front->display();
+ *     Solar::stop();
+ * }}
  * 
  * @category Solar
  * 

@@ -50,7 +50,7 @@ Solar::loadClass('Solar_Uri_Action');
  *         _item.php    # partial template
  *         list.php     # full template
  *         edit.php
- * </code>
+ * }}
  *
  * Note that models are not included in the application itself; this is
  * for class-name deconfliction reasons.  Your models should be stored

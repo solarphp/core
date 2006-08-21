@@ -457,17 +457,17 @@ class Solar_Sql extends Solar_Base {
      * 
      * The $cols parameter should be in this format:
      * 
-     * <code type="php">
-     * $cols = array(
-     *   'fieldOne' => array(
-     *     'type'    => bool|char|int|etc,
-     *     'size'    => total length for char|varchar|numeric
-     *     'scope'   => decimal places for numeric
-     *     'require' => true|false,
-     *   ),
-     *   'fieldTwo' => array(...)
-     * );
-     * </code>
+     * {{code: php
+     *     $cols = array(
+     *       'fieldOne' => array(
+     *         'type'    => bool|char|int|etc,
+     *         'size'    => total length for char|varchar|numeric
+     *         'scope'   => decimal places for numeric
+     *         'require' => true|false,
+     *       ),
+     *       'fieldTwo' => array(...)
+     *     );
+     * }}
      * 
      * For available field types, see Solar_Sql_Adapter::$_native.
      * 
@@ -563,14 +563,14 @@ class Solar_Sql extends Solar_Base {
      * 
      * The $info parameter should be in this format:
      * 
-     * <code type="php">
-     * $info = array(
-     *     'type'    => bool|char|int|etc,
-     *     'size'    => total length for char|varchar|numeric
-     *     'scope'   => decimal places for numeric
-     *     'require' => true|false,
-     * );
-     * </code>
+     * {{code: php
+     *     $info = array(
+     *         'type'    => bool|char|int|etc,
+     *         'size'    => total length for char|varchar|numeric
+     *         'scope'   => decimal places for numeric
+     *         'require' => true|false,
+     *     );
+     * }}
      * 
      * @param string $table The table name (1-30 chars).
      * 
@@ -610,15 +610,15 @@ class Solar_Sql extends Solar_Base {
      * 
      * The $info parameter should be in this format:
      * 
-     * <code type="php">
-     * $type = 'normal';
-     * 
-     * $info = array($type, 'col'); // single-col
-     * 
-     * $info = array($type, array('col', 'col', 'col')), // multi-col
-     * 
-     * $info = $type; // shorthand for single-col named for $name
-     * </code>
+     * {{code: php
+     *     $type = 'normal';
+     *     
+     *     $info = array($type, 'col'); // single-col
+     *     
+     *     $info = array($type, array('col', 'col', 'col')), // multi-col
+     *     
+     *     $info = $type; // shorthand for single-col named for $name
+     * }}
      * 
      * The $type may be 'normal' or 'unique'.
      * 
@@ -716,15 +716,15 @@ class Solar_Sql extends Solar_Base {
      * and then returned as a comma-separated string; this is useful 
      * for generating IN() lists.
      * 
-     * <code type="php">
-     * $sql = Solar::factory('Solar_Sql');
-     * 
-     * $safe = $sql->quote('foo"bar"');
-     * // $safe == "'foo\"bar\"'"
-     * 
-     * $safe = $sql->quote(array('one', 'two', 'three'));
-     * // $safe == "'one', 'two', 'three'"
-     * </code>
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     *     
+     *     $safe = $sql->quote('foo"bar"');
+     *     // $safe == "'foo\"bar\"'"
+     *     
+     *     $safe = $sql->quote(array('one', 'two', 'three'));
+     *     // $safe == "'one', 'two', 'three'"
+     * }}
      * 
      * @param mixed $val The value to quote.
      * 
@@ -753,15 +753,15 @@ class Solar_Sql extends Solar_Base {
      * The placeholder is a question-mark; all placeholders will be replaced
      * with the quoted value.   For example:
      * 
-     * <code type="php">
-     * $sql = Solar::factory('Solar_Sql');
-     * 
-     * $text = "WHERE date < ?";
-     * $date = "2005-01-02";
-     * $safe = $sql->quoteInto($text, $date);
-     * 
-     * // $safe == "WHERE date < '2005-01-02'"
-     * </code>
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     *     
+     *     $text = "WHERE date < ?";
+     *     $date = "2005-01-02";
+     *     $safe = $sql->quoteInto($text, $date);
+     *     
+     *     // $safe == "WHERE date < '2005-01-02'"
+     * }}
      * 
      * @param string $txt The text with a placeholder.
      * 
@@ -784,18 +784,18 @@ class Solar_Sql extends Solar_Base {
      * The placeholder is a question-mark; all placeholders will be replaced
      * with the quoted value.   For example:
      * 
-     * <code type="php">
-     * $sql = Solar::factory('Solar_Sql');
-     * 
-     * $list = array(
-     *      "WHERE date > ?"   => '2005-01-01',
-     *      "  AND date < ?"   => '2005-02-01',
-     *      "  AND type IN(?)" => array('a', 'b', 'c'),
-     * );
-     * $safe = $sql->quoteMulti($list);
-     * 
-     * // $safe == "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
-     * </code>
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     *     
+     *     $list = array(
+     *          "WHERE date > ?"   => '2005-01-01',
+     *          "  AND date < ?"   => '2005-02-01',
+     *          "  AND type IN(?)" => array('a', 'b', 'c'),
+     *     );
+     *     $safe = $sql->quoteMulti($list);
+     *     
+     *     // $safe == "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+     * }}
      * 
      * @param array $list A series of key-value pairs where the key is
      * the placeholder text and the value is the value to be quoted into

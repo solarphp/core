@@ -43,7 +43,7 @@
  * General-purpose:
  *   @see name                     # "see also" this element name
  *   @todo summary                 # todo item
- * </code>
+ * }}
  * 
  * @category Solar
  * 

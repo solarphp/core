@@ -8,8 +8,8 @@ For example, to get the 'subject_line' key from the $_POST
 array, with 'No Subject' as the default value, you would do
 this:
 
-<code type="php">
-$subject = Solar::post('subject_line', 'No Subject');
-</code>
+{{code: php
+    $subject = Solar::post('subject_line', 'No Subject');
+}}
 
 

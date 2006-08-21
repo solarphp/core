@@ -7,20 +7,20 @@ composed entirely of static methods and objects.  This means you
 never need to instantiate a `Solar` object proper; just include
 it.
 
-<code type="php">
-// after you load the Solar class,
-require_once 'Solar.php';
+{{code: php
+    // after you load the Solar class,
+    require_once 'Solar.php';
 
-// **do not** instantiate it.
-$solar = new Solar();
-$solar->start();
+    // **do not** instantiate it.
+    $solar = new Solar();
+    $solar->start();
 
-// just call its static methods.
-Solar::start();
-$action = Solar::get('action');
-$result = Solar::run('/path/to/file.php');
-Solar::stop();
-</code>
+    // just call its static methods.
+    Solar::start();
+    $action = Solar::get('action');
+    $result = Solar::run('/path/to/file.php');
+    Solar::stop();
+}}
 
 Once you have loaded the Solar.php file, you can call any of the ClassMethods it provides.
 

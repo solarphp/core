@@ -97,15 +97,15 @@ class Solar_Cache extends Solar_Base {
      * 
      * Example:
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // turn the cache off
-     * $cache->setActive(false);
-     * 
-     * // turn it back on
-     * $cache->setActive(true);
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // turn the cache off
+     *     $cache->setActive(false);
+     *     
+     *     // turn it back on
+     *     $cache->setActive(true);
+     * }}
      * 
      * @param bool $flag True to turn on, false to turn off.
      * 
@@ -123,13 +123,13 @@ class Solar_Cache extends Solar_Base {
      * 
      * Example:
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // is the cache active or not?
-     * $flag = $cache->isActive();
-     * Solar::dump($flag);
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // is the cache active or not?
+     *     $flag = $cache->isActive();
+     *     Solar::dump($flag);
+     * }}
      * 
      * @return bool True if active, false if not.
      * 
@@ -164,24 +164,24 @@ class Solar_Cache extends Solar_Base {
      * 
      * For example, to store an array in the cache ...
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // create a unique ID
-     * $id = 'my_array';
-     * 
-     * // set up some data to cache (this could be string output, or
-     * // an object, or almost anything else)
-     * $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
-     * 
-     * // store to the cache, overwriting any previous $id entry
-     * $cache->save($id, $data);
-     * 
-     * // now fetch back the data for the $id entry
-     * $result = $cache->fetch($id);
-     * 
-     * // $data and $result should be identical
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // create a unique ID
+     *     $id = 'my_array';
+     *     
+     *     // set up some data to cache (this could be string output, or
+     *     // an object, or almost anything else)
+     *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
+     *     
+     *     // store to the cache, overwriting any previous $id entry
+     *     $cache->save($id, $data);
+     *     
+     *     // now fetch back the data for the $id entry
+     *     $result = $cache->fetch($id);
+     *     
+     *     // $data and $result should be identical
+     * }}
      * 
      * @param string $key The entry ID.
      * 
@@ -215,17 +215,17 @@ class Solar_Cache extends Solar_Base {
      * For example, to get a cache entry identified by a web page
      * name, you could do this:
      * 
-     * <code type="php">
-     * // create a cache object
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // get the request URI as an identifier
-     * $id = Solar::server('REQUEST_URI');
-     * 
-     * // fetch the result and dump it to screen
-     * $result = $cache->fetch($id);
-     * Solar::dump($result);
-     * </code>
+     * {{code: php
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // get the request URI as an identifier
+     *     $id = Solar::server('REQUEST_URI');
+     *     
+     *     // fetch the result and dump it to screen
+     *     $result = $cache->fetch($id);
+     *     Solar::dump($result);
+     * }}
      * 
      * @param string $key The entry ID.
      * 
@@ -247,15 +247,15 @@ class Solar_Cache extends Solar_Base {
      * 
      * Example:
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // create an entry ID named for the current URI
-     * $id = Solar::server('REQUEST_URI');
-     * 
-     * // delete any cache entry with that ID
-     * $cache->delete($id);
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // create an entry ID named for the current URI
+     *     $id = Solar::server('REQUEST_URI');
+     *     
+     *     // delete any cache entry with that ID
+     *     $cache->delete($id);
+     * }}
      * 
      * @param string $key The entry ID.
      * 
@@ -275,12 +275,12 @@ class Solar_Cache extends Solar_Base {
      * 
      * Example:
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // delete all entries
-     * $cache->deleteAll();
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // delete all entries
+     *     $cache->deleteAll();
+     * }}
      * 
      * @return void
      * 
@@ -302,15 +302,15 @@ class Solar_Cache extends Solar_Base {
      * This method tells you what the adapter is using as the name for
      * the cache entry.
      * 
-     * <code type="php">
-     * $cache = Solar::factory('Solar_Cache');
-     * 
-     * // create an entry ID named for the current URI
-     * $id = Solar::server('REQUEST_URI');
-     * 
-     * // find out what the underlying cache adapter uses as the entry name
-     * $real_name = $cache->entry($id);
-     * </code>
+     * {{code: php
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // create an entry ID named for the current URI
+     *     $id = Solar::server('REQUEST_URI');
+     *     
+     *     // find out what the underlying cache adapter uses as the entry name
+     *     $real_name = $cache->entry($id);
+     * }}
      * 
      * @param string $key The entry ID.
      * 

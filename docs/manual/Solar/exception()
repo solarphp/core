@@ -5,14 +5,14 @@ about the specifics of the error.
 Note that this method only generates the object; it does not
 throw the exception.
 
-<code type="php">
-$class = 'My_Example_Class';
-$code = 'ERR_SOMETHING_WRONG';
-$text = 'Something is wrong.';
-$info = array('foo' => 'bar');
-$exception = Solar::exception($class, $code, $text, $info);
-throw $exception;
-</code>
+{{code: php
+    $class = 'My_Example_Class';
+    $code = 'ERR_SOMETHING_WRONG';
+    $text = 'Something is wrong.';
+    $info = array('foo' => 'bar');
+    $exception = Solar::exception($class, $code, $text, $info);
+    throw $exception;
+}}
 
 In general, you shouldn't need to use this directly in classes
 extended from [Solar_Base::HomePage Solar_Base].  Instead, use

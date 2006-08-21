@@ -1,23 +1,23 @@
-(This method is part of a [http://www.martinfowler.com/articles/injection.html dependency injection pattern].  In short, if you need to pass an object into another target class so that the target has access to needed methods, the target class is said to be dependent on that object.  This method standardizes dependency injections for Solar.)
+(This method is part of a [dependency injection pattern](http://www.martinfowler.com/articles/injection.html).  In short, if you need to pass an object into another target class so that the target has access to needed methods, the target class is said to be dependent on that object.  This method standardizes dependency injections for Solar.)
 
 This method checks that a dependency specification is of the proper class, retrieving it from the Solar::registry() or creating it using Solar::factory() as needed.
 
 For example, this retrieves the 'example' object from the registry and makes sure it is a Solar_Example instance:
 
-<code type="php">
-$example = Solar::dependency('Solar_Example', 'example');
-</code>
+{{code: php
+    $example = Solar::dependency('Solar_Example', 'example');
+}}
 
 This creates a Solar_Example class on the fly; as such, it is almost in operation to Solar::factory().  The only difference is that you have to pass a non-string as the config source.
 
-<code type="php">
-$config = array(...);
-$example = Solar::dependency('Solar_Example', $config);
-</code>
+{{code: php
+    $config = array(...);
+    $example = Solar::dependency('Solar_Example', $config);
+}}
 
 Finally, if the dependency specification is itself an object, this method just makes sure it is of the Solar_Example class:
 
-<code type="php">
-$obj = Solar::factory('Solar_Example');
-$example = Solar::dependency('Solar_Example', $obj);
-</code>
+{{code: php
+    $obj = Solar::factory('Solar_Example');
+    $example = Solar::dependency('Solar_Example', $obj);
+}}

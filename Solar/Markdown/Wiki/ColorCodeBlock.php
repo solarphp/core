@@ -146,10 +146,5 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
         // done!
         return $this->_toHtmlToken("<pre><code>$code</code></pre>");
     }
-    
-    protected function _colorHtml($code)
-    {
-        return highlight_string($code, true);
-    }
 }
 ?>

@@ -1,6 +1,8 @@
-+ Base Class
+====================
+Base Class
+====================
 
-The [Solar_Base::HomePage Solar_Base] class is a lightweight base class from which all other Solar classes descend (not including exceptions, which descend from [Solar_Exception::HomePage Solar_Exception]).  This base class provides:
+The [[Solar_Base::HomePage | Solar_Base]] class is a lightweight base class from which all other Solar classes descend (not including exceptions, which descend from [[Solar_Exception::HomePage | Solar_Exception]]).  This base class provides:
 
 ||~ Description ||~ See Also ||
 || A standard constructor that reads from the ConfigFile then combines the instantiation-time ConstructorParameters with the default property values for the class. || Solar_Base::__construct() ||

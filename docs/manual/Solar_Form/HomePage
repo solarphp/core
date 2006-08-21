@@ -2,81 +2,81 @@ This class helps you create a data structure designed to represent an XHTML form
 
 While this class does not output the form (as that is the job of a view or presentation layer), it does allow you to build "hints" as to how the elements should be presented; you then pass the object instance into your view, which can take those "hints" any way it likes.  These "hints" are called the FormDescriptor array.
 
-In addition, the class will draw in data from an array (typically $_POST), validate the newly-populated structure against filters and rules that you sets up, and set feedback messages based on which elements were valid and which were not.  In many ways, Solar_Form is a cousin to [http://pear.php.net/HTML_QuickForm HTML_QuickForm], but with all rendering removed.
+In addition, the class will draw in data from an array (typically $_POST), validate the newly-populated structure against filters and rules that you sets up, and set feedback messages based on which elements were valid and which were not.  In many ways, Solar_Form is a cousin to [HTML_QuickForm](http://pear.php.net/HTML_QuickForm), but with all rendering removed.
 
 You can see a full example on GettingStarted, but here's a short one to whet your curiosity.  Note that we use a small bit of localization (although a real form would have [LocalizedForms everything localized]).
 
-<code type="php">
-require_once 'Solar.php';
-Solar::start();
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
 
-// ---------------------------------------------------------------------
-// 
-// Build the form
-// 
+    // ---------------------------------------------------------------------
+    // 
+    // Build the form
+    // 
 
-$form = Solar::factory('Solar_Form');
-$form->setElements(array(
-    'user[handle]' => array(
-        'type'     => 'text',
-        'label'    => 'Your Username:',
-        'require'  => true,
-        'valid' => array(
-            array('notBlank', 'Please enter a username.'),
-            array('alnum', 'Please use only letters and numbers for your username.'),
+    $form = Solar::factory('Solar_Form');
+    $form->setElements(array(
+        'user[handle]' => array(
+            'type'     => 'text',
+            'label'    => 'Your Username:',
+            'require'  => true,
+            'valid' => array(
+                array('notBlank', 'Please enter a username.'),
+                array('alnum', 'Please use only letters and numbers for your username.'),
+            ),
         ),
-    ),
-    'user[email]'  => array(
-        'type'     => 'text',
-        'label'    => 'Your Email Address:',
-        'require'  => true,
-        'valid' => array(
-            array('notBlank', 'Please enter an email address.'),
-            array('email', 'Please use a valid email address.'),
+        'user[email]'  => array(
+            'type'     => 'text',
+            'label'    => 'Your Email Address:',
+            'require'  => true,
+            'valid' => array(
+                array('notBlank', 'Please enter an email address.'),
+                array('email', 'Please use a valid email address.'),
+            ),
         ),
-    ),
-    'submit' => array(
-        'type'     => 'submit',
-        // use a localized button value
-        'value'    => $this->locale('SUBMIT_SAVE'),
-    ),
-));
+        'submit' => array(
+            'type'     => 'submit',
+            // use a localized button value
+            'value'    => $this->locale('SUBMIT_SAVE'),
+        ),
+    ));
 
-// ---------------------------------------------------------------------
-// 
-// Process submissions
-// 
+    // ---------------------------------------------------------------------
+    // 
+    // Process submissions
+    // 
 
-// get the submission request
-$submit = Solar::post('submit');
+    // get the submission request
+    $submit = Solar::post('submit');
 
-// handle submissions based on the localized button values
-if ($submit == $this->locale('SUBMIT_SAVE')) {
+    // handle submissions based on the localized button values
+    if ($submit == $this->locale('SUBMIT_SAVE')) {
     
-    // populate the form with submitted values
-    $form->populate();
+        // populate the form with submitted values
+        $form->populate();
     
-    // validate the user input
-    if ($form->validate()) {
+        // validate the user input
+        if ($form->validate()) {
         
-        // get the validated and filtered values...
-        $values = $form->values();
-        $user = $values['user'];
+            // get the validated and filtered values...
+            $values = $form->values();
+            $user = $values['user'];
         
-        // ... and save $user to a database table.
-        // $table->save($user);
+            // ... and save $user to a database table.
+            // $table->save($user);
+        }
     }
-}
 
-// ---------------------------------------------------------------------
-// 
-// Output the form (with auto-generated feedback)
-// 
+    // ---------------------------------------------------------------------
+    // 
+    // Output the form (with auto-generated feedback)
+    // 
 
-// get a view object, assign the form to it, and display.
-$view = Solar::factory('Solar_View');
-$view->form = $form;
-$view->display('form_example.view.php');
+    // get a view object, assign the form to it, and display.
+    $view = Solar::factory('Solar_View');
+    $view->form = $form;
+    $view->display('form_example.view.php');
 
-// done!
-</code>
+    // done!
+}}

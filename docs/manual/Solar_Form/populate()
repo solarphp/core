@@ -15,37 +15,37 @@ This method takes values from the population source and imports them into their 
 
 If you populate more than once, the later populations will reset and overwrite previous populations.
 
-++ Population Sources
+--------------------
+Population Sources
+--------------------
 
 Let's say we have a set of elements that combine plain and array-based names, and in two different arrays:
 
-<code>
-id
-user[email]
-user[name]
-contact[street]
-contact[city]
-contact[state]
-contact[zip]
-books[author]
-books[title]
-</code>
+    id
+    user[email]
+    user[name]
+    contact[street]
+    contact[city]
+    contact[state]
+    contact[zip]
+    books[author]
+    books[title]
 
 All population sources are treated as arrays; if not an array to begin with (as in the case of objects) they will be recast to arrays. Those array elements would look like this in order to map into the above form elements:
 
-<code type="php">
-// $source can be $_GET, $_POST, your own array, an object, etc
-$source = array(
-    'id' => '12345',
-    'user' => array(
-        'email' => 'nobody@example.com',
-        'name'  => 'Nobody Example',
-    ),
-    'contact' => array(
-        'street' => '101 Main Street',
-        'city'   => 'Beverly Hills',
-        'state'  => 'CA',
-        'zip'    => '90210'
-    ),
-);
-</code>
+{{code: php
+    // $source can be $_GET, $_POST, your own array, an object, etc
+    $source = array(
+        'id' => '12345',
+        'user' => array(
+            'email' => 'nobody@example.com',
+            'name'  => 'Nobody Example',
+        ),
+        'contact' => array(
+            'street' => '101 Main Street',
+            'city'   => 'Beverly Hills',
+            'state'  => 'CA',
+            'zip'    => '90210'
+        ),
+    );
+}}

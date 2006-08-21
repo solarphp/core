@@ -98,7 +98,7 @@ class Solar_Sql_Table extends Solar_Base {
      *         'primary' => (bool) is this part of the primary key?
      *      ),
      * );
-     * </code>
+     * }}
      * 
      * @var array
      * 

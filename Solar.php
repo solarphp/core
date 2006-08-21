@@ -449,12 +449,12 @@ class Solar {
      * 
      * Use this to see if a file exists anywhere in the include_path.
      * 
-     * <code type="php">
-     * $file = 'path/to/file.php';
-     * if (Solar::fileExists('path/to/file.php')) {
-     *     include $file;
-     * }
-     * </code>
+     * {{code: php
+     *     $file = 'path/to/file.php';
+     *     if (Solar::fileExists('path/to/file.php')) {
+     *         include $file;
+     *     }
+     * }}
      * 
      * @param string $file Check for this file in the include_path.
      * 

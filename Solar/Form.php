@@ -698,7 +698,7 @@ class Solar_Form extends Solar_Base {
      * <code>
      * $form = Solar::factory('Solar_Form');
      * $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
-     * </code>
+     * }}
      * 
      * @param string|object $obj If a string, it is treated as a class
      * name to instantiate with Solar::factory(); if an object, it is

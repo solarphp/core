@@ -1,10 +1,14 @@
-+ Documentation
+====================
+Documentation
+====================
 
 Documentation is as important as the code itself.  With that in mind, we have combined two forms of documentation on this site:
 
-* All classes have basic API reference material automatically generated with each new release.
+* All classes have basic API reference material automatically generated
+  with each new release.
 
-* In addition, we also maintain manual narratives (overview, how-to, tutorial, getting started, etc) as part of the class documentation.
+* In addition, we also maintain manual narratives (overview, how-to,
+  tutorial, getting started, etc) as part of the class documentation.
 
 Click on the pull-down at the top-right of this page (it's labeled "Main" right now) and select the class you want to read about.  For example, read about the overarching Solar class itself [Solar::HomePage here].
 

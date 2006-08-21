@@ -21,22 +21,20 @@
  * 
  * Example:
  * 
- * <code type="php">
- * 
- * // example setup of a single adapter
- * $config = array(
- *     'adapter' => 'Solar_Log_Adapter_File',
- *     'events'  => '*',
- *     'file'    => '/path/to/file.log',
- * );
- * $log = Solar::factory('Solar_Log', $config);
- * 
- * // write/record/report/etc an event in the log.
- * // note that we don't do "priority levels" here, just
- * // class names and event types.
- * $log->save('class_name', 'event_name', 'message text');
- * 
- * </code>
+ * {{code: php
+ *     // example setup of a single adapter
+ *     $config = array(
+ *         'adapter' => 'Solar_Log_Adapter_File',
+ *         'events'  => '*',
+ *         'file'    => '/path/to/file.log',
+ *     );
+ *     $log = Solar::factory('Solar_Log', $config);
+ *     
+ *     // write/record/report/etc an event in the log.
+ *     // note that we don't do "priority levels" here, just
+ *     // class names and event types.
+ *     $log->save('class_name', 'event_name', 'message text');
+ * }}
  * 
  * @category Solar
  * 
@@ -95,11 +93,11 @@ class Solar_Log extends Solar_Base {
      * 
      * Magic shorthand for saving an event using a method name.
      * 
-     * <code type="php">
-     * // these are equivalent:
-     * $log->save('info', 'informational message');
-     * $log->info('informational message');
-     * </code>
+     * {{code: php
+     *     // these are equivalent:
+     *     $log->save('info', 'informational message');
+     *     $log->info('informational message');
+     * }}
      * 
      * @param string $method The event type.
      * 
@@ -121,11 +119,11 @@ class Solar_Log extends Solar_Base {
      * 
      * Saves (writes) an event and message to the log.
      * 
-     * <code type="php">
-     * $log->save('info', 'informational message');
-     * $log->save('critical', 'critical message');
-     * $log->save('my special event type', 'describing the event');
-     * </code>
+     * {{code: php
+     *     $log->save('info', 'informational message');
+     *     $log->save('critical', 'critical message');
+     *     $log->save('my special event type', 'describing the event');
+     * }}
      * 
      * @param string $class The class name logging the event.
      * 

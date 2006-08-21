@@ -57,27 +57,26 @@ class Solar_Path_Stack {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add(array('path/1', 'path/2', 'path/3'));
-     * // $stack->get() reveals that the directory search order will be
-     * // 'path/1/', 'path/2/', 'path/3/'.
-     * 
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add('path/1:path/2:path/3');
-     * // $stack->get() reveals that the directory search order will be
-     * // 'path/1/', 'path/2/', 'path/3/', because this is the way the
-     * // filesystem expects a path definition to work.
-     * 
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add('path/1');
-     * $stack->add('path/2');
-     * $stack->add('path/3');
-     * // $stack->get() reveals that the directory search order will be
-     * // 'path/3/', 'path/2/', 'path/1/', because the later adds
-     * // override the newer ones.
-     * 
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add(array('path/1', 'path/2', 'path/3'));
+     *     // $stack->get() reveals that the directory search order will be
+     *     // 'path/1/', 'path/2/', 'path/3/'.
+     *     
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add('path/1:path/2:path/3');
+     *     // $stack->get() reveals that the directory search order will be
+     *     // 'path/1/', 'path/2/', 'path/3/', because this is the way the
+     *     // filesystem expects a path definition to work.
+     *     
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add('path/1');
+     *     $stack->add('path/2');
+     *     $stack->add('path/3');
+     *     // $stack->get() reveals that the directory search order will be
+     *     // 'path/3/', 'path/2/', 'path/1/', because the later adds
+     *     // override the newer ones.
+     * }}
      * 
      * @param array|string $path The directories to add to the stack.
      * 
@@ -113,19 +112,19 @@ class Solar_Path_Stack {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add('path/1');
-     * $stack->add('path/2');
-     * $stack->add('path/3');
-     * 
-     * // $stack->get() reveals that the directory search order is
-     * // 'path/3/', 'path/2/', 'path/1/'.
-     * 
-     * $stack->set('another/path');
-     * 
-     * // $stack->get() is now 'another/path'.
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add('path/1');
+     *     $stack->add('path/2');
+     *     $stack->add('path/3');
+     *     
+     *     // $stack->get() reveals that the directory search order is
+     *     // 'path/3/', 'path/2/', 'path/1/'.
+     *     
+     *     $stack->set('another/path');
+     *     
+     *     // $stack->get() is now 'another/path'.
+     * }}
      * 
      * @param array|string $path The directories to add to the stack
      * after clearing it.
@@ -147,17 +146,17 @@ class Solar_Path_Stack {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add('path/1');
-     * $stack->add('path/2');
-     * $stack->add('path/3');
-     * 
-     * $file = $stack->find('file.php');
-     * // $file is now the first instance of 'file.php' found from the         
-     * // directory stack, looking first in 'path/3/file.php', then            
-     * // 'path/2/file.php', then finally 'path/1/file.php'.
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add('path/1');
+     *     $stack->add('path/2');
+     *     $stack->add('path/3');
+     *     
+     *     $file = $stack->find('file.php');
+     *     // $file is now the first instance of 'file.php' found from the         
+     *     // directory stack, looking first in 'path/3/file.php', then            
+     *     // 'path/2/file.php', then finally 'path/1/file.php'.
+     * }}
      * 
      * @param string $file The file to find using the directory stack
      * and the include_path.
@@ -187,20 +186,20 @@ class Solar_Path_Stack {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Path_Stack');
-     * $stack->add('/path/1');
-     * $stack->add('/path/2');
-     * $stack->add('/path/3');
-     * 
-     * $file = $stack->findReal('file.php');
-     * // $file is now the first instance of 'file.php' found from the         
-     * // directory stack, looking first in 'path/3/file.php', then            
-     * // 'path/2/file.php', then finally 'path/1/file.php'.
-     * //
-     * // note that this will be the realpath() to the file from the
-     * // filesystem root.
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Path_Stack');
+     *     $stack->add('/path/1');
+     *     $stack->add('/path/2');
+     *     $stack->add('/path/3');
+     *     
+     *     $file = $stack->findReal('file.php');
+     *     // $file is now the first instance of 'file.php' found from the         
+     *     // directory stack, looking first in 'path/3/file.php', then            
+     *     // 'path/2/file.php', then finally 'path/1/file.php'.
+     *     //
+     *     // note that this will be the realpath() to the file from the
+     *     // filesystem root.
+     * }}
      * 
      * @param string $file The file to find using the directory stack.
      * 

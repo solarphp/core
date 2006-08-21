@@ -30,7 +30,7 @@ Solar::loadClass('Solar_Cache_Adapter');
  *
  * The APC extension is not bundled with PHP; you will need to install it
  * on your server before you can use it.
- * More info on the [http://pecl.php.net/package/apc APC homepage].
+ * More info on the [APC homepage](http://pecl.php.net/package/apc).
  *
  * @category Solar
  *

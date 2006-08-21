@@ -4,20 +4,20 @@ user-defined parameters and the Solar.config.php file.
 In normal PHP, you must include a class file and then
 instantiate it.
 
-<code type="php">
-// normal use
-require_once 'My/Class/File.php';
-$obj = new My_Class_File();
-</code>
+{{code: php
+    // normal use
+    require_once 'My/Class/File.php';
+    $obj = new My_Class_File();
+}}
 
 With Solar, if you want to instantiate a new object,
 you can use the Solar::factory() method instead of the
 include-and-instantiate routine.
 
-<code type="php">
-// Solar object factory
-$obj = Solar::factory('My_Class_File');
-</code>
+{{code: php
+    // Solar object factory
+    $obj = Solar::factory('My_Class_File');
+}}
 
 This method uses Solar::loadClass() internally to load the class file.
 
@@ -28,10 +28,10 @@ in the [Main::ConfigFile config file].  If you want to override
 those values, you can pass a custom config array as the second
 parameter:
 
-<code type="php">
-$options = array('zim' => 'gir', 'baz' => 'dib');
-$obj = Solar::factory('My_Class_File', $options);
-</code>
+{{code: php
+    $options = array('zim' => 'gir', 'baz' => 'dib');
+    $obj = Solar::factory('My_Class_File', $options);
+}}
 
 For this method to work, the class to be loaded must be in the
 include_path and conform to the [Main::NamingConventions class

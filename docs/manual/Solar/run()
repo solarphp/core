@@ -4,11 +4,11 @@ current scope with the variables from the included file.
 
 For example, say you have this "main" script:
 
-<code type="php">
-$var = 'foo';
-include 'helper.php';
-echo $var;
-</code>
+{{code: php
+    $var = 'foo';
+    include 'helper.php';
+    echo $var;
+}}
 
 If 'helper.php' sets the value of $var for itself, that value
 will override the value from the main script, which can lead
@@ -16,11 +16,11 @@ to unexpected behavior.  If you want to make sure that
 'helper.php' executes in its own separate scope, use the run()
 method instead of [[php include]]:
 
-<code type="php">
-$var = 'foo';
-Solar::run('helper.php');
-echo $var;
-</code>
+{{code: php
+    $var = 'foo';
+    Solar::run('helper.php');
+    echo $var;
+}}
 
 Now $var will remain the same before and after the inclusion
 of helper.php (unless helper.php used [[php global]] to make
@@ -29,9 +29,9 @@ $var global).
 As with [[php include]], you can accept return values from the
 file you run:
 
-<code type="php">
-$result = Solar::run('helper.php');
-</code>
+{{code: php
+    $result = Solar::run('helper.php');
+}}
 
 If the last line of helper.php is a return value, $result will
 reflect that value.

@@ -213,7 +213,7 @@ class Solar_View extends Solar_Base {
      * // assign by name and value
      * $view->assign('var1', 'something');
      * $view->assign('var2', 'else');
-     * </code>
+     * }}
      * 
      * @param mixed $spec The assignment specification.
      * 

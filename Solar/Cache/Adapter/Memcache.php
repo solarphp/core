@@ -35,7 +35,7 @@ Solar::loadClass('Solar_Cache_Adapter');
  * network.  This particular adapter uses the PHP [[php memcache]]
  * extension to manage the cache connection.  The extension is not
  * bundled with PHP; you will need to follow the
- * [http://php.net/memcache installation instructions] before you can
+ * [installation instructions](http://php.net/memcache) before you can
  * use it.
  * 
  * @category Solar

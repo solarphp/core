@@ -56,27 +56,26 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Class_Stack');
-     * $stack->add(array('Base1', 'Base2', 'Base3'));
-     * // $stack->get() reveals that the class search order will be
-     * // 'Base1_', 'Base2_', 'Base3_'.
-     * 
-     * $stack = Solar::factory('Solar_Class_Stack');
-     * $stack->add('Base1, Base2, Base3');
-     * // $stack->get() reveals that the directory search order will be
-     * // 'Base1_', 'Base2_', 'Base3_', because this is the way the
-     * // filesystem expects a path definition to work.
-     * 
-     * $stack = Solar::factory('Solar_Class_Stack');
-     * $stack->add('Base1');
-     * $stack->add('Base2');
-     * $stack->add('Base3');
-     * // $stack->get() reveals that the directory search order will be
-     * // 'Base3_', 'Base2_', 'Base1_', because the later adds
-     * // override the newer ones.
-     * 
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Class_Stack');
+     *     $stack->add(array('Base1', 'Base2', 'Base3'));
+     *     // $stack->get() reveals that the class search order will be
+     *     // 'Base1_', 'Base2_', 'Base3_'.
+     *     
+     *     $stack = Solar::factory('Solar_Class_Stack');
+     *     $stack->add('Base1, Base2, Base3');
+     *     // $stack->get() reveals that the directory search order will be
+     *     // 'Base1_', 'Base2_', 'Base3_', because this is the way the
+     *     // filesystem expects a path definition to work.
+     *     
+     *     $stack = Solar::factory('Solar_Class_Stack');
+     *     $stack->add('Base1');
+     *     $stack->add('Base2');
+     *     $stack->add('Base3');
+     *     // $stack->get() reveals that the directory search order will be
+     *     // 'Base3_', 'Base2_', 'Base1_', because the later adds
+     *     // override the newer ones.
+     * }}
      * 
      * @param array|string $list The classes to add to the stack.
      * 
@@ -111,19 +110,19 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Class_Stack');
-     * $stack->add('Base1');
-     * $stack->add('Base2');
-     * $stack->add('Base3');
-     * 
-     * // $stack->get() reveals that the directory search order is
-     * // 'Base3_', 'Base2_', 'Base1_'.
-     * 
-     * $stack->set('Another_Base');
-     * 
-     * // $stack->get() is now array('Another_Base_').
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Class_Stack');
+     *     $stack->add('Base1');
+     *     $stack->add('Base2');
+     *     $stack->add('Base3');
+     *     
+     *     // $stack->get() reveals that the directory search order is
+     *     // 'Base3_', 'Base2_', 'Base1_'.
+     *     
+     *     $stack->set('Another_Base');
+     *     
+     *     // $stack->get() is now array('Another_Base_').
+     * }}
      * 
      * @param array|string $list The classes to add to the stack
      * after clearing it.
@@ -143,17 +142,17 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * For example:
      * 
-     * <code type="php">
-     * $stack = Solar::factory('Solar_Class_Stack');
-     * $stack->add('Base1');
-     * $stack->add('Base2');
-     * $stack->add('Base3');
-     * 
-     * $class = $stack->load('Name');
-     * // $class is now the first instance of '*_Name' found from the         
-     * // class stack, looking first for 'Base3_Name', then            
-     * // 'Base2_Name', then finally 'Base1_Name'.
-     * </code>
+     * {{code: php
+     *     $stack = Solar::factory('Solar_Class_Stack');
+     *     $stack->add('Base1');
+     *     $stack->add('Base2');
+     *     $stack->add('Base3');
+     *     
+     *     $class = $stack->load('Name');
+     *     // $class is now the first instance of '*_Name' found from the         
+     *     // class stack, looking first for 'Base3_Name', then            
+     *     // 'Base2_Name', then finally 'Base1_Name'.
+     * }}
      * 
      * @param string $name The class to load using the class stack.
      * 

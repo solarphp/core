@@ -180,7 +180,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * &name=mashery
      * &nick=Solar
      * &sig=PBG7mN48V9f83hOX5Ao+X9GbmUU=:maoKWgIZpcF1qVFUHf8GbFooAFc=
-     * </code>
+     * }}
      * 
      * @return bool
      * 

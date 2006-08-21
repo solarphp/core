@@ -1,13 +1,19 @@
-+ Migration Notes
+====================
+Migration Notes
+====================
 
-++ Overview
+--------------------
+Overview
+--------------------
 
 As usual, be sure to read the change notes for full details.
 
 This release has a lot of changes related to consistency and standardization; in particular, config keys have been standardized in many cases.
 
 
-++ Config Key Changes
+--------------------
+Config Key Changes
+--------------------
 
 I've tried to make config keys consistent and standard across all classes.  In particular, note these changes:
 
@@ -30,7 +36,9 @@ You should make sure to change your Solar.config.php array to reflect the new ke
 Also, you should make sure your authentication forms use the new 'handle
 
 
-++ Locale Key Changes
+--------------------
+Locale Key Changes
+--------------------
 
 Similarly, I've tried to make locale keys consistent and standard across all classes.
 
@@ -48,12 +56,16 @@ Similarly, I've tried to make locale keys consistent and standard across all cla
   the standard config keys for submissions, usernames, and passwords.
 
 
-++ Solar_Filter and Solar_Valid
+--------------------
+Solar_Filter and Solar_Valid
+--------------------
 
 These classes are no longer static; you have to instantiate them.  Also, the custom() methods have been renamed to callback() to more clearly indicate how they work.
 
 
-++ URI Generation
+--------------------
+URI Generation
+--------------------
 
 The Solar_Uri class has two new config keys, 'action' and 'public', to indicate the base href values for actions and public files.
 
@@ -62,7 +74,9 @@ For example, if your front-controller is at '/~username/solar/front.php', set th
 These keys make it easy to set defaults that will be used throughout Solar, e.g. in Solar_View helpers for action() and publicHref().
 
 
-++ View Processing
+--------------------
+View Processing
+--------------------
 
 Solar_View takes the place of Solar_Template, and is a new "flavor" of Savant3 specifically for Solar integration.
 
@@ -90,7 +104,9 @@ When changing your Solar_Template scripts to Solar_View, note that these changes
   Solar_View_Helper_Form documentation to see all the changes. I'll
   write more about this later.
 
-++ Front-Controller
+--------------------
+Front-Controller
+--------------------
 
 The front controller is much lighter now.  All layout processing has been moved into the page controller.  Also, the way the front controller maps page requests to page classes has been changed.  Previously, you would set up an "_app_class" array that mapped short page names to full class names:
 
@@ -113,7 +129,9 @@ If the front-controller receives a request for the page 'hello', it looks first 
 This allows you to have your own vendor-specific versions of Solar applications.  It also means you don't need to add to the map every time you add a new page controller class; just put your app in one of the noted class directories, and the front-controller will find it automatically.
 
 
-++ Page Controller
+--------------------
+Page Controller
+--------------------
 
 Conversely, the page-controller has become somewhat more robust.  It now handles layout processing by reusing the internal view object, which means that all page-level variables are now available to the layout.
 
@@ -145,7 +163,9 @@ Setting default values for info mapping is easier too; for example:
 
 
 
-++ Public Directories
+--------------------
+Public Directories
+--------------------
 
 The Solar/Layout and the Solar/App classes now have a Public/ directory.  These are for storing stylesheets, JavaScript files, images, etc.  The problem is that, because Solar is outside the webroot, you need to be able to put these files in a place accessible via http.
 

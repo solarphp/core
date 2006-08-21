@@ -7,9 +7,7 @@ The "path-info" portion of a URI comes after the script name
 but before any $_GET parameters.  For example, in the
 following URI ...
 
-<code>
-http://example.com/path/to/script.php/foo/bar/baz?zim=gir
-</code>
+    http://example.com/path/to/script.php/foo/bar/baz?zim=gir
 
 ... the "path-info" is `/foo/bar/baz`.
 
@@ -18,20 +16,20 @@ number, not by associative array key name (as with $_GET et.
 al.).  Thus, Solar builds its path-info array for the example
 URI to look like this:
 
-<code type="php">
-array(
-  0 => 'foo',
-  1 => 'bar',
-  2 => 'baz',
-);
-</code>
+{{code: php
+    array(
+      0 => 'foo',
+      1 => 'bar',
+      2 => 'baz',
+    );
+}}
 
 For example, to get path-info values, you would call the
 pathinfo() method like this:
 
-<code type="php">
-$info_2 = Solar::pathinfo(2, null);  // equals 'baz'
-$info_3 = Solar::pathinfo(3, 'dib'); // equals 'dib'
-</code>
+{{code: php
+    $info_2 = Solar::pathinfo(2, null);  // equals 'baz'
+    $info_3 = Solar::pathinfo(3, 'dib'); // equals 'dib'
+}}
 
 

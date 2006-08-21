@@ -33,7 +33,7 @@ Solar::loadClass('Solar_Auth_Adapter');
  * email = pmjones@solarphp.com
  * moniker = Paul M. Jones
  * uri = http://paul-m-jones.com/
- * </code>
+ * }}
  * 
  * @category Solar
  * 

@@ -155,7 +155,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      *         ), // methods
      *     ), // classname
      * ); // $this->api
-     * </code>
+     * }}
      * 
      * @var array
      * 

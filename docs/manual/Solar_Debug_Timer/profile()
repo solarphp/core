@@ -2,70 +2,67 @@ This will return the internal profile of marks as an array.
 For example, given this code (nearly identical to the 
 [HomePage initial example code]) ...
 
-<code type="php">
-require_once 'Solar.php';
-Solar::start();
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
 
-$timer = Solar::factory('Solar_Debug_Timer');
-$timer->start();
+    $timer = Solar::factory('Solar_Debug_Timer');
+    $timer->start();
 
-for ($i = 0; $i < 3; $i++) {
-    time_nanosleep(0, rand(1,999999999));
-    $timer->mark("iteration_$i");
-}
+    for ($i = 0; $i < 3; $i++) {
+        time_nanosleep(0, rand(1,999999999));
+        $timer->mark("iteration_$i");
+    }
 
-$timer->stop();
+    $timer->stop();
 
-$profile = $timer->profile();
-Solar::dump($profile);
-</code>
+    $profile = $timer->profile();
+    Solar::dump($profile);
+}}
 
 ... the profile output might look like this:
 
-<code>
-array(7) {
-[0] => array(4) {
- ["name"] => string(7) "__start"
- ["time"] => float(1121903570.8062)
- ["diff"] => int(0)
- ["total"] => int(0)
-}
-[1] => array(4) {
- ["name"] => string(11) "iteration_0"
- ["time"] => float(1121903571.1628)
- ["diff"] => float(0.35667991638184)
- ["total"] => float(0.35667991638184)
-}
-[2] => array(4) {
- ["name"] => string(11) "iteration_1"
- ["time"] => float(1121903571.6973)
- ["diff"] => float(0.53444910049438)
- ["total"] => float(0.89112901687622)
-}
-[3] => array(4) {
- ["name"] => string(11) "iteration_2"
- ["time"] => float(1121903571.9718)
- ["diff"] => float(0.27448797225952)
- ["total"] => float(1.1656169891357)
-}
-[4] => array(4) {
- ["name"] => string(11) "iteration_3"
- ["time"] => float(1121903572.5875)
- ["diff"] => float(0.61577486991882)
- ["total"] => float(1.7813918590546)
-}
-[5] => array(4) {
- ["name"] => string(11) "iteration_4"
- ["time"] => float(1121903573.2677)
- ["diff"] => float(0.68014907836914)
- ["total"] => float(2.4615409374237)
-}
-[6] => array(4) {
- ["name"] => string(6) "__stop"
- ["time"] => float(1121903573.2678)
- ["diff"] => float(5.6982040405273E-5)
- ["total"] => float(2.4615979194641)
-}
-}
-</code>
-
+    array(7) {
+        [0] => array(4) {
+            ["name"] => string(7) "__start"
+            ["time"] => float(1121903570.8062)
+            ["diff"] => int(0)
+            ["total"] => int(0)
+        }
+        [1] => array(4) {
+            ["name"] => string(11) "iteration_0"
+            ["time"] => float(1121903571.1628)
+            ["diff"] => float(0.35667991638184)
+            ["total"] => float(0.35667991638184)
+        }
+        [2] => array(4) {
+            ["name"] => string(11) "iteration_1"
+            ["time"] => float(1121903571.6973)
+            ["diff"] => float(0.53444910049438)
+            ["total"] => float(0.89112901687622)
+        }
+        [3] => array(4) {
+            ["name"] => string(11) "iteration_2"
+            ["time"] => float(1121903571.9718)
+            ["diff"] => float(0.27448797225952)
+            ["total"] => float(1.1656169891357)
+        }
+        [4] => array(4) {
+            ["name"] => string(11) "iteration_3"
+            ["time"] => float(1121903572.5875)
+            ["diff"] => float(0.61577486991882)
+            ["total"] => float(1.7813918590546)
+        }
+        [5] => array(4) {
+            ["name"] => string(11) "iteration_4"
+            ["time"] => float(1121903573.2677)
+            ["diff"] => float(0.68014907836914)
+            ["total"] => float(2.4615409374237)
+        }
+        [6] => array(4) {
+            ["name"] => string(6) "__stop"
+            ["time"] => float(1121903573.2678)
+            ["diff"] => float(5.6982040405273E-5)
+            ["total"] => float(2.4615979194641)
+        }
+    }

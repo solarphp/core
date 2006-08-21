@@ -1,10 +1,10 @@
 In normal PHP, you would load a class file using include or
 require, then attempt to instantiate the class.
 
-<code type="php">
-require_once "My/Example/Class.php";
-$example = new My_Example_Class();
-</code>
+{{code: php
+    require_once "My/Example/Class.php";
+    $example = new My_Example_Class();
+}}
 
 However, if My/Example/Class.php did not have the
 My_Example_Class in it, PHP would throw an error; this can
@@ -17,10 +17,10 @@ load the same class more than once.
 
 For example:
 
-<code type="php">
-Solar::loadClass('My_Example_Class');
-$example = new My_Example_Class();
-</code>
+{{code: php
+    Solar::loadClass('My_Example_Class');
+    $example = new My_Example_Class();
+}}
 
 If after calling loadClass() the 'My_Example_Class' still does
 not exist, Solar throws an exception with a backtrace to let

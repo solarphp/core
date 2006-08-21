@@ -1,10 +1,16 @@
-+ Naming Conventions
+====================
+Naming Conventions
+====================
 
-++ Class Names
+--------------------
+Class Names
+--------------------
 
 All Solar class names start with `Solar_` and map directly to their filesystem location, where the underscore represents a new directory.  For example, the `Solar_Auth_Adapter_Sql` class is located at `Solar/Auth/Adapter/Sql.php`.  This makes it possible to use `Solar::loadClass()` and `Solar::factory()` to automatically load and configure new instances.
 
-++ Method Names
+--------------------
+Method Names
+--------------------
 
 When reasonable, methods in Solar classes should conform to these names when they perform these related functions:
 
@@ -24,7 +30,9 @@ When reasonable, methods in Solar classes should conform to these names when the
 
 These names are not set in stone, but should be used when reasonable.
 
-++ Global Variables
+--------------------
+Global Variables
+--------------------
 
 Do not use global variables.  We say this for two reasons:
 
@@ -32,19 +40,27 @@ Do not use global variables.  We say this for two reasons:
 
 # They pollute the global namespace and may collide or overwrite each other in differing contexts
 
-++ Session Variables
+--------------------
+Session Variables
+--------------------
 
 `$_SESSION` keys for Solar classes shall match the class name.  Thus, a `Solar_Test_Example` session variable called `something` would be addressed as `$_SESSION['Solar_Test_Example']['something']`.
 
-++ Config File Keys
+--------------------
+Config File Keys
+--------------------
 
 Keys in the ConfigFile shall conform to the class name.  Thus, a `Solar_Test_Example` constructor configuration would be addressed as an associative array in the `['Solar_Test_Example']` key of the ConfigFile.
 
-++ Locale File Names
+--------------------
+Locale File Names
+--------------------
 
 LocaleFiles should be named for their locale code.  For example, the `en_US`  file should be named `en_US.php`, the `pt_BR` file should be named `pt_BR.php`, and so on.
 
-++ Locale Translation Keys
+--------------------
+Locale Translation Keys
+--------------------
 
 Keys in the LocaleFiles should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
 

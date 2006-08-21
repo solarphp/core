@@ -7,7 +7,7 @@ $_SESSION array, the default value is returned instead.
 For example, to get the 'last_active' key from the $_SESSION
 array, with `false` as the default value, you would do this:
 
-<code type="php">
-$last_active = Solar::session('last_active', false);
-</code>
+{{code: php
+    $last_active = Solar::session('last_active', false);
+}}
 

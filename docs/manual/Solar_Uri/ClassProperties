@@ -23,4 +23,4 @@ pass     => 'guest'
 path     => array('path', 'to', 'index.php', 'foo', 'bar')
 query    => array('baz' => 'dib')
 fragment => 'anchor'
-</code>
+}}

@@ -1,6 +1,10 @@
-+ Download and Install
+====================
+Download and Install
+====================
 
-++ Requirements
+--------------------
+Requirements
+--------------------
 
 * Please note that Solar is in alpha stage and is not yet stable.
 
@@ -12,26 +16,30 @@
 
  * Microsoft SQL Server 2000 or later
 
- * !MySQL 4.1 or later
+ * MySQL 4.1 or later
 
- * !PostgreSQL 7.3 or later
+ * PostgreSQL 7.3 or later
 
  * SQLite 3 or later
 
-++ Direct Download
+--------------------
+Direct Download
+--------------------
 
 You can download Solar directly from this link:
 
-http://solarphp.com/get/Solar-@package_version@.tgz
+<http://solarphp.com/get/Solar-@package_version@.tgz>
 
 Then copy the `Solar.php` file and `Solar/` directory into your libraries.
 
 However, it's usually better to use the PEAR installer.
 
 
-++ Install via PEAR
+--------------------
+Install via PEAR
+--------------------
 
-You can use our [http://solarphp.com/channel.php channel server] to install and upgrade.  Using the channel is the preferred method, because it will always install the most-recent version.
+You can use our [channel server](http://solarphp.com/channel.php) to install and upgrade.  Using the channel is the preferred method, because it will always install the most-recent version.
 
 First, let PEAR discover the channel server...
 
@@ -40,7 +48,7 @@ bash-2.05$ pear channel-discover solarphp.com
 Adding Channel "solarphp.com" succeeded
 Discovery of channel "solarphp.com" succeeded
 bash-2.05$ 
-</code>
+}}
 
 ... then you can install or upgrade:
 
@@ -50,22 +58,25 @@ bash-2.05$ pear install Solar/Solar-alpha
 
 bash-2.05$ pear upgrade Solar/Solar-alpha
 ... upgrade messages follow ...
-</code>
+}}
 
 Because Solar is still in alpha, you need to specify the "-alpha" flag when installing or upgrading.
 
 
-+++ Bundled Documentation
+Bundled Documentation
+====================
 
 When PEAR installs the Solar classes, it will place the bundled documentation in a different location.  Typically, you will find the classes in `/path/to/pear/`, while documentation will be in `/path/to/pear/docs/Solar/`.
 
 
-+++ Bundled Tests
+Bundled Tests
+====================
 
 When PEAR installs the Solar classes, it will place the bundled test files in a different location.  Typically, you will find the classes in `/path/to/pear/`, while the test files will be in `/path/to/pear/tests/Solar/`.
 
 
-+++ Problems?
+Problems?
+====================
 
 If you have problems with the channel not delivering the most-recent release, clear your local PEAR cache and try again:
 
@@ -76,7 +87,7 @@ cache entries cleared
 
 bash-2.05$ pear upgrade Solar/Solar-alpha
 ... upgrade messages follow ...
-</code>
+}}
 
 Alternatively, you can use PEAR to install or upgrade a specific release directly from a tarball, like this:
 
@@ -86,12 +97,14 @@ bash-2.05$ pear install http://solarphp.com/get/Solar-@package_version@.tgz
 
 bash-2.05$ pear upgrade http://solarphp.com/get/Solar-@package_version@.tgz
 ... upgrade messages follow ...
-</code>
+}}
 
-++ Source via Subversion
+--------------------
+Source via Subversion
+--------------------
 
-You can [http://solarphp.com/svn/ browse the Subversion repository] and do anonymous checkouts:
+You can [browse the Subversion repository](http://solarphp.com/svn/) and do anonymous checkouts:
 
 <code>
 bash-2.05$ svn checkout https://solarphp.com/svn/ solar
-</code>
+}}

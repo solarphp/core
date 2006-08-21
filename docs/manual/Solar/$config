@@ -1,5 +1,5 @@
 The $config array stores the values read in from Solar.config.php,
-also known as the [Main::ConfigFile config file].  In general, you
+also known as the [[Main::ConfigFile | config file]].  In general, you
 should not access the $config property directly; instead, read from
 it using Solar::config().
 
@@ -7,43 +7,49 @@ When you call Solar::start(), this array will be populated with
 the config file values (or the values from the alternative config
 source you pass in).
 
-You can configure the Solar class using these keys in your [Main::ConfigFile config file] (which are then passed into the Solar::$config property).
+You can configure the Solar class using these keys in your [[Main::ConfigFile | config file]] (which are then passed into the Solar::$config property).
 
 ||~ key ||~ type ||~ value ||
 || `locale` || string || path to Solar locale directory, default `Solar/Locale` ||
 || `locale_code` || string || initial locale code, default `en_US` ||
-|| `ini_set` || array || [[php ini_set()]] parameters ||
+|| `ini_set` || array || [[php::ini_set()]] parameters ||
 || `start` || array || custom startup scripts ||
 || `stop` || array || custom shutdown scripts ||
 
-++ `ini_set`
+--------------------
+`ini_set`
+--------------------
 
 These config key values get called as part of the Solar::start() process.  For example, if you have this in Solar::$config ...
 
-<code type="php">
-$config['Solar']['ini_set']['display_errors'] = true;
-</code>
+{{code: php
+    $config['Solar']['ini_set']['display_errors'] = true;
+}}
 
 ... Solar::start() will issue `ini_set('display_errors', true)` as part of the startup process.
 
-++ `start`
+--------------------
+`start`
+--------------------
 
 These values represent scripts to execute as part of Solar::start().  For example, if you have this in Solar::$config ...
 
-<code type="php">
-$config['Solar']['start'][] = '/path/to/start1.php';
-$config['Solar']['start'][] = '/path/to/start2.php';
-</code>
+{{code: php
+    $config['Solar']['start'][] = '/path/to/start1.php';
+    $config['Solar']['start'][] = '/path/to/start2.php';
+}}
 
 ... then Solar::start() will run `start1.php` and `start2.php` as part of its startup process.
 
-++ `stop`
+--------------------
+`stop`
+--------------------
 
 These values represent scripts to execute as part of Solar::stop().  For example, if you have this in Solar::$config ...
 
-<code type="php">
-$config['Solar']['stop'][] = '/path/to/stop1.php';
-$config['Solar']['stop'][] = '/path/to/stop2.php';
-</code>
+{{code: php
+    $config['Solar']['stop'][] = '/path/to/stop1.php';
+    $config['Solar']['stop'][] = '/path/to/stop2.php';
+}}
 
 ... then Solar::stop() will run `stop1.php` and `stop2.php` as part of its shutdown process.

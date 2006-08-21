@@ -28,14 +28,16 @@ if ($isValid) {
     $values = $form->values();
     // and do something with the values here
 }
-</code>
+}}
 
 
-+++ Solar_Form_Load_Table
+Solar_Form_Load_Table
+====================
 
 The Solar_Form_Load_Table class loads forms from Solar_Sql_Table column definitions.
 
-+++ Solar_Form_Load_Xml
+Solar_Form_Load_Xml
+====================
 
 The Solar_Form_Load_Xml class, authored by Matthew Weier O'Phinney, loads  Solar_Form element definitions from a !SimpleXML file.  The XML file format should be something like the following:
 
@@ -119,7 +121,7 @@ The Solar_Form_Load_Xml class, authored by Matthew Weier O'Phinney, loads  Solar
         <label>Message:</label>
     </element>
 </form>
-</code>
+}}
 
 Basically, a form consists of attributes and elements. Attributes are related
 to the form as a whole, and spefically the &lt;form&gt; HTML element; elements

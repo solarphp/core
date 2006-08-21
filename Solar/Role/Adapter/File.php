@@ -32,7 +32,7 @@ Solar::loadClass('Solar_Role_Adapter');
  * sysadmin:pmjones
  * writer:pmjones,boshag,agtsmith
  * editor:pmjones,agtsmith
- * </code>
+ * }}
  * 
  * @category Solar
  * 

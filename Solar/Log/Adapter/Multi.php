@@ -24,35 +24,35 @@ Solar::loadClass('Solar_Log_Adapter');
  * 
  * Log adapter to echo messages directly.
  * 
- * <code type="php">
- * // config for a multiple log
- * $config = array(
- *     'adapter' => 'Solar_Log_Adapter_Multiple', // could also be a dependency object?
- *     'adapters' => array(
- *         array(
- *             'adapter' => 'Solar_Log_Adapter_File',
- *             'events' => '*',
- *             'format' => null,
- *             'file' => '/path/to/file.log',
+ * {{code: php
+ *     // config for a multiple log
+ *     $config = array(
+ *         'adapter' => 'Solar_Log_Adapter_Multiple', // could also be a dependency object?
+ *         'adapters' => array(
+ *             array(
+ *                 'adapter' => 'Solar_Log_Adapter_File',
+ *                 'events' => '*',
+ *                 'format' => null,
+ *                 'file' => '/path/to/file.log',
+ *             ),
+ *             array(
+ *                 'adapter' => 'Solar_Log_Adapter_Echo',
+ *                 'events' => 'debug',
+ *                 'format' => null,
+ *             ),
+ *             array(
+ *                 'adapter' => 'Solar_Log_Adapter_Sql',
+ *                 'events' => 'warning, severe, critical',
+ *                 'sql'    => 'sql',
+ *                 'table'  => 'table_name',
+ *                 '%t'     => 'ts',
+ *                 '%e'     => 'evt',
+ *                 '%m'     => 'msg',
+ *             ),
  *         ),
- *         array(
- *             'adapter' => 'Solar_Log_Adapter_Echo',
- *             'events' => 'debug',
- *             'format' => null,
- *         ),
- *         array(
- *             'adapter' => 'Solar_Log_Adapter_Sql',
- *             'events' => 'warning, severe, critical',
- *             'sql'    => 'sql',
- *             'table'  => 'table_name',
- *             '%t'     => 'ts',
- *             '%e'     => 'evt',
- *             '%m'     => 'msg',
- *         ),
- *     ),
- * );
- * $log = Solar::factory('Solar_Log', $config);
- * </code>
+ *     );
+ *     $log = Solar::factory('Solar_Log', $config);
+ * }}
  * 
  * @category Solar
  * 

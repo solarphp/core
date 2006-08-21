@@ -1,30 +1,30 @@
 For example:
 
-<code type="php">
-$sql = Solar::factory('Solar_Sql');
+{{code: php
+    $sql = Solar::factory('Solar_Sql');
 
-$table = 'events';
-$where = $sql->quoteInto('status = ?', 'cancelled');
-$rows_affected = $sql->delete($table, $where);
+    $table = 'events';
+    $where = $sql->quoteInto('status = ?', 'cancelled');
+    $rows_affected = $sql->delete($table, $where);
 
-// calls 'DELETE FROM events WHERE status = "cancelled"'
-</code>
+    // calls 'DELETE FROM events WHERE status = "cancelled"'
+}}
 
 For the $where parameter, you can also pass multiple WHERE conditions as an array to be "AND"ed together.
 
-<code type="php">
-$sql = Solar::factory('Solar_Sql');
+{{code: php
+    $sql = Solar::factory('Solar_Sql');
 
-$table = 'events';
-$where = array(
-    "date >= ?"  => '2006-01-01',
-    "date <= ?"  => '2006-01-31',
-    "status = ?" => 'cancelled',
-);
+    $table = 'events';
+    $where = array(
+        "date >= ?"  => '2006-01-01',
+        "date <= ?"  => '2006-01-31',
+        "status = ?" => 'cancelled',
+    );
 
-$rows_affected = $sql->delete($table, $where);
+    $rows_affected = $sql->delete($table, $where);
 
-// calls:
-// DELETE FROM events WHERE date >= "2006-01-01"
-// AND date <= "2006-01-31" AND status = "cancelled"
-</code>
+    // calls:
+    // DELETE FROM events WHERE date >= "2006-01-01"
+    // AND date <= "2006-01-31" AND status = "cancelled"
+}}

@@ -7,7 +7,7 @@ array, the default value is returned instead.
 For example, to get the 'REQUEST_URI' key from the $_SERVER
 array, with `false` as the default value, you would do this:
 
-<code type="php">
-$remember_me = Solar::server('REQUEST_URI', false);
-</code>
+{{code: php
+    $remember_me = Solar::server('REQUEST_URI', false);
+}}
 

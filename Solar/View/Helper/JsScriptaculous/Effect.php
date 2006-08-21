@@ -33,42 +33,42 @@ Solar::loadClass('Solar_View_Helper_JsScriptaculous');
  * For $options, the core effects all support the following settings
  * (copied from <http://wiki.script.aculo.us/scriptaculous/show/CoreEffects>):
  *
- * duration:
- * `(float)` Duration of the effect in seconds. Defaults to `1.0`.
+ * `duration`:
+ * _(float)_ Duration of the effect in seconds. Defaults to `1.0`.
  *
- * fps:
- * `(int)` Target this many frames per second. Default to `25`. Can't be higher
+ * `fps`:
+ * _(int)_ Target this many frames per second. Default to `25`. Can't be higher
  * than `100`.
  *
- * transition:
- * `(string)` Sets a function that modifies the current point of the animation,
+ * `transition`:
+ * _(string)_ Sets a function that modifies the current point of the animation,
  * which is between `0` and `1`. Following transitions are supplied:
  * `Effect.Transitions.sinoidal` (default), `Effect.Transitions.linear`,
  * `Effect.Transitions.reverse`, `Effect.Transitions.wobble` and
  * `Effect.Transitions.flicker`.
  *
- * from:
- * `(float)` Sets the starting point of the transition between `0.0` and `1.0`.
+ * `from`:
+ * _(float)_ Sets the starting point of the transition between `0.0` and `1.0`.
  * Defaults to `0.0`.
  *
- * to:
- * `(float)` Sets the end point of the transition between `0.0` and `1.0`.
+ * `to`:
+ * _(float)_ Sets the end point of the transition between `0.0` and `1.0`.
  * Defaults to `1.0`.
  *
- * sync:
- * `(bool)` Sets whether the effect should render new frames automatically
+ * `sync`:
+ * _(bool)_ Sets whether the effect should render new frames automatically
  * (which it does by default). If true, you can render frames manually by
  * calling the render() instance method of an effect. This is used by
  * `Effect.Parallel()`.
  *
- * queue:
- * Sets queuing options. When used with a string, can be 'front' or 'end' to
+ * `queue`:
+ * _(mixed)_ Sets queuing options. When used with a string, can be 'front' or 'end' to
  * queue the effect in the global effects queue at the beginning or end, or a
  * queue parameter object that can have `{position:'front/end', scope:'scope', limit:1}`.
  * For more info on this, see [Effect Queues][].
  *
- * direction:
- * `(string)` Sets the direction of the transition. Values can be either
+ * `direction`:
+ * _(string)_ Sets the direction of the transition. Values can be either
  * 'top-left', 'top-right', 'bottom-left', 'bottom-right' or 'center' (Default).
  * Applicable only on Grow and Shrink effects.
  *

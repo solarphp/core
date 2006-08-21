@@ -132,8 +132,13 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
             }
         }
 
-        // 'callback' isn't an event, but its value will be a function
+        // These callback hooks aren't true JavaScript events, but their values
+        // will be a function
         $keys[] = 'callback';
+        $keys[] = 'beforeStart';
+        $keys[] = 'beforeUpdate';
+        $keys[] = 'afterUpdate';
+        $keys[] = 'afterFinish';
 
         return $keys;
     }

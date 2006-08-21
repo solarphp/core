@@ -20,6 +20,7 @@
  */
 Solar::loadClass('Solar_View_Helper_JsScriptaculous');
 
+
 /**
  *
  * script.aculo.us effect proxy class.
@@ -33,48 +34,45 @@ Solar::loadClass('Solar_View_Helper_JsScriptaculous');
  * (copied from <http://wiki.script.aculo.us/scriptaculous/show/CoreEffects>):
  *
  * duration:
- * (float) Duration of the effect in seconds.
- * Defaults to 1.0.
+ * `(float)` Duration of the effect in seconds. Defaults to `1.0`.
  *
  * fps:
- * (int) Target this many frames per second. Default to 25.
- * Can't be higher than 100.
+ * `(int)` Target this many frames per second. Default to `25`. Can't be higher
+ * than `100`.
  *
  * transition:
- * (string) Sets a function that modifies the current point of
- * the animation, which is between 0 and 1. Following transitions
- * are supplied: Effect.Transitions.sinoidal (default),
- * Effect.Transitions.linear, Effect.Transitions.reverse,
- * Effect.Transitions.wobble and Effect.Transitions.flicker.
+ * `(string)` Sets a function that modifies the current point of the animation,
+ * which is between `0` and `1`. Following transitions are supplied:
+ * `Effect.Transitions.sinoidal` (default), `Effect.Transitions.linear`,
+ * `Effect.Transitions.reverse`, `Effect.Transitions.wobble` and
+ * `Effect.Transitions.flicker`.
  *
  * from:
- * (float) Sets the starting point of the transition
- * between 0.0 and 1.0. Defaults to 0.0.
+ * `(float)` Sets the starting point of the transition between `0.0` and `1.0`.
+ * Defaults to `0.0`.
  *
  * to:
- * (float) Sets the end point of the transition
- * between 0.0 and 1.0. Defaults to 1.0.
+ * `(float)` Sets the end point of the transition between `0.0` and `1.0`.
+ * Defaults to `1.0`.
  *
  * sync:
- * (bool) Sets whether the effect should render new frames
- * automatically (which it does by default). If true,
- * you can render frames manually by calling the
- * render() instance method of an effect. This is
- * used by Effect.Parallel().
+ * `(bool)` Sets whether the effect should render new frames automatically
+ * (which it does by default). If true, you can render frames manually by
+ * calling the render() instance method of an effect. This is used by
+ * `Effect.Parallel()`.
  *
  * queue:
- * Sets queuing options. When used with a string, can
- * be 'front' or 'end' to queue the effect in the
- * global effects queue at the beginning or end, or a
- * queue parameter object that can have
- * `{position:'front/end', scope:'scope', limit:1}`.
- * For more info on this, see Effect Queues.
+ * Sets queuing options. When used with a string, can be 'front' or 'end' to
+ * queue the effect in the global effects queue at the beginning or end, or a
+ * queue parameter object that can have `{position:'front/end', scope:'scope', limit:1}`.
+ * For more info on this, see [Effect Queues][].
  *
  * direction:
- * Sets the direction of the transition. Values can
- * be either 'top-left', 'top-right', 'bottom-left',
- * 'bottom-right' or 'center' (Default). Applicable
- * only on Grow and Shrink effects.
+ * `(string)` Sets the direction of the transition. Values can be either
+ * 'top-left', 'top-right', 'bottom-left', 'bottom-right' or 'center' (Default).
+ * Applicable only on Grow and Shrink effects.
+ *
+ * [Effect Queues]: http://wiki.script.aculo.us/scriptaculous/show/EffectQueues
  *
  * @category Solar
  *
@@ -93,6 +91,22 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      */
     protected $_type = 'JsScriptaculous_Effect';
+
+    /**
+     *
+     * Camel case correction map for script.aculou.us effects
+     *
+     * @var array
+     *
+     */
+    protected $_caseCorrection = array(
+        'dropout'   => 'DropOut',
+        'blindup'   => 'BlindUp',
+        'blinddown' => 'BlindDown',
+        'slideup'   => 'SlideUp',
+        'slidedown' => 'SlideDown',
+        'switchoff' => 'SwitchOff'
+    );
 
     /**
      *
@@ -164,48 +178,132 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
         return $out;
     }
 
-    /** CORE EFFECTS **/
-
     /**
      *
-     * Setup trigger for core script.aculo.us Highlight effect.
+     * Overload method for core script.aculo.us effects that follow the same
+     * convention, which include:
      *
-     * @param string $selector CSS selector to highlight
+     * - Core Effects
+     *   - [Highlight][]
+     *   - [Opacity][]
+     * - Combination Effects
+     *   - [Appear][]
+     *   - [Fade][]
+     *   - [Puff][]
+     *   - [Shake][]
+     *   - [Pulsate][]
+     *   - [Squish][]
+     *   - [Fold][]
+     *   - [Grow][]
+     *   - [Shrink][]
+     *   - [DropOut][]
+     *   - [SwitchOff][]
+     *   - [BlindUp][]
+     *   - [BlindDown][]
+     *   - [SlideUp][]
+     *   - [SlideDown][]
      *
-     * @param array $options Assoc array of Highlight effect options
+     * The $args array is expected to have 1-3 values, which are:
      *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
+     * : $selector
+     * `(string)` CSS selector of element to apply effect to. There is no
+     * default.
      *
+     * : $options
+     * `(array)` Associative array of options for the effect. Defaults to
+     * `array()`
+     *
+     * : $returnJs
+     * `(boolean)` Whether or not to return JavaScript string immediately, or
+     * add it to the page-load observation stack. Defaults to `false`
+     *
+     * Since Core Effects [Scale][], [MoveBy][] and [Parallel][]accept a
+     * different number of parameters, those effects are implemented in their
+     * own explicit methods.
+     *
+     * Combination Effects [Toggle][] is also maintained in an explicit method
+     * due to its use of different number of parameters.
+     *
+     * Use of an overload method for these effects allows JsScriptaculous_Effect
+     * to remain more compatible with the script.aculo.us library. If the
+     * script.aculo.us library of effects grows in-between Solar releases, you
+     * will still be able to use this class to call those effects from your views,
+     * so long as the effects additions only need "Selector" and "Options".
+     *
+     * This flexibility also allows you to leverage third-party effects such as
+     * those you create yourself, or those found in the [Effects Treasure Chest][].
+     *
+     * [Highlight]: http://wiki.script.aculo.us/scriptaculous/show/Effect.Highlight
+     * [Opacity]:   http://wiki.script.aculo.us/scriptaculous/show/Effect.Opacity
+     * [Scale]:     http://wiki.script.aculo.us/scriptaculous/show/Effect.Scale
+     * [MoveBy]:    http://wiki.script.aculo.us/scriptaculous/show/Effect.MoveBy
+     * [Parallel]:  http://wiki.script.aculo.us/scriptaculous/show/Effect.Parallel
+     * [Appear]:    http://wiki.script.aculo.us/scriptaculous/show/Effect.Appear
+     * [Fade]:      http://wiki.script.aculo.us/scriptaculous/show/Effect.Fade
+     * [Puff]:      http://wiki.script.aculo.us/scriptaculous/show/Effect.Puff
+     * [DropOut]:   http://wiki.script.aculo.us/scriptaculous/show/Effect.DropOut
+     * [Shake]:     http://wiki.script.aculo.us/scriptaculous/show/Effect.Shake
+     * [SwitchOff]: http://wiki.script.aculo.us/scriptaculous/show/Effect.SwitchOff
+     * [BlindDown]: http://wiki.script.aculo.us/scriptaculous/show/Effect.BlindDown
+     * [BlindUp]:   http://wiki.script.aculo.us/scriptaculous/show/Effect.BlindUp
+     * [SlideDown]: http://wiki.script.aculo.us/scriptaculous/show/Effect.SlideDown
+     * [SlideUp]:   http://wiki.script.aculo.us/scriptaculous/show/Effect.SlideUp
+     * [Pulsate]:   http://wiki.script.aculo.us/scriptaculous/show/Effect.Pulsate
+     * [Squish]:    http://wiki.script.aculo.us/scriptaculous/show/Effect.Squish
+     * [Fold]:      http://wiki.script.aculo.us/scriptaculous/show/Effect.Fold
+     * [Grow]:      http://wiki.script.aculo.us/scriptaculous/show/Effect.Grow
+     * [Shrink]:    http://wiki.script.aculo.us/scriptaculous/show/Effect.Shrink
+     * [Toggle]:    http://wiki.script.aculo.us/scriptaculous/show/Effect.Toggle
+     *
+     * [Effects Treasure Chest]: http://wiki.script.aculo.us/scriptaculous/show/EffectsTreasureChest
+     *
+     *
+     * @param string $effect Name of effect
+     *
+     * @param array $args Array of arguments
+     *
+     * @return mixed object Solar_View_Helper_JsScriptaculous_Effect | string $js JavaScript string
      */
-    public function highlight($selector, $options = array())
+
+    public function __call($effect, $args)
     {
-        $this->_view->js()->selectors[$selector][] = array(
+        $effect   = $this->_correctCase($effect);
+        $selector = $args[0];
+        $options  = isset($args[1]) ? $args[1] : array();
+        $returnJs = isset($args[2]) ? $args[2] : false;
+
+        $action = array(
             'type'    => $this->_type,
-            'name'    => 'Highlight',
+            'name'    => $effect,
             'options' => $options
         );
-        return $this;
+
+        if ($returnJs) {
+            return $this->fetch($selector, $action);
+        } else {
+            $this->_view->js()->selectors[$selector][] = $action;
+            return $this;
+        }
     }
 
     /**
      *
-     * Setup trigger for core script.aculo.us Opacity effect.
+     * Correct the case of effects as appropriate, or return ucfirst()
+     * version of the $effect if no correction is known or needed.
      *
-     * @param string $selector CSS selector of element to adjust opacity of
+     * @param string $effect script.aculo.us effect name
      *
-     * @param array $options Assoc array of Opacity effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
+     * @return string Effect name adjusted for aesthetic accuracy.
      *
      */
-    public function opacity($selector, $options = array())
+    protected function _correctCase($effect)
     {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Opacity',
-            'options' => $options
-        );
-        return $this;
+        $effect = strtolower($effect);
+        if (isset($this->_caseCorrection[$effect])) {
+            return $this->_caseCorrection[$effect];
+        } else {
+            return ucfirst($effect);
+        }
     }
 
     /**
@@ -218,18 +316,28 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      * @param array $options Assoc array of Scale effect options
      *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
+     * @param bool $returnJs Optionally just return the JavaScript for the
+     * effect, without adding it to the CSS selector observers linked up on page
+     * load.
+     *
+     * @return mixed object Solar_View_Helper_JsScriptaculous_Effect | string $js JavaScript string
      *
      */
-    public function scale($selector, $percent, $options = array())
+    public function scale($selector, $percent, $options = array(), $returnJs = false)
     {
-        $this->_view->js()->selectors[$selector][] = array(
+        $action = array(
             'type'    => $this->_type,
             'name'    => 'Scale',
             'percent' => $percent,
             'options' => $options
         );
-        return $this;
+
+        if ($returnJs) {
+            return $this->fetch($selector, $action);
+        } else {
+            $this->_view->js()->selectors[$selector][] = $action;
+            return $this;
+        }
     }
 
     /**
@@ -244,19 +352,29 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      * @param array $options Assoc array of MoveBy effect options
      *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
+     * @param bool $returnJs Optionally just return the JavaScript for the
+     * effect, without adding it to the CSS selector observers linked up on page
+     * load.
+     *
+     * @return mixed object Solar_View_Helper_JsScriptaculous_Effect | string $js JavaScript string
      *
      */
-    public function moveBy($selector, $y = 0, $x = 0, $options = array())
+    public function moveBy($selector, $y = 0, $x = 0, $options = array(), $returnJs = false)
     {
-        $this->_view->js()->selectors[$selector][] = array(
+        $action = array(
             'type'    => $this->_type,
             'name'    => 'MoveBy',
             'y'       => $y,
             'x'       => $x,
             'options' => $options
         );
-        return $this;
+
+        if ($returnJs) {
+            return $this->fetch($selector, $action);
+        } else {
+            $this->_view->js()->selectors[$selector][] = $action;
+            return $this;
+        }
     }
 
     /**
@@ -271,7 +389,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      * @todo Figure out the best way to handle this effect.
      *
-     * @return object Solar_View_Helper_JsScriptaculous
+     * @return mixed object Solar_View_Helper_JsScriptaculous_Effect | string $js JavaScript string
      *
      */
     /**
@@ -285,325 +403,6 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
 
     /**
      *
-     * Setup trigger for combination Appear effect.
-     *
-     * @param string $selector CSS selector of element to appear
-     *
-     * @param array $options Assoc array of Appear effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function appear($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Appear',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Fade effect.
-     *
-     * @param string $selector CSS selector of element to fade
-     *
-     * @param array $options Assoc array of Fade effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function fade($selector, $options = array())
-    {
-         $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Fade',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Puff effect.
-     *
-     * @param string $selector CSS selector of element to puff
-     *
-     * @param array $options Assoc array of Puff effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function puff($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Puff',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination DropOut effect.
-     *
-     * @param string $selector CSS selector of element to drop out
-     *
-     * @param array $options Assoc array of DropOut effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function dropOut($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'DropOut',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Shake effect.
-     *
-     * @param string $selector CSS selector of element to shake
-     *
-     * @param array $options Assoc array of Shake effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function shake($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Shake',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination SwitchOff effect.
-     *
-     * @param string $selector CSS selector of element to switch off
-     *
-     * @param array $options Assoc array of SwitchOff effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function switchOff($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'SwitchOff',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination BlindDown effect.
-     *
-     * @param string $selector CSS selector of element to run the BlindDown
-     * effect on
-     *
-     * @param array $options Assoc array of BlindDown effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function blindDown($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'BlindDown',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination BlindUp effect.
-     *
-     * @param string $selector CSS selector of element to run the BlindUp effect
-     * on
-     *
-     * @param array $options Assoc array of BlindUp effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function blindUp($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'BlindUp',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination SlideDown effect.
-     *
-     * @param string $selector CSS selector of element to run the SlideDown
-     * effect on
-     *
-     * @param array $options Assoc array of SlideDown effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function slideDown($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'SlideDown',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination SlideUp effect.
-     *
-     * @param string $selector CSS selector of element to run the SlideUp effect
-     * on
-     *
-     * @param array $options Assoc array of SlideUp effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function slideUp($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'SlideUp',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Pulsate effect.
-     *
-     * @param string $selector CSS selector of element to pulsate
-     *
-     * @param array $options Assoc array of Pulsate effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function pulsate($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Pulsate',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Squish effect.
-     *
-     * @param string $selector CSS selector of element to squish
-     *
-     * @param array $options Assoc array of Squish effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function squish($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Squish',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Fold effect.
-     *
-     * @param string $selector CSS selector of element to fold
-     *
-     * @param array $options Assoc array of Fold effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function fold($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Fold',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Grow effect.
-     *
-     * @param string $selector CSS selector of element to grow
-     *
-     * @param array $options Assoc array of Grow effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function grow($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Grow',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
-     * Setup trigger for combination Shrink effect.
-     *
-     * @param string $selector CSS selector of element to shrink
-     *
-     * @param array $options Assoc array of Shrink effect options
-     *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
-     *
-     */
-    public function shrink($selector, $options = array())
-    {
-        $this->_view->js()->selectors[$selector][] = array(
-            'type'    => $this->_type,
-            'name'    => 'Shrink',
-            'options' => $options
-        );
-        return $this;
-    }
-
-    /**
-     *
      * Setup trigger for combination Toggle utility method.
      *
      * $effect can be one of 'appear', 'slide', or 'blind'
@@ -614,18 +413,28 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *
      * @param array $options Assoc array of Toggle effect options
      *
-     * @return object Solar_View_Helper_JsScriptaculous_Effect
+     * @param bool $returnJs Optionally just return the JavaScript for the
+     * effect, without adding it to the CSS selector observers linked up on page
+     * load.
+     *
+     * @return mixed object Solar_View_Helper_JsScriptaculous_Effect | string $js JavaScript string
      *
      */
-    public function toggle($selector, $effect = 'appear', $options = array())
+    public function toggle($selector, $effect = 'appear', $options = array(), $returnJs = false)
     {
-        $this->_view->js()->selectors[$selector][] = array(
+        $action = array(
             'type'    => $this->_type,
             'name'    => 'Toggle',
             'effect'  => $effect,
             'options' => $options
         );
-        return $this;
+
+        if ($returnJs) {
+            return $this->fetch($selector, $action);
+        } else {
+            $this->_view->js()->selectors[$selector][] = $action;
+            return $this;
+        }
     }
 
 }

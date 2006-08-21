@@ -17,6 +17,7 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
             'Solar_Markdown_Extra_DefList',
+            'Solar_Markdown_Wiki_ColorCodeBlock',
             'Solar_Markdown_Plugin_CodeBlock',
             'Solar_Markdown_Plugin_BlockQuote',
             'Solar_Markdown_Wiki_Html',

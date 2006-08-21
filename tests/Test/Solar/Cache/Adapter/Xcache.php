@@ -8,6 +8,8 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
         'config'  => array(
             'life'   => 7, // 7 seconds
         ),
+        'xcache.admin.user' => 'foo',
+        'xcache.admin.pass' => 'bar'
     );
 
     public function __construct($config = null)
@@ -17,12 +19,22 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
             $this->skip('xcache extension not loaded');
         }
     }
-    
+
     public function setup()
     {
         // create a Solar_Cache with the Solar_Cache_Xcache adapter
         $this->_cache = Solar::factory('Solar_Cache', $this->_config);
 
+        // deleteAll is an admin function, needs matching xcache admin creds
+        $_SERVER['PHP_AUTH_USER'] = $this->_config['xcache.admin.user'];
+        $_SERVER['PHP_AUTH_PW'] = $this->_config['xcache.admin.pass'];
+
+        // remove all previous entries
+        $this->_cache->deleteAll();
+    }
+
+    public function tearDown()
+    {
         // remove all previous entries
         $this->_cache->deleteAll();
     }
@@ -33,7 +45,7 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
         $data = 'Spaceman Spiff';
 
         // data has not been stored yet
-        $this->assertFalse($this->_cache->fetch($id));
+        $this->assertNull($this->_cache->fetch($id));
 
         // store it
         $this->assertTrue($this->_cache->save($id, $data));
@@ -43,7 +55,7 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
 
         // delete it, should not be able to fetch again
         $this->_cache->delete($id);
-        $this->assertFalse($this->_cache->fetch($id));
+        $this->assertNull($this->_cache->fetch($id));
     }
 
     public function testDeleteAll()
@@ -53,7 +65,7 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
 
         foreach ($list as $id) {
             // data has not been stored yet
-            $this->assertFalse($this->_cache->fetch($id));
+            $this->assertNull($this->_cache->fetch($id));
             // so store some data
             $this->assertTrue($this->_cache->save($id, $data));
             // and we should be able to fetch now
@@ -65,7 +77,7 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
 
         // should not be able to fetch again
         foreach ($list as $id) {
-            $this->assertFalse($this->_cache->fetch($id));
+            $this->assertNull($this->_cache->fetch($id));
         }
     }
 
@@ -75,7 +87,7 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
         $data = 'Spaceman Spiff';
 
         // data has not been stored yet
-        $this->assertFalse($this->_cache->fetch($id));
+        $this->assertNull($this->_cache->fetch($id));
 
         // store it
         $this->assertTrue($this->_cache->save($id, $data));
@@ -83,52 +95,32 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
         // and we should be able to fetch now
         $this->assertSame($this->_cache->fetch($id), $data);
 
-        // deactivate then try to fetch
-        $this->_cache->setActive(false);
-        $this->assertFalse($this->_cache->isActive());
-        $this->assertFalse($this->_cache->fetch($id));
+        // xcache has no ability to de-activate a cached value
 
-        // re-activate then try to fetch
-        $this->_cache->setActive(true);
-        $this->assertTrue($this->_cache->isActive());
-        $this->assertSame($this->_cache->fetch($id), $data);
     }
 
-    public function testGetLife()
+    public function testTTL()
     {
         $id = 'spiff';
         $data = 'Spaceman Spiff';
 
         // configured from setup
-        $this->assertSame($this->_cache->getLife(), $this->_config['config']['life']);
+        // xcache has no getLife()-type method
+        //$this->assertSame($this->_cache->getLife(), $this->_config['config']['life']);
 
         // store something
-        $this->assertTrue($this->_cache->save($id, $data));
+        $this->assertTrue($this->_cache->save($id, $data, 3));
         $this->assertSame($this->_cache->fetch($id), $data);
 
         // wait until just before the lifetime,
         // we should still get data
-        sleep($this->_cache->getLife() - 1);
+        sleep(1);
         $this->assertSame($this->_cache->fetch($id), $data);
 
         // wait until just after the lifetime,
         // we should get nothing
-        sleep(2);
-        $this->assertFalse($this->_cache->fetch($id));
-    }
-
-    public function testIsActive()
-    {
-        // should be active by default
-        $this->assertTrue($this->_cache->isActive());
-
-        // turn it off
-        $this->_cache->setActive(false);
-        $this->assertFalse($this->_cache->isActive());
-
-        // turn it back on
-        $this->_cache->setActive(true);
-        $this->assertTrue($this->_cache->isActive());
+        sleep(5);
+        $this->assertNull($this->_cache->fetch($id));
     }
 
     public function testSave_Array()

@@ -124,7 +124,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      *
      * @param string $key The entry ID.
      *
-     * @return void
+     * @return bool true on successful deletion, false on failure
      *
      */
     public function delete($key)
@@ -139,7 +139,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      * @param mixed 'user' to delete user variables & cached scripts,
      * null to delete only cached scripts
      *
-     * @return void
+     * @return bool true on success, false on failure
      *
      */
     public function deleteAll($cache_type = 'user')

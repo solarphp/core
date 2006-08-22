@@ -48,12 +48,12 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      * _(int)_ The cache entry lifetime in seconds, default `0`
      * (never expires).
      *
-     * `xcache.admin.user`:
+     * `user`:
      * _(string)_ Admin user name for Xcache, as set in php.ini. This login
      * and the corresponding password are required _only_ for the deleteAll()
      * method. Defaults to `null`.
      *
-     * `xcache.admin.pass`:
+     * `pass`:
      * _(string)_ Plaintext password that matches the md5() encrypted password
      * in php.ini. This password and the corresponding login are required
      * _only_ for the deleteAll() method. Defaults to `null`.
@@ -63,8 +63,8 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      */
     protected $_Solar_Cache_Adapter_Xcache = array(
         'life' => 0,
-        'xcache.admin.user' => null,
-        'xcache.admin.pass' => null
+        'user' => null,
+        'pass' => null
     );
 
     /**
@@ -135,42 +135,35 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
     /**
      *
      * Removes all cache entries.
-     *
-     * @param mixed 'user' to delete user variables & cached scripts,
-     * null to delete only cached scripts
-     *
+     * 
+     * Note that Xcache makes a distinction between "user" entries and
+     * "system" or "script" entries; this deletes only "user entries".
+     * 
      * @return bool true on success, false on failure
      *
      */
-    public function deleteAll($cache_type = 'user')
+    public function deleteAll()
     {
-
         // store creds current state
         $olduser = null;
         $oldpass = null;
+        
         if (isset($_SERVER['PHP_AUTH_USER'])) {
             $olduser = $_SERVER['PHP_AUTH_USER'];
         }
+        
         if (isset($_SERVER['PHP_AUTH_PW'])) {
             $oldpass = $_SERVER['PHP_AUTH_PW'];
         }
-        $_SERVER['PHP_AUTH_USER'] = $this->_config['xcache.admin.user'];
-        $_SERVER['PHP_AUTH_PW'] = $this->_config['xcache.admin.pass'];
+        
+        // force credentials to the configured values
+        $_SERVER['PHP_AUTH_USER'] = $this->_config['user'];
+        $_SERVER['PHP_AUTH_PW'] = $this->_config['pass'];
 
-        // XC_TYPE_VAR to clear user variables or
-        // XC_TYPE_PHP to delete cached scripts
-        if($cache_type == 'user') {
-            // clear user cache
-            $vcnt = xcache_count(XC_TYPE_VAR);
-            for ($i = 0; $i < $vcnt; $i++) {
-                if (!xcache_clear_cache(XC_TYPE_VAR, $i)) {
-                    return false;
-                }
-            }
-        }
-        $pcnt = xcache_count(XC_TYPE_PHP);
-        for ($i = 0; $i < $pcnt; $i++) {
-            if (!xcache_clear_cache(XC_TYPE_PHP, $i)) {
+        // clear user cache
+        $vcnt = xcache_count(XC_TYPE_VAR);
+        for ($i = 0; $i < $vcnt; $i++) {
+            if (!xcache_clear_cache(XC_TYPE_VAR, $i)) {
                 return false;
             }
         }
@@ -181,6 +174,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
         } else {
             $_SERVER['PHP_AUTH_USER'] = null;
         }
+        
         if ($oldpass !== null) {
             $_SERVER['PHP_AUTH_PW'] = $oldpass;
         } else {

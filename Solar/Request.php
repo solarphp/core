@@ -156,7 +156,6 @@ class Solar_Request extends Solar_Base {
      */
     public function __construct($config = null)
     {
-
         parent::__construct($config);
 
         // make copies of the original superglobal values
@@ -181,12 +180,12 @@ class Solar_Request extends Solar_Base {
 
     /**
      *
-     * get/post/server/env/files/cookie/headers getters, which return massaged
-     * values.
+     * Getters for get/post/server/env/files/cookie/headers, which
+     * return massaged values.
      *
      * @param string $name Name of getter
      *
-     * @param string $key Optional key of desired array to retrieve
+     * @param string $args Optional key of desired array to retrieve
      *
      * @return mixed Full array or array value
      *

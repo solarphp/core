@@ -137,7 +137,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      * Removes all cache entries.
      * 
      * Note that Xcache makes a distinction between "user" entries and
-     * "system" or "script" entries; this deletes only "user entries".
+     * "system" or "script" entries; this deletes only "user" entries.
      * 
      * @return bool true on success, false on failure
      *

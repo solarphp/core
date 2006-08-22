@@ -50,8 +50,6 @@
  * 
  * @todo How to configure plugins at the start?
  * 
- * @todo How to configure plugin settings after construction?
- * 
  * @todo How to send a plugin object in the config?
  * 
  */
@@ -339,7 +337,7 @@ class Solar_Markdown extends Solar_Base {
      * Returns an internal Markdow plugin object for direct manipulation
      * and inspection.
      * 
-     * @param string $text The plugin class name.
+     * @param string $class The plugin class name.
      * 
      * @return object The requested Markdown plugins.
      * 
@@ -629,6 +627,8 @@ class Solar_Markdown extends Solar_Base {
      * when parsing.
      * 
      * @param string $text The source text.
+     * 
+     * @param bool $only_backslash Only encode backslashed characters.
      * 
      * @return string The encoded text.
      * 

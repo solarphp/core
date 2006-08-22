@@ -1,12 +1,76 @@
 <?php
+/**
+ * 
+ * Block class to form tables from Markdown syntax.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * Block class to form tables from Markdown syntax.
+ * 
+ * Syntax is ...
+ * 
+ *     |  Header 1  |  Header 2  |  Header N 
+ *     | ---------- | ---------- | ----------
+ *     | data cell  | data cell  | data cell 
+ *     | data cell  | data cell  | data cell 
+ *     | data cell  | data cell  | data cell 
+ *     | data cell  | data cell  | data cell 
+ * 
+ * You can force columns alignment by putting a colon in the header-
+ * underline row.
+ * 
+ *     | Left-Aligned |  No Align | Right-Aligned 
+ *     | :----------- | --------- | -------------:
+ *     | data cell    | data cell | data cell      
+ *     | data cell    | data cell | data cell      
+ *     | data cell    | data cell | data cell      
+ *     | data cell    | data cell | data cell      
+ * 
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
-    //
-    // Form HTML tables.
-    //
+    /**
+     * 
+     * Transforms Markdown syntax to XHTML tables.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
@@ -71,6 +135,15 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Support callback for leading-pipe syntax.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parsePipe($matches)
     {
         // Remove leading pipe for each row.
@@ -78,7 +151,15 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
         return $this->_parsePlain($matches);
     }
     
-    
+    /**
+     * 
+     * Support callback for table conversion.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parsePlain($matches)
     {
         $head       = $matches[1];

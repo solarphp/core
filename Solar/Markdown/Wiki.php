@@ -1,8 +1,52 @@
 <?php
+/**
+ * 
+ * Markdown engine rules for wiki markup.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Markdown parse/render engine.
+ */
 Solar::loadClass('Solar_Markdown');
+
+/**
+ * 
+ * Markdown engine rules for wiki markup.
+ * 
+ * This class implements a plugin set for the Markdown-Extra syntax;
+ * be sure to visit the [Markdown-Extra][] site for syntax examples.
+ * 
+ * [Markdown-Extra]: http://www.michelf.com/projects/php-markdown/extra/
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @todo Implement the markdown-in-html portion of Markdown-Extra.
+ * 
+ */
 class Solar_Markdown_Wiki extends Solar_Markdown {
     
-    // we want to disallow HTML from almost everything
+    /**
+     * 
+     * User-defined configuration values.
+     * 
+     * This sets the plugins and their processing order for the engine.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_Markdown_Wiki = array(
         'plugins' => array(
             

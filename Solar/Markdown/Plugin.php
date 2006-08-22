@@ -303,6 +303,8 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * @param string $text Source text.
      * 
+     * @param int $quotes A PHP entities constant, default ENT_COMPAT.
+     * 
      * @return string The escaped text.
      * 
      */

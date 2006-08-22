@@ -1,12 +1,69 @@
 <?php
+/**
+ * 
+ * Block class to form definition lists.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin');
+
+/**
+ * 
+ * Block class to form definition lists.
+ * 
+ * Syntax is:
+ * 
+ *     term
+ *     : definition
+ *     
+ *     term1
+ *     term2
+ *     : definition
+ *     
+ *     term
+ *     : definition 1
+ *     : definition 2
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
     
+    /**
+     * 
+     * This is a block plugin.
+     * 
+     * @var bool
+     * 
+     */
     protected $_is_block = true;
     
-    //
-    // Form HTML definition lists.
-    //
+    /**
+     * 
+     * Processes source text to find definition lists.
+     * 
+     * @param string $text The source text.
+     * 
+     * @return string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
@@ -51,6 +108,15 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Support callback for block quotes.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parse($matches)
     {
         // Re-usable patterns to match list item bullets and number markers:
@@ -64,10 +130,16 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
     }
 
 
-    //
-    //    Process the contents of a single ordered or unordered list, splitting it
-    //    into individual list items.
-    //
+    /**
+     * 
+     * Process the contents of a definition list, splitting it into
+     * individual list items.
+     * 
+     * @param string $list_str The source text of the list block.
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _processItems($list_str)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
@@ -113,6 +185,15 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
         return $list_str;
     }
     
+    /**
+     * 
+     * Support callback for processing item terms.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _processDt($matches)
     {
         $terms = explode("\n", trim($matches[1]));
@@ -124,6 +205,15 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
         return $text . "\n";
     }
     
+    /**
+     * 
+     * Support callback for processing item definitions.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _processDd($matches)
     {
         $leading_line = $matches[1];

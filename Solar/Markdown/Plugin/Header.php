@@ -86,7 +86,7 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
     
     /**
      * 
-     * Turns setext-style headers into XHTML header tags.
+     * Turns ATX- and setext-style headers into XHTML header tags.
      * 
      * @param string $text Portion of the Markdown source text.
      * 

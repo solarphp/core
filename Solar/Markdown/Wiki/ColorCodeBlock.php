@@ -128,6 +128,15 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
              . "\n";
     }
     
+    /**
+     * 
+     * Returns colorized PHP code.
+     * 
+     * @param string $code The code block to colorize.
+     * 
+     * @return string The colorized code.
+     * 
+     */
     protected function _colorPhp($code)
     {
         // start using http://us3.php.net/manual/en/function.highlight-string.php#68274

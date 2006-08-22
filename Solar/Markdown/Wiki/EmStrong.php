@@ -7,10 +7,6 @@
  * 
  * @package Solar_Markdown
  * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
@@ -28,13 +24,9 @@ Solar::loadClass('Solar_Markdown_Extra_EmStrong');
  * 
  * Span plugin to insert emphasis and strong tags.
  * 
- * * `*foo*` and `_foo_` become `<em>foo</em>`.
- * 
- * * `**bar**` and `__bar__` become `<strong>bar</strong>`.
- * 
- * * `***zim***` and `___zim___` become `<strong><em>zim</em></strong>`.
- * 
- * * `**_zim_**` and `__*zim*__` become `<strong><em>zim</em></strong>`.
+ * Works the same as the "Extra" em/strong plugin, in that underscores
+ * and stars inside words are not triggers for markup.  However, this
+ * plugin goes one better and saves the markup as an HTML token.
  * 
  * @category Solar
  * 

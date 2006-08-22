@@ -1,9 +1,52 @@
 <?php
+/**
+ * 
+ * Span plugin to insert emphasis and strong tags.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
 
+/**
+ * Abstract plugin class.
+ */
 Solar::loadClass('Solar_Markdown_Plugin_EmStrong');
 
+/**
+ * 
+ * Span plugin to insert emphasis and strong tags.
+ * 
+ * Differs from default Markdown in that underscores and stars inside a
+ * word will not trigger the markup.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Markdown
+ * 
+ */
 class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {
     
+    /**
+     * 
+     * Converts emphasis and strong text.
+     * 
+     * @param string $text The source text.
+     * 
+     * @param string The transformed XHTML.
+     * 
+     */
     public function parse($text)
     {
         // <strong> must go first:

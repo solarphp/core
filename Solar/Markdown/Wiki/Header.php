@@ -46,13 +46,13 @@ Solar::loadClass('Solar_Markdown_Plugin');
  *     
  * ... would become:
  * 
- *     <h2>Title</h2>
+ *     <h1>Title</h1>
  *     
- *     <h3>Super-Section</h3>
+ *     <h2>Super-Section</h2>
  *     
- *     <h4>Section</h4>
+ *     <h3>Section</h3>
  *     
- *     <h5>Sub-Section</h5>
+ *     <h4>Sub-Section</h4>
  * 
  * @category Solar
  * 

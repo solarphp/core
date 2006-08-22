@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for <ul>, <ol>, and <li> tags.
+ * Helper for simple lists: <ul>, <ol>, <li> tags, and <dl>, <dt>, <dd> tags.
  * 
  * @category Solar
  * 
@@ -22,7 +22,7 @@ Solar::loadClass('Solar_View_Helper');
  
 /**
  * 
- * Helper for meta tags.
+ * Helper for simple lists: <ul>, <ol>, <li> tags, and <dl>, <dt>, <dd> tags.
  * 
  * @category Solar
  * 

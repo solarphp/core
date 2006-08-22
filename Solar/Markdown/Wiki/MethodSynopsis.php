@@ -107,6 +107,15 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
         );
     }
     
+    /**
+     * 
+     * Support callback for method synopses.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     protected function _parse($matches)
     {
         $method = $matches[1];

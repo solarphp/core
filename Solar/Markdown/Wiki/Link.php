@@ -442,9 +442,9 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * 
      * Cleans up text to replace encoded placeholders with anchors.
      * 
-     * @param string $page The page name from the source text.
+     * @param string $text The source text with placeholders.
      * 
-     * @return string The normalized page name.
+     * @return string The text with anchors instead of placeholders.
      * 
      */
     public function cleanup($text)

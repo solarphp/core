@@ -100,11 +100,11 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      *
      * Build and return JavaScript for page header
      *
-     * @return string Block of JavaScript with <script src ...> and inline script
-     * chunks as needed.
+     * @return string Block of JavaScript with <script src ...> for view-defined
+     * script requirements.
      *
      */
-    public function fetch()
+    public function fetchFiles()
     {
         $js = '';
 
@@ -114,11 +114,27 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
             }
         }
 
+        return $js;
+    }
+
+    /**
+     *
+     * Returns all defined inline scripts. This is a separate fetch method
+     * so that any/all external (standalone .js file) scripts required by the
+     * App or the View that the inline scripts depend on can be loaded prior to
+     * the output of the inline script.
+     *
+     * @return string All inline JavaScripts
+     *
+     */
+    public function fetchInline()
+    {
+        $js = '';
+
         // Loop through selectors for registered actions
-        $load = '';
         $f = '';
         if (!empty($this->selectors)) {
-            
+
             foreach ($this->selectors as $selector => $actions) {
 
                 // Wrap in selector loop
@@ -156,7 +172,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         if (!empty($this->scripts)) {
             $scripts = implode("\n\n", $this->scripts);
             $scripts = trim($scripts);
-            $js .= $this->_view->inlineScript($scripts);
+            $js = $this->_view->inlineScript($scripts);
         }
 
         return $js;
@@ -212,7 +228,6 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
         return $this;
     }
-
 
 
 }

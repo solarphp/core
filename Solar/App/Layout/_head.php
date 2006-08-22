@@ -1,20 +1,20 @@
 <?php
 /**
- * 
+ *
  * Partial template for layouts to generate the <head> section.
- * 
+ *
  * @category Solar
- * 
+ *
  * @package Solar_Layout
- * 
+ *
  * @author Paul M. Jones <pmjones@solarphp.com>
- * 
+ *
  * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
+ *
  * @version $Id$
- * 
+ *
  */
- 
+
 // meta elements
 if (! empty($this->layout_meta)) {
     foreach ((array) $this->layout_meta as $val) {
@@ -49,7 +49,11 @@ if (! empty($this->layout_style)) {
     }
 }
 
-// scripts
+// Helper-required scripts before App scripts, so that App scripts may
+// rely on bundled script files.
+echo $this->js()->fetchFiles();
+
+// Now, App scripts
 if (! empty($this->layout_script)) {
     foreach ((array) $this->layout_script as $val) {
         settype($val, 'array');
@@ -59,8 +63,8 @@ if (! empty($this->layout_script)) {
     }
 }
 
-// Helper-required scripts
-echo $this->js()->fetch();
+// Finally, any inline scripts
+echo $this->js()->fetchInline();
 
 /** @todo object */
 ?>

@@ -47,20 +47,22 @@ class Test_Solar_View_Helper_Js extends Solar_Test {
         $this->assertSame($helper, $this->_view->getHelper('js'));
     }
 
-    public function testFetch()
+    public function testFetch_Files_Inline()
     {
-        $helper = $this->_view->js()->addFile('foo.js')
-                                    ->addFile('bar.js');
 
         // one second highlight of #test
         $this->_view->jsScriptaculous()->effect->highlight('#test', array('duration' => 1));
 
-        $actual = $helper->fetch();
+        $helper = $this->_view->js()->addFile('foo.js')
+                                    ->addFile('bar.js');
 
-        $expect = '    <script src="/public/foo.js" type="text/javascript"></script>'."\n";
-        $expect .= '    <script src="/public/bar.js" type="text/javascript"></script>'."\n";
-        $expect .= '    <script src="/public/Solar/scripts/prototype/prototype.js" type="text/javascript"></script>'."\n";
+        $actual = $helper->fetchFiles();
+        $actual .= $helper->fetchInline();
+
+        $expect = '    <script src="/public/Solar/scripts/prototype/prototype.js" type="text/javascript"></script>'."\n";
         $expect .= '    <script src="/public/Solar/scripts/scriptaculous/effects.js" type="text/javascript"></script>'."\n";
+        $expect .= '    <script src="/public/foo.js" type="text/javascript"></script>'."\n";
+        $expect .= '    <script src="/public/bar.js" type="text/javascript"></script>'."\n";
         $expect .= '<script type="text/javascript">'."\n";
         $expect .= "//<![CDATA[\n";
         $expect .= "Event.observe(window,'load',function() {\n";

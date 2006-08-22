@@ -1,4 +1,4 @@
-Obviously this is the constructor.  However, it does quite a bit within Solar, particularly when reading the [Main::ConfigFile config file] values for the class.
+Obviously this is the constructor.  However, it does quite a bit within Solar, particularly when reading the [[Main::ConfigFile | config file]] values for the class.
 
 --------------------
 Extending the Constructor
@@ -46,7 +46,7 @@ When you define a Solar_Base extended class, you will need to populate the Solar
     }
 }}
 
-When you use Solar::factory() to instantiate this class, those will be the default $_config values.
+When you use [[Solar::factory()]] to instantiate this class, those will be the default $_config values.
 
 {{code: php
     $example = Solar::factory('Example');
@@ -62,7 +62,7 @@ When you use Solar::factory() to instantiate this class, those will be the defau
 Config File Settings
 ====================
 
-Now, if your [Main::ConfigFile config file] has an 'Example' group in it, those values will override any of the default values set by your class definition.  Say your config file looks something like this:
+Now, if your [[Main::ConfigFile | config file]] has an 'Example' group in it, those values will override any of the default values set by your class definition.  Say your config file looks something like this:
 
 {{code: php
     $config = array();
@@ -88,7 +88,7 @@ When you instantiate the Example object, the config file value will override the
 Instantiation Settings
 ====================
 
-Finally, if you specify a configuration array as the second parameter of Solar::factory(), those values override both the default values of the class definition and the Solar.config.php values.
+Finally, if you specify a configuration array as the second parameter of [[Solar::factory()]], those values override both the default values of the class definition and the Solar.config.php values.
 
 {{code: php
     $config = array('opt_2' => 'gir');

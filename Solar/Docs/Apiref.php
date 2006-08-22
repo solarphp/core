@@ -38,7 +38,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `phpdoc`:
      * (dependency) A Solar_Docs_Phpdoc dependency.

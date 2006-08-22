@@ -43,7 +43,7 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      *
      * User-provided configuration.
      *
-     * Keys are:
+     * Keys are ...
      *
      * `life`:
      * (int) The cache entry lifetime in seconds, default 0

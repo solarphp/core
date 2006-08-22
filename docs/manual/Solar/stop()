@@ -1,5 +1,5 @@
 Stops the Solar environment.  As a counterpart to
-Solar::start(), the stop() method shuts down the Solar
+[[Solar::start()]], the stop() method shuts down the Solar
 environment.
 
 {{code: php
@@ -12,5 +12,5 @@ environment.
 }}
 
 Effectively, all this does it execute any scripts named in
-Solar::$config['Solar']['stop'].  This allows you to run
+[[Solar::$config]]['Solar']['stop'].  This allows you to run
 shutdown scripts particular to your system.

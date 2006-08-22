@@ -80,7 +80,7 @@ View Processing
 
 Solar_View takes the place of Solar_Template, and is a new "flavor" of Savant3 specifically for Solar integration.
 
-There are new helpers as well, in particular the above-mentioned action() and publicHref() for URI generation, as well as new form and form-element helpers with built-in localization using Solar::locale().
+There are new helpers as well, in particular the above-mentioned action() and publicHref() for URI generation, as well as new form and form-element helpers with built-in localization using [[Solar::locale()]].
 
 When changing your Solar_Template scripts to Solar_View, note that these changes are needed:
 

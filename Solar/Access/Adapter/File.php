@@ -79,7 +79,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         $lines = explode("\n", $src);
         
         foreach ($lines as $line) {
-            // $info keys are:
+            // $info keys are ...
             // 0 => "allow" or "deny"
             // 1 => "handle" or "role"
             // 2 => handle/role name

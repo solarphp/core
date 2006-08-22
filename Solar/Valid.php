@@ -93,7 +93,7 @@ class Solar_Valid extends Solar_Base {
      * @param mixed $value The value to validate.
      * 
      * @param callback $callback A string or array suitable for use
-     * as the first argument to [[php call_user_func_array()]].
+     * as the first argument to [[php::call_user_func_array() | ]].
      * 
      * @return bool True if valid, false if not.
      * 
@@ -115,7 +115,7 @@ class Solar_Valid extends Solar_Base {
     
     /**
      * 
-     * Validate a value against a [[php ctype]] function.
+     * Validate a value against a [[php::ctype | ]] function.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -688,7 +688,7 @@ class Solar_Valid extends Solar_Base {
      * 
      * Validate a value against a regular expression.
      * 
-     * Uses [[php preg_match()]] to compare the value against the given
+     * Uses [[php::preg_match() | ]] to compare the value against the given
      * regular epxression.
      * 
      * @param mixed $value The value to validate.

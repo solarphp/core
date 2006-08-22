@@ -65,7 +65,7 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `adapters`:
      * (array) An array of arrays, where each sub-array

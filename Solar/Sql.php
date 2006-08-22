@@ -30,7 +30,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `adapter`:
      * (string) The adapter class to use, e.g. 'Solar_Sql_Adapter_Mysql'.
@@ -252,7 +252,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Select rows from the database.
      * 
-     * Available selection types are:
+     * Available selection types are ...
      * 
      * ||~ $type      ||~ returns ||
      * ||  `all`    ||  Solar_Sql_Rowset object of all rows; return class can be set using $class ||

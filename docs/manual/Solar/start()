@@ -14,11 +14,11 @@ file.  It loads the configuration values, cleans up $GLOBALS, and so on.
 The start() method performs a number of activities for
 you to set up the execution environment:
 
-# Reads the [Main::ConfigFile configuration file] file into Solar::$config.
+1. Reads the [[Main::ConfigFile | configuration file]] file into [[Solar::$config]].
 
-# Processes the Solar::$config['Solar']['ini_set'] key/value pairs using [[php ini_set()]].
+2. Processes the [[Solar::$config]]['Solar']['ini_set'] key/value pairs using [[php::ini_set() | ]].
 
-# Finally, Solar runs any scripts noted in Solar::$config['Solar']['start'].  This allows you to specify additional environment startup behaviors.
+3. Finally, Solar runs any scripts noted in [[Solar::$config]]['Solar']['start'].  This allows you to specify additional environment startup behaviors.
 
 
 --------------------
@@ -28,23 +28,22 @@ Alternative Configurations
 Note that the `start()` is overloaded; you can pass in different
 value types for the $config parameter.
 
-* `false` -- This will explicitly **not** load any
-  additional configuration; you will get only the default
-  Solar::$config array values defined in the Solar class.
+* `false` -- This will explicitly **not** load any additional
+  configuration; you will get only the default [[Solar::$config]] array
+  values defined in the Solar class.
 
-* `null` -- Equivalent to Solar::start(), this will cause
-  Solar to read the value of the SOLAR_CONFIG_PATH global constant
-  as the path to a file; the return value of that file will be used
-  for Solar::$config.
+* `null` -- Equivalent to [[Solar::start()]], this will cause Solar to
+  read the value of the SOLAR_CONFIG_PATH global constant as the path to
+  a file; the return value of that file will be used for [[Solar::$config]].
 
 * `string` -- The string is treated as a path to a Solar.config.php
-  file; the return value from that file will be used for Solar::$config.
+  file; the return value from that file will be used for [[Solar::$config]].
 
-* `array` -- This will use the passed array for the Solar::$config
+* `array` -- This will use the passed array for the [[Solar::$config]]
   values.
 
-* `object` -- The passed object will be cast as an array,
-  and those values will be used for Solar::$config.
+* `object` -- The passed object will be cast as an array, and those
+  values will be used for [[Solar::$config]].
 
 Here are some examples of starting with alternative configuration parameters:
 

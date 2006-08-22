@@ -37,11 +37,11 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * User-supplied configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `sql`:
      * (string|array) How to get the SQL object.  If a string, is
-     * treated as a Solar::registry() object name.  If array, treated as
+     * treated as a [[Solar::registry()]] object name.  If array, treated as
      * config for a standalone Solar_Sql object.
      * 
      * `table`:

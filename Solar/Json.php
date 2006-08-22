@@ -55,7 +55,7 @@ class Solar_Json extends Solar_Base {
      *
      * User-defined configuration, primarily of use in unit testing.
      *
-     * Keys are:
+     * Keys are ...
      *
      * `bypass_ext`:
      * (bool) Flag to instruct Solar_Json to bypass

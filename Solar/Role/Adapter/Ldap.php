@@ -35,7 +35,7 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
      * 
      * Array of user configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `url`:
      * (string) URL to the LDAP server. Takes the format of "ldaps://example.com:389".

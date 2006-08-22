@@ -32,7 +32,7 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `output`:
      * (string) Output mode.  Set to 'html' for HTML; 
@@ -67,9 +67,9 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      * Returns the output of "var_dump()" with a label.
      * 
-     * Buffers the [[php var_dump]] for a variable,
+     * Buffers the [[php::var_dump | ]] for a variable,
      * applies some simple formatting for readability,
-     * and [[php echo]]s it with an optional label.
+     * and [[php::echo | ]]s it with an optional label.
      * Use this for debugging variables to see exactly
      * what they contain.
      * 

@@ -30,7 +30,7 @@ class Solar_Role extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `adapter`:
      * (string) The adapter class to use.

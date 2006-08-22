@@ -32,7 +32,7 @@ Solar::loadClass('Solar_Cache_Adapter');
  * 
  * This kind of cache is extremely fast, especially when on the same
  * server as the web process, although it may also be accessed via
- * network.  This particular adapter uses the PHP [[php memcache]]
+ * network.  This particular adapter uses the PHP [[php::memcache | ]]
  * extension to manage the cache connection.  The extension is not
  * bundled with PHP; you will need to follow the
  * [installation instructions](http://php.net/memcache) before you can
@@ -49,7 +49,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `host`:
      * (string) The memcached host name, default 'localhost'.
@@ -88,7 +88,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * 
      * Constructor.
      * 
-     * Config keys are:
+     * Config keys are ...
      * 
      * `host`:
      * (string) The hostname of the memcached server, default 'localhost' 

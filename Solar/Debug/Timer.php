@@ -30,7 +30,7 @@ class Solar_Debug_Timer extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `output`:
      * (string) Output mode.  Set to 'html' for HTML; 

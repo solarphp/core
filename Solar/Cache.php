@@ -30,7 +30,7 @@ class Solar_Cache extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `active`:
      * (bool) Whether the cache is active or not when instantiated.

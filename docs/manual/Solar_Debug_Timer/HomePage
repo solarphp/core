@@ -2,7 +2,7 @@ This class allows you to profile the execution time of your script:
 you start the timer, set marks within your script, then stop the
 timer and display the profile.
 
-In the following example, we'll [[php sleep()]] for random periods
+In the following example, we'll [[php::sleep() | ]] for random periods
 under a second, then mark the timer profile.
 
 {{code: php

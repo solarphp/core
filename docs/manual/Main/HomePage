@@ -6,7 +6,7 @@ Solar for PHP5
 Current Release
 --------------------
 
-The current release is version @package_version@ as of @package_date@.  You can view the change log [here](http://solarphp.com/channel.php?package=Solar&release=@package_version@&downloads).  Installation instructions are [DownloadSolar here].
+The current release is version @package_version@ as of @package_date@.  You can view the change log [here](http://solarphp.com/channel.php?package=Solar&release=@package_version@&downloads).  Installation instructions are [[DownloadSolar | here]].
 
 --------------------
 Overview
@@ -22,4 +22,4 @@ You can visit our [PEAR channel](http://solarphp.com/channel.php) to review rele
 
 You can view the [[SolarDocs | documentation overview]] and notes on GettingStarted.
 
-You can read AboutSolar and then join the MailingList to report bugs.
+You can read [[AboutSolar]] and then join the [[MailingList]] to report bugs.

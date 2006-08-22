@@ -30,7 +30,7 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `events`:
      * (string|array) The event types this instance

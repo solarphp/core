@@ -40,7 +40,7 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * User-defined configuration array.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `classes`:
      * (array) Base class names for page controllers.

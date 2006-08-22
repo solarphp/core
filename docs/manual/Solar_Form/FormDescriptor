@@ -2,7 +2,7 @@
 Form Descriptor
 ====================
 
-While this descriptor array originated with [Savant](http://phpsavant.com) and [Main::HomePage Solar], the structure is generic enough for any framework to generate, and for any template system to render.  The structure is composed of an array of elements, where each element is itself an associative array.
+While this descriptor array originated with [Savant](http://phpsavant.com) and [[Main::HomePage | Solar]], the structure is generic enough for any framework to generate, and for any template system to render.  The structure is composed of an array of elements, where each element is itself an associative array.
 
 An example element array looks like this:
 

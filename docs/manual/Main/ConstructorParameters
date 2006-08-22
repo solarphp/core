@@ -49,6 +49,6 @@ In comparison, Solar classes can be instantiated like this:
     $example = new Solar_Test_Example($config);
 }}
 
-> **Note:** Usually Solar objects are instantiated via Solar::factory(), not via direct instantiation as above, but you get the idea.
+> **Note:** Usually Solar objects are instantiated via [[Solar::factory()]], not via direct instantiation as above, but you get the idea.
 
 Why do things this way?  The idea is to make it easy to read data from a ConfigFile and automatically configure object instances.  In the Solar_Test_Example class, the constructor parameter could easily be read from a configuration file and passed to the Solar_Test_Example constructor, which is not so easy with the Normal_Example.

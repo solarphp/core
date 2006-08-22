@@ -670,7 +670,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Reports whether or not user requested a specific submit type.
      *
-     * By default, looks for $_submit_key in Solar::post() to get the
+     * By default, looks for $_submit_key in [[Solar::post()]] to get the
      * value of the submit request.
      *
      * Checks against "SUBMIT_$type" locale string for matching.  E.g.,
@@ -681,7 +681,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 'preview', etc.
      *
      * @param string $submit_key If not empty, check against this
-     * Solar::post() key instead $this->_submit_key.  Default null.
+     * [[Solar::post()]] key instead $this->_submit_key.  Default null.
      *
      * @return bool
      *

@@ -2,7 +2,7 @@
 Localized Forms
 ====================
 
-Solar is built with worldwide distribution in mind; this means the end users of Solar applications may not speak your language.  As such, you should at least attempt to use the built-in localization facilities that Solar provides (c.f. the Solar::locale() and Solar_Base::locale() methods).
+Solar is built with worldwide distribution in mind; this means the end users of Solar applications may not speak your language.  As such, you should at least attempt to use the built-in localization facilities that Solar provides (c.f. the [[Solar::locale()]] and Solar_Base::locale() methods).
 
 Adding localization to a form is very straightforward.  You will need to localize ...
 
@@ -24,7 +24,7 @@ Before We Begin
 
 The first problem we run into with the Solar localization facility is that it expects the localization strings to be related to a class in some way.  While the GettingStarted example is fine for "standalone" forms, that example does not exist in relation to any other class.
 
-For this localization example, we'll use the generic Solar localization strings (which come as part of the standard Solar distribution) in some places (noted by calls to the Solar::locale() method) but we will also assume the existence of a Solar_Sql_Table class called $users; it has its own localization strings, noted by calls to $users->locale(), which will give us labels, descriptions, and so on.
+For this localization example, we'll use the generic Solar localization strings (which come as part of the standard Solar distribution) in some places (noted by calls to the [[Solar::locale()]] method) but we will also assume the existence of a Solar_Sql_Table class called $users; it has its own localization strings, noted by calls to $users->locale(), which will give us labels, descriptions, and so on.
 
 --------------------
 The Localized Example Form

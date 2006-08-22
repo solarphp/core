@@ -35,7 +35,7 @@ class Solar_View_Helper_ActionList extends Solar_View_Helper {
      * 
      * Default display options.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `list_type`:
      * (string) Default 'ul', optionally 'ol'.

@@ -10,12 +10,10 @@ We want to see how well this translates text.
     @return string
 }}
 
-Especially we want for [[wiki links]] to work, and for <html> to be
-**properly escaped**.
+Especially we want for [[wiki links]] to work, and for <span>...</span> 
+to be **properly escaped**.
 
-    <div>
-        <p>hm, this should show up literally</p>
-    </div>
+    <p>this should show up literally</p>
 
 And that's all folks!
 

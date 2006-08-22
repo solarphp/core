@@ -22,7 +22,7 @@ Solar::loadClass('Solar_View_Helper');
  
 /**
  * 
- * Helper for a formatted timestamp using [[php date()]] format codes.
+ * Helper for a formatted timestamp using [[php::date() | ]] format codes.
  * 
  * Default format is "Y-m-d\TH:i:s".
  * 
@@ -50,14 +50,14 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
     
     /**
      * 
-     * Outputs a formatted timestamp using [[php date()]] format codes.
+     * Outputs a formatted timestamp using [[php::date() | ]] format codes.
      * 
      * @access public
      * 
      * @param string $spec Any date-time string suitable for
      * strtotime().
      * 
-     * @param string $format An optional custom [[php date()]]
+     * @param string $format An optional custom [[php::date() | ]]
      * formatting string.
      * 
      * @return string The formatted date string.

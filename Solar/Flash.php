@@ -36,7 +36,7 @@ class Solar_Flash extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `class`:
      * Flash messages are for this class.  Default is 'Solar'.

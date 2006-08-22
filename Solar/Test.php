@@ -489,7 +489,7 @@ class Solar_Test extends Solar_Base {
     /**
      * 
      * Asserts that a value matches a regular expression pattern
-     * using [[php preg_match()]].
+     * using [[php::preg_match() | ]].
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -517,7 +517,7 @@ class Solar_Test extends Solar_Base {
     /**
      * 
      * Asserts that a value does not match a regular expression pattern
-     * using [[php preg_match()]].
+     * using [[php::preg_match() | ]].
      * 
      * @param mixed $actual The variable to test.
      * 
@@ -736,7 +736,7 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Recrsively [[php ksort()]] an array.
+     * Recrsively [[php::ksort() | ]] an array.
      * 
      * Used so that order of array elements does not affect equality.
      *

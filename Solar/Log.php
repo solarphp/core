@@ -47,7 +47,7 @@ class Solar_Log extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `adapter`:
      * (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.

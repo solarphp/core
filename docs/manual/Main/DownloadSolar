@@ -22,13 +22,14 @@ Requirements
 
  * SQLite 3 or later
 
+
 --------------------
 Direct Download
 --------------------
 
 You can download Solar directly from this link:
 
-<http://solarphp.com/get/Solar-@package_version@.tgz>
+<http://solarphp.com/get/Solar-@package_version@-alpha.tgz>
 
 Then copy the `Solar.php` file and `Solar/` directory into your libraries.
 
@@ -43,21 +44,21 @@ You can use our [channel server](http://solarphp.com/channel.php) to install and
 
 First, let PEAR discover the channel server...
 
-<code>
-bash-2.05$ pear channel-discover solarphp.com
-Adding Channel "solarphp.com" succeeded
-Discovery of channel "solarphp.com" succeeded
-bash-2.05$ 
+{{code: bash
+    bash-2.05$ pear channel-discover solarphp.com
+    Adding Channel "solarphp.com" succeeded
+    Discovery of channel "solarphp.com" succeeded
+    bash-2.05$ 
 }}
 
 ... then you can install or upgrade:
 
-<code>
-bash-2.05$ pear install Solar/Solar-alpha
-... installation messages follow ...
+{{code: bash
+    bash-2.05$ pear install Solar/Solar-alpha
+    ... installation messages follow ...
 
-bash-2.05$ pear upgrade Solar/Solar-alpha
-... upgrade messages follow ...
+    bash-2.05$ pear upgrade Solar/Solar-alpha
+    ... upgrade messages follow ...
 }}
 
 Because Solar is still in alpha, you need to specify the "-alpha" flag when installing or upgrading.
@@ -80,23 +81,23 @@ Problems?
 
 If you have problems with the channel not delivering the most-recent release, clear your local PEAR cache and try again:
 
-<code>
-bash-2.05$ pear clear-cache
-reading directory
-cache entries cleared
+{{code: bash
+    bash-2.05$ pear clear-cache
+    reading directory
+    cache entries cleared
 
-bash-2.05$ pear upgrade Solar/Solar-alpha
-... upgrade messages follow ...
+    bash-2.05$ pear upgrade Solar/Solar-alpha
+    ... upgrade messages follow ...
 }}
 
 Alternatively, you can use PEAR to install or upgrade a specific release directly from a tarball, like this:
 
-<code>
-bash-2.05$ pear install http://solarphp.com/get/Solar-@package_version@.tgz
-... installation messages follow ...
+{{code: bash
+    bash-2.05$ pear install http://solarphp.com/get/Solar-@package_version@.tgz
+    ... installation messages follow ...
 
-bash-2.05$ pear upgrade http://solarphp.com/get/Solar-@package_version@.tgz
-... upgrade messages follow ...
+    bash-2.05$ pear upgrade http://solarphp.com/get/Solar-@package_version@.tgz
+    ... upgrade messages follow ...
 }}
 
 --------------------
@@ -105,6 +106,6 @@ Source via Subversion
 
 You can [browse the Subversion repository](http://solarphp.com/svn/) and do anonymous checkouts:
 
-<code>
-bash-2.05$ svn checkout https://solarphp.com/svn/ solar
+{{code: bash
+    bash-2.05$ svn checkout https://solarphp.com/svn/ solar
 }}

@@ -35,7 +35,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `sql`:
      * (dependency) A Solar_Sql dependency object.

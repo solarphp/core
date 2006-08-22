@@ -30,7 +30,7 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
      * 
      * User-defined configuration keys.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `PDOStatement`:
      * (object) A PDOStatement object to be used as the

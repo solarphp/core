@@ -6,7 +6,7 @@ Naming Conventions
 Class Names
 --------------------
 
-All Solar class names start with `Solar_` and map directly to their filesystem location, where the underscore represents a new directory.  For example, the `Solar_Auth_Adapter_Sql` class is located at `Solar/Auth/Adapter/Sql.php`.  This makes it possible to use `Solar::loadClass()` and `Solar::factory()` to automatically load and configure new instances.
+All Solar class names start with `Solar_` and map directly to their filesystem location, where the underscore represents a new directory.  For example, the `Solar_Auth_Adapter_Sql` class is located at `Solar/Auth/Adapter/Sql.php`.  This makes it possible to use [[Solar::loadClass()]] and [[Solar::factory()]] to automatically load and configure new instances.
 
 --------------------
 Method Names
@@ -36,9 +36,9 @@ Global Variables
 
 Do not use global variables.  We say this for two reasons:
 
-# They open up security problems when `register_globals` is turned on
+1. They open up security problems when `register_globals` is turned on
 
-# They pollute the global namespace and may collide or overwrite each other in differing contexts
+2. They pollute the global namespace and may collide or overwrite each other in differing contexts
 
 --------------------
 Session Variables

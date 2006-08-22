@@ -1,10 +1,10 @@
 This method cycles through each element in the form, where it:
 
-# Applies the filters to populated user input for the element,
+1. Applies the filters to populated user input for the element,
 
-# Validates the filtered value against the validation rules for the element,
+2. Validates the filtered value against the validation rules for the element,
 
-# Adds feedback messages to the element if it does not pass validation.
+3. Adds feedback messages to the element if it does not pass validation.
 
 If all populated values pass validation, the method returns boolean true, indicating the form as a whole it valid; if even one validation on one element fails, the method returns boolean false.
 

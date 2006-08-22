@@ -13,6 +13,17 @@ abstract class Test_Solar_Markdown_Plugin extends Solar_Test {
     
     protected $_encode = "\x1B.*?\x1B";
     
+    // we need a special transform to process **spans** instead of
+    // blocks, for span testing.
+    protected function _spanTransform($text)
+    {
+        $text = $this->_markdown->prepare($text);
+        $text = $this->_markdown->processSpans($text);
+        $text = $this->_markdown->cleanup($text);
+        $text = $this->_markdown->render($text);
+        return $text;
+    }
+    
     public function __construct($config = null)
     {
         parent::__construct($config);

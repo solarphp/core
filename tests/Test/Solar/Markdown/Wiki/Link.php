@@ -5,18 +5,6 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     
     protected $_encode = "\x1BSolar_Markdown_Wiki_Link:.*?\x1B";
     
-    protected function _transform($text)
-    {
-        // we need a special transform to process **spans** instead of
-        // blocks, seeing as WikiLink is a span and only gets processed
-        // inside a block.  so we need to fake it.
-        $text = $this->_markdown->prepare($text);
-        $text = $this->_markdown->processSpans($text);
-        $text = $this->_markdown->cleanup($text);
-        $text = $this->_markdown->render($text);
-        return $text;
-    }
-    
     public function testIsBlock()
     {
         $this->assertFalse($this->_plugin->isBlock());
@@ -88,7 +76,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender()
     {
         $source = 'foo [[page name]] bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name">page name</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
@@ -96,7 +84,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender_frag()
     {
         $source = 'foo [[page name#frag]] bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name#frag">page name#frag</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
@@ -104,7 +92,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender_text()
     {
         $source = 'foo [[page name | text]] bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name">text</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
@@ -112,7 +100,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender_atch()
     {
         $source = 'foo [[page name atch]]es bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name_atch">page name atches</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
@@ -120,7 +108,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender_combo()
     {
         $source = 'foo [[page name#frag | display]]s bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name#frag">displays</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
@@ -128,55 +116,55 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
     public function testRender_comboCollapse()
     {
         $source = 'foo [[page name#frag | ]]s bar';
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="/wiki/read/Page_name#frag">page names</a> bar';
         $this->assertSame(trim($actual), trim($expect));
     }
     
-    public function testParse_interwiki()
+    public function testRender_interwiki()
     {
         $source = 'foo [[php::print()]] bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print()">php::print()</a> bar';
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiFrag()
+    public function testRender_interwikiFrag()
     {
         $source = 'foo [[php::print() #anchor]] bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print()#anchor">php::print()#anchor</a> bar';
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiText()
+    public function testRender_interwikiText()
     {
         $source = 'foo [[php::print() | other]] bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print()">other</a> bar';
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiAtch()
+    public function testRender_interwikiAtch()
     {
         $source = 'foo [[php::print]]ers bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print">php::printers</a> bar';
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiCombo()
+    public function testRender_interwikiCombo()
     {
         $source = 'foo [[php::print()#anchor | print]]ers bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print()#anchor">printers</a> bar';
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_interwikiComboCollapse()
+    public function testRender_interwikiComboCollapse()
     {
         $source = 'foo [[php::print#anchor | ]]ers bar';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $expect = 'foo <a href="http://php.net/print#anchor">printers</a> bar';
         $this->assertSame($actual, $expect);
     }
@@ -193,7 +181,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
                 . 'baz <a href="/wiki/read/Page_three">page three</a> '
                 . 'dib';
         
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
@@ -209,7 +197,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
                 . 'baz <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
                 . 'dib';
         
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
@@ -231,7 +219,7 @@ class Test_Solar_Markdown_Wiki_Link extends Test_Solar_Markdown_Plugin {
                 . 'gir <a href="http://php.net/phpinfo()">php::phpinfo()</a> '
                 . 'irk';
                 
-        $actual = $this->_transform($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

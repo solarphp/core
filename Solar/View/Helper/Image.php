@@ -37,7 +37,7 @@ class Solar_View_Helper_Image extends Solar_View_Helper {
 	 * Returns an <img ... /> tag.
 	 * 
 	 * If an "alt" attribute is not specified, will add it from the
-	 * image [[php basename()]].
+	 * image [[php::basename() | ]].
 	 * 
 	 * @param string $src The href to the image source.
 	 * 

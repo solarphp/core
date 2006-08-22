@@ -30,11 +30,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Information for "common" handle + passwd authentication adapters.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `source`:
      * (string) The source for auth credentials, 'get'
-     * (for Solar::get() method) or 'post' (for Solar::post() method).
+     * (for [[Solar::get()]] method) or 'post' (for [[Solar::post()]] method).
      * Default is 'post'.
      * 
      * `source_handle`:

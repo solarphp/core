@@ -35,7 +35,7 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
      * 
      * User-supplied configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `mailbox`:
      * (string) An imap_open() mailbox string, e.g.

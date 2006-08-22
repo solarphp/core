@@ -203,7 +203,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      *   - [SlideUp][]
      *   - [SlideDown][]
      *
-     * The $args array is expected to have 1-3 values, which are:
+     * The $args array is expected to have 1-3 values, which are ...
      *
      * : $selector
      * `(string)` CSS selector of element to apply effect to. There is no

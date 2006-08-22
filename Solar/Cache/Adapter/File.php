@@ -32,7 +32,7 @@ Solar::loadClass('Solar_Cache_Adapter');
  * If you specify a path (for storing cache entry files) that does
  * not exist, this adapter attempts to create it for you.
  * 
- * This adapter always uses [[php flock()]] when reading and writing
+ * This adapter always uses [[php::flock() | ]] when reading and writing
  * cache entries; it uses a shared lock for reading, and an exclusive
  * lock for writing.  This is to help cut down on cache corruption
  * when two processes are trying to access the same cache file entry,
@@ -56,7 +56,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * 
      * User-provided configuration.
      * 
-     * Config keys are:
+     * Config keys are ...
      * 
      * `path`:
      * (string) The directory where cache files are located; 

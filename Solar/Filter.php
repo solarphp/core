@@ -182,17 +182,17 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Forces a value to a date format using [[php date()]].
+     * Forces a value to a date format using [[php::date() | ]].
      * 
      * Takes a string value time and formats it according to $format.
-     * The [[php date()]] function is used to create the new value, and $format
+     * The [[php::date() | ]] function is used to create the new value, and $format
      * should be a format that works with that function.
      * 
-     * The value should be a format that [[php strtotime()]] understands.
+     * The value should be a format that [[php::strtotime() | ]] understands.
      * 
      * @param string $value The value to be filtered.  If an integer, it
      * is used as a Unix timestamp; otherwise, converted to a Unix
-     * timestamp using [[php strtotime()]].
+     * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '2005-02-25').
@@ -211,17 +211,17 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Forces a value to a time format using [[php date()]].
+     * Forces a value to a time format using [[php::date() | ]].
      * 
      * Takes a string value time and formats it according to $format.
-     * The [[php date()]] function is used to create the new value, and $format
+     * The [[php::date() | ]] function is used to create the new value, and $format
      * should be a format that works with that function.
      * 
-     * The value should be a format that [[php strtotime()]] understands.
+     * The value should be a format that [[php::strtotime() | ]] understands.
      * 
      * @param string $value The value to be filtered.  If an integer, it
      * is used as a Unix timestamp; otherwise, converted to a Unix
-     * timestamp using [[php strtotime()]].
+     * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '12:34:56').
@@ -236,17 +236,17 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Forces a value to a timestamp format using [[php date()]].
+     * Forces a value to a timestamp format using [[php::date() | ]].
      * 
      * Takes a string value time and formats it according to $format.
-     * The [[php date()]] function is used to create the new value, and $format
+     * The [[php::date() | ]] function is used to create the new value, and $format
      * should be a format that works with that function.
      * 
-     * The value should be a format that [[php strtotime()]] understands.
+     * The value should be a format that [[php::strtotime() | ]] understands.
      * 
      * @param string $value The value to be filtered.  If an integer, it
      * is used as a Unix timestamp; otherwise, converted to a Unix
-     * timestamp using [[php strtotime()]].
+     * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
      * default is ISO 8601 format (e.g., '2005-02-25T12:34:56').
@@ -267,7 +267,7 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Applies a [[php preg_replace()]] filter.
+     * Applies a [[php::preg_replace() | ]] filter.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -285,7 +285,7 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Applies a [[php str_replace()]] filter.
+     * Applies a [[php::str_replace() | ]] filter.
      * 
      * @param mixed $value The value to be filtered.
      * 
@@ -319,7 +319,7 @@ class Solar_Filter extends Solar_Base {
     
     /**
      * 
-     * Uses [[php settype()]] to cast a value as a PHP variable type.
+     * Uses [[php::settype() | ]] to cast a value as a PHP variable type.
      * 
      * @param mixed $value The value to filter.
      * 

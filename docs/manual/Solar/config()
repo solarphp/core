@@ -1,4 +1,4 @@
-Solar::config() safely reads a configuration group (or group-element) value from Solar::$config, optionally returning a default value if the group (or group-element) key does not exist.
+[[Solar::config()]] safely reads a configuration group (or group-element) value from [[Solar::$config]], optionally returning a default value if the group (or group-element) key does not exist.
 
 --------------------
 Reading An Entire Group
@@ -62,7 +62,7 @@ If the 'Example' group does not exist, or if the 'flag_a' element does not exist
     $flag_a = Solar::config('Example', 'flag_a', 'thars');
 }}
 
-Thus, `$flag_a` will be `'thars'` if Solar::$config['Example']['flag_a'] does not exist.
+Thus, `$flag_a` will be `'thars'` if [[Solar::$config]]['Example']['flag_a'] does not exist.
 
 --------------------
 Deep Reading
@@ -87,4 +87,4 @@ The config() method only allows you to read groups, or major group elements.  If
     $deeper = Solar::config('Example', 'deeper');
 }}
 
-... but you cannot retrieve the 'deep_1' sub-element.  In practice, this is not usually an issue.  Although you can always access Solar::$config if you need to, nesting often-used config file elements too deeply may be a signal that you need to re-think your design.
+... but you cannot retrieve the 'deep_1' sub-element.  In practice, this is not usually an issue.  Although you can always access [[Solar::$config]] if you need to, nesting often-used config file elements too deeply may be a signal that you need to re-think your design.

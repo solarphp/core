@@ -32,7 +32,7 @@ class Solar_Content extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `sql`:
      * (dependency) A Solar_Sql dependency injection, passed

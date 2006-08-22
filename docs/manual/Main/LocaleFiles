@@ -41,7 +41,7 @@ Sometimes you need to specify different singular and plural versions of a transl
     );
 }}
 
-You then call the `Solar::locale()` method with a numeric value, and Solar picks the proper translation based on the number.  For example:
+You then call the [[Solar::locale()]] method with a numeric value, and Solar picks the proper translation based on the number.  For example:
 
 {{code: php
     // returns 'apples'
@@ -59,13 +59,13 @@ You then call the `Solar::locale()` method with a numeric value, and Solar picks
 Nonexistent Keys
 --------------------
 
-If you use `Solar::locale()` to request a translation key that does not exist for a specific class, Solar falls back along the class hierarchy to the translation keys found in parent classes.  This means that child classes can override as many or as few translation strings as they wish, because they always have recourse to the parent-class strings.
+If you use [[Solar::locale()]] to request a translation key that does not exist for a specific class, Solar falls back along the class hierarchy to the translation keys found in parent classes.  This means that child classes can override as many or as few translation strings as they wish, because they always have recourse to the parent-class strings.
 
-As a final fallback, `Solar::locale()` will look in `Solar/Locale/*` for vendor-wide translations; if it cannot find them there, it returns the key itself as the translation.  (This means no blank translation strings.)
+As a final fallback, [[Solar::locale()]] will look in `Solar/Locale/*` for vendor-wide translations; if it cannot find them there, it returns the key itself as the translation.  (This means no blank translation strings.)
 
 
 --------------------
 Switching Locales
 --------------------
 
-If you want, you can change from one locale to another using Solar::setLocale().  When you do, Solar will automatically reload strings for the new locale as you make calls to Solar::locale().
+If you want, you can change from one locale to another using [[Solar::setLocale()]].  When you do, Solar will automatically reload strings for the new locale as you make calls to [[Solar::locale()]].

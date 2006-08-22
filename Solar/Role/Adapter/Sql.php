@@ -35,7 +35,7 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
      * 
      * User-supplied configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `sql`:
      * (dependency) A Solar_Sql dependency.

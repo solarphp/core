@@ -189,7 +189,7 @@ Now edit actionIndex() to use a locale key instead of a hard-coded string ...
     </html>
 }}
 
-Now when you browse to http://localhost/index.php/example/ you will see the translated output.  If you add other locale files, such as es_ES.php, and use Solar::setLocale() to change locale codes, those translations will appear instead.
+Now when you browse to http://localhost/index.php/example/ you will see the translated output.  If you add other locale files, such as es_ES.php, and use [[Solar::setLocale()]] to change locale codes, those translations will appear instead.
 
 --------------------
 Layout

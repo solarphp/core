@@ -37,7 +37,7 @@ class Solar_Sql_Row extends Solar_Struct {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `data`:
      * (array) Key-value pairs of colname => value.

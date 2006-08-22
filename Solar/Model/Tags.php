@@ -178,7 +178,7 @@ class Solar_Model_Tags extends Solar_Sql_Table {
      * // perform the diff
      * $diff = $this->_diff($old, $new);
      * 
-     * // the results are:
+     * // the results are ...
      * // $diff['del'] == array('a', 'b');
      * // $diff['ins'] == array('d', 'e');
      * // 'c' doesn't show up becuase it's present in both sets

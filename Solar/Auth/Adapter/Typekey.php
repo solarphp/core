@@ -56,7 +56,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * User-defined configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `token`:
      * (string) The TypeKey "site token" id against which

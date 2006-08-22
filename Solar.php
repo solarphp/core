@@ -78,10 +78,10 @@ class Solar {
      * 
      * The values read in from the configuration file.
      * 
-     * Default keys are:
+     * Default keys are ...
      * 
-     * `locale_code`:
-     * (string) The locale code Solar is using, default 'en_US'.
+     * `locale_code`
+     * : (string) The locale code Solar is using, default 'en_US'.
      * 
      * @var array
      * 
@@ -103,7 +103,7 @@ class Solar {
      * 
      * Object registry.
      * 
-     * Objects are registered using Solar::register(); the registry
+     * Objects are registered using [[Solar::register()]]; the registry
      * array is keyed on the name of the registered object.
      * 
      * Although this property is public, you generally shouldn't need
@@ -418,7 +418,7 @@ class Solar {
     
     /**
      * 
-     * Uses [[php include()]] to run a script in a limited scope.
+     * Uses [[php::include() | ]] to run a script in a limited scope.
      * 
      * @param string $file The file to include.
      * 
@@ -445,7 +445,7 @@ class Solar {
     
     /**
      * 
-     * Hack for [[php file_exists()]] that checks the include_path.
+     * Hack for [[php::file_exists() | ]] that checks the include_path.
      * 
      * Use this to see if a file exists anywhere in the include_path.
      * 
@@ -609,8 +609,8 @@ class Solar {
      * @param string $class The dependency object should be an instance of this class.
      * 
      * @param mixed $spec If an object, check to make sure it's an instance of $class.
-     * If a string, treat as a Solar::registry() key. Otherwise, use this as a config
-     * param to Solar::factory() to create a $class object.
+     * If a string, treat as a [[Solar::registry()]] key. Otherwise, use this as a config
+     * param to [[Solar::factory()]] to create a $class object.
      * 
      * @return object The dependency object.
      * 
@@ -874,17 +874,35 @@ class Solar {
      * exception or error coded as 'ERR_FILE_NOT_FOUND', the method will
      * attempt to return these exception classes in this order:
      * 
-     * # Vendor_Example_Exception_FileNotFound (class specific)
+     * 1. Vendor_Example_Exception_FileNotFound (class specific)
      * 
-     * # Vendor_Base_Exception_FileNotFound (parent specific)
+     * 2. Vendor_Base_Exception_FileNotFound (parent specific)
      * 
-     * # Vendor_Example_Exception (class generic)
+     * 3. Vendor_Example_Exception (class generic)
      * 
-     * # Vendor_Base_Exception (parent generic)
+     * 4. Vendor_Base_Exception (parent generic)
      * 
-     * # Vendor_Exception (generic for all of vendor)
+     * 5. Vendor_Exception (generic for all of vendor)
      * 
      * The final fallback is always the generic Solar_Exception class.
+     * 
+     * Note that this method only generates the object; it does not
+     * throw the exception.
+     * 
+     * {{code: php
+     *     $class = 'My_Example_Class';
+     *     $code = 'ERR_SOMETHING_WRONG';
+     *     $text = 'Something is wrong.';
+     *     $info = array('foo' => 'bar');
+     *     $exception = Solar::exception($class, $code, $text, $info);
+     *     throw $exception;
+     * }}
+     * 
+     * In general, you shouldn't need to use this directly in classes
+     * extended from [[Solar_Base::HomePage | Solar_Base]].  Instead, use
+     * [[Solar_Base::_exception() | $this->_exception()]] for automated
+     * picking of the right exception class from the $code, and
+     * automated translation of the error message.
      * 
      * @param string $class The class that generated the exception.
      * 
@@ -964,8 +982,8 @@ class Solar {
      * Dumps a variable to output.
      * 
      * Essentially, this is an alias to the Solar_Debug_Var::dump()
-     * method, which buffers the [[php var_dump]] for a variable,
-     * applies some simple formatting for readability, [[php echo]]s
+     * method, which buffers the [[php::var_dump | ]] for a variable,
+     * applies some simple formatting for readability, [[php::echo | ]]s
      * it, and prints with an optional label.  Use this for
      * debugging variables to see exactly what they contain.
      * 

@@ -8,7 +8,7 @@ This method places an object in the registry under a unique name.
     Solar::register('example', $obj);
     }}
 
-    You can then use Solar::registry() elsewhere in your application to access that same object.
+    You can then use [[Solar::registry()]] elsewhere in your application to access that same object.
 
     {{code: php
     // script 2
@@ -28,7 +28,7 @@ Sometimes you will want to register an object, but not actually instantiate that
     Solar::register('example', 'Solar_Example');
 }}
 
-Then on the first call to Solar::registry(), Solar will create the object instance, register it, and return it to you.
+Then on the first call to [[Solar::registry()]], Solar will create the object instance, register it, and return it to you.
 
 {{code: php
     // script 2.
@@ -36,7 +36,7 @@ Then on the first call to Solar::registry(), Solar will create the object instan
     $example = Solar::registry('example');
 }}
 
-When lazy-loading, you can also specify an alternative configuration for the object to be created, just as with Solar::factory().
+When lazy-loading, you can also specify an alternative configuration for the object to be created, just as with [[Solar::factory()]].
 
 {{code: php
     // script 1

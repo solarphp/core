@@ -10,9 +10,9 @@ Solar_Cache is itself a facade class; its methods interface directly with a back
 
 Solar_Cache comes with two adapters, or containers, for cached data:
 
-* the [Solar_Cache_Adapter_File::HomePage file adapter], which stores data in the filesystem
+* the [[Solar_Cache_Adapter_File::HomePage | file adapter]], which stores data in the filesystem
 
-* the [Solar_Cache_Adapter_Memcache::HomePage memcache adapter], which uses [[php memcache]] for storing data in memory
+* the [[Solar_Cache_Adapter_Memcache::HomePage | memcache adapter]], which uses [[php::memcache | ]] for storing data in memory
 
 Although the configuration options for the adapters are slightly different, the API for them is identical (because the API is mapped via the master Solar_Cache class).
 
@@ -26,7 +26,7 @@ Examples
 Instantiation
 ====================
 
-To instantiate Solar_Cache, you need to pick which adapter you want.  In the following example, we'll set up a [Solar_Cache_Adapter_File::HomePage file adapter] cache (which stores data as a file on the hard drive).
+To instantiate Solar_Cache, you need to pick which adapter you want.  In the following example, we'll set up a [[Solar_Cache_Adapter_File::HomePage | file adapter]] cache (which stores data as a file on the hard drive).
 
 {{code: php
     require_once 'Solar.php';
@@ -34,10 +34,17 @@ To instantiate Solar_Cache, you need to pick which adapter you want.  In the fol
 
     // set up the cache options
     $config = array(
-        'adapter' => 'Solar_Cache_Adapter_File',     // which adapter class to use
-        'config' => array(                // the config options for the class
-            'path' => '/tmp/Solar_Cache/', // where the cache files will be stored
-            'life' => 1800,                // the cache entry lifetime in seconds
+        // which adapter class to use
+        'adapter' => 'Solar_Cache_Adapter_File',
+        
+        // the config options for the class
+        'config' => array(
+        
+            // where the cache files will be stored
+            'path' => '/tmp/Solar_Cache/',
+            
+            // the cache entry lifetime in seconds
+            'life' => 1800,
         ),
     );
 
@@ -48,7 +55,7 @@ To instantiate Solar_Cache, you need to pick which adapter you want.  In the fol
 Adapter Configuration
 ====================
 
-Note that the config keys for the Solar_Cache class are logically separate from the config keys for its adapter classes.  This means you can configure the Solar_Cache, Solar_Cache_Adapter_File, and Solar_Cache_Adapter_Memcache classes separately within the [Main::ConfigFile config file] and Solar will use those options automatically.
+Note that the config keys for the Solar_Cache class are logically separate from the config keys for its adapter classes.  This means you can configure the Solar_Cache, Solar_Cache_Adapter_File, and Solar_Cache_Adapter_Memcache classes separately within the [[Main::ConfigFile | config file]] and Solar will use those options automatically.
 
 For example, you can do this in your config file...
 
@@ -85,7 +92,7 @@ For example, you can do this in your config file...
 Usage
 ====================
 
-Once you have instantiated the cache, you can use it to store data that usually takes more resources to generate than a filesystem call does (in the case of the [Solar_Cache_Adapter_File::HomePage file adapter]) or a memory call (in the case of the [Solar_Cache_Adapter_Memcache::HomePage memcache adapter]).
+Once you have instantiated the cache, you can use it to store data that usually takes more resources to generate than a filesystem call does (in the case of the [[Solar_Cache_Adapter_File::HomePage | file adapter]]) or a memory call (in the case of the [[Solar_Cache_Adapter_Memcache::HomePage | memcache adapter]]).
 
 In the following example, we simulate caching the results of a database call or other resource-intensive task.  If the cache entry does not exist, we generate the data and save it in the cache; if it does exist, we use that instead (thus speeding up the script execution).
 
@@ -119,7 +126,8 @@ In the following example, we simulate caching the results of a database call or 
     }
 
     // now we have the output, whether from the cache
-    // or from generating it fresh., we can output it or do whatever else we need.
+    // or from generating it fresh., we can output it or do whatever
+    // else we need.
     echo $output;
 }}
 
@@ -129,6 +137,6 @@ Limitations and Considerations
 
 Because Solar_Cache is intended work exactly the same with every underlying adapter for it, there are some special considerations to take into account.
 
-For example, the PEAR Cache_Lite class allows you to specify "groups" of caches through a single cache object; because the [Solar_Cache_Adapter_Memcache::HomePage memcache adapter] has no way of implementing that kind of function, it is not implemented within the [Solar_Cache_Adapter_File::HomePage file adapter] either.  However, the easy workaround it to have a separate Solar_Cache object for each "group" of caches you want to set up.
+For example, the PEAR Cache_Lite class allows you to specify "groups" of caches through a single cache object; because the [[Solar_Cache_Adapter_Memcache::HomePage | memcache adapter]] has no way of implementing that kind of function, it is not implemented within the [[Solar_Cache_Adapter_File::HomePage | file adapter]] either.  However, the easy workaround it to have a separate Solar_Cache object for each "group" of caches you want to set up.
 
-If you are on a shared system, you need to make sure the [Solar_Cache_Adapter_File::HomePage file adapter] path is not shared between separate users or installations, otherwise the installations will "compete" with each other when entry keys are identical.  The easy way to work around this is to not to use a system temp directory, and instead set up a directory specifically for caching.
+If you are on a shared system, you need to make sure the [[Solar_Cache_Adapter_File::HomePage | file adapter]] path is not shared between separate users or installations, otherwise the installations will "compete" with each other when entry keys are identical.  The easy way to work around this is to not to use a system temp directory, and instead set up a directory specifically for caching.

@@ -81,7 +81,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `data`:
      * (array) Key-value pairs.

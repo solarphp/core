@@ -23,7 +23,7 @@
  * 
  * http://java.sun.com/j2se/javadoc/writingdoccomments/index.html#format
  * 
- * Supported technical tags are:
+ * Supported technical tags are ...
  * 
  * <code>
  * For classes:

@@ -1,4 +1,4 @@
-Solar_Sql is a facade class for connecting to and querying SQL databases.  It uses PDO-based adapter classes so that you can interact with !MySQL, !PostgreSQL, SQLite, Microsoft SQL Server, and so on.  
+Solar_Sql is a facade class for connecting to and querying SQL databases.  It uses PDO-based adapter classes so that you can interact with MySQL, PostgreSQL, SQLite, Microsoft SQL Server, and so on.  
 
 In addition, all Solar_Sql functions are supported on all databases, so you never need to know the specifics of a particular database backend.  If your Solar_Sql calls work on one database, they should work on all databases (with some exceptions for how you write your queries; more on that in the "Portability" section below).
 
@@ -24,7 +24,7 @@ To get started, configure and instantiate a Solar_Sql object using the available
     $sql = Solar::factory('Solar_Sql', $config);
     }}
 
-    If set up your [Main::SolarConfig Solar.config.php file] like this ...
+    If set up your [[Main::SolarConfig | Solar.config.php file]] like this ...
 
     {{code: php
     $config = array();
@@ -110,8 +110,8 @@ Solar_Sql claims to have nearly-automatic database portability.  All Solar_Sql m
 
 With that in mind, you should attempt to do the following to ensure the portability of database work across all supported backends:
 
-# Use [Solar_Sql_Select::HomePage Solar_Sql_Select] whenever possible to construct SELECT statements.  This will ensure your LIMIT clauses work properly on all databases; some, like Microsoft SQL Server, do not support LIMIT offsets, but Solar_Sql_Select has workarounds for those systems.
+1. Use [[Solar_Sql_Select::HomePage | Solar_Sql_Select]] whenever possible to construct SELECT statements.  This will ensure your LIMIT clauses work properly on all databases; some, like Microsoft SQL Server, do not support LIMIT offsets, but Solar_Sql_Select has workarounds for those systems.
 
-# Use [Solar_Sql_Table::HomePage Solar_Sql_Table] whenever possible to define and create your tables.  Solar_Sql_Table creates column definitions in a database-portable fashion, so that you can write write queries in a standard way.  In particular, Solar_Sql_Table uses a "poor-man's" abstraction of date and time values by storing them as character strings in ISO 8601 format, so that the same date and time values in a query will work in any supported database.
+2. Use [[Solar_Sql_Table::HomePage | Solar_Sql_Table]] whenever possible to define and create your tables.  Solar_Sql_Table creates column definitions in a database-portable fashion, so that you can write write queries in a standard way.  In particular, Solar_Sql_Table uses a "poor-man's" abstraction of date and time values by storing them as character strings in ISO 8601 format, so that the same date and time values in a query will work in any supported database.
 
-# Try not to use use database-provided SQL functions like YEAR(), MONTH(), SUBSTR(), CONCAT(), and so on.  If you need these functions, try to emulate them at your PHP layer instead of at the databse layer.
+3. Try not to use use database-provided SQL functions like YEAR(), MONTH(), SUBSTR(), CONCAT(), and so on.  If you need these functions, try to emulate them at your PHP layer instead of at the databse layer.

@@ -11,7 +11,7 @@ instantiate it.
 }}
 
 With Solar, if you want to instantiate a new object,
-you can use the Solar::factory() method instead of the
+you can use the [[Solar::factory()]] method instead of the
 include-and-instantiate routine.
 
 {{code: php
@@ -19,12 +19,12 @@ include-and-instantiate routine.
     $obj = Solar::factory('My_Class_File');
 }}
 
-This method uses Solar::loadClass() internally to load the class file.
+This method uses [[Solar::loadClass()]] internally to load the class file.
 
 If the class conforms to the Solar standards for
-[Main::ConstructorParameters constructor parameters], the class
+[[Main::ConstructorParameters | constructor parameters]], the class
 will be configured automatically with its corresponding values
-in the [Main::ConfigFile config file].  If you want to override
+in the [[Main::ConfigFile | config file]].  If you want to override
 those values, you can pass a custom config array as the second
 parameter:
 
@@ -34,6 +34,5 @@ parameter:
 }}
 
 For this method to work, the class to be loaded must be in the
-include_path and conform to the [Main::NamingConventions class
-naming conventions].
+include_path and conform to the [[Main::NamingConventions | class naming conventions]].
 

@@ -4,20 +4,20 @@ To-Do List
 
 Please note that this list is mostly informal, and may be subject to change without advance notice.  No dates or release numbers are associated with this list, although the items are expected to be completed in this roughly this order.
 
-# Document and write tests for existing classes
+1. Document and write tests for existing classes
 
     * which will result in API changes as discrepancies are revealed
     
     * may add new classes as re-factoring occurs
 
-# New classes (in no particular order)
+2. New classes (in no particular order)
 
     * Solar_Text_Diff for a difference engine (c.f. [PEAR
       Text_Diff](http://pear.php.net/Text_Diff))
     
     * Solar_User_Prefs for user preferences collection
  
-# New apps based on the generic content model:
+3. New apps based on the generic content model:
 
     * Solar_App_Todo (simple to-do lists)
     

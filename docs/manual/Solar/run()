@@ -14,7 +14,7 @@ If 'helper.php' sets the value of $var for itself, that value
 will override the value from the main script, which can lead
 to unexpected behavior.  If you want to make sure that
 'helper.php' executes in its own separate scope, use the run()
-method instead of [[php include]]:
+method instead of [[php::include | ]]:
 
 {{code: php
     $var = 'foo';
@@ -23,10 +23,10 @@ method instead of [[php include]]:
 }}
 
 Now $var will remain the same before and after the inclusion
-of helper.php (unless helper.php used [[php global]] to make
+of helper.php (unless helper.php used [[php::global | ]] to make
 $var global).
 
-As with [[php include]], you can accept return values from the
+As with [[php::include | ]], you can accept return values from the
 file you run:
 
 {{code: php

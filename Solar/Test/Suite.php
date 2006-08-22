@@ -45,7 +45,7 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `dir`:
      * (string) The directory where tests are located.

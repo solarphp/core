@@ -91,7 +91,7 @@ First, move the file ...
     $ vi index.php
 }}
 
-... then edit index.php front-controller so that Solar::start() knows the new file location.
+... then edit index.php front-controller so that [[Solar::start()]] knows the new file location.
 
 {{code: php
     // Path to PEAR libraries, where Solar is installed

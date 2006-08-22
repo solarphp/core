@@ -1,6 +1,6 @@
 This method allows you to retrieve the proper text string as
 related to a specific class for a given locale.  Be sure to
-read about [Main::LocaleFiles locale files] for more
+read about [[Main::LocaleFiles | locale files]] for more
 information.
 
 For example, to get the locale string for the 'HELLO' key in

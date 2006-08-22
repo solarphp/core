@@ -35,7 +35,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `events`:
      * (string|array) The event types this instance

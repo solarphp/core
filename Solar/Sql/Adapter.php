@@ -30,7 +30,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `host`:
      * (string) Host specification (typically 'localhost').
@@ -75,7 +75,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
-     * The available column types are:
+     * The available column types are ...
      * 
      * `bool`:
      * A true/false boolean, generally stored as an integer 1 or 0.

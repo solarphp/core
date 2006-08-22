@@ -39,7 +39,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * 
      * User-supplied configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `url`:
      * (string) URL to the HTTP service, e.g. "https://example.com/login.php".

@@ -60,7 +60,7 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = "<h2>Title</h2>\n";
+        $expect[] = "<h1>Title</h1>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
@@ -79,7 +79,7 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = "<h3>Super-Section</h3>\n";
+        $expect[] = "<h2>Super-Section</h2>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
@@ -97,7 +97,7 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = "<h4>Section</h4>\n";
+        $expect[] = "<h3>Section</h3>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         
@@ -115,7 +115,7 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $source = implode("\n", $source);
         
         $expect[] = "foo bar";
-        $expect[] = "<h5>Sub-Section</h5>\n";
+        $expect[] = "<h4>Sub-Section</h4>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
         

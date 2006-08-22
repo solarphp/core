@@ -7,7 +7,7 @@ param: mixed, population source, null
 
 This method takes values from the population source and imports them into their corresponding form elements.
 
-* If the source is null (the default), then the population source is determined based on the ``Solar_Form::$attribs['method']`` key (c.f. the Solar_Form::$attribs property) -- if 'get', then Solar::get() is used (i.e. the filtered $_GET array); if 'post', then Solar::post() is used (i.e., the filtered $_POST array).
+* If the source is null (the default), then the population source is determined based on the ``Solar_Form::$attribs['method']`` key (c.f. the Solar_Form::$attribs property) -- if 'get', then [[Solar::get()]] is used (i.e. the filtered $_GET array); if 'post', then [[Solar::post()]] is used (i.e., the filtered $_POST array).
 
 * If the source is an array, then the array key-value pairs are recursively mapped to form element names and the values are imported into those elements.
 

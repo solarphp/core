@@ -35,7 +35,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * 
      * User-supplied configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `uri`:
      * (string) URL to the LDAP server, e.g. "ldaps://example.com:389".

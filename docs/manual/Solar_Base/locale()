@@ -1,6 +1,6 @@
 This is a convenience method that loads locale strings for the class and returns those strings based on the translation key.
 
-If you request a key that does not exist in the class-specific [Main::LocaleFiles locale file], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the `Solar/Locale/*` directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
+If you request a key that does not exist in the class-specific [[Main::LocaleFiles | locale file]], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the `Solar/Locale/*` directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
 
 --------------------
 Usage
@@ -51,7 +51,7 @@ Finally, if the requested key does not exist in the class-specific locale file, 
 Singular/Plural
 ====================
 
-The call to locale() takes an optional second parameter indicating a number to associate with the translation.  If the number is 1, a singular version of the translation will be returned; if the number is more or less than exactly 1, a plural version of the translation (if it exists) will be returned.  See more on defining plurals in the [Main::LocaleFiles locale files] documentation.
+The call to locale() takes an optional second parameter indicating a number to associate with the translation.  If the number is 1, a singular version of the translation will be returned; if the number is more or less than exactly 1, a plural version of the translation (if it exists) will be returned.  See more on defining plurals in the [[Main::LocaleFiles | locale files]] documentation.
 
 {{code: php
     require_once 'Solar.php';

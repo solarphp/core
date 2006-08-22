@@ -4,9 +4,9 @@ Configuration File
 
 Solar reads a single configuration file to set itself up.  This file is a regular PHP file that returns a single associative array keyed on Solar class names; each of those array elements is itself composed of an associative array suitable for passing as Solar ConstructorParameters.
 
-The config file contains all of the "system" settings for Solar, including the site-specific default configuration options you want to use for all Solar classes.  Solar reads the configuration file values into Solar::$config the first time you call Solar::start().  If Solar cannot find the config file, it will throw an exception.
+The config file contains all of the "system" settings for Solar, including the site-specific default configuration options you want to use for all Solar classes.  Solar reads the configuration file values into [[Solar::$config]] the first time you call [[Solar::start()]].  If Solar cannot find the config file, it will throw an exception.
 
-> **Note:** As a matter of convenience, having a config file is hard to beat.  However, you can call Solar::start() with different parameter types, and Solar will use that alternative parameter as the data source.  See the Solar::start() documentation for more information.  For purposes of getting started, though, we'll continue to assume that we're using a config file as the data source.
+> **Note:** As a matter of convenience, having a config file is hard to beat.  However, you can call [[Solar::start()]] with different parameter types, and Solar will use that alternative parameter as the data source.  See the [[Solar::start()]] documentation for more information.  For purposes of getting started, though, we'll continue to assume that we're using a config file as the data source.
 
 
 --------------------

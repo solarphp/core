@@ -1,6 +1,6 @@
 You can pass an arbitrary number of parameters to this method; all params after the first will be passed as arguments to the fetch() method of the loader object.
 
-If the //loader specification// is a string, it is treated as a class name to instantiate with Solar::factory(); if the //loader specification// is an object, it is used as-is.  Either way, the loader's fetch() method will be called to set the elements and attributes of the form.
+If the //loader specification// is a string, it is treated as a class name to instantiate with [[Solar::factory()]]; if the //loader specification// is an object, it is used as-is.  Either way, the loader's fetch() method will be called to set the elements and attributes of the form.
 
 The loader object itself must have at least one method, fetch(), that returns an associative array with keys 'attribs' and 'elements' which contain, respectively, values for Solar_Form::$attribs and Solar_Form::setElements().
 

@@ -1,5 +1,5 @@
 This class has one method, dump(), to capture the output of
-[[php var_dump()]] and output it to the screen either as
+[[php::var_dump() | ]] and output it to the screen either as
 plaintext or in HTML format.
 
 For example:
@@ -19,6 +19,5 @@ For example:
     Solar::dump($example);
 }}
 
-In general, you will never need to instantiate this class, as it is more easily accessed
-via Solar::dump().
+In general, you will never need to instantiate this class, as it is more easily accessed via [[Solar::dump()]].
 

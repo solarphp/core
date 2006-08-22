@@ -32,7 +32,7 @@ class Solar_Form extends Solar_Base {
      * 
      * User-provided configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `attribs`:
      * An array of <form> tag attributes; used for hinting
@@ -142,7 +142,7 @@ class Solar_Form extends Solar_Base {
      * Array of submitted values.
      * 
      * Populated on the first call to Solar_Form::_populate(), which itself uses
-     * Solar::get() or Solar::post(), depending on the value of
+     * [[Solar::get()]] or [[Solar::post()]], depending on the value of
      * $this->attribs['method'].
      * 
      * @var array
@@ -156,7 +156,7 @@ class Solar_Form extends Solar_Base {
      * 
      * Default values for each element.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `name`:
      * (string) The name attribute.
@@ -701,7 +701,7 @@ class Solar_Form extends Solar_Base {
      * }}
      * 
      * @param string|object $obj If a string, it is treated as a class
-     * name to instantiate with Solar::factory(); if an object, it is
+     * name to instantiate with [[Solar::factory()]]; if an object, it is
      * used as-is.  Either way, the fetch() method of the object will
      * be called to populate this form (via $this->attribs property and
      * the $this->setElements() method).

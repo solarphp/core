@@ -240,7 +240,7 @@ This is an array of messages to give to the user, generally related to user inpu
 `filter` array
 ====================
 
-This is an array of [Solar_Filter::HomePage Solar_Filter] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).  Technically, these are passed as arguments to Solar_Filter::multiple(); among other things, this means that if the the requested callback method does not exist, it is assumed to be a PHP function.  For example:
+This is an array of [[Solar_Filter::HomePage | Solar_Filter]] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).  Technically, these are passed as arguments to Solar_Filter::multiple(); among other things, this means that if the the requested callback method does not exist, it is assumed to be a PHP function.  For example:
 
 {{code: php
     $info = array(
@@ -256,7 +256,7 @@ This is an array of [Solar_Filter::HomePage Solar_Filter] callbacks to apply to 
 `validate` array
 ====================
 
-This is an array of [Solar_Valid::HomePage Solar_Valid] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).
+This is an array of [[Solar_Valid::HomePage | Solar_Valid]] callbacks to apply to the element as part of user input validation (c.f. the Solar_Form::validate() method).
 
 Note that this is actually an array of arrays.  That is, each element in the 'valid' array is itself an array, where element 0 is the Solar_Valid method name, element 1 is the feedback message if the user input is not valid, and additional elements are passed as added parameters to the Solar_Valid method.  
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a formatted date using [[php date()]] format codes.
+ * Helper for a formatted date using [[php::date() | ]] format codes.
  * 
  * @category Solar
  * 
@@ -22,7 +22,7 @@ Solar::loadClass('Solar_View_Helper');
  
 /**
  * 
- * Helper for a formatted date using [[php date()]] format codes.
+ * Helper for a formatted date using [[php::date() | ]] format codes.
  * 
  * @category Solar
  * 
@@ -51,7 +51,7 @@ class Solar_View_Helper_Date extends Solar_View_Helper {
      * @param string $spec Any date-time string suitable for
      * strtotime().
      * 
-     * @param string $format An optional custom [[php date()]]
+     * @param string $format An optional custom [[php::date() | ]]
      * formatting string; null by default.
      * 
      * @return string The formatted date string.

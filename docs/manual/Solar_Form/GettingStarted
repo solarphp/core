@@ -4,21 +4,21 @@ Getting Started
 
 In general, the basic form cycle goes like this:
 
-# Create a form object
+1. Create a form object
 
-# Add elements to the form object, including:
+2. Add elements to the form object, including:
 
- * The element description (name, type, etc)
+    * The element description (name, type, etc)
 
- * Filters to apply to the user input for this element
+    * Filters to apply to the user input for this element
 
- * Validation to perform on the user input
+    * Validation to perform on the user input
 
-# Populate the form with user input
+3. Populate the form with user input
 
-# Validate the user input in the form
+4. Validate the user input in the form
 
-# Retrieve the validated input and perform further actions (save to a database, etc)
+5. Retrieve the validated input and perform further actions (save to a database, etc)
 
 
 --------------------
@@ -58,7 +58,7 @@ Instant Feedback: Display the Form
 
 Just to show we're on the right track, let's display the form output.  (This doesn't populate the values or validate the input, it just displays for now.)
 
-We need to use [Solar_View::HomePage Solar_View] and its related [Solar_View_Helper_Form::HomePage form helper]. This is because Solar_Form does not perform output functions, only collection and processing.  
+We need to use [[Solar_View::HomePage | Solar_View]] and its related [[Solar_View_Helper_Form::HomePage | form helper]]. This is because Solar_Form does not perform output functions, only collection and processing.  
 
 Here is a combined controller and view extended from the earlier code.  (Normally you would separate your controller and view, but this example is about instant feedback.)
 
@@ -142,7 +142,7 @@ The Solar_Form::populate() method will look for the $_POST['user_email'] array v
     <!-- ... -->
 }}
 
-(Technically, the form will use Solar::post() to get the values instead of pulling directly from $_POST.)
+(Technically, the form will use [[Solar::post()]] to get the values instead of pulling directly from $_POST.)
 
 
 Validation
@@ -218,7 +218,7 @@ The different "success" and "failure" CSS classes allow you to style feedback me
 Filters
 ====================
 
-Sometimes we will want to pre-process the user input before validating it.  What if the user had extra spaces in the email address?  Those spaces will confuse the validation, even though it looks (to the user) like a valid address.  For these and other cases, you can add a 'filter' key to an element to indicate that the user input should be passed through a [Solar_Filter::HomePage Solar_Filter] method, removing anything that doesn't pass the filter.
+Sometimes we will want to pre-process the user input before validating it.  What if the user had extra spaces in the email address?  Those spaces will confuse the validation, even though it looks (to the user) like a valid address.  For these and other cases, you can add a 'filter' key to an element to indicate that the user input should be passed through a [[Solar_Filter::HomePage | Solar_Filter]] method, removing anything that doesn't pass the filter.
 
 For example, to filter out all blanks from the user input before validation, you can add this filter:
 

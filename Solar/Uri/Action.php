@@ -42,7 +42,7 @@ class Solar_Uri_Action extends Solar_Uri {
      * 
      * User-provided configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `path`:
      * (string) A path prefix specifically for actions, e.g. '/index.php/'.

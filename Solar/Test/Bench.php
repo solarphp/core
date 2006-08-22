@@ -33,7 +33,7 @@ class Solar_Test_Bench extends Solar_Base {
      * 
      * User-defined configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `loop`:
      * (int) The number of times the benchmarking methods

@@ -39,7 +39,7 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * User-defined configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `area_name`:
      * (string) The content area for the bookmarks
@@ -160,7 +160,7 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
-     * Local reference to the 'user' object in Solar::registry().
+     * Local reference to the 'user' object in [[Solar::registry()]].
      * 
      * @var Solar_User
      * 

@@ -30,7 +30,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * User-provided configuration values.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `path`:
      * (string) A path prefix.  Generally needed only
@@ -227,7 +227,7 @@ class Solar_Uri extends Solar_Base {
         $elem = array_merge($elem, parse_url($uri));
         
         // strip the prefix from the path.
-        // the conditions are:
+        // the conditions are ...
         // $elem['path'] == '/index.php/'
         // -- or --
         // $elem['path'] == '/index.php'
@@ -368,7 +368,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * Converts an array of path elements into a string.
      * 
-     * Does not use [[php urlencode()]]; instead, only converts
+     * Does not use [[php::urlencode() | ]]; instead, only converts
      * characters found in Solar_Uri::$_encode_path.
      * 
      * @param array $spec The path elements.

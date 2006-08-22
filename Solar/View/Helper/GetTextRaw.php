@@ -35,7 +35,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      * User-defined configuration.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `class`:
      * (string) The class for locale translations.

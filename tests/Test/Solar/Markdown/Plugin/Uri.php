@@ -33,17 +33,25 @@ class Test_Solar_Markdown_Plugin_Uri extends Test_Solar_Markdown_Plugin {
     
     public function testParse()
     {
+        $source = 'foo <http://example.com/?foo=bar&baz=dib> bar';
+        $expect = "foo $this->_token bar";
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
         $source = '<http://example.com/?foo=bar&baz=dib>';
         $expect = '<a href="http://example.com/?foo=bar&amp;baz=dib">http://example.com/?foo=bar&amp;baz=dib</a>';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_noAngles()
+    public function testRender_noAngles()
     {
         $source = 'http://example.com/?foo=bar&baz=dib';
         $expect = 'http://example.com/?foo=bar&baz=dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

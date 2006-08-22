@@ -34,44 +34,52 @@ class Test_Solar_Markdown_Plugin_Link extends Test_Solar_Markdown_Plugin {
     public function testParse()
     {
         $source = 'foo bar [display text](/path/to/file) baz dib';
-        $expect = 'foo bar <a href="/path/to/file">display text</a> baz dib';
+        $expect = "foo bar $this->_token baz dib";
         $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = 'foo bar [display text](/path/to/file) baz dib';
+        $expect = 'foo bar <a href="/path/to/file">display text</a> baz dib';
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_inlineWithTitle()
+    public function testRender_inlineWithTitle()
     {
         $source = 'foo bar [display text](/path/to/file "with title") baz dib';
         $expect = 'foo bar <a href="/path/to/file" title="with title">display text</a> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_inlineWithAngles()
+    public function testRender_inlineWithAngles()
     {
         $source = 'foo bar [display text](</path/to/file>) baz dib';
         $expect = 'foo bar <a href="/path/to/file">display text</a> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_reference()
+    public function testRender_reference()
     {
         $this->_markdown->setLink('display text', '/path/to/file', 'with title');
         
         $source = 'foo bar [display text][] baz dib';
         $expect = 'foo bar <a href="/path/to/file" title="with title">display text</a> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_referenceDifferentAlt()
+    public function testRender_referenceDifferentAlt()
     {
         $this->_markdown->setLink('display text', '/path/to/file', 'with title');
         
         $source = 'foo bar [inline-text][display text] baz dib';
         $expect = 'foo bar <a href="/path/to/file" title="with title">inline-text</a> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

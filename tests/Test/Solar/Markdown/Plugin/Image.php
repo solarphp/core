@@ -34,36 +34,44 @@ class Test_Solar_Markdown_Plugin_Image extends Test_Solar_Markdown_Plugin {
     public function testParse()
     {
         $source = 'foo bar ![alt text](/path/to/image) baz dib';
-        $expect = 'foo bar <img src="/path/to/image" alt="alt text" /> baz dib';
+        $expect = "foo bar $this->_token baz dib";
         $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = 'foo bar ![alt text](/path/to/image) baz dib';
+        $expect = 'foo bar <img src="/path/to/image" alt="alt text" /> baz dib';
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_inlineWithTitle()
+    public function testRender_inlineWithTitle()
     {
         $source = 'foo bar ![alt text](/path/to/image "with title") baz dib';
         $expect = 'foo bar <img src="/path/to/image" alt="alt text" title="with title" /> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_reference()
+    public function testRender_reference()
     {
         $this->_markdown->setLink('alt text', '/path/to/image', 'with title');
         
         $source = 'foo bar ![alt text][] baz dib';
         $expect = 'foo bar <img src="/path/to/image" alt="alt text" title="with title" /> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_referenceDifferentAlt()
+    public function testRender_referenceDifferentAlt()
     {
         $this->_markdown->setLink('alt text', '/path/to/image', 'with title');
         
         $source = 'foo bar ![inline text][alt text] baz dib';
         $expect = 'foo bar <img src="/path/to/image" alt="inline text" title="with title" /> baz dib';
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

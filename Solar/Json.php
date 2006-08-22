@@ -216,7 +216,8 @@ class Solar_Json extends Solar_Base {
      *
      * @param string $encodedValue String encoded in JSON format
      *
-     * @param bool $array Optional argument to decode as an array.
+     * @param bool $asArray Optional argument to decode as an array.
+     * Default false.
      *
      * @return mixed decoded value
      *
@@ -452,7 +453,7 @@ class Solar_Json extends Solar_Base {
      * Similarly, a string of '1' should return null, not int(1), unless
      * nested inside of an array or object.
      *
-     * @param string $encodedValue String encoded in JSON format
+     * @param string $str String encoded in JSON format
      *
      * @param bool $asArray Optional argument to decode as an array.
      *

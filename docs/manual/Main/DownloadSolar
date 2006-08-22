@@ -107,5 +107,5 @@ Source via Subversion
 You can [browse the Subversion repository](http://solarphp.com/svn/) and do anonymous checkouts:
 
 {{code: bash
-    bash-2.05$ svn checkout https://solarphp.com/svn/ solar
+    bash-2.05$ svn checkout https://solarphp.com/svn/trunk/ solar
 }}

@@ -15,7 +15,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Paragraph.php 1687 2006-08-20 00:22:50Z pmjones $
+ * @version $Id$
  * 
  */
 

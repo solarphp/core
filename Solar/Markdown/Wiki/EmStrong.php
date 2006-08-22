@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: EmStrong.php 1655 2006-08-15 00:47:11Z pmjones $
+ * @version $Id$
  * 
  */
 

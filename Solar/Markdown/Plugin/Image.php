@@ -163,7 +163,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         // encode special Markdown characters
         $result = $this->_encode($result);
         
-        return $result;
+        return $this->_toHtmlToken($result);
     }
     
     /**
@@ -196,7 +196,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         // encode special Markdown characters
         $result = $this->_encode($result);
         
-        return $result;
+        return $this->_toHtmlToken($result);
     }
 }
 ?>

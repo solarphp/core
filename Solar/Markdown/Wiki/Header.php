@@ -93,28 +93,28 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
         // h2
         $text = preg_replace_callback(
             '{ ^=+[ \t]*\n(.+)[ \t]*\n=+[ \t]*\n+ }mx',
-            array($this, '_parseH2'),
+            array($this, '_parseTitle'),
             $text
         );
         
         // h3
         $text = preg_replace_callback(
             '{ ^-+[ \t]*\n(.+)[ \t]*\n-+[ \t]*\n+ }mx',
-            array($this, '_parseH3'),
+            array($this, '_parseSuperSection'),
             $text
         );
         
         // h4
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n=+[ \t]*\n+ }mx',
-            array($this, '_parseH4'),
+            array($this, '_parseSection'),
             $text
         );
         
         // h5
         $text = preg_replace_callback(
             '{ ^(.+)[ \t]*\n-+[ \t]*\n+ }mx',
-            array($this, '_parseH5'),
+            array($this, '_parseSubSection'),
             $text
         );
         
@@ -130,9 +130,9 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parseH2($matches)
+    protected function _parseTitle($matches)
     {
-        return $this->_header('h2', $matches[1]);
+        return $this->_header('h1', $matches[1]);
     }
 
     /**
@@ -144,9 +144,9 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parseH3($matches)
+    protected function _parseSuperSection($matches)
     {
-        return $this->_header('h3', $matches[1]);
+        return $this->_header('h2', $matches[1]);
     }
 
     /**
@@ -158,9 +158,9 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parseH4($matches)
+    protected function _parseSection($matches)
     {
-        return $this->_header('h4', $matches[1]);
+        return $this->_header('h3', $matches[1]);
     }
 
     /**
@@ -172,9 +172,9 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      * @return string The replacement text.
      * 
      */
-    protected function _parseH5($matches)
+    protected function _parseSubSection($matches)
     {
-        return $this->_header('h5', $matches[1]);
+        return $this->_header('h4', $matches[1]);
     }
     
     /**

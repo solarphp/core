@@ -333,7 +333,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\S*)?/';
+        $regex = '/\[\[(.*?)(\#.*?)?(\|.*?)?\]\](\w*)?/';
         return preg_replace_callback(
             $regex,
             array($this, '_parse'),
@@ -435,7 +435,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
               . $this->_escape($text . $atch)
               . '</a>';
               
-        return $html;
+        return $this->_toHtmlToken($html);
     }
     
     /**

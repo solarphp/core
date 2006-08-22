@@ -6,8 +6,10 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
     protected $_Solar_Markdown_Wiki = array(
         'plugins' => array(
             
-            // pre-processing on the source as a whole
-            'Solar_Markdown_Plugin_Prefilter',
+            // highest-priority prepare and cleanup
+            'Solar_Markdown_Wiki_Filter',
+            
+            // for Markdown images and links
             'Solar_Markdown_Plugin_StripLinkDefs',
             
             // blocks
@@ -20,8 +22,7 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
             'Solar_Markdown_Wiki_ColorCodeBlock',
             'Solar_Markdown_Plugin_CodeBlock',
             'Solar_Markdown_Plugin_BlockQuote',
-            'Solar_Markdown_Wiki_Html',
-            'Solar_Markdown_Plugin_Paragraph',
+            'Solar_Markdown_Wiki_Paragraph',
             
             // spans
             'Solar_Markdown_Plugin_CodeSpan',
@@ -30,7 +31,7 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
             'Solar_Markdown_Plugin_Link',
             'Solar_Markdown_Plugin_Uri',
             'Solar_Markdown_Plugin_Encode',
-            'Solar_Markdown_Extra_EmStrong',
+            'Solar_Markdown_Wiki_EmStrong',
             'Solar_Markdown_Plugin_Break',
         ),
     );

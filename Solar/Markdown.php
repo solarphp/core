@@ -61,7 +61,7 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Default configuration for the class.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `tab_width`:
      * (int) Number of spaces per tab.  Default 4.
@@ -633,18 +633,24 @@ class Solar_Markdown extends Solar_Base {
      * @return string The encoded text.
      * 
      */
-    public function encode($text)
+    public function encode($text, $only_backslash = false)
     {
         $list = $this->_explodeTags($text);
         
         // reset text and rebuild from the list
         $text = '';
         
-        foreach ($list as $item) {
-            if ($item[0] == 'tag') {
-                $text .= $this->_encode($item[1], true);
-            } else {
+        if ($only_backslash) {
+            foreach ($list as $item) {
                 $text .= $this->_encode($item[1]);
+            }
+        } else {
+            foreach ($list as $item) {
+                if ($item[0] == 'tag') {
+                    $text .= $this->_encode($item[1], true);
+                } else {
+                    $text .= $this->_encode($item[1]);
+                }
             }
         }
         

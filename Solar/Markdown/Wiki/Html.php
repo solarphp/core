@@ -2,13 +2,7 @@
 Solar::loadClass('Solar_Markdown_Plugin');
 class Solar_Markdown_Wiki_Html extends Solar_Markdown_Plugin {
     
-    protected $_is_block = true;
     protected $_is_cleanup = true;
-    
-    public function parse($text)
-    {
-        return $this->_escape($text);
-    }
     
     public function cleanup($text)
     {

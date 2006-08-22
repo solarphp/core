@@ -30,7 +30,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * Default configuration values for this class.
      * 
-     * Keys are:
+     * Keys are ...
      * 
      * `markdown`:
      * (Solar_Markdown) The "parent" Markdown object.
@@ -313,16 +313,19 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**
      * 
-     * Escapes special Markdown characters.
+     * Encodes special Markdown characters to they are not parsed by
+     * plugins.
      * 
      * @param string $text Source text.
      * 
-     * @return string The escaped text.
+     * @param bool $only_backslash Only encode backslashed characters.
+     * 
+     * @return string The encoded text.
      * 
      */
-    protected function _encode($text)
+    protected function _encode($text, $only_backslash = false)
     {
-        return $this->_markdown->encode($text);
+        return $this->_markdown->encode($text, $only_backslash);
     }
     
     /**

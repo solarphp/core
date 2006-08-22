@@ -119,12 +119,12 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
             $code = $this->$color($code);
         } else {
             // simple escaping
-            $code = $this->_escape($code, ENT_NOQUOTES);
+            $code = "<pre><code>" . $this->_escape($code, ENT_NOQUOTES) . "</code></pre>";
         }
         
         // done
         return "\n"
-             . $code
+             . $this->_toHtmlToken($code)
              . "\n";
     }
     
@@ -144,7 +144,7 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
         $code = substr($code, 36, -16);
         
         // done!
-        return $this->_toHtmlToken("<pre><code>$code</code></pre>");
+        return "<pre><code>$code</code></pre>";
     }
 }
 ?>

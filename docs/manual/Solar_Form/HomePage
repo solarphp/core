@@ -1,10 +1,23 @@
-This class helps you create a data structure designed to represent an XHTML form; it automates data population, filtering, and validation for you.
+This class helps you create a data structure designed to represent an
+XHTML form; it automates data population, filtering, and validation for
+you.
 
-While this class does not output the form (as that is the job of a view or presentation layer), it does allow you to build "hints" as to how the elements should be presented; you then pass the object instance into your view, which can take those "hints" any way it likes.  These "hints" are called the FormDescriptor array.
+While this class does not output the form (as that is the job of a view
+or presentation layer), it does allow you to build "hints" as to how the
+elements should be presented; you then pass the object instance into
+your view, which can take those "hints" any way it likes. These "hints"
+are called the [[FormDescriptor]] array.
 
-In addition, the class will draw in data from an array (typically $_POST), validate the newly-populated structure against filters and rules that you sets up, and set feedback messages based on which elements were valid and which were not.  In many ways, Solar_Form is a cousin to [HTML_QuickForm](http://pear.php.net/HTML_QuickForm), but with all rendering removed.
+In addition, the class will draw in data from an array (typically
+$_POST), validate the newly-populated structure against filters and
+rules that you sets up, and set feedback messages based on which
+elements were valid and which were not. In many ways, Solar_Form is a
+cousin to [HTML_QuickForm](http://pear.php.net/HTML_QuickForm), but with
+all rendering removed.
 
-You can see a full example on GettingStarted, but here's a short one to whet your curiosity.  Note that we use a small bit of localization (although a real form would have [LocalizedForms everything localized]).
+You can see a full example on [[GettingStarted]], but here's a short one to
+whet your curiosity. Note that we use a small bit of localization
+(although a real form would have [[LocalizedForms | everything localized]]).
 
 {{code: php
     require_once 'Solar.php';

@@ -4,7 +4,9 @@ URI and allowing you modify them individually; you can then then fetch
 them as a single URI string. This helps when building complex links,
 such as in a paged navigation system.
 
-> Note: For controller action URIs, use [[Solar_Uri_Action::HomePage | Solar_Uri_Action]] instead.  Likewise, for public resource URIs, use [[Solar_Uri_Public::HomePage | Solar_Uri_Public]] instead.
+> Note: For controller action URIs, use [[Solar_Uri_Action::HomePage |
+> Solar_Uri_Action]] instead. Likewise, for public resource URIs, use
+> [[Solar_Uri_Public::HomePage | Solar_Uri_Public]] instead.
 
 The following is a simple example. Say that the page address is
 currently

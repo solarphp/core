@@ -1,6 +1,9 @@
 Use this method to append multiple elements to a form at one time.
 
-The associative array of elements is a series of key-value pairs where the key is the element name, and the value is an element information array (see the Solar_Form::setElement() method for more on the info key-value pairs).
+The associative array of elements is a series of key-value pairs where
+the key is the element name, and the value is an element information
+array (see the [[Solar_Form::setElement()]] method for more on the info
+key-value pairs).
 
 For example:
 
@@ -38,7 +41,8 @@ For example:
     $form->setElements($elements);
 }}
 
-This code will hint an output generator to create a form something like this (labels and layout are excluded for the sake of brevity):
+This code will hint an output generator to create a form something like
+this (labels and layout are excluded for the sake of brevity):
 
 {{code: html
     <input type="text" name="addr" value="101 Main Street" />
@@ -50,7 +54,10 @@ This code will hint an output generator to create a form something like this (la
     <input type="text" name="zip" value="90210" size="5" maxlength="5" />
 }}
 
-As with Solar_Form::setElement(), you can specify that each element become part of an array within the form by adding a second parameter.  For example, with the above set of elements, you can make them part of an array called 'contact' ...
+As with [[Solar_Form::setElement()]], you can specify that each element
+become part of an array within the form by adding a second parameter.
+For example, with the above set of elements, you can make them part of
+an array called 'contact' ...
 
 {{code: php
     $form->setElements($elements, 'contact');

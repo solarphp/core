@@ -4,8 +4,8 @@ User Manual
 
 In this section, we have two major examples:
 
-* GettingStarted on the basics of the form use cycle
+* [[GettingStarted]]  on the basics of the form use cycle
 
-* How to build LocalizedForms with Solar's locale facilities
+* How to build [[LocalizedForms]]  with Solar's locale facilities
 
-You may also wish to read about the FormDescriptor array that Solar_Form uses internally.
+You may also wish to read about the [[FormDescriptor]]  array that Solar_Form uses internally.

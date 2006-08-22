@@ -1,6 +1,10 @@
-This method lets you add feedback messages to multiple elements at one time.  These will be in addition to the feedback messages automatically generated when you call Solar_Form::validate().
+This method lets you add feedback messages to multiple elements at one
+time. These will be in addition to the feedback messages automatically
+generated when you call [[Solar_Form::validate()]].
 
-Note that this method works with feedback on **elements**; if you wish to add feedback about the form itself, use the Solar_Form::$feedback public property.
+Note that this method works with feedback on **elements**; if you wish
+to add feedback about the form itself, use the [[Solar_Form::$feedback]]
+public property.
 
 --------------------
 Example
@@ -38,14 +42,16 @@ Example
     $form->addFeedback($feedback);
 }}
 
-If you set the elements as part of an array, you will need to make sure the feedback is set as part of the same array.  For example:
+If you set the elements as part of an array, you will need to make sure
+the feedback is set as part of the same array. For example:
 
 {{code: php
     $form->setElements($elements, 'contact');
     $form->addFeedback($feedback, 'contact');
 }}
 
-Of course, you can skip all this if you like and add the feedback directly as part of the element to begin with:
+Of course, you can skip all this if you like and add the feedback
+directly as part of the element to begin with:
 
 {{code: php
     $elements = array(

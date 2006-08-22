@@ -12,8 +12,8 @@ For example:
     // calls 'UPDATE invaders SET human = "baz" WHERE irken = "zim"'
 }}
 
-
-For the $where parameter, you can also pass multiple WHERE conditions as an array to be "AND"ed together.
+For the $where parameter, you can also pass multiple WHERE conditions as
+an array to be "AND"ed together.
 
 {{code: php
     $sql = Solar::factory('Solar_Sql');

@@ -1,5 +1,6 @@
-Solar_Valid aggregates several validation methods so you can make sure user input matches your requirements. This is useful for checking form values and
-validating database fields.
+Solar_Valid aggregates several validation methods so you can make sure
+user input matches your requirements. This is useful for checking form
+values and validating database fields.
 
 {{code: php
     require_once 'Solar.php';
@@ -28,5 +29,5 @@ validating database fields.
     }
 }}
 
-Be sure to check the ClassMethods for a full list of
+Be sure to check the [[ClassMethods]] for a full list of
 valdiation routines.

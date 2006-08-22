@@ -2,7 +2,11 @@
 Form Descriptor
 ====================
 
-While this descriptor array originated with [Savant](http://phpsavant.com) and [[Main::HomePage | Solar]], the structure is generic enough for any framework to generate, and for any template system to render.  The structure is composed of an array of elements, where each element is itself an associative array.
+While this descriptor array originated with
+[Savant](http://phpsavant.com) and [[Main::HomePage | Solar]], the
+structure is generic enough for any framework to generate, and for any
+template system to render. The structure is composed of an array of
+elements, where each element is itself an associative array.
 
 An example element array looks like this:
 
@@ -15,9 +19,15 @@ An example element array looks like this:
     );
 }}
 
-Using this array, the view logic has all the information it needs to to generate the form element output; similarly, the controller logic has enough information to know what form element is mapped to which data element, and what the current value is.
+Using this array, the view logic has all the information it needs to to
+generate the form element output; similarly, the controller logic has
+enough information to know what form element is mapped to which data
+element, and what the current value is.
 
-Of course, this describes only one element in a form; to describe a series of form elements, put them into an array.  The following array is a representation of how the Solar_Form::$elements property is structured:
+Of course, this describes only one element in a form; to describe a
+series of form elements, put them into an array. The following array is
+a representation of how the [[Solar_Form::$elements]] property is
+structured:
 
 {{code: php
     $elements = array(

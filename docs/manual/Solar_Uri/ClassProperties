@@ -1,4 +1,5 @@
-The Solar_Uri class has a number of public properties, all related to the parsed URI processed by Solar_Uri::set().  They are ...
+The Solar_Uri class has a number of public properties, all related to
+the parsed URI processed by Solar_Uri::set(). They are ...
 
 ||~ Name        ||~ Type ||~ Description ||
 || `schema`   || string || The schema protocol; e.g.: http, https, ftp, mailto ... ||
@@ -13,7 +14,7 @@ The Solar_Uri class has a number of public properties, all related to the parsed
 As an example, the following URI would parse into these properties:
 
     http://anonymous:guest@example.com:8080/path/to/index.php/foo/bar?baz=dib#anchor
-    ...
+    
     schema   => 'http'
     host     => 'example.com'
     port     => '8080'

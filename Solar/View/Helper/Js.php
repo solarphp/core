@@ -198,7 +198,8 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      * Paths should be releative to the 'path' configuration value for the
      * corresponding Solar_View_Helper class.
      *
-     * @param string $file Name of .js file to add to the header of the page.
+     * @param mixed $file Name of .js file to add to the header of the page, or
+     * (optionally) an array of files to add.
      *
      */
     public function addFile($file)
@@ -206,9 +207,13 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         if ($this->files === null) {
             $this->files = array();
         }
-        if ($file !== null && !in_array($file, $this->files, true)) {
+
+        if (is_array($file)) {
+            $this->files = array_merge($this->files, $file);
+        } elseif ($file !== null && !in_array($file, $this->files, true)) {
             $this->files[] = $file;
         }
+        
         return $this;
     }
 

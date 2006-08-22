@@ -97,6 +97,23 @@ class Test_Solar_View_Helper_Js extends Solar_Test {
         $this->assertInstance($helper, 'Solar_View_Helper_Js');
         $this->assertSame($helper, $this->_view->getHelper('js'));
     }
+
+    public function testAddFile_Array()
+    {
+
+        $files = array('foo.js', 'bar.js');
+        $helper = $this->_view->js()->addFile($files);
+        $expect = array(
+            0 => 'foo.js',
+            1 => 'bar.js'
+        );
+        $this->assertProperty($helper, 'files', 'same', $expect);
+
+        // check for fluency
+        $this->assertInstance($helper, 'Solar_View_Helper_Js');
+        $this->assertSame($helper, $this->_view->getHelper('js'));
+    }
+
 }
 
 ?>

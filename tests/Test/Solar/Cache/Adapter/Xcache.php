@@ -7,9 +7,9 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
         'adapter' => 'Solar_Cache_Adapter_Xcache',
         'config'  => array(
             'life'   => 7, // 7 seconds
+            'user' => 'foo',
+            'pass' => 'bar',
         ),
-        'xcache.admin.user' => 'foo',
-        'xcache.admin.pass' => 'bar'
     );
 
     public function __construct($config = null)
@@ -24,10 +24,6 @@ class Test_Solar_Cache_Adapter_Xcache extends Solar_Test {
     {
         // create a Solar_Cache with the Solar_Cache_Xcache adapter
         $this->_cache = Solar::factory('Solar_Cache', $this->_config);
-
-        // deleteAll is an admin function, needs matching xcache admin creds
-        $_SERVER['PHP_AUTH_USER'] = $this->_config['xcache.admin.user'];
-        $_SERVER['PHP_AUTH_PW'] = $this->_config['xcache.admin.pass'];
 
         // remove all previous entries
         $this->_cache->deleteAll();

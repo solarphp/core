@@ -124,22 +124,16 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
     /**
      *
      * Removes all cache entries.
-     *
-     * @param mixed 'user' to delete user variables & cached scripts,
-     * null to delete only cached scripts
+     * 
+     * Note that APC makes a distinction between "user" entries and
+     * "system" entries; this only deletes the "user" entries.
      *
      * @return void
      *
      */
-    public function deleteAll($cache_type = 'user')
+    public function deleteAll()
     {
-        if($cache_type == 'user') {
-            // clear user cache
-            apc_clear_cache('user');
-        }
-
-        // clear cached files
-        apc_clear_cache();
+        apc_clear_cache('user');
     }
 
     /**

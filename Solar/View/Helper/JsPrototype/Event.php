@@ -152,7 +152,7 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
      * Adds an event handler function to the JavaScript object defined by
      * $object. Use observe() if you need to obverve blocks in the DOM.
      *
-     * @param string $selector JavaScript object to observe
+     * @param string $object JavaScript object to observe
      *
      * @param string $name Name of event to observe. Note that 'on' is prepended
      * by the Prototype library. So, valid $name values would be 'click', 'load',

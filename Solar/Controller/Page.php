@@ -182,15 +182,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
     /**
      *
-     * Request object
-     *
-     * @var Solar_Request
-     *
-     */
-    protected $_request;
-
-    /**
-     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -199,9 +190,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function __construct($config = null)
     {
         $class = get_class($this);
-
-        // create the request object
-        $this->_request = Solar::factory('Solar_Request');
 
         // auto-set the name; e.g. Solar_App_Something => 'something'
         if (empty($this->_name)) {

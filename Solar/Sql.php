@@ -254,17 +254,18 @@ class Solar_Sql extends Solar_Base {
      * 
      * Available selection types are ...
      * 
-     * ||~ $type      ||~ returns ||
-     * ||  `all`    ||  Solar_Sql_Rowset object of all rows; return class can be set using $class ||
-     * ||  `array`  ||  A sequential array of all rows ||
-     * ||  `assoc`  ||  An assoc. array of all rows keyed on first column ||
-     * ||  `col`    ||  A sequential array of the first column of each row ||
-     * ||  `one`    ||  The first value in the first row ||
-     * ||  `pairs`  ||  An assoc. array of keys (first col) and values (second col) ||
-     * ||  `pdo`    ||  A PDOStatement object ||
-     * ||  `result` ||  A Solar_Sql_Result object ||
-     * ||  `row`    ||  A Solar_Sql_Row object of the first row; return class can be set using $class ||
-     * ||  `string` ||  The SQL SELECT command as a string ||
+     * | $type    | returns 
+     * | -------- | -----------------------------------------------------------------------------
+     * | `all`    | Solar_Sql_Rowset object of all rows; return class can be set using $class 
+     * | `array`  | A sequential array of all rows 
+     * | `assoc`  | An assoc. array of all rows keyed on first column 
+     * | `col`    | A sequential array of the first column of each row 
+     * | `one`    | The first value in the first row 
+     * | `pairs`  | An assoc. array of keys (first col) and values (second col) 
+     * | `pdo`    | A PDOStatement object 
+     * | `result` | A Solar_Sql_Result object 
+     * | `row`    | A Solar_Sql_Row object of the first row; return class can be set using $class 
+     * | `string` | The SQL SELECT command as a string 
      * 
      * @param string $type How to return the results.
      * 

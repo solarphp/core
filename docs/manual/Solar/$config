@@ -9,12 +9,14 @@ source you pass in).
 
 You can configure the Solar class using these keys in your [[Main::ConfigFile | config file]] (which are then passed into the [[Solar::$config]] property).
 
-||~ key ||~ type ||~ value ||
-|| `locale` || string || path to Solar locale directory, default `Solar/Locale` ||
-|| `locale_code` || string || initial locale code, default `en_US` ||
-|| `ini_set` || array || [[php::ini_set()]] parameters ||
-|| `start` || array || custom startup scripts ||
-|| `stop` || array || custom shutdown scripts ||
+| key           | type   | value 
+| ------------- | ------ | ------------------------------------------------------
+| `locale`      | string | path to Solar locale directory, default `Solar/Locale` 
+| `locale_code` | string | initial locale code, default `en_US` 
+| `ini_set`     | array  | [[php::ini_set()]] parameters 
+| `start`       | array  | custom startup scripts 
+| `stop`        | array  | custom shutdown scripts 
+
 
 --------------------
 `ini_set`
@@ -28,6 +30,7 @@ These config key values get called as part of the [[Solar::start()]] process.  F
 
 ... [[Solar::start()]] will issue `ini_set('display_errors', true)` as part of the startup process.
 
+
 --------------------
 `start`
 --------------------
@@ -40,6 +43,7 @@ These values represent scripts to execute as part of [[Solar::start()]].  For ex
 }}
 
 ... then [[Solar::start()]] will run `start1.php` and `start2.php` as part of its startup process.
+
 
 --------------------
 `stop`

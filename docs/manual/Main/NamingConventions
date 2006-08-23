@@ -14,19 +14,21 @@ Method Names
 
 When reasonable, methods in Solar classes should conform to these names when they perform these related functions:
 
-||~ Method Name ||~ Usage ||~ Examples ||
-|| get          || gets the value of a property || $obj->getProperty() ||
-|| set          || sets the value of a property || $obj->setProperty($value) ||
-|| load         || loads a property value from an external source || $role->load($handle) ||
-|| fetch        || returns one entry from storage (instead of get/find/retrieve) || $cache->fetch($id) ||
-|| fetchAll     || returns multiple entries from storage || $table->fetchAll() ||
-|| fetchBy      || returns one entry from storage, using alternative or additional criteria (instead of fetchWith/fetchFor) || $table->fetchByName($name) ||
-|| fetchAllBy   || returns multiple entries from storage, using alternative or additional criteria || $table->fetchAllByName($name) ||
-|| insert       || inserts new data in storage (instead of add/new/save) || $table->insert($data) ||
-|| update       || updates existing data in storage (instead of save/change) || $table->update($data, $where), $file->update($data, $path) ||
-|| save         || updates existing data **or** inserts new data in storage (instead of replace) || $cache->save($id, $data) ||
-|| delete       || deletes data from storage (instead of remove) || $table->delete($where), $cache->delete($id) ||
-|| is           || returns boolean true/false || $cache->isActive() ||
+| Method Name  | Usage                                                                                                      | Examples 
+| ------------ | ---------------------------------------------------------------------------------------------------------- | --------
+| get          | gets the value of a property                                                                               | $obj->getProperty() 
+| set          | sets the value of a property                                                                               | $obj->setProperty($value) 
+| load         | loads a property value from an external source                                                             | $role->load($handle) 
+| fetch        | returns one entry from storage (instead of get/find/retrieve)                                              | $cache->fetch($id) 
+| fetchAll     | returns multiple entries from storage                                                                      | $table->fetchAll() 
+| fetchBy      | returns one entry from storage, using alternative or additional criteria (instead of fetchWith/fetchFor)   | $table->fetchByName($name) 
+| fetchAllBy   | returns multiple entries from storage, using alternative or additional criteria                            | $table->fetchAllByName($name) 
+| insert       | inserts new data in storage (instead of add/new/save)                                                      | $table->insert($data) 
+| update       | updates existing data in storage (instead of save/change)                                                  | $table->update($data, $where), $file->update($data, $path) 
+| save         | updates existing data **or** inserts new data in storage (instead of replace)                              | $cache->save($id, $data) 
+| delete       | deletes data from storage (instead of remove)                                                              | $table->delete($where), $cache->delete($id) 
+| is           | returns boolean true/false                                                                                 | $cache->isActive() 
+
 
 These names are not set in stone, but should be used when reasonable.
 
@@ -64,16 +66,17 @@ Locale Translation Keys
 
 Keys in the LocaleFiles should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
 
-||~ Prefix      ||~ Usage ||
-|| `ACTION_`  || Displayed text for page-controller action names ||
-|| `DESCR_`   || Form element descriptions (long text) ||
-|| `ERR_`     || Logic error and exception messages ||
-|| `FAILURE_` || Failure messages, typically form-related ||
-|| `FORMAT_`  || Formatting strings for the locale ||
-|| `HEADING_` || Heading titles ||
-|| `LABEL_`   || Form element labels (short text) ||
-|| `LEGEND_`  || Fieldset legend titles ||
-|| `SUCCESS_` || Success messages, typically form-related ||
-|| `SUBMIT_`  || Submit-button values ||
-|| `TEXT_`    || General-purpose text ||
-|| `WARNING_` || Warnings, typically form-related ||
+|  Prefix    | Usage
+| ---------- | -----------------------------------------------
+| `ACTION_`  | Displayed text for page-controller action names 
+| `DESCR_`   | Form element descriptions (long text) 
+| `ERR_`     | Logic error and exception messages 
+| `FAILURE_` | Failure messages, typically form-related 
+| `FORMAT_`  | Formatting strings for the locale 
+| `HEADING_` | Heading titles 
+| `LABEL_`   | Form element labels (short text) 
+| `LEGEND_`  | Fieldset legend titles 
+| `SUCCESS_` | Success messages, typically form-related 
+| `SUBMIT_`  | Submit-button values 
+| `TEXT_`    | General-purpose text 
+| `WARNING_` | Warnings, typically form-related 

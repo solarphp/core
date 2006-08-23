@@ -141,35 +141,39 @@ string you like here, in case your particular template or view system
 supports added element types. In general, though, you can expect to use
 these values:
 
-||~ `type` ||~ maps to... ||~ uses 'options'? ||
-|| button    || <input type="button" ... /> || no ||
-|| checkbox  || <input type="checkbox" ... /> || yes ||
-|| file      || <input type="file" ... /> || no ||
-|| hidden    || <input type="hidden" ... /> || no ||
-|| image     || <input type="image" ... /> || no ||
-|| password  || <input type="password" ... /> || no ||
-|| radio     || <input type="radio" ... /> || yes ||
-|| reset     || <input type="reset" ... /> || no ||
-|| select    || <select>...</select> || yes ||
-|| submit    || <input type="submit" ... /> || no ||
-|| text      || <input type="text" ... /> || no ||
-|| textarea  || <textarea>...</textarea> || no ||
+| type        | maps to...                    | uses 'options'?
+| ----------- | ----------------------------- | ---------------
+| `button`    | <input type="button" ... />   | no 
+| `checkbox`  | <input type="checkbox" ... /> | yes 
+| `file`      | <input type="file" ... />     | no 
+| `hidden`    | <input type="hidden" ... />   | no 
+| `image`     | <input type="image" ... />    | no 
+| `password`  | <input type="password" ... /> | no 
+| `radio`     | <input type="radio" ... />    | yes 
+| `reset`     | <input type="reset" ... />    | no 
+| `select`    | <select>...</select>          | yes   
+| `submit`    | <input type="submit" ... />   | no 
+| `text`      | <input type="text" ... />     | no 
+| `textarea`  | <textarea>...</textarea>      | no 
 
 In some cases, you can use the 'options' key (described below) to tell
 the form output generator what options are available for the input type;
 e.g., in a select list, or a set of radio buttons, or the
 checked/unchecked values for a checkbox.
 
+
 `label` string
 ====================
 
 This is a short descriptive label string for the form element.
+
 
 `descr` string
 ====================
 
 This is a longer description of the form element, generally for
 tooltips, help functions, and so on.
+
 
 `value` string or array
 ====================
@@ -179,6 +183,7 @@ used, this is the default selected or checked option key. If the `value`
 is an array and the element is a multiple-select, all the `value` option
 keys should show as selected by default.
 
+
 `require` bool
 ====================
 
@@ -187,6 +192,7 @@ A boolean flag indicating whether or not an element should be noted as
 "required" may change from system to system (Solar_View by default shows
 a red ##red|*## by the label to note required items).
 
+
 `disable` bool
 ====================
 
@@ -194,6 +200,7 @@ A boolean flag indicating whether or not the element should be displayed
 as read-only by the form output generator. If the element is disabled,
 the user should see the element and its value, but not be able to change
 it.
+
 
 `options` array
 ====================
@@ -259,6 +266,7 @@ For example, you can create a 'checkbox' element with these options ...
 indicate the unchecked value; the later checkbox value, if checked, will
 override the hidden value on form submission.)
 
+
 `attribs` array
 ====================
 
@@ -284,6 +292,7 @@ cols and rows ...
 {{code: html
     <textarea name="body_text" rows="24" cols="80">type something here</textarea>
 }}
+
 
 `feedback` array
 ====================
@@ -314,6 +323,7 @@ to be a PHP function. For example:
         ),
     );
 }}
+
 
 `validate` array
 ====================

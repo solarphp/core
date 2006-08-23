@@ -59,7 +59,7 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
             // blocks
             'Solar_Markdown_Wiki_MethodSynopsis',
             'Solar_Markdown_Wiki_Header',
-            'Solar_Markdown_Extra_Table',
+            'Solar_Markdown_Wiki_Table',
             'Solar_Markdown_Plugin_HorizRule',
             'Solar_Markdown_Plugin_List',
             'Solar_Markdown_Extra_DefList',

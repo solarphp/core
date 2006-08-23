@@ -125,7 +125,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     protected function _parse($matches)
     {
         $href = $this->_escape($matches[1]);
-        return "<a href=\"$href\">$href</a>";
+        return $this->_toHtmlToken("<a href=\"$href\">$href</a>");
     }
     
     /**

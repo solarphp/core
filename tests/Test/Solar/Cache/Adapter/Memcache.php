@@ -20,6 +20,10 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
         if (! extension_loaded('memcache')) {
             $this->skip('memcache extension not loaded');
         }
+        
+        if (! $this->_config['run']) {
+            $this->skip("config key 'run' set to false");
+        }
     }
     
     public function setup()

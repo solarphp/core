@@ -64,6 +64,15 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
     
     /**
      * 
+     * Uses these chars for parsing.
+     * 
+     * @var string
+     * 
+     */
+    protected $_chars = '|';
+    
+    /**
+     * 
      * Transforms Markdown syntax to XHTML tables.
      * 
      * @param string $text The source text.

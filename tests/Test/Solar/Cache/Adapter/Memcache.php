@@ -6,7 +6,7 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
     protected $_Test_Solar_Cache_Adapter_Memcache = array(
         'adapter' => 'Solar_Cache_Adapter_Memcache',
         'config'  => array(
-            'host' => '72.51.38.220',
+            'host' => '127.0.0.1',
             'port' => 11211,
             'life' => 7, // 7 seconds
         ),

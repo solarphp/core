@@ -6,7 +6,9 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
     protected $_Test_Solar_Cache_Adapter_Memcache = array(
         'adapter' => 'Solar_Cache_Adapter_Memcache',
         'config'  => array(
-            'life'   => 7, // 7 seconds
+            'host' => '72.51.38.220',
+            'port' => 11211,
+            'life' => 7, // 7 seconds
         ),
         'run' => false,
     );
@@ -14,12 +16,9 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
         if (! extension_loaded('memcache')) {
             $this->skip('memcache extension not loaded');
-        }
-        
-        if (! $this->_config['run']) {
-            $this->skip("config key 'run' set to false");
         }
     }
     
@@ -30,8 +29,13 @@ class Test_Solar_Cache_Adapter_Memcache extends Solar_Test {
 
         // remove all previous entries
         $this->_cache->deleteAll();
+        
+        // for some reason, we need to wait a second before trying
+        // to add/remove entries from the cache.  otherwise all the
+        // tests fail.
+        sleep(1);
     }
-
+    
     public function testDelete()
     {
         $id = 'spiff';

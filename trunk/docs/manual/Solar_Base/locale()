@@ -1,0 +1,71 @@
+This is a convenience method that loads locale strings for the class and returns those strings based on the translation key.
+
+If you request a key that does not exist in the class-specific [[Main::LocaleFiles | locale file]], or if there is no locale file for this class and the current locale code, this method will fall back to the system-wide Solar locale strings found in the `Solar/Locale/*` directory.  If, after all that searching, the key has no translation, this method will return the key itself as the translation.
+
+--------------------
+Usage
+--------------------
+
+Where Locale Files Are Located
+====================
+
+Solar looks for locale files in the same directory as the class, under the `Locale/` subdirectory.  
+
+{{code: php
+    class Example_Class extends Solar_Base {
+    }
+    // this will use the locale files in Example/Class/Locale/*
+}}
+
+Calling The locale() Method
+====================
+
+Once you have defined the locale file location, you can use the Solar_Base::locale() method.
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    $example = Solar::factory('Example');
+    $string = $example->locale('ERR_EXAMPLE');
+}}
+
+If you change locale codes, the method will automatically reload strings for the new code on your next call to locale().
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    $example = Solar::factory('Example');
+
+    // get the default translation
+    $string = $example->locale('ERR_EXAMPLE');
+
+    // change the code and get another translation
+    Solar::setLocale('es_ES');
+    $string = $example->locale('ERR_EXAMPLE');
+}}
+
+Finally, if the requested key does not exist in the class-specific locale file, this method will "fall back" to the all-purpose Solar locale file, generally located in `Solar/Locale/*`, and look for the translation key there.
+
+Singular/Plural
+====================
+
+The call to locale() takes an optional second parameter indicating a number to associate with the translation.  If the number is 1, a singular version of the translation will be returned; if the number is more or less than exactly 1, a plural version of the translation (if it exists) will be returned.  See more on defining plurals in the [[Main::LocaleFiles | locale files]] documentation.
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    $example = Solar::factory('Example');
+
+    // get singular translations
+    $string = $example->locale('ERR_EXAMPLE');
+    $string = $example->locale('ERR_EXAMPLE', 1);
+
+    // get plural translations
+    $string = $example->locale('ERR_EXAMPLE', 0);
+    $string = $example->locale('ERR_EXAMPLE', 0.5);
+    $string = $example->locale('ERR_EXAMPLE', 1.1);
+    $string = $example->locale('ERR_EXAMPLE', 999);
+}}

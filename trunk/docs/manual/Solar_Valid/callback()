@@ -1,0 +1,26 @@
+Use this to perform your own ad-hoc validations.  The value
+will be passed as the first argument to the callback; the
+callback should return boolean true if the value was valid,
+boolean false if not.
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    // get a validator object
+    $valid = Solar::factory('Solar_Valid');
+
+    // validate $value against a function
+    $result = $valid->callback($value, 'my_function');
+
+    // validate $value against a static method
+    $result = $valid->custom($value, array('SomeClass', 'StaticMethod'));
+
+    // validate $value against an object method
+    $result = $valid->callback($value, array($object, 'MethodName'));
+
+    // validate $value against a function,
+    // with added parameters for the function
+    $result = $valid->callback($value, 'my_function', $foo, 'bar', $etc);
+}}
+

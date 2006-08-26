@@ -1,0 +1,32 @@
+This method allows you to retrieve the proper text string as
+related to a specific class for a given locale.  Be sure to
+read about [[Main::LocaleFiles | locale files]] for more
+information.
+
+For example, to get the locale string for the 'HELLO' key in
+the 'Example' class ...
+
+{{code: php
+    $text = Solar::locale('Example', 'TEXT_HELLO');
+}}
+
+By default, the locale() method retrieves the singluar string
+for the translation key; if you need the "zero" or "plural"
+strings, just pass the appropriate number as the third
+parameter, and the locale() method will get the correct
+translation (provided it has been set up in the locale file).
+
+{{code: php
+    // get the translation for "0 apples"
+    $num = 0;
+    $text = Solar::locale('Example', 'TEXT_APPLE', $num);
+
+    // get the translation for "1 apple"
+    $apples = 1;
+    $text = Solar::locale('Example', 'TEXT_APPLE', $num);
+
+    // get the translation for "2 (or more) apples"
+    $apples = 2;
+    $text = Solar::locale('Example', 'TEXT_APPLE', $num);
+}}
+

@@ -1,0 +1,110 @@
+====================
+Getting Started with Solar
+====================
+
+--------------------
+Initial Installation
+--------------------
+
+Download and install via PEAR
+====================
+
+{{code: bash
+    $ pear channel-discover solarphp.com
+    $ pear install Solar/Solar-alpha
+    ...
+}}
+
+Set up the front-controller
+====================
+
+{{code: bash
+    $ cd /home/username/public_html
+    $ vi index.php
+}}
+
+{{code: php
+    // Path to PEAR libraries, or where Solar is installed
+    set_include_path('/home/username/pear/php');
+
+    // Load and start Solar
+    require_once 'Solar.php';
+    Solar::start();
+
+    // Instantiate and run the front controller
+    $front = Solar::factory('Solar_Controller_Front');
+    $front->display();
+
+    // Done!
+    Solar::stop();
+}}
+
+
+Symlink (alias) to the public directory
+====================
+
+{{code: bash
+    $ cd /home/username/public_html
+    $ mkdir public
+    $ cd public
+    $ ln -s /home/username/pear/php/Solar/App/Public Solar
+}}
+
+
+Set up a minimal config file
+====================
+
+{{code: bash
+    $ cd /home/username/public_html
+    $ vi Solar.config.php
+}}
+
+{{code: php
+    $config = array();
+
+    // Your front controller href
+    $config['Solar_Uri_Action']['path'] = '/index.php/';
+
+    // Your public directory href
+    $config['Solar_Uri_Public']['path'] = '/public/';
+
+    // Done!
+    return $config;
+}}
+    
+--------------------
+Browse to "Hello World"
+--------------------
+
+http://localhost/index.php/hello
+
+
+--------------------
+Move your config file outside the web root
+--------------------
+
+First, move the file ...
+
+{{code: bash
+    $ cd /home/username/public_html
+    $ mv Solar.config.php /home/username
+    $ vi index.php
+}}
+
+... then edit index.php front-controller so that [[Solar::start()]] knows the new file location.
+
+{{code: php
+    // Path to PEAR libraries, where Solar is installed
+    set_include_path('/home/username/pear/php');
+
+    // Load and start Solar
+    require_once 'Solar.php';
+    Solar::start('/home/username/Solar.config.php');
+
+    // Instantiate and run the front controller
+    $front = Solar::factory('Solar_Controller_Front');
+    $front->display();
+
+    // Done!
+    Solar::stop();
+}}

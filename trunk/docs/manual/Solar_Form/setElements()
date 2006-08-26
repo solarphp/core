@@ -1,0 +1,76 @@
+Use this method to append multiple elements to a form at one time.
+
+The associative array of elements is a series of key-value pairs where
+the key is the element name, and the value is an element information
+array (see the [[Solar_Form::setElement()]] method for more on the info
+key-value pairs).
+
+For example:
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    $form = Solar::factory('Solar_Form');
+
+    $elements = array(
+        'addr' => array(
+            'type'  => 'text',
+            'label' => 'Street Address:',
+            'value' => '101 Main Street'
+        ),
+        'city' => array(
+            'type'  => 'text',
+            'label' => 'City:',
+            'value' => 'Beverly Hills'
+        ),
+        'state' => array(
+            'type'  => 'select',
+            'label' => 'State:',
+            'value' => 'CA',
+            'options' => array('AL' => 'Alabama', 'CA' => 'California'),
+        ),
+        'zip' => array(
+            'type'  => 'text',
+            'label' => 'ZIP:',
+            'value' => '90210',
+            'attribs' => array('maxlength' => 5, 'size' => 5),
+        ),
+    );
+
+    $form->setElements($elements);
+}}
+
+This code will hint an output generator to create a form something like
+this (labels and layout are excluded for the sake of brevity):
+
+{{code: html
+    <input type="text" name="addr" value="101 Main Street" />
+    <input type="text" name="city" value="Beverly Hills" />
+    <select name="state">
+      <option value="AL" label="Alabama">Alabama</option>
+      <option value="CA" label="California" selected="selected">California</option>
+    </select>
+    <input type="text" name="zip" value="90210" size="5" maxlength="5" />
+}}
+
+As with [[Solar_Form::setElement()]], you can specify that each element
+become part of an array within the form by adding a second parameter.
+For example, with the above set of elements, you can make them part of
+an array called 'contact' ...
+
+{{code: php
+    $form->setElements($elements, 'contact');
+}}
+
+... which would lead to output something like this:
+
+{{code: html
+    <input type="text" name="contact[addr]" value="101 Main Street" />
+    <input type="text" name="contact[city]" value="Beverly Hills" />
+    <select name="contact[state]">
+      <option value="AL" label="Alabama">Alabama</option>
+      <option value="CA" label="California" selected="selected">California</option>
+    </select>
+    <input type="text" name="contact[zip]" value="90210" size="5" maxlength="5" />
+}}

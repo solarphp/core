@@ -1,0 +1,91 @@
+Here are some notes on how to use Solar_Sql_Table, which is a replacement for Solar_Sql_Entity.
+
+--------------------
+Overview
+--------------------
+
+The idea with Solar_Sql_Table is that you do not define your table as an SQL statement; instead, you define the columns and indexes in a PHP class, and then Solar_Sql_Table creates that table for you in the database.  This provides all sorts of information so you can validate, create forms, etc. from the PHP-based column definitions.
+
+
+--------------------
+Schema Setup
+--------------------
+
+Previously, in Solar_Sql_Entity, you would define these items for the pseudo-schema of the table:
+
+* Table name
+* Columns
+* Indexes
+* Baseline SQL queries
+* Baseline form elements
+
+In the new Solar_Sql_Table, you only define the table name and its columns and indexes (not forms and not queries).  The form functionality has been refactored to Solar_Form_Load_Table, and the query functionality has been refactored into Solar_Sql_Select.
+
+In Solar_Sql_Table, you define the schema in the extended setup() method.
+
+
+Column Definitions
+====================
+
+The new column definition keys are mostly the same as in Solar_Sql_Entity; however, some names, behaviors, and expected values have changed.
+
+: name : (string) the column name
+: type : (string) the column type (char, varchar, etc)
+: size : (int) the column size
+: scope : (int) number of decimal places
+: valid : (array) Solar_Valid methods and arguments
+: require : (bool) if the column is required (NOT NULL)
+: autoinc : (bool) if the column is auto-incremented
+: default : (string|array) default value (determined in PHP, not SQL)
+: primary : (bool) if the column is part of the table primary key
+
+The old Solar_Sql_Entity 'validate' key is now 'valid' in Solar_Sql_Table and serves much the same purpose.  The value for this key is much the same; however, the method name is assumed to be a Solar_Valid method name, not a class-and-method callback array.  Similarly, if you need only one validation and it has no parameters, you can just use the string method name.
+
+The old Solar_Sql_Entity 'sequence' key is replaced in Solar_Sql_Table with the 'autoinc' key.  Previously, the 'sequence' value was a sequence name; now, the 'autoinc' value is true/false, and if true, auto-creates a sequence for you named for the table and column.  The insert() method automatically increments the value if the column is left null.
+
+The old Solar_Sql_Entity 'default' key used to be an SQL DEFAULT clause.  In Solar_Sql_Table, tables are not created with DEFAULT column clauses any more; instead, the class determines the default value at the PHP level (not at the SQL level).  This means you can use callbacks and literals that are evaluated at runtime, not at table-creation time.
+
+
+Automatic Columns
+====================
+
+The new Solar_Sql_Table always defines these columns (and related indexes) for you automatically:
+
+: id : unique row ID, auto-incremented
+: created : creation timestamp
+: updated : last-modified timestamp
+
+If left null, the created and updated fields are automatically set for you by the insert() and update() methods.
+
+
+--------------------
+Insert/Update/Delete
+--------------------
+
+
+Insert
+====================
+
+Previously, Solar_Sql_Entity had preInsert() and postInsert() methods.  These methods are not present in Solar_Sql_Table.  To get that functionality, override the insert() method in your extended class, and put the pre-insert code before a call to parent::insert(), and the put the post-insert code after the call to parent::insert().
+
+
+Update
+====================
+
+Previously, Solar_Sql_Entity had preUpdate() and postUpdate() methods.  These methods are not present in Solar_Sql_Table.  To get that functionality, override the update() method in your extended class, and put the pre-update code before a call to parent::update(), and the put the post-update code after the call to parent::update().
+
+Additionally, you can now specify the $where parameter as an array of key-value pairs, where the key is a condition with a placeholder, and the value is a placeholder value (which will be automatically quoted for you).  The array of $where conditions is then ANDed together for you.  You can still provide a liter WHERE clause if you wish, but you have to do the quoting yourself.
+
+
+Delete
+====================
+
+You can specify the $where parameter as an array of key-value pairs, where the key is a condition with a placeholder, and the value is a placeholder value (which will be automatically quoted for you).  The array of $where conditions is then ANDed together for you.  You can still provide a liter WHERE clause if you wish, but you have to do the quoting yourself.
+
+
+--------------------
+Select
+--------------------
+
+Because the pre-defined query functionality has been refactored into Solar_Sql_Select, the Solar_Sql_Table class now provides a select() method as a convenience interface for a selection tool.
+

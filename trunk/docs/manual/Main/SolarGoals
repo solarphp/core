@@ -1,0 +1,80 @@
+====================
+Project Goals
+====================
+
+--------------------
+Easy to Comprehend
+--------------------
+
+**Solar classes should be easy to install, easy to learn, and easy to read.**
+
+Nobody wants to learn how to use another system; most developers prefer to spend their time writing their own tools, not conforming to someone else's ideas.  I think that's at least in part because most code is written without taking the audience into consideration (the "audience" being other developers).
+
+Because reading code from other developers is a learning experience, all Solar classes are written as a teaching experience.  This means that Solar classes are written as simply and clearly as possible without any tricky or obtuse techniques.  All Solar classes use common implementation ideas and a common StyleGuide.
+
+
+--------------------
+Teaching/Learning Community
+--------------------
+
+**The community of Solar users should be respectful and cordial to encourage problem-solving and idea exchange, not ego-boosting, point-scoring, or one-upmanship.**
+
+The social aspect of development is often overlooked or under-rated.  In Solar, we recognize that support and encouragement from other developers is a good and necessary component of successful projects.  Again, this is because all development is a learning experience, so we should foster a teaching environment for that experience.
+
+Thus, while providing a mailing list and wiki for collaboration, we want to maintain a polite and cordial atmosphere both for established developers and for new users.  The primary social rule in all public communication around Solar is to BeNice.
+
+
+--------------------
+Useful Documentation
+--------------------
+
+**Solar classes should be well-documented; this means real narrative documentation on how to use Solar, not just method descriptions.**
+
+Because developers generally find it less-rewarding, initially, to spend time learning someone else's code, all Solar classes have [[SolarDocs | extensive end-user documentation]].  Solar classes also have extensive inline comments to guide the reader while examining code, and we aim to provide extensive narrative documentation as well via this site.
+
+--------------------
+Built for the World
+--------------------
+
+**Solar classes should be namespaced, self-contained, and localizable.**
+
+Although English is the de-facto language of developers worldwide, end-users don't want to see English-only labels, buttons, and text.  Solar classes come with easy built-in text localization so that it's easy to translate into languages other than English.
+
+Solar is probably not the only PHP class library you are going to use. Because Solar classes are always named with a `Solar_` prefix, you never need to worry about name conflicts or collisions from other libraries.  Similarly, any classes you build for yourself should have a unique namespace prefix (often called the `Vendor_` prefix in the documentation).
+
+Solar-based applications should be self-contained; this means no external dependencies, and all internal dependencies should resolve themselves.  In practice, this means that all Solar classes are distributed in a single package.
+
+--------------------
+MVC-Aware
+--------------------
+
+**Solar classes should adhere to model, view, and controller separation.**
+
+Only one Solar class generates output in the normal course of execution: the Solar_View class.  Other Solar classes may access, manipulate, and return data, but they may not output it; output is solely in the realm of the "view" in a model/view/controller application, and Solar_View is the only "view" class in the standard Solar distribution.
+
+In addition, this makes it easy to write applications that are theme-aware.  Because all output passes through a template, the template can be modified to present the data in any way preferred by the developer.
+
+(Note that we said "in the normal course of execution" above; exceptions and various debug tools will generate output, but of course that's not the normal course.  :-)
+
+
+--------------------
+Technical Goals
+--------------------
+
+There are various technical goals for Solar.  In no particular order:
+
+* To run cleanly under [PHP5](http://php.net) with E_ALL and E_STRICT error reporting;
+
+* To provide easy-to-use secure-programming elements and a secure foundation to work from;
+
+* To provide a common means for calling, instantiating, and configuring classes automatically;
+
+* To provide a common configuration file or system not only for Solar classes but for the applications built on Solar components;
+
+* To provide basic library class components (authentication, database, cache, log, debug, forms, validation, etc);
+
+* To provide common data models as library class components;
+
+* To provide full applications based on the component classes using a straightforward MVC architecture 
+
+* To provide easy application distribution in shared environments

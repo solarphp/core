@@ -1,0 +1,76 @@
+====================
+User Authentication
+====================
+
+--------------------
+Set up a minimal authentication source
+--------------------
+
+For purposes of getting started, we'll use the Apache `htpasswd` system for maintaining usernames and passwords.
+
+{{code: bash
+    $ htpasswd -c -s /home/username/htpasswd.conf username
+    New password: 
+    Re-type new password: 
+    Adding password for user username
+}}
+
+--------------------
+Edit Solar.config.php
+--------------------
+
+Solar needs to know what kind of authentication we're using; edit the Solar config file to provide this information.
+
+{{code: bash
+    $ vi Solar.config.php
+}}
+
+{{code: php
+    $config = array();
+
+    // Front controller HREF prefix
+    $config['Solar_Uri_Action']['path'] = '/index.php';
+
+    // Public directory HREF prefix
+    $config['Solar_Uri_Public']['path'] = '/public';
+
+    // Authentication source
+    $config['Solar_Auth'] = array(
+        'adapter' => 'Solar_Auth_Adapter_Htpasswd',
+    );
+
+    // Adapter information
+    $config['Solar_Auth_Adapter_Htpasswd'] = array(
+        'file' => '/home/username/htpasswd.conf',
+    );
+
+    // Done!
+    return $config;
+}}
+
+--------------------
+Browse to "Hello World"
+--------------------
+
+http://localhost/index.php/hello
+
+Attempt to log in with your username and password.
+
+
+--------------------
+Other authentication sources
+--------------------
+
+* [[Solar_Auth_Adapter_Htpasswd::HomePage | Solar_Auth_Adapter_Htpasswd]]
+
+* [[Solar_Auth_Adapter_Ini::HomePage | Solar_Auth_Adapter_Ini]]
+
+* [[Solar_Auth_Adapter_Ldap::HomePage | Solar_Auth_Adapter_Ldap]]
+
+* [[Solar_Auth_Adapter_Mail::HomePage | Solar_Auth_Adapter_Mail]]
+
+* [[Solar_Auth_Adapter_None::HomePage | Solar_Auth_Adapter_None]]
+
+* [[Solar_Auth_Adapter_Post::HomePage | Solar_Auth_Adapter_Post]]
+
+* [[Solar_Auth_Adapter_Sql::HomePage | Solar_Auth_Adapter_Sql]]

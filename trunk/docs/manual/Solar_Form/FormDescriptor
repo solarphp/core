@@ -1,0 +1,81 @@
+====================
+Form Descriptor
+====================
+
+While this descriptor array originated with
+[Savant](http://phpsavant.com) and [[Main::HomePage | Solar]], the
+structure is generic enough for any framework to generate, and for any
+template system to render. The structure is composed of an array of
+elements, where each element is itself an associative array.
+
+An example element array looks like this:
+
+{{code: php
+    $element = array(
+        'name' => 'addr',
+        'type' => 'text',
+        'label' => 'Street Address:',
+        'value' => '101 Main Street'
+    );
+}}
+
+Using this array, the view logic has all the information it needs to to
+generate the form element output; similarly, the controller logic has
+enough information to know what form element is mapped to which data
+element, and what the current value is.
+
+Of course, this describes only one element in a form; to describe a
+series of form elements, put them into an array. The following array is
+a representation of how the [[Solar_Form::$elements]] property is
+structured:
+
+{{code: php
+    $elements = array(
+        'addr' => array(
+            'name' => 'addr',
+            'type' => 'text',
+            'label' => 'Street Address:',
+            'value' => '101 Main Street'
+        ),
+        'city' => array(
+            'name' => 'city',
+            'type' => 'text',
+            'label' => 'City:',
+            'value' => 'Beverly Hills'
+        ),
+        'state' => array(
+            'name' => 'state',
+            'type' => 'select',
+            'label' => 'State:',
+            'value' => 'CA',
+            'options' => array('AL' => 'Alabama', 'CA' => 'California'),
+        ),
+        'zip' => array(
+            'name' => 'zip',
+            'type' => 'text',
+            'label' => 'ZIP:',
+            'value' => '90210',
+            'attribs' => array('maxlength' => 5, 'size' => 5),
+        ),
+    );
+}}
+
+
+--------------------
+Element Keys
+--------------------
+
+These are the keys available for form elements:
+
+| Key        | Type          | Description 
+| ---------- | ------------- | ---------------------------------------------------------
+| `name`     | string        | the element name 
+| `type`     | string        | the element type; e.g. text, radio, select, checkbox, etc 
+| `label`    | string        | a short label for the element 
+| `descr`    | string        | a longer description of the element 
+| `value`    | string\|array | the value of the element, or the value of the selected option; if the element has multiple values (as from a multiple select), this is a sequential array of values 
+| `require`  | bool          | whether or not the element is required 
+| `disable`  | bool          | whether or not editing of the value should be disabled (i.e., read-only) 
+| `options`  | array         | key-value pairs of options for select, radio, checkbox, etc; each array key is the actual value of the option, and the corresponding array value is the displayed label of the option
+| `attribs`  | array         | key-value pairs for additional attributes to be applied 
+| `feedback` | array         | messages for the user related to the element; e.g. validation feedback 

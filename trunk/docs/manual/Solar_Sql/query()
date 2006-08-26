@@ -1,0 +1,30 @@
+This is the most-direct way to interact with the database; you simply
+pass an SQL statement to the method, and the underlying
+[[Solar_Sql_Adapter::HomePage | Solar_Sql_Adapter]] class uses
+[[php::PDO | ]] to execute the statement and return a result.
+
+{{code: php
+    $sql = Solar::factory('Solar_Sql');
+
+    // $result is a PDOStatement
+    $result = $sql->query('SELECT * FROM table');
+
+    // $result is a row-count
+    $value = $sql->quote('something');
+    $result = $sql->query("UPDATE table SET col = $value");
+}}
+
+To helper prevent SQL injection attacks, you should **always** quote the
+values used in a direct query. Use [[Solar_Sql::quote()]],
+[[Solar_Sql::quoteInto()]], or [[Solar_Sql::quoteMulti()]] to accomplish this.
+
+Note that Solar_Sql provides convenience methods to automatically quote
+values on common operations:
+
+* [[Solar_Sql::insert()]]
+
+* [[Solar_Sql::update()]]
+
+* [[Solar_Sql::delete()]]
+
+Additionally, the [[Solar_Sql_Select::HomePage | Solar_Sql_Select]] class is dedicated to safely creating portable SELECT statements, so you may wish to use that as well.

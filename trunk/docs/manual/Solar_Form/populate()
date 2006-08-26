@@ -1,0 +1,58 @@
+This method takes values from the population source and imports them
+into their corresponding form elements.
+
+* If the source is null (the default), then the population source is
+  determined based on the ``Solar_Form::$attribs['method']`` key (c.f.
+  the Solar_Form::$attribs property) -- if 'get', then [[Solar::get()]]
+  is used (i.e. the filtered $_GET array); if 'post', then
+  [[Solar::post()]] is used (i.e., the filtered $_POST array).
+
+* If the source is an array, then the array key-value pairs are
+  recursively mapped to form element names and the values are imported
+  into those elements.
+
+* If the source is an object, then the object is recast as an array, and
+  the properties are recursively mapped to form element names and the
+  values are imported into those elements.
+
+If you populate more than once, the later populations will reset and
+overwrite previous populations.
+
+--------------------
+Population Sources
+--------------------
+
+Let's say we have a set of elements that combine plain and array-based
+names, and in two different arrays:
+
+    id
+    user[email]
+    user[name]
+    contact[street]
+    contact[city]
+    contact[state]
+    contact[zip]
+    books[author]
+    books[title]
+
+All population sources are treated as arrays; if not an array to begin
+with (as in the case of objects) they will be recast to arrays. Those
+array elements would look like this in order to map into the above form
+elements:
+
+{{code: php
+    // $source can be $_GET, $_POST, your own array, an object, etc
+    $source = array(
+        'id' => '12345',
+        'user' => array(
+            'email' => 'nobody@example.com',
+            'name'  => 'Nobody Example',
+        ),
+        'contact' => array(
+            'street' => '101 Main Street',
+            'city'   => 'Beverly Hills',
+            'state'  => 'CA',
+            'zip'    => '90210'
+        ),
+    );
+}}

@@ -1,0 +1,120 @@
+====================
+Localized Forms
+====================
+
+Solar is built with worldwide distribution in mind; this means the end
+users of Solar applications may not speak your language. As such, you
+should at least attempt to use the built-in localization facilities that
+Solar provides (c.f. the [[Solar::locale()]] and [[Solar_Base::locale()]]
+methods).
+
+Adding localization to a form is very straightforward. You will need to
+localize ...
+
+* Form-feedback messages in Solar_Form::$feedback,
+
+* Element 'label' and 'descr' values,
+
+* If an element has 'options', the option labels
+
+* Element validation messages, and
+
+* The submission values of button elements.
+
+We'll step through the GettingStarted example from a localization point of view.
+
+--------------------
+Before We Begin
+--------------------
+
+The first problem we run into with the Solar localization facility is
+that it expects the localization strings to be related to a class in
+some way. While the [[GettingStarted]] example is fine for "standalone"
+forms, that example does not exist in relation to any other class.
+
+For this localization example, we'll use the generic Solar localization
+strings (which come as part of the standard Solar distribution) in some
+places (noted by calls to the [[Solar::locale()]] method) but we will
+also assume the existence of a Solar_Sql_Table class called $users; it
+has its own localization strings, noted by calls to $users->locale(),
+which will give us labels, descriptions, and so on.
+
+--------------------
+The Localized Example Form
+--------------------
+
+Now we'll recreate the [[GettingStarted]] form, using the Solar
+localization facility instead of hard-coded strings.
+
+In particular, note that the 'submit' button value, which tells the
+script what operation to perform, uses a localized string. When you are
+checking what operation to perform, you should check against a localized
+string, not a hard-coded one. This means that (1) users of other
+languages will see the button in their own language, and (2) your
+controller will automatically map to the correct submission request
+string for that language.
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    // create a hypothetical $users object for later
+    $users = Solar::factory('Example_Table_Users');
+
+    // create a form object
+    $form = Solar::factory('Solar_Form', $config);
+
+    // add elements to the form
+    $form->setElements(array(
+    
+        // the 'user_email' text input element
+        'user_email' => array(
+        
+            // element type
+            'type'  => 'text',
+        
+            // a localized label (custom from $users)
+            'label' => $users->locale('LABEL_USER_EMAIL'),
+        
+            // a localized long description (custom from $users)
+            'descr' => $users->locale('DESCR_USER_EMAIL'),
+        
+            // a localized validation message (custom from $users)
+            'valid' => array(
+                array('email', $users->locale('VALID_USER_EMAIL')),
+            ),
+        ),
+    
+        // the 'submit' element
+        'submit' => array(
+        
+            // element type
+            'type'  => 'submit',
+        
+            // a localized label (generic from Solar)
+            'label' => $this->locale('LABEL_SUBMIT'),
+        
+            // a localized operation value (generic from Solar)
+            'value' => $this->locale('SUBMIT_SAVE'),
+        
+        ),
+    );
+
+    // populate the form with user input
+    $form->populate();
+
+    // capture what operation the user wants to perform
+    $submit = Solar::post('submit');
+
+    // process a 'Save' submission.  Note that we check against
+    // the localized value of the operation, not a hard-coded
+    // string.
+    if ($submit == $this->locale('SUBMIT_SAVE')) {
+    
+        // validate the user input
+        if ($form->validate()) {
+            $values = $form->values();
+            // then save the $values in some way
+        }
+    }
+}}

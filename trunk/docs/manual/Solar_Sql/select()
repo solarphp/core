@@ -1,0 +1,51 @@
+This method exists primarily in support of [[Solar_Sql_Select::HomePage
+| Solar_Sql_Select]], which you should strongly consider using instead
+of calling this method.
+
+If you do use this method, here are some quick examples:
+
+{{code: php
+    $sql = Solar::factory('Solar_Sql');
+
+    // get all rows
+    $all = $sql->select('all', "SELECT * FROM table");
+
+    // get just the first row
+    $id = $sql->quote('id_value');
+    $row = $sql->select('row', "SELECT * FROM table WHERE id = $id");
+
+    // get just the first value
+    $count = $sql->select('one', "SELECT COUNT(*) FROM table");
+}}
+
+--------------------
+Security and Binding
+--------------------
+
+As with all SQL commands, you should be certain to quote values using
+[[Solar_Sql::quote()]], [[Solar_Sql::quoteInto()]], or [[Solar_Sql::quoteMulti()]].
+Alterntatively, use [[Solar_Sql_Select::HomePage | Solar_Sql_Select]] to
+build SELECT statements and fetch results.
+
+You can also build your SELECT commands using named placeholders, and
+the $data array will be automatically quoted into the command for you
+(per the requirements of your particular database). For example:
+
+{{code: php
+    $sql = Solar::factory('Solar_Sql');
+
+    // the command
+    $cmd = "SELECT * FROM table WHERE foo = :bar AND zim = :dib";
+
+    // data to bind into named placeholders
+    $data = array(
+        'bar' => 'double quote"ed',
+        'dib' => "single quote'ed",
+    );
+
+    // get a Solar_Sql_Result object
+    $result = $sql->select('result', $cmd, $data);
+
+    // the result will be from this statement:
+    // SELECT * FROM table WHERE foo = 'double quote\"ed' AND zim = 'single quote\'ed'
+}}

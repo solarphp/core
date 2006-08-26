@@ -1,0 +1,19 @@
+
+=========
+Home Page
+=========
+
+We want to see how well this translates text.
+
+{{method: methodName
+    @access public
+    @return string
+}}
+
+Especially we want for [[wiki links]] to work, and for <span>...</span> 
+to be **properly escaped**.
+
+    <p>this should show up literally</p>
+
+And that's all folks!
+

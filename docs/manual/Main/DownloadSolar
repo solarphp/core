@@ -29,7 +29,7 @@ Direct Download
 
 You can download Solar directly from this link:
 
-<http://solarphp.com/get/Solar-@package_version@-alpha.tgz>
+<http://solarphp.com/get/Solar-@package_version@.tgz>
 
 Then copy the `Solar.php` file and `Solar/` directory into your libraries.
 

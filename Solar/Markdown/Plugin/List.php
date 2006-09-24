@@ -287,6 +287,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
             $item = $this->parse($this->_outdent($item));
             $item = preg_replace('/\n+$/', '', $item);
             $item = $this->_processSpans($item);
+            $item = $this->_escape($item);
         }
         
         return "<li>$item</li>\n";

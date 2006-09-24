@@ -8,15 +8,19 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
         'adapters' => array(
             array(
                 'adapter' => 'Solar_Log_Adapter_File',
-                'events'  => 'debug',
-                'file'    => '/tmp/test_solar_log_adapter_multi.debug.log',
-                'format' => '%e %m',
+                'config'  => array(
+                    'events'  => 'debug',
+                    'file'    => '/tmp/test_solar_log_adapter_multi.debug.log',
+                    'format' => '%e %m',
+                ),
             ),
             array(
                 'adapter' => 'Solar_Log_Adapter_File',
-                'events'  => 'info, notice',
-                'file'    => '/tmp/test_solar_log_adapter_multi.other.log',
-                'format' => '%e %m',
+                'config'  => array(
+                    'events'  => 'info, notice',
+                    'file'    => '/tmp/test_solar_log_adapter_multi.other.log',
+                    'format' => '%e %m',
+                ),
             ),
         ),
     );
@@ -24,14 +28,14 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     public function setup()
     {
         parent::setup();
-        @unlink($this->_config['adapters'][0]['file']);
-        @unlink($this->_config['adapters'][1]['file']);
+        @unlink($this->_config['adapters'][0]['config']['file']);
+        @unlink($this->_config['adapters'][1]['config']['file']);
     }
     
     public function teardown()
     {
-        @unlink($this->_config['adapters'][0]['file']);
-        @unlink($this->_config['adapters'][1]['file']);
+        @unlink($this->_config['adapters'][0]['config']['file']);
+        @unlink($this->_config['adapters'][1]['config']['file']);
         parent::teardown();
     }
     
@@ -43,12 +47,12 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
         $this->_log->save($class, 'notice', 'note this message');
         
         // the debug log
-        $actual = file_get_contents($this->_config['adapters'][0]['file']);
+        $actual = file_get_contents($this->_config['adapters'][0]['config']['file']);
         $expect = "debug a debug description\n";
         $this->assertSame($actual, $expect);
         
         // the other log
-        $actual = file_get_contents($this->_config['adapters'][1]['file']);
+        $actual = file_get_contents($this->_config['adapters'][1]['config']['file']);
         $expect = "info some information\nnotice note this message\n";
         $this->assertSame($actual, $expect);
     }
@@ -61,12 +65,12 @@ class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
         $this->_log->save($class, 'qwert', 'not recognized');
         
         // the debug log
-        $actual = file_get_contents($this->_config['adapters'][0]['file']);
+        $actual = file_get_contents($this->_config['adapters'][0]['config']['file']);
         $expect = "debug recognized\n";
         $this->assertSame($actual, $expect);
         
         // the other log
-        $actual = file_get_contents($this->_config['adapters'][1]['file']);
+        $actual = file_get_contents($this->_config['adapters'][1]['config']['file']);
         $expect = "info recognized\n";
         $this->assertSame($actual, $expect);
     }

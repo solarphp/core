@@ -37,8 +37,8 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      * Keys are ...
      * 
-     * `class`:
-     * (string) The class for locale translations.
+     * `class`
+     * : (string) The class for locale translations.
      * 
      * @var array
      * 

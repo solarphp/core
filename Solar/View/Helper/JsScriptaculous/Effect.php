@@ -31,47 +31,48 @@ Solar::loadClass('Solar_View_Helper_JsScriptaculous');
  * and before the options array.
  *
  * For $options, the core effects all support the following settings
- * (copied from <http://wiki.script.aculo.us/scriptaculous/show/CoreEffects>):
+ * (copied from [core effects][] documentation) ...
  *
- * `duration`:
- * _(float)_ Duration of the effect in seconds. Defaults to `1.0`.
+ * `duration`
+ * : _(float)_ Duration of the effect in seconds. Defaults to `1.0`.
  *
- * `fps`:
- * _(int)_ Target this many frames per second. Default to `25`. Can't be higher
- * than `100`.
+ * `fps`
+ * : _(int)_ Target this many frames per second. Default to `25`. Can't be higher
+ *   than `100`.
  *
- * `transition`:
- * _(string)_ Sets a function that modifies the current point of the animation,
- * which is between `0` and `1`. Following transitions are supplied:
- * `Effect.Transitions.sinoidal` (default), `Effect.Transitions.linear`,
- * `Effect.Transitions.reverse`, `Effect.Transitions.wobble` and
- * `Effect.Transitions.flicker`.
+ * `transition`
+ * : _(string)_ Sets a function that modifies the current point of the animation,
+ *   which is between `0` and `1`. Following transitions are supplied:
+ *   `Effect.Transitions.sinoidal` (default), `Effect.Transitions.linear`,
+ *   `Effect.Transitions.reverse`, `Effect.Transitions.wobble` and
+ *   `Effect.Transitions.flicker`.
  *
- * `from`:
- * _(float)_ Sets the starting point of the transition between `0.0` and `1.0`.
- * Defaults to `0.0`.
+ * `from`
+ * : _(float)_ Sets the starting point of the transition between `0.0` and `1.0`.
+ *   Defaults to `0.0`.
  *
- * `to`:
- * _(float)_ Sets the end point of the transition between `0.0` and `1.0`.
- * Defaults to `1.0`.
+ * `to`
+ * : _(float)_ Sets the end point of the transition between `0.0` and `1.0`.
+ *   Defaults to `1.0`.
  *
- * `sync`:
- * _(bool)_ Sets whether the effect should render new frames automatically
- * (which it does by default). If true, you can render frames manually by
- * calling the render() instance method of an effect. This is used by
- * `Effect.Parallel()`.
+ * `sync`
+ * : _(bool)_ Sets whether the effect should render new frames automatically
+ *   (which it does by default). If true, you can render frames manually by
+ *   calling the render() instance method of an effect. This is used by
+ *   `Effect.Parallel()`.
  *
- * `queue`:
- * _(mixed)_ Sets queuing options. When used with a string, can be 'front' or 'end' to
- * queue the effect in the global effects queue at the beginning or end, or a
- * queue parameter object that can have `{position:'front/end', scope:'scope', limit:1}`.
- * For more info on this, see [Effect Queues][].
+ * `queue`
+ * : _(mixed)_ Sets queuing options. When used with a string, can be 'front' or 'end' to
+ *   queue the effect in the global effects queue at the beginning or end, or a
+ *   queue parameter object that can have `{position:'front/end', scope:'scope', limit:1}`.
+ *   For more info on this, see [Effect Queues][].
  *
- * `direction`:
- * _(string)_ Sets the direction of the transition. Values can be either
- * 'top-left', 'top-right', 'bottom-left', 'bottom-right' or 'center' (Default).
- * Applicable only on Grow and Shrink effects.
+ * `direction`
+ * : _(string)_ Sets the direction of the transition. Values can be either
+ *   'top-left', 'top-right', 'bottom-left', 'bottom-right' or 'center' (Default).
+ *   Applicable only on Grow and Shrink effects.
  *
+ * [core effects]: http://wiki.script.aculo.us/scriptaculous/show/CoreEffects
  * [Effect Queues]: http://wiki.script.aculo.us/scriptaculous/show/EffectQueues
  *
  * @category Solar
@@ -144,10 +145,17 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      * @param array $action Action details array created by a
      * JsScriptaculous_Effect method.
      *
+     * @param bool $useNamedSelector Boolean flag to determine whether or not
+     * to use the passed selector or a generic element reference.
+     *
      */
-    public function fetch($selector, $action)
+    public function fetch($selector, $action, $useNamedSelector = false)
     {
-        $out = "new Effect.{$action['name']}(el";
+        if ($useNamedSelector) {
+            $out = "\$\$('{$selector}').invoke('visualEffect', '{$action['name']}'";
+        } else {
+            $out = "new Effect.{$action['name']}(el";
+        }
 
         switch ($action['name']) {
 
@@ -181,7 +189,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
     /**
      *
      * Overload method for core script.aculo.us effects that follow the same
-     * convention, which include:
+     * convention, which include ...
      *
      * - Core Effects
      *   - [Highlight][]
@@ -279,7 +287,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
         );
 
         if ($returnJs) {
-            return $this->fetch($selector, $action);
+            return $this->fetch($selector, $action, true);
         } else {
             $this->_view->js()->selectors[$selector][] = $action;
             return $this;
@@ -333,7 +341,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
         );
 
         if ($returnJs) {
-            return $this->fetch($selector, $action);
+            return $this->fetch($selector, $action, true);
         } else {
             $this->_view->js()->selectors[$selector][] = $action;
             return $this;
@@ -370,7 +378,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
         );
 
         if ($returnJs) {
-            return $this->fetch($selector, $action);
+            return $this->fetch($selector, $action, true);
         } else {
             $this->_view->js()->selectors[$selector][] = $action;
             return $this;
@@ -430,7 +438,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
         );
 
         if ($returnJs) {
-            return $this->fetch($selector, $action);
+            return $this->fetch($selector, $action, true);
         } else {
             $this->_view->js()->selectors[$selector][] = $action;
             return $this;

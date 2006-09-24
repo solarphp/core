@@ -32,9 +32,9 @@ class Solar_Uri extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `path`:
-     * (string) A path prefix.  Generally needed only
-     * for specific URI subclasses, e.g. Solar_Uri_Action.
+     * `path`
+     * : (string) A path prefix.  Generally needed only
+     *   for specific URI subclasses, e.g. Solar_Uri_Action.
      * 
      * @var array
      * 
@@ -134,6 +134,15 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * Details about the request environment.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -143,6 +152,9 @@ class Solar_Uri extends Solar_Base {
     {
         // real construction
         parent::__construct($config);
+        
+        // get the request environment
+        $this->_request = Solar::factory('Solar_Request');
         
         // fix the base path by adding leading and trailing slashes
         if (trim($this->_config['path']) == '') {
@@ -170,17 +182,23 @@ class Solar_Uri extends Solar_Base {
     public function set($uri = null)
     {
         // build a default scheme (with '://' in it)
-        $ssl = Solar::server('HTTPS', 'off');
+        $ssl = $this->_request->server('HTTPS', 'off');
         $scheme = (($ssl == 'on') ? 'https' : 'http') . '://';
         
         // get the current host, using a dummy host name if needed.
         // we need a host name so that parse_url() works properly.
         // we remove the dummy host name at the end of this method.
-        $host = Solar::server('HTTP_HOST', 'example.com');
+        $host = $this->_request->server('HTTP_HOST', 'example.com');
         
-        // force to the current uri?
+        // right now, we assume we don't have to force any values.
+        $forced = false;
+        
+        // forcibly set to the current uri?
         $uri = trim($uri);
         if (! $uri) {
+            
+            // we're forcing values
+            $forced = true;
             
             // add the scheme and host
             $uri = $scheme . $host;
@@ -195,18 +213,19 @@ class Solar_Uri extends Solar_Base {
             if (substr($this->_config['path'], -5) == '.php/') {
                 // guess that mod_rewrite is off; build up from 
                 // component parts.
-                $uri .= Solar::server('SCRIPT_NAME')
-                      . Solar::server('PATH_INFO')
-                      . '?' . Solar::server('QUERY_STRING');
+                $uri .= $this->_request->server('SCRIPT_NAME')
+                      . $this->_request->server('PATH_INFO')
+                      . '?' . $this->_request->server('QUERY_STRING');
             } else {
                 // guess that mod_rewrite is on
-                $uri .= Solar::server('REQUEST_URI');
+                $uri .= $this->_request->server('REQUEST_URI');
             }
         }
         
-        // add the scheme and host?
+        // forcibly add the scheme and host?
         $pos = strpos($uri, '://');
         if ($pos === false) {
+            $forced = true;
             $uri = ltrim($uri, '/');
             $uri = "$scheme$host/$uri";
         }
@@ -254,8 +273,8 @@ class Solar_Uri extends Solar_Base {
         $this->setPath($elem['path']);
         $this->setQuery($elem['query']);
         
-        // remove any dummy host name
-        if (! Solar::server('HTTP_HOST')) {
+        // if we had to force values, remove dummy placeholders
+        if ($forced && ! $this->_request->server('HTTP_HOST')) {
             $this->scheme = null;
             $this->host = null;
         }

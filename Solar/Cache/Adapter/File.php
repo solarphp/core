@@ -58,14 +58,14 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * 
      * Config keys are ...
      * 
-     * `path`:
-     * (string) The directory where cache files are located; 
-     * should be readable and writable by the script process, usually
-     * the web server process. Default is '/tmp/Solar_Cache_File/'.
+     * `path`
+     * : (string) The directory where cache files are located; 
+     *   should be readable and writable by the script process, usually
+     *   the web server process. Default is '/tmp/Solar_Cache_File/'.
      * 
-     * `life`:
-     * (int) The lifetime of each cache entry in seconds; 
-     * default is 3600 seconds (i.e., 1 hour).
+     * `life`
+     * : (int) The lifetime of each cache entry in seconds; 
+     *   default is 3600 seconds (i.e., 1 hour).
      * 
      * @var array
      * 

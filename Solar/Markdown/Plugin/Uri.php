@@ -28,11 +28,11 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * Span plugin to create anchors from inline URIs.
  * 
- * Syntax looks like this:
+ * Syntax looks like this ...
  * 
  *     <http://example.com>
  * 
- * That will create the following XHTML:
+ * That will create the following XHTML ...
  * 
  *     <a href="http://example.com">http://example.com</a>
  * 
@@ -132,7 +132,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
      * 
      * Support callback for parsing email addresses.
      * 
-     * From the original notes:
+     * From the original notes ...
      * 
      * > Input: an email address, e.g. "foo@example.com"
      * >

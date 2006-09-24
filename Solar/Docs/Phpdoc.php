@@ -25,25 +25,26 @@
  * 
  * Supported technical tags are ...
  * 
- * <code>
- * For classes:
- *   @category name                # category for the package
- *   @package name                 # class package name
- *   @subpackage name              # class subpackage name
+ * For classes ...
+ *     @category name                # category for the package
+ *     @package name                 # class package name
+ *     @subpackage name              # class subpackage name
  * 
- * For properties:
- *   @var type [summary]           # class property
+ * For properties ...
  * 
- * For methods:
- *   @param type [$name] [summary] # method parameter
- *   @return type [summary]        # method return
- *   @throws class [summary]       # exceptions thrown by method
- *   @exception class [summary]    # alias to @throws
+ *     @var type [summary]           # class property
  * 
- * General-purpose:
- *   @see name                     # "see also" this element name
- *   @todo summary                 # todo item
- * }}
+ * For methods ...
+ * 
+ *     @param type [$name] [summary] # method parameter
+ *     @return type [summary]        # method return
+ *     @throws class [summary]       # exceptions thrown by method
+ *     @exception class [summary]    # alias to @throws
+ * 
+ * General-purpose ...
+ * 
+ *     @see name                     # "see also" this element name
+ *     @todo summary                 # todo item
  * 
  * @category Solar
  * 
@@ -414,7 +415,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
 
 /**
  * 
- * WHAT WE PROBABLY WILL SUPPORT:
+ * WHAT WE PROBABLY WILL SUPPORT
+ * 
  * @author name <author@email>
  * @copyright name date
  * @deprecated summary
@@ -426,7 +428,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * @staticvar name type summary
  * @version version
  * 
- * WHAT WE PROBABLY WILL NOT SUPPORT:
+ * WHAT WE PROBABLY WILL NOT SUPPORT
+ * 
  * @access       public or private
  * @global       type $globalvarname 
  *  or

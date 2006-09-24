@@ -58,6 +58,15 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
+     * Array of CSS files required by a JavaScript class
+     *
+     * @var array
+     *
+     */
+    public $styles;
+
+    /**
+     *
      * Array of inline JavaScript needed to provide specified functionality
      *
      * @var array
@@ -115,6 +124,27 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         }
 
         return $js;
+    }
+
+    /**
+     *
+     * Build and return list of CSS files for page header
+     *
+     * @return string Block of HTML with <style> tags for JavaScript-defined
+     * style requirements.
+     *
+     */
+    public function fetchStyles()
+    {
+        $str = '';
+
+        if (!empty($this->styles)) {
+            foreach ($this->styles as $style) {
+                $str .= '    ' . $this->_view->style($style) . "\n";
+            }
+        }
+
+        return $str;
     }
 
     /**
@@ -201,6 +231,8 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
      * @param mixed $file Name of .js file to add to the header of the page, or
      * (optionally) an array of files to add.
      *
+     * @return Solar_View_Helper_Js
+     *
      */
     public function addFile($file)
     {
@@ -213,7 +245,51 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         } elseif ($file !== null && !in_array($file, $this->files, true)) {
             $this->files[] = $file;
         }
-        
+
+        return $this;
+    }
+
+    /**
+     *
+     * Add the specified CSS file to the Helper_Js styles list
+     * if it's not already present.
+     *
+     * Paths should be releative to the 'styles' configuration value for the
+     * corresponding Solar_View_Helper class.
+     *
+     * @param mixed $file Name of .css file to add to the header of the page, or
+     * (optionally) an array of files to add.
+     *
+     * @return Solar_View_Helper_Js
+     *
+     */
+    public function addStyle($file)
+    {
+        if ($this->files === null) {
+            $this->files = array();
+        }
+
+        if (is_array($file)) {
+            $this->styles = array_merge($this->styles, $file);
+        } elseif ($file !== null && !in_array($file, $this->styles, true)) {
+            $this->styles[] = $file;
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * Add the script defined in $src to the inline scripts array.
+     *
+     * @param string $src A snippet of JavaScript to be inserted in the head
+     * of a document.
+     *
+     * @return Solar_View_Helper_Js
+     */
+    public function addInlineScript($src)
+    {
+        $this->scripts[] = $src;
         return $this;
     }
 
@@ -230,6 +306,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
         $this->objects = array();
         $this->files = array();
         $this->scripts = array();
+        $this->styles = array();
 
         return $this;
     }

@@ -1,5 +1,10 @@
-The $_config property has a special purpose within Solar classes: it contains the configuration parameters for instantiating an object.
+The $_config property has a special purpose within Solar classes: it
+contains the configuration parameters for instantiating an object.
 
-When you extend Solar_Base and instantiate the subclassed object, any key in this array will be re-populated with related keys from the [[Main::ConfigFile | config file]], and/or from keys set in the configuration parameter of [[Solar::factory()]] at instantiation time.
+When you extend Solar_Base and instantiate the subclassed object, any
+key in this array will be re-populated with related keys from the
+[[Main::ConfigFile | config file]], and/or from keys set in the
+configuration parameter of [[Solar::factory()]] at instantiation time.
 
-Because Solar_Base is intended for extension, you can add as many config keys as you like.
+Because Solar_Base is intended for extension, you can add as many config
+keys as you like.

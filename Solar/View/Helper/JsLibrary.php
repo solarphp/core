@@ -53,8 +53,8 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
             'interactive',
             'complete',
             'failure',
-            'success'
-            )
+            'success',
+        ),
     );
 
     /**
@@ -108,6 +108,25 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
         $file = $this->_config['path'] . $file;
 
         $this->_view->js()->addFile($file);
+        return $this;
+    }
+
+    /**
+     *
+     * Add the specified JavaScript file to the Helper_Js file list
+     * if it's not already present.
+     *
+     * @param string $file Name of .js file needed by Helper class
+     *
+     * @return Child JsLibrary object
+     *
+     */
+    protected function _needsStyle($file = null)
+    {
+        // Add configured path
+        $file = $this->_config['styles'] . $file;
+
+        $this->_view->js()->addStyle($file);
         return $this;
     }
 

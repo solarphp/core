@@ -19,8 +19,6 @@
  * 
  * Facade for a log adapter.
  * 
- * Example:
- * 
  * {{code: php
  *     // example setup of a single adapter
  *     $config = array(
@@ -49,17 +47,19 @@ class Solar_Log extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `adapter`:
-     * (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
-     * Default is 'Solar_Log_Adapter_None'.
+     * `adapter`
+     * : (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
+     *   Default is 'Solar_Log_Adapter_None'.
      * 
-     * All other keys are passed to the adapter class as its $config values.
+     * `config`
+     * : (array) Configuration to pass to the adapter.
      * 
      * @var array
      * 
      */
     protected $_Solar_Log = array(
         'adapter' => 'Solar_Log_Adapter_None',
+        'config'  => null,
     );
     
     /**
@@ -81,12 +81,9 @@ class Solar_Log extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $adapter_config = $this->_config;
-        unset($adapter_config['adapter']);
-        $this->_adapter = Solar::dependency(
-            $this->_config['adapter'],
-            $adapter_config
-        );
+        $class = $this->_config['adapter'];
+        $config = empty($this->_config['config']) ? null : $this->_config['config'];
+        $this->_adapter = Solar::factory($class, $config);
     }
     
     /**
@@ -94,7 +91,7 @@ class Solar_Log extends Solar_Base {
      * Magic shorthand for saving an event using a method name.
      * 
      * {{code: php
-     *     // these are equivalent:
+     *     // these are equivalent ...
      *     $log->save('info', 'informational message');
      *     $log->info('informational message');
      * }}

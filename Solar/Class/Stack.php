@@ -54,8 +54,6 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * Adds one or more classes to the stack.
      * 
-     * For example:
-     * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Class_Stack');
      *     $stack->add(array('Base1', 'Base2', 'Base3'));
@@ -108,8 +106,6 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * Clears the stack and adds one or more classes.
      * 
-     * For example:
-     * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Class_Stack');
      *     $stack->add('Base1');
@@ -139,8 +135,6 @@ class Solar_Class_Stack extends Solar_Base {
     /**
      * 
      * Loads a class using the class stack prefixes.
-     * 
-     * For example:
      * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Class_Stack');

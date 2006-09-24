@@ -30,7 +30,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * This is in support of the Link and Image plugins.
  * 
- * A named link reference looks like this:
+ * A named link reference looks like this ...
  * 
  *     [name]: http://example.com "Optional Title"
  * 

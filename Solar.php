@@ -162,7 +162,7 @@ class Solar {
      * 
      * @var string 
      * 
-     * @todo Keep the locale code in $_SESSION?
+     * @todo Keep the locale code in a session variable?
      * 
      */
     protected static $_locale_code = 'en_US';
@@ -193,8 +193,34 @@ class Solar {
         // where is Solar in the filesystem?
         Solar::$dir = dirname(__FILE__);
         
-        // do some security on globals, and turn off all magic quotes
-        Solar::_globalsQuotes();
+        // clear out registered globals
+        // (this code from Richard Heyes and Stefan Esser)
+        if (ini_get('register_globals')) {
+            
+            // Variables that shouldn't be unset
+            $noUnset = array(
+                'GLOBALS', '_GET', '_POST', '_COOKIE',
+                '_REQUEST', '_SERVER', '_ENV', '_FILES'
+            );
+            
+            // sources of global input.
+            // 
+            // the ternary check on $_SESSION is to make sure that
+            // it's really an array, not just a string; if it's just a
+            // string, that can bypass this check somehow.  Stefan
+            // Esser knows how this works, but I don't.
+            $input = array_merge($_ENV, $_GET, $_POST, $_COOKIE, $_SERVER, $_FILES,
+                isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array()
+            );
+            
+            // unset globals set from input sources, but don't unset
+            // the sources themselves.
+            foreach ($input as $k => $v) {
+                if (! in_array($k, $noUnset) && isset($GLOBALS[$k])) {
+                    unset($GLOBALS[$k]);
+                }
+            }
+        }
         
         // load the config file values. note that we use Solar::$config here,
         // not Solar::config(), because we are setting the value of the static
@@ -234,12 +260,6 @@ class Solar {
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {
             Solar::run($file);
-        }
-        
-        // start the session if one hasn't been started already,
-        // and if we're not in the command-line environment.
-        if (session_id() === '') {
-            session_start();
         }
         
         // and we're done!
@@ -316,7 +336,21 @@ class Solar {
             
             // do we need to load locale strings for the class?
             if (! array_key_exists($class, Solar::$locale)) {
-                Solar::_loadLocale($class);
+                // build the file name
+                $base = str_replace('_', '/', $class);
+                $file = Solar::fixdir($base . '/Locale/')
+                      . Solar::getLocale() . '.php';
+        
+                // can we find the file?
+                if (Solar::fileExists($file)) {
+                    // put the locale values into the shared locale array
+                    Solar::$locale[$class] = (array) include $file;
+                } else {
+                    // could not find file.
+                    // fail silently, as it's often the case that the
+                    // translation file simply doesn't exist.
+                    Solar::$locale[$class] = array();
+                }
             }
         
             // does the key exist for the class?
@@ -705,166 +739,6 @@ class Solar {
     
     /**
      * 
-     * Safely gets the value of an element from the $_GET array.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function get($key = null, $default = null)
-    {
-        return Solar::_super('_GET', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of an element from the $_POST array.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function post($key = null, $default = null)
-    {
-        return Solar::_super('_POST', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of an element from the $_COOKIE array.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function cookie($key = null, $default = null)
-    {
-        return Solar::_super('_COOKIE', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of an element from the $_SERVER array.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function server($key = null, $default = null)
-    {
-        return Solar::_super('_SERVER', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of an element from the $_SESSION array.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function session($key = null, $default = null)
-    {
-        return Solar::_super('_SESSION', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of an element from the $_FILES array.
-     * 
-     * Returns an empty array if the requested key does not exist.
-     * 
-     * @param string $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function files($key = null, $default = array())
-    {
-        return Solar::_super('_FILES', $key, $default);
-    }
-    
-    /**
-     * 
-     * Safely gets the value of $_SERVER['PATH_INFO'] element.
-     * 
-     * @param int $key The array element; if null, returns the whole
-     * array.
-     * 
-     * @param mixed $default If the requested array element is
-     * not set, return this value.
-     * 
-     * @return mixed The array element value (if set), or the
-     * $default value (if not).
-     * 
-     */
-    public static function pathinfo($key = null, $default = null)
-    {
-        // get the pathinfo as passed
-        $info = Solar::_super('_SERVER', 'PATH_INFO', '');
-        
-        // explode into its elements
-        $elem = explode('/', $info);
-        
-        // drop off the first element (it's always blank)
-        array_shift($elem);
-        
-        // look for the requested element number
-        if (is_null($key)) {
-        
-            // no key selected, return the whole $elem array
-            return $elem;
-            
-        } elseif (isset($elem[$key])) {
-        
-            // looking for a specific element key
-            return $elem[$key];
-            
-        } else {
-        
-            // specified element key does not exist
-            return $default;
-            
-        }
-    }
-    
-    /**
-     * 
      * Generates a simple exception, but does not throw it.
      * 
      * This method attempts to automatically load an exception class
@@ -872,7 +746,7 @@ class Solar {
      * when no specific exception classes exist.  For example, if a
      * class named 'Vendor_Example' extended from 'Vendor_Base' throws an
      * exception or error coded as 'ERR_FILE_NOT_FOUND', the method will
-     * attempt to return these exception classes in this order:
+     * attempt to return these exception classes in this order ...
      * 
      * 1. Vendor_Example_Exception_FileNotFound (class specific)
      * 
@@ -1087,169 +961,6 @@ class Solar {
         
         // done
         return $stack;
-    }
-    
-    /**
-     * 
-     * Performs some security on globals, removes magic quotes if turned on.
-     * 
-     * @return void
-     * 
-     */
-    protected static function _globalsQuotes()
-    {
-        // clear out registered globals?
-        // (this code from Richard Heyes and Stefan Esser)
-        if (ini_get('register_globals')) {
-            
-            // Variables that shouldn't be unset
-            $noUnset = array(
-                'GLOBALS', '_GET', '_POST', '_COOKIE',
-                '_REQUEST', '_SERVER', '_ENV', '_FILES'
-            );
-            
-            // sources of global input.
-            // 
-            // the ternary check on $_SESSION is to make sure that
-            // it's really an array, not just a string; if it's just a
-            // string, that can bypass this check somehow.  Stefan
-            // Esser knows how this works, but I don't.
-            $input = array_merge($_GET, $_POST, $_COOKIE,
-                $_SERVER, $_ENV, $_FILES,
-                isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array()
-            );
-            
-            // unset globals set from input sources, but don't unset
-            // the sources themselves.
-            foreach ($input as $k => $v) {
-                if (! in_array($k, $noUnset) && isset($GLOBALS[$k])) {
-                    unset($GLOBALS[$k]);
-                }
-            }
-        }
-        
-        // remove magic quotes if they are enabled; sybase quotes
-        // override normal quotes.
-        if (ini_get('magic_quotes_gpc')) {
-            
-            // what kind of quotes are we using?
-            if (ini_get('magic_quotes_sybase')) {
-                // sybase quotes
-                $func = array('Solar', '_dispelSybase');
-            } else {
-                // "normal" slashed quotes
-                $func = array('Solar', '_dispelQuotes');
-            }
-            
-            // dispel magic quotes from superglobals
-            array_walk_recursive($_GET, $func);
-            array_walk_recursive($_POST, $func);
-            array_walk_recursive($_COOKIE, $func);
-            array_walk_recursive($_FILES, $func);
-            array_walk_recursive($_SERVER, $func);
-        }
-        
-        // make sure automatic quoting of values from, e.g., SQL sources
-        // is turned off. turn off sybase quotes too.
-        ini_set('magic_quotes_runtime', false);
-        ini_set('magic_quotes_sybase',  false);
-    }
-    
-    /**
-     * 
-     * A stripslashes() alias that supports array_walk_recursive().
-     * 
-     * @param string &$value The value to strip slashes from.
-     * 
-     * @return void
-     * 
-     */
-    protected static function _dispelQuotes(&$value)
-    {
-        $value = stripslashes($value);
-    }
-    
-    /**
-     * 
-     * A str_replace() for Sybase quotes; supports array_walk_recursive().
-     * 
-     * @param string &$value The value to dispel Sybase quotes from.
-     * 
-     * @return void
-     * 
-     */
-    protected static function _dispelSybase(&$value)
-    {
-        $value = str_replace("''", "'", $value);
-    }
-    
-    /**
-     * 
-     * Fetches a superglobal value by key, or a default value.
-     * 
-     * @param string $type The superglobal variable name to fetch from;
-     * e.g., '_SERVER' for $_SERVER or '_GET' for $_GET.
-     * 
-     * @param string $key The superglobal array key to retrieve; if null,
-     * will return the entire superglobal array for that type.
-     * 
-     * @param mixed $default If the requested superglobal array key does
-     * not exist, return this value instead.
-     * 
-     * @return mixed The value of the superglobal type array key, or the
-     * default value if the key did not exist.
-     * 
-     */
-    protected static function _super($type, $key = null, $default = null)
-    {
-        // get the whole superglobal, or just one key?
-        if (is_null($key) && isset($GLOBALS[$type])) {
-        
-            // no key selected, return the whole array
-            return $GLOBALS[$type];
-            
-        } elseif (isset($GLOBALS[$type][$key])) {
-        
-            // looking for a specific key
-            return $GLOBALS[$type][$key];
-            
-        } else {
-        
-            // specified key does not exist
-            return $default;
-            
-        }
-    }
-    
-    /**
-     * 
-     * Loads locale strings for a given class.
-     * 
-     * For example, a Solar_Example_Class must have locale strings
-     * located at Solar/Example/Class/Locale/*.
-     * 
-     * @param string $class The class to load strings for.
-     * 
-     * @return void
-     * 
-     */
-    protected static function _loadLocale($class)
-    {
-        // build the file name
-        $base = str_replace('_', '/', $class);
-        $file = Solar::fixdir($base . '/Locale/')
-              . Solar::getLocale() . '.php';
-        
-        // can we find the file?
-        if (Solar::fileExists($file)) {
-            // put the locale values into the shared locale array
-            Solar::$locale[$class] = (array) include $file;
-        } else {
-            // could not find file.
-            // fail silently, as it's often the case that the
-            // translation file simply doesn't exist.
-            Solar::$locale[$class] = array();
-        }
     }
 }
 ?>

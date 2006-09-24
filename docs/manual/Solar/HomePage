@@ -17,10 +17,7 @@ it.
 
     // just call its static methods.
     Solar::start();
-    $action = Solar::get('action');
-    $result = Solar::run('/path/to/file.php');
-    Solar::stop();
 }}
 
-Once you have loaded the Solar.php file, you can call any of the ClassMethods it provides.
+Once you have loaded the Solar.php file, you can call any of the [[ClassMethods]] it provides.
 

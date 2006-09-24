@@ -112,16 +112,6 @@ option {
 	list-style: none;
 }
 
-#content form ul.success {
-	background-color: #aaf;
-	border: 1px solid #33f;
-}
-
-#content form ul.failure {
-	background-color: #faa;
-	border: 1px solid #f33;
-}
-
 #content form dl ul {
 	color: red;
 	font-size: 90%;

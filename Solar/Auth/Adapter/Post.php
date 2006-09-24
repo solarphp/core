@@ -24,9 +24,11 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * Authenticate via simple HTTP POST request-and-reply.
  * 
- * Based in part on php.net user comments:
- * http://us3.php.net/manual/en/function.fsockopen.php#57275
- * http://us3.php.net/manual/en/function.fopen.php#58099
+ * Based in part on php.net user comments ...
+ * 
+ * - <http://us3.php.net/manual/en/function.fsockopen.php#57275>
+ * 
+ * - <http://us3.php.net/manual/en/function.fopen.php#58099>
  * 
  * @category Solar
  * 
@@ -41,22 +43,22 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * 
      * Keys are ...
      * 
-     * `url`:
-     * (string) URL to the HTTP service, e.g. "https://example.com/login.php".
+     * `url`
+     * : (string) URL to the HTTP service, e.g. "https://example.com/login.php".
      * 
-     * `handle`:
-     * (string) The handle element name.
+     * `handle`
+     * : (string) The handle element name.
      * 
-     * `passwd`:
-     * (string) The passwd element name.
+     * `passwd`
+     * : (string) The passwd element name.
      * 
-     * `headers`:
-     * (array) Additional headers to use in the POST request.
+     * `headers`
+     * : (array) Additional headers to use in the POST request.
      * 
-     * `replies`:
-     * (array) Key-value pairs where the key is the server reply
-     * string, and the value is a boolean indicating if it indicates success
-     * or failure to authenticate.
+     * `replies`
+     * : (array) Key-value pairs where the key is the server reply
+     *   string, and the value is a boolean indicating if it indicates success
+     *   or failure to authenticate.
      * 
      * @var array
      * 

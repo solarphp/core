@@ -24,9 +24,9 @@ Solar::loadClass('Solar_Sql_Table');
  * 
  * Tags on nodes.
  * 
- * See notes on tag schemas here:
+ * See these notes on [tag schemas][].
  * 
- * http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
+ * [tag schemas]: http://www.pui.ch/phred/archives/2005/04/tags-database-schemas.html
  * 
  * @category Solar
  * 

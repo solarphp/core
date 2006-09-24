@@ -32,15 +32,15 @@ class Solar_Cache extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `active`:
-     * (bool) Whether the cache is active or not when instantiated.
+     * `active`
+     * : (bool) Whether the cache is active or not when instantiated.
      * 
-     * `adapter`:
-     * (string) The adapter class, default 'Solar_Cache_Adapter_File'.
+     * `adapter`
+     * : (string) The adapter class, default 'Solar_Cache_Adapter_File'.
      * 
-     * `config`:
-     * (array) Construction-time config keys to pass to the adapter
-     * to override Solar.config.php values.  Default is null.
+     * `config`
+     * : (array) Construction-time config keys to pass to the adapter
+     *   to override Solar.config.php values.  Default is null.
      * 
      * @var array
      * 
@@ -95,8 +95,6 @@ class Solar_Cache extends Solar_Base {
      * 
      * Makes the cache active (true) or inactive (false).
      * 
-     * Example:
-     * 
      * {{code: php
      *     $cache = Solar::factory('Solar_Cache');
      *     
@@ -120,8 +118,6 @@ class Solar_Cache extends Solar_Base {
     /**
      * 
      * Gets the current activity state of the cache (on or off).
-     * 
-     * Example:
      * 
      * {{code: php
      *     $cache = Solar::factory('Solar_Cache');
@@ -165,6 +161,7 @@ class Solar_Cache extends Solar_Base {
      * For example, to store an array in the cache ...
      * 
      * {{code: php
+     *     // create a cache object
      *     $cache = Solar::factory('Solar_Cache');
      *     
      *     // create a unique ID
@@ -213,14 +210,17 @@ class Solar_Cache extends Solar_Base {
      * the contents of the cache entry.
      * 
      * For example, to get a cache entry identified by a web page
-     * name, you could do this:
+     * name, you could do this ...
      * 
      * {{code: php
-     *     // create a cache object
-     *     $cache = Solar::factory('Solar_Cache');
+     *     // create a request object
+     *     $request = Solar::factory('Solar_Request');
      *     
      *     // get the request URI as an identifier
-     *     $id = Solar::server('REQUEST_URI');
+     *     $id = $request->server('REQUEST_URI');
+     *     
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
      *     
      *     // fetch the result and dump it to screen
      *     $result = $cache->fetch($id);
@@ -245,13 +245,15 @@ class Solar_Cache extends Solar_Base {
      * 
      * Deletes a cache entry.
      * 
-     * Example:
-     * 
      * {{code: php
-     *     $cache = Solar::factory('Solar_Cache');
+     *     // create a request object
+     *     $request = Solar::factory('Solar_Request');
      *     
      *     // create an entry ID named for the current URI
-     *     $id = Solar::server('REQUEST_URI');
+     *     $id = $request->server('REQUEST_URI');
+     *     
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
      *     
      *     // delete any cache entry with that ID
      *     $cache->delete($id);
@@ -273,12 +275,8 @@ class Solar_Cache extends Solar_Base {
      * 
      * Deletes all entries from the cache.
      * 
-     * Example:
-     * 
      * {{code: php
      *     $cache = Solar::factory('Solar_Cache');
-     *     
-     *     // delete all entries
      *     $cache->deleteAll();
      * }}
      * 
@@ -303,10 +301,14 @@ class Solar_Cache extends Solar_Base {
      * the cache entry.
      * 
      * {{code: php
-     *     $cache = Solar::factory('Solar_Cache');
+     *     // create a request object
+     *     $request = Solar::factory('Solar_Request');
      *     
      *     // create an entry ID named for the current URI
-     *     $id = Solar::server('REQUEST_URI');
+     *     $id = $request->server('REQUEST_URI');
+     *     
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
      *     
      *     // find out what the underlying cache adapter uses as the entry name
      *     $real_name = $cache->entry($id);

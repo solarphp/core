@@ -37,20 +37,20 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * 
      * Keys are ...
      * 
-     * `events`:
-     * (string|array) The event types this instance
-     * should recognize; a comma-separated string of events, or
-     * a sequential array.  Default is all events ('*').
+     * `events`
+     * : (string|array) The event types this instance
+     *   should recognize; a comma-separated string of events, or
+     *   a sequential array.  Default is all events ('*').
      * 
-     * `file`:
-     * (string) The file where events should be logged;
-     * e.g. '/www/username/logs/solar.log'.
+     * `file`
+     * : (string) The file where events should be logged;
+     *   e.g. '/www/username/logs/solar.log'.
      * 
-     * `format`:
-     * (string) The line format for each saved event.
-     * Use '%t' for the timestamp, '%e' for the class name, '%e' for
-     * the event type, '%m' for the event description, and '%%' for a
-     * literal percent.  Default is '%t %c %e %m'.
+     * `format`
+     * : (string) The line format for each saved event.
+     *   Use '%t' for the timestamp, '%e' for the class name, '%e' for
+     *   the event type, '%m' for the event description, and '%%' for a
+     *   literal percent.  Default is '%t %c %e %m'.
      * 
      * @var array
      * 

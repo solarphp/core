@@ -168,6 +168,15 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
+     * Details about the request environment.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -175,7 +184,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     public function __construct($config = null)
     {
-        $this->_default_attribs['action'] = $_SERVER['REQUEST_URI'];
+        $this->_request = Solar::factory('Solar_Request');
+        $this->_default_attribs['action'] = $this->_request->server('REQUEST_URI');
         parent::__construct($config);
         $this->reset();
     }
@@ -556,6 +566,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     }
                 }
                 
+                // SPECIAL CASE:
+                // checkboxes that are not in groups don't get an "extra" label.
+                if (strtolower($info['type']) == 'checkbox' && ! $in_group) {
+                    $info['label'] = null;
+                }
+        
                 // get the element output
                 $element = $helper->$method($info);
                 

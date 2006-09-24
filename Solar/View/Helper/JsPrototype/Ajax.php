@@ -129,7 +129,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * page. It may make sense for you to request only local URLs to avoid
      * security issues related to the user's browser configuration.
      *
-     * The supported $options array may have the following key/value pairs:
+     * The supported $options array may have the following key/value pairs ...
      *
      * `method`
      * :_(string)_ Method of the HTTP request. Default `post`
@@ -148,14 +148,12 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *
      * `requestHeaders`
      * :_(array)_ Associative array of HTTP headers to be sent along with
-     * the request. Example:
+     * the request, default null.  For example ...
      *
-     *       array(
+     *     array(
      *         'X-Foo' => 'Bar',
      *         'X-Request-Baz' => 'dib'
-     *       );
-     *
-     * Default `null`
+     *     );
      *
      * `on[XXXX]`
      * :_(string)_ Custom JavaScript function to be called when the respective
@@ -221,7 +219,9 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * option to `true` for returned `<script>` blocks to be evaluated.
      *
      * For complete description of available options, see the request()
-     * documentation. Options available only to the `Ajax.Updater` method are:
+     * documentation.
+     * 
+     * Options available only to the `Ajax.Updater` method are ...
      *
      * `insertion`
      * :_(string)_ A class that will determine how the new content will be
@@ -232,7 +232,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * `evalScripts`
      * :_(boolean)_ Determines if script blocks in the response, if any,
      * will be evaluated when the response arrives. __Applies only to
-     * `Ajax.Updater` objects__. Default `false`
+     * `Ajax.Updater` objects__. Default `false`.
      *
      * @param string $selector CSS Selector of block to update with results
      *

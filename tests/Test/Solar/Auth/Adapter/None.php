@@ -17,7 +17,6 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
-        $this->_restorePost();
     }
     
     public function testGetHandle()
@@ -26,7 +25,6 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getHandle(), $this->_handle);
-        $this->_restorePost();
     }
     
     public function testGetEmail()
@@ -35,7 +33,6 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getEmail(), $this->_email);
-        $this->_restorePost();
     }
     
     public function testGetMoniker()
@@ -44,7 +41,6 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
-        $this->_restorePost();
     }
     
     public function testGetUri()
@@ -53,7 +49,6 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getUri(), $this->_uri);
-        $this->_restorePost();
     }
 }
 ?>

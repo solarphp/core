@@ -211,12 +211,12 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_insertData();
         $actual = $this->_sql->select('assoc', "SELECT name, id FROM $this->_table_name ORDER BY id");
         $expect = array(
-            'Foo' => array('id' => '1'),
-            'Bar' => array('id' => '2'),
-            'Baz' => array('id' => '3'),
-            'Dib' => array('id' => '4'),
-            'Zim' => array('id' => '5'),
-            'Gir' => array('id' => '6'),
+            'Foo' => array('id' => '1', 'name' => 'Foo'),
+            'Bar' => array('id' => '2', 'name' => 'Bar'),
+            'Baz' => array('id' => '3', 'name' => 'Baz'),
+            'Dib' => array('id' => '4', 'name' => 'Dib'),
+            'Zim' => array('id' => '5', 'name' => 'Zim'),
+            'Gir' => array('id' => '6', 'name' => 'Gir'),
         );
         $this->assertSame($actual, $expect);
     }

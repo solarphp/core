@@ -24,7 +24,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * Replaces wiki and interwiki links in source text with XHTML anchors.
  * 
- * Wiki links are in this format:
+ * Wiki links are in this format ...
  * 
  *     [[wiki page]]
  *     [[wiki page #anchor]]
@@ -39,7 +39,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * Page links are replaced with encoded placeholders.  At cleanup()
  * time, the placeholders are transformed into XHTML anchors.
  * 
- * This plugin also supports Interwiki links, in this format:
+ * This plugin also supports Interwiki links, in this format ...
  * 
  *     [[site::page]]
  *     [[site::page #anchor]]
@@ -94,22 +94,22 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * 
      * Array of information for each link found in the source text.
      * 
-     * Each element is an array with these keys:
+     * Each element is an array with these keys ...
      * 
-     * `norm`:
-     * The normalized form of the page name.
+     * `norm`
+     * : The normalized form of the page name.
      * 
-     * `page`:
-     * The page name as entered in the source text.
+     * `page`
+     * : The page name as entered in the source text.
      * 
-     * `frag`:
-     * A fragment anchor for the target page (e.g., "#example").
+     * `frag`
+     * : A fragment anchor for the target page (e.g., "#example").
      * 
-     * `text`:
-     * The text to display in place of the page name.
+     * `text`
+     * : The text to display in place of the page name.
      * 
-     * `atch`:
-     * Attached suffix text to go on the end of the displayed text.
+     * `atch`
+     * : Attached suffix text to go on the end of the displayed text.
      * 
      * @var array
      * 

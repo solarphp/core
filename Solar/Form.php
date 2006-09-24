@@ -34,17 +34,17 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `attribs`:
-     * An array of <form> tag attributes; used for hinting
+     * `attribs`
+     * : An array of <form> tag attributes; used for hinting
      * the view on how to present the form.  Defaults are 'method="post"',
-     * 'action=$_SERVER["REQUEST_URI"]', and 'enctype="multipart/form-data"'.
+     * 'action="REQUEST_URI"', and 'enctype="multipart/form-data"'.
      * 
-     * `success`:
-     * The overall "success" message when validating form
+     * `success`
+     * : The overall "success" message when validating form
      * input. Default is Solar locale key SUCCESS_FORM.
      * 
-     * `failure`:
-     * The overall "failure" message when validating form
+     * `failure`
+     * : The overall "failure" message when validating form
      * input. Default is Solar locale key FAILURE_FORM.
      * 
      * @var array
@@ -141,8 +141,8 @@ class Solar_Form extends Solar_Base {
      * 
      * Array of submitted values.
      * 
-     * Populated on the first call to Solar_Form::_populate(), which itself uses
-     * [[Solar::get()]] or [[Solar::post()]], depending on the value of
+     * Populated on the first call to [[_populate()]], which itself uses
+     * [[Solar_Request::get()]] or [[Solar_Request::post()]], depending on the value of
      * $this->attribs['method'].
      * 
      * @var array
@@ -158,44 +158,44 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `name`:
-     * (string) The name attribute.
+     * `name`
+     * : (string) The name attribute.
      * 
-     * `type`:
-     * (string) The input or type attribute ('text', 'select', etc).
+     * `type`
+     * : (string) The input or type attribute ('text', 'select', etc).
      * 
-     * `label`:
-     * (string) A short label for the element.
+     * `label`
+     * : (string) A short label for the element.
      * 
-     * `value`:
-     * (string) The default or selected value(s) for the element.
+     * `value`
+     * : (string) The default or selected value(s) for the element.
      * 
-     * `descr`:
-     * (string) A longer description of the element, e.g. a tooltip
+     * `descr`
+     * : (string) A longer description of the element, e.g. a tooltip
      *   or help text.
      * 
-     * `status`:
-     * (bool) Whether or not the particular elements has
+     * `status`
+     * : (bool) Whether or not the particular elements has
      *   passed or failed validation (true or false), or null if there
      *   has been no attempt at validation.
      * 
-     * `require`:
-     * (bool) Whether or not the element is required.
+     * `require`
+     * : (bool) Whether or not the element is required.
      * 
-     * `disable`:
-     * (bool) If disabled, the element is read-only (but is still
+     * `disable`
+     * : (bool) If disabled, the element is read-only (but is still
      *   submitted with other elements).
      * 
-     * `options`:
-     * (array) The list of allowed values as options for this element
+     * `options`
+     * : (array) The list of allowed values as options for this element
      *   as an associative array in the form (value => label).
      * 
-     * `attribs`:
-     * (array) Additional XHTML attributes for the element in the
+     * `attribs`
+     * : (array) Additional XHTML attributes for the element in the
      *   form (attribute => value).
      * 
-     * `feedback`:
-     * (array) An array of feedback messages for this element,
+     * `feedback`
+     * : (array) An array of feedback messages for this element,
      *   generally based on validation of previous user input.
      * 
      * @var array
@@ -235,6 +235,15 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
+     * Request environment object.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -242,8 +251,11 @@ class Solar_Form extends Solar_Base {
      */
     public function __construct($config = null)
     {
+        // request environment
+        $this->_request = Solar::factory('Solar_Request');
+        
         // programmatic defaults
-        $this->_Solar_Form['attribs']['action'] = Solar::server('REQUEST_URI');
+        $this->_Solar_Form['attribs']['action'] = $this->_request->server('REQUEST_URI');
         $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
         $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
         
@@ -477,8 +489,9 @@ class Solar_Form extends Solar_Base {
      * Populates form elements with specified values.
      * 
      * @param array $submit The source data array for populating form
-     * values as array(name => value); if null, will populate from $_POST
-     * or $_GET as determined from the Solar_Form::$attribs['method'] value.
+     * values as array(name => value); if null, will populate from POST
+     * or GET vars as determined from the Solar_Form::$attribs['method']
+     * value.
      * 
      * @return void
      * 
@@ -496,10 +509,10 @@ class Solar_Form extends Solar_Base {
             // from an object
             $this->_submitted = (array) $submit;
         } else {
-            // from $_GET or $_POST, per the form method.
+            // from GET or POST, per the form method.
             $method = strtolower($this->attribs['method']);
             if ($method == 'get' || $method == 'post') {
-                $this->_submitted = Solar::$method();
+                $this->_submitted = $this->_request->$method();
             }
         }
         
@@ -517,8 +530,8 @@ class Solar_Form extends Solar_Base {
      * passed in $submit.
      * 
      * @param array $submit The source data array for populating form
-     * values as array(name => info); if null, will populate from $_POST
-     * or $_GET as determined from the 'method' attribute.
+     * values as array(name => info); if null, will populate from POST
+     * or GET vars as determined from the 'method' attribute.
      * 
      * @return bool True if all elements are valid, false if not.
      * 
@@ -693,11 +706,9 @@ class Solar_Form extends Solar_Base {
      * 'elements' which contain, respectively, values for $this->attribs
      * and $this->setElements().
      * 
-     * Example use:
-     * 
-     * <code>
-     * $form = Solar::factory('Solar_Form');
-     * $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
+     * {{code: php
+     *     $form = Solar::factory('Solar_Form');
+     *     $form->load('Solar_Form_Load_Xml', '/path/to/form.xml');
      * }}
      * 
      * @param string|object $obj If a string, it is treated as a class

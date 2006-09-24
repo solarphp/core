@@ -44,7 +44,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  *     Sub Section
  *     -----------
  *     
- * ... would become:
+ * ... would become ...
  * 
  *     <h1>Title</h1>
  *     
@@ -118,12 +118,44 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
             $text
         );
         
+        // atx 1 through 4
+        $text = preg_replace_callback(
+            "{
+                ^(\\#{1,4}) # $1 = string of #'s
+                [ \\t]*
+                (.+?)       # $2 = Header text
+                [ \\t]*
+                \\#*        # optional closing #'s (not counted)
+                \\n+
+            }xm",
+            array($this, '_parseAtx'),
+            $text
+        );
+        
+        // done
         return $text;
     }
 
     /**
      * 
-     * Support callback for H2 headers.
+     * Support callback for ATX headers.
+     * 
+     * Only supports 1-4 leading hash marks.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
+    protected function _parseAtx($matches)
+    {
+        $tag = 'h' . strlen($matches[1]);
+        return $this->_header($tag, $matches[2]);
+    }
+    
+    /**
+     * 
+     * Support callback for H1 headers.
      * 
      * @param array $matches Matches from preg_replace_callback().
      * 
@@ -137,7 +169,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
 
     /**
      * 
-     * Support callback for H3 headers.
+     * Support callback for H2 headers.
      * 
      * @param array $matches Matches from preg_replace_callback().
      * 
@@ -151,7 +183,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
 
     /**
      * 
-     * Support callback for H4 headers.
+     * Support callback for H3 headers.
      * 
      * @param array $matches Matches from preg_replace_callback().
      * 
@@ -165,7 +197,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
 
     /**
      * 
-     * Support callback for H5 headers.
+     * Support callback for H4 headers.
      * 
      * @param array $matches Matches from preg_replace_callback().
      * 

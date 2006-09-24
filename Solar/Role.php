@@ -32,14 +32,14 @@ class Solar_Role extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `adapter`:
-     * (string) The adapter class to use.
+     * `adapter`
+     * : (string) The adapter class to use.
      * 
-     * `config`:
-     * (array) Config options for constructing the adapter class.
+     * `config`
+     * : (array) Config options for constructing the adapter class.
      * 
-     * `refresh`:
-     * (bool) Whether or not to refresh the roles on every load.
+     * `refresh`
+     * : (bool) Whether or not to refresh the roles on every load.
      * 
      * @var array
      * 
@@ -70,7 +70,16 @@ class Solar_Role extends Solar_Base {
     
     /**
      * 
-     * A convenient reference to $_SESSION['Solar_Role'].
+     * A class-segmented session-variable reference.
+     * 
+     * @var Solar_Session
+     * 
+     */
+    protected $_session;
+    
+    /**
+     * 
+     * A public reference to the session store.
      * 
      * @var array
      * 
@@ -89,6 +98,12 @@ class Solar_Role extends Solar_Base {
         // basic config option settings
         parent::__construct($config);
         
+        // get a session segment
+        $this->_session = Solar::factory(
+            'Solar_Session',
+            array('class' => get_class($this))
+        );
+        
         // instantiate a adapter object
         $this->_adapter = Solar::factory(
             $this->_config['adapter'],
@@ -96,10 +111,7 @@ class Solar_Role extends Solar_Base {
         );
         
         // make sure we have a session value and reference to it.
-        if (! isset($this->list)) {
-            $_SESSION['Solar_Role'] = array();
-            $this->list =& $_SESSION['Solar_Role'];
-        }
+        $this->list =& $this->_session->store;
     }
     
     /**

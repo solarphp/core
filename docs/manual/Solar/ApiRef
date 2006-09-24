@@ -40,20 +40,6 @@ Groups At A Glance
  
  * [[Solar::$registry]]
  
-* Superglobals
- 
- * [[Solar::get()]]
- 
- * [[Solar::post()]]
- 
- * [[Solar::cookie()]]
- 
- * [[Solar::server()]]
- 
- * [[Solar::session()]]
- 
- * [[Solar::pathinfo()]]
-
 * File-Related
 
  * [[Solar::fileExists()]]

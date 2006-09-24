@@ -34,30 +34,34 @@ class Solar_View_Helper_Style extends Solar_View_Helper {
     /**
      *
      * Returns a <style>...</style> tag.
-     *
+     * 
      * Adds "media" attribute if not specified, and always uses
      * "type" attribute of "text/css".
-     *
+     * 
      * @param string $href The source href for the stylesheet.
-     *
+     * 
      * @param array $attribs Additional attributes for the <style> tag.
-     *
+     * 
      * @return string The <style>...</style> tag.
      *
      */
     public function style($href, $attribs = null)
     {
         settype($attribs, 'array');
+        
+        // force type="text/css"
         $attribs['type'] = 'text/css';
+        
+        // default to media="screen"
         if (empty($attribs['media'])) {
             $attribs['media'] = 'screen';
         }
-        if (substr($href, 0, 4) == 'http'
-            && strpos($href, '://') !== false) {
-            $url = $href;
-        } else {
-            $url = $this->_view->publicHref($href, true);
-        }
+        
+        // build the URL as an href to a public resource,
+        // get it back raw.
+        $url = $this->_view->publicHref($href, true);
+        
+        // build and return the tag
         return '<style' . $this->_view->attribs($attribs) . '>'
              . "@import url(\"$url\");</style>";
     }

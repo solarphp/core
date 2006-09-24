@@ -122,5 +122,29 @@ class Test_Solar_Markdown_Wiki_Header extends Test_Solar_Markdown_Plugin {
         $actual = $this->_markdown->transform($source);
         $this->assertSame($actual, $expect);
     }
+    
+    public function testRender_Atx()
+    {
+        $source = array();
+        $source[] = "foo bar";
+        $source[] = "# Title";
+        $source[] = "## Super-Section";
+        $source[] = "### Section";
+        $source[] = "#### Sub-Section";
+        $source[] = "baz dib";
+        $source = implode("\n", $source);
+        
+        $expect = array();
+        $expect[] = "foo bar";
+        $expect[] = "<h1>Title</h1>\n";
+        $expect[] = "<h2>Super-Section</h2>\n";
+        $expect[] = "<h3>Section</h3>\n";
+        $expect[] = "<h4>Sub-Section</h4>\n";
+        $expect[] = "baz dib";
+        $expect = implode("\n", $expect);
+        
+        $actual = $this->_markdown->transform($source);
+        $this->assertSame($actual, $expect);
+    }
 }
 ?>

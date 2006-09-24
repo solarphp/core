@@ -6,7 +6,7 @@ Solar is designed with built-in localization support.  This means you can create
 
 As you scan through the Solar distribution, you will see that many class directories have a `Locale/` subdirectory.  That subdirectory will have at least one file in it, `en_US.php`.  That contains the localization strings for the en_US locale.  As Solar gains acceptance, we expect to build more locale files for each localization (e.g., 'de_DE' for German, 'pt_BR' for Brazilian Portuguese, and so on).
 
-As with the ConfigFile, locale files are simply PHP scripts that return an array.  Thus, the simplest possible locale file is an empty array:
+As with the [[ConfigFile]], locale files are simply PHP scripts that return an array.  Thus, the simplest possible locale file is an empty array:
 
 {{code: php
     return array();

@@ -32,23 +32,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `host`:
-     * (string) Host specification (typically 'localhost').
+     * `host`
+     * : (string) Host specification (typically 'localhost').
      * 
-     * `port`:
-     * (string) Port number for the host name.
+     * `port`
+     * : (string) Port number for the host name.
      * 
-     * `user`:
-     * (string) Connect to the database as this username.
+     * `user`
+     * : (string) Connect to the database as this username.
      * 
-     * `pass`:
-     * (string) Password associated with the username.
+     * `pass`
+     * : (string) Password associated with the username.
      * 
-     * `name`:
-     * (string) Database name (or file path, or TNS name).
+     * `name`
+     * : (string) Database name (or file path, or TNS name).
      * 
-     * `mode`:
-     * (string) For SQLite, an octal file mode.
+     * `mode`
+     * : (string) For SQLite, an octal file mode.
      * 
      * @var array
      * 
@@ -77,41 +77,41 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * The available column types are ...
      * 
-     * `bool`:
-     * A true/false boolean, generally stored as an integer 1 or 0.
+     * `bool`
+     * : A true/false boolean, generally stored as an integer 1 or 0.
      * 
-     * `char`:
-     * A fixed-length string of 1-255 characters.
+     * `char`
+     * : A fixed-length string of 1-255 characters.
      * 
-     * `varchar`:
-     * A variable-length string of 1-255 characters.
+     * `varchar`
+     * : A variable-length string of 1-255 characters.
      * 
-     * `smallint`:
-     * A 2-byte integer, value range (-32767 ... +32768).
+     * `smallint`
+     * : A 2-byte integer, value range (-32767 ... +32768).
      * 
-     * `int`:
-     * A 4-byte integer, value range (-2,147,483,648 ... +2,147,483,647).
+     * `int`
+     * : A 4-byte integer, value range (-2,147,483,648 ... +2,147,483,647).
      * 
-     * `bigint`:
-     * An 8-byte integer, value range roughly (-9,223,372,036,854,780,000... +9,223,372,036,854,779,999).
+     * `bigint`
+     * : An 8-byte integer, value range roughly (-9,223,372,036,854,780,000... +9,223,372,036,854,779,999).
      * 
-     * `numeric`:
-     * A fixed-point decimal number.
+     * `numeric`
+     * : A fixed-point decimal number.
      * 
-     * `float`:
-     * A double-precision floating-point decimal number.
+     * `float`
+     * : A double-precision floating-point decimal number.
      * 
-     * `clob`:
-     * A character large object with a size of up to 2,147,483,647 bytes (about 2 GB).
+     * `clob`
+     * : A character large object with a size of up to 2,147,483,647 bytes (about 2 GB).
      * 
-     * `date`:
-     * An ISO 8601 date stored as a 10-character string; e.g., '1979-11-07'.
+     * `date`
+     * : An ISO 8601 date stored as a 10-character string; e.g., '1979-11-07'.
      * 
-     * `time`:
-     * An ISO 8601 time stored as an 8-character string; e.g., '12:34:56'.
+     * `time`
+     * : An ISO 8601 time stored as an 8-character string; e.g., '12:34:56'.
      * 
-     * `timestamp`:
-     * An ISO 8601 timestamp stored as a 19-character string (no zone offset); e.g., '1979-11-07T12:34:56'.
+     * `timestamp`
+     * : An ISO 8601 timestamp stored as a 19-character string (no zone offset); e.g., '1979-11-07T12:34:56'.
      * 
      * @var array
      * 

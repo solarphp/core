@@ -61,17 +61,17 @@ class Solar_Markdown extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `tab_width`:
-     * (int) Number of spaces per tab.  Default 4.
+     * `tab_width`
+     * : (int) Number of spaces per tab.  Default 4.
      * 
-     * `tidy`:
-     * (bool|array) If false, do not use Tidy to post-process
+     * `tidy`
+     * : (bool|array) If false, do not use Tidy to post-process
      * the transformed output.  If true or an array, is a set of
      * config options to pass to Tidy when rendering output.
      * See also <http://php.net/tidy>.  Default true.
      * 
-     * `plugins`:
-     * (array) An array of plugins for the parser to use, in
+     * `plugins`
+     * : (array) An array of plugins for the parser to use, in
      * order.
      * 
      * @var array
@@ -718,7 +718,7 @@ class Solar_Markdown extends Solar_Base {
      * 
      * [MTRegex]: http://www.bradchoate.com/past/mtregex.php
      * 
-     * From the original notes:
+     * From the original notes ...
      * 
      * > Returns an array of the tokens comprising the input string.
      * > Each token is either a tag (possibly with nested, tags

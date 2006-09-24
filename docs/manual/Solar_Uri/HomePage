@@ -72,5 +72,5 @@ can modify the component parts, then fetch a new URI string.
 }}
 
 As you can see, this class is quite powerful when it comes to URIs. For
-more information, be sure to read about the various ClassMethods.
+more information, be sure to read about the various [[ClassMethods]].
 

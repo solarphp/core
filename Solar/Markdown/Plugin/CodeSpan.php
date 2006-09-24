@@ -31,11 +31,11 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * Backtick quotes are used for `<code></code>` spans.
  *
  * You can use multiple backticks as the delimiters if you want to
- * include literal backticks in the code span. So, this input:
+ * include literal backticks in the code span. So, this input ...
  *
  *     Just type ``foo `bar` baz`` at the prompt.
  *
- * Will translate to:
+ * ... will translate to ...
  *
  *     <p>Just type <code>foo `bar` baz</code> at the prompt.</p>
  *
@@ -43,13 +43,13 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * can use as delimters. If you need three consecutive backticks
  * in your code, use four for delimiters, etc.
  *
- * You can use spaces to get literal backticks at the edges:
+ * You can use spaces to get literal backticks at the edges ...
  *
- *     ... type `` `bar` `` ...
+ *     type `` `bar` ``
  *
- * Turns into:
+ * ... which turns into ...
  *
- *     ... type <code>`bar`</code> ...
+ *     type <code>`bar`</code>
  *
  * @category Solar
  * 

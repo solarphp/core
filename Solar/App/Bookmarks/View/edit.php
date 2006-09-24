@@ -27,7 +27,7 @@
         'onclick' => "return confirm('" . $this->getTextRaw('CONFIRM_DELETE') . "')"
     );
     
-    echo $this->form()
+    echo $this->form(array('id' => 'form-bookmark'))
               ->auto($this->formdata)
               ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
               ->beginGroup()
@@ -36,4 +36,26 @@
               ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_DELETE'), 'attribs' => $attribs))
               ->endGroup()
               ->fetch();
+    
+    // add highlighting to all UL elements in the form.
+    // this works for success and failure, and for all
+    // individual failed elements.
+    $this->jsScriptaculous()->effect->highlight(
+        "#form-bookmark ul.success",
+        array(
+            'duration' => 3,
+            'endcolor' => '#aaaaff',
+            'restorecolor' => true,
+        )
+    );
+    
+    $this->jsScriptaculous()->effect->highlight(
+        "#form-bookmark ul.failure",
+        array(
+            'duration' => 3,
+            'endcolor' => '#ffaaaa',
+            'restorecolor' => true,
+        )
+    );
+    
 ?>

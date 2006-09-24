@@ -8,9 +8,12 @@ values and validating database fields.
 
     // get a validation object
     $valid = Solar::factory('Solar_Valid');
-
-    // Fetch a copy of the $_GET['name'] value
-    $name = Solar::get('name');
+    
+    // get a request object
+    $request = Solar::factory('Solar_Request');
+    
+    // Fetch a copy of the GET request variable for 'name'
+    $name = $request->get('name');
 
     // Does it match the "alpha" validation rule?
     // (i.e., A-Z and a-z only).
@@ -18,9 +21,8 @@ values and validating database fields.
         echo htmlspecialchars("Name '$name' is not valid.");
     }
 
-
-    // Fetch a copy of the $_POST['date'] value
-    $date = Solar::post('date');
+    // Fetch a copy of the POST request variable for 'date'
+    $date = $request->post('date');
 
     // Is it an ISO-formatted date?  (Alternatively,
     // it can be completely blank.)

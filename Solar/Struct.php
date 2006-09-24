@@ -23,8 +23,9 @@
  * ($foo['bar']) and object notation ($foo->bar).  This helps with 
  * moving data among form objects, view helpers, SQL objects, etc.
  * 
- * Examples:
+ * Examples ...
  * 
+ * {{code: php
  *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
  *     $struct = Solar::factory('Solar_Struct', array('data' => $data));
  *     
@@ -42,33 +43,40 @@
  *     
  *     $struct->noSuchKey = 'nothing';
  *     echo $struct->noSuchKey; // null
+ * }}
  * 
  * One problem is that casting the object to an array will not
  * reveal the data; you'll get an empty array.  Instead, you should use
  * the toArray() method to get a copy of the object data.
  * 
+ * {{code: php
  *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
  *     $object = Solar::factory('Solar_Struct', array('data' => $data));
  *     
  *     $struct = (array) $object; // $struct = array();
  *     
  *     $struct = $object->toArray(); // $struct = array('foo' => 'bar', ...)
+ * }}
  * 
  * Another problem is that you can't use object notation inside double-
  * quotes directly; you need to wrap in braces.
  * 
+ * {{code: php
  *     echo "$struct->foo";   // won't work
  *     echo "{$struct->foo}"; // will work
+ * }}
  * 
  * A third problem is that you can't address keys inside a foreach() 
  * loop directly using array notation; you have to use object notation.
  * Originally reported by Antti Holvikari.
  * 
+ * {{code: php
  *     // will not work
  *     foreach ($struct['subarray'] as $key => $val) { ... }
  *     
  *     // will work
  *     foreach ($struct->subarray as $key => $val) { ... }
+ * }}
  * 
  * @category Solar
  * 
@@ -83,8 +91,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * Keys are ...
      * 
-     * `data`:
-     * (array) Key-value pairs.
+     * `data`
+     * : (array) Key-value pairs.
      * 
      */
     protected $_Solar_Struct = array(
@@ -119,7 +127,11 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_data = (array) $this->_config['data'];
+        if (is_array($this->_config['data'])) {
+            $this->_data = $this->_config['data'];
+        } else {
+            $this->_data = array();
+        }
     }
     
     /**
@@ -215,8 +227,10 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         if ($spec instanceof Solar_Struct) {
             // we can do this because $spec is of the same class
             $data = $spec->_data;
+        } elseif (is_array($spec)) {
+            $data = $spec;
         } else {
-            $data = (array) $spec;
+            $data = array();
         }
         
         // load new data

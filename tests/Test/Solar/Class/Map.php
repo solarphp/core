@@ -41,6 +41,7 @@ class Test_Solar_Class_Map extends Solar_Test {
             "Solar_Test_Example" => "$base/Solar/Test/Example.php",
             "Solar_Test_Example_Exception" => "$base/Solar/Test/Example/Exception.php",
             "Solar_Test_Example_Exception_CustomCondition" => "$base/Solar/Test/Example/Exception/CustomCondition.php",
+            "Solar_Test_Example_PageController" => "$base/Solar/Test/Example/PageController.php",
             "Solar_Test_Exception" => "$base/Solar/Test/Exception.php",
             "Solar_Test_Exception_Fail" => "$base/Solar/Test/Exception/Fail.php",
             "Solar_Test_Exception_Skip" => "$base/Solar/Test/Exception/Skip.php",

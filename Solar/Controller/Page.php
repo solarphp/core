@@ -24,59 +24,56 @@ Solar::loadClass('Solar_Uri_Action');
  *
  * Abstract page controller class.
  *
- * Expects a directory structure similar to the following:
+ * Expects a directory structure similar to the following ...
  *
- * <code>
- * Vendor/              # your vendor namespace
- *   App/               # subdirectory for page controllers
- *     Helper/          # shared helper classes
- *       ...
- *     Layout/          # shared layout files
- *       ...
- *     Locale/          # shared locale files
- *       ...
- *     View/            # shared view scripts
- *       ...
- *     Example.php      # an example page controller app
- *     Example/
- *       Helper/        # helper classes specific to the page
- *         ...
- *       Layout/        # layout files to override shared layouts
- *         ...
- *       Locale/        # locale files
- *         en_US.php
- *         pt_BR.php
- *       View/          # view scripts
- *         _item.php    # partial template
- *         list.php     # full template
- *         edit.php
- * }}
+ *     Vendor/              # your vendor namespace
+ *       App/               # subdirectory for page controllers
+ *         Helper/          # shared helper classes
+ *           ...
+ *         Layout/          # shared layout files
+ *           ...
+ *         Locale/          # shared locale files
+ *           ...
+ *         View/            # shared view scripts
+ *           ...
+ *         Example.php      # an example page controller app
+ *         Example/
+ *           Helper/        # helper classes specific to the page
+ *             ...
+ *           Layout/        # layout files to override shared layouts
+ *             ...
+ *           Locale/        # locale files
+ *             en_US.php
+ *             pt_BR.php
+ *           View/          # view scripts
+ *             _item.php    # partial template
+ *             list.php     # full template
+ *             edit.php
  *
  * Note that models are not included in the application itself; this is
  * for class-name deconfliction reasons.  Your models should be stored
  * elsewhere in the Solar hierarchy, e.g. Vendor_Model_Name.
  *
- * When you call Solar_Controller_Page::fetch(), these intercept methods
- * are run in the following order:
+ * When you call [[fetch()]], these intercept methods
+ * are run in the following order ...
  *
- * * Solar_Controller_Page::_load() to load class properties from the
+ * * [[_load()]] to load class properties from the
  *   fetch() URI specification
  *
- * * Solar_Controller_Page::_preRun() before the first action
+ * * [[_preRun()]] before the first action
  *
- * * Solar_Controller_Page::_preAction() before each action (including
+ * * [[_preAction()]] before each action (including
  *   _forward()-ed actions)
  *
  * * ... The action method itself runs here ...
  *
- * * Solar_Controller_Page::_postAction() after each action
+ * * [[_postAction()]] after each action
  *
- * * Solar_Controller_Page::_postRun() after the last action, and before
- *   rendering
+ * * [[_postRun()]] after the last action, and before rendering
  *
- * * Solar_Controller_Page::_render() to render the view and layout;
- *   this in its turn calls Solar_Controller_Page::_getView() for
- *   the view object, and Solar_Controller_Page::_setViewLayout() to
+ * * [[_render()]] to render the view and layout;
+ *   this in its turn calls [[_getView()]] for
+ *   the view object, and [[_setViewLayout()]] to
  *   reset the view object to use layout templates.
  *
  * @category Solar
@@ -106,12 +103,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
     /**
      *
-     * Flash-messaging object.
+     * Session data, including read-once flashes.
      *
-     * @var Solar_Flash
+     * @var Solar_Session
      *
      */
-    protected $_flash;
+    protected $_session;
 
     /**
      *
@@ -182,6 +179,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
     /**
      *
+     * Request environment details: get, post, etc.
+     *
+     * @var Solar_Request
+     *
+     */
+    protected $_request;
+
+    /**
+     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -191,6 +197,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
         $class = get_class($this);
 
+        // create the request object
+        $this->_request = Solar::factory('Solar_Request');
+
         // auto-set the name; e.g. Solar_App_Something => 'something'
         if (empty($this->_name)) {
             $pos = strrpos($class, '_');
@@ -199,8 +208,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
 
         // create the flash object
-        $this->_flash = Solar::factory(
-            'Solar_Flash',
+        $this->_session = Solar::factory(
+            'Solar_Session',
             array('class' => $class)
         );
 
@@ -251,7 +260,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Executes the requested action and returns its output with layout.
      *
-     * @param string $spec The action specification string, e.g.:
+     * @param string $spec The action specification string, e.g.,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      *
      * @return string The results of the action + view + layout.
@@ -279,7 +288,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Executes the requested action and displays its output.
      *
-     * @param string $spec The action specification string, e.g.:
+     * @param string $spec The action specification string, e.g.,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      *
      * @return void
@@ -297,7 +306,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @return string The results of the view and layout scripts.
      *
      */
-    public function _render()
+    protected function _render()
     {
         // get a view object and assign variables
         $view = $this->_getView();
@@ -336,22 +345,22 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Creates and returns a new Solar_View object for a view.
      *
      * Automatically sets up a template-path stack for you, searching
-     * for view files in this order:
+     * for view files in this order ...
      *
-     * # Vendor/App/Example/View/
+     * 1. Vendor/App/Example/View/
      *
-     * # Vendor/App/View
+     * 2. Vendor/App/View
      *
      * Automatically sets up a helper-class stack for you, searching
-     * for helper classes in this order:
+     * for helper classes in this order ...
      *
-     * # Vendor_App_Example_Helper_
+     * 1. Vendor_App_Example_Helper_
      *
-     * # Vendor_App_Helper_
+     * 2. Vendor_App_Helper_
      *
-     * # Vendor_View_Helper_
+     * 3. Vendor_View_Helper_
      *
-     * # Solar_View_Helper_ (this is part of Solar_View to begin with)
+     * 4. Solar_View_Helper_ (this is part of Solar_View to begin with)
      *
      * @return Solar_View
      *
@@ -414,13 +423,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * the layout with zero effort.
      *
      * Automatically sets up a template-path stack for you, searching
-     * for layout files in this order:
+     * for layout files in this order ...
      *
-     * # Vendor/App/Example/Layout/
+     * 1. Vendor/App/Example/Layout/
      *
-     * # Vendor/App/Layout/
+     * 2. Vendor/App/Layout/
      *
-     * # Solar/App/Layout/
+     * 3. Solar/App/Layout/
      *
      * @param Solar_View $view The Solar_View object to modify.
      *
@@ -658,36 +667,46 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Reports whether or not user requested a specific submit type.
      *
-     * By default, looks for $_submit_key in [[Solar::post()]] to get the
+     * By default, looks for $submit_key in [[Solar_Request::post()]] to get the
      * value of the submit request.
      *
      * Checks against "SUBMIT_$type" locale string for matching.  E.g.,
-     * $this->_isSubmit('save') checks Solar::post('submit') against
-     * $this->locale('SUBMIT_SAVE').
+     * $this->_isSubmit('save') checks Solar_Request::post('submit') 
+     * against $this->locale('SUBMIT_SAVE').
      *
      * @param string $type The submit type; e.g., 'save', 'delete',
-     * 'preview', etc.
+     * 'preview', etc.  If empty, returns true if *any* submission type
+     * was posted.
      *
      * @param string $submit_key If not empty, check against this
-     * [[Solar::post()]] key instead $this->_submit_key.  Default null.
+     * [[Solar_Request::post()]] key instead $this->_submit_key. Default
+     * null.
      *
      * @return bool
      *
      */
-    protected function _isSubmit($type, $submit_key = null)
-    {
-        $locale_key = 'SUBMIT_' . strtoupper($type);
-
+    protected function _isSubmit($type = null, $submit_key = null)
+    {   
+        // make sure we know what post-var to look in
         if (empty($submit_key)) {
             $submit_key = $this->_submit_key;
         }
-
-        $submit = Solar::post($submit_key, false);
+        
+        // didn't ask for a submission type; answer if *any* submission
+        // was attempted.
+        if (empty($type)) {
+            $any = $this->_request->post($submit_key);
+            return ! empty($any);
+        }
+        
+        // asked for a submission type, find the locale string for it.
+        $locale_key = 'SUBMIT_' . strtoupper($type);
         $locale = $this->locale($locale_key);
 
         // $submit must be non-empty, and must match locale string.
         // not enough just to match the locale string, as it might
         // be empty.
+        $submit = $this->_request->post($submit_key, false);
         return $submit && $submit == $locale;
     }
 

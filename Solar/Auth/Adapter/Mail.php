@@ -37,9 +37,9 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
      * 
      * Keys are ...
      * 
-     * `mailbox`:
-     * (string) An imap_open() mailbox string, e.g.
-     * "mail.example.com:143/imap" or "mail.example.com:110/pop3".
+     * `mailbox`
+     * : (string) An imap_open() mailbox string, e.g.
+     *   "mail.example.com:143/imap" or "mail.example.com:110/pop3".
      * 
      * @var array
      * 

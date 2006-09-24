@@ -4,6 +4,14 @@ require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . '/Helper.php';
 
 class Test_Solar_View_Helper_Anchor extends Test_Solar_View_Helper {
     
+    public function setup()
+    {
+        parent::setup();
+        // forcibly reset the request environment
+        $request = Solar::factory('Solar_Request');
+        $request->load(true);
+    }
+    
     public function testAnchor_hrefFromString()
     {
         $actual = $this->_view->anchor('/path/to/script.php');

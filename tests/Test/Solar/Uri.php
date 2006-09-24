@@ -10,31 +10,26 @@ class Test_Solar_Uri extends Solar_Test {
     
     protected $_class = 'Solar_Uri';
     
+    protected $_request;
+    
     public function __construct($config = null)
     {
         parent::__construct($config);
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
-        $this->_server = $_SERVER;
-        $this->_get = $_GET;
-        $_SERVER['HTTP_HOST']    = 'example.com';
-        $_SERVER['SCRIPT_NAME']  = '/path/to/index.php';
-        $_SERVER['PATH_INFO']    = '/appname/action';
-        $_SERVER['QUERY_STRING'] = 'foo=bar&baz=dib';
-        $_SERVER['REQUEST_URI']  = $_SERVER['SCRIPT_NAME']
-                                 . $_SERVER['PATH_INFO']
-                                 . '?' . $_SERVER['QUERY_STRING'];
+        $this->_request = Solar::factory('Solar_Request');
+        $this->_request->server['HTTP_HOST']  = 'example.com';
+        $this->_request->server['SCRIPT_NAME']  = '/path/to/index.php';
+        $this->_request->server['PATH_INFO']    = '/appname/action';
+        $this->_request->server['QUERY_STRING'] = 'foo=bar&baz=dib';
+        $this->_request->server['REQUEST_URI']  = $this->_request->server['SCRIPT_NAME']
+                                                . $this->_request->server['PATH_INFO']
+                                                . '?'
+                                                . $this->_request->server['QUERY_STRING'];
 
-        // emulate $_GET vars from the URI
-        parse_str($_SERVER['QUERY_STRING'], $_GET);
-    }
-    
-    public function __destruct()
-    {
-        $_GET = $this->_get;
-        $_SERVER = $this->_server;
-        parent::__destruct();
+        // emulate GET vars from the URI
+        parse_str($this->_request->server['QUERY_STRING'], $this->_request->get);
     }
     
     public function setup()
@@ -88,7 +83,6 @@ class Test_Solar_Uri extends Solar_Test {
 
         // import the URI spec and test that it imported properly
         $this->_uri->set($spec);
-        // $assert->setLabel('Initial import');
         $this->assertSame($this->_uri->scheme, $scheme);
         $this->assertSame($this->_uri->host, $host);
         $this->assertSame($this->_uri->port, $port);
@@ -99,7 +93,6 @@ class Test_Solar_Uri extends Solar_Test {
         // do this to make sure there are no translation errors.
         $spec = $this->_uri->fetch(true);
         $this->_uri->set($spec);
-        // $assert->setLabel('Retranslation');
         $this->assertSame($this->_uri->scheme, $scheme);
         $this->assertSame($this->_uri->host, $host);
         $this->assertSame($this->_uri->port, $port);
@@ -143,17 +136,14 @@ class Test_Solar_Uri extends Solar_Test {
         $this->_uri->set($expect_full);
 
         // full fetch
-        // $assert->setLabel('full');
         $this->assertSame($this->_uri->fetch(true), $expect_full);
 
         // partial fetch
-        // $assert->setLabel('part');
-        $this->assertSame($this->_uri->fetch(), $expect_part);
+        $this->assertSame($this->_uri->fetch(false), $expect_part);
     }
     
     public function testQuick()
     {
-
         // partial
         $expect = '/path/to/index.php?foo=bar';
         $actual = $this->_uri->quick("http://example.com$expect");

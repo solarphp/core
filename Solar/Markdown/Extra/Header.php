@@ -39,7 +39,7 @@ Solar::loadClass('Solar_Markdown_Plugin_Header');
  *     Header 2 {#id-word2}
  *     -------------------
  * 
- * ... would become:
+ * ... would become ...
  * 
  *     <h1 id="id-word1">Header 1</h1>
  * 

@@ -39,6 +39,10 @@ if (! empty($this->layout_link)) {
     }
 }
 
+// JavaScript Helper-required styles before App styles, so that App styles may
+// override bundled style files.
+echo $this->js()->fetchStyles();
+
 // styles
 if (! empty($this->layout_style)) {
     foreach ((array) $this->layout_style as $val) {

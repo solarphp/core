@@ -44,8 +44,8 @@ class Solar_Uri_Action extends Solar_Uri {
      * 
      * Keys are ...
      * 
-     * `path`:
-     * (string) A path prefix specifically for actions, e.g. '/index.php/'.
+     * `path`
+     * : (string) A path prefix specifically for actions, e.g. '/index.php/'.
      * 
      * @var array
      * 

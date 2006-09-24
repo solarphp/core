@@ -58,6 +58,7 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     public function __construct($config = null)
     {
         parent::__construct($config);
+
         // We need Prototype to be loaded
         $this->_view->getHelper('JsPrototype');
     }

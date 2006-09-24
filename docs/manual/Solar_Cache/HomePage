@@ -118,13 +118,16 @@ we use that instead (thus speeding up the script execution).
 {{code: php
     require_once 'Solar.php';
     Solar::start();
-
-    // connect to the cache
-    $cache = Solar::factory('Solar_Cache');
-
+    
+    // discover the request environment
+    $request = Solar::factory('Solar_Request');
+    
     // every cache entry needs a unique ID; we'll assume that ID
     // is passed as part of the URL.
-    $id = Solar::get('id');
+    $id = $request->get('id');
+    
+    // connect to the cache
+    $cache = Solar::factory('Solar_Cache');
 
     // try to get the cache entry.  if the entry is past its lifetime,
     // this will addiitonally delete the entry for us, keeping the cache

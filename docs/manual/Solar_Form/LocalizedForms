@@ -103,8 +103,11 @@ string for that language.
     // populate the form with user input
     $form->populate();
 
+    // discover the request environment
+    $request = Solar::factory('Solar_Request');
+    
     // capture what operation the user wants to perform
-    $submit = Solar::post('submit');
+    $submit = $request->post('submit');
 
     // process a 'Save' submission.  Note that we check against
     // the localized value of the operation, not a hard-coded

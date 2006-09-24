@@ -38,33 +38,44 @@ Global Variables
 
 Do not use global variables.  We say this for two reasons:
 
-1. They open up security problems when `register_globals` is turned on
+1. They open up security problems when `register_globals` is turned on.
 
-2. They pollute the global namespace and may collide or overwrite each other in differing contexts
+2. They pollute the global namespace and may collide or overwrite each other in differing contexts.
 
 --------------------
 Session Variables
 --------------------
 
-`$_SESSION` keys for Solar classes shall match the class name.  Thus, a `Solar_Test_Example` session variable called `something` would be addressed as `$_SESSION['Solar_Test_Example']['something']`.
+`$_SESSION` keys for Solar classes shall match the class name.  Thus, a `Solar_Test_Example` class using a session variable called `foo` would be addressed as `$_SESSION['Solar_Test_Example']['foo']`.
+
+The easiest way to ahere to this convention is to use a [[Solar_Session::HomePage | Solar_Session]] storage object within your class.  For example ...
+
+{{code: php
+    $session = Solar::factory('Solar_Session',
+        array('class' => 'Solar_Test_Example')
+    );
+
+    // equivalent of $_SESSION['Solar_Test_Example']['something']
+    $session->store['foo'] = 'bar';
+}}
 
 --------------------
 Config File Keys
 --------------------
 
-Keys in the ConfigFile shall conform to the class name.  Thus, a `Solar_Test_Example` constructor configuration would be addressed as an associative array in the `['Solar_Test_Example']` key of the ConfigFile.
+Keys in the [[ConfigFile]] shall conform to the class name.  Thus, a `Solar_Test_Example` constructor configuration would be addressed as an associative array in the `['Solar_Test_Example']` key of the [[ConfigFile]].
 
 --------------------
 Locale File Names
 --------------------
 
-LocaleFiles should be named for their locale code.  For example, the `en_US`  file should be named `en_US.php`, the `pt_BR` file should be named `pt_BR.php`, and so on.
+[[LocaleFiles]] should be named for their locale code.  For example, the `en_US`  file should be named `en_US.php`, the `pt_BR` file should be named `pt_BR.php`, and so on.
 
 --------------------
 Locale Translation Keys
 --------------------
 
-Keys in the LocaleFiles should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
+Keys in the [[LocaleFiles]] should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
 
 |  Prefix    | Usage
 | ---------- | -----------------------------------------------

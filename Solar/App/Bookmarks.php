@@ -41,13 +41,13 @@ class Solar_App_Bookmarks extends Solar_App {
      * 
      * Keys are ...
      * 
-     * `area_name`:
-     * (string) The content area for the bookmarks
-     * app, default 'Solar_App_Bookmarks'.  Will be created automatically
-     * if it does not exist.
+     * `area_name`
+     * : (string) The content area for the bookmarks
+     *   app, default 'Solar_App_Bookmarks'.  Will be created automatically
+     *   if it does not exist.
      * 
-     * `content`:
-     * (dependency) A Solar_Content domain model dependency object.
+     * `content`
+     * : (dependency) A Solar_Content domain model dependency object.
      * 
      * @var array
      * 
@@ -319,7 +319,7 @@ class Solar_App_Bookmarks extends Solar_App {
         }
 
         // build a link for _redirect() calls and the backlink.
-        $href = $this->_flash->get('backlink');
+        $href = $this->_session->getFlash('backlink');
         if (! $href) {
             // probably browsed to this page directly.  link to the user's list.
             $uri = Solar::factory('Solar_Uri_Action');
@@ -327,7 +327,7 @@ class Solar_App_Bookmarks extends Solar_App {
         }
 
         // keep the backlink for the next page load
-        $this->_flash->set('backlink', $href);
+        $this->_session->setFlash('backlink', $href);
 
         // build the basic form, populated with the bookmark data
         // from the database
@@ -357,7 +357,7 @@ class Solar_App_Bookmarks extends Solar_App {
             try {
                 
                 $item->save();
-                $this->_flash->set('add_ok', true);
+                $this->_session->setFlash('add_ok', true);
                 $this->_redirect("bookmarks/edit/{$item->id}");
         
             } catch (Solar_Exception $e) {
@@ -425,15 +425,15 @@ class Solar_App_Bookmarks extends Solar_App {
         // otherwise, return the list for the user.
         //
 
-        $href = $this->_flash->get('backlink');
+        $href = $this->_session->getFlash('backlink');
         if (! $href) {
             // probably browsed directly to this page; return to the user's list
             $uri = Solar::factory('Solar_Uri_Action');
             $href = $uri->quick("bookmarks/user/{$this->_user->auth->handle}");
         }
-
+        
         // keep the backlink for the next page load
-        $this->_flash->set('backlink', $href);
+        $this->_session->setFlash('backlink', $href);
 
         // ---------------------------------------------------------------------
         // 
@@ -446,7 +446,13 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // now populate the the submitted POST values to the form
         $form->populate();
-
+        
+        // was this from a quickmark or an add operation?
+        if ($this->_session->getFlash('add_ok')) {
+            $form->setStatus(true);
+            $form->feedback = $this->locale('SUCCESS_ADDED');
+        }
+        
         // Save?
         if ($this->_isSubmit('save') && $form->validate()) {
     
@@ -533,7 +539,7 @@ class Solar_App_Bookmarks extends Solar_App {
         // if the user *does* already have that URI bookmarked,
         // redirect to the existing bookmark.
         if (! empty($existing->id)) {
-            $this->_flash->set('backlink', $uri);
+            $this->_session->setFlash('backlink', $uri);
             $this->_redirect("bookmarks/edit/{$existing['id']}");
         }
 
@@ -612,11 +618,11 @@ class Solar_App_Bookmarks extends Solar_App {
         $total = $this->_bookmarks->countPages($tags, $owner_handle);
 
         // flash forward the backlink in case we go to edit
-        $this->_flash->set('backlink', Solar::server('REQUEST_URI'));
+        $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
 
         // assign everything else for the view
         $this->pages        = $total['pages'];
-        $this->order        = Solar::get('order', 'created_desc');
+        $this->order        = $this->_request->get('order', 'created_desc');
         $this->page         = $page;
         $this->owner_handle = null; // requested owner_handle
         $this->tags         = $tags; // the requested tags
@@ -631,7 +637,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->layout_link[] = array(
             'rel'   => 'alternate',
             'type'  => 'application/rss+xml',
-            'title' => Solar::server('PATH_INFO'),
+            'title' => $this->_request->server('PATH_INFO'),
             'href'  => $uri->fetch(),
         );
     }
@@ -698,14 +704,14 @@ class Solar_App_Bookmarks extends Solar_App {
         $total = $this->_bookmarks->countPages($tags, $owner_handle);
 
         // flash forward the backlink in case we go to edit
-        $this->_flash->set('backlink', Solar::server('REQUEST_URI'));
+        $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
 
         // set the view
         $this->_view = 'browse';
 
         // assign view vars
         $this->pages        = $total['pages'];
-        $this->order        = Solar::get('order', 'created_desc');
+        $this->order        = $this->_request->get('order', 'created_desc');
         $this->page         = $page;
         $this->owner_handle = $owner_handle; // requested owner_handle
         $this->tags         = $tags; // the requested tags
@@ -725,7 +731,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->layout_link[] = array(
             'rel'   => 'alternate',
             'type'  => 'application/rss+xml',
-            'title' => Solar::server('PATH_INFO'),
+            'title' => $this->_request->server('PATH_INFO'),
             'href'  => $uri->fetch(),
         );
     }

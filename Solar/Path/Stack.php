@@ -55,8 +55,6 @@ class Solar_Path_Stack {
      * 
      * Adds one or more directories to the stack.
      * 
-     * For example:
-     * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Path_Stack');
      *     $stack->add(array('path/1', 'path/2', 'path/3'));
@@ -110,8 +108,6 @@ class Solar_Path_Stack {
      * 
      * Clears the stack and adds one or more directories.
      * 
-     * For example:
-     * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Path_Stack');
      *     $stack->add('path/1');
@@ -143,8 +139,6 @@ class Solar_Path_Stack {
      * Finds a file in the path stack.
      * 
      * Relative paths are honored as part of the include_path.
-     * 
-     * For example:
      * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Path_Stack');
@@ -183,8 +177,6 @@ class Solar_Path_Stack {
      * While slower than Solar_Path_Stack::find(), this helps to protect
      * against directory traversal attacks.  It only works with absolute
      * paths; relative paths will fail.
-     * 
-     * For example:
      * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Path_Stack');

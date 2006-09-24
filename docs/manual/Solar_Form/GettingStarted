@@ -149,10 +149,10 @@ submissions. This is very easy to do: just add a
     // ... create a Solar_View object, assign, and display.
 }}
 
-The [[Solar_Form::populate()]] method will look for the
-$_POST['user_email'] array value and put it into the $form object for
-you. If the user entered "nobody@example.com" as the address, the view
-script would display something like this:
+The [[Solar_Form::populate()]] method will examine the request for a
+POST variable called `user_email` and put its value into the $form
+object for you. If the user entered "nobody@example.com" as the address,
+the view script would display something like this:
 
 {{code: html
     <!-- ... -->
@@ -160,9 +160,6 @@ script would display something like this:
     <dd><input type="text" id="user_email" name="user_email" value="nobody@example.com" />
     <!-- ... -->
 }}
-
-(Technically, the form will use [[Solar::post()]] to get the values
-instead of pulling directly from $_POST.)
 
 
 Validation
@@ -297,8 +294,11 @@ method.
     // populate the form with user input
     $form->populate();
 
+    // discover the request environment
+    $request = Solar::factory('Solar_Request');
+    
     // what was the submission request?
-    $submit = Solar::post('submit'); 
+    $submit = $request->post('submit'); 
 
     // process a 'Save' submission
     if ($submit == 'Save') {
@@ -311,8 +311,8 @@ method.
     }
 }}
 
-Note the the array returned by [[Solar_Form::values()]] will match the
-structure of the $_POST array for the form elements, so if you had
-sub-arrays in the form, you will get sub-arrays from
-[[Solar_Form::values()]]. Wise use of array key names will help you keep
-track of what information goes in which table, and so on.
+Note that the array returned by [[Solar_Form::values()]] will match the
+array of POST variables in the request, so if you had sub-arrays in the
+form, you will get sub-arrays from [[Solar_Form::values()]]. Wise use of
+array key names will help you keep track of what information goes in
+which table, and so on.

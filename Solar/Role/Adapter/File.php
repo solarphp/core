@@ -26,13 +26,11 @@ Solar::loadClass('Solar_Role_Adapter');
  * 
  * Adapter to fetch roles from a Unix-style groups file.
  * 
- * The file format is "group:user1,user2,user3\n".  Example:
+ * The file format is "group:user1,user2,user3\n".
  * 
- * <code>
- * sysadmin:pmjones
- * writer:pmjones,boshag,agtsmith
- * editor:pmjones,agtsmith
- * }}
+ *     sysadmin:pmjones
+ *     writer:pmjones,boshag,agtsmith
+ *     editor:pmjones,agtsmith
  * 
  * @category Solar
  * 
@@ -47,8 +45,8 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
      * 
      * Keys are ...
      * 
-     * `file`:
-     * (string) Where the roles file is located.
+     * `file`
+     * : (string) Where the roles file is located.
      * 
      * @var array
      * 

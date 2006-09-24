@@ -24,18 +24,16 @@ Solar::loadClass('Solar_Access_Adapter');
  * 
  * Class for reading access privileges from a text file.
  * 
- * The file format is:
+ * The file format is ...
  *
- * 0:flag 1:type 2:name 3:class 4:action 5:submit
+ *     0:flag 1:type 2:name 3:class 4:action 5:submit
  * 
- * E.g.:
+ * For example ...
  * 
- * <code>
- * deny handle * * * *
- * allow role sysadmin * * *
- * allow handle + Solar_App_Bookmarks * *
- * deny user boshag Solar_App_Bookmarks edit *
- * }}
+ *     deny handle * * * *
+ *     allow role sysadmin * * *
+ *     allow handle + Solar_App_Bookmarks * *
+ *     deny user boshag Solar_App_Bookmarks edit *
  * 
  * @category Solar
  * 

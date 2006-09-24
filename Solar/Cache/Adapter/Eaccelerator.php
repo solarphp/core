@@ -46,9 +46,9 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
      *
      * Keys are ...
      *
-     * `life`:
-     * (int) The cache entry lifetime in seconds, default 0
-     * (never expires).
+     * `life`
+     * : (int) The cache entry lifetime in seconds, default 0
+     *   (never expires).
      *
      * @var array
      *

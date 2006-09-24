@@ -101,7 +101,6 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
             'type'    => 'char',
             'size'    => 15,
             'require' => true,
-            'default' => Solar::server('REMOTE_ADDR'),
             'valid'   => 'ipv4',
         );
         

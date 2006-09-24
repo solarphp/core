@@ -149,5 +149,26 @@ class Test_Solar_Struct extends Solar_Test {
             $this->assertSame($val, $expect[$key]);
         }
     }
+    
+    public function test__construct_dataNotArray()
+    {
+        $struct = Solar::factory(
+            'Solar_Struct',
+            array('data' => null)
+        );
+        $this->assertSame($struct->toArray(), array());
+        
+        $struct = Solar::factory(
+            'Solar_Struct',
+            array('data' => '')
+        );
+        $this->assertSame($struct->toArray(), array());
+        
+        $struct = Solar::factory(
+            'Solar_Struct',
+            array('data' => 0)
+        );
+        $this->assertSame($struct->toArray(), array());
+    }
 }
 ?>

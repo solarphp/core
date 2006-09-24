@@ -30,13 +30,13 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * You can link to another page using `[display text](http://example.com)`.
  * 
- * Alternatively, you can use defined links:
+ * Alternatively, you can use defined links ...
  * 
  *     Show [this link][id].
  * 
  *     [id]: http://example.com
  * 
- * And a shorthand for defined links:
+ * And a shorthand for defined links ...
  * 
  *     Show the [example][].
  *     

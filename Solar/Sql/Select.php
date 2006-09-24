@@ -24,51 +24,48 @@ Solar::loadClass('Solar_Sql_Table');
  * 
  * Class for SQL select generation and results.
  * 
- * Example usage:
- * 
- * <code>
- * $select = Solar::factory('Solar_Sql_Select');
- * 
- * // select these columns from the 'contacts' table
- * $select->from('contacts', array(
- *   'id',
- *     'n_last',
- *     'n_first',
- *     'adr_street',
- *     'adr_city',
- *     'adr_region AS state',
- *     'adr_postcode AS zip',
- *     'adr_country',
- * ));
- * 
- * // on these ANDed conditions
- * $select->where('n_last = :lastname');
- * $select->where('adr_city = :city');
- * 
- * // reverse-ordered by first name
- * $select->order('n_first DESC')
- * 
- * // get 50 per page, when we limit by page
- * $select->setPaging(50);
- * 
- * // bind data into the query.
- * // remember :lastname and :city in the setWhere() calls above.
- * $data = ('lastname' => 'Jones', 'city' => 'Memphis');
- * $select->bind($data);
- * 
- * // limit by which page of results we want
- * $select->limitPage(1);
- * 
- * // get a Solar_Sql_Result object (the default)
- * $result = $select->fetch(); // or fetch('result')
- * 
- * // alternatively, get a Solar_Sql_Rowset object
- * $rows = $select->fetch('all');
- * 
- * // find out the count of rows, and how many pages there are.
- * // this comes back as an array('count' => ?, 'pages' => ?).
- * $total = $select->countPages();
- * 
+ * {{code: php
+ *     $select = Solar::factory('Solar_Sql_Select');
+ *     
+ *     // select these columns from the 'contacts' table
+ *     $select->from('contacts', array(
+ *       'id',
+ *         'n_last',
+ *         'n_first',
+ *         'adr_street',
+ *         'adr_city',
+ *         'adr_region AS state',
+ *         'adr_postcode AS zip',
+ *         'adr_country',
+ *     ));
+ *     
+ *     // on these ANDed conditions
+ *     $select->where('n_last = :lastname');
+ *     $select->where('adr_city = :city');
+ *     
+ *     // reverse-ordered by first name
+ *     $select->order('n_first DESC')
+ *     
+ *     // get 50 per page, when we limit by page
+ *     $select->setPaging(50);
+ *     
+ *     // bind data into the query.
+ *     // remember :lastname and :city in the setWhere() calls above.
+ *     $data = ('lastname' => 'Jones', 'city' => 'Memphis');
+ *     $select->bind($data);
+ *     
+ *     // limit by which page of results we want
+ *     $select->limitPage(1);
+ *     
+ *     // get a Solar_Sql_Result object (the default)
+ *     $result = $select->fetch(); // or fetch('result')
+ *     
+ *     // alternatively, get a Solar_Sql_Rowset object
+ *     $rows = $select->fetch('all');
+ *     
+ *     // find out the count of rows, and how many pages there are.
+ *     // this comes back as an array('count' => ?, 'pages' => ?).
+ *     $total = $select->countPages();
  * }}
  * 
  * @category Solar
@@ -84,11 +81,11 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `sql`:
-     * (dependency) A Solar_Sql dependency object.
+     * `sql`
+     * : (dependency) A Solar_Sql dependency object.
      * 
-     * `paging`:
-     * (int) Number of rows per page.
+     * `paging`
+     * : (int) Number of rows per page.
      * 
      * @var array
      * 

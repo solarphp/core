@@ -36,7 +36,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  *     Header 2
  *     --------
  * 
- * ... would become:
+ * ... would become ...
  * 
  *     <h1>Header 1</h1>
  * 
@@ -51,7 +51,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  *     ##### Header 5
  * 
- * ... would become:
+ * ... would become ...
  * 
  *     <h1>Header 1</h1>
  * 

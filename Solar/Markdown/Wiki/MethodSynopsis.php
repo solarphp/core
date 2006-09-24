@@ -24,8 +24,6 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * Block plugin to for method synopsis markup.
  * 
- * Example:
- * 
  *     {{method: methodName
  *        @access level
  *        @param  type

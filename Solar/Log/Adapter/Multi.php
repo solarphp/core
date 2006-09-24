@@ -27,7 +27,7 @@ Solar::loadClass('Solar_Log_Adapter');
  * {{code: php
  *     // config for a multiple log
  *     $config = array(
- *         'adapter' => 'Solar_Log_Adapter_Multiple', // could also be a dependency object?
+ *         'adapter' => 'Solar_Log_Adapter_Multi', // could also be a dependency object?
  *         'adapters' => array(
  *             array(
  *                 'adapter' => 'Solar_Log_Adapter_File',
@@ -67,18 +67,23 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
      * 
      * Keys are ...
      * 
-     * `adapters`:
-     * (array) An array of arrays, where each sub-array
-     * is a separate adapter configuration.
+     * `adapters`
+     * : (array) An array of arrays, where each sub-array
+     *   is a separate adapter configuration.
      * 
      * @var array
+     * 
+     * @todo make the standard events config key the default for 
+     * all sub-adapters.
      * 
      */
     protected $_Solar_Log_Adapter_Multi = array(
         'adapters' => array(
             array(
                 'adapter' => 'Solar_Log_Adapter_None',
-                'events'  => '*',
+                'config'  => array(
+                    'events'  => '*',
+                ),
             ),
         ),
     );
@@ -102,10 +107,21 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        foreach ($this->_config['adapters'] as $adapter_config) {
-            $class = $adapter_config['adapter'];
-            unset($adapter_config['adapter']);
-            $this->_adapters[] = Solar::dependency($class, $adapter_config);
+        $events = $this->_config['events'];
+        
+        // build each sub-adapter
+        foreach ($this->_config['adapters'] as $val) {
+            
+            // basic config
+            $class = $val['adapter'];
+            $config = empty($val['config']) ? null : $val['config'];
+            
+            // use default events?
+            if (empty($config['events'])) {
+                $config['events'] = $events;
+            }
+            
+            $this->_adapters[] = Solar::factory($class, $config);
         }
     }
      

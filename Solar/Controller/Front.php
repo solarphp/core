@@ -19,7 +19,8 @@
  * 
  * Front-controller class for Solar.
  * 
- * An example front-controller "index.php" for your web root:
+ * An example bootstrap "index.php" for your web root using the front
+ * controller ...
  * 
  * {{code: php
  *     require 'Solar.php';

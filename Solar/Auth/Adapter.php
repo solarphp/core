@@ -32,30 +32,30 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `source`:
-     * (string) The source for auth credentials, 'get'
-     * (for [[Solar::get()]] method) or 'post' (for [[Solar::post()]] method).
-     * Default is 'post'.
+     * `source`
+     * : (string) The source for auth credentials, 'get' (via the
+     *   for GET request vars) or 'post' (via the POST request vars).
+     *   Default is 'post'.
      * 
-     * `source_handle`:
-     * (string) Username key in the credential array source,
-     * default 'handle'.
+     * `source_handle`
+     * : (string) Username key in the credential array source,
+     *   default 'handle'.
      * 
-     * `source_passwd`:
-     * (string) Password key in the credential array source,
-     * default 'passwd'.
+     * `source_passwd`
+     * : (string) Password key in the credential array source,
+     *   default 'passwd'.
      * 
-     * `source_submit`:
-     * (string) Submission key in the credential array source,
-     * default 'submit'.
+     * `source_submit`
+     * : (string) Submission key in the credential array source,
+     *   default 'submit'.
      * 
-     * `submit_login`:
-     * (string) The submission-key value to indicate a
-     * login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * `submit_login`
+     * : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
      * 
-     * `submit_logout`:
-     * (string) The submission-key value to indicate a
-     * login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * `submit_logout`
+     * : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
      * @var array
      * 
@@ -63,6 +63,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_common = array(
+        'request'       => null,
         'source'        => 'post',
         'source_handle' => 'handle',
         'source_passwd' => 'passwd',
@@ -70,6 +71,15 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'submit_login'  => null,
         'submit_logout' => null,
     );
+    
+    /**
+     * 
+     * Details on the current request.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
     
     /**
      * 
@@ -138,6 +148,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_common['submit_login']  = $this->locale('SUBMIT_LOGIN');
         $this->_common['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
         parent::__construct($config);
+        $this->_request = Solar::factory('Solar_Request');
     }
     
     /**
@@ -200,7 +211,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isLoginRequest()
     {
         $method = strtolower($this->_common['source']);
-        $submit = Solar::$method($this->_common['source_submit']);
+        $submit = $this->_request->$method($this->_common['source_submit']);
         return $submit == $this->_common['submit_login'];
     }
     
@@ -215,7 +226,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isLogoutRequest()
     {
         $method = strtolower($this->_common['source']);
-        $submit = Solar::$method($this->_common['source_submit']);
+        $submit = $this->_request->$method($this->_common['source_submit']);
         return $submit == $this->_common['submit_logout'];
     }
     
@@ -228,15 +239,19 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isLoginValid()
     {
+        // clear out current error and user data.
         $this->_err = null;
-        $method = strtolower($this->_common['source']);
-        $submit = Solar::$method($this->_common['source_submit']);
         $this->reset();
-        $this->_handle = Solar::$method($this->_common['source_handle']);
-        $this->_passwd = Solar::$method($this->_common['source_passwd']);
+        
+        // load the handle and password from the request source
+        $method = strtolower($this->_common['source']);
+        $this->_handle = $this->_request->$method($this->_common['source_handle']);
+        $this->_passwd = $this->_request->$method($this->_common['source_passwd']);
+        
+        // verify the credentials, which may set some user data.
         $result = (bool) $this->_verify();
         if ($result !== true) {
-            // not verified, clear out all user data
+            // not verified, clear out all user data.
             $this->reset();
         }
         return $result;

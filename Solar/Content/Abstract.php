@@ -30,14 +30,14 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * 
      * User-defined configuaration values.
      * 
-     * `content`:
-     * (dependency) A Solar_Content dependency object.
+     * `content`
+     * : (dependency) A Solar_Content dependency object.
      * 
-     * `area_id`:
-     * (int) Only work with this area_id (if any).
+     * `area_id`
+     * : (int) Only work with this area_id (if any).
      * 
-     * `paging`:
-     * (int) The number of rows per page when fetching pages.
+     * `paging`
+     * : (int) The number of rows per page when fetching pages.
      * 
      * @var array
      * 
@@ -188,188 +188,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Fetch a list of nodes of the node type.
-     * 
-     * @param string|array $tags Fetch nodes with all these tags; if
-     * empty, ignores tags.
-     * 
-     * @param string|array $where A set of multiWhere() conditions to
-     * determine which nodes are fetched.
-     * 
-     * @param string|array $order Order the returned rows in this
-     * fashion.
-     * 
-     * @param int $page Which page-number of results to fetch.
-     * 
-     * @return Solar_Sql_Rowset
-     * 
-     */
-    public function fetchAll($tags = null, $where = null, $order = null,
-        $page = null)
-    {
-        // set the default order if needed
-        if (! $order) {
-            $order = $this->_order;
-        }
-        
-        if (! empty($tags)) {
-            // force the tags to an array (for the IN(...) clause)
-            $tags = $this->_content->tags->asArray($tags);
-        }
-        
-        // getting just tags, or just part-counts, is fine as a normal select.
-        // but getting tagged part-counts requires a sub-select.
-        if ($tags && $this->_parts) {
-            
-            // create the tags inner select
-            $subselect = Solar::factory('Solar_Sql_Select');
-            
-            $subselect->from($this->_content->nodes, '*')
-                      ->multiWhere($this->_where())
-                      ->multiWhere($where);
-                      
-            // join for area name
-            $subselect->join(
-                $this->_content->areas,
-                'nodes.area_id = areas.id',
-                'name AS area_name'
-            );
-            
-            $this->_selectTags($subselect, $tags);
-            
-            // wrap in a part-count outer select
-            $select = Solar::factory('Solar_Sql_Select');
-            $select->fromSelect($subselect, 'nodes');
-            $this->_selectPartCounts($select, $this->_parts);
-            
-        } else {
-            
-            $select = Solar::factory('Solar_Sql_Select');
-            
-            $select->from($this->_content->nodes, '*')
-                   ->multiWhere($this->_where())
-                   ->multiWhere($where);
-            
-            // join for area name
-            $select->join(
-                $this->_content->areas,
-                'nodes.area_id = areas.id',
-                'name AS area_name'
-            );
-            
-            if ($tags) {
-                $this->_selectTags($select, $tags);
-            } elseif ($this->_parts) {
-                $this->_selectPartCounts($select, $this->_parts);
-            }
-            
-        }
-        
-        $select->setPaging($this->_paging);
-        $select->order($order);
-        $select->limitPage($page);
-        
-        $all = $select->fetch('all');
-        $all->setSave($this);
-        return $all;
-    }
-    
-    /**
-     * 
-     * Given an existing select object, add part-count selection to it.
-     * 
-     * Note that this acts on the object reference directly.
-     * 
-     * @param Solar_Sql_Select $select The select object.
-     * 
-     * @param array $parts The parts to get counts for.
-     * 
-     * @return void
-     * 
-     */
-    protected function _selectPartCounts($select, $parts)
-    {
-        // join each table and get a count
-        foreach ($parts as $part) {
-            // we left-join so that an absences of a part-type does
-            // not return 0 rows for the main type
-            // 
-            // LEFT JOIN nodes AS comment_parts ON comment_parts.parent_id = nodes.id
-            $join = $part . '_parts';
-            $type = $select->quote($part);
-            $count = $part . '_count';
-            $select->leftJoin(
-                // this table
-                "nodes AS $join",
-                // on these conditions
-                "$join.parent_id = nodes.id AND $join.type = $type",
-                // with these columns
-                "COUNT($join.id) AS $count"
-            );
-        }
-        $select->group('nodes.id');
-    }
-    
-    /**
-     * 
-     * Given an existing select object, add tag-based selection to it.
-     * 
-     * Note that this acts on the object reference directly.
-     * 
-     * @param Solar_Sql_Select $select The select object.
-     * 
-     * @param array $tags Select nodes with these tags.
-     * 
-     * @return void
-     * 
-     */
-    protected function _selectTags($select, $tags)
-    {
-        $select->join($this->_content->tags, 'tags.node_id = nodes.id')
-               ->where('tags.name IN (?)', $tags)
-               ->having("COUNT(nodes.id) = ?", count($tags))
-               ->group("nodes.id");
-    }
-    
-    /**
-     * 
-     * Fetch a total count and pages of nodes in the content store.
-     * 
-     * @param string|array $tags Count nodes with all these
-     * tags; if empty, counts for all tags.
-     * 
-     * @param string|array $where A set of multiWhere() conditions to
-     * determine which nodes are fetched.
-     * 
-     * @return array A array with keys 'count' (total number of 
-     * bookmarks) and 'pages' (number of pages).
-     * 
-     */
-    public function countPages($tags = null, $where = null)
-    {
-        $select = Solar::factory('Solar_Sql_Select');
-        $select->from($this->_content->nodes, 'id');
-        $select->multiWhere($this->_where());
-        $select->multiWhere($where);
-        
-        // using tags?
-        $tags = $this->_content->tags->asArray($tags);
-        if ($tags) {
-            // add tags to the query
-            $this->_selectTags($select, $tags);
-            // wrap as a sub-select
-            $wrap = Solar::factory('Solar_Sql_Select');
-            $wrap->fromSelect($select, 'nodes');
-            $wrap->setPaging($this->_paging);
-            return $wrap->countPages('nodes.id');
-        } else {
-            // no need for subselect
-            return $select->countPages('nodes.id');
-        }
-    }
-    
-    /**
-     * 
      * Fetch one node by ID.
      * 
      * @param int $id The node ID.
@@ -406,11 +224,6 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             'name AS area_name'
         );
         
-        // get part counts?
-        if ($this->_parts) {
-            $this->_selectPartCounts($select, $this->_parts);
-        }
-        
         // add master and user conditions
         $select->multiWhere($this->_where());
         $select->multiWhere($where);
@@ -423,8 +236,22 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         // get the row
         $row = $select->fetch('row');
         $row->setSave($this);
+        
+        // fetch and append the part counts.
+        // check that the row ID exists so that we don't get SQL
+        // errors looking for empty/nonexistent nodes.
+        if ($this->_parts && $row->id) {
+            $part_count = $this->_fetchPartCounts($row->id);
+            foreach ($part_count as $val) {
+                $col = $val['type'] . '_count';
+                $row->$col = $val['part_count'];
+            }
+        }
+        
+        // done!
         return $row;
     }
+    
     
     /**
      * 
@@ -532,6 +359,116 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
+     * Fetch a list of nodes of the node type.
+     * 
+     * @param string|array $tags Fetch nodes with all these tags; if
+     * empty, ignores tags.
+     * 
+     * @param string|array $where A set of multiWhere() conditions to
+     * determine which nodes are fetched.
+     * 
+     * @param string|array $order Order the returned rows in this
+     * fashion.
+     * 
+     * @param int $page Which page-number of results to fetch.
+     * 
+     * @return Solar_Sql_Rowset
+     * 
+     */
+    public function fetchAll($tags = null, $where = null, $order = null,
+        $page = null)
+    {
+        // set the default order if needed
+        if (! $order) {
+            $order = $this->_order;
+        }
+        
+        // basic selection
+        $select = Solar::factory('Solar_Sql_Select');
+        $select->from($this->_content->nodes, '*')
+               ->multiWhere($this->_where())
+               ->multiWhere($where);
+        
+        // join for area name
+        $select->join(
+            $this->_content->areas,
+            'nodes.area_id = areas.id',
+            'name AS area_name'
+        );
+        
+        // add tags?
+        if (! empty($tags)) {
+            // force the tags to an array (for the IN(...) clause)
+            $tags = $this->_content->tags->asArray($tags);
+            $this->_selectTags($select, $tags);
+        }
+        
+        // complete the select
+        $select->setPaging($this->_paging);
+        $select->order($order);
+        $select->limitPage($page);
+        
+        // fetch data as assoc array keyed on node ID
+        $data = $select->fetch('assoc');
+        
+        // part counts? also check to make sure $data is not empty,
+        // thus avoiding SQL errors when finding parts for an empty
+        // rowset.
+        if ($this->_parts && $data) {
+            // fetch and retain part counts
+            $part_count = $this->_fetchPartCounts(array_keys($data));
+            foreach ($part_count as $val) {
+                $id  = $val['id'];
+                $col = $val['type'] . '_count';
+                $data[$id][$col] = $val['part_count'];
+            }
+        }
+        
+        // convert to a Solar_Sql_Rowset and return
+        $rowset = Solar::factory('Solar_Sql_Rowset', array('data' => $data));
+        $rowset->setSave($this);
+        return $rowset;
+    }
+    
+    /**
+     * 
+     * Fetch a total count and pages of nodes in the content store.
+     * 
+     * @param string|array $tags Count nodes with all these
+     * tags; if empty, counts for all tags.
+     * 
+     * @param string|array $where A set of multiWhere() conditions to
+     * determine which nodes are fetched.
+     * 
+     * @return array A array with keys 'count' (total number of 
+     * bookmarks) and 'pages' (number of pages).
+     * 
+     */
+    public function countPages($tags = null, $where = null)
+    {
+        $select = Solar::factory('Solar_Sql_Select');
+        $select->from($this->_content->nodes, 'id');
+        $select->multiWhere($this->_where());
+        $select->multiWhere($where);
+        
+        // using tags?
+        $tags = $this->_content->tags->asArray($tags);
+        if ($tags) {
+            // add tags to the query
+            $this->_selectTags($select, $tags);
+            // wrap as a sub-select
+            $wrap = Solar::factory('Solar_Sql_Select');
+            $wrap->fromSelect($select, 'nodes');
+            $wrap->setPaging($this->_paging);
+            return $wrap->countPages('nodes.id');
+        } else {
+            // no need for subselect
+            return $select->countPages('nodes.id');
+        }
+    }
+    
+    /**
+     * 
      * Inserts or updates a node.
      * 
      * @param array $data The node data.
@@ -563,7 +500,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $data['type'] = $this->_type;
         
         // force the IP address
-        $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
+        $request = Solar::factory('Solar_Request');
+        $data['editor_ipaddr'] = $request->server('REMOTE_ADDR');
         
         // force the created timestamp
         $data['created'] = date('Y-m-d\TH:i:s');
@@ -598,7 +536,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $data['type'] = $this->_type;
         
         // force the IP address
-        $data['editor_ipaddr'] = Solar::server('REMOTE_ADDR');
+        $request = Solar::factory('Solar_Request');
+        $data['editor_ipaddr'] = $request->server('REMOTE_ADDR');
         
         // force the updated timestamp
         $data['updated'] = date('Y-m-d\TH:i:s');
@@ -721,6 +660,80 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         
         // done
         return $where;
+    }
+    
+    /**
+     * 
+     * Given an existing select object, add tag-based selection to it.
+     * 
+     * Note that this acts on the object reference directly.
+     * 
+     * @param Solar_Sql_Select $select The select object.
+     * 
+     * @param array $tags Select nodes with these tags.
+     * 
+     * @return void
+     * 
+     */
+    protected function _selectTags($select, $tags)
+    {
+        $select->join($this->_content->tags, 'tags.node_id = nodes.id')
+               ->where('tags.name IN (?)', $tags)
+               ->having("COUNT(nodes.id) = ?", count($tags))
+               ->group("nodes.id");
+    }
+    
+    /**
+     * 
+     * Fetch an array of part-counts for specific node IDs.
+     * 
+     * The returned array is sequential; each element is an array with
+     * keys for the node ID, the part-type being counted, and the count
+     * of nodes with that part type belonging to the parent node.
+     * 
+     * There are either one or two entries for each node: one with a
+     * zero count (to force the existence of each part-type for that
+     * node ID), then a second entry with the actual count (if the node
+     * ID has parts of that type).
+     * 
+     * @param string|array $id_list The IDs to get part counts for.
+     * 
+     * @return array The part-counts as a sequential array.
+     * 
+     * 
+     */
+    protected function _fetchPartCounts($id_list)
+    {
+        // force to array
+        settype($id_list, 'array');
+        
+        // prepend with zero-counts so that all parts are represented
+        $zero = array();
+        foreach ($id_list as $id) {
+            foreach ($this->_parts as $type) {
+                $zero[] = array(
+                    'id' => $id,
+                    'type' => $type,
+                    'part_count' => '0',
+                );
+            }
+        }
+        
+        // get a list of parent_id, part type, and part count
+        $select = Solar::factory('Solar_Sql_Select');
+        $select->from('nodes', array(
+            'parent_id AS id',
+            'type',
+            'COUNT(id) AS part_count'
+        ));
+        $select->where('parent_id IN(?)', $id_list);
+        $select->where('type IN(?)', $this->_parts);
+        $select->group(array('nodes.parent_id', 'nodes.type'));
+        $result = $select->fetch('array');
+        
+        // append the results to the zero base, and we're done
+        $result = array_merge($zero, $result);
+        return $result;
     }
 }
 ?>

@@ -35,11 +35,11 @@ Solar::loadClass('Solar_Auth_Adapter');
  * 
  * Developed for, and then donated by, Mashery.com <http://mashery.com>.
  * 
- * For more info on TypeKey, see:
+ * For more info on TypeKey, see ...
  * 
- * * http://www.sixapart.com/typekey/api
+ * * <http://www.sixapart.com/typekey/api>
  * 
- * * http://www.sixapart.com/movabletype/docs/tk-apps
+ * * <http://www.sixapart.com/movabletype/docs/tk-apps>
  * 
  * @category Solar
  *
@@ -58,21 +58,21 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Keys are ...
      * 
-     * `token`:
-     * (string) The TypeKey "site token" id against which
+     * `token`
+     * : (string) The TypeKey "site token" id against which
      * authentication requests will be made.
      * 
-     * `window`:
-     * (int) The signature should have been generated
+     * `window`
+     * : (int) The signature should have been generated
      * within this many seconds of "now". Default is 10 seconds, to
      * allow for long network latency periods.
      * 
-     * `cache`:
-     * (dependency) A Solar_Cache dependency for storing 
+     * `cache`
+     * : (dependency) A Solar_Cache dependency for storing 
      * the TypeKey public key data.
      * 
-     * `cache_key`:
-     * (string) When using a cache, the entry key for
+     * `cache_key`
+     * : (string) When using a cache, the entry key for
      * the TypeKey public key data.  Default 'typekey_pubkey'.
      * 
      */
@@ -109,7 +109,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     
     /**
      * 
-     * DSA signature extracted from login attempt $_GET vars.
+     * DSA signature extracted from login attempt GET request vars.
      * 
      * @var string
      * 
@@ -172,26 +172,24 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * Is the current page-load a login request?
      * 
-     * We can tell because there will be certain GET params in place:
+     * We can tell because there will be certain GET params in place ...
      * 
-     * <code>
-     * &ts=1149633028
-     * &email=clay%40mashery.com
-     * &name=mashery
-     * &nick=Solar
-     * &sig=PBG7mN48V9f83hOX5Ao+X9GbmUU=:maoKWgIZpcF1qVFUHf8GbFooAFc=
-     * }}
+     *     &ts=1149633028
+     *     &email=user%40example.com
+     *     &name=handle
+     *     &nick=Moni%20Kerr
+     *     &sig=PBG7mN48V9f83hOX5Ao+X9GbmUU=:maoKWgIZpcF1qVFUHf8GbFooAFc=
      * 
      * @return bool
      * 
      */
     public function isLoginRequest()
     {
-        return ! empty($_GET['email']) &&
-               ! empty($_GET['name']) &&
-               ! empty($_GET['nick']) &&
-               ! empty($_GET['ts']) &&
-               ! empty($_GET['sig']);
+        return ! empty($this->_request->get['email']) &&
+               ! empty($this->_request->get['name']) &&
+               ! empty($this->_request->get['nick']) &&
+               ! empty($this->_request->get['ts']) &&
+               ! empty($this->_request->get['sig']);
     }
     
     /**
@@ -255,17 +253,19 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         // no errors yet ;-)
         $this->_err = null;
         
-        // get data from the login.
-        $email = $_GET['email'];
-        $name  = $_GET['name'];
-        $nick  = $_GET['nick'];
-        $ts    = $_GET['ts'];
+        // get data from the request.
+        $email = $this->_request->get('email');
+        $name  = $this->_request->get('name');
+        $nick  = $this->_request->get('nick');
+        $ts    = $this->_request->get('ts');
         
         // get the signature values from the login. note that the sig
         // values need to have pluses converted to spaces because
         // urldecode() doesn't do that for us. thus, we have to re-
         // encode, the raw-decode it.
-        $this->_sig = rawurldecode(urlencode($_GET['sig']));
+        $this->_sig = rawurldecode(
+            urlencode($this->_request->get('sig'))
+        );
         
         // re-create the message for signature comparison.
         // <email>::<name>::<nick>::<ts>

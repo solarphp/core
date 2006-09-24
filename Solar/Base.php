@@ -20,7 +20,7 @@
  * Abstract base class for all Solar objects.
  * 
  * This is the class from which almost all other Solar classes are
- * extended.  Solar_Base is relatively light, and provides:
+ * extended.  Solar_Base is relatively light, and provides ...
  * 
  * * Construction-time reading of [Main:ConfigFile config file] options 
  *   for itself, and merging of those options with any options passed   

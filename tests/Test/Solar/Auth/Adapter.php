@@ -16,9 +16,15 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     protected $_uri = null;
     
+    protected $_request;
+    
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        // convert from Test_Solar_Auth_Adapter_Whatever
+        // to Solar_Auth_Adapter_Whatever
+        $this->_class = substr(get_class($this), 5);
     }
     
     public function __destruct()
@@ -28,10 +34,14 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     public function setup()
     {
-        // convert from Test_Solar_Adapter_Whatever
-        // to Solar_Adapter_Whatever
-        $this->_class = substr(get_class($this), 5);
+        // get a new adapter
         $this->_auth = Solar::factory($this->_class, $this->_config);
+        
+        // get the request environment ...
+        $this->_request = Solar::factory('Solar_Request');
+        
+        // and reload it fresh for this test.
+        $this->_request->load(true);
     }
     
     public function teardown()
@@ -70,14 +80,8 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     public function testIsLoginRequest_true()
     {
         // fake the POST parameters
-        $prior_post = $_POST;
-        $_POST['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
-        
-        // assert
+        $this->_request->post['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
         $this->assertTrue($this->_auth->isLoginRequest());
-        
-        // restore POST params
-        $_POST = $prior_post;
     }
     
     public function testIsLoginRequest_false()
@@ -88,14 +92,8 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     public function testIsLogoutRequest_true()
     {
         // fake the POST parameters
-        $prior_post = $_POST;
-        $_POST['submit'] = $this->_auth->locale('SUBMIT_LOGOUT');
-        
-        // assert
+        $this->_request->post['submit'] = $this->_auth->locale('SUBMIT_LOGOUT');
         $this->assertTrue($this->_auth->isLogoutRequest());
-        
-        // restore POST params
-        $_POST = $prior_post;
     }
     
     public function testIsLogoutRequest_false()
@@ -108,7 +106,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
-        $this->_restorePost();
     }
     
     public function testIsLoginValid_badPasswd()
@@ -116,7 +113,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_badPasswd();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
-        $this->_restorePost();
     }
     
     public function testIsLoginValid_noSuchUser()
@@ -124,7 +120,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_noSuchUser();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->isLoginValid());
-        $this->_restorePost();
     }
     
     public function testReset()
@@ -143,7 +138,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getHandle(), $this->_handle);
-        $this->_restorePost();
     }
     
     public function testGetEmail()
@@ -152,7 +146,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getEmail(), $this->_email);
-        $this->_restorePost();
     }
     
     public function testGetMoniker()
@@ -161,7 +154,6 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
-        $this->_restorePost();
     }
     
     public function testGetUri()
@@ -170,36 +162,27 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->isLoginValid());
         $this->assertSame($this->_auth->getUri(), $this->_uri);
-        $this->_restorePost();
     }
     
     protected function _fakePostLogin_valid()
     {
-        $this->_post = $_POST;
-        $_POST['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
-        $_POST['handle'] = 'pmjones';
-        $_POST['passwd'] = 'jones';
+        $this->_request->post['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
+        $this->_request->post['handle'] = 'pmjones';
+        $this->_request->post['passwd'] = 'jones';
     }
     
     protected function _fakePostLogin_badPasswd()
     {
-        $this->_post = $_POST;
-        $_POST['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
-        $_POST['handle'] = 'pmjones';
-        $_POST['passwd'] = 'badpass';
+        $this->_request->post['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
+        $this->_request->post['handle'] = 'pmjones';
+        $this->_request->post['passwd'] = 'badpass';
     }
     
     protected function _fakePostLogin_noSuchUser()
     {
-        $this->_post = $_POST;
-        $_POST['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
-        $_POST['handle'] = 'nouser';
-        $_POST['passwd'] = 'badpass';
-    }
-    
-    protected function _restorePost()
-    {
-        $_POST = $this->_post;
+        $this->_request->post['submit'] = $this->_auth->locale('SUBMIT_LOGIN');
+        $this->_request->post['handle'] = 'nouser';
+        $this->_request->post['passwd'] = 'badpass';
     }
 }
 ?>

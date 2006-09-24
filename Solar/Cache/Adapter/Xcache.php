@@ -44,19 +44,19 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      *
      * Keys are ...
      *
-     * `life`:
-     * _(int)_ The cache entry lifetime in seconds, default `0`
+     * `life`
+     * : (int) The cache entry lifetime in seconds, default `0`
      * (never expires).
      *
-     * `user`:
-     * _(string)_ Admin user name for Xcache, as set in php.ini. This login
-     * and the corresponding password are required _only_ for the deleteAll()
-     * method. Defaults to `null`.
+     * `user`
+     * : (string) Admin user name for Xcache, as set in php.ini. This login
+     *   and the corresponding password are required _only_ for the deleteAll()
+     *   method. Defaults to `null`.
      *
-     * `pass`:
-     * _(string)_ Plaintext password that matches the md5() encrypted password
-     * in php.ini. This password and the corresponding login are required
-     * _only_ for the deleteAll() method. Defaults to `null`.
+     * `pass`
+     * : (string) Plaintext password that matches the md5() encrypted password
+     *   in php.ini. This password and the corresponding login are required
+     *   _only_ for the deleteAll() method. Defaults to `null`.
      *
      * @var array
      *
@@ -148,6 +148,9 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
         $olduser = null;
         $oldpass = null;
         
+        // we need to work with actual PHP superglobal $_SERVER here,
+        // instead of a Solar_Request::$server value, because the APC
+        // extension doesn't know about Solar_Request.
         if (isset($_SERVER['PHP_AUTH_USER'])) {
             $olduser = $_SERVER['PHP_AUTH_USER'];
         }
@@ -163,7 +166,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
         // clear user cache
         $vcnt = xcache_count(XC_TYPE_VAR);
         for ($i = 0; $i < $vcnt; $i++) {
-            if (!xcache_clear_cache(XC_TYPE_VAR, $i)) {
+            if (! xcache_clear_cache(XC_TYPE_VAR, $i)) {
                 return false;
             }
         }

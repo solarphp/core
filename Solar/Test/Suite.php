@@ -24,15 +24,15 @@ Solar::loadClass('Solar_Test');
  * 
  * Class for running suites of unit tests.
  * 
- * Expects a directory structure like this:
+ * Expects a directory structure like this ...
  * 
- * Test/
- *   Solar.php      -- Test_Solar
- *   Solar/         
- *     Base.php     -- Test_Solar_Base
- *     Uri.php      -- Test_Solar_Uri
- *     Uri/     
- *       Action.php -- Test_Solar_Uri_Action
+ *     Test/
+ *       Solar.php      -- Test_Solar
+ *       Solar/         
+ *         Base.php     -- Test_Solar_Base
+ *         Uri.php      -- Test_Solar_Uri
+ *         Uri/     
+ *           Action.php -- Test_Solar_Uri_Action
  * 
  * @category Solar
  * 
@@ -47,15 +47,15 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `dir`:
-     * (string) The directory where tests are located.
+     * `dir`
+     * : (string) The directory where tests are located.
      * 
-     * `log`:
-     * (dependency) A Solar_Log dependency for logging test
+     * `log`
+     * : (dependency) A Solar_Log dependency for logging test
      * results.
      * 
-     * `error_reporting`:
-     * (int) The level of error reporting we 
+     * `error_reporting`
+     * : (int) The level of error reporting we 
      * want to catch; default is E_ALL|E_STRICT.
      * 
      * @var array
@@ -144,9 +144,10 @@ class Solar_Test_Suite extends Solar_Base {
             // create a new log object
             $log_config = array(
                 'adapter' => 'Solar_Log_Adapter_Echo',
-                'format' => '%m',
-                'events' => 'test',
-                'output' => 'text',
+                'config'  => array(
+                    'format' => '%m',
+                    'events' => 'test',
+                ),
             );
             $this->_log = Solar::factory('Solar_Log', $log_config);
         }
@@ -247,28 +248,28 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Runs the test suite (or the sub-test series) and logs as it goes.
      * 
-     * Returns an array of statistics with these keys:
+     * Returns an array of statistics with these keys ...
      * 
-     * `plan`:
-     * (int) The planned number of tests.
+     * `plan`
+     * : (int) The planned number of tests.
      * 
-     * `done`:
-     * (int) The number of tests actually done.
+     * `done`
+     * : (int) The number of tests actually done.
      * 
-     * `time`:
-     * (int) The time, in seconds, it took to run all tests.
+     * `time`
+     * : (int) The time, in seconds, it took to run all tests.
      * 
-     * `pass`:
-     * (array) Log of tests that passed.
+     * `pass`
+     * : (array) Log of tests that passed.
      * 
-     * `skip`:
-     * (array) Log of tests that were skipped.
+     * `skip`
+     * : (array) Log of tests that were skipped.
      * 
-     * `todo`:
-     * (array) Log of tests that are incomplete.
+     * `todo`
+     * : (array) Log of tests that are incomplete.
      * 
-     * `fail`:
-     * (array) Log of tests that failed.
+     * `fail`
+     * : (array) Log of tests that failed.
      * 
      * @param string $series The sub-test series to run, typically a
      * class name (not including the 'Test_' prefix).

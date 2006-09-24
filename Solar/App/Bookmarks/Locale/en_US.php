@@ -61,6 +61,8 @@ return array(
     'ORDER_TAGS'            => 'Tags',
     'ORDER_TAGS_DESC'       => 'Tags (desc)',
                             
+    'SUCCESS_ADDED'         => 'Added new bookmark.',
+    
     'BACKLINK'              => 'Back',
     'CONFIRM_DELETE'        => 'Are you sure you want to delete this bookmark?',
     'DRAG_THIS'             => 'Drag this link to your toolbar for quick bookmarking',

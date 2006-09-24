@@ -32,12 +32,12 @@ class Solar_Sql extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `adapter`:
-     * (string) The adapter class to use, e.g. 'Solar_Sql_Adapter_Mysql'.
+     * `adapter`
+     * : (string) The adapter class to use, e.g. 'Solar_Sql_Adapter_Mysql'.
      * 
-     * `config`:
-     * (array) Construction-time config keys to pass to the adapter
-     * to override Solar.config.php values.  Default is null.
+     * `config`
+     * : (array) Construction-time config keys to pass to the adapter
+     *   to override Solar.config.php values.  Default is null.
      * 
      * @var array
      * 
@@ -322,7 +322,7 @@ class Solar_Sql extends Solar_Base {
         case 'assoc':
             $data = array();
             while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $key = array_shift($row);
+                $key = current($row); // value of the first element
                 $data[$key] = $row;
             }
             break;
@@ -456,7 +456,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Creates a portable table.
      * 
-     * The $cols parameter should be in this format:
+     * The $cols parameter should be in this format ...
      * 
      * {{code: php
      *     $cols = array(
@@ -562,7 +562,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Adds a portable column to a table in the database.
      * 
-     * The $info parameter should be in this format:
+     * The $info parameter should be in this format ...
      * 
      * {{code: php
      *     $info = array(
@@ -609,7 +609,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Creates a portable index on a table.
      * 
-     * The $info parameter should be in this format:
+     * The $info parameter should be in this format ...
      * 
      * {{code: php
      *     $type = 'normal';
@@ -752,7 +752,7 @@ class Solar_Sql extends Solar_Base {
      * Quotes a value and places into a piece of text at a placeholder.
      * 
      * The placeholder is a question-mark; all placeholders will be replaced
-     * with the quoted value.   For example:
+     * with the quoted value.   For example ...
      * 
      * {{code: php
      *     $sql = Solar::factory('Solar_Sql');
@@ -783,7 +783,7 @@ class Solar_Sql extends Solar_Base {
      * Quote multiple text-and-value pieces.
      * 
      * The placeholder is a question-mark; all placeholders will be replaced
-     * with the quoted value.   For example:
+     * with the quoted value.   For example ...
      * 
      * {{code: php
      *     $sql = Solar::factory('Solar_Sql');
@@ -842,7 +842,7 @@ class Solar_Sql extends Solar_Base {
      * 
      * Builds a column definition string.
      * 
-     * The $info parameter should be in this format:
+     * The $info parameter should be in this format ...
      * 
      * $info = array(
      *   'type'    => bool|char|int|etc,

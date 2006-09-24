@@ -23,7 +23,7 @@
  * [[php::var_dump() | ]] and output it to the screen either as
  * plaintext or in HTML format.
  * 
- * For example:
+ * For example ...
  * 
  * {{code: php
  *     require_once 'Solar.php';
@@ -58,9 +58,9 @@ class Solar_Debug_Var extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `output`:
-     * (string) Output mode.  Set to 'html' for HTML; 
-     * or 'text' for plain text.  Default autodetects by SAPI version.
+     * `output`
+     * : (string) Output mode.  Set to 'html' for HTML; 
+     *   or 'text' for plain text.  Default autodetects by SAPI version.
      * 
      * @var array
      * 

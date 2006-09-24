@@ -34,9 +34,9 @@ class Solar_Content extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `sql`:
-     * (dependency) A Solar_Sql dependency injection, passed
-     * into the table objects at creation time.
+     * `sql`
+     * : (dependency) A Solar_Sql dependency injection, passed
+     *   into the table objects at creation time.
      * 
      * @param array
      * 

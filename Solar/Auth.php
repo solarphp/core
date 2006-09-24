@@ -51,8 +51,8 @@ class Solar_Auth extends Solar_Base {
      * : (bool) Whether or not to allow login/logout attempts.
      * 
      * `source`
-     * : (string) The source for auth credentials, 'get'
-     *   (for [[Solar::get()]] method) or 'post' (for [[Solar::post()]] method).
+     * : (string) The source for auth credentials, 'get' (via the
+     *   for GET request vars) or 'post' (via the POST request vars).
      *   Default is 'post'.
      * 
      * `source_handle`
@@ -103,12 +103,12 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Flash-messaging object.
+     * Class-specific session object.
      * 
-     * @var Solar_Flash
+     * @var Solar_Session
      * 
      */
-    protected $_flash;
+    protected $_session;
     
     /**
      * 
@@ -130,10 +130,10 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['active'].
+     * The Unix time at which the authenticated handle was last
+     * valid.
      * 
-     * This is the Unix time at which the authenticated handle was last
-     * valid().
+     * Convenience reference to $this->_session->store['active'].
      * 
      * @var int
      * 
@@ -144,10 +144,10 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['initial'].
-     * 
-     * This is the Unix time at which the handle was initially
+     * The Unix time at which the handle was initially
      * authenticated.
+     * 
+     * Convenience reference to $this->_session->store['initial'].
      * 
      * @var int
      * 
@@ -156,9 +156,7 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['status'].
-     * 
-     * This is the status code of the current user authentication; the string
+     * The status code of the current user authentication. The string
      * codes are ...
      * 
      * `ANON`
@@ -177,6 +175,8 @@ class Solar_Auth extends Solar_Base {
      * `WRONG`
      * : The user attempted authentication but failed
      * 
+     * Convenience reference to $this->_session->store['status'].
+     * 
      * @var string
      * 
      */
@@ -184,9 +184,9 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['handle'].
+     * The currently authenticated user handle.
      * 
-     * This is the currently authenticated user handle.
+     * Convenience reference to $this->_session->store['handle'].
      * 
      * @var string
      * 
@@ -195,10 +195,10 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['email'].
-     * 
-     * This is the email address of the currently authenticated user. 
+     * The email address of the currently authenticated user. 
       * May or may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['email'].
      * 
      * @var string
      * 
@@ -207,10 +207,10 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['moniker'].
-     * 
-     * This is the "display name" or "full name" of the currently
+     * The "display name" or "full name" of the currently
      * authenticated user.  May or may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['moniker'].
      * 
      * @var string
      * 
@@ -219,10 +219,10 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
-     * Convenience reference to $_SESSION['Solar_Auth']['uri'].
-     * 
-     * This is the URI for the currently authenticated user.  May or
+     * The URI for the currently authenticated user.  May or
      * may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['uri'].
      * 
      * @var string
      * 
@@ -262,12 +262,6 @@ class Solar_Auth extends Solar_Base {
             'submit_logout' => $this->_config['submit_logout'],
         );
         $this->_adapter->setCommon($common);
-        
-        // create the flash object
-        $this->_flash = Solar::factory(
-            'Solar_Flash',
-            array('class' => get_class($this))
-        );
     }
     
     /**
@@ -279,16 +273,16 @@ class Solar_Auth extends Solar_Base {
      */
     public function start()
     {
-        // start the session if one hasn't been started already
-        if (session_id() === '') {
-            session_start();
-        }
+        // create the session-access object.
+        // starts the session if it has not been started already.
+        $this->_session = Solar::factory(
+            'Solar_Session',
+            array('class' => get_class($this))
+        );
         
-        // initialize the session array if it does not exist
-        if (! isset($_SESSION['Solar_Auth']) ||
-            ! is_array($_SESSION['Solar_Auth'])) {
-            
-            $_SESSION['Solar_Auth'] = array(
+        // initialize the session array as needed
+        if (empty($this->_session->store)) {
+            $this->_session->store = array(
                 'status'  => 'ANON',
                 'initial' => null,
                 'active'  => null,
@@ -299,14 +293,14 @@ class Solar_Auth extends Solar_Base {
             );
         }
         
-        // add convenience references to the session array keys
-        $this->status  =& $_SESSION['Solar_Auth']['status'];
-        $this->initial =& $_SESSION['Solar_Auth']['initial'];
-        $this->active  =& $_SESSION['Solar_Auth']['active'];
-        $this->handle  =& $_SESSION['Solar_Auth']['handle'];
-        $this->email   =& $_SESSION['Solar_Auth']['email'];
-        $this->moniker =& $_SESSION['Solar_Auth']['moniker'];
-        $this->uri     =& $_SESSION['Solar_Auth']['uri'];
+        // add convenience references to the session store keys
+        $this->status  =& $this->_session->store['status'];
+        $this->initial =& $this->_session->store['initial'];
+        $this->active  =& $this->_session->store['active'];
+        $this->handle  =& $this->_session->store['handle'];
+        $this->email   =& $this->_session->store['email'];
+        $this->moniker =& $this->_session->store['moniker'];
+        $this->uri     =& $this->_session->store['uri'];
         
         // update idle and expire times no matter what
         $this->updateIdleExpire();
@@ -438,11 +432,11 @@ class Solar_Auth extends Solar_Base {
             $this->_adapter->reset();
         }
         
-        // reset the session id and delete previous session
-        session_regenerate_id(true);
+        // reset the session id and delete previous session file
+        $this->_session->regenerateId();
         
         // flash forward any messages
-        $this->_flash->set('status_text', $this->locale($this->status));
+        $this->_session->setFlash('status_text', $this->locale($this->status));
     }
     
     /**
@@ -459,7 +453,7 @@ class Solar_Auth extends Solar_Base {
      */
     public function getFlash($key, $val = null)
     {
-        return $this->_flash->get($key, $val);
+        return $this->_session->getFlash($key, $val);
     }
 }
 ?>

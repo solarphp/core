@@ -8,16 +8,17 @@ elements should be presented; you then pass the object instance into
 your view, which can take those "hints" any way it likes. These "hints"
 are called the [[FormDescriptor]] array.
 
-In addition, the class will draw in data from an array (typically
-$_POST), validate the newly-populated structure against filters and
+In addition, the class will draw in data from an array (typically POST
+variables), validate the newly-populated structure against filters and
 rules that you sets up, and set feedback messages based on which
 elements were valid and which were not. In many ways, Solar_Form is a
 cousin to [HTML_QuickForm](http://pear.php.net/HTML_QuickForm), but with
 all rendering removed.
 
-You can see a full example on [[GettingStarted]], but here's a short one to
-whet your curiosity. Note that we use a small bit of localization
-(although a real form would have [[LocalizedForms | everything localized]]).
+You can see a full example on [[GettingStarted]], but here's a short one
+to whet your curiosity. Note that we use a small bit of localization
+(although a real form would have [[LocalizedForms | everything
+localized]]).
 
 {{code: php
     require_once 'Solar.php';
@@ -60,8 +61,11 @@ whet your curiosity. Note that we use a small bit of localization
     // Process submissions
     // 
 
+    // discover the request environment
+    $request = Solar::factory('Solar_Request');
+    
     // get the submission request
-    $submit = Solar::post('submit');
+    $submit = $request->post('submit');
 
     // handle submissions based on the localized button values
     if ($submit == $this->locale('SUBMIT_SAVE')) {

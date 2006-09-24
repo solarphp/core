@@ -37,11 +37,11 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `sql`:
-     * (dependency) A Solar_Sql dependency object.
+     * `sql`
+     * : (dependency) A Solar_Sql dependency object.
      * 
-     * `locale`:
-     * (string) Path to locale files.
+     * `locale`
+     * : (string) Path to locale files.
      * 
      * @var array
      * 
@@ -82,22 +82,22 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * The column specification array for all columns in this table.
      * 
-     * Each element in this array looks like this:
+     * Each element in this array looks like this...
      * 
-     * <code>
-     * $col = array(
-     *     'colName' => array(
-     *         'name'    => (string) the colName, same as the key
-     *         'type'    => (string) char, varchar, date, etc
-     *         'size'    => (int) column size
-     *         'scope'   => (int) decimal places
-     *         'valid'   => (array) Solar_Valid methods and args
-     *         'require' => (bool) is this a required (non-null) column?
-     *         'autoinc' => (bool) auto-increment
-     *         'default' => (string|array) default value
-     *         'primary' => (bool) is this part of the primary key?
-     *      ),
-     * );
+     * {{code: php
+     *     $col = array(
+     *         'colName' => array(
+     *             'name'    => (string) the colName, same as the key
+     *             'type'    => (string) char, varchar, date, etc
+     *             'size'    => (int) column size
+     *             'scope'   => (int) decimal places
+     *             'valid'   => (array) Solar_Valid methods and args
+     *             'require' => (bool) is this a required (non-null) column?
+     *             'autoinc' => (bool) auto-increment
+     *             'default' => (string|array) default value
+     *             'primary' => (bool) is this part of the primary key?
+     *          ),
+     *     );
      * }}
      * 
      * @var array
@@ -107,7 +107,7 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
-     * The index specification array for all indexes on this table:
+     * The index specification array for all indexes on this table.
      * 
      * @var array
      * 

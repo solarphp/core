@@ -32,10 +32,10 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `events`:
-     * (string|array) The event types this instance
-     * should recognize; a comma-separated string of events, or
-     * a sequential array.  Default is all events ('*').
+     * `events`
+     * : (string|array) The event types this instance
+     *   should recognize; a comma-separated string of events, or
+     *   a sequential array.  Default is all events ('*').
      * 
      * @var array
      * 

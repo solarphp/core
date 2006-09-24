@@ -15,5 +15,10 @@ to be **properly escaped**.
 
     <p>this should show up literally</p>
 
+And this should not.
+
+* do we get <span>...</span> escaping in lists?
+* because we should :-(
+
 And that's all folks!
 

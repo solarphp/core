@@ -79,11 +79,29 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin {
         return $text;
     }
     
+    /**
+     * 
+     * Callback to place tokenized ampersands.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     public function _processAmp($matches)
     {
         return $this->_toHtmlToken('&amp;');
     }
     
+    /**
+     * 
+     * Callback to place tokenized less-than symbols.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The replacement text.
+     * 
+     */
     public function _processLt($matches)
     {
         return $this->_toHtmlToken('&lt;');

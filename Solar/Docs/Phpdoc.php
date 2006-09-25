@@ -26,6 +26,7 @@
  * Supported technical tags are ...
  * 
  * For classes ...
+ * 
  *     @category name                # category for the package
  *     @package name                 # class package name
  *     @subpackage name              # class subpackage name

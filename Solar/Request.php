@@ -395,7 +395,14 @@ class Solar_Request extends Solar_Base {
      * Loads properties from the superglobal arrays.
      * 
      * Normalizes HTTP header keys, dispels magic quotes.
-     *
+     * 
+     * Subsequent calls will not reload properties, unless the $reload
+     * property is set to true.
+     * 
+     * @param bool $reload If true, reload all properties from the 
+     * original superglobal arrays, even if properties have already
+     * been loaded.
+     * 
      * @return void
      *
      */

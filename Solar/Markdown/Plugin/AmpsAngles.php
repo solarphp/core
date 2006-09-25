@@ -63,16 +63,30 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin {
     public function parse($text)
     {
         // encode ampersands
-        $text = preg_replace(
+        $text = preg_replace_callback(
             '/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/', 
-            '&amp;',
+            array($this, '_processAmp'),
             $text
         );
 
-        // Encode naked <'s
-        $text = preg_replace('{<(?![a-z/?\$!])}i', '&lt;', $text);
+        // encode naked <'s
+        $text = preg_replace_callback(
+            '{<(?![a-z/?\$!])}i',
+            array($this, '_processLt'),
+            $text
+        );
 
         return $text;
+    }
+    
+    public function _processAmp($matches)
+    {
+        return $this->_toHtmlToken('&amp;');
+    }
+    
+    public function _processLt($matches)
+    {
+        return $this->_toHtmlToken('&lt;');
     }
 }
 ?>

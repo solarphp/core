@@ -117,7 +117,9 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
      */
     protected function _parseStrong($matches)
     {
-        return "<strong>$matches[2]</strong>";
+        return $this->_toHtmlToken("<strong>")
+             . $matches[2]
+             . $this->_toHtmlToken("</strong>");
     }
     
     /**
@@ -131,7 +133,9 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
      */
     protected function _parseEm($matches)
     {
-        return "<em>$matches[2]</em>";
+        return $this->_toHtmlToken("<em>")
+             . $matches[2]
+             . $this->_toHtmlToken("</em>");
     }
 }
 ?>

@@ -40,17 +40,36 @@ class Test_Solar_Markdown_Extra_EmStrong extends Test_Solar_Markdown_Plugin {
         $source[] = "plain *em* plain **strong** plain ***strong-em*** plain";
         $source = implode(" ", $source);
         
+        $expect[] = "{$this->_token}em{$this->_token}";
+        $expect[] = "{$this->_token}strong{$this->_token}";
+        $expect[] = "{$this->_token}{$this->_token}strong-em{$this->_token}{$this->_token}";
+        $expect[] = "plain {$this->_token}em{$this->_token} plain {$this->_token}strong{$this->_token} plain {$this->_token}{$this->_token}strong-em{$this->_token}{$this->_token} plain";
+        $expect = implode(" ", $expect);
+        
+        $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = array();
+        $source[] = "*em*";
+        $source[] = "**strong**";
+        $source[] = "***strong-em***";
+        $source[] = "plain *em* plain **strong** plain ***strong-em*** plain";
+        $source = implode(" ", $source);
+        
         $expect[] = "<em>em</em>";
         $expect[] = "<strong>strong</strong>";
         $expect[] = "<strong><em>strong-em</em></strong>";
         $expect[] = "plain <em>em</em> plain <strong>strong</strong> plain <strong><em>strong-em</em></strong> plain";
         $expect = implode(" ", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_underscores()
+    public function testRender_underscores()
     {
         $source = array();
         $source[] = "_em_";
@@ -65,11 +84,11 @@ class Test_Solar_Markdown_Extra_EmStrong extends Test_Solar_Markdown_Plugin {
         $expect[] = "plain <em>em</em> plain <strong>strong</strong> plain <strong><em>strong-em</em></strong> plain";
         $expect = implode(" ", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_mixed()
+    public function testRender_mixed()
     {
         $source = array();
         $source[] = "_em_";
@@ -84,11 +103,11 @@ class Test_Solar_Markdown_Extra_EmStrong extends Test_Solar_Markdown_Plugin {
         $expect[] = "plain <em>em</em> plain <strong>strong</strong> plain <strong><em>strong-em</em></strong> plain";
         $expect = implode(" ", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
     
-    public function testParse_underscoreWords()
+    public function testRender_underscoreWords()
     {
         $source = array();
         $source[] = "Solar_Test_Example";
@@ -101,7 +120,7 @@ class Test_Solar_Markdown_Extra_EmStrong extends Test_Solar_Markdown_Plugin {
         $expect[] = "_ Solar_Test_Example _";
         $expect = implode(" ", $expect);
         
-        $actual = $this->_plugin->parse($source);
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

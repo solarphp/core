@@ -34,8 +34,16 @@ class Test_Solar_Markdown_Plugin_AmpsAngles extends Test_Solar_Markdown_Plugin {
     public function testParse()
     {
         $source = "foo <bar> & baz < dib zim & gir >";
-        $expect = "foo <bar> &amp; baz &lt; dib zim &amp; gir >";
+        $expect = "foo <bar> {$this->_token} baz {$this->_token} dib zim {$this->_token} gir >";
         $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = "foo <bar> & baz < dib zim & gir >";
+        $expect = "foo <bar> &amp; baz &lt; dib zim &amp; gir >";
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

@@ -57,7 +57,7 @@ class Solar_Markdown_Plugin_Break extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        return preg_replace('/ {2,}\n/', "<br />\n", $text);
+        return preg_replace('/ {2,}\n/', $this->_toHtmlToken("<br />") . "\n", $text);
     }
 }
 ?>

@@ -34,8 +34,16 @@ class Test_Solar_Markdown_Plugin_Break extends Test_Solar_Markdown_Plugin {
     public function testParse()
     {
         $source = "line\nline \nline  \nline   \n";
-        $expect = "line\nline \nline<br />\nline<br />\n";
+        $expect = "line\nline \nline{$this->_token}\nline{$this->_token}\n";
         $actual = $this->_plugin->parse($source);
+        $this->assertRegex($actual, "@$expect@");
+    }
+    
+    public function testRender()
+    {
+        $source = "line\nline \nline  \nline   \n";
+        $expect = "line\nline \nline<br />\nline<br />\n";
+        $actual = $this->_spanTransform($source);
         $this->assertSame($actual, $expect);
     }
 }

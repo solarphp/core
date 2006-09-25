@@ -10,7 +10,7 @@
 </div>
 
 <p>Especially we want for <a href="/wiki/read/Wiki_links">wiki links</a> to work,
-    and for &lt;span&gt;...&lt;/span&gt; to be
+    and for &lt;span&gt;HTML&lt;/span&gt; to be
     <strong>properly escaped</strong>.</p>
 
 <pre><code>&lt;p&gt;this should show up literally&lt;/p&gt;
@@ -19,9 +19,59 @@
 
 <p>And this should not.</p>
 
+<h2>Check &lt;span&gt;HTML&lt;/span&gt; Escaping</h2>
+
+<p>Compressed lists:</p>
+
 <ul>
-<li>do we get &lt;span&gt;...&lt;/span&gt; escaping in lists?</li>
+<li>compressed list</li>
+<li>do we get &lt;span&gt;HTML&lt;/span&gt; escaping in this
+list?</li>
 <li>because we should :-(</li>
 </ul>
 
-<p>And that's all folks!</p>
+<p>Loose lists:</p>
+
+<ul>
+<li>
+<p>loose list</p>
+</li>
+<li>
+<p>do we get &lt;span&gt;HTML&lt;/span&gt; escaping in this
+list?</p>
+</li>
+<li>
+<p>because we should</p>
+</li>
+</ul>
+
+<p>Definition lists:</p>
+
+<dl>
+<dt>term</dt>
+<dd>&lt;span&gt;definition&lt;/span&gt;</dd>
+</dl>
+
+<p>Block quotes:</p>
+
+<blockquote>
+<p>do we get &lt;span&gt;HTML&lt;/span&gt; escaping inside block
+quotes?</p>
+</blockquote>
+
+<p>Tables:</p>
+
+<table>
+<thead>
+<tr>
+<th>Header &lt;span&gt;HTML&lt;/span&gt;</th>
+<th><strong>Strong</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cell with <em>em</em> &lt;span&gt;HTML&lt;/span&gt;</td>
+<td>no html</td>
+</tr>
+</tbody>
+</table>

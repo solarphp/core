@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Example.php 1438 2006-07-06 13:36:30Z pmjones $
+ * @version $Id$
  * 
  */
 

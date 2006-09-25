@@ -11,7 +11,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
- * @version $Id: ActionList.php 307 2006-08-11 10:36:44Z clay $
+ * @version $Id$
  *
  */
 

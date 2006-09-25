@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Flash.php 1707 2006-08-22 14:29:36Z pmjones $
+ * @version $Id$
  * 
  */
 

@@ -171,17 +171,17 @@ class Solar_Model_Tags extends Solar_Sql_Table {
      * 
      * Determines the diff (delete/insert matrix) between two tag sets.
      * 
-     * <code>
-     * $old = array('a', 'b', 'c');
-     * $new = array('c', 'd', 'e');
-     * 
-     * // perform the diff
-     * $diff = $this->_diff($old, $new);
-     * 
-     * // the results are ...
-     * // $diff['del'] == array('a', 'b');
-     * // $diff['ins'] == array('d', 'e');
-     * // 'c' doesn't show up becuase it's present in both sets
+     * {{code: php
+     *     $old = array('a', 'b', 'c');
+     *     $new = array('c', 'd', 'e');
+     *     
+     *     // perform the diff
+     *     $diff = $this->_diff($old, $new);
+     *     
+     *     // the results are ...
+     *     // $diff['del'] == array('a', 'b');
+     *     // $diff['ins'] == array('d', 'e');
+     *     // 'c' doesn't show up becuase it's present in both sets
      * }}
      * 
      * @param array $old The old (previous) set of tags.

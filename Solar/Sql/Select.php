@@ -395,16 +395,16 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Array values are quoted and comma-separated.
      * 
-     * <code>
-     * // simplest but non-secure
-     * $select->where("id = $id");
-     * 
-     * // secure
-     * $select->where('id = ?', $id);
-     * 
-     * // equivalent security with named binding
-     * $select->where('id = :id');
-     * $select->bind('id', $id);
+     * {{code: php
+     *     // simplest but non-secure
+     *     $select->where("id = $id");
+     *     
+     *     // secure
+     *     $select->where('id = ?', $id);
+     *     
+     *     // equivalent security with named binding
+     *     $select->where('id = :id');
+     *     $select->bind('id', $id);
      * }}
      * 
      * @param string $cond The WHERE condition.
@@ -550,16 +550,16 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Array values are quoted and comma-separated.
      * 
-     * <code>
-     * // simplest but non-secure
-     * $select->having("COUNT(id) = $count");
-     * 
-     * // secure
-     * $select->having('COUNT(id) = ?', $count);
-     * 
-     * // equivalent security with named binding
-     * $select->having('COUNT(id) = :count');
-     * $select->bind('count', $count);
+     * {{code: php
+     *     // simplest but non-secure
+     *     $select->having("COUNT(id) = $count");
+     *     
+     *     // secure
+     *     $select->having('COUNT(id) = ?', $count);
+     *     
+     *     // equivalent security with named binding
+     *     $select->having('COUNT(id) = :count');
+     *     $select->bind('count', $count);
      * }}
      * 
      * @param string $cond The HAVING condition.

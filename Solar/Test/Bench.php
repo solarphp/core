@@ -55,7 +55,7 @@ class Solar_Test_Bench extends Solar_Base {
      * 
      * Executes this code before running any benchmarks.
      * 
-     * @reutrn void
+     * @return void
      * 
      */
     public function setup()
@@ -66,7 +66,7 @@ class Solar_Test_Bench extends Solar_Base {
      * 
      * Executes this code after running all benchmarks.
      * 
-     * @reutrn void
+     * @return void
      * 
      */
     public function teardown()

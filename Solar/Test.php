@@ -61,6 +61,8 @@ class Solar_Test extends Solar_Base {
      * 
      * Teardown after the entire unit test.
      * 
+     * @return void
+     * 
      */
     public function __destruct()
     {
@@ -70,6 +72,8 @@ class Solar_Test extends Solar_Base {
      * 
      * Setup before each method test.
      * 
+     * @return void
+     * 
      */
     public function setup()
     {
@@ -78,6 +82,8 @@ class Solar_Test extends Solar_Base {
     /**
      * 
      * Teardown after each method test.
+     * 
+     * @return void
      * 
      */
     public function teardown()

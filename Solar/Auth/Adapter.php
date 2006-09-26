@@ -177,6 +177,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * @param array $common The common adapter information for source, 
      * source_handle, etc.
      * 
+     * @return void
+     * 
      * @see Solar_Auth_Adapter::$_common
      * 
      */

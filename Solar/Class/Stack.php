@@ -42,7 +42,7 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * Gets a copy of the current stack.
      * 
-     * @var array
+     * @return array
      * 
      */
     public function get()
@@ -200,6 +200,8 @@ class Solar_Class_Stack extends Solar_Base {
      * Loads the class file in a limited scope.
      * 
      * @param string The file to include.
+     * 
+     * @return void
      * 
      */
     protected function _run()

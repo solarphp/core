@@ -45,6 +45,8 @@ class Solar_Sql_Row extends Solar_Struct {
      * `save`
      * : (object) Source object for save() calls.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Sql_Row = array(
         'data' => array(),

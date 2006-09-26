@@ -43,7 +43,7 @@ class Solar_Path_Stack {
      * 
      * Gets a copy of the current stack.
      * 
-     * @var array
+     * @return array
      * 
      */
     public function get()

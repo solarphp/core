@@ -45,8 +45,7 @@ $config['Solar']['ini_set'] = array(
 $config['Solar_Sql'] = array(
 	'adapter' => 'Solar_Sql_adapter_Sqlite',
 	'config'  => array(
-    	'file'   => "$docroot/solar.sqlite",
-    	'mode'   => '0666',
+    	'name'   => "$docroot/solar.sqlite",
 	)
 );
 

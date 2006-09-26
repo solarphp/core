@@ -462,6 +462,34 @@ EXPECT;
         $this->assertSame(trim($actual), trim($expect));
     }
     
+    public function testFetch_noFormTag()
+    {
+        $helper = $this->_view->form();
+        
+        $helper->setAttrib('foo', 'bar');
+        
+        $helper->addElement(
+            array(
+                'name' => 'baz',
+                'type' => 'text',
+                'size' => '10',
+                'value' => 'dib',
+            )
+        );
+        
+        $actual = $helper->fetch(false);
+        $expect = <<<EXPECT
+        <dl>
+            <dt><label for="baz"></label></dt>
+            <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
+
+        </dl>
+EXPECT;
+        $this->assertSame(trim($actual), trim($expect));
+    }
+    
+    
+    
     public function testListFeedback()
     {
         $helper = $this->_view->form();

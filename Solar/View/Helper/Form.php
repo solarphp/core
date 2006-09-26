@@ -499,14 +499,21 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      * Builds and returns the form output.
      * 
+     * @param bool $with_form_tag If true (the default) outputs the form with
+     * <form>...</form> tags.  If false, it does not.
+     * 
      * @return string
      * 
      */
-    public function fetch()
+    public function fetch($with_form_tag = true)
     {
-        // the form tag
+        // stack of output elements
         $form = array();
-        $form[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
+        
+        // the form tag itself?
+        if ($with_form_tag) {
+            $form[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
+        }
         
         // what status class should we use?
         if ($this->_status === true) {
@@ -652,8 +659,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             $form[] = '    </fieldset>';
         }
         
-        // and add a closing form tag.
-        $form[] = '</form>';
+        // add a closing form tag?
+        if ($with_form_tag) {
+            $form[] = '</form>';
+        }
         
         // reset for the next pass
         $this->reset();

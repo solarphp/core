@@ -336,8 +336,10 @@ class Solar {
             
             // do we need to load locale strings for the class?
             if (! array_key_exists($class, Solar::$locale)) {
-                // build the file name
-                $base = str_replace('_', DIRECTORY_SEPARATOR, $class);
+                // build the file name.  note that we use the fixdir()
+                // method, which automatically replaces '/' with the
+                // correct directory separator.
+                $base = str_replace('_', '/', $class);
                 $file = Solar::fixdir($base . '/Locale/')
                       . Solar::getLocale() . '.php';
         

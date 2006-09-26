@@ -337,7 +337,7 @@ class Solar {
             // do we need to load locale strings for the class?
             if (! array_key_exists($class, Solar::$locale)) {
                 // build the file name
-                $base = str_replace('_', '/', $class);
+                $base = str_replace('_', DIRECTORY_SEPARATOR, $class);
                 $file = Solar::fixdir($base . '/Locale/')
                       . Solar::getLocale() . '.php';
         

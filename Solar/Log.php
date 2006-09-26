@@ -101,6 +101,9 @@ class Solar_Log extends Solar_Base {
      * @param array $params Additional parameters; only the first
      * paramter is used (the message to log).
      * 
+     * @return mixed Boolean false if the event was not saved, or a
+     * non-empty value if the event was saved (typically boolean true).
+     * 
      */
     public function __call($method, $params)
     {

@@ -67,7 +67,7 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
      * 
      * @param string $text The source text.
      * 
-     * @param string The transformed XHTML.
+     * @return string The transformed XHTML.
      * 
      */
     public function parse($text)

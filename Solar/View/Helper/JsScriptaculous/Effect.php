@@ -148,6 +148,8 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
      * @param bool $useNamedSelector Boolean flag to determine whether or not
      * to use the passed selector or a generic element reference.
      *
+     * @return string The JavaScript output.
+     * 
      */
     public function fetch($selector, $action, $useNamedSelector = false)
     {

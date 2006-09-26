@@ -77,84 +77,63 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     protected $_phpdoc;
     
-    /** 
+    /**
      * 
-     * When generating log notices, ignore these class methods and
-     * properties.
+     * List of "internal" classes we have fake docs for.
      * 
-     * @var string
-     * 
-     * @todo replace with a check for "built-in" classes?
+     * @var array
      * 
      */
-    protected $_ignore = array(
-        'Exception' => array(
-            'methods' => array(
-                '__clone',
-                'getMessage',
-                'getCode',
-                'getFile',
-                'getLine',
-                'getTrace',
-                'getTraceAsString',
-            ),
-            'properties' => array(
-                'message',
-                'code',
-                'file',
-                'line',
-            ),
-        ),
-    );
+    protected $_internal = array();
     
     /** 
      * 
      * The entire API as a structured array.
      * 
-     * <code>
-     * $api = array(
-     *     classname => array(
-     *         summ => string,
-     *         narr => string,
-     *         tech => array(...),
-     *         from => array(...),
-     *         properties => array(
-     *             propertyname => array(
-     *                 name => string,
-     *                 summ => string,
-     *                 narr => string,
-     *                 tech => array(...),
-     *                 type => string,
-     *                 access => string,
-     *                 static => bool,
-     *                 from => string,
-     *             ), // propertyname
-     *         ), // properties
-     *         methods => array(
-     *             methodname => array(
-     *                 name => string,
-     *                 summ => string,
-     *                 narr => string,
-     *                 tech => array(...),
-     *                 access => string,
-     *                 static => bool,
-     *                 final => bool,
-     *                 return => string,
-     *                 from => string,
-     *                 params => array(
-     *                     paramname => array(
-     *                         name => string,
-     *                         type => string,
-     *                         summ => string,
-     *                         byref => bool,
-     *                         optional => bool,
-     *                         default => mixed,
-     *                     ), // paramname
-     *                 ), // params
-     *             ), // methodname
-     *         ), // methods
-     *     ), // classname
-     * ); // $this->api
+     * {{code: php
+     *     $api = array(
+     *         classname => array(
+     *             summ => string,
+     *             narr => string,
+     *             tech => array(...),
+     *             from => array(...),
+     *             properties => array(
+     *                 propertyname => array(
+     *                     name => string,
+     *                     summ => string,
+     *                     narr => string,
+     *                     tech => array(...),
+     *                     type => string,
+     *                     access => string,
+     *                     static => bool,
+     *                     from => string,
+     *                 ), // propertyname
+     *             ), // properties
+     *             methods => array(
+     *                 methodname => array(
+     *                     name => string,
+     *                     summ => string,
+     *                     narr => string,
+     *                     tech => array(...),
+     *                     access => string,
+     *                     static => bool,
+     *                     final => bool,
+     *                     return => string,
+     *                     from => string,
+     *                     params => array(
+     *                         paramname => array(
+     *                             name => string,
+     *                             type => string,
+     *                             summ => string,
+     *                             byref => bool,
+     *                             optional => bool,
+     *                             default => mixed,
+     *                         ), // paramname
+     *                     ), // params
+     *                 ), // methodname
+     *             ), // methods
+     *         ), // classname
+     *     ); // $this->api
      * }}
      * 
      * @var array
@@ -184,6 +163,34 @@ class Solar_Docs_Apiref extends Solar_Base {
             'Solar_Log',
             $this->_config['log']
         );
+        
+        // Load "internal" class api references from faked arrays
+        $this->_loadInternal();
+    }
+    
+    /**
+     * 
+     * Loads "internal" class API references from faked PHPDoc arrays.
+     * 
+     * Looks in Solar/Docs/Apiref/internal/ for the data.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadInternal()
+    {
+        // the directory of fake classes
+        $base = Solar::fixdir(dirname(__FILE__) . '/Apiref/internal');
+        
+        // the class mapper
+        $map = Solar::factory('Solar_Class_Map');
+        $source = $map->fetch($base);
+        
+        // load the apiref values
+        foreach ($source as $class => $file) {
+            $this->apiref[$class] = include($file);
+            $this->_internal[] = $class;
+        }
     }
     
     /**
@@ -214,7 +221,7 @@ class Solar_Docs_Apiref extends Solar_Base {
      * 
      * @param string $class The class to add to the docs.
      * 
-     * @param bool True if the class was added, false if not.
+     * @return bool True if the class was added, false if not.
      * 
      */
     public function addClass($class)
@@ -303,11 +310,7 @@ class Solar_Docs_Apiref extends Solar_Base {
             if (! empty($docs['tech']['var']['type'])) {
                 $info['type'] = $docs['tech']['var']['type'];
             } else {
-                if (! empty($this->_ignore[$class]['properties']) &&
-                    ! in_array($name, $this->_ignore[$class]['properties'])) {
-                    // not to be ignored
-                    $this->_log($class, "property '$name' has no @var type");
-                }
+                $this->_log($class, "property '$name' has no @var type");
             }
             
             // save in the API
@@ -380,14 +383,8 @@ class Solar_Docs_Apiref extends Solar_Base {
             } else {
                 // no return type noted in the class docs
                 $info['return'] = $this->_config['unknown'];
-                
-                // can we ignore this lack of type?
-                if (! empty($this->_ignore[$class]['methods']) &&
-                    ! in_array($name, $this->_ignore[$class]['methods'])) {
-                    // not to be ignored
-                    $unknown = $this->_config['unknown'];
-                    $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
-                }
+                $unknown = $this->_config['unknown'];
+                $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
             }
             
             // add the parameters

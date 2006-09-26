@@ -776,7 +776,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      *
      * Executes before the first action.
-     *
+     * 
+     * @return void
+     * 
      */
     protected function _preRun()
     {

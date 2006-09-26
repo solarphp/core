@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: ColorCodeBlock.php 1722 2006-08-22 18:49:48Z pmjones $
+ * @version $Id$
  * 
  */
 

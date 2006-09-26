@@ -38,7 +38,7 @@ class Solar_Content extends Solar_Base {
      * : (dependency) A Solar_Sql dependency injection, passed
      *   into the table objects at creation time.
      * 
-     * @param array
+     * @var array
      * 
      */
     protected $_Solar_Content = array(

@@ -71,7 +71,9 @@ class Solar_Json extends Solar_Base {
      *   for values it cannot encode rather than throwing
      *   an exceptions (PHP-only encoding) or PHP warnings
      *   (native json_encode() function).
-     *
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_Json = array(
         'bypass_ext' => false,

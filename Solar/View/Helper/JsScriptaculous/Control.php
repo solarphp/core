@@ -75,7 +75,9 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
      *
      * @param array $action Action details array created by a
      * JsScriptaculous_Control method.
-     *
+     * 
+     * @return string The JavaScript output.
+     * 
      */
     public function fetch($selector, $action)
     {

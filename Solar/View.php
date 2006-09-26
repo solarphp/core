@@ -193,26 +193,26 @@ class Solar_View extends Solar_Base {
      * assigned to it; the variables will be known inside the template as
      * "$this->var1" and "$this->var2".
      * 
-     * <code>
-     * $view = Solar::factory('Solar_View_Template');
-     * 
-     * // assign directly
-     * $view->var1 = 'something';
-     * $view->var2 = 'else';
-     * 
-     * // assign by associative array
-     * $ary = array('var1' => 'something', 'var2' => 'else');
-     * $view->assign($ary);
-     * 
-     * // assign by object
-     * $obj = new stdClass;
-     * $obj->var1 = 'something';
-     * $obj->var2 = 'else';
-     * $view->assign($obj);
-     * 
-     * // assign by name and value
-     * $view->assign('var1', 'something');
-     * $view->assign('var2', 'else');
+     * {{code: php
+     *     $view = Solar::factory('Solar_View_Template');
+     *     
+     *     // assign directly
+     *     $view->var1 = 'something';
+     *     $view->var2 = 'else';
+     *     
+     *     // assign by associative array
+     *     $ary = array('var1' => 'something', 'var2' => 'else');
+     *     $view->assign($ary);
+     *     
+     *     // assign by object
+     *     $obj = new stdClass;
+     *     $obj->var1 = 'something';
+     *     $obj->var2 = 'else';
+     *     $view->assign($obj);
+     *     
+     *     // assign by name and value
+     *     $view->assign('var1', 'something');
+     *     $view->assign('var2', 'else');
      * }}
      * 
      * @param mixed $spec The assignment specification.

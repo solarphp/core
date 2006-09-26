@@ -50,7 +50,7 @@
  * Define where the Solar.config.php file is located.
  */
 if (! defined('SOLAR_CONFIG_PATH')) {
-    define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . '/Solar.config.php');
+    define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'Solar.config.php');
 }
 
 /**

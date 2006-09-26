@@ -73,6 +73,8 @@ class Solar_Request extends Solar_Base {
      *   Default false, which means properties are loaded only on first
      *   instantiation.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Request = array(
         'reload' => false,

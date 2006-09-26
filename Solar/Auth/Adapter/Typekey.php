@@ -75,6 +75,8 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * : (string) When using a cache, the entry key for
      * the TypeKey public key data.  Default 'typekey_pubkey'.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Auth_Adapter_Typekey = array(
         'token'     => null,

@@ -59,31 +59,48 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
      */
     protected $_chars = '{}:';
     
+    /**
+     * 
+     * User-defined configuration values.
+     * 
+     * Keys are ...
+     * 
+     * `synopsis`
+     * : (string) The "main" format string.
+     * 
+     * `access`
+     * : (string) The format string for access type.
+     * 
+     * `return`
+     * : (string) The format string for return type.
+     * 
+     * `method`
+     * : (string) The format string for the method name.
+     * 
+     * `param`
+     * : (string) The format string for required params.
+     * 
+     * `param_default`
+     * : (string) The format string for params with a default value.
+     * 
+     * `throws`
+     * : (string) The format string for throws.
+     * 
+     * `list_sep`
+     * : (string) The list separator for params and throws.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_Markdown_Wiki_MethodSynopsis = array(
-        
-        // the "main" format string
-        'synopsis' => "<div class=\"method-synopsis\">\n    %access\n    %return\n    %method (%params\n    )%throws\n</div>",
-
-        // the looped format string for required params
-        'access' => '<span class="access">%access</span>',
-
-        // the looped format string for required params
-        'return' => '<span class="return">%return</span>',
-
-        // the looped format string for required params
-        'method' => '<span class="method">%method</span>',
-
-        // the looped format string for required params
-        'param' => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
-
-        // the looped format string for params with default values
+        'synopsis'      => "<div class=\"method-synopsis\">\n    %access\n    %return\n    %method (%params\n    )%throws\n</div>",
+        'access'        => '<span class="access">%access</span>',
+        'return'        => '<span class="return">%return</span>',
+        'method'        => '<span class="method">%method</span>',
+        'param'         => "\n        <span class=\"param\"><span class=\"type\">%type</span> <span class=\"name\">%name</span>",
         'param_default' => "\n        <span class=\"param-default\"><span class=\"type\">%type</span> <span class=\"name\">%name</span> default <span class=\"default\">%default</span>",
-
-        // the looped format string for throws
-        'throws' => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
-        
-    	// list separator for params and throws
-        'list_sep' => ', ',
+        'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
+        'list_sep'      => ', ',
     );
 
     /**

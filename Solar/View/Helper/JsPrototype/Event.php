@@ -132,7 +132,9 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
      *
      * @param bool $useCapture If true, handle the event in the capture phase
      * and if false, in the bubbling phase.
-     *
+     * 
+     * @return Solar_View_Helper_JsPrototype_Effect This object.
+     * 
      */
     public function observe($selector, $name, $observer, $useCapture = false)
     {
@@ -149,6 +151,7 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
     }
 
     /**
+     * 
      * Adds an event handler function to the JavaScript object defined by
      * $object. Use observe() if you need to obverve blocks in the DOM.
      *
@@ -163,6 +166,8 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
      * @param bool $useCapture If true, handle the event in the capture phase
      * and if false, in the bubbling phase.
      *
+     * @return Solar_View_Helper_JsPrototype_Effect This object.
+     * 
      */
     public function observeObject($object, $name, $observer, $useCapture = false)
     {

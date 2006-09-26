@@ -104,7 +104,7 @@ Alternatively, you can use PEAR to install or upgrade a specific release directl
 Source via Subversion
 --------------------
 
-You can [browse the Subversion repository](http://solarphp.com/svn/) and do anonymous checkouts:
+You can [browse the Subversion repository](http://solarphp.com/svn/trunk/) and do anonymous checkouts:
 
 {{code: bash
     bash-2.05$ svn checkout https://solarphp.com/svn/trunk/ solar

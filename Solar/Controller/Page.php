@@ -185,7 +185,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      */
     protected $_request;
-
+    
+    // these helper classes will be added in the middle of the stack, between the
+    // solar-view-helper final fallbacks and the vendor+app specific helpers.
+    protected $_helper_class = array();
+    
     /**
      *
      * Constructor.
@@ -400,6 +404,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $helper[] = $class . '_Helper';
         $helper[] = $parent . '_Helper';
         $helper[] = $vendor . '_View_Helper';
+        
+        // are there additional helper classes we need to add?
+        if (! empty($this->_helper_class)) {
+            $helper = array_merge($helper, (array) $this->_helper_class);
+        }
+        
         if ($vendor != 'Solar') {
             // non-Solar vendor, add Solar helpers as final fallback
             $helper[] = 'Solar_View_Helper';

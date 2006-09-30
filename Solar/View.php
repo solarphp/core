@@ -529,12 +529,22 @@ class Solar_View extends Solar_Base {
      */
     public function partial($name, $vars = null)
     {
-        // save externally and unset from local scope
-        $this->_partial_file = $this->template($name);
-        unset($name);
+        // use a try/catch block so that if a partial is not found, the
+        // exception does not break the parent template.
+        try {
+            // save the partial name externally
+            $this->_partial_file = $this->template($name);
+        } catch (Solar_View_Exception_TemplateNotFound $e) {
+            throw $this->_exception(
+                'ERR_PARTIAL_NOT_FOUND',
+                $e->getInfo()
+            );
+        }
         
-        // save externally and remove from local scope.
-        // special case for Solar_Struct and other objects.
+        // remove the partial name from local scope
+        unset($name);
+    
+        // save partial vars externally. special cases for different types.
         if ($vars instanceof Solar_Struct) {
             $this->_partial_vars = $vars->toArray();
         } elseif (is_object($vars)) {
@@ -542,13 +552,15 @@ class Solar_View extends Solar_Base {
         } else {
             $this->_partial_vars = (array) $vars;
         }
-        unset($vars);
         
+        // remove the partial vars from local scope
+        unset($vars);
+    
         // disallow resetting of $this and inject vars into local scope
         unset($this->_partial_vars['this']);
         extract($this->_partial_vars);
-        
-        // run the template
+    
+        // run the partial template
         ob_start();
         require $this->_partial_file;
         return ob_get_clean();

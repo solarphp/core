@@ -206,7 +206,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * 
      * Sets the callback to check if pages exist.
      * 
-     * The callback has to take exactly one paramter, an array keyed
+     * The callback has to take exactly one parameter, an array keyed
      * on page names, with the value being true or false.  It should
      * return a similar array, saying whether or not each page in the
      * array exists.

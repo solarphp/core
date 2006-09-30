@@ -43,6 +43,12 @@ class Test_Solar_Exception extends Solar_Test {
         $this->assertSame($e->getInfo(), $this->_config['info']);
     }
     
+    public function testGetInfo_key()
+    {
+        $e = Solar::factory('Solar_Exception', $this->_config);
+        $this->assertSame($e->getInfo('foo'), $this->_config['info']['foo']);
+    }
+    
     public function testGetClass()
     {
         $e = Solar::factory('Solar_Exception', $this->_config);
@@ -81,7 +87,7 @@ class Test_Solar_Exception extends Solar_Test {
         try {
             throw new Solar_Exception($this->_config);
         } catch (Solar_Exception $e) {
-            $this->assertSame($e->getLine(), 82); // line 82, above
+            $this->assertSame($e->getLine(), 88); // line 88, above
         }
     }
     

@@ -289,11 +289,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         $info = array_merge($this->_default_info, $info);
         
         if (empty($info['type'])) {
-            throw $this->_exception('ERR_NO_ELEMENT_TYPE');
+            throw $this->_exception('ERR_NO_ELEMENT_TYPE', $info);
         }
         
         if (empty($info['name'])) {
-            throw $this->_exception('ERR_NO_ELEMENT_NAME');
+            throw $this->_exception('ERR_NO_ELEMENT_NAME', $info);
         }
         
         // auto-set ID?

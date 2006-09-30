@@ -198,11 +198,13 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         // 
         
         $this->_idx = array(
-            // composite unique index to ensure unique node names within
-            // an area_id
-            'unique_in_area' => array(
+            // composite unique index to ensure unique node names among
+            // an area_id and a given node type.  this allows type X to have
+            // a name and type Z to have the same name, but only in different
+            // areas.
+            'area_type_name' => array(
                 'type' => 'unique',
-                'cols' => array('area_id', 'name'),
+                'cols' => array('area_id', 'type', 'name'),
             ),
             // other indexes
             'area_id'       => 'normal',

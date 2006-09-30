@@ -92,9 +92,13 @@ class Solar_Exception extends Exception {
      * @return array
      * 
      */
-    final public function getInfo()
+    final public function getInfo($key = null)
     {
-        return $this->_info;
+        if (empty($key)) {
+            return $this->_info;
+        } else {
+            return $this->_info[$key];
+        }
     }
     
     /**

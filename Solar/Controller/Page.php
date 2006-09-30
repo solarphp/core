@@ -320,8 +320,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
         try {
             $output = $view->fetch($this->_view . '.php');
         } catch (Solar_View_Exception_TemplateNotFound $e) {
-            $view->errors[] = $this->locale('ERR_VIEW_NOT_FOUND');
-            $view->errors[] = $this->_view . '.php';
+            $view->errors[] = $this->locale('ERR_TEMPLATE_NOT_FOUND');
+            $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
+            $view->errors[] = $e->getInfo('name');
             $output = $view->fetch('error.php');
         }
 
@@ -410,10 +411,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $helper = array_merge($helper, (array) $this->_helper_class);
         }
         
-        if ($vendor != 'Solar') {
-            // non-Solar vendor, add Solar helpers as final fallback
-            $helper[] = 'Solar_View_Helper';
-        }
+        /**
+         * @todo: do we really need this? The View class already has the
+         * Solar_View_Helper class in the stack.
+         */
+        // if ($vendor != 'Solar') {
+        //     // non-Solar vendor, add Solar helpers as final fallback
+        //     $helper[] = 'Solar_View_Helper';
+        // }
+        
         $view->addHelperClass($helper);
 
         // set the locale class for the getText helper

@@ -86,8 +86,8 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * {{code: php
      *     $col = array(
-     *         'colName' => array(
-     *             'name'    => (string) the colName, same as the key
+     *         'col_name' => array(
+     *             'name'    => (string) the col_name, same as the key
      *             'type'    => (string) char, varchar, date, etc
      *             'size'    => (int) column size
      *             'scope'   => (int) decimal places

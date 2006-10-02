@@ -350,10 +350,10 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->multiWhere($where);
         
         // group by tag name
-        $select->group('name');
+        $select->group('tags.name');
         
         // order and return
-        $select->order('name');
+        $select->order('tags.name');
         return $select->fetch('pairs');
     }
     

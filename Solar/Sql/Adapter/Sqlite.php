@@ -196,6 +196,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      */
     public function nextSequence($name)
     {
+        $this->_connect();
         $cmd = "INSERT INTO $name (id) VALUES (NULL)";
         
         // first, try to increment the sequence number, assuming

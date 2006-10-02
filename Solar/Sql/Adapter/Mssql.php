@@ -219,11 +219,13 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      */
     public function nextSequence($name)
     {
+        $this->_connect();
         $cmd = "INSERT INTO $name DEFAULT VALUES";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
+            $this->_connect();
             $stmt = $this->_pdo->prepare($cmd);
             $stmt->execute();
         } catch (Exception $e) {

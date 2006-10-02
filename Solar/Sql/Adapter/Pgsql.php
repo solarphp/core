@@ -217,8 +217,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     public function nextSequence($name)
     {
-        // first, try to get the next sequence number, assuming
-        // the sequence exists.
+        $this->_connect();
         $cmd = "SELECT NEXTVAL($name)";
         
         // first, try to increment the sequence number, assuming

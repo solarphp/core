@@ -199,6 +199,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      */
     public function nextSequence($name)
     {
+        $this->_connect();
         $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
         
         // first, try to increment the sequence number, assuming

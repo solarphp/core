@@ -405,7 +405,6 @@ class Solar {
         return Solar::$_locale_code;
     }
     
-    
     /**
      * 
      * Loads a class file from the include_path.
@@ -448,6 +447,52 @@ class Solar {
                 'ERR_LOADCLASS_EXIST',
                 'Class does not exist in loaded file',
                 array('class' => $class, 'file' => $file)
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Loads an interface file from the include_path.
+     * 
+     * @param string $interface A Solar (or other) interface class name.
+     * 
+     * @return void
+     * 
+     * @todo Add localization for errors
+     * 
+     */
+    public static function loadInterface($interface)
+    {
+        // did we ask for a non-blank interface?
+        if (trim($interface) == '') {
+            throw Solar::exception(
+                'Solar',
+                'ERR_LOADINTERFACE_EMPTY',
+                'No interface named for loading',
+                array('interface' => $interface)
+            );
+        }
+
+        // pre-empt further searching for the interface
+        if (interface_exists($interface, false)) {
+            return;
+        }
+
+        // convert the interface name to a file path.
+        $file = str_replace('_', DIRECTORY_SEPARATOR, $interface) . '.php';
+
+        // include the file and check for failure. we use run() here
+        // instead of require() so we can see the exception backtrace.
+        $result = Solar::run($file);
+
+        // if the interface was not in the file, we have a problem.
+        if (! interface_exists($interface)) {
+            throw Solar::exception(
+                'Solar',
+                'ERR_LOADINTERFACE_EXIST',
+                'Interface does not exist in loaded file',
+                array('interface' => $interface, 'file' => $file)
             );
         }
     }

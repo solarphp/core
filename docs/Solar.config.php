@@ -43,7 +43,7 @@ $config['Solar']['ini_set'] = array(
  * Default database connection.
  */
 $config['Solar_Sql'] = array(
-	'adapter' => 'Solar_Sql_adapter_Sqlite',
+	'adapter' => 'Solar_Sql_Adapter_Sqlite',
 	'config'  => array(
     	'name'   => "$docroot/solar.sqlite",
 	)

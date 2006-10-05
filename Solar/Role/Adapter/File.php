@@ -87,6 +87,10 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
         // is on the line anywhere
         foreach ($lines as $line) {
             
+            // eliminate all spaces, which cause mismatches when we get to
+            // in_array() later
+            $line = preg_replace("/\s/", '', $line);
+            
             // break apart at first ':'
             $pos = strpos($line, ':');
             

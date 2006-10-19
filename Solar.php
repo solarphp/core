@@ -1009,5 +1009,74 @@ class Solar {
         // done
         return $stack;
     }
+    
+    /**
+     * 
+     * Returns the OS-specific directory for temporary files, optionally with
+     * a path added to it.
+     * 
+     * @param string $add Add this to the end of the temporary directory
+     * path.
+     * 
+     * @return string The temp directory path, with optional suffix added.
+     * 
+     */
+    public static function temp($add = '')
+    {
+        if (function_exists('sys_get_temp_dir')) {
+            $tmp = sys_get_temp_dir();
+        } else {
+            $tmp = Solar::_getTempDir();
+        }
+        
+        if ($add) {
+            $add = ltrim($add, '/' . DIRECTORY_SEPARATOR);
+            $add = str_replace('/', DIRECTORY_SEPARATOR, $add);
+            $tmp .= DIRECTORY_SEPARATOR . $add;
+        }
+        
+        return $tmp;
+    }
+    
+    /**
+     * 
+     * Returns the OS-specific temporary directory location.
+     * 
+     * @return string The temp directory path.
+     * 
+     */
+    protected static function _getTempDir()
+    {
+        // non-Windows system?
+        if (strtolower(substr(PHP_OS, 0, 3)) != 'win') {
+            $tmp = empty($_ENV['TMPDIR']) ? getenv('TMPDIR') : $_ENV['TMPDIR'];
+            if ($tmp) {
+                return $tmp;
+            } else {
+                return '/tmp';
+            }
+        }
+        
+        // Windows 'TEMP'
+        $tmp = empty($_ENV['TEMP']) ? getenv('TEMP') : $_ENV['TEMP'];
+        if ($tmp) {
+            return $tmp;
+        }
+    
+        // Windows 'TMP'
+        $tmp = empty($_ENV['TMP']) ? getenv('TMP') : $_ENV['TMP'];
+        if ($tmp) {
+            return $tmp;
+        }
+    
+        // Windows 'windir'
+        $tmp = empty($_ENV['windir']) ? getenv('windir') : $_ENV['windir'];
+        if ($tmp) {
+            return $tmp;
+        }
+    
+        // final fallback for Windows
+        return getenv('SystemRoot') . '\\temp';
+    }
 }
 ?>

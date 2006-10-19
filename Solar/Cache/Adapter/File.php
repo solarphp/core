@@ -61,17 +61,18 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * `path`
      * : (string) The directory where cache files are located; 
      *   should be readable and writable by the script process, usually
-     *   the web server process. Default is '/tmp/Solar_Cache_File/'.
+     *   the web server process. Default is '/Solar_Cache_File' in the system
+     *   temporary directory.
      * 
      * `life`
-     * : (int) The lifetime of each cache entry in seconds; 
+     * : (int) The lifetime of each cache entry in seconds;
      *   default is 3600 seconds (i.e., 1 hour).
      * 
      * @var array
      * 
      */
     protected $_Solar_Cache_Adapter_File = array(
-        'path'   => '/tmp/Solar_Cache_File/',
+        'path'   => null, // default set in constructor
         'life'   => 3600
     );
     
@@ -93,6 +94,9 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function __construct($config = null)
     {
+        // set the default cache directory location
+        $this->_Solar_Cache_Adapter_File['path'] == Solar::temp('/Solar_Cache_File/');
+        
         // basic construction
         parent::__construct($config);
         

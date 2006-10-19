@@ -5,10 +5,16 @@ require_once realpath(dirname(__FILE__) . '/../Adapter.php');
 class Test_Solar_Log_Adapter_File extends Test_Solar_Log_Adapter {
     
     protected $_Test_Solar_Log_Adapter_File = array(
-        'file' => '/tmp/test_solar_log_adapter_file.log',
+        'file' => null, // set in constructor
         'format' => '%e %m',
         'events' => array('info', 'debug', 'notice'),
     );
+    
+    public function __construct($config = null)
+    {
+        $this->_Test_Solar_Log_Adapter_File['file'] = Solar::temp('test_solar_log_adapter_file.log');
+        parent::__construct($config);
+    }
     
     public function setup()
     {

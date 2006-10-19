@@ -4,26 +4,36 @@ require_once realpath(dirname(__FILE__) . '/../Adapter.php');
 
 class Test_Solar_Log_Adapter_Multi extends Test_Solar_Log_Adapter {
     
-    protected $_Test_Solar_Log_Adapter_Multi = array(
-        'adapters' => array(
-            array(
-                'adapter' => 'Solar_Log_Adapter_File',
-                'config'  => array(
-                    'events'  => 'debug',
-                    'file'    => '/tmp/test_solar_log_adapter_multi.debug.log',
-                    'format' => '%e %m',
+    // build in constructor
+    protected $_Test_Solar_Log_Adapter_Multi = array();
+    
+    public function __construct($config = null)
+    {
+        // easier to do this here than as a property, since we use functions.
+        $this->_Test_Solar_Log_Adapter_Multi = array(
+            'adapters' => array(
+                array(
+                    'adapter' => 'Solar_Log_Adapter_File',
+                    'config'  => array(
+                        'events'  => 'debug',
+                        'file'    => Solar::temp('test_solar_log_adapter_multi.debug.log'),
+                        'format' => '%e %m',
+                    ),
+                ),
+                array(
+                    'adapter' => 'Solar_Log_Adapter_File',
+                    'config'  => array(
+                        'events'  => 'info, notice',
+                        'file'    => Solar::temp('test_solar_log_adapter_multi.other.log'),
+                        'format' => '%e %m',
+                    ),
                 ),
             ),
-            array(
-                'adapter' => 'Solar_Log_Adapter_File',
-                'config'  => array(
-                    'events'  => 'info, notice',
-                    'file'    => '/tmp/test_solar_log_adapter_multi.other.log',
-                    'format' => '%e %m',
-                ),
-            ),
-        ),
-    );
+        );
+        
+        // real construction
+        parent::__construct($config);
+    }
     
     public function setup()
     {

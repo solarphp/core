@@ -1030,8 +1030,8 @@ class Solar {
         }
         
         if ($add) {
-            $add = ltrim($add, '/' . DIRECTORY_SEPARATOR);
             $add = str_replace('/', DIRECTORY_SEPARATOR, $add);
+            $add = ltrim($add, DIRECTORY_SEPARATOR);
             $tmp .= DIRECTORY_SEPARATOR . $add;
         }
         

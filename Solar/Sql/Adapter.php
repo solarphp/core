@@ -295,8 +295,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function quote($val)
     {
-        $this->_connect();
-        return $this->_pdo->quote($val);
+        if (is_numeric($val)) {
+            // no need to quote numerics
+            return $val;
+        } else {
+            // quote everything else
+            $this->_connect();
+            return $this->_pdo->quote($val);
+        }
     }
     
     /**

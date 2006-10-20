@@ -231,6 +231,18 @@ class Solar_Auth extends Solar_Base {
     
     /**
      * 
+     * The numeric user ID for the currently authenticated user.  May or
+     * may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['uid'].
+     * 
+     * @var string
+     * 
+     */
+    public $uid;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config An array of user-defined configuration values.
@@ -290,6 +302,7 @@ class Solar_Auth extends Solar_Base {
                 'email'   => null,
                 'moniker' => null,
                 'uri'     => null,
+                'uid'     => null,
             );
         }
         
@@ -301,6 +314,7 @@ class Solar_Auth extends Solar_Base {
         $this->email   =& $this->_session->store['email'];
         $this->moniker =& $this->_session->store['moniker'];
         $this->uri     =& $this->_session->store['uri'];
+        $this->uid     =& $this->_session->store['uid'];
         
         // update idle and expire times no matter what
         $this->updateIdleExpire();
@@ -317,6 +331,7 @@ class Solar_Auth extends Solar_Base {
                 $this->moniker = $this->_adapter->getMoniker();
                 $this->email   = $this->_adapter->getEmail();
                 $this->uri     = $this->_adapter->getUri();
+                $this->uid     = $this->_adapter->getUid();
             } else {
                 $code = $this->_adapter->getErrCode();
                 if ($code) {

@@ -83,7 +83,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * The unique user handle as derived from the authentication source.
+     * The user handle as derived from the authentication source.
      * 
      * @var string
      * 
@@ -126,6 +126,15 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_uri;
+    
+    /**
+     * 
+     * The numeric user ID as derived from the authentication source.
+     * 
+     * @var int
+     * 
+     */
+    protected $_uid;
     
     /**
      * 
@@ -274,6 +283,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_email   = null;
         $this->_moniker = null;
         $this->_uri     = null;
+        $this->_uid     = null;
     }
     
     /**
@@ -334,6 +344,18 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function getUri()
     {
         return $this->_uri;
+    }
+    
+    /**
+     * 
+     * Returns the current user ID.
+     * 
+     * @return string
+     * 
+     */
+    public function getUid()
+    {
+        return $this->_uid;
     }
 }
 ?>

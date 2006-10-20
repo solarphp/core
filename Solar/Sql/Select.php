@@ -359,7 +359,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function leftJoin($spec, $cond, $cols)
+    public function leftJoin($spec, $cond, $cols = null)
     {
         $this->_join('LEFT', $spec, $cond, $cols);
         return $this;
@@ -379,7 +379,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function innerJoin($spec, $cond, $cols)
+    public function innerJoin($spec, $cond, $cols = null)
     {
         $this->_join('INNER', $spec, $cond, $cols);
         return $this;

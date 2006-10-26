@@ -48,7 +48,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * : (string) Name of the table holding authentication data.
      * 
      * `handle_col`
-     * : (string) Name of the column with the handle.
+     * : (string) Name of the column with the user handle ("username").
      * 
      * `passwd_col`
      * : (string) Name of the column with the MD5-hashed passwd.
@@ -61,6 +61,9 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * `uri_col`
      * : (string) Name of the column with the website URI.
+     * 
+     * `uid_col`
+     * : (string) Name of the column with the numeric user ID ("user_id").
      * 
      * `salt`
      * : (string) A salt prefix to make cracking passwords harder.
@@ -80,6 +83,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         'email_col'   => null,
         'moniker_col' => null,
         'uri_col'     => null,
+        'uid_col'     => null,
         'salt'        => null,
         'where'       => array(),
     );
@@ -105,22 +109,22 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
             array('sql' => $obj)
         );
         
+        // list of optional columns as (property => field)
+        $optional = array(
+            '_email'   => 'email_col',
+            '_moniker' => 'moniker_col',
+            '_uri'     => 'uri_col',
+            '_uid'     => 'uid_col',
+        );
+        
         // always get the user handle
         $cols = array($this->_config['handle_col']);
         
-        // get the display name (moniker)?
-        if ($this->_config['moniker_col']) {
-            $cols[] = $this->_config['moniker_col'];
-        }
-        
-        // get the email address?
-        if ($this->_config['email_col']) {
-            $cols[] = $this->_config['email_col'];
-        }
-        
-        // get the uri website?
-        if ($this->_config['uri_col']) {
-            $cols[] = $this->_config['uri_col'];
+        // get optional columns
+        foreach ($optional as $key => $val) {
+            if ($this->_config[$val]) {
+                $cols[] = $this->_config[$val];
+            }
         }
         
         // salt and hash the password
@@ -138,11 +142,21 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         // if we get back exactly 1 row, the user is authenticated;
         // otherwise, it's more or less than exactly 1 row.
         if (count($rows) == 1) {
+            
             $row = $rows->current();
-            $this->_email   = $row[$this->_config['email_col']];
-            $this->_moniker = $row[$this->_config['moniker_col']];
-            $this->_uri     = $row[$this->_config['uri_col']];
+            
+            // handle is already set, need to set values from opt. cols.
+            foreach ($optional as $key => $val) {
+                if ($this->_config[$val]) {
+                    $this->$key = $row[$this->_config[$val]];
+                } else {
+                    $this->$key = null;
+                }
+            }
+            
+            // done
             return true;
+            
         } else {
             return false;
         }

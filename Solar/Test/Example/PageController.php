@@ -118,6 +118,8 @@ class Solar_Test_Example_PageController extends Solar_Controller_Page {
      * 
      * Sets the default action for testing.
      * 
+     * @param string $val The default action name.
+     * 
      * @return void
      * 
      */

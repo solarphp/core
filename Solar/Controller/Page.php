@@ -186,8 +186,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected $_request;
     
-    // these helper classes will be added in the middle of the stack, between the
-    // solar-view-helper final fallbacks and the vendor+app specific helpers.
+    /**
+     * 
+     * These helper classes will be added in the middle of the stack, between the
+      * Solar_View_Helper final fallbacks and the vendor+app specific helpers.
+      * 
+      * @var array
+      * 
+      */
     protected $_helper_class = array();
     
     /**

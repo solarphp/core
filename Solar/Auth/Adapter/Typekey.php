@@ -292,6 +292,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
             $this->_email   = $email; // email
             $this->_moniker = $nick;  // display name
             $this->_uri     = null;   // not supported by TypeKey
+            $this->_uid     = null;   // not supported by TypeKey
             $valid = true;
         } else {
             // not verified, clear out user data

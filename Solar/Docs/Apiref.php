@@ -77,15 +77,6 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     protected $_phpdoc;
     
-    /**
-     * 
-     * List of "internal" classes we have fake docs for.
-     * 
-     * @var array
-     * 
-     */
-    protected $_internal = array();
-    
     /** 
      * 
      * When generating log notices, ignore these class methods and
@@ -193,34 +184,6 @@ class Solar_Docs_Apiref extends Solar_Base {
             'Solar_Log',
             $this->_config['log']
         );
-        
-        // Load "internal" class api references from faked arrays
-        $this->_loadInternal();
-    }
-    
-    /**
-     * 
-     * Loads "internal" class API references from faked PHPDoc arrays.
-     * 
-     * Looks in Solar/Docs/Apiref/internal/ for the data.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadInternal()
-    {
-        // the directory of fake classes
-        $base = Solar::fixdir(dirname(__FILE__) . '/Apiref/internal');
-        
-        // the class mapper
-        $map = Solar::factory('Solar_Class_Map');
-        $source = $map->fetch($base);
-        
-        // load the apiref values
-        foreach ($source as $class => $file) {
-            $this->apiref[$class] = include($file);
-            $this->_internal[] = $class;
-        }
     }
     
     /**

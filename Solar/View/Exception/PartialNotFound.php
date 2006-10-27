@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: TemplateNotFound.php 1493 2006-07-18 17:12:44Z pmjones $
+ * @version $Id$
  * 
  */
 

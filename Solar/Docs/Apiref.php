@@ -88,6 +88,36 @@ class Solar_Docs_Apiref extends Solar_Base {
     
     /** 
      * 
+     * When generating log notices, ignore these class methods and
+     * properties.
+     * 
+     * @var string
+     * 
+     * @todo replace with a check for "built-in" classes?
+     * 
+     */
+    protected $_ignore = array(
+        'Exception' => array(
+            'methods' => array(
+                '__clone',
+                'getMessage',
+                'getCode',
+                'getFile',
+                'getLine',
+                'getTrace',
+                'getTraceAsString',
+            ),
+            'properties' => array(
+                'message',
+                'code',
+                'file',
+                'line',
+            ),
+        ),
+    );
+    
+    /** 
+     * 
      * The entire API as a structured array.
      * 
      * {{code: php
@@ -310,7 +340,11 @@ class Solar_Docs_Apiref extends Solar_Base {
             if (! empty($docs['tech']['var']['type'])) {
                 $info['type'] = $docs['tech']['var']['type'];
             } else {
-                $this->_log($class, "property '$name' has no @var type");
+                if (! empty($this->_ignore[$class]['properties']) &&
+                    ! in_array($name, $this->_ignore[$class]['properties'])) {
+                    // not to be ignored
+                    $this->_log($class, "property '$name' has no @var type");
+                }
             }
             
             // save in the API
@@ -383,8 +417,14 @@ class Solar_Docs_Apiref extends Solar_Base {
             } else {
                 // no return type noted in the class docs
                 $info['return'] = $this->_config['unknown'];
-                $unknown = $this->_config['unknown'];
-                $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
+                
+                // can we ignore this lack of type?
+                if (! empty($this->_ignore[$class]['methods']) &&
+                    ! in_array($name, $this->_ignore[$class]['methods'])) {
+                    // not to be ignored
+                    $unknown = $this->_config['unknown'];
+                    $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
+                }
             }
             
             // add the parameters

@@ -89,6 +89,9 @@ class Solar_Exception extends Exception {
      * 
      * Returns user-defined information.
      * 
+     * @param string $key A particular info key to return; if empty, returns
+     * all info.
+     * 
      * @return array
      * 
      */

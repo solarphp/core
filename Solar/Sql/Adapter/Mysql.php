@@ -39,7 +39,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * 
      */
     protected $_native = array(
-        'bool'      => 'DECIMAL(1,0)',
+        'bool'      => 'TINYINT(1)',
         'char'      => 'CHAR(:size) BINARY',
         'varchar'   => 'VARCHAR(:size) BINARY',
         'smallint'  => 'SMALLINT',

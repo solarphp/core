@@ -120,6 +120,18 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
+     * Get the underlying adapter query profile.
+     * 
+     * @return array An array of queries executed by the adapter.
+     * 
+     */
+    public function getProfile()
+    {
+        return $this->_adapter->profile;
+    }
+    
+    /**
+     * 
      * Leave autocommit mode and begin a transaction.
      * 
      * @return void

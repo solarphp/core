@@ -92,6 +92,17 @@ class Solar {
     
     /**
      * 
+     * Inherited configs for classes descended from Solar_Base.
+     * 
+     * We keep this here so we can (in theory) cache them from load to load.
+     * 
+     * @var array
+     * 
+     */
+    public static $config_base = array();
+    
+    /**
+     * 
      * Where the Solar arch-class is in the filesystem.
      * 
      * @var string
@@ -302,7 +313,7 @@ class Solar {
      * 
      * Loads locale string files on-demand.
      * 
-     * @param string $class The class of the translation.
+     * @param string|object $spec The class name (or object) for the translation.
      * 
      * @param string $key The translation key.
      * 
@@ -312,8 +323,17 @@ class Solar {
      * @return string A translated locale string.
      * 
      */
-    public static function locale($class, $key, $num = 1)
+    public static function locale($spec, $key, $num = 1)
     {
+        // is the spec an object?
+        if (is_object($spec)) {
+            // yes, find its class
+            $class = get_class($spec);
+        } else {
+            // no, assume the spec is a class name
+            $class = (string) $spec;
+        }
+        
         // find all parents of this class, including this class
         $stack = Solar::parents($class, true);
         
@@ -825,7 +845,7 @@ class Solar {
      * picking of the right exception class from the $code, and
      * automated translation of the error message.
      * 
-     * @param string $class The class that generated the exception.
+     * @param string|object $spec The class name (or object) that generated the exception.
      * 
      * @param mixed $code A scalar error code, generally a string.
      * 
@@ -837,9 +857,18 @@ class Solar {
      * @return Solar_Exception
      * 
      */
-    public static function exception($class, $code, $text = '',
+    public static function exception($spec, $code, $text = '',
         $info = array())
     {
+        // is the spec an object?
+        if (is_object($spec)) {
+            // yes, find its class
+            $class = get_class($spec);
+        } else {
+            // no, assume the spec is a class name
+            $class = (string) $spec;
+        }
+        
         // drop 'ERR_' and 'EXCEPTION_' prefixes from the code
         // to get a suffix for the exception class
         $suffix = $code;

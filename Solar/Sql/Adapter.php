@@ -50,16 +50,20 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * `mode`
      * : (string) For SQLite, an octal file mode.
      * 
+     * `profile`
+     * : (bool) Turn on query profiling?
+     * 
      * @var array
      * 
      */
     protected $_Solar_Sql_Adapter = array(
-        'host'   => null,
-        'port'   => null,
-        'user'   => null,
-        'pass'   => null,
-        'name'   => null,
-        'mode'   => null,
+        'host'    => null,
+        'port'    => null,
+        'user'    => null,
+        'pass'    => null,
+        'name'    => null,
+        'mode'    => null,
+        'profile' => false,
     );
     
     /**
@@ -144,12 +148,17 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Execute these commands directly, without preparation.
+     * A quick-and-dirty query profile array.
+     * 
+     * Each element is an array, where the first value is the query execution
+     * time in microseconds, and the second value is the query string.
+     * 
+     * Only populated when the `profile` config key is true.
      * 
      * @var array
      * 
      */
-    protected $_direct = array('CREATE', 'ALTER', 'DROP');
+    public $profile = array();
     
     /**
      * 
@@ -189,6 +198,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             return;
         }
         
+        // start profile time
+        $before = microtime(true);
+        
         // build a DSN
         $dsn = $this->_dsn();
         
@@ -207,7 +219,16 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // force names to lower case
         $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
         
-        /** @todo Are there other portability attribs to consider? */
+        // retain the profile data?
+        if ($this->_config['profile']) {
+            $after = microtime(true);
+            $this->profile[] = array($after - $before, 'Connection');
+        }
+        
+        // always emulate prepared statements; this is faster, and works
+        // better with CREATE, DROP, ALTER statements.  requires PHP 5.1.3
+        // or later.
+        $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
     }
     
     /**
@@ -264,24 +285,21 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function exec($stmt, $data = array())
     {
-        // connect to the database if needed
         $this->_connect();
         
-        // what kind of command?
-        $pos = strpos($stmt, ' ');
-        $cmd = substr($stmt, 0, $pos);
+        // begin the profile time
+        $before = microtime(true);
         
-        // execute
-        if (in_array(strtoupper($cmd), $this->_direct)) {
-            // execute schema modifications directly
-            $this->_pdo->exec($stmt);
-            return true;
-        } else {
-            // prepare and execute
-            $obj = $this->_pdo->prepare($stmt);
-            $obj->execute((array) $data);
-            return $obj;
+        $obj = $this->_pdo->prepare($stmt);
+        $obj->execute((array) $data);
+        
+        // retain the profile data?
+        if ($this->_config['profile']) {
+            $after = microtime(true);
+            $this->profile[] = array($after - $before, $stmt);
         }
+        
+        return $obj;
     }
     
     /**

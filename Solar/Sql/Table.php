@@ -40,8 +40,11 @@ class Solar_Sql_Table extends Solar_Base {
      * `sql`
      * : (dependency) A Solar_Sql dependency object.
      * 
-     * `locale`
-     * : (string) Path to locale files.
+     * `paging`
+     * : (int) Number of rows per page.
+     * 
+     * `create`
+     * : (bool) Attempt to auto-create the table?
      * 
      * @var array
      * 
@@ -49,6 +52,7 @@ class Solar_Sql_Table extends Solar_Base {
     protected $_Solar_Sql_Table = array(
         'sql'    => 'sql',
         'paging' => 10,
+        'create' => true,
     );
     
     /**
@@ -77,6 +81,15 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      */
     protected $_paging = 10;
+    
+    /**
+     * 
+     * Have we connected to the database?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_connected = false;
     
     /**
      * 
@@ -161,12 +174,26 @@ class Solar_Sql_Table extends Solar_Base {
         // perform column and index setup, then fix everything.
         $this->_setup();
         $this->_autoSetup();
-        
-        // connect to the database with dependency injection
-        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
-        
-        // auto-create the table if needed
-        $this->_autoCreate();
+    }
+    
+    /**
+     * 
+     * Connects to the database and auto-creates the table if requested.
+     * 
+     * @return void
+     * 
+     */
+    protected function _connect()
+    {
+        if (! $this->_connected) {
+            $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
+            
+            if ($this->_config['create']) {
+                $this->_autoCreate();
+            }
+            
+            $this->_connected = true;
+        }
     }
     
     /**
@@ -215,6 +242,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function save($data)
     {
+        $this->_connect();
         if (empty($data['id'])) {
             return $this->insert($data);
         } else {
@@ -261,6 +289,7 @@ class Solar_Sql_Table extends Solar_Base {
         $result = $this->_autoValid($data);
         
         // attempt the insert.
+        $this->_connect();
         $result = $this->_sql->insert($this->_name, $data);
         
         // return the data as inserted
@@ -300,6 +329,7 @@ class Solar_Sql_Table extends Solar_Base {
         $result = $this->_autoValid($data);
         
         // attempt the update
+        $this->_connect();
         $result = $this->_sql->update($this->_name, $data, $where);
         
         // restore retained primary key data and return
@@ -318,7 +348,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function delete($where)
     {
-        // attempt the deletion
+        $this->_connect();
         $result = $this->_sql->delete($this->_name, $where);
         return $result;
     }
@@ -342,6 +372,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function select($type = 'result', $where = null,
         $order = null, $page = null)
     {
+        $this->_connect();
         $select = Solar::factory('Solar_Sql_Select');
         
         if ($type == 'all') {
@@ -377,6 +408,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function increment($name)
     {
+        $this->_connect();
         // only increment if auto-increment is set
         if (! empty($this->_col[$name]['autoinc'])) {
             // table__column

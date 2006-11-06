@@ -49,6 +49,10 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
      * `role_col`
      * : (string) The column for roles.
      * 
+     * `where`
+     * : (string|array) Additional _multiWhere() conditions to use
+     *   when selecting role rows.
+     * 
      * @var array
      * 
      */
@@ -57,6 +61,7 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
         'table'      => 'member_roles',
         'handle_col' => 'handle',
         'role_col'   => 'role',
+        'where'      => array(),
     );
     
     /**
@@ -71,18 +76,18 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
     public function fetch($handle)
     {
         // get the dependency object of class Solar_Sql
-        $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
+        $sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
-        // build the SQL statement
-        $stmt =  "SELECT " . $this->_config['role_col']
-              .  " FROM " . $this->_config['table']
-              .  " WHERE " . $this->_config['handle_col']
-              .  " = :handle";
-        
-        // build the placeholder data
-        $data = array(
-            'handle' => $handle,
+        // get a selection tool using the dependency object
+        $select = Solar::factory(
+            'Solar_Sql_Select',
+            array('sql' => $sql)
         );
+        
+        // build the select
+        $select->from($this->_config['table'], $this->_config['role_col'])
+               ->where("{$this->_config['handle_col']} = ?", $handle)
+               ->multiWhere($this->_config['where']);
         
         // get the results (a column of rows)
         $result = $obj->select('col', $stmt, $data);

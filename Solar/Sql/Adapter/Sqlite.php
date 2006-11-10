@@ -143,9 +143,9 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * 
      *     sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(32) NOT NULL);
      *     sqlite> pragma table_info(areas);
-     *     cid|name|type|notnull|dflt_value|pk
-     *     0|id|INTEGER|0||1
-     *     1|name|VARCHAR(32)|99||0
+     *     cid |name |type        |notnull |dflt_value |pk
+     *     0   |id   |INTEGER     |0       |           |1
+     *     1   |name |VARCHAR(32) |99      |           |0
      * 
      * @param string $table The table to describe.
      * 

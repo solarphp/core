@@ -626,6 +626,21 @@ class Solar_Sql extends Solar_Base {
     
     /**
      * 
+     * Get the last auto-incremented insert ID from the database.
+     * 
+     * @param string $name The name of the auto-increment series; optional,
+     * not normally required.
+     * 
+     * @return int The last auto-increment ID value inserted to the database.
+     * 
+     */
+    public function lastInsertId($name = null)
+    {
+        return $this->_adapter->lastInsertId($name);
+    }
+    
+    /**
+     * 
      * Creates a sequence in the database.
      * 
      * @param string $name The sequence name to create; this will be 

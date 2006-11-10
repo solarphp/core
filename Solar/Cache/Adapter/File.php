@@ -184,7 +184,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     public function save($key, $data)
     {
         // should the data be serialized?
-        if (is_array($data) || is_object($data)) {
+        // serialize all non-string data.
+        if (! is_string($data)) {
             $data = serialize($data);
             $serial = true;
         } else {

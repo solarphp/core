@@ -139,6 +139,77 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
+     * Describes the columns in a table.
+     * 
+     *     sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(32) NOT NULL);
+     *     sqlite> pragma table_info(areas);
+     *     cid|name|type|notnull|dflt_value|pk
+     *     0|id|INTEGER|0||1
+     *     1|name|VARCHAR(32)|99||0
+     * 
+     * @param string $table The table to describe.
+     * 
+     * @return array
+     * 
+     */
+    public function describeTable($table)
+    {
+        // strip non-word characters to try and prevent SQL injections
+        $table = preg_replace('/[^\w]/', '', $table);
+        
+        // get the native PDOStatement result
+        $result = $this->exec("PRAGMA TABLE_INFO($table)");
+        
+        // where the description will be stored
+        $descr = array();
+        
+        // loop through the result rows; each describes a column.
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+            
+            $name = $val['name'];
+            
+            // @todo: replace with preg() to allow for multiple spaces
+            $autoinc = strpos(strtoupper($val['type']), 'INTEGER PRIMARY KEY AUTOINCREMENT');
+            
+            list($type, $size, $scope) = $this->_parseTypeSizeScope($val['type']);
+            
+            $descr[$name] = array(
+                
+                // column name
+                'name'    => $name,
+                
+                // data type
+                'type'    => $type,
+                
+                // size, if any
+                'size'    => $size,
+                
+                // scope, if any
+                'scope'   => $scope,
+                
+                // "NOT NULL" means "require"
+                'require' => (bool) ($val['notnull'] == 1),
+                
+                // convert SQL NULL to PHP null
+                'default' => ($val['dflt_value'] == 'NULL' ? null : $val['dflt_value']),
+                
+                // is it a primary key?
+                'primary' => (bool) ($val['pk'] == 1),
+                
+                // is it auto-incremented?
+                'autoinc' => (bool) ($autoinc !== false),
+                
+                // keep the original native report
+                'native'  => $val,
+            );
+        }
+            
+        // done!
+        return $descr;
+    }
+    
+    /**
+     * 
      * Creates a sequence, optionally starting at a certain number.
      * 
      * @param string $name The sequence name to create.

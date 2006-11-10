@@ -130,6 +130,13 @@ class Solar_Sql extends Solar_Base {
         return $this->_adapter->profile;
     }
     
+    
+    // -----------------------------------------------------------------
+    // 
+    // Manipulation
+    // 
+    // -----------------------------------------------------------------
+    
     /**
      * 
      * Leave autocommit mode and begin a transaction.
@@ -260,6 +267,12 @@ class Solar_Sql extends Solar_Base {
         return $result->rowCount();
     }
     
+    // -----------------------------------------------------------------
+    // 
+    // Retrieval
+    // 
+    // -----------------------------------------------------------------
+    
     /**
      * 
      * Select rows from the database.
@@ -291,6 +304,8 @@ class Solar_Sql extends Solar_Base {
      * class for the return object.
      * 
      * @return mixed The query results for the return type requested.
+     * 
+     * @todo Deprecate in favor of fetch*() methods?
      * 
      */
     public function select($type, $spec, $data = array(), $class = null)
@@ -395,6 +410,213 @@ class Solar_Sql extends Solar_Base {
         return $data;
     }
     
+    /**
+     * 
+     * Fetches all rows from the database.
+     * 
+     * By default, returns as a Solar_Db_Rowset object; however, if an empty
+     * $class is specified, returns as a sequential array.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @param string $class Use this class for the return object; default is
+     * 'Solar_Db_Rowset'.  If empty, returns as a sequential array instead.
+     * 
+     * @return object
+     * 
+     */
+    public function fetchAll($spec, $data = array(), $class = 'Solar_Db_Rowset')
+    {
+        $result = $this->fetchResult($spec, $data);
+        
+        if ($class) {
+            $data = Solar::factory(
+                $class,
+                array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
+            );
+            return $data;
+        } else {
+            return $result->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+    
+    /**
+     * 
+     * Fetches all rows from the database as an associative array keyed on
+     * the first column.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchAssoc($spec, $data = array())
+    {
+        $result = $this->fetchResult($spec, $data);
+        
+        $data = array();
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $key = current($row); // value of the first element
+            $data[$key] = $row;
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * 
+     * Fetches the first column of all rows as a sequential array.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchCol($spec, $data = array())
+    {
+        $result = $this->fetchResult($spec, $data);
+        return $result->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+    
+    /**
+     * 
+     * Fetches the first column of the first row.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @return mixed
+     * 
+     */
+    public function fetchOne($spec, $data = array())
+    {
+        $result = $this->fetchResult($spec, $data);
+        return $result->fetchColumn(0);
+    }
+    
+    /**
+     * 
+     * Fetches an associative array of all rows as key-value pairs (first 
+     * column is the key, second column is the value).
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchPairs($spec, $data = array())
+    {
+        $result = $this->fetchResult($spec, $data);
+        
+        $data = array();
+        while ($row = $result->fetch(PDO::FETCH_NUM)) {
+            $data[$row[0]] = $row[1];
+        }
+        
+        return $data;
+    }
+
+    /**
+     * 
+     * Fetches a PDOStatement result object.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchResult($spec, $data = array())
+    {
+        // build the statement from its component parts if needed
+        if (is_array($spec)) {
+            $stmt = $this->_adapter->buildSelect($spec);
+        } else {
+            $stmt = $spec;
+        }
+        
+        // execute and get the PDOStatement result object
+        return $this->_adapter->exec($stmt, $data);
+    }
+    
+    /**
+     * 
+     * Fetches one row from the database.
+     * 
+     * By default, returns as a Solar_Db_Row object; however, if an empty
+     * $class is specified, returns as an associative array.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @param string $class Use this class for the return object; default is
+     * 'Solar_Db_Rowset'.  If empty, returns as a sequential array instead.
+     * 
+     * @return object
+     * 
+     */
+    public function fetchRow($spec, $data = array(), $class = 'Solar_Sql_Row')
+    {
+        $result = $this->fetchResult($spec, $data);
+        
+        if ($class) {
+            $data = Solar::factory(
+                $class,
+                array('data' => $result->fetch(PDO::FETCH_ASSOC))
+            );
+        
+            return $data;
+        } else {
+            return $result->fetch(PDO::FETCH_ASSOC);
+        }
+    }
+    
+    /**
+     * 
+     * Builds the SQL statement and returns it as a string instead of 
+     * executing it.  Useful for debugging.
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @return string
+     * 
+     */
+    public function fetchString($spec)
+    {
+        // build the statement from its component parts if needed
+        if (is_array($spec)) {
+            return $this->_adapter->buildSelect($spec);
+        } else {
+            return $spec;
+        }
+    }
+    
     
     // -----------------------------------------------------------------
     // 
@@ -457,6 +679,36 @@ class Solar_Sql extends Solar_Base {
         return $result;
     }
     
+    
+    // -----------------------------------------------------------------
+    // 
+    // Table discovery
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Returns a list of table names in the database.
+     * 
+     * @return array
+     * 
+     */
+    public function listTables()
+    {
+        return $this->_adapter->listTables($this);
+    }
+    
+    /**
+     * 
+     * Returns a Solar-standard table description.
+     * 
+     * @return array
+     * 
+     */
+    public function describeTable($table)
+    {
+        return $this->_adapter->describeTable($table);
+    }
     
     // -----------------------------------------------------------------
     // 
@@ -556,18 +808,6 @@ class Solar_Sql extends Solar_Base {
     public function dropTable($table)
     {
         return $this->_adapter->exec("DROP TABLE $table");
-    }
-    
-    /**
-     * 
-     * Returns a list of table names in the database.
-     * 
-     * @return array
-     * 
-     */
-    public function listTables()
-    {
-        return $this->_adapter->listTables($this);
     }
     
     /**

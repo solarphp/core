@@ -124,6 +124,81 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
+     * Describes the columns in a table.
+     * 
+     *     mysql> DESCRIBE table_name;
+     *     +--------------+--------------+------+-----+---------+-------+
+     *     | Field        | Type         | Null | Key | Default | Extra |
+     *     +--------------+--------------+------+-----+---------+-------+
+     *     | id           | int(11)      |      | PRI | 0       |       |
+     *     | created      | varchar(19)  | YES  | MUL | NULL    |       |
+     *     | updated      | varchar(19)  | YES  | MUL | NULL    |       |
+     *     | name         | varchar(127) |      | UNI |         |       |
+     *     | owner_handle | varchar(32)  | YES  | MUL | NULL    |       |
+     *     | subj         | varchar(255) | YES  |     | NULL    |       |
+     *     | prefs        | longtext     | YES  |     | NULL    |       |
+     *     +--------------+--------------+------+-----+---------+-------+
+     * 
+     * @param string $table The table to describe.
+     * 
+     * @return array
+     * 
+     */
+    public function describeTable($table)
+    {
+        // strip non-word characters to try and prevent SQL injections
+        $table = preg_replace('/[^\w]/', '', $table);
+        
+        // get the native PDOStatement result
+        $result = $this->exec("DESCRIBE $table");
+        
+        // where the description will be stored
+        $descr = array();
+        
+        // loop through the result rows; each describes a column.
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+            
+            $name = $val['field'];
+            
+            list($type, $size, $scope) = $this->_parseTypeSizeScope($val['type']);
+            
+            $descr[$name] = array(
+                
+                // column name
+                'name'    => $name,
+                
+                // data type
+                'type'    => $type,
+                
+                // size, if any
+                'size'    => $size,
+                
+                // scope, if any
+                'scope'   => $scope,
+                
+                // "NOT NULL" means "require"
+                'require' => (bool) ($val['null'] != 'YES'),
+                
+                // convert SQL NULL to PHP null
+                'default' => ($val['default'] == 'NULL' ? null : $val['default']),
+                
+                // is it a primary key?
+                'primary' => (bool) ($val['key'] == 'PRI'),
+                
+                // is it auto-incremented?
+                'autoinc' => (bool) (strpos($val['extra'], 'AUTO_INCREMENT') !== false),
+                
+                // keep the original native report
+                'native'  => $val,
+            );
+        }
+            
+        // done!
+        return $descr;
+    }
+    
+    /**
+     * 
      * Builds a CREATE TABLE command string.
      * 
      * @param string $name The table name to create.

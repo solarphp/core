@@ -369,6 +369,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Describes the columns in a table.
+     * 
+     * @return array An array of column tables.
+     * 
+     */
+    abstract public function describeTable($table);
+    
+    /**
+     * 
      * Drops an index.
      * 
      * @param string $table The table of the index.
@@ -485,6 +494,54 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // done!
         return $stmt;
+    }
+    
+    /**
+     * 
+     * Given a column specification, parse into datatype, size, and 
+     * decimal scope.
+     * 
+     * @param string $spec The column specification; e.g., "VARCHAR(255)"
+     * or "NUMERIC(10,2)".
+     * 
+     * @return array A sequential array of the column type, size, and scope.
+     * 
+     */
+    protected function _parseTypeSizeScope($spec)
+    {
+        $spec  = strtolower($spec);
+        $type  = null;
+        $size  = null;
+        $scope = null;
+        
+        // find the parens, if any
+        $pos = strpos($spec, '(');
+        if ($pos === false) {
+            // no parens, so no size or scope
+            $type = $spec;
+        } else {
+            // find the type first.
+            $type = substr($spec, 0, $pos);
+            
+            // there were parens, so there's at least a size.
+            // remove parens to get the size.
+            $size = trim(substr($spec, $pos), '()');
+            
+            // a comma in the size indicates a scope.
+            $pos = strpos($size, ',');
+            if ($pos !== false) {
+                $scope = substr($size, $pos + 1);
+                $size  = substr($size, 0, $pos);
+            }
+        }
+        
+        // find the Solar standard data type, if any.
+        // USE THIS LATER when we start mapping native types differently.
+        // $type = empty($this->_native[$type])
+        //     ? $type
+        //     : trim($this->_native[$val['type']]);
+        
+        return array($type, $size, $scope);
     }
 }
 ?>

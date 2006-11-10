@@ -188,7 +188,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
                 'scope'   => $scope,
                 
                 // "NOT NULL" means "require"
-                'require' => (bool) ($val['notnull'] == 1),
+                'require' => (bool) ($val['notnull']),
                 
                 // convert SQL NULL to PHP null
                 'default' => ($val['dflt_value'] == 'NULL' ? null : $val['dflt_value']),

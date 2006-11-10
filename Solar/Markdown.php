@@ -65,14 +65,13 @@ class Solar_Markdown extends Solar_Base {
      * : (int) Number of spaces per tab.  Default 4.
      * 
      * `tidy`
-     * : (bool|array) If false, do not use Tidy to post-process
-     * the transformed output.  If true or an array, is a set of
+     * : (bool|array) If empty/false/null, do not use Tidy to post-process
+     * the transformed output.  If true or a non-empty array, is a set of
      * config options to pass to Tidy when rendering output.
-     * See also <http://php.net/tidy>.  Default true.
+     * See also <http://php.net/tidy>.  Default false.
      * 
      * `plugins`
-     * : (array) An array of plugins for the parser to use, in
-     * order.
+     * : (array) An array of plugins for the parser to use, in order.
      * 
      * @var array
      * 
@@ -275,9 +274,8 @@ class Solar_Markdown extends Solar_Base {
         parent::__construct($config);
         
         // use tidy?
-        if ($this->_config['tidy'] !== false &&
-            ! extension_loaded('tidy')) {
-            // tidy requsted but not loaded
+        if ($this->_config['tidy'] && ! extension_loaded('tidy')) {
+            // tidy requested but not loaded
             throw $this->_exception('ERR_TIDY_NOT_LOADED');
         }
         
@@ -473,7 +471,7 @@ class Solar_Markdown extends Solar_Base {
         // replace all special chars in the text.
         $text = $this->unEncode($text);
         
-        if ($this->_config['tidy'] === false) {
+        if (! $this->_config['tidy']) {
             // tidy explicitly disabled
             return $text;
         }

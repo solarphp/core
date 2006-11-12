@@ -1,4 +1,4 @@
-// From script.aculo.us 1.6.4, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html).
+// From script.aculo.us 1.6.5, compressed by jsmin (http://www.crockford.com/javascript/jsmin.html).
 
 if(typeof Effect=='undefined')
 throw("controls.js requires including script.aculo.us' effects.js library");var Autocompleter={}
@@ -20,7 +20,7 @@ var value='';if(this.options.select){var nodes=document.getElementsByClassName(t
 value=Element.collectTextNodesIgnoreClass(selectedElement,'informal');var lastTokenPos=this.findLastToken();if(lastTokenPos!=-1){var newValue=this.element.value.substr(0,lastTokenPos+1);var whitespace=this.element.value.substr(lastTokenPos+1).match(/^\s+/);if(whitespace)
 newValue+=whitespace[0];this.element.value=newValue+value;}else{this.element.value=value;}
 this.element.focus();if(this.options.afterUpdateElement)
-this.options.afterUpdateElement(this.element,selectedElement);},updateChoices:function(choices){if(!this.changed&&this.hasFocus){this.update.innerHTML=choices;Element.cleanWhitespace(this.update);Element.cleanWhitespace(this.update.firstChild);if(this.update.firstChild&&this.update.firstChild.childNodes){this.entryCount=this.update.firstChild.childNodes.length;for(var i=0;i<this.entryCount;i++){var entry=this.getEntry(i);entry.autocompleteIndex=i;this.addObservers(entry);}}else{this.entryCount=0;}
+this.options.afterUpdateElement(this.element,selectedElement);},updateChoices:function(choices){if(!this.changed&&this.hasFocus){this.update.innerHTML=choices;Element.cleanWhitespace(this.update);Element.cleanWhitespace(this.update.down());if(this.update.firstChild&&this.update.down().childNodes){this.entryCount=this.update.down().childNodes.length;for(var i=0;i<this.entryCount;i++){var entry=this.getEntry(i);entry.autocompleteIndex=i;this.addObservers(entry);}}else{this.entryCount=0;}
 this.stopIndicator();this.index=0;if(this.entryCount==1&&this.options.autoSelect){this.selectEntry();this.hide();}else{this.render();}}},addObservers:function(element){Event.observe(element,"mouseover",this.onHover.bindAsEventListener(this));Event.observe(element,"click",this.onClick.bindAsEventListener(this));},onObserverEvent:function(){this.changed=false;if(this.getToken().length>=this.options.minChars){this.startIndicator();this.getUpdatedChoices();}else{this.active=false;this.hide();}},getToken:function(){var tokenPos=this.findLastToken();if(tokenPos!=-1)
 var ret=this.element.value.substr(tokenPos+1).replace(/^\s+/,'').replace(/\s+$/,'');else
 var ret=this.element.value;return/\n/.test(ret)?'':ret;},findLastToken:function(){var lastTokenPos=-1;for(var i=0;i<this.options.tokens.length;i++){var thisTokenPos=this.element.value.lastIndexOf(this.options.tokens[i]);if(thisTokenPos>lastTokenPos)

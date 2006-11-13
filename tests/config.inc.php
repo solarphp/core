@@ -26,9 +26,6 @@ $config['Solar_Sql_Adapter_Mysql'] = array(
 
 $config['Solar_Auth_Adapter_TypeKey']['token'] = 'foobarbaz';
 
-$config['Test_Solar_Cache_Adapter_Apc']['run'] = false;
-$config['Test_Solar_Cache_Adapter_Eaccellerator']['run'] = false;
-$config['Test_Solar_Cache_Adapter_Xcache']['run'] = false;
 
 return $config;
 ?>

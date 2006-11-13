@@ -78,25 +78,46 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        $class = get_class($this);
-        
-        // merge from config file
         $parents = array_reverse(Solar::parents($this, true));
-        foreach ($parents as $class) {
-            $var = "_$class";
-            $prop = empty($this->$var) ? null : $this->$var;
-            $this->_config = array_merge(
-                // current values
-                $this->_config,
-                // override with class property config
-                (array) $prop,
-                // override with solar config for the class
-                Solar::config($class, null, array())
-            );
-        }
         
-        // final override with construct-time config
-        $this->_config = array_merge($this->_config, (array) $config);
+        if ($config === false) {
+            
+            // properties only, no config file
+            foreach ($parents as $class) {
+                $var = "_$class"; // e.g., $_Solar_Test_Example
+                $prop = empty($this->$var) ? null : $this->$var;
+                $this->_config = array_merge(
+                    // current values
+                    $this->_config,
+                    // override with class property config
+                    (array) $prop
+                );
+            }
+            
+        } else {
+            
+            // merge from config file too
+            foreach ($parents as $class) {
+                $var = "_$class";
+                $prop = empty($this->$var) ? null : $this->$var;
+                $this->_config = array_merge(
+                    // current values
+                    $this->_config,
+                    // override with class property config
+                    (array) $prop,
+                    // override with solar config for the class
+                    Solar::config($class, null, array())
+                );
+            }
+        
+            // is construct-time config a file name?
+            if (is_string($config)) {
+                $config = Solar::run($config);
+            }
+        
+            // final override with construct-time config
+            $this->_config = array_merge($this->_config, (array) $config);
+        }
     }
     
     /**

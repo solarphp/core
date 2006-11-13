@@ -92,17 +92,6 @@ class Solar {
     
     /**
      * 
-     * Inherited configs for classes descended from Solar_Base.
-     * 
-     * We keep this here so we can (in theory) cache them from load to load.
-     * 
-     * @var array
-     * 
-     */
-    public static $config_base = array();
-    
-    /**
-     * 
      * Where the Solar arch-class is in the filesystem.
      * 
      * @var string

@@ -79,24 +79,20 @@ abstract class Solar_Base {
     public function __construct($config = null)
     {
         $class = get_class($this);
-        if (empty(Solar::$config_base[$class])) {
-            // merge from config file
-            $parents = array_reverse(Solar::parents($this, true));
-            foreach ($parents as $class) {
-                $var = "_$class";
-                $prop = empty($this->$var) ? null : $this->$var;
-                $this->_config = array_merge(
-                    // current values
-                    $this->_config,
-                    // override with class property config
-                    (array) $prop,
-                    // override with solar config for the class
-                    Solar::config($class, null, array())
-                );
-            }
-            Solar::$config_base[$class] = $this->_config;
-        } else {
-            $this->_config = Solar::$config_base[$class];
+        
+        // merge from config file
+        $parents = array_reverse(Solar::parents($this, true));
+        foreach ($parents as $class) {
+            $var = "_$class";
+            $prop = empty($this->$var) ? null : $this->$var;
+            $this->_config = array_merge(
+                // current values
+                $this->_config,
+                // override with class property config
+                (array) $prop,
+                // override with solar config for the class
+                Solar::config($class, null, array())
+            );
         }
         
         // final override with construct-time config

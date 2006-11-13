@@ -39,7 +39,10 @@ class Test_Solar_Form_Load_Table extends Solar_Test {
     public function teardown()
     {
         parent::teardown();
-        $this->_sql->dropTable('test_form_load');
+        $list = $this->_sql->listTables();
+        if (in_array('test_form_load', $list)) {
+            $this->_sql->dropTable('test_form_load');
+        }
     }
     
     /*

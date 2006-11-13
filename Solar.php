@@ -74,25 +74,19 @@ if (! class_exists('Solar_Base')) {
  */
 class Solar {
     
+    
     /**
      * 
      * The values read in from the configuration file.
      * 
-     * Default keys are ...
-     * 
-     * `locale_code`
-     * : (string) The locale code Solar is using, default 'en_US'.
-     * 
      * @var array
      * 
      */
-    public static $config = array(
-        'locale_code' => 'en_US',
-    );
+    public static $config = array();
     
     /**
      * 
-     * Where the Solar arch-class is in the filesystem.
+     * Where this class (the Solar arch-class) is in the filesystem.
      * 
      * @var string
      * 
@@ -182,6 +176,10 @@ class Solar {
      * 
      * @return void
      * 
+     * @see Solar::cleanGlobals()
+     * 
+     * @see Solar::fetchConfig()
+     * 
      */
     public static function start($config = null)
     {
@@ -194,58 +192,12 @@ class Solar {
         Solar::$dir = dirname(__FILE__);
         
         // clear out registered globals
-        // (this code from Richard Heyes and Stefan Esser)
         if (ini_get('register_globals')) {
-            
-            // Variables that shouldn't be unset
-            $noUnset = array(
-                'GLOBALS', '_GET', '_POST', '_COOKIE',
-                '_REQUEST', '_SERVER', '_ENV', '_FILES'
-            );
-            
-            // sources of global input.
-            // 
-            // the ternary check on $_SESSION is to make sure that
-            // it's really an array, not just a string; if it's just a
-            // string, that can bypass this check somehow.  Stefan
-            // Esser knows how this works, but I don't.
-            $input = array_merge($_ENV, $_GET, $_POST, $_COOKIE, $_SERVER, $_FILES,
-                isset($_SESSION) && is_array($_SESSION) ? $_SESSION : array()
-            );
-            
-            // unset globals set from input sources, but don't unset
-            // the sources themselves.
-            foreach ($input as $k => $v) {
-                if (! in_array($k, $noUnset) && isset($GLOBALS[$k])) {
-                    unset($GLOBALS[$k]);
-                }
-            }
+            $this->cleanGlobals();
         }
         
-        // load the config file values. note that we use Solar::$config here,
-        // not Solar::config(), because we are setting the value of the static
-        // property.  use alternate config source if one is given.
-        if (is_array($config) || is_object($config)) {
-            // merge from array or object
-            Solar::$config = array_merge(
-                Solar::$config,
-                (array) $config
-            );
-        } elseif (is_string($config)) {
-            // merge from array file return
-            Solar::$config = array_merge(
-                Solar::$config,
-                (array) Solar::run($config)
-            );
-        } elseif ($config === false) {
-            // leave Solar::$config alone
-        } else {
-            // use the default config path
-            Solar::$config = array_merge(
-                Solar::$config,
-                (array) Solar::run(SOLAR_CONFIG_PATH)
-            );
-        }
+        // fetch config values from file or other source
+        Solar::$config = Solar::fetchConfig($config);
         
         // process ini settings from config file
         $settings = Solar::config('Solar', 'ini_set', array());
@@ -254,7 +206,9 @@ class Solar {
         }
         
         // load the initial locale strings
-        Solar::$_locale_code = Solar::$config['locale_code'];
+        if (! empty(Solar::$config['locale_code'])) {
+            Solar::$_locale_code = Solar::$config['locale_code'];
+        }
         Solar::setLocale(Solar::$_locale_code);
         
         // run any 'start' hook scripts
@@ -1026,6 +980,79 @@ class Solar {
         
         // done
         return $stack;
+    }
+    
+    /**
+     *
+     * Cleans the global scope of all variables that are found in other
+     * super-globals.
+     *
+     * This code originally from Richard Heyes and Stefan Esser.
+     * 
+     * @return void
+     * 
+     */
+    public function cleanGlobals()
+    {
+        $list = array(
+            'GLOBALS',
+            '_POST',
+            '_GET',
+            '_COOKIE',
+            '_REQUEST',
+            '_SERVER',
+            '_ENV',
+            '_FILES',
+        );
+        
+        // Create a list of all of the keys from the super-global values.
+        // Use array_keys() here to preserve key integrity.
+        $keys = array_merge(
+            array_keys($_ENV),
+            array_keys($_GET),
+            array_keys($_POST),
+            array_keys($_COOKIE),
+            array_keys($_SERVER),
+            array_keys($_FILES),
+            // $_SESSION = null if you have not started the session yet.
+            // This insures that a check is performed regardless.
+            isset($_SESSION) && is_array($_SESSION) ? array_keys($_SESSION) : array()
+        );
+        
+        // Unset the globals.
+        foreach ($keys as $key) {
+            if (isset($GLOBALS[$key]) && ! in_array($key, $list)) {
+                unset($GLOBALS[$key]);
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Fetches config file values.
+     * 
+     * @param mixed $spec A config specification.
+     * 
+     * @return array A config array.
+     * 
+     */
+    public static function fetchConfig($spec = null)
+    {
+        // load the config file values.
+        // use alternate config source if one is given.
+        if (is_array($spec) || is_object($spec)) {
+            $config = (array) $spec;
+        } elseif (is_string($spec)) {
+            // merge from array file return
+            $config = (array) Solar::run($spec);
+        } elseif ($spec === false) {
+            $config = array();
+        } else {
+            // use the default config path
+            $config = (array) Solar::run(SOLAR_CONFIG_PATH);
+        }
+        
+        return $config;
     }
     
     /**

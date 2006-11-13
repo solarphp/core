@@ -193,7 +193,7 @@ class Solar {
         
         // clear out registered globals
         if (ini_get('register_globals')) {
-            $this->cleanGlobals();
+            Solar::cleanGlobals();
         }
         
         // fetch config values from file or other source

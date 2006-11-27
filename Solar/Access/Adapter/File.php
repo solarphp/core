@@ -66,6 +66,17 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
      */
     public function fetch($handle, $roles)
     {
+        // force the full, real path to the file
+        $file = realpath($this->_config['file']);
+        
+        // does the file exist?
+        if (! Solar::fileExists($file)) {
+            throw $this->_exception(
+                'ERR_FILE_NOT_READABLE',
+                array('file' => $file)
+            );
+        }
+        
         $handle = trim($handle);
         
         // eventual access list for the handle and roles
@@ -87,9 +98,9 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
             $info = explode(' ', $line);
             if ($info[1] == 'handle' && $info[2] == $handle ||        // direct user handle match
                 $info[1] == 'handle' && $info[2] == '+' && $handle || // any authenticated user
-                $info[1] == 'handle' && $info[2] == '*' ||            // any 
+                $info[1] == 'handle' && $info[2] == '*' ||            // any user (incl anon)
                 $info[1] == 'role'   && in_array($info[2], $roles) || // direct role match
-                $info[2] == 'role'   && $info[2] == '*') {            // any role
+                $info[2] == 'role'   && $info[2] == '*') {            // any role (incl anon)
                 
                 // keep the line
                 $list[] = array(

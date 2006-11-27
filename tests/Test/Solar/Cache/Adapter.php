@@ -12,6 +12,11 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         $this->_cache->deleteAll();
     }
     
+    public function test__construct()
+    {
+        $this->assertInstance($this->_cache, $this->_config['adapter']);
+    }
+    
     public function testDelete()
     {
         $id = 'coyote';
@@ -71,7 +76,7 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
         // deactivate then try to fetch
         $this->_cache->setActive(false);
         $this->assertFalse($this->_cache->isActive());
-        $this->assertFalse($this->_cache->fetch($id));
+        $this->assertNull($this->_cache->fetch($id));
         
         // re-activate then try to fetch
         $this->_cache->setActive(true);

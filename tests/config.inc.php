@@ -24,6 +24,13 @@ $config['Solar_Sql_Adapter_Mysql'] = array(
     'host'   => '127.0.0.1',
 );
 
+$config['Solar_Sql_Adapter_Pgsql'] = array(
+    'name'   => 'test',
+    'user'   => null,
+    'pass'   => null,
+    'host'   => '127.0.0.1',
+);
+
 $config['Solar_Auth_Adapter_TypeKey']['token'] = 'foobarbaz';
 
 

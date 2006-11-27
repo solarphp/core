@@ -152,7 +152,12 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
         }
         
         // did the hashes match?
-        return $stored_hash == $computed_hash;
+        if ($stored_hash == $computed_hash) {
+            $this->handle = $handle;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     /**

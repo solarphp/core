@@ -28,9 +28,27 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Information for "common" handle + passwd authentication adapters.
+     * User-supplied configuration values.
      * 
      * Keys are ...
+     * 
+     * `adapter`
+     * : (string) The adapter class, e.g. 'Solar_Auth_Adapter_File'.
+     * 
+     * `config`
+     * : (array) Construction-time config keys to pass to the adapter
+     *   to override Solar.config.php values.  Default is null.
+     * 
+     * `expire`
+     * : (int) Authentication lifetime in seconds; zero is
+     *   forever.  Default is 14400 (4 hours).
+     * 
+     * `idle`
+     * : (int) Maximum allowed idle time in seconds; zero is
+     *   forever.  Default is 1800 (30 minutes).
+     * 
+     * `allow`
+     * : (bool) Whether or not to allow login/logout attempts.
      * 
      * `source`
      * : (string) The source for auth credentials, 'get' (via the
@@ -59,11 +77,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * @var array
      * 
-     * @see Solar_Auth_Adapter::setCommon()
-     * 
      */
-    protected $_common = array(
-        'request'       => null,
+    protected $_Solar_Auth_Adapter = array(
+        'expire'        => 14400,
+        'idle'          => 1800,
+        'allow'         => true,
         'source'        => 'post',
         'source_handle' => 'handle',
         'source_passwd' => 'passwd',
@@ -83,7 +101,25 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * The user handle as derived from the authentication source.
+     * Class-specific session object.
+     * 
+     * @var Solar_Session
+     * 
+     */
+    protected $_session;
+    
+    /**
+     * 
+     * The source of auth credentials, either 'get' or 'post'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_source;
+    
+    /**
+     * 
+     * The user-provided plaintext handle, if any.
      * 
      * @var string
      * 
@@ -92,7 +128,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * The user password.
+     * The user-provided plaintext password, if any.
      * 
      * @var string
      * 
@@ -101,114 +137,352 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * The user "display name" or "full name" as derived from the
-     * authentication source.
+     * The current error code string.
      * 
      * @var string
      * 
      */
-    protected $_moniker;
+    protected $_err;
     
     /**
      * 
-     * The user email address as derived from the authentication source.
+     * Whether or not to allow authentication actions (login/logout).
      * 
-     * @var string
+     * @var bool
      * 
      */
-    protected $_email;
+    public $allow = true;
     
     /**
      * 
-     * The user URI as derived from the authentication source.
+     * The Unix time at which the authenticated handle was last
+     * valid.
      * 
-     * @var string
+     * Convenience reference to $this->_session->store['active'].
+     * 
+     * @var int
+     * 
+     * @see valid()
      * 
      */
-    protected $_uri;
+    public $active;
     
     /**
      * 
-     * The numeric user ID as derived from the authentication source.
+     * The Unix time at which the handle was initially
+     * authenticated.
+     * 
+     * Convenience reference to $this->_session->store['initial'].
      * 
      * @var int
      * 
      */
-    protected $_uid;
+    public $initial;
     
     /**
      * 
-     * The most-recent error code.
+     * The status code of the current user authentication. The string
+     * codes are ...
+     * 
+     * `ANON`
+     * : The user is anonymous/unauthenticated (no attempt to 
+     *   authenticate)
+     * 
+     * `EXPIRED`
+     * : The max time for authentication has expired
+     * 
+     * `IDLED`
+     * : The authenticated user has been idle for too long
+     * 
+     * `VALID`
+     * : The user is authenticated and has not timed out
+     * 
+     * `WRONG`
+     * : The user attempted authentication but failed
+     * 
+     * Convenience reference to $this->_session->store['status'].
      * 
      * @var string
      * 
      */
-    protected $_err = null;
+    public $status;
+    
+    /**
+     * 
+     * The currently authenticated user handle.
+     * 
+     * Convenience reference to $this->_session->store['handle'].
+     * 
+     * @var string
+     * 
+     */
+    public $handle;
+    
+    /**
+     * 
+     * The email address of the currently authenticated user. 
+      * May or may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['email'].
+     * 
+     * @var string
+     * 
+     */
+    public $email;
+    
+    /**
+     * 
+     * The "display name" or "full name" of the currently
+     * authenticated user.  May or may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['moniker'].
+     * 
+     * @var string
+     * 
+     */
+    public $moniker;
+    
+    /**
+     * 
+     * The URI for the currently authenticated user.  May or
+     * may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['uri'].
+     * 
+     * @var string
+     * 
+     */
+    public $uri;
+    
+    /**
+     * 
+     * The numeric user ID for the currently authenticated user.  May or
+     * may not be populated by the adapter.
+     * 
+     * Convenience reference to $this->_session->store['uid'].
+     * 
+     * @var string
+     * 
+     */
+    public $uid;
     
     /**
      * 
      * Constructor.
      * 
-     * @param array $config User-defined configuration values.
+     * @param array $config An array of user-defined configuration values.
      * 
      */
     public function __construct($config = null)
     {
-        $this->_common['submit_login']  = $this->locale('SUBMIT_LOGIN');
-        $this->_common['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
         parent::__construct($config);
-        $this->_request = Solar::factory('Solar_Request');
+        
+        // make sure we have submit values
+        if (empty($this->_config['submit_login'])) {
+            $this->_config['submit_login'] = $this->locale('SUBMIT_LOGIN');
+        }
+        
+        if (empty($this->_config['submit_logout'])) {
+            $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        }
+        
+        // make sure the source is either 'get' or 'post'.
+        if ($this->_config['source'] != 'get' && $this->_config['source'] != 'post') {
+            // default to post
+            $this->_config['source'] = 'post';
+        }
     }
     
     /**
      * 
-     * Verifies user credentials for the adapter.
+     * Start a session with authentication.
      * 
-     * Typical credentials are $this->_handle and $this->_passwd, but
-     * single sign-on systems may use different credential sources.
-     * 
-     * Adapters should set $this->_handle, $this->_email, and
-     * $this->_moniker if verfication is successful.
-     * 
-     * @return bool True if valid, false if not.
+     * @return void
      * 
      */
-    protected function _verify()
+    public function start()
     {
+        // get the current request environment
+        $this->_request = Solar::factory('Solar_Request');
+        
+        // create the session-access object.
+        // starts the session if it has not been started already.
+        $this->_session = Solar::factory(
+            'Solar_Session',
+            array('class' => get_class($this))
+        );
+        
+        // initialize the session array as needed
+        if (empty($this->_session->store)) {
+            $this->_session->store = array(
+                'status'  => 'ANON',
+                'initial' => null,
+                'active'  => null,
+                'handle'  => null,
+                'email'   => null,
+                'moniker' => null,
+                'uri'     => null,
+                'uid'     => null,
+            );
+        }
+        
+        // add convenience references to the session store keys
+        $this->status  =& $this->_session->store['status'];
+        $this->initial =& $this->_session->store['initial'];
+        $this->active  =& $this->_session->store['active'];
+        $this->handle  =& $this->_session->store['handle'];
+        $this->email   =& $this->_session->store['email'];
+        $this->moniker =& $this->_session->store['moniker'];
+        $this->uri     =& $this->_session->store['uri'];
+        $this->uid     =& $this->_session->store['uid'];
+        
+        // update idle and expire times no matter what
+        $this->updateIdleExpire();
+        
+        // if current auth is not valid, and processing is allowed,
+        // process login attempts
+        if (! $this->isValid() && $this->allow && $this->isLoginRequest()) {
+            
+            // reset to anonymous
+            $this->reset('ANON');
+            
+            // check the login validity
+            if ($this->isLoginValid() === true) {
+                $this->reset('VALID');
+            } else {
+                $code = $this->getErrCode();
+                if ($code) {
+                    // use adapter-specific error code
+                    $this->reset($code);
+                } else {
+                    // generic error
+                    $this->reset('WRONG');
+                }
+            }
+            
+        }
+        
+        // if current auth **is** valid, and processing is allowed,
+        // process logout attempts.
+        if ($this->isValid() && $this->allow && $this->isLogoutRequest()) {
+            $this->reset();
+        }
+    }
+    
+    /**
+     * 
+     * Updates idle and expire times, invalidating authentication if
+     * they are exceeded.
+     * 
+     * Note that if your script runs more than 1 second, it is possible
+     * that multiple calls to this method may result in the authentication
+     * expiring in the middle of the script.  As such, if you only need
+     * to check that the user is logged in, call $this->isValid().
+     * 
+     * @return bool Whether or not authentication is still valid.
+     * 
+     */
+    public function updateIdleExpire()
+    {
+        // is the current user already authenticated?
+        if ($this->isValid()) {
+            
+            // Check if session authentication has expired
+            $tmp = $this->initial + $this->_config['expire'];
+            if ($this->_config['expire'] > 0 && $tmp < time()) {
+                // past the expiration time
+                // flash forward the status text, and return
+                $this->reset('EXPIRED');
+                return false;
+            }
+    
+            // Check if session has been idle for too long
+            $tmp = $this->active + $this->_config['idle'];
+            if ($this->_config['idle'] > 0 && $tmp < time()) {
+                // past the idle time
+                // flash forward the status text, and return
+                $this->reset('IDLED');
+                return false;
+            }
+            
+            // not expired, not idled, so update the active time
+            $this->active = time();
+            return true;
+            
+        }
+        
         return false;
     }
     
     /**
      * 
-     * Sets information for "common" handle + passwd authentication
-     * systems.
+     * Tells whether the current authentication is valid.
      * 
-     * @param array $common The common adapter information for source, 
-     * source_handle, etc.
+     * @return bool Whether or not authentication is still valid.
+     * 
+     */
+    public function isValid()
+    {
+        return $this->status == 'VALID';
+    }
+    
+    /**
+     * 
+     * Resets any authentication data in the session.
+     * 
+     * Typically used for idling, expiration, and logout.  Calls
+     * [[php::session_regenerate_id() | ]] to clear previous session.
+     * 
+     * @param string $status A Solar_Auth status string;
+     * default is 'ANON'.
+     * 
+     * @param string $handle The authenticated user handle; only
+     * honored if $status is 'VALID'.
      * 
      * @return void
      * 
-     * @see Solar_Auth_Adapter::$_common
+     */
+    public function reset($status = 'ANON')
+    {
+        $this->status = strtoupper($status);
+        if ($this->status == 'VALID') {
+            // reset the timers, leave credentials in place.
+            $now = time();
+            $this->initial = $now;
+            $this->active  = $now;
+        } else {
+            // reset the credentials and information
+            $this->initial = null;
+            $this->active  = null;
+            $this->handle  = null;
+            $this->moniker = null;
+            $this->email   = null;
+            $this->uri     = null;
+            $this->uid     = null;
+        }
+        
+        // reset the session id and delete previous session file
+        $this->_session->regenerateId();
+        
+        // flash forward any messages
+        $this->_session->setFlash('status_text', $this->locale($this->status));
+    }
+    
+    /**
+     * 
+     * Retrieves a "read-once" session value for Solar_Auth.
+     * 
+     * @param string $key The specific type of information.
+     * 
+     * @param mixed $val If the class and key do not exist, return
+     * this value.  Default null.
+     * 
+     * @return mixed The "read-once" value.
      * 
      */
-    public function setCommon($common)
+    public function getFlash($key, $val = null)
     {
-        $base = array(
-            'source'        => 'post',
-            'source_handle' => 'handle',
-            'source_passwd' => 'passwd',
-            'source_submit' => 'submit',
-            'submit_login'  => $this->locale('SUBMIT_LOGIN'),
-            'submit_logout' => $this->locale('SUBMIT_LOGOUT'),
-        );
-        
-        $this->_common = array_merge($base, $common);
-        
-        // make sure the source is either 'get' or 'post'.
-        if ($this->_common['source'] != 'get' && $this->_common['source'] != 'post') {
-            // default to post
-            $this->_common['source'] = 'post';
-        }
+        return $this->_session->getFlash($key, $val);
     }
     
     /**
@@ -221,9 +495,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isLoginRequest()
     {
-        $method = strtolower($this->_common['source']);
-        $submit = $this->_request->$method($this->_common['source_submit']);
-        return $submit == $this->_common['submit_login'];
+        $method = strtolower($this->_config['source']);
+        $submit = $this->_request->$method($this->_config['source_submit']);
+        return $submit == $this->_config['submit_login'];
     }
     
     /**
@@ -236,9 +510,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isLogoutRequest()
     {
-        $method = strtolower($this->_common['source']);
-        $submit = $this->_request->$method($this->_common['source_submit']);
-        return $submit == $this->_common['submit_logout'];
+        $method = strtolower($this->_config['source']);
+        $submit = $this->_request->$method($this->_config['source_submit']);
+        return $submit == $this->_config['submit_logout'];
     }
     
     /**
@@ -254,10 +528,13 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_err = null;
         $this->reset();
         
-        // load the handle and password from the request source
-        $method = strtolower($this->_common['source']);
-        $this->_handle = $this->_request->$method($this->_common['source_handle']);
-        $this->_passwd = $this->_request->$method($this->_common['source_passwd']);
+        // load the handle and password from the request source.
+        // note that we use $_handle and $_passwd; these are the user-provided
+        // values, not the session values.  the _verify() method should set
+        // the $handle, $email, etc. values.
+        $method        = strtolower($this->_config['source']);
+        $this->_handle  = $this->_request->$method($this->_config['source_handle']);
+        $this->_passwd = $this->_request->$method($this->_config['source_passwd']);
         
         // verify the credentials, which may set some user data.
         $result = (bool) $this->_verify();
@@ -270,21 +547,18 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Clears handle, passwd, email, moniker, and uri properties.
+     * Verifies user credentials for the adapter.
      * 
-     * @return void
+     * Typical credentials are $this->_handle and $this->_passwd, but
+     * single sign-on systems may use different credential sources.
+     * 
+     * Adapters should set $this->handle, $this->email, $this->moniker,
+     * and $this->uri if verfication is successful.
+     * 
+     * @return bool True if valid, false if not.
      * 
      */
-    public function reset()
-    {
-        $this->_err     = null;
-        $this->_handle  = null;
-        $this->_passwd  = null;
-        $this->_email   = null;
-        $this->_moniker = null;
-        $this->_uri     = null;
-        $this->_uid     = null;
-    }
+    abstract protected function _verify();
     
     /**
      * 
@@ -296,66 +570,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function getErrCode()
     {
         return $this->_err;
-    }
-    
-    /**
-     * 
-     * Returns the current user handle.
-     * 
-     * @return string
-     * 
-     */
-    public function getHandle()
-    {
-        return $this->_handle;
-    }
-    
-    /**
-     * 
-     * Returns the current user email address.
-     * 
-     * @return string
-     * 
-     */
-    public function getEmail()
-    {
-        return $this->_email;
-    }
-    
-    /**
-     * 
-     * Returns the current user "full name" or "display name".
-     * 
-     * @return string
-     * 
-     */
-    public function getMoniker()
-    {
-        return $this->_moniker;
-    }
-    
-    /**
-     * 
-     * Returns the current user URI.
-     * 
-     * @return string
-     * 
-     */
-    public function getUri()
-    {
-        return $this->_uri;
-    }
-    
-    /**
-     * 
-     * Returns the current user ID.
-     * 
-     * @return string
-     * 
-     */
-    public function getUid()
-    {
-        return $this->_uid;
     }
 }
 ?>

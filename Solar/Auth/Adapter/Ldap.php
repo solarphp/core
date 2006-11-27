@@ -116,6 +116,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
                 array($this->_config)
             );
         } else {
+            $this->handle = $handle;
             return true;
         }
     }

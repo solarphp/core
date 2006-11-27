@@ -89,11 +89,12 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
         // there must be an entry for the username,
         // and the plain-text password must match.
         if (! empty($user['passwd']) && $user['passwd'] == $passwd) {
-            // set additional values
-            $this->_moniker  = (! empty($user['moniker']))  ? $user['moniker'] : null;
-            $this->_email    = (! empty($user['email']))    ? $user['email']   : null;
-            $this->_uri      = (! empty($user['uri']))      ? $user['uri']     : null;
-            $this->_uid      = (! empty($user['uid']))      ? $user['uid']     : null;
+            // set credentials
+            $this->handle   = $handle;
+            $this->moniker  = (! empty($user['moniker']))  ? $user['moniker'] : null;
+            $this->email    = (! empty($user['email']))    ? $user['email']   : null;
+            $this->uri      = (! empty($user['uri']))      ? $user['uri']     : null;
+            $this->uid      = (! empty($user['uid']))      ? $user['uid']     : null;
             return true;
         } else {
             return false;

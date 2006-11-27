@@ -158,14 +158,16 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
         $pos = strpos($reply, "\n\n");
         $reply = substr($reply, $pos+2);
         
-        // is the reply string a known reply?
-        if (array_key_exists($reply, $this->_config['replies'])) {
-            // get the true/false value of the reply
-            return (bool) $this->_config['replies'][$reply];
+        // is the reply string a known reply, and set to true?
+        $ok = array_key_exists($reply, $this->_config['replies']) &&
+              (bool) $this->_config['replies'][$reply];
+             
+        if ($ok) {
+            $this->handle = $handle;
+            return true;
+        } else {
+            return false;
         }
-        
-        // reply not listed, assume false
-        return false;
     }
 }
 ?>

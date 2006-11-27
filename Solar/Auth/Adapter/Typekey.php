@@ -288,20 +288,16 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
             $valid = false;
         } elseif ($this->_verify()) {
             // verified, save user data
-            $this->_handle  = $name;  // username
-            $this->_email   = $email; // email
-            $this->_moniker = $nick;  // display name
-            $this->_uri     = null;   // not supported by TypeKey
-            $this->_uid     = null;   // not supported by TypeKey
-            $valid = true;
+            $this->handle  = $name;  // username
+            $this->email   = $email; // email
+            $this->moniker = $nick;  // display name
+            $this->uri     = null;   // not supported by TypeKey
+            $this->uid     = null;   // not supported by TypeKey
+            return true;
         } else {
             // not verified, clear out user data
-            $this->reset();
-            $valid = false;
+            return false;
         }
-        
-        // done!
-        return $valid;
     }
     
     /**

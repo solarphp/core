@@ -111,10 +111,10 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         
         // list of optional columns as (property => field)
         $optional = array(
-            '_email'   => 'email_col',
-            '_moniker' => 'moniker_col',
-            '_uri'     => 'uri_col',
-            '_uid'     => 'uid_col',
+            'email'   => 'email_col',
+            'moniker' => 'moniker_col',
+            'uri'     => 'uri_col',
+            'uid'     => 'uid_col',
         );
         
         // always get the user handle
@@ -145,7 +145,8 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
             
             $row = $rows->current();
             
-            // handle is already set, need to set values from opt. cols.
+            // set credentials from optional cols
+            $this->handle = $handle;
             foreach ($optional as $key => $val) {
                 if ($this->_config[$val]) {
                     $this->$key = $row[$this->_config[$val]];

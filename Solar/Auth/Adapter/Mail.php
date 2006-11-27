@@ -87,6 +87,7 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
         $conn = @imap_open($mailbox, $handle, $passwd, OP_HALFOPEN);
         if (is_resource($conn)) {
             @imap_close($conn);
+            $this->handle = $handle;
             return true;
         } else {
             return false;

@@ -62,7 +62,6 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      *
      */
     protected $_Solar_Cache_Adapter_Xcache = array(
-        'life' => 0,
         'user' => null,
         'pass' => null
     );
@@ -101,6 +100,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      */
     public function save($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return xcache_set($key, $data, $this->_life);
     }
 
@@ -115,6 +118,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return xcache_get($key);
     }
 
@@ -129,6 +136,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      */
     public function delete($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return xcache_unset($key);
     }
 
@@ -144,6 +155,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      */
     public function deleteAll()
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         // store creds current state
         $olduser = null;
         $oldpass = null;

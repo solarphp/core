@@ -42,23 +42,6 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
 
     /**
      *
-     * User-provided configuration.
-     *
-     * Keys are ...
-     *
-     * `life`
-     * : (int) The cache entry lifetime in seconds, default 0
-     *   (never expires).
-     *
-     * @var array
-     *
-     */
-    protected $_Solar_Cache_Adapter_Eaccelerator = array(
-        'life' => 0,
-    );
-
-    /**
-     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -92,6 +75,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
      */
     public function save($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return eaccelerator_put($key, $data, $this->_life);
     }
 
@@ -106,6 +93,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return eaccelerator_get($key);
     }
 
@@ -120,6 +111,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
      */
     public function delete($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         eaccelerator_rm($key);
     }
 
@@ -132,6 +127,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
      */
     public function deleteAll()
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         eaccelerator_clean();
     }
 

@@ -41,23 +41,6 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
 
     /**
      *
-     * User-provided configuration.
-     *
-     * Keys are ...
-     *
-     * `life`
-     * : (int) The cache entry lifetime in seconds, default 0
-     *   (never expires).
-     *
-     * @var array
-     *
-     */
-    protected $_Solar_Cache_Adapter_Apc = array(
-        'life' => 0,
-    );
-
-    /**
-     *
      * Constructor.
      *
      * @param array $config User-provided configuration values.
@@ -90,6 +73,10 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      */
     public function save($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return apc_store($key, $data, $this->_life);
     }
 
@@ -104,6 +91,10 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return apc_fetch($key);
     }
 
@@ -118,6 +109,10 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      */
     public function delete($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         apc_delete($key);
     }
 
@@ -133,6 +128,10 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      */
     public function deleteAll()
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         apc_clear_cache('user');
     }
 

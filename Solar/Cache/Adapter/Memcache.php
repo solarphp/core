@@ -57,9 +57,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * `port`
      * : (int) The memcached port number, default 11211.
      * 
-     * `life`
-     * : (int) The cache entry lifetime in seconds, default 60.
-     * 
      * `timeout`
      * : (int) The timeout before the server connection is
      *   considered a miss, in seconds.  Default is 1 second, and should 
@@ -71,7 +68,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
     protected $_Solar_Cache_Adapter_Memcache = array(
         'host' => 'localhost',
         'port' => 11211,
-        'life' => 60,
         'timeout' => 1,
     );
     
@@ -124,6 +120,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      */
     public function save($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return $this->_memcache->set($key, $data, null, $this->_life);
     }
     
@@ -138,6 +138,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return $this->_memcache->get($key);
     }
     
@@ -152,6 +156,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      */
     public function delete($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         $this->_memcache->delete($key);
     }
     
@@ -164,6 +172,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      */
     public function deleteAll()
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         $this->_memcache->flush();
     }
     

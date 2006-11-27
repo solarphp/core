@@ -64,16 +64,11 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      *   the web server process. Default is '/Solar_Cache_File' in the system
      *   temporary directory.
      * 
-     * `life`
-     * : (int) The lifetime of each cache entry in seconds;
-     *   default is 3600 seconds (i.e., 1 hour).
-     * 
      * @var array
      * 
      */
     protected $_Solar_Cache_Adapter_File = array(
         'path'   => null, // default set in constructor
-        'life'   => 3600
     );
     
     /**
@@ -112,6 +107,64 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     
     /**
      * 
+     * Inserts/updates cache entry data.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param mixed $data The data to write into the entry.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function save($key, $data)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        // should the data be serialized?
+        // serialize all non-string data.
+        if (! is_string($data)) {
+            $data = serialize($data);
+            $serial = true;
+        } else {
+            $serial = false;
+        }
+        
+        // open the file for over-writing
+        $file = $this->entry($key);
+        $fp = @fopen($file, 'wb');
+        
+        // was it opened?
+        if ($fp) {
+            
+            // yes.  exclusive lock for writing.
+            flock($fp, LOCK_EX);
+            fwrite($fp, $data, strlen($data));
+            
+            // add a .serial file? (do this while the file
+            // is locked to avoid race conditions)
+            if ($serial) {
+                touch($file . '.serial');
+            } else {
+                // make sure no serial file is there
+                // from a previous entry with the same
+                // name
+                @unlink($file . '.serial');
+            }
+            
+            // unlock and close, then done.
+            flock($fp, LOCK_UN);
+            fclose($fp);
+            return true;
+        }
+        
+        // could not open the file for writing.
+        return false;
+    }
+    
+    /**
+     * 
      * Fetches cache entry data.
      * 
      * @param string $key The entry ID.
@@ -121,6 +174,10 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         // get the entry filename *before* validating;
         // this avoids race conditions.
         $file = $this->entry($key);
@@ -172,60 +229,6 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     
     /**
      * 
-     * Inserts/updates cache entry data.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @param mixed $data The data to write into the entry.
-     * 
-     * @return bool True on success, false on failure.
-     * 
-     */
-    public function save($key, $data)
-    {
-        // should the data be serialized?
-        // serialize all non-string data.
-        if (! is_string($data)) {
-            $data = serialize($data);
-            $serial = true;
-        } else {
-            $serial = false;
-        }
-        
-        // open the file for over-writing
-        $file = $this->entry($key);
-        $fp = @fopen($file, 'wb');
-        
-        // was it opened?
-        if ($fp) {
-            
-            // yes.  exclusive lock for writing.
-            flock($fp, LOCK_EX);
-            fwrite($fp, $data, strlen($data));
-            
-            // add a .serial file? (do this while the file
-            // is locked to avoid race conditions)
-            if ($serial) {
-                touch($file . '.serial');
-            } else {
-                // make sure no serial file is there
-                // from a previous entry with the same
-                // name
-                @unlink($file . '.serial');
-            }
-            
-            // unlock and close, then done.
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return true;
-        }
-        
-        // could not open the file for writing.
-        return false;
-    }
-    
-    /**
-     * 
      * Deletes an entry from the cache.
      * 
      * @param string $key The entry ID.
@@ -235,6 +238,10 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function delete($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         $file = $this->entry($key);
         unlink($file);
         @unlink($file . '.serial');
@@ -249,6 +256,10 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function deleteAll()
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         // open the directory
         $dir = dir($this->_path);
         

@@ -550,6 +550,14 @@ class Solar {
     {
         Solar::loadClass($class);
         $obj = new $class($config);
+        
+        // is it an object factory?
+        if (method_exists($obj, 'factory')) {
+            // yes, return the class from the object factory
+            return $obj->factory();
+        }
+        
+        // return the object itself
         return $obj;
     }
     
@@ -651,6 +659,8 @@ class Solar {
      * Returns a dependency object.
      * 
      * @param string $class The dependency object should be an instance of this class.
+     * Technically, this is more a hint than a requirement, although it will be used
+     * as the class name if [[Solar::factory()]] gets called.
      * 
      * @param mixed $spec If an object, check to make sure it's an instance of $class.
      * If a string, treat as a [[Solar::registry()]] key. Otherwise, use this as a config
@@ -661,29 +671,17 @@ class Solar {
      */
     public static function dependency($class, $spec)
     {
-        // if it's a string, assume it's the key name for a registered
-        // object.  get it, then proceed to class-check.
-        if (is_string($spec)) {
-            $spec = Solar::registry($spec);
-        }
-        
-        // is it an object?
+        // is it an object already?
         if (is_object($spec)) {
-            // make sure it's of the proper class
-            Solar::loadClass($class);
-            if (! $spec instanceof $class) {
-                $actual = get_class($spec);
-                throw Solar::exception(
-                    'Solar',
-                    'ERR_DEPENDENCY_MISMATCH',
-                    "Dependency of class '$class' needed, actually '$actual'",
-                    array('class' => $class, 'actual' => $actual)
-                );
-            }
-            // it's good, return as-is
             return $spec;
         }
         
+        // check for registry objects
+        if (is_string($spec) && Solar::isRegistered($spec)) {
+            return Solar::registry($spec);
+        }
+        
+        // not an object, not in registry.
         // try to create an object with $spec as the config
         return Solar::factory($class, $spec);
     }

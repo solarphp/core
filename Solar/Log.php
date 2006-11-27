@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Facade for a log adapter.
+ * Factory for a log adapter.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Facade for a log adapter.
+ * Factory for a log adapter.
  * 
  * {{code: php
  *     // example setup of a single adapter
@@ -51,94 +51,35 @@ class Solar_Log extends Solar_Base {
      * : (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
      *   Default is 'Solar_Log_Adapter_None'.
      * 
-     * `config`
-     * : (array) Configuration to pass to the adapter.
-     * 
      * @var array
      * 
      */
     protected $_Solar_Log = array(
         'adapter' => 'Solar_Log_Adapter_None',
-        'config'  => null,
+        'events'  => '*',
     );
     
     /**
      * 
-     * The internal Solar_Log_Adapter instance.
-     * 
-     * @var Solar_Log_Adapter
+     * Factory method for returning adapters.
      * 
      */
-    protected $_adapter;
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration.
-     * 
-     */
-    public function __construct($config = null)
+    public function factory()
     {
-        parent::__construct($config);
-        $class = $this->_config['adapter'];
-        $config = empty($this->_config['config']) ? null : $this->_config['config'];
-        $this->_adapter = Solar::factory($class, $config);
-    }
-    
-    /**
-     * 
-     * Magic shorthand for saving an event using a method name.
-     * 
-     * {{code: php
-     *     // these are equivalent ...
-     *     $log->save('info', 'informational message');
-     *     $log->info('informational message');
-     * }}
-     * 
-     * @param string $method The event type.
-     * 
-     * @param array $params Additional parameters; only the first
-     * paramter is used (the message to log).
-     * 
-     * @return mixed Boolean false if the event was not saved, or a
-     * non-empty value if the event was saved (typically boolean true).
-     * 
-     */
-    public function __call($method, $params)
-    {
-        if (! empty($params[0])) {
-            return $this->save($method, $params[0]);
-        } else {
-            // will throw a PHP warning about missing second param
-            return $this->save($method);
+        // bring in the config and get the adapter class.
+        $config = $this->_config;
+        $class = $config['adapter'];
+        unset($config['adapter']);
+        
+        // deprecated: support a 'config' key for the adapter configs.
+        // this was needed for facades, but is not needed for factories.
+        if (isset($config['config'])) {
+            $tmp = $config['config'];
+            unset($config['config']);
+            $config = array_merge($config, (array) $tmp);
         }
-    }
-    
-    /**
-     * 
-     * Saves (writes) an event and message to the log.
-     * 
-     * {{code: php
-     *     $log->save('info', 'informational message');
-     *     $log->save('critical', 'critical message');
-     *     $log->save('my special event type', 'describing the event');
-     * }}
-     * 
-     * @param string $class The class name logging the event.
-     * 
-     * @param string $event The event type (typically 'debug', 'info',
-     * 'notice', 'severe', 'critical', etc).
-     * 
-     * @param string $message A text description of the event.
-     * 
-     * @return mixed Boolean false if the event was not saved, or a
-     * non-empty value if the event was saved (typically boolean true).
-     * 
-     */
-    public function save($class, $event, $message)
-    {
-        return $this->_adapter->save($class, $event, $message);
+        
+        return Solar::factory($class, $config);
     }
 }
 ?>

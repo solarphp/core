@@ -75,6 +75,39 @@ abstract class Solar_Log_Adapter extends Solar_Base {
     
     /**
      * 
+     * Saves (writes) an event and message to the log.
+     * 
+     * {{code: php
+     *     $log->save('class_name', 'info', 'informational message');
+     *     $log->save('class_name', 'critical', 'critical message');
+     *     $log->save('class_name', 'my special event type', 'describing the event');
+     * }}
+     * 
+     * @param string $class The class name logging the event.
+     * 
+     * @param string $event The event type (typically 'debug', 'info',
+     * 'notice', 'severe', 'critical', etc).
+     * 
+     * @param string $descr A text description of the event.
+     * 
+     * @return mixed Boolean false if the event was not saved, or a
+     * non-empty value if the event was saved (typically boolean true).
+     * 
+     */
+    public function save($class, $event, $descr)
+    {
+        $save = in_array($event, $this->_events) ||
+                in_array('*', $this->_events);
+        
+        if ($save) {
+            return $this->_save($class, $event, $descr);
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
      * Gets the list of events this adapter recognizes.
      * 
      * @return array The list of recognized events.
@@ -118,40 +151,6 @@ abstract class Solar_Log_Adapter extends Solar_Base {
     protected function _getTime()
     {
         return date('Y-m-d\TH:i:s');
-    }
-    
-    /**
-     * 
-     * Public interface to save (write) an event and message to the log.
-     * 
-     * This is the public interface for saving an event; adapters should
-     * override the protected _save() method to perform the "real" save.
-     * 
-     * @param string $class The class name reporting the event.
-     * 
-     * @param string $event The event type (e.g. 'info' or 'debug').
-     * 
-     * @param string $descr A description of the event. 
-     * 
-     * @return mixed Boolean false if the event was not saved (usually
-     * because it was not recognized), or a non-empty value if it was
-     * saved.
-     * 
-     * @see Solar_Log_Adapter::_save()
-     * 
-     * @todo support wildcard-suffix events (e.g., "event-*").
-     * 
-     */
-    public function save($class, $event, $descr)
-    {
-        $save = in_array($event, $this->_events) ||
-                in_array('*', $this->_events);
-        
-        if ($save) {
-            return $this->_save($class, $event, $descr);
-        } else {
-            return false;
-        }
     }
     
     /**

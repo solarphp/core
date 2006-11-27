@@ -73,10 +73,10 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function buildSelect($parts)
+    protected function _buildSelect($parts)
     {
         // build the baseline statement
-        $stmt = parent::buildSelect($parts);
+        $stmt = parent::_buildSelect($parts);
         
         // determine count
         $count = ! empty($parts['limit']['count'])
@@ -117,7 +117,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      */
     public function listTables()
     {
-        $result = $this->exec('SHOW TABLES');
+        $result = $this->query('SHOW TABLES');
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
@@ -150,7 +150,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         $table = preg_replace('/[^\w]/', '', $table);
         
         // get the native PDOStatement result
-        $result = $this->exec("DESCRIBE $table");
+        $result = $this->query("DESCRIBE $table");
         
         // where the description will be stored
         $descr = array();
@@ -208,9 +208,9 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return string A CREATE TABLE command string.
      * 
      */
-    public function buildCreateTable($name, $cols)
+    protected function _buildCreateTable($name, $cols)
     {
-        $stmt = parent::buildCreateTable($name, $cols);
+        $stmt = parent::_buildCreateTable($name, $cols);
         $stmt .= " TYPE=InnoDB"; // for transactions
         return $stmt;
     }
@@ -226,9 +226,9 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropIndex($table, $name)
+    protected function _dropIndex($table, $name)
     {
-        $this->exec("DROP INDEX $name ON $table");
+        $this->query("DROP INDEX $name ON $table");
     }
     
     /**
@@ -242,11 +242,11 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function createSequence($name, $start = 1)
+    protected function _createSequence($name, $start = 1)
     {
         $start -= 1;
-        $this->exec("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
-        $this->exec("INSERT INTO $name (id) VALUES ($start)");
+        $this->query("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
+        $this->query("INSERT INTO $name (id) VALUES ($start)");
     }
     
     /**
@@ -258,9 +258,9 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropSequence($name)
+    protected function _dropSequence($name)
     {
-        $this->exec("DROP TABLE $name");
+        $this->query("DROP TABLE $name");
     }
     
     /**
@@ -272,24 +272,20 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return int The next sequence number.
      * 
      */
-    public function nextSequence($name)
+    protected function _nextSequence($name)
     {
-        $this->_connect();
         $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            $this->query($cmd);
         } catch (Exception $e) {
             // error when updating the sequence.
-            // assume we need to create it.
-            $this->createSequence($name);
-            
-            // now try to increment again.
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            // assume we need to create it, then
+            // try to increment again.
+            $this->_createSequence($name);
+            $this->query($cmd);
         }
         
         // get the sequence number

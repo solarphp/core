@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: column type is unknown.
+ * Exception: table name is a reserved word.
  * 
  * @category Solar
  * 
@@ -18,16 +18,16 @@
 /**
  * Base SQL exception.
  */
-Solar::loadClass('Solar_Sql_Exception');
+Solar::loadClass('Solar_Sql_Adapter_Exception');
 
 /**
  * 
- * Exception: column type is unknown.
+ * Exception: table name is a reserved word.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Exception_ColTypeUnknown extends Solar_Sql_Exception {}
+class Solar_Sql_Adapter_Exception_TableNameReserved extends Solar_Sql_Adapter_Exception {}
 ?>

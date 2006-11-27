@@ -18,7 +18,7 @@
 /**
  * Base SQL exception.
  */
-Solar::loadClass('Solar_Sql_Exception');
+Solar::loadClass('Solar_Sql_Adapter_Exception');
 
 /**
  * 
@@ -29,5 +29,5 @@ Solar::loadClass('Solar_Sql_Exception');
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Exception_IdxNoColumns extends Solar_Sql_Exception {}
+class Solar_Sql_Adapter_Exception_IdxNoColumns extends Solar_Sql_Adapter_Exception {}
 ?>

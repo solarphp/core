@@ -64,35 +64,6 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Creates a PDO-style DSN.
-     * 
-     * Per http://php.net/manual/en/ref.pdo-pgsql.connection.php
-     * 
-     * @return string A PDO-style DSN.
-     * 
-     */
-    protected function _dsn()
-    {
-        $dsn = array();
-        
-        if (! empty($this->_config['host'])) {
-            $dsn[] = 'host=' . $this->_config['host'];
-        }
-        
-        if (! empty($this->_config['port'])) {
-            $dsn[] = 'port=' . $this->_config['port'];
-        }
-        
-        if (! empty($this->_config['name'])) {
-            $dsn[] = 'dbname=' . $this->_config['name'];
-        }
-        
-        return $this->_pdo_type . ':' . implode(' ', $dsn);
-    }
-    
-    
-    /**
-     * 
      * Builds a SELECT statement from its component parts.
      * 
      * Adds LIMIT clause.
@@ -102,10 +73,10 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function buildSelect($parts)
+    protected function _buildSelect($parts)
     {
         // build the baseline statement
-        $stmt = parent::buildSelect($parts);
+        $stmt = parent::_buildSelect($parts);
         
         // determine count
         $count = ! empty($parts['limit']['count'])
@@ -152,9 +123,17 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
             "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " .
             "AND c.relname !~ '^pg_'";
         
-        $result = $this->exec($cmd);
+        $result = $this->query($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
+    }
+    
+    public function describeTable($table)
+    {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => 'describeTable')
+        );
     }
     
     /**
@@ -168,12 +147,12 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropIndex($table, $name)
+    protected function _dropIndex($table, $name)
     {
         // postgres index names are for the entire database,
         // not for a single table.
         // http://www.postgresql.org/docs/7.4/interactive/sql-dropindex.html
-        $this->exec("DROP INDEX $name");
+        $this->query("DROP INDEX $name");
     }
     
     /**
@@ -187,9 +166,9 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function createSequence($name, $start = 1)
+    protected function _createSequence($name, $start = 1)
     {
-        $this->exec("CREATE SEQUENCE $name START $start");
+        $this->query("CREATE SEQUENCE $name START $start");
     }
     
     /**
@@ -201,9 +180,9 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropSequence($name)
+    protected function _dropSequence($name)
     {
-        $this->exec("DROP SEQUENCE $name");
+        $this->query("DROP SEQUENCE $name");
     }
     
     /**
@@ -215,24 +194,21 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return int The next sequence number.
      * 
      */
-    public function nextSequence($name)
+    protected function _nextSequence($name)
     {
-        $this->_connect();
-        $cmd = "SELECT NEXTVAL($name)";
+        $cmd = 'SELECT NEXTVAL(' . $this->quote($name) . ')';
         
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            $this->query($cmd);
         } catch (Exception $e) {
             // error when updating the sequence.
             // assume we need to create it.
-            $this->createSequence($name);
+            $this->_createSequence($name);
             
             // now try to increment again.
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            $this->query($cmd);
         }
         
         // get the sequence number

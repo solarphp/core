@@ -76,7 +76,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function buildSelect($parts)
+    protected function _buildSelect($parts)
     {
         // determine count
         $count = ! empty($parts['limit']['count'])
@@ -89,7 +89,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
             : 0;
         
         // build the basic statement
-        $stmt = parent::buildSelect($parts);
+        $stmt = parent::_buildSelect($parts);
         
         // add limits?
         if ($count) {
@@ -152,9 +152,17 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
     public function listTables()
     {
         $cmd = "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
-        $result = $this->exec($cmd);
+        $result = $this->query($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
+    }
+    
+    public function describeTable($table)
+    {
+        throw $this->_exception(
+            'ERR_METHOD_NOT_IMPLEMENTED',
+            array('method' => 'describeTable')
+        );
     }
     
     /**
@@ -168,10 +176,10 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropIndex($table, $name)
+    protected function _dropIndex($table, $name)
     {
         // http://www.w3schools.com/sql/sql_drop.asp
-        $this->exec("DROP INDEX {$table}.{$name}");
+        $this->query("DROP INDEX {$table}.{$name}");
     }
     
     /**
@@ -185,10 +193,10 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function createSequence($name, $start = 1)
+    protected function _createSequence($name, $start = 1)
     {
         $start = (int) $start;
-        $this->exec(
+        $this->query(
             "CREATE TABLE $name (id INT NOT NULL " .
             "IDENTITY($start,1) PRIMARY KEY CLUSTERED)"
         );
@@ -203,9 +211,9 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return void
      * 
      */
-    public function dropSequence($name)
+    protected function _dropSequence($name)
     {
-        $this->exec("DROP TABLE $name");
+        $this->query("DROP TABLE $name");
     }
     
     /**
@@ -217,35 +225,29 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return int The next sequence number.
      * 
      */
-    public function nextSequence($name)
+    protected function _nextSequence($name)
     {
-        $this->_connect();
         $cmd = "INSERT INTO $name DEFAULT VALUES";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
         try {
-            $this->_connect();
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            $this->query($cmd);
         } catch (Exception $e) {
             // error when updating the sequence.
-            // assume we need to create it.
-            $this->createSequence($name);
-            
-            // now try to increment again.
-            $stmt = $this->_pdo->prepare($cmd);
-            $stmt->execute();
+            // assume we need to create it, then
+            // try to increment again.
+            $this->_createSequence($name);
+            $this->query($cmd);
         }
         
         // get the sequence number
-        $stmt = $this->_pdo->prepare("SELECT @@IDENTITY FROM $name");
-        $stmt->execute();
+        $stmt = $this->query("SELECT @@IDENTITY FROM $name");
         $id = $stmt->fetchColumn(0);
         
         // now that we have a new sequence number, delete any earlier rows
         // to keep the table small.  should this be a trigger instead?
-        $this->exec("DELETE FROM $name WHERE id < $id");
+        $this->query("DELETE FROM $name WHERE id < $id");
         
         // return the sequence number
         return $id;

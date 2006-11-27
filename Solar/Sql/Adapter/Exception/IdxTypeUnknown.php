@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: column scope is too large or too small for its size.
+ * Exception: index type is unknown (should be 'normal' or 'unique').
  * 
  * @category Solar
  * 
@@ -18,16 +18,16 @@
 /**
  * Base SQL exception.
  */
-Solar::loadClass('Solar_Sql_Exception');
+Solar::loadClass('Solar_Sql_Adapter_Exception');
 
 /**
  * 
- * Exception: column scope is too large or too small for its size.
+ * Exception: index type is unknown (should be 'normal' or 'unique').
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Exception_ColScope extends Solar_Sql_Exception {}
+class Solar_Sql_Adapter_Exception_IdxTypeUnknown extends Solar_Sql_Adapter_Exception {}
 ?>

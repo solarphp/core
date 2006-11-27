@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: index name is too long or too short.
+ * Exception: table name is too long or too short.
  * 
  * @category Solar
  * 
@@ -18,16 +18,16 @@
 /**
  * Base SQL exception.
  */
-Solar::loadClass('Solar_Sql_Exception');
+Solar::loadClass('Solar_Sql_Adapter_Exception');
 
 /**
  * 
- * Exception: index name is too long or too short.
+ * Exception: table name is too long or too short.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Exception_IdxNameLength extends Solar_Sql_Exception {}
+class Solar_Sql_Adapter_Exception_TableNameLength extends Solar_Sql_Adapter_Exception {}
 ?>

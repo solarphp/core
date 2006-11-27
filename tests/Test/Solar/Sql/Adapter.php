@@ -46,18 +46,16 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         try {
             $this->_sql->dropTable($this->_table_name);
         } catch (Exception $e) {
-            // do nothing
         }
         
         // drop existing sequence
         try {
             $this->_sql->dropSequence($this->_seq_name);
         } catch (Exception $e) {
-            // do nothing
         }
         
         // recreate table
-        $this->_sql->createTable('test_solar_sql', $this->_table_def);
+        $this->_sql->createTable($this->_table_name, $this->_table_def);
     }
     
     public function teardown()
@@ -84,12 +82,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     
     public function test__construct()
     {
-        $this->assertInstance($this->_sql, 'Solar_Sql');
-    }
-    
-    public function testAdapter()
-    {
-        $this->assertProperty($this->_sql, '_adapter', 'instance', $this->_config['adapter']);
+        $this->assertInstance($this->_sql, $this->_config['adapter']);
     }
     
     public function testQuery_preparedQueryPlain()
@@ -111,7 +104,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     public function testQuery_exec()
     {
         $result = $this->_sql->query("DROP TABLE $this->_table_name");
-        $this->assertTrue($result);
+        $this->assertInstance($result, 'PDOStatement');
     }
     
     public function testBegin()
@@ -128,7 +121,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_sql->insert($this->_table_name, $data);
         $this->_sql->commit();
         $result = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
-        $this->assertSame($result, '1');
+        $this->assertEquals($result, '1');
     }
     
     public function testRollback()
@@ -138,7 +131,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_sql->insert($this->_table_name, $data);
         $this->_sql->rollback();
         $result = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
-        $this->assertSame($result, '0');
+        $this->assertEquals($result, '0');
     }
     
     public function testInsert()
@@ -146,26 +139,26 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $data = array('id' => '1', 'name' => 'Zim');
         
         $result = $this->_sql->insert($this->_table_name, $data);
-        $this->assertSame($result, 1);
+        $this->assertEquals($result, 1);
         
         $result = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
-        $this->assertSame($result->toArray(), $data);
+        $this->assertEquals($result->toArray(), $data);
     }
     
     public function testUpdate()
     {
         $insert = array('id' => '1', 'name' => 'Foo');
         $result = $this->_sql->insert($this->_table_name, $insert);
-        $this->assertSame($result, 1);
+        $this->assertEquals($result, 1);
         
         $update = array('name' => 'Bar');
         $where = $this->_sql->quoteInto("id = ?", 1);
         $result = $this->_sql->update($this->_table_name, $update, $where);
-        $this->assertSame($result, 1);
+        $this->assertEquals($result, 1);
         
         $expect = array('id' => '1', 'name' => 'Bar');
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testDelete()
@@ -176,7 +169,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         // attempt the delete
         $where = $this->_sql->quoteInto('id = ?', 5);
         $result = $this->_sql->delete($this->_table_name, $where);
-        $this->assertSame($result, 1);
+        $this->assertEquals($result, 1);
         
         $expect = array(
             array('id' => '1', 'name' => 'Foo'),
@@ -188,7 +181,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
         // did it work?
         $actual = $this->_sql->select('all', "SELECT * FROM $this->_table_name ORDER BY id");
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testSelect_all()
@@ -203,7 +196,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             array('id' => '5', 'name' => 'Zim'),
             array('id' => '6', 'name' => 'Gir'),
         );
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testSelect_assoc()
@@ -218,7 +211,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             'Zim' => array('id' => '5', 'name' => 'Zim'),
             'Gir' => array('id' => '6', 'name' => 'Gir'),
         );
-        $this->assertSame($actual, $expect);
+        $this->assertEquals($actual, $expect);
     }
     
     public function testSelect_col()
@@ -233,7 +226,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             'Zim',
             'Gir',
         );
-        $this->assertSame($actual, $expect);
+        $this->assertEquals($actual, $expect);
     }
     
     public function testSelect_one()
@@ -241,7 +234,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_insertData();
         $actual = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
         $expect = '6';
-        $this->assertSame($actual, $expect);
+        $this->assertEquals($actual, $expect);
     }
     
     public function testSelect_pairs()
@@ -256,7 +249,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             'Zim' => '5',
             'Gir' => '6',
         );
-        $this->assertSame($actual, $expect);
+        $this->assertEquals($actual, $expect);
     }
     
     public function testSelect_pdo()
@@ -282,14 +275,14 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $data = array('id' => 5);
         $actual = $this->_sql->select('row', $cmd, $data);
         $expect = array('id' => '5', 'name' => 'Zim');
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testSelect_string()
     {
         $expect = "SELECT name, id FROM $this->_table_name WHERE id = :id";
         $actual = $this->_sql->select('string', $expect);
-        $this->assertSame($actual, $expect);
+        $this->assertEquals($actual, $expect);
     }
     
     public function testSelect_unknown()
@@ -298,15 +291,16 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
             $actual = $this->_sql->select('NO_SUCH_TYPE', "SELECT * FROM $this->_table_name");
             $this->fail('should not have selected NO_SUCH_TYPE');
         } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Sql_Exception');
+            $this->assertInstance($e, 'Solar_Sql_Adapter_Exception');
         }
     }
     
     public function testCreateSequence()
     {
         $this->_sql->createSequence($this->_seq_name);
+        
         $result = $this->_sql->nextSequence($this->_seq_name);
-        $this->assertSame($result, '1');
+        $this->assertEquals($result, '1');
     }
     
     public function testDropSequence()
@@ -314,18 +308,18 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         // create the sequence so next value is 9
         $this->_sql->createSequence($this->_seq_name, 9);
         $result = $this->_sql->nextSequence($this->_seq_name);
-        $this->assertSame($result, '9');
+        $this->assertEquals($result, '9');
         
         // drop and recreate starting at 0, should get 1
         $this->_sql->dropSequence($this->_seq_name);
         $result = $this->_sql->nextSequence($this->_seq_name);
-        $this->assertSame($result, '1');
+        $this->assertEquals($result, '1');
     }
     
     public function testNextSequence()
     {
         $result = $this->_sql->nextSequence($this->_seq_name);
-        $this->assertSame($result, '1');
+        $this->assertEquals($result, '1');
     }
     
     /**
@@ -367,7 +361,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1', 'name' => 'Foo', 'email' => 'nobody@example.com');
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testDropColumn()
@@ -376,7 +370,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_sql->dropColumn($this->_table_name, 'name');
         $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1');
-        $this->assertSame($actual->toArray(), $expect);
+        $this->assertEquals($actual->toArray(), $expect);
     }
     
     public function testCreateIndex_singleNormal()
@@ -428,21 +422,21 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
     {
         $actual = $this->_sql->quote('"foo" bar \'baz\'');
         //var_dump($actual);
-        $this->assertSame($actual, $this->_quote_expect);
+        $this->assertEquals($actual, $this->_quote_expect);
     }
     
     public function testQuote_array()
     {
         $actual = $this->_sql->quote(array('"foo"', 'bar', "'baz'"));
         //var_dump($actual);
-        $this->assertSame($actual, $this->_quote_array_expect);
+        $this->assertEquals($actual, $this->_quote_array_expect);
     }
     
     public function testQuoteInto()
     {
         $actual = $this->_sql->quoteInto("foo = ?", "'bar'");
         //var_dump($actual);
-        $this->assertSame($actual, $this->_quote_into_expect);
+        $this->assertEquals($actual, $this->_quote_into_expect);
     }
     
     public function testQuoteMulti()
@@ -454,7 +448,7 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         );
         $actual = $this->_sql->quoteMulti($where, ' AND ');
         //var_dump($actual);
-        $this->assertSame($actual, $this->_quote_multi_expect);
+        $this->assertEquals($actual, $this->_quote_multi_expect);
     }
 }
 ?>

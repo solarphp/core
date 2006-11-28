@@ -35,19 +35,11 @@ class Solar_Sql extends Solar_Base {
      * `adapter`
      * : (string) The class to factory, e.g. 'Solar_Sql_Adapter_Mysql'.
      * 
-     * `name`
-     * : (string) Database name (or file path, or TNS name).
-     * 
-     * `profile`
-     * : (bool) Turn on query profiling?
-     * 
      * @var array
      * 
      */
-    protected $_Solar_Sql_Adapter = array(
+    protected $_Solar_Sql = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
-        'name'    => ':memory:',
-        'profile' => false,
     );
     
     /**

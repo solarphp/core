@@ -34,7 +34,6 @@ class Solar_Access extends Solar_Base {
      */
     protected $_Solar_Access = array(
         'adapter' => 'Solar_Access_Adapter_Open',
-        'config' => null,
     );
     
     /**

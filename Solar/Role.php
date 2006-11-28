@@ -35,19 +35,11 @@ class Solar_Role extends Solar_Base {
      * `adapter`
      * : (string) The adapter class to use.
      * 
-     * `config`
-     * : (array) Config options for constructing the adapter class.
-     * 
-     * `refresh`
-     * : (bool) Whether or not to refresh the roles on every load.
-     * 
      * @var array
      * 
      */
     protected $_Solar_Role = array(
         'adapter' => 'Solar_Role_Adapter_None',
-        'config'  => null,
-        'refresh' => false,
     );
     
     /**

@@ -36,19 +36,11 @@ class Solar_Cache extends Solar_Base {
      * : (string) The adapter class for the factory, default 
      * 'Solar_Cache_Adapter_File'.
      * 
-     * `active`
-     * : (bool) Whether the cache is active or not when instantiated.
-     * 
-     * `life`
-     * : (array) The cache lifetime in seconds; default is 0 (forever).
-     * 
      * @var array
      * 
      */
     protected $_Solar_Cache = array(
         'adapter' => 'Solar_Cache_Adapter_File',
-        'active'  => true,
-        'life'    => 0,
     );
     
     /**

@@ -677,7 +677,7 @@ class Solar {
         }
         
         // check for registry objects
-        if (is_string($spec) && Solar::isRegistered($spec)) {
+        if (is_string($spec)) {
             return Solar::registry($spec);
         }
         

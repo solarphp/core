@@ -316,7 +316,9 @@ class Solar_Session extends Solar_Base {
      */
     public function regenerateId()
     {
-        session_regenerate_id(true);
+        if (! headers_sent()) {
+            session_regenerate_id(true);
+        }
     }
 }
 ?>

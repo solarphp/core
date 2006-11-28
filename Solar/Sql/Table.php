@@ -372,9 +372,6 @@ class Solar_Sql_Table extends Solar_Base {
     public function select($type = 'result', $where = null,
         $order = null, $page = null)
     {
-        $this->_connect();
-        $select = Solar::factory('Solar_Sql_Select');
-        
         if ($type == 'all') {
             $class = $this->_all_class;
         } elseif ($type == 'row') {
@@ -382,6 +379,8 @@ class Solar_Sql_Table extends Solar_Base {
         } else {
             $class = null;
         }
+        
+        $select = $this->_newSelect();
         
         $result = $select->from($this->_name, array_keys($this->_col))
                          ->multiWhere($where)
@@ -534,6 +533,26 @@ class Solar_Sql_Table extends Solar_Base {
     // Support and management methods.
     // 
     // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Gets a new Solar_Sql_Select tool, with the proper SQL object injected
+     * automatically.
+     * 
+     * Note: this forces a database connection so that we have the SQL object
+     * properly constructed.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    protected function _newSelect()
+    {
+        $this->_connect();
+        return Solar::factory(
+            'Solar_Sql_Select',
+            array('sql' => $this->_sql)
+        );
+    }
     
     /**
      * 

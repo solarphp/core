@@ -97,14 +97,27 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             );
         }
         
-        // we're ok
+        // construction
         parent::__construct($config);
         $this->_memcache = new Memcache;
-        $this->_memcache->connect(
+        
+        // make sure we can connect
+        $result = @$this->_memcache->connect(
             $this->_config['host'],
             $this->_config['port'],
             $this->_config['timeout']
         );
+        
+        if (! $result) {
+            throw $this->_exception(
+                'ERR_CONNECTION_FAILED',
+                array(
+                    'host' => $this->_config['host'],
+                    'port' => $this->_config['port'],
+                    'timeout' => $this->_config['timeout'],
+                )
+            );
+        }
     }
     
     /**

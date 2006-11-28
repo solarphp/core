@@ -300,7 +300,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $data An associative array of data to bind to the
      * placeholders.
      * 
-     * @return mixed A PDOStatement object, or a count of rows affected.
+     * @return PDOStatement
      * 
      */
     public function query($stmt, $data = array())
@@ -1450,7 +1450,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 );
             } else {
                 // replace the 'size' placeholder
-                $coldef = str_replace(':size', $size, $native[$type]);
+                $coldef = str_replace(':size', $size, $this->_native[$type]);
             }
             break;
         
@@ -1474,13 +1474,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $coldef = str_replace(
                 array(':size', ':scope'),
                 array($size, $scope),
-                $native[$type]
+                $this->_native[$type]
             );
             
             break;
         
         default:
-            $coldef = $native[$type];
+            $coldef = $this->_native[$type];
             break;
         
         }

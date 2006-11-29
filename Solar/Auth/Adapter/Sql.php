@@ -92,14 +92,13 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * 
      * Verifies a username handle and password.
      * 
-     * @return bool True if valid, false if not.
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
      * 
      */
-    protected function _verify()
+    protected function _processLogin()
     {
-        $handle = $this->_handle;
-        $passwd = $this->_passwd;
-        
         // get the dependency object of class Solar_Sql
         $obj = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
@@ -128,11 +127,11 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         }
         
         // salt and hash the password
-        $md5 = md5($this->_config['salt'] . $passwd);
+        $md5 = md5($this->_config['salt'] . $this->_passwd);
         
         // build the select
         $select->from($this->_config['table'], $cols)
-               ->where("{$this->_config['handle_col']} = ?", $handle)
+               ->where("{$this->_config['handle_col']} = ?", $this->_handle)
                ->where("{$this->_config['passwd_col']} = ?", $md5)
                ->multiWhere($this->_config['where']);
                
@@ -143,20 +142,19 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         // otherwise, it's more or less than exactly 1 row.
         if (count($rows) == 1) {
             
-            $row = $rows->current();
+            // set base info
+            $info = array('handle' => $this->_handle);
             
-            // set credentials from optional cols
-            $this->handle = $handle;
+            // set optional info from optional cols
+            $row = $rows->current();
             foreach ($optional as $key => $val) {
                 if ($this->_config[$val]) {
-                    $this->$key = $row[$this->_config[$val]];
-                } else {
-                    $this->$key = null;
+                    $info[$key] = $row[$this->_config[$val]];
                 }
             }
             
             // done
-            return true;
+            return $info;
             
         } else {
             return false;

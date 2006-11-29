@@ -93,7 +93,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * @see Solar_Auth_Adapter_Typekey::isLoginValid()
      * 
-     * @see Solar_Auth_Adapter_Typekey::_verify()
+     * @see Solar_Auth_Adapter_Typekey::_processLogin()
      * 
      */
     protected $_msg;
@@ -117,7 +117,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * 
      * @see Solar_Auth_Adapter_Typekey::isLoginValid()
      * 
-     * @see Solar_Auth_Adapter_Typekey::_verify()
+     * @see Solar_Auth_Adapter_Typekey::_processLogin()
      * 
      */
     protected $_sig;
@@ -187,6 +187,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      */
     public function isLoginRequest()
     {
+        // set up request and session objects
+        $this->_setup();
+        
         return ! empty($this->_request->get['email']) &&
                ! empty($this->_request->get['name']) &&
                ! empty($this->_request->get['nick']) &&
@@ -238,28 +241,26 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     
     /**
      * 
-     * Is the current login attempt valid?
+     * Processes login credentials using either GMP or bcmath functions.
      * 
-     * The signature must pass DSA verification, and the timestamp of
-     * the signature must be within the time-window (this is to avoid
-     * replay attacks).
-     * 
-     * If the login is valid, this populates the handle, email, and
-     * name properties of this adapter.
-     * 
-     * @return bool
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
      * 
      */
-    public function isLoginValid()
+    protected function _processLogin()
     {
-        // no errors yet ;-)
-        $this->_err = null;
-        
         // get data from the request.
         $email = $this->_request->get('email');
         $name  = $this->_request->get('name');
         $nick  = $this->_request->get('nick');
         $ts    = $this->_request->get('ts');
+        
+        // are we in the allowed time window?
+        if (time() - $ts > $this->_config['window']) {
+            // possible replay attack.
+            $this->_err = 'ERR_TIME_WINDOW';
+            return false;
+        }
         
         // get the signature values from the login. note that the sig
         // values need to have pluses converted to spaces because
@@ -276,42 +277,19 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         // get the TypeKey public key data
         $this->_key = $this->_fetchKeyData();
         
-        // by default, not valid
-        $valid = false;
+        // what method for verification?
+        $method = '_verify_' . $this->_ext;
         
         // verification routine
-        if (time() - $ts > $this->_config['window']) {
-            // not within the allowed time window for verification.
-            // possible replay attack.
-            $this->reset();
-            $this->_err = 'ERR_TIME_WINDOW';
-            $valid = false;
-        } elseif ($this->_verify()) {
-            // verified, save user data
-            $this->handle  = $name;  // username
-            $this->email   = $email; // email
-            $this->moniker = $nick;  // display name
-            $this->uri     = null;   // not supported by TypeKey
-            $this->uid     = null;   // not supported by TypeKey
-            return true;
+        if ($this->$method()) {
+            return array(
+                'handle'  => $name,  // username
+                'email'   => $email, // email
+                'moniker' => $nick,  // display name
+            );
         } else {
-            // not verified, clear out user data
             return false;
         }
-    }
-    
-    /**
-     * 
-     * Verifies login using either GMP or bcmath functions.
-     * 
-     * @return bool True if the message signature is verified using the
-     * DSA public key.
-     * 
-     */
-    protected function _verify()
-    {
-        $method = '_verify_' . $this->_ext;
-        return $this->$method();
     }
     
     /**

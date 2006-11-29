@@ -61,14 +61,13 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
      * 
      * Verifies a username handle and password.
      * 
-     * @return bool True if valid, false if not.
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
      * 
      */
-    protected function _verify()
+    protected function _processLogin()
     {
-        $handle = $this->_handle;
-        $passwd = $this->_passwd;
-        
         // force the full, real path to the .ini file
         $file = realpath($this->_config['file']);
         
@@ -84,18 +83,13 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
         $data = parse_ini_file($file, true);
         
         // get user info for the handle
-        $user = (! empty($data[$handle])) ? $data[$handle] : array();
+        $user = (! empty($data[$this->_handle])) ? $data[$this->_handle] : array();
         
         // there must be an entry for the username,
         // and the plain-text password must match.
-        if (! empty($user['passwd']) && $user['passwd'] == $passwd) {
-            // set credentials
-            $this->handle   = $handle;
-            $this->moniker  = (! empty($user['moniker']))  ? $user['moniker'] : null;
-            $this->email    = (! empty($user['email']))    ? $user['email']   : null;
-            $this->uri      = (! empty($user['uri']))      ? $user['uri']     : null;
-            $this->uid      = (! empty($user['uid']))      ? $user['uid']     : null;
-            return true;
+        if (! empty($user['passwd']) && $user['passwd'] == $this->_passwd) {
+            $user['handle'] = $this->_handle;
+            return $user;
         } else {
             return false;
         }

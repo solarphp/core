@@ -78,14 +78,13 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * 
      * Verifies a username handle and password.
      * 
-     * @return bool True if valid, false if not.
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
      * 
      */
-    protected function _verify()
+    protected function _processLogin()
     {
-        $handle = $this->_handle;
-        $passwd = $this->_passwd;
-        
         // connect
         $conn = @ldap_connect($this->_config['uri']);
         
@@ -101,23 +100,17 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
         @ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
         
         // bind to the server
-        $rdn = sprintf($this->_config['format'], $handle);
-        $bind = @ldap_bind($conn, $rdn, $passwd);
-        ldap_close($conn);
+        $rdn = sprintf($this->_config['format'], $this->_handle);
+        $bind = @ldap_bind($conn, $rdn, $this->_passwd);
         
-        // return the bind-value
-        if (! $bind) {
-            // not using $this->_exception() because we need fine control
-            // over the error text
-            throw Solar::exception(
-                get_class($this),
-                @ldap_errno($conn),
-                @ldap_error($conn),
-                array($this->_config)
-            );
+        // did the bind succeed?
+        if ($bind) {
+            ldap_close($conn);
+            return array('handle' => $this->_handle);
         } else {
-            $this->handle = $handle;
-            return true;
+            $this->_err = @ldap_errno($conn) . " " . @ldap_error($conn);
+            ldap_close($conn);
+            return false;
         }
     }
 }

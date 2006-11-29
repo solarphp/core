@@ -75,21 +75,20 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * 
      * Verifies a username handle and password.
      * 
-     * @return bool True if valid, false if not.
+     * @return mixed An array of verified user information, or boolean false
+     * if verification failed.
+     * 
      * 
      */
-    protected function _verify()
+    protected function _processLogin()
     {
-        $handle = $this->_handle;
-        $passwd = $this->_passwd;
-        
         // parse out URL elements
         $url = parse_url($this->_config['url']);
         
         // build the content string for handle and passwd
         $content = 
-            urlencode($this->_config['handle']) . '=' . urlencode($handle) . '&' .
-            urlencode($this->_config['passwd']) . '=' . urlencode($passwd);
+            urlencode($this->_config['handle']) . '=' . urlencode($this->_handle) . '&' .
+            urlencode($this->_config['passwd']) . '=' . urlencode($this->_passwd);
         
         // set up the basic headers
         $tmp = array(
@@ -163,8 +162,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
               (bool) $this->_config['replies'][$reply];
              
         if ($ok) {
-            $this->handle = $handle;
-            return true;
+            return array('handle' => $this->_handle);
         } else {
             return false;
         }

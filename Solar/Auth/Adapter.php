@@ -291,19 +291,24 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             // default to post
             $this->_config['source'] = 'post';
         }
+        
+        // get the current request environment
+        $this->_request = Solar::factory('Solar_Request');
     }
     
     /**
      * 
-     * Start a session with authentication.
+     * Loads the class properties from the $_SESSION values, starting the
+     * session if needed.
      * 
      * @return void
      * 
      */
-    public function start()
+    protected function _loadSession()
     {
-        // get the current request environment
-        $this->_request = Solar::factory('Solar_Request');
+        if ($this->_session) {
+            return;
+        }
         
         // create the session-access object.
         // starts the session if it has not been started already.
@@ -335,37 +340,33 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->moniker =& $this->_session->store['moniker'];
         $this->uri     =& $this->_session->store['uri'];
         $this->uid     =& $this->_session->store['uid'];
+    }
+    
+    /**
+     * 
+     * Starts a session with authentication.
+     * 
+     * @return void
+     * 
+     */
+    public function start()
+    {
+        // load the session
+        $this->_loadSession();
         
         // update idle and expire times no matter what
         $this->updateIdleExpire();
         
-        // if current auth is not valid, and processing is allowed,
+        // if current auth **is not** valid, and processing is allowed,
         // process login attempts
         if (! $this->isValid() && $this->allow && $this->isLoginRequest()) {
-            
-            // reset to anonymous
-            $this->reset('ANON');
-            
-            // check the login validity
-            if ($this->isLoginValid() === true) {
-                $this->reset('VALID');
-            } else {
-                $code = $this->getErrCode();
-                if ($code) {
-                    // use adapter-specific error code
-                    $this->reset($code);
-                } else {
-                    // generic error
-                    $this->reset('WRONG');
-                }
-            }
-            
+            $this->processLogin();
         }
         
         // if current auth **is** valid, and processing is allowed,
         // process logout attempts.
         if ($this->isValid() && $this->allow && $this->isLogoutRequest()) {
-            $this->reset();
+            $this->processLogout();
         }
     }
     
@@ -430,36 +431,57 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Resets any authentication data in the session.
      * 
+     * Note that this will start a session if one is not already in progress.
+     * 
      * Typically used for idling, expiration, and logout.  Calls
      * [[php::session_regenerate_id() | ]] to clear previous session.
      * 
-     * @param string $status A Solar_Auth status string;
-     * default is 'ANON'.
+     * @param string $status A Solar_Auth status string; default is 'ANON'.
      * 
-     * @param string $handle The authenticated user handle; only
-     * honored if $status is 'VALID'.
+     * @param array $info If status is 'VALID', populate properties with this
+     * user data, with keys for 'handle', 'email', 'moniker', 'uri', and 
+     * 'uid'.  If a key is empty or does not exist, its value is set to null.
      * 
      * @return void
      * 
      */
-    public function reset($status = 'ANON')
+    public function reset($status = 'ANON', $info = array())
     {
+        // load the session
+        $this->_loadSession();
+        
+        // baseline user information
+        $base = array(
+           'handle'  => null,
+           'moniker' => null,
+           'email'   => null,
+           'uri'     => null,
+           'uid'     => null,
+        );
+        
+        // reset the status
         $this->status = strtoupper($status);
+        
+        // change properties
         if ($this->status == 'VALID') {
-            // reset the timers, leave credentials in place.
+            // update the timers, leave user info alone
             $now = time();
             $this->initial = $now;
             $this->active  = $now;
         } else {
-            // reset the credentials and information
+            // clear the timers *and* the user info
             $this->initial = null;
             $this->active  = null;
-            $this->handle  = null;
-            $this->moniker = null;
-            $this->email   = null;
-            $this->uri     = null;
-            $this->uid     = null;
+            $info = null;
         }
+        
+        // set the user-info properties
+        $info = array_merge($base, (array) $info);
+        $this->handle  = $info['handle'];
+        $this->moniker = $info['moniker'];
+        $this->email   = $info['email'];
+        $this->uri     = $info['uri'];
+        $this->uid     = $info['uid'];
         
         // reset the session id and delete previous session file
         $this->_session->regenerateId();
@@ -472,9 +494,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Retrieves a "read-once" session value for Solar_Auth.
      * 
+     * Starts a session if one is not already going.
+     * 
      * @param string $key The specific type of information.
      * 
-     * @param mixed $val If the class and key do not exist, return
+     * @param mixed $val If the key does not exist, return
      * this value.  Default null.
      * 
      * @return mixed The "read-once" value.
@@ -482,6 +506,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function getFlash($key, $val = null)
     {
+        $this->_loadSession();
         return $this->_session->getFlash($key, $val);
     }
     
@@ -517,59 +542,79 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Checks to see if login credentials are valid for the adapter.
+     * Processes login attempts and sets user credentials.
      * 
-     * @return bool
+     * @return bool True if the login was successful, false if not.
      * 
      */
-    public function isLoginValid()
+    public function processLogin()
     {
         // clear out current error and user data.
         $this->_err = null;
         $this->reset();
         
-        // load the handle and password from the request source.
-        // note that we use $_handle and $_passwd; these are the user-provided
-        // values, not the session values.  the _verify() method should set
-        // the $handle, $email, etc. values.
+        // load the user-provided handle and password from the request source.
         $method        = strtolower($this->_config['source']);
-        $this->_handle  = $this->_request->$method($this->_config['source_handle']);
+        $this->_handle = $this->_request->$method($this->_config['source_handle']);
         $this->_passwd = $this->_request->$method($this->_config['source_passwd']);
         
-        // verify the credentials, which may set some user data.
-        $result = (bool) $this->_verify();
-        if ($result !== true) {
-            // not verified, clear out all user data.
-            $this->reset();
+        // adapter-specific login processing
+        $result = $this->_processLogin();
+        
+        // did it work?
+        if (is_array($result)) {
+            // successful login, treat result as user info
+            $this->reset('VALID', $result);
+            return true;
+        } elseif (is_string($result)) {
+            // failed login, treat result as error code
+            $this->reset($result);
+            return false;
+        } else {
+            // failed login, generic error code
+            $this->reset('WRONG');
+            return false;
         }
-        return $result;
     }
     
     /**
      * 
-     * Verifies user credentials for the adapter.
+     * Adapter-specific login processing.
      * 
-     * Typical credentials are $this->_handle and $this->_passwd, but
-     * single sign-on systems may use different credential sources.
-     * 
-     * Adapters should set $this->handle, $this->email, $this->moniker,
-     * and $this->uri if verfication is successful.
-     * 
-     * @return bool True if valid, false if not.
+     * @return mixed An array of user information if valid; if not valid, a
+     * string error code or empty value.
      * 
      */
-    abstract protected function _verify();
+    protected function _processLogin()
+    {
+        // you should implement this in an adapter, but the default is to 
+        // not-validate login attempts.
+        return false;
+    }
     
     /**
      * 
-     * Returns the most recent error code.
+     * Processes logout attempts.
      * 
-     * @return string
+     * @return void
      * 
      */
-    public function getErrCode()
+    public function processLogout()
     {
-        return $this->_err;
+        $code = $this->_processLogout();
+        $this->reset($code);
+    }
+    
+    /**
+     * 
+     * Adapter-specific logout processing.
+     * 
+     * @return string A status code string for reset().
+     * 
+     */
+    protected function _processLogout()
+    {
+        return 'ANON';
     }
 }
 ?>

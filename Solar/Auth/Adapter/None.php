@@ -35,10 +35,13 @@ class Solar_Auth_Adapter_None extends Solar_Auth_Adapter {
      * 
      * Verifies a username handle and password.
      * 
-     * @return bool True if valid, false if not.
+     * **Never** verifies the user; this closes off authentication.
+     * 
+     * @return false
+     * 
      * 
      */
-    protected function _verify()
+    protected function _processLogin()
     {
         return false;
     }

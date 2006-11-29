@@ -187,9 +187,6 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      */
     public function isLoginRequest()
     {
-        // set up request and session objects
-        $this->_setup();
-        
         return ! empty($this->_request->get['email']) &&
                ! empty($this->_request->get['name']) &&
                ! empty($this->_request->get['nick']) &&

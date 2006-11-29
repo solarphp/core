@@ -255,8 +255,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         // are we in the allowed time window?
         if (time() - $ts > $this->_config['window']) {
             // possible replay attack.
-            $this->_err = 'ERR_TIME_WINDOW';
-            return false;
+            return 'ERR_TIME_WINDOW';
         }
         
         // get the signature values from the login. note that the sig

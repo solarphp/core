@@ -737,7 +737,7 @@ class Solar {
             }
             
             // find the requested group and element.
-            if (empty(Solar::$config[$group][$elem])) {
+            if (! isset(Solar::$config[$group][$elem])) {
                 return $default;
             } else {
                 return Solar::$config[$group][$elem];

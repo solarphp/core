@@ -55,6 +55,28 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
+     * Use these values to map native columns to Solar generic data types.
+     * 
+     * @var array
+     * 
+     */
+    protected $_describe = array(
+        'BOOLEAN'   => 'bool',
+        'CHAR'      => 'char',
+        'VARCHAR'   => 'varchar',
+        'SMALLINT'  => 'smallint',
+        'INTEGER'   => 'int',
+        'BIGINT'    => 'bigint',
+        'NUMERIC'   => 'numeric',
+        'DOUBLE'    => 'float',
+        'CLOB'      => 'clob',
+        'DATE'      => 'date',
+        'TIME'      => 'time',
+        'TIMESTAMP' => 'timestamp',
+    );
+    
+    /**
+     * 
      * The PDO adapter type.
      * 
      * @var string
@@ -190,17 +212,11 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
                 // "NOT NULL" means "require"
                 'require' => (bool) ($val['notnull']),
                 
-                // convert SQL NULL to PHP null
-                'default' => ($val['dflt_value'] == 'NULL' ? null : $val['dflt_value']),
-                
                 // is it a primary key?
                 'primary' => (bool) ($val['pk'] == 1),
                 
                 // is it auto-incremented?
                 'autoinc' => (bool) ($autoinc !== false),
-                
-                // keep the original native report
-                'native'  => $val,
             );
         }
             

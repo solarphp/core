@@ -53,6 +53,26 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         'timestamp' => 'CHAR(19)'
     );
     
+    protected $_describe = array(
+        
+        // numeric
+        'int2'      => 'smallint',
+        'int4'      => 'integer',
+        'int8'      => 'bigint',
+        'numeric'   => 'numeric',
+        'float8'    => 'float',
+        
+        // date & time
+        'date'      => 'date',
+        'time'      => 'time',
+        'timestamp' => 'timestamp',
+        
+        // string types
+        'bpchar'    => 'char',
+        'varchar'   => 'varchar',
+    );
+    
+    
     /**
      * 
      * The PDO adapter type.
@@ -110,19 +130,25 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     public function listTables()
     {
         // copied from PEAR DB
-        $cmd = "SELECT c.relname AS table_name " .
-            "FROM pg_class c, pg_user u " .
-            "WHERE c.relowner = u.usesysid AND c.relkind = 'r' " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
-            "AND c.relname !~ '^(pg_|sql_)' " .
-            "UNION " .
-            "SELECT c.relname AS table_name " .
-            "FROM pg_class c " .
-            "WHERE c.relkind = 'r' " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " .
-            "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " .
-            "AND c.relname !~ '^pg_'";
+        // $cmd = "SELECT c.relname AS table_name " 
+        //      . "FROM pg_class c, pg_user u " 
+        //      . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' " 
+        //      . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " 
+        //      . "AND c.relname !~ '^(pg_|sql_)' " 
+        //      . "UNION " 
+        //      . "SELECT c.relname AS table_name " 
+        //      . "FROM pg_class c " 
+        //      . "WHERE c.relkind = 'r' " 
+        //      . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " 
+        //      . "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " 
+        //      . "AND c.relname !~ '^pg_'";
         
+        // replace with:
+        $cmd = "SELECT DISTINCT table_name "
+             . "FROM information_schema.tables "
+             . "WHERE table_schema != 'pg_catalog' "
+             . "AND table_schema != 'information_schema'";
+             
         $result = $this->query($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
@@ -130,10 +156,61 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     public function describeTable($table)
     {
-        throw $this->_exception(
-            'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => 'describeTable')
-        );
+        // strip non-word characters to try and prevent SQL injections
+        $table = preg_replace('/[^\w]/', '', $table);
+        
+        // http://www.postgresql.org/docs/current/static/infoschema-columns.html
+        $cmd = <<<SQL
+            SELECT 
+                cols.column_name AS name, 
+                cols.udt_name AS type, 
+                CASE
+                    WHEN cols.character_maximum_length > 0 THEN cols.character_maximum_length
+                    ELSE CASE
+                        WHEN cols.numeric_precision_radix = 10 THEN cols.numeric_precision
+                        ELSE NULL
+                    END
+                END AS size,
+                CASE
+                    WHEN cols.numeric_precision_radix = 10 THEN cols.numeric_scale
+                    ELSE NULL
+                END AS scope,
+                CASE
+                    WHEN is_nullable = 'YES' THEN FALSE
+                    ELSE TRUE
+                END AS require,
+                CASE
+                    WHEN cons.constraint_type = 'PRIMARY KEY' THEN TRUE
+                    ELSE FALSE
+                END AS primary,
+                CASE
+                    WHEN cols.column_default ~ '^nextval' THEN TRUE
+                    ELSE FALSE
+                END AS autoinc
+            FROM information_schema.columns AS cols
+            LEFT JOIN information_schema.key_column_usage AS keys
+                ON keys.table_name = cols.table_name
+                AND keys.column_name = cols.column_name
+            LEFT JOIN information_schema.table_constraints AS cons
+                ON keys.constraint_name = cons.constraint_name
+            WHERE cols.table_name = :table
+            ORDER BY cols.ordinal_position;
+SQL;
+        
+        // get the native PDOStatement result
+        $result = $this->query($cmd, array('table' => $table));
+        
+        // where the description will be stored
+        $descr = array();
+        
+        // loop through the result rows; each describes a column.
+        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+            $val['type'] = $this->_getSolarType($val['type']);
+            $descr[$val['name']] = $val;
+        }
+        
+        // done
+        return $descr;
     }
     
     /**

@@ -53,6 +53,39 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         'timestamp' => 'CHAR(19)'
     );
     
+    protected $_describe = array(
+        
+        // numeric
+        'SMALLINT'          => 'smallint',
+        'INT'               => 'integer',
+        'INTEGER'           => 'integer',
+        'BIGINT'            => 'bigint',
+        'DEC'               => 'numeric',
+        'DECIMAL'           => 'numeric',
+        'DOUBLE'            => 'float',
+        
+        // date & time
+        'DATE'              => 'date',
+        'DATETIME'          => 'timestamp',
+        'TIMESTAMP'         => 'integer',
+        'TIME'              => 'time',
+        
+        // string
+        'NATIONAL CHAR'     => 'char',
+        'NCHAR'             => 'char',
+        'CHAR'              => 'char',
+        'BINARY'            => 'char',
+        'NATIONAL VARCHAR'  => 'varchar',
+        'NVARCHAR'          => 'varchar',
+        'VARCHAR'           => 'varchar',
+        'VARBINARY'         => 'varchar',
+        
+        // clob
+        'LONGTEXT'          => 'clob',
+        'LONGBLOB'          => 'clob',
+    );
+        
+    
     /**
      * 
      * The PDO adapter type.
@@ -179,17 +212,11 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
                 // "NOT NULL" means "require"
                 'require' => (bool) ($val['null'] != 'YES'),
                 
-                // convert SQL NULL to PHP null
-                'default' => ($val['default'] == 'NULL' ? null : $val['default']),
-                
                 // is it a primary key?
                 'primary' => (bool) ($val['key'] == 'PRI'),
                 
                 // is it auto-incremented?
                 'autoinc' => (bool) (strpos($val['extra'], 'AUTO_INCREMENT') !== false),
-                
-                // keep the original native report
-                'native'  => $val,
             );
         }
             

@@ -124,6 +124,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Use these values to map native columns to Solar generic data types.
+     * 
+     * @var array
+     * 
+     */
+    protected $_describe = array();
+    
+    /**
+     * 
      * A portable database object for accessing the RDBMS.
      * 
      * @var object
@@ -1662,13 +1671,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             }
         }
         
-        // find the Solar standard data type, if any.
-        // USE THIS LATER when we start mapping native types differently.
-        // $type = empty($this->_native[$type])
-        //     ? $type
-        //     : trim($this->_native[$val['type']]);
-        
+        $type = $this->_getSolarType($type);
         return array($type, $size, $scope);
+    }
+    
+    protected function _getSolarType($type)
+    {
+        foreach ($this->_describe as $native => $solar) {
+            if ($type == $native) {
+                return $solar;
+            }
+        }
+        return $type;
     }
 }
 ?>

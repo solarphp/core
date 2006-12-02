@@ -59,6 +59,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         'boolean'                       => 'bool',
         'smallint'                      => 'smallint',
         'integer'                       => 'int',
+        'bigint'                        => 'bigint',
         'numeric'                       => 'numeric',
         'double precision'              => 'float',
         

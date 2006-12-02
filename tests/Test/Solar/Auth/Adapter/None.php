@@ -16,39 +16,46 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
+        $this->assertFalse($this->_auth->processLogin());
+    }
+    
+    public function testProcessLogin_valid()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertFalse($this->_auth->processLogin());
     }
     
     public function testGetHandle()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getHandle(), $this->_handle);
+        $this->assertFalse($this->_auth->processLogin());
+        $this->assertNull($this->_auth->handle);
     }
     
     public function testGetEmail()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getEmail(), $this->_email);
+        $this->assertFalse($this->_auth->processLogin());
+        $this->assertNull($this->_auth->email);
     }
     
     public function testGetMoniker()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
+        $this->assertFalse($this->_auth->processLogin());
+        $this->assertNull($this->_auth->moniker);
     }
     
     public function testGetUri()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getUri(), $this->_uri);
+        $this->assertFalse($this->_auth->processLogin());
+        $this->assertNull($this->_auth->email);
     }
 }
 ?>

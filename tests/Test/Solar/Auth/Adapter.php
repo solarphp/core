@@ -54,28 +54,28 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertInstance($this->_auth, $this->_class);
     }
     
-    public function testSetCommon()
-    {
-        // non-default common values
-        $common = array(
-            'source'        => 'get',
-            'source_handle' => 'username',
-            'source_passwd' => 'password',
-            'source_submit' => 'myaction',
-            'submit_login'  => 'Log In',
-            'submit_logout' => 'Log Out',
-        );
-        
-        $this->_auth->setCommon($common);
-        $this->assertProperty($this->_auth, '_common', 'same', $common);
-        
-        // make sure you get 'post' source by default
-        $common['source'] = 'no-such-source';
-        $expect = $common;
-        $expect['source'] = 'post';
-        $this->_auth->setCommon($common);
-        $this->assertProperty($this->_auth, '_common', 'same', $expect);
-    }
+    // public function testSetCommon()
+    // {
+    //     // non-default common values
+    //     $common = array(
+    //         'source'        => 'get',
+    //         'source_handle' => 'username',
+    //         'source_passwd' => 'password',
+    //         'source_submit' => 'myaction',
+    //         'submit_login'  => 'Log In',
+    //         'submit_logout' => 'Log Out',
+    //     );
+    //     
+    //     $this->_auth->setCommon($common);
+    //     $this->assertProperty($this->_auth, '_common', 'same', $common);
+    //     
+    //     // make sure you get 'post' source by default
+    //     $common['source'] = 'no-such-source';
+    //     $expect = $common;
+    //     $expect['source'] = 'post';
+    //     $this->_auth->setCommon($common);
+    //     $this->assertProperty($this->_auth, '_common', 'same', $expect);
+    // }
     
     public function testIsLoginRequest_true()
     {
@@ -101,67 +101,67 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->assertFalse($this->_auth->isLogoutRequest());
     }
     
-    public function testIsLoginValid_true()
+    public function testProcessLogin_valid()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertTrue($this->_auth->isLoginValid());
+        $this->assertTrue($this->_auth->processLogin());
     }
     
-    public function testIsLoginValid_badPasswd()
+    public function testProcessLogin_badPasswd()
     {
         $this->_fakePostLogin_badPasswd();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
+        $this->assertFalse($this->_auth->processLogin());
     }
     
-    public function testIsLoginValid_noSuchUser()
+    public function testProcessLogin_noSuchUser()
     {
         $this->_fakePostLogin_noSuchUser();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertFalse($this->_auth->isLoginValid());
+        $this->assertFalse($this->_auth->processLogin());
     }
     
     public function testReset()
     {
         $this->_auth->reset();
-        $this->assertProperty($this->_auth, '_handle', 'null');
-        $this->assertProperty($this->_auth, '_passwd', 'null');
-        $this->assertProperty($this->_auth, '_email', 'null');
-        $this->assertProperty($this->_auth, '_moniker', 'null');
-        $this->assertProperty($this->_auth, '_uri', 'null');
+        $this->assertNull($this->_auth->handle);
+        $this->assertNull($this->_auth->email);
+        $this->assertNull($this->_auth->moniker);
+        $this->assertNull($this->_auth->uri);
+        $this->assertNull($this->_auth->uid);
     }
     
     public function testGetHandle()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertTrue($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getHandle(), $this->_handle);
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->handle, $this->_handle);
     }
     
     public function testGetEmail()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertTrue($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getEmail(), $this->_email);
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->email, $this->_email);
     }
     
     public function testGetMoniker()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertTrue($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getMoniker(), $this->_moniker);
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->moniker, $this->_moniker);
     }
     
     public function testGetUri()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
-        $this->assertTrue($this->_auth->isLoginValid());
-        $this->assertSame($this->_auth->getUri(), $this->_uri);
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->uri, $this->_uri);
     }
     
     protected function _fakePostLogin_valid()

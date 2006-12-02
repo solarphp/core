@@ -17,7 +17,20 @@ class Test_Solar_Cache_Adapter_Memcache extends Test_Solar_Cache_Adapter {
         if (! extension_loaded('memcache')) {
             $this->skip('memcache extension not loaded');
         }
+        
         parent::__construct($config);
+        
+        // make sure we can connect
+        try {
+            $cache = Solar::factory('Solar_Cache', $this->_config);
+        } catch (Exception $e) {
+            echo $e;
+            if ($e->getCode() == 'ERR_CONNECTION_FAILED' ) {
+                $this->skip('memcache connection failed');
+            } else {
+                throw $e;
+            }
+        }
     }
     
     public function setup()

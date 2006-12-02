@@ -17,8 +17,7 @@ all rendering removed.
 
 You can see a full example on [[GettingStarted]], but here's a short one
 to whet your curiosity. Note that we use a small bit of localization
-(although a real form would have [[LocalizedForms | everything
-localized]]).
+(although a real form would have [[LocalizedForms | everything localized]]).
 
 {{code: php
     require_once 'Solar.php';

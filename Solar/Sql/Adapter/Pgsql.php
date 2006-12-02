@@ -56,20 +56,23 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     protected $_describe = array(
         
         // numeric
-        'int2'      => 'smallint',
-        'int4'      => 'integer',
-        'int8'      => 'bigint',
-        'numeric'   => 'numeric',
-        'float8'    => 'float',
+        'boolean'                       => 'bool',
+        'smallint'                      => 'smallint',
+        'integer'                       => 'int',
+        'numeric'                       => 'numeric',
+        'double precision'              => 'float',
         
-        // date & time
-        'date'      => 'date',
-        'time'      => 'time',
-        'timestamp' => 'timestamp',
+        // date & time                  
+        'date'                          => 'date',
+        'time without time zone'        => 'time',
+        'timestamp without time zone'   => 'timestamp',
         
         // string types
-        'bpchar'    => 'char',
-        'varchar'   => 'varchar',
+        'character'                     => 'char',
+        'character varying'             => 'varchar',
+        
+        // clob
+        'text'                          => 'clob',
     );
     
     
@@ -129,73 +132,81 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     public function listTables()
     {
-        // copied from PEAR DB
-        // $cmd = "SELECT c.relname AS table_name " 
-        //      . "FROM pg_class c, pg_user u " 
-        //      . "WHERE c.relowner = u.usesysid AND c.relkind = 'r' " 
-        //      . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " 
-        //      . "AND c.relname !~ '^(pg_|sql_)' " 
-        //      . "UNION " 
-        //      . "SELECT c.relname AS table_name " 
-        //      . "FROM pg_class c " 
-        //      . "WHERE c.relkind = 'r' " 
-        //      . "AND NOT EXISTS (SELECT 1 FROM pg_views WHERE viewname = c.relname) " 
-        //      . "AND NOT EXISTS (SELECT 1 FROM pg_user WHERE usesysid = c.relowner) " 
-        //      . "AND c.relname !~ '^pg_'";
-        
-        // replace with:
-        $cmd = "SELECT DISTINCT table_name "
-             . "FROM information_schema.tables "
-             . "WHERE table_schema != 'pg_catalog' "
-             . "AND table_schema != 'information_schema'";
+        $cmd = "
+            SELECT DISTINCT table_name
+            FROM information_schema.tables
+            WHERE table_schema != 'pg_catalog'
+            AND table_schema != 'information_schema'";
              
         $result = $this->query($cmd);
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
         return $list;
     }
     
+    /**
+     * 
+     * Describes the columns in a table.
+     * 
+     *              name         |            type             | require | primary |                           default                           
+     *     ----------------------+-----------------------------+---------+---------+-------------------------------------------------------------
+     *      test_autoinc_primary | integer                     | t       | t       | nextval('test_describe_test_autoinc_primary_seq'::regclass)
+     *      test_require         | integer                     | t       |         | 
+     *      test_bool            | boolean                     | f       |         | 
+     *      test_char            | character(7)                | f       |         | 
+     *      test_varchar         | character varying(7)        | f       |         | 
+     *      test_smallint        | smallint                    | f       |         | 
+     *      test_int             | integer                     | f       |         | 
+     *      test_bigint          | bigint                      | f       |         | 
+     *      test_numeric_size    | numeric(5,0)                | f       |         | 
+     *      test_numeric_scope   | numeric(5,3)                | f       |         | 
+     *      test_float           | double precision            | f       |         | 
+     *      test_clob            | text                        | f       |         | 
+     *      test_date            | date                        | f       |         | 
+     *      test_time            | time without time zone      | f       |         | 
+     *      test_timestamp       | timestamp without time zone | f       |         | 
+     *      test_default_null    | character(7)                | f       |         | 
+     *      test_default_string  | character(7)                | f       |         | 'literal'::bpchar
+     *      test_default_integer | integer                     | f       |         | 7
+     *      test_default_numeric | numeric(5,3)                | f       |         | 12.345
+     *      test_default_ignore  | timestamp without time zone | f       |         | now()
+     *      test_default_varchar | character varying(17)       | f       |         | 'literal'::character varying
+     *      test_default_date    | date                        | f       |         | '1979-11-07'::date
+     * 
+     * @param string $table The table to describe.
+     * 
+     * @return array
+     * 
+     */
     public function describeTable($table)
     {
-        // strip non-word characters to try and prevent SQL injections
-        $table = preg_replace('/[^\w]/', '', $table);
-        
-        // http://www.postgresql.org/docs/current/static/infoschema-columns.html
-        $cmd = <<<SQL
-            SELECT 
-                cols.column_name AS name, 
-                cols.udt_name AS type, 
-                CASE
-                    WHEN cols.character_maximum_length > 0 THEN cols.character_maximum_length
-                    ELSE CASE
-                        WHEN cols.numeric_precision_radix = 10 THEN cols.numeric_precision
-                        ELSE NULL
-                    END
-                END AS size,
-                CASE
-                    WHEN cols.numeric_precision_radix = 10 THEN cols.numeric_scale
-                    ELSE NULL
-                END AS scope,
-                CASE
-                    WHEN is_nullable = 'YES' THEN FALSE
-                    ELSE TRUE
-                END AS require,
-                CASE
-                    WHEN cons.constraint_type = 'PRIMARY KEY' THEN TRUE
-                    ELSE FALSE
-                END AS primary,
-                CASE
-                    WHEN cols.column_default ~ '^nextval' THEN TRUE
-                    ELSE FALSE
-                END AS autoinc
-            FROM information_schema.columns AS cols
-            LEFT JOIN information_schema.key_column_usage AS keys
-                ON keys.table_name = cols.table_name
-                AND keys.column_name = cols.column_name
-            LEFT JOIN information_schema.table_constraints AS cons
-                ON keys.constraint_name = cons.constraint_name
-            WHERE cols.table_name = :table
-            ORDER BY cols.ordinal_position;
-SQL;
+        // modified from Zend_Db_Adapter_Pdo_Pgsql
+        $cmd = "
+            SELECT
+                a.attname AS name,
+                format_type(a.atttypid, a.atttypmod) AS type,
+                a.attnotnull AS require,
+                (SELECT 't'
+                    FROM pg_index
+                    WHERE c.oid = pg_index.indrelid
+                    AND pg_index.indkey[0] = a.attnum
+                    AND pg_index.indisprimary = 't'
+                ) AS primary,
+                (SELECT pg_attrdef.adsrc
+                    FROM pg_attrdef
+                    WHERE c.oid = pg_attrdef.adrelid
+                    AND pg_attrdef.adnum=a.attnum
+                ) AS default
+            FROM
+                pg_attribute a,
+                pg_class c,
+                pg_type t
+            WHERE
+                c.relname = :table
+                AND a.attnum > 0
+                AND a.attrelid = c.oid
+                AND a.atttypid = t.oid
+            ORDER BY
+                a.attnum";
         
         // get the native PDOStatement result
         $result = $this->query($cmd, array('table' => $table));
@@ -205,12 +216,54 @@ SQL;
         
         // loop through the result rows; each describes a column.
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
-            $val['type'] = $this->_getSolarType($val['type']);
-            $descr[$val['name']] = $val;
+            $name = $val['name'];
+            list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
+            $descr[$name] = array(
+                'name'    => $name,
+                'type'    => $type,
+                'size'    => $size,
+                'scope'   => $scope,
+                'default' => $this->_getDefault($val['default']),
+                'require' => (bool) ($val['require'] == 't'),
+                'primary' => (bool) ($val['primary'] == 't'),
+                'autoinc' => (bool) (substr($val['default'], 0, 7) == 'nextval'),
+            );
         }
         
         // done
         return $descr;
+    }
+    
+    /**
+     * 
+     * Given a native column SQL default value, finds a PHP literal value.
+     * 
+     * SQL NULLs are converted to PHP nulls.  Non-literal values (such as
+     * keywords and functions) are also returned as null.
+     * 
+     * @param string $default The column default SQL value.
+     * 
+     * @return scalar A literal PHP value.
+     * 
+     */
+    protected function _getDefault($default)
+    {
+        // numeric literal?
+        if (is_numeric($default)) {
+            return $default;
+        }
+        
+        // string literal?
+        $k = substr($default, 0, 1);
+        if ($k == '"' || $k == "'") {
+            // find the :: typedef
+            $pos = strrpos($default, '::');
+            // also trim of the leading and trailing quotes
+            return substr($default, 1, $pos-2);
+        }
+        
+        // null or non-literal
+        return null;
     }
     
     /**

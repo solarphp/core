@@ -57,8 +57,8 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         
         // numeric
         'SMALLINT'          => 'smallint',
-        'INT'               => 'integer',
-        'INTEGER'           => 'integer',
+        'INT'               => 'int',
+        'INTEGER'           => 'int',
         'BIGINT'            => 'bigint',
         'DEC'               => 'numeric',
         'DECIMAL'           => 'numeric',
@@ -190,32 +190,16 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         
         // loop through the result rows; each describes a column.
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
-            
             $name = $val['field'];
-            
-            list($type, $size, $scope) = $this->_parseTypeSizeScope($val['type']);
-            
+            list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             $descr[$name] = array(
-                
-                // column name
                 'name'    => $name,
-                
-                // data type
                 'type'    => $type,
-                
-                // size, if any
                 'size'    => $size,
-                
-                // scope, if any
                 'scope'   => $scope,
-                
-                // "NOT NULL" means "require"
+                'default' => $this->_getDefault($val['default']),
                 'require' => (bool) ($val['null'] != 'YES'),
-                
-                // is it a primary key?
                 'primary' => (bool) ($val['key'] == 'PRI'),
-                
-                // is it auto-incremented?
                 'autoinc' => (bool) (strpos($val['extra'], 'AUTO_INCREMENT') !== false),
             );
         }

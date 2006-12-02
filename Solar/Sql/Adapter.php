@@ -1643,7 +1643,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array A sequential array of the column type, size, and scope.
      * 
      */
-    protected function _parseTypeSizeScope($spec)
+    protected function _getTypeSizeScope($spec)
     {
         $spec  = strtolower($spec);
         $type  = null;
@@ -1675,6 +1675,16 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return array($type, $size, $scope);
     }
     
+    /**
+     * 
+     * Given a native column data type, finds the generic Solar data type.
+     * 
+     * @param string $type The native column data type.
+     * 
+     * @return string The generic Solar data type, if one maps to the native
+     * type; otherwise, returns the native type unchanged.
+     * 
+     */
     protected function _getSolarType($type)
     {
         foreach ($this->_describe as $native => $solar) {
@@ -1683,6 +1693,35 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             }
         }
         return $type;
+    }
+    
+    /**
+     * 
+     * Given a native column SQL default value, finds a PHP literal value.
+     * 
+     * SQL NULLs are converted to PHP nulls.  Non-literal values (such as
+     * keywords and functions) are also returned as null.
+     * 
+     * @param string $default The column default SQL value.
+     * 
+     * @return scalar A literal PHP value.
+     * 
+     */
+    protected function _getDefault($default)
+    {
+        // numeric literal?
+        if (is_numeric($default)) {
+            return $default;
+        }
+        
+        // string literal?
+        $k = substr($default, 0, 1);
+        if ($k == '"' || $k == "'") {
+            return substr($default, 1, -1);
+        }
+        
+        // null or non-literal
+        return null;
     }
 }
 ?>

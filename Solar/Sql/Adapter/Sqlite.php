@@ -173,6 +173,8 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * 
      * @return array
      * 
+     * @todo: For $autoinc, replace with preg() to allow for multiple spaces.
+     * 
      */
     public function describeTable($table)
     {
@@ -187,35 +189,17 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         
         // loop through the result rows; each describes a column.
         foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
-            
             $name = $val['name'];
-            
-            // @todo: replace with preg() to allow for multiple spaces
+            list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             $autoinc = strpos(strtoupper($val['type']), 'INTEGER PRIMARY KEY AUTOINCREMENT');
-            
-            list($type, $size, $scope) = $this->_parseTypeSizeScope($val['type']);
-            
             $descr[$name] = array(
-                
-                // column name
                 'name'    => $name,
-                
-                // data type
                 'type'    => $type,
-                
-                // size, if any
                 'size'    => $size,
-                
-                // scope, if any
                 'scope'   => $scope,
-                
-                // "NOT NULL" means "require"
+                'default' => $this->_getDefault($val['dflt_value']),
                 'require' => (bool) ($val['notnull']),
-                
-                // is it a primary key?
                 'primary' => (bool) ($val['pk'] == 1),
-                
-                // is it auto-incremented?
                 'autoinc' => (bool) ($autoinc !== false),
             );
         }

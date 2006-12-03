@@ -56,33 +56,33 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     protected $_describe = array(
         
         // numeric
-        'SMALLINT'          => 'smallint',
-        'INT'               => 'int',
-        'INTEGER'           => 'int',
-        'BIGINT'            => 'bigint',
-        'DEC'               => 'numeric',
-        'DECIMAL'           => 'numeric',
-        'DOUBLE'            => 'float',
+        'smallint'          => 'smallint',
+        'int'               => 'int',
+        'integer'           => 'int',
+        'bigint'            => 'bigint',
+        'dec'               => 'numeric',
+        'decimal'           => 'numeric',
+        'double'            => 'float',
         
         // date & time
-        'DATE'              => 'date',
-        'DATETIME'          => 'timestamp',
-        'TIMESTAMP'         => 'integer',
-        'TIME'              => 'time',
+        'date'              => 'date',
+        'datetime'          => 'timestamp',
+        'timestamp'         => 'integer',
+        'time'              => 'time',
         
         // string
-        'NATIONAL CHAR'     => 'char',
-        'NCHAR'             => 'char',
-        'CHAR'              => 'char',
-        'BINARY'            => 'char',
-        'NATIONAL VARCHAR'  => 'varchar',
-        'NVARCHAR'          => 'varchar',
-        'VARCHAR'           => 'varchar',
-        'VARBINARY'         => 'varchar',
+        'national char'     => 'char',
+        'nchar'             => 'char',
+        'char'              => 'char',
+        'binary'            => 'char',
+        'national varchar'  => 'varchar',
+        'nvarchar'          => 'varchar',
+        'varchar'           => 'varchar',
+        'varbinary'         => 'varchar',
         
         // clob
-        'LONGTEXT'          => 'clob',
-        'LONGBLOB'          => 'clob',
+        'longtext'          => 'clob',
+        'longblob'          => 'clob',
     );
         
     
@@ -189,9 +189,19 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         $descr = array();
         
         // loop through the result rows; each describes a column.
-        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+        $cols = $result->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($cols as $val) {
+            
             $name = $val['field'];
+            
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
+            
+            // override $type to find tinyint(1) as boolean
+            if ($val['type'] == 'tinyint(1)') {
+                $type = 'bool';
+            }
+            
+            // save the column description
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
@@ -200,12 +210,36 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
                 'default' => $this->_getDefault($val['default']),
                 'require' => (bool) ($val['null'] != 'YES'),
                 'primary' => (bool) ($val['key'] == 'PRI'),
-                'autoinc' => (bool) (strpos($val['extra'], 'AUTO_INCREMENT') !== false),
+                'autoinc' => (bool) (strpos($val['extra'], 'auto_increment') !== false),
             );
         }
             
         // done!
         return $descr;
+    }
+    
+    /**
+     * 
+     * Given a native column SQL default value, finds a PHP literal value.
+     * 
+     * SQL NULLs are converted to PHP nulls.  Non-literal values (such as
+     * keywords and functions) are also returned as null.
+     * 
+     * @param string $default The column default SQL value.
+     * 
+     * @return scalar A literal PHP value.
+     * 
+     */
+    protected function _getDefault($default)
+    {
+        $upper = strtoupper($default);
+        if ($upper == 'NULL' || $upper == 'CURRENT_TIMESTAMP') {
+            // the only non-literal allowed by MySQL is "CURRENT_TIMESTAMP"
+            return null;
+        } else {
+            // return the literal default
+            return $default;
+        }
     }
     
     /**

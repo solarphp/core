@@ -1688,40 +1688,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     protected function _getSolarType($type)
     {
         foreach ($this->_describe as $native => $solar) {
-            if ($type == $native) {
+            if (strtolower($type) == strtolower($native)) {
                 return $solar;
             }
         }
         return $type;
-    }
-    
-    /**
-     * 
-     * Given a native column SQL default value, finds a PHP literal value.
-     * 
-     * SQL NULLs are converted to PHP nulls.  Non-literal values (such as
-     * keywords and functions) are also returned as null.
-     * 
-     * @param string $default The column default SQL value.
-     * 
-     * @return scalar A literal PHP value.
-     * 
-     */
-    protected function _getDefault($default)
-    {
-        // numeric literal?
-        if (is_numeric($default)) {
-            return $default;
-        }
-        
-        // string literal?
-        $k = substr($default, 0, 1);
-        if ($k == '"' || $k == "'") {
-            return substr($default, 1, -1);
-        }
-        
-        // null or non-literal
-        return null;
     }
 }
 ?>

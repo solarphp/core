@@ -62,17 +62,21 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      */
     protected $_describe = array(
         'BOOLEAN'   => 'bool',
+        'BOOL'      => 'bool',
         'CHAR'      => 'char',
         'VARCHAR'   => 'varchar',
         'SMALLINT'  => 'smallint',
         'INTEGER'   => 'int',
+        'INT'       => 'int',
         'BIGINT'    => 'bigint',
         'NUMERIC'   => 'numeric',
         'DOUBLE'    => 'float',
+        'FLOAT'     => 'float',
         'CLOB'      => 'clob',
         'DATE'      => 'date',
         'TIME'      => 'time',
         'TIMESTAMP' => 'timestamp',
+        'DATETIME'  => 'timestamp',
     );
     
     /**
@@ -175,32 +179,52 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * 
      * @todo: For $autoinc, replace with preg() to allow for multiple spaces.
      * 
+     * @todo: For $default, SQLite always reports the keyword *value*, not the
+     * keyword itself.  Check $sql for the default value to see if it's a 
+     * keyword and report 'null' in those cases.
+     * 
      */
     public function describeTable($table)
     {
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
         
-        // get the native PDOStatement result
-        $result = $this->query("PRAGMA TABLE_INFO($table)");
-        
         // where the description will be stored
         $descr = array();
         
+        // get the CREATE TABLE sql; need this for finding autoincrement cols
+        $result = $this->query(
+            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = :table",
+            array('table' => $table)
+        );
+        $create_table = $result->fetchColumn(0);
+        
         // loop through the result rows; each describes a column.
-        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+        $result = $this->query("PRAGMA TABLE_INFO($table)");
+        $cols = $result->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($cols as $val) {
             $name = $val['name'];
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
-            $autoinc = strpos(strtoupper($val['type']), 'INTEGER PRIMARY KEY AUTOINCREMENT');
+            
+            // find autoincrement column in CREATE TABLE sql.
+            // non-word char, followed by the col name, followed by "INTEGER
+            // PRIMARY KEY AUTOINCREMENT", followed by non-word char
+            $find = "/\W$name\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT\W/Ui";
+            $autoinc = preg_match(
+                $find,
+                $create_table,
+                $matches
+            );
+            
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
                 'size'    => $size,
                 'scope'   => $scope,
-                'default' => $this->_getDefault($val['dflt_value']),
+                'default' => $val['dflt_value'],
                 'require' => (bool) ($val['notnull']),
                 'primary' => (bool) ($val['pk'] == 1),
-                'autoinc' => (bool) ($autoinc !== false),
+                'autoinc' => (bool) $autoinc,
             );
         }
             

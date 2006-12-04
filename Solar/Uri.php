@@ -359,7 +359,17 @@ class Solar_Uri extends Solar_Base {
      */
     public function setQuery($spec)
     {
-        parse_str($spec, $this->query);
+        parse_str($spec, $tmp);
+        if (get_magic_quotes_gpc()) {
+            $this->query = array();
+            foreach ($tmp as $key => $val) {
+                $key = stripslashes($key);
+                $val = stripslashes($val);
+                $this->query[$key] = $val;
+            }
+        } else {
+            $this->query = $tmp;
+        }
     }
     
     /**

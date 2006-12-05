@@ -123,8 +123,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         }
         
         // should the data be serialized?
-        // serialize all non-string data.
-        if (! is_string($data)) {
+        // serialize all non-scalar data.
+        if (! is_scalar($data)) {
             $data = serialize($data);
             $serial = true;
         } else {

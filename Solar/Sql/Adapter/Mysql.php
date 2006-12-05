@@ -148,7 +148,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return array The list of tables in the database.
      * 
      */
-    public function listTables()
+    public function fetchTableList()
     {
         $result = $this->query('SHOW TABLES');
         $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -177,7 +177,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return array
      * 
      */
-    public function describeTable($table)
+    public function fetchTableCols($table)
     {
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);

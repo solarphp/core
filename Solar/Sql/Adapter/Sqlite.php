@@ -151,7 +151,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * @return string The SQL statement.
      * 
      */
-    public function listTables()
+    public function fetchTableList()
     {
         // copied from PEAR DB
         $cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
@@ -184,7 +184,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * keyword and report 'null' in those cases.
      * 
      */
-    public function describeTable($table)
+    public function fetchTableCols($table)
     {
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);

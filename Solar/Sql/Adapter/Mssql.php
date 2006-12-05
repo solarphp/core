@@ -149,7 +149,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return array The list of tables in the database.
      * 
      */
-    public function listTables()
+    public function fetchTableList()
     {
         $cmd = "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
         $result = $this->query($cmd);
@@ -157,11 +157,11 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         return $list;
     }
     
-    public function describeTable($table)
+    public function fetchTableCols($table)
     {
         throw $this->_exception(
             'ERR_METHOD_NOT_IMPLEMENTED',
-            array('method' => 'describeTable')
+            array('method' => 'fetchTableCols')
         );
     }
     

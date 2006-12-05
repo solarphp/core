@@ -131,7 +131,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return string The SQL statement.
      * 
      */
-    public function listTables()
+    public function fetchTableList()
     {
         $cmd = "
             SELECT DISTINCT table_name
@@ -178,7 +178,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return array
      * 
      */
-    public function describeTable($table)
+    public function fetchTableCols($table)
     {
         // modified from Zend_Db_Adapter_Pdo_Pgsql
         $cmd = "

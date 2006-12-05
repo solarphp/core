@@ -322,32 +322,36 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $view = $this->_getView();
         $this->_preRender($view);
         $view->assign($this);
-
-        try {
-            $output = $view->fetch($this->_view . '.php');
-        } catch (Solar_View_Exception_TemplateNotFound $e) {
-            $view->errors[] = $this->locale('ERR_TEMPLATE_NOT_FOUND');
-            $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
-            $view->errors[] = $e->getInfo('name');
-            $output = $view->fetch('error.php');
-        }
-
-        // are we using a layout?
-        if (! $this->_layout) {
-
-            // no layout, just use the post-render filter on the view.
-            return $this->_postRender($output);
-
+        
+        // are we using a view?
+        if ($this->_view) {
+            try {
+                $output = $view->fetch($this->_view . '.php');
+            } catch (Solar_View_Exception_TemplateNotFound $e) {
+                $view->errors[] = $this->locale('ERR_TEMPLATE_NOT_FOUND');
+                $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
+                $view->errors[] = $e->getInfo('name');
+                $output = $view->fetch('error.php');
+            }
         } else {
-
+            $output = null;
+        }
+        
+        // are we using a layout?
+        if ($this->_layout) {
             // using a layout.  reset the view to use Layout templates.
             $this->_setViewLayout($view);
-
+            
             // assign the output
             $view->assign($this->_layout_var, $output);
-
+            
             // use the post-render filter on the layout
             return $this->_postRender($view->fetch($this->_layout . '.php'));
+        } else {
+            // no layout, just use the post-render filter on the current
+            // output.
+            return $this->_postRender($output);
+
         }
     }
 

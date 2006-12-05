@@ -30,6 +30,24 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     
     /**
      * 
+     * User-defined configuration values.
+     * 
+     * Keys are ...
+     * 
+     * `refresh`
+     * : (bool) Whether or not to refresh (reload) roles every time load() is
+     *   called.  The default is to load into the session once, then not load
+     *   again even though load() gets called.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Role_Adapter = array(
+        'refresh' => false,
+    );
+    
+    /**
+     * 
      * Have we attempted to load the list of roles yet?
      * 
      * @var bool
@@ -86,19 +104,23 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    public function load($handle)
+    public function load($handle, $refresh = null)
     {
+        if (is_null($refresh)) {
+            $refresh = $this->_config['refresh'];
+        }
+        
         // have we loaded roles for the first time yet? if so, and if
         // we're not forcing refreshes, the we don't need to do
         // anything, just return the list as it is right now.
-        if ($this->_loaded && ! $this->_config['refresh']) {
+        if ($this->_loaded && ! $refresh) {
             return $this->list;
         }
         
         // reset the roles list
         $this->reset();
         
-        // fetch the role list
+        // fetch the role list using the adapter-specific method
         $result = $this->fetch($handle);
         if ($result) {
             // merge the results into the common list
@@ -191,7 +213,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     
     /**
      * 
-     * Fetches the roles for a user handle.
+     * Adapter-specific method to find roles for loading.
      * 
      * @param string $handle User handle to get roles for.
      * 

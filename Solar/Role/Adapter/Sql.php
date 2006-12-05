@@ -58,9 +58,9 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
      */
     protected $_Solar_Role_Adapter_Sql = array(
         'sql'        => 'sql',
-        'table'      => 'member_roles',
+        'table'      => 'roles',
         'handle_col' => 'handle',
-        'role_col'   => 'role',
+        'role_col'   => 'name',
         'where'      => array(),
     );
     
@@ -90,7 +90,7 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
                ->multiWhere($this->_config['where']);
         
         // get the results (a column of rows)
-        $result = $obj->select('col', $stmt, $data);
+        $result = $select->fetch('col');
         
         // done!
         return $result;

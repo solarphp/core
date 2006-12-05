@@ -156,7 +156,7 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
         $where = array();
         $where['nodes.owner_handle = ?'] = $handle;
         $where['nodes.uri = ?']          = $uri;
-        return $this->fetchWhere($where);
+        return $this->fetchRow($where);
     }
     
     /**

@@ -198,7 +198,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     public function fetch($id)
     {
         $where = array('nodes.id = ?' => (int) $id);
-        return $this->fetchWhere($where);
+        return $this->fetchRow($where);
     }
     
     /**
@@ -212,7 +212,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * @return Solar_Sql_Row
      * 
      */
-    public function fetchWhere($where, $order = null)
+    public function fetchRow($where, $order = null)
     {
         $select = Solar::factory('Solar_Sql_Select');
         $select->from($this->_content->nodes, '*');

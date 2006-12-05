@@ -597,18 +597,16 @@ class Solar_Sql_Table extends Solar_Base {
         // part after the last underscore, then converts camelCaps 
         // to underscore_words.
         if (empty($this->_name)) {
-            
             // get the class name
             $tmp = get_class($this);
-            
             // get the part after the last underscore
             $tmp = substr($tmp, strrpos($tmp, '_'));
-            
-            // camels to underscores, and force lower-case
-            $this->_name = strtolower(
-                preg_replace('/([a-z])([A-Z])/', "$1_$2", $tmp)
-            );
+            // camels to unders
+            $this->_name = preg_replace('/([a-z])([A-Z])/', "$1_$2", $tmp);
         }
+        
+        // make sure table name is lower case regardless
+        $this->_name = strtolower($this->_name);
         
         // a baseline column definition
         $basecol = array(

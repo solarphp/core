@@ -962,7 +962,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     // -----------------------------------------------------------------
     // 
-    // Table discovery
+    // Table and columns discovery
     // 
     // -----------------------------------------------------------------
     
@@ -973,7 +973,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array A sequential array of table names in the database.
      * 
      */
-    abstract public function listTables();
+    abstract public function fetchTableList();
     
     /**
      * 
@@ -982,7 +982,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array An array of column tables.
      * 
      */
-    abstract public function describeTable($table);
+    abstract public function fetchTableCols($table);
     
     // -----------------------------------------------------------------
     // 

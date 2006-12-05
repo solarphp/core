@@ -454,6 +454,24 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
+     * Fetches one row by arbitrary criteria.
+     * 
+     * @param string|array $where A Solar_Sql_Select::multiWhere() parameter.
+     * 
+     * @param string|array $order A Solar_Sql_Select::order() parameter.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     * @deprecated Use Solar_Sql_Table::fetchRow() instead.
+     * 
+     */
+    public function fetchRow($where = null, $order = null)
+    {
+        return $this->select('row', $where, $order);
+    }
+    
+    /**
+     * 
      * Returns a new row of column keys and default values.
      * 
      * @return Solar_Sql_Row
@@ -521,12 +539,13 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @return Solar_Sql_Row
      * 
+     * @deprecated Use Solar_Sql_Table::fetchRow() instead.
+     * 
      */
     public function fetchWhere($where = null, $order = null)
     {
         return $this->select('row', $where, $order);
     }
-    
     
     // -----------------------------------------------------------------
     // 
@@ -729,7 +748,7 @@ class Solar_Sql_Table extends Solar_Base {
     protected function _autoCreate()
     {
         // is a table with the same name already there?
-        $tmp = $this->_sql->listTables();
+        $tmp = $this->_sql->fetchTableList();
         $here = strtolower($this->_name);
         foreach ($tmp as $there) {
             if ($here == strtolower($there)) {

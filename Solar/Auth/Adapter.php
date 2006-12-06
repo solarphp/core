@@ -88,6 +88,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'source_submit' => 'submit',
         'submit_login'  => null,
         'submit_logout' => null,
+        'session_class' => null,
     );
     
     /**
@@ -292,6 +293,13 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             $this->_config['source'] = 'post';
         }
         
+        // make sure we have a session class name; this determines how the
+        // session store is segmented.  when you have multiple adapters that
+        // need to use the same store, this is useful.
+        if (! $this->_config['session_class']) {
+            $this->_config['session_class'] = get_class($this);
+        }
+        
         // get the current request environment
         $this->_request = Solar::factory('Solar_Request');
     }
@@ -314,7 +322,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // starts the session if it has not been started already.
         $this->_session = Solar::factory(
             'Solar_Session',
-            array('class' => get_class($this))
+            array('class' => $this->_config['session_class'])
         );
         
         // initialize the session array as needed

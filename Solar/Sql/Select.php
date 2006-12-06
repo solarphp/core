@@ -1033,7 +1033,7 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function quoteInto($txt, $val)
     {
-        $val = $this->_sql->quoteInto($txt, $val);
+        return $this->_sql->quoteInto($txt, $val);
     }
     
     /**

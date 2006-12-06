@@ -75,6 +75,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (string) The submission-key value to indicate a
      *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
      * 
+     * `session_class`
+     * : (string) The class name to use as the session storage segment name.
+     *   Default is 'Solar_Auth_Adapter' regardless of the actual class name
+     *   (this lets multiple adapters share the same credential information).
+     * 
      * @var array
      * 
      */
@@ -88,7 +93,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'source_submit' => 'submit',
         'submit_login'  => null,
         'submit_logout' => null,
-        'session_class' => null,
+        'session_class' => 'Solar_Auth_Adapter',
     );
     
     /**
@@ -297,7 +302,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // session store is segmented.  when you have multiple adapters that
         // need to use the same store, this is useful.
         if (! $this->_config['session_class']) {
-            $this->_config['session_class'] = get_class($this);
+            $this->_config['session_class'] = 'Solar_Auth_Adapter';
         }
         
         // get the current request environment

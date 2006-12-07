@@ -34,4 +34,3 @@ return array(
     'ERR_IDX_COLS'   => 'Colonnes d\'index invalides',
     'ERR_IDX_TYPE'   => 'Type d\'index invalide',
 );
-?>

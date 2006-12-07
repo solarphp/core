@@ -38,4 +38,3 @@ return array(
     'ERR_IDX_COLS'   => 'Index columns not valid',
     'ERR_IDX_TYPE'   => 'Index type not valid',
 );
-?>

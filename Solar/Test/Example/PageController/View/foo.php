@@ -1,1 +1,1 @@
-<?php echo "foo = " . $this->foo 
+<?php echo "foo = " . $this->foo;

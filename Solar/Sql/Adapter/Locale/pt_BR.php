@@ -38,4 +38,3 @@ return array(
     'ERR_IDX_COLS'   => 'Colunas do index não são válidas',
     'ERR_IDX_TYPE'   => 'Tipo do index não é válido',
 );
-?>

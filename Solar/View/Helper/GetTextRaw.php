@@ -120,4 +120,3 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
         return Solar::locale($class, $key, $num);
     }
 }
-?>

@@ -87,4 +87,3 @@ class Solar_Content extends Solar_Base {
         $this->tags  = Solar::factory('Solar_Model_Tags', $this->_config);
     }
 }
-?>

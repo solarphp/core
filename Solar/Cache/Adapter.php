@@ -286,4 +286,3 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     abstract public function entry($key);
 } 
 
-?>

@@ -253,4 +253,3 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         return $id;
     }
 }
-?>

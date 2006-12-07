@@ -67,4 +67,3 @@ class Solar_View_Helper_Attribs extends Solar_View_Helper {
         return $xhtml;
     }
 }
-?>

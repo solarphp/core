@@ -178,4 +178,3 @@ abstract class Solar_Base {
         );
     }
 }
-?>

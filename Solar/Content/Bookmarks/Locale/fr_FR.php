@@ -22,4 +22,3 @@ return array(
     'ERR_POS'  => 'Veuillez utiliser un nombre entier, ou laisser vide.',
     'ERR_TITLE' => 'Veuillez entrer un titre pour ce signet.',
 );
-?>

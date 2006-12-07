@@ -130,4 +130,3 @@ class Solar_Debug_Var extends Solar_Base {
         return $output;
     }
 }
-?>

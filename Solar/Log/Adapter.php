@@ -170,4 +170,3 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      */
     abstract protected function _save($class, $event, $descr);
 }
-?>

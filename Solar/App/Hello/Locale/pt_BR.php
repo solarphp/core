@@ -19,4 +19,3 @@
 return array(
     'TEXT_HELLO_WORLD' => 'Olá, mundo!'
 );
-?>

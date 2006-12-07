@@ -22,4 +22,3 @@ return array(
     'EXPIRED' => 'Votre session a expiré.  Merci de vous reconnecter.',
     'IDLED'   => 'Votre session a été inutilisée pendant trop longtemps.  Merci de vous reconnecter.'
 );
-?>

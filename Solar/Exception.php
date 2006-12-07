@@ -128,4 +128,3 @@ class Solar_Exception extends Exception {
         return $this->_class . '::' . $this->code;
     }
 }
-?>

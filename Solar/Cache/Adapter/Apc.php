@@ -149,4 +149,3 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
         return $key;
     }
 }
-?>

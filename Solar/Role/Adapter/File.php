@@ -111,4 +111,3 @@ class Solar_Role_Adapter_File extends Solar_Role_Adapter {
         return $roles;
     }
 }
-?>

@@ -19,4 +19,3 @@ return array(
     'ERR_SKIP' => 'skip',
     'ERR_FAIL' => 'fail',
 );
-?>

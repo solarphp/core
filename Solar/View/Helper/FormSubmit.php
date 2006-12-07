@@ -61,4 +61,3 @@ class Solar_View_Helper_FormSubmit extends Solar_View_Helper_FormElement {
              . $this->_view->attribs($this->_attribs) . ' />';
     }
 }
-?>

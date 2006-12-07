@@ -103,4 +103,3 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
         return $this->_view->anchor($uri->fetch(true), $text);
     }
 }
-?>

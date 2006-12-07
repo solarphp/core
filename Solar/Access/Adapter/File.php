@@ -114,4 +114,3 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         return $list;
     }
 }
-?>

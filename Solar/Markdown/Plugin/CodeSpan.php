@@ -121,4 +121,3 @@ class Solar_Markdown_Plugin_CodeSpan extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($c);
     }
 }
-?>

@@ -580,4 +580,3 @@ class Solar_Json_Checker extends Solar_Base {
         return true;
     }
 }
-?>

@@ -54,4 +54,3 @@ class Solar_Markdown_Wiki_Escape extends Solar_Markdown_Plugin {
         return $this->_escape($text);
     }
 }
-?>

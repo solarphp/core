@@ -63,4 +63,3 @@ class Solar_View_Helper_InlineScript extends Solar_View_Helper {
              . "</script>\n";
     }
 }
-?>

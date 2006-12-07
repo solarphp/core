@@ -736,4 +736,3 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         return $result;
     }
 }
-?>

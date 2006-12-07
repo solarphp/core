@@ -148,4 +148,3 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
         return $key;
     }
 }
-?>

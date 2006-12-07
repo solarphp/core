@@ -167,4 +167,3 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
         return $list;
     }
 }
-?>

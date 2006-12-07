@@ -88,4 +88,3 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
         }
     }
 }
-?>

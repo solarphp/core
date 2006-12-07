@@ -47,4 +47,3 @@ class Solar_View_Helper_Link extends Solar_View_Helper {
     }
 
 }
-?>

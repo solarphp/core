@@ -20,4 +20,3 @@ return array(
     'LABEL_DIFF'  => 'diferença',
     'LABEL_TOTAL' => 'total',
 );
-?>

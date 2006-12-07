@@ -71,4 +71,3 @@ if (! empty($this->layout_script)) {
 echo $this->js()->fetchInline();
 
 /** @todo object */
-?>

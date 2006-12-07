@@ -90,4 +90,3 @@ class Solar_Markdown_Plugin_HorizRule extends Solar_Markdown_Plugin {
         return "\n" . $this->_toHtmlToken("<hr />") . "\n";
     }
 }
-?>

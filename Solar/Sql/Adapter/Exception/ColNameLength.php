@@ -30,4 +30,3 @@ Solar::loadClass('Solar_Sql_Adapter_Exception');
  * 
  */
 class Solar_Sql_Adapter_Exception_ColNameLength extends Solar_Sql_Adapter_Exception {}
-?>

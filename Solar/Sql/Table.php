@@ -1027,4 +1027,3 @@ class Solar_Sql_Table extends Solar_Base {
         }
     }
 }
-?>

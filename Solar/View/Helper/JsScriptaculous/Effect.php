@@ -448,4 +448,3 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
     }
 
 }
-?>

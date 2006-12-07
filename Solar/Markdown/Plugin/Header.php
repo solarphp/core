@@ -189,4 +189,3 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($html) . "\n\n";
     }
 }
-?>

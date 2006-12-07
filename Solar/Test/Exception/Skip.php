@@ -30,4 +30,3 @@ Solar::loadClass('Solar_Test_Exception');
  * 
  */
 class Solar_Test_Exception_Skip extends Solar_Test_Exception {}
-?>

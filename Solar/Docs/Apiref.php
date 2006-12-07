@@ -549,4 +549,3 @@ class Solar_Docs_Apiref extends Solar_Base {
         $this->_log->save(get_class($this), 'docs', $message);
     }
 }
-?>

@@ -1695,4 +1695,3 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return $type;
     }
 }
-?>

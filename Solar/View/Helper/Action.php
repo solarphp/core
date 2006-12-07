@@ -99,4 +99,3 @@ class Solar_View_Helper_Action extends Solar_View_Helper {
         }
     }
 }
-?>

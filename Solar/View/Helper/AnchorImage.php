@@ -73,4 +73,3 @@ class Solar_View_Helper_AnchorImage extends Solar_View_Helper {
         return "<a href=\"$href\"$attr>$img</a>";
     }
 }
-?>

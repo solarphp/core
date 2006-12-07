@@ -54,4 +54,3 @@ class Solar_Uri_Action extends Solar_Uri {
         'path' => '/index.php/',
     );
 }
-?>

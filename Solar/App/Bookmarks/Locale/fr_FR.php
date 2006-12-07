@@ -45,4 +45,4 @@ return array(
     'TAGGED'                => 'taggé',
     'TAGS'                  => 'Tags',
     'USER'                  => 'Utilisateur',
-) ?>
+);

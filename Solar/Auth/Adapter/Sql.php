@@ -161,4 +161,3 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         }
     }
 }
-?>

@@ -147,4 +147,3 @@ class Solar_App_HelloAjax extends Solar_App {
         $this->_layout = false;
     }
 }
-?>

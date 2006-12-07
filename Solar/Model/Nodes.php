@@ -253,4 +253,3 @@ class Solar_Model_Nodes extends Solar_Sql_Table {
         return parent::insert($data);
     }
 }
-?>

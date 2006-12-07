@@ -415,4 +415,3 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
         return $this->_markdown->unHtmlToken($text);
     }
 }
-?>

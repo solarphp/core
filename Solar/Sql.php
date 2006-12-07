@@ -67,4 +67,3 @@ class Solar_Sql extends Solar_Base {
         return Solar::factory($class, $config);
     }
 }
-?>

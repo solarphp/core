@@ -230,4 +230,3 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
         return "\n<dd>" . $def . "</dd>\n";
     }
 }
-?>

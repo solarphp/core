@@ -96,4 +96,3 @@ return array(
     'LABEL_MONIKER'              => 'Display Name',
     'LABEL_URI'                  => 'Website',
 );
-?>

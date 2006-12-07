@@ -168,4 +168,3 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
         }
     }
 }
-?>

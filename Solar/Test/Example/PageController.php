@@ -217,4 +217,3 @@ class Solar_Test_Example_PageController extends Solar_Controller_Page {
         return $output;
     }
 }
-?>

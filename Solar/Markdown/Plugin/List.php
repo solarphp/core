@@ -292,4 +292,3 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         return "<li>$item</li>\n";
     }
 }
-?>

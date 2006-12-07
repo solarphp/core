@@ -375,4 +375,3 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         return $this->_valid;
     }
 }
-?>

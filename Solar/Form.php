@@ -908,4 +908,3 @@ class Solar_Form extends Solar_Base {
         }
     }
 }
-?>

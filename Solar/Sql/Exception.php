@@ -30,4 +30,3 @@ Solar::loadClass('Solar_Exception');
  * 
  */
 class Solar_Sql_Exception extends Solar_Exception {}
-?>

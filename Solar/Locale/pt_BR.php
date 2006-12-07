@@ -98,4 +98,3 @@ return array(
     'LABEL_MONIKER'              => 'Nome',
     'LABEL_URI'                  => 'Site',
 );
-?>

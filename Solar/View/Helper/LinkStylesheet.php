@@ -54,4 +54,3 @@ class Solar_View_Helper_LinkStylesheet extends Solar_View_Helper {
         return $this->_view->link($attribs);
     }
 }
-?>

@@ -186,4 +186,3 @@ class Solar_Content_Bookmarks extends Solar_Content_Abstract {
         return $form;
     }
 }
-?>

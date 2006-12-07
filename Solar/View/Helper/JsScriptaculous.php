@@ -92,4 +92,3 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
     }
 
 }
-?>

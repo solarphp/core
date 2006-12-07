@@ -220,4 +220,3 @@ class Solar_Sql_Result extends Solar_Base implements Iterator {
         return true;
     }
 }
-?>

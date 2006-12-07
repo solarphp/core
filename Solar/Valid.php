@@ -886,4 +886,3 @@ class Solar_Valid extends Solar_Base {
         return $this->regex($value, $expr, $blank);
     }
 }
-?>

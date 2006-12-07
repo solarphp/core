@@ -93,4 +93,3 @@ class Solar_View_Helper_JsPrototype extends Solar_View_Helper_JsLibrary {
     }
 
 }
-?>

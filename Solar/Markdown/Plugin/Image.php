@@ -199,4 +199,3 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($result);
     }
 }
-?>

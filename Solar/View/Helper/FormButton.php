@@ -56,4 +56,3 @@ class Solar_View_Helper_FormButton extends Solar_View_Helper_FormElement {
         return $xhtml;
     }
 }
-?>

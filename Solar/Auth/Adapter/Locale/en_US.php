@@ -22,4 +22,3 @@ return array(
     'EXPIRED' => 'Your session has expired.  Please sign in again.',
     'IDLED'   => 'Your session has been idle for too long.  Please sign in again.'
 );
-?>

@@ -45,4 +45,3 @@ class Solar_Role_Adapter_None extends Solar_Role_Adapter {
         return array();
     }
 }
-?>

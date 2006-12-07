@@ -66,4 +66,3 @@ class Solar_View_Helper_Style extends Solar_View_Helper {
              . "@import url(\"$url\");</style>";
     }
 }
-?>

@@ -771,4 +771,3 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->_layout = false;
     }
 }
-?>

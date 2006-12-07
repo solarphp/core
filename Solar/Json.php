@@ -921,4 +921,3 @@ class Solar_Json extends Solar_Base {
         return trim($str);
     }
 }
-?>

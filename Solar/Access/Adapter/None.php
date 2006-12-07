@@ -54,4 +54,3 @@ class Solar_Access_Adapter_None extends Solar_Access_Adapter {
         );
     }
 }
-?>

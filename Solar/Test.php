@@ -761,4 +761,3 @@ class Solar_Test extends Solar_Base {
         }
     }
 }
-?>

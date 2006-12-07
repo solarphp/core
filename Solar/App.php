@@ -217,4 +217,3 @@ abstract class Solar_App extends Solar_Controller_Page {
         // view
     }
 }
-?>

@@ -49,4 +49,3 @@ class Solar_View_Helper_Meta extends Solar_View_Helper {
     }
 
 }
-?>

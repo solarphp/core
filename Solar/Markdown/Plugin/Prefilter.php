@@ -123,4 +123,3 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
         return $text;
     }
 }
-?>

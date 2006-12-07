@@ -81,4 +81,3 @@ class Solar_View_Helper_FormCheckbox extends Solar_View_Helper_FormElement {
         return $xhtml;
     }
 }
-?>

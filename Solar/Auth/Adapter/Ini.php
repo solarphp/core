@@ -95,4 +95,3 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {
         }
     }
 }
-?>

@@ -53,4 +53,3 @@ class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement {
     }
     
 }
-?>

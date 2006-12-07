@@ -76,4 +76,3 @@ class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
         return implode("\n\n", $grafs);
     }
 }
-?>

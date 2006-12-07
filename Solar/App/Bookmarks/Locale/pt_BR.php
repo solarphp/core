@@ -66,5 +66,4 @@ return array(
     'DRAG_THIS'             => 'Arraste este link para a sua barra de ferramentas para adicionar bookmarks rapidamente.',
     'NO_BOOKMARKS_FOUND'    => 'Nenhum bookmark encontrado.',
 
-)
-?>
+);

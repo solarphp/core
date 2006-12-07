@@ -251,4 +251,3 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
         return $result;
     }
 }
-?>

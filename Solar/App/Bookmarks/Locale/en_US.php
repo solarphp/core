@@ -68,4 +68,4 @@ return array(
     'DRAG_THIS'             => 'Drag this link to your toolbar for quick bookmarking',
     'NO_BOOKMARKS_FOUND'    => 'No bookmarks found.',
 
-) ?>
+);

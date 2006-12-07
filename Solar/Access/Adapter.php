@@ -111,4 +111,3 @@ abstract class Solar_Access_Adapter extends Solar_Base {
      */
     abstract public function fetch($handle, $roles);
 }
-?>

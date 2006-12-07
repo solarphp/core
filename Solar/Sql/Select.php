@@ -1258,4 +1258,3 @@ class Solar_Sql_Select extends Solar_Base {
         $this->_parts['from'][] = "($orig) AS $name";
     }
 }
-?>

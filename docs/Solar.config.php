@@ -65,4 +65,3 @@ $config['Solar_Auth'] = array(
  * Done!
  */
 return $config;
-?>

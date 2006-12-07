@@ -279,4 +279,3 @@ class Solar_Form_Load_Table extends Solar_Base {
         }
     }
 }
-?>

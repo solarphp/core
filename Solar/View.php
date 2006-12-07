@@ -566,4 +566,3 @@ class Solar_View extends Solar_Base {
         return ob_get_clean();
     }
 }
-?>

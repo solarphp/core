@@ -62,4 +62,3 @@ class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
              . ' />';
     }
 }
-?>

@@ -68,4 +68,3 @@ class Solar_Cache extends Solar_Base {
         return Solar::factory($class, $config);
     }
 }
-?>

@@ -157,4 +157,3 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
         return $count;
     }
 }
-?>

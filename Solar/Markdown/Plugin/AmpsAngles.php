@@ -107,4 +107,3 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken('&lt;');
     }
 }
-?>

@@ -812,4 +812,3 @@ class Solar_Markdown extends Solar_Base {
         return $this->_link;
     }
 }
-?>

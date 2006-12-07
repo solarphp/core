@@ -194,4 +194,3 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
     }
 
 }
-?>

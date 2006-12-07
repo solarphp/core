@@ -156,4 +156,3 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
         return "<pre><code>$code</code></pre>";
     }
 }
-?>

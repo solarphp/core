@@ -229,4 +229,3 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($html) . "\n\n";
     }
 }
-?>

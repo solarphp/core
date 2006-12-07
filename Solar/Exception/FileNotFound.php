@@ -30,4 +30,3 @@ Solar::loadClass('Solar_Exception');
  * 
  */
 class Solar_Exception_FileNotFound extends Solar_Exception {}
-?>

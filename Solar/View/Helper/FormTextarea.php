@@ -52,4 +52,3 @@ class Solar_View_Helper_FormTextarea extends Solar_View_Helper_FormElement {
              . '</textarea>';
     }
 }
-?>

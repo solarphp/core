@@ -113,4 +113,3 @@ class Solar_Model_Areas extends Solar_Sql_Table {
         return $select->fetch('pairs');
     }
 }
-?>

@@ -451,4 +451,3 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * {@value}
  * 
  */
-?>

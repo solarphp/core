@@ -223,4 +223,3 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
              ."\n\n";
     }
 }
-?>

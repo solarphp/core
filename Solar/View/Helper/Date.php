@@ -72,4 +72,3 @@ class Solar_View_Helper_Date extends Solar_View_Helper {
         }
     }
 }
-?>

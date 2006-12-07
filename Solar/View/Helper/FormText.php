@@ -52,4 +52,3 @@ class Solar_View_Helper_FormText extends Solar_View_Helper_FormElement {
              . ' />';
     }
 }
-?>

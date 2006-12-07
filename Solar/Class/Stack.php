@@ -209,4 +209,3 @@ class Solar_Class_Stack extends Solar_Base {
         include func_get_arg(0);
     }
 }
-?>

@@ -39,4 +39,3 @@ return array(
     'ERR_DATA'          => 'Invalid data; please try again.',
 );
 
-?>

@@ -68,4 +68,3 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
         }
     }
 }
-?>

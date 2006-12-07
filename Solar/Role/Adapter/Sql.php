@@ -96,4 +96,3 @@ class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
         return $result;
     }
 }
-?>

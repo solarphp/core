@@ -431,4 +431,3 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
 
 }
-?>

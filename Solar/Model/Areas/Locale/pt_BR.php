@@ -27,4 +27,3 @@ return array(
     'VALID_AREA_USER_HANDLE' => 'O nome do usuário só pode ter letras, números e o caracter subtraço (_).',
 );
 
-?>

@@ -78,4 +78,3 @@ class Solar_View_Helper_Script extends Solar_View_Helper {
              . $this->_view->attribs($attribs) . '></script>';
     }
 }
-?>

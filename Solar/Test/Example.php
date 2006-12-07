@@ -182,4 +182,3 @@ class Solar_Test_Example extends Solar_Base {
         return is_int($value);
     }
 }
-?>

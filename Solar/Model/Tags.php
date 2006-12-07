@@ -260,4 +260,3 @@ class Solar_Model_Tags extends Solar_Sql_Table {
         );
     }
 }
-?>

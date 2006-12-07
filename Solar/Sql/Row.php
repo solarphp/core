@@ -134,4 +134,3 @@ class Solar_Sql_Row extends Solar_Struct {
         return $this->_save;
     }
 }
-?>

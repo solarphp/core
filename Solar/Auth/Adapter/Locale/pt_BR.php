@@ -22,4 +22,3 @@ return array(
     'EXPIRED' => 'A sessão expirou.  Por favor logue-se novamente.',
     'IDLED'   => 'A sessão está inativa há muito tempo.  Por favor logue-se novamente.'
 );
-?>

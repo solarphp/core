@@ -222,4 +222,3 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     abstract public function fetch($handle);
 }
-?>

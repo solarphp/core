@@ -241,4 +241,3 @@ class Solar_Form_Load_Xml extends Solar_Base {
         return $final;
     }
 }
-?>

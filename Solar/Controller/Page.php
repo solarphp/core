@@ -878,4 +878,3 @@ abstract class Solar_Controller_Page extends Solar_Base {
         return $output;
     }
 }
-?>

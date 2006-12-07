@@ -53,4 +53,3 @@ class Solar_View_Helper_GetText extends Solar_View_Helper {
         return $this->_view->escape($this->_view->getTextRaw($key, $num));
     }
 }
-?>

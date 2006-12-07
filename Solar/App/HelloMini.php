@@ -53,4 +53,3 @@ class Solar_App_HelloMini extends Solar_Controller_Page {
     {
     }
 }
-?>

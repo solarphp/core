@@ -30,4 +30,3 @@ Solar::loadClass('Solar_View_Exception');
  * 
  */
 class Solar_View_Exception_PartialNotFound extends Solar_View_Exception {}
-?>

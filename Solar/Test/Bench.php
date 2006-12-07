@@ -198,4 +198,3 @@ class Solar_Test_Bench extends Solar_Base {
     }
 }
 
-?>

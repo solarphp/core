@@ -91,4 +91,3 @@ class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
         }
     }
 }
-?>

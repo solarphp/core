@@ -32,4 +32,3 @@
               ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
               ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
               ->fetch();
-?>

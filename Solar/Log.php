@@ -81,4 +81,3 @@ class Solar_Log extends Solar_Base {
         return Solar::factory($class, $config);
     }
 }
-?>

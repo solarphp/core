@@ -504,4 +504,3 @@ class Solar_Request extends Solar_Base {
         }
     }
 }
-?>

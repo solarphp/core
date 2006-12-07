@@ -468,4 +468,3 @@ class Solar_Filter extends Solar_Base {
         return $value;
     }
 }
-?>

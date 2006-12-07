@@ -113,4 +113,3 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
         return file_put_contents($this->_file, $text, FILE_APPEND | LOCK_EX);
     }
 }
-?>

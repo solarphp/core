@@ -79,4 +79,3 @@ class Solar_Markdown_Extra extends Solar_Markdown {
         ),
     );
 }
-?>

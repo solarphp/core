@@ -59,4 +59,3 @@ class Solar_View_Helper_Image extends Solar_View_Helper {
 	         . $this->_view->attribs($attribs) . ' />';
 	}
 }
-?>

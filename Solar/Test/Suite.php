@@ -533,4 +533,3 @@ class Solar_Test_Suite extends Solar_Base {
         $this->_log->save(get_class($this), 'test', $message);
     }
 }
-?>

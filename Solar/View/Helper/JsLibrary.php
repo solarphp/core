@@ -163,4 +163,3 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
     }
 
 }
-?>

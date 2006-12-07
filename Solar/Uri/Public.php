@@ -54,4 +54,3 @@ class Solar_Uri_Public extends Solar_Uri {
         'path' => '/public/',
     );
 }
-?>

@@ -180,4 +180,3 @@ class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
         return $this->_toHtmlToken($html) . "\n\n";
     }
 }
-?>

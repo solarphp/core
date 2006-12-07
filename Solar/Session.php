@@ -321,4 +321,3 @@ class Solar_Session extends Solar_Base {
         }
     }
 }
-?>

@@ -513,4 +513,3 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         return array($a0, $b0, $x);
     }
 }
-?>

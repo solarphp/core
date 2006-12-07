@@ -59,4 +59,3 @@ abstract class Solar_View_Helper extends Solar_Base {
         unset($this->_config['_view']);
     }
 }
-?>

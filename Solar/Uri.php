@@ -419,4 +419,3 @@ class Solar_Uri extends Solar_Base {
         return implode('/', $out);
     }
 }
-?>

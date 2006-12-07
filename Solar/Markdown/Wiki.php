@@ -81,4 +81,3 @@ class Solar_Markdown_Wiki extends Solar_Markdown {
         ),
     );
 }
-?>

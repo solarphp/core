@@ -18,5 +18,4 @@ return array(
 	'ERR_EXAMPLE' => 'esta é uma mensagem de erro.',
 	'HELLO_WORLD' => 'Olá, mundo.',
 	'APPLE' => array('maçã', 'maçãs'),
-)
-?>
+);

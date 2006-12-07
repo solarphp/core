@@ -30,4 +30,3 @@ Solar::loadClass('Solar_View_Exception');
  * 
  */
 class Solar_View_Exception_TemplateNotFound extends Solar_View_Exception {}
-?>

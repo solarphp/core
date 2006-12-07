@@ -27,4 +27,3 @@ return array(
     'VALID_AREA_USER_HANDLE' => 'The username should consist only of letters, numbers, and underscores.',
 );
 
-?>

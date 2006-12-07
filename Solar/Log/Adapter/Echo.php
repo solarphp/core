@@ -111,4 +111,3 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
         return true;
     }
 }
-?>

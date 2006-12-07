@@ -220,4 +220,3 @@ class Solar_Path_Stack {
         return false;
     }
 }
-?>

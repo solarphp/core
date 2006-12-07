@@ -188,4 +188,3 @@ class Solar_Controller_Front extends Solar_Base {
         echo $this->fetch($spec);
     }
 }
-?>

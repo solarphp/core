@@ -145,4 +145,3 @@ class Solar_App_Hello extends Solar_App {
         $this->_layout = false;
     }
 }
-?>

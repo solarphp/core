@@ -111,4 +111,3 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
         // no return, it's supposed to be removed.
     }
 }
-?>

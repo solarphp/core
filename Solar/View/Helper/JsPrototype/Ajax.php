@@ -295,4 +295,3 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
     }
 
 }
-?>

@@ -65,4 +65,3 @@ class Solar_Role extends Solar_Base {
         return Solar::factory($class, $config);
     }
 }
-?>

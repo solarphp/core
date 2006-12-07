@@ -62,4 +62,3 @@ class Solar_Markdown_Plugin_Encode extends Solar_Markdown_Plugin {
         return $this->_encode($text, true);
     }
 }
-?>

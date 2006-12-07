@@ -128,4 +128,3 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
         return $pre;
     }
 }
-?>

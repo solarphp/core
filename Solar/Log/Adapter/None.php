@@ -51,4 +51,3 @@ class Solar_Log_Adapter_None extends Solar_Log_Adapter {
         return true;
     }
 }
-?>

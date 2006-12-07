@@ -112,4 +112,3 @@ class Solar_User extends Solar_Base {
         $this->access->load($this->auth->handle, $this->role->list);
     }
 }
-?>

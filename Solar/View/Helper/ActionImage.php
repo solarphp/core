@@ -91,4 +91,3 @@ class Solar_View_Helper_ActionImage extends Solar_View_Helper {
         return "<a href=\"$href\">$img</a>";
     }
 }
-?>

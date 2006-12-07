@@ -152,4 +152,3 @@ class Solar_Sql_Rowset extends Solar_Sql_Row {
     {
     }
 }
-?>

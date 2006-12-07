@@ -538,4 +538,3 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
         return $html;
     }
 }
-?>

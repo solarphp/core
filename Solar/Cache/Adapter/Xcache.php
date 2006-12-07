@@ -216,4 +216,3 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
         return $key;
     }
 }
-?>

@@ -52,4 +52,3 @@ class Solar_View_Helper_MetaName extends Solar_View_Helper {
     }
 
 }
-?>

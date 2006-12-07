@@ -46,4 +46,3 @@ class Solar_Auth_Adapter_None extends Solar_Auth_Adapter {
         return false;
     }
 }
-?>

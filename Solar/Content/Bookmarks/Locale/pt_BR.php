@@ -24,4 +24,3 @@ return array(
     'LABEL_TAGS' => 'Tags',
     'LABEL_POS' => 'Popularidade',
 );
-?>

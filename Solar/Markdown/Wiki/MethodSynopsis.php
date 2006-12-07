@@ -249,4 +249,3 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($html) . "\n";
     }
 }
-?>

@@ -84,4 +84,3 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
              . "</select>";
     }
 }
-?>

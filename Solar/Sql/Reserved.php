@@ -135,4 +135,3 @@ class Solar_Sql_Reserved {
         'WRITETEXT', 'XOR', 'YEAR', 'YEAR_MONTH', 'ZEROFILL', 'ZONE',
     );
 }
-?>

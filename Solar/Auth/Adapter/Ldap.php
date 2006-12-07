@@ -114,4 +114,3 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
         }
     }
 }
-?>

@@ -234,4 +234,3 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
         return $this->_toHtmlToken($text) . "\n";
     }
 }
-?>

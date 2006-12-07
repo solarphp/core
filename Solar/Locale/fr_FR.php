@@ -74,4 +74,3 @@ return array(
     'LABEL_HANDLE'     => 'Identifiant',
     'LABEL_PASSWD'     => 'Mot de passe',
 );
-?>

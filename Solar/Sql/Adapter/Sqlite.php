@@ -309,4 +309,3 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         return $this->lastInsertId();
     }
 }
-?>

@@ -74,4 +74,3 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
         return $this->_view->date($spec, $format);
     }
 }
-?>

@@ -65,4 +65,3 @@ class Solar_Auth extends Solar_Base {
         return Solar::factory($class, $config);
     }
 }
-?>

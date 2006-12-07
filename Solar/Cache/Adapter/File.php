@@ -298,4 +298,3 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     }
 } 
 
-?>

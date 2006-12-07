@@ -184,4 +184,3 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
     }
 
 }
-?>

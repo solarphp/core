@@ -52,4 +52,3 @@ class Solar_View_Helper_MetaHttp extends Solar_View_Helper {
     }
 
 }
-?>

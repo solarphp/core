@@ -320,7 +320,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $before = microtime(true);
         
         $obj = $this->_pdo->prepare($stmt);
-        $obj->execute((array) $data);
+        
+        try {
+            $obj->execute((array) $data);
+        } catch (PDOException $e) {
+            throw $this->_exception(
+                'ERR_QUERY_FAILED',
+                array(
+                    'pdo_code' => $e->getCode(),
+                    'pdo_text' => $e->getMessage(),
+                    'host'     => $this->_config['host'],
+                    'port'     => $this->_config['port'],
+                    'user'     => $this->_config['user'],
+                    'name'     => $this->_config['name'],
+                    'stmt'     => $stmt,
+                )
+            );
+        }
         
         // retain the profile data?
         if ($this->_config['profile']) {

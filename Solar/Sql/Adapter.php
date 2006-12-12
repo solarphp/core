@@ -54,12 +54,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Sql_Adapter = array(
-        'host'    => null,
-        'port'    => null,
-        'user'    => null,
-        'pass'    => null,
-        'name'    => null,
-        'profile' => false,
+        'host'      => null,
+        'port'      => null,
+        'user'      => null,
+        'pass'      => null,
+        'name'      => null,
+        'profiling' => false,
     );
     
     /**
@@ -190,6 +190,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected $_profile = array();
     
+    protected $_profiling = false;
+    
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->setProfiling($this->_config['profile']);
+    }
+    
     /**
      * 
      * Get the query profile array.
@@ -213,6 +221,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     {
         $this->_connect();
         return $this->_pdo;
+    }
+    
+    public function setProfiling($flag)
+    {
+        $this->_profiling = (bool) $flag;
     }
     
     
@@ -292,7 +305,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
         
         // retain the profile data?
-        if ($this->_config['profile']) {
+        if ($this->_profiling) {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, '__CONNECT');
         }
@@ -339,7 +352,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // retain the profile data?
-        if ($this->_config['profile']) {
+        if ($this->_profiling) {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, $obj->queryString);
         }
@@ -368,7 +381,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $before = microtime(true);
         $result = $this->_pdo->beginTransaction();
         
-        if ($this->_config['profile']) {
+        if ($this->_profiling) {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, "__BEGIN");
         }
@@ -386,7 +399,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function commit()
     {
         $this->_connect();
-        if ($this->_config['profile']) {
+        if ($this->_profiling) {
             $this->_profile[] = array(null, "__COMMIT");
         }
         return $this->_pdo->commit();
@@ -402,7 +415,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function rollback()
     {
         $this->_connect();
-        if ($this->_config['profile']) {
+        if ($this->_profiling) {
             $this->_profile[] = array(null, "__ROLLBACK");
         }
         return $this->_pdo->rollBack();

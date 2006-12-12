@@ -54,6 +54,14 @@ if (! defined('SOLAR_CONFIG_PATH')) {
 }
 
 /**
+ * Define a random value that lets us avoid having to use func_num_args() and 
+ * func_get_arg() for optional undefined parameters.
+ */
+if (! defined('SOLAR_IGNORE_PARAM')) {
+    define('SOLAR_IGNORE_PARAM', uniqid('SOLAR_IGNORE_PARAM' . rand(), true));
+}
+
+/**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
  */
 if (! class_exists('Solar_Base')) {
@@ -73,7 +81,6 @@ if (! class_exists('Solar_Base')) {
  * 
  */
 class Solar {
-    
     
     /**
      * 
@@ -116,6 +123,15 @@ class Solar {
      * 
      */
     protected static $_status = false;
+    
+    /**
+     * 
+     * A filename to include.
+     * 
+     * @var string
+     * 
+     */
+    protected static $_file = null;
     
     /**
      * 
@@ -474,8 +490,9 @@ class Solar {
         if (Solar::fileExists($file)) {
             // clean up the local scope, then include the file and
             // return its results
+            Solar::$_file = $file;
             unset($file);
-            return include(func_get_arg(0));
+            return include(Solar::$_file);
         } else {
             // could not open the file for reading
             throw Solar::exception(
@@ -702,22 +719,14 @@ class Solar {
      * @return mixed The value of the configuration group or element.
      * 
      */
-    public static function config($group, $elem = null)
+    public static function config($group, $elem = null, $default = SOLAR_IGNORE_PARAM)
     {
-        // was a default fallback value passed?  we do it this way
-        // instead of defining a parameter because we need to return
-        // a different default value depending on whether a group
-        // was requested, or an element.
-        if (func_num_args() > 2) {
-            $default = func_get_arg(2);
-        }
-        
         // are we looking for a group or an element?
         if (is_null($elem)) {
             
             // looking for a group. if no default passed, set up an
             // empty array.
-            if (! isset($default)) {
+            if ($default == SOLAR_IGNORE_PARAM) {
                 $default = array();
             }
             
@@ -732,7 +741,7 @@ class Solar {
             
             // looking for an element. if no default passed, set up a
             // null.
-            if (! isset($default)) {
+            if ($default == SOLAR_IGNORE_PARAM) {
                 $default = null;
             }
             

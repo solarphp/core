@@ -187,7 +187,6 @@ class Solar_Sql_Select extends Solar_Base {
         return $this->fetch('string');
     }
     
-    
     /**
      * 
      * Sets the number of rows per page.
@@ -414,14 +413,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function where($cond)
+    public function where($cond, $val = SOLAR_IGNORE_PARAM)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if (func_num_args() > 1) {
-            $val = func_get_arg(1);
+        if ($val != SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -450,14 +448,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @see where()
      * 
      */
-    public function orWhere($cond)
+    public function orWhere($cond, $val = SOLAR_IGNORE_PARAM)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if (func_num_args() > 1) {
-            $val = func_get_arg(1);
+        if ($val != SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -569,14 +566,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function having($cond)
+    public function having($cond, $val = SOLAR_IGNORE_PARAM)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if (func_num_args() > 1) {
-            $val = func_get_arg(1);
+        if ($val != SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -605,14 +601,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @see having()
      * 
      */
-    public function orHaving($cond)
+    public function orHaving($cond, $val = SOLAR_IGNORE_PARAM)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if (func_num_args() > 1) {
-            $val = func_get_arg(1);
+        if ($val != SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         

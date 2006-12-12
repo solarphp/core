@@ -223,7 +223,7 @@ class Solar_View extends Solar_Base {
      * @return bool True on success, false on failure.
      * 
      */
-    public function assign($spec)
+    public function assign($spec, $var = SOLAR_IGNORE_PARAM)
     {
         // assign from associative array
         if (is_array($spec)) {
@@ -260,8 +260,8 @@ class Solar_View extends Solar_Base {
         }
         
         // assign by name and value
-        if (is_string($spec) && func_num_args() > 1) {
-            $this->$spec = func_get_arg(1);
+        if (is_string($spec) && $var != SOLAR_IGNORE_PARAM) {
+            $this->$spec = $var;
             return true;
         }
         

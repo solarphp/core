@@ -236,7 +236,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Get the PDO connection object (connecting if needed).
+     * Get the PDO connection object (connects to the database if needed).
      * 
      * @return PDO
      * 
@@ -395,16 +395,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function begin()
     {
         $this->_connect();
-        
-        // begin the profile time
         $before = microtime(true);
         $result = $this->_pdo->beginTransaction();
-        
         if ($this->_profiling) {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, "__BEGIN");
         }
-        
         return $result;
     }
     
@@ -418,10 +414,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function commit()
     {
         $this->_connect();
+        $before = microtime(true);
+        $result = $this->_pdo->commit();
         if ($this->_profiling) {
-            $this->_profile[] = array(null, "__COMMIT");
+            $after = microtime(true);
+            $this->_profile[] = array($after - $before, "__COMMIT");
         }
-        return $this->_pdo->commit();
+        return $result;
     }
     
     /**
@@ -434,10 +433,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function rollback()
     {
         $this->_connect();
+        $before = microtime(true);
+        $result = $this->_pdo->rollBack();
         if ($this->_profiling) {
-            $this->_profile[] = array(null, "__ROLLBACK");
+            $after = microtime(true);
+            $this->_profile[] = array($after - $before, "__ROLLBACK");
         }
-        return $this->_pdo->rollBack();
+        return $result;
     }
     
     /**
@@ -1335,7 +1337,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             // quote all other scalars
             $this->_connect();
             return $this->_pdo->quote($val);
-        }            $this->_connect();
+        }
     }
     
     /**

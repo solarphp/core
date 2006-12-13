@@ -812,8 +812,9 @@ class Solar_Valid extends Solar_Base {
         }
         
         // TAKEN (almost) DIRECTLY FROM PEAR_VALIDATE::URI()
+        $delim = chr(255);
         $result = preg_match(
-            '£^(?:([a-z][-+.a-z0-9]*):)?                                                # 1. scheme
+            $delim . '^(?:([a-z][-+.a-z0-9]*):)?                                        # 1. scheme
             (?://                                                                       #    authority start
             (?:((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();:&=+$,])*)@)?                         # 2. authority-userinfo
             (?:((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*[a-z](?:[-a-z0-9]*[a-z0-9])?\.?)  # 3. authority-hostname OR
@@ -822,7 +823,7 @@ class Solar_Valid extends Solar_Base {
             ((?:/(?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'():@&=+$,;])*)+)?                       # 6. path
             (?:\?([^#]*))?                                                              # 7. query
             (?:\#((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();/?:@&=+$,])*))?                     # 8. fragment
-            $£xi', $value, $matches);
+            $' . $delim . 'xi', $value, $matches);
         
         if ($result) {
             

@@ -140,7 +140,7 @@ class Solar_Sql_Table extends Solar_Base {
     
     /**
      * 
-     * The object class returned by fetch(), fetchNew(), and fetchWhere().
+     * The object class returned by fetch(), fetchNew(), and fetchRow().
      * 
      * @var string
      * 
@@ -228,6 +228,24 @@ class Solar_Sql_Table extends Solar_Base {
     public function setPaging($val)
     {
         $this->_paging = (int) $val;
+    }
+    
+    /**
+     * 
+     * Returns a fully-qualified column name ("tablename.colname").
+     * 
+     * If the column does not exist in the table, returns null.
+     * 
+     * @param string $name The column name itself.
+     * 
+     * @return string The column name prefixed with the table name.
+     * 
+     */
+    public function getColName($key)
+    {
+        if (! empty($this->_col[$key])) {
+            return $this->_name . '.' . $key;
+        }
     }
     
     /**

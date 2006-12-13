@@ -42,7 +42,10 @@ class Solar_Content extends Solar_Base {
      * 
      */
     protected $_Solar_Content = array(
-        'sql' => 'sql',
+        'sql'   => 'sql',
+        'areas' => 'Solar_Model_Areas',
+        'nodes' => 'Solar_Model_Nodes',
+        'tags'  => 'Solar_Model_Tags',
     );
     
     /**
@@ -82,8 +85,9 @@ class Solar_Content extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->areas = Solar::factory('Solar_Model_Areas', $this->_config);
-        $this->nodes = Solar::factory('Solar_Model_Nodes', $this->_config);
-        $this->tags  = Solar::factory('Solar_Model_Tags', $this->_config);
+        $model_config = array('sql' => $this->_config['sql']);
+        $this->areas = Solar::dependency($this->_config['areas'], $model_config);
+        $this->nodes = Solar::dependency($this->_config['nodes'], $model_config);
+        $this->tags  = Solar::dependency($this->_config['tags'],  $model_config);
     }
 }

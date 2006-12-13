@@ -92,7 +92,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * The path portion (e.g., 'path/to/index.php').
      * 
-     * @var string
+     * @var array
      * 
      */
     public $path = null;
@@ -101,7 +101,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * Query string elements split apart into an array.
      * 
-     * @var string
+     * @var array
      * 
      */
     public $query = array();

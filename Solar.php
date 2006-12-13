@@ -535,8 +535,9 @@ class Solar {
         // using an absolute path for the file?
         // dual check for Unix '/' and Windows '\',
         // or Windows drive letter and a ':'.
-        if ($file[0] == '/' || $file[0] == '\\' || $file[1] == ':') {
-            return file_exists($file);
+        $abs = ($file[0] == '/' || $file[0] == '\\' || $file[1] == ':');
+        if ($abs && file_exists($file)) {
+            return $file;
         }
         
         // using a relative path on the file

@@ -323,9 +323,10 @@ class Solar {
                       . Solar::getLocale() . '.php';
         
                 // can we find the file?
-                if (Solar::fileExists($file)) {
+                $target = Solar::fileExists($file);
+                if ($target) {
                     // put the locale values into the shared locale array
-                    Solar::$locale[$class] = (array) include $file;
+                    Solar::$locale[$class] = (array) include $target;
                 } else {
                     // could not find file.
                     // fail silently, as it's often the case that the
@@ -487,12 +488,12 @@ class Solar {
      */
     public static function run($file)
     {
-        if (Solar::fileExists($file)) {
+        Solar::$_file = Solar::fileExists($file);
+        unset($file);
+        if (Solar::$_file) {
             // clean up the local scope, then include the file and
             // return its results
-            Solar::$_file = $file;
-            unset($file);
-            return include(Solar::$_file);
+            return include Solar::$_file;
         } else {
             // could not open the file for reading
             throw Solar::exception(
@@ -542,9 +543,9 @@ class Solar {
         $path = explode(PATH_SEPARATOR, ini_get('include_path'));
         foreach ($path as $dir) {
             // strip Unix '/' and Windows '\'
-            $dir = rtrim($dir, '\\/');
-            if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
-                return true;
+            $target = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . $file;
+            if (file_exists($target)) {
+                return $target;
             }
         }
         

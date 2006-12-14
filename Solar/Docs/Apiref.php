@@ -239,8 +239,6 @@ class Solar_Docs_Apiref extends Solar_Base {
         $this->_addProperties($class);
         $this->_addMethods($class);
         
-        Solar::dump($this->api[$class]['constants']);
-        
         // done!
         return true;
     }

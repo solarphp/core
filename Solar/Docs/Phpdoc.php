@@ -131,7 +131,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         // return the summary, narrative, and technical portions
         return array(
             'summ' => trim(substr($narr, 0, $pos)),
-            'narr' => trim(substr($narr, $pos + 1)),
+            'narr' => trim(substr($narr, $pos)),
             'tech' => $this->_info,
         );
     }
@@ -160,7 +160,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         // process each element
         foreach ($split as $line) {
             $line = trim($line);
-            $found = preg_match('/(\w+)\s+(.*)/ms', $line, $matches);
+            $found = preg_match('/(\w+)(?:\s+)?(.*)/ms', $line, $matches);
             if (! $found) {
                 continue;
             }
@@ -374,6 +374,20 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
+     * Parses an @ignore line into $this->_info.
+     * 
+     * @param string $line The block line
+     * 
+     * @return void
+     * 
+     */
+    public function parseIgnore($line)
+    {
+        $this->_info['ignore'] = 'ignore';
+    }
+    
+    /**
+     * 
      * Parses a one-part block line.
      * 
      * Strips everything after the first space.
@@ -431,7 +445,6 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * 
  * WHAT WE PROBABLY WILL NOT SUPPORT
  * 
- * @access       public or private
  * @global       type $globalvarname 
  *  or
  * @global       type description of global variable usage in a function
@@ -440,8 +453,6 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * @name         $globalvaralias
  * @magic        phpdoc.de compatibility
  * @internal     private information for advanced developers only
- * @static       static method or property
- * @ignore
  * {@code}
  * {@docRoot}
  * {@inheritDoc}

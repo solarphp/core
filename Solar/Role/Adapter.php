@@ -43,7 +43,8 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Role_Adapter = array(
-        'refresh' => false,
+        'refresh'       => false,
+        'session_class' => 'Solar_Role_Adapter',
     );
     
     /**
@@ -85,10 +86,17 @@ abstract class Solar_Role_Adapter extends Solar_Base {
         // basic config option settings
         parent::__construct($config);
         
+        // make sure we have a session class name; this determines how the
+        // session store is segmented.  when you have multiple adapters that
+        // need to use the same store, this is useful.
+        if (! $this->_config['session_class']) {
+            $this->_config['session_class'] = 'Solar_Role_Adapter';
+        }
+        
         // get a session segment
         $this->_session = Solar::factory(
             'Solar_Session',
-            array('class' => get_class($this))
+            array('class' => $this->_config['session_class'])
         );
         
         // make sure we have a session value and reference to it.

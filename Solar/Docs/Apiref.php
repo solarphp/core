@@ -118,6 +118,12 @@ class Solar_Docs_Apiref extends Solar_Base {
      *             narr => string,
      *             tech => array(...),
      *             from => array(...),
+     *             constants => array(
+     *                 constantname => array(
+     *                     type => string,
+     *                     value => string,
+     *                 ), // constantname
+     *             ), // constants
      *             properties => array(
      *                 propertyname => array(
      *                     name => string,
@@ -229,8 +235,11 @@ class Solar_Docs_Apiref extends Solar_Base {
         
         // add the class parents, properties and methods
         $this->_addParents($class);
+        $this->_addConstants($class);
         $this->_addProperties($class);
         $this->_addMethods($class);
+        
+        Solar::dump($this->api[$class]['constants']);
         
         // done!
         return true;
@@ -254,6 +263,30 @@ class Solar_Docs_Apiref extends Solar_Base {
             $parents[] = $parent;
         }
         $this->api[$class]['from'] = array_reverse($parents);
+    }
+    
+    /**
+     * 
+     * Adds the constant reflections for a given class.
+     * 
+     * The Reflection API does not support doc comments for constants yet.
+     * 
+     * @param string $class The class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addConstants($class)
+    {
+        $this->api[$class]['constants'] = array();
+        $reflect = new ReflectionClass($class);
+        $list = $reflect->getConstants();
+        foreach ($list as $key => $val) {
+            $this->api[$class]['constants'][$key] = array(
+                'type' => gettype($val),
+                'value' => var_export($val, true),
+            );
+        }
     }
     
     /**

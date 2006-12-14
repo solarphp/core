@@ -1,7 +1,3 @@
-# Point to your PEAR directory here, which should contain
-# the Solar installation.
-php_value include_path /usr/local/pear/php
-
 # Try to be smart out there: no short tags, no magic quotes.
 php_flag short_open_tag off
 php_flag magic_quotes_gpc off

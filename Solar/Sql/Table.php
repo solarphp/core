@@ -236,7 +236,7 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * If the column does not exist in the table, returns null.
      * 
-     * @param string $name The column name itself.
+     * @param string $key The column name itself.
      * 
      * @return string The column name prefixed with the table name.
      * 

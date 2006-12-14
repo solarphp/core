@@ -157,6 +157,15 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         return $list;
     }
     
+    /**
+     * 
+     * Returns an array describing the columns in a table.
+     * 
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @return array An array of table columns.
+     * 
+     */
     public function fetchTableCols($table)
     {
         throw $this->_exception(

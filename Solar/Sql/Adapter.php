@@ -216,6 +216,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Turns profiling on and off.
      * 
+     * @param bool $flag True to turn profiling on, false to turn it off.
+     * 
+     * @return void
+     * 
      */
     public function setProfiling($flag)
     {
@@ -1027,9 +1031,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Describes the columns in a table.
+     * Returns an array describing the columns in a table.
      * 
-     * @return array An array of column tables.
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @return array An array of table columns.
      * 
      */
     abstract public function fetchTableCols($table);

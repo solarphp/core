@@ -432,7 +432,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
  * 
  * WHAT WE PROBABLY WILL SUPPORT
  * 
- * @author name <author@email>
+ * @author name <author@email> summary
  * @copyright name date
  * @deprecated summary
  * @deprec summary

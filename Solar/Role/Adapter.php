@@ -109,6 +109,10 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      * @param string $handle The username to load roles for.
      * 
+     * @param bool $refresh Override the class-default for refreshing, and
+     * force (true) or don't force (false) reloading.  Default is null, which
+     * uses the class-default value.
+     * 
      * @return void
      * 
      */

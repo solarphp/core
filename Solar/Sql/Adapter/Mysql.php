@@ -157,7 +157,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Describes the columns in a table.
+     * Returns an array describing the columns in a table.
      * 
      *     mysql> DESCRIBE table_name;
      *     +--------------+--------------+------+-----+---------+-------+
@@ -172,9 +172,9 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      *     | prefs        | longtext     | YES  |     | NULL    |       |
      *     +--------------+--------------+------+-----+---------+-------+
      * 
-     * @param string $table The table to describe.
+     * @param string $table The table name to fetch columns for.
      * 
-     * @return array
+     * @return array An array of table columns.
      * 
      */
     public function fetchTableCols($table)

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 
  * Sample configuration file for Solar.
@@ -16,18 +15,15 @@
  * 
  */
 
-
 /**
  * Empty base array.
  */
 $config = array();
 
-
 /**
  * Document root.
  */
 $docroot = $_SERVER['DOCUMENT_ROOT'];
-
 
 /**
  * General ini settings.
@@ -37,7 +33,6 @@ $config['Solar']['ini_set'] = array(
 	'display_errors'  => true,
 	'html_errors'     => true
 );
-
 
 /**
  * Default database connection.
@@ -49,7 +44,6 @@ $config['Solar_Sql'] = array(
 	)
 );
 
-
 /**
  * User authentication source.
  */
@@ -60,6 +54,18 @@ $config['Solar_Auth'] = array(
 	),
 );
 
+/**
+ * 
+ * The base path for action URIs.
+ * 
+ * If you are using the mod_rewrite .htaccess file that comes with
+ * Solar in "docs/_htaccess", uncomment the "/" line below.  Otherwise,
+ * uncomment the "/index.php" line to indicate the location of your 
+ * bootstrap file.
+ * 
+ */
+// $config['Solar_Uri_Action']['path'] = '/';
+// $config['Solar_Uri_Action']['path'] = '/index.php';
 
 /**
  * Done!

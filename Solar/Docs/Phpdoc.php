@@ -113,15 +113,24 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         // load the formal technical info array
         $this->_loadInfo($tech);
         
-        // now take the summary line off the narrative
-        $dot = strpos($narr, ".");
-        $new = strpos($narr, "\n");
-        if ($dot !== false) {
+        // now take the summary line off the narrative.
+        // look for the first sentence-punctuation followed by whitespace.
+        preg_match('/^(.*[\.\?\!])(\s|\n|$)/AUms', $narr, $matches);
+        if ($matches) {
+            $punct = strlen($matches[1]);
+        } else {
+            $punct = false;
+        }
+        
+        // alternatively, look for the first newline only.
+        $newline = strpos($narr, "\n");
+        
+        if ($punct !== false) {
             // summary is first sentence
-            $pos = $dot + 1;
+            $pos = $punct;
         } elseif ($new !== false) {
             // summary is first line
-            $pos = $new;
+            $pos = $newline;
         } else {
             // appears there is no summary line, go only
             // with the narrative.
@@ -130,10 +139,11 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         
         // return the summary, narrative, and technical portions
         return array(
-            'summ' => trim(substr($narr, 0, $pos)),
+            'summ' => str_replace("\n", " ", trim(substr($narr, 0, $pos))),
             'narr' => trim(substr($narr, $pos)),
             'tech' => $this->_info,
         );
+        
     }
     
     /**

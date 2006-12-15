@@ -489,10 +489,10 @@ class Solar {
     public static function run($file)
     {
         Solar::$_file = Solar::fileExists($file);
-        unset($file);
         if (Solar::$_file) {
             // clean up the local scope, then include the file and
             // return its results
+            unset($file);
             return include Solar::$_file;
         } else {
             // could not open the file for reading

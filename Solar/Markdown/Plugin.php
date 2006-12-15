@@ -278,7 +278,7 @@ abstract class Solar_Markdown_Plugin extends Solar_Base {
      * 
      * Removes one level of leading tabs or space from a text block.
      * 
-     * E.g., if a block of text is indented by 3 tabs, it will be
+     * For example, if a block of text is indented by 3 tabs, it will be
      * returned as indented with only 2 tabs.
      * 
      * @param string $text A block of text.

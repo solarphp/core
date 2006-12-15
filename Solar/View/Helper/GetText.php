@@ -37,9 +37,9 @@ class Solar_View_Helper_GetText extends Solar_View_Helper {
      * 
      * @param string $key The locale key to look up.  Uses the default
      * class; if you need to use a key from another class, prefix with
-     * that class name and two colons (e.g.,
+     * that class name and two colons (for example,
      * 'Non_Default_Class::KEY_NAME').  If you need to set a new default
-     * class, use the class name with two colons and no key (e.g.
+     * class, use the class name with two colons and no key (for example
      * 'New_Default_Class::').
      * 
      * @param int|float $num A number to help determine if the

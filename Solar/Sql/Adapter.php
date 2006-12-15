@@ -96,13 +96,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * : A character large object with a size of up to 2,147,483,647 bytes (about 2 GB).
      * 
      * `date`
-     * : An ISO 8601 date stored as a 10-character string; e.g., '1979-11-07'.
+     * : An ISO 8601 date stored as a 10-character string; for example, '1979-11-07'.
      * 
      * `time`
-     * : An ISO 8601 time stored as an 8-character string; e.g., '12:34:56'.
+     * : An ISO 8601 time stored as an 8-character string; for example, '12:34:56'.
      * 
      * `timestamp`
-     * : An ISO 8601 timestamp stored as a 19-character string (no zone offset); e.g., '1979-11-07T12:34:56'.
+     * : An ISO 8601 timestamp stored as a 19-character string (no zone offset); for example, '1979-11-07T12:34:56'.
      * 
      * @var array
      * 
@@ -262,7 +262,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Creates a PDO-style DSN.
      * 
-     * E.g., "mysql:host=127.0.0.1;dbname=test"
+     * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
      * @return string A PDO-style DSN.
      * 
@@ -1403,7 +1403,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * piece of literal text to be used and not quoted.
      * 
      * @param string $sep Return the list pieces separated with this string
-     * (e.g. ' AND '), default null.
+     * (for example ' AND '), default null.
      * 
      * @return string An SQL-safe string composed of the list keys and
      * quoted values.
@@ -1598,7 +1598,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Builds a CREATE TABLE command string.
      * 
      * We use this so that certain adapters can append table types
-     * to the creation statment (e.g. MySQL).
+     * to the creation statment (for example MySQL).
      * 
      * @param string $name The table name to create.
      * 
@@ -1693,7 +1693,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Given a column specification, parse into datatype, size, and 
      * decimal scope.
      * 
-     * @param string $spec The column specification; e.g., "VARCHAR(255)"
+     * @param string $spec The column specification; for example, "VARCHAR(255)"
      * or "NUMERIC(10,2)".
      * 
      * @return array A sequential array of the column type, size, and scope.

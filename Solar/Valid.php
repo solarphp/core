@@ -314,7 +314,7 @@ class Solar_Valid extends Solar_Base {
      * Validate that a value is an ISO 8601 date string.
      * 
      * The format is "yyyy-mm-dd".  Also checks to see that the date
-     * itself is valid (e.g., no Feb 30).
+     * itself is valid (for example, no Feb 30).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -370,7 +370,7 @@ class Solar_Valid extends Solar_Base {
      * The format is "yyyy-mm-ddThh:ii:ss" (note the literal "T" in the
      * middle, which acts as a separator).
      * 
-     * Also checks that the date itself is valid (e.g., no Feb 30).
+     * Also checks that the date itself is valid (for example, no Feb 30).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -790,13 +790,13 @@ class Solar_Valid extends Solar_Base {
      * 
      * Validate a value as a URI per RFC2396.
      * 
-     * The value must match a generic URI format; e.g.,
+     * The value must match a generic URI format; for example,
      * ``http://example.com``, ``mms://example.org``, and so on.
      * 
      * @param mixed $value The value to validate.
      * 
      * @param string|array $schemes Allowed schemes for the URI;
-     * e.g., http, https, ftp.  If null, all schemes are allowed.
+     * for example, http, https, ftp.  If null, all schemes are allowed.
      * 
      * @param bool $blank Allow blank values to be valid.
      * 

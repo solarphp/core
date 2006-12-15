@@ -44,7 +44,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * Keys are ...
      * 
      * `url`
-     * : (string) URL to the HTTP service, e.g. "https://example.com/login.php".
+     * : (string) URL to the HTTP service, for example "https://example.com/login.php".
      * 
      * `handle`
      * : (string) The handle element name.

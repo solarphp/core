@@ -195,7 +195,7 @@ class Solar_Filter extends Solar_Base {
      * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
-     * default is ISO 8601 format (e.g., '2005-02-25').
+     * default is ISO 8601 format (for example, '2005-02-25').
      * 
      * @return string The filtered value.
      * 
@@ -224,7 +224,7 @@ class Solar_Filter extends Solar_Base {
      * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
-     * default is ISO 8601 format (e.g., '12:34:56').
+     * default is ISO 8601 format (for example, '12:34:56').
      * 
      * @return string The filtered value.
      * 
@@ -249,7 +249,7 @@ class Solar_Filter extends Solar_Base {
      * timestamp using [[php::strtotime() | ]].
      * 
      * @param string $format A timestamp format string appropriate for date();
-     * default is ISO 8601 format (e.g., '2005-02-25T12:34:56').
+     * default is ISO 8601 format (for example, '2005-02-25T12:34:56').
      * 
      * @return string The filtered value.
      * 

@@ -103,7 +103,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * : The page name as entered in the source text.
      * 
      * `frag`
-     * : A fragment anchor for the target page (e.g., "#example").
+     * : A fragment anchor for the target page (for example, "#example").
      * 
      * `text`
      * : The text to display in place of the page name.
@@ -229,7 +229,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * 
      * @param string $type The anchor type, generally 'read' or 'add'.
      * 
-     * @param string $key The attribute key, e.g. 'href' or 'class'.
+     * @param string $key The attribute key, for example 'href' or 'class'.
      * 
      * @param string $val The attribute value.
      * 

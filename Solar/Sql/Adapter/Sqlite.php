@@ -92,7 +92,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * 
      * Creates a PDO-style DSN.
      * 
-     * E.g., "mysql:host=127.0.0.1;dbname=test"
+     * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
      * @return string A PDO-style DSN.
      * 

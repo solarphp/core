@@ -360,7 +360,7 @@ class Solar {
      * 
      * Sets the locale code and clears out previous locale strings.
      * 
-     * @param string $code A locale code, e.g., 'en_US'.
+     * @param string $code A locale code, for example, 'en_US'.
      * 
      * @return void
      */
@@ -377,7 +377,7 @@ class Solar {
      * 
      * Returns the current locale code.
      * 
-     * @return string The current locale code, e.g., 'en_US'.
+     * @return string The current locale code, for example, 'en_US'.
      * 
      */
     public static function getLocale()
@@ -520,8 +520,8 @@ class Solar {
      * 
      * @param string $file Check for this file in the include_path.
      * 
-     * @return bool True if the file exists and is readble in the
-     * include_path, false if not.
+     * @return mixed If the file exists and is readble in the include_path,
+     * returns the path and filename; if not, returns boolean false.
      * 
      */
     public static function fileExists($file)
@@ -847,7 +847,7 @@ class Solar {
         // get all parent classes, including the class itself
         $stack = Solar::parents($class, true);
         
-        // add the vendor namespace, (e.g., 'Solar') to the stack as a
+        // add the vendor namespace, (for example, 'Solar') to the stack as a
         // final fallback, even though it's not strictly part of the
         // hierarchy, for generic vendor-wide exceptions.
         $pos = strpos($class, '_');
@@ -908,7 +908,7 @@ class Solar {
      * 
      * Use slashes anywhere you need a directory separator. Then run the
      * string through fixdir() and the slashes will be converted to the
-     * proper separator (e.g. '\' on Windows).
+     * proper separator (for example '\' on Windows).
      * 
      * Always adds a final trailing separator.
      * 

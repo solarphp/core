@@ -33,7 +33,7 @@ class Solar_Sql extends Solar_Base {
      * Keys are ...
      * 
      * `adapter`
-     * : (string) The class to factory, e.g. 'Solar_Sql_Adapter_Mysql'.
+     * : (string) The class to factory, for example 'Solar_Sql_Adapter_Mysql'.
      * 
      * @var array
      * 

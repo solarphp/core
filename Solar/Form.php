@@ -171,7 +171,7 @@ class Solar_Form extends Solar_Base {
      * : (string) The default or selected value(s) for the element.
      * 
      * `descr`
-     * : (string) A longer description of the element, e.g. a tooltip
+     * : (string) A longer description of the element, for example a tooltip
      *   or help text.
      * 
      * `status`
@@ -788,12 +788,12 @@ class Solar_Form extends Solar_Base {
             $pos = strpos($name, '[');
             if ($pos === false) {
                 // name is not itself an array.
-                // e.g., 'field' becomes 'array[field]'
+                // for example, 'field' becomes 'array[field]'
                 $name = $array . "[$name]";
             } else {
-                // the name already has array keys, e.g.
+                // the name already has array keys, for example
                 // 'field[0]'. make the name just another key
-                // in the array, e.g. 'array[field][0]'.
+                // in the array, for example 'array[field][0]'.
                 $name = $array . '[' .
                     substr($name, 0, $pos) . ']' .
                     substr($name, $pos);
@@ -811,7 +811,7 @@ class Solar_Form extends Solar_Base {
      * if a scalar, will map the value into a form element.
      * 
      * @param string $elem The name of the current element mapped from
-     * the array of submitted values.  E.g., $src['foo']['bar']['baz']
+     * the array of submitted values.  For example, $src['foo']['bar']['baz']
      * maps to "foo[bar][baz]".
      * 
      * @return void

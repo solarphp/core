@@ -48,7 +48,7 @@ class Solar_Log extends Solar_Base {
      * Keys are ...
      * 
      * `adapter`
-     * : (string) The adapter class to use, e.g. 'Solar_Log_Adapter_File'.
+     * : (string) The adapter class to use, for example 'Solar_Log_Adapter_File'.
      *   Default is 'Solar_Log_Adapter_None'.
      * 
      * @var array

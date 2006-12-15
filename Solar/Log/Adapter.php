@@ -159,7 +159,7 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * 
      * @param string $class The class name saving the message.
      * 
-     * @param string $event The event type (e.g. 'info' or 'debug').
+     * @param string $event The event type (for example 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
      * 

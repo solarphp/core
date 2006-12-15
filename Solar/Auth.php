@@ -33,7 +33,7 @@ class Solar_Auth extends Solar_Base {
      * Keys are ...
      * 
      * `adapter`
-     * : (string) The adapter class, e.g. 'Solar_Auth_Adapter_File'.
+     * : (string) The adapter class, for example 'Solar_Auth_Adapter_File'.
      * 
      * @var array
      * 

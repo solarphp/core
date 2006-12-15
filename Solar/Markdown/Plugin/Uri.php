@@ -134,11 +134,11 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
      * 
      * From the original notes ...
      * 
-     * > Input: an email address, e.g. "foo@example.com"
+     * > Input: an email address, for example "foo@example.com"
      * >
      * > Output: the email address as a mailto link, with each character
      * > of the address encoded as either a decimal or hex entity, in
-     * > the hopes of foiling most address harvesting spam bots. E.g.:
+     * > the hopes of foiling most address harvesting spam bots. For example:
      * >
      * >     <a href="&#x6D;&#97;&#105;&#108;&#x74;&#111;:&#102;&#111;&#111;&#64;&#101;
      * >     x&#x61;&#109;&#x70;&#108;&#x65;&#x2E;&#99;&#111;&#109;">&#102;&#111;&#111;

@@ -52,7 +52,7 @@ Solar::loadClass('Solar_Uri_Action');
  *
  * Note that models are not included in the application itself; this is
  * for class-name deconfliction reasons.  Your models should be stored
- * elsewhere in the Solar hierarchy, e.g. Vendor_Model_Name.
+ * elsewhere in the Solar hierarchy, for example Vendor_Model_Name.
  *
  * When you call [[fetch()]], these intercept methods
  * are run in the following order ...
@@ -210,7 +210,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // create the request object
         $this->_request = Solar::factory('Solar_Request');
 
-        // auto-set the name; e.g. Solar_App_Something => 'something'
+        // auto-set the name; for example Solar_App_Something => 'something'
         if (empty($this->_name)) {
             $pos = strrpos($class, '_');
             $this->_name = substr($class, $pos + 1);
@@ -270,7 +270,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Executes the requested action and returns its output with layout.
      *
-     * @param string $spec The action specification string, e.g.,
+     * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      *
      * @return string The results of the action + view + layout.
@@ -298,7 +298,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      * Executes the requested action and displays its output.
      *
-     * @param string $spec The action specification string, e.g.,
+     * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      *
      * @return void
@@ -696,11 +696,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * By default, looks for $submit_key in [[Solar_Request::post()]] to get the
      * value of the submit request.
      *
-     * Checks against "SUBMIT_$type" locale string for matching.  E.g.,
+     * Checks against "SUBMIT_$type" locale string for matching.  For example,
      * $this->_isSubmit('save') checks Solar_Request::post('submit') 
      * against $this->locale('SUBMIT_SAVE').
      *
-     * @param string $type The submit type; e.g., 'save', 'delete',
+     * @param string $type The submit type; for example, 'save', 'delete',
      * 'preview', etc.  If empty, returns true if *any* submission type
      * was posted.
      *

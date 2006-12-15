@@ -313,7 +313,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             $this->_id_count[$id] = 1;
         } else {
             // already in use, increment the count.
-            // e.g., 'this-id' becomes 'this-id-1',
+            // for example, 'this-id' becomes 'this-id-1',
             // next one is 'this-id-2', etc.
             $id .= "-" . $this->_id_count[$id] ++;
             $info['attribs']['id'] = $id;

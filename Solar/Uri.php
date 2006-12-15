@@ -34,7 +34,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * `path`
      * : (string) A path prefix.  Generally needed only
-     *   for specific URI subclasses, e.g. Solar_Uri_Action.
+     *   for specific URI subclasses, for example Solar_Uri_Action.
      * 
      * @var array
      * 
@@ -45,7 +45,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The scheme (e.g. 'http' or 'https').
+     * The scheme (for example 'http' or 'https').
      * 
      * @var string
      * 
@@ -54,7 +54,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The host specification (e.g., 'example.com').
+     * The host specification (for example, 'example.com').
      * 
      * @var string
      * 
@@ -63,7 +63,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The port number (e.g., '80').
+     * The port number (for example, '80').
      * 
      * @var string
      * 
@@ -90,7 +90,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The path portion (e.g., 'path/to/index.php').
+     * The path portion (for example, 'path/to/index.php').
      * 
      * @var array
      * 
@@ -108,7 +108,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The fragment portion (e.g., "#subsection").
+     * The fragment portion (for example, "#subsection").
      * 
      * @var string
      * 

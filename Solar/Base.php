@@ -70,7 +70,7 @@ abstract class Solar_Base {
      * config array and any values from the Solar.config.php file.
      * 
      * The Solar.config.php values are inherited along class parent
-     * lines; e.g., all classes descending from Solar_Base use the 
+     * lines; for example, all classes descending from Solar_Base use the 
      * Solar_Base config file values until overridden.
      * 
      * @param mixed $config User-defined configuration values.
@@ -84,7 +84,7 @@ abstract class Solar_Base {
             
             // properties only, no config file
             foreach ($parents as $class) {
-                $var = "_$class"; // e.g., $_Solar_Test_Example
+                $var = "_$class"; // for example, $_Solar_Test_Example
                 $prop = empty($this->$var) ? null : $this->$var;
                 $this->_config = array_merge(
                     // current values

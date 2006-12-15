@@ -84,7 +84,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
      * 
      * @param string $class The class name reporting the event.
      * 
-     * @param string $event The event type (e.g. 'info' or 'debug').
+     * @param string $event The event type (for example 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
      * 

@@ -33,7 +33,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Keys are ...
      * 
      * `adapter`
-     * : (string) The adapter class, e.g. 'Solar_Auth_Adapter_File'.
+     * : (string) The adapter class, for example 'Solar_Auth_Adapter_File'.
      * 
      * `config`
      * : (array) Construction-time config keys to pass to the adapter

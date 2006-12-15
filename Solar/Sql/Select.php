@@ -1041,7 +1041,7 @@ class Solar_Sql_Select extends Solar_Base {
      * piece of literal text to be used and not quoted.
      * 
      * @param string $sep Return the list pieces separated with this string
-     * (e.g. ' AND '), default null.
+     * (for example ' AND '), default null.
      * 
      * @return string An SQL-safe string composed of the list keys and
      * quoted values.

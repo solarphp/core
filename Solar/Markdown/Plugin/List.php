@@ -32,7 +32,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * indicate an unordered bullet list.
  * 
  * Start a line with a number and period (and a space)
- * (e.g. `1. `) to indicate a numbered list.
+ * (for example `1. `) to indicate a numbered list.
  * 
  * @category Solar
  * 
@@ -242,7 +242,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         // an aspect of Markdown's syntax that's hard to parse perfectly
         // without resorting to mind-reading. Perhaps the solution is to
         // change the syntax rules such that sub-lists must start with a
-        // starting cardinal number; e.g. "1." or "a.".
+        // starting cardinal number; for example "1." or "a.".
         $this->_list_level ++;
 
         // trim trailing blank lines:

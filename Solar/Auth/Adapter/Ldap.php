@@ -38,7 +38,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * Keys are ...
      * 
      * `uri`
-     * : (string) URL to the LDAP server, e.g. "ldaps://example.com:389".
+     * : (string) URL to the LDAP server, for example "ldaps://example.com:389".
      * 
      * `format`
      * : (string) Sprintf() format string for the LDAP query; %s

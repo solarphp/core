@@ -44,7 +44,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * 
      * `file`
      * : (string) The file where events should be logged;
-     *   e.g. '/www/username/logs/solar.log'.
+     *   for example '/www/username/logs/solar.log'.
      * 
      * `format`
      * : (string) The line format for each saved event.
@@ -93,7 +93,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
      * 
      * @param string $class The class name reporting the event.
      * 
-     * @param string $event The event type (e.g. 'info' or 'debug').
+     * @param string $event The event type (for example 'info' or 'debug').
      * 
      * @param string $descr A description of the event. 
      * 

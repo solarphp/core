@@ -115,7 +115,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
         $block_tags_b = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|'.
                         'script|noscript|form|fieldset|iframe|math';
 
-        // First, look for nested blocks, e.g.:
+        // First, look for nested blocks, for example:
         // 
         //     <div>
         //         <div>

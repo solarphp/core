@@ -128,7 +128,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         if ($punct !== false) {
             // summary is first sentence
             $pos = $punct;
-        } elseif ($new !== false) {
+        } elseif ($newline !== false) {
             // summary is first line
             $pos = $newline;
         } else {

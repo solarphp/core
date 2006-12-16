@@ -27,25 +27,51 @@
  * 
  * For classes ...
  * 
- *     @category name                # category for the package
- *     @package name                 # class package name
- *     @subpackage name              # class subpackage name
+ *     @category name                   # category for the package
+ *     @package name                    # class package name
+ *     @subpackage name                 # class subpackage name
+ *     @copyright info                  # class copyright information
+ *     @license uri name text           # licensing information
+ *     @version info                    # version information
  * 
  * For properties ...
  * 
- *     @var type [summary]           # class property
+ *     @var type [summary]              # class property
  * 
  * For methods ...
  * 
- *     @param type [$name] [summary] # method parameter
- *     @return type [summary]        # method return
- *     @throws class [summary]       # exceptions thrown by method
- *     @exception class [summary]    # alias to @throws
+ *     @exception class [summary]       # alias to @throws
+ *     @param type [$name] [summary]    # method parameter
+ *     @return type [summary]           # method return
+ *     @throws class [summary]          # exceptions thrown by the method
+ *     @staticvar type $name summary    # use of a static variable within a method
  * 
  * General-purpose ...
  * 
- *     @see name                     # "see also" this element name
- *     @todo summary                 # todo item
+ *     @see name                        # "see also" this element name
+ *     @todo summary                    # todo item
+ *     @ignore                          # ignore this element
+ *     @author name <email> summ        # author name, email, and summary
+ *     @deprecated                      # notes the element is deprecated
+ *     @deprec                          # alias to @deprecated
+ *     @link uri text                   # link to an external URI
+ *     @since info                      # element has been available since this time
+ *     @example file                    # path to an external example file
+ * 
+ * Not supported ...
+ * 
+ *     @global type $globalvar          # description of global variable usage in a function
+ *     @name procpagealias              #
+ *     @name $globalvaralias            #
+ *     @magic                           # phpdoc.de compatibility
+ *     @internal                        # private information for advanced developers only
+ *     {@code}                          # inline tags
+ *     {@docRoot}                       # 
+ *     {@inheritDoc}                    # 
+ *     {@link}                          # 
+ *     {@linkplain}                     # 
+ *     {@literal}                       # 
+ *     {@value}                         # 
  * 
  * @category Solar
  * 
@@ -185,9 +211,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @param line into $this->_info.
-     * 
-     * Multiple @param tags are allowed.
+     * Parses one or more @param lines into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -236,7 +260,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @return line into $this->_info.
+     * Parses one @return line into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -245,16 +269,18 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parseReturn($line)
     {
-        // string|array summary
         $parts = $this->_2part($line);
         if ($parts) {
-            $this->_info['return'] = $parts;
+            $this->_info['return'] = array(
+                'type' => $parts[0],
+                'summ' => $parts[1],
+            );
         }
     }
     
     /**
      * 
-     * Parses an @todo line into $this->_info.
+     * Parses one ore more @todo lines into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -263,16 +289,12 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parseTodo($line)
     {
-        // @todo (multi)
-        if (! empty($this->_info['todo'])) {
-            $this->_info['todo'] = array();
-        }
-        $this->_info['todo'][] = $line;
+        $this->_info['todo'][] = $this->_1part($line);
     }
     
     /**
      * 
-     * Parses an @see line into $this->_info.
+     * Parses one or more @see lines into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -281,16 +303,12 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parseSee($line)
     {
-        // @see (multi)
-        if (! empty($this->_info['see'])) {
-            $this->_info['see'] = array();
-        }
-        $this->_info['see'][] = $line;
+        $this->_info['see'][] = $this->_1part($line);
     }
     
     /**
      * 
-     * Parses an @var line into $this->_info.
+     * Parses one @var line into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -303,13 +321,16 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         // string|array summary
         $parts = $this->_2part($line);
         if ($parts) {
-            $this->_info['var'] = $parts;
+            $this->_info['var'] = array(
+                'type' => $parts[0],
+                'summ' => $parts[1],
+            );
         }
     }
     
     /**
      * 
-     * Parses an @throws line into $this->_info.
+     * Parses one or more @throws lines into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -318,17 +339,18 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parseThrows($line)
     {
-        // @throws (multiple)
-        // Class_Name summary
         $parts = $this->_2part($line);
         if ($parts) {
-            $this->_info['throws'][] = $parts;
+            $this->_info['throws'][] = array(
+                'type' => $parts[0],
+                'summ' => $parts[1],
+            );
         }
     }
     
     /**
      * 
-     * Parses an @exception line into $this->_info; alias for @throws.
+     * Parses one or more @exception lines into $this->_info; alias for @throws.
      * 
      * @param string $line The block line.
      * 
@@ -342,7 +364,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @category line into $this->_info.
+     * Parses one @category line into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -356,7 +378,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @package line into $this->_info.
+     * Parses one @package line into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -370,7 +392,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @subpackage line into $this->_info.
+     * Parses one @subpackage line into $this->_info.
      * 
      * @param string $line The block line.
      * 
@@ -384,9 +406,9 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     
     /**
      * 
-     * Parses an @ignore line into $this->_info.
+     * Parses one @ignore line into $this->_info.
      * 
-     * @param string $line The block line
+     * @param string $line The block line.
      * 
      * @return void
      * 
@@ -394,6 +416,171 @@ class Solar_Docs_Phpdoc extends Solar_Base {
     public function parseIgnore($line)
     {
         $this->_info['ignore'] = 'ignore';
+    }
+    
+    /**
+     * 
+     * Parses one or more @author lines into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     * @todo Do specialized parsing, looking for <email@example.com> in the
+     * middle of the line.
+     * 
+     */
+    public function parseAuthor($line)
+    {
+        $this->_info['author'][] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one @copyright line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseCopyright($line)
+    {
+        $this->_info['copyright'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one @deprecated line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseDeprecated($line)
+    {
+        $this->_info['deprecated'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one @deprec line into $this->_info; alias for @deprecated.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseDeprec($line)
+    {
+        return $this->parseDeprectated($line);
+    }
+    
+    /**
+     * 
+     * Parses one @license line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseLicense($line)
+    {
+        $parts = $this->_3part($line);
+        if ($parts) {
+            $this->_info['license'] = array(
+                'uri' => $parts[0],
+                'name' => $parts[1],
+                'text'  => $parts[2],
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Parses one or more @link lines into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseLink($line)
+    {
+        $parts = $this->_2part($line);
+        if ($parts) {
+            $this->_info['link'][] = array(
+                'uri' => $parts[0],
+                'text'  => $parts[2],
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Parses one @since line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseSince($line)
+    {
+        $this->_info['since'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one @version line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseVersion($line)
+    {
+        $this->_info['version'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one @example line into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     */
+    public function parseExample($line)
+    {
+        $this->_info['example'] = $this->_1part($line);
+    }
+    
+    /**
+     * 
+     * Parses one or more @staticvar lines into $this->_info.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return void
+     * 
+     * @todo Use @param parsing algorithm.
+     * 
+     */
+    public function parseStaticvar($line)
+    {
+        $parts = $this->_3part($line);
+        if ($parts) {
+            $this->_info['staticvar'][] = array(
+                'type' => $parts[0],
+                'name' => $parts[1],
+                'summ' => $parts[2],
+            );
+        }
     }
     
     /**
@@ -418,8 +605,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      * 
      * @param string $line The block line.
      * 
-     * @return array An array with keys 'type' (the first part)
-     * and 'summ' (the second part).
+     * @return array An array of the parts.
      * 
      */
     protected function _2part($line)
@@ -432,43 +618,41 @@ class Solar_Docs_Phpdoc extends Solar_Base {
             $matches[4] = '';
         }
         return array(
-            'type' => $matches[1],
-            'summ' => $matches[4],
+            $matches[1],
+            $matches[4],
+        );
+    }
+    
+    /**
+     * 
+     * Parses a three-part block line.
+     * 
+     * @param string $line The block line.
+     * 
+     * @return array An array of the parts.
+     * 
+     */
+    protected function _3part($line)
+    {
+        preg_match('/([\S]+)((\s+)(.*))?((\s+)(.*))?/', $line, $matches);
+        if (empty($matches)) {
+            return array();
+        }
+        if (empty($matches[4])) {
+            $matches[4] = '';
+        }
+        if (empty($matches[7])) {
+            $matches[7] = '';
+        }
+        return array(
+            $matches[1],
+            $matches[4],
+            $matches[7],
         );
     }
 }
 
 /**
  * 
- * WHAT WE PROBABLY WILL SUPPORT
- * 
- * @author name <author@email> summary
- * @copyright name date
- * @deprecated summary
- * @deprec summary
- * @example /path/to/example
- * @license href name text
- * @link href text
- * @since version|date
- * @staticvar name type summary
- * @version version
- * 
- * WHAT WE PROBABLY WILL NOT SUPPORT
- * 
- * @global       type $globalvarname 
- *  or
- * @global       type description of global variable usage in a function
- * @name         procpagealias
- *  or
- * @name         $globalvaralias
- * @magic        phpdoc.de compatibility
- * @internal     private information for advanced developers only
- * {@code}
- * {@docRoot}
- * {@inheritDoc}
- * {@link}
- * {@linkplain}
- * {@literal}
- * {@value}
  * 
  */

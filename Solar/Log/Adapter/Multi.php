@@ -56,7 +56,7 @@ Solar::loadClass('Solar_Log_Adapter');
  * 
  * @category Solar
  * 
- * @package Solar_Cache
+ * @package Solar_Log
  * 
  */
 class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {

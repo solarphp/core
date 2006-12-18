@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Cache
+ * @package Solar_Log
  * 
  */
 abstract class Solar_Log_Adapter extends Solar_Base {

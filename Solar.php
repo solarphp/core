@@ -135,6 +135,15 @@ class Solar {
     
     /**
      * 
+     * The include_path as an array.
+     * 
+     * @var array
+     * 
+     */
+    protected static $_include_path = array();
+    
+    /**
+     * 
      * Locale strings for all classes.
      * 
      * This is where locale strings for Solar are kept.  The array
@@ -207,6 +216,9 @@ class Solar {
         // where is Solar in the filesystem?
         Solar::$dir = dirname(__FILE__);
         
+        // set the internal include_path property
+        Solar::setIncludePath();
+        
         // clear out registered globals
         if (ini_get('register_globals')) {
             Solar::cleanGlobals();
@@ -234,6 +246,14 @@ class Solar {
         
         // and we're done!
         Solar::$_status = true;
+    }
+    
+    public static function setIncludePath($spec = null)
+    {
+        if ($spec) {
+            ini_set('include_path', $spec);
+        }
+        Solar::$_include_path = explode(PATH_SEPARATOR, ini_get('include_path'));
     }
     
     /**
@@ -541,8 +561,7 @@ class Solar {
         }
         
         // using a relative path on the file
-        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
-        foreach ($path as $dir) {
+        foreach (Solar::$_include_path as $dir) {
             // strip Unix '/' and Windows '\'
             $target = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . $file;
             if (file_exists($target)) {

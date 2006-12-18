@@ -168,6 +168,10 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     public $api = array();
     
+    public $packages = array();
+    
+    public $subpackages = array();
+    
     /**
      * 
      * Constructor.
@@ -233,6 +237,20 @@ class Solar_Docs_Apiref extends Solar_Base {
         $reflect = new ReflectionClass($class);
         $this->api[$class] = $this->_phpdoc->parse($reflect->getDocComment());
         
+        // add to the package list
+        if (empty($this->api[$class]['tech']['package'])) {
+            $this->_log($class, "class '$class' has no @package tag");
+        } else {
+            $name = $this->api[$class]['tech']['package']['name'];
+            $this->packages[$name][] = $class;
+        }
+        
+        // optionally add to the subpackage list
+        if (! empty($this->api[$class]['tech']['subpackage'])) {
+            $name = $this->api[$class]['tech']['subpackage']['name'];
+            $this->subpackages[$name][] = $class;
+        }
+
         // add the class parents, properties and methods
         $this->_addParents($class);
         $this->_addConstants($class);

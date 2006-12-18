@@ -9,7 +9,7 @@ Usage
 Where Locale Files Are Located
 ====================
 
-Solar looks for locale files in the same directory as the class, under the `Locale/` subdirectory.  
+Solar looks for locale files in the same directory as the class, under the `Locale/` subdirectory.
 
 {{code: php
     class Example_Class extends Solar_Base {

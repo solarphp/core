@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View
+ * @package Solar_View_Helper
  * 
  * @author Jeff Surgeson <solar@3hex.com>
  * 
@@ -28,7 +28,7 @@ Solar::loadClass('Solar_View_Helper');
  * 
  * @category Solar
  * 
- * @package Solar_View
+ * @package Solar_View_Helper
  * 
  */
 class Solar_View_Helper_Meta extends Solar_View_Helper {

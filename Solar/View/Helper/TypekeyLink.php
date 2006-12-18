@@ -5,7 +5,7 @@
  *
  * @category Solar
  *
- * @package Solar_View
+ * @package Solar_View_Helper
  *
  * @author Paul M. Jones <pmjones@solarphp.com>
  *
@@ -27,7 +27,7 @@ Solar::loadClass('Solar_View_Helper');
  * Uses the same TypeKey token as Solar_Auth_Adapter_TypeKey
  * @category Solar
  *
- * @package Solar_View
+ * @package Solar_View_Helper
  *
  */
 class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {

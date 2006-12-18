@@ -5,7 +5,7 @@
  *
  * @category Solar
  *
- * @package Solar_View
+ * @package Solar_View_Helper_Js
  *
  * @author Clay Loveless <clay@killersoft.com>
  *
@@ -77,7 +77,7 @@ Solar::loadClass('Solar_View_Helper_JsScriptaculous');
  *
  * @category Solar
  *
- * @package Solar_View
+ * @package Solar_View_Helper_Js
  *
  * @author Clay Loveless <clay@killersoft.com>
  *

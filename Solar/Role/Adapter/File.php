@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Role
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -34,7 +34,7 @@ Solar::loadClass('Solar_Role_Adapter');
  * 
  * @category Solar
  * 
- * @package Solar_User
+ * @package Solar_Role
  * 
  */
 class Solar_Role_Adapter_File extends Solar_Role_Adapter {

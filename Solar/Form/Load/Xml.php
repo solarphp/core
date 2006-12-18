@@ -18,7 +18,7 @@
 /**
  * 
  * Class for loading Solar_Form definitions from a SimpleXML file.
- *  
+ * 
  * @category Solar
  * 
  * @package Solar_Form

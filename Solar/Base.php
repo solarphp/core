@@ -22,14 +22,14 @@
  * This is the class from which almost all other Solar classes are
  * extended.  Solar_Base is relatively light, and provides ...
  * 
- * * Construction-time reading of [Main:ConfigFile config file] options 
+ * * Construction-time reading of [[Main::ConfigFile | config file]] options 
  *   for itself, and merging of those options with any options passed   
- *   for instantation, along with the class-defined config defaults,  
+ *   for instantation, along with the class-defined config defaults,
  *   into the Solar_Base::$_config property.
  * 
- * * A Solar_Base::locale() convenience method to return locale strings.
+ * * A [[Solar_Base::locale()]] convenience method to return locale strings.
  * 
- * * A Solar_Base::_exception() convenience method to generate
+ * * A [[Solar_Base::_exception()]] convenience method to generate
  *   exception objects with translated strings from the locale file
  * 
  * Note that you do not define config defaults in $_config directly; 

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar: Simple Object Library and Application repository for PHP5.
+ * Solar: Simple Object Library and Application Repository for PHP5.
  * 
  * @category Solar
  * 

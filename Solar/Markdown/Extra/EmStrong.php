@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  * @author John Gruber <http://daringfireball.net/projects/markdown/>
  * 
@@ -33,7 +33,7 @@ Solar::loadClass('Solar_Markdown_Plugin_EmStrong');
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  */
 class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {

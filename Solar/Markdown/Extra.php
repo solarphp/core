@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
  * 
@@ -33,7 +33,7 @@ Solar::loadClass('Solar_Markdown');
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  * @todo Implement the markdown-in-html portion of Markdown-Extra.
  * 

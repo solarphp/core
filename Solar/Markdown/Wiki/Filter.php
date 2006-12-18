@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Wiki
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Markdown_Plugin_Prefilter');
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Wiki
  * 
  */
 class Solar_Markdown_Wiki_Filter extends Solar_Markdown_Plugin_Prefilter {

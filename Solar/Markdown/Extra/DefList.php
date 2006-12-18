@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
  * 
@@ -41,7 +41,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Extra
  * 
  */
 class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {

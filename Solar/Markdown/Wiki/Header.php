@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Wiki
  * 
  * @author John Gruber <http://daringfireball.net/projects/markdown/>
  * 
@@ -56,7 +56,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  * @category Solar
  * 
- * @package Solar_Markdown
+ * @package Solar_Markdown_Wiki
  * 
  */
 class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {

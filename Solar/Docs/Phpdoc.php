@@ -415,7 +415,7 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parseIgnore($line)
     {
-        $this->_info['ignore'] = 'ignore';
+        $this->_info['ignore'] = true;
     }
     
     /**
@@ -491,9 +491,9 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         $parts = $this->_3part($line);
         if ($parts) {
             $this->_info['license'] = array(
-                'uri' => $parts[0],
+                'uri'  => $parts[0],
                 'name' => $parts[1],
-                'text'  => $parts[2],
+                'text' => $parts[2],
             );
         }
     }
@@ -512,8 +512,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
         $parts = $this->_2part($line);
         if ($parts) {
             $this->_info['link'][] = array(
-                'uri' => $parts[0],
-                'text'  => $parts[2],
+                'uri'  => $parts[0],
+                'text' => $parts[1],
             );
         }
     }

@@ -64,7 +64,6 @@ Solar::loadClass('Solar_Markdown_Plugin');
  * 
  *     <h3 id="foo">Section</h3>
  * 
- * 
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki
@@ -103,28 +102,30 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
     {
         // h2
         $text = preg_replace_callback(
-            '{ ^=+[ \t]*\n(.+)[ \t]*\n=+[ \t]*\n+ }mx',
+            // '{ ^=+[ \t]*\n(.+)[ \t]*\n=+[ \t]*\n+ }mx',
+            '{ ^=+[ \t]*\n(.+?) (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})? [ \t]*\n=+[ \t]*\n+ }mx',
             array($this, '_parseTitle'),
             $text
         );
         
         // h3
         $text = preg_replace_callback(
-            '{ ^-+[ \t]*\n(.+)[ \t]*\n-+[ \t]*\n+ }mx',
+            // '{ ^-+[ \t]*\n(.+)[ \t]*\n-+[ \t]*\n+ }mx',
+            '{ ^-+[ \t]*\n(.+?) (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})? [ \t]*\n-+[ \t]*\n+ }mx',
             array($this, '_parseSuperSection'),
             $text
         );
         
         // h4
         $text = preg_replace_callback(
-            '{ ^(.+)[ \t]*\n=+[ \t]*\n+ }mx',
+            '{ (^.+?) (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})? [ \t]*\n=+[ \t]*\n+ }mx',
             array($this, '_parseSection'),
             $text
         );
         
         // h5
         $text = preg_replace_callback(
-            '{ ^(.+)[ \t]*\n-+[ \t]*\n+ }mx',
+            '{ (^.+?) (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})? [ \t]*\n-+[ \t]*\n+ }mx',
             array($this, '_parseSubSection'),
             $text
         );
@@ -132,11 +133,12 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
         // atx 1 through 4
         $text = preg_replace_callback(
             "{
-                ^(\\#{1,4}) # $1 = string of #'s
+                ^(\\#{1,4})                         # $1 = string of #'s
+                [ \\t]*                             
+                (.+?)                               # $2 = header text
+                (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\})?    # $3 = ID
                 [ \\t]*
-                (.+?)       # $2 = Header text
-                [ \\t]*
-                \\#*        # optional closing #'s (not counted)
+                \\#*                                # optional closing #'s
                 \\n+
             }xm",
             array($this, '_parseAtx'),
@@ -161,7 +163,18 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
     protected function _parseAtx($matches)
     {
         $tag = 'h' . strlen($matches[1]);
-        return $this->_header($tag, $matches[2]);
+        
+        if (! empty($matches[3])) {
+            $id = ' id="' . $this->_escape($matches[3]) . '"';
+        } else {
+            $id = '';
+        }
+        
+        $html = "<$tag$id>"
+              . $this->_processSpans($matches[2])
+              . "</$tag>";
+              
+        return $this->_toHtmlToken($html) . "\n\n";
     }
     
     /**
@@ -175,7 +188,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseTitle($matches)
     {
-        return $this->_header('h1', $matches[1]);
+        return $this->_header('h1', $matches);
     }
 
     /**
@@ -189,7 +202,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseSuperSection($matches)
     {
-        return $this->_header('h2', $matches[1]);
+        return $this->_header('h2', $matches);
     }
 
     /**
@@ -203,7 +216,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseSection($matches)
     {
-        return $this->_header('h3', $matches[1]);
+        return $this->_header('h3', $matches);
     }
 
     /**
@@ -217,7 +230,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      */
     protected function _parseSubSection($matches)
     {
-        return $this->_header('h4', $matches[1]);
+        return $this->_header('h4', $matches);
     }
     
     /**
@@ -226,17 +239,24 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
      * 
      * @param string $tag The header tag ('h1', 'h5', etc).
      * 
-     * @param string $text The header text.
+     * @param string $matches The matched values, element 1 is the text,
+     * optional element 2 is the ID (if any).
      * 
      * @return string The replacement header HTML token.
      * 
      */
-    protected function _header($tag, $text)
+    protected function _header($tag, $matches)
     {
-        $html = "<$tag>"
-              . $this->_processSpans($text)
-              . "</$tag>";
+        if (! empty($matches[2])) {
+            $id = ' id="' . $this->_escape($matches[2]) . '"';
+        } else {
+            $id = '';
+        }
         
+        $html = "<$tag$id>"
+              . $this->_processSpans($matches[1])
+              . "</$tag>";
+              
         return $this->_toHtmlToken($html) . "\n\n";
     }
 }

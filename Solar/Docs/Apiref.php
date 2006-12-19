@@ -241,7 +241,7 @@ class Solar_Docs_Apiref extends Solar_Base {
         if (empty($this->api[$class]['tech']['package'])) {
             $this->_log($class, "class '$class' has no @package tag");
         } else {
-            $name = $this->api[$class]['tech']['package']['name'];
+            $name = $this->api[$class]['tech']['package'];
             $this->packages[$name][] = $class;
         }
         

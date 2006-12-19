@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Base
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Exception');
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Base
  * 
  */
 class Solar_Exception_FileNotFound extends Solar_Exception {}

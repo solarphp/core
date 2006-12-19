@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Base
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -40,7 +40,7 @@
  * 
  * @category Solar
  * 
- * @package Solar
+ * @package Solar_Base
  * 
  */
 abstract class Solar_Base {

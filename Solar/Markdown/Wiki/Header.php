@@ -54,6 +54,17 @@ Solar::loadClass('Solar_Markdown_Plugin');
  *     
  *     <h4>Sub-Section</h4>
  * 
+ * You can also suffix the header text with `{#id}` and that will become the
+ * the header ID attribute.  For example, this code ...
+ * 
+ *     Section {#foo}
+ *     ==============
+ * 
+ * ... would become ...
+ * 
+ *     <h3 id="foo">Section</h3>
+ * 
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki

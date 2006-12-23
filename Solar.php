@@ -489,12 +489,7 @@ class Solar {
     public static function run($file)
     {
         Solar::$_file = Solar::fileExists($file);
-        if (Solar::$_file) {
-            // clean up the local scope, then include the file and
-            // return its results
-            unset($file);
-            return include Solar::$_file;
-        } else {
+        if (! Solar::$_file) {
             // could not open the file for reading
             throw Solar::exception(
                 'Solar',
@@ -503,6 +498,12 @@ class Solar {
                 array('file' => $file)
             );
         }
+
+        // clean up the local scope, then include the file and
+        // return its results.  keeps the include() outside of an if()
+        // statement, which makes it possible to opcode-cache.
+        unset($file);
+        return include Solar::$_file;
     }
     
     /**

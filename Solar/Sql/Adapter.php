@@ -583,104 +583,75 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function select($type, $spec, $data = array(), $class = null)
     {
-        // build the statement from its component parts if needed
-        if (is_array($spec)) {
-            $stmt = $this->_buildSelect($spec);
-        } else {
-            $stmt = $spec;
-        }
+        switch (strtolower($type)) {
         
-        // are we just returning the statement?
-        $lctype = strtolower($type);
-        if ($lctype == 'string') {
-            return $stmt;
-        }
-        
-        // execute and get the PDOStatement result object
-        $result = $this->query($stmt, $data);
-        
-        // return data based on the select type
-        switch ($lctype) {
-        
-        // return Solar_Sql_Rowset object
         case 'all':
             if (empty($class)) {
                 $class = 'Solar_Sql_Rowset';
             }
-            $data = Solar::factory(
-                $class,
-                array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
-            );
+            return $this->fetchAll($spec, $data, $class);
             break;
         
-        // return all as a sequential array
         case 'array':
-            $data = $result->fetchAll(PDO::FETCH_ASSOC);
+            // maintains BC
+            // will be deprecated in favor of fetchAll()
+            return $this->fetchAll($spec, $data, null);
             break;
-            
-        // return all as an array keyed on the first column
+        
         case 'assoc':
-            $data = array();
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                $key = current($row); // value of the first element
-                $data[$key] = $row;
-            }
+            // maintains BC
+            // will change behavior to return Solar_Sql_Rowset (vice array)
+            return $this->fetchAssoc($spec, $data, null);
             break;
         
-        // return the first col of every row
         case 'col':
-            $data = $result->fetchAll(PDO::FETCH_COLUMN, 0);
-            break;
-            
-        // return the first col of the first row
-        case 'one':
-            $data = $result->fetchColumn(0);
+            return $this->fetchCol($spec, $data, $class);
             break;
         
-        // return data as key-value pairs where the first column
-        // is the key and the second column is the value
+        case 'one':
+            return $this->fetchOne($spec, $data, $class);
+            break;
+        
         case 'pair':
         case 'pairs':
-            $data = array();
-            while ($row = $result->fetch(PDO::FETCH_NUM)) {
-                $data[$row[0]] = $row[1];
-            }
+            return $this->fetchPairs($spec, $data, $class);
             break;
         
-        // the PDOStatement result object
         case 'pdo':
         case 'pdostatement':
         case 'statement':
-            $data = $result;
+            // maintains BC
+            // will be deprecated in favor of fetchResult()
+            return $this->fetchResult($spec, $data, $class);
             break;
-            
-        // a Solar_Sql_Result object
+        
         case 'result':
+            // maintains BC
+            // will be deprecated and removed
+            $result = $this->fetchResult($spec, $data, $class);
             $data = Solar::factory(
                 'Solar_Sql_Result',
                 array('PDOStatement' => $result)
             );
+            return $data;
             break;
         
-        // return a Solar_Sql_Row object
         case 'row':
             if (empty($class)) {
                 $class = 'Solar_Sql_Row';
             }
-            $data = Solar::factory(
-                $class,
-                array('data' => $result->fetch(PDO::FETCH_ASSOC))
-            );
+            return $this->fetchRow($spec, $data, $class);
             break;
         
-        // not a recognized select type
+        case 'string':
+            return $this->fetchString($spec, $data, $class);
+            break;
+        
         default:
+            // not a recognized select type
             throw $this->_exception('ERR_SELECT_TYPE', array('type' => $type));
             break;
         }
-        
-        // done!
-        return $data;
     }
     
     /**
@@ -779,6 +750,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Fetches the first column of the first row.
      * 
+     * When $spec is an array, automatically sets LIMIT 1 OFFSET 0 to limit
+     * the results to a single row.
+     * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string.
      * 
@@ -790,6 +764,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchOne($spec, $data = array())
     {
+        if (is_array($spec)) {
+            // automatically limit to the first row only
+            $spec['limit']['count'] = 1;
+            $spec['limit']['offset'] = 0;
+        }
         $result = $this->fetchResult($spec, $data);
         return $result->fetchColumn(0);
     }
@@ -853,6 +832,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * By default, returns as a Solar_Sql_Row object; however, if an empty
      * $class is specified, returns as an associative array.
      * 
+     * When $spec is an array, automatically sets LIMIT 1 OFFSET 0 to limit
+     * the results to a single row.
+     * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string.
      * 
@@ -867,6 +849,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchRow($spec, $data = array(), $class = 'Solar_Sql_Row')
     {
+        if (is_array($spec)) {
+            // automatically limit to the first row only
+            $spec['limit']['count'] = 1;
+            $spec['limit']['offset'] = 0;
+        }
+        
         $result = $this->fetchResult($spec, $data);
         
         if ($class) {

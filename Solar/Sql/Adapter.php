@@ -765,9 +765,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function fetchOne($spec, $data = array())
     {
         if (is_array($spec)) {
-            // automatically limit to the first row only
+            // automatically limit to the first row only,
+            // but leave the offset alone.
             $spec['limit']['count'] = 1;
-            $spec['limit']['offset'] = 0;
         }
         $result = $this->fetchResult($spec, $data);
         return $result->fetchColumn(0);
@@ -850,9 +850,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function fetchRow($spec, $data = array(), $class = 'Solar_Sql_Row')
     {
         if (is_array($spec)) {
-            // automatically limit to the first row only
+            // automatically limit to the first row only,
+            // but leave the offset alone.
             $spec['limit']['count'] = 1;
-            $spec['limit']['offset'] = 0;
         }
         
         $result = $this->fetchResult($spec, $data);

@@ -47,7 +47,7 @@ class Solar_Role extends Solar_Base {
      * Factory method for returning adapters.
      * 
      */
-    public function factory()
+    public function solarFactory()
     {
         // bring in the config and get the adapter class.
         $config = $this->_config;

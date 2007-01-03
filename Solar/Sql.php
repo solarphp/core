@@ -49,7 +49,7 @@ class Solar_Sql extends Solar_Base {
      * @return Solar_Sql_Adapter
      * 
      */
-    public function factory()
+    public function solarFactory()
     {
         // bring in the config and get the adapter class.
         $config = $this->_config;

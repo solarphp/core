@@ -1179,20 +1179,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Creates a portable index on a table.
      * 
-     * The $info parameter should be in this format ...
-     * 
-     * {{code: php
-     *     $type = 'normal';
-     *     
-     *     $info = array($type, 'col'); // single-col
-     *     
-     *     $info = array($type, array('col', 'col', 'col')), // multi-col
-     *     
-     *     $info = $type; // shorthand for single-col named for $name
-     * }}
-     * 
-     * The $type may be 'normal' or 'unique'.
-     * 
      * Indexes are automatically renamed to "tablename__indexname__i" for
      * portability reasons.
      * 

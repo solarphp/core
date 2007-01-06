@@ -122,6 +122,31 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * The index specification array for all indexes on this table.
      * 
+     * The array should be in this format ...
+     * 
+     * {{code: php
+     *     // the index type: 'normal' or 'unique'
+     *     $type = 'normal';
+     *     
+     *     // index on a single column:
+     *     // CREATE INDEX idx_name ON table_name (col_name)
+     *     $this->_idx['idx_name'] = array($type, 'col_name');
+     * 
+     *     // index on multiple columns:
+     *     // CREATE INDEX idx_name ON table_name (col1, col2, ... colN)
+     *     $this->_idx['idx_name'] = array(
+     *         $type,
+     *         array('col1', 'col2', ..., 'colN')
+     *     );
+     *     
+     *     // easy shorthand for an index on a single column,
+     *     // giving the index the same name as the column:
+     *     // CREATE INDEX col_name ON table_name (col_name)
+     *     $this->_idx['col_name'] = $type; 
+     * }}
+     * 
+     * The $type may be 'normal' or 'unique'.
+     * 
      * @var array
      * 
      * @see addIndex()

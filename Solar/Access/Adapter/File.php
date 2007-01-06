@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Access_Adapter');
  * 
  * The file format is ...
  *
- *     0:flag 1:type 2:name 3:class 4:action 5:submit
+ *     0:flag 1:type 2:name 3:class 4:action 5:process
  * 
  * For example ...
  * 
@@ -94,7 +94,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
             // 2 => handle/role name
             // 3 => class name
             // 4 => action name
-            // 5 => submit name
+            // 5 => process name
             $info = explode(' ', $line);
             if ($info[1] == 'handle' && $info[2] == $handle ||        // direct user handle match
                 $info[1] == 'handle' && $info[2] == '+' && $handle || // any authenticated user
@@ -104,10 +104,10 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
                 
                 // keep the line
                 $list[] = array(
-                    'allow'  => ($info[0] == 'allow' ? true : false),
-                    'class'  => $info[3],
-                    'action' => $info[4],
-                    'submit' => $info[5],
+                    'allow'   => ($info[0] == 'allow' ? true : false),
+                    'class'   => $info[3],
+                    'action'  => $info[4],
+                    'process' => $info[5],
                 );
             }
         }

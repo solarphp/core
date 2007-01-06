@@ -89,14 +89,14 @@ is about instant feedback.)
     );
     $form->setElement('user_email', $info);
 
-    // Set a "Save" submit button called "submit"
+    // Set a submit button called "process" with a value of "Save"
     $info = array(
       'type'  => 'submit',
       'label' => 'Action:',
       'value' => 'Save',
 
     );
-    $form->setElement('submit', $info);
+    $form->setElement('process', $info);
 
     // Create a view object and output the form
     // using the form() helper
@@ -113,8 +113,8 @@ semantic markup, and can by styled using CSS.
             <dt><label for="user_email">Email Address:</label></dt>
             <dd><input type="text" id="user_email" name="user_email" value="" /></dd>
         
-            <dt><label for="submit">Action:</label></dt>
-            <dd><input type="submit" id="submit" name="submit" value="Save" />
+            <dt><label for="process">Action:</label></dt>
+            <dd><input type="submit" id="process" name="process" value="Save" />
         </dl>
     </form>
 }}
@@ -220,8 +220,8 @@ following output. The feedback messages are added automatically when
                 </ul>
             </dd>
         
-            <dt><label for="submit">Action:</label></dt>
-            <dd><input type="submit" id="submit" name="submit" value="Save" />
+            <dt><label for="process">Action:</label></dt>
+            <dd><input type="submit" id="process" name="process" value="Save" />
         </dl>
     </form>
   <!-- ... -->
@@ -298,10 +298,10 @@ method.
     $request = Solar::factory('Solar_Request');
     
     // what was the submission request?
-    $submit = $request->post('submit'); 
+    $process = $request->post('process'); 
 
     // process a 'Save' submission
-    if ($submit == 'Save') {
+    if ($process == 'Save') {
     
         if ($form->validate();) {
             $values = $form->values();

@@ -56,28 +56,28 @@ abstract class Solar_Access_Adapter extends Solar_Base {
     
     /**
      * 
-     * Tells whether or not to allow access to a class/action/submit combination.
+     * Tells whether or not to allow access to a class/action/process combination.
      * 
      * @param string $class The class name of the control; use '*' for
-     * all classes.
+     * all values.
      * 
      * @param string $action The action within that class; use '*' for
-     * all actions.
+     * all values.
      * 
-     * @param string $submit The submission value within the action; use
-     * '*' for all submissions.
+     * @param string $process The process value within the action; use
+     * '*' for all values.
      * 
      * @return bool True if the current handle or role is allowed 
      * access, false if not.
      * 
      */
-    public function isAllowed($class = '*', $action = '*', $submit = '*')
+    public function isAllowed($class = '*', $action = '*', $process = '*')
     {
         foreach ($this->list as $info) {
-            $class_match  = ($info['class']  == $class  || $info['class'] == '*');
-            $action_match = ($info['action'] == $action || $info['action'] == '*');
-            $submit_match = ($info['submit'] == $submit || $info['submit'] == '*');
-            if ($class_match && $action_match && $submit_match) {
+            $class_match   = ($info['class']   == $class   || $info['class']  == '*');
+            $action_match  = ($info['action']  == $action  || $info['action'] == '*');
+            $process_match = ($info['process'] == $process || $info['process'] == '*');
+            if ($class_match && $action_match && $process_match) {
                 // all params match, return the flag (true or false)
                 return (bool) $info['allow'];
             }

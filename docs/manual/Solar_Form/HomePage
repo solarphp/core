@@ -48,10 +48,10 @@ to whet your curiosity. Note that we use a small bit of localization
                 array('email', 'Please use a valid email address.'),
             ),
         ),
-        'submit' => array(
+        'process' => array(
             'type'     => 'submit',
             // use a localized button value
-            'value'    => $this->locale('SUBMIT_SAVE'),
+            'value'    => $this->locale('PROCESS_SAVE'),
         ),
     ));
 
@@ -63,11 +63,11 @@ to whet your curiosity. Note that we use a small bit of localization
     // discover the request environment
     $request = Solar::factory('Solar_Request');
     
-    // get the submission request
-    $submit = $request->post('submit');
+    // get the requested process
+    $process = $request->post('process');
 
-    // handle submissions based on the localized button values
-    if ($submit == $this->locale('SUBMIT_SAVE')) {
+    // handle processes based on the localized button values
+    if ($process == $this->locale('PROCESS_SAVE')) {
     
         // populate the form with submitted values
         $form->populate();

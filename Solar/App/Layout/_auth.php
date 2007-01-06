@@ -23,8 +23,8 @@
     <?php
         echo $this->form()
                   ->submit(array(
-                        'name'    => 'submit',
-                        'value'   => $this->getTextRaw('SUBMIT_LOGOUT')
+                        'name'    => 'process',
+                        'value'   => $this->getTextRaw('PROCESS_LOGOUT')
                   ))
                   ->fetch();
     ?>
@@ -32,8 +32,8 @@
     <?php
         echo $this->form()
                   ->hidden(array(
-                        'name'    => 'submit',
-                        'value'   => $this->getTextRaw('SUBMIT_LOGIN')
+                        'name'    => 'process',
+                        'value'   => $this->getTextRaw('PROCESS_LOGIN')
                   ))
                   ->text(array(
                         'name'    => 'handle',
@@ -46,8 +46,8 @@
                         'attribs' => array('size' => 10)
                   ))
                   ->submit(array(
-                        'name'    => 'submit',
-                        'value'   => $this->getTextRaw('SUBMIT_LOGIN')
+                        'name'    => 'process',
+                        'value'   => $this->getTextRaw('PROCESS_LOGIN')
                   ))
                   ->fetch();
     ?>

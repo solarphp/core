@@ -29,6 +29,6 @@
     
     echo $this->form()
               ->auto($this->formdata)
-              ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
-              ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
+              ->hidden(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
+              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
               ->fetch();

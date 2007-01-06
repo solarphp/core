@@ -63,17 +63,17 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (string) Password key in the credential array source,
      *   default 'passwd'.
      * 
-     * `source_submit`
-     * : (string) Submission key in the credential array source,
-     *   default 'submit'.
+     * `source_process`
+     * : (string) Element key in the credential array source to indicate
+     *   how to process the request, default 'process'.
      * 
-     * `submit_login`
-     * : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * `process_login`
+     * : (string) The source_process element value indicating a login request;
+     *   default is the 'PROCESS_LOGIN' locale key value.
      * 
-     * `submit_logout`
-     * : (string) The submission-key value to indicate a
-     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * `process_logout`
+     * : (string) The source_process element value indicating a logout request;
+     *   default is the 'PROCESS_LOGOUT' locale key value.
      * 
      * `session_class`
      * : (string) The class name to use as the session storage segment name.
@@ -84,16 +84,16 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Auth_Adapter = array(
-        'expire'        => 14400,
-        'idle'          => 1800,
-        'allow'         => true,
-        'source'        => 'post',
-        'source_handle' => 'handle',
-        'source_passwd' => 'passwd',
-        'source_submit' => 'submit',
-        'submit_login'  => null,
-        'submit_logout' => null,
-        'session_class' => 'Solar_Auth_Adapter',
+        'expire'         => 14400,
+        'idle'           => 1800,
+        'allow'          => true,
+        'source'         => 'post',
+        'source_handle'  => 'handle',
+        'source_passwd'  => 'passwd',
+        'source_process' => 'process',
+        'process_login'  => null,
+        'process_logout' => null,
+        'session_class'  => 'Solar_Auth_Adapter',
     );
     
     /**
@@ -283,13 +283,13 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     {
         parent::__construct($config);
         
-        // make sure we have submit values
-        if (empty($this->_config['submit_login'])) {
-            $this->_config['submit_login'] = $this->locale('SUBMIT_LOGIN');
+        // make sure we have process values
+        if (empty($this->_config['process_login'])) {
+            $this->_config['process_login'] = $this->locale('PROCESS_LOGIN');
         }
         
-        if (empty($this->_config['submit_logout'])) {
-            $this->_config['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        if (empty($this->_config['process_logout'])) {
+            $this->_config['process_logout'] = $this->locale('PROCESS_LOGOUT');
         }
         
         // make sure the source is either 'get' or 'post'.
@@ -535,8 +535,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isLoginRequest()
     {
         $method = strtolower($this->_config['source']);
-        $submit = $this->_request->$method($this->_config['source_submit']);
-        return $submit == $this->_config['submit_login'];
+        $process = $this->_request->$method($this->_config['source_process']);
+        return $process == $this->_config['process_login'];
     }
     
     /**
@@ -550,8 +550,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isLogoutRequest()
     {
         $method = strtolower($this->_config['source']);
-        $submit = $this->_request->$method($this->_config['source_submit']);
-        return $submit == $this->_config['submit_logout'];
+        $process = $this->_request->$method($this->_config['source_process']);
+        return $process == $this->_config['process_logout'];
     }
     
     /**

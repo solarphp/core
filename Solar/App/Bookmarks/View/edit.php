@@ -29,11 +29,11 @@
     
     echo $this->form(array('id' => 'form-bookmark'))
               ->auto($this->formdata)
-              ->hidden(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
+              ->hidden(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
               ->beginGroup()
-              ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_SAVE')))
-              ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_CANCEL')))
-              ->submit(array('name' => 'submit', 'value' => $this->getTextRaw('SUBMIT_DELETE'), 'attribs' => $attribs))
+              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
+              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_CANCEL')))
+              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_DELETE'), 'attribs' => $attribs))
               ->endGroup()
               ->fetch();
     

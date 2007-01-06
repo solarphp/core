@@ -78,7 +78,7 @@ Locale Translation Keys
 Keys in the [[LocaleFiles]] should usually be in all capitals, using only A-Z, 0-9, and underscores for the key name.  In general, you should prefix the key name with a hint for its usage:
 
 |  Prefix    | Usage
-| ---------- | -----------------------------------------------
+| ---------- | -------------------------------------------------------------------
 | `ACTION_`  | Displayed text for page-controller action names 
 | `DESCR_`   | Form element descriptions (long text) 
 | `ERR_`     | Logic error and exception messages 
@@ -88,6 +88,6 @@ Keys in the [[LocaleFiles]] should usually be in all capitals, using only A-Z, 0
 | `LABEL_`   | Form element labels (short text) 
 | `LEGEND_`  | Fieldset legend titles 
 | `SUCCESS_` | Success messages, typically form-related 
-| `SUBMIT_`  | Submit-button values 
+| `PROCESS_` | Displayed text for action processes, typically submit-button values
 | `TEXT_`    | General-purpose text 
 | `WARNING_` | Warnings, typically form-related 

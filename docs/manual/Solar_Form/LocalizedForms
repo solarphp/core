@@ -46,7 +46,7 @@ The Localized Example Form
 Now we'll recreate the [[GettingStarted]] form, using the Solar
 localization facility instead of hard-coded strings.
 
-In particular, note that the 'submit' button value, which tells the
+In particular, note that the 'process' button value, which tells the
 script what operation to perform, uses a localized string. When you are
 checking what operation to perform, you should check against a localized
 string, not a hard-coded one. This means that (1) users of other
@@ -85,8 +85,8 @@ string for that language.
             ),
         ),
     
-        // the 'submit' element
-        'submit' => array(
+        // the 'process' element
+        'process' => array(
         
             // element type
             'type'  => 'submit',
@@ -95,7 +95,7 @@ string for that language.
             'label' => $this->locale('LABEL_SUBMIT'),
         
             // a localized operation value (generic from Solar)
-            'value' => $this->locale('SUBMIT_SAVE'),
+            'value' => $this->locale('PROCESS_SAVE'),
         
         ),
     );
@@ -106,13 +106,13 @@ string for that language.
     // discover the request environment
     $request = Solar::factory('Solar_Request');
     
-    // capture what operation the user wants to perform
-    $submit = $request->post('submit');
+    // capture what process the user wants to perform
+    $process = $request->post('process');
 
     // process a 'Save' submission.  Note that we check against
     // the localized value of the operation, not a hard-coded
     // string.
-    if ($submit == $this->locale('SUBMIT_SAVE')) {
+    if ($process == $this->locale('PROCESS_SAVE')) {
     
         // validate the user input
         if ($form->validate()) {

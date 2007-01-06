@@ -24,17 +24,17 @@ return array(
     'FORMAT_TIME'        => '%r', // strftime: 24-hour 
     
     // operation actions
-    'SUBMIT_SAVE'            => 'Sauvegarder',
-    'SUBMIT_PREVIEW'         => 'Previsualisation',
-    'SUBMIT_CANCEL'          => 'Annuler',
-    'SUBMIT_DELETE'          => 'Effacer',
-    'SUBMIT_RESET'           => 'Réinitialiser',
-    'SUBMIT_NEXT'            => 'Prochain',
-    'SUBMIT_PREVIOUS'        => 'Précédent',
-    'SUBMIT_SEARCH'          => 'Chercher',
-    'SUBMIT_GO'              => 'Action!',
-    'SUBMIT_LOGIN'         => 'Sign In',
-    'SUBMIT_LOGOUT'        => 'Sign Out',
+    'PROCESS_SAVE'       => 'Sauvegarder',
+    'PROCESS_PREVIEW'    => 'Previsualisation',
+    'PROCESS_CANCEL'     => 'Annuler',
+    'PROCESS_DELETE'     => 'Effacer',
+    'PROCESS_RESET'      => 'Réinitialiser',
+    'PROCESS_NEXT'       => 'Prochain',
+    'PROCESS_PREVIOUS'   => 'Précédent',
+    'PROCESS_SEARCH'     => 'Chercher',
+    'PROCESS_GO'         => 'Action!',
+    'PROCESS_LOGIN'      => 'Sign In',
+    'PROCESS_LOGOUT'     => 'Sign Out',
     
     // error messages
     'ERR_FILE_NOT_FOUND'       => 'Impossible de trouver le fichier.',

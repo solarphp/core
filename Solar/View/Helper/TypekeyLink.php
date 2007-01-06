@@ -58,6 +58,7 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
         'token'      => null,
         'href'       => "https://www.typekey.com:443/t/typekey/login",
         'need_email' => false,
+        'process_key' => 'process',
     );
     
     /**
@@ -74,10 +75,11 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
         // get a URI processor; defaults to the current URI.
         $uri = Solar::factory('Solar_Uri');
         
-        // do not retain the GET 'submit' value on the current URI.
+        // do not retain the GET 'process' value on the current URI.
         // this prevents double-processing of actions submitted via GET.
-        if (! empty($uri->query['submit'])) {
-            unset($uri->query['submit']);
+        $key = $this->_config['process_key'];
+        if (! empty($uri->query[$key])) {
+            unset($uri->query[$key]);
         }
         
         // save the current URI as the return location after typekey.

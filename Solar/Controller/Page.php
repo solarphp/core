@@ -159,14 +159,17 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
     /**
      *
-     * Name of the form element with a 'submit' value.
-     *
+     * Name of the form element that holds the process request value (such as
+     * 'Save', 'Next', 'Cancel', etc)
+     * 
+     * Default is 'process', as in $_POST['process'] or $_GET['process'].
+     * 
      * @var string
      *
-     * @see Solar_Controller_Page::_submit()
+     * @see Solar_Controller_Page::_process()
      *
      */
-    protected $_submit_key = 'submit';
+    protected $_process_key = 'process';
 
     /**
      *
@@ -326,6 +329,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // are we using a view?
         if ($this->_view) {
             try {
+                // @todo Add $this->_format somehow
                 $output = $view->fetch($this->_view . '.php');
             } catch (Solar_View_Exception_TemplateNotFound $e) {
                 $view->errors[] = $this->locale('ERR_TEMPLATE_NOT_FOUND');
@@ -345,6 +349,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // assign the output
             $view->assign($this->_layout_var, $output);
             
+            // @todo Add $this->_format somehow
             // use the post-render filter on the layout
             return $this->_postRender($view->fetch($this->_layout . '.php'));
         } else {
@@ -522,7 +527,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $this->_query = $uri->query;
 
         }
-
+        
+        // @todo Check the *last* info element for a ".xml", ".rss", etc
+        // and set $this->_format from it
+        
         // remove the page name from the info
         if (! empty($this->_info[0]) && $this->_info[0] == $this->_name) {
             array_shift($this->_info);
@@ -691,49 +699,49 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
     /**
      *
-     * Reports whether or not user requested a specific submit type.
+     * Whether or not user requested a specific process within the action.
      *
-     * By default, looks for $submit_key in [[Solar_Request::post()]] to get the
-     * value of the submit request.
+     * By default, looks for $process_key in [[Solar_Request::post()]] to get the
+     * value of the process request.
      *
-     * Checks against "SUBMIT_$type" locale string for matching.  For example,
-     * $this->_isSubmit('save') checks Solar_Request::post('submit') 
-     * against $this->locale('SUBMIT_SAVE').
+     * Checks against "PROCESS_$type" locale string for matching.  For example,
+     * $this->_isProcess('save') checks Solar_Request::post('process') 
+     * against $this->locale('PROCESS_SAVE').
      *
-     * @param string $type The submit type; for example, 'save', 'delete',
+     * @param string $type The process type; for example, 'save', 'delete',
      * 'preview', etc.  If empty, returns true if *any* submission type
      * was posted.
      *
-     * @param string $submit_key If not empty, check against this
-     * [[Solar_Request::post()]] key instead $this->_submit_key. Default
+     * @param string $process_key If not empty, check against this
+     * [[Solar_Request::post()]] key instead $this->_process_key. Default
      * null.
      *
      * @return bool
      *
      */
-    protected function _isSubmit($type = null, $submit_key = null)
+    protected function _isProcess($type = null, $process_key = null)
     {   
         // make sure we know what post-var to look in
-        if (empty($submit_key)) {
-            $submit_key = $this->_submit_key;
+        if (empty($process_key)) {
+            $process_key = $this->_process_key;
         }
         
         // didn't ask for a submission type; answer if *any* submission
         // was attempted.
         if (empty($type)) {
-            $any = $this->_request->post($submit_key);
+            $any = $this->_request->post($process_key);
             return ! empty($any);
         }
         
         // asked for a submission type, find the locale string for it.
-        $locale_key = 'SUBMIT_' . strtoupper($type);
+        $locale_key = 'PROCESS_' . strtoupper($type);
         $locale = $this->locale($locale_key);
 
-        // $submit must be non-empty, and must match locale string.
+        // $process must be non-empty, and must match locale string.
         // not enough just to match the locale string, as it might
         // be empty.
-        $submit = $this->_request->post($submit_key, false);
-        return $submit && $submit == $locale;
+        $process = $this->_request->post($process_key, false);
+        return $process && $process == $locale;
     }
 
     /**

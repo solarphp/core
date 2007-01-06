@@ -23,21 +23,21 @@ return array(
     'FORMAT_DATE'                => '%b %d, %Y', // strftime(): Mar 19, 2005
     'FORMAT_TIME'                => '%r', // strftime: 12-hour am/pm
     
-    // page submissions
-    'SUBMIT_ADD'                 => 'Add',
-    'SUBMIT_CANCEL'              => 'Cancel',
-    'SUBMIT_CREATE'              => 'Create',
-    'SUBMIT_DELETE'              => 'Delete',
-    'SUBMIT_EDIT'                => 'Edit',
-    'SUBMIT_GO'                  => 'Go!',
-    'SUBMIT_LOGIN'               => 'Sign In',
-    'SUBMIT_LOGOUT'              => 'Sign Out',
-    'SUBMIT_NEXT'                => 'Next',
-    'SUBMIT_PREVIEW'             => 'Preview',
-    'SUBMIT_PREVIOUS'            => 'Previous',
-    'SUBMIT_RESET'               => 'Reset',
-    'SUBMIT_SAVE'                => 'Save',
-    'SUBMIT_SEARCH'              => 'Search',
+    // action processes
+    'PROCESS_ADD'                => 'Add',
+    'PROCESS_CANCEL'             => 'Cancel',
+    'PROCESS_CREATE'             => 'Create',
+    'PROCESS_DELETE'             => 'Delete',
+    'PROCESS_EDIT'               => 'Edit',
+    'PROCESS_GO'                 => 'Go!',
+    'PROCESS_LOGIN'              => 'Sign In',
+    'PROCESS_LOGOUT'             => 'Sign Out',
+    'PROCESS_NEXT'               => 'Next',
+    'PROCESS_PREVIEW'            => 'Preview',
+    'PROCESS_PREVIOUS'           => 'Previous',
+    'PROCESS_RESET'              => 'Reset',
+    'PROCESS_SAVE'               => 'Save',
+    'PROCESS_SEARCH'             => 'Search',
     
     // controller actions
     'ACTION_BROWSE'              => 'Browse',

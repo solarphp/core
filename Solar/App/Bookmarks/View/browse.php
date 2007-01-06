@@ -59,7 +59,7 @@
             // previous
             if ($this->page > 1) {
                 $uri->query['page'] = $this->page - 1;
-                echo $this->action($uri, 'SUBMIT_PREVIOUS') . ' | ';
+                echo $this->action($uri, 'PROCESS_PREVIOUS') . ' | ';
             }
             
             // current
@@ -68,7 +68,7 @@
             // next
             if ($this->page < $this->pages) {
                 $uri->query['page'] = $this->page + 1;
-                echo ' | ' . $this->action($uri, 'SUBMIT_NEXT');
+                echo ' | ' . $this->action($uri, 'PROCESS_NEXT');
             }
         ?> ]</strong></p>
         

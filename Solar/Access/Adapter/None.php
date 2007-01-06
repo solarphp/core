@@ -46,10 +46,10 @@ class Solar_Access_Adapter_None extends Solar_Access_Adapter {
     {
         return array(
             array(
-                'allow'  => false,
-                'class'  => '*',
-                'action' => '*',
-                'submit' => '*',
+                'allow'   => false,
+                'class'   => '*',
+                'action'  => '*',
+                'process' => '*',
             ),
         );
     }

@@ -340,11 +340,11 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // ---------------------------------------------------------------------
         // 
-        // operations
+        // processes
         // 
 
-        // OP: Save
-        if ($this->_isSubmit('save') && $form->validate()) {
+        // Process: save
+        if ($this->_isProcess('save') && $form->validate()) {
     
             // load data from the form input
             $item->load($form->values('bookmark'));
@@ -372,7 +372,7 @@ class Solar_App_Bookmarks extends Solar_App {
         }
         
         // OP: Cancel
-        if ($this->_isSubmit('cancel')) {
+        if ($this->_isProcess('cancel')) {
             $this->_redirect($href);
         }
         
@@ -437,7 +437,7 @@ class Solar_App_Bookmarks extends Solar_App {
 
         // ---------------------------------------------------------------------
         // 
-        // operations
+        // processing
         // 
 
         // build the basic form, populated with the bookmark data
@@ -447,14 +447,14 @@ class Solar_App_Bookmarks extends Solar_App {
         // now populate the the submitted POST values to the form
         $form->populate();
         
-        // was this from a quickmark or an add operation?
+        // was this from a quickmark or an "add" process request?
         if ($this->_session->getFlash('add_ok')) {
             $form->setStatus(true);
             $form->feedback = $this->locale('SUCCESS_ADDED');
         }
         
         // Save?
-        if ($this->_isSubmit('save') && $form->validate()) {
+        if ($this->_isProcess('save') && $form->validate()) {
     
             // load the item with form input
             $item->load($form->values('bookmark'));
@@ -483,12 +483,12 @@ class Solar_App_Bookmarks extends Solar_App {
         }
 
         // Cancel?
-        if ($this->_isSubmit('cancel')) {
+        if ($this->_isProcess('cancel')) {
             $this->_redirect($href);
         }
 
         // Delete?
-        if ($this->_isSubmit('delete')) {
+        if ($this->_isProcess('delete')) {
             $values = $form->values();
             $id = $values['bookmark']['id'];
             $this->_bookmarks->delete($id);
@@ -552,8 +552,8 @@ class Solar_App_Bookmarks extends Solar_App {
         // overwrite form defaults with submissions
         $form->populate();
 
-        // check for a 'Save' operation
-        if ($this->_isSubmit('save') && $form->validate()) {
+        // check for a 'Save' process request
+        if ($this->_isProcess('save') && $form->validate()) {
     
             // save the data
             try {

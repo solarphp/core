@@ -455,15 +455,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $helper = array_merge($helper, (array) $this->_helper_class);
         }
         
-        /**
-         * @todo: do we really need this? The View class already has the
-         * Solar_View_Helper class in the stack.
-         */
-        // if ($vendor != 'Solar') {
-        //     // non-Solar vendor, add Solar helpers as final fallback
-        //     $helper[] = 'Solar_View_Helper';
-        // }
-        
         $view->addHelperClass($helper);
 
         // set the locale class for the getText helper
@@ -557,7 +548,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
         }
         
-        // @todo Check the *last* info element for a ".xml", ".rss", etc
+        // Check the *last* info element for a ".xml", ".rss", etc
         // and set $this->_format from it.  using the internal array pointer
         // here for speed and simplicity.
         $val = end($this->_info);

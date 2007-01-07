@@ -565,7 +565,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if ($pos !== false) {
             // found a format value; set it, then strip it from the info.
             $key = key($this->_info);
-            $this->_format = substr($val, $pos + 1);
+            $this->_format = strtolower(substr($val, $pos + 1));
             $this->_info[$key] = substr($val, 0, $pos);
         }
         

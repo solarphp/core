@@ -131,11 +131,21 @@ class Solar_Controller_Front extends Solar_Base {
             $uri->set($spec);
         }
         
-        // pull the page name off the top of the path, use the default
-        // if none specified
-        $page = array_shift($uri->path);
+        // get the page name from the top of the path.
+        // use the default if none specified.
+        $page = current($uri->path);
         if (trim($page) == '') {
             $page = $this->_default;
+        }
+        
+        // if there was 0 or 1 element in the original URI path,
+        // look for a format extension and strip it. (0 means we
+        // used a default page.)
+        if (count($uri->path) < 1) {
+            $pos = strpos($page, '.');
+            if ($pos !== false) {
+                $page = substr($page, 0, $pos);
+            }
         }
         
         // convert from "pageName, page-name, page_name" to "PageName"
@@ -168,7 +178,8 @@ class Solar_Controller_Front extends Solar_Base {
             return htmlspecialchars("404: Page '$page' unknown.");
         }
         
-        // instantiate the page class and fetch its content.
+        // instantiate the page class and fetch its content
+        // using the ORIGINAL uri, with the page-name and everything.
         $page = Solar::factory($class);
         return $page->fetch($uri);
     }

@@ -179,7 +179,24 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      */
     protected $_view = null;
-
+    
+    /**
+     * 
+     * Use this output format for views and layouts.
+     * 
+     * For example, say the action is "read" and the layout is "main".
+     * 
+     * In the default case, the format is empty, so  the _render() method will
+     * look for a view named "read.php" and a layout named "main.php".
+     * 
+     * However, if the format is "xml", the _render() method will look for a
+     * view named "read.xml.php" and a layout named "main.xml.php".
+     * 
+     * @var string
+     * 
+     */
+    protected $_format = null;
+    
     /**
      *
      * Request environment details: get, post, etc.
@@ -325,39 +342,51 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $view = $this->_getView();
         $this->_preRender($view);
         $view->assign($this);
+        $output = null;
         
         // are we using a view?
         if ($this->_view) {
             try {
-                // @todo Add $this->_format somehow
-                $output = $view->fetch($this->_view . '.php');
+                // set the template name from the view and format
+                $tpl = $this->_view
+                     . ($this->_format ? ".{$this->_format}" : "")
+                     . ".php";
+                // get the view output
+                $output = $view->fetch($tpl);
             } catch (Solar_View_Exception_TemplateNotFound $e) {
-                $view->errors[] = $this->locale('ERR_TEMPLATE_NOT_FOUND');
+                $view->errors[] = $this->locale('ERR_VIEW_NOT_FOUND');
                 $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
                 $view->errors[] = $e->getInfo('name');
                 $output = $view->fetch('error.php');
             }
-        } else {
-            $output = null;
         }
         
         // are we using a layout?
         if ($this->_layout) {
-            // using a layout.  reset the view to use Layout templates.
-            $this->_setViewLayout($view);
+            try {
+                // reset the view object to use layout templates.
+                $this->_setViewLayout($view);
             
-            // assign the output
-            $view->assign($this->_layout_var, $output);
+                // assign the view output
+                $view->assign($this->_layout_var, $output);
             
-            // @todo Add $this->_format somehow
-            // use the post-render filter on the layout
-            return $this->_postRender($view->fetch($this->_layout . '.php'));
-        } else {
-            // no layout, just use the post-render filter on the current
-            // output.
-            return $this->_postRender($output);
-
+                // set the template name from the layout and format
+                $tpl = $this->_layout
+                     . ($this->_format ? ".{$this->_format}" : "")
+                     . ".php";
+                
+                // get the layout output
+                $output = $view->fetch($tpl);
+            } catch (Solar_View_Exception_TemplateNotFound $e) {
+                $view->errors[] = $this->locale('ERR_LAYOUT_NOT_FOUND');
+                $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
+                $view->errors[] = $e->getInfo('name');
+                $output = $view->fetch('error.php');
+            }
         }
+        
+        // apply post-render processing, and done
+        return $this->_postRender($output);
     }
 
     /**
@@ -529,7 +558,16 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // @todo Check the *last* info element for a ".xml", ".rss", etc
-        // and set $this->_format from it
+        // and set $this->_format from it.  using the internal array pointer
+        // here for speed and simplicity.
+        $val = end($this->_info);
+        $pos = strpos($val, '.');
+        if ($pos !== false) {
+            // found a format value; set it, then strip it from the info.
+            $key = key($this->_info);
+            $this->_format = substr($val, $pos + 1);
+            $this->_info[$key] = substr($val, 0, $pos);
+        }
         
         // remove the page name from the info
         if (! empty($this->_info[0]) && $this->_info[0] == $this->_name) {

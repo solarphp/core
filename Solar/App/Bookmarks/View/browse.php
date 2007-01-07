@@ -17,7 +17,27 @@
  * 
  */
 
+// set the RSS feed link for the layout
+$uri = Solar::factory('Solar_Uri_Action');
+$val = end($uri->path);
+$key = key($uri->path);
+$uri->path[$key] .= '.rss';
+
+if ($this->tags) {
+    // there are tags requested, so the RSS should show all pages
+    // (i.e., page zero) and ignore the rows-per-page settings.
+    $uri->query['page'] = 'all';
+    unset($uri->query['rows_per_page']);
+}
+
+$this->layout_link[] = array(
+    'rel'   => 'alternate',
+    'type'  => 'application/rss+xml',
+    'title' => implode('/', $uri->path),
+    'href'  => $uri->fetch(true),
+);
 ?>
+
 <!-- list of tags in use -->
 <div id="taglist">
     <h3><?php echo $this->getText('HEADING_TAGLIST') ?></h3>

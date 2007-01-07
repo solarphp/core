@@ -621,56 +621,20 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
 
         // assign everything else for the view
-        $this->pages        = $total['pages'];
-        $this->order        = $this->_request->get('order', 'created_desc');
-        $this->page         = $page;
-        $this->owner_handle = null; // requested owner_handle
-        $this->tags         = $tags; // the requested tags
-        $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags
-
-        // use the 'browse' view
-        $this->_view = 'browse';
-
-        // RSS feed link for the page
-        $uri = Solar::factory('Solar_Uri_Action');
-        $uri->path[1] = 'tag-feed';
-        $this->layout_link[] = array(
-            'rel'   => 'alternate',
-            'type'  => 'application/rss+xml',
-            'title' => $this->_request->server('PATH_INFO'),
-            'href'  => $uri->fetch(),
-        );
-    }
-    
-    /**
-     * 
-     * Shows an RSS feed of bookmarks filtered by tag, regardless of 
-     * owner.
-     * 
-     * @param string|array $tags The tags to show; either a space- (or
-     * plus-) separated list of tags, or a sequential array of tags.
-     * 
-     * @return void
-     * 
-     */
-    public function actionTagFeed($tags = null)
-    {
-        // build the local variables
-        $this->_forward('tag', array($tags));
-
-        // explicitly pick a different view script
-        $this->_view = 'feed';
-
-        // assign to the view
+        $this->pages         = $total['pages'];
+        $this->order         = $this->_request->get('order', 'created_desc');
+        $this->page          = $page;
+        $this->owner_handle  = null; // requested owner_handle
+        $this->tags          = $tags; // the requested tags
+        $this->tags_in_use   = $this->_bookmarks->fetchTags($owner_handle); // all tags
         $this->feed['title'] = 'tag';
         $this->feed['descr'] = $this->tags;
 
-        $uri = Solar::factory('Solar_Uri_Action');
-        $uri->info[1] = 'tag';
-        $this->feed['link'] = $uri->fetch(true);
-
-        // explicitly use a one-step view (i.e., no layout)
-        $this->_layout = false;
+        // set the view and layout
+        $this->_view = 'browse';
+        if ($this->_format) {
+            $this->_layout = null;
+        }
     }
     
     /**
@@ -706,68 +670,20 @@ class Solar_App_Bookmarks extends Solar_App {
         // flash forward the backlink in case we go to edit
         $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
 
-        // set the view
-        $this->_view = 'browse';
-
         // assign view vars
-        $this->pages        = $total['pages'];
-        $this->order        = $this->_request->get('order', 'created_desc');
-        $this->page         = $page;
-        $this->owner_handle = $owner_handle; // requested owner_handle
-        $this->tags         = $tags; // the requested tags
-        $this->tags_in_use  = $this->_bookmarks->fetchTags($owner_handle); // all tags for this user
-
-        // set the RSS feed link for the layout
-        $uri = Solar::factory('Solar_Uri_Action');
-        $uri->path[1] = 'user-feed';
-
-        if ($tags) {
-            // there are tags requested, so the RSS should show all pages
-            // (i.e., page zero) and ignore the rows-per-page settings.
-            $uri->query['page'] = 'all';
-            unset($uri->query['rows_per_page']);
-        }
-
-        $this->layout_link[] = array(
-            'rel'   => 'alternate',
-            'type'  => 'application/rss+xml',
-            'title' => $this->_request->server('PATH_INFO'),
-            'href'  => $uri->fetch(),
-        );
-    }
-    
-    /**
-     * 
-     * Shows all bookmarks for an owner as an RSS feed, optionally 
-     * filtered by tag.
-     * 
-     * @param string $owner_handle The owner to show bookmarks for.
-     * 
-     * @param string|array $tags An optional set of tags to filter by;
-     * either a space- (or plus-) separated list of tags, or a
-     * sequential array of tags.
-     * 
-     * @return void
-     * 
-     */
-    public function actionUserFeed($owner_handle = null, $tags = null)
-    {
-        // build the local vars
-        $this->_forward('user', array($owner_handle, $tags));
-
-        // explicitly use a different view
-        $this->_view = 'feed';
-
-        // assign vars
+        $this->pages         = $total['pages'];
+        $this->order         = $this->_request->get('order', 'created_desc');
+        $this->page          = $page;
+        $this->owner_handle  = $owner_handle; // requested owner_handle
+        $this->tags          = $tags; // the requested tags
+        $this->tags_in_use   = $this->_bookmarks->fetchTags($owner_handle); // all tags for this user
         $this->feed['title'] = 'user';
         $this->feed['descr'] = $this->owner_handle . '/' . $this->tags;
-        $this->feed['date'] = date(DATE_RSS);
-
-        $uri = Solar::factory('Solar_Uri_Action');
-        $uri->info[1] = 'user';
-        $this->feed['link'] = $uri->fetch(true);
-
-        // explicitly use a one-step view (no layout)
-        $this->_layout = false;
+        
+        // set the view and layout
+        $this->_view = 'browse';
+        if ($this->_format) {
+            $this->_layout = null;
+        }
     }
 }

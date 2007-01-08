@@ -131,9 +131,9 @@ class Solar_Controller_Front extends Solar_Base {
             $uri->set($spec);
         }
         
-        // get the page name from the top of the path.
+        // take the page name off the top of the path.
         // use the default if none specified.
-        $page = current($uri->path);
+        $page = array_shift($uri->path);
         if (trim($page) == '') {
             $page = $this->_default;
         }
@@ -141,9 +141,17 @@ class Solar_Controller_Front extends Solar_Base {
         // if there was 0 or 1 element in the original URI path,
         // look for a format extension and strip it. (0 means we
         // used a default page.)
-        if (count($uri->path) < 1) {
+        if (count($uri->path) == 0) {
             $pos = strpos($page, '.');
             if ($pos !== false) {
+                // ADD JUST THE FORMAT EXTENSION BACK TO THE PATH-INFO.
+                // this allows us to request the default action without
+                // needing to specify exactly what that action is.  e.g.,
+                // "example.com/controller.xml" becomes "example.com/.xml".
+                $dot_format = substr($page, $pos);
+                array_unshift($uri->path, $dot_format);
+                // strip the format off the page name so we can find the
+                // related class.
                 $page = substr($page, 0, $pos);
             }
         }

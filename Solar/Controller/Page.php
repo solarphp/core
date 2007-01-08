@@ -182,15 +182,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Use this output format for views and layouts.
+     * Use this output format for views.
      * 
-     * For example, say the action is "read" and the layout is "main".
+     * For example, say the action is "read". In the default case, the format
+     * is empty, so  the _render() method will look for a view named 
+     * "read.php". However, if the format is "xml", the _render() method will
+     * look for a view named "read.xml.php".
      * 
-     * In the default case, the format is empty, so  the _render() method will
-     * look for a view named "read.php" and a layout named "main.php".
-     * 
-     * However, if the format is "xml", the _render() method will look for a
-     * view named "read.xml.php" and a layout named "main.xml.php".
+     * Has no effect on the layout script that _render() looks for.
      * 
      * @var string
      * 
@@ -370,10 +369,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
                 // assign the view output
                 $view->assign($this->_layout_var, $output);
             
-                // set the template name from the layout and format
-                $tpl = $this->_layout
-                     . ($this->_format ? ".{$this->_format}" : "")
-                     . ".php";
+                // set the template name from the layout value
+                $tpl = $this->_layout . ".php";
                 
                 // get the layout output
                 $output = $view->fetch($tpl);
@@ -516,7 +513,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
     /**
      *
      * Loads properties from an action specification.
-     *
+     * 
+     * Note that if the action info ends in a format extension, layout will
+     * automatically be turned off.
+     * 
+     * For example, "foo/bar/baz.xml" will set $this->_format = "xml" and
+     * $this->_layout = null.
+     * 
      * @param string $spec The action specification.
      *
      * @return void
@@ -555,9 +558,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $pos = strpos($val, '.');
         if ($pos !== false) {
             // found a format value; set it, then strip it from the info.
+            // also turn off layouts by default.
             $key = key($this->_info);
             $this->_format = strtolower(substr($val, $pos + 1));
             $this->_info[$key] = substr($val, 0, $pos);
+            $this->_layout = null;
         }
         
         // remove the page name from the info

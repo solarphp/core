@@ -26,7 +26,7 @@ echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
 // from the last element
 $link = Solar::factory('Solar_Uri_Action');
 $val = end($link->path);
-$pos = strpos('.', $val);
+$pos = strpos($val, '.');
 if ($pos !== false) {
     $key = key($link->path);
     $link->path[$key] = substr($val, 0, $pos);

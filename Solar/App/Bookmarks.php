@@ -630,11 +630,8 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->feed['title'] = 'tag';
         $this->feed['descr'] = $this->tags;
 
-        // set the view and layout
+        // set the view
         $this->_view = 'browse';
-        if ($this->_format) {
-            $this->_layout = null;
-        }
     }
     
     /**
@@ -680,10 +677,7 @@ class Solar_App_Bookmarks extends Solar_App {
         $this->feed['title'] = 'user';
         $this->feed['descr'] = $this->owner_handle . '/' . $this->tags;
         
-        // set the view and layout
+        // set the view
         $this->_view = 'browse';
-        if ($this->_format) {
-            $this->_layout = null;
-        }
     }
 }

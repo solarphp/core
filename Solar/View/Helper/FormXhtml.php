@@ -44,7 +44,6 @@ class Solar_View_Helper_FormXhtml extends Solar_View_Helper_FormElement {
      * @return string The element XHTML.
      * 
      */     
-     
     public function formXhtml($info)
     {
         $this->_prepare($info);

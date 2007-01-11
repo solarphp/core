@@ -154,7 +154,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Sets a key value; disallows setting of unknown keys.
+     * Sets a key value.
      * 
      * @param string $key The requested data key.
      * 

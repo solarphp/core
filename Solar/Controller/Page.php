@@ -552,17 +552,22 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // Check the *last* info element for a ".xml", ".rss", etc
-        // and set $this->_format from it.  using the internal array pointer
-        // here for speed and simplicity.
+        // and set $this->_format from it. ignore ".php" formats.
+        // use the internal array pointer for speed and simplicity.
         $val = end($this->_info);
         $pos = strpos($val, '.');
-        if ($pos !== false) {
+        if ($pos !== false && strtolower(substr($val, -4)) != '.php') {
             // found a format value; set it, then strip it from the info.
-            // also turn off layouts by default.
             $key = key($this->_info);
             $this->_format = strtolower(substr($val, $pos + 1));
             $this->_info[$key] = substr($val, 0, $pos);
+            // also turn off layouts by default.
             $this->_layout = null;
+        }
+        
+        // ignore .php formats
+        if ($this->_format == 'php') {
+            $this->_format = null;
         }
         
         // remove the page name from the info

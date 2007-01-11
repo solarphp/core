@@ -63,6 +63,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (string) Password key in the credential array source,
      *   default 'passwd'.
      * 
+     * `source_redirect`
+     * : (string) Element key in the credential array source to indicate
+     *   where to redirect on successful authentication.
+     * 
      * `source_process`
      * : (string) Element key in the credential array source to indicate
      *   how to process the request, default 'process'.
@@ -90,6 +94,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'source'         => 'post',
         'source_handle'  => 'handle',
         'source_passwd'  => 'passwd',
+        'source_redirect' => 'redirect',
         'source_process' => 'process',
         'process_login'  => null,
         'process_logout' => null,
@@ -374,12 +379,43 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // process login attempts
         if (! $this->isValid() && $this->allow && $this->isLoginRequest()) {
             $this->processLogin();
+            if ($this->isValid()) {
+                // was a valid login, attempt to redirect.
+                $this->_redirect();
+            }
         }
         
         // if current auth **is** valid, and processing is allowed,
         // process logout attempts.
         if ($this->isValid() && $this->allow && $this->isLogoutRequest()) {
             $this->processLogout();
+        }
+    }
+    
+    /**
+     * 
+     * Redirects to another URI after valid authentication.
+     * 
+     * Looks at the value of the 'redirect' source key, and sets a 'Location:'
+     * header from it.  Note that this will end any further processing on this
+     * page-load.
+     * 
+     * If the 'redirect' key is empty or not present, will not redirect, and
+     * processing will continue.
+     * 
+     * @return void
+     * 
+     */
+    protected function _redirect()
+    {
+        $method = strtolower($this->_config['source']);
+        $href = $this->_request->$method($this->_config['source_redirect']);
+        if ($href) {
+            // protect against header injection
+            $href = str_replace(array("\r", "\n"), '', (string) $href);
+            // redirect; note that this terminates all further processing.
+            header("Location: $href");
+            exit();
         }
     }
     
@@ -509,6 +545,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Retrieves a "read-once" session value for Solar_Auth.
      * 
      * Starts a session if one is not already going.
+     * 
+     * Typical key here is "status_text".
      * 
      * @param string $key The specific type of information.
      * 

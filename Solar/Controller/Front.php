@@ -160,34 +160,19 @@ class Solar_Controller_Front extends Solar_Base {
         $page = str_replace(array('_', '-'), ' ', $page);
         $page = str_replace(' ', '', ucwords(trim($page)));
         
-        // does the page map to a known class?
-        $list = (array) $this->_classes;
-        foreach (array_reverse($list) as $base) {
-            
-            // get a class name
-            $class = $base . '_' . $page;
-            
-            // what file would it be?
-            $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-            
-            // does that file exist?
-            if (Solar::fileExists($file)) {
-                // $class is set to the proper class name, so break
-                // out of the loop
-                break;
-            }
-            
-            // not found at all.
-            $class = false;
+        // attempt to map the page name to a page-controller class
+        $class = $this->_getPageClass($page);
+        if (! $class) {
+            // not found, fall back to default
+            $class = $this->_getPageClass($this->_default);
         }
         
-        // did we find the page class?
+        // did we find a page-controller class?
         if (! $class) {
             return $this->_notFound($page);
         }
         
         // instantiate the page class and fetch its content
-        // using the ORIGINAL uri, with the page-name and everything.
         $page = Solar::factory($class);
         return $page->fetch($uri);
     }
@@ -209,6 +194,37 @@ class Solar_Controller_Front extends Solar_Base {
     
     /**
      * 
+     * Finds the page-controller class name from a page name.
+     * 
+     * @param string $page The page name.
+     * 
+     * @return string $class The related page-controller class picked from
+     * the list of available classes.  If not found, returns empty.
+     * 
+     */
+    protected function _getPageClass($page)
+    {
+        // does the page map to a known class?
+        $list = (array) $this->_classes;
+        foreach (array_reverse($list) as $base) {
+            
+            // get a class name
+            $class = $base . '_' . $page;
+            
+            // what file would it be?
+            $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+            
+            // does that file exist?
+            if (Solar::fileExists($file)) {
+                // $class is set to the proper class name, so break
+                // out of the loop
+                return $class;
+            }
+        }
+    }
+    
+    /**
+     * 
      * Executes when fetch() cannot find a related page-controller class.
      * 
      * @param string $page The name of the page not found.
@@ -216,8 +232,8 @@ class Solar_Controller_Front extends Solar_Base {
      * @return string
      * 
      */
-    protected function _notFound($page)
+    protected function _notFound($spec)
     {
-        return htmlspecialchars("404: Page '$page' unknown.");
+        return htmlspecialchars("404: Page '$page' not found.");
     }
 }

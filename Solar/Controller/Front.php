@@ -134,9 +134,6 @@ class Solar_Controller_Front extends Solar_Base {
         // take the page name off the top of the path.
         // use the default if none specified.
         $page = array_shift($uri->path);
-        if (trim($page) == '') {
-            $page = $this->_default;
-        }
         
         // if there was 0 or 1 element in the original URI path,
         // look for a format extension and strip it. (0 means we
@@ -156,15 +153,17 @@ class Solar_Controller_Front extends Solar_Base {
             }
         }
         
-        // convert from "pageName, page-name, page_name" to "PageName"
-        $page = str_replace(array('_', '-'), ' ', $page);
-        $page = str_replace(' ', '', ucwords(trim($page)));
-        
         // attempt to map the page name to a page-controller class
         $class = $this->_getPageClass($page);
         if (! $class) {
             // not found, fall back to default
             $class = $this->_getPageClass($this->_default);
+            // put the original segment back on top.
+            // note that in the case of formats, this makes the uri look like
+            // "example.com/pagename/.xml".  this doesn't appear to be a 
+            // problem, as the page-controller looks at the last element
+            // regardless.
+            array_unshift($uri->path, $page);
         }
         
         // did we find a page-controller class?
@@ -204,6 +203,14 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected function _getPageClass($page)
     {
+        if (empty($page)) {
+            return;
+        }
+        
+        // convert from "pageName, page-name, page_name" to "PageName"
+        $page = str_replace(array('_', '-'), ' ', $page);
+        $page = str_replace(' ', '', ucwords(trim($page)));
+        
         // does the page map to a known class?
         $list = (array) $this->_classes;
         foreach (array_reverse($list) as $base) {

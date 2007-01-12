@@ -183,7 +183,7 @@ class Solar_Controller_Front extends Solar_Base {
         
         // did we find the page class?
         if (! $class) {
-            return htmlspecialchars("404: Page '$page' unknown.");
+            return $this->_notFound($page);
         }
         
         // instantiate the page class and fetch its content
@@ -205,5 +205,19 @@ class Solar_Controller_Front extends Solar_Base {
     public function display($spec = null)
     {
         echo $this->fetch($spec);
+    }
+    
+    /**
+     * 
+     * Executes when fetch() cannot find a related page-controller class.
+     * 
+     * @param string $page The name of the page not found.
+     * 
+     * @return string
+     * 
+     */
+    protected function _notFound($page)
+    {
+        return htmlspecialchars("404: Page '$page' unknown.");
     }
 }

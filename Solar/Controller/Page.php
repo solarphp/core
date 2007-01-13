@@ -100,7 +100,31 @@ abstract class Solar_Controller_Page extends Solar_Base {
      *
      */
     protected $_action = null;
-
+    
+    /**
+     * 
+     * Tells which alternative output formats are supported by which actions.
+     * 
+     * Array format is 'action' => array('format', 'format', 'format').
+     * 
+     * If an action is not listed, it will not respond to alternative formats.
+     * 
+     * For example ...
+     * 
+     * {{code: php
+     *     $_action_format = array(
+     *         // multiple formats
+     *         'browse' => array('xml', 'rss', 'atom')
+     *         // shorthand for just one format
+     *         'read'   => 'xml',
+     *     );
+     * }}
+     * 
+     * @var array
+     * 
+     */
+    protected $_action_format = array();
+    
     /**
      *
      * Session data, including read-once flashes.
@@ -527,7 +551,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _load($spec)
     {
-        // process the page/action/info specification
+        // process the action/param.format?query specification
         if (! $spec) {
 
             // no spec, use the current URI
@@ -543,7 +567,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
         } else {
 
-            // a string, assumed to be a page/action/info?query spec.
+            // a string, assumed to be an action/param.format?query spec.
             $uri = Solar::factory('Solar_Uri_Action');
             $uri->set($spec);
             $this->_info = $uri->path;
@@ -551,30 +575,30 @@ abstract class Solar_Controller_Page extends Solar_Base {
 
         }
         
-        // Check the *last* info element for a ".xml", ".rss", etc
-        // and set $this->_format from it. ignore ".php" formats.
-        // use the internal array pointer for speed and simplicity.
+        // Check the final param for a ".xml", ".rss", etc and save it as
+        // a format request.  do this first, because there might be only
+        // one param.
+        $format = '';
         $val = end($this->_info);
         $pos = strpos($val, '.');
-        if ($pos !== false && strtolower(substr($val, -4)) != '.php') {
-            // found a format value; set it, then strip it from the info.
+        if ($pos !== false) {
+            // found a format value; hold onto it, but strip from the param.
             $key = key($this->_info);
-            $this->_format = strtolower(substr($val, $pos + 1));
+            $format = substr($val, $pos + 1);
             $this->_info[$key] = substr($val, 0, $pos);
-            // also turn off layouts by default.
-            $this->_layout = null;
         }
         
         // ignore .php formats
-        if ($this->_format == 'php') {
-            $this->_format = null;
+        if (strtolower($format) == 'php') {
+            $format = '';
         }
         
-        // remove the page name from the info
+        // if the first param is the page name, drop it.
+        // needed when no spec is passed and we're using the default URI.
         if (! empty($this->_info[0]) && $this->_info[0] == $this->_name) {
             array_shift($this->_info);
         }
-
+        
         // do we have an initial info element as an action method?
         if (! empty($this->_info[0])) {
             $method = $this->_getActionMethod($this->_info[0]);
@@ -588,19 +612,41 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (! $this->_action) {
             $this->_action = $this->_action_default;
         }
+        
+        // are we asking for a non-default format?
+        if ($format) {
+            
+            // what formats does the action allow?
+            $action_format = empty($this->_action_format[$this->_action])
+                  ? array()
+                  : (array) $this->_action_format[$this->_action];
+        
+            // does the action support the requested format?
+            if (in_array($format, $action_format)) {
+                // retain the format and turn off layouts
+                $this->_format = $format;
+                $this->_layout = null;
+            } else {
+                // action does not support the format.
+                // add the format extension back to the last param.
+                $val = end($this->_info);
+                $key = key($this->_info);
+                $this->_info[$key] = $val . '.' . $format;
+            }
+        }
     }
 
     /**
      *
-     * Retrieves the TAINTED value of a path-info value by position.
+     * Retrieves the TAINTED value of a path-info parameter by position.
      *
      * Note that this value is direct user input; you should sanitize it
      * with Solar_Valid or Solar_Filter (or some other technique) before
      * using it.
      *
-     * @param int $key The path-info position number.
+     * @param int $key The path-info parameter position.
      *
-     * @param mixed $val If the key does not exist, use this value
+     * @param mixed $val If the position does not exist, use this value
      * as a default in its place.
      *
      * @return mixed The value of that query key.

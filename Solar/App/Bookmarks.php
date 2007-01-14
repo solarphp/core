@@ -68,6 +68,18 @@ class Solar_App_Bookmarks extends Solar_App {
     
     /**
      * 
+     * These actions support these non-default formats.
+     * 
+     * @var array
+     * 
+     */
+    protected $_action_format = array(
+        'user' => 'rss',
+        'tag'  => 'rss',
+    );
+    
+    /**
+     * 
      * The total number of pages in the query.
      * 
      * @var int

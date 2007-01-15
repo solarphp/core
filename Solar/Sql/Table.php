@@ -232,7 +232,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function __get($key = null)
     {
-        $prop = array('col', 'idx', 'name', 'paging', 'fetch_all', 'fetch_row');
+        $prop = array('col', 'idx', 'name', 'paging', 'all_class', 'row_class');
         if (in_array($key, $prop)) {
             $key = "_$key";
             return $this->$key;
@@ -269,7 +269,7 @@ class Solar_Sql_Table extends Solar_Base {
         if (! $class) {
             $class = 'Solar_Sql_Row';
         }
-        $this->_fetch_row = $class;
+        $this->_row_class = $class;
     }
     
     /**
@@ -286,7 +286,7 @@ class Solar_Sql_Table extends Solar_Base {
         if (! $class) {
             $class = 'Solar_Sql_Rowset';
         }
-        $this->_fetch_all = $class;
+        $this->_all_class = $class;
     }
     
     /**

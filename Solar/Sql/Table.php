@@ -232,7 +232,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function __get($key = null)
     {
-        $prop = array('col', 'idx', 'name', 'paging');
+        $prop = array('col', 'idx', 'name', 'paging', 'fetch_all', 'fetch_row');
         if (in_array($key, $prop)) {
             $key = "_$key";
             return $this->$key;
@@ -253,6 +253,40 @@ class Solar_Sql_Table extends Solar_Base {
     public function setPaging($val)
     {
         $this->_paging = (int) $val;
+    }
+    
+    /**
+     * 
+     * Sets the class returned by fetchRow() calls.
+     * 
+     * @param string $class The class name.  If empty, uses 'Solar_Sql_Row'.
+     * 
+     * @return void
+     * 
+     */
+    public function setFetchRowClass($class)
+    {
+        if (! $class) {
+            $class = 'Solar_Sql_Row';
+        }
+        $this->_fetch_row = $class;
+    }
+    
+    /**
+     * 
+     * Sets the class returned by fetchAll() calls.
+     * 
+     * @param string $class The class name.  If empty, uses 'Solar_Sql_Rowset'.
+     * 
+     * @return void
+     * 
+     */
+    public function setFetchAllClass($class)
+    {
+        if (! $class) {
+            $class = 'Solar_Sql_Rowset';
+        }
+        $this->_fetch_all = $class;
     }
     
     /**

@@ -72,7 +72,7 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Converts '1', 'true', 'yes', and 'on' to boolean true.
      * 
-     * Converts '0', 'false', 'no', and 'off' to boolean false.
+     * Converts '0', 'false', 'no', 'off', and '' to boolean false.
      * 
      * @param mixed $value The value to sanitize.
      * 

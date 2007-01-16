@@ -288,7 +288,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateAlnum($value, $blank = Solar_DataFilter::NOT_BLANK)
     {
-        return $this->ctype($value, 'alnum', $blank);
+        return $this->validateCtype($value, 'alnum', $blank);
     }
     
     /**
@@ -304,7 +304,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateAlpha($value, $blank = Solar_DataFilter::NOT_BLANK)
     {
-        return $this->ctype($value, 'alpha', $blank);
+        return $this->validateCtype($value, 'alpha', $blank);
     }
     
     /**

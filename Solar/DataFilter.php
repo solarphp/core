@@ -54,7 +54,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strip non-alphabetic characters from value.
+     * Strip non-alphabetic characters from the value.
      * 
      * @param mixed $value The value to be sanitized.
      * 
@@ -75,7 +75,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strip non-alphanumeric characters from a value.
+     * Strip non-alphanumeric characters from the value.
      * 
      * @param mixed $value The value to be sanitized.
      * 
@@ -425,7 +425,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is only letters (upper or lower case) and digits.
+     * Validates that the value is only letters (upper or lower case) and digits.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -442,7 +442,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is letters only (upper or lower case).
+     * Validates that the value is letters only (upper or lower case).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -459,7 +459,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value composed only of whitespace.
+     * Validates that the value composed only of whitespace.
      * 
      * Boolean, integer, and float types are never "blank".
      * 
@@ -482,7 +482,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is a boolean representation.
+     * Validates that the value is a boolean representation.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -515,7 +515,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates a value against a [[php::ctype | ]] function.
+     * Validates the value against a [[php::ctype | ]] function.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -540,7 +540,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is an email address.
+     * Validates that the value is an email address.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -589,7 +589,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is in a list of allowed values.
+     * Validates that the value is in a list of allowed values.
      * 
      * Strict checking is enforced, so a string "1" is not the same as
      * an integer 1.  This helps to avoid matching 0 and empty, etc.
@@ -615,7 +615,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value represents an integer (+/-).
+     * Validates that the value represents an integer (+/-).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -641,7 +641,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is a legal IP address (v4 or v6).
+     * Validates that the value is a legal IP address (v4 or v6).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -662,7 +662,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is a legal IPv4 address.
+     * Validates that the value is a legal IPv4 address.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -683,7 +683,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is a legal IPv6 address.
+     * Validates that the value is a legal IPv6 address.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -704,7 +704,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is an ISO 8601 date string.
+     * Validates that the value is an ISO 8601 date string.
      * 
      * The format is "yyyy-mm-dd".  Also checks to see that the date
      * itself is valid (for example, no Feb 30).
@@ -738,7 +738,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is an ISO 8601 time string (hh:ii::ss format).
+     * Validates that the value is an ISO 8601 time string (hh:ii::ss format).
      * 
      * Per note from Chris Drozdowski about ISO 8601, allows two
      * midnight times ... 00:00:00 for the beginning of the day, and
@@ -762,7 +762,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is an ISO 8601 timestamp string.
+     * Validates that the value is an ISO 8601 timestamp string.
      * 
      * The format is "yyyy-mm-ddThh:ii:ss" (note the literal "T" in the
      * middle, which acts as a separator -- may also be a space).
@@ -812,7 +812,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is a locale code.
+     * Validates that the value is a locale code.
      * 
      * The format is two lower-case letters, an underscore, and two upper-case
      * letters.
@@ -833,7 +833,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is less than than or equal to a maximum.
+     * Validates that the value is less than than or equal to a maximum.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -882,7 +882,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is formatted as a MIME type.
+     * Validates that the value is formatted as a MIME type.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -912,7 +912,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is greater than or equal to a minimum.
+     * Validates that the value is greater than or equal to a minimum.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -959,7 +959,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is numeric (any number or number string).
+     * Validates that the value is numeric (any number or number string).
      * 
      * @param mixed $value The value to validate.
      * 
@@ -980,7 +980,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is not exactly zero.
+     * Validates that the value is not exactly zero.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -1004,7 +1004,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is not blank whitespace.
+     * Validates that the value is not blank whitespace.
      * 
      * Boolean, integer, and float types are never "blank".
      * 
@@ -1027,7 +1027,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is within a given range.
+     * Validates that the value is within a given range.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -1052,7 +1052,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the length of a value is within a given range.
+     * Validates that the length of the value is within a given range.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -1078,7 +1078,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates a value against a regular expression.
+     * Validates the value against a regular expression.
      * 
      * Uses [[php::preg_match() | ]] to compare the value against the given
      * regular epxression.
@@ -1103,7 +1103,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * See a value has only a certain number of digits and decimals.
+     * See the value has only a certain number of digits and decimals.
      * 
      * The value must be numeric, can be no longer than the `$size`,
      * and can have no more decimal places than the `$scope`.
@@ -1160,7 +1160,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is composed of one or more words separated by
+     * Validates that the value is composed of one or more words separated by
      * a single separator-character.
      * 
      * Word characters include a-z, A-Z, 0-9, and underscore, indicated by the 
@@ -1185,7 +1185,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value can be represented as a string.
+     * Validates that the value can be represented as a string.
      * 
      * Essentially, this means any scalar value is valid (no arrays, objects,
      * resources, etc).
@@ -1209,7 +1209,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates a value as a URI per RFC2396.
+     * Validates the value as a URI per RFC2396.
      * 
      * The value must match a generic URI format; for example,
      * ``http://example.com``, ``mms://example.org``, and so on.
@@ -1235,7 +1235,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that a value is composed only of "word" characters.
+     * Validates that the value is composed only of "word" characters.
      * 
      * These include a-z, A-Z, 0-9, and underscore, indicated by a 
      * regular expression "\w".

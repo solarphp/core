@@ -54,7 +54,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strip non-alphabetic characters from the value.
+     * Strips non-alphabetic characters from the value.
      * 
      * @param mixed $value The value to be sanitized.
      * 
@@ -75,7 +75,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strip non-alphanumeric characters from the value.
+     * Strips non-alphanumeric characters from the value.
      * 
      * @param mixed $value The value to be sanitized.
      * 
@@ -96,7 +96,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Converts the value to a boolean.
+     * Forces the value to a boolean.
      * 
      * Note that this recognizes $this->_true and $this->_false values.
      * 
@@ -134,7 +134,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Converts the value to a float.
+     * Forces the value to a float.
      * 
      * Attempts to sanely extract a float from the given value, using an
      * algorithm somewhat less naive that "remove all characters that are not
@@ -174,8 +174,8 @@ class Solar_DataFilter extends Solar_Base {
         // remove all decimals without a digit or minus next to them
         $value = preg_replace('/([^0-9-]\.[^0-9])/', '', $value);
         
-        // remove all non-numeric chars
-        $value = preg_replace('/[^0-9.\-]/', '', $value);
+        // remove all chars except digit, decimal, and minus
+        $value = preg_replace('/[^0-9\.-]/', '', $value);
         
         // remove all trailing decimals and minuses
         $value = rtrim($value, '.-');
@@ -207,7 +207,11 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Converts the value to an integer.
+     * Forces the value to an integer.
+     * 
+     * Attempts to sanely extract an integer from the given value, using an
+     * algorithm somewhat less naive that "remove all characters that are not
+     * '0-9+-'".  The result may not be expected, but it will be a integer.
      * 
      * @param mixed $value The value to be sanitized.
      * 
@@ -219,7 +223,42 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function sanitizeInt($value, $require = false)
     {
-        return (int) $this->sanitizeFloat($value, $require);
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        if (! is_string($value) || is_numeric($value)) {
+            // we double-cast here to honor scientific notation.
+            // (int) 1E6 == 1, but (int) (float) 1E6 == 100000
+            return (int) (float) $value;
+        }
+        
+        // it's a non-numeric string, attempt to extract an integer from it.
+        
+        // remove all chars except digit and minus.
+        // this removes all + signs; any - sign takes precedence because ...
+        //     0 + -1 = -1
+        //     0 - +1 = -1
+        // ... at least it seems that way to me now.
+        $value = preg_replace('/[^0-9-]/', '', $value);
+        
+        // remove all trailing minuses
+        $value = rtrim($value, '-');
+        
+        // pre-empt further checks if already empty
+        if ($value == '') {
+            return (int) $value;
+        }
+        
+        // remove all minuses not at the front
+        $is_negative = ($value[0] == '-');
+        $value = str_replace('-', '', $value);
+        if ($is_negative) {
+            $value = '-' . $value;
+        }
+        
+        // looks like we're done
+        return (int) $value;
     }
     
     /**

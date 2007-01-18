@@ -134,35 +134,20 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strips non-email characters from the value.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeEmail($value, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return filter_var($value, FILTER_SANITIZE_EMAIL);
-    }
-    
-    /**
-     * 
      * Converts the value to a float.
      * 
+     * Attempts to sanely extract a float from the given value, using an
+     * algorithm somewhat less naive that "remove all characters that are not
+     * '0-9.,eE+-'".  The result may not be expected, but it will be a float.
+     * 
      * @param mixed $value The value to be sanitized.
      * 
      * @param bool $require Sanitize blank values (default false, which
      * returns blank values as nulls).
      * 
-     * @return string The sanitized value.
+     * @return float The sanitized value.
+     * 
+     * @todo Extract scientific notation from weird strings?
      * 
      */
     public function sanitizeFloat($value, $require = false)
@@ -171,8 +156,53 @@ class Solar_DataFilter extends Solar_Base {
             return null;
         }
         
-        return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT,
-            FILTER_FLAG_ALLOW_FRACTION | FILTER_FLAG_ALLOW_SCIENTIFIC);
+        if (! is_string($value) || is_numeric($value)) {
+            return (float) $value;
+        }
+        
+        // it's a non-numeric string, attempt to extract a float from it.
+        
+        // remove all + signs; any - sign takes precedence because ...
+        //     0 + -1 = -1
+        //     0 - +1 = -1
+        // ... at least it seems that way to me now.
+        $value = str_replace('+', '', $value);
+        
+        // reduce multiple decimals and minuses
+        $value = preg_replace('/[\.-]{2,}/', '.', $value);
+        
+        // remove all decimals without a digit or minus next to them
+        $value = preg_replace('/([^0-9-]\.[^0-9])/', '', $value);
+        
+        // remove all non-numeric chars
+        $value = preg_replace('/[^0-9.\-]/', '', $value);
+        
+        // remove all trailing decimals and minuses
+        $value = rtrim($value, '.-');
+        
+        // pre-empt further checks if already empty
+        if ($value == '') {
+            return (float) $value;
+        }
+        
+        // remove all minuses not at the front
+        $is_negative = ($value[0] == '-');
+        $value = str_replace('-', '', $value);
+        if ($is_negative) {
+            $value = '-' . $value;
+        }
+        
+        // remove all decimals but the first
+        $pos = strpos($value, '.');
+        $value = str_replace('.', '', $value);
+        if ($pos !== false) {
+            $value = substr($value, 0, $pos)
+                   . '.'
+                   . substr($value, $pos);
+        }
+        
+        // looks like we're done
+        return (float) $value;
     }
     
     /**
@@ -184,16 +214,12 @@ class Solar_DataFilter extends Solar_Base {
      * @param bool $require Sanitize blank values (default false, which
      * returns blank values as nulls).
      * 
-     * @return string The sanitized value.
+     * @return int The sanitized value.
      * 
      */
     public function sanitizeInt($value, $require = false)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+        return (int) $this->sanitizeFloat($value, $require);
     }
     
     /**
@@ -358,7 +384,7 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param string $chars Trim these characters.
+     * @param string $chars Trim these characters (default space).
      * 
      * @param bool $require Sanitize blank values (default false, which
      * returns blank values as nulls).
@@ -373,27 +399,6 @@ class Solar_DataFilter extends Solar_Base {
         }
         
         return trim($value, $chars);
-    }
-    
-    /**
-     * 
-     * Strips non-URI characters from the value.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeUri($value, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return filter_var($value, FILTER_SANITIZE_URI);
     }
     
     /**

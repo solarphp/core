@@ -388,6 +388,10 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Strips non-email characters from the value.
      * 
+     * Note that this does not guarantee a valid email address; you should
+     * additionally pass the value through validateEmail() to check if the
+     * sanitized value is valid.
+     * 
      * @param mixed $value The value to be sanitized.
      * 
      * @param bool $require Sanitize blank values (default false, which
@@ -481,6 +485,10 @@ class Solar_DataFilter extends Solar_Base {
     /**
      * 
      * Strips non-URI characters from the value.
+     * 
+     * Note that this does not guarantee a valid URI; you should
+     * additionally pass the value through validateUri() to check if the
+     * sanitized value is valid.
      * 
      * @param mixed $value The value to be sanitized.
      * 

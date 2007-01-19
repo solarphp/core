@@ -378,7 +378,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Is this an 'XML' request?
+     * Is this an XmlHttpRequest?
      * 
      * Checks if the `X-Requested-With` HTTP header is `XMLHttpRequest`.
      * Generally used in addition to the [[isPost()]], [[isGet()]], etc. 
@@ -387,7 +387,7 @@ class Solar_Request extends Solar_Base {
      * @return bool
      * 
      */
-    public function isXml()
+    public function isXhr()
     {
         return strtolower($this->http('X-Requested-With')) == 'xmlhttprequest';
     }

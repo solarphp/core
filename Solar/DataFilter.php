@@ -306,6 +306,23 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
+     * Forces the value to a numeric string.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return int The sanitized value.
+     * 
+     */
+    public function sanitizeNumeric($value, $require = false)
+    {
+        return (string) $this->sanitizeFloat($value, $require);
+    }
+    
+    /**
+     * 
      * Applies [[php::preg_replace() | ]] to the value.
      * 
      * @param mixed $value The value to be sanitized.
@@ -580,7 +597,10 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateBoolean($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
+        // need to allow for blanks if not required, because
+        // empty strings are boolean false, and strings composed of blanks
+        // are booleans true.
+        if ($this->validateBlank($value) && ! $require) {
             return true;
         }
         
@@ -616,8 +636,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateCtype($value, $type, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         $func = 'ctype_' . $type;
@@ -638,8 +658,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateEmail($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // FILTER_VALIDATE_EMAIL modifies the given value to strip
@@ -670,8 +690,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateInKeys($value, $array, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return array_key_exists($value, (array) $array);
@@ -696,8 +716,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateInList($value, $array, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return in_array($value, (array) $array, true);
@@ -717,8 +737,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateInt($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         if (is_int($value)) {
@@ -743,8 +763,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIp($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
@@ -770,8 +790,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIpv4($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
@@ -797,8 +817,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIpv6($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
@@ -827,8 +847,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIsoDate($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // basic date format
@@ -887,8 +907,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIsoTimestamp($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // correct length?
@@ -955,8 +975,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateMax($value, $max, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return is_numeric($value) && $value <= $max;
@@ -1034,8 +1054,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateMin($value, $min, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return is_numeric($value) && $value >= $min;
@@ -1058,8 +1078,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateMinLength($value, $min, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return strlen($value) >= $min;
@@ -1079,8 +1099,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateNumeric($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return is_numeric($value);
@@ -1151,8 +1171,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateRange($value, $min, $max, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return ($value >= $min && $value <= $max);
@@ -1176,8 +1196,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateRangeLength($value, $min, $max, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         $len = strlen($value);
@@ -1203,9 +1223,10 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateRegex($value, $expr, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
+        
         return (bool) preg_match($expr, $value);
     }
     
@@ -1229,11 +1250,10 @@ class Solar_DataFilter extends Solar_Base {
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateScope($value, $size, $scope, $require = true)
+    public function validateSizeScope($value, $size, $scope, $require = true)
     {
-        // allowed blank?
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // scope has to be smaller than size.
@@ -1308,8 +1328,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateString($value, $require = true)
     {
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         return is_scalar($value);
@@ -1332,9 +1352,8 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateUri($value, $require = true)
     {
-        // allowed blank?
-        if (! $require && $this->validateBlank($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $require;
         }
         
         // FILTER_VALIDATE_URL modifies the given value to strip

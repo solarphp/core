@@ -323,31 +323,6 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Applies [[php::preg_replace() | ]] to the value.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param string $pattern The regex pattern to apply.
-     * 
-     * @param string $replace Replace the found pattern with this string.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizePregReplace($value, $pattern, $replace, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return preg_replace($pattern, $replace, $value);
-    }
-    
-    /**
-     * 
      * Converts the value to a string; characters are not stripped or encoded.
      * 
      * @param mixed $value The value to be sanitized.
@@ -432,9 +407,13 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strips non-URI characters from the value.
+     * Applies [[php::preg_replace() | ]] to the value.
      * 
      * @param mixed $value The value to be sanitized.
+     * 
+     * @param string $pattern The regex pattern to apply.
+     * 
+     * @param string $replace Replace the found pattern with this string.
      * 
      * @param bool $require Sanitize blank values (default false, which
      * returns blank values as nulls).
@@ -442,13 +421,13 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringUri($value, $require = false)
+    public function sanitizeStringRegex($value, $pattern, $replace, $require = false)
     {
         if (! $require && $this->validateBlank($value)) {
             return null;
         }
         
-        return filter_var($value, FILTER_SANITIZE_URL);
+        return preg_replace($pattern, $replace, $value);
     }
     
     /**
@@ -467,7 +446,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStrReplace($value, $find, $replace, $require = false)
+    public function sanitizeStringReplace($value, $find, $replace, $require = false)
     {
         if (! $require && $this->validateBlank($value)) {
             return null;
@@ -490,13 +469,34 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeTrim($value, $chars = ' ', $require = false)
+    public function sanitizeStringTrim($value, $chars = ' ', $require = false)
     {
         if (! $require && $this->validateBlank($value)) {
             return null;
         }
         
         return trim($value, $chars);
+    }
+    
+    /**
+     * 
+     * Strips non-URI characters from the value.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeStringUri($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return filter_var($value, FILTER_SANITIZE_URL);
     }
     
     /**
@@ -511,7 +511,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeWord($value, $require = false)
+    public function sanitizeStringWord($value, $require = false)
     {
         if (! $require && $this->validateBlank($value)) {
             return null;
@@ -564,10 +564,9 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Validates that the value composed only of whitespace.
      * 
-     * Boolean, integer, and float types are never "blank".
+     * Non-string types never validate as "blank".
      * 
-     * All other types are converted to string and trimmed; if '', then the
-     * value is blank.
+     * Strings are trimmed; if '', then the value is blank.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -576,7 +575,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateBlank($value)
     {
-        if (is_bool($value) || is_int($value) || is_float($value)) {
+        if (! is_string($value)) {
             return false;
         }
         
@@ -673,6 +672,32 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
+     * Validates that the value represents a float.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param bool $require When true, value must be non-blank; when false,
+     * blank values are valid.  Default true.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function validateFloat($value, $require = true)
+    {
+        if ($this->validateBlank($value)) {
+            return ! $require;
+        }
+        
+        if (is_float($value)) {
+            return true;
+        }
+        
+        // otherwise, must be numeric, and must be same as when cast to float
+        return is_numeric($value) && $value == (float) $value;
+    }
+    
+    /**
+     * 
      * Validates that the value is a key in the list of allowed options.
      * 
      * Given the keys of the array (second parameter), the value
@@ -725,7 +750,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the value represents an integer (+/-).
+     * Validates that the value represents an integer.
      * 
      * @param mixed $value The value to validate.
      * 

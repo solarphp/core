@@ -323,7 +323,7 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Converts the value to a string; characters are not stripped or encoded.
+     * Forces the value to a string; characters are not stripped or encoded.
      * 
      * @param mixed $value The value to be sanitized.
      * 

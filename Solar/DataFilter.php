@@ -35,7 +35,7 @@ class Solar_DataFilter extends Solar_Base {
      * @var array
      * 
      */
-    protected $_true = array('1', 'true', 'on', 'yes');
+    protected $_true = array('1', 'on', 'true', 't', 'yes', 'y');
     
     /**
      * 
@@ -44,7 +44,7 @@ class Solar_DataFilter extends Solar_Base {
      * @var array
      * 
      */
-    protected $_false = array('0', 'false', 'off', 'no', '');
+    protected $_false = array('0', 'off', 'false', 'f', 'no', 'n', '');
     
     // -----------------------------------------------------------------
     // 
@@ -136,7 +136,7 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Forces the value to a float.
      * 
-     * Attempts to sanely extract a float from the given value, using an
+     * Attempts to extract a valid float from the given value, using an
      * algorithm somewhat less naive that "remove all characters that are not
      * '0-9.,eE+-'".  The result may not be expected, but it will be a float.
      * 
@@ -209,7 +209,7 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Forces the value to an integer.
      * 
-     * Attempts to sanely extract an integer from the given value, using an
+     * Attempts to extract a valid integer from the given value, using an
      * algorithm somewhat less naive that "remove all characters that are not
      * '0-9+-'".  The result may not be expected, but it will be a integer.
      * 
@@ -229,7 +229,7 @@ class Solar_DataFilter extends Solar_Base {
         
         if (! is_string($value) || is_numeric($value)) {
             // we double-cast here to honor scientific notation.
-            // (int) 1E6 == 1, but (int) (float) 1E6 == 100000
+            // (int) 1E5 == 1, but (int) (float) 1E5 == 100000
             return (int) (float) $value;
         }
         

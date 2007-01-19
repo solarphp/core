@@ -54,48 +54,6 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Strips non-alphabetic characters from the value.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeAlpha($value, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return preg_replace('/[^a-z]/i', '', $value);
-    }
-    
-    /**
-     * 
-     * Strips non-alphanumeric characters from the value.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeAlnum($value, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return preg_replace('/[^a-z0-9]/i', '', $value);
-    }
-    
-    /**
-     * 
      * Forces the value to a boolean.
      * 
      * Note that this recognizes $this->_true and $this->_false values.
@@ -373,6 +331,111 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
+     * Converts the value to a string; characters are not stripped or encoded.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeString($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return (string) $value;
+    }
+    
+    /**
+     * 
+     * Strips non-alphabetic characters from the value.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeStringAlpha($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return preg_replace('/[^a-z]/i', '', $value);
+    }
+    
+    /**
+     * 
+     * Strips non-alphanumeric characters from the value.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeStringAlnum($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return preg_replace('/[^a-z0-9]/i', '', $value);
+    }
+    
+    /**
+     * 
+     * Strips non-email characters from the value.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeStringEmail($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return filter_var($value, FILTER_SANITIZE_EMAIL);
+    }
+    
+    /**
+     * 
+     * Strips non-URI characters from the value.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @param bool $require Sanitize blank values (default false, which
+     * returns blank values as nulls).
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeStringUri($value, $require = false)
+    {
+        if (! $require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return filter_var($value, FILTER_SANITIZE_URL);
+    }
+    
+    /**
+     * 
      * Applies [[php::str_replace() | ]] to the value.
      * 
      * @param mixed $value The value to be sanitized.
@@ -394,27 +457,6 @@ class Solar_DataFilter extends Solar_Base {
         }
         
         return str_replace($find, $replace, $value);
-    }
-    
-    /**
-     * 
-     * Converts the value to a string; characters are not stripped or encoded.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeString($value, $require = false)
-    {
-        if (! $require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return (string) $value;
     }
     
     /**
@@ -600,9 +642,13 @@ class Solar_DataFilter extends Solar_Base {
             return true;
         }
         
-        // FILTER_VALIDATE_EMAIL, when valid, returns the email address,
-        // not a boolean, so we need to cast to boolean here.
-        return (bool) filter_var($value, FILTER_VALIDATE_EMAIL);
+        // FILTER_VALIDATE_EMAIL modifies the given value to strip
+        // invalid characters, then validates.  that bothers me.
+        // so to compensate, we check the php-vlaidated value against
+        // the original value to see if they match.  if they do, then
+        // the original value was valid.
+        $might_be_ok = filter_var($value, FILTER_VALIDATE_EMAIL);
+        return $value == $might_be_ok;
     }
     
     /**
@@ -701,7 +747,13 @@ class Solar_DataFilter extends Solar_Base {
             return true;
         }
         
-        return (bool) filter_var($value, FILTER_VALIDATE_IP);
+        // FILTER_VALIDATE_IP modifies the given value to strip
+        // invalid characters, then validates.  that bothers me.
+        // so to compensate, we check the php-vlaidated value against
+        // the original value to see if they match.  if they do, then
+        // the original value was valid.
+        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP);
+        return $value == $might_be_ok;
     }
     
     /**
@@ -722,7 +774,13 @@ class Solar_DataFilter extends Solar_Base {
             return true;
         }
         
-        return (bool) filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        // FILTER_VALIDATE_IP modifies the given value to strip
+        // invalid characters, then validates.  that bothers me.
+        // so to compensate, we check the php-vlaidated value against
+        // the original value to see if they match.  if they do, then
+        // the original value was valid.
+        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+        return $value == $might_be_ok;
     }
     
     /**
@@ -743,7 +801,13 @@ class Solar_DataFilter extends Solar_Base {
             return true;
         }
         
-        return (bool) filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        // FILTER_VALIDATE_IP modifies the given value to strip
+        // invalid characters, then validates.  that bothers me.
+        // so to compensate, we check the php-vlaidated value against
+        // the original value to see if they match.  if they do, then
+        // the original value was valid.
+        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+        return $value == $might_be_ok;
     }
     
     /**
@@ -1273,8 +1337,15 @@ class Solar_DataFilter extends Solar_Base {
             return true;
         }
         
-        return (bool) filter_var($value, FILTER_VALIDATE_URL,
+        // FILTER_VALIDATE_URL modifies the given value to strip
+        // invalid characters, then validates.  that bothers me.
+        // so to compensate, we check the php-vlaidated value against
+        // the original value to see if they match.  if they do, then
+        // the original value was valid.
+        $might_be_ok = filter_var($value, FILTER_VALIDATE_URL,
             FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+        
+        return $value == $might_be_ok;
     }
     
     /**

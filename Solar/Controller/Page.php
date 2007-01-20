@@ -634,6 +634,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
                 $this->_info[$key] = $val . '.' . $format;
             }
         }
+        
+        // finally, remove blank info elements from the end.
+        // this happens sometimes with elements being added
+        // and removed from format checking, and helps make
+        // sure that action default parameters are honored.
+        $i = count($this->_info);
+        while ($i --) {
+            if (! empty($this->_info[$i])) {
+                // not empty, stop removing blanks
+                break;
+            } else {
+                unset($this->_info[$i]);
+            }
+        }
     }
 
     /**

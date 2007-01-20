@@ -239,7 +239,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @return string
      * 
      */
-    protected function _notFound($spec)
+    protected function _notFound($page)
     {
         return htmlspecialchars("404: Page '$page' not found.");
     }

@@ -1335,6 +1335,9 @@ class Solar_DataFilter extends Solar_Base {
      * @param string $sep The word separator character(s), such as " -'" (to
      * allow spaces, dashes, and apostrophes in the word).  Default is ' '.
      * 
+     * @param bool $require When true, value must be non-blank; when false,
+     * blank values are valid.  Default true.
+     * 
      * @return bool True if valid, false if not.
      * 
      */

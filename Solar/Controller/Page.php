@@ -640,13 +640,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // and removed from format checking, and helps make
         // sure that action default parameters are honored.
         $i = count($this->_info);
-        while ($i) {
+        while ($i --) {
             if (! empty($this->_info[$i])) {
                 // not empty, stop removing blanks
                 break;
             } else {
                 unset($this->_info[$i]);
-                $i --;
             }
         }
     }

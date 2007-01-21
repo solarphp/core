@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Memcache cache controller.
+ * eAccelerator cache controller.
  *
  * @category Solar
  *
@@ -22,7 +22,7 @@ Solar::loadClass('Solar_Cache_Adapter');
 
 /**
  *
- * APC cache controller.
+ * eAccellerator cache controller.
  *
  * eAccelerator is a free open-source PHP accelerator, optimizer,
  * encoder and dynamic content cache. It increases the performance of

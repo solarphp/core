@@ -213,7 +213,7 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
         foreach ($params as $key => $val) {
 
             // is there a default value?
-            if ($val['default']) {
+            if (isset($val['default'])) {
                 $item = $this->_config['param_default'];
             } else {
                 $item = $this->_config['param'];

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Memcache cache controller.
+ * APC cache controller.
  *
  * @category Solar
  *

@@ -793,7 +793,7 @@ class Solar {
      * }}
      * 
      * In general, you shouldn't need to use this directly in classes
-     * extended from [[Solar_Base::HomePage | Solar_Base]].  Instead, use
+     * extended from [[Solar_Base::Overview | Solar_Base]].  Instead, use
      * [[Solar_Base::_exception() | $this->_exception()]] for automated
      * picking of the right exception class from the $code, and
      * automated translation of the error message.

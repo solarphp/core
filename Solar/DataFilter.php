@@ -548,7 +548,11 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateAlnum($value, $require = true)
     {
-        return $this->validateCtype($value, 'alnum', $require);
+        if ($this->validateBlank($value)) {
+            return ! $require;
+        }
+        
+        return ctype_alnum((string)$value);
     }
     
     /**
@@ -565,16 +569,16 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateAlpha($value, $require = true)
     {
-        return $this->validateCtype($value, 'alpha', $require);
+        if ($this->validateBlank($value)) {
+            return ! $require;
+        }
+        
+        return ctype_alpha($value);
     }
     
     /**
      * 
-     * Validates that the value composed only of whitespace.
-     * 
-     * Non-string types never validate as "blank".
-     * 
-     * Strings are trimmed; if '', then the value is blank.
+     * Validates that the value is a string composed only of whitespace.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -587,7 +591,7 @@ class Solar_DataFilter extends Solar_Base {
             return false;
         }
         
-        return (trim((string)$value) == '');
+        return trim($value) == '';
     }
     
     /**

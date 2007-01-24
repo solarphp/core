@@ -19,6 +19,39 @@
  * 
  * Methods for validating data.
  * 
+ * Solar_Valid aggregates several validation methods so you can make sure
+ * user input matches your requirements. This is useful for checking form
+ * values and validating database fields.
+ * 
+ * {{code: php
+ *     require_once 'Solar.php';
+ *     Solar::start();
+ * 
+ *     // get a validation object
+ *     $valid = Solar::factory('Solar_Valid');
+ *     
+ *     // get a request object
+ *     $request = Solar::factory('Solar_Request');
+ *     
+ *     // Fetch a copy of the GET request variable for 'name'
+ *     $name = $request->get('name');
+ * 
+ *     // Does it match the "alpha" validation rule?
+ *     // (i.e., A-Z and a-z only).
+ *     if (! $valid->alpha($name)) {
+ *         echo htmlspecialchars("Name '$name' is not valid.");
+ *     }
+ * 
+ *     // Fetch a copy of the POST request variable for 'date'
+ *     $date = $request->post('date');
+ * 
+ *     // Is it an ISO-formatted date?  (Alternatively,
+ *     // it can be completely blank.)
+ *     if (! $valid->isoDate($date, Solar_Valid::OR_BLANK)) {
+ *         echo "The date must be in 'yyyy-mm-dd' format, or blank.";
+ *     }
+ * }}
+ * 
  * @category Solar
  * 
  * @package Solar_Valid
@@ -89,6 +122,32 @@ class Solar_Valid extends Solar_Base {
     /**
      * 
      * Validate against a callback function or method.
+     * 
+     * Use this to perform your own ad-hoc validations.  The value
+     * will be passed as the first argument to the callback; the
+     * callback should return boolean true if the value was valid,
+     * boolean false if not.
+     * 
+     * {{code: php
+     *     require_once 'Solar.php';
+     *     Solar::start();
+     * 
+     *     // get a validator object
+     *     $valid = Solar::factory('Solar_Valid');
+     * 
+     *     // validate $value against a function
+     *     $result = $valid->callback($value, 'my_function');
+     * 
+     *     // validate $value against a static method
+     *     $result = $valid->custom($value, array('SomeClass', 'StaticMethod'));
+     * 
+     *     // validate $value against an object method
+     *     $result = $valid->callback($value, array($object, 'MethodName'));
+     * 
+     *     // validate $value against a function,
+     *     // with added parameters for the function
+     *     $result = $valid->callback($value, 'my_function', $foo, 'bar', $etc);
+     * }}
      * 
      * @param mixed $value The value to validate.
      * 
@@ -554,6 +613,41 @@ class Solar_Valid extends Solar_Base {
     /**
      * 
      * Check the value against multiple callback validations.
+     * 
+     * Use this to perform multiple validations on a single value. 
+     * All of the validations must be successful for the value to be
+     * valid.  If any of the validations fails, then the value is
+     * treated as not valid.
+     * 
+     * The array describing the validations must itself consist of a
+     * series of arrays where the first element is a Solar_Valid
+     * method name, and the remaining elements are the parameters for
+     * that method (not including the value, of course).
+     * 
+     * {{code: php
+     *     require_once 'Solar.php';
+     *     Solar::start();
+     * 
+     *     Solar::loadClass('Solar_Valid');
+     * 
+     *     // the list of validations to perform
+     *     $validations = array(
+     *         array('maxLength', 12),
+     *         array('regex', '/^\w+$/', Solar_Valid::OR_BLANK),
+     *     );
+     * 
+     *     // this will be valid
+     *     $valid = Solar_Valid::multiple('something', $validations);
+     * 
+     *     // this will not be valid (too long)
+     *     $valid = Solar_Valid::multiple('somethingelse', $validations);
+     * 
+     *     // this will not be valid (non-word character)
+     *     $valid = Solar_Valid::multiple('some~thing', $validations);
+     * 
+     *     // this will be valid (not too long, and OR_BLANK)
+     *     $valid = Solar_Valid::multiple('', $validations);
+     * }}
      * 
      * @param mixed $value The value to validate.
      * 

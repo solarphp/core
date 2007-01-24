@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Exception');
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  */
 class Solar_Exception_MethodNotImplemented extends Solar_Exception {}

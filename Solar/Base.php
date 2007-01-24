@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -40,7 +40,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  */
 abstract class Solar_Base {
@@ -49,13 +49,30 @@ abstract class Solar_Base {
      * 
      * Collection point for configuration values.
      * 
-     * Note that you do not define config defaults in $_config directly; 
-     * instead, you use a protected property named for the class, with 
-     * an underscore prefix.
+     * Note that you do not define config defaults in $_config directly.
+     * 
+     * {{code: php
+     *     // DO NOT DO THIS
+     *     protected $_config = array(
+     *         'foo' => 'bar',
+     *         'baz' => 'dib',
+     *     );
+     * }}
+     * 
+     * Instead, define config defaults in a protected property named for the
+     * class, withan underscore prefix.
      * 
      * For exmple, a "Vendor_Class_Name" class would define the default 
      * config array in "$_Vendor_Class_Name".  This convention lets 
      * child classes inherit parent config keys and values.
+     * 
+     * {{code: php
+     *     // DO THIS INSTEAD
+     *     protected $_Vendor_Class_Name = array(
+     *         'foo' => 'bar',
+     *         'baz' => 'dib',
+     *     );
+     * }}
      * 
      * @var array
      * 
@@ -139,6 +156,9 @@ abstract class Solar_Base {
      * 
      * Looks up locale strings based on a key.
      * 
+     * This is a convenient shortcut for calling [[Solar::locale()]] that 
+     * automatically uses the current class name.
+     * 
      * @param string $key The key to get a locale string for.
      * 
      * @param string $num If 1, returns a singular string; otherwise, returns
@@ -147,7 +167,9 @@ abstract class Solar_Base {
      * @return string The locale string, or the original $key if no
      * string found.
      * 
-     * @todo rewrite docs
+     * @see Manual::Solar/Using_locales
+     * 
+     * @see Solar::locale()
      * 
      */
     public function locale($key, $num = 1)

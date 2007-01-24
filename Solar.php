@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.net>
  * 
@@ -75,7 +75,7 @@ if (! class_exists('Solar_Base')) {
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  * @version @package_version@
  * 

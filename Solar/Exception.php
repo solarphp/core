@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Base
+ * @package Solar
  * 
  */
 class Solar_Exception extends Exception {

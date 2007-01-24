@@ -668,7 +668,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * SELECT statement.
      * 
      * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty, returns as a sequential array instead.
+     * 'Solar_Sql_Rowset'.  If empty, or is 'array', returns as a sequential
+     * array instead.
      * 
      * @return object
      * 
@@ -677,7 +678,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     {
         $result = $this->fetchResult($spec, $data);
         
-        if ($class) {
+        if ($class && strtolower($class) != 'array') {
             return Solar::factory(
                 $class,
                 array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
@@ -702,7 +703,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * SELECT statement.
      * 
      * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty, returns as an associative array instead.
+     * 'Solar_Sql_Rowset'.  If empty, or is 'array', returns an associative
+     * array instead.
      * 
      * @return array
      * 
@@ -842,7 +844,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * SELECT statement.
      * 
      * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty, returns as a sequential array instead.
+     * 'Solar_Sql_Rowset'.  If empty or 'array', returns as a sequential
+     * array instead.
      * 
      * @return object
      * 
@@ -857,7 +860,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         $result = $this->fetchResult($spec, $data);
         
-        if ($class) {
+        if ($class && strtolower($class) != 'array') {
             return Solar::factory(
                 $class,
                 array('data' => $result->fetch(PDO::FETCH_ASSOC))

@@ -281,6 +281,10 @@ class Solar {
      * 
      * @return string A translated locale string.
      * 
+     * @see Solar_Base::locale()
+     * 
+     * @see Manual::Solar/Using_locales
+     * 
      */
     public static function locale($spec, $key, $num = 1)
     {

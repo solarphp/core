@@ -19,6 +19,106 @@
  * 
  * Manipulates and generates URI strings.
  * 
+ * This class helps you to create and manipulate URIs, including query
+ * strings and path elements. It does so by splitting up the pieces of the
+ * URI and allowing you modify them individually; you can then then fetch
+ * them as a single URI string. This helps when building complex links,
+ * such as in a paged navigation system.
+ * 
+ * > Note: For controller action URIs, use [[Class::Solar_Uri_Action | ]].
+ * > Likewise, for public resource URIs, use [[Class::Solar_Uri_Public | ]].
+ * 
+ * The following is a simple example. Say that the page address is currently
+ * `http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor`.
+ * 
+ * You can use Solar_Uri to parse this complex string very easily:
+ * 
+ * {{code: php
+ *     require_once 'Solar.php';
+ *     Solar::start();
+ * 
+ *     // create a URI object; this will automatically import the current
+ *     // location, which is...
+ *     // 
+ *     // http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor
+ *     $uri = Solar::factory('Solar_Uri');
+ * 
+ *     // now the $uri properties are ...
+ *     // 
+ *     // $uri->scheme   => 'http'
+ *     // $uri->host     => 'example.com'
+ *     // $uri->user     => 'anonymous'
+ *     // $uri->pass     => 'guest'
+ *     // $uri->path     => array('path', 'to', 'index.php', 'foo', 'bar')
+ *     // $uri->query    => array('baz' => 'dib')
+ *     // $uri->fragment => 'anchor'
+ * }}
+ * 
+ * Now that we have imported the URI and had it parsed automatically, we
+ * can modify the component parts, then fetch a new URI string.
+ * 
+ * {{code: php
+ *     // change to 'https://'
+ *     $uri->scheme = 'https';
+ * 
+ *     // remove the username and password
+ *     $uri->user = '';
+ *     $uri->pass = '';
+ * 
+ *     // change the value of 'baz' to 'zab'
+ *     $uri->setQuery('baz', 'zab');
+ * 
+ *     // add a new query element called 'zim' with a value of 'gir'
+ *     $uri->query['zim'] = 'gir';
+ * 
+ *     // reset the path to something else entirely
+ *     $uri->setPath('/something/else/entirely.php');
+ * 
+ *     // add a path element
+ *     $uri->path[] = 'another';
+ * 
+ *     // and fetch it to a string.
+ *     $new_uri = $uri->fetch();
+ * 
+ *     // the $new_uri string is:
+ *     // /something/else/entirely.php/another?baz=zab&zim=gir#anchor
+ * 
+ *     // wait, there's no scheme or host!
+ *     // we need to fetch the "full" URI.
+ *     $full_uri = $uri->fetch(true);
+ * 
+ *     // the $full_uri string is:
+ *     // https://example.com/something/else/entirely.php/another?baz=zab&zim=gir#anchor
+ * }}
+ * 
+ * 
+ * This class has a number of public properties, all related to
+ * the parsed URI processed by [[Solar_Uri::set()]]. They are ...
+ * 
+ * | Name       | Type    | Description
+ * | ---------- | ------- | --------------------------------------------------------------
+ * | `schema`   | string  | The schema protocol; e.g.: http, https, ftp, mailto ... 
+ * | `host`     | string  | The host name; e.g.: example.com 
+ * | `port`     | string  | The port number 
+ * | `user`     | string  | The username for the URI 
+ * | `pass`     | string  | The password for the URI 
+ * | `path`     | array   | A sequential array of the path elements 
+ * | `query`    | array   | An associative array of the query terms 
+ * | `fragment` | string  | The anchor or page fragment being addressed 
+ * 
+ * As an example, the following URI would parse into these properties:
+ * 
+ *     http://anonymous:guest@example.com:8080/path/to/index.php/foo/bar?baz=dib#anchor
+ *     
+ *     schema   => 'http'
+ *     host     => 'example.com'
+ *     port     => '8080'
+ *     user     => 'anonymous'
+ *     pass     => 'guest'
+ *     path     => array('path', 'to', 'index.php', 'foo', 'bar')
+ *     query    => array('baz' => 'dib')
+ *     fragment => 'anchor'
+ * 
  * @category Solar
  * 
  * @package Solar_Uri

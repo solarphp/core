@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_DataFilter
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -23,7 +23,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_DataFilter
+ * @package Solar
  * 
  */
 class Solar_DataFilter extends Solar_Base {

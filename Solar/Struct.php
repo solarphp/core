@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Struct
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -80,7 +80,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Struct
+ * @package Solar
  * 
  */
 class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterator {

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  * @author Clay Loveless <clay@killersoft.com>
  * 

@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -28,7 +28,7 @@ Solar::loadClass('Solar_View_Helper');
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 

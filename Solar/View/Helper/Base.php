@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -29,7 +29,7 @@ Solar::loadClass('Solar_Uri');
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  */
 class Solar_View_Helper_Base extends Solar_View_Helper {

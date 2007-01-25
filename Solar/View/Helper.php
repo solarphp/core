@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * * @package Solar_View_Helper
+ * @package Solar_View
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_View_Helper
+ * @package Solar_View
  * 
  */
 

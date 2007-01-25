@@ -97,14 +97,14 @@ class Solar_Debug_Var extends Solar_Base {
      * Use this for debugging variables to see exactly
      * what they contain.
      * 
-     * @param mixed &$var The variable to dump.
+     * @param mixed $var The variable to dump.
      * 
      * @param string $label A label to prefix to the dump.
      * 
      * @return string The labeled results of var_dump().
      * 
      */
-    public function dump(&$var, $label = null)
+    public function dump($var = null, $label = null)
     {
         // if there's a label, add a space after it
         if (trim($label) != '') {

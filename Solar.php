@@ -894,14 +894,14 @@ class Solar {
      * it, and prints with an optional label.  Use this for
      * debugging variables to see exactly what they contain.
      * 
-     * @param mixed &$var The variable to dump.
+     * @param mixed $var The variable to dump.
      * 
      * @param string $label A label for the dumped output.
      * 
      * @return void
      * 
      */
-    public static function dump(&$var, $label = null)
+    public static function dump($var, $label = null)
     {
         $obj = Solar::factory('Solar_Debug_Var');
         echo $obj->dump($var, $label);

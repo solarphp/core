@@ -609,7 +609,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             break;
         
         case 'one':
-            return $this->fetchOne($spec, $data, $class);
+            return $this->fetchValue($spec, $data, $class);
             break;
         
         case 'pair':
@@ -640,7 +640,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             if (empty($class)) {
                 $class = 'Solar_Sql_Row';
             }
-            return $this->fetchRow($spec, $data, $class);
+            return $this->fetchOne($spec, $data, $class);
             break;
         
         case 'string':
@@ -750,7 +750,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Fetches the first column of the first row.
+     * Fetches the very first value (i.e., first column of the first row).
      * 
      * When $spec is an array, automatically sets LIMIT 1 OFFSET 0 to limit
      * the results to a single row.
@@ -764,7 +764,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return mixed
      * 
      */
-    public function fetchOne($spec, $data = array())
+    public function fetchValue($spec, $data = array())
     {
         if (is_array($spec)) {
             // automatically limit to the first row only,
@@ -850,7 +850,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return object
      * 
      */
-    public function fetchRow($spec, $data = array(), $class = 'Solar_Sql_Row')
+    public function fetchOne($spec, $data = array(), $class = 'Solar_Sql_Row')
     {
         if (is_array($spec)) {
             // automatically limit to the first row only,

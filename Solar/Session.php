@@ -6,7 +6,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Session
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -36,7 +36,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Session
+ * @package Solar
  * 
  */
 class Solar_Session extends Solar_Base {

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class to track code execution times.
+ * Tracks code execution times.
  * 
  * @category Solar
  * 
@@ -17,7 +17,51 @@
 
 /**
  * 
- * Class to track code execution times.
+ * Tracks code execution times.
+ * 
+ * This class allows you to profile the execution time of your script:
+ * you start the timer, set marks within your script, then stop the
+ * timer and display the profile.
+ * 
+ * In the following example, we'll [[php::sleep() | ]] for random periods
+ * under a second, then mark the timer profile.
+ * 
+ * {{code: php
+ *     require_once 'Solar.php';
+ *     Solar::start();
+ * 
+ *     // create a timer and start it
+ *     $timer = Solar::factory('Solar_Debug_Timer');
+ *     $timer->start();
+ * 
+ *     // loop and pause for a random period under 1 second,
+ *     // then make a profile mark
+ *     for ($i = 0; $i < 5; $i++) {
+ *         time_nanosleep(0, rand(1,999999999));
+ *         $timer->mark("iteration_$i");
+ *     }
+ * 
+ *     // stop the timer and display the profile
+ *     $timer->stop();
+ *     $timer->display();
+ * }}
+ * 
+ * The resulting profile might look something like this:
+ * 
+ *     name        : diff     : total   
+ *     __start     : 0.000000 : 0.000000
+ *     iteration_0 : 0.376908 : 0.376908
+ *     iteration_1 : 0.395037 : 0.771945
+ *     iteration_2 : 0.607002 : 1.378947
+ *     iteration_3 : 0.202960 : 1.581907
+ *     iteration_4 : 0.232987 : 1.814894
+ *     __stop      : 0.000056 : 1.814950
+ * 
+ * In the above profile, the "name" is the mark name, the "diff"
+ * is the difference (in seconds) from the previous mark, and 
+ * the "total" is a running total (in seconds) for the execution
+ * time.  Note that the "diff" for the __start mark is zero, as
+ * there is no previous mark to get a difference from.
  * 
  * @category Solar
  * 
@@ -161,6 +205,75 @@ class Solar_Debug_Timer extends Solar_Base {
     /**
      * 
      * Returns profiling information as an array.
+     * 
+     * This will return the internal profile of marks as an array.
+     * For example, given this code (nearly identical to the 
+     * [HomePage initial example code]) ...
+     * 
+     * {{code: php
+     *     require_once 'Solar.php';
+     *     Solar::start();
+     * 
+     *     $timer = Solar::factory('Solar_Debug_Timer');
+     *     $timer->start();
+     * 
+     *     for ($i = 0; $i < 3; $i++) {
+     *         time_nanosleep(0, rand(1,999999999));
+     *         $timer->mark("iteration_$i");
+     *     }
+     * 
+     *     $timer->stop();
+     * 
+     *     $profile = $timer->profile();
+     *     Solar::dump($profile);
+     * }}
+     * 
+     * ... the profile output might look like this:
+     * 
+     *     array(7) {
+     *         [0] => array(4) {
+     *             ["name"] => string(7) "__start"
+     *             ["time"] => float(1121903570.8062)
+     *             ["diff"] => int(0)
+     *             ["total"] => int(0)
+     *         }
+     *         [1] => array(4) {
+     *             ["name"] => string(11) "iteration_0"
+     *             ["time"] => float(1121903571.1628)
+     *             ["diff"] => float(0.35667991638184)
+     *             ["total"] => float(0.35667991638184)
+     *         }
+     *         [2] => array(4) {
+     *             ["name"] => string(11) "iteration_1"
+     *             ["time"] => float(1121903571.6973)
+     *             ["diff"] => float(0.53444910049438)
+     *             ["total"] => float(0.89112901687622)
+     *         }
+     *         [3] => array(4) {
+     *             ["name"] => string(11) "iteration_2"
+     *             ["time"] => float(1121903571.9718)
+     *             ["diff"] => float(0.27448797225952)
+     *             ["total"] => float(1.1656169891357)
+     *         }
+     *         [4] => array(4) {
+     *             ["name"] => string(11) "iteration_3"
+     *             ["time"] => float(1121903572.5875)
+     *             ["diff"] => float(0.61577486991882)
+     *             ["total"] => float(1.7813918590546)
+     *         }
+     *         [5] => array(4) {
+     *             ["name"] => string(11) "iteration_4"
+     *             ["time"] => float(1121903573.2677)
+     *             ["diff"] => float(0.68014907836914)
+     *             ["total"] => float(2.4615409374237)
+     *         }
+     *         [6] => array(4) {
+     *             ["name"] => string(6) "__stop"
+     *             ["time"] => float(1121903573.2678)
+     *             ["diff"] => float(5.6982040405273E-5)
+     *             ["total"] => float(2.4615979194641)
+     *         }
+     *     }
      * 
      * @return array An array of profile information.
      * 

@@ -339,6 +339,35 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Prepares and executes an SQL statement with bound data.
      * 
+     * This is the most-direct way to interact with the database; you simply
+     * pass an SQL statement to the method, then the adapter uses
+     * [[php::PDO | ]] to execute the statement and return a result.
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     * 
+     *     // $result is a PDOStatement
+     *     $result = $sql->query('SELECT * FROM table');
+     * 
+     *     // $result is a row-count
+     *     $value = $sql->quote('something');
+     *     $result = $sql->query("UPDATE table SET col = $value");
+     * }}
+     * 
+     * To helper prevent SQL injection attacks, you should **always** quote
+     * the values used in a direct query. Use [[quote()]], [[quoteInto()]],
+     * or [[quoteMulti()]] to accomplish this.
+     * 
+     * Note that adapters provide convenience methods to automatically quote
+     * values on common operations:
+     * 
+     * - [[Solar_Sql::insert()]]
+     * - [[Solar_Sql::update()]]
+     * - [[Solar_Sql::delete()]]
+     * 
+     * Additionally, the [[Class::Solar_Sql_Select | ]] class is dedicated to safely
+     * creating portable SELECT statements, so you may wish to use that as well.
+     * 
      * @param string $stmt The text of the SQL statement, with
      * placeholders.
      * 
@@ -452,6 +481,22 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Automatically applies Solar_Sql::quote() to the data values for you.
      * 
+     * For example:
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     * 
+     *     $table = 'invaders';
+     *     $data = array(
+     *         'foo' => 'bar',
+     *         'baz' => 'dib',
+     *         'zim' => 'gir'
+     *     );
+     * 
+     *     $rows_affected = $sql->insert($table, $data);
+     *     // calls 'INSERT INTO invaders (foo, baz, zim) VALUES ("bar", "dib", "gir")'
+     * }}
+     * 
      * @param string $table The table to insert data into.
      * 
      * @param array $data An associative array where the key is the column
@@ -523,6 +568,38 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Deletes rows from the table based on a WHERE clause.
      * 
+     * For example ...
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     * 
+     *     $table = 'events';
+     *     $where = $sql->quoteInto('status = ?', 'cancelled');
+     *     $rows_affected = $sql->delete($table, $where);
+     * 
+     *     // calls 'DELETE FROM events WHERE status = "cancelled"'
+     * }}
+     * 
+     * For the $where parameter, you can also pass multiple WHERE conditions as
+     * an array to be "AND"ed together.
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     * 
+     *     $table = 'events';
+     *     $where = array(
+     *         "date >= ?"  => '2006-01-01',
+     *         "date <= ?"  => '2006-01-31',
+     *         "status = ?" => 'cancelled',
+     *     );
+     * 
+     *     $rows_affected = $sql->delete($table, $where);
+     * 
+     *     // calls:
+     *     // DELETE FROM events WHERE date >= "2006-01-01"
+     *     // AND date <= "2006-01-31" AND status = "cancelled"
+     * }}
+     * 
      * @param string $table The table to delete from.
      * 
      * @param string|array $where The SQL WHERE clause to limit which
@@ -549,6 +626,25 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     /**
      * 
      * Select rows from the database.
+     * 
+     * This method exists primarily in support of [[Class::Solar_Sql_Select | ]],
+     * which you should strongly consider using instead of calling this method.
+     * 
+     * If you do use this method, here are some quick examples:
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     * 
+     *     // get all rows
+     *     $all = $sql->select('all', "SELECT * FROM table");
+     * 
+     *     // get just the first row
+     *     $id = $sql->quote('id_value');
+     *     $row = $sql->select('row', "SELECT * FROM table WHERE id = $id");
+     * 
+     *     // get just the first value
+     *     $count = $sql->select('one', "SELECT COUNT(*) FROM table");
+     * }}
      * 
      * Available selection types are ...
      * 

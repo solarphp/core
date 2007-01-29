@@ -1,5 +1,0 @@
-====================
-Custom Cache Adapters
-====================
-
-You can write your own cache adapter very easily.  Use the Solar_Cache_Adapter_File or Solar_Cache_Adapter_Memcache classes as a template, and implement the various methods therein with the same parameter lists.  Then you can use that custom class name as the Solar_Cache 'adapter' config key value.

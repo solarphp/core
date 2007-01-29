@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Valid.php 2036 2006-12-15 20:21:28Z pmjones $
+ * @version $Id$
  * 
  */
 

@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: IdxTypeUnknown.php 2007 2006-12-07 14:57:54Z pmjones $
+ * @version $Id$
  * 
  */
 

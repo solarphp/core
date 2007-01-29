@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: feed.php 1344 2006-06-22 23:00:03Z pmjones $
+ * @version $Id$
  * 
  */
 

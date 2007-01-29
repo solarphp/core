@@ -188,6 +188,61 @@ class Solar {
      * 
      * Starts Solar: loads configuration values and and sets up the environment.
      * 
+     * Note that this method is overloaded; you can pass in different
+     * value types for the $config parameter.
+     * 
+     * * `null` -- Equivalent to [[Solar::start()]], this will cause Solar to
+     *   read the value of the SOLAR_CONFIG_PATH global constant as the path to
+     *   a file; the return value of that file will be used for [[Solar::$config]].
+     * 
+     * * `false` -- This will explicitly **not** load any additional
+     *   configuration; you will get only the default [[Solar::$config]] array
+     *   values defined in the Solar class.
+     * 
+     * * `string` -- The string is treated as a path to a Solar.config.php
+     *   file; the return value from that file will be used for [[Solar::$config]].
+     * 
+     * * `array` -- This will use the passed array for the [[Solar::$config]]
+     *   values.
+     * 
+     * * `object` -- The passed object will be cast as an array, and those
+     *   values will be used for [[Solar::$config]].
+     * 
+     * Here are some examples of starting with alternative configuration parameters:
+     * 
+     * {{code: php
+     *     require_once 'Solar.php';
+     * 
+     *     // don't load any config values at all
+     *     Solar::start(false);
+     * 
+     *     // a "normal" start; loads the config file
+     *     // from SOLAR_CONFIG_PATH
+     *     Solar::start(null);
+     * 
+     *     // use an array as the config source.
+     *     $config = array(
+     *         'Solar' => array(
+     *             'ini_set' => array(
+     *                 'error_reporting' => E_ALL,
+     *             ),
+     *         ),
+     *     );
+     *     Solar::start($config);
+     * 
+     *     // use an object as the config source.
+     *     $config = new StdClass;
+     *     $config->Solar = array(
+     *         'ini_set' => array(
+     *             'error_reporting' => E_ALL,
+     *         ),
+     *     );
+     *     Solar::start($config);
+     * 
+     *     // point to an alternative config file
+     *     Solar::start('/path/to/another/config.php');
+     * }}
+     *  
      * @param mixed $config An alternative configuration parameter.
      * 
      * @return void
@@ -1044,6 +1099,21 @@ class Solar {
     /**
      * 
      * Fetches config file values.
+     * 
+     * Note that this method is overloaded by the variable type of $spec ...
+     * 
+     * * `null` -- Uses the value of the SOLAR_CONFIG_PATH global constant as
+     *   the path to a file, which should return a PHP array.
+     * 
+     * * `false` -- This will explicitly **not** search for additional
+     *   configuration and return a blank array.
+     * 
+     * * `string` -- The string is treated as a path to a Solar.config.php
+     *   file, which should return a PHP array.
+     * 
+     * * `array` -- This will use the passed array and return it as-is.
+     * 
+     * * `object` -- The passed object will be cast as an array and returned.
      * 
      * @param mixed $spec A config specification.
      * 

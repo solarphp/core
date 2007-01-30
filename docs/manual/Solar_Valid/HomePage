@@ -1,0 +1,35 @@
+Solar_Valid aggregates several validation methods so you can make sure
+user input matches your requirements. This is useful for checking form
+values and validating database fields.
+
+{{code: php
+    require_once 'Solar.php';
+    Solar::start();
+
+    // get a validation object
+    $valid = Solar::factory('Solar_Valid');
+    
+    // get a request object
+    $request = Solar::factory('Solar_Request');
+    
+    // Fetch a copy of the GET request variable for 'name'
+    $name = $request->get('name');
+
+    // Does it match the "alpha" validation rule?
+    // (i.e., A-Z and a-z only).
+    if (! $valid->alpha($name)) {
+        echo htmlspecialchars("Name '$name' is not valid.");
+    }
+
+    // Fetch a copy of the POST request variable for 'date'
+    $date = $request->post('date');
+
+    // Is it an ISO-formatted date?  (Alternatively,
+    // it can be completely blank.)
+    if (! $valid->isoDate($date, Solar_Valid::OR_BLANK)) {
+        echo "The date must be in 'yyyy-mm-dd' format, or blank.";
+    }
+}}
+
+Be sure to check the [[ClassMethods]] for a full list of
+valdiation routines.

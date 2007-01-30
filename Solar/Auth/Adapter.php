@@ -1,0 +1,361 @@
+<?php
+/**
+ * 
+ * Abstract authentication adapter.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Auth
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Adapter.php 1894 2006-10-20 19:42:16Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Abstract authentication adapter.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Auth
+ * 
+ */
+abstract class Solar_Auth_Adapter extends Solar_Base {
+    
+    /**
+     * 
+     * Information for "common" handle + passwd authentication adapters.
+     * 
+     * Keys are ...
+     * 
+     * `source`
+     * : (string) The source for auth credentials, 'get' (via the
+     *   for GET request vars) or 'post' (via the POST request vars).
+     *   Default is 'post'.
+     * 
+     * `source_handle`
+     * : (string) Username key in the credential array source,
+     *   default 'handle'.
+     * 
+     * `source_passwd`
+     * : (string) Password key in the credential array source,
+     *   default 'passwd'.
+     * 
+     * `source_submit`
+     * : (string) Submission key in the credential array source,
+     *   default 'submit'.
+     * 
+     * `submit_login`
+     * : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGIN' locale key value.
+     * 
+     * `submit_logout`
+     * : (string) The submission-key value to indicate a
+     *   login attempt; default is the 'SUBMIT_LOGOUT' locale key value.
+     * 
+     * @var array
+     * 
+     * @see Solar_Auth_Adapter::setCommon()
+     * 
+     */
+    protected $_common = array(
+        'request'       => null,
+        'source'        => 'post',
+        'source_handle' => 'handle',
+        'source_passwd' => 'passwd',
+        'source_submit' => 'submit',
+        'submit_login'  => null,
+        'submit_logout' => null,
+    );
+    
+    /**
+     * 
+     * Details on the current request.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request;
+    
+    /**
+     * 
+     * The user handle as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_handle;
+    
+    /**
+     * 
+     * The user password.
+     * 
+     * @var string
+     * 
+     */
+    protected $_passwd;
+    
+    /**
+     * 
+     * The user "display name" or "full name" as derived from the
+     * authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_moniker;
+    
+    /**
+     * 
+     * The user email address as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_email;
+    
+    /**
+     * 
+     * The user URI as derived from the authentication source.
+     * 
+     * @var string
+     * 
+     */
+    protected $_uri;
+    
+    /**
+     * 
+     * The numeric user ID as derived from the authentication source.
+     * 
+     * @var int
+     * 
+     */
+    protected $_uid;
+    
+    /**
+     * 
+     * The most-recent error code.
+     * 
+     * @var string
+     * 
+     */
+    protected $_err = null;
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        $this->_common['submit_login']  = $this->locale('SUBMIT_LOGIN');
+        $this->_common['submit_logout'] = $this->locale('SUBMIT_LOGOUT');
+        parent::__construct($config);
+        $this->_request = Solar::factory('Solar_Request');
+    }
+    
+    /**
+     * 
+     * Verifies user credentials for the adapter.
+     * 
+     * Typical credentials are $this->_handle and $this->_passwd, but
+     * single sign-on systems may use different credential sources.
+     * 
+     * Adapters should set $this->_handle, $this->_email, and
+     * $this->_moniker if verfication is successful.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    protected function _verify()
+    {
+        return false;
+    }
+    
+    /**
+     * 
+     * Sets information for "common" handle + passwd authentication
+     * systems.
+     * 
+     * @param array $common The common adapter information for source, 
+     * source_handle, etc.
+     * 
+     * @return void
+     * 
+     * @see Solar_Auth_Adapter::$_common
+     * 
+     */
+    public function setCommon($common)
+    {
+        $base = array(
+            'source'        => 'post',
+            'source_handle' => 'handle',
+            'source_passwd' => 'passwd',
+            'source_submit' => 'submit',
+            'submit_login'  => $this->locale('SUBMIT_LOGIN'),
+            'submit_logout' => $this->locale('SUBMIT_LOGOUT'),
+        );
+        
+        $this->_common = array_merge($base, $common);
+        
+        // make sure the source is either 'get' or 'post'.
+        if ($this->_common['source'] != 'get' && $this->_common['source'] != 'post') {
+            // default to post
+            $this->_common['source'] = 'post';
+        }
+    }
+    
+    /**
+     * 
+     * Tells if the current page load appears to be the result of
+     * an attempt to log in.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoginRequest()
+    {
+        $method = strtolower($this->_common['source']);
+        $submit = $this->_request->$method($this->_common['source_submit']);
+        return $submit == $this->_common['submit_login'];
+    }
+    
+    /**
+     * 
+     * Tells if the current page load appears to be the result of
+     * an attempt to log out.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLogoutRequest()
+    {
+        $method = strtolower($this->_common['source']);
+        $submit = $this->_request->$method($this->_common['source_submit']);
+        return $submit == $this->_common['submit_logout'];
+    }
+    
+    /**
+     * 
+     * Checks to see if login credentials are valid for the adapter.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoginValid()
+    {
+        // clear out current error and user data.
+        $this->_err = null;
+        $this->reset();
+        
+        // load the handle and password from the request source
+        $method = strtolower($this->_common['source']);
+        $this->_handle = $this->_request->$method($this->_common['source_handle']);
+        $this->_passwd = $this->_request->$method($this->_common['source_passwd']);
+        
+        // verify the credentials, which may set some user data.
+        $result = (bool) $this->_verify();
+        if ($result !== true) {
+            // not verified, clear out all user data.
+            $this->reset();
+        }
+        return $result;
+    }
+    
+    /**
+     * 
+     * Clears handle, passwd, email, moniker, and uri properties.
+     * 
+     * @return void
+     * 
+     */
+    public function reset()
+    {
+        $this->_err     = null;
+        $this->_handle  = null;
+        $this->_passwd  = null;
+        $this->_email   = null;
+        $this->_moniker = null;
+        $this->_uri     = null;
+        $this->_uid     = null;
+    }
+    
+    /**
+     * 
+     * Returns the most recent error code.
+     * 
+     * @return string
+     * 
+     */
+    public function getErrCode()
+    {
+        return $this->_err;
+    }
+    
+    /**
+     * 
+     * Returns the current user handle.
+     * 
+     * @return string
+     * 
+     */
+    public function getHandle()
+    {
+        return $this->_handle;
+    }
+    
+    /**
+     * 
+     * Returns the current user email address.
+     * 
+     * @return string
+     * 
+     */
+    public function getEmail()
+    {
+        return $this->_email;
+    }
+    
+    /**
+     * 
+     * Returns the current user "full name" or "display name".
+     * 
+     * @return string
+     * 
+     */
+    public function getMoniker()
+    {
+        return $this->_moniker;
+    }
+    
+    /**
+     * 
+     * Returns the current user URI.
+     * 
+     * @return string
+     * 
+     */
+    public function getUri()
+    {
+        return $this->_uri;
+    }
+    
+    /**
+     * 
+     * Returns the current user ID.
+     * 
+     * @return string
+     * 
+     */
+    public function getUid()
+    {
+        return $this->_uid;
+    }
+}
+?>

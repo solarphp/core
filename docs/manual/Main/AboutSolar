@@ -1,0 +1,38 @@
+====================
+About Solar
+====================
+
+[[HomePage | Solar]] is a **S**imple **O**bject **L**ibrary and **A**pplication **R**epository for PHP5.
+
+It is the brainchild of [Paul M. Jones](http://paul-m-jones.com/) who winkingly calls himself the "Benevolent Dictator" of the Solar system.  Other developers are working on additional components for the standard project distribution package, all licensed under the LGPL.
+
+Solar uses concepts derived from the [Savant](http://phpsavant.com/) template system, the [DB_Table](http://pear.php.net/DB_Table) object-relation management package, and the [Yawp](http://phpyawp.com/) foundation for PHP applications.
+
+
+--------------------
+Similar Projects
+--------------------
+
+Solar is similar to these other PHP projects, but has its own specific [[SolarGoals | goals]] and [[SolarDocs | standards]].
+
+* [PEAR](http://pear.php.net/)
+
+    * The Solar project is similar to PEAR in that it provides a class
+      library of useful components for PHP development that adhere to a
+      common standard of development. However, with the exception of the
+      base PEAR classes themselves (e.g. PEAR_Error), classes in PEAR
+      are not intended to be a cohesive framework.
+
+* [Horde](http://horde.org/)
+
+    * Solar is also similar to Horde in that it attempts to provide a
+      cohesive framework for application development. Horde has a long
+      and distinguished history, but is based on PHP4; while this does
+      not prevent Horde from being used in a PHP5 environment, it is not
+      E_STRICT compliant.
+      
+* [Zend Framework](http://framework.zend.com/)
+
+    * Solar and ZF look very similar at first glance; however, Solar
+      pre-dates the Zend Framework by about a year. You can read more
+      about the differences [here](http://lists.solarphp.com/pipermail/solar-talk/2006-March/000636.html).

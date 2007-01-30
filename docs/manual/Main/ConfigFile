@@ -1,0 +1,147 @@
+====================
+Configuration File
+====================
+
+Solar reads a single configuration file to set itself up.  This file is a regular PHP file that returns a single associative array keyed on Solar class names; each of those array elements is itself composed of an associative array suitable for passing as Solar ConstructorParameters.
+
+The config file contains all of the "system" settings for Solar, including the site-specific default configuration options you want to use for all Solar classes.  Solar reads the configuration file values into [[Solar::$config]] the first time you call [[Solar::start()]].  If Solar cannot find the config file, it will throw an exception.
+
+> **Note:** As a matter of convenience, having a config file is hard to beat.  However, you can call [[Solar::start()]] with different parameter types, and Solar will use that alternative parameter as the data source.  See the [[Solar::start()]] documentation for more information.  For purposes of getting started, though, we'll continue to assume that we're using a config file as the data source.
+
+
+--------------------
+Location
+--------------------
+
+The default path to the config file is conditionally defined for you as a constant in the Solar.php file:
+
+{{code: php
+    if (! defined('SOLAR_CONFIG_PATH')) {
+        define(
+            'SOLAR_CONFIG_PATH',
+            $_SERVER['DOCUMENT_ROOT'] . '/Solar.config.php'
+        );
+    }
+}}
+
+For example, if you document root is at `/var/www/htdocs`, then the default configuration file is located at `/var/www/htdocs/Solar.config.php`.
+
+This location is easy to remember for development purposes, but is not always very secure in production environments.  As such, you can pre-define the `SOLAR_CONFIG_PATH` constant before including the Solar class to point to a location outside the document root.
+
+{{code: php
+    define('SOLAR_CONFIG_PATH', '/path/to/another/config_file.php');
+    require_once 'Solar.php';
+    Solar::start();
+
+    // the rest of your script
+
+    Solar::stop();
+}}
+
+
+--------------------
+Format
+--------------------
+
+The config file is just another PHP script.  The only requirement is that it return an array as its last command.  Thus, the simplest possible config file looks like this:
+
+{{code: php
+    return array();
+}}
+
+The array is composed of key-value pairs, where the initial key is the name of a Solar class, and the value is itself an array of key-value pairs where the key is a configuration option name and the value is the value for the options.  These configuration options differ from class to class, so you should refer the specific documentation for the class in question when configuring it.
+
+--------------------
+Simple Example
+--------------------
+
+As a simple example, the [[Solar::HomePage | Solar arch-class]] can be configured this way ...
+
+{{code: php
+    // Solar.config.php
+    return array(
+
+        // config options for the Solar class
+        'Solar' => array(
+
+        // ini settings
+        'ini_set' => array(
+            'error_reporting' => true,
+            'html_errors'     => true,
+        ),
+
+        // custom start scripts
+        'start' => array(
+            '/path/to/custom/start.php',
+        ),
+
+        // custom stop scripts
+        'stop' => array(
+            '/path/to/custom/stop.php',
+        ),
+
+    );
+}}
+
+... or (as an equivalent) this way:
+
+{{code: php
+    $config = array();
+
+    $config['Solar']['ini_set']['display_errors'] = true;
+    $config['Solar']['ini_set']['html_errors']    = true;
+    $config['Solar']['start'][]                   = '/path/to/custom/start.php';
+    $config['Solar']['stop'][]                    = '/path/to/custom/stop.php';
+
+    return $config;
+}}
+
+Remember, you always have to return an array from the config file; if you do not, Solar won't be able to receive the config values you entered.
+
+--------------------
+Complex Example
+--------------------
+
+The following is a more-complex example of a Solar configuration file.  Even though we use variables to ease the setup process, none of those variables will be seen by the rest of Solar (unless you use the [[php::global]] keyword) because the config file is processed in an isolated scope.
+
+
+{{code: php
+    /**
+     * Empty base array.
+     */
+    $config = array();
+
+    /**
+     * Default database connection via the 'Solar_Sql' class.
+     */
+    $config['Solar_Sql'] = array(
+        'adapter'  => 'Solar_Sql_Adapter_Sqlite',
+    );
+
+    /**
+     * The SQLite adapter uses these default values.
+     */
+    $config['Solar_Sql_Adapter_Sqlite'] = array(
+        'name' => "$docroot/solar.sqlite",
+    );
+
+    /**
+     * User authentication source via 'Solar_Auth'.
+     */
+    $config['Solar_Auth'] = array(
+        'adapter' => 'Solar_Auth_Adapter_Htpasswd',
+    );
+
+    /**
+     * The Htpasswd adapter uses these default values.
+     */
+    $docroot = $_SERVER['DOCUMENT_ROOT'];
+    $config['Solar_Auth_Adapter_Htpasswd'] = array(
+        'file' => "$docroot/htpasswd.conf",
+    );
+
+    /**
+     * Done!
+     */
+    return $config;
+}}

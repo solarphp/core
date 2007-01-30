@@ -1,0 +1,9 @@
+To migrate your old bookmarks into the new generic content system:
+
+0. MAKE A BACKUP of your current database.
+
+1. Upgrade to Solar 0.9.0, but do not browse to your bookmarks yet.
+
+2. Instead, put the migrate/0.8.0-0.9.0/scripts/migrate_bookmarks.php file somewhere in your web root and browse to that.  This will examine the old 'sc_bookmarks' table and convert to the new generic content tables ('areas', 'nodes', etc); each converted bookmark array will appear as output.
+
+3. There is no step three.  :-)

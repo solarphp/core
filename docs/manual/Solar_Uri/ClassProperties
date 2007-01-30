@@ -1,0 +1,26 @@
+The Solar_Uri class has a number of public properties, all related to
+the parsed URI processed by Solar_Uri::set(). They are ...
+
+| Name       | Type    | Description
+| ---------- | ------- | --------------------------------------------------------------
+| `schema`   | string  | The schema protocol; e.g.: http, https, ftp, mailto ... 
+| `host`     | string  | The host name; e.g.: example.com 
+| `port`     | string  | The port number 
+| `user`     | string  | The username for the URI 
+| `pass`     | string  | The password for the URI 
+| `path`     | array   | A sequential array of the path elements 
+| `query`    | array   | An associative array of the query terms 
+| `fragment` | string  | The anchor or page fragment being addressed 
+
+As an example, the following URI would parse into these properties:
+
+    http://anonymous:guest@example.com:8080/path/to/index.php/foo/bar?baz=dib#anchor
+    
+    schema   => 'http'
+    host     => 'example.com'
+    port     => '8080'
+    user     => 'anonymous'
+    pass     => 'guest'
+    path     => array('path', 'to', 'index.php', 'foo', 'bar')
+    query    => array('baz' => 'dib')
+    fragment => 'anchor'

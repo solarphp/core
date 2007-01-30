@@ -1,0 +1,178 @@
+====================
+Migration Notes
+====================
+
+--------------------
+Overview
+--------------------
+
+As usual, be sure to read the change notes for full details.
+
+This release has a lot of changes related to consistency and standardization; in particular, config keys have been standardized in many cases.
+
+
+--------------------
+Config Key Changes
+--------------------
+
+I've tried to make config keys consistent and standard across all classes.  In particular, note these changes:
+
+* Keys related to username values now use 'handle' (vs 'username')
+
+* Keys related to password values now use 'passwd' (vs 'password')
+
+* Keys related to form submission values now use 'submit' (vs 'op')
+
+* Keys indicating the name of a driver class are now 'driver' (vs
+  'class')
+
+* Keys indicating the configuration array for a driver class are now
+  'config' (vs 'options')
+
+In particular, these config key changes affect Solar_Sql and Solar_User_*
+
+You should make sure to change your Solar.config.php array to reflect the new keys; e.g., $config['Solar_Sql']['class'] should become $config['Solar_Sql']['driver'].
+
+Also, you should make sure your authentication forms use the new 'handle
+
+
+--------------------
+Locale Key Changes
+--------------------
+
+Similarly, I've tried to make locale keys consistent and standard across all classes.
+
+* 'ERR_*' keys are now reserved for exception and error messages,
+  instead of generic feedback (such as form processing).
+
+* 'SUBMIT_*' keys take the place of earlier 'OP_*' keys, to indicate a
+  form submission value, or a sub-action value (like 'next' or
+  'previous')
+
+* New 'SUCCESS_*' and 'FAILURE_*' keys are for non-exception non-error
+  user feedback, such as in form processing
+
+* Label keys now use '_SUBMIT', '_HANDLE', and '_PASSWD' in relation to
+  the standard config keys for submissions, usernames, and passwords.
+
+
+--------------------
+Solar_Filter and Solar_Valid
+--------------------
+
+These classes are no longer static; you have to instantiate them.  Also, the custom() methods have been renamed to callback() to more clearly indicate how they work.
+
+
+--------------------
+URI Generation
+--------------------
+
+The Solar_Uri class has two new config keys, 'action' and 'public', to indicate the base href values for actions and public files.
+
+For example, if your front-controller is at '/~username/solar/front.php', set that as your 'action' config key value.  Then, all calls to exportAction() will be prefixed with that value.  Similarly, if all your public files (CSS, JavaScript, etc) are at '/~username/public', set that as your 'public' config key value, and all calls to exportPublic() will be prefixed with that value.
+
+These keys make it easy to set defaults that will be used throughout Solar, e.g. in Solar_View helpers for action() and publicHref().
+
+
+--------------------
+View Processing
+--------------------
+
+Solar_View takes the place of Solar_Template, and is a new "flavor" of Savant3 specifically for Solar integration.
+
+There are new helpers as well, in particular the above-mentioned action() and publicHref() for URI generation, as well as new form and form-element helpers with built-in localization using [[Solar::locale()]].
+
+When changing your Solar_Template scripts to Solar_View, note that these changes are needed:
+
+* Solar_Template => Solar_View
+
+* $tpl->addPath('template', ...) => $view->addTemplatePath(...)
+
+* $tpl->addPath('resource', ...) => $view->addHelperPath(...)
+
+* $this->eprint() => echo $this->escape()
+
+* $this->locale() => $this->getText() || $this->getTextRaw()
+
+* $this->eprint($this->locale(...)) => echo $this->getText(...)
+
+* $this->actionLink() => $this->action()
+
+* $this->ahref() => $this->anchor()
+
+* $this->form() is completely different; review the
+  Solar_View_Helper_Form documentation to see all the changes. I'll
+  write more about this later.
+
+--------------------
+Front-Controller
+--------------------
+
+The front controller is much lighter now.  All layout processing has been moved into the page controller.  Also, the way the front controller maps page requests to page classes has been changed.  Previously, you would set up an "_app_class" array that mapped short page names to full class names:
+
+    $_app_class = array(
+        'bookmarks' => 'Solar_App_Bookmarks',
+        'hello'     => 'Solar_App_Hello',
+        'other'     => 'Vendor_App_Other',
+    );
+
+In the spirit of auto-discovery, override, and fallback, the front-controller now uses a simpler array of base class names; the short-page name is appended to the class name to get the proper class.
+
+    $_classes = array(
+        'Solar_App',
+        'Vendor_Pages',
+        'Another_Vendor_App',
+    );
+
+If the front-controller receives a request for the page 'hello', it looks first for 'Another_Vendor_App_Hello', then falls back to 'Vendor_Pages_Hello', and finally defaults to 'Solar_App_Hello'.
+
+This allows you to have your own vendor-specific versions of Solar applications.  It also means you don't need to add to the map every time you add a new page controller class; just put your app in one of the noted class directories, and the front-controller will find it automatically.
+
+
+--------------------
+Page Controller
+--------------------
+
+Conversely, the page-controller has become somewhat more robust.  It now handles layout processing by reusing the internal view object, which means that all page-level variables are now available to the layout.
+
+In addition, all Solar_App_* classes extend the new Solar_App class, which provides a series of variables specifically for the layout (e.g., $layout_title, $layout_links, etc).
+
+The technique for indicating what variables should be mapped from the URI into the $_info array has changed.  Previously, you would key on the action, and provide an array of variable names:
+
+    $_action_info = array(
+        'read' => array('area', 'page');
+    )
+
+This would map a URI of  "read/Main/HomePage" to the "list" action, and populate $_info['area'] and  $_info['page'].
+
+The problem here is that you couldn't tell the page-controller how to map default action variables.  E.g., if $_action_default is 'read', then the URI 'Main/HomePage' should map to the 'read' action, but instead it would map to the 'Main' action (which probably doesn't exist).
+
+The new page-controller code uses this format for mapping variables ...
+
+    $_action_info = array(
+        'read' => 'area/page',
+    );
+
+... and *does* map variables using the default action_info map, so that calls to non-existent actions map properly.  Thus, the 'Main/HomePage' URI will map to the 'read' action and populate the 'area' and 'page' $_info keys for you.  This should help make your URIs prettier.
+
+Setting default values for info mapping is easier too; for example:
+
+    $_action_info = array(
+        'read' => 'area=Main/page=HomePage',
+    );
+
+
+
+--------------------
+Public Directories
+--------------------
+
+The Solar/Layout and the Solar/App classes now have a Public/ directory.  These are for storing stylesheets, JavaScript files, images, etc.  The problem is that, because Solar is outside the webroot, you need to be able to put these files in a place accessible via http.
+
+There are two ways to do this; either way, you need to create a 'public/Solar' directory in your web root.  Then in that location, either:
+
+* Create a symbolic link to the related Solar "Public/" directories, or
+
+* Copy the related Solar "Public/" directories
+
+The main drawback is that you need to link to (or copy) each Public/ directory; each new app means a new link.  I'm going to try to find some way of either collecting all Public/ resources in one logical place, or automating the linking/copying process as part of the installation process.

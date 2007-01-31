@@ -47,7 +47,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * `name`
      * : (string) Database name (or file path, or TNS name).
      * 
-     * `profile`
+     * `profiling`
      * : (bool) Turn on query profiling?
      * 
      * @var array

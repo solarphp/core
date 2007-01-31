@@ -22,7 +22,7 @@
  * This is the class from which almost all other Solar classes are
  * extended.  Solar_Base is relatively light, and provides ...
  * 
- * * Construction-time reading of [[Main::ConfigFile | config file]] options 
+ * * Construction-time reading of config file options 
  *   for itself, and merging of those options with any options passed   
  *   for instantation, along with the class-defined config defaults,
  *   into the Solar_Base::$_config property.

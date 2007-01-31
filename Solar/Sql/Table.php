@@ -539,8 +539,6 @@ class Solar_Sql_Table extends Solar_Base {
      * 
      * @return Solar_Sql_Row
      * 
-     * @deprecated Use Solar_Sql_Table::fetchRow() instead.
-     * 
      */
     public function fetchRow($where = null, $order = null)
     {

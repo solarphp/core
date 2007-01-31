@@ -21,7 +21,11 @@ RewriteRule ^$ index.html [QSA]
 # add ".html" to all requests without a dot in them,
 # keeping the query string intact. apparently prevents
 # directory browsing.
-RewriteRule ^([^.]+)$ $1.html [QSA]
+# 
+# used for full-page caching.  it's turned off by default.
+
+# RewriteRule ^([^.]+)$ $1.html [QSA]
+
 
 # for all files not found in the file system,
 # reroute to "index.php" bootstrap script,

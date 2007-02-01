@@ -62,6 +62,12 @@ if (! defined('SOLAR_IGNORE_PARAM')) {
 }
 
 /**
+ * Register Solar::loadClass() and Solar::loadInterface() for autoload.
+ */
+spl_autoload_register(array('Solar', 'loadClass'));
+spl_autoload_register(array('Solar', 'loadInterface'));
+
+/**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
  */
 if (! class_exists('Solar_Base')) {
@@ -368,8 +374,10 @@ class Solar {
             );
         }
         
-        // pre-empt further searching for the class
-        if (class_exists($class)) {
+        // pre-empt further searching for the class.
+        // do not use autoload, because this method
+        // is registered with spl_autoload already.
+        if (class_exists($class, false)) {
             return;
         }
         
@@ -381,7 +389,9 @@ class Solar {
         $result = Solar::run($file);
         
         // if the class was not in the file, we have a problem.
-        if (! class_exists($class)) {
+        // do not use autoload, because this method
+        // is registered with spl_autoload already.
+        if (! class_exists($class, false)) {
             throw Solar::exception(
                 'Solar',
                 'ERR_LOADCLASS_EXIST',
@@ -415,6 +425,8 @@ class Solar {
         }
 
         // pre-empt further searching for the interface
+        // do not use autoload, because this method
+        // is registered with spl_autoload already.
         if (interface_exists($interface, false)) {
             return;
         }
@@ -427,7 +439,9 @@ class Solar {
         $result = Solar::run($file);
 
         // if the interface was not in the file, we have a problem.
-        if (! interface_exists($interface)) {
+        // do not use autoload, because this method
+        // is registered with spl_autoload already.
+        if (! interface_exists($interface, false)) {
             throw Solar::exception(
                 'Solar',
                 'ERR_LOADINTERFACE_EXIST',

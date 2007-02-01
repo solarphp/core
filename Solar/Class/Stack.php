@@ -161,8 +161,9 @@ class Solar_Class_Stack extends Solar_Base {
             // the full class name
             $class = "$prefix$name";
             
-            // pre-empt searching
-            if (class_exists($class)) {
+            // pre-empt searching.
+            // don't use autoload.
+            if (class_exists($class, false)) {
                 return $class;
             }
             
@@ -179,7 +180,8 @@ class Solar_Class_Stack extends Solar_Base {
             $this->_run($file);
             
             // did the class exist within the file?
-            if (class_exists($class)) {
+            // don't use autoload.
+            if (class_exists($class, false)) {
                 // yes, we're done
                 return $class;
             }

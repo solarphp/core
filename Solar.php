@@ -84,6 +84,35 @@ class Solar {
     
     /**
      * 
+     * Default config values for the Solar arch-class.
+     * 
+     * Keys are:
+     * 
+     * `ini_set`
+     * : (array) An array of key-value pairs where the key is an
+     * [[php::ini_set | ]] key, and the value is the value for that setting.
+     * 
+     * `locale_class`
+     * : (string) Use this class for Solar::$locale.
+     * 
+     * `start`
+     * : (array) Run these scripts at the end of Solar::start().
+     * 
+     * `stop`
+     * : (array) Run these scripts in Solar::stop().
+     * 
+     * @var array
+     * 
+     */
+    protected static $_Solar = array(
+        'ini_set'      => array(),
+        'locale_class' => 'Solar_Locale',
+        'start'        => array(),
+        'stop'         => array(),
+    );
+    
+    /**
+     * 
      * The values read in from the configuration file.
      * 
      * @var array
@@ -256,6 +285,16 @@ class Solar {
         
         // fetch config values from file or other source
         Solar::$config = Solar::fetchConfig($config);
+        
+        // make sure we have the Solar arch-class configs
+        if (empty(Solar::$config['Solar'])) {
+            Solar::$config['Solar'] = Solar::$_Solar;
+        } else {
+            Solar::$config['Solar'] = array_merge(
+                Solar::$_Solar,
+                (array) Solar::$config['Solar']
+            );
+        }
         
         // process ini settings from config file
         $settings = Solar::config('Solar', 'ini_set', array());

@@ -126,28 +126,28 @@ class Solar {
     
     /**
      * 
-     * A filename to include.
+     * A filename to include; used by [[Solar::run()]] to keep the filename
+     * out of the execution scope.
      * 
      * @var string
+     * 
+     * @see Solar::run()
      * 
      */
     protected static $_file = null;
     
     /**
      * 
-     * Locale strings for all classes.
+     * Locale class for managing translations.
      * 
-     * This is where locale strings for Solar are kept.  The array
-     * is keyed first by the class name, and the sub-keys are the
-     * translation keys.
+     * In general, you should never need to address this directly; instead,
+     * use [[Solar_Base::locale() | $this->locale()]] in classes extended
+     * from [[Class::Solar_Base]].
      * 
-     * Although this property is public, you generally shouldn't need
-     * to manipulate it in any way.
-     * 
-     * @var array
+     * @var Solar_Locale
      * 
      */
-    public static $locale = array();
+    public static $locale;
     
     /**
      * 
@@ -163,19 +163,6 @@ class Solar {
      * 
      */
     public static $parents = array();
-    
-    /**
-     * 
-     * The current locale code being used by Solar.
-     * 
-     * Default value is 'en_US'.
-     * 
-     * @var string 
-     * 
-     * @todo Keep the locale code in a session variable?
-     * 
-     */
-    protected static $_locale_code = 'en_US';
     
     /**
      * 
@@ -276,11 +263,9 @@ class Solar {
             ini_set($key, $val);
         }
         
-        // load the initial locale strings
-        if (! empty(Solar::$config['locale_code'])) {
-            Solar::$_locale_code = Solar::$config['locale_code'];
-        }
-        Solar::setLocale(Solar::$_locale_code);
+        // load the locale class
+        $class = Solar::config('Solar', 'locale_class', 'Solar_Locale');
+        Solar::$locale = Solar::factory($class);
         
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {
@@ -319,129 +304,6 @@ class Solar {
     public static function apiVersion()
     {
         return '@package_version@';
-    }
-    
-    /**
-     * 
-     * Gets the translated locale string for a class and key.
-     * 
-     * Loads locale string files on-demand.
-     * 
-     * @param string|object $spec The class name (or object) for the translation.
-     * 
-     * @param string $key The translation key.
-     * 
-     * @param mixed $num Helps determine whether to get a singular
-     * or plural translation.
-     * 
-     * @return string A translated locale string.
-     * 
-     * @see Solar_Base::locale()
-     * 
-     * @see Manual::Solar/Using_locales
-     * 
-     */
-    public static function locale($spec, $key, $num = 1)
-    {
-        // is the spec an object?
-        if (is_object($spec)) {
-            // yes, find its class
-            $class = get_class($spec);
-        } else {
-            // no, assume the spec is a class name
-            $class = (string) $spec;
-        }
-        
-        // find all parents of this class, including this class
-        $stack = Solar::parents($class, true);
-        
-        // add the vendor namespace to the stack for vendor-wide strings
-        // and add Solar as the final fallback.
-        $pos = strpos($class, '_');
-        if ($pos !== false) {
-            $vendor = substr($class, 0, $pos);
-            $stack[] = $vendor;
-            if ($vendor != 'Solar') {
-                $stack[] = 'Solar';
-            }
-        } else {
-            $stack[] = 'Solar';
-        }
-        
-        // go through all classes and find the first matching
-        // translation key
-        foreach ($stack as $class) {
-            
-            // do we need to load locale strings for the class?
-            if (! array_key_exists($class, Solar::$locale)) {
-                // build the file name.  note that we use the fixdir()
-                // method, which automatically replaces '/' with the
-                // correct directory separator.
-                $base = str_replace('_', '/', $class);
-                $file = Solar::fixdir($base . '/Locale/')
-                      . Solar::getLocale() . '.php';
-        
-                // can we find the file?
-                $target = Solar::fileExists($file);
-                if ($target) {
-                    // put the locale values into the shared locale array
-                    Solar::$locale[$class] = (array) include $target;
-                } else {
-                    // could not find file.
-                    // fail silently, as it's often the case that the
-                    // translation file simply doesn't exist.
-                    Solar::$locale[$class] = array();
-                }
-            }
-        
-            // does the key exist for the class?
-            if (! empty(Solar::$locale[$class][$key])) {
-                
-                // get the translation of the key and force
-                // to an array.
-                $string = (array) Solar::$locale[$class][$key];
-        
-                // return the number-appropriate version of the
-                // translated key, if multiple values exist.
-                if ($num != 1 && ! empty($string[1])) {
-                    return $string[1];
-                } else {
-                    return $string[0];
-                }
-            }
-        }
-        
-        // never found a translation, return the requested key.
-        return $key;
-    }
-    
-    /**
-     * 
-     * Sets the locale code and clears out previous locale strings.
-     * 
-     * @param string $code A locale code, for example, 'en_US'.
-     * 
-     * @return void
-     */
-    public static function setLocale($code)
-    {
-        // set the code
-        Solar::$_locale_code = $code;
-        
-        // reset the strings
-        Solar::$locale = array();
-    }
-    
-    /**
-     * 
-     * Returns the current locale code.
-     * 
-     * @return string The current locale code, for example, 'en_US'.
-     * 
-     */
-    public static function getLocale()
-    {
-        return Solar::$_locale_code;
     }
     
     /**
@@ -852,7 +714,7 @@ class Solar {
      * }}
      * 
      * In general, you shouldn't need to use this directly in classes
-     * extended from [[Solar_Base::Overview | Solar_Base]].  Instead, use
+     * extended from [[Class::Solar_Base]].  Instead, use
      * [[Solar_Base::_exception() | $this->_exception()]] for automated
      * picking of the right exception class from the $code, and
      * automated translation of the error message.

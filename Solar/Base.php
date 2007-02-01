@@ -156,8 +156,8 @@ abstract class Solar_Base {
      * 
      * Looks up locale strings based on a key.
      * 
-     * This is a convenient shortcut for calling [[Solar::locale()]] that 
-     * automatically uses the current class name.
+     * This is a convenient shortcut for calling [[Solar::$locale]]->fetch()
+     * that automatically uses the current class name.
      * 
      * @param string $key The key to get a locale string for.
      * 
@@ -169,12 +169,19 @@ abstract class Solar_Base {
      * 
      * @see Manual::Solar/Using_locales
      * 
-     * @see Solar::locale()
+     * @see Solar::$locale
+     * 
+     * @see Class::Solar_Locale
      * 
      */
     public function locale($key, $num = 1)
     {
-        return Solar::locale(get_class($this), $key, $num);
+        static $class;
+        if (! $class) {
+            $class = get_class($this);
+        }
+        
+        return Solar::$locale->fetch($class, $key, $num);
     }
     
     /**
@@ -191,11 +198,15 @@ abstract class Solar_Base {
      */
     protected function _exception($code, $info = array())
     {
-        $class = get_class($this);
+        static $class;
+        if (! $class) {
+            $class = get_class($this);
+        }
+        
         return Solar::exception(
             $class,
             $code,
-            Solar::locale($class, $code),
+            Solar::$locale->fetch($class, $code),
             (array) $info
         );
     }

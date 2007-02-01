@@ -117,6 +117,6 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
         }
         
         // get the translation
-        return Solar::locale($class, $key, $num);
+        return Solar::$locale->fetch($class, $key, $num);
     }
 }

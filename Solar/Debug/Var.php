@@ -97,6 +97,9 @@ class Solar_Debug_Var extends Solar_Base {
      * Use this for debugging variables to see exactly
      * what they contain.
      * 
+     * Note that this overrides the Solar_Base::dump()
+     * behavior entirely.
+     * 
      * @param mixed $var The variable to dump.
      * 
      * @param string $label A label to prefix to the dump.

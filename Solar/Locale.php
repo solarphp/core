@@ -156,7 +156,7 @@ class Solar_Locale extends Solar_Base {
      * does not.
      * 
      */
-    public function _trans($class, $key, $num = 1)
+    protected function _trans($class, $key, $num = 1)
     {
         // does the key exist for the class?
         if (empty($this->trans[$class][$key])) {
@@ -184,7 +184,7 @@ class Solar_Locale extends Solar_Base {
      * @return void
      * 
      */
-    public function _load($class)
+    protected function _load($class)
     {
         // build the file name.  note that we use the fixdir()
         // method, which automatically replaces '/' with the

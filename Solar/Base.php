@@ -151,6 +151,29 @@ abstract class Solar_Base {
     {
         return '@package_version@';
     }
+
+    /**
+     * 
+     * Convenience method for getting a dump the whole object, or one of its
+     * properties.
+     * 
+     * @param string $var Dump this property; if empty, dumps the entire
+     * object.
+     * 
+     * @param string $label Label the dump output with this string.
+     * 
+     * @return string
+     * 
+     */
+    public function dump($var = null, $label = null)
+    {
+        $obj = Solar::factory('Solar_Debug_Var');
+        if (empty($var)) {
+            return $obj->dump($this, $label);
+        } else {
+            return $obj->dump($this->$var, $label);
+        }
+    }
     
     /**
      * 

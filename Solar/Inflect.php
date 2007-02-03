@@ -33,7 +33,7 @@ class Solar_Inflect extends Solar_Base {
      * Keys are ...
      * 
      * `identical`
-     * : (array) Words that do not change from singular to plurar.
+     * : (array) Words that do not change from singular to plural.
      * 
      * `irregular`
      * : (array) Irregular singular-to-plural inflections.
@@ -86,7 +86,7 @@ class Solar_Inflect extends Solar_Base {
      * @var array
      * 
      */
-	protected $_irregular = array(
+    protected $_irregular = array(
         'child'  => 'children',
         'man'    => 'men',
         'move'   => 'moves',
@@ -204,36 +204,36 @@ class Solar_Inflect extends Solar_Base {
      * @return string The plural form of the word.
      * 
      */
-	public function oneToMany($str)
-	{
-	    $key = strtolower($str);
-	    
-	    // look for words that are the same either way
-		if (in_array($key, $this->_identical)) {
-		    return $str;
-		}
+    public function oneToMany($str)
+    {
+        $key = strtolower($str);
+        
+        // look for words that are the same either way
+        if (in_array($key, $this->_identical)) {
+            return $str;
+        }
         
         // look for irregular words
         foreach ($this->_irregular as $key => $val) {
             $find = "/(.*)$key\$/i";
             $repl = "\$1$val";
-			if (preg_match($find, $str)) {
-				return preg_replace($find, $repl, $str);
-			}
+            if (preg_match($find, $str)) {
+                return preg_replace($find, $repl, $str);
+            }
         }
         
         // apply normal rules
-		foreach($this->_one_to_many as $find => $repl) {
-		    $find = '/' . $find . '$/i';
-			if (preg_match($find, $str)) {
-				return preg_replace($find, $repl, $str);
-			}
-		}
-		
-		// couldn't find a plural form
-		return $str;
-	}
-	
+        foreach($this->_one_to_many as $find => $repl) {
+            $find = '/' . $find . '$/i';
+            if (preg_match($find, $str)) {
+                return preg_replace($find, $repl, $str);
+            }
+        }
+        
+        // couldn't find a plural form
+        return $str;
+    }
+    
     /**
      * 
      * Returns a plural word as a singular.
@@ -243,14 +243,14 @@ class Solar_Inflect extends Solar_Base {
      * @return string The singular form of the word.
      * 
      */
-	public function manyToOne($str)
-	{
-	    $key = strtolower($str);
-	    
-	    // look for words that are the same either way
-		if (in_array($key, $this->_identical)) {
-		    return $str;
-		}
+    public function manyToOne($str)
+    {
+        $key = strtolower($str);
+        
+        // look for words that are the same either way
+        if (in_array($key, $this->_identical)) {
+            return $str;
+        }
         
         // look for irregular words
         // note that we flip singulars and plurals
@@ -258,35 +258,35 @@ class Solar_Inflect extends Solar_Base {
         foreach ($list as $key => $val) {
             $find = "/(.*)$key\$/i";
             $repl = "\$1$val";
-			if (preg_match($find, $str)) {
-				return preg_replace($find, $repl, $str);
-			}
+            if (preg_match($find, $str)) {
+                return preg_replace($find, $repl, $str);
+            }
         }
         
         // apply normal rules
-		foreach($this->_many_to_one as $find => $repl) {
-		    $find = '/' . $find . '$/i';
-			if (preg_match($find, $str)) {
-				return preg_replace($find, $repl, $str);
-			}
-		}
-		
-		// couldn't find a singular form
-		return $str;
-	}
-	
-	/**
-	 * 
-	 * Returns "under_score_word" as "underScoreWord" or "UnderScoreWord".
-	 * 
-	 * @param string $str The underscore word.
-	 * 
-	 * @param bool $studly If true, force the first letter to uppercase; if
-	 * false, force to lower case.  Default false.
-	 * 
-	 * @return string The word in camel-caps.
-	 * 
-	 */
+        foreach($this->_many_to_one as $find => $repl) {
+            $find = '/' . $find . '$/i';
+            if (preg_match($find, $str)) {
+                return preg_replace($find, $repl, $str);
+            }
+        }
+        
+        // couldn't find a singular form
+        return $str;
+    }
+    
+    /**
+     * 
+     * Returns "under_score_word" as "underScoreWord" or "UnderScoreWord".
+     * 
+     * @param string $str The underscore word.
+     * 
+     * @param bool $studly If true, force the first letter to uppercase; if
+     * false, force to lower case.  Default false.
+     * 
+     * @return string The word in camel-caps.
+     * 
+     */
     public function underToCamel($str, $studly = false)
     {
         $str = ucwords(str_replace('_', ' ', $str));
@@ -299,15 +299,15 @@ class Solar_Inflect extends Solar_Base {
         return $str;
     }
     
-	/**
-	 * 
-	 * Returns "camelCapsWord" and "CamelCapsWord" as "Camel_Caps_Word".
-	 * 
-	 * @param string $str The camel-caps word.
-	 * 
-	 * @return string The word with underscores in place of camel caps.
-	 * 
-	 */
+    /**
+     * 
+     * Returns "camelCapsWord" and "CamelCapsWord" as "Camel_Caps_Word".
+     * 
+     * @param string $str The camel-caps word.
+     * 
+     * @return string The word with underscores in place of camel caps.
+     * 
+     */
     public function camelToUnder($str)
     {
         $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);
@@ -315,15 +315,15 @@ class Solar_Inflect extends Solar_Base {
         return $str;
     }
     
-	/**
-	 * 
-	 * Returns "Class_Name" as "Class/Name.php".
-	 * 
-	 * @param string $str The class name.
-	 * 
-	 * @return string The class as a file name.
-	 * 
-	 */
+    /**
+     * 
+     * Returns "Class_Name" as "Class/Name.php".
+     * 
+     * @param string $str The class name.
+     * 
+     * @return string The class as a file name.
+     * 
+     */
     public function classToFile($str)
     {
         return str_replace('_', '/', $str) . '.php';

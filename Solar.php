@@ -874,7 +874,7 @@ class Solar {
     public static function dump($var, $label = null)
     {
         $obj = Solar::factory('Solar_Debug_Var');
-        echo $obj->dump($var, $label);
+        $obj->display($var, $label);
     }
     
     /**

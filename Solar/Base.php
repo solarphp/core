@@ -155,10 +155,10 @@ abstract class Solar_Base {
     /**
      * 
      * Convenience method for getting a dump the whole object, or one of its
-     * properties.
+     * properties, or an external variable.
      * 
-     * @param string $var Dump this property; if empty, dumps the entire
-     * object.
+     * @param mixed $var If null, dump $this; if a string, dump $this->$var;
+     * otherwise, dump $var.
      * 
      * @param string $label Label the dump output with this string.
      * 
@@ -168,10 +168,20 @@ abstract class Solar_Base {
     public function dump($var = null, $label = null)
     {
         $obj = Solar::factory('Solar_Debug_Var');
-        if (empty($var)) {
-            return $obj->dump($this, $label);
+        if (is_null($var)) {
+            // clone $this and remove the parent config arrays
+            $clone = clone($this);
+            foreach (Solar::parents($this) as $class) {
+                $key = "_$class";
+                unset($clone->$key);
+            }
+            $obj->display($clone, $label);
+        } elseif (is_string($var)) {
+            // display a property
+            $obj->display($this->$var, $label);
         } else {
-            return $obj->dump($this->$var, $label);
+            // display the passed variable
+            $obj->display($var, $label);
         }
     }
     

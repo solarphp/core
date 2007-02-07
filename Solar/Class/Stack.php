@@ -19,8 +19,8 @@
  * 
  * Stack for loading classes from user-defined hierarchies.
  * 
- * As you add classes to the stack, they are searched first when you 
- * call load($name).
+ * As you add classes to the stack, they are searched-for first when you 
+ * call [[Solar_Stack_Class::load()]].
  * 
  * @category Solar
  * 
@@ -150,10 +150,16 @@ class Solar_Class_Stack extends Solar_Base {
      * 
      * @param string $name The class to load using the class stack.
      * 
+     * @param bool $throw Throw an exception if no matching class is found
+     * in the stack (default true).  When false, returns boolean false if no
+     * matching class is found.
+     * 
      * @return string The full name of the loaded class.
      * 
+     * @throws Solar_Exception_ClassNotFound
+     * 
      */
-    public function load($name)
+    public function load($name, $throw = true)
     {
         $name = ucfirst($name);
         foreach ($this->_stack as $prefix) {
@@ -188,13 +194,17 @@ class Solar_Class_Stack extends Solar_Base {
         }
         
         // failed to find the class in the stack
-        throw $this->_exception(
-            'ERR_CLASS_NOT_FOUND',
-            array(
-                'name'  => $name,
-                'stack' => $this->_stack,
-            )
-        );
+        if ($throw) {
+            throw $this->_exception(
+                'ERR_CLASS_NOT_FOUND',
+                array(
+                    'name'  => $name,
+                    'stack' => $this->_stack,
+                )
+            );
+        } else {
+            return false;
+        }
     }
     
     /**

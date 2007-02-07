@@ -117,7 +117,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * @var array
      * 
      */
-    protected $_valid = false;
+    protected $_iterator_valid = false;
     
     /**
      * 
@@ -216,14 +216,10 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * @param array|Solar_Struct $spec The data to load into the object.
      * 
-     * @param bool $reset Reset the data array first so that only keys
-     * in the $spec will be in the struct.  Default false, so that $spec
-     * keys are merged with existing struct keys.
-     * 
      * @return void
      * 
      */
-    public function load($spec, $reset = false)
+    public function load($spec)
     {
         // force to array
         if ($spec instanceof Solar_Struct) {
@@ -235,14 +231,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
             $data = array();
         }
         
-        // load new data
-        if ($reset) {
-            // clear out previous values
-            $this->_data = $data;
-        } else {
-            // merge new values with old
-            $this->_data = array_merge($this->_data, $data);
-        }
+        // load new data, merging new values with old
+        $this->_data = array_merge($this->_data, $data);
     }
     
     /**
@@ -348,7 +338,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function next()
     {
-        $this->_valid = (next($this->_data) !== false);
+        $this->_iterator_valid = (next($this->_data) !== false);
     }
 
     /**
@@ -360,7 +350,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function rewind()
     {
-        $this->_valid = (reset($this->_data) !== false);
+        $this->_iterator_valid = (reset($this->_data) !== false);
     }
 
     /**
@@ -372,6 +362,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function valid()
     {
-        return $this->_valid;
+        return $this->_iterator_valid;
     }
 }

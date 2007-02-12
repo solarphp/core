@@ -1700,6 +1700,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _buildSelect($parts)
     {
+        $default = array(
+            'distinct' => false,
+            'cols'     => array(),
+            'from'     => array(),
+            'where'    => array(),
+            'group'    => array(),
+            'having'   => array(),
+            'order'    => array(),
+        );
+        
+        $parts = array_merge($default, $parts);
+        
         // is this a SELECT or SELECT DISTINCT?
         if ($parts['distinct']) {
             $stmt = "SELECT DISTINCT\n\t";

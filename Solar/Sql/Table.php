@@ -232,7 +232,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function __get($key = null)
     {
-        $prop = array('col', 'idx', 'name', 'paging', 'all_class', 'row_class');
+        $prop = array('col', 'idx', 'name', 'paging', 'all_class', 'row_class', 'order', );
         if (in_array($key, $prop)) {
             $key = "_$key";
             return $this->$key;

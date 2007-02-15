@@ -199,6 +199,16 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
+     * The dot-format extension of the last path element (for example, the "rss"
+     * in "feed.rss").
+     * 
+     * @var string
+     * 
+     */
+    public $format = null;
+    
+    /**
+     * 
      * Query string elements split apart into an array.
      * 
      * @var array
@@ -370,7 +380,9 @@ class Solar_Uri extends Solar_Base {
         $this->host     = $elem['host'];
         $this->port     = $elem['port'];
         $this->fragment = $elem['fragment'];
-        $this->setPath($elem['path']);
+        
+        // extended processing of parsed elements into properties
+        $this->setPath($elem['path']); // will also set $this->format
         $this->setQuery($elem['query']);
         
         // if we had to force values, remove dummy placeholders
@@ -386,7 +398,7 @@ class Solar_Uri extends Solar_Base {
      * 
      * @param bool $full If true, returns a full URI with scheme,
      * user, pass, host, and port.  Otherwise, just returns the
-     * path, query, and fragment.  Default false.
+     * path, format, query, and fragment.  Default false.
      * 
      * @return string An action URI string.
      * 
@@ -420,6 +432,7 @@ class Solar_Uri extends Solar_Base {
         return $uri
              . $this->_config['path']
              . (empty($this->path)     ? '' : $this->_pathEncode($this->path))
+             . (empty($this->format)   ? '' : ".{$this->format}")
              . (empty($this->query)    ? '' : '?' . http_build_query($this->query))
              . (empty($this->fragment) ? '' : '#' . $this->fragment);
     }
@@ -476,7 +489,8 @@ class Solar_Uri extends Solar_Base {
      * 
      * Sets the Solar_Uri::$path array from a string.
      * 
-     * This will overwrite any previous values.
+     * This will overwrite any previous values, and reset the format based on
+     * the final path value.
      * 
      * @param string $spec The path string to use; for example,
      * "/foo/bar/baz/dib".  A leading slash will *not* create an empty
@@ -490,6 +504,29 @@ class Solar_Uri extends Solar_Base {
         $this->path = explode('/', trim($spec, '/'));
         foreach ($this->path as $key => $val) {
             $this->path[$key] = urldecode($val);
+        }
+        $this->_setFormatFromPath();
+    }
+    
+    /**
+     * 
+     * Removes and stores any trailing .format extension of last path element.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setFormatFromPath()
+    {
+        $this->format = null;
+        $val = end($this->path);
+        if ($val) {
+            // find the last dot in the value
+            $pos = strrpos($val, '.');
+            if ($pos !== false) {
+                $key = key($this->path);
+                $this->format = substr($val, $pos + 1);
+                $this->path[$key] = substr($val, 0, $pos);
+            }
         }
     }
     

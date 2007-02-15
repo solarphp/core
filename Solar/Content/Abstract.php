@@ -463,7 +463,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
             return $wrap->countPages('nodes.id');
         } else {
             // no need for subselect
-            return $select->countPages('nodes.id');
+            return $select->setPaging($this->_paging)
+                          ->countPages('nodes.id');
         }
     }
     

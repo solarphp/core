@@ -558,13 +558,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $uri = Solar::factory('Solar_Uri_Action');
             $this->_info = $uri->path;
             $this->_query = $uri->query;
-
+            $this->_format = $uri->format;
+            
         } elseif ($spec instanceof Solar_Uri_Action) {
 
             // pull from a Solar_Uri_Action object
             $this->_info = $spec->path;
             $this->_query = $spec->query;
-
+            $this->_format = $spec->format;
+            
         } else {
 
             // a string, assumed to be an action/param.format?query spec.
@@ -572,25 +574,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $uri->set($spec);
             $this->_info = $uri->path;
             $this->_query = $uri->query;
-
-        }
-        
-        // Check the final param for a ".xml", ".rss", etc and save it as
-        // a format request.  do this first, because there might be only
-        // one param.
-        $format = '';
-        $val = end($this->_info);
-        $pos = strpos($val, '.');
-        if ($pos !== false) {
-            // found a format value; hold onto it, but strip from the param.
-            $key = key($this->_info);
-            $format = substr($val, $pos + 1);
-            $this->_info[$key] = substr($val, 0, $pos);
+            $this->_format = $uri->format;
+            
         }
         
         // ignore .php formats
-        if (strtolower($format) == 'php') {
-            $format = '';
+        if (strtolower($this->_format) == 'php') {
+            $this->_format = '';
         }
         
         // if the first param is the page name, drop it.
@@ -614,7 +604,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // are we asking for a non-default format?
-        if ($format) {
+        if ($this->_format) {
             
             // what formats does the action allow?
             $action_format = empty($this->_action_format[$this->_action])
@@ -622,16 +612,18 @@ abstract class Solar_Controller_Page extends Solar_Base {
                   : (array) $this->_action_format[$this->_action];
         
             // does the action support the requested format?
-            if (in_array($format, $action_format)) {
-                // retain the format and turn off layouts
-                $this->_format = $format;
+            if (in_array($this->_format, $action_format)) {
+                // action supports the format; turn off layouts by default.
                 $this->_layout = null;
             } else {
                 // action does not support the format.
-                // add the format extension back to the last param.
+                // add the format extension to the last param.
+                // that's because it might be an actual file name.
                 $val = end($this->_info);
                 $key = key($this->_info);
-                $this->_info[$key] = $val . '.' . $format;
+                $this->_info[$key] = $val . '.' . $this->_format;
+                // discard the unrecognized format.
+                $this->_format = null;
             }
         }
         

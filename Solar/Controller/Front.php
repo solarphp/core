@@ -135,34 +135,12 @@ class Solar_Controller_Front extends Solar_Base {
         // use the default if none specified.
         $page = array_shift($uri->path);
         
-        // if there was 0 or 1 element in the original URI path,
-        // look for a format extension and strip it. (0 means we
-        // used a default page.)
-        if (count($uri->path) == 0) {
-            $pos = strpos($page, '.');
-            if ($pos !== false) {
-                // ADD JUST THE FORMAT EXTENSION BACK TO THE PATH-INFO.
-                // this allows us to request the default action without
-                // needing to specify exactly what that action is.  e.g.,
-                // "example.com/controller.xml" becomes "example.com/.xml".
-                $dot_format = substr($page, $pos);
-                array_unshift($uri->path, $dot_format);
-                // strip the format off the page name so we can find the
-                // related class.
-                $page = substr($page, 0, $pos);
-            }
-        }
-        
         // attempt to map the page name to a page-controller class
         $class = $this->_getPageClass($page);
         if (! $class) {
             // not found, fall back to default
             $class = $this->_getPageClass($this->_default);
             // put the original segment back on top.
-            // note that in the case of formats, this makes the uri look like
-            // "example.com/pagename/.xml".  this doesn't appear to be a 
-            // problem, as the page-controller looks at the last element
-            // regardless.
             array_unshift($uri->path, $page);
         }
         

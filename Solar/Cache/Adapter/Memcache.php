@@ -24,10 +24,10 @@ Solar::loadClass('Solar_Cache_Adapter');
  * 
  * Memcache cache controller.
  * 
- * This adapter lets you connect to a [http://www.danga.com/memcached/
- * memcached] server, which uses system memory to cache data.  In
- * general, you never need to instantiate it yourself; instead, use
- * Solar_Cache as the frontend for it and specify
+ * This adapter lets you connect to a
+ * [memcached](http://www.danga.com/memcached/) server, which uses system
+ * memory to cache data. In general, you never need to instantiate it 
+ * yourself; instead, use Solar_Cache as the frontend for it and specify
  * 'Solar_Cache_Memcache' in the config keys as the 'adapter' value.
  * 
  * This kind of cache is extremely fast, especially when on the same
@@ -62,6 +62,14 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      *   considered a miss, in seconds.  Default is 1 second, and should 
      *   not really be changed for reasons other than testing purposes.
      * 
+     * `pool`
+     * : (array) An array of memcache connections to connect to in a 
+     *   multi-server pool. Each connection should be represented by an array
+     *   with the following keys: `host`, `port`, `persistent`, `weight`, 
+     *   `timeout`, `retry_interval`, `status` and `failure_callback`.
+     *   The `pool` is empty by default, and will only be used instead of 
+     *   a single-server connection if non-empty.
+     * 
      * @var array
      * 
      */
@@ -69,7 +77,65 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         'host' => 'localhost',
         'port' => 11211,
         'timeout' => 1,
+        'pool' => array(),
     );
+    
+    /**
+     * 
+     * Default configuration for a pool server node.
+     * 
+     * Keys are ...
+     * 
+     * `host`
+     * : (string) The memcached host name, default 'localhost'.
+     * 
+     * `port`
+     * : (int) The memcached port number, default 11211.
+     * 
+     * `persistent`
+     * : (bool) Controls the use of a persistent connection, default **TRUE**.
+     * 
+     * `weight`
+     * : (int) Number of buckets to create for this server, which in turn 
+     *   controls its probability of being selected. The probability is 
+     *   relative to the total weight of all servers. Default 1.
+     * 
+     * `timeout`
+     * : (int) Value in seconds which will be used for connecting to the 
+     *   daemon. Default 1.
+     * 
+     * `retry_interval`
+     * : (int) Controls how often a failed server will be retried. Default is
+     *   15 seconds. A setting of -1 disables automatic retry.
+     * 
+     * `status`
+     * : (bool) Controls if the server should be flagged as online. Setting 
+     *   this parameter to **FALSE** and `retry_interval` to -1 allows a failed
+     *   server to be kept in the pool so as not to affect the key distribution
+     *   algorithm. Requests for this server will then failover or fail
+     *   immediately depending on the *memcache.allow_failover* php.ini setting.
+     *   Defaults to **TRUE**, meaning the server should be considered online.
+     * 
+     * `failure_callback`
+     * : (callback) Allows specification of a callback function to run upon
+     *   encountering a connection error. The callback is run before 
+     *   failover is attempted, and takes two parameters: the hostname and port
+     *   of the failed server. Default is null.
+     * 
+     * @var array
+     * 
+     */
+    protected $_pool_node = array(
+        'host'              => 'localhost',
+        'port'              => 11211,
+        'persistent'        => true,
+        'weight'            => 1,
+        'timeout'           => 1,
+        'retry_interval'    => 1,
+        'status'            => true,
+        'faliure_callback'  => null,        
+    );
+    
     
     /**
      * 
@@ -101,22 +167,31 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         parent::__construct($config);
         $this->_memcache = new Memcache;
         
-        // make sure we can connect
-        $result = @$this->_memcache->connect(
-            $this->_config['host'],
-            $this->_config['port'],
-            $this->_config['timeout']
-        );
-        
-        if (! $result) {
-            throw $this->_exception(
-                'ERR_CONNECTION_FAILED',
-                array(
-                    'host' => $this->_config['host'],
-                    'port' => $this->_config['port'],
-                    'timeout' => $this->_config['timeout'],
-                )
+        // pool or single-server connection?
+        if (empty($this->_config['pool'])) {
+            
+            // make sure we can connect
+            $result = @$this->_memcache->connect(
+                $this->_config['host'],
+                $this->_config['port'],
+                $this->_config['timeout']
             );
+        
+            if (! $result) {
+                throw $this->_exception(
+                    'ERR_CONNECTION_FAILED',
+                    array(
+                        'host' => $this->_config['host'],
+                        'port' => $this->_config['port'],
+                        'timeout' => $this->_config['timeout'],
+                    )
+                );
+            }
+            
+        } else {
+            
+            // set up a pool
+            $this->_createPool();
         }
     }
     
@@ -205,4 +280,61 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
     {
         return $key;
     }
+    
+    /**
+     * 
+     * Adds servers to a memcache connection pool from configuration.
+     * 
+     * @return void
+     * 
+     */
+    protected function _createPool()
+    {
+        $connection_count = 0;
+        
+        foreach ($this->_config['pool'] as $server) {
+            // set all defaults
+            $server = array_merge($this->_pool_node, $server);
+            
+            // separate addServer calls in case failure_callback is 
+            // empty
+            if (empty($server['failure_callback'])) {
+                $result = $this->_memcache->addServer(
+                    (string) $server['host'],
+                    (int)    $server['port'],
+                    (bool)   $server['persistent'],
+                    (int)    $server['weight'],
+                    (int)    $server['retry_interval'],
+                    (bool)   $server['status']
+                );
+                                
+            } else {
+                $result = $this->_memcache->addServer(
+                    (string) $server['host'],
+                    (int)    $server['port'],
+                    (bool)   $server['persistent'],
+                    (int)    $server['weight'],
+                    (int)    $server['retry_interval'],
+                    (bool)   $server['status'],
+                             $server['failure_callback']
+                );
+            }
+            
+            // Did connection to the last node succeed?
+            if ($result === true) {
+                $connection_count++;
+            }
+
+        }
+        
+        // make sure we connected to at least one
+        if ($connection_count < 1) {
+            throw $this->_exception(
+                'ERR_CONNECTION_FAILED',
+                $this->_config['pool']
+            );
+        }
+        
+    }
+
 }

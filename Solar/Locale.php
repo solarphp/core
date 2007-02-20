@@ -16,6 +16,7 @@ class Solar_Locale extends Solar_Base {
      */
     protected $_Solar_Locale = array(
         'code' => 'en_US',
+        'blank' => false,
     );
     
     /**
@@ -99,7 +100,7 @@ class Solar_Locale extends Solar_Base {
         // does the translation key exist for this class?
         // pre-empts the stack check.
         $string = $this->_trans($class, $key, $num);
-        if ($string) {
+        if ($string !== null) {
             return $string;
         }
         
@@ -129,7 +130,7 @@ class Solar_Locale extends Solar_Base {
         
             // does the key exist for the parent?
             $string = $this->_trans($parent, $key, $num);
-            if ($string) {
+            if ($string !== null) {
                 // save it for the class so we don't need to go through the
                 // stack again, and then we're done.
                 $this->trans[$class][$key] = $this->trans[$parent][$key];
@@ -158,20 +159,21 @@ class Solar_Locale extends Solar_Base {
      */
     protected function _trans($class, $key, $num = 1)
     {
-        // does the key exist for the class?
-        if (empty($this->trans[$class][$key])) {
+        if (! array_key_exists($class, $this->trans) ||
+            ! array_key_exists($key, $this->trans[$class])) {
+            // class or class-key does not exist
             return null;
+        }
+        
+        // get the translation of the key and force to an array.
+        $trans = (array) $this->trans[$class][$key];
+
+        // return the number-appropriate version of the
+        // translated key, if multiple values exist.
+        if ($num != 1 && ! empty($trans[1])) {
+            return $trans[1];
         } else {
-            // get the translation of the key and force to an array.
-            $trans = (array) $this->trans[$class][$key];
-    
-            // return the number-appropriate version of the
-            // translated key, if multiple values exist.
-            if ($num != 1 && ! empty($trans[1])) {
-                return $trans[1];
-            } else {
-                return $trans[0];
-            }
+            return $trans[0];
         }
     }
     

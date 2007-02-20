@@ -144,7 +144,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      * @var object
      * 
      */
-    protected $_memcache;
+    public $memcache;
     
     /**
      * 
@@ -165,13 +165,13 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         
         // construction
         parent::__construct($config);
-        $this->_memcache = new Memcache;
+        $this->memcache = new Memcache;
         
         // pool or single-server connection?
         if (empty($this->_config['pool'])) {
             
             // make sure we can connect
-            $result = @$this->_memcache->connect(
+            $result = @$this->memcache->connect(
                 $this->_config['host'],
                 $this->_config['port'],
                 $this->_config['timeout']
@@ -212,7 +212,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             return;
         }
         
-        return $this->_memcache->set($key, $data, null, $this->_life);
+        return $this->memcache->set($key, $data, null, $this->_life);
     }
     
     /**
@@ -230,7 +230,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             return;
         }
         
-        return $this->_memcache->get($key);
+        return $this->memcache->get($key);
     }
     
     /**
@@ -248,7 +248,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             return;
         }
         
-        $this->_memcache->delete($key);
+        $this->memcache->delete($key);
     }
     
     /**
@@ -264,7 +264,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             return;
         }
         
-        $this->_memcache->flush();
+        $this->memcache->flush();
     }
     
     /**
@@ -299,7 +299,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             // separate addServer calls in case failure_callback is 
             // empty
             if (empty($server['failure_callback'])) {
-                $result = $this->_memcache->addServer(
+                $result = $this->memcache->addServer(
                     (string) $server['host'],
                     (int)    $server['port'],
                     (bool)   $server['persistent'],
@@ -309,7 +309,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
                 );
                                 
             } else {
-                $result = $this->_memcache->addServer(
+                $result = $this->memcache->addServer(
                     (string) $server['host'],
                     (int)    $server['port'],
                     (bool)   $server['persistent'],

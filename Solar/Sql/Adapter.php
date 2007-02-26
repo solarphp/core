@@ -368,10 +368,36 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Additionally, the [[Class::Solar_Sql_Select | ]] class is dedicated to safely
      * creating portable SELECT statements, so you may wish to use that as well.
      * 
-     * @param string $stmt The text of the SQL statement, with
-     * placeholders.
      * 
-     * @param array $data An associative array of data to bind to the
+     * Automated Binding of Values in PHP 5.2.1 and Later
+     * --------------------------------------------------
+     * 
+     * With PDO in PHP 5.2.1 and later, we can no longer just throw an array
+     * of data at the statement; we need to bind values specifically to their
+     * respective placeholders.
+     * 
+     * In addition, we can't bind one value to multiple identical named
+     * placeholders; we need to bind that same value multiple times. So if
+     * :foo is used three times, PDO uses :foo the first time, :foo2 the
+     * second time, and :foo3 the third time.
+     * 
+     * This query() method examins the statement for all :name placeholders
+     * and attempts to bind data from the $data array.  The regular-expression
+     * it uses is a little braindead; it cannot tell if the :name placeholder
+     * is literal text or really a place holder.
+     * 
+     * As such, you should *either* use the $data array for named-placeholder
+     * value binding at query() time, *or* bind-as-you-go when building the 
+     * statement, not both.  If you do, you are on your own to make sure
+     * that nothing looking like a :name placeholder exists as literal text.
+     * 
+     * Question-mark placeholders are no longer supported for automatic 
+     * value binding at query() time.
+     * 
+     * @param string $stmt The text of the SQL statement, optionally with
+     * named placeholders.
+     * 
+     * @param array $data An associative array of data to bind to the named
      * placeholders.
      * 
      * @return PDOStatement
@@ -384,10 +410,53 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // begin the profile time
         $before = microtime(true);
         
+        // prepare the statment
         $obj = $this->_pdo->prepare($stmt);
         
+        // was data passed for binding?
+        if ($data) {
+            
+            // find all :placeholder matches.  note that this is a little
+            // brain-dead; it will find placeholders in literal text, which
+            // will cause errors later.  so in general, you should *either*
+            // bind at query time *or* bind as you go, not both.
+            preg_match_all(
+                "/\W(:[a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
+                $stmt . "\n",
+                $matches
+            );
+        
+            // bind values to placeholders, repeating as needed
+            $repeat = array();
+            foreach ($matches[1] as $key) {
+            
+                // only attempt to bind if the data key exists.
+                // this allows for nulls and empty strings.
+                if (! array_key_exists($key, $data)) {
+                    // skip it
+                    continue;
+                }
+            
+                // what does PDO expect as the placeholder name?
+                if (empty($repeat[$key])) {
+                    // first time is ":foo"
+                    $repeat[$key] = 1;
+                    $name = $key;
+                } else {
+                    // repeated times of ":foo" are treated by PDO as
+                    // ":foo2", ":foo3", etc.
+                    $repeat[$key] ++;
+                    $name = $key . $repeat[$key];
+                }
+            
+                // bind the value to the placeholder name
+                $stmt->bindValue($name, $data[$key]);
+            }
+        }
+        
+        // now try to execute
         try {
-            $obj->execute((array) $data);
+            $obj->execute();
         } catch (PDOException $e) {
             throw $this->_exception(
                 'ERR_QUERY_FAILED',

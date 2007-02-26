@@ -449,8 +449,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                     $name = $key . $repeat[$key];
                 }
                 
-                Solar::dump($data[$key], "bind to $name");
-                
                 // bind the value to the placeholder name
                 $obj->bindValue($name, $data[$key]);
             }

@@ -421,15 +421,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             // will cause errors later.  so in general, you should *either*
             // bind at query time *or* bind as you go, not both.
             preg_match_all(
-                "/\W(:[a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
+                "/\W:([a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
                 $stmt . "\n",
                 $matches
             );
-        
+            
             // bind values to placeholders, repeating as needed
             $repeat = array();
             foreach ($matches[1] as $key) {
-            
+                
                 // only attempt to bind if the data key exists.
                 // this allows for nulls and empty strings.
                 if (! array_key_exists($key, $data)) {
@@ -448,9 +448,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                     $repeat[$key] ++;
                     $name = $key . $repeat[$key];
                 }
-            
+                
+                Solar::dump($data[$key], "bind to $name");
+                
                 // bind the value to the placeholder name
-                $stmt->bindValue($name, $data[$key]);
+                $obj->bindValue($name, $data[$key]);
             }
         }
         

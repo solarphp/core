@@ -46,6 +46,57 @@ class Solar_DataFilter extends Solar_Base {
      */
     protected $_false = array('0', 'off', 'false', 'f', 'no', 'n', '');
     
+    /**
+     * 
+     * Are values required to be not-blank?
+     * 
+     * For validate methods, when $_require is true, the value must be
+     * non-blank for it to validate; when false, blank values are considered
+     * valid.
+     * 
+     * For sanitize methods, when $_require is true, the method will attempt
+     * to sanitize blank values; when false, the method will return blank
+     * values as nulls.
+     * 
+     * @var bool
+     * 
+     * @see setRequire()
+     * 
+     * @see getRequire()
+     * 
+     */
+    protected $_require = true;
+    
+    /**
+     * 
+     * Sets the value of the 'require' flag.
+     * 
+     * @param bool $flag Turn 'require' on (true) or off (false).
+     * 
+     * @return void
+     * 
+     * @see $_require
+     * 
+     */
+    public function setRequire($flag)
+    {
+        $this->_require = (bool) $flag;
+    }
+    
+    /**
+     * 
+     * Returns the value of the 'require' flag.
+     * 
+     * @return bool
+     * 
+     * @see $_require
+     * 
+     */
+    public function getRequire()
+    {
+        return $this->_require;
+    }
+    
     // -----------------------------------------------------------------
     // 
     // Sanitize
@@ -60,15 +111,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to sanitize.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return bool The sanitized value.
      * 
      */
-    public function sanitizeBoolean($value, $require = false)
+    public function sanitizeBool($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -100,17 +148,14 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return float The sanitized value.
      * 
      * @todo Extract scientific notation from weird strings?
      * 
      */
-    public function sanitizeFloat($value, $require = false)
+    public function sanitizeFloat($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -173,15 +218,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return int The sanitized value.
      * 
      */
-    public function sanitizeInt($value, $require = false)
+    public function sanitizeInt($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -227,15 +269,12 @@ class Solar_DataFilter extends Solar_Base {
      * is used as a Unix timestamp; otherwise, converted to a Unix
      * timestamp using [[php::strtotime() | ]].
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeIsoDate($value, $require = false)
+    public function sanitizeIsoDate($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -255,15 +294,12 @@ class Solar_DataFilter extends Solar_Base {
      * is used as a Unix timestamp; otherwise, converted to a Unix
      * timestamp using [[php::strtotime() | ]].
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeIsoTime($value, $require = false)
+    public function sanitizeIsoTime($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -284,15 +320,12 @@ class Solar_DataFilter extends Solar_Base {
      * is used as a Unix timestamp; otherwise, converted to a Unix
      * timestamp using [[php::strtotime() | ]].
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeIsoTimestamp($value, $require = false)
+    public function sanitizeIsoTimestamp($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -310,15 +343,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return int The sanitized value.
      * 
      */
-    public function sanitizeNumeric($value, $require = false)
+    public function sanitizeNumeric($value)
     {
-        return (string) $this->sanitizeFloat($value, $require);
+        return (string) $this->sanitizeFloat($value);
     }
     
     /**
@@ -327,15 +357,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeString($value, $require = false)
+    public function sanitizeString($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -348,15 +375,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringAlpha($value, $require = false)
+    public function sanitizeStringAlpha($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -369,15 +393,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringAlnum($value, $require = false)
+    public function sanitizeStringAlnum($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -394,15 +415,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringEmail($value, $require = false)
+    public function sanitizeStringEmail($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -419,15 +437,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param string $replace Replace the found pattern with this string.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringRegex($value, $pattern, $replace, $require = false)
+    public function sanitizeStringRegex($value, $pattern, $replace)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -444,15 +459,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param string $replace Replace with this string.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringReplace($value, $find, $replace, $require = false)
+    public function sanitizeStringReplace($value, $find, $replace)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -467,15 +479,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param string $chars Trim these characters (default space).
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringTrim($value, $chars = ' ', $require = false)
+    public function sanitizeStringTrim($value, $chars = ' ')
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -492,15 +501,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringUri($value, $require = false)
+    public function sanitizeStringUri($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -513,15 +519,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to be sanitized.
      * 
-     * @param bool $require Sanitize blank values (default false, which
-     * returns blank values as nulls).
-     * 
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringWord($value, $require = false)
+    public function sanitizeStringWord($value)
     {
-        if (! $require && $this->validateBlank($value)) {
+        if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
@@ -540,16 +543,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateAlnum($value, $require = true)
+    public function validateAlnum($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return ctype_alnum((string)$value);
@@ -561,16 +561,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateAlpha($value, $require = true)
+    public function validateAlpha($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return ctype_alpha($value);
@@ -578,7 +575,12 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the value is a string composed only of whitespace.
+     * Validates that the value is null, or is a string composed only of
+     * whitespace.
+     * 
+     * Non-strings and non-nulls never validate as blank; this includes
+     * integers, floats, numeric zero, boolean true and false, any array with
+     * zero or more elements, and all objects and resources.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -587,7 +589,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateBlank($value)
     {
-        if (! is_string($value)) {
+        if (! is_string($value) && ! is_null($value)) {
             return false;
         }
         
@@ -600,18 +602,15 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateBoolean($value, $require = true)
+    public function validateBool($value)
     {
         // need to allow for blanks if not required, because
         // empty strings are boolean false, and strings composed of blanks
-        // are booleans true.
-        if ($this->validateBlank($value) && ! $require) {
+        // are boolean true.
+        if ($this->validateBlank($value) && ! $this->_require) {
             return true;
         }
         
@@ -639,16 +638,13 @@ class Solar_DataFilter extends Solar_Base {
      * @param string $type The ctype to validate against: 'alnum',
      * 'alpha', 'digit', etc.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if the value matches the ctype, false if not.
      * 
      */
-    public function validateCtype($value, $type, $require = true)
+    public function validateCtype($value, $type)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         $func = 'ctype_' . $type;
@@ -661,21 +657,18 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateEmail($value, $require = true)
+    public function validateEmail($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // FILTER_VALIDATE_EMAIL modifies the given value to strip
         // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-vlaidated value against
+        // so to compensate, we check the php-validated value against
         // the original value to see if they match.  if they do, then
         // the original value was valid.
         $might_be_ok = filter_var($value, FILTER_VALIDATE_EMAIL);
@@ -688,16 +681,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateFloat($value, $require = true)
+    public function validateFloat($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         if (is_float($value)) {
@@ -719,16 +709,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param array $array An array of allowed options.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateInKeys($value, $array, $require = true)
+    public function validateInKeys($value, $array)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return array_key_exists($value, (array) $array);
@@ -745,16 +732,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param array $array An array of allowed values.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateInList($value, $array, $require = true)
+    public function validateInList($value, $array)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return in_array($value, (array) $array, true);
@@ -766,16 +750,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateInt($value, $require = true)
+    public function validateInt($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         if (is_int($value)) {
@@ -792,21 +773,18 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIp($value, $require = true)
+    public function validateIp($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
         // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-vlaidated value against
+        // so to compensate, we check the php-validated value against
         // the original value to see if they match.  if they do, then
         // the original value was valid.
         $might_be_ok = filter_var($value, FILTER_VALIDATE_IP);
@@ -819,21 +797,18 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIpv4($value, $require = true)
+    public function validateIpv4($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
         // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-vlaidated value against
+        // so to compensate, we check the php-validated value against
         // the original value to see if they match.  if they do, then
         // the original value was valid.
         $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
@@ -846,21 +821,18 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIpv6($value, $require = true)
+    public function validateIpv6($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // FILTER_VALIDATE_IP modifies the given value to strip
         // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-vlaidated value against
+        // so to compensate, we check the php-validated value against
         // the original value to see if they match.  if they do, then
         // the original value was valid.
         $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
@@ -876,16 +848,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIsoDate($value, $require = true)
+    public function validateIsoDate($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // basic date format
@@ -911,17 +880,14 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIsoTime($value, $require = true)
+    public function validateIsoTime($value)
     {
         $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
         
-        return $this->validateRegex($value, $expr, $require) ||
+        return $this->validateRegex($value, $expr) ||
                ($value == '24:00:00');
     }
     
@@ -936,16 +902,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateIsoTimestamp($value, $require = true)
+    public function validateIsoTimestamp($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // correct length?
@@ -984,16 +947,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateLocaleCode($value, $require = true)
+    public function validateLocaleCode($value)
     {
         $expr = '/^[a-z]{2}_[A-Z]{2}$/';
-        return $this->validateRegex($value, $expr, $require);
+        return $this->validateRegex($value, $expr);
     }
     
     /**
@@ -1004,16 +964,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $max The maximum valid value.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateMax($value, $max, $require = true)
+    public function validateMax($value, $max)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return is_numeric($value) && $value <= $max;
@@ -1028,17 +985,14 @@ class Solar_DataFilter extends Solar_Base {
      * @param mixed $max The value must have no more than this many
      * characters.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateMaxLength($value, $max, $require = true)
+    public function validateMaxLength($value, $max)
     {
         // reverse the normal check for blankness so that blank strings
         // are not checked for length.
-        if ($require && $this->validateBlank($value)) {
+        if ($this->_require && $this->validateBlank($value)) {
             return false;
         }
         
@@ -1054,20 +1008,17 @@ class Solar_DataFilter extends Solar_Base {
      * @param array $allowed The MIME type must be one of these
      * allowed values; if null, then all values are allowed.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateMimeType($value, $allowed = null, $require = true)
+    public function validateMimeType($value, $allowed = null)
     {
         // basically, anything like 'text/plain' or
         // 'application/vnd.ms-powerpoint' or
         // 'text/xml+xhtml'
         $word = '[a-zA-Z][\-\.a-zA-Z0-9+]*';
         $expr = '|^' . $word . '/' . $word . '$|';
-        $ok = $this->validateRegex($value, $expr, $require);
+        $ok = $this->validateRegex($value, $expr);
         $allowed = (array) $allowed;
         if ($ok && count($allowed) > 0) {
             $ok = in_array($value, $allowed);
@@ -1083,16 +1034,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $min The minimum valid value.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateMin($value, $min, $require = true)
+    public function validateMin($value, $min)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return is_numeric($value) && $value >= $min;
@@ -1107,16 +1055,13 @@ class Solar_DataFilter extends Solar_Base {
      * @param mixed $min The value must have at least this many
      * characters.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateMinLength($value, $min, $require = true)
+    public function validateMinLength($value, $min)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return strlen($value) >= $min;
@@ -1128,16 +1073,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateNumeric($value, $require = true)
+    public function validateNumeric($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return is_numeric($value);
@@ -1149,17 +1091,14 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateNotZero($value, $require = true)
+    public function validateNotZero($value)
     {
         // reverse the blank-check so that empties are not
         // treated as zero.
-        if ($require && $this->validateBlank($value)) {
+        if ($this->_require && $this->validateBlank($value)) {
             return false;
         }
         
@@ -1200,16 +1139,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $max The maximum valid value.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateRange($value, $min, $max, $require = true)
+    public function validateRange($value, $min, $max)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return ($value >= $min && $value <= $max);
@@ -1225,16 +1161,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $max The maximum valid length.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateRangeLength($value, $min, $max, $require = true)
+    public function validateRangeLength($value, $min, $max)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         $len = strlen($value);
@@ -1252,16 +1185,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param string $expr The regular expression to validate against.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if the value matches the expression, false if not.
      * 
      */
-    public function validateRegex($value, $expr, $require = true)
+    public function validateRegex($value, $expr)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return (bool) preg_match($expr, $value);
@@ -1281,16 +1211,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param int $scope The maximum number of decimal places.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateSizeScope($value, $size, $scope, $require = true)
+    public function validateSizeScope($value, $size, $scope)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // scope has to be smaller than size.
@@ -1339,16 +1266,13 @@ class Solar_DataFilter extends Solar_Base {
      * @param string $sep The word separator character(s), such as " -'" (to
      * allow spaces, dashes, and apostrophes in the word).  Default is ' '.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateSepWords($value, $sep = ' ', $require = true)
+    public function validateSepWords($value, $sep = ' ')
     {
         $expr = '/^[\w' . preg_quote($sep) . ']+$/';
-        return $this->validateRegex($value, $expr, $require);
+        return $this->validateRegex($value, $expr);
     }
     
     /**
@@ -1360,16 +1284,13 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateString($value, $require = true)
+    public function validateString($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         return is_scalar($value);
@@ -1384,21 +1305,18 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateUri($value, $require = true)
+    public function validateUri($value)
     {
         if ($this->validateBlank($value)) {
-            return ! $require;
+            return ! $this->_require;
         }
         
         // FILTER_VALIDATE_URL modifies the given value to strip
         // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-vlaidated value against
+        // so to compensate, we check the php-validated value against
         // the original value to see if they match.  if they do, then
         // the original value was valid.
         $might_be_ok = filter_var($value, FILTER_VALIDATE_URL,
@@ -1416,15 +1334,12 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param bool $require When true, value must be non-blank; when false,
-     * blank values are valid.  Default true.
-     * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateWord($value, $require = true)
+    public function validateWord($value)
     {
         $expr = '/^\w+$/';
-        return $this->validateRegex($value, $expr, $require);
+        return $this->validateRegex($value, $expr);
     }
 }

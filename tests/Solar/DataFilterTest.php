@@ -21,12 +21,15 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testCanInstantiateThroughFactory()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $this->assertTrue($filter instanceof Solar_DataFilter);
     }
     
-    public function testSanitizeBoolean()
+    public function testSanitizeBool()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $list = array(
             true,
@@ -40,7 +43,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         );
         
         foreach ($list as $val) {
-            $bool = $filter->sanitizeBoolean($val, true);
+            $bool = $filter->sanitizeBool($val);
             $this->assertTrue($bool);
         }
         
@@ -56,7 +59,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         );
         
         foreach ($list as $val) {
-            $bool = $filter->sanitizeBoolean($val, true);
+            $bool = $filter->sanitizeBool($val);
             $this->assertFalse($bool);
         }
     }
@@ -64,80 +67,92 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeFloat()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $before = 'abc ... 123.45 ,.../';
-        $after = $filter->sanitizeFloat($before, true);
+        $after = $filter->sanitizeFloat($before);
         $this->assertSame($after, 123.450);
         
         $before = 'a-bc .1. alkasldjf 23 aslk.45 ,.../';
-        $after = $filter->sanitizeFloat($before, true);
+        $after = $filter->sanitizeFloat($before);
         $this->assertSame($after, -.123450);
         
         $before = '1E5';
-        $after = $filter->sanitizeFloat($before, true);
+        $after = $filter->sanitizeFloat($before);
         $this->assertSame($after, 100000.0);
     }
     
     public function testSanitizeInt()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'abc ... 123.45 ,.../';
-        $after = $filter->sanitizeInt($before, true);
+        $after = $filter->sanitizeInt($before);
         $this->assertSame($after, 12345);
         
         $before = 'a-bc .1. alkasldjf 23 aslk.45 ,.../';
-        $after = $filter->sanitizeInt($before, true);
+        $after = $filter->sanitizeInt($before);
         $this->assertSame($after, -12345);
         
         $before = '1E5';
-        $after = $filter->sanitizeInt($before, true);
+        $after = $filter->sanitizeInt($before);
         $this->assertSame($after, 100000);
     }
     
     public function testSanitizeIsoDate()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'Nov 7, 1979, 12:34pm';
-        $after = $filter->sanitizeIsoDate($before, true);
+        $after = $filter->sanitizeIsoDate($before);
         $this->assertSame($after, '1979-11-07');
     }
     
     public function testSanitizeIsoTime()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'Nov 7, 1979, 12:34pm';
-        $after = $filter->sanitizeIsoTime($before, true);
+        $after = $filter->sanitizeIsoTime($before);
         $this->assertSame($after, '12:34:00');
     }
     
     public function testSanitizeIsoTimestamp()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'Nov 7, 1979, 12:34pm';
-        $after = $filter->sanitizeIsoTimestamp($before, true);
+        $after = $filter->sanitizeIsoTimestamp($before);
         $this->assertSame($after, '1979-11-07T12:34:00');
     }
     
     public function testSanitizeNumeric()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $before = 'abc ... 123.45 ,.../';
-        $after = $filter->sanitizeNumeric($before, true);
+        $after = $filter->sanitizeNumeric($before);
         $this->assertSame($after, (string) 123.450);
         
         $before = 'a-bc .1. alkasldjf 23 aslk.45 ,.../';
-        $after = $filter->sanitizeNumeric($before, true);
+        $after = $filter->sanitizeNumeric($before);
         $this->assertSame($after, (string) -.123450);
         
         $before = '1E5';
-        $after = $filter->sanitizeNumeric($before, true);
+        $after = $filter->sanitizeNumeric($before);
         $this->assertSame($after, (string) 100000.0);
     }
     
     public function testSanitizeString()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 12345;
         $after = $filter->sanitizeString($before);
         $this->assertSame($after, '12345');
@@ -146,18 +161,22 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringAlnum()
     {
         $filter = Solar::factory('Solar_DataFilter');
-        $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringAlnum($before, true);
+        $filter->setRequire(true);
         
-        $this->assertNotSame($before, $after, true);
+        $before = 'abc 123 ,./';
+        $after = $filter->sanitizeStringAlnum($before);
+        
+        $this->assertNotSame($before, $after); //, true)
         $this->assertSame($after, 'abc123');
     }
     
     public function testSanitizeStringAlpha()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringAlpha($before, true);
+        $after = $filter->sanitizeStringAlpha($before);
         
         $this->assertNotSame($before, $after);
         $this->assertSame($after, 'abc');
@@ -166,6 +185,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringEmail()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // values taken directly from filter/test/022.phpt
         $test = array(
@@ -184,16 +204,20 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringRegex()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringRegex($before, '/[^a-z]/', '@', true);
+        $after = $filter->sanitizeStringRegex($before, '/[^a-z]/', '@');
         $this->assertSame($after, 'abc@@@@@@@@');
     }
     
     public function testSanitizeStringReplace()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringReplace($before, ' ', '@', true);
+        $after = $filter->sanitizeStringReplace($before, ' ', '@');
         $this->assertSame($after, 'abc@123@,./');
     }
     
@@ -205,6 +229,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringTrim()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = '  abc 123 ,./  ';
         $after = $filter->sanitizeStringTrim($before);
         $this->assertSame($after, 'abc 123 ,./');
@@ -213,6 +239,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringTrim_OtherChars()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = '  abc 123 ,./  ';
         $after = $filter->sanitizeStringTrim($before, ' ,./');
         $this->assertSame($after, 'abc 123');
@@ -221,14 +249,17 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testSanitizeStringWord()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
+        
         $before = 'abc _ 123 - ,./';
-        $after = $filter->sanitizeStringWord($before, true);
+        $after = $filter->sanitizeStringWord($before);
         $this->assertSame($after, 'abc_123');
     }
     
     public function testValidateAlnum()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -253,6 +284,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             0, 1, 2, 5,
@@ -262,13 +294,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'someThing8else',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateAlnum($val, false));
+            $this->assertTrue($filter->validateAlnum($val));
         }
     }
     
     public function testValidateAlpha()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -294,19 +327,21 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             'alphaonly',
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateAlpha($val, false));
+            $this->assertTrue($filter->validateAlpha($val));
         }
     }
     
     public function testValidateBlank()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -334,9 +369,10 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
     }
     
-    public function testValidateBoolean()
+    public function testValidateBool()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // boolean, blanks not allowed
         $list = array(
@@ -357,7 +393,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         );
         
         foreach ($list as $val) {
-            $bool = $filter->validateBoolean($val, false);
+            $bool = $filter->validateBool($val, false);
             $this->assertTrue($bool);
         }
         
@@ -367,17 +403,18 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         );
         
         foreach ($list as $val) {
-            $bool = $filter->validateBoolean($val, false);
+            $bool = $filter->validateBool($val, false);
             $this->assertFalse($bool);
         }
         
         // boolean, blanks allowed
+        $filter->setRequire(false);
         $list = array(
             '', '    ',
         );
         
         foreach ($list as $val) {
-            $bool = $filter->validateBoolean($val, true);
+            $bool = $filter->validateBool($val);
             $this->assertTrue($bool);
         }
     }
@@ -385,6 +422,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testValidateCtype()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -410,19 +448,21 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             'alphaonly',
             'AlphaOnLy',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateCtype($val, 'alpha', false));
+            $this->assertTrue($filter->validateCtype($val, 'alpha'));
         }
     }
     
     public function testValidateEmail()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -452,6 +492,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "",
             "\t\n",
@@ -463,13 +504,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "nobody1234567890@yahoo.co.uk",
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateEmail($val, false));
+            $this->assertTrue($filter->validateEmail($val));
         }
     }
     
     public function testValidateFloat()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -495,8 +537,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateFloat($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "+123456.7890",
@@ -506,13 +548,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '-1.23',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateFloat($val, false));
+            $this->assertTrue($filter->validateFloat($val));
         }
     }
     
     public function testValidateInKeys()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // basic options
         $opts = array(
@@ -538,17 +581,19 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array_keys($opts);
         $test[] = " ";
         $test[] = "\r";
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateInKeys($val, $opts, false));
+            $this->assertTrue($filter->validateInKeys($val, $opts));
         }
     }
     
     public function testValidateInList()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // basic options
         $opts = array(
@@ -572,19 +617,20 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateInList($val, $opts));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = $opts;
         $test[] = "";
         $test[] = " ";
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateInList($val, $opts, false));
+            $this->assertTrue($filter->validateInList($val, $opts));
         }
     }
     
     public function testValidateInt()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -610,8 +656,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateInt($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "+1234567890",
@@ -621,13 +667,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '-123',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateInt($val, false));
+            $this->assertTrue($filter->validateInt($val));
         }
     }
     
     public function testValidateIp()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -668,6 +715,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             '141.225.185.101',
@@ -685,13 +733,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "\n", "\r\n",
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIp($val, false));
+            $this->assertTrue($filter->validateIp($val));
         }
     }
     
     public function testValidateIpv4()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -727,6 +776,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             '141.225.185.101',
@@ -737,13 +787,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '127.0.0.1',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIpv4($val, false));
+            $this->assertTrue($filter->validateIpv4($val));
         }
     }
     
     public function testValidateIpv6()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -773,6 +824,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             '2001:0db8:0000:0000:0000:0000:1428:57ab',
             '2001:0db8:0000:0000:0000::1428:57ab',
@@ -783,13 +835,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '', '    '
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIpv6($val, false));
+            $this->assertTrue($filter->validateIpv6($val));
         }
     }
     
     public function testValidateIsoDate()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -820,8 +873,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateIsoDate($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             '0001-01-01',
@@ -830,7 +883,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '9999-12-31',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIsoDate($val, false));
+            $this->assertTrue($filter->validateIsoDate($val));
         }
         
     }
@@ -838,6 +891,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testValidateIsoTime()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -866,8 +920,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateIsoTime($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             '00:00:00',
@@ -876,13 +930,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '24:00:00',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIsoTime($val, false));
+            $this->assertTrue($filter->validateIsoTime($val));
         }
     }
     
     public function testValidateIsoTimeStamp()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -911,8 +966,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateIsoTimestamp($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             '0001-01-01T00:00:00',
@@ -920,13 +975,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '2004-02-29T24:00:00',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateIsoTimestamp($val, false));
+            $this->assertTrue($filter->validateIsoTimestamp($val));
         }
     }
     
     public function testValidateLocaleCode()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -951,8 +1007,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateLocaleCode($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             'en_US',
@@ -960,13 +1016,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'xx_YY',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateLocaleCode($val, false));
+            $this->assertTrue($filter->validateLocaleCode($val));
         }
     }
     
     public function testValidateMax()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $max = 3;
         
@@ -988,18 +1045,20 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             1, 2, 3,
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateMax($val, $max, false));
+            $this->assertTrue($filter->validateMax($val, $max));
         }
     }
     
     public function testValidateMaxLength()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $len = strlen("I am the very model");
         
@@ -1024,19 +1083,21 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "I am",
             "I am the very model",
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateMaxLength($val, $len, false));
+            $this->assertTrue($filter->validateMaxLength($val, $len));
         }
     }
     
     public function testValidateMimeType()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1045,7 +1106,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'application/vnd.ms-powerpoint',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertTrue($filter->validateMimeType($val));
         }
         
@@ -1061,12 +1121,16 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'someThing8else',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertFalse($filter->validateMimeType($val));
         }
         
+        // only certain types allowed
+        $allowed = array('text/plain', 'text/html', 'text/xhtml+xml');
+        $this->assertTrue($filter->validateMimeType('text/html', $allowed));
+        $this->assertFalse($filter->validateMimeType('application/vnd.ms-powerpoint', $allowed));
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             '', ' ',
             'text/plain',
@@ -1074,19 +1138,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'application/vnd.ms-powerpoint',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
-            $this->assertTrue($filter->validateMimeType($val, null, false));
+            $this->assertTrue($filter->validateMimeType($val));
         }
-        
-        // only certain types allowed
-        $allowed = array('text/plain', 'text/html', 'text/xhtml+xml');
-        $this->assertTrue($filter->validateMimeType('text/html', $allowed));
-        $this->assertFalse($filter->validateMimeType('application/vnd.ms-powerpoint', $allowed));
     }
     
     public function testValidateMin()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $min = 4;
         
@@ -1108,18 +1167,20 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateMin($val, $min, false));
+            $this->assertTrue($filter->validateMin($val, $min));
         }
     }
     
     public function testValidateMinLength()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $len = strlen("I am the very model");
         
@@ -1130,7 +1191,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "I am the very model of a moden Major-General",
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertTrue($filter->validateMinLength($val, $len));
         }
         
@@ -1141,11 +1201,11 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "I am",
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertFalse($filter->validateMinLength($val, $len));
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "I am the very model",
@@ -1153,14 +1213,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "I am the very model of a moden Major-General",
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
-            $this->assertTrue($filter->validateMinLength($val, $len, false));
+            $this->assertTrue($filter->validateMinLength($val, $len));
         }
     }
     
     public function testValidateNotBlank()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1192,6 +1252,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testValidateNotZero()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good (are non-zero)
         $test = array(
@@ -1214,8 +1275,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateNotZero($val));
         }
         
-        
         // blank
+        $filter->setRequire(false);
         $test = array(
             ' ', '',
             '1', '2', '5',
@@ -1225,13 +1286,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '+-0.0',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateNotZero($val, false));
+            $this->assertTrue($filter->validateNotZero($val));
         }
     }
     
     public function testValidateNumeric()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1257,8 +1319,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateNumeric($val));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "+123456.7890",
@@ -1268,13 +1330,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '-123',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateNumeric($val, false));
+            $this->assertTrue($filter->validateNumeric($val));
         }
     }
     
     public function testValidateRange()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $min = 4;
         $max = 6;
@@ -1297,18 +1360,20 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             4, 5, 6
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateRange($val, $min, $max, false));
+            $this->assertTrue($filter->validateRange($val, $min, $max));
         }
     }
     
     public function testValidateRangeLength()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $min = 4;
         $max = 6;
@@ -1320,7 +1385,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "abcdef",
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertTrue($filter->validateRangeLength($val, $min, $max));
         }
         
@@ -1331,11 +1395,11 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'abcdefg', 'abcdefgh', 'abcdefghi', 
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertFalse($filter->validateRangeLength($val, $min, $max));
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "abcd",
@@ -1343,14 +1407,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             "abcdef",
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
-            $this->assertTrue($filter->validateRangeLength($val, $min, $max, false));
+            $this->assertTrue($filter->validateRangeLength($val, $min, $max));
         }
     }
     
     public function testValidateRegex()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $expr = '/^[\+\-]?[0-9]+$/';
         
@@ -1378,8 +1442,8 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateRegex($val, $expr));
         }
         
-        
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "+1234567890",
@@ -1389,7 +1453,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '-123',
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateRegex($val, $expr, false));
+            $this->assertTrue($filter->validateRegex($val, $expr));
         }
 
     }
@@ -1397,6 +1461,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
     public function testValidateSizeScope()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         $good = array(
             "+1234567890",
@@ -1446,17 +1511,19 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = $good;
         $test[] = "";
         $test[] = " ";
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateSizeScope($val, $size, $scope, false));
+            $this->assertTrue($filter->validateSizeScope($val, $size, $scope));
         }
     }
     
     public function testValidateSepWords()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1478,17 +1545,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             $this->assertFalse($filter->validateSepWords($val));
         }
         
-        // blanks allowed
-        $test = array(
-            "", ' ',
-            'abc def ghi',
-            ' abc def ',
-            'a1s_2sd and another',
-        );
-        foreach ($test as $val) {
-            $this->assertTrue($filter->validateSepWords($val, ' ', false));
-        }
-        
         // alternative separator
         $test = array(
             'abc,def,ghi',
@@ -1498,11 +1554,24 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         foreach ($test as $val) {
             $this->assertTrue($filter->validateSepWords($val, ','));
         }
+        
+        // blanks allowed
+        $filter->setRequire(false);
+        $test = array(
+            "", ' ',
+            'abc def ghi',
+            ' abc def ',
+            'a1s_2sd and another',
+        );
+        foreach ($test as $val) {
+            $this->assertTrue($filter->validateSepWords($val));
+        }
     }
     
     public function testValidateString()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1527,6 +1596,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             12345,
             123.45,
@@ -1536,13 +1606,14 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '', ' ', "\t\n",
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateString($val, false));
+            $this->assertTrue($filter->validateString($val));
         }
     }
     
     public function testValidateUri()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1570,19 +1641,21 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             "foo://example.com/path/to/file.php/info?foo=bar&baz=dib#zim",
             "mms://user:pass@site.info/path/to/file.php/info?foo=bar&baz=dib#zim",
         );
         foreach ($test as $val) {
-            $this->assertTrue($filter->validateUri($val, null, false));
+            $this->assertTrue($filter->validateUri($val));
         }
     }
     
     public function testValidateWord()
     {
         $filter = Solar::factory('Solar_DataFilter');
+        $filter->setRequire(true);
         
         // good
         $test = array(
@@ -1591,7 +1664,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'A1s_2Sd',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertTrue($filter->validateWord($val));
         }
         
@@ -1602,11 +1674,11 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'ab-db cd-ef',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
             $this->assertFalse($filter->validateWord($val));
         }
         
         // blanks allowed
+        $filter->setRequire(false);
         $test = array(
             "", ' ',
             'abc', 'def', 'ghi',
@@ -1614,8 +1686,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'A1s_2Sd',
         );
         foreach ($test as $val) {
-            // $assert->setLabel("'$val'");
-            $this->assertTrue($filter->validateWord($val, false));
+            $this->assertTrue($filter->validateWord($val));
         }
     }
 }

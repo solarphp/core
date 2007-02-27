@@ -59,43 +59,51 @@ EXPECT;
         $this->assertType('Solar_Debug_Var', $var);
     }
     
-    public function testDump_arrayAsText()
+    public function testFetch_array()
     {
         $this->assertSame(
-            $this->_var_text->dump($this->_actual_array),
+            $this->_var_text->fetch($this->_actual_array),
             $this->_expect_array
         );
     }
     
-    public function testDump_stringAsText()
+    public function testFetch_string()
     {
         $this->assertSame(
-            $this->_var_text->dump($this->_actual_string),
+            $this->_var_text->fetch($this->_actual_string),
             $this->_expect_string
         );
     }
     
-    public function testDump_arrayAsHtml()
+    public function testDisplay_arrayAsHtml()
     {
         $expect = '<pre>'
                 . htmlspecialchars($this->_expect_array)
                 . '</pre>';
         
+        ob_start();
+        $this->_var_html->display($this->_actual_array);
+        $actual = ob_get_clean();
+        
         $this->assertSame(
-            $this->_var_html->dump($this->_actual_array),
-            $expect
+            $expect,
+            $actual
         );
     }
     
-    public function testDump_stringAsHtml()
+    public function testDisplay_stringAsHtml()
     {
         $expect = '<pre>'
                 . htmlspecialchars($this->_expect_string)
                 . '</pre>';
         
+        ob_start();
+        $this->_var_html->display($this->_actual_string);
+        $actual = ob_get_clean();
+        
         $this->assertSame(
-            $this->_var_html->dump($this->_actual_string),
-            $expect
+            $expect,
+            $actual
         );
     }
 }

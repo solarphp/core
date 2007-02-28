@@ -665,11 +665,112 @@ ENDEXPECT;
                                                 'bypass_mb' => true
                                                 ));
         $before = file_get_contents($this->t.'pass1.json');
-        $actual = serialize($json->decode($before));
         
-        $expect = file_get_contents($this->t.'pass1.json.txt');
+        $actual = $json->decode($before);
+    
+        $expect = array();
+        $expect[0] = 'JSON Test Pattern pass1';
+        $expect[1] = (object) array('object with 1 member' => array('array with 1 element'));
+        $expect[2] = new stdClass;
+        $expect[3] = array();
+        $expect[4] = -42;
+        $expect[5] = true;
+        $expect[6] = false;
+        $expect[7] = null;
         
-        $this->assertSame($actual, $expect);
+        $megakey = "/\\\""
+                 . $this->unicode_to_utf8(array(51966))
+                 . $this->unicode_to_utf8(array(47806))
+                 . $this->unicode_to_utf8(array(43928))
+                 . $this->unicode_to_utf8(array(64734))
+                 . $this->unicode_to_utf8(array(48346))
+                 . $this->unicode_to_utf8(array(61258))
+                 . chr(0x08)
+                 . chr(0x0C)."\n\r\t"
+                 . "`1~!@#$%^&*()_+-=[]{}|;:',./<>?";
+        
+        $expect[8] = (object) array(
+            'integer'   => 1234567890,
+            'real'      => -9876.543210,
+            'e'         => 0.123456789e-12,
+            'E'         => 1.234567890E+34,
+            '_empty_'   => INF,
+            'zero'      => 0,
+            'one'       => 1,
+            'space'     => ' ',
+            'quote'     => '"',
+            'backslash' => '\\',
+            'controls'  => chr(0x08). chr(0x0C)."\n\r\t",
+            'slash'     => "/ & /",
+            'alpha'     => 'abcdefghijklmnopqrstuvwyz',
+            'ALPHA'     => 'ABCDEFGHIJKLMNOPQRSTUVWYZ',
+            'digit'     => '0123456789',
+            'special'   => "`1~!@#$%^&*()_+-={':[,]}|;.</>?",
+            'hex'       => $this->unicode_to_utf8(array(291)).
+                           $this->unicode_to_utf8(array(17767)).
+                           $this->unicode_to_utf8(array(35243)).
+                           $this->unicode_to_utf8(array(52719)).
+                           $this->unicode_to_utf8(array(43981)).
+                           $this->unicode_to_utf8(array(61258)),
+            'true'      => true,
+            'false'     => false,
+            'null'      => null,
+            'array'     => array(),
+            'object'    => new stdClass(),
+            'address'   => '50 St. James Street',
+            'url'       => 'http://www.JSON.org/',
+            'comment'   => "// /* <!-- --",
+            '# -- --> */' => ' ',
+            ' s p a c e d ' => array(1,2,3,4,5,6,7),
+            'compact'   => array(1,2,3,4,5,6,7),
+            'jsontext'  => "{\"object with 1 member\":[\"array with 1 element\"]}",
+            'quotes'    => "&#34; \" %22 0x22 034 &#x22;",
+            "$megakey" => 'A key can be any string',
+        );
+        $expect[9] = 0.5;
+        $expect[10] = 98.6;
+        $expect[11] = 99.44;
+        $expect[12] = 1066;
+        $expect[13] = 'rosebud';
+        //print_r($expect);
+    
+    
+        // Commented out portion illustrates that the only differences in the 
+        // UNserialized versions is the value of the 'object' property:
+        
+        /*
+        
+        actual
+        object(stdClass)#27 (0) {
+        }
+        expect
+        object(stdClass)#25 (0) {
+        }
+        
+        */
+        // ... so we serialize both values for comparison in the assertion
+        
+        // $a8 = $actual[8];
+        // $e8 = $expect[8];
+        // $avars = get_object_vars($a8);
+        // $evars = get_object_vars($e8);
+        // 
+        // foreach ($avars as $key => $val) {
+        //     if (!array_key_exists($key, $evars)) {
+        //         var_dump($key);
+        //         echo "key: {$key} not found in expected\n";
+        //     } else {
+        //         if ($val !== $evars[$key]) {
+        //             echo "actual\n";
+        //             var_dump($val);
+        //             echo "expect\n";
+        //             var_dump($evars[$key]);                    
+        //         }
+        //     }
+        //     
+        // }
+    
+        $this->assertSame(serialize($actual), serialize($expect));        
     }
     
     public function testDecode_stress_compat()
@@ -738,4 +839,42 @@ ENDEXPECT;
 
         }
     }
+
+
+    /**
+     * 
+     * Hats off to Scott Reynen
+     * http://www.randomchaos.com/documents/?source=php_and_unicode
+     * 
+     * @param array $str Array of unicode bytes
+     * 
+     */
+    public function unicode_to_utf8($str)
+    {    
+        $utf8 = '';
+
+        foreach ($str as $unicode) {
+
+            if ($unicode < 128) {
+
+                $utf8 .= chr($unicode);
+
+            } elseif ($unicode < 2048) {
+
+                $utf8 .= chr(192 +  ( ( $unicode - ( $unicode % 64 ) ) / 64 ));
+                $utf8 .= chr(128 + ( $unicode % 64 ));
+
+            } else {
+
+                $utf8 .= chr( 224 + (( $unicode - ( $unicode % 4096 ) ) / 4096 ));
+                $utf8 .= chr( 128 + (( ( $unicode % 4096 ) - ( $unicode % 64 ) ) / 64 ));
+                $utf8 .= chr( 128 + ($unicode % 64 ));
+
+            } // if
+
+        } // foreach
+
+        return $utf8;
+    }
+    
 }

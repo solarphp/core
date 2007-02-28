@@ -216,6 +216,9 @@ class Solar_Json extends Solar_Base {
      * returned as an array. The default is false, meaning the default return
      * from this method is an object.
      *
+     * For compliance with the [JSON specification][], no attempt is made to 
+     * decode strings that are obviously not an encoded arrays or objects. 
+     * 
      * @param string $encodedValue String encoded in JSON format
      *
      * @param bool $asArray Optional argument to decode as an array.
@@ -226,6 +229,11 @@ class Solar_Json extends Solar_Base {
      */
     public function decode($encodedValue, $asArray = false)
     {
+        $first_char = substr(ltrim($encodedValue), 0, 1);
+        if ($first_char != '{' && $first_char != '[') {
+            return null;
+        }
+        
         if (!$this->_config['bypass_ext'] && function_exists('json_decode')) {
             return json_decode($encodedValue, (bool) $asArray);
         }

@@ -113,7 +113,7 @@ class Solar_App_HelloAjax extends Solar_App {
         $this->code = $code;
 
         // reset the locale strings to the new code
-        Solar::setLocale($this->code);
+        Solar::$locale->setCode($this->code);
 
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');
@@ -138,7 +138,7 @@ class Solar_App_HelloAjax extends Solar_App {
         $this->code = $code;
 
         // reset the locale strings to the new code
-        Solar::setLocale($this->code);
+        Solar::$locale->setCode($this->code);
 
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');

@@ -219,6 +219,8 @@ class Solar_Json extends Solar_Base {
      * For compliance with the [JSON specification][], no attempt is made to 
      * decode strings that are obviously not an encoded arrays or objects. 
      * 
+     * [JSON specification]: http://www.ietf.org/rfc/rfc4627.txt
+     * 
      * @param string $encodedValue String encoded in JSON format
      *
      * @param bool $asArray Optional argument to decode as an array.

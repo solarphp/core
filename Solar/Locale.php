@@ -45,7 +45,6 @@ class Solar_Locale extends Solar_Base {
      */
     protected $_Solar_Locale = array(
         'code' => 'en_US',
-        'blank' => false,
     );
     
     /**

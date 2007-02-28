@@ -108,19 +108,6 @@ class Solar_StructTest extends PHPUnit_Framework_TestCase
         $this->assertSame($actual, $expect);
     }
     
-    public function testLoad_reset()
-    {
-        $struct = $this->_getStruct();
-        $expect = array(
-            'foo2' => 'bar',
-            'baz2' => 'dib',
-            'zim2' => 'gir',
-        );
-        $struct->load($expect, true);
-        $actual = $struct->toArray();
-        $this->assertSame($actual, $expect);
-    }
-    
     public function testCount()
     {
         $struct = $this->_getStruct();

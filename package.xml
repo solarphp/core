@@ -1,0 +1,3115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
+<package version="1.0" packagerversion="1.5.0">
+ <name>Solar</name>
+ <summary>Simple object library and application repository for PHP.</summary>
+ <description>Solar is a class library and application component suite for PHP 5 (and
+is PHP5 E_STRICT compliant). Solar provides simple, easy-to-comprehend
+classes and components for the common aspects of web-based rapid
+application development.
+
+Solar is designed for developers who intend to distribute their
+applications to the whole world.  This means, for example, the database
+driver functions work exactly the same way for each supported database. 
+It also means that localization support is built in from the start.
+
+Please visit http://solarphp.com/ for more information.
+ </description>
+ <maintainers>
+  <maintainer>
+   <user>pmjones</user>
+   <name>Paul M. Jones</name>
+   <email>pmjones@solarphp.com</email>
+   <role>lead</role>
+  </maintainer>
+  <maintainer>
+   <user>clay</user>
+   <name>Clay Loveless</name>
+   <email>clay@killersoft.com</email>
+   <role>contributor</role>
+  </maintainer>
+  <maintainer>
+   <user>jelaurent</user>
+   <name>Jean-Eric Laurent</name>
+   <email>jel@jelaurent.com</email>
+   <role>contributor</role>
+  </maintainer>
+  <maintainer>
+   <user>jsurgeson</user>
+   <name>Jeff Surgeson</name>
+   <email>solar@3hex.com</email>
+   <role>contributor</role>
+  </maintainer>
+  <maintainer>
+   <user>moraes</user>
+   <name>Rodrigo Moraes</name>
+   <email>rodrigo.moraes@gmail.com</email>
+   <role>contributor</role>
+  </maintainer>
+  <maintainer>
+   <user>weierophinney</user>
+   <name>Matthew Weier O&apos;Phinney</name>
+   <email>mweierophinney@gmail.com</email>
+   <role>contributor</role>
+  </maintainer>
+  </maintainers>
+ <release>
+  <version>0.27.1</version>
+  <date>2007-02-28</date>
+  <license>BSD</license>
+  <state>alpha</state>
+  <notes>Solar 0.27.1 Release Notes
+==========================
+
+[FIX] The 0.27.0 release had two locale-related bugs in the &quot;Hello&quot; and &quot;Hello-Ajax&quot; apps; was calling the older Solar::setLocale() call instead of the newer Solar::$locale-&gt;setCode().  The 0.27.1 release fixes those bugs.
+
+
+Solar 0.27.0 Release Notes
+==========================
+
+
+Using spl_autoload()
+--------------------
+
+Modified Solar and Solar_Class_Stack so that class_exists() and interface_exists() so they **do not** address autoload, because the related methods are already registered with spl_autoload.
+
+
+New Class: Solar_Locale
+-----------------------
+
+Because of a need to override how locale strings are populated, moving all Solar::locale() related methods to their own class.
+
+This is at least a partial BC break. If you have been using Solar::locale() directly, you now need to use Solar::$locale-&gt;fetch(). However, use of $this-&gt;locale() in classes extended from Solar_Base is completel unaffected.
+
+If you need to change locale codes, you used to use Solar::setLocale() and getLocale(); you now use Solar::$locale-&gt;setCode() and getCode().
+
+Solar::$locale is now a Solar_Locale object, not an array of strings. If you need direct access to the string translations array, use Solar::$locale-&gt;trans.
+
+Also, it now allows for explicitly blank translation strings.
+
+Finally, you can tell Solar to use a class *other* than Solar_Locale as the Solar::$locale object by setting $config[&apos;Solar&apos;][&apos;locale_class&apos;].
+
+Related Solar classes have been modified to adapt to this change.
+
+
+Solar
+-----
+
+* [CHG] Now registers Solar::loadClass() and loadInterface() with spl_autoload(). This means you no longer have to use Solar::loadClass() in your class definition files; if the class is named properly for its location in the file system, spl_autoload() will now find and load it for you. In line with this, loadClass() and loadInterface() uses of class_exists() **do not** attempt to address autoloading.
+
+
+Solar_Base
+----------
+
+* [ADD] Added a dump() method so that classes can have their own custom var_dump() functionality.
+
+
+Solar_Cache_Adapter_Memcache
+----------------------------
+
+* [ADD] New support for pools of memcache servers; many thanks, Clay Loveless.
+
+* [CHG] Internal memcache object now publically accessible; thanks, Clay Loveless.
+
+
+Solar_Class_Stack
+-----------------
+
+* [CHG] Method load() now has a second param, $throw = true. When $throw = false, load() merely returns boolean false when the requested class is not found, instead of throwing an exception (the default behavior).
+
+* [CHG] Internal uses of class_exists() no longer attempt to address autoload, because of new spl_autoload() registration of Solar::loadClass() and Solar::loadInterface().
+
+
+Solar_Content_Abstract
+----------------------
+
+* [FIX] Method countPages() now honors $_paging value in non-tag queries.
+
+
+Solar_Controller_Front
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format discovery.
+
+
+Solar_Controller_Page
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format discovery.
+
+
+Solar_DataFilter
+----------------
+
+* [BRK] No more $require param at the end of methods; instead, use new method setRequire() to say whether values are required or not.
+
+* [ADD] Added new method getRequire() to tell if values are currently required or not.
+
+* [BRK] Renamed validateBoolean() and sanitizeBoolean() to validateBool() and sanitizeBool(), respectively.
+
+* [CHG] Method validateBlank() now properly validates NULL as blank.
+
+
+Solar_Debug_Var
+---------------
+
+* [BRK] For consistency with the rest of Solar, now uses fetch() and display() methods instead of just dump().
+
+* [BRK] The dump() method is now inherited from Solar_Base.
+
+
+Solar_Json
+----------
+
+* [FIX] In PHP 5.2.1, json_decode() deliberately disregards published standards for decoding JSON payloads. Solar_Json now includes code to bypass this behavior when using ext/json. Many thanks, Clay Loveless, for providing this fix.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [FIX] For PDO in PHP 5.2.1, to better support automated binding of values.
+
+  With PDO in PHP 5.2.1 and later, we can no longer just throw an array of data at the statement; we need to bind values specifically to their respective placeholders.
+
+  In addition, we can&apos;t bind one value to multiple identical named placeholders; we need to bind that same value multiple times. So if :foo is used three times, PDO uses :foo the first time, :foo2 the second time, and :foo3 the third time.
+
+  This query() method examins the statement for all :name placeholders and attempts to bind data from the $data array. The regular-expression it uses is a little braindead; it cannot tell if the :name placeholder is literal text or really a place holder.
+
+  As such, you should *either* use the $data array for named-placeholder value binding at query() time, *or* bind-as-you-go when building the statement, not both. If you do, you are on your own to make sure that nothing looking like a :name placeholder exists as literal text.
+
+* [BRK] As a result of the combination of the new PDO behavior and the adapter &quot;fix&quot; in response to it, question-mark placeholders are no longer supported for automatic value binding at query() time.
+
+
+Solar_Sql_Result
+----------------
+
+* [CHG] DEPRECATING in favor of Row and Rowset.
+
+
+Solar_Sql_Table
+---------------
+
+* [CHG] Allows reading &apos;order&apos; via __get(); thanks for the suggestion, Rodrigo Moraes.
+
+
+Solar_Struct
+------------
+
+* [CHG] Protected property $_valid is now $_iterator_valid, to indicate it relates to the iterator interface, not the validity of the struct data.
+
+* [BRK] Method load() now only takes one param, $data. The $reset param which used to let you clear the internal data array is now removed. Thus, new data being loaded is now always merged with existing data in the struct.
+
+
+Solar_Uri
+---------
+
+* [ADD] Now extracts the &quot;.ext&quot; format extension from the last path element and stores in new $format property. Adds the format back to the last path element on fetch().
+  </notes>
+  <deps>
+   <dep type="php" rel="ge" version="5.2.0" optional="no"/>
+  </deps>
+  <provides type="class" name="Solar_Access" extends="Solar_Base" />
+  <provides type="function" name="Solar_Access::solarFactory" />
+  <provides type="class" name="Solar_App" extends="Solar_Controller_Page" />
+  <provides type="function" name="Solar_App::actionError" />
+  <provides type="class" name="Solar_Auth" extends="Solar_Base" />
+  <provides type="function" name="Solar_Auth::solarFactory" />
+  <provides type="class" name="Solar_Base" />
+  <provides type="function" name="Solar_Base::apiVersion" />
+  <provides type="function" name="Solar_Base::dump" />
+  <provides type="function" name="Solar_Base::locale" />
+  <provides type="class" name="Solar_Cache" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cache::solarFactory" />
+  <provides type="class" name="Solar_Content" extends="Solar_Base" />
+  <provides type="class" name="Solar_DataFilter" extends="Solar_Base" />
+  <provides type="function" name="Solar_DataFilter::setRequire" />
+  <provides type="function" name="Solar_DataFilter::getRequire" />
+  <provides type="function" name="Solar_DataFilter::sanitizeBool" />
+  <provides type="function" name="Solar_DataFilter::sanitizeFloat" />
+  <provides type="function" name="Solar_DataFilter::sanitizeInt" />
+  <provides type="function" name="Solar_DataFilter::sanitizeIsoDate" />
+  <provides type="function" name="Solar_DataFilter::sanitizeIsoTime" />
+  <provides type="function" name="Solar_DataFilter::sanitizeIsoTimestamp" />
+  <provides type="function" name="Solar_DataFilter::sanitizeNumeric" />
+  <provides type="function" name="Solar_DataFilter::sanitizeString" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringAlpha" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringAlnum" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringEmail" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringRegex" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringReplace" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringTrim" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringUri" />
+  <provides type="function" name="Solar_DataFilter::sanitizeStringWord" />
+  <provides type="function" name="Solar_DataFilter::validateAlnum" />
+  <provides type="function" name="Solar_DataFilter::validateAlpha" />
+  <provides type="function" name="Solar_DataFilter::validateBlank" />
+  <provides type="function" name="Solar_DataFilter::validateBool" />
+  <provides type="function" name="Solar_DataFilter::validateCtype" />
+  <provides type="function" name="Solar_DataFilter::validateEmail" />
+  <provides type="function" name="Solar_DataFilter::validateFloat" />
+  <provides type="function" name="Solar_DataFilter::validateInKeys" />
+  <provides type="function" name="Solar_DataFilter::validateInList" />
+  <provides type="function" name="Solar_DataFilter::validateInt" />
+  <provides type="function" name="Solar_DataFilter::validateIp" />
+  <provides type="function" name="Solar_DataFilter::validateIpv4" />
+  <provides type="function" name="Solar_DataFilter::validateIpv6" />
+  <provides type="function" name="Solar_DataFilter::validateIsoDate" />
+  <provides type="function" name="Solar_DataFilter::validateIsoTime" />
+  <provides type="function" name="Solar_DataFilter::validateIsoTimestamp" />
+  <provides type="function" name="Solar_DataFilter::validateLocaleCode" />
+  <provides type="function" name="Solar_DataFilter::validateMax" />
+  <provides type="function" name="Solar_DataFilter::validateMaxLength" />
+  <provides type="function" name="Solar_DataFilter::validateMimeType" />
+  <provides type="function" name="Solar_DataFilter::validateMin" />
+  <provides type="function" name="Solar_DataFilter::validateMinLength" />
+  <provides type="function" name="Solar_DataFilter::validateNumeric" />
+  <provides type="function" name="Solar_DataFilter::validateNotZero" />
+  <provides type="function" name="Solar_DataFilter::validateNotBlank" />
+  <provides type="function" name="Solar_DataFilter::validateRange" />
+  <provides type="function" name="Solar_DataFilter::validateRangeLength" />
+  <provides type="function" name="Solar_DataFilter::validateRegex" />
+  <provides type="function" name="Solar_DataFilter::validateSizeScope" />
+  <provides type="function" name="Solar_DataFilter::validateSepWords" />
+  <provides type="function" name="Solar_DataFilter::validateString" />
+  <provides type="function" name="Solar_DataFilter::validateUri" />
+  <provides type="function" name="Solar_DataFilter::validateWord" />
+  <provides type="class" name="Solar_Exception" extends="Exception" />
+  <provides type="function" name="Solar_Exception::getInfo" />
+  <provides type="function" name="Solar_Exception::getClass" />
+  <provides type="function" name="Solar_Exception::getClassCode" />
+  <provides type="class" name="Solar_Filter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Filter::alpha" />
+  <provides type="function" name="Solar_Filter::stripAlpha" />
+  <provides type="function" name="Solar_Filter::alnum" />
+  <provides type="function" name="Solar_Filter::stripAlnum" />
+  <provides type="function" name="Solar_Filter::blank" />
+  <provides type="function" name="Solar_Filter::stripBlank" />
+  <provides type="function" name="Solar_Filter::numeric" />
+  <provides type="function" name="Solar_Filter::stripNumeric" />
+  <provides type="function" name="Solar_Filter::word" />
+  <provides type="function" name="Solar_Filter::stripWord" />
+  <provides type="function" name="Solar_Filter::formatDate" />
+  <provides type="function" name="Solar_Filter::formatTime" />
+  <provides type="function" name="Solar_Filter::formatTimestamp" />
+  <provides type="function" name="Solar_Filter::pregReplace" />
+  <provides type="function" name="Solar_Filter::strReplace" />
+  <provides type="function" name="Solar_Filter::trim" />
+  <provides type="function" name="Solar_Filter::cast" />
+  <provides type="function" name="Solar_Filter::callback" />
+  <provides type="function" name="Solar_Filter::multiple" />
+  <provides type="class" name="Solar_Form" extends="Solar_Base" />
+  <provides type="function" name="Solar_Form::setElement" />
+  <provides type="function" name="Solar_Form::setElements" />
+  <provides type="function" name="Solar_Form::orderElements" />
+  <provides type="function" name="Solar_Form::addFilter" />
+  <provides type="function" name="Solar_Form::addValid" />
+  <provides type="function" name="Solar_Form::addFeedback" />
+  <provides type="function" name="Solar_Form::populate" />
+  <provides type="function" name="Solar_Form::validate" />
+  <provides type="function" name="Solar_Form::values" />
+  <provides type="function" name="Solar_Form::reset" />
+  <provides type="function" name="Solar_Form::setStatus" />
+  <provides type="function" name="Solar_Form::getStatus" />
+  <provides type="function" name="Solar_Form::load" />
+  <provides type="class" name="Solar_Json" extends="Solar_Base" />
+  <provides type="function" name="Solar_Json::encode" />
+  <provides type="function" name="Solar_Json::decode" />
+  <provides type="class" name="Solar_Locale" extends="Solar_Base" />
+  <provides type="function" name="Solar_Locale::setCode" />
+  <provides type="function" name="Solar_Locale::getCode" />
+  <provides type="function" name="Solar_Locale::fetch" />
+  <provides type="class" name="Solar_Log" extends="Solar_Base" />
+  <provides type="function" name="Solar_Log::solarFactory" />
+  <provides type="class" name="Solar_Markdown" extends="Solar_Base" />
+  <provides type="function" name="Solar_Markdown::getPlugin" />
+  <provides type="function" name="Solar_Markdown::transform" />
+  <provides type="function" name="Solar_Markdown::reset" />
+  <provides type="function" name="Solar_Markdown::prepare" />
+  <provides type="function" name="Solar_Markdown::processBlocks" />
+  <provides type="function" name="Solar_Markdown::cleanup" />
+  <provides type="function" name="Solar_Markdown::render" />
+  <provides type="function" name="Solar_Markdown::processSpans" />
+  <provides type="function" name="Solar_Markdown::getTabWidth" />
+  <provides type="function" name="Solar_Markdown::toHtmlToken" />
+  <provides type="function" name="Solar_Markdown::isHtmlToken" />
+  <provides type="function" name="Solar_Markdown::unHtmlToken" />
+  <provides type="function" name="Solar_Markdown::escape" />
+  <provides type="function" name="Solar_Markdown::encode" />
+  <provides type="function" name="Solar_Markdown::unEncode" />
+  <provides type="function" name="Solar_Markdown::setLink" />
+  <provides type="function" name="Solar_Markdown::getLink" />
+  <provides type="function" name="Solar_Markdown::getLinks" />
+  <provides type="class" name="Solar_Request" extends="Solar_Base" />
+  <provides type="function" name="Solar_Request::get" />
+  <provides type="function" name="Solar_Request::post" />
+  <provides type="function" name="Solar_Request::cookie" />
+  <provides type="function" name="Solar_Request::env" />
+  <provides type="function" name="Solar_Request::server" />
+  <provides type="function" name="Solar_Request::files" />
+  <provides type="function" name="Solar_Request::http" />
+  <provides type="function" name="Solar_Request::isGet" />
+  <provides type="function" name="Solar_Request::isPost" />
+  <provides type="function" name="Solar_Request::isPut" />
+  <provides type="function" name="Solar_Request::isDelete" />
+  <provides type="function" name="Solar_Request::isXhr" />
+  <provides type="function" name="Solar_Request::load" />
+  <provides type="class" name="Solar_Role" extends="Solar_Base" />
+  <provides type="function" name="Solar_Role::solarFactory" />
+  <provides type="class" name="Solar_Session" extends="Solar_Base" />
+  <provides type="function" name="Solar_Session::setClass" />
+  <provides type="function" name="Solar_Session::set" />
+  <provides type="function" name="Solar_Session::add" />
+  <provides type="function" name="Solar_Session::get" />
+  <provides type="function" name="Solar_Session::reset" />
+  <provides type="function" name="Solar_Session::setFlash" />
+  <provides type="function" name="Solar_Session::addFlash" />
+  <provides type="function" name="Solar_Session::getFlash" />
+  <provides type="function" name="Solar_Session::resetFlash" />
+  <provides type="function" name="Solar_Session::resetAll" />
+  <provides type="function" name="Solar_Session::regenerateId" />
+  <provides type="class" name="Solar_Sql" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql::solarFactory" />
+  <provides type="class" name="Solar_Struct" extends="Solar_Base" />
+  <provides type="function" name="Solar_Struct::toArray" />
+  <provides type="function" name="Solar_Struct::load" />
+  <provides type="function" name="Solar_Struct::offsetExists" />
+  <provides type="function" name="Solar_Struct::offsetGet" />
+  <provides type="function" name="Solar_Struct::offsetSet" />
+  <provides type="function" name="Solar_Struct::offsetUnset" />
+  <provides type="function" name="Solar_Struct::count" />
+  <provides type="function" name="Solar_Struct::current" />
+  <provides type="function" name="Solar_Struct::key" />
+  <provides type="function" name="Solar_Struct::next" />
+  <provides type="function" name="Solar_Struct::rewind" />
+  <provides type="function" name="Solar_Struct::valid" />
+  <provides type="class" name="Solar_Test" extends="Solar_Base" />
+  <provides type="function" name="Solar_Test::setup" />
+  <provides type="function" name="Solar_Test::teardown" />
+  <provides type="function" name="Solar_Test::getAssertCount" />
+  <provides type="function" name="Solar_Test::resetAssertCount" />
+  <provides type="function" name="Solar_Test::assertTrue" />
+  <provides type="function" name="Solar_Test::assertNotTrue" />
+  <provides type="function" name="Solar_Test::assertFalse" />
+  <provides type="function" name="Solar_Test::assertNotFalse" />
+  <provides type="function" name="Solar_Test::assertNull" />
+  <provides type="function" name="Solar_Test::assertNotNull" />
+  <provides type="function" name="Solar_Test::assertInstance" />
+  <provides type="function" name="Solar_Test::assertNotInstance" />
+  <provides type="function" name="Solar_Test::assertSame" />
+  <provides type="function" name="Solar_Test::assertNotSame" />
+  <provides type="function" name="Solar_Test::assertEquals" />
+  <provides type="function" name="Solar_Test::assertNotEquals" />
+  <provides type="function" name="Solar_Test::assertRegex" />
+  <provides type="function" name="Solar_Test::assertNotRegex" />
+  <provides type="function" name="Solar_Test::assertProperty" />
+  <provides type="function" name="Solar_Test::fail" />
+  <provides type="function" name="Solar_Test::todo" />
+  <provides type="function" name="Solar_Test::skip" />
+  <provides type="function" name="Solar_Test::error" />
+  <provides type="class" name="Solar_Uri" extends="Solar_Base" />
+  <provides type="function" name="Solar_Uri::set" />
+  <provides type="function" name="Solar_Uri::fetch" />
+  <provides type="function" name="Solar_Uri::quick" />
+  <provides type="function" name="Solar_Uri::setQuery" />
+  <provides type="function" name="Solar_Uri::setPath" />
+  <provides type="class" name="Solar_User" extends="Solar_Base" />
+  <provides type="class" name="Solar_Valid" extends="Solar_Base" />
+  <provides type="function" name="Solar_Valid::alnum" />
+  <provides type="function" name="Solar_Valid::alpha" />
+  <provides type="function" name="Solar_Valid::blank" />
+  <provides type="function" name="Solar_Valid::callback" />
+  <provides type="function" name="Solar_Valid::ctype" />
+  <provides type="function" name="Solar_Valid::email" />
+  <provides type="function" name="Solar_Valid::feedback" />
+  <provides type="function" name="Solar_Valid::inKeys" />
+  <provides type="function" name="Solar_Valid::inList" />
+  <provides type="function" name="Solar_Valid::integer" />
+  <provides type="function" name="Solar_Valid::ipv4" />
+  <provides type="function" name="Solar_Valid::isoDate" />
+  <provides type="function" name="Solar_Valid::isoTime" />
+  <provides type="function" name="Solar_Valid::isoTimestamp" />
+  <provides type="function" name="Solar_Valid::localeCode" />
+  <provides type="function" name="Solar_Valid::max" />
+  <provides type="function" name="Solar_Valid::maxLength" />
+  <provides type="function" name="Solar_Valid::mimeType" />
+  <provides type="function" name="Solar_Valid::min" />
+  <provides type="function" name="Solar_Valid::minLength" />
+  <provides type="function" name="Solar_Valid::multiple" />
+  <provides type="function" name="Solar_Valid::notZero" />
+  <provides type="function" name="Solar_Valid::notBlank" />
+  <provides type="function" name="Solar_Valid::range" />
+  <provides type="function" name="Solar_Valid::rangeLength" />
+  <provides type="function" name="Solar_Valid::regex" />
+  <provides type="function" name="Solar_Valid::scope" />
+  <provides type="function" name="Solar_Valid::sepWords" />
+  <provides type="function" name="Solar_Valid::uri" />
+  <provides type="function" name="Solar_Valid::word" />
+  <provides type="class" name="Solar_View" extends="Solar_Base" />
+  <provides type="function" name="Solar_View::assign" />
+  <provides type="function" name="Solar_View::setHelperClass" />
+  <provides type="function" name="Solar_View::addHelperClass" />
+  <provides type="function" name="Solar_View::getHelperClass" />
+  <provides type="function" name="Solar_View::getHelper" />
+  <provides type="function" name="Solar_View::newHelper" />
+  <provides type="function" name="Solar_View::escape" />
+  <provides type="function" name="Solar_View::setTemplatePath" />
+  <provides type="function" name="Solar_View::addTemplatePath" />
+  <provides type="function" name="Solar_View::getTemplatePath" />
+  <provides type="function" name="Solar_View::display" />
+  <provides type="function" name="Solar_View::fetch" />
+  <provides type="function" name="Solar_View::template" />
+  <provides type="function" name="Solar_View::partial" />
+  <provides type="class" name="Solar_Access_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Access_Adapter::load" />
+  <provides type="function" name="Solar_Access_Adapter::isAllowed" />
+  <provides type="function" name="Solar_Access_Adapter::reset" />
+  <provides type="function" name="Solar_Access_Adapter::fetch" />
+  <provides type="class" name="Solar_Access_Adapter_File" extends="Solar_Access_Adapter" />
+  <provides type="function" name="Solar_Access_Adapter_File::fetch" />
+  <provides type="class" name="Solar_Access_Adapter_None" extends="Solar_Access_Adapter" />
+  <provides type="function" name="Solar_Access_Adapter_None::fetch" />
+  <provides type="class" name="Solar_Access_Adapter_Open" extends="Solar_Access_Adapter" />
+  <provides type="function" name="Solar_Access_Adapter_Open::fetch" />
+  <provides type="class" name="Solar_App_Bookmarks" extends="Solar_App" />
+  <provides type="function" name="Solar_App_Bookmarks::actionAdd" />
+  <provides type="function" name="Solar_App_Bookmarks::actionEdit" />
+  <provides type="function" name="Solar_App_Bookmarks::actionQuick" />
+  <provides type="function" name="Solar_App_Bookmarks::actionTag" />
+  <provides type="function" name="Solar_App_Bookmarks::actionUser" />
+  <provides type="class" name="Solar_App_Hello" extends="Solar_App" />
+  <provides type="function" name="Solar_App_Hello::actionMain" />
+  <provides type="function" name="Solar_App_Hello::actionRss" />
+  <provides type="class" name="Solar_App_HelloAjax" extends="Solar_App" />
+  <provides type="function" name="Solar_App_HelloAjax::actionMain" />
+  <provides type="function" name="Solar_App_HelloAjax::actionRss" />
+  <provides type="class" name="Solar_App_HelloMini" extends="Solar_Controller_Page" />
+  <provides type="function" name="Solar_App_HelloMini::actionIndex" />
+  <provides type="class" name="Solar_Auth_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Auth_Adapter::start" />
+  <provides type="function" name="Solar_Auth_Adapter::updateIdleExpire" />
+  <provides type="function" name="Solar_Auth_Adapter::isValid" />
+  <provides type="function" name="Solar_Auth_Adapter::reset" />
+  <provides type="function" name="Solar_Auth_Adapter::getFlash" />
+  <provides type="function" name="Solar_Auth_Adapter::isLoginRequest" />
+  <provides type="function" name="Solar_Auth_Adapter::isLogoutRequest" />
+  <provides type="function" name="Solar_Auth_Adapter::processLogin" />
+  <provides type="function" name="Solar_Auth_Adapter::processLogout" />
+  <provides type="class" name="Solar_Auth_Adapter_Htpasswd" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Ini" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Ldap" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Mail" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_None" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Post" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Sql" extends="Solar_Auth_Adapter" />
+  <provides type="class" name="Solar_Auth_Adapter_Typekey" extends="Solar_Auth_Adapter" />
+  <provides type="function" name="Solar_Auth_Adapter_Typekey::isLoginRequest" />
+  <provides type="class" name="Solar_Cache_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Cache_Adapter::setActive" />
+  <provides type="function" name="Solar_Cache_Adapter::isActive" />
+  <provides type="function" name="Solar_Cache_Adapter::getLife" />
+  <provides type="function" name="Solar_Cache_Adapter::save" />
+  <provides type="function" name="Solar_Cache_Adapter::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter::delete" />
+  <provides type="function" name="Solar_Cache_Adapter::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter::entry" />
+  <provides type="class" name="Solar_Cache_Adapter_Apc" extends="Solar_Cache_Adapter" />
+  <provides type="function" name="Solar_Cache_Adapter_Apc::save" />
+  <provides type="function" name="Solar_Cache_Adapter_Apc::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter_Apc::delete" />
+  <provides type="function" name="Solar_Cache_Adapter_Apc::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter_Apc::entry" />
+  <provides type="class" name="Solar_Cache_Adapter_Eaccelerator" extends="Solar_Cache_Adapter" />
+  <provides type="function" name="Solar_Cache_Adapter_Eaccelerator::save" />
+  <provides type="function" name="Solar_Cache_Adapter_Eaccelerator::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter_Eaccelerator::delete" />
+  <provides type="function" name="Solar_Cache_Adapter_Eaccelerator::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter_Eaccelerator::entry" />
+  <provides type="class" name="Solar_Cache_Adapter_File" extends="Solar_Cache_Adapter" />
+  <provides type="function" name="Solar_Cache_Adapter_File::save" />
+  <provides type="function" name="Solar_Cache_Adapter_File::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter_File::delete" />
+  <provides type="function" name="Solar_Cache_Adapter_File::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter_File::entry" />
+  <provides type="class" name="Solar_Cache_Adapter_Memcache" extends="Solar_Cache_Adapter" />
+  <provides type="function" name="Solar_Cache_Adapter_Memcache::save" />
+  <provides type="function" name="Solar_Cache_Adapter_Memcache::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter_Memcache::delete" />
+  <provides type="function" name="Solar_Cache_Adapter_Memcache::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter_Memcache::entry" />
+  <provides type="class" name="Solar_Cache_Adapter_Xcache" extends="Solar_Cache_Adapter" />
+  <provides type="function" name="Solar_Cache_Adapter_Xcache::save" />
+  <provides type="function" name="Solar_Cache_Adapter_Xcache::fetch" />
+  <provides type="function" name="Solar_Cache_Adapter_Xcache::delete" />
+  <provides type="function" name="Solar_Cache_Adapter_Xcache::deleteAll" />
+  <provides type="function" name="Solar_Cache_Adapter_Xcache::entry" />
+  <provides type="class" name="Solar_Class_Map" extends="Solar_Base" />
+  <provides type="function" name="Solar_Class_Map::fetch" />
+  <provides type="class" name="Solar_Class_Stack" extends="Solar_Base" />
+  <provides type="function" name="Solar_Class_Stack::get" />
+  <provides type="function" name="Solar_Class_Stack::add" />
+  <provides type="function" name="Solar_Class_Stack::set" />
+  <provides type="function" name="Solar_Class_Stack::load" />
+  <provides type="class" name="Solar_Content_Abstract" extends="Solar_Base" />
+  <provides type="function" name="Solar_Content_Abstract::setAreaId" />
+  <provides type="function" name="Solar_Content_Abstract::getAreaId" />
+  <provides type="function" name="Solar_Content_Abstract::setPaging" />
+  <provides type="function" name="Solar_Content_Abstract::getPaging" />
+  <provides type="function" name="Solar_Content_Abstract::fetch" />
+  <provides type="function" name="Solar_Content_Abstract::fetchRow" />
+  <provides type="function" name="Solar_Content_Abstract::fetchParts" />
+  <provides type="function" name="Solar_Content_Abstract::fetchPartsByType" />
+  <provides type="function" name="Solar_Content_Abstract::fetchNew" />
+  <provides type="function" name="Solar_Content_Abstract::fetchTags" />
+  <provides type="function" name="Solar_Content_Abstract::fetchAll" />
+  <provides type="function" name="Solar_Content_Abstract::countPages" />
+  <provides type="function" name="Solar_Content_Abstract::save" />
+  <provides type="function" name="Solar_Content_Abstract::insert" />
+  <provides type="function" name="Solar_Content_Abstract::update" />
+  <provides type="function" name="Solar_Content_Abstract::delete" />
+  <provides type="function" name="Solar_Content_Abstract::form" />
+  <provides type="class" name="Solar_Content_Bookmarks" extends="Solar_Content_Abstract" />
+  <provides type="function" name="Solar_Content_Bookmarks::fetchAll" />
+  <provides type="function" name="Solar_Content_Bookmarks::countPages" />
+  <provides type="function" name="Solar_Content_Bookmarks::fetchTags" />
+  <provides type="function" name="Solar_Content_Bookmarks::fetchByOwnerUri" />
+  <provides type="function" name="Solar_Content_Bookmarks::form" />
+  <provides type="class" name="Solar_Controller_Exception" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Controller_Front" extends="Solar_Base" />
+  <provides type="function" name="Solar_Controller_Front::fetch" />
+  <provides type="function" name="Solar_Controller_Front::display" />
+  <provides type="class" name="Solar_Controller_Page" extends="Solar_Base" />
+  <provides type="function" name="Solar_Controller_Page::fetch" />
+  <provides type="function" name="Solar_Controller_Page::display" />
+  <provides type="class" name="Solar_Controller_Page_Exception" extends="Solar_Controller_Exception" />
+  <provides type="class" name="Solar_Controller_Page_Exception_ActionNotFound" extends="Solar_Controller_Page_Exception" />
+  <provides type="class" name="Solar_Controller_Page_Exception_LayoutNotFound" extends="Solar_Controller_Page_Exception" />
+  <provides type="class" name="Solar_Controller_Page_Exception_PropertyNotDefined" extends="Solar_Controller_Page_Exception" />
+  <provides type="class" name="Solar_Controller_Page_Exception_ViewNotFound" extends="Solar_Controller_Page_Exception" />
+  <provides type="class" name="Solar_Debug_Timer" extends="Solar_Base" />
+  <provides type="function" name="Solar_Debug_Timer::start" />
+  <provides type="function" name="Solar_Debug_Timer::stop" />
+  <provides type="function" name="Solar_Debug_Timer::mark" />
+  <provides type="function" name="Solar_Debug_Timer::profile" />
+  <provides type="function" name="Solar_Debug_Timer::fetch" />
+  <provides type="function" name="Solar_Debug_Timer::display" />
+  <provides type="class" name="Solar_Debug_Var" extends="Solar_Base" />
+  <provides type="function" name="Solar_Debug_Var::display" />
+  <provides type="function" name="Solar_Debug_Var::fetch" />
+  <provides type="class" name="Solar_Docs_Apiref" extends="Solar_Base" />
+  <provides type="function" name="Solar_Docs_Apiref::addFiles" />
+  <provides type="function" name="Solar_Docs_Apiref::addClass" />
+  <provides type="class" name="Solar_Docs_Phpdoc" extends="Solar_Base" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parse" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseParam" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseReturn" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseTodo" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseSee" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseVar" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseThrows" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseException" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseCategory" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parsePackage" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseSubpackage" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseIgnore" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseAuthor" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseCopyright" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseDeprecated" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseDeprec" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseLicense" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseLink" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseSince" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseVersion" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseExample" />
+  <provides type="function" name="Solar_Docs_Phpdoc::parseStaticvar" />
+  <provides type="class" name="Solar_Exception_ConnectionFailed" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_ExtensionNotLoaded" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_FileNotFound" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_FileNotReadable" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_MethodNotCallable" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Exception_MethodNotImplemented" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Form_Load_Table" extends="Solar_Base" />
+  <provides type="function" name="Solar_Form_Load_Table::fetch" />
+  <provides type="class" name="Solar_Form_Load_Xml" extends="Solar_Base" />
+  <provides type="function" name="Solar_Form_Load_Xml::fetch" />
+  <provides type="class" name="Solar_Json_Checker" extends="Solar_Base" />
+  <provides type="function" name="Solar_Json_Checker::isValid" />
+  <provides type="class" name="Solar_Log_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Log_Adapter::save" />
+  <provides type="function" name="Solar_Log_Adapter::getEvents" />
+  <provides type="function" name="Solar_Log_Adapter::setEvents" />
+  <provides type="class" name="Solar_Log_Adapter_Echo" extends="Solar_Log_Adapter" />
+  <provides type="class" name="Solar_Log_Adapter_File" extends="Solar_Log_Adapter" />
+  <provides type="class" name="Solar_Log_Adapter_Multi" extends="Solar_Log_Adapter" />
+  <provides type="class" name="Solar_Log_Adapter_None" extends="Solar_Log_Adapter" />
+  <provides type="class" name="Solar_Markdown_Extra" extends="Solar_Markdown" />
+  <provides type="class" name="Solar_Markdown_Plugin" extends="Solar_Base" />
+  <provides type="function" name="Solar_Markdown_Plugin::setMarkdown" />
+  <provides type="function" name="Solar_Markdown_Plugin::isPrepare" />
+  <provides type="function" name="Solar_Markdown_Plugin::isBlock" />
+  <provides type="function" name="Solar_Markdown_Plugin::isSpan" />
+  <provides type="function" name="Solar_Markdown_Plugin::isCleanup" />
+  <provides type="function" name="Solar_Markdown_Plugin::getChars" />
+  <provides type="function" name="Solar_Markdown_Plugin::reset" />
+  <provides type="function" name="Solar_Markdown_Plugin::prepare" />
+  <provides type="function" name="Solar_Markdown_Plugin::parse" />
+  <provides type="function" name="Solar_Markdown_Plugin::cleanup" />
+  <provides type="class" name="Solar_Markdown_Wiki" extends="Solar_Markdown" />
+  <provides type="class" name="Solar_Markdown_Extra_DefList" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Extra_DefList::parse" />
+  <provides type="class" name="Solar_Markdown_Extra_EmStrong" extends="Solar_Markdown_Plugin_EmStrong" />
+  <provides type="function" name="Solar_Markdown_Extra_EmStrong::parse" />
+  <provides type="class" name="Solar_Markdown_Extra_Header" extends="Solar_Markdown_Plugin_Header" />
+  <provides type="function" name="Solar_Markdown_Extra_Header::parse" />
+  <provides type="class" name="Solar_Markdown_Extra_Table" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Extra_Table::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_AmpsAngles" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_AmpsAngles::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_BlockQuote" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_BlockQuote::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Break" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Break::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_CodeBlock" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_CodeBlock::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_CodeSpan" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_CodeSpan::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_EmStrong" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_EmStrong::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Encode" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Encode::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Header" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Header::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_HorizRule" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_HorizRule::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Html" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Html::prepare" />
+  <provides type="function" name="Solar_Markdown_Plugin_Html::cleanup" />
+  <provides type="function" name="Solar_Markdown_Plugin_Html::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Image" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Image::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Link" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Link::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_List" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_List::reset" />
+  <provides type="function" name="Solar_Markdown_Plugin_List::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Paragraph" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Paragraph::parse" />
+  <provides type="class" name="Solar_Markdown_Plugin_Prefilter" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Prefilter::prepare" />
+  <provides type="class" name="Solar_Markdown_Plugin_StripLinkDefs" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_StripLinkDefs::prepare" />
+  <provides type="class" name="Solar_Markdown_Plugin_Uri" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Plugin_Uri::parse" />
+  <provides type="class" name="Solar_Markdown_Wiki_ColorCodeBlock" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Wiki_ColorCodeBlock::parse" />
+  <provides type="class" name="Solar_Markdown_Wiki_Escape" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Wiki_Escape::parse" />
+  <provides type="class" name="Solar_Markdown_Wiki_Filter" extends="Solar_Markdown_Plugin_Prefilter" />
+  <provides type="function" name="Solar_Markdown_Wiki_Filter::cleanup" />
+  <provides type="class" name="Solar_Markdown_Wiki_Header" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Wiki_Header::parse" />
+  <provides type="class" name="Solar_Markdown_Wiki_Link" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::setCheckPagesCallback" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::setAttrib" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::setInterwiki" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::getInterwiki" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::setAttribs" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::getPages" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::reset" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::parse" />
+  <provides type="function" name="Solar_Markdown_Wiki_Link::cleanup" />
+  <provides type="class" name="Solar_Markdown_Wiki_MethodSynopsis" extends="Solar_Markdown_Plugin" />
+  <provides type="function" name="Solar_Markdown_Wiki_MethodSynopsis::parse" />
+  <provides type="class" name="Solar_Model_Areas" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Model_Areas::fetchByName" />
+  <provides type="function" name="Solar_Model_Areas::fetchAllNames" />
+  <provides type="class" name="Solar_Model_Nodes" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Model_Nodes::insert" />
+  <provides type="class" name="Solar_Model_Tags" extends="Solar_Sql_Table" />
+  <provides type="function" name="Solar_Model_Tags::asString" />
+  <provides type="function" name="Solar_Model_Tags::asArray" />
+  <provides type="function" name="Solar_Model_Tags::fetchAllByNodeId" />
+  <provides type="function" name="Solar_Model_Tags::refresh" />
+  <provides type="class" name="Solar_Path_Stack" />
+  <provides type="function" name="Solar_Path_Stack::get" />
+  <provides type="function" name="Solar_Path_Stack::add" />
+  <provides type="function" name="Solar_Path_Stack::set" />
+  <provides type="function" name="Solar_Path_Stack::find" />
+  <provides type="function" name="Solar_Path_Stack::findReal" />
+  <provides type="class" name="Solar_Role_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Role_Adapter::load" />
+  <provides type="function" name="Solar_Role_Adapter::reset" />
+  <provides type="function" name="Solar_Role_Adapter::is" />
+  <provides type="function" name="Solar_Role_Adapter::isAny" />
+  <provides type="function" name="Solar_Role_Adapter::isAll" />
+  <provides type="function" name="Solar_Role_Adapter::fetch" />
+  <provides type="class" name="Solar_Role_Adapter_File" extends="Solar_Role_Adapter" />
+  <provides type="function" name="Solar_Role_Adapter_File::fetch" />
+  <provides type="class" name="Solar_Role_Adapter_Ldap" extends="Solar_Role_Adapter" />
+  <provides type="function" name="Solar_Role_Adapter_Ldap::fetch" />
+  <provides type="class" name="Solar_Role_Adapter_None" extends="Solar_Role_Adapter" />
+  <provides type="function" name="Solar_Role_Adapter_None::fetch" />
+  <provides type="class" name="Solar_Role_Adapter_Sql" extends="Solar_Role_Adapter" />
+  <provides type="function" name="Solar_Role_Adapter_Sql::fetch" />
+  <provides type="class" name="Solar_Sql_Adapter" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Adapter::setProfiling" />
+  <provides type="function" name="Solar_Sql_Adapter::getProfile" />
+  <provides type="function" name="Solar_Sql_Adapter::getPdo" />
+  <provides type="function" name="Solar_Sql_Adapter::query" />
+  <provides type="function" name="Solar_Sql_Adapter::begin" />
+  <provides type="function" name="Solar_Sql_Adapter::commit" />
+  <provides type="function" name="Solar_Sql_Adapter::rollback" />
+  <provides type="function" name="Solar_Sql_Adapter::insert" />
+  <provides type="function" name="Solar_Sql_Adapter::update" />
+  <provides type="function" name="Solar_Sql_Adapter::delete" />
+  <provides type="function" name="Solar_Sql_Adapter::select" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchAll" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchAssoc" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchCol" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchValue" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchPairs" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchResult" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchOne" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchString" />
+  <provides type="function" name="Solar_Sql_Adapter::lastInsertId" />
+  <provides type="function" name="Solar_Sql_Adapter::createSequence" />
+  <provides type="function" name="Solar_Sql_Adapter::dropSequence" />
+  <provides type="function" name="Solar_Sql_Adapter::nextSequence" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchTableList" />
+  <provides type="function" name="Solar_Sql_Adapter::fetchTableCols" />
+  <provides type="function" name="Solar_Sql_Adapter::createTable" />
+  <provides type="function" name="Solar_Sql_Adapter::dropTable" />
+  <provides type="function" name="Solar_Sql_Adapter::addColumn" />
+  <provides type="function" name="Solar_Sql_Adapter::dropColumn" />
+  <provides type="function" name="Solar_Sql_Adapter::createIndex" />
+  <provides type="function" name="Solar_Sql_Adapter::dropIndex" />
+  <provides type="function" name="Solar_Sql_Adapter::quote" />
+  <provides type="function" name="Solar_Sql_Adapter::quoteInto" />
+  <provides type="function" name="Solar_Sql_Adapter::quoteMulti" />
+  <provides type="class" name="Solar_Sql_Exception" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Sql_Reserved" />
+  <provides type="class" name="Solar_Sql_Result" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Result::rewind" />
+  <provides type="function" name="Solar_Sql_Result::key" />
+  <provides type="function" name="Solar_Sql_Result::next" />
+  <provides type="function" name="Solar_Sql_Result::valid" />
+  <provides type="function" name="Solar_Sql_Result::current" />
+  <provides type="function" name="Solar_Sql_Result::fetch" />
+  <provides type="function" name="Solar_Sql_Result::fetchAll" />
+  <provides type="class" name="Solar_Sql_Row" extends="Solar_Struct" />
+  <provides type="function" name="Solar_Sql_Row::save" />
+  <provides type="function" name="Solar_Sql_Row::setSave" />
+  <provides type="function" name="Solar_Sql_Row::getSave" />
+  <provides type="class" name="Solar_Sql_Rowset" extends="Solar_Sql_Row" />
+  <provides type="function" name="Solar_Sql_Rowset::offsetGet" />
+  <provides type="function" name="Solar_Sql_Rowset::offsetSet" />
+  <provides type="function" name="Solar_Sql_Rowset::offsetUnset" />
+  <provides type="function" name="Solar_Sql_Rowset::current" />
+  <provides type="function" name="Solar_Sql_Rowset::toArray" />
+  <provides type="function" name="Solar_Sql_Rowset::load" />
+  <provides type="class" name="Solar_Sql_Select" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Select::setPaging" />
+  <provides type="function" name="Solar_Sql_Select::getPaging" />
+  <provides type="function" name="Solar_Sql_Select::distinct" />
+  <provides type="function" name="Solar_Sql_Select::from" />
+  <provides type="function" name="Solar_Sql_Select::fromSelect" />
+  <provides type="function" name="Solar_Sql_Select::join" />
+  <provides type="function" name="Solar_Sql_Select::leftJoin" />
+  <provides type="function" name="Solar_Sql_Select::innerJoin" />
+  <provides type="function" name="Solar_Sql_Select::where" />
+  <provides type="function" name="Solar_Sql_Select::orWhere" />
+  <provides type="function" name="Solar_Sql_Select::multiWhere" />
+  <provides type="function" name="Solar_Sql_Select::group" />
+  <provides type="function" name="Solar_Sql_Select::having" />
+  <provides type="function" name="Solar_Sql_Select::orHaving" />
+  <provides type="function" name="Solar_Sql_Select::multiHaving" />
+  <provides type="function" name="Solar_Sql_Select::order" />
+  <provides type="function" name="Solar_Sql_Select::limit" />
+  <provides type="function" name="Solar_Sql_Select::limitPage" />
+  <provides type="function" name="Solar_Sql_Select::clear" />
+  <provides type="function" name="Solar_Sql_Select::bind" />
+  <provides type="function" name="Solar_Sql_Select::unbind" />
+  <provides type="function" name="Solar_Sql_Select::fetch" />
+  <provides type="function" name="Solar_Sql_Select::countPages" />
+  <provides type="function" name="Solar_Sql_Select::quote" />
+  <provides type="function" name="Solar_Sql_Select::quoteInto" />
+  <provides type="function" name="Solar_Sql_Select::quoteMulti" />
+  <provides type="class" name="Solar_Sql_Table" extends="Solar_Base" />
+  <provides type="function" name="Solar_Sql_Table::setPaging" />
+  <provides type="function" name="Solar_Sql_Table::setFetchRowClass" />
+  <provides type="function" name="Solar_Sql_Table::setFetchAllClass" />
+  <provides type="function" name="Solar_Sql_Table::getColName" />
+  <provides type="function" name="Solar_Sql_Table::save" />
+  <provides type="function" name="Solar_Sql_Table::insert" />
+  <provides type="function" name="Solar_Sql_Table::update" />
+  <provides type="function" name="Solar_Sql_Table::delete" />
+  <provides type="function" name="Solar_Sql_Table::select" />
+  <provides type="function" name="Solar_Sql_Table::increment" />
+  <provides type="function" name="Solar_Sql_Table::fetch" />
+  <provides type="function" name="Solar_Sql_Table::fetchAll" />
+  <provides type="function" name="Solar_Sql_Table::fetchRow" />
+  <provides type="function" name="Solar_Sql_Table::fetchNew" />
+  <provides type="function" name="Solar_Sql_Table::fetchWhere" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Mssql" extends="Solar_Sql_Adapter" />
+  <provides type="function" name="Solar_Sql_Adapter_Mssql::fetchTableList" />
+  <provides type="function" name="Solar_Sql_Adapter_Mssql::fetchTableCols" />
+  <provides type="class" name="Solar_Sql_Adapter_Mysql" extends="Solar_Sql_Adapter" />
+  <provides type="function" name="Solar_Sql_Adapter_Mysql::fetchTableList" />
+  <provides type="function" name="Solar_Sql_Adapter_Mysql::fetchTableCols" />
+  <provides type="class" name="Solar_Sql_Adapter_Pgsql" extends="Solar_Sql_Adapter" />
+  <provides type="function" name="Solar_Sql_Adapter_Pgsql::fetchTableList" />
+  <provides type="function" name="Solar_Sql_Adapter_Pgsql::fetchTableCols" />
+  <provides type="class" name="Solar_Sql_Adapter_Sqlite" extends="Solar_Sql_Adapter" />
+  <provides type="function" name="Solar_Sql_Adapter_Sqlite::fetchTableList" />
+  <provides type="function" name="Solar_Sql_Adapter_Sqlite::fetchTableCols" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_ColNameLength" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_ColNameReserved" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_ColScope" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_ColSize" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_ColTypeUnknown" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_IdxNameLength" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_IdxNoColumns" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_IdxTypeUnknown" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_QueryFailed" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_TableNameLength" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_TableNameReserved" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Adapter_Exception_TableNotCreated" extends="Solar_Sql_Adapter_Exception" />
+  <provides type="class" name="Solar_Sql_Table_Exception" extends="Solar_Sql_Exception" />
+  <provides type="class" name="Solar_Test_Bench" extends="Solar_Base" />
+  <provides type="function" name="Solar_Test_Bench::setup" />
+  <provides type="function" name="Solar_Test_Bench::teardown" />
+  <provides type="function" name="Solar_Test_Bench::loop" />
+  <provides type="function" name="Solar_Test_Bench::time" />
+  <provides type="class" name="Solar_Test_Example" extends="Solar_Base" />
+  <provides type="function" name="Solar_Test_Example::classSpecificException" />
+  <provides type="function" name="Solar_Test_Example::solarSpecificException" />
+  <provides type="function" name="Solar_Test_Example::classGenericException" />
+  <provides type="function" name="Solar_Test_Example::solarGenericException" />
+  <provides type="function" name="Solar_Test_Example::exceptionFromCode" />
+  <provides type="function" name="Solar_Test_Example::filterCallback" />
+  <provides type="function" name="Solar_Test_Example::staticFilterCallback" />
+  <provides type="function" name="Solar_Test_Example::validIsInt" />
+  <provides type="function" name="Solar_Test_Example::staticValidIsInt" />
+  <provides type="class" name="Solar_Test_Exception" extends="Solar_Exception" />
+  <provides type="class" name="Solar_Test_Suite" extends="Solar_Base" />
+  <provides type="function" name="Solar_Test_Suite::findTests" />
+  <provides type="function" name="Solar_Test_Suite::addTestMethods" />
+  <provides type="function" name="Solar_Test_Suite::run" />
+  <provides type="class" name="Solar_Test_Example_Exception" extends="Solar_Test_Exception" />
+  <provides type="class" name="Solar_Test_Example_PageController" extends="Solar_Controller_Page" />
+  <provides type="function" name="Solar_Test_Example_PageController::actionFoo" />
+  <provides type="function" name="Solar_Test_Example_PageController::actionBumpyCase" />
+  <provides type="function" name="Solar_Test_Example_PageController::actionNoRelatedView" />
+  <provides type="function" name="Solar_Test_Example_PageController::actionTestForward" />
+  <provides type="function" name="Solar_Test_Example_PageController::setActionDefault" />
+  <provides type="class" name="Solar_Test_Example_Exception_CustomCondition" extends="Solar_Test_Example_Exception" />
+  <provides type="class" name="Solar_Test_Exception_Fail" extends="Solar_Test_Exception" />
+  <provides type="class" name="Solar_Test_Exception_Skip" extends="Solar_Test_Exception" />
+  <provides type="class" name="Solar_Test_Exception_Todo" extends="Solar_Test_Exception" />
+  <provides type="class" name="Solar_Uri_Action" extends="Solar_Uri" />
+  <provides type="class" name="Solar_Uri_Public" extends="Solar_Uri" />
+  <provides type="class" name="Solar_View_Exception" extends="Solar_Exception" />
+  <provides type="class" name="Solar_View_Helper" extends="Solar_Base" />
+  <provides type="class" name="Solar_View_Exception_PartialNotFound" extends="Solar_View_Exception" />
+  <provides type="class" name="Solar_View_Exception_TemplateNotFound" extends="Solar_View_Exception" />
+  <provides type="class" name="Solar_View_Helper_Action" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Action::action" />
+  <provides type="class" name="Solar_View_Helper_ActionImage" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_ActionImage::actionImage" />
+  <provides type="class" name="Solar_View_Helper_Anchor" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Anchor::anchor" />
+  <provides type="class" name="Solar_View_Helper_AnchorImage" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_AnchorImage::anchorImage" />
+  <provides type="class" name="Solar_View_Helper_Attribs" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Attribs::attribs" />
+  <provides type="class" name="Solar_View_Helper_Base" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Base::base" />
+  <provides type="class" name="Solar_View_Helper_Date" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Date::date" />
+  <provides type="class" name="Solar_View_Helper_Form" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Form::form" />
+  <provides type="function" name="Solar_View_Helper_Form::setAttrib" />
+  <provides type="function" name="Solar_View_Helper_Form::addFeedback" />
+  <provides type="function" name="Solar_View_Helper_Form::addElement" />
+  <provides type="function" name="Solar_View_Helper_Form::setStatus" />
+  <provides type="function" name="Solar_View_Helper_Form::getStatus" />
+  <provides type="function" name="Solar_View_Helper_Form::auto" />
+  <provides type="function" name="Solar_View_Helper_Form::beginGroup" />
+  <provides type="function" name="Solar_View_Helper_Form::endGroup" />
+  <provides type="function" name="Solar_View_Helper_Form::beginFieldset" />
+  <provides type="function" name="Solar_View_Helper_Form::endFieldset" />
+  <provides type="function" name="Solar_View_Helper_Form::fetch" />
+  <provides type="function" name="Solar_View_Helper_Form::listFeedback" />
+  <provides type="function" name="Solar_View_Helper_Form::reset" />
+  <provides type="class" name="Solar_View_Helper_FormButton" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormButton::formButton" />
+  <provides type="class" name="Solar_View_Helper_FormCheckbox" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormCheckbox::formCheckbox" />
+  <provides type="class" name="Solar_View_Helper_FormElement" extends="Solar_View_Helper" />
+  <provides type="class" name="Solar_View_Helper_FormFile" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormFile::formFile" />
+  <provides type="class" name="Solar_View_Helper_FormHidden" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormHidden::formHidden" />
+  <provides type="class" name="Solar_View_Helper_FormOptions" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormOptions::formOptions" />
+  <provides type="class" name="Solar_View_Helper_FormPassword" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormPassword::formPassword" />
+  <provides type="class" name="Solar_View_Helper_FormRadio" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormRadio::formRadio" />
+  <provides type="class" name="Solar_View_Helper_FormReset" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormReset::formReset" />
+  <provides type="class" name="Solar_View_Helper_FormSelect" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormSelect::formSelect" />
+  <provides type="class" name="Solar_View_Helper_FormSubmit" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormSubmit::formSubmit" />
+  <provides type="class" name="Solar_View_Helper_FormText" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormText::formText" />
+  <provides type="class" name="Solar_View_Helper_FormTextarea" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormTextarea::formTextarea" />
+  <provides type="class" name="Solar_View_Helper_FormXhtml" extends="Solar_View_Helper_FormElement" />
+  <provides type="function" name="Solar_View_Helper_FormXhtml::formXhtml" />
+  <provides type="class" name="Solar_View_Helper_GetText" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_GetText::getText" />
+  <provides type="class" name="Solar_View_Helper_GetTextRaw" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_GetTextRaw::getTextRaw" />
+  <provides type="class" name="Solar_View_Helper_Image" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Image::image" />
+  <provides type="class" name="Solar_View_Helper_InlineScript" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_InlineScript::inlineScript" />
+  <provides type="class" name="Solar_View_Helper_Js" extends="Solar_View_Helper_JsLibrary" />
+  <provides type="function" name="Solar_View_Helper_Js::fetchFiles" />
+  <provides type="function" name="Solar_View_Helper_Js::fetchStyles" />
+  <provides type="function" name="Solar_View_Helper_Js::fetchInline" />
+  <provides type="function" name="Solar_View_Helper_Js::js" />
+  <provides type="function" name="Solar_View_Helper_Js::addFile" />
+  <provides type="function" name="Solar_View_Helper_Js::addStyle" />
+  <provides type="function" name="Solar_View_Helper_Js::addInlineScript" />
+  <provides type="function" name="Solar_View_Helper_Js::reset" />
+  <provides type="class" name="Solar_View_Helper_JsLibrary" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_JsLibrary::jsLibrary" />
+  <provides type="function" name="Solar_View_Helper_JsLibrary::getFunctionKeys" />
+  <provides type="class" name="Solar_View_Helper_JsPrototype" extends="Solar_View_Helper_JsLibrary" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype::jsPrototype" />
+  <provides type="class" name="Solar_View_Helper_JsScriptaculous" extends="Solar_View_Helper_JsLibrary" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous::jsScriptaculous" />
+  <provides type="class" name="Solar_View_Helper_Link" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Link::link" />
+  <provides type="class" name="Solar_View_Helper_LinkStylesheet" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_LinkStylesheet::linkStylesheet" />
+  <provides type="class" name="Solar_View_Helper_Meta" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Meta::meta" />
+  <provides type="class" name="Solar_View_Helper_MetaHttp" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_MetaHttp::metaHttp" />
+  <provides type="class" name="Solar_View_Helper_MetaName" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_MetaName::metaName" />
+  <provides type="class" name="Solar_View_Helper_PublicHref" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_PublicHref::publicHref" />
+  <provides type="class" name="Solar_View_Helper_Script" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Script::script" />
+  <provides type="class" name="Solar_View_Helper_Style" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Style::style" />
+  <provides type="class" name="Solar_View_Helper_Time" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Time::time" />
+  <provides type="class" name="Solar_View_Helper_Timestamp" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Timestamp::timestamp" />
+  <provides type="class" name="Solar_View_Helper_Title" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_Title::title" />
+  <provides type="class" name="Solar_View_Helper_TypekeyLink" extends="Solar_View_Helper" />
+  <provides type="function" name="Solar_View_Helper_TypekeyLink::typekeyLink" />
+  <provides type="class" name="Solar_View_Helper_JsPrototype_Ajax" extends="Solar_View_Helper_JsPrototype" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Ajax::ajax" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Ajax::fetch" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Ajax::request" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Ajax::updater" />
+  <provides type="class" name="Solar_View_Helper_JsPrototype_Event" extends="Solar_View_Helper_JsPrototype" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Event::event" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Event::fetch" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Event::observe" />
+  <provides type="function" name="Solar_View_Helper_JsPrototype_Event::observeObject" />
+  <provides type="class" name="Solar_View_Helper_JsScriptaculous_Control" extends="Solar_View_Helper_JsScriptaculous" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Control::control" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Control::fetch" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Control::inPlaceEditor" />
+  <provides type="class" name="Solar_View_Helper_JsScriptaculous_Effect" extends="Solar_View_Helper_JsScriptaculous" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Effect::effect" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Effect::fetch" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Effect::scale" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Effect::moveBy" />
+  <provides type="function" name="Solar_View_Helper_JsScriptaculous_Effect::toggle" />
+  <provides type="class" name="Solar" />
+  <provides type="function" name="Solar::start" />
+  <provides type="function" name="Solar::stop" />
+  <provides type="function" name="Solar::apiVersion" />
+  <provides type="function" name="Solar::loadClass" />
+  <provides type="function" name="Solar::loadInterface" />
+  <provides type="function" name="Solar::run" />
+  <provides type="function" name="Solar::fileExists" />
+  <provides type="function" name="Solar::factory" />
+  <provides type="function" name="Solar::registry" />
+  <provides type="function" name="Solar::register" />
+  <provides type="function" name="Solar::isRegistered" />
+  <provides type="function" name="Solar::dependency" />
+  <provides type="function" name="Solar::config" />
+  <provides type="function" name="Solar::exception" />
+  <provides type="function" name="Solar::dump" />
+  <provides type="function" name="Solar::fixdir" />
+  <provides type="function" name="Solar::dirname" />
+  <provides type="function" name="Solar::parents" />
+  <provides type="function" name="Solar::cleanGlobals" />
+  <provides type="function" name="Solar::fetchConfig" />
+  <provides type="function" name="Solar::temp" />
+  <filelist>
+   <file role="doc" baseinstalldir="/" name="docs/index.dev.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/Solar.config.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/_htaccess">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/bookmarks.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_select.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/docs/solar_sql_table.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.8.0-0.9.0/scripts/migrate_bookmarks.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.12.0-0.13.0/notes.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.14.0-0.15.0/content.sql">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.15.2-0.16.0/content.sql">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.19.0-0.20.0/content.sql">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.20.0-0.21.0/content.sql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/migrate/0.24.0-0.25.0/content.sql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/other/content_schema.graffle">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/other/content_schema.png">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="doc" baseinstalldir="/" name="docs/other/content_schema.xls">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Access.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Base.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/DataFilter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Filter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Form.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Json.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Locale.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Request.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Session.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Struct.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Uri.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/User.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Valid.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Access/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Access/Adapter/File.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Access/Adapter/None.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Access/Adapter/Open.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloMini.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/add.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/browse.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/browse.rss.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/edit.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/quick.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/_item.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/_order.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Bookmarks/View/_tags.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/Locale/es_ES.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/View/main.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Hello/View/rss.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/Locale/es_ES.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/View/main.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloAjax/View/rss.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/HelloMini/View/index.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Layout/threeCol.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Layout/twoColLeft.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Layout/twoColRight.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Layout/_auth.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Layout/_head.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/images/indicators/indicator.gif">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/images/indicators/indicator_black.gif">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/images/indicators/indicator_circle_ball.gif">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/images/indicators/indicator_circle_ball_black.gif">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/images/indicators/indicator_medium.gif">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/prototype/prototype.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/builder.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/controls.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/dragdrop.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/effects.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/scriptaculous.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/slider.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts-min/scriptaculous/unittest.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/prototype/prototype.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/builder.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/controls.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/dragdrop.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/effects.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/scriptaculous.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/slider.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/scripts/scriptaculous/unittest.js">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/styles/bookmarks.css">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/Public/styles/default.css">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/App/View/error.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Htpasswd.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Ini.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Ldap.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Mail.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/None.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Post.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Sql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Typekey.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Auth/Adapter/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter/Apc.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter/Eaccelerator.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter/File.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter/Memcache.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Cache/Adapter/Xcache.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Class/Map.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Class/Stack.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Abstract.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Bookmarks.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Bookmarks/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Bookmarks/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Content/Bookmarks/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Front.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Exception/ActionNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Exception/LayoutNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Exception/PropertyNotDefined.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Exception/ViewNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Controller/Page/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Timer.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Var.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Timer/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Timer/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Debug/Timer/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Docs/Apiref.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Docs/Phpdoc.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/ConnectionFailed.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/ExtensionNotLoaded.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/FileNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/FileNotReadable.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/MethodNotCallable.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Exception/MethodNotImplemented.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Form/Load/Table.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Form/Load/Xml.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Json/Checker.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log/Adapter/Echo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log/Adapter/File.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log/Adapter/Multi.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Log/Adapter/None.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Extra.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Extra/DefList.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Extra/EmStrong.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Extra/Header.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Extra/Table.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/AmpsAngles.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/BlockQuote.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Break.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/CodeBlock.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/CodeSpan.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/EmStrong.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Encode.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Header.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/HorizRule.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Html.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Image.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Link.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/List.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Paragraph.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Prefilter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/StripLinkDefs.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Plugin/Uri.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/ColorCodeBlock.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/Escape.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/Filter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/Header.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/Link.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Markdown/Wiki/MethodSynopsis.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Areas.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Nodes.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Tags.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Areas/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Areas/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Nodes/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Nodes/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Tags/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Model/Tags/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Path/Stack.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role/Adapter/File.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role/Adapter/Ldap.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role/Adapter/None.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Role/Adapter/Sql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Reserved.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Result.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Row.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Rowset.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Select.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Table.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Mssql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Mysql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Pgsql.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Sqlite.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/ColNameLength.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/ColNameReserved.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/ColScope.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/ColSize.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/ColTypeUnknown.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/IdxNameLength.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/IdxNoColumns.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/IdxTypeUnknown.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/QueryFailed.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/TableNameLength.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/TableNameReserved.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Exception/TableNotCreated.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Adapter/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Sql/Table/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Bench.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Suite.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/PageController.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Exception/CustomCondition.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/es_ES.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/fr_FR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/it_IT.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/Locale/pt_BR.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/PageController/View/bumpyCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Example/PageController/View/foo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Exception/Fail.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Exception/Skip.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Exception/Todo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Test/Locale/en_US.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Uri/Action.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/Uri/Public.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Exception.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Exception/PartialNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Exception/TemplateNotFound.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Action.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/ActionImage.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Anchor.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/AnchorImage.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Attribs.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Base.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Date.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Form.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormButton.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormCheckbox.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormElement.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormFile.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormHidden.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormOptions.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormPassword.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormRadio.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormReset.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormSelect.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormSubmit.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormText.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormTextarea.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/FormXhtml.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/GetText.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/GetTextRaw.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Image.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/InlineScript.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Js.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsLibrary.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsPrototype.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsScriptaculous.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Link.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/LinkStylesheet.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Meta.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/MetaHttp.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/MetaName.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/PublicHref.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Script.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Style.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Time.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Timestamp.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/Title.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/TypekeyLink.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsPrototype/Ajax.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsPrototype/Event.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsScriptaculous/Control.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar/View/Helper/JsScriptaculous/Effect.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/AllTests.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/configRunner.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/phpunit">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/SolarTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/SolarUnitTest.config.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/ContentTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/DataFilterTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/FilterTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/JsonTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/RequestTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/SessionTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/StructTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/UriTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/ValidTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/ViewTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/AdapterTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/users.htpasswd">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/users.ini">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/Adapter/HtpasswdTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/Adapter/IniTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/Adapter/NoneTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Auth/Adapter/SqlTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/AdapterTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/Adapter/ApcTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/Adapter/EacceleratorTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/Adapter/FileTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/Adapter/MemcacheTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Cache/Adapter/XcacheTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Class/MapTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Class/StackTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Controller/PageTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Debug/TimerTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Debug/VarTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Docs/PhpdocTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Form/Load/TableTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Json/CheckerTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Log/AdapterTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Log/Adapter/EchoTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Log/Adapter/FileTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Log/Adapter/MultiTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Log/Adapter/NoneTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/PluginTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/WikiTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Extra/DefListTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Extra/EmStrongTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Extra/HeaderTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Extra/TableTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/AmpsAnglesTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/BlockQuoteTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/BreakTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/CodeBlockTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/CodeSpanTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/EmStrongTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/EncodeTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/HeaderTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/HorizRuleTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/HtmlTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/ImageTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/LinkTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/ListTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/PrefilterTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/StripLinkDefsTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Plugin/UriTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Wiki/ColorCodeBlockTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Wiki/HeaderTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Wiki/LinkTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Markdown/Wiki/MethodSynopsisTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Path/StackTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/AdapterTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/roles.ini">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/roles.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/Adapter/FileTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/Adapter/NoneTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Role/Adapter/SqlTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Sql/AdapterTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Sql/Adapter/MysqlTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Sql/Adapter/PgsqlTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Sql/Adapter/SqliteTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Uri/ActionTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/Uri/PublicTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/HelperTestCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/ActionImageTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/ActionTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/AnchorImageTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/AnchorTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/AttribsTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/BaseTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/DateTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormButtonTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormCheckboxTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormFileTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormHiddenTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormOptionsTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormPasswordTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormRadioTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormResetTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormSelectTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormSubmitTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormTextareaTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/FormTextTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/GetTextRawTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/GetTextTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/ImageTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/InlineScriptTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/JsTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/LinkStylesheetTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/LinkTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/MetaHttpTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/MetaNameTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/MetaTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/PublicHrefTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/ScriptTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/StyleTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/TimestampTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/TimeTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/TitleTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/Solar/View/Helper/TypekeyLinkTest.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/config.inc.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/FactoryObject.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/LoadClassObject.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Class/Map/TestOne.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Class/Map/TestTwo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Class/Map/DirOne/TestOne.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Class/Map/DirOne/TestTwo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Controller/PageController.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Controller/PageController/View/bumpyCase.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Controller/PageController/View/foo.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail1.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail2.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail3.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail4.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail5.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail6.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail7.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail8.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail9.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail10.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail11.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail12.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail13.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail14.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail15.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail16.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail17.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail18.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail19.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail20.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail21.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail22.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail23.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail24.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail25.json.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail26.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail27.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/fail28.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/pass1.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/pass1.json.txt">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/pass2.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Json/pass3.json">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Markdown/Wiki/basic.html">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Markdown/Wiki/basic.text">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/a/target1">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/a/target2">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/a/target3">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/b/target2">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/b/target3">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/Path/Stack/c/target3">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="test" baseinstalldir="/" name="tests/support/Solar/View/templates/test.view.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+   <file role="php" baseinstalldir="/" name="Solar.php">
+    <replace from="@package_version@" to="version" type="package-info"/>
+    <replace from="@package_date@" to="date" type="package-info"/>
+   </file>
+  </filelist>
+ </release>
+ <changelog>
+   <release>
+    <version>0.27.1</version>
+    <date>2007-02-28</date>
+    <license>BSD</license>
+    <state>alpha</state>
+    <notes>Solar 0.27.1 Release Notes
+==========================
+
+[FIX] The 0.27.0 release had two locale-related bugs in the &quot;Hello&quot; and &quot;Hello-Ajax&quot; apps; was calling the older Solar::setLocale() call instead of the newer Solar::$locale-&gt;setCode().  The 0.27.1 release fixes those bugs.
+
+
+Solar 0.27.0 Release Notes
+==========================
+
+
+Using spl_autoload()
+--------------------
+
+Modified Solar and Solar_Class_Stack so that class_exists() and interface_exists() so they **do not** address autoload, because the related methods are already registered with spl_autoload.
+
+
+New Class: Solar_Locale
+-----------------------
+
+Because of a need to override how locale strings are populated, moving all Solar::locale() related methods to their own class.
+
+This is at least a partial BC break. If you have been using Solar::locale() directly, you now need to use Solar::$locale-&gt;fetch(). However, use of $this-&gt;locale() in classes extended from Solar_Base is completel unaffected.
+
+If you need to change locale codes, you used to use Solar::setLocale() and getLocale(); you now use Solar::$locale-&gt;setCode() and getCode().
+
+Solar::$locale is now a Solar_Locale object, not an array of strings. If you need direct access to the string translations array, use Solar::$locale-&gt;trans.
+
+Also, it now allows for explicitly blank translation strings.
+
+Finally, you can tell Solar to use a class *other* than Solar_Locale as the Solar::$locale object by setting $config[&apos;Solar&apos;][&apos;locale_class&apos;].
+
+Related Solar classes have been modified to adapt to this change.
+
+
+Solar
+-----
+
+* [CHG] Now registers Solar::loadClass() and loadInterface() with spl_autoload(). This means you no longer have to use Solar::loadClass() in your class definition files; if the class is named properly for its location in the file system, spl_autoload() will now find and load it for you. In line with this, loadClass() and loadInterface() uses of class_exists() **do not** attempt to address autoloading.
+
+
+Solar_Base
+----------
+
+* [ADD] Added a dump() method so that classes can have their own custom var_dump() functionality.
+
+
+Solar_Cache_Adapter_Memcache
+----------------------------
+
+* [ADD] New support for pools of memcache servers; many thanks, Clay Loveless.
+
+* [CHG] Internal memcache object now publically accessible; thanks, Clay Loveless.
+
+
+Solar_Class_Stack
+-----------------
+
+* [CHG] Method load() now has a second param, $throw = true. When $throw = false, load() merely returns boolean false when the requested class is not found, instead of throwing an exception (the default behavior).
+
+* [CHG] Internal uses of class_exists() no longer attempt to address autoload, because of new spl_autoload() registration of Solar::loadClass() and Solar::loadInterface().
+
+
+Solar_Content_Abstract
+----------------------
+
+* [FIX] Method countPages() now honors $_paging value in non-tag queries.
+
+
+Solar_Controller_Front
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format discovery.
+
+
+Solar_Controller_Page
+----------------------
+
+* [CHG] Now uses new Solar_Uri::$format property internally for format discovery.
+
+
+Solar_DataFilter
+----------------
+
+* [BRK] No more $require param at the end of methods; instead, use new method setRequire() to say whether values are required or not.
+
+* [ADD] Added new method getRequire() to tell if values are currently required or not.
+
+* [BRK] Renamed validateBoolean() and sanitizeBoolean() to validateBool() and sanitizeBool(), respectively.
+
+* [CHG] Method validateBlank() now properly validates NULL as blank.
+
+
+Solar_Debug_Var
+---------------
+
+* [BRK] For consistency with the rest of Solar, now uses fetch() and display() methods instead of just dump().
+
+* [BRK] The dump() method is now inherited from Solar_Base.
+
+
+Solar_Json
+----------
+
+* [FIX] In PHP 5.2.1, json_decode() deliberately disregards published standards for decoding JSON payloads. Solar_Json now includes code to bypass this behavior when using ext/json. Many thanks, Clay Loveless, for providing this fix.
+
+
+Solar_Sql_Adapter
+-----------------
+
+* [FIX] For PDO in PHP 5.2.1, to better support automated binding of values.
+
+  With PDO in PHP 5.2.1 and later, we can no longer just throw an array of data at the statement; we need to bind values specifically to their respective placeholders.
+
+  In addition, we can&apos;t bind one value to multiple identical named placeholders; we need to bind that same value multiple times. So if :foo is used three times, PDO uses :foo the first time, :foo2 the second time, and :foo3 the third time.
+
+  This query() method examins the statement for all :name placeholders and attempts to bind data from the $data array. The regular-expression it uses is a little braindead; it cannot tell if the :name placeholder is literal text or really a place holder.
+
+  As such, you should *either* use the $data array for named-placeholder value binding at query() time, *or* bind-as-you-go when building the statement, not both. If you do, you are on your own to make sure that nothing looking like a :name placeholder exists as literal text.
+
+* [BRK] As a result of the combination of the new PDO behavior and the adapter &quot;fix&quot; in response to it, question-mark placeholders are no longer supported for automatic value binding at query() time.
+
+
+Solar_Sql_Result
+----------------
+
+* [CHG] DEPRECATING in favor of Row and Rowset.
+
+
+Solar_Sql_Table
+---------------
+
+* [CHG] Allows reading &apos;order&apos; via __get(); thanks for the suggestion, Rodrigo Moraes.
+
+
+Solar_Struct
+------------
+
+* [CHG] Protected property $_valid is now $_iterator_valid, to indicate it relates to the iterator interface, not the validity of the struct data.
+
+* [BRK] Method load() now only takes one param, $data. The $reset param which used to let you clear the internal data array is now removed. Thus, new data being loaded is now always merged with existing data in the struct.
+
+
+Solar_Uri
+---------
+
+* [ADD] Now extracts the &quot;.ext&quot; format extension from the last path element and stores in new $format property. Adds the format back to the last path element on fetch().
+    </notes>
+   </release>
+ </changelog>
+</package>

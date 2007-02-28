@@ -18,14 +18,14 @@ class SolarTest extends PHPUnit_Framework_TestCase
     public function testLoadClassLoadsAnObjectOnKnownClass() {
         try {
             $this->assertFalse(
-                class_exists('Solar_LoadClassObject'),
+                class_exists('Solar_LoadClassObject', false),
                 'Insure class has not been loaded.'
             );
             
             Solar::loadClass('Solar_LoadClassObject');
             
             $this->assertTrue(
-                class_exists('Solar_LoadClassObject'),
+                class_exists('Solar_LoadClassObject', false),
                 'Insure Solar::loadClass() loaded the requested class.'
             );
         } catch (Exception $e) {
@@ -36,7 +36,7 @@ class SolarTest extends PHPUnit_Framework_TestCase
     
     public function testFactoryLoadsAndReturnsObject() {
         $this->assertFalse(
-            class_exists('Solar_FactoryObject'),
+            class_exists('Solar_FactoryObject', false),
             'Insure class has not been loaded.'
         );
         

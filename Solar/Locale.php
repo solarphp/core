@@ -1,5 +1,34 @@
 <?php
+/**
+ * 
+ * Manages locale strings for all Solar classes.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * Base class for all Solar objects.
+ */
 Solar::loadClass('Solar_Base');
+
+/**
+ * 
+ * Manages locale strings for all Solar classes.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ */
 class Solar_Locale extends Solar_Base {
     
     /**

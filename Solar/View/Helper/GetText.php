@@ -19,7 +19,7 @@
  * Solar_View_Helper
  */
 Solar::loadClass('Solar_View_Helper');
- 
+
 /**
  * 
  * Helper for locale strings, with escaping.
@@ -35,12 +35,7 @@ class Solar_View_Helper_GetText extends Solar_View_Helper {
      * 
      * Returns a localized string, with escaping applied.
      * 
-     * @param string $key The locale key to look up.  Uses the default
-     * class; if you need to use a key from another class, prefix with
-     * that class name and two colons (for example,
-     * 'Non_Default_Class::KEY_NAME').  If you need to set a new default
-     * class, use the class name with two colons and no key (for example
-     * 'New_Default_Class::').
+     * @param string $key The locale key to look up.
      * 
      * @param int|float $num A number to help determine if the
      * translation should return singluar or plural.
@@ -51,5 +46,25 @@ class Solar_View_Helper_GetText extends Solar_View_Helper {
     public function getText($key, $num = 1)
     {
         return $this->_view->escape($this->_view->getTextRaw($key, $num));
+    }
+    
+    /**
+     * 
+     * Sets the class used for translations.
+     * 
+     * You can use this method in a view like so:
+     * 
+     * {{code: php
+     *     $this->getHelper('getText')->setClass('Some_Class');
+     * }}
+     * 
+     * @param string $class The class used for translations.
+     * 
+     * @return void
+     * 
+     */
+    public function setClass($class)
+    {
+        return $this->_view->getHelper('getTextRaw')->setClass($class);
     }
 }

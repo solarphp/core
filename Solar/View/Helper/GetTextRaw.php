@@ -49,7 +49,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
     
     /**
      * 
-     * The default locale class.
+     * The locale class-space key to use.
      * 
      * @var string
      * 
@@ -73,19 +73,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * 
      * Returns a localized string WITH NO ESCAPING.
      * 
-     * Alternatively, use this method to reset the default locale class,
-     * or get a localized string from another class without resetting
-     * the default.
-     * 
-     * To set a new default locale class, use the class name with two
-     * colons and no key (for example 'New_Default_Class::').
-     * 
-     * To use a key from another locale class, prefix the key with that
-     * class name and two colons (for example 'Non_Default_Class::KEY_NAME').
-     * 
-     * @param string $key The locale key to look up from the default
-     * class, or a class name and key, or a class name to set as the new
-     * default.
+     * @param string $key The locale key to look up from the class.
      * 
      * @param int|float $num A number to help determine if the
      * translation should return singluar or plural.
@@ -95,28 +83,26 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      */
     public function getTextRaw($key, $num = 1)
     {
-        // is there a :: in the key?
-        $pos = strpos($key, '::');
-        if ($pos) {
-        
-            // yes, so we're using a non-default class.
-            // get the class and key.
-            $class = substr($key, 0, $pos);
-            $key = substr($key, $pos+2);
-            
-            // is there a key after the :: marker?
-            if ($key == '') {
-                // no, so set a new default class
-                $this->_class = $class;
-                return;
-            }
-        } else {
-            // no :: in the name, the class is the default
-            // and the key remains as it is.
-            $class = $this->_class;
-        }
-        
-        // get the translation
-        return Solar::$locale->fetch($class, $key, $num);
+        return Solar::$locale->fetch($this->_class, $key, $num);
+    }
+    
+    /**
+     * 
+     * Sets the class used for translations.
+     * 
+     * You can use this method in a view like so:
+     * 
+     * {{code: php
+     *     $this->getHelper('getTextRaw')->setClass('Some_Class');
+     * }}
+     * 
+     * @param string $class The class used for translations.
+     * 
+     * @return void
+     * 
+     */
+    public function setClass($class)
+    {
+        $this->_class = $class;
     }
 }

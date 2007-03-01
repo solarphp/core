@@ -40,7 +40,7 @@
  *     // create a URI object; this will automatically import the current
  *     // location, which is...
  *     // 
- *     // http://anonymous::guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor
+ *     // http://anonymous:guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor
  *     $uri = Solar::factory('Solar_Uri');
  * 
  *     // now the $uri properties are ...

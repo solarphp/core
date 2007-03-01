@@ -479,7 +479,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $view->addHelperClass($helper);
 
         // set the locale class for the getText helper
-        $view->getTextRaw("$class::");
+        $view->getHelper('getTextRaw')->setClass($class);
 
         // done!
         return $view;

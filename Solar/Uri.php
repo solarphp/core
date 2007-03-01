@@ -40,7 +40,7 @@
  *     // create a URI object; this will automatically import the current
  *     // location, which is...
  *     // 
- *     // http://anonymous::guest@example.com/path/to/index.php/foo/bar?baz=dib#anchor
+ *     // http://anonymous::guest@example.com/path/to/index.php/foo/bar.xml?baz=dib#anchor
  *     $uri = Solar::factory('Solar_Uri');
  * 
  *     // now the $uri properties are ...
@@ -50,6 +50,7 @@
  *     // $uri->user     => 'anonymous'
  *     // $uri->pass     => 'guest'
  *     // $uri->path     => array('path', 'to', 'index.php', 'foo', 'bar')
+ *     // $uri->format   => 'xml'
  *     // $uri->query    => array('baz' => 'dib')
  *     // $uri->fragment => 'anchor'
  * }}
@@ -71,24 +72,26 @@
  *     // add a new query element called 'zim' with a value of 'gir'
  *     $uri->query['zim'] = 'gir';
  * 
- *     // reset the path to something else entirely
+ *     // reset the path to something else entirely.
+ *     // this will additionally set the format to 'php'.
  *     $uri->setPath('/something/else/entirely.php');
  * 
- *     // add a path element
+ *     // add another path element
  *     $uri->path[] = 'another';
- * 
+ *     
  *     // and fetch it to a string.
  *     $new_uri = $uri->fetch();
  * 
- *     // the $new_uri string is:
- *     // /something/else/entirely.php/another?baz=zab&zim=gir#anchor
+ *     // the $new_uri string is as follows; notice how the format
+ *     // is always applied to the last path-element.
+ *     // /something/else/entirely/another.php?baz=zab&zim=gir#anchor
  * 
  *     // wait, there's no scheme or host!
  *     // we need to fetch the "full" URI.
  *     $full_uri = $uri->fetch(true);
  * 
  *     // the $full_uri string is:
- *     // https://example.com/something/else/entirely.php/another?baz=zab&zim=gir#anchor
+ *     // https://example.com/something/else/entirely/another.php?baz=zab&zim=gir#anchor
  * }}
  * 
  * 
@@ -97,25 +100,27 @@
  * 
  * | Name       | Type    | Description
  * | ---------- | ------- | --------------------------------------------------------------
- * | `schema`   | string  | The schema protocol; e.g.: http, https, ftp, mailto ... 
- * | `host`     | string  | The host name; e.g.: example.com 
- * | `port`     | string  | The port number 
- * | `user`     | string  | The username for the URI 
- * | `pass`     | string  | The password for the URI 
- * | `path`     | array   | A sequential array of the path elements 
- * | `query`    | array   | An associative array of the query terms 
- * | `fragment` | string  | The anchor or page fragment being addressed 
+ * | `schema`   | string  | The schema protocol; e.g.: http, https, ftp, mailto
+ * | `host`     | string  | The host name; e.g.: example.com
+ * | `port`     | string  | The port number
+ * | `user`     | string  | The username for the URI
+ * | `pass`     | string  | The password for the URI
+ * | `path`     | array   | A sequential array of the path elements
+ * | `format`   | string  | The filename-extension indicating the file format
+ * | `query`    | array   | An associative array of the query terms
+ * | `fragment` | string  | The anchor or page fragment being addressed
  * 
  * As an example, the following URI would parse into these properties:
  * 
- *     http://anonymous:guest@example.com:8080/path/to/index.php/foo/bar?baz=dib#anchor
+ *     http://anonymous:guest@example.com:8080/foo/bar.xml?baz=dib#anchor
  *     
  *     schema   => 'http'
  *     host     => 'example.com'
  *     port     => '8080'
  *     user     => 'anonymous'
  *     pass     => 'guest'
- *     path     => array('path', 'to', 'index.php', 'foo', 'bar')
+ *     path     => array('foo', 'bar')
+ *     format   => 'xml'
  *     query    => array('baz' => 'dib')
  *     fragment => 'anchor'
  * 
@@ -218,7 +223,7 @@ class Solar_Uri extends Solar_Base {
     
     /**
      * 
-     * The fragment portion (for example, "#subsection").
+     * The fragment portion (for example, the "foo" in "#foo").
      * 
      * @var string
      * 
@@ -489,8 +494,8 @@ class Solar_Uri extends Solar_Base {
      * 
      * Sets the Solar_Uri::$path array from a string.
      * 
-     * This will overwrite any previous values, and reset the format based on
-     * the final path value.
+     * This will overwrite any previous values. Also, resets the format based
+     * on the final path value.
      * 
      * @param string $spec The path string to use; for example,
      * "/foo/bar/baz/dib".  A leading slash will *not* create an empty

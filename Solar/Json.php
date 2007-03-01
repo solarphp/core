@@ -116,16 +116,16 @@ class Solar_Json extends Solar_Base {
     }
 
     /**
-     *
-     * Encodes the mixed $valueToEncode into the JSON format.
-     *
+     * 
+     * Encodes the mixed $valueToEncode into JSON format.
+     * 
      * @param mixed $valueToEncode Value to be encoded into JSON format
-     *
+     * 
      * @param array $deQuote Array of keys whose values should **not** be
      * quoted in encoded string.
-     *
+     * 
      * @return string JSON encoded value
-     *
+     * 
      */
     public function encode($valueToEncode, $deQuote = array())
     {

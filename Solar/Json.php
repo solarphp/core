@@ -192,7 +192,8 @@ class Solar_Json extends Solar_Base {
     /**
      *
      * Method for use with preg_replace_callback in the _deQuote() method.
-     * Returns ["keymatch":][value] where value has had its leading and
+     * 
+     * Returns \["keymatch":\]\[value\] where value has had its leading and
      * trailing double-quotes removed, and stripslashes() run on the rest of
      * the value.
      *
@@ -452,11 +453,11 @@ class Solar_Json extends Solar_Base {
 
     /**
      *
-     * Decodes a JSON string into appropriate variable
+     * Decodes a JSON string into appropriate variable.
      *
      * Note: several changes were made in translating this method from
      * Services_JSON, particularly related to how strings are handled. According
-     * to JSON_checker test suite from http://www.json.org/JSON_checker/,
+     * to JSON_checker test suite from <http://www.json.org/JSON_checker/>,
      * a JSON payload should be an object or an array, not a string.
      *
      * Therefore, returning bool(true) for 'true' is invalid JSON decoding
@@ -794,7 +795,7 @@ class Solar_Json extends Solar_Base {
     /**
      *
      * Array-walking method for use in generating JSON-formatted name-value
-     * pairs in the form of '"name":value'
+     * pairs in the form of '"name":value'.
      *
      * @param string $name name of key to use
      *
@@ -811,7 +812,7 @@ class Solar_Json extends Solar_Base {
 
     /**
      *
-     * Convert a string from one UTF-16 char to one UTF-8 char
+     * Convert a string from one UTF-16 char to one UTF-8 char.
      *
      * Normally should be handled by mb_convert_encoding, but
      * provides a slower PHP-only method for installations

@@ -117,7 +117,7 @@ class Solar_Json extends Solar_Base {
 
     /**
      *
-     * Encode the mixed $valueToEncode into the JSON format
+     * Encodes the mixed $valueToEncode into the JSON format.
      *
      * @param mixed $valueToEncode Value to be encoded into JSON format
      *

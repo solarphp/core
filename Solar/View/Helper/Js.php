@@ -107,7 +107,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Build and return JavaScript for page header
+     * Build and return JavaScript for page header.
      *
      * @return string Block of JavaScript with <script src ...> for view-defined
      * script requirements.
@@ -128,7 +128,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Build and return list of CSS files for page header
+     * Build and return list of CSS files for page header.
      *
      * @return string Block of HTML with <style> tags for JavaScript-defined
      * style requirements.
@@ -150,7 +150,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
     /**
      *
      * Returns all defined inline scripts. This is a separate fetch method
-     * so that any/all external (standalone .js file) scripts required by the
+     * so that any/all external (standalone JS file) scripts required by the
      * App or the View that the inline scripts depend on can be loaded prior to
      * the output of the inline script.
      *
@@ -210,9 +210,9 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Method interface
+     * Fluent interface.
      *
-     * @return object Solar_View_Helper_Js
+     * @return Solar_View_Helper_Js
      *
      */
     public function js()

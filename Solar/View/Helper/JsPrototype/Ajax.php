@@ -21,7 +21,9 @@
 Solar::loadClass('Solar_View_Helper_JsPrototype');
 
 /**
- *
+ * 
+ * JsPrototype Ajax helper class.
+ * 
  * @category Solar
  *
  * @package Solar_View_Helper_Js
@@ -39,17 +41,25 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *
      */
     protected $_type = 'JsPrototype_Ajax';
-
-
+    
+    /**
+     * 
+     * A JSON encoder/decoder.
+     * 
+     * @var Solar_Json
+     * 
+     */
+    protected $_json;
+    
     /**
      *
-     * Keys of values which should be dequoted by Solar_Json
+     * Keys of values which should be dequoted by Solar_Json.
      *
      * @var array
      *
      */
     protected $_dequote;
-
+    
     /**
      *
      * Constructor.
@@ -60,20 +70,21 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->_json = Solar::factory('Solar_Json');
     }
-
+    
     /**
      *
-     * Method interface
+     * Fluent interface for method chaining.
      *
-     * @return object Solar_View_Helper_JsPrototype_Ajax
+     * @return Solar_View_Helper_JsPrototype_Ajax
      *
      */
     public function ajax()
     {
         return $this;
     }
-
+    
     /**
      *
      * Fetch method called by Solar_View_Helper_Js. Feeds generated JavaScript
@@ -90,32 +101,35 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *
      * @return string Generated JavaScript.
      *
-     * @todo Determine how/if the fetch method should be used in this class
-     *
      */
     public function fetch($selector, $action, $object = false)
     {
-
-        $out = '';
-        /*
         switch ($action['method']) {
-
-            case 'Updater':
-
-                break;
-
-            case 'PeriodicalUpdater':
-
-                break;
-
-            default:
-                break;
-
+        
+        case 'Updater':
+            $url      = $action['url'];
+            $options  = $this->_json->encode($action['options'], $this->_dequote);
+            
+            // passing a new Selector().params.id lets us make sure Ajax.Updater
+            // has something to work with. Ajax.Updater takes the first argument and
+            // passes to $()
+            $js = "new Ajax.Updater(new Selector('{$selector}').params.id, '{$url}', $options);";
+            break;
+        
+        case 'Request':
+            $url  = $action['url'];
+            $opts = $this->_json->encode($action['options'], $this->_dequote);
+            $js   = "new Ajax.Request('{$url}', $opts);";
+            break;
+            
+        default:
+            $js = '';
+            break;
         }
-        */
-        return $out;
+        
+        return $js;
     }
-
+    
     /**
      *
      * Creates a string of JavaScript which, when executed, will create one
@@ -132,22 +146,22 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * The supported $options array may have the following key/value pairs ...
      *
      * `method`
-     * :_(string)_ Method of the HTTP request. Default `post`
+     * : (string) Method of the HTTP request. Default `post`
      *
      * `parameters`
-     * :_(string)_ The URL-formatted list of values appended to the URL,
+     * : (string) The URL-formatted list of values appended to the URL,
      * such as `foo=bar&baz=dib&zim=gaz`. Default `''`
      *
      * `asynchronous`
-     * :_(bool)_ Indicates if the request will be made asyncronously.
+     * : (bool) Indicates if the request will be made asyncronously.
      * Default `true`
      *
      * `postBody`
-     * :_(string)_ URL-formatted content submitted with a post-method request.
+     * : (string) URL-formatted content submitted with a post-method request.
      * Default `null`
      *
      * `requestHeaders`
-     * :_(array)_ Associative array of HTTP headers to be sent along with
+     * : (array) Associative array of HTTP headers to be sent along with
      * the request, default null.  For example ...
      *
      *     array(
@@ -156,7 +170,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *     );
      *
      * `on[XXXX]`
-     * :_(string)_ Custom JavaScript function to be called when the respective
+     * : (string) Custom JavaScript function to be called when the respective
      * event/status is reached during the Ajax call. __Note:__ Prototype's
      * `Ajax.Request` class defines five events that are rasied during an Ajax
      * operation: 'Uninitialized', 'Loading', 'Loaded', 'Interactive', and
@@ -164,28 +178,28 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * `on403`, can be defined. Default `undefined`
      *
      * `onSuccess`
-     * :_(string)_ Custom function to be called with the Ajax call completes
+     * : (string) Custom function to be called with the Ajax call completes
      * successfully. The function used should accept two parameters. The first
      * will contain the `XMLHttpRequest` object that is carrying the Ajax operation,
      * and the second will carry the evaluated `X-JSON` response HTTP header, if
      * any was present in the response. Default `undefined`
      *
      * `onFailure`
-     * :_(string)_ Custom function to be called with the Ajax call completes
+     * : (string) Custom function to be called with the Ajax call completes
      * with an error. The function used should accept two parameters. The first
      * will contain the `XMLHttpRequest` object that is carrying the Ajax operation,
      * and the second will carry the evaluated `X-JSON` response HTTP header, if
      * any was present in the error response. Default `undefined`
      *
      * `onException`
-     * :_(string)_ Custom function to be called when an exceptional condition
+     * : (string) Custom function to be called when an exceptional condition
      * happens on the client side of the Ajax call, such as an invalid response
      * or invalid arguments. The function used should accept two parameters. The
      * first will contain the `Ajax.Request` object that wraps the Ajax operation,
      * and the second will contain the exception object. Default `undefined`
      *
      * `_deQuote`
-     * :_(array)_ Internal option. An array of keys whose values should
+     * : (array) Internal option. An array of keys whose values should
      * not be quoted in the returned JavaScript string. See Solar_Json::encode()
      * for more details.
      *
@@ -194,22 +208,25 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *
      * @param array $options Array of Ajax options to configure the request.
      *
-     * @return string Generated JavaScript
+     * @return Solar_View_Helper_JsPrototype_Ajax
      *
      */
     public function request($url, $options = array())
     {
-        $json = Solar::factory('Solar_Json');
-
         $options = $this->_tweakAjaxOptions($options);
-
-        $js = "new Ajax.Request('{$url}',";
-        $js .= $json->encode($options, $this->_dequote);
-        $js .= ');';
-
-        return $js;
+        
+        $details = array(
+            'type'      => $this->_type,
+            'method'    => 'Request',
+            'url'       => $url,
+            'options'   => $options,
+        );
+        
+        $this->_view->js()->selectors[$selector][] = $details;
+        
+        return $this;
     }
-
+    
     /**
      *
      * Use this method when the requested URL returns HTML that you want to
@@ -224,13 +241,13 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      * Options available only to the `Ajax.Updater` method are ...
      *
      * `insertion`
-     * :_(string)_ A class that will determine how the new content will be
+     * : (string) A class that will determine how the new content will be
      * inserted. It can be `Insertion.Before`, `Insertion.Top`,
      * `Insertion.Bottom`, or `Insertion.After`. Default `undefined`.
      * __Applies only to `Ajax.Updater` objects__.
      *
      * `evalScripts`
-     * :_(boolean)_ Determines if script blocks in the response, if any,
+     * : (boolean) Determines if script blocks in the response, if any,
      * will be evaluated when the response arrives. __Applies only to
      * `Ajax.Updater` objects__. Default `false`.
      *
@@ -241,27 +258,25 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
      *
      * @param array $options Array of Ajax options to configure the request.
      *
-     * @return string Generated JavaScript
+     * @return Solar_View_Helper_JsPrototype_Ajax
      *
      */
     public function updater($selector, $url, $options = array())
     {
-
-        $json = Solar::factory('Solar_Json');
-
         $options = $this->_tweakAjaxOptions($options);
-
-        // passing a new Selector().params.id lets us make sure Ajax.Updater
-        // has something to work with. Ajax.Updater takes the first argument and
-        // passes to $()
-        $js = "new Ajax.Updater(new Selector('{$selector}').params.id, '{$url}',";
-        $js .= $json->encode($options, $this->_dequote);
-        $js .= ');';
-
-        return $js;
-
+        
+        $details = array(
+            'type'      => $this->_type,
+            'method'    => 'Updater',
+            'url'       => $url,
+            'options'   => $options,
+        );
+        
+        $this->_view->js()->selectors[$selector][] = $details;
+        
+        return $this;
     }
-
+    
     /**
      *
      * Tweak Ajax.* options to make them more JSON-ready. Remove internal options,
@@ -280,7 +295,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
             $this->_dequote = $options['_deQuote'];
             unset($options['_deQuote']);
         }
-
+        
         if (isset($options['requestHeaders'])) {
             // convert from user-friendly assoc array to clunky odd-even list
             $rh = array();
@@ -290,8 +305,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
             }
             $options['requestHeaders'] = $rh;
         }
-
+        
         return $options;
     }
-
 }

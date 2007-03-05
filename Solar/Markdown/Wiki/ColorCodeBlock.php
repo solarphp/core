@@ -63,7 +63,7 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
                     .*\n+                               
                   )+                                    
                 )                                       
-            \}\}\n                                      # end of the block
+            \}\}\s*?\n                                  # end of the block
         }mx';                                           
         
         $text = preg_replace_callback(
@@ -71,22 +71,6 @@ class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-        
-        /*
-        $text = preg_replace_callback('{
-                (?:\n\n|\A)
-                (                                     # $1 = the code block -- one or more lines, starting with a space/tab
-                  (?:                                 
-                    (?:[ ]{'.$tab_width.'} | \t)      # Lines must start with a tab or a tab-width of spaces
-                    .*\n+                             
-                  )+                                  
-                )                                     
-                ((?=^[ ]{0,'.$tab_width.'}\S)|\Z)     # Lookahead for non-space at line-start, or end of doc
-            }xm',
-            array($this, '_parse'),
-            $text
-        );
-        */
         
         return $text;
     }

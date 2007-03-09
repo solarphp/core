@@ -44,12 +44,18 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * : (string) Sprintf() format string for the LDAP query; %s
      *   represents the username.  Example: "uid=%s,dc=example,dc=com".
      * 
+     * `filter`
+     * : (string) A regular-expression snippet that lists allowed characters
+     *   in the username.  This is to help prevent LDAP injections.  Default
+     *   is 'a-zA-Z0-9_'.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Auth_Adapter_Ldap = array(
         'uri'    => null,
         'format' => null,
+        'filter' => 'a-zA-Z0-9_',
     );
     
     /**
@@ -98,6 +104,10 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
         
         // upgrade to LDAP3 when possible
         @ldap_set_option($conn, LDAP_OPT_PROTOCOL_VERSION, 3);
+        
+        // filter the handle to prevent LDAP injection
+        $regex = '/[^' . $this->_config['filter'] . ']/';
+        $this->_handle = preg_replace($regex, '', $this->_handle);
         
         // bind to the server
         $rdn = sprintf($this->_config['format'], $this->_handle);

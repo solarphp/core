@@ -33,19 +33,20 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Map of Solar generic column types to RDBMS native declarations.
+     * Map of Solar generic types to RDBMS native types used when creating
+     * portable tables.
      * 
      * @var array
      * 
      */
-    protected $_native = array(
+    protected $_solar_native = array(
         'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
+        'char'      => 'CHAR',
+        'varchar'   => 'VARCHAR',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC(:size,:scope)',
+        'numeric'   => 'NUMERIC',
         'float'     => 'DOUBLE',
         'clob'      => 'CLOB',
         'date'      => 'DATE',
@@ -55,12 +56,15 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Use these values to map native columns to Solar generic data types.
+     * Map of native RDBMS types to Solar generic types used when reading 
+     * table column information.
      * 
      * @var array
      * 
+     * @see fetchTableCols()
+     * 
      */
-    protected $_describe = array(
+    protected $_native_solar = array(
         'BOOLEAN'   => 'bool',
         'BOOL'      => 'bool',
         'CHAR'      => 'char',
@@ -72,6 +76,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         'NUMERIC'   => 'numeric',
         'DOUBLE'    => 'float',
         'FLOAT'     => 'float',
+        'REAL'      => 'float',
         'CLOB'      => 'clob',
         'DATE'      => 'date',
         'TIME'      => 'time',
@@ -108,47 +113,9 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Builds a SELECT statement from its component parts.
+     * Returns a list of all tables in the database.
      * 
-     * Adds LIMIT clause.
-     * 
-     * @param array $parts The component parts of the statement.
-     * 
-     * @return void
-     * 
-     */
-    protected function _buildSelect($parts)
-    {
-        // build the baseline statement
-        $stmt = parent::_buildSelect($parts);
-        
-        // determine count
-        $count = ! empty($parts['limit']['count'])
-            ? (int) $parts['limit']['count']
-            : 0;
-        
-        // determine offset
-        $offset = ! empty($parts['limit']['offset'])
-            ? (int) $parts['limit']['offset']
-            : 0;
-            
-        // add the count and offset
-        if ($count > 0) {
-            $stmt .= " LIMIT $count";
-            if ($offset > 0) {
-                $stmt .= " OFFSET $offset";
-            }
-        }
-        
-        // done!
-        return $stmt;
-    }
-    
-    /**
-     * 
-     * Returns the SQL statement to get a list of database tables.
-     * 
-     * @return string The SQL statement.
+     * @return array All table names in the database.
      * 
      */
     public function fetchTableList()
@@ -158,34 +125,27 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
             "UNION ALL SELECT name FROM sqlite_temp_master " .
             "WHERE type='table' ORDER BY name";
         
-        $result = $this->query($cmd);
-        $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $list;
+        return $this->fetchCol($cmd);
     }
     
     /**
      * 
      * Describes the columns in a table.
      * 
-     *     sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(32) NOT NULL);
-     *     sqlite> pragma table_info(areas);
-     *     cid |name |type        |notnull |dflt_value |pk
-     *     0   |id   |INTEGER     |0       |           |1
-     *     1   |name |VARCHAR(32) |99      |           |0
-     * 
      * @param string $table The table to describe.
      * 
      * @return array
      * 
-     * @todo: For $autoinc, replace with preg() to allow for multiple spaces.
-     * 
-     * @todo: For $default, SQLite always reports the keyword *value*, not the
-     * keyword itself.  Check $sql for the default value to see if it's a 
-     * keyword and report 'null' in those cases.
-     * 
      */
     public function fetchTableCols($table)
     {
+        // sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        //         name VARCHAR(32) NOT NULL);
+        // sqlite> pragma table_info(areas);
+        // cid |name |type        |notnull |dflt_value |pk
+        // 0   |id   |INTEGER     |0       |           |1
+        // 1   |name |VARCHAR(32) |99      |           |0
+        
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
         
@@ -193,15 +153,13 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         $descr = array();
         
         // get the CREATE TABLE sql; need this for finding autoincrement cols
-        $result = $this->query(
+        $create_table = $this->fetchValue(
             "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = :table",
             array('table' => $table)
         );
-        $create_table = $result->fetchColumn(0);
         
         // loop through the result rows; each describes a column.
-        $result = $this->query("PRAGMA TABLE_INFO($table)");
-        $cols = $result->fetchAll(PDO::FETCH_ASSOC);
+        $cols = $this->fetchAll("PRAGMA TABLE_INFO($table)");
         foreach ($cols as $val) {
             $name = $val['name'];
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
@@ -219,15 +177,60 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
-                'size'    => $size,
-                'scope'   => $scope,
+                'size'    => ($size  ? (int) $size  : null),
+                'scope'   => ($scope ? (int) $scope : null),
                 'default' => $val['dflt_value'],
                 'require' => (bool) ($val['notnull']),
                 'primary' => (bool) ($val['pk'] == 1),
                 'autoinc' => (bool) $autoinc,
             );
         }
+        
+        // For defaults using keywords, SQLite always reports the keyword
+        // *value*, not the keyword itself (e.g., '2007-03-07' instead of
+        // 'CURRENT_DATE').
+        // 
+        // The allowed keywords are CURRENT_DATE, CURRENT_TIME, and
+        // CURRENT_TIMESTAMP.
+        // 
+        //   <http://www.sqlite.org/lang_createtable.html>
+        // 
+        // Check the table-creation SQL for the default value to see if it's
+        // a keyword and report 'null' in those cases.
+        
+        // get the list of columns
+        $cols = array_keys($descr);
+        
+        // how many are there?
+        $last = count($cols) - 1;
+        
+        // loop through each column and find out if its default is a keyword
+        foreach ($cols as $curr => $name) {
             
+            // if there's no default value, there can't be a keyword.
+            if (! $descr[$name]['default']) {
+                continue;
+            }
+            
+            // look for :curr_col :curr_type . DEFAULT CURRENT_(*)
+            $find = $descr[$name]['name'] . '\s+'
+                  . $this->_solar_native[$descr[$name]['type']]
+                  . '.*\s+DEFAULT\s+CURRENT_';
+            
+            // if not at the end, don't look further than the next coldef
+            if ($curr < $last) {
+                $next = $cols[$curr + 1];
+                $find .= '.*' . $descr[$next]['name'] . '\s+'
+                       . $this->_solar_native[$descr[$next]['type']];
+            }
+            
+            // is the default a keyword?
+            preg_match("/$find/ims", $create_table, $matches);
+            if (! empty($matches)) {
+                $descr[$name]['default'] = null;
+            }
+        }
+        
         // done!
         return $descr;
     }
@@ -247,7 +250,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     {
         $start -= 1;
         $this->query("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
-        $this->query("INSERT INTO $name (id) VALUES ($start)");
+        return $this->query("INSERT INTO $name (id) VALUES ($start)");
     }
     
     /**
@@ -261,7 +264,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        $this->query("DROP TABLE $name");
+        return $this->query("DROP TABLE $name");
     }
     
     /**
@@ -277,7 +280,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      */
     protected function _dropIndex($table, $name)
     {
-        $this->query("DROP INDEX $name");
+        return $this->query("DROP INDEX $name");
     }
     
     /**
@@ -307,5 +310,29 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         
         // get the sequence number
         return $this->lastInsertId();
+    }
+    
+    /**
+     * 
+     * Given a column definition, modifies the auto-increment and primary-key
+     * clauses in place.
+     * 
+     * @param string &$coldef The column definition as it is now.
+     * 
+     * @param bool $autoinc Whether or not this is an auto-increment column.
+     * 
+     * @param bool $primary Whether or not this is a primary-key column.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modAutoincPrimary(&$coldef, $autoinc, $primary)
+    {
+        if ($autoinc) {
+            // forces datatype, primary key, and autoincrement
+            $coldef = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+        } elseif ($primary) {
+            $coldef .= ' PRIMARY KEY';
+        }
     }
 }

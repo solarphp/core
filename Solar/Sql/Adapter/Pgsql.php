@@ -33,27 +33,38 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Map of Solar generic column types to RDBMS native declarations.
+     * Map of Solar generic types to RDBMS native types used when creating
+     * portable tables.
      * 
      * @var array
      * 
      */
-    protected $_native = array(
+    protected $_solar_native = array(
         'bool'      => 'BOOLEAN',
-        'char'      => 'CHAR(:size)',
-        'varchar'   => 'VARCHAR(:size)',
+        'char'      => 'CHAR',
+        'varchar'   => 'VARCHAR',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'NUMERIC(:size,:scope)',
+        'numeric'   => 'NUMERIC',
         'float'     => 'DOUBLE PRECISION',
         'clob'      => 'TEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+        'date'      => 'DATE',
+        'time'      => 'TIME',
+        'timestamp' => 'TIMESTAMP'
     );
     
-    protected $_describe = array(
+    /**
+     * 
+     * Map of native RDBMS types to Solar generic types used when reading 
+     * table column information.
+     * 
+     * @var array
+     * 
+     * @see fetchTableCols()
+     * 
+     */
+    protected $_native_solar = array(
         
         // numeric
         'boolean'                       => 'bool',
@@ -76,7 +87,6 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         'text'                          => 'clob',
     );
     
-    
     /**
      * 
      * The PDO adapter type.
@@ -88,47 +98,9 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Builds a SELECT statement from its component parts.
+     * Returns a list of all tables in the database.
      * 
-     * Adds LIMIT clause.
-     * 
-     * @param array $parts The component parts of the statement.
-     * 
-     * @return void
-     * 
-     */
-    protected function _buildSelect($parts)
-    {
-        // build the baseline statement
-        $stmt = parent::_buildSelect($parts);
-        
-        // determine count
-        $count = ! empty($parts['limit']['count'])
-            ? (int) $parts['limit']['count']
-            : 0;
-        
-        // determine offset
-        $offset = ! empty($parts['limit']['offset'])
-            ? (int) $parts['limit']['offset']
-            : 0;
-            
-        // add the count and offset
-        if ($count > 0) {
-            $stmt .= " LIMIT $count";
-            if ($offset > 0) {
-                $stmt .= " OFFSET $offset";
-            }
-        }
-        
-        // done!
-        return $stmt;
-    }
-    
-    /**
-     * 
-     * Returns the SQL statement to get a list of database tables.
-     * 
-     * @return string The SQL statement.
+     * @return array All table names in the database.
      * 
      */
     public function fetchTableList()
@@ -139,39 +111,12 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
             WHERE table_schema != 'pg_catalog'
             AND table_schema != 'information_schema'";
              
-        $result = $this->query($cmd);
-        $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $list;
+        return $this->fetchCol($cmd);
     }
     
     /**
      * 
      * Describes the columns in a table.
-     * 
-     *              name         |            type             | require | primary |                           default                           
-     *     ----------------------+-----------------------------+---------+---------+-------------------------------------------------------------
-     *      test_autoinc_primary | integer                     | t       | t       | nextval('test_describe_test_autoinc_primary_seq'::regclass)
-     *      test_require         | integer                     | t       |         | 
-     *      test_bool            | boolean                     | f       |         | 
-     *      test_char            | character(7)                | f       |         | 
-     *      test_varchar         | character varying(7)        | f       |         | 
-     *      test_smallint        | smallint                    | f       |         | 
-     *      test_int             | integer                     | f       |         | 
-     *      test_bigint          | bigint                      | f       |         | 
-     *      test_numeric_size    | numeric(5,0)                | f       |         | 
-     *      test_numeric_scope   | numeric(5,3)                | f       |         | 
-     *      test_float           | double precision            | f       |         | 
-     *      test_clob            | text                        | f       |         | 
-     *      test_date            | date                        | f       |         | 
-     *      test_time            | time without time zone      | f       |         | 
-     *      test_timestamp       | timestamp without time zone | f       |         | 
-     *      test_default_null    | character(7)                | f       |         | 
-     *      test_default_string  | character(7)                | f       |         | 'literal'::bpchar
-     *      test_default_integer | integer                     | f       |         | 7
-     *      test_default_numeric | numeric(5,3)                | f       |         | 12.345
-     *      test_default_ignore  | timestamp without time zone | f       |         | now()
-     *      test_default_varchar | character varying(17)       | f       |         | 'literal'::character varying
-     *      test_default_date    | date                        | f       |         | '1979-11-07'::date
      * 
      * @param string $table The table to describe.
      * 
@@ -180,6 +125,31 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     public function fetchTableCols($table)
     {
+        //          name         |            type             | require | primary |                           default                           
+        // ----------------------+-----------------------------+---------+---------+-------------------------------------------------------------
+        //  test_autoinc_primary | integer                     | t       | t       | nextval('test_describe_test_autoinc_primary_seq'::regclass)
+        //  test_require         | integer                     | t       |         | 
+        //  test_bool            | boolean                     | f       |         | 
+        //  test_char            | character(7)                | f       |         | 
+        //  test_varchar         | character varying(7)        | f       |         | 
+        //  test_smallint        | smallint                    | f       |         | 
+        //  test_int             | integer                     | f       |         | 
+        //  test_bigint          | bigint                      | f       |         | 
+        //  test_numeric_size    | numeric(5,0)                | f       |         | 
+        //  test_numeric_scope   | numeric(5,3)                | f       |         | 
+        //  test_float           | double precision            | f       |         | 
+        //  test_clob            | text                        | f       |         | 
+        //  test_date            | date                        | f       |         | 
+        //  test_time            | time without time zone      | f       |         | 
+        //  test_timestamp       | timestamp without time zone | f       |         | 
+        //  test_default_null    | character(7)                | f       |         | 
+        //  test_default_string  | character(7)                | f       |         | 'literal'::bpchar
+        //  test_default_integer | integer                     | f       |         | 7
+        //  test_default_numeric | numeric(5,3)                | f       |         | 12.345
+        //  test_default_ignore  | timestamp without time zone | f       |         | now()
+        //  test_default_varchar | character varying(17)       | f       |         | 'literal'::character varying
+        //  test_default_date    | date                        | f       |         | '1979-11-07'::date
+        
         // modified from Zend_Db_Adapter_Pdo_Pgsql
         $cmd = "
             SELECT
@@ -209,21 +179,19 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
             ORDER BY
                 a.attnum";
         
-        // get the native PDOStatement result
-        $result = $this->query($cmd, array('table' => $table));
-        
         // where the description will be stored
         $descr = array();
         
         // loop through the result rows; each describes a column.
-        foreach ($result->fetchAll(PDO::FETCH_ASSOC) as $val) {
+        $cols = $this->fetchAll($cmd, array('table' => $table));
+        foreach ($cols as $val) {
             $name = $val['name'];
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
-                'size'    => $size,
-                'scope'   => $scope,
+                'size'    => ($size  ? (int) $size  : null),
+                'scope'   => ($scope ? (int) $scope : null),
                 'default' => $this->_getDefault($val['default']),
                 'require' => (bool) ($val['require'] == 't'),
                 'primary' => (bool) ($val['primary'] == 't'),
@@ -283,7 +251,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         // postgres index names are for the entire database,
         // not for a single table.
         // http://www.postgresql.org/docs/7.4/interactive/sql-dropindex.html
-        $this->query("DROP INDEX $name");
+        return $this->query("DROP INDEX $name");
     }
     
     /**
@@ -299,7 +267,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     protected function _createSequence($name, $start = 1)
     {
-        $this->query("CREATE SEQUENCE $name START $start");
+        return $this->query("CREATE SEQUENCE $name START $start");
     }
     
     /**
@@ -313,7 +281,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        $this->query("DROP SEQUENCE $name");
+        return $this->query("DROP SEQUENCE $name");
     }
     
     /**
@@ -344,5 +312,37 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         
         // get the sequence number
         return $this->_pdo->lastInsertID($name);
+    }
+    
+    /**
+     * 
+     * Given a column definition, modifies the auto-increment and primary-key
+     * clauses in place.
+     * 
+     * @param string &$coldef The column definition as it is now.
+     * 
+     * @param bool $autoinc Whether or not this is an auto-increment column.
+     * 
+     * @param bool $primary Whether or not this is a primary-key column.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modAutoincPrimary(&$coldef, $autoinc, $primary)
+    {
+        if ($autoinc) {
+            // replace datatype with SERIAL or BIGSERIAL
+            $parts = explode(' ', $coldef);
+            if (strtoupper($parts[0]) == 'BIGINT') {
+                $parts[0] = 'BIGSERIAL';
+            } else {
+                $parts[0] = 'SERIAL';
+            }
+            $coldef = implode(' ', $parts);
+        }
+        
+        if ($primary) {
+            $coldef .= ' PRIMARY KEY';
+        }
     }
 }

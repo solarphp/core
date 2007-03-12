@@ -19,6 +19,23 @@
  * 
  * Abstract base class for specific RDBMS adapters.
  * 
+ * WHen writing an adapter, you need to override these abstract methods:
+ * 
+ * {{code: php
+ *     abstract public function fetchTableList();
+ *     abstract public function fetchTableCols($table);
+ *     abstract protected function _createSequence($name, $start = 1);
+ *     abstract protected function _dropSequence($name);
+ *     abstract protected function _nextSequence($name);
+ *     abstract protected function _dropIndex($table, $name);
+ *     abstract protected function _modAutoincPrimary(&$coldef, $autoinc, $primary);
+ *     abstract protected function _getDefault($default);
+ * }}
+ * 
+ * Additionally, if backend does not have explicit "LIMIT ... OFFSET" support,
+ * you will want to override _limitSelect($stmt, $parts) to rewrite the query
+ * in order to emulate limit/select behavior.
+ * 
  * @category Solar
  * 
  * @package Solar_Sql
@@ -66,10 +83,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Map of Solar generic column types to RDBMS native declarations.
      * 
-     * The available column types are ...
+     * These are used when creating a portable table.
      * 
-     * `bool`
-     * : A true/false boolean, generally stored as an integer 1 or 0.
+     * The available column types are ...
      * 
      * `char`
      * : A fixed-length string of 1-255 characters.
@@ -77,37 +93,46 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * `varchar`
      * : A variable-length string of 1-255 characters.
      * 
+     * `bool`
+     * : A true/false boolean, generally stored as an integer 1 or 0.  May
+     *   also be stored as null, allowing for ternary logic.
+     * 
      * `smallint`
-     * : A 2-byte integer, value range (-32767 ... +32768).
+     * : A 2-byte integer in the range of -32767 ... +32768.
      * 
      * `int`
-     * : A 4-byte integer, value range (-2,147,483,648 ... +2,147,483,647).
+     * : A 4-byte integer in the range of -2,147,483,648 ... +2,147,483,647.
      * 
      * `bigint`
-     * : An 8-byte integer, value range roughly (-9,223,372,036,854,780,000... +9,223,372,036,854,779,999).
+     * : An 8-byte integer, value range roughly (-9,223,372,036,854,780,000
+     *   ... +9,223,372,036,854,779,999).
      * 
      * `numeric`
-     * : A fixed-point decimal number.
+     * : A fixed-point decimal number of a specific size (total number of
+     *   digits) and scope (the number of those digits to the right of the
+     *   decimal point).
      * 
      * `float`
      * : A double-precision floating-point decimal number.
      * 
      * `clob`
-     * : A character large object with a size of up to 2,147,483,647 bytes (about 2 GB).
+     * : A character large object with a size of up to 2,147,483,647 bytes
+     *   (about 2 GB).
      * 
      * `date`
-     * : An ISO 8601 date stored as a 10-character string; for example, '1979-11-07'.
+     * : An ISO 8601 date; for example, '1979-11-07'.
      * 
      * `time`
-     * : An ISO 8601 time stored as an 8-character string; for example, '12:34:56'.
+     * : An ISO 8601 time; for example, '12:34:56'.
      * 
      * `timestamp`
-     * : An ISO 8601 timestamp stored as a 19-character string (no zone offset); for example, '1979-11-07T12:34:56'.
+     * : An ISO 8601 timestamp without a timezone offset; for example,
+     *   '1979-11-07 12:34:56'.
      * 
      * @var array
      * 
      */
-    protected $_native = array(
+    protected $_solar_native = array(
         'bool'      => null,
         'char'      => null, 
         'varchar'   => null, 
@@ -126,14 +151,20 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Use these values to map native columns to Solar generic data types.
      * 
+     * These are used when fetching table column descriptions.
+     * 
+     * See the individual adapters for specific mappings.
+     * 
      * @var array
      * 
+     * @see fetchTableCols()
+     * 
      */
-    protected $_describe = array();
+    protected $_native_solar = array();
     
     /**
      * 
-     * A portable database object for accessing the RDBMS.
+     * A [[php::pdo | PDO]] object for accessing the RDBMS.
      * 
      * @var object
      * 
@@ -142,7 +173,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * The PDO adapter DSN type.
+     * The [[php::pdo | PDO]] PDO adapter DSN type.
      * 
      * This might not be the same as the Solar adapter type.
      * 
@@ -153,27 +184,31 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Max identifier lengths for table, column, and index names.
+     * Max identifier lengths for table, column, and index names used when
+     * creating portable tables.
      * 
-     * The total length cannot exceed 63 (the Postgres limit).
+     * The reasoning behind these numbers is as follows:
      * 
-     * Reserve 3 chars for suffixes ("__i" for indexes, "__s" for
-     * sequences).
+     * - The total length cannot exceed 63 (the Postgres limit).
      * 
-     * Reserve 2 chars for table__index separator (again, because
-     * Postgres needs unique names for indexes even on different tables).
+     * - Reserve 3 chars for suffixes ("__i" for indexes, "__s" for
+     *   sequences) because Postgres cannot have a table with the same name
+     *   as an index or sequence.
      * 
-     * This leaves 58 characters to split between table name and col/idx
-     * name.  Figure tables need more "space", so they get 30 and
-     * tables/indexes get 28.
+     * - Reserve 2 chars for table__index separator, because Postgres needs
+     *   needs unique names for indexes even on different tables.
+     * 
+     * This leaves 58 characters to split between table name and column/index
+     * name.  I figure table names need more "space", so they get 30 chars,
+     * and tables/indexes get 28.
      * 
      * @var array
      * 
      */
     protected $_len = array(
-        'tbl' => 30,
-        'col' => 28,
-        'idx' => 28
+        'table' => 30,
+        'col'   => 28,
+        'index' => 28
     );
     
     /**
@@ -461,13 +496,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             throw $this->_exception(
                 'ERR_QUERY_FAILED',
                 array(
-                    'pdo_code' => $e->getCode(),
-                    'pdo_text' => $e->getMessage(),
-                    'host'     => $this->_config['host'],
-                    'port'     => $this->_config['port'],
-                    'user'     => $this->_config['user'],
-                    'name'     => $this->_config['name'],
-                    'stmt'     => $stmt,
+                    'pdo_code'  => $e->getCode(),
+                    'pdo_text'  => $e->getMessage(),
+                    'host'      => $this->_config['host'],
+                    'port'      => $this->_config['port'],
+                    'user'      => $this->_config['user'],
+                    'name'      => $this->_config['name'],
+                    'stmt'      => $stmt,
+                    'pdo_trace' => $e->getTraceAsString(),
                 )
             );
         }
@@ -478,12 +514,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $this->_profile[] = array($after - $before, $obj->queryString);
         }
         
+        // done!
         return $obj;
     }
     
     // -----------------------------------------------------------------
     // 
-    // Manipulation
+    // Transactions
     // 
     // -----------------------------------------------------------------
     
@@ -543,6 +580,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         return $result;
     }
+    
+    // -----------------------------------------------------------------
+    // 
+    // Manipulation
+    // 
+    // -----------------------------------------------------------------
     
     /**
      * 
@@ -694,137 +737,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Select rows from the database.
-     * 
-     * This method exists primarily in support of [[Class::Solar_Sql_Select | ]],
-     * which you should strongly consider using instead of calling this method.
-     * 
-     * If you do use this method, here are some quick examples:
-     * 
-     * {{code: php
-     *     $sql = Solar::factory('Solar_Sql');
-     * 
-     *     // get all rows
-     *     $all = $sql->select('all', "SELECT * FROM table");
-     * 
-     *     // get just the first row
-     *     $id = $sql->quote('id_value');
-     *     $row = $sql->select('row', "SELECT * FROM table WHERE id = $id");
-     * 
-     *     // get just the first value
-     *     $count = $sql->select('one', "SELECT COUNT(*) FROM table");
-     * }}
-     * 
-     * Available selection types are ...
-     * 
-     * | $type    | returns 
-     * | -------- | -----------------------------------------------------------------------------
-     * | `all`    | Solar_Sql_Rowset object of all rows; return class can be set using $class 
-     * | `array`  | A sequential array of all rows 
-     * | `assoc`  | An assoc. array of all rows keyed on first column 
-     * | `col`    | A sequential array of the first column of each row 
-     * | `one`    | The first value in the first row 
-     * | `pairs`  | An assoc. array of keys (first col) and values (second col) 
-     * | `pdo`    | A PDOStatement object 
-     * | `result` | A Solar_Sql_Result object 
-     * | `row`    | A Solar_Sql_Row object of the first row; return class can be set using $class 
-     * | `string` | The SQL SELECT command as a string 
-     * 
-     * @param string $type How to return the results.
-     * 
-     * @param array|string $spec An array of component parts for a
-     * SELECT, or a literal query string (SELECT or non-select).
-     * 
-     * @param array $data An associative array of data to bind into the
-     * SELECT statement.
-     * 
-     * @param string $class If selecting $type 'all' or 'row', use this
-     * class for the return object.
-     * 
-     * @return mixed The query results for the return type requested.
-     * 
-     * @todo Deprecate in favor of fetch*() methods?
-     * 
-     */
-    public function select($type, $spec, $data = array(), $class = null)
-    {
-        switch (strtolower($type)) {
-        
-        case 'all':
-            if (empty($class)) {
-                $class = 'Solar_Sql_Rowset';
-            }
-            return $this->fetchAll($spec, $data, $class);
-            break;
-        
-        case 'array':
-            // maintains BC
-            // will be deprecated in favor of fetchAll()
-            return $this->fetchAll($spec, $data, null);
-            break;
-        
-        case 'assoc':
-            // maintains BC
-            // will change behavior to return Solar_Sql_Rowset (vice array)
-            return $this->fetchAssoc($spec, $data, null);
-            break;
-        
-        case 'col':
-            return $this->fetchCol($spec, $data, $class);
-            break;
-        
-        case 'one':
-            return $this->fetchValue($spec, $data, $class);
-            break;
-        
-        case 'pair':
-        case 'pairs':
-            return $this->fetchPairs($spec, $data, $class);
-            break;
-        
-        case 'pdo':
-        case 'pdostatement':
-        case 'statement':
-            // maintains BC
-            // will be deprecated in favor of fetchResult()
-            return $this->fetchResult($spec, $data, $class);
-            break;
-        
-        case 'result':
-            // maintains BC
-            // will be deprecated and removed
-            $result = $this->fetchResult($spec, $data, $class);
-            $data = Solar::factory(
-                'Solar_Sql_Result',
-                array('PDOStatement' => $result)
-            );
-            return $data;
-            break;
-        
-        case 'row':
-            if (empty($class)) {
-                $class = 'Solar_Sql_Row';
-            }
-            return $this->fetchOne($spec, $data, $class);
-            break;
-        
-        case 'string':
-            return $this->fetchString($spec, $data, $class);
-            break;
-        
-        default:
-            // not a recognized select type
-            throw $this->_exception('ERR_SELECT_TYPE', array('type' => $type));
-            break;
-        }
-    }
-    
-    /**
-     * 
      * Fetches all rows from the database using sequential keys.
-     * 
-     * By default, returns as a Solar_Sql_Rowset object; however, if an empty
-     * $class is specified, returns as a sequential array.
      * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string.
@@ -832,25 +745,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty, or is 'array', returns as a sequential
-     * array instead.
-     * 
-     * @return object
+     * @return array
      * 
      */
-    public function fetchAll($spec, $data = array(), $class = 'Solar_Sql_Rowset')
+    public function fetchAll($spec, $data = array())
     {
-        $result = $this->fetchResult($spec, $data);
-        
-        if ($class && strtolower($class) != 'array') {
-            return Solar::factory(
-                $class,
-                array('data' => $result->fetchAll(PDO::FETCH_ASSOC))
-            );
-        } else {
-            return $result->fetchAll(PDO::FETCH_ASSOC);
-        }
+        $result = $this->fetchPdo($spec, $data);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
     
     /**
@@ -858,25 +759,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Fetches all rows from the database using associative keys (defined by
      * the first column).
      * 
-     * By default, returns as a Solar_Sql_Rowset object; however, if an empty
-     * $class is specified, returns as an associative array.
-     * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string.
      * 
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty, or is 'array', returns an associative
-     * array instead.
-     * 
      * @return array
      * 
      */
-    public function fetchAssoc($spec, $data = array(), $class = 'Solar_Sql_Rowset')
+    public function fetchAssoc($spec, $data = array())
     {
-        $result = $this->fetchResult($spec, $data);
+        $result = $this->fetchPdo($spec, $data);
         
         $data = array();
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -884,14 +778,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $data[$key] = $row;
         }
         
-        if ($class) {
-            return Solar::factory(
-                $class,
-                array('data' => $data)
-            );
-        } else {
-            return $data;
-        }
+        return $data;
     }
     
     /**
@@ -909,7 +796,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchCol($spec, $data = array())
     {
-        $result = $this->fetchResult($spec, $data);
+        $result = $this->fetchPdo($spec, $data);
         return $result->fetchAll(PDO::FETCH_COLUMN, 0);
     }
     
@@ -936,7 +823,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             // but leave the offset alone.
             $spec['limit']['count'] = 1;
         }
-        $result = $this->fetchResult($spec, $data);
+        $result = $this->fetchPdo($spec, $data);
         return $result->fetchColumn(0);
     }
     
@@ -956,7 +843,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchPairs($spec, $data = array())
     {
-        $result = $this->fetchResult($spec, $data);
+        $result = $this->fetchPdo($spec, $data);
         
         $data = array();
         while ($row = $result->fetch(PDO::FETCH_NUM)) {
@@ -979,11 +866,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array
      * 
      */
-    public function fetchResult($spec, $data = array())
+    public function fetchPdo($spec, $data = array())
     {
         // build the statement from its component parts if needed
         if (is_array($spec)) {
-            $stmt = $this->_buildSelect($spec);
+            $stmt = $this->_select($spec);
         } else {
             $stmt = $spec;
         }
@@ -996,9 +883,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Fetches one row from the database.
      * 
-     * By default, returns as a Solar_Sql_Row object; however, if an empty
-     * $class is specified, returns as an associative array.
-     * 
      * When $spec is an array, automatically sets LIMIT 1 OFFSET 0 to limit
      * the results to a single row.
      * 
@@ -1008,14 +892,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @param string $class Use this class for the return object; default is
-     * 'Solar_Sql_Rowset'.  If empty or 'array', returns as a sequential
-     * array instead.
-     * 
      * @return object
      * 
      */
-    public function fetchOne($spec, $data = array(), $class = 'Solar_Sql_Row')
+    public function fetchOne($spec, $data = array())
     {
         if (is_array($spec)) {
             // automatically limit to the first row only,
@@ -1023,16 +903,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $spec['limit']['count'] = 1;
         }
         
-        $result = $this->fetchResult($spec, $data);
-        
-        if ($class && strtolower($class) != 'array') {
-            return Solar::factory(
-                $class,
-                array('data' => $result->fetch(PDO::FETCH_ASSOC))
-            );
-        } else {
-            return $result->fetch(PDO::FETCH_ASSOC);
-        }
+        $result = $this->fetchPdo($spec, $data);
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
     
     /**
@@ -1046,398 +918,153 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return string
      * 
      */
-    public function fetchString($spec)
+    public function fetchSql($spec)
     {
         // build the statement from its component parts if needed
         if (is_array($spec)) {
-            return $this->_buildSelect($spec);
+            return $this->_select($spec);
         } else {
             return $spec;
         }
     }
     
-    
-    // -----------------------------------------------------------------
-    // 
-    // Sequences
-    // 
-    // -----------------------------------------------------------------
-    
     /**
      * 
-     * Get the last auto-incremented insert ID from the database.
+     * Returns a SELECT statement built from its component parts.
      * 
-     * @param string $name The name of the auto-increment series; optional,
-     * not normally required.
+     * @param array $parts The component parts of the SELECT.
      * 
-     * @return int The last auto-increment ID value inserted to the database.
+     * @return string The SELECT string.
      * 
      */
-    public function lastInsertId($name = null)
+    protected function _select($parts)
     {
-        $this->_connect();
-        return $this->_pdo->lastInsertId($name);
+        $stmt = $this->_sqlSelect($parts);
+        $this->_modSelect($stmt, $parts);
+        return $stmt;
     }
     
     /**
      * 
-     * Creates a sequence in the database.
+     * Builds the base SELECT command string from its component parts, without
+     * the LIMIT portions; those are left to the individual adapters.
      * 
-     * @param string $name The sequence name to create; this will be 
-     * automatically suffixed with '__s' for portability reasons.
+     * @param array $parts The parts of the SELECT statement, generally
+     * from a Solar_Sql_Select object.
      * 
-     * @param string $start The starting sequence number.
-     * 
-     * @return void
-     * 
-     * @todo Check name length.
+     * @return string A SELECT command string.
      * 
      */
-    public function createSequence($name, $start = 1)
+    protected function _sqlSelect($parts)
     {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_createSequence($name, $start);
-        return $result;
-    }
-    
-    /**
-     * 
-     * Creates a sequence, optionally starting at a certain number.
-     * 
-     * @param string $name The sequence name to create.
-     * 
-     * @param int $start The first sequence number to return.
-     * 
-     * @return void
-     * 
-     */
-    abstract protected function _createSequence($name, $start = 1);
-    
-    /**
-     * 
-     * Drops a sequence from the database.
-     * 
-     * @param string $name The sequence name to drop; this will be 
-     * automatically suffixed with '__s' for portability reasons.
-     * 
-     * @return void
-     * 
-     */
-    public function dropSequence($name)
-    {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_dropSequence($name);
-        return $result;
-    }
-    
-    /**
-     * 
-     * Drops a sequence.
-     * 
-     * @param string $name The sequence name to drop.
-     * 
-     * @return void
-     * 
-     */
-    abstract protected function _dropSequence($name);
-    
-    /**
-     * 
-     * Gets the next number in a sequence; creates the sequence if it does not exist.
-     * 
-     * @param string $name The sequence name; this will be 
-     * automatically suffixed with '__s' for portability reasons.
-     * 
-     * @return int The next number in the sequence.
-     * 
-     */
-    public function nextSequence($name)
-    {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
-        $result = $this->_nextSequence($name);
-        return $result;
-    }
-    
-    /**
-     * 
-     * Gets the next sequence number; creates the sequence if needed.
-     * 
-     * @param string $name The sequence name to increment.
-     * 
-     * @return int The next sequence number.
-     * 
-     */
-    abstract protected function _nextSequence($name);
-    
-    
-    // -----------------------------------------------------------------
-    // 
-    // Table and columns discovery
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Returns a list of database tables.
-     * 
-     * @return array A sequential array of table names in the database.
-     * 
-     */
-    abstract public function fetchTableList();
-    
-    /**
-     * 
-     * Returns an array describing the columns in a table.
-     * 
-     * @param string $table The table name to fetch columns for.
-     * 
-     * @return array An array of table columns.
-     * 
-     */
-    abstract public function fetchTableCols($table);
-    
-    // -----------------------------------------------------------------
-    // 
-    // Table, column, and index management
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Creates a portable table.
-     * 
-     * The $cols parameter should be in this format ...
-     * 
-     * {{code: php
-     *     $cols = array(
-     *       'fieldOne' => array(
-     *         'type'    => bool|char|int|etc,
-     *         'size'    => total length for char|varchar|numeric
-     *         'scope'   => decimal places for numeric
-     *         'require' => true|false,
-     *       ),
-     *       'fieldTwo' => array(...)
-     *     );
-     * }}
-     * 
-     * For available field types, see Solar_Sql_Adapter::$_native.
-     * 
-     * @param string $table The name of the table to create.
-     * 
-     * @param array $cols Array of columns to create.
-     * 
-     * @return string An SQL string.
-     * 
-     * @todo Instead of stacking errors, stack info, then throw in exception.
-     * 
-     */
-    public function createTable($table, $cols)
-    {
-        // table name can only be so many chars
-        $len = strlen($table);
-        if ($len < 1 || $len > $this->_len['tbl']) {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_LENGTH',
-                array('table' => $table)
-            );
+        $default = array(
+            'distinct' => false,
+            'cols'     => array(),
+            'from'     => array(),
+            'where'    => array(),
+            'group'    => array(),
+            'having'   => array(),
+            'order'    => array(),
+        );
+        
+        $parts = array_merge($default, $parts);
+        
+        // is this a SELECT or SELECT DISTINCT?
+        if ($parts['distinct']) {
+            $stmt = "SELECT DISTINCT\n\t";
+        } else {
+            $stmt = "SELECT\n\t";
         }
         
-        // table name must be a valid word, and cannot end in
-        // "__s" (this is to prevent sequence table collisions)
-        if (! $this->_validIdentifier($table) || substr($table, -3) == "__s") {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_RESERVED',
-                array('table' => $table)
-            );
+        // add columns
+        $stmt .= implode(",\n\t", $parts['cols']) . "\n";
+        
+        // from these tables
+        $stmt .= "FROM ";
+        $stmt .= implode(", ", $parts['from']) . "\n";
+        
+        // joined to these tables
+        if ($parts['join']) {
+            $list = array();
+            foreach ($parts['join'] as $join) {
+                $tmp = '';
+                // add the type (LEFT, INNER, etc)
+                if (! empty($join['type'])) {
+                    $tmp .= $join['type'] . ' ';
+                }
+                // add the table name and condition
+                $tmp .= 'JOIN ' . $join['name'];
+                $tmp .= ' ON ' . $join['cond'];
+                // add to the list
+                $list[] = $tmp;
+            }
+            // add the list of all joins
+            $stmt .= implode("\n", $list) . "\n";
         }
         
-        // array of column definitions
-        $coldef = array();
+        // with these where conditions
+        if ($parts['where']) {
+            $stmt .= "WHERE\n\t";
+            $stmt .= implode("\n\t", $parts['where']) . "\n";
+        }
         
-        // use this to stack errors when creating definitions
-        $err = array();
+        // grouped by these columns
+        if ($parts['group']) {
+            $stmt .= "GROUP BY\n\t";
+            $stmt .= implode(",\n\t", $parts['group']) . "\n";
+        }
         
-        // loop through each column and get its definition
-        foreach ($cols as $name => $info) {
-            try {
-                $result = $this->_buildColDef($name, $info);
-                $coldef[] = "$name $result";
-            } catch (Exception $e) {
-                $err[$name] = $e->getInfo();
+        // having these conditions
+        if ($parts['having']) {
+            $stmt .= "HAVING\n\t";
+            $stmt .= implode("\n\t", $parts['having']) . "\n";
+        }
+        
+        // ordered by these columns
+        if ($parts['order']) {
+            $stmt .= "ORDER BY\n\t";
+            $stmt .= implode(",\n\t", $parts['order']) . "\n";
+        }
+        
+        // done!
+        return $stmt;
+    }
+    
+    /**
+     * 
+     * Modifies a SELECT statement in place to add a LIMIT clause.
+     * 
+     * The default code adds a LIMIT for MySQL, PostgreSQL, and Sqlite, but
+     * adapters can override as needed.
+     * 
+     * @param string &$stmt The SELECT statement.
+     * 
+     * @param array &$parts The orignal SELECT component parts, in case the
+     * adapter needs them.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modSelect(&$stmt, &$parts)
+    {
+        // determine count
+        $count = ! empty($parts['limit']['count'])
+            ? (int) $parts['limit']['count']
+            : 0;
+        
+        // determine offset
+        $offset = ! empty($parts['limit']['offset'])
+            ? (int) $parts['limit']['offset']
+            : 0;
+      
+        // add the count and offset
+        if ($count > 0) {
+            $stmt .= " LIMIT $count";
+            if ($offset > 0) {
+                $stmt .= " OFFSET $offset";
             }
         }
-        
-        // were there errors?
-        if ($err) {
-            throw $this->_exception(
-                'ERR_TABLE_NOT_CREATED',
-                $err
-            );
-        } else {
-            // no errors, execute and return
-            $cols = implode(",\n\t", $coldef);
-            $stmt = $this->_buildCreateTable($table, $cols);
-            $result = $this->query($stmt);
-            return $result;
-        }
     }
-    
-    /**
-     * 
-     * Drops a table from the database.
-     * 
-     * @param string $table The table name.
-     * 
-     * @return mixed
-     * 
-     */
-    public function dropTable($table)
-    {
-        return $this->query("DROP TABLE $table");
-    }
-    
-    /**
-     * 
-     * Adds a portable column to a table in the database.
-     * 
-     * The $info parameter should be in this format ...
-     * 
-     * {{code: php
-     *     $info = array(
-     *         'type'    => bool|char|int|etc,
-     *         'size'    => total length for char|varchar|numeric
-     *         'scope'   => decimal places for numeric
-     *         'require' => true|false,
-     *     );
-     * }}
-     * 
-     * @param string $table The table name (1-30 chars).
-     * 
-     * @param string $name The column name to add (1-28 chars).
-     * 
-     * @param array $info Information about the column.
-     * 
-     * @return mixed
-     * 
-     */
-    public function addColumn($table, $name, $info)
-    {
-        $coldef = $this->_buildColDef($name, $info);
-        $stmt = "ALTER TABLE $table ADD COLUMN $name $coldef";
-        return $this->query($stmt);
-    }
-    
-    /**
-     * 
-     * Drops a column from a table in the database.
-     * 
-     * @param string $table The table name.
-     * 
-     * @param string $name The column name to drop.
-     * 
-     * @return mixed
-     * 
-     */
-    public function dropColumn($table, $name)
-    {
-        return $this->query("ALTER TABLE $table DROP COLUMN $name");
-    }
-    
-    /**
-     * 
-     * Creates a portable index on a table.
-     * 
-     * Indexes are automatically renamed to "tablename__indexname__i" for
-     * portability reasons.
-     * 
-     * @param string $table The name of the table for the index (1-30 chars).
-     * 
-     * @param string $name The name of the index (1-28 chars).
-     * 
-     * @param bool $unique Whether or not the index is unique.
-     * 
-     * @param array $cols The columns in the index.  If empty, uses the
-     * $name parameters as the column name.
-     * 
-     * @return void
-     * 
-     */
-    public function createIndex($table, $name, $unique = false,
-        $cols = null)
-    {
-        // are there any columns for the index?
-        if (empty($cols)) {
-            // take the column name from the index name
-            $cols = $name;
-        }
-        
-        // check the table name length
-        $len = strlen($table);
-        if ($len < 1 || $len > $this->_len['tbl']) {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_LENGTH',
-                array('table' => $table)
-            );
-        }
-        
-        // check the index name length
-        $len = strlen($name);
-        if ($len < 1 || $len > $this->_len['idx']) {
-            throw $this->_exception(
-                'ERR_IDX_NAME_LENGTH',
-                array('table' => $table, 'index' => $name)
-            );
-        }
-        
-        // create a string of column names
-        $cols = implode(', ', (array) $cols);
-        
-        // we prefix all index names with the table name,
-        // and suffix all index names with '__i'.  this
-        // is to soothe PostgreSQL, which demands that index
-        // names not collide, even when they indexes are on
-        // different tables.
-        $fullname = $table . '__' . $name . '__i';
-        
-        // create index entry
-        if ($unique) {
-            $cmd = "CREATE UNIQUE INDEX $fullname ON $table ($cols)";
-        } else {
-            $cmd = "CREATE INDEX $fullname ON $table ($cols)";
-        }
-        return $this->query($cmd);
-    }
-    
-    
-    /**
-     * 
-     * Drops an index from a table in the database.
-     * 
-     * @param string $table The table name.
-     * 
-     * @param string $name The index name to drop.
-     * 
-     * @return mixed
-     * 
-     */
-    public function dropIndex($table, $name)
-    {
-        $fullname = $table . '__' . $name . '__i';
-        return $this->_dropIndex($table, $fullname);
-    }
-    
-    /**
-     * 
-     * Drops an index.
-     * 
-     * @param string $table The table of the index.
-     * 
-     * @param string $name The index name.
-     * 
-     * @return void
-     * 
-     */
-    abstract protected function _dropIndex($table, $name);
     
     
     // -----------------------------------------------------------------
@@ -1536,7 +1163,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      *     );
      *     $safe = $sql->quoteMulti($list);
      *     
-     *     // $safe == "WHERE date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
+     *     // $safe = "WHERE date > '2005-01-02'
+     *     //          AND date < 2005-02-01
+     *     //          AND type IN('a','b','c')"
      * }}
      * 
      * @param array $list A series of key-value pairs where the key is
@@ -1551,7 +1180,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * quoted values.
      * 
      */
-    // rename to quoteIntoMany()?
     public function quoteMulti($list, $sep = null)
     {
         $text = array();
@@ -1575,22 +1203,493 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     // -----------------------------------------------------------------
     // 
+    // Auto-increment and sequence reading.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Get the last auto-incremented insert ID from the database.
+     * 
+     * @param string $name The name of the auto-increment series; optional,
+     * not normally required.
+     * 
+     * @return int The last auto-increment ID value inserted to the database.
+     * 
+     */
+    public function lastInsertId($name = null)
+    {
+        $this->_connect();
+        return $this->_pdo->lastInsertId($name);
+    }
+    
+    /**
+     * 
+     * Gets the next number in a sequence; creates the sequence if it does not exist.
+     * 
+     * @param string $name The sequence name; this will be 
+     * automatically suffixed with '__s' for portability reasons.
+     * 
+     * @return int The next number in the sequence.
+     * 
+     */
+    public function nextSequence($name)
+    {
+        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $result = $this->_nextSequence($name);
+        return $result;
+    }
+    
+    /**
+     * 
+     * Gets the next sequence number; creates the sequence if needed.
+     * 
+     * @param string $name The sequence name to increment.
+     * 
+     * @return int The next sequence number.
+     * 
+     */
+    abstract protected function _nextSequence($name);
+    
+    
+    // -----------------------------------------------------------------
+    // 
+    // Table and column information reading.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Returns a list of database tables.
+     * 
+     * @return array A sequential array of table names in the database.
+     * 
+     */
+    abstract public function fetchTableList();
+    
+    /**
+     * 
+     * Returns an array describing the columns in a table.
+     * 
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @return array An array of table columns.
+     * 
+     */
+    abstract public function fetchTableCols($table);
+    
+    /**
+     * 
+     * Given a native column SQL default value, returns a PHP literal value.
+     * 
+     * @param string $default The column default SQL value.
+     * 
+     * @return scalar A literal PHP value.
+     * 
+     */
+    abstract protected function _getDefault($default);
+    
+    /**
+     * 
+     * Given a column specification, parse into datatype, size, and 
+     * decimal scope.
+     * 
+     * @param string $spec The column specification; for example,
+     * "VARCHAR(255)" or "NUMERIC(10,2)".
+     * 
+     * @return array A sequential array of the column type, size, and scope.
+     * 
+     */
+    protected function _getTypeSizeScope($spec)
+    {
+        $spec  = strtolower($spec);
+        $type  = null;
+        $size  = null;
+        $scope = null;
+        
+        // find the parens, if any
+        $pos = strpos($spec, '(');
+        if ($pos === false) {
+            // no parens, so no size or scope
+            $type = $spec;
+        } else {
+            // find the type first.
+            $type = substr($spec, 0, $pos);
+            
+            // there were parens, so there's at least a size.
+            // remove parens to get the size.
+            $size = trim(substr($spec, $pos), '()');
+            
+            // a comma in the size indicates a scope.
+            $pos = strpos($size, ',');
+            if ($pos !== false) {
+                $scope = substr($size, $pos + 1);
+                $size  = substr($size, 0, $pos);
+            }
+        }
+        
+        foreach ($this->_native_solar as $native => $solar) {
+            // $type is already lowered
+            if ($type == strtolower($native)) {
+                $type = strtolower($solar);
+                break;
+            }
+        }
+        
+        return array($type, $size, $scope);
+    }
+    
+    
+    // -----------------------------------------------------------------
+    // 
+    // Table, column, index, and sequence management.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Creates a portable table.
+     * 
+     * The $cols parameter should be in this format ...
+     * 
+     * {{code: php
+     *     $cols = array(
+     *       'fieldOne' => array(
+     *         'type'    => (string) bool, char, int, ...
+     *         'size'    => (int) total length for char|varchar|numeric
+     *         'scope'   => (int) decimal places for numeric
+     *         'default' => (bool) the default value, if any
+     *         'require' => (bool) is the value required to be NOT NULL?
+     *         'primary' => (bool) is this a primary key column?
+     *         'autoinc' => (bool) is this an auto-increment column?
+     *       ),
+     *       'fieldTwo' => array(...)
+     *     );
+     * }}
+     * 
+     * For available field types, see Solar_Sql_Adapter::$_native.
+     * 
+     * @param string $table The name of the table to create.
+     * 
+     * @param array $cols Array of columns to create.
+     * 
+     * @return string An SQL string.
+     * 
+     * @todo Instead of stacking errors, stack info, then throw in exception.
+     * 
+     */
+    public function createTable($table, $cols)
+    {
+        $stmt = $this->_sqlCreateTable($table, $cols);
+        $this->query($stmt);
+    }
+    
+    /**
+     * 
+     * Returns a CREATE TABLE command string for the adapter.
+     * 
+     * We use this so that certain adapters can append table types
+     * to the creation statment (for example MySQL).
+     * 
+     * @param string $name The table name to create.
+     * 
+     * @param string $cols The column definitions.
+     * 
+     * @return string A CREATE TABLE command string.
+     * 
+     */
+    protected function _sqlCreateTable($table, $cols)
+    {
+        // table name can only be so many chars
+        $len = strlen($table);
+        if ($len < 1 || $len > $this->_len['table']) {
+            throw $this->_exception(
+                'ERR_TABLE_NAME_LENGTH',
+                array('table' => $table)
+            );
+        }
+        
+        // table name must be a valid word, and cannot end in
+        // "__s" (this is to prevent sequence table collisions)
+        if (! $this->_validIdentifier($table) || substr($table, -3) == "__s") {
+            throw $this->_exception(
+                'ERR_TABLE_NAME_RESERVED',
+                array('table' => $table)
+            );
+        }
+        
+        // array of column definitions
+        $coldef = array();
+        
+        // use this to stack errors when creating definitions
+        $err = array();
+        
+        // loop through each column and get its definition
+        foreach ($cols as $name => $info) {
+            try {
+                $coldef[] = $this->_sqlColdef($name, $info);
+            } catch (Exception $e) {
+                $err[$name] = $e->getInfo();
+            }
+        }
+        
+        if ($err) {
+            throw $this->_exception(
+                'ERR_CREATE_TABLE',
+                $err
+            );
+        }
+        
+        // no errors, build a return the CREATE statement
+        $cols = implode(",\n\t", $coldef);
+        return "CREATE TABLE $table (\n\t$cols\n)";
+    }
+    
+    /**
+     * 
+     * Drops a table from the database.
+     * 
+     * @param string $table The table name.
+     * 
+     * @return mixed
+     * 
+     */
+    public function dropTable($table)
+    {
+        return $this->query("DROP TABLE $table");
+    }
+    
+    /**
+     * 
+     * Adds a portable column to a table in the database.
+     * 
+     * The $info parameter should be in this format ...
+     * 
+     * {{code: php
+     *     $info = array(
+     *         'type'    => (string) bool, char, int, ...
+     *         'size'    => (int) total length for char|varchar|numeric
+     *         'scope'   => (int) decimal places for numeric
+     *         'default' => (bool) the default value, if any
+     *         'require' => (bool) is the value required to be NOT NULL?
+     *         'primary' => (bool) is this a primary key column?
+     *         'autoinc' => (bool) is this an auto-increment column?
+     *     );
+     * }}
+     * 
+     * @param string $table The table name (1-30 chars).
+     * 
+     * @param string $name The column name to add (1-28 chars).
+     * 
+     * @param array $info Information about the column.
+     * 
+     * @return mixed
+     * 
+     */
+    public function addColumn($table, $name, $info)
+    {
+        $coldef = $this->_sqlColdef($name, $info);
+        $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
+        return $this->query($stmt);
+    }
+    
+    /**
+     * 
+     * Drops a column from a table in the database.
+     * 
+     * @param string $table The table name.
+     * 
+     * @param string $name The column name to drop.
+     * 
+     * @return mixed
+     * 
+     */
+    public function dropColumn($table, $name)
+    {
+        return $this->query("ALTER TABLE $table DROP COLUMN $name");
+    }
+    
+    /**
+     * 
+     * Creates a portable index on a table.
+     * 
+     * Indexes are automatically renamed to "tablename__indexname__i" for
+     * portability reasons.
+     * 
+     * @param string $table The name of the table for the index (1-30 chars).
+     * 
+     * @param string $name The name of the index (1-28 chars).
+     * 
+     * @param bool $unique Whether or not the index is unique.
+     * 
+     * @param array $cols The columns in the index.  If empty, uses the
+     * $name parameters as the column name.
+     * 
+     * @return void
+     * 
+     */
+    public function createIndex($table, $name, $unique = false, $cols = null)
+    {
+        // are there any columns for the index?
+        if (empty($cols)) {
+            // take the column name from the index name
+            $cols = $name;
+        }
+        
+        // check the table name length
+        $len = strlen($table);
+        if ($len < 1 || $len > $this->_len['table']) {
+            throw $this->_exception(
+                'ERR_TABLE_NAME_LENGTH',
+                array('table' => $table)
+            );
+        }
+        
+        // check the index name length
+        $len = strlen($name);
+        if ($len < 1 || $len > $this->_len['index']) {
+            throw $this->_exception(
+                'ERR_IDX_NAME_LENGTH',
+                array('table' => $table, 'index' => $name)
+            );
+        }
+        
+        // create a string of column names
+        $cols = implode(', ', (array) $cols);
+        
+        // we prefix all index names with the table name,
+        // and suffix all index names with '__i'.  this
+        // is to soothe PostgreSQL, which demands that index
+        // names not collide, even when they indexes are on
+        // different tables.
+        $fullname = $table . '__' . $name . '__i';
+        
+        // create index entry
+        if ($unique) {
+            $cmd = "CREATE UNIQUE INDEX $fullname ON $table ($cols)";
+        } else {
+            $cmd = "CREATE INDEX $fullname ON $table ($cols)";
+        }
+        return $this->query($cmd);
+    }
+    
+    
+    /**
+     * 
+     * Drops an index from a table in the database.
+     * 
+     * @param string $table The table name.
+     * 
+     * @param string $name The index name to drop.
+     * 
+     * @return mixed
+     * 
+     */
+    public function dropIndex($table, $name)
+    {
+        $fullname = $table . '__' . $name . '__i';
+        return $this->_dropIndex($table, $fullname);
+    }
+    
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The index name.
+     * 
+     * @return void
+     * 
+     */
+    abstract protected function _dropIndex($table, $name);
+    
+    /**
+     * 
+     * Creates a sequence in the database.
+     * 
+     * @param string $name The sequence name to create; this will be 
+     * automatically suffixed with '__s' for portability reasons.
+     * 
+     * @param string $start The starting sequence number.
+     * 
+     * @return void
+     * 
+     * @todo Check name length.
+     * 
+     */
+    public function createSequence($name, $start = 1)
+    {
+        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $result = $this->_createSequence($name, $start);
+        return $result;
+    }
+    
+    /**
+     * 
+     * Creates a sequence, optionally starting at a certain number.
+     * 
+     * @param string $name The sequence name to create.
+     * 
+     * @param int $start The first sequence number to return.
+     * 
+     * @return void
+     * 
+     */
+    abstract protected function _createSequence($name, $start = 1);
+    
+    /**
+     * 
+     * Drops a sequence from the database.
+     * 
+     * @param string $name The sequence name to drop; this will be 
+     * automatically suffixed with '__s' for portability reasons.
+     * 
+     * @return void
+     * 
+     */
+    public function dropSequence($name)
+    {
+        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $result = $this->_dropSequence($name);
+        return $result;
+    }
+    
+    /**
+     * 
+     * Drops a sequence.
+     * 
+     * @param string $name The sequence name to drop.
+     * 
+     * @return void
+     * 
+     */
+    abstract protected function _dropSequence($name);
+    
+    
+    // -----------------------------------------------------------------
+    // 
     // Support
     // 
     // -----------------------------------------------------------------
     
     /**
      * 
-     * Builds a column definition string.
+     * Returns a column definition string.
      * 
      * The $info parameter should be in this format ...
      * 
-     * $info = array(
-     *   'type'    => bool|char|int|etc,
-     *   'size'    => total length for char|varchar|numeric
-     *   'scope'   => decimal places for numeric
-     *   'require' => true|false,
-     * );
+     * {{code: php
+     *     $info = array(
+     *         'type'    => (string) bool, char, int, ...
+     *         'size'    => (int) total length for char|varchar|numeric
+     *         'scope'   => (int) decimal places for numeric
+     *         'default' => (bool) the default value, if any
+     *         'require' => (bool) is the value required to be NOT NULL?
+     *         'primary' => (bool) is this a primary key column?
+     *         'autoinc' => (bool) is this an auto-increment column?
+     *     );
+     * }}
      * 
      * @param string $name The column name.
      * 
@@ -1599,7 +1698,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return string The column definition string.
      * 
      */
-    protected function _buildColDef($name, $info)
+    protected function _sqlColdef($name, $info)
     {
         // validate column name length
         $len = strlen($name);
@@ -1618,12 +1717,20 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             );
         }
         
+        // short-form of definition
+        if (is_string($info)) {
+            $info = array('type' => $info);
+        }
+        
         // set default values for these variables
         $tmp = array(
-            'type'     => null,
-            'size'     => null,
-            'scope'    => null,
-            'require'  => null, // true means NOT NULL, false means NULL
+            'type'    => null,
+            'size'    => null,
+            'scope'   => null,
+            'default' => null,
+            'require' => null,
+            'primary' => false,
+            'autoinc' => false,
         );
         
         $info = array_merge($tmp, $info);
@@ -1637,7 +1744,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $require = (bool) $require;
         
         // is it a recognized column type?
-        if (! array_key_exists($type, $this->_native)) {
+        if (! array_key_exists($type, $this->_solar_native)) {
             throw $this->_exception(
                 'ERR_COL_TYPE_UNKNOWN',
                 array('col' => $name, 'type' => $type)
@@ -1657,7 +1764,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 );
             } else {
                 // replace the 'size' placeholder
-                $coldef = str_replace(':size', $size, $this->_native[$type]);
+                $coldef = $this->_solar_native[$type] . "($size)";
             }
             break;
         
@@ -1678,16 +1785,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             }
             
             // replace the 'size' and 'scope' placeholders
-            $coldef = str_replace(
-                array(':size', ':scope'),
-                array($size, $scope),
-                $this->_native[$type]
-            );
+            $coldef = $this->_solar_native[$type] . "($size,$scope)";
             
             break;
         
         default:
-            $coldef = $this->_native[$type];
+            $coldef = $this->_solar_native[$type];
             break;
         
         }
@@ -1695,9 +1798,28 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // set the "NULL"/"NOT NULL" portion
         $coldef .= ($require) ? ' NOT NULL' : ' NULL';
         
+        // modify with auto-increment and primary-key portions
+        $this->_modAutoincPrimary($coldef, $autoinc, $primary);
+        
         // done
-        return $coldef;
+        return "$name $coldef";
     }
+    
+    /**
+     * 
+     * Given a column definition, modifies the auto-increment and primary-key
+     * clauses in place.
+     * 
+     * @param string &$coldef The column definition as it is now.
+     * 
+     * @param bool $autoinc Whether or not this is an auto-increment column.
+     * 
+     * @param bool $autoinc Whether or not this is a primary-key column.
+     * 
+     * @return void
+     * 
+     */
+    abstract protected function _modAutoincPrimary(&$coldef, $autoinc, $primary);
     
     /**
      * 
@@ -1733,175 +1855,5 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // guess it's OK
         return true;
-    }
-    
-    /**
-     * 
-     * Builds a CREATE TABLE command string.
-     * 
-     * We use this so that certain adapters can append table types
-     * to the creation statment (for example MySQL).
-     * 
-     * @param string $name The table name to create.
-     * 
-     * @param string $cols The column definitions.
-     * 
-     * @return string A CREATE TABLE command string.
-     * 
-     */
-    protected function _buildCreateTable($name, $cols)
-    {
-        return "CREATE TABLE $name (\n$cols\n)";
-    }
-    
-    /**
-     * 
-     * Build an SQL SELECT command string from its component parts.
-     * 
-     * We use this so that adapters can append or wrap with LIMIT
-     * clauses or emulation.
-     * 
-     * @param array $parts The parts of the SELECT statement, generally
-     * from a Solar_Sql_Select object.
-     * 
-     * @return string An SQL SELECT command string.
-     * 
-     */
-    protected function _buildSelect($parts)
-    {
-        $default = array(
-            'distinct' => false,
-            'cols'     => array(),
-            'from'     => array(),
-            'where'    => array(),
-            'group'    => array(),
-            'having'   => array(),
-            'order'    => array(),
-        );
-        
-        $parts = array_merge($default, $parts);
-        
-        // is this a SELECT or SELECT DISTINCT?
-        if ($parts['distinct']) {
-            $stmt = "SELECT DISTINCT\n\t";
-        } else {
-            $stmt = "SELECT\n\t";
-        }
-        
-        // add columns
-        $stmt .= implode(",\n\t", $parts['cols']) . "\n";
-        
-        // from these tables
-        $stmt .= "FROM ";
-        $stmt .= implode(", ", $parts['from']) . "\n";
-        
-        // joined to these tables
-        if ($parts['join']) {
-            $list = array();
-            foreach ($parts['join'] as $join) {
-                $tmp = '';
-                // add the type (LEFT, INNER, etc)
-                if (! empty($join['type'])) {
-                    $tmp .= $join['type'] . ' ';
-                }
-                // add the table name and condition
-                $tmp .= 'JOIN ' . $join['name'];
-                $tmp .= ' ON ' . $join['cond'];
-                // add to the list
-                $list[] = $tmp;
-            }
-            // add the list of all joins
-            $stmt .= implode("\n", $list) . "\n";
-        }
-        
-        // with these where conditions
-        if ($parts['where']) {
-            $stmt .= "WHERE\n\t";
-            $stmt .= implode("\n\t", $parts['where']) . "\n";
-        }
-        
-        // grouped by these columns
-        if ($parts['group']) {
-            $stmt .= "GROUP BY\n\t";
-            $stmt .= implode(",\n\t", $parts['group']) . "\n";
-        }
-        
-        // having these conditions
-        if ($parts['having']) {
-            $stmt .= "HAVING\n\t";
-            $stmt .= implode("\n\t", $parts['having']) . "\n";
-        }
-        
-        // ordered by these columns
-        if ($parts['order']) {
-            $stmt .= "ORDER BY\n\t";
-            $stmt .= implode(",\n\t", $parts['order']) . "\n";
-        }
-        
-        // done!
-        return $stmt;
-    }
-    
-    /**
-     * 
-     * Given a column specification, parse into datatype, size, and 
-     * decimal scope.
-     * 
-     * @param string $spec The column specification; for example, "VARCHAR(255)"
-     * or "NUMERIC(10,2)".
-     * 
-     * @return array A sequential array of the column type, size, and scope.
-     * 
-     */
-    protected function _getTypeSizeScope($spec)
-    {
-        $spec  = strtolower($spec);
-        $type  = null;
-        $size  = null;
-        $scope = null;
-        
-        // find the parens, if any
-        $pos = strpos($spec, '(');
-        if ($pos === false) {
-            // no parens, so no size or scope
-            $type = $spec;
-        } else {
-            // find the type first.
-            $type = substr($spec, 0, $pos);
-            
-            // there were parens, so there's at least a size.
-            // remove parens to get the size.
-            $size = trim(substr($spec, $pos), '()');
-            
-            // a comma in the size indicates a scope.
-            $pos = strpos($size, ',');
-            if ($pos !== false) {
-                $scope = substr($size, $pos + 1);
-                $size  = substr($size, 0, $pos);
-            }
-        }
-        
-        $type = $this->_getSolarType($type);
-        return array($type, $size, $scope);
-    }
-    
-    /**
-     * 
-     * Given a native column data type, finds the generic Solar data type.
-     * 
-     * @param string $type The native column data type.
-     * 
-     * @return string The generic Solar data type, if one maps to the native
-     * type; otherwise, returns the native type unchanged.
-     * 
-     */
-    protected function _getSolarType($type)
-    {
-        foreach ($this->_describe as $native => $solar) {
-            if (strtolower($type) == strtolower($native)) {
-                return $solar;
-            }
-        }
-        return $type;
     }
 }

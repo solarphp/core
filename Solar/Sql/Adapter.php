@@ -81,11 +81,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Map of Solar generic column types to RDBMS native declarations.
+     * Map of Solar generic types to RDBMS native types used when creating
+     * portable tables.
      * 
-     * These are used when creating a portable table.
+     * See the individual adapters for specific mappings.
      * 
-     * The available column types are ...
+     * The available generic column types are ...
      * 
      * `char`
      * : A fixed-length string of 1-255 characters.
@@ -149,9 +150,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Use these values to map native columns to Solar generic data types.
-     * 
-     * These are used when fetching table column descriptions.
+     * Map of native RDBMS types to Solar generic types used when reading 
+     * table column information.
      * 
      * See the individual adapters for specific mappings.
      * 
@@ -164,7 +164,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * A [[php::pdo | PDO]] object for accessing the RDBMS.
+     * A PDO object for accessing the RDBMS.
      * 
      * @var object
      * 
@@ -173,7 +173,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * The [[php::pdo | PDO]] PDO adapter DSN type.
+     * The PDO adapter DSN type.
      * 
      * This might not be the same as the Solar adapter type.
      * 
@@ -218,7 +218,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Each element is an array, where the first value is the query execution
      * time in microseconds, and the second value is the query string.
      * 
-     * Only populated when the `profile` config key is true.
+     * Only populated when the `profiling` config key is true.
      * 
      * @var array
      * 
@@ -367,14 +367,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, '__CONNECT');
         }
-        
     }
     
     /**
      * 
-     * Prepares and executes an SQL statement with bound data.
+     * Prepares and executes an SQL statement, optionally binding values
+     * to named parameters in the statement.
      * 
-     * This is the most-direct way to interact with the database; you simply
+     * This is the most-direct way to interact with the database; you
      * pass an SQL statement to the method, then the adapter uses
      * [[php::PDO | ]] to execute the statement and return a result.
      * 
@@ -383,15 +383,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      *     // $result is a PDOStatement
      *     $result = $sql->query('SELECT * FROM table');
-     * 
-     *     // $result is a row-count
-     *     $value = $sql->quote('something');
-     *     $result = $sql->query("UPDATE table SET col = $value");
      * }}
      * 
-     * To helper prevent SQL injection attacks, you should **always** quote
+     * To help prevent SQL injection attacks, you should **always** quote
      * the values used in a direct query. Use [[quote()]], [[quoteInto()]],
-     * or [[quoteMulti()]] to accomplish this.
+     * or [[quoteMulti()]] to accomplish this. Even easier, use the automated
+     * value binding provided by the query() method:
+     * 
+     * {{code: php
+     *     // BAD AND SCARY:
+     *     $result = $sql->query('SELECT * FROM table WHERE foo = $bar');
+     *     
+     *     // Much much better:
+     *     $result = $sql->query(
+     *         'SELECT * FROM table WHERE foo = :bar',
+     *         array('bar' => $bar)
+     *     );
+     * }}
      * 
      * Note that adapters provide convenience methods to automatically quote
      * values on common operations:
@@ -400,34 +408,35 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * - [[Solar_Sql::update()]]
      * - [[Solar_Sql::delete()]]
      * 
-     * Additionally, the [[Class::Solar_Sql_Select | ]] class is dedicated to safely
-     * creating portable SELECT statements, so you may wish to use that as well.
+     * Additionally, the [[Class::Solar_Sql_Select | ]] class is dedicated to
+     * safely creating portable SELECT statements, so you may wish to use that
+     * instead of writing literal SELECTs.
      * 
      * 
      * Automated Binding of Values in PHP 5.2.1 and Later
      * --------------------------------------------------
      * 
      * With PDO in PHP 5.2.1 and later, we can no longer just throw an array
-     * of data at the statement; we need to bind values specifically to their
-     * respective placeholders.
+     * of data at the statement for binding. We now need to bind values
+     * specifically to their respective placeholders.
      * 
      * In addition, we can't bind one value to multiple identical named
      * placeholders; we need to bind that same value multiple times. So if
-     * :foo is used three times, PDO uses :foo the first time, :foo2 the
-     * second time, and :foo3 the third time.
+     * `:foo` is used three times, PDO uses `:foo` the first time, `:foo2` the
+     * second time, and `:foo3` the third time.
      * 
-     * This query() method examins the statement for all :name placeholders
-     * and attempts to bind data from the $data array.  The regular-expression
+     * This query() method examins the statement for all `:name` placeholders
+     * and attempts to bind data from the `$data` array.  The regular-expression
      * it uses is a little braindead; it cannot tell if the :name placeholder
      * is literal text or really a place holder.
      * 
-     * As such, you should *either* use the $data array for named-placeholder
+     * As such, you should *either* use the `$data` array for named-placeholder
      * value binding at query() time, *or* bind-as-you-go when building the 
      * statement, not both.  If you do, you are on your own to make sure
-     * that nothing looking like a :name placeholder exists as literal text.
+     * that nothing looking like a `:name` placeholder exists in the literal text.
      * 
-     * Question-mark placeholders are no longer supported for automatic 
-     * value binding at query() time.
+     * Question-mark placeholders are not supported for automatic value
+     * binding at query() time.
      * 
      * @param string $stmt The text of the SQL statement, optionally with
      * named placeholders.

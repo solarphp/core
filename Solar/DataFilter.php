@@ -702,8 +702,8 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Validates that the value is a key in the list of allowed options.
      * 
-     * Given the keys of the array (second parameter), the value
-     * (first parameter) must match at least one of those keys.
+     * Given an array (second parameter), the value (first parameter) must 
+     * match at least one of the array keys.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -1069,20 +1069,72 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the value is numeric (any number or number string).
+     * Validates that the value is not blank whitespace.
+     * 
+     * Boolean, integer, and float types are never "blank".
+     * 
+     * All other types are converted to string and trimmed; if '', then the
+     * value is blank.
      * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateNumeric($value)
+    public function validateNotBlank($value)
+    {
+        if (is_bool($value) || is_int($value) || is_float($value)) {
+            return true;
+        }
+        
+        return (trim((string)$value) != '');
+    }
+    
+    /**
+     * 
+     * Validates that the value **is not** a key in the list of allowed
+     * options.
+     * 
+     * Given an array (second parameter), the value (first parameter) must not
+     * match any the array keys.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param array $array An array of disallowed options.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function validateNotInKeys($value, $array)
     {
         if ($this->validateBlank($value)) {
             return ! $this->_require;
         }
         
-        return is_numeric($value);
+        return ! array_key_exists($value, (array) $array);
+    }
+    
+    /**
+     * 
+     * Validates that the value **is not** in a list of disallowed values.
+     * 
+     * Strict checking is enforced, so a string "1" is not the same as
+     * an integer 1.  This helps to avoid matching 0 and empty, etc.
+     * 
+     * @param mixed $value The value to validate.
+     * 
+     * @param array $array An array of disallowed values.
+     * 
+     * @return bool True if valid, false if not.
+     * 
+     */
+    public function validateNotInList($value, $array)
+    {
+        if ($this->validateBlank($value)) {
+            return ! $this->_require;
+        }
+        
+        return ! in_array($value, (array) $array, true);
     }
     
     /**
@@ -1108,25 +1160,20 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the value is not blank whitespace.
-     * 
-     * Boolean, integer, and float types are never "blank".
-     * 
-     * All other types are converted to string and trimmed; if '', then the
-     * value is blank.
+     * Validates that the value is numeric (any number or number string).
      * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
      * 
      */
-    public function validateNotBlank($value)
+    public function validateNumeric($value)
     {
-        if (is_bool($value) || is_int($value) || is_float($value)) {
-            return true;
+        if ($this->validateBlank($value)) {
+            return ! $this->_require;
         }
         
-        return (trim((string)$value) != '');
+        return is_numeric($value);
     }
     
     /**

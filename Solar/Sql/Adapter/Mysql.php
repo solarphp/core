@@ -33,27 +33,41 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Map of Solar generic column types to RDBMS native declarations.
+     * Map of Solar generic types to RDBMS native types used when creating
+     * portable tables.
      * 
      * @var array
      * 
      */
-    protected $_native = array(
-        'bool'      => 'TINYINT(1)',
-        'char'      => 'CHAR(:size) BINARY',
-        'varchar'   => 'VARCHAR(:size) BINARY',
+    protected $_solar_native = array(
+        'bool'      => 'BOOLEAN',
+        'char'      => 'CHAR',
+        'varchar'   => 'VARCHAR',
         'smallint'  => 'SMALLINT',
         'int'       => 'INTEGER',
         'bigint'    => 'BIGINT',
-        'numeric'   => 'DECIMAL(:size,:scope)',
+        'numeric'   => 'DECIMAL',
         'float'     => 'DOUBLE',
         'clob'      => 'LONGTEXT',
-        'date'      => 'CHAR(10)',
-        'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+        'date'      => 'DATE',
+        'time'      => 'TIME',
+        'timestamp' => 'DATETIME'
     );
     
-    protected $_describe = array(
+    /**
+     * 
+     * Map of native RDBMS types to Solar generic types used when reading 
+     * table column information.
+     * 
+     * Note that fetchTableCols() will programmatically convert TINYINT(1) to
+     * 'bool' independent of this map.
+     * 
+     * @var array
+     * 
+     * @see fetchTableCols()
+     * 
+     */
+    protected $_native_solar = array(
         
         // numeric
         'smallint'          => 'smallint',
@@ -97,116 +111,67 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Builds a SELECT statement from its component parts.
+     * Returns a list of all tables in the database.
      * 
-     * Adds LIMIT clause.
-     * 
-     * @param array $parts The component parts of the statement.
-     * 
-     * @return void
-     * 
-     */
-    protected function _buildSelect($parts)
-    {
-        // build the baseline statement
-        $stmt = parent::_buildSelect($parts);
-        
-        // determine count
-        $count = ! empty($parts['limit']['count'])
-            ? (int) $parts['limit']['count']
-            : 0;
-        
-        // determine offset
-        $offset = ! empty($parts['limit']['offset'])
-            ? (int) $parts['limit']['offset']
-            : 0;
-      
-        /*
-            // for mysql 3.23.x?
-            if ($count > 0) {
-                $offset = ($offset > 0) ? $offset : 0;    
-                $stmt .= "LIMIT $offset, $count";
-            }
-        */
-        
-        // add the count and offset
-        if ($count > 0) {
-            $stmt .= " LIMIT $count";
-            if ($offset > 0) {
-                $stmt .= " OFFSET $offset";
-            }
-        }
-        
-        // done!
-        return $stmt;
-    }
-    
-    /**
-     * 
-     * Returns a list of database tables.
-     * 
-     * @return array The list of tables in the database.
+     * @return array All table names in the database.
      * 
      */
     public function fetchTableList()
     {
-        $result = $this->query('SHOW TABLES');
-        $list = $result->fetchAll(PDO::FETCH_COLUMN, 0);
-        return $list;
+        return $this->fetchCol('SHOW TABLES');
     }
     
     /**
      * 
      * Returns an array describing the columns in a table.
      * 
-     *     mysql> DESCRIBE table_name;
-     *     +--------------+--------------+------+-----+---------+-------+
-     *     | Field        | Type         | Null | Key | Default | Extra |
-     *     +--------------+--------------+------+-----+---------+-------+
-     *     | id           | int(11)      |      | PRI | 0       |       |
-     *     | created      | varchar(19)  | YES  | MUL | NULL    |       |
-     *     | updated      | varchar(19)  | YES  | MUL | NULL    |       |
-     *     | name         | varchar(127) |      | UNI |         |       |
-     *     | owner_handle | varchar(32)  | YES  | MUL | NULL    |       |
-     *     | subj         | varchar(255) | YES  |     | NULL    |       |
-     *     | prefs        | longtext     | YES  |     | NULL    |       |
-     *     +--------------+--------------+------+-----+---------+-------+
-     * 
      * @param string $table The table name to fetch columns for.
      * 
-     * @return array An array of table columns.
+     * @return array An array of table column information.
      * 
      */
     public function fetchTableCols($table)
     {
+        // mysql> DESCRIBE table_name;
+        // +--------------+--------------+------+-----+---------+-------+
+        // | Field        | Type         | Null | Key | Default | Extra |
+        // +--------------+--------------+------+-----+---------+-------+
+        // | id           | int(11)      |      | PRI | 0       |       |
+        // | created      | varchar(19)  | YES  | MUL | NULL    |       |
+        // | updated      | varchar(19)  | YES  | MUL | NULL    |       |
+        // | name         | varchar(127) |      | UNI |         |       |
+        // | owner_handle | varchar(32)  | YES  | MUL | NULL    |       |
+        // | subj         | varchar(255) | YES  |     | NULL    |       |
+        // | prefs        | longtext     | YES  |     | NULL    |       |
+        // +--------------+--------------+------+-----+---------+-------+
+     
         // strip non-word characters to try and prevent SQL injections
         $table = preg_replace('/[^\w]/', '', $table);
-        
-        // get the native PDOStatement result
-        $result = $this->query("DESCRIBE $table");
         
         // where the description will be stored
         $descr = array();
         
         // loop through the result rows; each describes a column.
-        $cols = $result->fetchAll(PDO::FETCH_ASSOC);
+        $cols = $this->fetchAll("DESCRIBE $table");
         foreach ($cols as $val) {
             
             $name = $val['field'];
             
-            list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
-            
             // override $type to find tinyint(1) as boolean
-            if ($val['type'] == 'tinyint(1)') {
+            if (strtolower($val['type']) == 'tinyint(1)') {
                 $type = 'bool';
+                $size = null;
+                $scope = null;
+            } else {
+                list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             }
             
             // save the column description
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
-                'size'    => $size,
-                'scope'   => $scope,
+                'size'    => ($size  ? (int) $size  : null),
+                'scope'   => ($scope ? (int) $scope : null),
                 'default' => $this->_getDefault($val['default']),
                 'require' => (bool) ($val['null'] != 'YES'),
                 'primary' => (bool) ($val['key'] == 'PRI'),
@@ -253,9 +218,9 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return string A CREATE TABLE command string.
      * 
      */
-    protected function _buildCreateTable($name, $cols)
+    protected function _sqlCreateTable($name, $cols)
     {
-        $stmt = parent::_buildCreateTable($name, $cols);
+        $stmt = parent::_sqlCreateTable($name, $cols);
         $stmt .= " TYPE=InnoDB"; // for transactions
         return $stmt;
     }
@@ -273,7 +238,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      */
     protected function _dropIndex($table, $name)
     {
-        $this->query("DROP INDEX $name ON $table");
+        return $this->query("DROP INDEX $name ON $table");
     }
     
     /**
@@ -291,7 +256,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     {
         $start -= 1;
         $this->query("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
-        $this->query("INSERT INTO $name (id) VALUES ($start)");
+        return $this->query("INSERT INTO $name (id) VALUES ($start)");
     }
     
     /**
@@ -305,7 +270,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        $this->query("DROP TABLE $name");
+        return $this->query("DROP TABLE $name");
     }
     
     /**
@@ -335,5 +300,30 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         
         // get the sequence number
         return $this->_pdo->lastInsertID();
+    }
+    
+    /**
+     * 
+     * Given a column definition, modifies the auto-increment and primary-key
+     * clauses in place.
+     * 
+     * @param string &$coldef The column definition as it is now.
+     * 
+     * @param bool $autoinc Whether or not this is an auto-increment column.
+     * 
+     * @param bool $primary Whether or not this is a primary-key column.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modAutoincPrimary(&$coldef, $autoinc, $primary)
+    {
+        if ($autoinc) {
+            $coldef .= " AUTO_INCREMENT";
+        }
+        
+        if ($primary) {
+            $coldef .= " PRIMARY KEY";
+        }
     }
 }

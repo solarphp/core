@@ -435,7 +435,7 @@ class Solar_Sql_Table extends Solar_Base {
      * Convenience method to select rows from this table.
      * 
      * @param string $type The type of select to execute: 'all', 'one',
-     * 'row', etc. Default is 'result'.
+     * 'value', etc. Default is 'pdo'.
      * 
      * @param string|array $where A Solar_Sql_Select::multiWhere() parameter.
      * 
@@ -446,31 +446,28 @@ class Solar_Sql_Table extends Solar_Base {
      * @return mixed
      * 
      */
-    public function select($type = 'result', $where = null,
-        $order = null, $page = null)
+    public function select($type = 'pdo', $where = null, $order = null,
+        $page = null)
     {
-        if ($type == 'all') {
-            $class = $this->_all_class;
-        } elseif ($type == 'row') {
-            $class = $this->_row_class;
-        } else {
-            $class = null;
-        }
-        
         $select = $this->_newSelect();
-        
         $result = $select->from($this->_name, array_keys($this->_col))
                          ->multiWhere($where)
                          ->order($order)
                          ->setPaging($this->_paging)
                          ->limitPage($page)
-                         ->fetch($type, $class);
+                         ->fetch($type);
         
-        if ($result instanceof Solar_Sql_Row) {
-            $result->setSave($this);
+        if ($type == 'all') {
+            $obj = Solar::factory($this->_all_class, array('data' => $result));
+            $obj->setSave($this);
+            return $obj;
+        } elseif ($type == 'one') {
+            $obj = Solar::factory($this->_row_class, array('data' => $result));
+            $obj->setSave($this);
+            return $obj;
+        } else {
+            return $result;
         }
-        
-        return $result;
     }
     
     /**

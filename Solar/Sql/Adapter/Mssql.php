@@ -61,6 +61,8 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * 
      * The PDO adapter type.
      * 
+     * Default is 'dblib', but on Windows systems it is 'mssql'.
+     * 
      * @var string
      * 
      */

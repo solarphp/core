@@ -225,9 +225,9 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         // string literal?
         $k = substr($default, 0, 1);
         if ($k == '"' || $k == "'") {
-            // find the :: typedef
+            // find the trailing :: typedef
             $pos = strrpos($default, '::');
-            // also trim of the leading and trailing quotes
+            // also remove the leading and trailing quotes
             return substr($default, 1, $pos-2);
         }
         

@@ -57,11 +57,14 @@ Solar::loadClass('Solar_Sql_Table');
  *     // limit by which page of results we want
  *     $select->limitPage(1);
  *     
- *     // get a Solar_Sql_Result object (the default)
- *     $result = $select->fetch(); // or fetch('result')
+ *     // get a PDOStatement object (the default)
+ *     $result = $select->fetch(); // or fetch('pdo')
  *     
- *     // alternatively, get a Solar_Sql_Rowset object
+ *     // alternatively, get an array of data
  *     $rows = $select->fetch('all');
+ *     
+ *     // or, get a Solar_Sql_Rowset object
+ *     $rows = $select->fetch('rowset');
  *     
  *     // find out the count of rows, and how many pages there are.
  *     // this comes back as an array('count' => ?, 'pages' => ?).
@@ -882,16 +885,16 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Fetch the results based on the current query properties.
      * 
-     * @param string $type The type of fetch to perform (all, one, row,
-     * etc).  Default is 'result'.
+     * @param string $type The type of fetch to perform (all, one, col,
+     * etc).  Default is 'pdo'.
      * 
-     * @param string $class When fetching 'all' or 'row', use this as 
+     * @param string $class When fetching 'row' or 'rowset', use this as 
      * the return class.
      * 
      * @return mixed The query results.
      * 
      */
-    public function fetch($type = 'result')
+    public function fetch($type = 'pdo', $class = null)
     {
         // build from scratch using the table and record sources.
         $this->_parts['cols'] = array();

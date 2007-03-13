@@ -730,7 +730,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->where('parent_id IN(?)', $id_list);
         $select->where('type IN(?)', $this->_parts);
         $select->group(array('nodes.parent_id', 'nodes.type'));
-        $result = $select->fetch('array');
+        $result = $select->fetch('all');
         
         // append the results to the zero base, and we're done
         $result = array_merge($zero, $result);

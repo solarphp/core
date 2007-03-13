@@ -184,7 +184,7 @@ class Solar_Sql_Select extends Solar_Base {
     
     public function __toString()
     {
-        return $this->fetch('string');
+        return $this->fetch('sql');
     }
     
     /**
@@ -419,7 +419,7 @@ class Solar_Sql_Select extends Solar_Base {
             return $this;
         }
         
-        if ($val != SOLAR_IGNORE_PARAM) {
+        if ($val !== SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -454,7 +454,7 @@ class Solar_Sql_Select extends Solar_Base {
             return $this;
         }
         
-        if ($val != SOLAR_IGNORE_PARAM) {
+        if ($val !== SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -572,7 +572,7 @@ class Solar_Sql_Select extends Solar_Base {
             return $this;
         }
         
-        if ($val != SOLAR_IGNORE_PARAM) {
+        if ($val !== SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -607,7 +607,7 @@ class Solar_Sql_Select extends Solar_Base {
             return $this;
         }
         
-        if ($val != SOLAR_IGNORE_PARAM) {
+        if ($val !== SOLAR_IGNORE_PARAM) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -891,7 +891,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @return mixed The query results.
      * 
      */
-    public function fetch($type = 'result', $class = null)
+    public function fetch($type = 'result')
     {
         // build from scratch using the table and record sources.
         $this->_parts['cols'] = array();
@@ -947,7 +947,8 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // perform the fetch
-        return $this->_sql->select($type, $this->_parts, $this->_bind, $class);
+        $fetchType = 'fetch' . ucfirst($type);
+        return $this->_sql->$fetchType($this->_parts, $this->_bind);
     }
     
     /**
@@ -982,7 +983,7 @@ class Solar_Sql_Select extends Solar_Base {
         );
         
         // get the count and calculate pages
-        $count = $select->fetch('one');
+        $count = $select->fetch('value');
         $pages = 0;
         if ($count > 0) {
             $pages = ceil($count / $this->_paging);

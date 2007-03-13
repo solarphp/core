@@ -129,7 +129,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->_sql->begin();
         $this->_sql->insert($this->_table_name, $data);
         $this->_sql->commit();
-        $result = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
+        $result = $this->_sql->fetchValue("SELECT COUNT(*) FROM $this->_table_name");
         $this->assertEquals($result, '1');
     }
     
@@ -139,7 +139,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->_sql->begin();
         $this->_sql->insert($this->_table_name, $data);
         $this->_sql->rollback();
-        $result = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
+        $result = $this->_sql->fetchValue("SELECT COUNT(*) FROM $this->_table_name");
         $this->assertEquals($result, '0');
     }
     
@@ -150,7 +150,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $result = $this->_sql->insert($this->_table_name, $data);
         $this->assertEquals($result, 1);
         
-        $result = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
+        $result = $this->_sql->fetchRow("SELECT * FROM $this->_table_name WHERE id = 1");
         $this->assertEquals($result->toArray(), $data);
     }
     
@@ -166,7 +166,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($result, 1);
         
         $expect = array('id' => '1', 'name' => 'Bar');
-        $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
+        $actual = $this->_sql->fetchRow("SELECT * FROM $this->_table_name WHERE id = 1");
         $this->assertEquals($actual->toArray(), $expect);
     }
     
@@ -189,14 +189,14 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         );
         
         // did it work?
-        $actual = $this->_sql->select('all', "SELECT * FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchRowset("SELECT * FROM $this->_table_name ORDER BY id");
         $this->assertEquals($actual->toArray(), $expect);
     }
     
-    public function testSelect_all()
+    public function testFetchAll()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('all', "SELECT * FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchAll("SELECT * FROM $this->_table_name ORDER BY id");
         $expect = array(
             array('id' => '1', 'name' => 'Foo'),
             array('id' => '2', 'name' => 'Bar'),
@@ -205,13 +205,13 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
             array('id' => '5', 'name' => 'Zim'),
             array('id' => '6', 'name' => 'Gir'),
         );
-        $this->assertEquals($actual->toArray(), $expect);
+        $this->assertEquals($actual, $expect);
     }
     
-    public function testSelect_assoc()
+    public function testFetchAssoc()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('assoc', "SELECT name, id FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchAssoc("SELECT name, id FROM $this->_table_name ORDER BY id");
         $expect = array(
             'Foo' => array('id' => '1', 'name' => 'Foo'),
             'Bar' => array('id' => '2', 'name' => 'Bar'),
@@ -223,10 +223,10 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($expect, $actual);
     }
     
-    public function testSelect_col()
+    public function testFetchCol()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('col', "SELECT name, id FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchCol("SELECT name, id FROM $this->_table_name ORDER BY id");
         $expect = array(
             'Foo',
             'Bar',
@@ -238,18 +238,18 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($expect, $actual);
     }
     
-    public function testSelect_one()
+    public function testFetchValue()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('one', "SELECT COUNT(*) FROM $this->_table_name");
+        $actual = $this->_sql->fetchValue("SELECT COUNT(*) FROM $this->_table_name");
         $expect = '6';
         $this->assertEquals($expect, $actual);
     }
     
-    public function testSelect_pairs()
+    public function testFetchPairs()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('pairs', "SELECT name, id FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchPairs("SELECT name, id FROM $this->_table_name ORDER BY id");
         $expect = array(
             'Foo' => '1',
             'Bar' => '2',
@@ -261,47 +261,29 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertEquals($expect, $actual);
     }
     
-    public function testSelect_pdo()
+    public function testFetchPdo()
     {
         $this->_insertData();
-        $actual = $this->_sql->select('pdo', "SELECT name, id FROM $this->_table_name ORDER BY id");
+        $actual = $this->_sql->fetchPdo("SELECT name, id FROM $this->_table_name ORDER BY id");
         $expect = 'PDOStatement';
         $this->assertType($expect, $actual);
     }
     
-    public function testSelect_result()
-    {
-        $this->_insertData();
-        $actual = $this->_sql->select('result', "SELECT name, id FROM $this->_table_name ORDER BY id");
-        $expect = 'Solar_Sql_Result';
-        $this->assertType($expect, $actual);
-    }
-    
-    public function testSelect_row()
+    public function testFetchRow()
     {
         $this->_insertData();
         $cmd = "SELECT id, name FROM $this->_table_name WHERE id = :id";
         $data = array('id' => 5);
-        $actual = $this->_sql->select('row', $cmd, $data);
+        $actual = $this->_sql->fetchRow($cmd, $data);
         $expect = array('id' => '5', 'name' => 'Zim');
         $this->assertEquals($actual->toArray(), $expect);
     }
     
-    public function testSelect_string()
+    public function testFetchSql()
     {
         $expect = "SELECT name, id FROM $this->_table_name WHERE id = :id";
-        $actual = $this->_sql->select('string', $expect);
+        $actual = $this->_sql->fetchSql($expect);
         $this->assertEquals($expect, $actual);
-    }
-    
-    public function testSelect_unknown()
-    {
-        try {
-            $actual = $this->_sql->select('NO_SUCH_TYPE', "SELECT * FROM $this->_table_name");
-            $this->fail('should not have selected NO_SUCH_TYPE');
-        } catch (Exception $e) {
-            $this->assertType('Solar_Sql_Exception', $e);
-        }
     }
     
     public function testCreateSequence()
@@ -367,7 +349,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->_sql->addColumn($this->_table_name, 'email', $info);
         $this->_sql->update($this->_table_name, array('email' => 'nobody@example.com'), '1=1');
         
-        $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
+        $actual = $this->_sql->fetchRow("SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1', 'name' => 'Foo', 'email' => 'nobody@example.com');
         $this->assertEquals($actual->toArray(), $expect);
     }
@@ -376,7 +358,7 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
     {
         $this->_insertData();
         $this->_sql->dropColumn($this->_table_name, 'name');
-        $actual = $this->_sql->select('row', "SELECT * FROM $this->_table_name WHERE id = 1");
+        $actual = $this->_sql->fetchRow("SELECT * FROM $this->_table_name WHERE id = 1");
         $expect = array('id' => '1');
         $this->assertEquals($actual->toArray(), $expect);
     }
@@ -420,10 +402,10 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
     public function testDropIndex()
     {
         $result = $this->_sql->createIndex($this->_table_name, 'id');
-        $this->assertNotNull($result);
+        $this->assertTrue($result instanceof PDOStatement);
         
         $result = $this->_sql->dropIndex($this->_table_name, 'id');
-        $this->assertNull($result);
+        $this->assertTrue($result instanceof PDOStatement);
     }
     
     public function testQuote()

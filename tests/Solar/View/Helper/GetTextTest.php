@@ -11,19 +11,14 @@ class Solar_View_Helper_GetTextTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
     
-    public function testGetText_otherClass()
+    public function testGetText_setClass()
     {
         $example = Solar::factory('Solar_Test_Example');
-        $actual = $this->_view->getText('Solar_Test_Example::HELLO_WORLD');
-        $expect = 'hello world';
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testGetText_resetClass()
-    {
-        $example = Solar::factory('Solar_Test_Example');
-        $this->_view->getText('Solar_Test_Example::');
-        $actual = $this->_view->getText('HELLO_WORLD');
+        
+        $helper = $this->_view->getHelper('getText');
+        $helper->setClass('Solar_Test_Example');
+        
+        $actual = $this->_view->getTextRaw('HELLO_WORLD');
         $expect = 'hello world';
         $this->assertSame($actual, $expect);
     }

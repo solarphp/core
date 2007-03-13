@@ -29,7 +29,6 @@
  *     abstract protected function _nextSequence($name);
  *     abstract protected function _dropIndex($table, $name);
  *     abstract protected function _modAutoincPrimary(&$coldef, $autoinc, $primary);
- *     abstract protected function _getDefault($default);
  * }}
  * 
  * Additionally, if backend does not have explicit "LIMIT ... OFFSET" support,
@@ -1286,17 +1285,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     abstract public function fetchTableCols($table);
-    
-    /**
-     * 
-     * Given a native column SQL default value, returns a PHP literal value.
-     * 
-     * @param string $default The column default SQL value.
-     * 
-     * @return scalar A literal PHP value.
-     * 
-     */
-    abstract protected function _getDefault($default);
     
     /**
      * 

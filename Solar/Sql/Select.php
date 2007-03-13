@@ -896,6 +896,15 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function fetch($type = 'pdo', $class = null)
     {
+        // does the method exist? (this allows for extended adapters 
+        // to define their own fetch methods)
+        $method = 'fetch' . ucfirst($type);
+        if (! method_exists($this->_sql, $method)) {
+            throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED', array(
+                'method' => $method
+            ));
+        }
+        
         // build from scratch using the table and record sources.
         $this->_parts['cols'] = array();
         $this->_parts['from'] = array();
@@ -949,9 +958,8 @@ class Solar_Sql_Select extends Solar_Base {
             }
         }
         
-        // perform the fetch
-        $fetchType = 'fetch' . ucfirst($type);
-        return $this->_sql->$fetchType($this->_parts, $this->_bind);
+        // return the fetch result
+        return $this->_sql->$method($this->_parts, $this->_bind);
     }
     
     /**

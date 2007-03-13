@@ -508,7 +508,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function fetch($id)
     {
         $where = array('id = ?' => $id);
-        return $this->select('row', $where);
+        return $this->select('one', $where);
     }
     
     /**
@@ -542,7 +542,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function fetchRow($where = null, $order = null)
     {
-        return $this->select('row', $where, $order);
+        return $this->select('one', $where, $order);
     }
     
     /**
@@ -619,7 +619,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function fetchWhere($where = null, $order = null)
     {
-        return $this->select('row', $where, $order);
+        return $this->select('one', $where, $order);
     }
     
     // -----------------------------------------------------------------

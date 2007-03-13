@@ -260,7 +260,7 @@ class Solar_View extends Solar_Base {
         }
         
         // assign by name and value
-        if (is_string($spec) && $var != SOLAR_IGNORE_PARAM) {
+        if (is_string($spec) && $var !== SOLAR_IGNORE_PARAM) {
             $this->$spec = $var;
             return true;
         }

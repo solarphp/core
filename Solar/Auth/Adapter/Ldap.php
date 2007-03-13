@@ -47,7 +47,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
      * `filter`
      * : (string) A regular-expression snippet that lists allowed characters
      *   in the username.  This is to help prevent LDAP injections.  Default
-     *   allowed chars are 'a-zA-Z0-9_'.
+     *   expression is '\w' (that is, only word characters are allowed).
      * 
      * @var array
      * 
@@ -55,7 +55,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
     protected $_Solar_Auth_Adapter_Ldap = array(
         'uri'    => null,
         'format' => null,
-        'filter' => 'a-zA-Z0-9_',
+        'filter' => '\w',
     );
     
     /**

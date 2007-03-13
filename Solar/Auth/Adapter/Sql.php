@@ -136,7 +136,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
                ->multiWhere($this->_config['where']);
                
         // get the results
-        $rows = $select->fetch('all');
+        $rows = $select->fetch('rowset');
         
         // if we get back exactly 1 row, the user is authenticated;
         // otherwise, it's more or less than exactly 1 row.

@@ -30,6 +30,12 @@ Solar::loadClass('Solar_Sql_Adapter');
  * 
  * @package Solar_Sql
  * 
+ * @todo Transaction support
+ * 
+ * @todo Better date/time creation
+ * 
+ * @todo Build tests
+ * 
  */
 class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
     

@@ -703,7 +703,7 @@ class Solar {
             
             // looking for a group. if no default passed, set up an
             // empty array.
-            if ($default == SOLAR_IGNORE_PARAM) {
+            if ($default === SOLAR_IGNORE_PARAM) {
                 $default = array();
             }
             
@@ -718,7 +718,7 @@ class Solar {
             
             // looking for an element. if no default passed, set up a
             // null.
-            if ($default == SOLAR_IGNORE_PARAM) {
+            if ($default === SOLAR_IGNORE_PARAM) {
                 $default = null;
             }
             

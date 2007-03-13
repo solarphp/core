@@ -449,25 +449,27 @@ class Solar_Sql_Table extends Solar_Base {
     public function select($type = 'pdo', $where = null, $order = null,
         $page = null)
     {
+        if ($type == 'rowset') {
+            $class = $this->_all_class;
+        } elseif ($type == 'row') {
+            $class = $this->_row_class;
+        } else {
+            $class = null;
+        }
+        
         $select = $this->_newSelect();
         $result = $select->from($this->_name, array_keys($this->_col))
                          ->multiWhere($where)
                          ->order($order)
                          ->setPaging($this->_paging)
                          ->limitPage($page)
-                         ->fetch($type);
+                         ->fetch($type, $class);
         
-        if ($type == 'all') {
-            $obj = Solar::factory($this->_all_class, array('data' => $result));
-            $obj->setSave($this);
-            return $obj;
-        } elseif ($type == 'one') {
-            $obj = Solar::factory($this->_row_class, array('data' => $result));
-            $obj->setSave($this);
-            return $obj;
-        } else {
-            return $result;
+        if ($result instanceof Solar_Sql_Row) {
+            $result->setSave($this);
         }
+        
+        return $result;
     }
     
     /**
@@ -505,7 +507,7 @@ class Solar_Sql_Table extends Solar_Base {
     public function fetch($id)
     {
         $where = array('id = ?' => $id);
-        return $this->select('one', $where);
+        return $this->select('row', $where);
     }
     
     /**
@@ -523,7 +525,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function fetchAll($where = null, $order = null, $page = null)
     {
-        return $this->select('all', $where, $order, $page);
+        return $this->select('rowset', $where, $order, $page);
     }
     
     /**
@@ -539,7 +541,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function fetchRow($where = null, $order = null)
     {
-        return $this->select('one', $where, $order);
+        return $this->select('row', $where, $order);
     }
     
     /**
@@ -616,7 +618,7 @@ class Solar_Sql_Table extends Solar_Base {
      */
     public function fetchWhere($where = null, $order = null)
     {
-        return $this->select('one', $where, $order);
+        return $this->select('row', $where, $order);
     }
     
     // -----------------------------------------------------------------

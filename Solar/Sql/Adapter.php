@@ -871,7 +871,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @return array
+     * @return PDOStatement
      * 
      */
     public function fetchPdo($spec, $data = array())
@@ -900,7 +900,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @param array $data An associative array of data to bind into the
      * SELECT statement.
      * 
-     * @return object
+     * @return array
      * 
      */
     public function fetchOne($spec, $data = array())
@@ -913,6 +913,66 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         $result = $this->fetchPdo($spec, $data);
         return $result->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * 
+     * DEPRECATED: Fetch one row as a Solar_Sql_Row object.
+     * 
+     * This method is provided as a transitional aid while moving from Table
+     * to Model.
+     * 
+     * @deprecated
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @param string $class The class name of the object to return; default is
+     * 'Solar_Sql_Row'.
+     * 
+     * @return Solar_Sql_Row
+     * 
+     */
+    public function fetchRow($spec, $data = array(), $class = null)
+    {
+        if (! $class) {
+            $class = 'Solar_Sql_Row';
+        }
+        $result = $this->fetchOne($spec, $data);
+        return Solar::factory($class, array('data' => $result));
+    }
+    
+    /**
+     * 
+     * DEPRECATED: Fetch all rows as a Solar_Sql_Rowset object.
+     * 
+     * This method is provided as a transitional aid while moving from Table
+     * to Model.
+     * 
+     * @deprecated
+     * 
+     * @param array|string $spec An array of component parts for a
+     * SELECT, or a literal query string.
+     * 
+     * @param array $data An associative array of data to bind into the
+     * SELECT statement.
+     * 
+     * @param string $class The class name of the object to return; default is
+     * 'Solar_Sql_Rowset'.
+     * 
+     * @return Solar_Sql_Rowset
+     * 
+     */
+    public function fetchRowset($spec, $data = array(), $class = null)
+    {
+        if (! $class) {
+            $class = 'Solar_Sql_Rowset';
+        }
+        $result = $this->fetchAll($spec, $data);
+        return Solar::factory($class, array('data' => $result));
     }
     
     /**

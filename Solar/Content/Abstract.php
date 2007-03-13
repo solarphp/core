@@ -280,7 +280,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $select->where('nodes.parent_id = ?', $parent_id);
         $select->multiWhere($where);
         $select->order($order);
-        return $select->fetch('all');
+        return $select->fetch('rowset');
     }
     
     /**

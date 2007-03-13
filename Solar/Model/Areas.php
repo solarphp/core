@@ -94,7 +94,7 @@ class Solar_Model_Areas extends Solar_Sql_Table {
     public function fetchByName($name)
     {
         $where = array('name = ?' => $name);
-        return $this->select('one', $where);
+        return $this->select('row', $where);
     }
     
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Front-controller class for Solar.
+ * Front-controller class to find and invoke a page-controller.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Front-controller class for Solar.
+ * Front-controller class to find and invoke a page-controller.
  * 
  * An example bootstrap "index.php" for your web root using the front
  * controller ...
@@ -43,11 +43,15 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `classes`:
-     * (array) Base class names for page controllers.
+     * `classes`
+     * : (array) Base class names for page controllers.
      * 
-     * `default`:
-     * (string) The default page name to load.
+     * `default`
+     * : (string) The default page-name.
+     * 
+     * `routing`
+     * : (array) Key-value pairs explicitly mapping a page-name to a
+     *   controller class.
      * 
      * @var array
      * 
@@ -55,19 +59,13 @@ class Solar_Controller_Front extends Solar_Base {
     protected $_Solar_Controller_Front = array(
         'classes' => array('Solar_App'),
         'default' => 'hello',
+        'routing' => array(
+            'bookmarks'  => 'Solar_App_Bookmarks',
+            'hello'      => 'Solar_App_Hello',
+            'hello-ajax' => 'Solar_App_HelloAjax',
+            'hello-mini' => 'Solar_App_HelloMini',
+        ),
     );
-
-    /**
-     * 
-     * List of base class names.
-     * 
-     * Classes are searched in last-in-first-out order, so later classes take
-     * precedence over earlier ones.
-     * 
-     * @var array
-     * 
-     */
-    protected $_classes;
     
     /**
      * 
@@ -77,7 +75,23 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      */
     protected $_default;
-
+    
+    /**
+     * 
+     * Explicit page-name to class-name mappings.
+     * 
+     * @var array
+     * 
+     */
+    protected $_routing;
+    
+    /**
+     * 
+     * Stack of page-controller class prefixes.
+     * 
+     */
+    protected $_stack;
+    
     /**
      * 
      * Constructor.
@@ -91,8 +105,12 @@ class Solar_Controller_Front extends Solar_Base {
         parent::__construct($config); 
         
         // set convenience vars from config
-        $this->_classes = $this->_config['classes'];
         $this->_default = $this->_config['default'];
+        $this->_routing = $this->_config['routing'];
+        
+        // set up a class stack for finding apps
+        $this->_stack = Solar::factory('Solar_Class_Stack');
+        $this->_stack->add($this->_config['classes']);
         
         // extended setup
         $this->_setup();
@@ -118,40 +136,41 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * @return string The output of the page action.
      * 
-     * @todo Add 404 support.
-     * 
      */
     public function fetch($spec = null)
     {
-        // default to current URI
-        $uri = Solar::factory('Solar_Uri_Action');
-        
-        // override current URI with user spec
-        if (is_string($spec)) {
+        if (! $spec) {
+            // default to current URI
+            $uri = Solar::factory('Solar_Uri_Action');
+        } elseif ($spec instanceof Solar_Uri_Action) {
+            // a URI was passed directly
+            $uri = $spec;
+        } else {
+            // override current URI with user spec
             $uri->set($spec);
         }
         
-        // take the page name off the top of the path.
-        // use the default if none specified.
+        // take the page name off the top of the path and try to get a
+        // controller class from it.
         $page = array_shift($uri->path);
-        
-        // attempt to map the page name to a page-controller class
         $class = $this->_getPageClass($page);
+        
+        // did we get a class from it?
         if (! $class) {
-            // not found, fall back to default
-            $class = $this->_getPageClass($this->_default);
             // put the original segment back on top.
             array_unshift($uri->path, $page);
+            // try to get a controller class from the default page name
+            $class = $this->_getPageClass($this->_default);
         }
         
-        // did we find a page-controller class?
+        // last chance: do we have a class yet?
         if (! $class) {
             return $this->_notFound($page);
         }
         
-        // instantiate the page class and fetch its content
-        $page = Solar::factory($class);
-        return $page->fetch($uri);
+        // instantiate the controller class and fetch its content
+        $obj = Solar::factory($class);
+        return $obj->fetch($uri);
     }
     
     /**
@@ -175,42 +194,31 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * @param string $page The page name.
      * 
-     * @return string $class The related page-controller class picked from
-     * the list of available classes.  If not found, returns empty.
+     * @return string The related page-controller class picked from
+     * the routing, or from the list of available classes.  If not found,
+     * returns false.
      * 
      */
     protected function _getPageClass($page)
     {
-        if (empty($page)) {
-            return;
-        }
-        
-        // convert from "pageName, page-name, page_name" to "PageName"
-        $page = str_replace(array('_', '-'), ' ', $page);
+        $page = str_replace('-',' ', $page);
         $page = str_replace(' ', '', ucwords(trim($page)));
-        
-        // does the page map to a known class?
-        $list = (array) $this->_classes;
-        foreach (array_reverse($list) as $base) {
-            
-            // get a class name
-            $class = $base . '_' . $page;
-            
-            // what file would it be?
-            $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-            
-            // does that file exist?
-            if (Solar::fileExists($file)) {
-                // $class is set to the proper class name, so break
-                // out of the loop
-                return $class;
-            }
+        if (! empty($this->_routing[$page])) {
+            // found an explicit route
+            $class = $this->_routing[$page];
+        } else {
+            // no explicit route, try to find a matching class
+            $class = $this->_stack->load($page, false);
         }
+        return $class;
     }
     
     /**
      * 
      * Executes when fetch() cannot find a related page-controller class.
+     * 
+     * Generates an "HTTP 1.1/404 Not Found" status header and returns a
+     * short HTML page describing the error.
      * 
      * @param string $page The name of the page not found.
      * 
@@ -219,6 +227,9 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected function _notFound($page)
     {
-        return htmlspecialchars("404: Page '$page' not found.");
+        header("HTTP 1.1/404 Not Found", true, 404);
+        return "<html><head><title>Not Found</title><body><h1>404: Not Found</h1><p>"
+             . htmlspecialchars("Page controller for '$page' not found.")
+             . "</p></body></html>";
     }
 }

@@ -442,7 +442,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     
     /**
      * 
-     * Issues SMTP MAIL FROM to indicate who the message is to.
+     * Issues SMTP RCPT TO to indicate who the message is to.
      * 
      * @param string $addr One "To:" email address.
      * 

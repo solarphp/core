@@ -405,7 +405,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
             // modern, timeout 5 minutes
             $this->_send('EHLO ' . $this->_client);
             $this->_expect(250, 300);
-        } catch (Solar_Mail_Exception $e) {
+        } catch (Solar_Smtp_Exception $e) {
             // legacy, timeout 5 minutes
             $this->_send('HELO ' . $this->_client);
             $this->_expect(250, 300);

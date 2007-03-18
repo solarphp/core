@@ -677,7 +677,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         
         // retrieve response and save to log (without crlf)
         $line = fgets($this->_conn, 1024);
-        $this->_log[] = ltrim($line);
+        $this->_log[] = rtrim($line);
     
         // did we time out?
         $info = stream_get_meta_data($this->_conn);

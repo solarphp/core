@@ -1,0 +1,40 @@
+<?php
+/**
+ * 
+ * SMTP adapter with no authentication.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Smtp
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * SMTP adapter with no authentication.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Smtp
+ * 
+ */
+class Solar_Smtp_Adapter_NoAuth extends Solar_Smtp_Adapter {
+    
+    /**
+     * 
+     * Authentication is never attempted, and always fails.
+     * 
+     * @return bool
+     * 
+     */
+    public function auth()
+    {
+        return $this->_auth;
+    }
+}

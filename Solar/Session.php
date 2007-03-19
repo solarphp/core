@@ -268,6 +268,19 @@ class Solar_Session extends Solar_Base {
      * 
      * @return mixed The flash value.
      * 
+     * @todo Mike Naberezny notes a possible issue with AJAX requests:
+     * 
+     *     // If this is an AJAX request, don't clear the flash.
+     *     $headers = getallheaders();
+     *     if (isset($headers['X-Requested-With']) &&
+     *         stripos($headers['X-Requested-With'], 'xmlhttprequest') !== false) {
+     *         // leave alone
+     *         return;
+     *     }
+     * 
+     * Would need to have Solar_Request access for this to work like the rest
+     * of Solar does.
+     * 
      */
     public function getFlash($key, $val = null)
     {

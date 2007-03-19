@@ -102,16 +102,16 @@ class Solar_Mail_Encoding extends Solar_Base {
     
     /**
      * 
-     * Is a text string already quoted-printable?
+     * Is a text string already safe as quoted-printable?
      * 
      * @param string $text The string to check.
      * 
-     * @return bool True is already quoted-printable, false if not.
+     * @return bool True if already quoted-printable, false if not.
      * 
      */
     static public function isQuotedPrintable($text)
     {
-        return ! (strcspn($text, self::$qp_str) == strlen($text));
+        return (strcspn($text, self::$qp_str) == strlen($text));
     }
     
     /**
@@ -142,7 +142,7 @@ class Solar_Mail_Encoding extends Solar_Base {
      */
     static public function headerValue($value)
     {
-        if (self::isQuotedPrintable($value)) {
+        if (! self::isQuotedPrintable($value)) {
             $value = self::quotedPrintable($value);
             $value = str_replace('?', '=3F', $value);
             return '=?' . $this->_charset . '?Q?' . $value . '?=';

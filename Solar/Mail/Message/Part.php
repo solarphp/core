@@ -93,6 +93,8 @@ class Solar_Mail_Message_Part {
      */
     public $content = null;
     
+    public $boundary = null;
+    
     /**
      * 
      * Array of custom headers for this part.
@@ -126,8 +128,22 @@ class Solar_Mail_Message_Part {
             throw $this->_exception('ERR_ADD_STANDARD_HEADER');
         }
         
-        $label = Solar_Mail_Encoding::headerLabel($label);
+        // save the label and value
         $this->_headers[$label] = $value;
+    }
+    
+    /**
+     * 
+     * Returns the headers, a newline, and the content, all as a single block.
+     * 
+     * @return string
+     * 
+     */
+    public function fetch()
+    {
+        return $this->fetchHeaders()
+             . $this->crlf
+             . $this->fetchContent();
     }
     
     /**
@@ -145,16 +161,18 @@ class Solar_Mail_Message_Part {
         
         // Content-Type:
         $content_type = $this->type;
+        
         if ($this->charset) {
             $content_type .= '; charset="' . $this->charset . '"';
         }
+        
+        if ($this->boundary) {
+            $content_type .= ';' . $this->crlf
+                           . ' boundary="' . $this->boundary . '"';
+        }
+        
         $headers['Content-Type'] = $content_type;
         
-        // Content-Transfer-Encoding:
-        if ($this->encoding) {
-            $headers['Content-Transfer-Encoding'] = $this->encoding;
-        }
-
         // Content-Disposition:
         if ($this->disposition) {
             $disposition = $this->disposition;
@@ -164,13 +182,19 @@ class Solar_Mail_Message_Part {
             $headers['Content-Disposition'] = $disposition;
         }
         
+        // Content-Transfer-Encoding:
+        if ($this->encoding) {
+            $headers['Content-Transfer-Encoding'] = $this->encoding;
+        }
+
         // now loop through all the headers and build the header block,
         // using header-value encoding as we go.
         $output = '';
         foreach ($headers as $label => $value) {
-            $output .= $label . ': '
-                     . Solar_Mail_Encoding::headerValue($value)
-                     . $this->crlf;
+            $value = Solar_Mail_Encoding::headerValue(
+                $label, $value, $this->charset, $this->crlf
+            );
+            $output .= $label . ': ' . $value . $this->crlf;
         }
         
         return $output;

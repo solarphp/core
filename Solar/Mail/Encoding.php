@@ -3,8 +3,6 @@
  * 
  * Static utility class for encoding mail message values.
  * 
- * Refactored and modified from Zend_Mime and related classes.
- * 
  * @category Solar
  * 
  * @package Solar_Mail
@@ -26,93 +24,7 @@
  * @package Solar_Mail
  * 
  */
-class Solar_Mail_Encoding extends Solar_Base {
-    
-    /**
-     * 
-     * Map of characters that quuoted-printable encoding should replace.
-     * 
-     * @var array
-     * 
-     */
-    static public $qp_key = array(
-        "\x00","\x01","\x02","\x03","\x04","\x05","\x06","\x07",
-        "\x08","\x09","\x0A","\x0B","\x0C","\x0D","\x0E","\x0F",
-        "\x10","\x11","\x12","\x13","\x14","\x15","\x16","\x17",
-        "\x18","\x19","\x1A","\x1B","\x1C","\x1D","\x1E","\x1F",
-        "\x7F","\x80","\x81","\x82","\x83","\x84","\x85","\x86",
-        "\x87","\x88","\x89","\x8A","\x8B","\x8C","\x8D","\x8E",
-        "\x8F","\x90","\x91","\x92","\x93","\x94","\x95","\x96",
-        "\x97","\x98","\x99","\x9A","\x9B","\x9C","\x9D","\x9E",
-        "\x9F","\xA0","\xA1","\xA2","\xA3","\xA4","\xA5","\xA6",
-        "\xA7","\xA8","\xA9","\xAA","\xAB","\xAC","\xAD","\xAE",
-        "\xAF","\xB0","\xB1","\xB2","\xB3","\xB4","\xB5","\xB6",
-        "\xB7","\xB8","\xB9","\xBA","\xBB","\xBC","\xBD","\xBE",
-        "\xBF","\xC0","\xC1","\xC2","\xC3","\xC4","\xC5","\xC6",
-        "\xC7","\xC8","\xC9","\xCA","\xCB","\xCC","\xCD","\xCE",
-        "\xCF","\xD0","\xD1","\xD2","\xD3","\xD4","\xD5","\xD6",
-        "\xD7","\xD8","\xD9","\xDA","\xDB","\xDC","\xDD","\xDE",
-        "\xDF","\xE0","\xE1","\xE2","\xE3","\xE4","\xE5","\xE6",
-        "\xE7","\xE8","\xE9","\xEA","\xEB","\xEC","\xED","\xEE",
-        "\xEF","\xF0","\xF1","\xF2","\xF3","\xF4","\xF5","\xF6",
-        "\xF7","\xF8","\xF9","\xFA","\xFB","\xFC","\xFD","\xFE",
-        "\xFF"
-    );
-    
-    /**
-     * 
-     * Map of replacement characters for quoted-printable encoding.
-     * 
-     * @var array
-     * 
-     */
-    static public $qp_val = array(
-        "=00","=01","=02","=03","=04","=05","=06","=07",
-        "=08","=09","=0A","=0B","=0C","=0D","=0E","=0F",
-        "=10","=11","=12","=13","=14","=15","=16","=17",
-        "=18","=19","=1A","=1B","=1C","=1D","=1E","=1F",
-        "=7F","=80","=81","=82","=83","=84","=85","=86",
-        "=87","=88","=89","=8A","=8B","=8C","=8D","=8E",
-        "=8F","=90","=91","=92","=93","=94","=95","=96",
-        "=97","=98","=99","=9A","=9B","=9C","=9D","=9E",
-        "=9F","=A0","=A1","=A2","=A3","=A4","=A5","=A6",
-        "=A7","=A8","=A9","=AA","=AB","=AC","=AD","=AE",
-        "=AF","=B0","=B1","=B2","=B3","=B4","=B5","=B6",
-        "=B7","=B8","=B9","=BA","=BB","=BC","=BD","=BE",
-        "=BF","=C0","=C1","=C2","=C3","=C4","=C5","=C6",
-        "=C7","=C8","=C9","=CA","=CB","=CC","=CD","=CE",
-        "=CF","=D0","=D1","=D2","=D3","=D4","=D5","=D6",
-        "=D7","=D8","=D9","=DA","=DB","=DC","=DD","=DE",
-        "=DF","=E0","=E1","=E2","=E3","=E4","=E5","=E6",
-        "=E7","=E8","=E9","=EA","=EB","=EC","=ED","=EE",
-        "=EF","=F0","=F1","=F2","=F3","=F4","=F5","=F6",
-        "=F7","=F8","=F9","=FA","=FB","=FC","=FD","=FE",
-        "=FF"
-    );
-    
-    /**
-     * 
-     * A string representation of the $qp_keys property for strcspn() use.
-     * 
-     * @var string
-     * 
-     */
-    static public $qp_str = 
-         "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F\x7F\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8A\x8B\x8C\x8D\x8E\x8F\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9A\x9B\x9C\x9D\x9E\x9F\xA0\xA1\xA2\xA3\xA4\xA5\xA6\xA7\xA8\xA9\xAA\xAB\xAC\xAD\xAE\xAF\xB0\xB1\xB2\xB3\xB4\xB5\xB6\xB7\xB8\xB9\xBA\xBB\xBC\xBD\xBE\xBF\xC0\xC1\xC2\xC3\xC4\xC5\xC6\xC7\xC8\xC9\xCA\xCB\xCC\xCD\xCE\xCF\xD0\xD1\xD2\xD3\xD4\xD5\xD6\xD7\xD8\xD9\xDA\xDB\xDC\xDD\xDE\xDF\xE0\xE1\xE2\xE3\xE4\xE5\xE6\xE7\xE8\xE9\xEA\xEB\xEC\xED\xEE\xEF\xF0\xF1\xF2\xF3\xF4\xF5\xF6\xF7\xF8\xF9\xFA\xFB\xFC\xFD\xFE\xFF";
-    
-    /**
-     * 
-     * Is a text string already safe as quoted-printable?
-     * 
-     * @param string $text The string to check.
-     * 
-     * @return bool True if already quoted-printable, false if not.
-     * 
-     */
-    static public function isQuotedPrintable($text)
-    {
-        return (strcspn($text, self::$qp_str) == strlen($text));
-    }
+class Solar_Mail_Encoding {
     
     /**
      * 
@@ -133,68 +45,187 @@ class Solar_Mail_Encoding extends Solar_Base {
     
     /**
      * 
-     * Encodes header values if they are not quoted-printable safe.
+     * Encodes a header value as per RFC 2047.
+     * 
+     * Copied, with modifications, from the "mime.php" class in the
+     * [PEAR Mail_Mime](http://pear.php.net/Mail_Mime) package (v 1.62).
+     * 
+     * @author Richard Heyes  <richard@phpguru.org>
+     * 
+     * @author Tomas V.V. Cox <cox@idecnet.com>
+     * 
+     * @author Cipriano Groenendal <cipri@php.net>
+     * 
+     * @author Sean Coates <sean@php.net>
+     * 
+     * @param string $label The (sanitized) header label; needed for line
+     * length calculations.
      * 
      * @param string $value The header value to encode.
+     * 
+     * @param string $charset The character set to note when encoding.
+     * 
+     * @param string $crlf The CRLF line-ending string.
+     * 
+     * @param string $len The line-length to wrap at.
      * 
      * @return string The encoded header value.
      * 
      */
-    static public function headerValue($value)
+    static public function headerValue($label, $value, $charset,
+        $crlf = "\r\n", $len = 75)
     {
-        if (! self::isQuotedPrintable($value)) {
-            $value = self::quotedPrintable($value);
-            $value = str_replace('?', '=3F', $value);
-            return '=?' . $this->_charset . '?Q?' . $value . '?=';
-        } else {
-            return $value;
+        $hdr_vals  = preg_split("/(\s)/", $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $value_out = "";
+        $previous  = "";
+        foreach ($hdr_vals as $hdr_val) {
+            
+            if (! trim($hdr_val)) {
+                // whitespace needs to be handled with another string, or it
+                // won't show between encoded strings. Prepend this to the next item.
+                $previous .= $hdr_val;
+                continue;
+            } else {
+                $hdr_val = $previous . $hdr_val;
+                $previous = "";
+            }
+            
+            // any non-ascii characters?
+            if (preg_match('/[\x80-\xFF]{1}/', $hdr_val)){
+                
+                // This header contains non ASCII chars and should be encoded
+                // using quoted-printable. Dynamically determine the maximum
+                // length of the strings.
+                $prefix = '=?' . $charset . '?Q?';
+                $suffix = '?=';
+                
+                // The -2 is here so the later regexp doesn't break any of
+                // the translated chars. The -2 on the first line-regexp is
+                // to compensate for the ": " between the header-name and the
+                // header value.
+                $maxLength        = $len - strlen($prefix . $suffix) - 2;
+                $maxLength1stLine = $maxLength - strlen($label) - 2;
+                
+                // Replace all special characters used by the encoder.
+                $search  = array("=",   "_",   "?",   " ");
+                $replace = array("=3D", "=5F", "=3F", "_");
+                $hdr_val = str_replace($search, $replace, $hdr_val);
+                
+                // Replace all extended characters (\x80-xFF) with their
+                // ASCII values.
+                $hdr_val = preg_replace_callback(
+                    '/([\x80-\xFF])/',
+                    array('Solar_Message_Encoding', '_qpReplace'),
+                    $hdr_val
+                );
+                
+                // This regexp will break QP-encoded text at every $maxLength
+                // but will not break any encoded letters.
+                $reg1st = "|(.{0,$maxLength1stLine})[^\=]|";
+                $reg2nd = "|(.{0,$maxLength})[^\=]|";
+                
+                // Begin with the regexp for the first line.
+                $reg = $reg1st;
+                
+                // Prevent lines that are just way too short.
+                if ($maxLength1stLine > 1){
+                    $reg = $reg2nd;
+                }
+                
+                $output = "";
+                while ($hdr_val) {
+                    // Split translated string at every $maxLength.
+                    // Make sure not to break any translated chars.
+                    $found = preg_match($reg, $hdr_val, $matches);
+                    
+                    // After this first line, we need to use a different
+                    // regexp for the first line.
+                    $reg = $reg2nd;
+                    
+                    // Save the found part and encapsulate it in the
+                    // prefix & suffix. Then remove the part from the
+                    // $hdr_val variable.
+                    if ($found){
+                        $part    = $matches[0];
+                        $hdr_val = substr($hdr_val, strlen($matches[0]));
+                    }else{
+                        $part    = $hdr_val;
+                        $hdr_val = "";
+                    }
+                    
+                    // RFC 2047 specifies that any split header should be seperated
+                    // by a CRLF SPACE. 
+                    if ($output){
+                        $output .= "$crlf ";
+                    }
+                    
+                    $output .= $prefix . $part . $suffix;
+                }
+                
+                $hdr_val = $output;
+            }
+            
+            $value_out .= $hdr_val;
         }
+        
+        return $value_out;
+    }
+    
+    /**
+     * 
+     * Callback from the headerValue() method.
+     * 
+     * @param array $matches Matches from preg_replace_callback().
+     * 
+     * @return string The value of $matches[0] with non-ASCII characters
+     * encoded for quoted-printable.
+     * 
+     */
+    static protected function _qpReplace($matches)
+    {
+        return '=' . strtoupper(dechex(ord($matches[1])));
     }
     
     /**
      * 
      * Applies "quoted-printable" encoding to text.
      * 
+     * Code taken from <http://us3.php.net/manual/en/ref.stream.php/70826>.
+     * 
      * @param string $text The text to encode.
      * 
      * @param string $crlf The line-ending to use; default "\r\n".
      * 
-     * @param int $len Break lines at this length; default 74.
+     * @param int $len Break lines at this length; default 75.
      * 
      * @return string The encoded text.
      * 
      */
-    static public function quotedPrintable($text, $crlf = "\r\n", $len = 74)
+    static public function quotedPrintable($text, $crlf = "\r\n", $len = 75)
     {
-        $out = '';
-        $text = str_replace('=', '=3D', $text);
-        $text = str_replace(self::$qp_key, self::$qp_val, $text);
+        // open a "temp" stream pointer
+        $fp = fopen('php://temp/', 'r+');
         
-        // Split encoded text into separate lines
-        while ($text) {
-            $ptr = strlen($text);
-            if ($ptr > $len) {
-                $ptr = $len;
-            }
-            
-            // Ensure we are not splitting across an encoded character
-            if (($pos = strrpos(substr($text, 0, $ptr), '=')) >= $ptr - 2) {
-                $ptr = $pos;
-            }
-            
-            // Check if there is a space at the end of the line and rewind
-            if ($text[$ptr - 1] == ' ') {
-                --$ptr;
-            }
-            
-            // Add string and continue
-            $out .= substr($text, 0, $ptr) . '=' . $crlf;
-            $text = substr($text, $ptr);
-        }
+        // make sure we break at $len lines with $crlf line-endings
+        $params = array('line-length' => $len, 'line-break-chars' => $crlf);
+        stream_filter_append(
+            $fp,
+            'convert.quoted-printable-encode',
+            STREAM_FILTER_READ,
+            $params
+        );
         
-        $out = rtrim($out, $crlf);
-        $out = rtrim($out, '=');
-        return $out;
+        // put the text into the stream
+        fputs($fp, $text);
+        
+        // rewind the pointer and retrieve the the content, which will
+        // encode as it reads
+        rewind($fp);
+        $output = stream_get_contents($fp);
+        
+        // close the stream and return
+        fclose($fp);
+        return $output;
     }
     
     /**
@@ -205,12 +236,12 @@ class Solar_Mail_Encoding extends Solar_Base {
      * 
      * @param string $crlf The line-ending to use; default "\r\n".
      * 
-     * @param int $len Break lines at this length; default 74.
+     * @param int $len Break lines at this length; default 75.
      * 
      * @return string The encoded text.
      * 
      */
-    static public function base64($text, $crlf = "\r\n", $len = 74)
+    static public function base64($text, $crlf = "\r\n", $len = 75)
     {
         return rtrim(chunk_split(base64_encode($text), $len, $crlf));
     }

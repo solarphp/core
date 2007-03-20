@@ -78,7 +78,7 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
-     * Array of attachments for this message.
+     * Array of MIME part attachments for this message.
      * 
      * @var array
      * 
@@ -87,7 +87,7 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
-     * The MIME boundary string to separate parts in this message.
+     * The MIME boundary string to separate the parts in this message.
      * 
      * @var string
      * 
@@ -147,8 +147,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      */
     protected $_rcpt = array(
-        'To' => array(),
-        'Cc' => array(),
+        'To'  => array(),
+        'Cc'  => array(),
         'Bcc' => array(),
     );
     
@@ -404,8 +404,10 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Returns an array of all recipient addresses.
      * 
-     * @param string
-     * @return array
+     * @param string $type The recipient type to return: 'to', 'cc', or 'bcc'.
+     * If empty (the default) will return all recipient addresses.
+     * 
+     * @return array A sequential array of recipient addresses.
      * 
      */
     public function getRcpt($type = null)
@@ -429,9 +431,13 @@ class Solar_Mail_Message extends Solar_Base {
     }
     
     /**
-     * Sets the subject of the message
+     * 
+     * Sets the subject of the message.
      * 
      * @param string $subject
+     * 
+     * @return void
+     * 
      */
     public function setSubject($subject)
     {
@@ -540,7 +546,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Attaches a file to the message.
      * 
-     * @param string $file The file-name to attach.
+     * @param string $file The absolute path and filename to attach.
      * 
      * @param string $type The Content-Type to use for the file. If empty,
      * uses the Solar_Mail_Message_Part default $type.
@@ -562,7 +568,7 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
-     * Add a custom header to the message.
+     * Adds a custom header to the message.
      * 
      * @param string $label The header label.
      * 
@@ -579,7 +585,7 @@ class Solar_Mail_Message extends Solar_Base {
         
         // not allowed to add headers for these labels
         $list = array('to', 'cc', 'bcc', 'from', 'subject', 'return-path',
-            'content-type', 'mime-version');
+            'content-type', 'mime-version', 'content-transfer-encoding');
         if (in_array(strtolower($label), $list)) {
             throw $this->_exception('ERR_ADD_STANDARD_HEADER');
         }
@@ -589,6 +595,7 @@ class Solar_Mail_Message extends Solar_Base {
             $this->_headers[$label] = array();
         }
         
+        // save the label and value
         $this->_headers[$label][] = $value;
     }
     
@@ -604,7 +611,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function fetchHeaders()
     {
-        // the array of headers
+        // the array of headers to return
         $headers = array();
         
         // Return-Path: (alternatively, the From: address)
@@ -617,10 +624,7 @@ class Solar_Mail_Message extends Solar_Base {
         // From:
         $value = "<{$this->_from[0]}>";
         if ($this->_from[1]) {
-            $value = '"'
-                  . Solar_Mail_Encoding::headerValue($this->_from[1])
-                  . '" '
-                  . $value;
+            $value = '"' . $this->_from[1] . '" ' . $value;
         }
         $headers[] = array("From", $value);
         
@@ -629,18 +633,14 @@ class Solar_Mail_Message extends Solar_Base {
             foreach ($rcpt as $addr => $name) {
                 $value = "<$addr>";
                 if ($name) {
-                    $value = '"' . Solar_Mail_Encoding::headerValue($name)
-                           . '" ' . $value;
+                    $value = '"' . $name . '" ' . $value;
                 }
                 $headers[] = array($label, $value);
             }
         }
         
         // Subject:
-        $headers[] = array(
-            'Subject',
-            Solar_Mail_Encoding::headerValue($this->_subject)
-        );
+        $headers[] = array('Subject', $this->_subject);
         
         // Mime-Version:
         $headers[] = array('Mime-Version', '1.0');
@@ -650,7 +650,7 @@ class Solar_Mail_Message extends Solar_Base {
         $encoding = null;
         if ($this->_text && $this->_html && ! $this->_atch) {
             
-            // both text and html, but no parts: multipart/alternative
+            // both text and html, but no attachments: multipart/alternative
             $value = 'multipart/alternative; '
                    . 'charset="' . $this->_charset . '"; '
                    . $this->_crlf . " "
@@ -658,7 +658,7 @@ class Solar_Mail_Message extends Solar_Base {
             
         } elseif ($this->_atch) {
             
-            // has parts, use multipart/mixed
+            // has attachments, use multipart/mixed
             $value = 'multipart/mixed; '
                    . 'charset="' . $this->_charset . '"; '
                    . $this->_crlf . " "
@@ -666,7 +666,7 @@ class Solar_Mail_Message extends Solar_Base {
             
         } elseif ($this->_html) {
             
-            // no parts, html only
+            // no attachments, html only
             $value = 'text/html; '
                    . 'charset="' . $this->_charset . '"';
             
@@ -675,7 +675,7 @@ class Solar_Mail_Message extends Solar_Base {
             
         } elseif ($this->_text) {
             
-            // no parts, text only
+            // no attachments, text only
             $value = 'text/plain; '
                    . 'charset="' . $this->_charset . '"';
             
@@ -693,18 +693,31 @@ class Solar_Mail_Message extends Solar_Base {
         
         // Content-Transfer-Encoding:
         if ($encoding) {
-            $headers[] = array(
-                'Content-Transfer-Encoding',
-                Solar_Mail_Encoding::headerValue($encoding)
+            $headers[] = array('Content-Transfer-Encoding', $encoding);
+        }
+        
+        // encode all the headers so far
+        foreach ($headers as $key => $val) {
+            // val[0] is the label, val[1] is the value
+            $headers[$key][1] = Solar_Mail_Encoding::headerValue(
+                $val[0],
+                $val[1],
+                $this->_charset,
+                $this->_crlf
             );
         }
         
-        // Custom headers
+        // add and encode custom headers
         foreach ($this->_headers as $label => $list) {
             foreach ($list as $value) {
                 $headers[] = array(
                     $label,
-                    Solar_Mail_Encoding::headerValue($value)
+                    Solar_Mail_Encoding::headerValue(
+                        $label,
+                        $value,
+                        $this->_charset,
+                        $this->_crlf
+                    ),
                 );
             }
         }
@@ -717,6 +730,20 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Fetches all the content parts of this message as a string.
      * 
+     * See notes here:
+     * <http://www.webcheatsheet.com/php/send_email_text_html_attachment.php#attachment>
+     *
+     * If we have text *and* html, and attachments, the text and html are 
+     * wrapped in their own multipart/alternative subpart, then the message as
+     * a whole is built as multipart/mixed.
+     * 
+     * If we have text *or* html, and attachments, we build as multipart/mixed.
+     * 
+     * If we have text *or* html, no attachments, we build as a single part.
+     * 
+     * If we have only attachments, we build as a single part if there's one
+     * attachment, or as multipart/mixed if there are more than one.
+     * 
      * @return string
      * 
      */
@@ -726,14 +753,46 @@ class Solar_Mail_Message extends Solar_Base {
         // attachments
         $parts = array();
         
-        // add the text part, if it exists
-        if ($this->_text) {
-            $parts[] = $this->_text;
-        }
+        // special treatment if we have text **and** html **and** attachments.
+        if ($this->_text && $this->_html && $this->_atch) {
+            
+            // create a separate part to hold only the text and html as
+            // alternatives, to keep the attachments separate.  otherwise
+            // the text, html, and atches *all* show up in the email inline,
+            // when we just want *either* the text *or* the html to show.
+            // 
+            // @todo this is kind of dumb; we should make the Message_Part be
+            // smart enough to handle sub-parts and set up its own boundaries.
+            $boundary = '____' . md5($this->_boundary . uniqid());
+            $alt = Solar::factory('Solar_Mail_Message_Part');
+            $alt->crlf = $this->_crlf;
+            $alt->encoding = '7bit';
+            $alt->disposition = null;
+            $alt->type = 'multipart/alternative';
+            $alt->charset = $this->_charset;
+            $alt->boundary = $boundary;
+            $alt->content = ltrim($this->_boundarySep($boundary))
+                          . $this->_text->fetch()
+                          . $this->_boundarySep($boundary)
+                          . $this->_html->fetch()
+                          . $this->_boundaryEnd($boundary);
+            
+            // add the combined text/html alternative part
+            $parts[] = $alt;
+            
+        } else {
+            // we have *either* text *or* html, and possibly some attachments.
+            // no need to wrap the main-message part, just show it inline.
+            //
+            // add the text part, if it exists
+            if ($this->_text) {
+                $parts[] = $this->_text;
+            }
         
-        // add the html part, if it exists
-        if ($this->_html) {
-            $parts[] = $this->_html;
+            // add the html part, if it exists
+            if ($this->_html) {
+                $parts[] = $this->_html;
+            }
         }
         
         // add all the attachments
@@ -754,15 +813,13 @@ class Solar_Mail_Message extends Solar_Base {
             // add a warning message ...
             $content = 'This is a message in MIME format. If you see this, '
                      . $this->_crlf
-                     . 'your mail reader does not support the MIME format.';
+                     . 'your mail reader does not support the MIME format.'
+                     . $this->_crlf;
             
             // then each of the parts with a boundary separator
             foreach ($parts as $part) {
-                $content .= $this->_crlf
-                          . $this->_boundarySep()
-                          . $part->fetchHeaders()
-                          . $this->_crlf
-                          . $part->fetchContent();
+                $content .= $this->_boundarySep()
+                          . $part->fetch();
             }
         
             // add a boundary ending, and we're done
@@ -797,9 +854,12 @@ class Solar_Mail_Message extends Solar_Base {
      * @return string
      * 
      */
-    protected function _boundarySep()
+    protected function _boundarySep($str = null)
     {
-        return "{$this->_crlf}--{$this->_boundary}{$this->_crlf}";
+        if (! $str) {
+            $str = $this->_boundary;
+        }
+        return "{$this->_crlf}--{$str}{$this->_crlf}";
     }
     
     /**
@@ -809,8 +869,11 @@ class Solar_Mail_Message extends Solar_Base {
      * @return string
      * 
      */
-    protected function _boundaryEnd()
+    protected function _boundaryEnd($str = null)
     {
-        return "{$this->_crlf}--{$this->_boundary}--{$this->_crlf}";
+        if (! $str) {
+            $str = $this->_boundary;
+        }
+        return "{$this->_crlf}--{$str}--{$this->_crlf}";
     }
 }

@@ -80,9 +80,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        if (! empty($this->_config['file'])) {
-            $this->_file = Solar::fixdir($this->_config['file']);
-        }
+        $this->_file = $this->_config['file'];
     }
     
     /**

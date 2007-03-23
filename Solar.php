@@ -69,8 +69,10 @@ spl_autoload_register(array('Solar', 'loadInterface'));
 
 /**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
+ * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
+ * in some environments.
  */
-if (! class_exists('Solar_Base')) {
+if (! class_exists('Solar_Base', false)) {
     require dirname(__FILE__) . DIRECTORY_SEPARATOR
           . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
 }

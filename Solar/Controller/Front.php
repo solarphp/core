@@ -132,22 +132,22 @@ class Solar_Controller_Front extends Solar_Base {
      * Fetches the output of a page/action/info specification URI.
      * 
      * @param Solar_Uri_Action|string $spec An action URI for the front
-     * controller.  E.g., 'bookmarks/user/pmjones/php+blog?page=2'.
+     * controller.  E.g., 'bookmarks/user/pmjones/php+blog?page=2'. When
+     * empty (the default) uses the current URI.
      * 
      * @return string The output of the page action.
      * 
      */
     public function fetch($spec = null)
     {
-        if (! $spec) {
-            // default to current URI
-            $uri = Solar::factory('Solar_Uri_Action');
-        } elseif ($spec instanceof Solar_Uri_Action) {
+        if ($spec instanceof Solar_Uri_Action) {
             // a URI was passed directly
             $uri = $spec;
         } else {
-            // override current URI with user spec
-            $uri->set($spec);
+            // user spec is a URI string; if empty, is the current URI
+            $uri = Solar::factory('Solar_Uri_Action', array(
+                'uri' => (string) $spec,
+            ));
         }
         
         // take the page name off the top of the path and try to get a

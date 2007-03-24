@@ -141,11 +141,16 @@ class Solar_Uri extends Solar_Base {
      * : (string) A path prefix.  Generally needed only
      *   for specific URI subclasses, for example Solar_Uri_Action.
      * 
+     * `uri`
+     * : (string) Call set() with this URI string at construct-time, instead
+     *   of loading from the current URI.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Uri = array(
         'path' => '',
+        'uri'  => null,
     );
     
     /**
@@ -281,7 +286,7 @@ class Solar_Uri extends Solar_Base {
         $this->_config['path'] = rtrim($this->_config['path'], '/') . '/';
         
         // set properties
-        $this->set();
+        $this->set($this->_config['uri']);
     }
     
     /**

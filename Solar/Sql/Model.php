@@ -1019,7 +1019,21 @@ abstract class Solar_Sql_Model extends Solar_Base
         // fetch
         $data = $select->fetch('one');
         if ($data) {
-            return $this->_getRecord($data);
+            
+            // get the main record
+            $record = $this->_newRecord($data);
+            
+            // get related data from each eager has_many relationship
+            foreach ($this->_related as $name => $opts) {
+                $eager = in_array($name, $params['eager']);
+                if ($eager && $opts['type'] == 'has_many') {
+                    $record->_data[$name] = $this->_fetchRelated($name, $opts['page']);
+                }
+            }
+            
+            // done
+            return $record;
+            
         } else {
             return null;
         }
@@ -1204,7 +1218,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // done, return the proper record object
-        $record = $this->_getRecord($data);
+        $record = $this->_newRecord($data);
         $record->_status = 'new';
         return $record;
     }
@@ -1498,7 +1512,7 @@ abstract class Solar_Sql_Model extends Solar_Base
                 ! empty($rel_data[$name])) {
                 // create a record object from the related model
                 $model = Solar::factory($opts['foreign_model']);
-                $this->_data[$name] = $model->_getRecord($rel_data[$name]);
+                $this->_data[$name] = $model->_newRecord($rel_data[$name]);
             } else {
                 // set a placeholder for lazy-loading in __get()
                 $this->_data[$name] = null;
@@ -1529,7 +1543,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return Solar_Sql_Model A model with 'record' focus.
      * 
      */
-    protected function _getRecord($data)
+    protected function _newRecord($data)
     {
         // the model class we'll use for the record
         $class = null;
@@ -1823,7 +1837,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // create and load into an appropriate Record object.
             $model = Solar::factory($opts['foreign_model']);
-            $result = $model->_getRecord($data);
+            $result = $model->_newRecord($data);
             
         } else {
             
@@ -2306,7 +2320,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // load the record if needed, honoring single table inheritance
             if (empty($this->_records[$key])) {
-                $this->_records[$key] = $this->_getRecord($this->_data[$key]);
+                $this->_records[$key] = $this->_newRecord($this->_data[$key]);
             }
         
             // return the record

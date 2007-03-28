@@ -162,10 +162,9 @@ class Solar_Class_Stack extends Solar_Base {
     public function load($name, $throw = true)
     {
         // some preliminary checks for valid class names
-        $name = trim($name);
-        if (! $name || ! ctype_alpha($name[0])) {
+        if ($name != trim($name) || ! ctype_alpha($name[0])) {
             if ($throw) {
-                throw $this->_exception('ERR_CLASS_NOT_FOUND', array(
+                throw $this->_exception('ERR_CLASS_NOT_VALID', array(
                     'name' => $name,
                     'stack' => $this->_stack,
                 ));

@@ -728,7 +728,7 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Returns the output from Solar_Debug_Var::dump() for a variable.
+     * Returns the output from Solar_Debug_Var::fetch() for a variable.
      * 
      * @param mixed $var The variable dump.
      * 
@@ -742,7 +742,7 @@ class Solar_Test extends Solar_Base {
     
     /**
      * 
-     * Recrsively [[php::ksort() | ]] an array.
+     * Recursively [[php::ksort() | ]] an array.
      * 
      * Used so that order of array elements does not affect equality.
      *

@@ -1213,7 +1213,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // set placeholders for relateds.
-        foreach ($this->_related as $key) {
+        foreach ($this->_related as $key => $val) {
             $data[$key] = null;
         }
         

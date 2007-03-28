@@ -209,6 +209,7 @@ class Solar_Class_Stack extends Solar_Base {
             throw $this->_exception(
                 'ERR_CLASS_NOT_FOUND',
                 array(
+                    'path'  => get_include_path(),
                     'name'  => $name,
                     'stack' => $this->_stack,
                 )

@@ -35,7 +35,7 @@ class Solar_Auth_Adapter_SqlTest extends Solar_Auth_AdapterTestCase {
         $insert = parse_ini_file(dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'users.ini', true);
         foreach ($insert as $handle => $data) {
             $data['handle'] = $handle;
-            $data['passwd'] = md5($data['passwd']);
+            $data['passwd'] = hash('md5', $data['passwd']);
             $this->_sql->insert('members', $data);
         }
         

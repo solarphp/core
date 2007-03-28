@@ -1448,7 +1448,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * We use this so that certain adapters can append table types
      * to the creation statment (for example MySQL).
      * 
-     * @param string $name The table name to create.
+     * @param string $table The table name to create.
      * 
      * @param string $cols The column definitions.
      * 
@@ -1871,7 +1871,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * @param bool $autoinc Whether or not this is an auto-increment column.
      * 
-     * @param bool $autoinc Whether or not this is a primary-key column.
+     * @param bool $primary Whether or not this is a primary-key column.
      * 
      * @return void
      * 

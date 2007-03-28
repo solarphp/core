@@ -30,7 +30,7 @@ class Solar_Mail_Encoding {
      * 
      * Sanitizes header labels.
      * 
-     * @var string $label The header label sanitize.
+     * @param string $label The header label sanitize.
      * 
      * @return string The sanitized header label.
      * 

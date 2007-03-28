@@ -39,7 +39,7 @@ abstract class Solar_Mail_Transport_Adapter extends Solar_Base {
      * 
      * Sends a Solar_Mail_Message.
      * 
-     * @param Solar_Mail_Message $mail 
+     * @param Solar_Mail_Message $mail The message to send.
      * 
      * @return void
      * 

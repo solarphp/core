@@ -243,7 +243,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      * 
      * Sets the line-ending string.
      * 
-     * @var string $crlf The line-ending string.
+     * @param string $crlf The line-ending string.
      * 
      * @return void
      * 
@@ -257,7 +257,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      * 
      * Returns the line-ending string.
      * 
-     * @var string $crlf The line-ending string.
+     * @param string $crlf The line-ending string.
      * 
      * @return void
      * 
@@ -656,7 +656,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      * 
      * Receives a response line from the SMTP server.
      * 
-     * @var int $timeout Timeout in seconds.
+     * @param int $timeout Timeout in seconds.
      * 
      * @return string
      * 

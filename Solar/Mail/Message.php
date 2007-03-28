@@ -250,7 +250,9 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the CRLF sequence for this message.
      * 
-     * @param string
+     * @param string $crlf The CRLF line-ending string.
+     * 
+     * @return void
      * 
      */
     public function setCrlf($crlf)
@@ -276,7 +278,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $charset The character set.
      * 
-     * @return string
+     * @return void
      * 
      */
     public function setCharset($charset)
@@ -434,7 +436,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the subject of the message.
      * 
-     * @param string $subject
+     * @param string $subject The subject line for the message.
      * 
      * @return void
      * 
@@ -532,7 +534,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Attaches a Solar_Mail_Message_Part to the message.
      * 
-     * @param Solar_Mail_Message_Part The part to add as an attachment.
+     * @param Solar_Mail_Message_Part $part The part to add as an attachment.
      * 
      * @return void
      * 
@@ -550,6 +552,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $type The Content-Type to use for the file. If empty,
      * uses the Solar_Mail_Message_Part default $type.
+     * 
+     * @return void
      * 
      */
     public function attachFile($file, $type = null)
@@ -851,6 +855,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Returns a boundary-line separator.
      * 
+     * @param string $str The boundary text; if empty, uses $this->_boundary.
+     * 
      * @return string
      * 
      */
@@ -865,6 +871,8 @@ class Solar_Mail_Message extends Solar_Base {
     /**
      * 
      * Returns a boundary-line ending.
+     * 
+     * @param string $str The boundary text; if empty, uses $this->_boundary.
      * 
      * @return string
      * 

@@ -737,7 +737,7 @@ class Solar_Test extends Solar_Base {
      */
     protected function _export($var)
     {
-        return trim($this->_debug->dump($var));
+        return trim($this->_debug->fetch($var));
     }
     
     /**

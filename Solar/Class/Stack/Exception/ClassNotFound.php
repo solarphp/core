@@ -1,0 +1,2 @@
+<?php
+class Solar_Class_Stack_Exception_ClassNotFound extends Solar_Class_Stack_Exception {}

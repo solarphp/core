@@ -165,7 +165,7 @@ class Solar_Class_Stack extends Solar_Base {
         if ($name != trim($name) || ! ctype_alpha($name[0])) {
             if ($throw) {
                 throw $this->_exception('ERR_CLASS_NOT_VALID', array(
-                    'name' => $name,
+                    'name'  => $name,
                     'stack' => $this->_stack,
                 ));
             } else {
@@ -212,7 +212,6 @@ class Solar_Class_Stack extends Solar_Base {
             throw $this->_exception(
                 'ERR_CLASS_NOT_FOUND',
                 array(
-                    'path'  => get_include_path(),
                     'name'  => $name,
                     'stack' => $this->_stack,
                 )

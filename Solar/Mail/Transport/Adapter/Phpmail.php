@@ -65,7 +65,7 @@ class Solar_Mail_Transport_Adapter_Phpmail extends Solar_Mail_Transport_Adapter 
             implode(', ', $to_addr),
             $subject,
             $this->_mail->fetchContent(),
-            $this->_headersToString($headers);
+            $this->_headersToString($headers)
         );
     }
 }

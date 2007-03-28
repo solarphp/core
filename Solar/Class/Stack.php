@@ -173,6 +173,9 @@ class Solar_Class_Stack extends Solar_Base {
             }
         }
         
+        // make sure the name is upper-cased, then loop through the stack
+        // to find it.
+        $name = ucfirst($name);
         foreach ($this->_stack as $prefix) {
             
             // the full class name

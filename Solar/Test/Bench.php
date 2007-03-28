@@ -86,7 +86,7 @@ class Solar_Test_Bench extends Solar_Base {
     public function loop($loops = null)
     {
         if (empty($loops)) {
-            $loops = $this->_config['loops'];
+            $loops = $this->_config['loop'];
         }
         
         // get the list of bench*() methods

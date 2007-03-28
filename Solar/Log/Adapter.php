@@ -37,11 +37,15 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      *   should recognize; a comma-separated string of events, or
      *   a sequential array.  Default is all events ('*').
      * 
+     * `microtime`
+     * : (bool) Use timestamps with decimal microseconds.  Default false.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Log_Adapter = array(
-        'events' => '*',
+        'events'    => '*',
+        'microtime' => false,
     );
     
     /**
@@ -145,12 +149,20 @@ abstract class Solar_Log_Adapter extends Solar_Base {
      * 
      * Gets the current timestamp in ISO-8601 format (yyyy-mm-ddThh:ii:ss).
      * 
+     * If the 'microtime' config option is true, the seconds have a decimal
+     * portion appended.
+     * 
      * @return string The current timestamp.
      * 
      */
     protected function _getTime()
     {
-        return date('Y-m-d\TH:i:s');
+        $time = date('Y-m-d\TH:i:s');
+        if ($this->_config['microtime']) {
+            // strip the "0" from "0.123456" and append
+            $time .= substr((float) microtime(), 1);
+        }
+        return $time;
     }
     
     /**

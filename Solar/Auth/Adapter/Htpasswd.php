@@ -183,7 +183,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
         $length  = strlen($plain);
         $context = $plain . '$apr1$' . $salt;
         
-        $binary = md5($plain . $salt . $plain, true);
+        $binary = hash('md5', $plain . $salt . $plain, true);
         
         for ($i = $length; $i > 0; $i -= 16) {
             $context .= substr($binary, 0, min(16 , $i));
@@ -192,7 +192,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
             $context .= ($i & 1) ? chr(0) : $plain[0];
         }
         
-        $binary = md5($context, true);
+        $binary = hash('md5', $context, true);
         
         for($i = 0; $i < 1000; $i++) {
             $new = ($i & 1) ? $plain : $binary;
@@ -203,7 +203,7 @@ class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
                 $new .= $plain;
             }
             $new .= ($i & 1) ? $binary : $plain;
-            $binary = md5($new, true);
+            $binary = hash('md5', $new, true);
         }
         
         $p = array();

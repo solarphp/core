@@ -64,11 +64,17 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      *   the web server process. Default is '/Solar_Cache_File' in the system
      *   temporary directory.
      * 
+     * `mode`
+     * : (int) If the cache directory does not exist, when it is created, use
+     *   this octal permission mode.  Default is '0660' (user read/write,
+     *   group read/write, others excluded).
+     * 
      * @var array
      * 
      */
     protected $_Solar_Cache_Adapter_File = array(
         'path'   => null, // default set in constructor
+        'mode'   => 0660,
     );
     
     /**
@@ -101,7 +107,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         // make sure the cache directory is there; create it if
         // necessary.
         if (! is_dir($this->_path)) {
-            mkdir($this->_path, 0777, true);
+            mkdir($this->_path, $this->_config['mode'], true);
         }
     }
     
@@ -294,7 +300,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function entry($key)
     {
-        return $this->_path . md5($key);
+        return $this->_path . hash('md5', $key);
     }
 } 
 

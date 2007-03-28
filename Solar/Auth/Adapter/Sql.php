@@ -127,7 +127,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         }
         
         // salt and hash the password
-        $md5 = md5($this->_config['salt'] . $this->_passwd);
+        $md5 = hash('md5', $this->_config['salt'] . $this->_passwd);
         
         // build the select
         $select->from($this->_config['table'], $cols)

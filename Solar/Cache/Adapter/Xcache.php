@@ -54,7 +54,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
      *   method. Defaults to `null`.
      *
      * `pass`
-     * : (string) Plaintext password that matches the md5() encrypted password
+     * : (string) Plaintext password that matches the MD5-encrypted password
      *   in php.ini. This password and the corresponding login are required
      *   _only_ for the deleteAll() method. Defaults to `null`.
      *

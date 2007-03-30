@@ -417,4 +417,29 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
     	
     	return $default;
     }
+    
+    /**
+     * 
+     * Given a column definition, modifies the auto-increment and primary-key
+     * clauses in place.
+     * 
+     * @param string &$coldef The column definition as it is now.
+     * 
+     * @param bool $autoinc Whether or not this is an auto-increment column.
+     * 
+     * @param bool $primary Whether or not this is a primary-key column.
+     * 
+     * @return void
+     * 
+     */
+    protected function _modAutoincPrimary(&$coldef, $autoinc, $primary)
+    {
+        if ($autoinc) {
+            $coldef .= " IDENTITY";
+        }
+        
+        if ($primary) {
+            $coldef .= " PRIMARY KEY";
+        }
+    }
 }

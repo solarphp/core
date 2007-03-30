@@ -856,6 +856,21 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * A support method for _fixRelated() to handle belongs-to relationships.
+     * 
+     * @param array &$opts The relationship options; these are modified in-
+     * place.
+     * 
+     * @param StdClass $model The catalog entry for the native model (i.e.,
+     * this model).
+     * 
+     * @param StdClass $foreign The catalog entry for the foreign model.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedBelongsTo(&$opts, $model, $foreign)
     {
         // a little magic
@@ -882,6 +897,21 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         $this->_fixRelatedNotThrough($opts);
     }
     
+    /**
+     * 
+     * A support method for _fixRelated() to handle has-one relationships.
+     * 
+     * @param array &$opts The relationship options; these are modified in-
+     * place.
+     * 
+     * @param StdClass $model The catalog entry for the native model (i.e.,
+     * this model).
+     * 
+     * @param StdClass $foreign The catalog entry for the foreign model.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedHasOne(&$opts, $model, $foreign)
     {
         // a little magic
@@ -908,6 +938,21 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         $this->_fixRelatedNotThrough($opts);
     }
     
+    /**
+     * 
+     * A support method for _fixRelated() to handle has-many relationships.
+     * 
+     * @param array &$opts The relationship options; these are modified in-
+     * place.
+     * 
+     * @param StdClass $model The catalog entry for the native model (i.e.,
+     * this model).
+     * 
+     * @param StdClass $foreign The catalog entry for the foreign model.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedHasMany(&$opts, $model, $foreign)
     {
         // a little magic
@@ -940,6 +985,22 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * A support method for _fixRelatedHasMany() to handle "through"
+     * relationships.
+     * 
+     * @param array &$opts The relationship options; these are modified in-
+     * place.
+     * 
+     * @param StdClass $model The catalog entry for the native model (i.e.,
+     * this model).
+     * 
+     * @param StdClass $foreign The catalog entry for the foreign model.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedHasManyThrough(&$opts, $model, $foreign)
     {
         // make sure the "through" relationship exists
@@ -983,6 +1044,22 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * A support method for _fixRelatedHasMany() to set the "through" options
+     * to blanks.
+     * 
+     * @param array &$opts The relationship options; these are modified in-
+     * place.
+     * 
+     * @param StdClass $model The catalog entry for the native model (i.e.,
+     * this model).
+     * 
+     * @param StdClass $foreign The catalog entry for the foreign model.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedNotThrough(&$opts)
     {
         $opts['through']                = null;

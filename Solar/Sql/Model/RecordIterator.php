@@ -61,9 +61,10 @@ class Solar_Sql_Model_RecordIterator extends Solar_Base implements Iterator {
      * 
      * Injects the model from which the data originates.
      * 
-     * @param Solar_Sql_Model The origin model object.
+     * @param Solar_Sql_Model $model The origin model object.
      * 
      * @return void
+     * 
      */
     public function setModel(Solar_Sql_Model $model)
     {

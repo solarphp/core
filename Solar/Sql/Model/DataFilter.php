@@ -37,6 +37,15 @@ class Solar_Sql_Model_DataFilter extends Solar_DataFilter {
     
     protected $_catalog;
     
+    /**
+     * 
+     * Injects the model from which the data originates.
+     * 
+     * @param Solar_Sql_Model $model The origin model object.
+     * 
+     * @return void
+     * 
+     */
     public function setModel(Solar_Sql_Model $model)
     {
         $this->_model = $model;

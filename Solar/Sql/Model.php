@@ -1275,7 +1275,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return int The number of records per page.
      * 
      */
-    public function getPaging($paging)
+    public function getPaging()
     {
         $this->_checkFocus('master');
         return $this->_paging;
@@ -1434,10 +1434,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @param string $name The relationship name.
      * 
-     * @param int $page For to-many associations, the page-number of records
-     * to fetch (default null, which fetches all records).  Ignored by to-one
-     * associations.  Paging is based on the related model's "$_paging"
-     * property.
+     * @param array $params Parameters for the related SELECT; honors keys for
+     * 'where', 'having', 'group', and 'paging'.
      * 
      * @return array An array with keys 'count' (the count of records) and
      * 'pages' (the number of pages of records).
@@ -1862,9 +1860,10 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Returns a new Solar_Sql_Select tool, with the proper SQL object
      * injected automatically, and with eager "to-one" associations joined.
      * 
-     * @return Solar_Sql_Select
+     * @param array $eager An array of to-one relationship names to eager-
+     * load with LEFT JOIN clauses.
      * 
-     * @todo Add param $eager for eager-relationships to load?
+     * @return Solar_Sql_Select
      * 
      */
     protected function _newSelect($eager = null)

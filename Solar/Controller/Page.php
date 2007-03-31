@@ -722,8 +722,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
             ));
         }
 
-        // kill off all output buffers and redirect
+        // kill off all output buffers
         while(@ob_end_clean());
+        
+        // save the session and redirect
+        session_write_close();
         header("Location: $href");
         exit;
     }

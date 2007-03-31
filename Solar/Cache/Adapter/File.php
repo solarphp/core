@@ -59,22 +59,30 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * Config keys are ...
      * 
      * `path`
-     * : (string) The directory where cache files are located; 
-     *   should be readable and writable by the script process, usually
-     *   the web server process. Default is '/Solar_Cache_File' in the system
-     *   temporary directory.
+     * : (string) The directory where cache files are located; should be
+     *   readable and writable by the script process, usually the web server
+     *   process. Default is '/Solar_Cache_File' in the system temporary
+     *   directory.  Will be created if it does not already exist.  Supports
+     *   streams, so you may specify (e.g.) 'http://cache-server/' as the 
+     *   path.
      * 
      * `mode`
-     * : (int) If the cache directory does not exist, when it is created, use
-     *   this octal permission mode.  Default is '0660' (user read/write,
-     *   group read/write, others excluded).
+     * : (int) If the cache path does not exist, when it is created, use
+     *   this octal permission mode.  Default is `0750` (user read/write/exec,
+     *   group read, others excluded).
+     * 
+     * `context`
+     * : (array|resource) A stream context resource, or an array to pass to
+     *   stream_create_context(). When empty, no context is used.  Default
+     *   null.
      * 
      * @var array
      * 
      */
     protected $_Solar_Cache_Adapter_File = array(
-        'path'   => null, // default set in constructor
-        'mode'   => 0660,
+        'path'    => null, // default set in constructor
+        'mode'    => 0740,
+        'context' => null,
     );
     
     /**
@@ -88,6 +96,16 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     
     /**
      * 
+     * A stream context resource to define how the input/output for the cache
+     * is handled.
+     * 
+     * @var resource
+     * 
+     */
+    protected $_context;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -96,7 +114,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     public function __construct($config = null)
     {
         // set the default cache directory location
-        $this->_Solar_Cache_Adapter_File['path'] == Solar::temp('/Solar_Cache_File/');
+        $this->_Solar_Cache_Adapter_File['path'] = Solar::temp('/Solar_Cache_File/');
         
         // basic construction
         parent::__construct($config);
@@ -104,10 +122,24 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         // keep local values so they can't be changed
         $this->_path = Solar::fixdir($this->_config['path']);
         
+        // build the context property
+        if (is_resource($this->_config['context'])) {
+            // assume it's a context resource
+            $this->_context = $this->_config['context'];
+        } elseif (is_array($this->_config['context'])) {
+            // create from scratch
+            $this->_context = stream_context_create($this->_config['context']);
+        } else {
+            // not a resource, not an array, so ignore.
+            // have to use a resource of some sort, so create
+            // a blank context resource.
+            $this->_context = stream_context_create(array());
+        }
+        
         // make sure the cache directory is there; create it if
         // necessary.
         if (! is_dir($this->_path)) {
-            mkdir($this->_path, $this->_config['mode'], true);
+            mkdir($this->_path, $this->_config['mode'], true, $this->_context);
         }
     }
     
@@ -137,9 +169,11 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             $serial = false;
         }
         
-        // open the file for over-writing
+        // open the file for over-writing. not using file_put_contents 
+        // becuase we may need to write a serial file too (and avoid race
+        // conditions while doing so). don't use include path.
         $file = $this->entry($key);
-        $fp = @fopen($file, 'wb');
+        $fp = @fopen($file, 'wb', false, $this->_context);
         
         // was it opened?
         if ($fp) {
@@ -148,15 +182,16 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             flock($fp, LOCK_EX);
             fwrite($fp, $data, strlen($data));
             
-            // add a .serial file? (do this while the file
-            // is locked to avoid race conditions)
+            // add a .serial file? (do this while the file is locked to avoid
+            // race conditions)
             if ($serial) {
-                touch($file . '.serial');
+                // use this instead of touch() because it supports stream
+                // contexts.
+                file_put_contents($file . '.serial', null, LOCK_EX, $this->_context);
             } else {
-                // make sure no serial file is there
-                // from a previous entry with the same
-                // name
-                @unlink($file . '.serial');
+                // make sure no serial file is there from any previous entries
+                // with the same name
+                @unlink($file . '.serial', $this->_context);
             }
             
             // unlock and close, then done.
@@ -200,7 +235,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         }
         
         // file exists; open it for reading
-        $fp = @fopen($file, 'rb');
+        $fp = @fopen($file, 'rb', false, $this->_context);
         
         // could it be opened?
         if ($fp) {
@@ -249,8 +284,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         }
         
         $file = $this->entry($key);
-        unlink($file);
-        @unlink($file . '.serial');
+        @unlink($file, $this->_context);
+        @unlink($file . '.serial', $this->_context);
     }
     
     /**
@@ -266,26 +301,12 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             return;
         }
         
-        // open the directory
-        $dir = dir($this->_path);
+        // get the list of files in the directory, suppress warnings.
+        $list = (array) @scandir($this->_path, null, $this->_context);
         
-        // did it exist?
-        if ($dir) {
-            
-            // delete each file in the cache directory.
-            // we use the "false !==" piece so that a file
-            // named '0' does not prematurely terminate the
-            // loop.
-            while (false !== ($file = $dir->read())) {
-                // delete the file (suppress errors so that . and ..
-                // don't throw warnings) ...
-                @unlink($this->_path . $file);
-                // ... and any serial marker.
-                @unlink($file . '.serial');
-            }
-            
-            // done
-            $dir->close();
+        // delete each file 
+        foreach ($list as $file) {
+            @unlink($this->_path . $file, $this->_context);
         }
     }
     

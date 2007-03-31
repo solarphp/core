@@ -413,6 +413,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         if ($href) {
             // protect against header injection
             $href = str_replace(array("\r", "\n"), '', (string) $href);
+            // commit any session values
+            session_write_close();
             // redirect; note that this terminates all further processing.
             header("Location: $href");
             exit();

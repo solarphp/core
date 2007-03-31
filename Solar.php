@@ -1076,8 +1076,13 @@ class Solar {
         }
         
         if ($add) {
+            // convert slashes to os-specific separators,
+            // and remove leading separators
             $add = str_replace('/', DIRECTORY_SEPARATOR, $add);
             $add = ltrim($add, DIRECTORY_SEPARATOR);
+            
+            // remove trailing separators, and append $add.
+            $tmp = rtrim($tmp, DIRECTORY_SEPARATOR);
             $tmp .= DIRECTORY_SEPARATOR . $add;
         }
         

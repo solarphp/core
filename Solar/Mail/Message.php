@@ -45,18 +45,9 @@ class Solar_Mail_Message extends Solar_Base {
      * `crlf`
      * : (string) The line-ending string to use; default is "\r\n".
      * 
-     * `from`
-     * : (string|array) The "From:" address to use for the message; either an
-     * email address string, or an array of two elements, where the first is
-     * the email address and the second is the display-name.  Default null.
-     * 
      * `headers`
      * : (array) An array of key-value pairs where the key is the header label
      * and the value is the header value.  Default null.
-     * 
-     * `return_path`
-     * : (string) The "Return-Path:" address to use for the message; default
-     * null.
      * 
      * `transport`
      * : (dependency) A Solar_Mail_Transport dependency injection, for use 
@@ -70,9 +61,7 @@ class Solar_Mail_Message extends Solar_Base {
         'boundary'    => null,
         'charset'     => 'utf-8',
         'crlf'        => "\r\n",
-        'from'        => null,
         'headers'     => null,
-        'return_path' => null,
         'transport'   => null,
     );
     
@@ -217,24 +206,11 @@ class Solar_Mail_Message extends Solar_Base {
             $this->_crlf = $this->_config['crlf'];
         }
         
-        // custom From: address and name
-        if ($this->_config['from']) {
-            $this->_from = array_merge(
-                $this->_from,
-                (array) $this->_config['from']
-            );
-        }
-        
         // custom headers
         if ($this->_config['headers']) {
             foreach ((array) $this->_config['headers'] as $label => $value) {
                 $this->addHeader($label, $value);
             }
-        }
-        
-        // custom Return-Path:
-        if ($this->_config['return_path']) {
-            $this->_return_path = $this->_config['return_path'];
         }
         
         // do we have an injected transport?

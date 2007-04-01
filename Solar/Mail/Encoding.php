@@ -153,8 +153,8 @@ class Solar_Mail_Encoding {
                         $hdr_val = "";
                     }
                     
-                    // RFC 2047 specifies that any split header should be seperated
-                    // by a CRLF SPACE. 
+                    // RFC 2047 specifies that any split header should be
+                    // separated by a CRLF SPACE. 
                     if ($output){
                         $output .= "$crlf ";
                     }
@@ -280,5 +280,23 @@ class Solar_Mail_Encoding {
             throw $this->_exception('ERR_UNKNOWN_TYPE');
             break;
         }
+    }
+    
+    /**
+     * 
+     * Removes \r and \n from the value; aids in preventing header injections.
+     * 
+     * @param string $val The value to strip CR and LF from.
+     * 
+     * @return string The value without any \r or \n characters.
+     * 
+     */
+    static public function stripCrlf($value)
+    {
+        return str_replace(
+            array("\r", "\n"),
+            '',
+            $val
+        );
     }
 }

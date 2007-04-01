@@ -900,7 +900,6 @@ class Solar {
         return rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
     }
     
-    
     /**
      * 
      * Convenience method for dirname() and higher-level directories.

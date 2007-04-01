@@ -193,7 +193,7 @@ class Solar_Mail_Message extends Solar_Base {
         if ($this->_config['boundary']) {
             $this->_boundary = $this->_config['boundary'];
         } else {
-            $this->_boundary = '__' . md5(uniqid());
+            $this->_boundary = '__' . hash('md5', uniqid());
         }
         
         // custom charset
@@ -252,6 +252,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the character set for this message.
      * 
+     * Strips CR/LF from the value to help avoid header injections.
+     * 
      * @param string $charset The character set.
      * 
      * @return void
@@ -259,7 +261,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setCharset($charset)
     {
-        $this->_charset = $this->_stripNewlines($charset);
+        $this->_charset = Solar_Mail_Encoding::stripCrlf($charset);
     }
     
     /**
@@ -276,7 +278,9 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
-     * Sets the Return-Path header for an email
+     * Sets the Return-Path header for an email.
+     * 
+     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @param string $addr The email address of the return-path.
      * 
@@ -285,14 +289,14 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setReturnPath($addr)
     {
-        $this->_return_path = $this->_stripNewlines($addr);
+        $this->_return_path = Solar_Mail_Encoding::stripCrlf($addr);
     }
     
     /**
      * 
      * Returns the current Return-Path address for the email.
      * 
-     * If no Return-Path header is set, returns the value of $this->_from.
+     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @return string
      * 
@@ -306,6 +310,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the "From:" (sender) on this message.
      * 
+     * Strips CR/LF from the address and name to help avoid header injections.
+     * 
      * @param string $addr The email address of the sender.
      * 
      * @param string $name The display-name for the sender, if any.
@@ -316,8 +322,8 @@ class Solar_Mail_Message extends Solar_Base {
     public function setFrom($addr, $name = '')
     {
         $this->_from = array(
-            $this->_stripNewlines($addr),
-            $this->_stripNewlines($name),
+            Solar_Mail_Encoding::stripCrlf($addr),
+            Solar_Mail_Encoding::stripCrlf($name),
         );
     }
     
@@ -337,6 +343,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Adds a "To:" address recipient.
      * 
+     * Strips CR/LF from the address and name to help avoid header injections.
+     * 
      * @param string $addr The email address of the recipient.
      * 
      * @param string $name The display-name for the recipient, if any.
@@ -346,14 +354,16 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addTo($addr, $name = null)
     {
-        $addr = $this->_stripNewlines($addr);
-        $name = $this->_stripNewlines($name);
+        $addr = Solar_Mail_Encoding::stripCrlf($addr);
+        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['To'][$addr] = $name;
     }
     
     /**
      * 
      * Adds a "Cc:" address recipient.
+     * 
+     * Strips CR/LF from the address and name to help avoid header injections.
      * 
      * @param string $addr The email address of the recipient.
      * 
@@ -364,14 +374,16 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addCc($addr, $name = null)
     {
-        $addr = $this->_stripNewlines($addr);
-        $name = $this->_stripNewlines($name);
+        $addr = Solar_Mail_Encoding::stripCrlf($addr);
+        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['Cc'][$addr] = $name;
     }
     
     /**
      * 
      * Adds a "To:" address recipient.
+     * 
+     * Strips CR/LF from the address and name to help avoid header injections.
      * 
      * @param string $addr The email address of the recipient.
      * 
@@ -382,8 +394,8 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addBcc($addr, $name = null)
     {
-        $addr = $this->_stripNewlines($addr);
-        $name = $this->_stripNewlines($name);
+        $addr = Solar_Mail_Encoding::stripCrlf($addr);
+        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['Bcc'][$addr] = $name;
     }
     
@@ -421,6 +433,8 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the subject of the message.
      * 
+     * Strips CR/LF from the value to help avoid header injections.
+     * 
      * @param string $subject The subject line for the message.
      * 
      * @return void
@@ -428,7 +442,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setSubject($subject)
     {
-        $this->_subject = $this->_stripNewlines($subject);
+        $this->_subject = Solar_Mail_Encoding::stripCrlf($subject);
     }
     
     /**
@@ -456,12 +470,12 @@ class Solar_Mail_Message extends Solar_Base {
     {
         // create the part
         $part = Solar::factory('Solar_Mail_Message_Part');
-        $part->content     = $text;
-        $part->crlf        = $this->_crlf;
-        $part->type        = 'text/plain';
-        $part->charset     = $this->_charset;
-        $part->encoding    = 'quoted-printable';
-        $part->disposition = 'inline';
+        $part->setContent($text);
+        $part->setCrlf($this->_crlf);
+        $part->setType('text/plain');
+        $part->setCharset($this->_charset);
+        $part->setEncoding('quoted-printable');
+        $part->setDisposition('inline');
         
         // keep it
         $this->_text = $part;
@@ -492,12 +506,12 @@ class Solar_Mail_Message extends Solar_Base {
     {
         // create the part
         $part = Solar::factory('Solar_Mail_Message_Part');
-        $part->content     = $html;
-        $part->crlf        = $this->_crlf;
-        $part->type        = 'text/html';
-        $part->charset     = $this->_charset;
-        $part->encoding    = 'quoted-printable';
-        $part->disposition = 'inline';
+        $part->setContent($html);
+        $part->setCrlf($this->_crlf);
+        $part->setType('text/html');
+        $part->setCharset($this->_charset);
+        $part->setEncoding('quoted-printable');
+        $part->setDisposition('inline');
         
         // keep it
         $this->_html = $part;
@@ -544,12 +558,12 @@ class Solar_Mail_Message extends Solar_Base {
     public function attachFile($file, $type = null)
     {
         $part = Solar::factory('Solar_Mail_Message_Part');
-        $part->content  = file_get_contents($file);
-        $part->crlf     = $this->_crlf;
-        $part->filename = basename($file);
+        $part->setContent(file_get_contents($file));
+        $part->setCrlf($this->_crlf);
+        $part->setFilename(basename($file));
         
         if ($type) {
-            $part->type = $type;
+            $part->setType($type);
         }
         
         $this->_atch[] = $part;
@@ -558,6 +572,9 @@ class Solar_Mail_Message extends Solar_Base {
     /**
      * 
      * Adds a custom header to the message.
+     * 
+     * Canonicalizes the label, and strips CR/LF from the value, to help
+     * prevent header injections.
      * 
      * @param string $label The header label.
      * 
@@ -585,7 +602,7 @@ class Solar_Mail_Message extends Solar_Base {
         }
         
         // save the label and value
-        $this->_headers[$label][] = $value;
+        $this->_headers[$label][] = Solar_Mail_Encoding::stripCrlf($value);
     }
     
     /**
@@ -752,19 +769,19 @@ class Solar_Mail_Message extends Solar_Base {
             // 
             // @todo this is kind of dumb; we should make the Message_Part be
             // smart enough to handle sub-parts and set up its own boundaries.
-            $boundary = '____' . md5($this->_boundary . uniqid());
+            $boundary = '____' . hash('md5', $this->_boundary . uniqid());
             $alt = Solar::factory('Solar_Mail_Message_Part');
-            $alt->crlf = $this->_crlf;
-            $alt->encoding = '7bit';
-            $alt->disposition = null;
-            $alt->type = 'multipart/alternative';
-            $alt->charset = $this->_charset;
-            $alt->boundary = $boundary;
-            $alt->content = ltrim($this->_boundarySep($boundary))
-                          . $this->_text->fetch()
-                          . $this->_boundarySep($boundary)
-                          . $this->_html->fetch()
-                          . $this->_boundaryEnd($boundary);
+            $alt->setCrlf($this->_crlf);
+            $alt->setEncoding('7bit');
+            $alt->setDisposition(null);
+            $alt->setType('multipart/alternative');
+            $alt->setCharset($this->_charset);
+            $alt->setBoundary($boundary);
+            $alt->setContent(ltrim($this->_boundarySep($boundary))
+                           . $this->_text->fetch()
+                           . $this->_boundarySep($boundary)
+                           . $this->_html->fetch()
+                           . $this->_boundaryEnd($boundary));
             
             // add the combined text/html alternative part
             $parts[] = $alt;
@@ -834,24 +851,6 @@ class Solar_Mail_Message extends Solar_Base {
         }
         
         return $this->_transport->send($this);
-    }
-    
-    /**
-     * 
-     * Removes \r and \n from the value; aids in preventing header injections.
-     * 
-     * @param string $val The value to strip newlines from.
-     * 
-     * @return string The value without any \r or \n characters.
-     * 
-     */
-    protected function _stripNewlines($val)
-    {
-        return str_replace(
-            array("\r", "\n"),
-            '',
-            $val
-        );
     }
     
     /**

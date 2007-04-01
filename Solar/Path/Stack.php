@@ -55,6 +55,9 @@ class Solar_Path_Stack {
      * 
      * Adds one or more directories to the stack.
      * 
+     * Converts Unix path- and directory-separator characters to Windows
+     * separators when on Windows.
+     * 
      * {{code: php
      *     $stack = Solar::factory('Solar_Path_Stack');
      *     $stack->add(array('path/1', 'path/2', 'path/3'));
@@ -83,6 +86,11 @@ class Solar_Path_Stack {
      */
     public function add($path)
     {
+        // convert from unix to windows if needed
+        if (substr(PHP_OS, 0, 3) == 'WIN') {
+            $this->_unixToWindows($path);
+        }
+        
         if (is_string($path)) {
             $path = explode(PATH_SEPARATOR, $path);
         }
@@ -218,5 +226,33 @@ class Solar_Path_Stack {
             
         }
         return false;
+    }
+    
+    /**
+     * 
+     * Replaces Unix path and directory separators with system-specific
+     * separators.
+     * 
+     * This is particularly helpful on Windows.
+     * 
+     * @param string|array $path The path parameter to "fix" for Windows.
+     * 
+     * @return mixed The fixed path parameter.
+     * 
+     */
+    protected function _unixToWindows($path)
+    {
+        if (is_string($path)) {
+            $path = str_replace(
+                array('/', ':'),
+                array(DIRECTORY_SEPARATOR, PATH_SEPARATOR),
+                $path
+            );
+        } elseif (is_array($path)) {
+            foreach ($path as $key => $val) {
+                $path[$key] = $this->_fix($val);
+            }
+        }
+        return $path;
     }
 }

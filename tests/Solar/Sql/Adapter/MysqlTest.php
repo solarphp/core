@@ -45,5 +45,14 @@ class Solar_Sql_Adapter_MysqlTest extends Solar_Sql_AdapterTestCase {
             ,test_default_numeric   NUMERIC(7,3) DEFAULT 1234.567
             ,test_default_ignore    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
+        
+    public function setup()
+    {
+        if (! extension_loaded('pdo_mysql')) {
+            $this->markTestSkipped('pdo_mysql extension not loaded');
+        }
+        
+        parent::setup();
+    }
 }
 ?>

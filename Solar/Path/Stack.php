@@ -250,7 +250,7 @@ class Solar_Path_Stack {
             );
         } elseif (is_array($path)) {
             foreach ($path as $key => $val) {
-                $path[$key] = $this->_fix($val);
+                $path[$key] = $this->_unixToWindows($val);
             }
         }
         return $path;

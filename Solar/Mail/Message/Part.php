@@ -93,6 +93,13 @@ class Solar_Mail_Message_Part {
      */
     public $content = null;
     
+    /**
+     * 
+     * The boundary string to use in this part.
+     * 
+     * @var string
+     * 
+     */
     public $boundary = null;
     
     /**
@@ -114,6 +121,8 @@ class Solar_Mail_Message_Part {
      * @param string $label The header label.
      * 
      * @param string $value The header value.
+     * 
+     * @return void
      * 
      */
     public function setHeader($label, $value)

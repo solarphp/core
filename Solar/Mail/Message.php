@@ -283,7 +283,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setCharset($charset)
     {
-        $this->_charset = $charset;
+        $this->_charset = $this->_stripNewlines($charset);
     }
     
     /**
@@ -309,7 +309,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setReturnPath($addr)
     {
-        $this->_return_path = $addr;
+        $this->_return_path = $this->_stripNewlines($addr);
     }
     
     /**
@@ -339,7 +339,10 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setFrom($addr, $name = '')
     {
-        $this->_from = array($addr, $name);
+        $this->_from = array(
+            $this->_stripNewlines($addr),
+            $this->_stripNewlines($name),
+        );
     }
     
     /**
@@ -367,6 +370,8 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addTo($addr, $name = null)
     {
+        $addr = $this->_stripNewlines($addr);
+        $name = $this->_stripNewlines($name);
         $this->_rcpt['To'][$addr] = $name;
     }
     
@@ -383,6 +388,8 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addCc($addr, $name = null)
     {
+        $addr = $this->_stripNewlines($addr);
+        $name = $this->_stripNewlines($name);
         $this->_rcpt['Cc'][$addr] = $name;
     }
     
@@ -399,6 +406,8 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function addBcc($addr, $name = null)
     {
+        $addr = $this->_stripNewlines($addr);
+        $name = $this->_stripNewlines($name);
         $this->_rcpt['Bcc'][$addr] = $name;
     }
     
@@ -443,7 +452,7 @@ class Solar_Mail_Message extends Solar_Base {
      */
     public function setSubject($subject)
     {
-        $this->_subject = $subject;
+        $this->_subject = $this->_stripNewlines($subject);
     }
     
     /**
@@ -849,6 +858,24 @@ class Solar_Mail_Message extends Solar_Base {
         }
         
         return $this->_transport->send($this);
+    }
+    
+    /**
+     * 
+     * Removes \r and \n from the value; aids in preventing header injections.
+     * 
+     * @param string $val The value to strip newlines from.
+     * 
+     * @return string The value without any \r or \n characters.
+     * 
+     */
+    protected function _stripNewlines($val)
+    {
+        return str_replace(
+            array("\r", "\n"),
+            '',
+            $val
+        );
     }
     
     /**

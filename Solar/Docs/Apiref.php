@@ -348,14 +348,29 @@ class Solar_Docs_Apiref extends Solar_Base {
                 $info['access'] = "private";
             }
             
-            // add the type
-            if (! empty($docs['tech']['var']['type'])) {
-                $info['type'] = $docs['tech']['var']['type'];
-            } else {
-                if (! empty($this->_ignore[$class]['properties']) &&
-                    ! in_array($name, $this->_ignore[$class]['properties'])) {
-                    // not to be ignored
+            // is this a class we ignore?
+            // use the declaring class, not the current class, because
+            // the property may be inherited.
+            $decl = $prop->getDeclaringClass()->getName();
+            $ignore = (array) @$this->_ignore[$decl]['properties'];
+            
+            // does @var exist?
+            if (empty($docs['tech']['var']['type'])) {
+                // no @var type.  
+                if (! in_array($name, $ignore)) {
+                    // not in the list of ignored properties
                     $this->_log($class, "property '$name' has no @var type");
+                }
+            } else {
+                $info['type'] = $docs['tech']['var']['type'];
+            }
+            
+            // is there a summary line?
+            if (empty($docs['summ'])) {
+                // no summary line.  
+                if (! in_array($name, $ignore)) {
+                    // not in the list of ignored properties
+                    $this->_log($class, "property '$name' has no summary");
                 }
             }
             
@@ -419,6 +434,12 @@ class Solar_Docs_Apiref extends Solar_Base {
                 $info['access'] = 'private';
             }
             
+            // is this a class we ignore?
+            // use the declaring class, not the current class, because
+            // the property may be inherited.
+            $decl = $method->getDeclaringClass()->getName();
+            $ignore = (array) @$this->_ignore[$decl]['methods'];
+            
             // find the return type in the technical docs
             if ($method->isConstructor()) {
                 // it's a constructor, so it returns its own class
@@ -431,11 +452,19 @@ class Solar_Docs_Apiref extends Solar_Base {
                 $info['return'] = $this->_config['unknown'];
                 
                 // can we ignore this lack of type?
-                if (! empty($this->_ignore[$class]['methods']) &&
-                    ! in_array($name, $this->_ignore[$class]['methods'])) {
+                if (! in_array($name, $ignore)) {
                     // not to be ignored
                     $unknown = $this->_config['unknown'];
                     $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
+                }
+            }
+            
+            // is there a summary line?
+            if (empty($docs['summ'])) {
+                // no summary line.  
+                if (! in_array($name, $ignore)) {
+                    // not in the list of ignored methods
+                    $this->_log($class, "method '$name' has no summary");
                 }
             }
             
@@ -468,23 +497,13 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     protected function _isInheritedMethod($class, ReflectionMethod $method)
     {
-        $name = $method->getName();
-        $mods = $method->getModifiers();
-        $args = $method->getParameters();
-        $docs = $method->getDocComment();
-        foreach ($this->api[$class]['from'] as $parent) {
-            $parentReflect = new ReflectionClass($parent);
-            if ($parentReflect->hasMethod($name)) {
-                $parentMethod = $parentReflect->getMethod($name);
-                $parent_mods = $parentMethod->getModifiers();
-                $parent_args = $parentMethod->getParameters();
-                $parent_docs = $parentMethod->getDocComment();
-                if ($mods == $parent_mods && $args == $parent_args && $docs == $parent_docs) {
-                    return $parent;
-                }
-            }
+        // if declared in the same class, then it's not inherited.
+        $decl = $method->getDeclaringClass()->getName();
+        if ($class != $decl) {
+            return $decl;
+        } else {
+            return false;
         }
-        return false;
     }
     
     /**
@@ -501,21 +520,13 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     protected function _isInheritedProperty($class, ReflectionProperty $property)
     {
-        $name = $property->getName();
-        $mods = $property->getModifiers();
-        $docs = $property->getDocComment();
-        foreach ($this->api[$class]['from'] as $parent) {
-            $parentReflect = new ReflectionClass($parent);
-            if ($parentReflect->hasProperty($name)) {
-                $parentProperty = $parentReflect->getProperty($name);
-                $parent_mods = $parentProperty->getModifiers();
-                $parent_docs = $parentProperty->getDocComment();
-                if ($mods == $parent_mods && $docs == $parent_docs) {
-                    return $parent;
-                }
-            }
+        // if declared in the same class, then it's not inherited.
+        $decl = $property->getDeclaringClass()->getName();
+        if ($class != $decl) {
+            return $decl;
+        } else {
+            return false;
         }
-        return false;
     }
     
     /**

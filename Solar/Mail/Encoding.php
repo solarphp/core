@@ -277,7 +277,10 @@ class Solar_Mail_Encoding {
             break;
         
         default:
-            throw $this->_exception('ERR_UNKNOWN_TYPE');
+            throw Solar::exception(
+                'Solar_Mail_Encoding',
+                'ERR_UNKNOWN_TYPE'
+            );
             break;
         }
     }
@@ -286,7 +289,7 @@ class Solar_Mail_Encoding {
      * 
      * Removes \r and \n from the value; aids in preventing header injections.
      * 
-     * @param string $val The value to strip CR and LF from.
+     * @param string $value The value to strip CR and LF from.
      * 
      * @return string The value without any \r or \n characters.
      * 
@@ -296,7 +299,7 @@ class Solar_Mail_Encoding {
         return str_replace(
             array("\r", "\n"),
             '',
-            $val
+            $value
         );
     }
 }

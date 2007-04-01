@@ -325,7 +325,7 @@ class Solar {
     
     /**
      * 
-     * Stops Solar: run stop scripts.
+     * Stops Solar: runs stop scripts and cleans up the Solar environment.
      * 
      * @return void
      * 
@@ -336,6 +336,12 @@ class Solar {
         foreach ((array) Solar::config('Solar', 'stop') as $file) {
             Solar::run($file);
         }
+        
+        // clean up
+        Solar::$registry = array();
+        Solar::$config = array();
+        Solar::$parents = array();
+        Solar::$locale = null;
         
         // reset the status flag, and we're done.
         Solar::$_status = false;

@@ -19,7 +19,11 @@ class Solar_Log_Adapter_EchoTest extends Solar_Log_AdapterTestCase
         $this->_log->save($class, 'debug', 'a debug description');
         $this->_log->save($class, 'notice', 'note this message');
         $actual = ob_get_clean();
-        $expect = "info some information\ndebug a debug description\nnotice note this message\n";
+        
+        $expect = "info some information" . PHP_EOL
+                . "debug a debug description" . PHP_EOL
+                . "notice note this message" . PHP_EOL;
+                
         $this->assertSame($actual, $expect);
     }
     

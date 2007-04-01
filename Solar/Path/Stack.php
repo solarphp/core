@@ -88,7 +88,7 @@ class Solar_Path_Stack {
     {
         // convert from unix to windows if needed
         if (substr(PHP_OS, 0, 3) == 'WIN') {
-            $this->_unixToWindows($path);
+            $path = $this->_unixToWindows($path);
         }
         
         if (is_string($path)) {

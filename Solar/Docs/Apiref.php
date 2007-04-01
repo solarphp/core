@@ -237,6 +237,11 @@ class Solar_Docs_Apiref extends Solar_Base {
         $reflect = new ReflectionClass($class);
         $this->api[$class] = $this->_phpdoc->parse($reflect->getDocComment());
         
+        // needs a summary line
+        if (empty($this->api[$class]['summ'])) {
+            $this->_log($class, "class '$class' has no summary");
+        }
+        
         // add to the package list
         if (empty($this->api[$class]['tech']['package'])) {
             $this->_log($class, "class '$class' has no @package tag");
@@ -354,6 +359,15 @@ class Solar_Docs_Apiref extends Solar_Base {
             $decl = $prop->getDeclaringClass()->getName();
             $ignore = (array) @$this->_ignore[$decl]['properties'];
             
+            // is there a summary line?
+            if (empty($docs['summ'])) {
+                // no summary line.  
+                if (! in_array($name, $ignore)) {
+                    // not in the list of ignored properties
+                    $this->_log($class, "property '$name' has no summary");
+                }
+            }
+            
             // does @var exist?
             if (empty($docs['tech']['var']['type'])) {
                 // no @var type.  
@@ -363,15 +377,6 @@ class Solar_Docs_Apiref extends Solar_Base {
                 }
             } else {
                 $info['type'] = $docs['tech']['var']['type'];
-            }
-            
-            // is there a summary line?
-            if (empty($docs['summ'])) {
-                // no summary line.  
-                if (! in_array($name, $ignore)) {
-                    // not in the list of ignored properties
-                    $this->_log($class, "property '$name' has no summary");
-                }
             }
             
             // save in the API
@@ -440,6 +445,15 @@ class Solar_Docs_Apiref extends Solar_Base {
             $decl = $method->getDeclaringClass()->getName();
             $ignore = (array) @$this->_ignore[$decl]['methods'];
             
+            // is there a summary line?
+            if (empty($docs['summ'])) {
+                // no summary line.  
+                if (! in_array($name, $ignore)) {
+                    // not in the list of ignored methods
+                    $this->_log($class, "method '$name' has no summary");
+                }
+            }
+            
             // find the return type in the technical docs
             if ($method->isConstructor()) {
                 // it's a constructor, so it returns its own class
@@ -456,15 +470,6 @@ class Solar_Docs_Apiref extends Solar_Base {
                     // not to be ignored
                     $unknown = $this->_config['unknown'];
                     $this->_log($class, "method '$name' has unknown @return type, used '$unknown'");
-                }
-            }
-            
-            // is there a summary line?
-            if (empty($docs['summ'])) {
-                // no summary line.  
-                if (! in_array($name, $ignore)) {
-                    // not in the list of ignored methods
-                    $this->_log($class, "method '$name' has no summary");
                 }
             }
             

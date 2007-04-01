@@ -677,7 +677,7 @@ class Solar_Mail_Message extends Solar_Base {
                    . 'charset="' . $this->_charset . '"';
             
             // use the part's encoding
-            $encoding = $this->_html->encoding;
+            $encoding = $this->_html->getEncoding();
             
         } elseif ($this->_text) {
             
@@ -686,7 +686,7 @@ class Solar_Mail_Message extends Solar_Base {
                    . 'charset="' . $this->_charset . '"';
             
             // use the part's encoding
-            $encoding = $this->_text->encoding;
+            $encoding = $this->_text->getEncoding();
             
         } else {
             // final fallback

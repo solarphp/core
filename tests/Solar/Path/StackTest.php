@@ -19,9 +19,9 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         $expect = array(
-          '/path/foo/',
-          '/path/bar/',
-          '/path/baz/',
+            Solar::fixdir('/path/foo/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/baz/'),
         );
 
         $stack = Solar::factory('Solar_Path_Stack');
@@ -35,9 +35,9 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
         $stack->add(array('/path/foo', '/path/bar', '/path/baz'));
 
         $expect = array(
-          "/path/foo/",
-          "/path/bar/",
-          "/path/baz/",
+            Solar::fixdir('/path/foo/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/baz/'),
         );
         
         $this->assertSame($stack->get(), $expect);
@@ -50,9 +50,9 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
         $stack->add('/path/foo:/path/bar:/path/baz');
 
         $expect = array(
-          "/path/foo/",
-          "/path/bar/",
-          "/path/baz/",
+            Solar::fixdir('/path/foo/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/baz/'),
         );
         
         $this->assertSame($stack->get(), $expect);
@@ -66,19 +66,20 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
         $stack->add('/path/baz');
 
         $expect = array(
-          "/path/baz/",
-          "/path/bar/",
-          "/path/foo/",
+            Solar::fixdir('/path/baz/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/foo/'),
         );
+        
         $this->assertSame($stack->get(), $expect);
     }
     
     public function testSet_byString()
     {
         $expect = array(
-          '/path/foo/',
-          '/path/bar/',
-          '/path/baz/',
+            Solar::fixdir('/path/foo/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/baz/'),
         );
 
         $stack = Solar::factory('Solar_Path_Stack');
@@ -90,9 +91,9 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
     public function testSet_byArray()
     {
         $expect = array(
-          '/path/foo/',
-          '/path/bar/',
-          '/path/baz/',
+            Solar::fixdir('/path/foo/'),
+            Solar::fixdir('/path/bar/'),
+            Solar::fixdir('/path/baz/'),
         );
         
         $stack = Solar::factory('Solar_Path_Stack');
@@ -121,15 +122,18 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
         
         // should find it at a
         $actual = $stack->find('target1');
-        $this->assertSame("{$path[0]}/target1", $actual);
+        $expect = Solar::fixdir($path[0]) . 'target1';
+        $this->assertSame($expect, $actual);
 
         // should find it at b
         $actual = $stack->find('target2');
-        $this->assertSame("{$path[1]}/target2", $actual);
+        $expect = Solar::fixdir($path[1]) . 'target2';
+        $this->assertSame($expect, $actual);
 
         // should find it at c
         $actual = $stack->find('target3');
-        $this->assertSame("{$path[2]}/target3", $actual);
+        $expect = Solar::fixdir($path[2]) . 'target3';
+        $this->assertSame($expect, $actual);
 
         // should not find it at all
         $actual = $stack->find('no_such_file');
@@ -154,22 +158,23 @@ class Solar_Path_StackTest extends PHPUnit_Framework_TestCase
         $stack->add($path[1]);
         $stack->add($path[2]);
         
-
         // should find it at Solar_Base
         $actual = $stack->findReal('target1');
-        $this->assertSame("{$path[0]}/target1", $actual);
+        $expect = Solar::fixdir($path[0]) . 'target1';
+        $this->assertSame($expect, $actual);
 
         // should find it at Solar_Debug_Timer
         $actual = $stack->findReal('target2');
-        $this->assertSame("{$path[1]}/target2", $actual);
+        $expect = Solar::fixdir($path[1]) . 'target2';
+        $this->assertSame($expect, $actual);
 
         // should find it at Solar_Debug_Var
         $actual = $stack->findReal('target3');
-        $this->assertSame("{$path[2]}/target3", $actual);
+        $expect = Solar::fixdir($path[2]) . 'target3';
+        $this->assertSame($expect, $actual);
 
         // should not find it at all
         $actual = $stack->findReal('no_such_file');
         $this->assertFalse($actual);
     }
 }
-?>

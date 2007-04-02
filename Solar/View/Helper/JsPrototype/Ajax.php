@@ -30,7 +30,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
 
     /**
      *
-     * Reference name for the type of JavaScript object this class produces
+     * Reference name for the type of JavaScript object this class produces.
      *
      * @var string
      *
@@ -48,7 +48,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
  
     /**
      *
-     * Keys of values which should be dequoted by Solar_Json
+     * Keys of values which should be dequoted by Solar_Json.
      *
      * @var array
      *
@@ -70,7 +70,7 @@ class Solar_View_Helper_JsPrototype_Ajax extends Solar_View_Helper_JsPrototype {
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return object Solar_View_Helper_JsPrototype_Ajax
      *

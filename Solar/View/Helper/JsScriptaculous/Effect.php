@@ -23,7 +23,7 @@ Solar::loadClass('Solar_View_Helper_JsScriptaculous');
 
 /**
  *
- * script.aculo.us effect proxy class.
+ * JsScriptaculous Effect helper class.
  *
  * Note that very few script.aculo.us effects have required parameters.
  * In fact, only Effect.Scale and Effect.MoveBy have required parameters. In
@@ -86,7 +86,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
 
     /**
      *
-     * Reference name for the type of JavaScript object this class produces
+     * Reference name for the type of JavaScript object this class produces.
      *
      * @var string
      *
@@ -95,7 +95,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
 
     /**
      *
-     * Camel case correction map for script.aculou.us effects
+     * Camel case correction map for script.aculou.us effects.
      *
      * @var array
      *
@@ -124,7 +124,7 @@ class Solar_View_Helper_JsScriptaculous_Effect extends Solar_View_Helper_JsScrip
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return object Solar_View_Helper_JsScriptaculous_Effect
      *

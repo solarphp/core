@@ -39,7 +39,7 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * User-provided configuration values
+     * User-provided configuration values.
      *
      * @var array
      *
@@ -65,7 +65,7 @@ class Solar_View_Helper_JsScriptaculous extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return Solar_View_Helper_JsScriptaculous
      *

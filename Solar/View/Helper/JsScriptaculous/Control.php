@@ -16,11 +16,13 @@
  */
 
 /**
- * The parent JsScriptaculous class
+ * The parent JsScriptaculous class.
  */
 Solar::loadClass('Solar_View_Helper_JsScriptaculous');
 
 /**
+ *
+ * JsScriptaculous Control helper class.
  *
  * @category Solar
  *
@@ -33,7 +35,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
     /**
      *
-     * Reference name for the type of JavaScript object this class produces
+     * Reference name for the type of JavaScript object this class produces.
      *
      * @var string
      *
@@ -55,7 +57,7 @@ class Solar_View_Helper_JsScriptaculous_Control extends Solar_View_Helper_JsScri
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return Solar_View_Helper_JsScriptaculous_Control
      *

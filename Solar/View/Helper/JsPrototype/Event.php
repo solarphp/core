@@ -16,12 +16,14 @@
  */
 
 /**
- * The parent JsPrototype class
+ * The parent JsPrototype class.
  */
 Solar::loadClass('Solar_View_Helper_JsPrototype');
 
 /**
  *
+ * JsPrototype Event helper class.
+ * 
  * @category Solar
  *
  * @package Solar_View_Helper_Js
@@ -33,7 +35,7 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
 
     /**
      *
-     * Reference name for the type of JavaScript object this class produces
+     * Reference name for the type of JavaScript object this class produces.
      *
      * @var string
      *
@@ -54,7 +56,7 @@ class Solar_View_Helper_JsPrototype_Event extends Solar_View_Helper_JsPrototype 
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return object Solar_View_Helper_JsPrototype_Event
      *

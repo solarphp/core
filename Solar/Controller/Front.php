@@ -89,6 +89,8 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Stack of page-controller class prefixes.
      * 
+     * @var Solar_Class_Stack
+     * 
      */
     protected $_stack;
     

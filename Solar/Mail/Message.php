@@ -583,6 +583,8 @@ class Solar_Mail_Message extends Solar_Base {
      * @param bool $replace If true, resets all headers of the same label so
      * that this is the only value for that header.
      * 
+     * @return void
+     * 
      */
     public function addHeader($label, $value, $replace = true)
     {

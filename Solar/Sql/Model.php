@@ -87,6 +87,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * ['get']['foo_bar'] => '__getFooBar'.
      * 
      * @var array
+     * 
      */
     protected $_access_methods = array();
     
@@ -128,6 +129,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param string
      * 
      * @see _applyFilters()
+     * 
+     * @var string
      * 
      */
     protected $_datafilter_class;
@@ -622,6 +625,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param string $key The property name.
      * 
      * @param mixed $val The value to set.
+     * 
+     * @return void
      * 
      */
     public function __set($key, $val)
@@ -2101,6 +2106,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * property when records are fetched from the model.
      * 
      * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
      * 
      */
     protected function _addRelated($type, $name, $opts = null)

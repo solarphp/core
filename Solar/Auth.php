@@ -46,6 +46,8 @@ class Solar_Auth extends Solar_Base {
      * 
      * Factory method for returning adapters.
      * 
+     * @return Solar_Auth_Adapter
+     * 
      */
     public function solarFactory()
     {

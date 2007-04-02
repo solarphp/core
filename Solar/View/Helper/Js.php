@@ -16,7 +16,7 @@
  */
 
 /**
- * The abstract JsLibrary class
+ * The abstract JsLibrary class.
  */
 Solar::loadClass('Solar_View_Helper_JsLibrary');
 
@@ -49,7 +49,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Array of JavaScript files needed to provide specified functionality
+     * Array of JavaScript files needed to provide specified functionality.
      *
      * @var array
      *
@@ -58,7 +58,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Array of CSS files required by a JavaScript class
+     * Array of CSS files required by a JavaScript class.
      *
      * @var array
      *
@@ -67,7 +67,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Array of inline JavaScript needed to provide specified functionality
+     * Array of inline JavaScript needed to provide specified functionality.
      *
      * @var array
      *
@@ -76,7 +76,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Array of CSS selectors and their corresponding rules
+     * Array of CSS selectors and their corresponding rules.
      *
      * @var array
      *
@@ -85,7 +85,7 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
     /**
      *
-     * Array of JavaScript objects and their corresponding rules
+     * Array of JavaScript objects and their corresponding rules.
      *
      * @var array
      *

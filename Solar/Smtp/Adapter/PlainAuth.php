@@ -38,6 +38,8 @@ class Solar_Smtp_Adapter_PlainAuth extends Solar_Smtp_Adapter {
      * `password`
      * : The password for authentication.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Smtp_Adapter_PlainAuth = array(
         'username' => null,

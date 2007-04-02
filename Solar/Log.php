@@ -62,6 +62,8 @@ class Solar_Log extends Solar_Base {
      * 
      * Factory method for returning adapters.
      * 
+     * @return Solar_Log_Adapter
+     * 
      */
     public function solarFactory()
     {

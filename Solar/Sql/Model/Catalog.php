@@ -154,6 +154,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * 
      * @param array $methods All the class methods for the model.
      * 
+     * @return void
+     * 
      */
     public function set($class, $vars)
     {
@@ -183,7 +185,6 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         $this->_fixAccessMethods($model);
         $this->_fixFilters($model); // including datafilter class
         $this->_fixRelated($model);
-        // $this->_createMapTables($model);
         
         // do we have a cache?
         if ($this->_cache) {
@@ -202,7 +203,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * @param string|object $spec The model class name, or an instance of the
      * model class.
      * 
-     * @param StdClass A clone of the catalog data for the model class.
+     * @return StdClass A clone of the catalog data for the model class.
      * 
      */
     public function get($spec)
@@ -364,6 +365,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * $_inherit_model value based on the existence of the inheritance column.
      * 
      * @param StdClass $model The model property catalog.
+     * 
+     * @return void
      * 
      * @todo How to make foreign_col recognize that it's inherited, and should
      * use the parent foreign_col value?  Can we just work up the chain?

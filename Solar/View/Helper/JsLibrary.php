@@ -59,7 +59,7 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
 
     /**
      *
-     * Valid events for JavaScript environment
+     * Valid events for JavaScript environment.
      *
      * @var array
      *
@@ -67,9 +67,10 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
     protected $_valid_events;
 
     /**
+     * 
      * Constructor.
      *
-     * @param array $config User-defined configuration
+     * @param array $config User-defined configuration.
      *
      */
     public function __construct($config = null)
@@ -83,7 +84,7 @@ abstract class Solar_View_Helper_JsLibrary extends Solar_View_Helper {
 
     /**
      *
-     * Method interface
+     * Method interface.
      *
      * @return Child JsLibrary object
      */

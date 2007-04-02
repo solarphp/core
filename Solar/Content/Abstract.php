@@ -117,7 +117,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
-     * Constructor
+     * Constructor.
      * 
      * @param array $config User-defined configuration values.
      * 

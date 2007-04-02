@@ -48,6 +48,8 @@ class Solar_App_HelloMini extends Solar_Controller_Page {
      * 
      * Action with no code at all; only passes to the view.
      * 
+     * @return void
+     * 
      */
     public function actionIndex()
     {

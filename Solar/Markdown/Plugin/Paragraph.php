@@ -26,7 +26,7 @@ Solar::loadClass('Solar_Markdown_Plugin');
 
 /**
  * 
- * _____
+ * Block plugin to form paragraphs of text with 2 newlines around it.
  * 
  * @category Solar
  * 

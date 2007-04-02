@@ -36,6 +36,8 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter {
      * : (dependency) A Solar_Smtp dependency object.  Default is 'smtp',
      *   which means to use the registered object named 'smtp'.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Mail_Transport_Adapter_Smtp = array(
         'smtp' => 'smtp',

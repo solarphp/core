@@ -29,12 +29,40 @@
  */
 class Solar_Sql_Model_DataFilter extends Solar_DataFilter {
     
+    /**
+     * 
+     * Data from the model for filtering.
+     * 
+     * @var array
+     * 
+     */
     protected $_data;
     
+    /**
+     * 
+     * The current data element being filtered.
+     * 
+     * @var string
+     * 
+     */
     protected $_data_key;
     
+    /**
+     * 
+     * The model from which the data originated.
+     * 
+     * @var Solar_Sql_Model
+     * 
+     */
     protected $_model;
     
+    /**
+     * 
+     * A catalog of model structures.
+     * 
+     * @var Solar_Sql_Model_Catalog
+     * 
+     */
     protected $_catalog;
     
     /**

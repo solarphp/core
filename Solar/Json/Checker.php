@@ -14,7 +14,7 @@
  *
  * @license http://opensource.org/licenses/bsd-license.php BSD
  *
- * Copyright (c) 2005 JSON.org
+ * @copyright Copyright (c) 2005 JSON.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -250,6 +250,7 @@ class Solar_Json_Checker extends Solar_Base {
     /**
      *
      * Map of 128 ASCII characters into the 32 character classes.
+     * 
      * The remaining Unicode characters should be mapped to S_ETC.
      *
      * @var array
@@ -259,9 +260,10 @@ class Solar_Json_Checker extends Solar_Base {
 
     /**
      *
-     * State transition table
+     * State transition table.
      *
      * @var array
+     * 
      */
     protected $_state_transition_table = array();
 
@@ -297,7 +299,7 @@ class Solar_Json_Checker extends Solar_Base {
 
     /**
      *
-     * Pointer for the top of the stack
+     * Pointer for the top of the stack.
      *
      * @var int
      *

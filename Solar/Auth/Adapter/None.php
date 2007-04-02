@@ -22,7 +22,7 @@ Solar::loadClass('Solar_Auth_Adapter');
 
 /**
  * 
- * Authenticate against nothing; defaults all authentication to "failed."
+ * Authenticate against nothing; defaults all authentication to "failed".
  * 
  * @category Solar
  * 

@@ -40,6 +40,8 @@ class Solar_Access extends Solar_Base {
      * 
      * Factory method for returning adapters.
      * 
+     * @return Solar_Access_Adapter
+     * 
      */
     public function solarFactory()
     {

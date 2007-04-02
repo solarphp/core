@@ -168,8 +168,28 @@ class Solar_Docs_Apiref extends Solar_Base {
      */
     public $api = array();
     
+    /**
+     * 
+     * An array of all packages discovered.
+     * 
+     * Key is the package name, value is an array of all classes in that
+     * package.
+     * 
+     * @var array
+     * 
+     */
     public $packages = array();
     
+    /**
+     * 
+     * An array of all subpackages discovered.
+     * 
+     * Key is the subpackage name, value is an array of all classes in that
+     * subpackage.
+     * 
+     * @var array
+     * 
+     */
     public $subpackages = array();
     
     /**

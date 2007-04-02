@@ -576,6 +576,9 @@ class Solar_Mail_Message extends Solar_Base {
      * Canonicalizes the label, and strips CR/LF from the value, to help
      * prevent header injections.
      * 
+     * If you need to wrap lines in the header value, don't worry; the header
+     * encoding routine will wrap them for you.
+     * 
      * @param string $label The header label.
      * 
      * @param string $value The header value.

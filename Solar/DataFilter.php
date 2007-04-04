@@ -859,7 +859,7 @@ class Solar_DataFilter extends Solar_Base {
         
         // basic date format
         // yyyy-mm-dd
-        $expr = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/';
+        $expr = '/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/D';
         
         // validate
         if (preg_match($expr, $value, $match) &&
@@ -885,7 +885,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateIsoTime($value)
     {
-        $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/';
+        $expr = '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]:[0-5][0-9]$/D';
         
         return $this->validateRegex($value, $expr) ||
                ($value == '24:00:00');
@@ -952,7 +952,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateLocaleCode($value)
     {
-        $expr = '/^[a-z]{2}_[A-Z]{2}$/';
+        $expr = '/^[a-z]{2}_[A-Z]{2}$/D';
         return $this->validateRegex($value, $expr);
     }
     
@@ -1017,7 +1017,7 @@ class Solar_DataFilter extends Solar_Base {
         // 'application/vnd.ms-powerpoint' or
         // 'text/xml+xhtml'
         $word = '[a-zA-Z][\-\.a-zA-Z0-9+]*';
-        $expr = '|^' . $word . '/' . $word . '$|';
+        $expr = '|^' . $word . '/' . $word . '$|D';
         $ok = $this->validateRegex($value, $expr);
         $allowed = (array) $allowed;
         if ($ok && count($allowed) > 0) {
@@ -1287,7 +1287,7 @@ class Solar_DataFilter extends Solar_Base {
         // 
         // use the @ signs in strlen() checks to suppress errors
         // when the match-element doesn't exist.
-        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/";
+        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/D";
         if (preg_match($expr, $value, $match) &&
             @strlen($match[2] . $match[5]) <= $size &&
             @strlen($match[5]) <= $scope) {
@@ -1318,7 +1318,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateSepWords($value, $sep = ' ')
     {
-        $expr = '/^[\w' . preg_quote($sep) . ']+$/';
+        $expr = '/^[\w' . preg_quote($sep) . ']+$/D';
         return $this->validateRegex($value, $expr);
     }
     
@@ -1386,7 +1386,7 @@ class Solar_DataFilter extends Solar_Base {
      */
     public function validateWord($value)
     {
-        $expr = '/^\w+$/';
+        $expr = '/^\w+$/D';
         return $this->validateRegex($value, $expr);
     }
 }

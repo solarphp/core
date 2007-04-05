@@ -52,7 +52,7 @@ class Solar_View_Helper_InlineScript extends Solar_View_Helper {
         unset($attribs['src']);
 
         if (empty($attribs['type'])) {
-            $attribs['type'] = 'text/javascript';
+            $attribs['type'] = 'application/javascript';
         }
 
         return '<script'

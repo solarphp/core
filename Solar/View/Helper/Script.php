@@ -71,7 +71,7 @@ class Solar_View_Helper_Script extends Solar_View_Helper {
         }
 
         if (empty($attribs['type'])) {
-            $attribs['type'] = 'text/javascript';
+            $attribs['type'] = 'application/javascript';
         }
 
         return "<script src=\"$src\""

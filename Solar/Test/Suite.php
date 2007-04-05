@@ -271,16 +271,20 @@ class Solar_Test_Suite extends Solar_Base {
      * `fail`
      * : (array) Log of tests that failed.
      * 
-     * @param string $series The sub-test series to run, typically a
-     * class name (not including the 'Test_' prefix).
+     * @param string $class Only prepare tests for this class series.  Don't
+     * include the 'Test_' prefix.  If empty, will run all test classes.
+     * 
+     * @param bool $only When true, run **only** the $class test; when false,
+     * will recurse into subdirectories and run sub-tests.  Default false.
+     * Ignored when $class is empty.
      * 
      * @return array A statistics array.
      * 
      */
-    public function run($series = null)
+    public function run($class = null, $only = false)
     {
         // prepare
-        $this->_prepare($series);
+        $this->_prepare($class, $only);
         
         // run the tests
         $time = time();
@@ -384,13 +388,17 @@ class Solar_Test_Suite extends Solar_Base {
      * 
      * Prepares class properties for a test run.
      * 
-     * @param string $series The sub-test series to run, typically a
-     * class name (not including the 'Test_' prefix).
+     * @param string $class Only prepare tests for this class series.  Don't
+     * include the 'Test_' prefix.  If empty, will run all test classes.
+     * 
+     * @param bool $only When true, run **only** the $class test; when false,
+     * will recurse into subdirectories and run sub-tests.  Default false.
+     * Ignored when $class is empty.
      * 
      * @return void
      * 
      */
-    protected function _prepare($series = null)
+    protected function _prepare($class = null, $only = false)
     {
         // reset
         $this->_info = array(
@@ -404,9 +412,8 @@ class Solar_Test_Suite extends Solar_Base {
         );
         $this->_test = array();
         
-        // running all tests, or just a sub-series?
-        if ($series) {
-            $class = $series;
+        // running tests for one class series?
+        if ($class) {
             $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
             $dir = $this->_dir . Solar::fixdir($sub);
             $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
@@ -418,7 +425,12 @@ class Solar_Test_Suite extends Solar_Base {
             $dir = $this->_dir;
         }
         
-        // find all remaining tests
+        // running only the one class?
+        if ($class && $only) {
+            return;
+        }
+        
+        // find sub-tests
         if (is_dir($dir)) {
             $iter = new RecursiveDirectoryIterator($dir);
             $this->findTests($iter);

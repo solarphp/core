@@ -25,6 +25,8 @@
  * 
  * @package Solar
  * 
+ * @todo convert Ipv6() and Ip() to userland, not ext/filter
+ * 
  */
 class Solar_DataFilter extends Solar_Base {
     
@@ -263,6 +265,24 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
+     * Forces the value to an IPv4 address.
+     * 
+     * @param mixed $value The value to be sanitized.
+     * 
+     * @return string The sanitized value.
+     * 
+     */
+    public function sanitizeIpv4($value)
+    {
+        if (! $this->_require && $this->validateBlank($value)) {
+            return null;
+        }
+        
+        return long2ip(ip2long($value));
+    }
+    
+    /**
+     * 
      * Forces the value to an ISO-8601 formatted date ("yyyy-mm-dd").
      * 
      * @param string $value The value to be sanitized.  If an integer, it
@@ -378,7 +398,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringAlpha($value)
+    public function sanitizeAlpha($value)
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
@@ -396,35 +416,13 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringAlnum($value)
+    public function sanitizeAlnum($value)
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
         return preg_replace('/[^a-z0-9]/i', '', $value);
-    }
-    
-    /**
-     * 
-     * Strips non-email characters from the value.
-     * 
-     * Note that this does not guarantee a valid email address; you should
-     * additionally pass the value through validateEmail() to check if the
-     * sanitized value is valid.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeStringEmail($value)
-    {
-        if (! $this->_require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return filter_var($value, FILTER_SANITIZE_EMAIL);
     }
     
     /**
@@ -440,7 +438,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringRegex($value, $pattern, $replace)
+    public function sanitizeRegex($value, $pattern, $replace)
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
@@ -462,7 +460,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringReplace($value, $find, $replace)
+    public function sanitizeReplace($value, $find, $replace)
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
@@ -482,35 +480,13 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringTrim($value, $chars = ' ')
+    public function sanitizeTrim($value, $chars = ' ')
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
         }
         
         return trim($value, $chars);
-    }
-    
-    /**
-     * 
-     * Strips non-URI characters from the value.
-     * 
-     * Note that this does not guarantee a valid URI; you should
-     * additionally pass the value through validateUri() to check if the
-     * sanitized value is valid.
-     * 
-     * @param mixed $value The value to be sanitized.
-     * 
-     * @return string The sanitized value.
-     * 
-     */
-    public function sanitizeStringUri($value)
-    {
-        if (! $this->_require && $this->validateBlank($value)) {
-            return null;
-        }
-        
-        return filter_var($value, FILTER_SANITIZE_URL);
     }
     
     /**
@@ -522,7 +498,7 @@ class Solar_DataFilter extends Solar_Base {
      * @return string The sanitized value.
      * 
      */
-    public function sanitizeStringWord($value)
+    public function sanitizeWord($value)
     {
         if (! $this->_require && $this->validateBlank($value)) {
             return null;
@@ -655,6 +631,9 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Validates that the value is an email address.
      * 
+     * Heavily adapted and modified from
+     * <http://www.ilovejackdaniels.com/php/email-address-validation/>.
+     * 
      * @param mixed $value The value to validate.
      * 
      * @return bool True if valid, false if not.
@@ -666,13 +645,80 @@ class Solar_DataFilter extends Solar_Base {
             return ! $this->_require;
         }
         
-        // FILTER_VALIDATE_EMAIL modifies the given value to strip
-        // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-validated value against
-        // the original value to see if they match.  if they do, then
-        // the original value was valid.
-        $might_be_ok = filter_var($value, FILTER_VALIDATE_EMAIL);
-        return $value == $might_be_ok;
+        /**
+         * preliminaries
+         */
+        
+        // are there disallowed chars?
+        $valid = "a-zA-Z0-9"
+               . preg_quote("!#$%&'*+-/=?^_`{|}~@.[]", '/');
+        
+        $clean = preg_replace("/[^$valid]/", '', $value);
+        if ($value != $clean) {
+            return false;
+        }
+        
+        // split on the @
+        $parts = explode('@', $value);
+        if (count($parts) != 2) {
+            // more or less than one @-sign
+            return false;
+        } else {
+            $name = $parts[0];
+            $host = $parts[1];
+        }
+        
+        /**
+         * validate the name
+         */
+        // needs 1-64 chars
+        $len = strlen($name);
+        if ($len < 1 || $len > 64) {
+            return false;
+        }
+        
+        // each part must be normal or quoted
+        $parts = explode('.', $name);
+        $first = "[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]";
+        $other = "[A-Za-z0-9!#$%&'*+\/=?^_`{|}~\.-]{0,63}";
+        $quote = "(\"[^(\\|\")]{0,62}\")";
+        foreach ($parts as $part) {
+            if (! preg_match("/^($first$other)|($quote)\$/D", $part)) {
+                return false;
+            }
+        }
+        
+        /**
+         * validate the host
+         */
+        // needs 1-255 chars
+        $len = strlen($host);
+        if ($len < 1 || $len > 255) {
+            return false;
+        }
+        
+        // is the host a valid IPv4 address?
+        if ($this->validateIpv4($host)) {
+            // we're OK then
+            return true;
+        }
+        
+        // not an IP address, check for a domain name of at least two parts
+        $parts = explode(".", $host);
+        if (count($parts) < 2) {
+            return false;
+        }
+        
+        // check each part
+        foreach ($parts as $part) {
+            $ext = "[A-Za-z0-9]";
+            $int = "[A-Za-z0-9-]{0,61}";
+            if (! preg_match("/^$ext$int$ext\$/D", $part)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     /**
@@ -806,13 +852,12 @@ class Solar_DataFilter extends Solar_Base {
             return ! $this->_require;
         }
         
-        // FILTER_VALIDATE_IP modifies the given value to strip
-        // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-validated value against
-        // the original value to see if they match.  if they do, then
-        // the original value was valid.
-        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-        return $value == $might_be_ok;
+        $result = ip2long($value);
+        if ($result == -1 || $result === false) {
+            return false;
+        } else {
+            return true;
+        }
     }
     
     /**
@@ -1287,7 +1332,7 @@ class Solar_DataFilter extends Solar_Base {
         // 
         // use the @ signs in strlen() checks to suppress errors
         // when the match-element doesn't exist.
-        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?$/D";
+        $expr = "/^(\-)?([0-9]+)?((\.)([0-9]+))?\$/D";
         if (preg_match($expr, $value, $match) &&
             @strlen($match[2] . $match[5]) <= $size &&
             @strlen($match[5]) <= $scope) {
@@ -1361,15 +1406,29 @@ class Solar_DataFilter extends Solar_Base {
             return ! $this->_require;
         }
         
-        // FILTER_VALIDATE_URL modifies the given value to strip
-        // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-validated value against
-        // the original value to see if they match.  if they do, then
-        // the original value was valid.
-        $might_be_ok = filter_var($value, FILTER_VALIDATE_URL,
-            FILTER_FLAG_SCHEME_REQUIRED | FILTER_FLAG_HOST_REQUIRED);
+        // first, make sure there are no invalid chars, list from ext/filter
+        $other = "$-_.+"        // safe
+               . "!*'(),"       // extra
+               . "{}|\\^~[]`"   // national
+               . "<>#%\""       // punctuation
+               . ";/?:@&=";     // reserved
         
-        return $value == $might_be_ok;
+        $valid = 'a-zA-Z0-9' . preg_quote($other, '/');
+        $clean = preg_replace("/[^$valid]/", '', $value);
+        if ($value != $clean) {
+            return false;
+        }
+        
+        // now make sure it parses as a URL with scheme and host
+        $result = @parse_url($value);
+        if (empty($result['scheme']) || trim($result['scheme']) == '' ||
+            empty($result['host'])   || trim($result['host']) == '') {
+            // need a scheme and host
+            return false;
+        } else {
+            // looks ok
+            return true;
+        }
     }
     
     /**

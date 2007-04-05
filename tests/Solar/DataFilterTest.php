@@ -158,101 +158,77 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         $this->assertSame($after, '12345');
     }
     
-    public function testSanitizeStringAlnum()
+    public function testSanitizeAlnum()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringAlnum($before);
+        $after = $filter->sanitizeAlnum($before);
         
         $this->assertNotSame($before, $after); //, true)
         $this->assertSame($after, 'abc123');
     }
     
-    public function testSanitizeStringAlpha()
+    public function testSanitizeAlpha()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringAlpha($before);
+        $after = $filter->sanitizeAlpha($before);
         
         $this->assertNotSame($before, $after);
         $this->assertSame($after, 'abc');
     }
     
-    public function testSanitizeStringEmail()
-    {
-        $filter = Solar::factory('Solar_DataFilter');
-        $filter->setRequire(true);
-        
-        // values taken directly from filter/test/022.phpt
-        $test = array(
-            "a@b.c"                              => "a@b.c",
-            "a[!@#$%^&*()@a@#$%^&*(.com@#$%^&*(" => "a[!@#$%^&*@a@#$%^&*.com@#$%^&*",
-            "white space here \ \ \" som more"   => "whitespaceheresommore",
-            "123456789000000"                    => "123456789000000",
-        );
-        
-        foreach ($test as $source => $expect) {
-            $actual = $filter->sanitizeStringEmail($source);
-            $this->assertSame($actual, $expect);
-        }
-    }
-    
-    public function testSanitizeStringRegex()
+    public function testSanitizeRegex()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringRegex($before, '/[^a-z]/', '@');
+        $after = $filter->sanitizeRegex($before, '/[^a-z]/', '@');
         $this->assertSame($after, 'abc@@@@@@@@');
     }
     
-    public function testSanitizeStringReplace()
+    public function testSanitizeReplace()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = 'abc 123 ,./';
-        $after = $filter->sanitizeStringReplace($before, ' ', '@');
+        $after = $filter->sanitizeReplace($before, ' ', '@');
         $this->assertSame($after, 'abc@123@,./');
     }
     
-    public function testSanitizeStringUri()
-    {
-        $this->markTestSkipped('no test data from filter_var phpt file');
-    }
-    
-    public function testSanitizeStringTrim()
+    public function testSanitizeTrim()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = '  abc 123 ,./  ';
-        $after = $filter->sanitizeStringTrim($before);
+        $after = $filter->sanitizeTrim($before);
         $this->assertSame($after, 'abc 123 ,./');
     }
     
-    public function testSanitizeStringTrim_OtherChars()
+    public function testSanitizeTrim_OtherChars()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = '  abc 123 ,./  ';
-        $after = $filter->sanitizeStringTrim($before, ' ,./');
+        $after = $filter->sanitizeTrim($before, ' ,./');
         $this->assertSame($after, 'abc 123');
     }
     
-    public function testSanitizeStringWord()
+    public function testSanitizeWord()
     {
         $filter = Solar::factory('Solar_DataFilter');
         $filter->setRequire(true);
         
         $before = 'abc _ 123 - ,./';
-        $after = $filter->sanitizeStringWord($before);
+        $after = $filter->sanitizeWord($before);
         $this->assertSame($after, 'abc_123');
     }
     

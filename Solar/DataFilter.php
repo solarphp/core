@@ -815,7 +815,10 @@ class Solar_DataFilter extends Solar_Base {
     
     /**
      * 
-     * Validates that the value is a legal IP address (v4 or v6).
+     * Validates that the value is a legal IP address.
+     * 
+     * Currently validates only IPv4; in future versions, will validate both
+     * IPv4 and IPv6.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -828,13 +831,7 @@ class Solar_DataFilter extends Solar_Base {
             return ! $this->_require;
         }
         
-        // FILTER_VALIDATE_IP modifies the given value to strip
-        // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-validated value against
-        // the original value to see if they match.  if they do, then
-        // the original value was valid.
-        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP);
-        return $value == $might_be_ok;
+        return $this->validateIpv4($value);
     }
     
     /**
@@ -858,30 +855,6 @@ class Solar_DataFilter extends Solar_Base {
         } else {
             return true;
         }
-    }
-    
-    /**
-     * 
-     * Validates that the value is a legal IPv6 address.
-     * 
-     * @param mixed $value The value to validate.
-     * 
-     * @return bool True if valid, false if not.
-     * 
-     */
-    public function validateIpv6($value)
-    {
-        if ($this->validateBlank($value)) {
-            return ! $this->_require;
-        }
-        
-        // FILTER_VALIDATE_IP modifies the given value to strip
-        // invalid characters, then validates.  that bothers me.
-        // so to compensate, we check the php-validated value against
-        // the original value to see if they match.  if they do, then
-        // the original value was valid.
-        $might_be_ok = filter_var($value, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-        return $value == $might_be_ok;
     }
     
     /**

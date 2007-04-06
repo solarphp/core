@@ -660,12 +660,12 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '0.0.255.0',
             '0.0.0.255',
             '127.0.0.1',
-            '2001:0db8:0000:0000:0000:0000:1428:57ab',
-            '2001:0db8:0000:0000:0000::1428:57ab',
-            '2001:0db8:0:0:0:0:1428:57ab',
-            '2001:0db8:0:0::1428:57ab',
-            '2001:0db8::1428:57ab',
-            '2001:db8::1428:57ab',
+            // '2001:0db8:0000:0000:0000:0000:1428:57ab',
+            // '2001:0db8:0000:0000:0000::1428:57ab',
+            // '2001:0db8:0:0:0:0:1428:57ab',
+            // '2001:0db8:0:0::1428:57ab',
+            // '2001:0db8::1428:57ab',
+            // '2001:db8::1428:57ab',
         );
         foreach ($test as $val) {
             $this->assertTrue($filter->validateIp($val));
@@ -700,13 +700,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '0.0.255.0',
             '0.0.0.255',
             '127.0.0.1',
-            '2001:0db8:0000:0000:0000:0000:1428:57ab',
-            '2001:0db8:0000:0000:0000::1428:57ab',
-            '2001:0db8:0:0:0:0:1428:57ab',
-            '2001:0db8:0:0::1428:57ab',
-            '2001:0db8::1428:57ab',
-            '2001:db8::1428:57ab',
-            "\n", "\r\n",
+:            "\n", "\r\n",
         );
         foreach ($test as $val) {
             $this->assertTrue($filter->validateIp($val));
@@ -764,54 +758,6 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
         );
         foreach ($test as $val) {
             $this->assertTrue($filter->validateIpv4($val));
-        }
-    }
-    
-    public function testValidateIpv6()
-    {
-        $filter = Solar::factory('Solar_DataFilter');
-        $filter->setRequire(true);
-        
-        // good
-        $test = array(
-            '2001:0db8:0000:0000:0000:0000:1428:57ab',
-            '2001:0db8:0000:0000:0000::1428:57ab',
-            '2001:0db8:0:0:0:0:1428:57ab',
-            '2001:0db8:0:0::1428:57ab',
-            '2001:0db8::1428:57ab',
-            '2001:db8::1428:57ab',
-        );
-        foreach ($test as $val) {
-            $this->assertTrue($filter->validateIpv6($val));
-        }
-        
-        // bad, or are blank
-        $test = array(
-            '141.225.185.101',
-            '255.0.0.0',
-            '0.255.0.0',
-            '0.0.255.0',
-            '0.0.0.255',
-            '127.0.0.1',
-            '', '   ',
-        );
-        foreach ($test as $val) {
-            $this->assertFalse($filter->validateIpv6($val));
-        }
-        
-        // blanks allowed
-        $filter->setRequire(false);
-        $test = array(
-            '2001:0db8:0000:0000:0000:0000:1428:57ab',
-            '2001:0db8:0000:0000:0000::1428:57ab',
-            '2001:0db8:0:0:0:0:1428:57ab',
-            '2001:0db8:0:0::1428:57ab',
-            '2001:0db8::1428:57ab',
-            '2001:db8::1428:57ab',
-            '', '    '
-        );
-        foreach ($test as $val) {
-            $this->assertTrue($filter->validateIpv6($val));
         }
     }
     

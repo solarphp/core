@@ -232,6 +232,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
                 $this->delete($key);
                 return false;
             }
+        } else {
+            return false;
         }
         
         // file exists; open it for reading

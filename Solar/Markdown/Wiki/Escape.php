@@ -16,11 +16,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Span plugin to escape HTML remaining the span.
  * 

@@ -16,11 +16,6 @@
  */
 
 /**
- * Generic Solar_Exception.
- */
-Solar::loadClass('Solar_Exception');
-
-/**
  * 
  * Exception: file does not exist or is not readable.
  * 

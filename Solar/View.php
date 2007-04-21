@@ -16,11 +16,6 @@
  */
 
 /**
- * Needed when extracting variables in partial().
- */
-Solar::loadClass('Solar_Struct');
-
-/**
  * 
  * Provides a Template View pattern implementation for Solar.
  * 
@@ -128,9 +123,6 @@ class Solar_View extends Solar_Base {
     {
         // base construction
         parent::__construct($config);
-        
-        // load the base helper class
-        Solar::loadClass('Solar_View_Helper');
         
         // set the fallback helper path
         $this->_helper_class = Solar::factory('Solar_Class_Stack'); 

@@ -16,11 +16,6 @@
  */
 
 /**
- * The parent JsScriptaculous class.
- */
-Solar::loadClass('Solar_View_Helper_JsScriptaculous');
-
-/**
  *
  * JsScriptaculous Control helper class.
  *

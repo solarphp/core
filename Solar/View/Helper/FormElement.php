@@ -16,11 +16,6 @@
  */
 
 /**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
- 
-/**
  * 
  * Abstract helper for form elements.
  * 

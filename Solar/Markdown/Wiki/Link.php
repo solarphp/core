@@ -16,11 +16,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Replaces wiki and interwiki links in source text with XHTML anchors.
  * 

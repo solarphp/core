@@ -20,11 +20,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Strips named-link definitions in the preparation phase.
  * 

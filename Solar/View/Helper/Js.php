@@ -16,11 +16,6 @@
  */
 
 /**
- * The abstract JsLibrary class.
- */
-Solar::loadClass('Solar_View_Helper_JsLibrary');
-
-/**
  *
  * Helper for building JavaScript-powered applications.
  *

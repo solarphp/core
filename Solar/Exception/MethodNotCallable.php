@@ -16,11 +16,6 @@
  */
 
 /**
- * Generic Solar_Exception.
- */
-Solar::loadClass('Solar_Exception');
-
-/**
  * 
  * Exception: a class or object method is not callable.
  * 

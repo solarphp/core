@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class.
- */
-Solar::loadClass('Solar_Controller_Page');
-
-/**
  * 
  * Example page-controller to support unit tests.
  * 

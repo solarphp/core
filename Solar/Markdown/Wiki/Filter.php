@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class.
- */
-Solar::loadClass('Solar_Markdown_Plugin_Prefilter');
-
-/**
  * 
  * Escapes all remaining HTML, and replaces HTML tokens.
  * 

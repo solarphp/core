@@ -16,11 +16,6 @@
  */
  
 /**
- * Extends the Solar_Sql_Row class, and contains Solar_Sql_Row objects.
- */
-Solar::loadClass('Solar_Sql_Row');
-
-/**
  * 
  * Represents multiple Solar_Sql_Row objects from a SELECT.
  * 

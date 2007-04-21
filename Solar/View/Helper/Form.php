@@ -16,16 +16,6 @@
  */
 
 /**
- * Needed for Solar_Form instanceof comparisons.
- */
-Solar::loadClass('Solar_Form');
-
-/**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
-
-/**
  * 
  * Helper for building CSS-based forms.
  * 

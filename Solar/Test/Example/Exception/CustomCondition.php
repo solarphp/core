@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent exception class.
- */
-Solar::loadClass('Solar_Test_Example_Exception');
-
-/**
  * 
  * Example for testing Solar class-to-file hierarchy, locales, and exceptions.
  * 

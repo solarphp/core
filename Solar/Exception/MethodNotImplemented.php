@@ -16,11 +16,6 @@
  */
 
 /**
- * Generic Solar_Exception.
- */
-Solar::loadClass('Solar_Exception');
-
-/**
  * 
  * Exception: a class method is not implemented.
  * 

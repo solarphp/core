@@ -20,11 +20,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Block plugin to convert email-style blockquotes to <blockquote> tags.
  * 

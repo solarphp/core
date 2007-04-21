@@ -21,11 +21,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Span plugin to add <br /> tags to each line ending with two or more
  * spaces.

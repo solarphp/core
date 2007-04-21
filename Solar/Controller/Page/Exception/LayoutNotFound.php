@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class.
- */
-Solar::loadClass('Solar_Controller_Page_Exception');
-
-/**
  * 
  * Page-controller could not find the file for a named layout.
  * 

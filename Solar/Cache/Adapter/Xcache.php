@@ -16,11 +16,6 @@
  */
 
 /**
- * The abstract cache adapter.
- */
-Solar::loadClass('Solar_Cache_Adapter');
-
-/**
  *
  * XCache cache controller.
  *

@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class for test exceptions.
- */
-Solar::loadClass('Solar_Test_Exception');
-
-/**
  * 
  * Exception to note a failed test.
  * 

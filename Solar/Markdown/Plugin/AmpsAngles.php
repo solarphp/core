@@ -21,11 +21,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Span class to convert ampersands and less-than angle brackets to 
  * their HTML entity equivalents.

@@ -16,11 +16,6 @@
  */
 
 /**
- * Base SQL exception.
- */
-Solar::loadClass('Solar_Sql_Adapter_Exception');
-
-/**
  * 
  * Exception: query failed for some reason.
  * 

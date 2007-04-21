@@ -16,11 +16,6 @@
  */
 
 /**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
- 
-/**
  * 
  * Helper for a formatted time using [[php::date() | ]] format codes.
  * 

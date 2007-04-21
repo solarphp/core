@@ -20,11 +20,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Block plugin to convert wiki-fied headers into XHTML headers.
  * 

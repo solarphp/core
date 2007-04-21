@@ -7,7 +7,7 @@ class Solar_View_Helper_InlineScriptTest extends Solar_View_HelperTestCase {
     public function testScript()
     {
         $actual = $this->_view->inlineScript('alert(\'Hello world!\');');
-        $expect = '<script type="application/javascript">
+        $expect = '<script type="text/javascript">
 //<![CDATA[
 alert(\'Hello world!\');
 //]]>

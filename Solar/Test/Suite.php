@@ -16,11 +16,6 @@
  */
 
 /**
- * Needed for test classes.
- */
-Solar::loadClass('Solar_Test');
-
-/**
  * 
  * Class for running suites of unit tests.
  * 

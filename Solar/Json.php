@@ -104,18 +104,6 @@ class Solar_Json extends Solar_Base {
     protected $_level;
 
     /**
-     *
-     * Constructor.
-     *
-     * @param array $config User-defined configuration values.
-     *
-     */
-    public function __construct($config)
-    {
-        parent::__construct($config);
-    }
-
-    /**
      * 
      * Encodes the mixed $valueToEncode into JSON format.
      * 

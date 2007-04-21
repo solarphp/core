@@ -18,11 +18,6 @@
  */
 
 /**
- * Abstract role adapter class.
- */
-Solar::loadClass('Solar_Role_Adapter');
-
-/**
  * 
  * Adapter to fetch roles from a Unix-style groups file.
  * 

@@ -20,11 +20,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Span plugin to change `` `text` `` to `<code>text</code>`.
  *

@@ -21,11 +21,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin');
-
-/**
  * 
  * Block plugin to changes indented text to <pre><code>...</code></pre>
  * blocks.

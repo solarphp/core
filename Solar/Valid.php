@@ -628,8 +628,6 @@ class Solar_Valid extends Solar_Base {
      *     require_once 'Solar.php';
      *     Solar::start();
      * 
-     *     Solar::loadClass('Solar_Valid');
-     * 
      *     // the list of validations to perform
      *     $validations = array(
      *         array('maxLength', 12),

@@ -18,11 +18,6 @@
  */
 
 /**
- * Abstract SQL adapter.
- */
-Solar::loadClass('Solar_Sql_Adapter');
-
-/**
  * 
  * Class for connecting to Microsoft SQL databases.
  * 

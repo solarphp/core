@@ -16,11 +16,6 @@
  */
 
 /**
- * Authentication adapter class.
- */
-Solar::loadClass('Solar_Auth_Adapter');
-
-/**
  * 
  * Authenticate against an LDAP server.
  * 

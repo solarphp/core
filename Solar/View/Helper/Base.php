@@ -14,16 +14,6 @@
  */
 
 /**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
-
-/**
- * Needed for instanceof comparisons.
- */
-Solar::loadClass('Solar_Uri');
-
-/**
  * 
  * Helper for base tags.
  * 

@@ -16,11 +16,6 @@
  */
 
 /**
- * Base SQL exception.
- */
-Solar::loadClass('Solar_Sql_Adapter_Exception');
-
-/**
  * 
  * Exception: column size is too large or too small.
  * 

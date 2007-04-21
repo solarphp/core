@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class.
- */
-Solar::loadClass('Solar_Controller_Exception');
-
-/**
  * 
  * Generic page-controller exception.
  * 

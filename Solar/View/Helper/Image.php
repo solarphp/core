@@ -17,11 +17,6 @@
  */
 
 /**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
- 
-/**
  * 
  * Helper to generate an <img ... /> tag.
  * 

@@ -16,11 +16,6 @@
  */
 
 /**
- * Load Solar_Uri_Action for dispatch comparisons.
- */
-Solar::loadClass('Solar_Uri_Action');
-
-/**
  *
  * Abstract page controller class.
  *

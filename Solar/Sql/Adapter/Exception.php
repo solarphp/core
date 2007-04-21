@@ -16,11 +16,6 @@
  */
 
 /**
- * Base exception.
- */
-Solar::loadClass('Solar_Sql_Exception');
-
-/**
  * 
  * Exception class.
  * 

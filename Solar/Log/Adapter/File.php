@@ -16,11 +16,6 @@
  */
 
 /**
- * Solar_Log_Adapter
- */
-Solar::loadClass('Solar_Log_Adapter');
-
-/**
  * 
  * Log adapter for appending to a file.
  * 

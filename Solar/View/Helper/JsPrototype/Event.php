@@ -16,11 +16,6 @@
  */
 
 /**
- * The parent JsPrototype class.
- */
-Solar::loadClass('Solar_View_Helper_JsPrototype');
-
-/**
  *
  * JsPrototype Event helper class.
  * 

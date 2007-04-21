@@ -16,11 +16,6 @@
  */
 
 /**
- * Base class for all Solar objects.
- */
-Solar::loadClass('Solar_Base');
-
-/**
  * 
  * Manages locale strings for all Solar classes.
  * 

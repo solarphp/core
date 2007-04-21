@@ -16,11 +16,6 @@
  */
 
 /**
- * Solar_View_Helper
- */
-Solar::loadClass('Solar_View_Helper');
- 
-/**
  * 
  * Helper for action anchors and hrefs, with built-in text translation.
  * 

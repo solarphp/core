@@ -16,11 +16,6 @@
  */
 
 /**
- * Markdown parse/render engine.
- */
-Solar::loadClass('Solar_Markdown');
-
-/**
  * 
  * Markdown engine rules for wiki markup.
  * 

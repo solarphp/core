@@ -16,11 +16,6 @@
  */
 
 /**
- * Parent class
- */
-Solar::loadClass('Solar_View_Helper');
-
-/**
  *
  * Generates a anchor linking to the TypeKey login site.
  * 

@@ -16,11 +16,6 @@
  */
 
 /**
- * Base class for Solar exceptions.
- */
-Solar::loadClass('Solar_Exception');
-
-/**
  * 
  * Generic Solar_View exception.
  * 

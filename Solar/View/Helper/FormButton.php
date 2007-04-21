@@ -16,11 +16,6 @@
  */
 
 /**
- * The abstract FormElement class.
- */
-Solar::loadClass('Solar_View_Helper_FormElement');
-
-/**
  * 
  * Helper for a 'button' element.
  * 

@@ -18,11 +18,6 @@
  */
 
 /**
- * Application-specific page controller class.
- */
-Solar::loadClass('Solar_App');
-
-/**
  * 
  * Social bookmarking application.
  * 

@@ -20,11 +20,6 @@
  */
 
 /**
- * Abstract plugin class.
- */
-Solar::loadClass('Solar_Markdown_Plugin_EmStrong');
-
-/**
  * 
  * Span plugin to insert emphasis and strong tags.
  * 

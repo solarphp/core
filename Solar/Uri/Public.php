@@ -16,11 +16,6 @@
  */
 
 /**
- * Base URI class.
- */
-Solar::loadClass('Solar_Uri');
-
-/**
  * 
  * Manipulates generates public URI strings.
  * 

@@ -18,11 +18,6 @@
  */
 
 /**
- * Basic page controller.
- */
-Solar::loadClass('Solar_Controller_Page');
-
-/**
  * 
  * Absolute minimal "hello world" application for benchmarking.
  * 

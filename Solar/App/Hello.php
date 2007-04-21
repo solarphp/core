@@ -18,11 +18,6 @@
  */
 
 /**
- * Application controller class.
- */
-Solar::loadClass('Solar_App');
-
-/**
  * 
  * Simple "hello world" application with actions, views, and localization.
  * 

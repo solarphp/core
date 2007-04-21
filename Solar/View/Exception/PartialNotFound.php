@@ -16,11 +16,6 @@
  */
 
 /**
- * Base class for Solar_View exceptions.
- */
-Solar::loadClass('Solar_View_Exception');
-
-/**
  * 
  * Solar_View exception for partial-not-found.
  * 

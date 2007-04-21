@@ -20,11 +20,6 @@
  */
 
 /**
- * Parent class.
- */
-Solar::loadClass('Solar_Markdown_Plugin_Header');
-
-/**
  * 
  * Block plugin to convert Markdown headers into XHTML headers.
  * 

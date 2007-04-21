@@ -16,11 +16,6 @@
  */
 
 /**
- * Abstract access adapter class.
- */
-Solar::loadClass('Solar_Access_Adapter');
-
-/**
  * 
  * Class for reading access privileges from a text file.
  * 

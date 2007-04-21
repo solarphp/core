@@ -18,11 +18,6 @@
  */
 
 /**
- * Authentication adapter class.
- */
-Solar::loadClass('Solar_Auth_Adapter');
-
-/**
  *
  * Authentication adapter for TypeKey.
  * 

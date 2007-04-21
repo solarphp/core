@@ -16,11 +16,6 @@
  */
 
 /**
- * Needed for loading validations.
- */
-Solar::loadClass('Solar_Valid');
-
-/**
  * 
  * Class for loading form definitions from Solar_Sql_Table columns.
  * 

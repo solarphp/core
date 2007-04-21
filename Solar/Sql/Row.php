@@ -17,11 +17,6 @@
  */
  
 /**
- * Extends the Solar_Struct class.
- */
-Solar::loadClass('Solar_Struct');
-
-/**
  * 
  * Represents a single row of SQL SELECT results, optionally with a 
  * source object to support saving the data.

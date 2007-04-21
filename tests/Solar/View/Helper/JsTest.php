@@ -52,11 +52,11 @@ class Solar_View_Helper_JsTest extends PHPUnit_Framework_TestCase
         $actual = $helper->fetchFiles();
         $actual .= $helper->fetchInline();
 
-        $expect = '    <script src="/public/Solar/scripts/prototype/prototype.js" type="application/javascript"></script>'."\n";
-        $expect .= '    <script src="/public/Solar/scripts/scriptaculous/effects.js" type="application/javascript"></script>'."\n";
-        $expect .= '    <script src="/public/foo.js" type="application/javascript"></script>'."\n";
-        $expect .= '    <script src="/public/bar.js" type="application/javascript"></script>'."\n";
-        $expect .= '<script type="application/javascript">'."\n";
+        $expect = '    <script src="/public/Solar/scripts/prototype/prototype.js" type="text/javascript"></script>'."\n";
+        $expect .= '    <script src="/public/Solar/scripts/scriptaculous/effects.js" type="text/javascript"></script>'."\n";
+        $expect .= '    <script src="/public/foo.js" type="text/javascript"></script>'."\n";
+        $expect .= '    <script src="/public/bar.js" type="text/javascript"></script>'."\n";
+        $expect .= '<script type="text/javascript">'."\n";
         $expect .= "//<![CDATA[\n";
         $expect .= "Event.observe(window,'load',function() {\n";
         $expect .= "    \$\$('#test').each(function(el){\n";

@@ -18,11 +18,6 @@
  */
 
 /**
- * Abstract content master node.
- */
-Solar::loadClass('Solar_Content_Abstract');
-
-/**
  * 
  * Content class for bookmark nodes.
  * 

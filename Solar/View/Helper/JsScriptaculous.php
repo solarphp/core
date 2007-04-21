@@ -18,11 +18,6 @@
  */
 
 /**
- * The abstract JsLibrary class
- */
-Solar::loadClass('Solar_View_Helper_JsLibrary');
-
-/**
  *
  * Helper for [script.aculo.us][] JavaScript library
  *

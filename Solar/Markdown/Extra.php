@@ -18,11 +18,6 @@
  */
 
 /**
- * Markdown parse/render engine.
- */
-Solar::loadClass('Solar_Markdown');
-
-/**
  * 
  * Solar port of Markdown-Extra by Michel Fortin.
  * 

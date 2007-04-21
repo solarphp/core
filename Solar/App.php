@@ -16,11 +16,6 @@
  */
 
 /**
- * Page-controller class.
- */
-Solar::loadClass('Solar_Controller_Page');
-
-/**
  * 
  * Abstract base class for Solar application classes.
  * 

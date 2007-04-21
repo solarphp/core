@@ -16,11 +16,6 @@
  */
 
 /**
- * Needed for instanceof comparisons.
- */
-Solar::loadClass('Solar_Sql_Table');
-
-/**
  * 
  * Class for SQL select generation and results.
  * 

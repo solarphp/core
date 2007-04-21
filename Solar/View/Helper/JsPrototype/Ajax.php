@@ -16,7 +16,7 @@
  */
 
 /**
- *
+ * 
  * JsPrototype Ajax helper class.
  *
  * @category Solar

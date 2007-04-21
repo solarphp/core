@@ -73,12 +73,19 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      * @param int|float $num A number to help determine if the
      * translation should return singluar or plural.
      * 
+     * @param array $replace If an array, will call vsprintf() on the
+     * localized string using the replacements in the array.
+     * 
      * @return string The translated locale string.
      * 
      */
-    public function getTextRaw($key, $num = 1)
+    public function getTextRaw($key, $num = 1, $replace = null)
     {
-        return Solar::$locale->fetch($this->_class, $key, $num);
+        $string = Solar::$locale->fetch($this->_class, $key, $num);
+        if ($replace) {
+            $string = vsprintf($string, (array) $replace);
+        }
+        return $string;
     }
     
     /**

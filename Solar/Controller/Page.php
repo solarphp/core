@@ -1,18 +1,18 @@
 <?php
 /**
- *
- * Abstract page-based application controller class for Solar.
- *
+ * 
+ * Abstract page controller class for Solar.
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_Controller
- *
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -20,20 +20,18 @@
  * Abstract page controller class.
  *
  * Expects a directory structure similar to the following ...
- *
+ * 
  *     Vendor/              # your vendor namespace
  *       App/               # subdirectory for page controllers
- *         Helper/          # shared helper classes
- *           ...
- *         Layout/          # shared layout files
- *           ...
- *         Locale/          # shared locale files
- *           ...
- *         View/            # shared view scripts
- *           ...
- *         Example.php      # an example page controller app
+ *         Base/
+ *           Helper/        # shared helper classes
+ *           Layout/        # shared layout files
+ *           Locale/        # shared locale files
+ *           Model/         # shared model classes
+ *           View/          # shared view scripts
+ *         Example.php      # an example app
  *         Example/
- *           Helper/        # helper classes specific to the page
+ *           Helper/        # helper classes specific to the app
  *             ...
  *           Layout/        # layout files to override shared layouts
  *             ...
@@ -43,58 +41,53 @@
  *           View/          # view scripts
  *             _item.php    # partial template
  *             list.php     # full template
- *             edit.php
- *
- * Note that models are not included in the application itself; this is
- * for class-name deconfliction reasons.  Your models should be stored
- * elsewhere in the Solar hierarchy, for example Vendor_Model_Name.
- *
- * When you call [[fetch()]], these intercept methods
- * are run in the following order ...
- *
- * * [[_load()]] to load class properties from the
- *   fetch() URI specification
- *
- * * [[_preRun()]] before the first action
- *
- * * [[_preAction()]] before each action (including
- *   _forward()-ed actions)
- *
- * * ... The action method itself runs here ...
- *
- * * [[_postAction()]] after each action
- *
- * * [[_postRun()]] after the last action, and before rendering
- *
- * * [[_render()]] to render the view and layout;
- *   this in its turn calls [[_getView()]] for
- *   the view object, and [[_setViewLayout()]] to
- *   reset the view object to use layout templates.
- *
+ *             edit.php     # another full template
+ * 
+ * 
+ * When you call [[fetch()]], these intercept methods are run in the
+ * following order ...
+ * 
+ * 1. [[_load()]] to load class properties from the fetch() URI specification
+ * 
+ * 2. [[_preRun()]] before the first action
+ * 
+ * 3. [[_preAction()]] before each action (including _forward()-ed actions)
+ * 
+ * 4. ... The action method itself runs here ...
+ * 
+ * 5. [[_postAction()]] after each action
+ * 
+ * 6. [[_postRun()]] after the last action, and before rendering
+ * 
+ * 7. [[_render()]] to render the view and layout; this in its turn calls
+ *    [[_getViewObject()]] for the view object, and [[_addViewLayout()]] to
+ *    reset the view object to use layout templates.
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_Controller
- *
+ * 
  */
+
 abstract class Solar_Controller_Page extends Solar_Base {
-
+    
     /**
-     *
-     * The default application action.
-     *
+     * 
+     * The action being requested of (performed by) the page controller.
+     * 
      * @var string
-     *
-     */
-    protected $_action_default = null;
-
-    /**
-     *
-     * The action being requested of (performed by) the application.
-     *
-     * @var string
-     *
+     * 
      */
     protected $_action = null;
+    
+    /**
+     * 
+     * The default page controller action.
+     * 
+     * @var string
+     * 
+     */
+    protected $_action_default = null;
     
     /**
      * 
@@ -117,85 +110,90 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * @var array
      * 
+     * @todo Make the action key a little smarter.  Right now, you need to 
+     * specify action names as "fooBar", not "actionFooBar" or "foo-bar".
+     * Maybe a method "_getActionFormat()" to translate the key to the right
+     * format (e.g., 'foo-bar' to "fooBar").
+     * 
      */
     protected $_action_format = array();
     
     /**
-     *
+     * 
      * Session data, including read-once flashes.
-     *
+     * 
      * @var Solar_Session
-     *
+     * 
      */
     protected $_session;
-
+    
     /**
-     *
-     * Application request parameters collected from the URI pathinfo.
-     *
+     * 
+     * Request parameters collected from the URI pathinfo.
+     * 
      * @var array
-     *
+     * 
      */
     protected $_info = array();
-
+    
     /**
-     *
+     * 
      * The name of the layout to be rendered.
-     *
+     * 
      * @var string
-     *
+     * 
      */
     protected $_layout = null;
-
+    
     /**
-     *
+     * 
      * The name of the variable where page content is placed in the layout.
-     *
+     * 
      * Default is 'layout_content'.
-     *
+     * 
      * @var string
-     *
+     * 
      */
     protected $_layout_var = 'layout_content';
-
+    
     /**
-     *
-     * The short-name of this application.
-     *
+     * 
+     * The short-name of this page controller.
+     * 
      * @var string
-     *
+     * 
      */
     protected $_name = null;
-
+    
     /**
-     *
-     * Application request parameters collected from the URI query string.
-     *
+     * 
+     * Request parameters collected from the URI query string.
+     * 
      * @var string
-     *
+     * 
      */
     protected $_query = array();
-
+    
     /**
-     *
+     * 
      * Name of the form element that holds the process request value (such as
      * 'Save', 'Next', 'Cancel', etc)
      * 
      * Default is 'process', as in $_POST['process'] or $_GET['process'].
      * 
      * @var string
-     *
+     * 
      * @see Solar_Controller_Page::_process()
-     *
+     * 
      */
     protected $_process_key = 'process';
-
+    
     /**
-     *
+     * 
      * The name of the view to be rendered.
-     *
+     * 
      * @var string
-     *
+     * 
      */
     protected $_view = null;
     
@@ -216,11 +214,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected $_format = null;
     
     /**
-     *
+     * 
+     * What is the default output format?
+     * 
+     * @var string
+     * 
+     */
+    protected $_format_default = 'xhtml';
+    
+    /**
+     * 
      * Request environment details: get, post, etc.
-     *
+     * 
      * @var Solar_Request
-     *
+     * 
      */
     protected $_request;
     
@@ -235,49 +242,117 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected $_helper_class = array();
     
     /**
-     *
+     * 
+     * The response object with headers and body.
+     * 
+     * @var Solar_Response
+     * 
+     */
+    protected $_response;
+    
+    /**
+     * 
+     * The class used for view objects.
+     * 
+     * @var string
+     * 
+     */
+    protected $_view_class = 'Solar_View';
+    
+    /**
+     * 
+     * The object used for rendering views and layouts.
+     * 
+     * @var Solar_View
+     * 
+     */
+    protected $_view_object;
+    
+    /**
+     * 
+     * Maps format name keys to Content-Type values.
+     * 
+     * When $this->_format matches one of the keys, the controller will set
+     * the matching Content-Type header automatically in the response object.
+     * 
+     * @var array
+     * 
+     */
+    protected $_format_type = array(
+        'atom'      => 'application/atom+xml',
+        'css'       => 'text/css',
+        'htm'       => 'text/html',
+        'html'      => 'text/html',
+        'js'        => 'text/javascript',
+        'json'      => 'application/json',
+        'pdf'       => 'application/pdf',
+        'ps'        => 'application/postscript',
+        'rdf'       => 'application/rdf+xml',
+        'rss'       => 'application/rss+xml',
+        'rss2'      => 'application/rss+xml',
+        'rtf'       => 'application/rtf',
+        'text'      => 'text/plain',
+        'txt'       => 'text/plain',
+        'xml'       => 'application/xml',
+    );
+    
+    /**
+     * 
+     * The character set to use when setting the Content-Type header.
+     * 
+     * @var string
+     * 
+     */
+    protected $_charset = 'utf-8';
+    
+    /**
+     * 
      * Constructor.
-     *
+     * 
      * @param array $config User-provided configuration values.
-     *
+     * 
      */
     public function __construct($config = null)
     {
         $class = get_class($this);
-
+        
         // create the request object
         $this->_request = Solar::factory('Solar_Request');
-
-        // auto-set the name; for example Solar_App_Something => 'something'
-        if (empty($this->_name)) {
-            $pos = strrpos($class, '_');
-            $this->_name = substr($class, $pos + 1);
-            $this->_name[0] = strtolower($this->_name[0]);
-        }
-
-        // create the flash object
+        
+        // create the session object for this class
         $this->_session = Solar::factory(
             'Solar_Session',
             array('class' => $class)
         );
-
+        
+        // create the response object
+        $this->_response = Solar::factory('Solar_Response');
+        
+        // auto-set the name; for example Vendor_App_SomeThing => 'some-thing'
+        if (empty($this->_name)) {
+            $pos = strrpos($class, '_');
+            $this->_name = substr($class, $pos + 1);
+            $this->_name = preg_replace('/([a-z])([A-Z])/', '$1-$2', $this->_name);
+            $this->_name = strtolower($this->_name);
+        }
+        
         // now do the parent construction
         parent::__construct($config);
-
+        
         // extended setup
         $this->_setup();
     }
-
+    
     /**
-     *
+     * 
      * Try to force users to define what their view variables are.
-     *
+     * 
      * @param string $key The property name.
-     *
+     * 
      * @param mixed $val The property value.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     public function __set($key, $val)
     {
@@ -286,15 +361,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
             array('property' => "\$$key")
         );
     }
-
+    
     /**
-     *
+     * 
      * Try to force users to define what their view variables are.
-     *
+     * 
      * @param string $key The property name.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     public function __get($key)
     {
@@ -303,234 +378,323 @@ abstract class Solar_Controller_Page extends Solar_Base {
             array('property' => "\$$key")
         );
     }
-
+    
     /**
-     *
+     * 
      * Executes the requested action and returns its output with layout.
-     *
+     * 
+     * If an exception is thrown during the fetch() process, it is caught
+     * and sent along to the _rescueException() method, which may generate
+     * and return alternative output.
+     * 
      * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
-     *
-     * @return string The results of the action + view + layout.
-     *
+     * 
+     * @return Solar_Response A response object with headers and body from
+     * the action, view, and layout.
+     * 
      */
     public function fetch($spec = null)
     {
-        // load action, info, and query properties
-        $this->_load($spec);
-
-        // prerun hook
-        $this->_preRun();
-
-        // action chain, with pre- and post-action hooks
-        $this->_forward($this->_action, $this->_info);
-
-        // postrun hook
-        $this->_postRun();
-
-        // render the view and layout, with pre- and post-render hooks
-        return $this->_render();
+        try {
+            
+            // load action, info, and query properties
+            $this->_load($spec);
+            
+            // prerun hook
+            $this->_preRun();
+            
+            // action chain, with pre- and post-action hooks
+            $this->_forward($this->_action, $this->_info);
+            
+            // postrun hook
+            $this->_postRun();
+            
+            // render the view and layout, with pre- and post-render hooks
+            $this->_render();
+            
+            // set the Content-Type based on the format
+            $this->_setContentType();
+            
+            // done, return the response headers, cookies, and body
+            return $this->_response;
+            
+        } catch (Exception $e){
+            
+            // an exception was thrown somewhere, attempt to rescue it
+            return $this->_exceptionDuringFetch($e);
+            
+        }
     }
-
+    
     /**
-     *
+     * 
      * Executes the requested action and displays its output.
-     *
+     * 
      * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
-     *
+     * 
      * @return void
-     *
+     * 
      */
     public function display($spec = null)
     {
-        echo $this->fetch($spec);
+        $response = $this->fetch($spec);
+        $response->send();
     }
-
+    
     /**
-     *
-     * Renders the view with layout with pre- and post-rendering.
-     *
-     * @return string The results of the view and layout scripts.
-     *
+     * 
+     * Sets the response body based on the view, including layout, with
+     * pre- and post-rendering logic.
+     * 
+     * @return void
+     * 
      */
     protected function _render()
     {
-        // get a view object and assign variables
-        $view = $this->_getView();
-        $this->_preRender($view);
-        $view->assign($this);
-        $output = null;
+        $this->_setViewObject();
+        $this->_preRender();
+        $this->_view_object->assign($this);
         
-        // are we using a view?
         if ($this->_view) {
-            try {
-                // set the template name from the view and format
-                $tpl = $this->_view
-                     . ($this->_format ? ".{$this->_format}" : "")
-                     . ".php";
-                // get the view output
-                $output = $view->fetch($tpl);
-            } catch (Solar_View_Exception_TemplateNotFound $e) {
-                $view->errors[] = $this->locale('ERR_VIEW_NOT_FOUND');
-                $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
-                $view->errors[] = $e->getInfo('name');
-                $output = $view->fetch('error.php');
-            }
+            $this->_renderView();
         }
         
-        // are we using a layout?
         if ($this->_layout) {
-            try {
-                // reset the view object to use layout templates.
-                $this->_setViewLayout($view);
-            
-                // assign the view output
-                $view->assign($this->_layout_var, $output);
-            
-                // set the template name from the layout value
-                $tpl = $this->_layout . ".php";
-                
-                // get the layout output
-                $output = $view->fetch($tpl);
-            } catch (Solar_View_Exception_TemplateNotFound $e) {
-                $view->errors[] = $this->locale('ERR_LAYOUT_NOT_FOUND');
-                $view->errors[] = implode(PATH_SEPARATOR, $e->getInfo('path'));
-                $view->errors[] = $e->getInfo('name');
-                $output = $view->fetch('error.php');
-            }
+            $this->_renderLayout();
         }
         
-        // apply post-render processing, and done
-        return $this->_postRender($output);
+        $this->_postRender();
     }
-
+    
     /**
-     *
-     * Creates and returns a new Solar_View object for a view.
-     *
-     * Automatically sets up a template-path stack for you, searching
-     * for view files in this order ...
-     *
-     * 1. Vendor/App/Example/View/
-     *
-     * 2. Vendor/App/View
-     *
+     * 
+     * Sets $this->_view_object for rendering.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setViewObject()
+    {
+        // set up a view object, its template paths, and its helper stacks
+        $this->_view_object = Solar::factory($this->_view_class);
+        $this->_addViewTemplates();
+        $this->_addViewHelpers();
+    }
+    
+    /**
+     * 
+     * Uses $this->_view_object to render the view into $this->_response.
+     * 
+     * @return void
+     * 
+     */
+    protected function _renderView()
+    {
+        // set the template name from the view and format
+        $tpl = $this->_view
+             . ($this->_format ? ".{$this->_format}" : "")
+             . ".php";
+        
+        // fetch the view
+        try {
+            $this->_response->body = $this->_view_object->fetch($tpl);
+        } catch (Solar_View_Exception_TemplateNotFound $e) {
+            throw $this->_exception('ERR_VIEW_NOT_FOUND', array(
+                'path' => $e->getInfo('path'),
+                'name' => $e->getInfo('name'),
+            ));
+        }
+    }
+    
+    /**
+     * 
+     * Uses $this->_view_object to render the layout into $this->_response.
+     * 
+     * @return void
+     * 
+     */
+    protected function _renderLayout()
+    {
+        // reset the view object to use layout templates.
+        $this->_setLayoutTemplates();
+        
+        // assign the previous output
+        $this->_view_object->assign($this->_layout_var, $this->_response->body);
+        
+        // set the template name from the layout value
+        $tpl = $this->_layout . ".php";
+        
+        // fetch the layout
+        try {
+            $this->_response->body = $this->_view_object->fetch($tpl);
+        } catch (Solar_View_Exception_TemplateNotFound $e) {
+            throw $this->_exception('ERR_LAYOUT_NOT_FOUND', array(
+                'path' => $e->getInfo('path'),
+                'name' => $e->getInfo('name'),
+            ));
+        }
+    }
+    
+    /**
+     * 
+     * Sets a Content-Type header in the response based on $this->_format.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setContentType()
+    {
+        // get the current format, or the default if not specified
+        $format = $this->_format ? $this->_format : $this->_format_default;
+        
+        // do we have a content-type for the format?
+        if (! empty($this->_format_type[$format])) {
+            
+            // yes, retain the content-type
+            $val = $this->_format_type[$format];
+            
+            // add charset if one exists
+            if ($this->_charset) {
+                $val .= '; charset=' . $this->_charset;
+            }
+            
+            // set the response header for content-type
+            $this->_response->setHeader('Content-Type', $val);
+        }
+    }
+    
+    /**
+     * 
+     * Adds to the helper-class stack on a view object.
+     * 
      * Automatically sets up a helper-class stack for you, searching
      * for helper classes in this order ...
-     *
+     * 
      * 1. Vendor_App_Example_Helper_
-     *
-     * 2. Vendor_App_Helper_
-     *
+     * 
+     * 2. Vendor_App_Base_Helper_
+     * 
      * 3. Vendor_View_Helper_
-     *
-     * 4. Solar_View_Helper_ (this is part of Solar_View to begin with)
-     *
-     * @return Solar_View
-     *
+     * 
+     * 4. Solar_View_Helper_
+     * 
+     * @return void
+     * 
      */
-    protected function _getView()
+    protected function _addViewHelpers()
     {
-        $view = Solar::factory('Solar_View');
-
-        // get the current class
+        // who is the vendor of this controller?
         $class = get_class($this);
-
-        // get the parent-level class
-        $pos = strrpos($class, '_');
-        $parent = substr($class, 0, $pos);
-
-        // who's the vendor?
         $pos = strpos($class, '_');
         $vendor = substr($class, 0, $pos);
-
-        // add template paths to the view object.
-        // the order of searching will be:
-        // Vendor/App/Example/View, Vendor/App/View, Solar/App/View
-        $template = array();
-        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$class}_View");
-        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$parent}_View");
+        
+        // if vendor is not Solar, add {Vendor}_View_Helper
         if ($vendor != 'Solar') {
-            // non-Solar vendor, add Solar views as final fallback
-            $template[] = str_replace('_', DIRECTORY_SEPARATOR, 'Solar_App_View');
-        }
-        $view->addTemplatePath($template);
-
-        // add helper classes to the view object.
-        // the order of searching will be:
-        // Vendor_App_Example_Helper_*, Vendor_App_Helper_*,
-        // Vendor_View_Helper_*, Solar_View_Helper_*
-        $helper = array();
-        $helper[] = $class . '_Helper';
-        $helper[] = $parent . '_Helper';
-        $helper[] = $vendor . '_View_Helper';
-        
-        // are there additional helper classes we need to add?
-        if (! empty($this->_helper_class)) {
-            $helper = array_merge($helper, (array) $this->_helper_class);
+            $this->_view_object->addHelperClass("{$vendor}_View_Helper");
         }
         
-        $view->addHelperClass($helper);
-
-        // set the locale class for the getText helper
-        $view->getHelper('getTextRaw')->setClass($class);
-
-        // done!
-        return $view;
+        // add custom helper classes
+        $this->_view_object->addHelperClass($this->_helper_class);
+        
+        // get all parents including self
+        $stack = Solar::parents(get_class($this), true);
+        
+        // remove the last two parents
+        array_pop($stack); // Solar_Base
+        array_pop($stack); // Solar_Controller_Page
+        
+        // add _Helper to each one
+        foreach ($stack as $key => $val) {
+            $stack[$key] = $val . '_Helper';
+        }
+        
+        // add local helper classes
+        $this->_view_object->addHelperClass($stack);
     }
-
+    
     /**
-     *
-     * Points an existing Solar_View object to the Layout templates.
-     *
+     * 
+     * Adds template paths to $this->_view_object.
+     * 
+     * The search-path will be in this order, for a Vendor_App_Example class
+     * extended from Vender_App_Base ...
+     * 
+     * 1. Vendor/App/Example/View/
+     * 
+     * 2. Vendor/App/Base/View/
+     * 
+     * @param Solar_View $view The view object to add template paths to.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addViewTemplates()
+    {
+        // get the parents of the current class, including self
+        $stack = Solar::parents(get_class($this), true);
+        
+        // remove Solar_Base and Solar_Controller_Page
+        array_pop($stack);
+        array_pop($stack);
+        
+        // convert underscores to slashes, and add /View
+        foreach ($stack as $key => $val) {
+            $stack[$key] = str_replace('_', '/', $val) . '/View';
+        }
+        
+        // should we add Solar/App/Base/View for non-Solar vendors?
+        
+        // done, add the stack
+        $this->_view_object->addTemplatePath($stack);
+    }
+    
+    /**
+     * 
+     * Resets $this->_view_object to use the Layout templates.
+     * 
      * This effectively re-uses the Solar_View object from the page
      * (with its helper objects and data) to build the layout.  This
      * helps to transfer JavaScript and other layout data back up to
      * the layout with zero effort.
-     *
+     * 
      * Automatically sets up a template-path stack for you, searching
      * for layout files in this order ...
-     *
+     * 
      * 1. Vendor/App/Example/Layout/
-     *
+     * 
      * 2. Vendor/App/Layout/
-     *
+     * 
      * 3. Solar/App/Layout/
-     *
+     * 
      * @param Solar_View $view The Solar_View object to modify.
-     *
+     * 
      * @return Solar_View
-     *
+     * 
      */
-    protected function _setViewLayout($view)
+    protected function _setLayoutTemplates()
     {
-        // get the current class
-        $class = get_class($this);
-
-        // get the parent-level class
-        $pos = strrpos($class, '_');
-        $parent = substr($class, 0, $pos);
-
-        // who's the vendor?
-        $pos = strpos($class, '_');
-        $vendor = substr($class, 0, $pos);
-
-        // reset template paths in the view object.
-        // the order of searching will be:
-        // Vendor/App/Example/Layout, Vendor/App/Layout, Solar/App/Layout
-        $template = array();
-        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$class}_Layout");
-        $template[] = str_replace('_', DIRECTORY_SEPARATOR, "{$parent}_Layout");
-        if ($vendor != 'Solar') {
-            // non-Solar vendor, add Solar views as final fallback
-            $template[] = str_replace('_', DIRECTORY_SEPARATOR, 'Solar_App_Layout');
+        // get the parents of the current class, including self
+        $stack = Solar::parents(get_class($this), true);
+        
+        // remove Solar_Base and Solar_Controller_Page
+        array_pop($stack);
+        array_pop($stack);
+        
+        // convert underscores to slashes, and add /Layout
+        foreach ($stack as $key => $val) {
+            $stack[$key] = str_replace('_', '/', $val) . '/Layout';
         }
-        $view->setTemplatePath($template);
+        
+        // should we add Solar/App/Base/Layout for non-Solar vendors?
+        
+        // done, add the stack
+        $this->_view_object->setTemplatePath($stack);
     }
-
+    
     /**
-     *
+     * 
      * Loads properties from an action specification.
      * 
      * Note that if the action info ends in a format extension, layout will
@@ -540,15 +704,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * $this->_layout = null.
      * 
      * @param string $spec The action specification.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _load($spec)
     {
         // process the action/param.format?query specification
         if (! $spec) {
-
+            
             // no spec, use the current URI
             $uri = Solar::factory('Solar_Uri_Action');
             $this->_info = $uri->path;
@@ -556,14 +720,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $this->_format = $uri->format;
             
         } elseif ($spec instanceof Solar_Uri_Action) {
-
+            
             // pull from a Solar_Uri_Action object
             $this->_info = $spec->path;
             $this->_query = $spec->query;
             $this->_format = $spec->format;
             
         } else {
-
+            
             // a string, assumed to be an action/param.format?query spec.
             $uri = Solar::factory('Solar_Uri_Action');
             $uri->set($spec);
@@ -575,7 +739,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // ignore .php formats
         if (strtolower($this->_format) == 'php') {
-            $this->_format = '';
+            $this->_format = null;
         }
         
         // if the first param is the page name, drop it.
@@ -592,7 +756,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
                 $this->_action = array_shift($this->_info);
             }
         }
-
+        
         // if no action yet, use the default
         if (! $this->_action) {
             $this->_action = $this->_action_default;
@@ -602,9 +766,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if ($this->_format) {
             
             // what formats does the action allow?
-            $action_format = empty($this->_action_format[$this->_action])
-                  ? array()
-                  : (array) $this->_action_format[$this->_action];
+            $action_format = $this->_getActionFormat($this->_action);
         
             // does the action support the requested format?
             if (in_array($this->_format, $action_format)) {
@@ -636,22 +798,21 @@ abstract class Solar_Controller_Page extends Solar_Base {
             }
         }
     }
-
+    
     /**
-     *
+     * 
      * Retrieves the TAINTED value of a path-info parameter by position.
-     *
+     * 
      * Note that this value is direct user input; you should sanitize it
-     * with Solar_Valid or Solar_Filter (or some other technique) before
-     * using it.
-     *
+     * with Solar_DataFilter (or some other technique) before using it.
+     * 
      * @param int $key The path-info parameter position.
-     *
+     * 
      * @param mixed $val If the position does not exist, use this value
      * as a default in its place.
-     *
+     * 
      * @return mixed The value of that query key.
-     *
+     * 
      */
     protected function _info($key, $val = null)
     {
@@ -661,22 +822,21 @@ abstract class Solar_Controller_Page extends Solar_Base {
             return $val;
         }
     }
-
+    
     /**
-     *
+     * 
      * Retrieves the TAINTED value of a query request key by name.
-     *
+     * 
      * Note that this value is direct user input; you should sanitize it
-     * with Solar_Valid or Solar_Filter (or some other technique) before
-     * using it.
-     *
+     * with Solar_DataFilter (or some other technique) before using it.
+     * 
      * @param string $key The query key.
-     *
+     * 
      * @param mixed $val If the key does not exist, use this value
      * as a default in its place.
-     *
+     * 
      * @return mixed The value of that query key.
-     *
+     * 
      */
     protected function _query($key, $val = null)
     {
@@ -686,28 +846,31 @@ abstract class Solar_Controller_Page extends Solar_Base {
             return $val;
         }
     }
-
+    
     /**
-     *
-     * Redirects to another page and action.
-     *
+     * 
+     * Redirects to another page and action, then calls exit(0).
+     * 
      * @param Solar_Uri_Action|string $spec The URI to redirect to.
-     *
+     * 
+     * @param int|string $code The HTTP status code to redirect with; default
+     * is '302 Found'.
+     * 
      * @return void
-     *
+     * 
      */
-    protected function _redirect($spec)
+    protected function _redirect($spec, $code = 302)
     {
         if ($spec instanceof Solar_Uri_Action) {
-            $href = $spec->fetch();
+            $href = $spec->fetch(true);
         } elseif (strpos($spec, '://') !== false) {
             // external link, protect against header injections
             $href = str_replace(array("\r", "\n"), '', $spec);
         } else {
             $uri = Solar::factory('Solar_Uri_Action');
-            $href = $uri->quick($spec);
+            $href = $uri->quick($spec, true);
         }
-
+        
         // make sure there's actually an href
         $href = trim($href);
         if (! $href || trim($spec) == '') {
@@ -716,188 +879,289 @@ abstract class Solar_Controller_Page extends Solar_Base {
                 'href' => $href,
             ));
         }
-
+        
         // kill off all output buffers
         while(@ob_end_clean());
         
-        // save the session and redirect
+        // save the session
         session_write_close();
-        header("Location: $href");
-        exit;
+        
+        // clear the response body
+        $this->_response->body = null;
+        
+        // set headers and send the response directly
+        $this->_response->setStatus($code);
+        $this->_response->setHeader('Location', $href);
+        $this->_response->send();
+        exit(0);
     }
-
+    
     /**
-     *
+     * 
+     * Redirects to another page and action after disabling HTTP caching.
+     * 
+     * The _redirect() method is often called after a successful POST
+     * operation, to show a "success" or "edit" page. In such cases, clicking
+     * clicking "back" or "reload" will generate a warning in the
+     * browser allowing for a possible re-POST if the user clicks OK.
+     * Typically this is not what you want.
+     * 
+     * In those cases, use _redirectNoCache() to turn off HTTP caching, so
+     * that the re-POST warning does not occur.
+     * 
+     * This method sends the following headers before setting Location:
+     * 
+     * {{code: php
+     *     header("Cache-Control: no-store, no-cache, must-revalidate");
+     *     header("Cache-Control: post-check=0, pre-check=0", false);
+     *     header("Pragma: no-cache");
+     * }}
+     * 
+     * @param Solar_Uri_Action|string $spec The URI to redirect to.
+     * 
+     * @param int|string $code The HTTP status code to redirect with; default
+     * is '303 See Other'.
+     * 
+     * @return void
+     * 
+     */
+    protected function _redirectNoCache($spec, $code = 303)
+    {
+        // reset cache-control
+        $this->_response->setHeader(
+            'Cache-Control',
+            'no-store, no-cache, must-revalidate'
+        );
+        
+        // append cache-control
+        $this->_response->setHeader(
+            'Cache-Control',
+            'post-check=0, pre-check=0',
+            false
+        );
+        
+        // reset pragma header
+        $this->_response->setHeader('Pragma', 'no-cache');
+        
+        // continue with redirection
+        return $this->_redirect($spec, $code);
+    }
+    
+    /**
+     * 
      * Forwards internally to another action, using pre- and post-
      * action hooks, and resets $this->_view to the requested action.
-     *
+     * 
      * You should generally use "return $this->_forward(...)" instead
      * of just $this->_forward; otherwise, script execution will come
      * back to where you called the forwarding.
-     *
+     * 
      * @param string $action The action name.
-     *
+     * 
      * @param array $params Parameters to pass to the action method.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _forward($action, $params = null)
     {
         // set the current action on entry
         $this->_action = $action;
-
+        
         // run this before every action, may change the
         // requested action.
         $this->_preAction();
-
+        
         // does a related action-method exist?
         $method = $this->_getActionMethod($this->_action);
         if (! $method) {
-            throw $this->_exception(
-                'ERR_ACTION_NOT_FOUND',
-                array(
-                    'action' => $this->_action,
-                )
-            );
+            // try to recover from not having a method
+            $method = $this->_forwardActionMethod($this->_action);
         }
-
+        
         // set the view to the requested action
         $this->_view = $this->_getActionView($this->_action);
-
-        // run the action script, which may itself _forward() to
-        // other actions.  pass all pathinfo parameters in order.
-        if (empty($params)) {
-            // speed boost
+        
+        // run the action method, which may itself _forward() to
+        // other actions.  pass all parameters in order.  use a
+        // little speed boost for shorter param lists.
+        switch (count($params)) {
+        case 0:
             $this->$method();
-        } else {
-            // somewhat slower
+            break;
+        case 1:
+            $this->$method($params[0]);
+            break;
+        case 2:
+            $this->$method($params[0], $params[1]);
+            break;
+        case 3:
+            $this->$method($params[0], $params[1], $params[2]);
+            break;
+        case 4:
+            $this->$method($params[0], $params[1], $params[2], $params[3]);
+            break;
+        default:
+            // this is 2x slower than $this->$method
             call_user_func_array(
                 array($this, $method),
-                (array) $params
+                $params
             );
+            break;
         }
-
+        
         // run this after every action
         $this->_postAction();
-
+        
         // set the current action on exit so that $this->_action is
         // always the **first** action requested when we finally exit.
         $this->_action = $action;
     }
-
+    
     /**
-     *
+     * 
      * Whether or not user requested a specific process within the action.
-     *
+     * 
      * By default, looks for $process_key in [[Solar_Request::post()]] to get the
      * value of the process request.
-     *
+     * 
      * Checks against "PROCESS_$type" locale string for matching.  For example,
      * $this->_isProcess('save') checks Solar_Request::post('process') 
      * against $this->locale('PROCESS_SAVE').
-     *
+     * 
      * @param string $type The process type; for example, 'save', 'delete',
-     * 'preview', etc.  If empty, returns true if *any* submission type
+     * 'preview', etc.  If empty, returns true if *any* process type
      * was posted.
-     *
+     * 
      * @param string $process_key If not empty, check against this
      * [[Solar_Request::post()]] key instead $this->_process_key. Default
      * null.
-     *
+     * 
      * @return bool
-     *
+     * 
      */
     protected function _isProcess($type = null, $process_key = null)
-    {   
+    {
         // make sure we know what post-var to look in
         if (empty($process_key)) {
             $process_key = $this->_process_key;
         }
         
-        // didn't ask for a submission type; answer if *any* submission
-        // was attempted.
+        // didn't ask for a process type; answer if *any* process was
+        // requested.
         if (empty($type)) {
             $any = $this->_request->post($process_key);
             return ! empty($any);
         }
         
-        // asked for a submission type, find the locale string for it.
+        // asked for a process type, find the locale string for it.
         $locale_key = 'PROCESS_' . strtoupper($type);
         $locale = $this->locale($locale_key);
-
+        
         // $process must be non-empty, and must match locale string.
         // not enough just to match the locale string, as it might
         // be empty.
         $process = $this->_request->post($process_key, false);
         return $process && $process == $locale;
     }
-
+    
     /**
-     *
+     * 
      * Returns the method name for an action.
-     *
+     * 
      * @param string $action The action name.
-     *
+     * 
      * @return string The method name, or boolean false if the action
      * method does not exist.
-     *
+     * 
      */
     protected function _getActionMethod($action)
     {
         // convert example-name and example_name to "actionExampleName"
-        $word = str_replace(array('_', '-'), ' ', $action);
-        $word = ucwords(trim($word));
-        $word = 'action' . str_replace(' ', '', $word);
-
-        // does it exist?
-        if (method_exists($this, $word)) {
-            return $word;
+        $method = str_replace('-', ' ', $action);
+        $method = ucwords(trim($method));
+        $method = 'action' . str_replace(' ', '', $method);
+        
+        // does the method exist?
+        if (method_exists($this, $method)) {
+            return $method;
         } else {
             return false;
         }
     }
-
+    
     /**
-     *
-     * Returns the view name for an action.
-     *
+     * 
+     * Returns the allowed format list for a given action.
+     * 
+     * Allows the use of both "fooBar" and "foo-bar" as the action key in
+     * the action_format array.
+     * 
      * @param string $action The action name.
-     *
+     * 
+     * @return array The list of formats allowed for the action.
+     * 
+     */
+    protected function _getActionFormat($action)
+    {
+        // look for the action as passed (foo-bar) in action_format
+        $key = $action;
+        if (! empty($this->_action_format[$key])) {
+            return (array) $this->_action_format[$key];
+        }
+        
+        // convert the action to method style (foo-bar to fooBar) and look again
+        $key = str_replace('-', ' ', $action);
+        $key = ucwords(trim($key));
+        $key = str_replace(' ', '', $key);
+        $key[0] = strtolower($key[0]);
+        if (! empty($this->_action_format[$key])) {
+            return (array) $this->_action_format[$key];
+        }
+        
+        // fail
+        return array();
+    }
+    
+    /**
+     * 
+     * Returns the view name for an action.
+     * 
+     * @param string $action The action name.
+     * 
      * @return string The related view name.
-     *
+     * 
      */
     protected function _getActionView($action)
     {
         // convert example-name and example_name to exampleName
-        $word = str_replace(array('_', '-'), ' ', $action);
-        $word = ucwords(trim($word));
-        $word = str_replace(' ', '', $word);
-        $word[0] = strtolower($word[0]);
-        return $word;
+        $view = str_replace('-', ' ', $action);
+        $view = ucwords(trim($view));
+        $view = str_replace(' ', '', $view);
+        $view[0] = strtolower($view[0]);
+        return $view;
     }
-
-
+    
+    
     // -----------------------------------------------------------------
     //
     // Behavior hooks.
     //
     // -----------------------------------------------------------------
-
-
+    
     /**
-     *
+     * 
      * Executes after construction.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _setup()
     {
     }
-
+    
     /**
-     *
+     * 
      * Executes before the first action.
      * 
      * @return void
@@ -906,72 +1170,116 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _preRun()
     {
     }
-
+    
     /**
-     *
+     * 
      * Executes before each action.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _preAction()
     {
     }
-
+    
     /**
-     *
+     * 
      * Executes after each action.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _postAction()
     {
     }
-
+    
     /**
-     *
+     * 
      * Executes after the last action.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     protected function _postRun()
     {
     }
-
+    
     /**
-     *
+     * 
      * Executes before rendering the page view and layout.
-     *
-     * Use this to pre-process the Solar_View object, or to manipulate
+     * 
+     * Use this to pre-process $this->_view_object, or to manipulate
      * controller properties with view helpers.
-     *
-     * @param Solar_View $view The Solar_View object for rendering the
-     * page view script.
-     *
+     * 
+     * The default implementation sets the locale class for the getText
+     * helper.
+     * 
      * @return void
-     *
+     * 
      */
-    protected function _preRender($view)
+    protected function _preRender()
+    {
+        // set the locale class for the getText helper
+        $class = get_class($this);
+        $this->_view_object->getHelper('getTextRaw')->setClass($class);
+    }
+    
+    /**
+     * 
+     * Executes after rendering the page view and layout.
+     * 
+     * Use this to do a final filter or maniuplation of $this->_response
+     * from the view and layout scripts.  By default, it leaves the
+     * response alone.
+     * 
+     */
+    protected function _postRender()
     {
     }
-
+    
     /**
-     *
-     * Executes after rendering the page view and layout.
-     *
-     * Use this to do a final filter or maniuplation of the output text
-     * from the view and layout scripts.  By default, it leaves the
-     * rendered output alone and returns it as-is.
-     *
-     * @param string $output The output from the rendered view and layout.
-     *
-     * @return string The filtered output.
-     *
+     * 
+     * Executes when _forward() cannot find a method for the current action.
+     * 
+     * This default implementation throws an exception, but extended classes
+     * may override the behavior to return an alternative method name for the
+     * action.
+     * 
+     * @param string $action The action name.
+     * 
+     * @param string $method The method name the controller looked for.
+     * 
+     * @return string An alternative method name for the action.
+     * 
      */
-    protected function _postRender($output)
+    protected function _forwardActionMethod($action)
     {
-        return $output;
+        throw $this->_exception(
+            'ERR_ACTION_NOT_FOUND',
+            array(
+                'action' => $action,
+            )
+        );
+    }
+    
+    /**
+     * 
+     * When an exception is thrown during the fetch() process, use this
+     * method to recover from it.
+     * 
+     * This default implementation just re-throws the exception, but extended
+     * classes may override the behavior to return alternative output from
+     * the failed fetch().
+     * 
+     * @param Exception $e The exception thrown during the fetch() process.
+     * 
+     * @return string The alternative output from the rescued exception.
+     * 
+     */
+    protected function _exceptionDuringFetch(Exception $e)
+    {
+        throw $this->_exception('ERR_DURING_FETCH', array(
+            'exception' => $e,
+        ));
     }
 }

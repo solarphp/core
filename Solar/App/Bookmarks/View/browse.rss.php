@@ -19,7 +19,6 @@
 
 // output the header this way so as not to let the XML
 // tags interfere with PHP
-header('Content-Type: text/xml; charset=iso-8859-1');
 echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
 
 // build the link to the source page by stripping .ext

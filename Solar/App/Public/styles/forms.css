@@ -1,0 +1,50 @@
+option {
+    font-family: "Lucida Sans", Verdana, sans-serif;
+}
+
+.input-text,
+.input-password,
+.input-textarea {
+    font-family: "Lucida Sans Typewriter", "Courier New", monospace;
+	font-size: 12px;
+}
+
+/* form layout (http://phrogz.net/CSS/formdl.html) */
+
+#content #main form dl {
+    margin: 0em;
+    margin-top: 0.5em;
+    clear: both;
+}
+
+#content #main form dt {
+    float: left;
+    clear: left;
+    width: 10em;
+    margin-bottom: 0.8em;
+    text-align: right;
+    font-weight: bold;
+    position: relative;
+}
+
+#content #main form dd {
+    clear: right;
+    margin-left: 10.5em;
+    margin-bottom: 0.8em;
+    padding-left: 0.5em
+}
+
+#content #main form ul {
+	margin: 0;
+	padding: 4px;
+	list-style: none;
+}
+
+#content #main form ul li {
+    margin: 0;
+}
+
+#content #main form dl ul {
+	color: red;
+	font-size: 90%;
+}

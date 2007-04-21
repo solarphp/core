@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Generic application view for displaying major errors.
+ * Partial layout template for the "footer" div.
  * 
  * @category Solar
  * 
@@ -15,8 +15,3 @@
  * 
  */
 ?>
-<div class='error'>
-<?php foreach ($this->errors as $code): ?>
-    <p><?php echo $this->getText($code) ?></p>
-<?php endforeach ?>
-</div>

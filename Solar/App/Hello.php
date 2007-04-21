@@ -28,7 +28,7 @@
  * @subpackage Solar_App_Hello
  * 
  */
-class Solar_App_Hello extends Solar_App {
+class Solar_App_Hello extends Solar_App_Base {
     
     /**
      * 
@@ -87,7 +87,7 @@ class Solar_App_Hello extends Solar_App {
         }
         
         // set the layout title
-        $this->layout_title = get_class($this);
+        $this->layout_head['title'] = get_class($this);
     }
     
     /**
@@ -112,7 +112,7 @@ class Solar_App_Hello extends Solar_App {
         $this->text = $this->locale('TEXT_HELLO_WORLD');
 
         // tell the site layout what title to use
-        $this->layout_title = 'Solar: Hello World!';
+        $this->layout_head['title'] = 'Solar: Hello World!';
     }
     
     /**

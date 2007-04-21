@@ -28,7 +28,7 @@
  * @subpackage Solar_App_Bookmarks
  * 
  */
-class Solar_App_Bookmarks extends Solar_App {
+class Solar_App_Bookmarks extends Solar_App_Base {
     
     /**
      * 
@@ -37,9 +37,9 @@ class Solar_App_Bookmarks extends Solar_App {
      * Keys are ...
      * 
      * `area_name`
-     * : (string) The content area for the bookmarks
-     *   app, default 'Solar_App_Bookmarks'.  Will be created automatically
-     *   if it does not exist.
+     * : (string) The content area for the bookmarks app, default
+     *   'Solar_App_Bookmarks'.  Will be created automatically if it does not
+     *   exist.
      * 
      * `content`
      * : (dependency) A Solar_Content domain model dependency object.
@@ -220,9 +220,6 @@ class Solar_App_Bookmarks extends Solar_App {
                 'area_id' => $area['id']
             )
         );
-        
-        // add the bookmarks stylesheet
-        $this->layout_style[] = 'Solar/styles/bookmarks.css';
     }
     
     /**
@@ -656,6 +653,7 @@ class Solar_App_Bookmarks extends Solar_App {
      */
     public function actionUser($owner_handle = null, $tags = null)
     {
+        
         // allow uri to set the "count" for each page (default 10)
         $this->_bookmarks->setPaging($this->_query('paging', 10));
 

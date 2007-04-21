@@ -17,55 +17,58 @@
  * 
  */
 ?>
-                <!-- NEW ITEM -->
-                <p>
-                    <!-- title -->
-                    <span style="font-size: 120%; font-weight: bold;"><?php
-                        echo $this->anchor($uri, $subj);
-                    ?></span>
+
+            <li class="bookmark-item">
+                <span><?php
+                    $title = $uri;
+                    if (strlen($title) > 72) {
+                        // if longer than 72 chars, only show 64 chars, cut in the middle
+                        $title = substr($title, 0, 48) . ' ... ' . substr($title, -16);
+                    }
+                    echo $this->anchor($uri, $subj, array('title' => $title));
+                ?></span>
+                <ul><?php if (trim($summ) != ''): ?>
                     
-                    <!-- description -->
-                    <?php if (trim($summ) != ''): ?>
-                    
-                    <br /><?php echo nl2br(wordwrap($this->escape($summ), 72)) ?>
+                    <li class="summ"><?php
+                        echo nl2br(wordwrap($this->escape($summ), 72));
+                    ?></li>
                     <?php endif ?>
                     
-                    <!-- pos and uri -->
-                    <br /><span style="font-size: 90%;"><?php
+                    <li class="pos"><span><?php
+                            echo $this->getText('LABEL_POS');
+                        ?></span> <?php echo $this->escape($pos);
+                    ?></li>
+    
+                    <li class="created">
+                        <span><?php
+                            echo $this->getText('LABEL_CREATED');
+                        ?></span> <?php echo $this->timestamp($created); ?>
+            
+                        <span><?php
+                            echo $this->getText('LABEL_OWNER_HANDLE');
+                        ?></span> <?php echo $this->action(
+                            "bookmarks/user/$owner_handle",
+                            $owner_handle);
+                        ?>
+            
+                    </li>
+    
+                    <li class="tags">
+                        <span><?php echo $this->getText('LABEL_TAGS');
+                        ?></span><?php
+                            $tags = explode(' ', $tags);
+                            foreach ($tags as $tag) {
+                                echo ' ' . $this->action("bookmarks/tag/$tag", $tag);
+                            }
+                        ?>
+            
+                    </li><?php
+                    if (Solar::registry('user')->auth->handle == $owner_handle): ?>
                     
-                        // pos
-                        echo $this->getText('LABEL_POS') . ' ' . $this->escape($pos);
-                        
-                        // from uri
-                        echo ' ' . $this->getText('LABEL_URI') . ' ';
-                        $cut = $uri;
-                        if (strlen($cut) > 72) {
-                            // if longer than 72 chars, only show 64 chars, cut in the middle
-                            $cut = substr($cut, 0, 48) . '...' . substr($cut, -16);
-                        }
-                        echo $this->escape($cut);
-                    ?>
+                    <li class="edit">
+                        <?php echo $this->action("bookmarks/edit/$id", 'PROCESS_EDIT'); ?>
+                    </li>
+                    <?php endif; ?>
                     
-                    <!-- date added by user -->
-                    <br /><?php
-                        echo $this->getText('LABEL_CREATED') . ' ' . $this->escape($this->timestamp($created) . ' ');
-                        echo $this->getText('LABEL_OWNER_HANDLE') . ' ';
-                        echo $this->action("bookmarks/user/$owner_handle", $owner_handle);
-                    ?></span>
-                    
-                    <!-- tags and edit link -->
-                    <br /><?php
-                    
-                        // tags
-                        echo $this->getText('LABEL_TAGS');
-                        $tags = explode(' ', $tags);
-                        foreach ($tags as $tag) {
-                            echo '&nbsp;' . $this->action("bookmarks/tag/$tag", $tag);
-                        }
-                        
-                        // edit link
-                        if (Solar::registry('user')->auth->handle == $owner_handle) {
-                            echo '&nbsp;...&nbsp;' . $this->action("bookmarks/edit/$id", 'PROCESS_EDIT');
-                        }
-                    ?>
-                </p>
+                </ul>
+            </li>

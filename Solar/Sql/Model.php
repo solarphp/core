@@ -1029,8 +1029,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             $record = $this->_newRecord($data);
             
             // get related data from each eager has_many relationship
+            $list = (array) $params['eager'];
             foreach ($this->_related as $name => $opts) {
-                $eager = in_array($name, $params['eager']);
+                $eager = in_array($name, $list);
                 if ($eager && $opts['type'] == 'has_many') {
                     $record->_data[$name] = $this->_fetchRelated($name, $opts['page']);
                 }

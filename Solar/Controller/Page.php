@@ -1104,6 +1104,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _getActionFormat($action)
     {
+        // skip if there are no action formats
+        if (empty($this->_action_format)) {
+            return array();
+        }
+        
         // look for the action as passed (foo-bar) in action_format
         $key = $action;
         if (! empty($this->_action_format[$key])) {

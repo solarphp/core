@@ -1244,6 +1244,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * from the view and layout scripts.  By default, it leaves the
      * response alone.
      * 
+     * @return void
+     * 
      */
     protected function _postRender()
     {

@@ -196,7 +196,8 @@ class Solar_Response extends Solar_Base {
      * 
      * By default, should cookies be sent by HTTP only?
      * 
-     * @param bool $flag
+     * @param bool $flag True to send by HTTP only, false to send by any
+     * method.
      * 
      * @return void
      * 

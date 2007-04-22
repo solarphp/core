@@ -187,12 +187,10 @@ class Solar_Test_Example_PageController extends Solar_Controller_Page {
      * 
      * Hook for pre-render behavior.
      * 
-     * @param Solar_View $view The Solar_View object.
-     * 
      * @return void
      * 
      */
-    protected function _preRender($view)
+    protected function _preRender()
     {
         $this->hooks[__FUNCTION__] ++;
     }
@@ -201,14 +199,11 @@ class Solar_Test_Example_PageController extends Solar_Controller_Page {
      * 
      * Hook for post-render filtering.
      * 
-     * @param string $output The output before filtering.
-     * 
-     * @return string $output The output after filtering.
+     * @return void
      * 
      */
-    protected function _postRender($output)
+    protected function _postRender()
     {
         $this->hooks[__FUNCTION__] ++;
-        return $output;
     }
 }

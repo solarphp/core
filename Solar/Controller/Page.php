@@ -1094,8 +1094,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Returns the allowed format list for a given action.
      * 
-     * Allows the use of both "fooBar" and "foo-bar" as the action key in
-     * the action_format array.
+     * Allows the use of "foo-bar" (preferred), "fooBar", or "actionFooBar"
+     * as the action key in the action_format array.
      * 
      * @param string $action The action name.
      * 

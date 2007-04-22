@@ -62,11 +62,25 @@ class Solar_Locale extends Solar_Base {
     
     /**
      * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->setCode($this->_config['code']);
+    }
+    
+    /**
+     * 
      * Sets the locale code and clears out previous translations.
      * 
      * @param string $code A locale code, for example, 'en_US'.
      * 
      * @return void
+     * 
      */
     public function setCode($code)
     {

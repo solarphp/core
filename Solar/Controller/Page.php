@@ -1119,6 +1119,13 @@ abstract class Solar_Controller_Page extends Solar_Base {
             return (array) $this->_action_format[$key];
         }
         
+        // convert the action to full method style (actionFooBar) and look for
+        // the last time
+        $key = 'action' . ucfirst($key);
+        if (! empty($this->_action_format[$key])) {
+            return (array) $this->_action_format[$key];
+        }
+        
         // fail
         return array();
     }

@@ -85,7 +85,7 @@ class Solar_Json extends Solar_Base {
      *
      * Marker constants for use in _json_decode()
      *
-     * @const
+     * @constant
      *
      */
     const SLICE  = 1;

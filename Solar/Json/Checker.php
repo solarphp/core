@@ -57,193 +57,193 @@ class Solar_Json_Checker extends Solar_Base {
 
     /**
      * Error
-     * @const
+     * @constant
      */
     const S_ERR = -1;
 
     /**
      * Space
-     * @const
+     * @constant
      */
     const S_SPA = 0;
 
     /**
      * Other whitespace
-     * @const
+     * @constant
      */
     const S_WSP = 1;
 
     /**
      * {
-     * @const
+     * @constant
      */
     const S_LBE = 2;
 
     /**
      * }
-     * @const
+     * @constant
      */
     const S_RBE = 3;
 
     /**
      * [
-     * @const
+     * @constant
      */
     const S_LBT = 4;
 
     /**
      * ]
-     * @const
+     * @constant
      */
     const S_RBT = 5;
 
     /**
      * :
-     * @const
+     * @constant
      */
     const S_COL = 6;
 
     /**
      * ,
-     * @const
+     * @constant
      */
     const S_COM = 7;
 
     /**
      * "
-     * @const
+     * @constant
      */
     const S_QUO = 8;
 
     /**
      * \
-     * @const
+     * @constant
      */
     const S_BAC = 9;
 
     /**
      * /
-     * @const
+     * @constant
      */
     const S_SLA = 10;
 
     /**
      * +
-     * @const
+     * @constant
      */
     const S_PLU = 11;
 
     /**
      * -
-     * @const
+     * @constant
      */
     const S_MIN = 12;
 
     /**
      * .
-     * @const
+     * @constant
      */
     const S_DOT = 13;
 
     /**
      * 0
-     * @const
+     * @constant
      */
     const S_ZER = 14;
 
     /**
      * 123456789
-     * @const
+     * @constant
      */
     const S_DIG = 15;
 
     /**
      * a
-     * @const
+     * @constant
      */
     const S__A_ = 16;
 
     /**
      * b
-     * @const
+     * @constant
      */
     const S__B_ = 17;
 
     /**
      * c
-     * @const
+     * @constant
      */
     const S__C_ = 18;
 
     /**
      * d
-     * @const
+     * @constant
      */
     const S__D_ = 19;
 
     /**
      * e
-     * @const
+     * @constant
      */
     const S__E_ = 20;
 
     /**
      * f
-     * @const
+     * @constant
      */
     const S__F_ = 21;
 
     /**
      * l
-     * @const
+     * @constant
      */
     const S__L_ = 22;
 
     /**
      * n
-     * @const
+     * @constant
      */
     const S__N_ = 23;
 
     /**
      * r
-     * @const
+     * @constant
      */
     const S__R_ = 24;
 
     /**
      * s
-     * @const
+     * @constant
      */
     const S__S_ = 25;
 
     /**
      * t
-     * @const
+     * @constant
      */
     const S__T_ = 26;
 
     /**
      * u
-     * @const
+     * @constant
      */
     const S__U_ = 27;
 
     /**
      * ABCDF
-     * @const
+     * @constant
      */
     const S_A_F = 28;
 
     /**
      * E
-     * @const
+     * @constant
      */
     const S_E = 29;
 
     /**
      * Everything else
-     * @const
+     * @constant
      */
     const S_ETC = 30;
 
@@ -271,7 +271,7 @@ class Solar_Json_Checker extends Solar_Base {
      *
      * These modes can be pushed on the "pushdown automata" (PDA) stack.
      *
-     * @const
+     * @constant
      *
      */
     const MODE_DONE     = 1;
@@ -283,7 +283,7 @@ class Solar_Json_Checker extends Solar_Base {
      *
      * Max depth allowed for nested structures.
      *
-     * @const
+     * @constant
      *
      */
     const MAX_DEPTH = 20;

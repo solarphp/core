@@ -876,6 +876,11 @@ class Solar_Sql_Select extends Solar_Base {
         return $this;
     }
     
+    public function getParts()
+    {
+        return $this->_parts;
+    }
+    
     /**
      * 
      * Fetch the results based on the current query properties.

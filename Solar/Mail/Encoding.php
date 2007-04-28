@@ -115,7 +115,7 @@ class Solar_Mail_Encoding {
                 // ASCII values.
                 $hdr_val = preg_replace_callback(
                     '/([\x80-\xFF])/',
-                    array('Solar_Message_Encoding', '_qpReplace'),
+                    array('Solar_Mail_Encoding', '_qpReplace'),
                     $hdr_val
                 );
                 

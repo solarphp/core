@@ -1462,7 +1462,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function delete()
     {
-        $this->checkFocus('record');
+        $this->_checkFocus('record');
         if ($this->_status != 'new') {
             $where = $this->_sql->quoteInto(
                 "{$this->_primary_col} = ?",

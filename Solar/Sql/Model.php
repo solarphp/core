@@ -59,6 +59,14 @@
  * 
  * @todo Make delete() cascade as needed.
  * 
+ * @todo When saving, save related Record and Collection properties.
+ * 
+ * @todo Make it possible to append to a Collection, and then insert as needed
+ * when saving.
+ * 
+ * @todo Add "soft delete" feature? $deleted_col = 'deleted', and then only
+ * retrieve non-deleted cols.
+ * 
  */
 abstract class Solar_Sql_Model extends Solar_Base
     implements ArrayAccess, Countable, IteratorAggregate {
@@ -391,30 +399,6 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_serialize_cols = array();
-    
-    /**
-     * 
-     * "Special" column names used by the Model; each is ignored by the Model
-     * if it doesn't exist in the table.
-     * 
-     * Keys are ...
-     * 
-     * `created`
-     * : The column name for 'created' timestamps; default name is 
-     * 'created'.
-     * 
-     * `inherit`
-     * : The column name that tracks the model to use for single-table
-     * inheritance; default name is 'model'.
-     * 
-     * `primary`
-     * : The primary-key column name.
-     * 
-     * `updated`
-     * : The column name for 'updated' timestamps.
-     * 
-     * @var array
-     */
     
     /**
      * 
@@ -1194,7 +1178,21 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function fetchNew($spec = null)
     {
         $this->_checkFocus('master');
-        
+        return $this->_fetchNew($spec);
+    }
+    
+    /**
+     * 
+     * Internal-only support method to fetch new (blank) records.
+     * 
+     * @param array $spec An array of user-specified data to place into the
+     * new record, if any.
+     * 
+     * @return Solar_Sql_Model
+     * 
+     */
+    protected function _fetchNew($spec = null)
+    {
         // the user-specifed data
         settype($spec, 'array');
         
@@ -1228,6 +1226,34 @@ abstract class Solar_Sql_Model extends Solar_Base
         $record->_status = 'new';
         return $record;
     }
+    
+    /**
+     * 
+     * Converts the properties of this model Record or Collection to an array,
+     * including related models stored in properties.
+     * 
+     * @return array
+     * 
+     */
+    public function toArray()
+    {
+        // only works with records and collections
+        $this->_checkFocus(array('record', 'collection'));
+        
+        // get a copy of everything
+        $data = array();
+        foreach ($this->_data as $key => $val) {
+            if ($val instanceof Solar_Sql_Model) {
+                $data[$key] = $val->toArray();
+            } else {
+                $data[$key] = $val;
+            }
+        }
+        
+        // done!
+        return $data;
+    }
+    
     
     /**
      * 
@@ -1296,18 +1322,48 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Inserts or updates the current record based on its primary key.
+     * Inserts or updates the current record based on its primary key,
+     * or if a collection, inserts or updates each record in the collection.
      * 
-     * @param array $data An associative array of data to merge with existing
-     * record data.
+     * @param array $data If the model focus is 'record', an associative
+     * array of data to merge with existing record data.  Ignored in 
+     * 'collection' focus.
      * 
-     * @return array The data as inserted or updated.
+     * @return void
+     * 
+     * @todo Wrap these in transactions?  Need to track transaction status
+     * in the Catalog, so we don't start multiple transactions.
+     * 
+     * @todo When saving related, don't save deleted ones; catch ERR_DELETED
+     * and proceed ot the next related.
      * 
      */
     public function save($data = null)
     {
-        $this->_checkFocus('record');
+        // only save records and collections, that have not been deleted
+        $this->_checkFocus(array('record', 'collection'));
+        $this->_checkDeleted();
         
+        // ok, what kind of save?
+        if ($this->_focus == 'record') {
+            $this->_saveRecord($data);
+        } elseif ($this->_focus == 'collection') {
+            $this->_saveCollection();
+        }
+    }
+    
+    /**
+     * 
+     * Saves this individual record, along with any related record instances.
+     * 
+     * @param array $data An associative array of data to merge with existing
+     * record data.
+     * 
+     * @return void
+     * 
+     */
+    protected function _saveRecord($data = null)
+    {
         // load data at save-time?
         if ($data) {
             
@@ -1317,7 +1373,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             // the model name in array keys
             $name = $this->_model_name;
             
-            // look to see if we have an array-key for this model
+            // do we have an array-key for this model in the data?
             if (array_key_exists($name, $data) && is_array($data[$name])) {
                 // get just the array-key values for this model name
                 $this->_loadRecord($data[$name]);
@@ -1332,13 +1388,44 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // if the primary key value is not present, insert;
-        // otherwise, update.
-        $primary = $this->_primary_col;
-        if (empty($this->_data[$primary])) {
-            $this->_insert();
-        } else {
-            $this->_update();
+        // only save if we're not clean
+        if ($this->_status != 'clean') {
+            // if the primary key value is not present, insert;
+            // otherwise, update.
+            $primary = $this->_primary_col;
+            if (empty($this->_data[$primary])) {
+                $this->_insert();
+            } else {
+                $this->_update();
+            }
+            $this->_status = 'clean';
+        }
+        
+        // now save each related, but only if instantiated
+        foreach ($this->_related as $name) {
+            if ($this->_data[$name] instanceof Solar_Sql_Model) {
+                $this->_data[$name]->save();
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Saves each record in the collection.
+     * 
+     * @param array $data An associative array of data to merge with existing
+     * record data.
+     * 
+     * @return void
+     * 
+     * @todo Don't attempt to save deleted records in a collection; or, catch
+     * ERR_DELETED and go on to the next record in the collection.
+     * 
+     */
+    protected function _saveCollection()
+    {
+        foreach ($this->_data as $key => $val) {
+            $val->save();
         }
     }
     
@@ -1349,6 +1436,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Note that this does not reload any related values.
      * 
      * @return void
+     * 
+     * @todo rename to refresh(), so we can have a load() method?
      * 
      */
     public function reload()
@@ -1598,7 +1687,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // keep a copy of the data for manipulation (filters, etc)
         $this->_data = array_merge(
-            $this->fetchNew()->toArray(),
+            $this->_fetchNew()->toArray(), // use the *protected* version
             $this->_data
         );
         
@@ -2148,21 +2237,22 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Checks the current focus, and throws an exception if they don't match.
      * 
-     * @param string $focus The focus we should have right now.
+     * @param string|array $allow The focus we should have right now.
      * 
      * @return void
      * 
-     * @throws Solar_Sql_Model_Exception_Focus_Not_* Indicates the focus
+     * @throws Solar_Sql_Model_Exception_Focus_Is_* Indicates the focus
      * is not the requested one.
      * 
      */
-    protected function _checkFocus($focus)
+    protected function _checkFocus($allow)
     {
-        if ($this->_focus != $focus) {
+        settype($allow, 'array');
+        if (! in_array($this->_focus, $allow)) {
             throw $this->_exception(
-                "ERR_FOCUS_NOT_" . strtoupper($focus),
+                "ERR_FOCUS_IS_" . strtoupper($this->_focus),
                 array(
-                    'focus' => $this->_focus,
+                    'allow' => $focus,
                 )
             );
         }

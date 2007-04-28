@@ -95,4 +95,6 @@ return array(
     'LABEL_EMAIL'                => 'Email',
     'LABEL_MONIKER'              => 'Display Name',
     'LABEL_URI'                  => 'Website',
+    'LABEL_CREATED'              => 'Created',
+    'LABEL_UPDATED'              => 'Updated',
 );

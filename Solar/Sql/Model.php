@@ -34,9 +34,6 @@
  * 
  * @package Solar_Sql_Model
  * 
- * @todo Add saving of related records?  Need to wrap in a transaction.  Also
- * need to look up related values, insert-id's, etc.
- * 
  * @todo Honor "eager" loading of to-many by fetching all has_many records for
  * all records in a collection, so as to hit the database only once per relation.
  * 
@@ -55,11 +52,19 @@
  * 
  * @todo Add isValid() method?
  * 
- * @todo Add isRecord(), isCollection(), isMaster(), getStatus()?
+ * @todo Add isRecord(), isCollection(), isMaster(), getStatus(), getFocus()?
  * 
  * @todo Make delete() cascade as needed.
  * 
+ * @todo Add saving of related records?  Need to wrap in a transaction.  Also
+ * need to look up related values, insert-id's, etc.
+ * 
  * @todo When saving, save related Record and Collection properties.
+ * 
+ * @todo When saving related, populate the related primary-key back to the 
+ * native record.
+ * 
+ * @todo When saving, should we save the related "belongs-to" record?
  * 
  * @todo Make it possible to append to a Collection, and then insert as needed
  * when saving.
@@ -550,8 +555,6 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Magic getter for record properties; automatically calls __getColName()
      * methods when they exist.
      * 
-     * In non-record focuses, disallows getting of non-existent properties.
-     * 
      * @param string $key The property name.
      * 
      * @return mixed The property value.
@@ -560,6 +563,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function __get($key = null)
     {
         // allow property-like access to record data
+        $this->_checkFocus('record');
         if ($this->_focus == 'record') {
             
             // disallow if status is 'deleted'
@@ -589,22 +593,12 @@ abstract class Solar_Sql_Model extends Solar_Base
                 return $this->_data[$key];
             }
         }
-        
-        // in other focuses, blow up
-        throw $this->_exception(
-            'ERR_PROPERTY_NOT_DEFINED',
-            array(
-                'property' => "\$$key",
-            )
-        );
     }
     
     /**
      * 
      * Magic setter for record properties; automatically calls __setColName()
      * methods when they exist.
-     * 
-     * In non-record focuses, disallows setting of non-existent properties.
      * 
      * @param string $key The property name.
      * 
@@ -616,6 +610,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function __set($key, $val)
     {
         // allow property-like access to record data
+        $this->_checkFocus('record');
         if ($this->_focus == 'record') {
             
             // disallow if status is 'deleted'
@@ -637,15 +632,6 @@ abstract class Solar_Sql_Model extends Solar_Base
                 // no accessor method, not a primary key; assign directly.
                 $this->_data[$key] = $val;
             }
-            
-        } else {
-            // in other focuses, blow up
-            throw $this->_exception(
-                'ERR_PROPERTY_NOT_DEFINED',
-                array(
-                    'property' => "\$$key",
-                )
-            );
         }
     }
     
@@ -1190,6 +1176,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @return Solar_Sql_Model
      * 
+     * @todo Add placeholder keys for related models?  Set as null, or as
+     * new record/collection objects?
+     * 
      */
     protected function _fetchNew($spec = null)
     {
@@ -1402,8 +1391,10 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // now save each related, but only if instantiated
-        foreach ($this->_related as $name) {
-            if ($this->_data[$name] instanceof Solar_Sql_Model) {
+        foreach ($this->_related as $name => $info) {
+            if (! empty($this->_data[$name]) &&
+                $this->_data[$name] instanceof Solar_Sql_Model) {
+                // not empty, and is a model instance
                 $this->_data[$name]->save();
             }
         }
@@ -2077,7 +2068,7 @@ abstract class Solar_Sql_Model extends Solar_Base
                 "{$opts['through_alias']}.{$opts['through_native_col']} = ?",
                 $this->_data[$opts['native_col']]
             );
-                
+            
             // honor foreign inheritance
             if ($opts['foreign_inherit_col']) {
                 $select->where(
@@ -2408,6 +2399,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     final public function offsetGet($key)
     {
+        $this->_checkFocus(array('record', 'collection'));
+        
         if ($this->_focus == 'record') {
             return $this->__get($key);
         }
@@ -2426,8 +2419,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             // return the record
             return $this->_records[$key];
         }
-        
-        return false;
     }
     
     /**
@@ -2440,10 +2431,27 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @return void
      * 
+     * @todo If $key is null, that is [] ("append") notation.  Only let it
+     * work for collections?
+     * 
      */
     final public function offsetSet($key, $val)
     {
-        $this->__set($key, $val);
+        $this->_checkFocus(array('record', 'collection'));
+        
+        if ($this->_focus == 'record') {
+            return $this->__set($key, $val);
+        }
+        
+        if ($this->_focus == 'collection') {
+            if ($key === null) {
+                $key = $this->count();
+                if (! $key) {
+                    $key = 0;
+                }
+            }
+            return $this->_data[$key] = $val;
+        }
     }
     
     /**

@@ -2059,15 +2059,18 @@ abstract class Solar_Sql_Model extends Solar_Base
         if ($opts['type'] == 'has_many' && $opts['through']) {
             
             // more-complex 'has_many through' relationship.
-            // select from the map table.
-            $select->from("{$opts['through_table']} AS {$opts['through_alias']}");
+            // select from the foreign table.
+            $select->from(
+                "{$opts['foreign_table']} AS {$opts['foreign_alias']}",
+                $opts['cols']
+            );
             
-            // join to columns from the foreign table
-            $join_table = "{$opts['foreign_table']} AS {$opts['foreign_alias']}";
+            // join through the mapping table.
+            $join_table = "{$opts['through_table']} AS {$opts['through_alias']}";
             $join_where = "{$opts['foreign_alias']}.{$opts['foreign_col']} = "
                         . "{$opts['through_alias']}.{$opts['through_foreign_col']}";
             
-            $select->leftJoin($join_table, $join_where, $opts['cols']);
+            $select->leftJoin($join_table, $join_where);
             
             // restrict to the related native column value in the "through" table
             $select->where(
@@ -2114,6 +2117,8 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->having($opts['having'])
                ->order($opts['order'])
                ->setPaging($opts['paging']);
+        
+        Solar::dump($select->__toString());
         
         // done
         return $select;

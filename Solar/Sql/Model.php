@@ -2118,8 +2118,6 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->order($opts['order'])
                ->setPaging($opts['paging']);
         
-        Solar::dump($select->__toString());
-        
         // done
         return $select;
     }

@@ -958,6 +958,15 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      */
     protected function _fixRelatedHasMany(&$opts, $model, $foreign)
     {
+        // are we working through another relationship?
+        if (! empty($opts['through'])) {
+            // through another relationship, hand off to another method
+            return $this->_fixRelatedHasManyThrough($opts, $model, $foreign);
+        } else {
+            // not "through" anything, clear the "through" keys
+            $this->_fixRelatedNotThrough($opts);
+        }
+        
         // a little magic
         if (empty($opts['foreign_col']) && empty($opts['native_col']) &&
             ! empty($opts['foreign_key'])) {
@@ -976,15 +985,6 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         if (empty($opts['native_col'])) {
             // named by native primary key (e.g., native.id)
             $opts['native_col'] = $model->_primary_col;
-        }
-        
-        // are we working through another relationship?
-        if (empty($opts['through'])) {
-            // not "through" anything
-            $this->_fixRelatedNotThrough($opts);
-        } else {
-            // through another relationship
-            $this->_fixRelatedHasManyThrough($opts, $model, $foreign);
         }
     }
     
@@ -1015,6 +1015,25 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
             ));
         }
         
+        // a little magic
+        if (empty($opts['foreign_col']) && empty($opts['native_col']) &&
+            ! empty($opts['foreign_key'])) {
+            // foreign key is stored in the foreign model
+            $opts['foreign_col'] = $opts['foreign_key'];
+        }
+        
+        // the foreign column
+        if (empty($opts['foreign_col'])) {
+            // named by foreign primary key (e.g., foreign.id)
+            $opts['foreign_col'] = $foreign->_primary_col;
+        }
+        
+        // the native column
+        if (empty($opts['native_col'])) {
+            // named by native primary key (e.g., native.id)
+            $opts['native_col'] = $model->_primary_col;
+        }
+        
         // convenient reference to the "through" relationship
         $through = $model->_related[$opts['through']];
         
@@ -1033,7 +1052,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
             empty($opts['through_foreign_col']) &&
             ! empty($opts['through_key'])) {
             // use this
-            $opts['through_foreign_key'] = $opts['through_key'];
+            $opts['through_foreign_col'] = $opts['through_key'];
         }
         
         // what's the native model key in the through table?

@@ -195,9 +195,9 @@ class Solar_View_Helper_Js extends Solar_View_Helper_JsLibrary {
 
         // Gather all registered scripts for output
         if (!empty($this->scripts)) {
-            foreach ($this->scripts as $script) {
-                $js .= $this->_view->inlineScript($script);
-            }
+            $scripts = implode("\n\n", $this->scripts);
+            $scripts = trim($scripts);
+            $js = $this->_view->inlineScript($scripts);
         }
 
         return $js;

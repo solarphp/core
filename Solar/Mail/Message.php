@@ -25,8 +25,6 @@
  * 
  * @package Solar_Mail
  * 
- * @todo Use DataFilter to validate email addresses?
- * 
  */
 class Solar_Mail_Message extends Solar_Base {
     
@@ -228,12 +226,13 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $crlf The CRLF line-ending string.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setCrlf($crlf)
     {
         $this->_crlf = $crlf;
+        return $this;
     }
     
     /**
@@ -252,16 +251,15 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the character set for this message.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $charset The character set.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setCharset($charset)
     {
-        $this->_charset = Solar_Mail_Encoding::stripCrlf($charset);
+        $this->_charset = $charset;
+        return $this;
     }
     
     /**
@@ -280,23 +278,20 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the Return-Path header for an email.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $addr The email address of the return-path.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setReturnPath($addr)
     {
-        $this->_return_path = Solar_Mail_Encoding::stripCrlf($addr);
+        $this->_return_path = $addr;
+        return $this;
     }
     
     /**
      * 
      * Returns the current Return-Path address for the email.
-     * 
-     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @return string
      * 
@@ -316,15 +311,17 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $name The display-name for the sender, if any.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setFrom($addr, $name = '')
     {
         $this->_from = array(
-            Solar_Mail_Encoding::stripCrlf($addr),
-            Solar_Mail_Encoding::stripCrlf($name),
+            $addr,
+            $name,
         );
+        
+        return $this;
     }
     
     /**
@@ -343,60 +340,51 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Adds a "To:" address recipient.
      * 
-     * Strips CR/LF from the address and name to help avoid header injections.
-     * 
      * @param string $addr The email address of the recipient.
      * 
      * @param string $name The display-name for the recipient, if any.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function addTo($addr, $name = null)
     {
-        $addr = Solar_Mail_Encoding::stripCrlf($addr);
-        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['To'][$addr] = $name;
+        return $this;
     }
     
     /**
      * 
      * Adds a "Cc:" address recipient.
      * 
-     * Strips CR/LF from the address and name to help avoid header injections.
-     * 
      * @param string $addr The email address of the recipient.
      * 
      * @param string $name The display-name for the recipient, if any.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function addCc($addr, $name = null)
     {
-        $addr = Solar_Mail_Encoding::stripCrlf($addr);
-        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['Cc'][$addr] = $name;
+        return $this;
     }
     
     /**
      * 
-     * Adds a "To:" address recipient.
-     * 
-     * Strips CR/LF from the address and name to help avoid header injections.
+     * Adds a "Bcc:" address recipient.
      * 
      * @param string $addr The email address of the recipient.
      * 
      * @param string $name The display-name for the recipient, if any.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function addBcc($addr, $name = null)
     {
-        $addr = Solar_Mail_Encoding::stripCrlf($addr);
-        $name = Solar_Mail_Encoding::stripCrlf($name);
         $this->_rcpt['Bcc'][$addr] = $name;
+        return $this;
     }
     
     /**
@@ -433,16 +421,15 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Sets the subject of the message.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $subject The subject line for the message.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setSubject($subject)
     {
-        $this->_subject = Solar_Mail_Encoding::stripCrlf($subject);
+        $this->_subject = $subject;
+        return $this;
     }
     
     /**
@@ -463,7 +450,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $text The plain-text message.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setText($text)
@@ -479,6 +466,9 @@ class Solar_Mail_Message extends Solar_Base {
         
         // keep it
         $this->_text = $part;
+        
+        // done!
+        return $this;
     }
     
     /**
@@ -499,7 +489,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param string $html The HTML message.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function setHtml($html)
@@ -515,6 +505,9 @@ class Solar_Mail_Message extends Solar_Base {
         
         // keep it
         $this->_html = $part;
+        
+        // done!
+        return $this;
     }
     
     /**
@@ -535,12 +528,13 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * @param Solar_Mail_Message_Part $part The part to add as an attachment.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function attachPart($part)
     {
         $this->_atch[] = $part;
+        return $this;
     }
     
     /**
@@ -552,7 +546,7 @@ class Solar_Mail_Message extends Solar_Base {
      * @param string $type The Content-Type to use for the file. If empty,
      * uses the Solar_Mail_Message_Part default $type.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function attachFile($file, $type = null)
@@ -567,6 +561,8 @@ class Solar_Mail_Message extends Solar_Base {
         }
         
         $this->_atch[] = $part;
+        
+        return $this;
     }
     
     /**
@@ -586,13 +582,13 @@ class Solar_Mail_Message extends Solar_Base {
      * @param bool $replace If true, resets all headers of the same label so
      * that this is the only value for that header.
      * 
-     * @return void
+     * @return Solar_Mail_Message This object.
      * 
      */
     public function addHeader($label, $value, $replace = true)
     {
         // sanitize the header label
-        $label = Solar_Mail_Encoding::headerLabel($label);
+        $label = Solar_Mime::headerLabel($label);
         
         // not allowed to add headers for these labels
         $list = array('to', 'cc', 'bcc', 'from', 'subject', 'return-path',
@@ -607,7 +603,10 @@ class Solar_Mail_Message extends Solar_Base {
         }
         
         // save the label and value
-        $this->_headers[$label][] = Solar_Mail_Encoding::stripCrlf($value);
+        $this->_headers[$label][] = $value;
+        
+        // done!
+        return $this;
     }
     
     /**
@@ -710,7 +709,8 @@ class Solar_Mail_Message extends Solar_Base {
         // encode all the headers so far
         foreach ($headers as $key => $val) {
             // val[0] is the label, val[1] is the value
-            $headers[$key][1] = Solar_Mail_Encoding::headerValue(
+            $val[0] = Solar_Mime::headerLabel($val[0]);
+            $headers[$key][1] = Solar_Mime::headerValue(
                 $val[0],
                 $val[1],
                 $this->_charset,
@@ -720,10 +720,11 @@ class Solar_Mail_Message extends Solar_Base {
         
         // add and encode custom headers
         foreach ($this->_headers as $label => $list) {
+            $label = Solar_Mime::headerLabel($label);
             foreach ($list as $value) {
                 $headers[] = array(
                     $label,
-                    Solar_Mail_Encoding::headerValue(
+                    Solar_Mime::headerValue(
                         $label,
                         $value,
                         $this->_charset,

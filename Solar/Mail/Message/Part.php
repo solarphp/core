@@ -150,7 +150,7 @@ class Solar_Mail_Message_Part {
      */
     public function setType($type)
     {
-        $this->_type = Solar_Mail_Encoding::stripCrlf($type);
+        $this->_type = $type;
     }
     
     /**
@@ -178,7 +178,7 @@ class Solar_Mail_Message_Part {
      */
     public function setCharset($charset)
     {
-        $this->_charset = Solar_Mail_Encoding::stripCrlf($charset);
+        $this->_charset = $charset;
     }
     
     /**
@@ -206,7 +206,7 @@ class Solar_Mail_Message_Part {
      */
     public function setBoundary($boundary)
     {
-        $this->_boundary = Solar_Mail_Encoding::stripCrlf($boundary);
+        $this->_boundary = $boundary;
     }
     
     /**
@@ -234,7 +234,7 @@ class Solar_Mail_Message_Part {
      */
     public function setDisposition($disposition)
     {
-        $this->_disposition = Solar_Mail_Encoding::stripCrlf($disposition);
+        $this->_disposition = $disposition;
     }
     
     /**
@@ -262,7 +262,7 @@ class Solar_Mail_Message_Part {
      */
     public function setFilename($filename)
     {
-        $this->_filename = Solar_Mail_Encoding::stripCrlf($filename);
+        $this->_filename = $filename;
     }
     
     /**
@@ -290,7 +290,7 @@ class Solar_Mail_Message_Part {
      */
     public function setEncoding($encoding)
     {
-        $this->_encoding = Solar_Mail_Encoding::stripCrlf($encoding);
+        $this->_encoding = $encoding;
     }
     
     /**
@@ -351,7 +351,7 @@ class Solar_Mail_Message_Part {
     public function setHeader($label, $value)
     {
         // sanitize the header label
-        $label = Solar_Mail_Encoding::headerLabel($label);
+        $label = Solar_Mime::headerLabel($label);
         
         // not allowed to add headers for these labels
         $list = array('content-type', 'content-transfer-encoding',
@@ -361,7 +361,7 @@ class Solar_Mail_Message_Part {
         }
         
         // save the label and value
-        $this->_headers[$label] = Solar_Mail_Encoding::stripCrlf($value);
+        $this->_headers[$label] = $value;
     }
     
     /**
@@ -423,10 +423,14 @@ class Solar_Mail_Message_Part {
         // using header-value encoding as we go.
         $output = '';
         foreach ($headers as $label => $value) {
-            $value = Solar_Mail_Encoding::headerValue(
-                $label, $value, $this->_charset, $this->_crlf
+            $label = Solar_Mime::headerLabel($label);
+            $value = Solar_Mime::headerValue(
+                $label,
+                $value,
+                $this->_charset,
+                $this->_crlf
             );
-            $output .= $label . ': ' . $value . $this->_crlf;
+            $output .= "$label: $value{$this->_crlf}";
         }
         
         return $output;
@@ -441,7 +445,7 @@ class Solar_Mail_Message_Part {
      */
     public function fetchContent()
     {
-        $content = Solar_Mail_Encoding::apply(
+        $content = Solar_Mime::encode(
             $this->_encoding,
             $this->_content,
             $this->_crlf

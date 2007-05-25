@@ -18,7 +18,7 @@
 <body>
     
     <div id="page">
-
+        
         <div id="header" class="clearfix">
             <?php include $this->template('_header.php'); ?>
         </div><!-- end header -->
@@ -42,16 +42,16 @@
             <div id="nav">
                 <?php include $this->template('_nav.php'); ?>
             </div><!-- end main nav -->
-        
+            
         </div><!-- end content -->
-    
+        
         <div id="footer" class="clearfix">
             <?php include $this->template('_footer.php'); ?>
         </div><!-- end footer -->
-    
+        
     </div><!-- end page -->
-
+    
     <div id="extra1"><?php include $this->template('_extra1.php'); ?></div>
     <div id="extra2"><?php include $this->template('_extra2.php'); ?></div>
-
+    
 </body>

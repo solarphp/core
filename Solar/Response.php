@@ -330,7 +330,7 @@ class Solar_Response extends Solar_Base {
         $this->_checkHeadersSent();
         
         // build the response status code and text string
-        $status = "HTTP {$this->_version}/{$this->_status} "
+        $status = "HTTP/{$this->_version} {$this->_status} "
                 . $this->_status_codes[$this->_status];
         
         // send the status header

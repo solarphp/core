@@ -72,6 +72,10 @@
  * @todo Add "soft delete" feature? $deleted_col = 'deleted', and then only
  * retrieve non-deleted cols.
  * 
+ * @todo Add "increment" and "decrement" feature?  Good for instant-update
+ * counting ... although when you save, it still overwrites the increments from
+ * any other instance.  :-(
+ * 
  */
 abstract class Solar_Sql_Model extends Solar_Base
     implements ArrayAccess, Countable, IteratorAggregate {
@@ -1871,16 +1875,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
     }
-    
-    /**
-     * 
-     * Deletes rows in the table based on a WHERE clause.
-     * 
-     * @param string $where An SQL WHERE clause limiting the deleted rows.
-     * 
-     * @return void
-     * 
-     */
     
     // -----------------------------------------------------------------
     // 

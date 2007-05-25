@@ -119,7 +119,9 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
-     * Default layout to be rendered.
+     * Name of the layout to be rendered.
+     * 
+     * Default is "navtop-localright".
      * 
      * @var string
      * 

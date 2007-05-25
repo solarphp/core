@@ -23,6 +23,10 @@
  * 
  * @package Solar_Cache
  * 
+ * @todo Memcache, Apc support some form of "add" vs "set".  Xcache can check
+ * with isset() to emulate.  Eaccelerator could emulate with an added get() call?
+ * File could emulate with a lookup?  Call new method "add()"?
+ * 
  */
 abstract class Solar_Cache_Adapter extends Solar_Base {
     

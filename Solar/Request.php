@@ -32,8 +32,6 @@
  * 
  * - QUERY_STRING
  * 
- * - REMOTE_HOST
- * 
  * - REQUEST_URI
  * 
  * - SERVER_NAME

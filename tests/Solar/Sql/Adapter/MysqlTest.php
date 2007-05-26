@@ -43,7 +43,7 @@ class Solar_Sql_Adapter_MysqlTest extends Solar_Sql_AdapterTestCase {
             ,test_default_string    VARCHAR(7) DEFAULT 'literal'
             ,test_default_integer   INTEGER DEFAULT 7
             ,test_default_numeric   NUMERIC(7,3) DEFAULT 1234.567
-            ,test_default_ignore    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            ,test_default_ignore    TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
         )";
         
     public function setup()

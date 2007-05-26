@@ -198,7 +198,7 @@ class Solar_Controller_PageController extends Solar_Controller_Page
      * @return void
      * 
      */
-    protected function _preRender($view)
+    protected function _preRender()
     {
         $this->hooks[__FUNCTION__] ++;
     }
@@ -212,10 +212,9 @@ class Solar_Controller_PageController extends Solar_Controller_Page
      * @return string $output The output after filtering.
      * 
      */
-    protected function _postRender($output)
+    protected function _postRender()
     {
         $this->hooks[__FUNCTION__] ++;
-        return $output;
     }
 }
 ?>

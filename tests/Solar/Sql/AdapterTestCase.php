@@ -40,6 +40,8 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
      */
     public function setup()
     {
+        Solar::start(false);
+        
         $this->_sql = Solar::factory('Solar_Sql', $this->_config);
         
         // drop existing table

@@ -3,10 +3,14 @@
 require_once dirname(__FILE__) . '/../HelperTestCase.php';
 
 class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
+    
     protected $_request = null;
+    
     public function setup()
     {
+        Solar::start(false); // to get the $locale object
         parent::setup();
+        
         $this->_request = Solar::factory('Solar_Request');
         $this->_request->load(true);
         

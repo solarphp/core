@@ -4,6 +4,11 @@ require_once dirname(__FILE__) . '/../HelperTestCase.php';
 
 class Solar_View_Helper_ActionTest extends Solar_View_HelperTestCase
 {
+    public function setup()
+    {
+        Solar::start(false); // to get the $locale object
+        parent::setup();
+    }
     
     public function testAction_hrefFromString()
     {

@@ -156,5 +156,21 @@ abstract class Solar_Cache_AdapterTestCase extends PHPUnit_Framework_TestCase {
         $this->assertTrue($this->_cache->save($id, $data));
         $this->assertSame($this->_cache->fetch($id), $data);
     }
+    
+    public function testAdd()
+    {
+        $id = 'coyote';
+        $data = 'Wile E. Coyote';
+        
+        // add for the first time
+        $this->assertTrue($this->_cache->add($id, $data));
+        $this->assertSame($this->_cache->fetch($id), $data);
+        
+        // add for the second time with a different value, should fail
+        $this->assertFalse($this->_cache->add($id, 'Bugs Bunny'));
+        
+        // make sure it really didn't overwrite the data
+        $this->assertSame($this->_cache->fetch($id), $data);
+    }
 }
 ?>

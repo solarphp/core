@@ -6,7 +6,9 @@ class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
     
     public function setup()
     {
+        Solar::start(false); // to get the $locale object
         parent::setup();
+        
         // forcibly reset the request environment
         $request = Solar::factory('Solar_Request');
         $request->load(true);

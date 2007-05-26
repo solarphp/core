@@ -6,6 +6,7 @@ class Solar_View_Helper_GetTextTest extends Solar_View_HelperTestCase {
     
     public function testGetText()
     {
+        Solar::start(false);
         $actual = $this->_view->getText('ACTION_BROWSE');
         $expect = 'Browse';
         $this->assertSame($actual, $expect);
@@ -13,6 +14,7 @@ class Solar_View_Helper_GetTextTest extends Solar_View_HelperTestCase {
     
     public function testGetText_setClass()
     {
+        Solar::start(false);
         $example = Solar::factory('Solar_Test_Example');
         
         $helper = $this->_view->getHelper('getText');
@@ -25,6 +27,7 @@ class Solar_View_Helper_GetTextTest extends Solar_View_HelperTestCase {
     
     public function testGetText_badLocaleKey()
     {
+        Solar::start(false);
         $actual = $this->_view->getText('no such "locale" key');
         $expect = 'no such &quot;locale&quot; key';
         $this->assertSame($actual, $expect);

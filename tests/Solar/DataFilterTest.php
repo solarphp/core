@@ -700,7 +700,7 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             '0.0.255.0',
             '0.0.0.255',
             '127.0.0.1',
-:            "\n", "\r\n",
+            "\n", "\r\n",
         );
         foreach ($test as $val) {
             $this->assertTrue($filter->validateIp($val));

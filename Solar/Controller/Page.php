@@ -245,7 +245,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * The response object with headers and body.
      * 
-     * @var Solar_Response
+     * @var Solar_Http_Response
      * 
      */
     protected $_response;
@@ -326,7 +326,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         );
         
         // create the response object
-        $this->_response = Solar::factory('Solar_Response');
+        $this->_response = Solar::factory('Solar_Http_Response');
         
         // auto-set the name; for example Vendor_App_SomeThing => 'some-thing'
         if (empty($this->_name)) {
@@ -390,7 +390,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      * 
-     * @return Solar_Response A response object with headers and body from
+     * @return Solar_Http_Response A response object with headers and body from
      * the action, view, and layout.
      * 
      */
@@ -440,7 +440,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     public function display($spec = null)
     {
         $response = $this->fetch($spec);
-        $response->send();
+        $response->display();
     }
     
     /**
@@ -499,7 +499,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // fetch the view
         try {
-            $this->_response->body = $this->_view_object->fetch($tpl);
+            $this->_response->content = $this->_view_object->fetch($tpl);
         } catch (Solar_View_Exception_TemplateNotFound $e) {
             throw $this->_exception('ERR_VIEW_NOT_FOUND', array(
                 'path' => $e->getInfo('path'),
@@ -521,14 +521,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_setLayoutTemplates();
         
         // assign the previous output
-        $this->_view_object->assign($this->_layout_var, $this->_response->body);
+        $this->_view_object->assign($this->_layout_var, $this->_response->content);
         
         // set the template name from the layout value
         $tpl = $this->_layout . ".php";
         
         // fetch the layout
         try {
-            $this->_response->body = $this->_view_object->fetch($tpl);
+            $this->_response->content = $this->_view_object->fetch($tpl);
         } catch (Solar_View_Exception_TemplateNotFound $e) {
             throw $this->_exception('ERR_LAYOUT_NOT_FOUND', array(
                 'path' => $e->getInfo('path'),
@@ -887,12 +887,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         session_write_close();
         
         // clear the response body
-        $this->_response->body = null;
+        $this->_response->content = null;
         
         // set headers and send the response directly
-        $this->_response->setStatus($code);
+        $this->_response->setStatusCode($code);
         $this->_response->setHeader('Location', $href);
-        $this->_response->send();
+        $this->_response->display();
         exit(0);
     }
     

@@ -232,7 +232,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
         $this->_layout = null;
         $this->_view = 'exception';
         $this->_format = null;
-        $this->_response->setStatus(500);
+        $this->_response->setStatusCode(500);
         
         $this->_render();
         return $this->_response;

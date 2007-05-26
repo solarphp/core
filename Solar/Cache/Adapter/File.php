@@ -201,6 +201,41 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     
     /**
      * 
+     * Inserts cache entry data, but only if the entry does not already exist.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param mixed $data The data to write into the entry.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function add($key, $data)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        // what file should we look for?
+        $file = $this->entry($key);
+        
+        // if the file does not exists or is unreadable, key is available
+        if (! file_exists($file) || ! is_readable($file)) {
+            return $this->save($key, $data);
+        }
+        
+        // if the file has expired, key is available
+        $expire_time = filemtime($file) + $this->_config['life'];
+        if (time() > $expire_time) {
+            return $this->save($key, $data);
+        }
+        
+        // key already exists
+        return false;
+    }
+    
+    /**
+     * 
      * Fetches cache entry data.
      * 
      * @param string $key The entry ID.

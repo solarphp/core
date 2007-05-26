@@ -65,11 +65,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
      *   The `pool` is empty by default, and will only be used instead of 
      *   a single-server connection if non-empty.
      * 
-     * `save`
-     * : (string) What memcache function should the save() method use, 'set' or
-     *   'add'?  The 'set' function always re-saves for the key, but the 'add'
-     *   function saves only if the key does not already exist.  Default 'set'.
-     * 
      * @var array
      * 
      */
@@ -78,7 +73,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
         'port' => 11211,
         'timeout' => 1,
         'pool' => array(),
-        'save' => 'set',
     );
     
     /**
@@ -198,10 +192,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
     
     /**
      * 
-     * Sets cache entry data.
-     * 
-     * Honors the config value for `save` when deciding to use either
-     * Memcache::set() or Memcache::add() ... default is Memcache::set().
+     * Updates or inserts cache entry data.
      * 
      * @param string $key The entry ID.
      * 
@@ -216,13 +207,27 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             return;
         }
         
-        if ($this->_config['save'] == 'add') {
-            $func = 'add';
-        } else {
-            $func = 'set';
+        return $this->memcache->set($key, $data, null, $this->_life);
+    }
+    
+    /**
+     * 
+     * Inserts cache entry data, but only if the entry does not already exist.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param mixed $data The data to write into the entry.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function add($key, $data)
+    {
+        if (! $this->_active) {
+            return;
         }
         
-        return $this->memcache->$func($key, $data, null, $this->_life);
+        return $this->memcache->add($key, $data, null, $this->_life);
     }
     
     /**

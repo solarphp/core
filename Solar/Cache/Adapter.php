@@ -142,7 +142,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     
     /**
      * 
-     * Inserts/updates cache entry data.
+     * Updates cache entry data, inserting if it does not already exist.
      * 
      * This method stores data to the cache with its own entry
      * identifier.  If the entry does not exist, it is created; if
@@ -180,6 +180,45 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      */
     abstract public function save($key, $data);
+    
+    /**
+     * 
+     * Inserts cache entry data *only if it does not already exist*.
+     * 
+     * Useful for avoiding race conditions when one or more processes may be
+     * writing to the same entry.
+     * 
+     * This method will not update an existing entry; if the entry already
+     * exists, this method will not replace it.
+     * 
+     * For example, to add an array in the cache ...
+     * 
+     * {{code: php
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // create a unique ID
+     *     $id = 'my_array';
+     *     
+     *     // set up some data to cache (this could be string output, or
+     *     // an object, or almost anything else)
+     *     $data = array('foo' => 'bar', 'baz' => 'dib', 'zim' => 'gir');
+     *     
+     *     // store to the cache (fails if $id already exists)
+     *     $cache->add($id, $data);
+     *     
+     *     // now fetch back the data for the $id entry
+     *     $result = $cache->fetch($id);
+     * }}
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param string $data The data to store.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    abstract public function add($key, $data);
     
     /**
      * 

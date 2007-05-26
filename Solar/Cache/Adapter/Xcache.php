@@ -29,7 +29,10 @@
  * @category Solar
  *
  * @package Solar_Cache
- *
+ * 
+ * @todo Does not work with objects.  Need to add custom support for them.
+ * <http://trac.lighttpd.net/xcache/wiki/XcacheApi>
+ * 
  */
 class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
 
@@ -102,6 +105,30 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter {
         return xcache_set($key, $data, $this->_life);
     }
 
+    /**
+     * 
+     * Inserts cache entry data, but only if the entry does not already exist.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param mixed $data The data to write into the entry.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function add($key, $data)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        if (xcache_isset($key)) {
+            return false;
+        }
+        
+        return xcache_set($key, $data, $this->_life);
+    }
+    
     /**
      *
      * Gets cache entry data.

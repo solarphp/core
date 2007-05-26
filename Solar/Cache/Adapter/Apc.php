@@ -76,6 +76,34 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
     }
 
     /**
+     * 
+     * Inserts cache entry data, but only if the entry does not already exist.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param mixed $data The data to write into the entry.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function add($key, $data)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        // NOT AVAILABLE YET
+        // return apc_add($key, $data, $this->_life);
+        
+        // hack
+        if (apc_fetch($key) !== false) {
+            return false;
+        }
+        
+        return $this->save($key, $data);
+    }
+    
+    /**
      *
      * Gets cache entry data.
      *

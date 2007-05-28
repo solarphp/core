@@ -30,7 +30,11 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
      * 
      * Support method to make the request, then return headers and content.
      * 
-     * @param string $spec The URI get a response from.
+     * @param string $uri The URI get a response from.
+     * 
+     * @param array $headers A sequential array of header lines for the request.
+     * 
+     * @param string $content A string of content for the request.
      * 
      * @return array A sequential array where element 0 is a sequential array of
      * header lines, and element 1 is the body content.
@@ -81,6 +85,10 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
     /**
      * 
      * Builds the stream context from property options for _fetch().
+     * 
+     * @param array $headers A sequential array of headers.
+     * 
+     * @param string $content The body content.
      * 
      * @return resource A stream context resource for "http" and "https"
      * protocols.

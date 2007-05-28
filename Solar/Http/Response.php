@@ -493,6 +493,11 @@ class Solar_Http_Response extends Solar_Base {
      * 
      * Dumps the values of this object.
      * 
+     * @param mixed $var If null, dump $this; if a string, dump $this->$var;
+     * otherwise, dump $var.
+     * 
+     * @param string $label Label the dump output with this string.
+     * 
      * @return void
      * 
      */

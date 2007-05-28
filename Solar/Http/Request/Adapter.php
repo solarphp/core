@@ -405,7 +405,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets the character set for the body content.
      * 
-     * @param string $val
+     * @param string $val The character set, e.g. "utf-8".
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -423,7 +423,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * If you pass an array, the _prepare() method will automatically call
      * http_build_query() on the array and set the content-type for you.
      * 
-     * @param string|array $val
+     * @param string|array $val The body content.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -438,7 +438,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets the content-type for the body content.
      * 
-     * @param string $val
+     * @param string $val The content-type, e.g. "text/plain".
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -641,7 +641,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets the HTTP protocol version for the request (1.0 or 1.1).
      * 
-     * @param string $method The method to use for the request.
+     * @param string $version The version number (1.0 or 1.1).
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -659,7 +659,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Require verification of SSL certificate used?
      * 
-     * @param bool $flag
+     * @param bool $flag True or false.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -676,7 +676,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * be used with the $_ssl_verify_peer option to authenticate the identity
      * of the remote peer.              
      * 
-     * @param string $val
+     * @param string $val The CA file.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -694,7 +694,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * The path must be a correctly hashed certificate directory.              
      * 
-     * @param string $val
+     * @param string $val The CA path.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -711,7 +711,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * file which contains your certificate and private key. It can optionally
      * contain the certificate chain of issuers.              
      * 
-     * @param string $val
+     * @param string $val The local certificate file path.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 
@@ -726,7 +726,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Passphrase with which the $_ssl_local_cert file was encoded.
      * 
-     * @param string $val
+     * @param string $val The passphrase.
      * 
      * @return Solar_Http_Adapter This adapter object.
      * 

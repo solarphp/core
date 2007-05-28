@@ -547,8 +547,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
             
             switch ($type) {
             case 'bool':
-                $model->_filters[$col][] = array('validateBoolean');
-                $model->_filters[$col][] = array('sanitizeBoolean');
+                $model->_filters[$col][] = array('validateBool');
+                $model->_filters[$col][] = array('sanitizeBool');
                 break;
                 
             case 'char':

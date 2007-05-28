@@ -1,0 +1,157 @@
+<?php
+/**
+ *
+ * Wraps an HTTP stream to act as a standalone HTTP request.
+ * 
+ * @category Solar
+ *
+ * @package Solar_Http
+ *
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ *
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ *
+ * @version $Id: Request.php 2126 2007-01-25 00:42:51Z pmjones $
+ *
+ */
+
+/**
+ * 
+ * Wraps an HTTP stream to act as a standalone HTTP request.
+ * 
+ * @category Solar
+ *
+ * @package Solar_Http
+ *
+ */
+class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
+    
+    /**
+     * 
+     * Support method to make the request, then return headers and content.
+     * 
+     * @param string $spec The URI get a response from.
+     * 
+     * @return array A sequential array where element 0 is a sequential array of
+     * header lines, and element 1 is the body content.
+     * 
+     */
+    protected function _fetch($uri, $headers, $content)
+    {
+        // prepare the stream context
+        $context = $this->_prepareContext($headers, $content);
+        
+        // connect to the uri (suppress errors and deal with them later)
+        $stream = @fopen($uri, 'r', false, $context);
+        
+        // did we hit any errors?
+        if ($stream === false) {
+            // the $http_response_header variable is automatically created
+            // by the streams extension
+            if (! empty($http_response_header)) {
+                // server responded, but there's no content
+                return array($http_response_header, null);
+            } else {
+                // no server response, must be some other error
+                throw $this->_exception(
+                    'ERR_CONNECTION_FAILED',
+                    error_get_last()
+                );
+            }
+        }
+        
+        // get the response message
+        $content = stream_get_contents($stream);
+        $meta = stream_get_meta_data($stream);
+        fclose($stream);
+        
+        // did it time out?
+        if ($meta['timed_out']) {
+            throw $this->_exception('ERR_CONNECTION_TIMEOUT', array(
+                'uri'     => $uri,
+                'meta'    => $meta,
+                'content' => $content,
+            ));
+        }
+        
+        // return headers and content
+        return array($meta['wrapper_data'], $content);
+    }
+    
+    /**
+     * 
+     * Builds the stream context from property options for _fetch().
+     * 
+     * @return resource A stream context resource for "http" and "https"
+     * protocols.
+     * 
+     * @see <http://php.net/manual/en/wrappers.http.php>
+     * 
+     */
+    protected function _prepareContext($headers, $content)
+    {
+        /**
+         * HTTP context
+         */
+        
+        // http options
+        $http = array();
+        
+        // method
+        if ($this->_method != 'GET') {
+            $http['method'] = $this->_method;
+        }
+        
+        // send headers?
+        if ($headers) {
+            $http['header'] = implode("\r\n", $headers);
+        }
+        
+        // http: property-name => context-key
+        $var_key = array(
+            '_content'          => 'content',
+            '_proxy'            => 'proxy',
+            '_max_redirects'    => 'max_redirects',
+            '_version'          => 'version',
+            '_timeout'          => 'timeout',
+        );
+        
+        // set other options
+        foreach ($var_key as $var => $key) {
+            if ($this->$var) {
+                $http[$key] = $this->$var;
+            }
+        }
+        
+        /**
+         * HTTPS context
+         */
+        
+        // base on http options
+        $https = $http;
+        
+        // property-name => context-key
+        $var_key = array(
+            '_ssl_verify_peer'       => 'verify_peer',
+            '_ssl_cafile'            => 'cafile',
+            '_ssl_capath'            => 'capath',
+            '_ssl_local_cert'        => 'local_cert',
+            '_ssl_passphrase'        => 'passphrase',
+        );
+        
+        // set other options
+        foreach ($var_key as $var => $key) {
+            if ($this->$var) {
+                $https[$key] = $this->$var;
+            }
+        }
+        
+        /**
+         * Done
+         */
+        return stream_context_create(array(
+            'http'  => $http,
+            'https' => $https,
+        ));
+    }
+}

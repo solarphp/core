@@ -763,7 +763,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // add the last param after last column name as the "extra" settings
         // (order, group, having, page, paging, etc).
         $k = count($list);
-        if (count($params) >= $k) {
+        if (count($params) > $k) {
             $opts = (array) $params[$k];
         } else {
             $opts = array();

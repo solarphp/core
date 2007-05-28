@@ -81,11 +81,7 @@ class Solar_View_Helper_GetTextRaw extends Solar_View_Helper {
      */
     public function getTextRaw($key, $num = 1, $replace = null)
     {
-        $string = Solar::$locale->fetch($this->_class, $key, $num);
-        if ($replace) {
-            $string = vsprintf($string, (array) $replace);
-        }
-        return $string;
+        return Solar::$locale->fetch($this->_class, $key, $num, $replace);
     }
     
     /**

@@ -116,6 +116,9 @@ class Solar_Locale extends Solar_Base {
      * @param mixed $num Helps determine whether to get a singular
      * or plural translation.
      * 
+     * @param array $replace An array of replacement values for the string, to
+     * be applied using [[php::vsprintf() | ]].
+     * 
      * @return string A translated locale string.
      * 
      * @see Solar_Base::locale()
@@ -123,7 +126,7 @@ class Solar_Locale extends Solar_Base {
      * @see Manual::Solar/Using_locales
      * 
      */
-    public function fetch($spec, $key, $num = 1)
+    public function fetch($spec, $key, $num = 1, $replace = null)
     {
         // is the spec an object?
         if (is_object($spec)) {
@@ -136,7 +139,7 @@ class Solar_Locale extends Solar_Base {
         
         // does the translation key exist for this class?
         // pre-empts the stack check.
-        $string = $this->_trans($class, $key, $num);
+        $string = $this->_trans($class, $key, $num, $replace);
         if ($string !== null) {
             return $string;
         }
@@ -166,7 +169,7 @@ class Solar_Locale extends Solar_Base {
             }
         
             // does the key exist for the parent?
-            $string = $this->_trans($parent, $key, $num);
+            $string = $this->_trans($parent, $key, $num, $replace);
             if ($string !== null) {
                 // save it for the class so we don't need to go through the
                 // stack again, and then we're done.
@@ -190,11 +193,14 @@ class Solar_Locale extends Solar_Base {
      * @param mixed $num Helps determine if we need a singular or plural
      * translation.
      * 
+     * @param array $replace An array of replacement values for the string, to
+     * be applied using [[php::vsprintf() | ]].
+     * 
      * @return string The translation string if it exists, or null if it
      * does not.
      * 
      */
-    protected function _trans($class, $key, $num = 1)
+    protected function _trans($class, $key, $num = 1, $replace = null)
     {
         if (! array_key_exists($class, $this->trans) ||
             ! array_key_exists($key, $this->trans[$class])) {
@@ -205,13 +211,21 @@ class Solar_Locale extends Solar_Base {
         // get the translation of the key and force to an array.
         $trans = (array) $this->trans[$class][$key];
 
-        // return the number-appropriate version of the
+        // find the number-appropriate version of the
         // translated key, if multiple values exist.
         if ($num != 1 && ! empty($trans[1])) {
-            return $trans[1];
+            $string = $trans[1];
         } else {
-            return $trans[0];
+            $string = $trans[0];
         }
+        
+        // do replacements
+        if ($replace) {
+            $string = vsprintf($string, (array) $replace);
+        }
+        
+        // done!
+        return $string;
     }
     
     /**

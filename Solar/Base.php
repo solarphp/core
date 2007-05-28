@@ -197,6 +197,9 @@ abstract class Solar_Base {
      * @param string $num If 1, returns a singular string; otherwise, returns
      * a plural string (if one exists).
      * 
+     * @param array $replace An array of replacement values for the string, to
+     * be applied using [[php::vsprintf() | ]].
+     * 
      * @return string The locale string, or the original $key if no
      * string found.
      * 
@@ -207,14 +210,14 @@ abstract class Solar_Base {
      * @see Class::Solar_Locale
      * 
      */
-    public function locale($key, $num = 1)
+    public function locale($key, $num = 1, $replace = null)
     {
         static $class;
         if (! $class) {
             $class = get_class($this);
         }
         
-        return Solar::$locale->fetch($class, $key, $num);
+        return Solar::$locale->fetch($class, $key, $num, $replace);
     }
     
     /**

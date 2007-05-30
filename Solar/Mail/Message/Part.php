@@ -26,7 +26,7 @@
  * @package Solar_Mail
  * 
  */
-class Solar_Mail_Message_Part {
+class Solar_Mail_Message_Part extends Solar_Base {
     
     /**
      * 
@@ -141,8 +141,6 @@ class Solar_Mail_Message_Part {
      * 
      * Sets the Content-Type for this part.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $type The content type, e.g. 'image/jpeg'.
      * 
      * @return void
@@ -168,8 +166,6 @@ class Solar_Mail_Message_Part {
     /**
      * 
      * Sets the Content-Type character set for this part.
-     * 
-     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @param string $charset The character set.
      * 
@@ -197,8 +193,6 @@ class Solar_Mail_Message_Part {
      * 
      * Sets the Content-Type boundary for this part.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $boundary The boundary string.
      * 
      * @return void
@@ -224,8 +218,6 @@ class Solar_Mail_Message_Part {
     /**
      * 
      * Sets the Content-Disposition for this part.
-     * 
-     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @param string $disposition Typically 'inline' or 'attachment'.
      * 
@@ -253,8 +245,6 @@ class Solar_Mail_Message_Part {
      * 
      * Sets the Content-Disposition filename for this part.
      * 
-     * Strips CR/LF from the value to help avoid header injections.
-     * 
      * @param string $filename The file name.
      * 
      * @return void
@@ -280,8 +270,6 @@ class Solar_Mail_Message_Part {
     /**
      * 
      * Sets the Content-Transfer-Encoding for this part.
-     * 
-     * Strips CR/LF from the value to help avoid header injections.
      * 
      * @param string $encoding Typically 'base64' or 'quoted-printable'.
      * 
@@ -418,7 +406,7 @@ class Solar_Mail_Message_Part {
         if ($this->_encoding) {
             $headers['Content-Transfer-Encoding'] = $this->_encoding;
         }
-
+        
         // now loop through all the headers and build the header block,
         // using header-value encoding as we go.
         $output = '';

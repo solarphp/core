@@ -38,7 +38,7 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * 
      * Keys are ...
      * 
-     * `url`
+     * `uri`
      * : (string) URL to the HTTP service, for example "https://example.com/login.php".
      * 
      * `handle`
@@ -51,15 +51,15 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      * : (array) Additional headers to use in the POST request.
      * 
      * `replies`
-     * : (array) Key-value pairs where the key is the server reply
-     *   string, and the value is a boolean indicating if it indicates success
-     *   or failure to authenticate.
+     * : (array) Key-value pairs where the key is the server reply string, and
+     *   and the value is a boolean indicating if it indicates success or
+     *   failure in authenticating.
      * 
      * @var array
      * 
      */
     protected $_Solar_Auth_Adapter_Post = array(
-        'url'     => 'https://example.com/services/authenticate.php',
+        'uri'     => 'https://example.com/services/authenticate.php',
         'handle'  => 'handle',
         'passwd'  => 'passwd',
         'headers' => null, // additional heaaders
@@ -77,80 +77,26 @@ class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {
      */
     protected function _processLogin()
     {
-        // parse out URL elements
-        $url = parse_url($this->_config['url']);
-        
-        // build the content string for handle and passwd
-        $content = 
-            urlencode($this->_config['handle']) . '=' . urlencode($this->_handle) . '&' .
-            urlencode($this->_config['passwd']) . '=' . urlencode($this->_passwd);
-        
-        // set up the basic headers
-        $tmp = array(
-            'Host'           => $url['host'],
-            'Connection'     => 'close',
-            'Content-Type'   => 'application/x-www-form-urlencoded',
-            'Content-Length' => strlen($content),
+        // create an array of POST data
+        $content = array(
+            $this->_config['handle'] => $this->_handle,
+            $this->_config['passwd'] => $this->_passwd,
         );
         
-        // add user-defined headers
-        $tmp = array_merge($tmp, (array) $this->_config['headers']);
+        // build the base request
+        $request = Solar::factory('Solar_Http_Request');
+        $request->setUri($this->_config['uri'])
+                ->setMethod('post')
+                ->setContent($content);
         
-        // build the header string itself
-        $headers = "POST {$url['path']} HTTP/1.1\r\n";
-        foreach ($tmp as $key => $val) {
-            $headers .= "$key: $val\r\n";
+        // add custom headers
+        foreach ((array) $this->_config['headers'] as $label => $value) {
+            $request->setHeader($label, $value);
         }
         
-        // define the host string
-        $host = $url['host'];
-        if (strtolower($url['scheme']) == 'https') {
-            // special hostname used for SSL connections,
-            // see http://php.net/fsockopen
-            $host = "ssl://$host";
-        }
-        
-        // set the port number (needed for fsockopen)
-        if (empty($url['port'])) {
-            if (strtolower($url['scheme']) == 'https') {
-                $url['port'] = 443;
-            } else {
-                $url['port'] = 80;
-            }
-        }
-        
-        // connect to the host
-        $fp = fsockopen($host, $url['port'], $errno, $errstr);
-        if (! $fp) {
-            // build user-info about the error
-            $info = array_merge(
-                $this->_config,
-                array('errno' => $errno, 'errstr' => $errstr)
-            );
-            throw $this->_exception(
-                'ERR_CONNECTION_FAILED',
-                $info
-            );
-        }
-        
-        // send the headers and content
-        fputs($fp, $headers . "\r\n" . $content);
-        
-        // now get back the reply
-        $reply = '';
-        while (! feof($fp)) {
-            // suppress errors, as SSL errors come through in a lot of cases.
-            // http://forum.mamboserver.com/showthread.php?t=41446
-            $reply .= @fgets($fp, 1024);
-        }
-        
-        // close the connection
-        fclose($fp);
-        
-        // remove anything before the first newline-pair (the headers)
-        $reply = str_replace("\r\n", "\n", $reply); // be lax on newlines
-        $pos = strpos($reply, "\n\n");
-        $reply = substr($reply, $pos+2);
+        // fetch the response body content
+        $response = $request->fetch();
+        $reply = trim($response->content);
         
         // is the reply string a known reply, and set to true?
         $ok = array_key_exists($reply, $this->_config['replies']) &&

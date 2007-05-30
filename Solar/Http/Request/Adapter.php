@@ -47,7 +47,7 @@
  *     // fetch a response object for a POST request with some data
  *     $request  = Solar::factory('Solar_Http_Request');
  *     $response = $request->setUri('http://example.com')
- *                         ->setContent = array(...);
+ *                         ->setContent(array(...))
  *                         ->setMethod('post')
  *                         ->fetch();
  * }}
@@ -58,7 +58,7 @@
  *     // fetch a response object for a POST request with some data
  *     $request  = Solar::factory('Solar_Http_Request');
  *     echo $request->setUri('http://example.com')
- *                  ->setContent = array(...);
+ *                  ->setContent(array(...))
  *                  ->setMethod('post')
  *                  ->__toString();
  * }}

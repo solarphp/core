@@ -106,6 +106,8 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     public $layout_local = array();
     
+    public $layout_local_active = null;
+    
     /**
      * 
      * Site navigation links.
@@ -116,6 +118,8 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      * 
      */
     public $layout_nav = array();
+    
+    public $layout_nav_active = null;
     
     /**
      * 

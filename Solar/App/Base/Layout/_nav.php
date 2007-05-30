@@ -20,7 +20,7 @@
     <?php
         foreach ((array) $this->layout_nav as $key => $val) {
             echo "<li";
-            if ($this->controller == $key) {
+            if ($this->layout_nav_active == $key) {
                 echo ' class="active"';
             }
             echo '>';

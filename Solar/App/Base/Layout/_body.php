@@ -14,8 +14,11 @@
  * @version $Id$
  * 
  */
+
+$body_id    = "page-{$this->controller}";
+$body_class = "page-{$this->controller}";
 ?>
-<body>
+<body id="<?php echo $body_id ?>" class="<?php echo $body_class ?>">
     
     <div id="page">
         

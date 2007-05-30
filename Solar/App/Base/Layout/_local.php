@@ -16,14 +16,14 @@
  */
 ?>
 
-<?php echo $this->partial('_auth.php'); ?>
+<?php include $this->template('_auth.php'); ?>
 
 <h2 class="accessibility">Local</h2>
 <ul class="clearfix">
     <?php
         foreach ((array) $this->layout_local as $key => $val) {
             echo "<li";
-            if ($this->action == $key) {
+            if ($this->layout_local_active == $key) {
                 echo ' class="active"';
             }
             echo '>';

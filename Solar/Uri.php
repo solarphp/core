@@ -422,29 +422,29 @@ class Solar_Uri extends Solar_Base {
         if ($full) {
             
             // add the scheme, if any.
-            $uri .= empty($this->scheme) ? '' : $this->scheme . '://';
+            $uri .= empty($this->scheme) ? '' : urlencode($this->scheme) . '://';
         
             // add the username and password, if any.
             if (! empty($this->user)) {
-                $uri .= $this->user;
+                $uri .= urlencode($this->user);
                 if (! empty($this->pass)) {
-                    $uri .= ':' . $this->pass;
+                    $uri .= ':' . urlencode($this->pass);
                 }
                 $uri .= '@';
             }
         
             // add the host and port, if any.
-            $uri .= (empty($this->host) ? '' : $this->host)
-                  . (empty($this->port) ? '' : ':' . $this->port);
+            $uri .= (empty($this->host) ? '' : urlencode($this->host))
+                  . (empty($this->port) ? '' : ':' . (int) $this->port);
         }
         
         // add the rest of the URI
         return $uri
              . $this->_config['path']
              . (empty($this->path)     ? '' : $this->_pathEncode($this->path))
-             . (empty($this->format)   ? '' : ".{$this->format}")
+             . (empty($this->format)   ? '' : '.' . urlencode($this->format))
              . (empty($this->query)    ? '' : '?' . http_build_query($this->query))
-             . (empty($this->fragment) ? '' : '#' . $this->fragment);
+             . (empty($this->fragment) ? '' : '#' . urlencode($this->fragment));
     }
     
     /**

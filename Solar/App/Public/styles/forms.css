@@ -6,7 +6,7 @@ option {
 .input-password,
 .input-textarea {
     font-family: "Lucida Sans Typewriter", "Courier New", monospace;
-	font-size: 12px;
+    font-size: 12px;
 }
 
 /* form layout (http://phrogz.net/CSS/formdl.html) */
@@ -35,9 +35,9 @@ option {
 }
 
 #content #main form ul {
-	margin: 0;
-	padding: 4px;
-	list-style: none;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
 }
 
 #content #main form ul li {
@@ -45,6 +45,6 @@ option {
 }
 
 #content #main form dl ul {
-	color: red;
-	font-size: 90%;
+    color: red;
+    font-size: 90%;
 }

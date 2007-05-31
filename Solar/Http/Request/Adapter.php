@@ -90,7 +90,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         'proxy'           => null,
         'timeout'         => null,
         'user_agent'      => null,
-        'version'         => null,
+        'version'         => '1.1',
         'ssl_cafile'      => null,
         'ssl_capath'      => null,
         'ssl_local_cert'  => null,
@@ -206,7 +206,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * @var string
      * 
      */
-    protected $_version = null;
+    protected $_version = '1.1';
     
     /**
      * 
@@ -390,7 +390,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // set authorization header
         $value = 'Basic ' . base64_encode("$handle:$passwd");
-        $this->setHeader('Authorization', $value);
+        $this->_headers['Authorization'] = $value;
+        
+        // done
         return $this;
     }
     
@@ -498,7 +500,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         $lower = strtolower($key);
         $notok = array('http', 'authorization', 'cookie');
         if (in_array($lower, $notok)) {
-            return;
+            throw $this->_exception('ERR_USE_OTHER_METHOD');
         }
         
         // how to add the header?
@@ -641,7 +643,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setVersion($version)
     {
-        if ($version && $version != '1.0' && $version != '1.1') {
+        if ($version != '1.0' && $version != '1.1') {
             throw $this->_exception('ERR_UNKNOWN_VERSION');
         }
         $this->_version = $version;

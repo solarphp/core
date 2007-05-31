@@ -299,14 +299,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     public function __toString()
     {
         // the headers and content
-        list($headers, $content) = $this->_prepareRequest();
-        
-        // do we have a URI?
-        if ($this->_uri) {
-            $uri = $this->_uri->fetch(true);
-        } else {
-            $uri = '-';
-        }
+        list($uri, $headers, $content) = $this->_prepareRequest();
         
         // add the request line
         array_unshift($headers, "{$this->_method} $uri HTTP/{$this->_version}");
@@ -755,17 +748,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function fetch($as_array = false)
     {
-        if ($this->_uri) {
-            $uri = $this->_uri->fetch(true);
-        } else {
-            throw $this->_exception('ERR_NO_URI');
-        }
-        
         // get prepared headers and content for the request
-        list($req_headers, $req_content) = $this->_prepareRequest();
+        list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        list($headers, $content) = $this->_fetch($uri, $req_headers,
+        list($headers, $content) = $this->_fetch($req_uri, $req_headers,
             $req_content);
         
         // a stack of responses; this is because there may have been redirects,
@@ -851,17 +838,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function fetchRaw()
     {
-        if ($this->_uri) {
-            $uri = $this->_uri->fetch(true);
-        } else {
-            throw $this->_exception('ERR_NO_URI');
-        }
-        
         // get prepared headers and content for the request
-        list($req_headers, $req_content) = $this->_prepareRequest();
+        list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        list($headers, $content) = $this->_fetch($uri, $req_headers,
+        list($headers, $content) = $this->_fetch($req_uri, $req_headers,
             $req_content);
         
         // return the raw message
@@ -899,19 +880,51 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     protected function _prepareRequest()
     {
+        // get the URI
+        if (! $this->_uri) {
+            throw $this->_exception('ERR_NO_URI');
+        } else {
+            $uri = clone $this->_uri;
+        }
+        
+        // what kind of request is this?
+        $is_get  = ($this->_method == 'GET');
+        $is_post = ($this->_method == 'POST');
+        $is_put  = ($this->_method == 'PUT');
+        
         // do we have any body content?
-        if (is_array($this->_content)) {
-            // build from an array and force the content-type
+        if (is_array($this->_content) && ($is_post || $is_put)) {
+            
+            // is a POST or PUT with a data array.
+            // convert from array and force the content-type.
             $content      = http_build_query($this->_content);
             $content_type = 'application/x-www-form-urlencoded';
+            
+        } elseif (is_array($this->_content) && $is_get) {
+            
+            // is a GET with a data array.
+            // merge the content array to the cloned uri query params.
+            $uri->query = array_merge(
+                $uri->query,
+                $this->_content
+            );
+            
+            // now clear out the content
+            $content      = null;
+            $content_type = null;
+            
         } elseif (is_string($this->_content)) {
+            
             // honor as set by the user
             $content      = $this->_content;
             $content_type = $this->_content_type;
+            
         } else {
-            // no content
+            
+            // no recognizable content
             $content      = null;
             $content_type = null;
+            
         }
         
         // get a list of the headers as they are now
@@ -947,7 +960,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // done!
-        return array($headers, $content);
+        return array($uri->fetch(true), $headers, $content);
     }
     
     /**

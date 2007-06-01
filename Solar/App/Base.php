@@ -106,6 +106,15 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     public $layout_local = array();
     
+    /**
+     * 
+     * The currently-active local navigation link.
+     * 
+     * Refers to a key in [[$layout_local]].
+     * 
+     * @var array
+     * 
+     */
     public $layout_local_active = null;
     
     /**
@@ -119,6 +128,15 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     public $layout_nav = array();
     
+    /**
+     * 
+     * The currently-active site navigation link.
+     * 
+     * Refers to a key in [[$layout_nav]].
+     * 
+     * @var array
+     * 
+     */
     public $layout_nav_active = null;
     
     /**

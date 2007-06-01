@@ -500,7 +500,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         $lower = strtolower($key);
         $notok = array('http', 'authorization', 'cookie');
         if (in_array($lower, $notok)) {
-            throw $this->_exception('ERR_USE_OTHER_METHOD');
+            throw $this->_exception('ERR_USE_OTHER_METHOD', array(
+                'Authorization' => 'setBasicAuth()',
+                'Cookie'        => 'setCookie()',
+                'HTTP'          => 'setVersion()',
+            ));
         }
         
         // how to add the header?
@@ -538,6 +542,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     /**
      * 
      * Sets the HTTP method for the request (GET, POST, etc).
+     * 
+     * Recgonized methods are 'OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE',
+     * 'TRACE', and 'CONNECT'.
      * 
      * @param string $method The method to use for the request.
      * 

@@ -229,9 +229,15 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected function _notFound($page)
     {
-        header("HTTP 1.1/404 Not Found", true, 404);
-        return "<html><head><title>Not Found</title><body><h1>404: Not Found</h1><p>"
-             . htmlspecialchars("Page controller for '$page' not found.")
-             . "</p></body></html>";
+        $content = "<html><head><title>Not Found</title>"
+                 . "<body><h1>404 Not Found</h1><p>"
+                 . htmlspecialchars("Page controller for '$page' not found.")
+                 . "</p></body></html>";
+        
+        $response = Solar::factory('Solar_Http_Response');
+        $response->setStatusCode(404);
+        $response->content = $content;
+        
+        return $response;
     }
 }

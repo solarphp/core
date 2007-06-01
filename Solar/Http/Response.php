@@ -19,6 +19,16 @@
  * 
  * Generic HTTP response object for sending headers, cookies, and content.
  * 
+ * This is a fluent class; the set() methods can be chained together like so:
+ * 
+ * {{code: php
+ *     $response = Solar::factory('Solar_Http_Response');
+ *     $response->setStatusCode(404)
+ *              ->setHeader('X-Foo', 'Bar')
+ *              ->setCookie('baz', 'dib')
+ *              ->setContent('Page not found.')
+ *              ->display();
+ * }}
  * @category Solar
  * 
  * @package Solar_Http
@@ -110,7 +120,7 @@ class Solar_Http_Response extends Solar_Base {
      * 
      * @param string $version The HTTP version to use for this response.
      * 
-     * @return void
+     * @return Solar_Http_Response This response object.
      * 
      * @throws Solar_Http_Response_Exception_HttpVersion when the version number
      * is not '1.0' or '1.1'.
@@ -126,6 +136,9 @@ class Solar_Http_Response extends Solar_Base {
         } else {
             $this->_version = $version;
         }
+        
+        // done
+        return $this;
     }
     
     /**
@@ -148,7 +161,7 @@ class Solar_Http_Response extends Solar_Base {
      * 
      * @param int $code An HTTP status code, such as 200, 302, 404, etc.
      * 
-     * @return void
+     * @return Solar_Http_Response This response object.
      * 
      */
     public function setStatusCode($code)
@@ -162,6 +175,9 @@ class Solar_Http_Response extends Solar_Base {
         
         $this->_status_code = $code;
         $this->setStatusText(null);
+        
+        // done
+        return $this;
     }
     
     /**
@@ -171,7 +187,7 @@ class Solar_Http_Response extends Solar_Base {
      * @param string $text The status text; if empty, will set the text to the
      * default for the current status code.
      * 
-     * @return void
+     * @return Solar_Http_Response This response object.
      * 
      */
     public function setStatusText($text)
@@ -185,6 +201,9 @@ class Solar_Http_Response extends Solar_Base {
             // use default text for status code
             $this->_status_text = $this->locale("STATUS_{$this->_status_code}");
         }
+        
+        // done
+        return $this;
     }
     
     /**
@@ -218,12 +237,13 @@ class Solar_Http_Response extends Solar_Base {
      * @param bool $flag True to send by HTTP only, false to send by any
      * method.
      * 
-     * @return void
+     * @return Solar_Http_Response This response object.
      * 
      */
     public function setCookiesHttponly($flag)
     {
         $this->_cookies_httponly = (bool) $flag;
+        return $this;
     }
     
     /**
@@ -242,26 +262,22 @@ class Solar_Http_Response extends Solar_Base {
      * values of the same key.  When false, the same header key is sent
      * multiple times with the different values.
      * 
-     * @return void
-     * 
-     * @throws Solar_Http_Response_Exception_HeadersSent when headers have
-     * already been sent.
+     * @return Solar_Http_Response This response object.
      * 
      * @see [[php::header() | ]]
      * 
      */
     public function setHeader($key, $val, $replace = true)
     {
-        // have headers been sent already?
-        $this->_checkHeadersSent();
-        
         // normalize the header key
         $key = Solar_Mime::headerLabel($key);
         
         // disallow HTTP header
         $lower = strtolower($key);
         if ($lower == 'http') {
-            return;
+            throw $this->_exception('ERR_USE_OTHER_METHOD', array(
+                'HTTP'          => 'setVersion()',
+            ));
         }
         
         // add the header to the list
@@ -273,6 +289,9 @@ class Solar_Http_Response extends Solar_Base {
             settype($this->_headers[$key], 'array');
             $this->_headers[$key][] = $val;
         }
+        
+        // done
+        return $this;
     }
     
     /**
@@ -311,6 +330,40 @@ class Solar_Http_Response extends Solar_Base {
     
     /**
      * 
+     * Sets the content of the response.
+     * 
+     * While this is not strictly necessary (because $content is public), it
+     * does serve to complete the fluency of this class.
+     * 
+     * @param string $content The body content of the response.
+     * 
+     * @return Solar_Http_Response This response object.
+     * 
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Gets the body content of the response.
+     * 
+     * While this is not strictly necessary (because $content is public), it
+     * serves to complete the get/set method list.
+     * 
+     * @return string The body content of the response.
+     * 
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
+    
+    /**
+     * 
      * Sets a cookie value in $this->_cookies; will be sent to the client at
      * display() time.
      * 
@@ -333,20 +386,14 @@ class Solar_Http_Response extends Solar_Base {
      * only through the HTTP protocol. This means that the cookie won't be
      * accessible by scripting languages, such as JavaScript.
      * 
-     * @return void
+     * @return Solar_Http_Response This response object.
      * 
      * @see [[php::setcookie() | ]]
-     * 
-     * @throws Solar_Http_Response_Exception_HeadersSent when headers have
-     * already been sent.
      * 
      */
     public function setCookie($name, $value = '', $expire = 0,
         $path = '', $domain = '', $secure = false, $httponly = null)
     {
-        // have headers been sent already?
-        $this->_checkHeadersSent();
-        
         // store the cookie value
         $this->_cookies[$name] = array(
             'value'     => $value,
@@ -356,6 +403,9 @@ class Solar_Http_Response extends Solar_Base {
             'secure'    => $secure,
             'httponly'  => $httponly,
         );
+        
+        // done
+        return $this;
     }
     
     /**
@@ -401,16 +451,15 @@ class Solar_Http_Response extends Solar_Base {
     
     /**
      * 
-     * Checks to see if headers have been sent, throws an exception if they
-     * have.
+     * Sends all headers and cookies.
      * 
      * @return void
      * 
-     * @throws Solar_Http_Response_Exception_HeadersSent when headers have
+     * @throws Solar_Http_Response_Exception_HeadersSent if headers have
      * already been sent.
      * 
      */
-    protected function _checkHeadersSent()
+    protected function _sendHeaders()
     {
         // have headers been sent already?
         if (headers_sent($file, $line)) {
@@ -419,22 +468,6 @@ class Solar_Http_Response extends Solar_Base {
                 'line' => $line,
             ));
         }
-    }
-    
-    /**
-     * 
-     * Sends all headers and cookies.
-     * 
-     * @return void
-     * 
-     * @throws Solar_Http_Response_Exception_HeadersSent when headers have
-     * already been sent.
-     * 
-     */
-    protected function _sendHeaders()
-    {
-        // has this response already been sent?
-        $this->_checkHeadersSent();
         
         // build the full status header string
         $status = "HTTP/{$this->_version} {$this->_status_code}";
@@ -507,7 +540,6 @@ class Solar_Http_Response extends Solar_Base {
             return parent::dump($var, $label);
         } else {
             $clone = clone($this);
-            unset($clone->_datafilter);
             unset($clone->_config);
             return parent::dump($clone, $label);
         }

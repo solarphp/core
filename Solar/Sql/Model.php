@@ -834,7 +834,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * `bind`
      * : (array) Bind these placeholder keys to these values in the where,
-     * group, having, etc. clauses.
+     *   group, having, etc. clauses.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, 'order', and 'page'.

@@ -502,8 +502,10 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         if (in_array($lower, $notok)) {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
                 'Authorization' => 'setBasicAuth()',
+                'Content-Type'  => 'setContentType()',
                 'Cookie'        => 'setCookie()',
                 'HTTP'          => 'setVersion()',
+                'User-Agent'    => 'setUserAgent()',
             ));
         }
         

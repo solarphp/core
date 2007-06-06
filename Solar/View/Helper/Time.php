@@ -26,11 +26,17 @@
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
-class Solar_View_Helper_Time extends Solar_View_Helper {
+class Solar_View_Helper_Time extends Solar_View_Helper_Timestamp {
     
     /**
      * 
-     * The default date() format string.
+     * User-defined configuration values.
+     * 
+     * Keys are:
+     * 
+     * `format`
+     * : (string) The default output formatting using [[php:date() | ]] codes.
+     *   Default is 'H:i:s'.
      * 
      * @var array
      * 
@@ -54,12 +60,6 @@ class Solar_View_Helper_Time extends Solar_View_Helper {
      */
     public function time($spec, $format = null)
     {
-        if (! $spec) {
-            return;
-        }
-        if (! $format) {
-            $format = $this->_config['format'];
-        }
-        return $this->_view->date($spec, $format);
+        return $this->_process($spec, $format);
     }
 }

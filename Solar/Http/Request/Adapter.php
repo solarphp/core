@@ -306,7 +306,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // the request line, headers, and content
         return implode("\r\n", $headers)
-             . "\r\n"
+             . "\r\n\r\n"
              . $content;
     }
     

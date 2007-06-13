@@ -480,7 +480,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $key The header label, such as "X-Foo-Bar".
      * 
-     * @param string $val The value for the header.
+     * @param string $val The value for the header.  When null or false,
+     * deletes the header.
      * 
      * @param bool $replace This header value should replace any previous
      * values of the same key.  When false, the same header key is sent
@@ -498,7 +499,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // disallow certain headers
         $lower = strtolower($key);
-        $notok = array('http', 'authorization', 'cookie');
+        $notok = array('authorization', 'content-type', 'cookie', 'http', 'user-agent');
         if (in_array($lower, $notok)) {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
                 'Authorization' => 'setBasicAuth()',
@@ -510,7 +511,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // how to add the header?
-        if (! $val) {
+        if ($val === null or $val === false) {
             // delete the key
             unset($this->_headers[$key]);
         } elseif ($replace || empty($this->_headers[$key])) {

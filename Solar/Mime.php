@@ -115,11 +115,12 @@ class Solar_Mime {
         
         // now do the encoding
         $hdr_vals  = preg_split("/(\s)/", $value, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
         $value_out = "";
         $previous  = "";
         foreach ($hdr_vals as $hdr_val) {
             
-            if (! trim($hdr_val)) {
+            if (trim($hdr_val) == '') {
                 // whitespace needs to be handled with another string, or it
                 // won't show between encoded strings. Prepend this to the next
                 // item.

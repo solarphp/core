@@ -950,6 +950,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             $list['Content-Type'] = $content_type;
         }
         
+        // force the content-length on POST and PUT
+        if ($is_post || $is_put) {
+            $list['Content-Length'] = strlen($content);
+        }
+        
         // force the user-agent header if needed
         if ($this->_user_agent) {
             $list['User-Agent'] = $this->_user_agent;

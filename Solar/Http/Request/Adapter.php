@@ -859,7 +859,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // return the raw message
         return implode("\r\n", $headers)
-             . "\r\n"
+             . "\r\n\r\n"
              . $content;
     }
     
@@ -950,9 +950,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             $list['Content-Type'] = $content_type;
         }
         
-        // force the content-length on POST and PUT
-        if ($is_post || $is_put) {
+        // force the content-length
+        if ($content) {
             $list['Content-Length'] = strlen($content);
+        } else {
+            unset($list['Content-Length']);
         }
         
         // force the user-agent header if needed

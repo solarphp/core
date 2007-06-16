@@ -98,6 +98,7 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
      */
     protected function _prepareContext($headers, $content)
     {
+        
         /**
          * HTTP context
          */
@@ -115,9 +116,13 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
             $http['header'] = implode("\r\n", $headers);
         }
         
+        // send content?
+        if ($content) {
+            $http['content'] = $content;
+        }
+        
         // http: property-name => context-key
         $var_key = array(
-            '_content'          => 'content',
             '_proxy'            => 'proxy',
             '_max_redirects'    => 'max_redirects',
             '_version'          => 'version',
@@ -157,6 +162,10 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
         /**
          * Done
          */
+        Solar::dump($headers);
+        Solar::dump($content);
+        Solar::dump($http);
+        
         return stream_context_create(array(
             'http'  => $http,
             'https' => $https,

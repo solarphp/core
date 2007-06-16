@@ -162,10 +162,6 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
         /**
          * Done
          */
-        Solar::dump($headers);
-        Solar::dump($content);
-        Solar::dump($http);
-        
         return stream_context_create(array(
             'http'  => $http,
             'https' => $https,

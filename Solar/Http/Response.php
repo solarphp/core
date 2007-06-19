@@ -311,7 +311,7 @@ class Solar_Http_Response extends Solar_Base {
         $key = Solar_Mime::headerLabel($key);
         
         // get the value
-        if (! empty($this->_headers[$key])) {
+        if (array_key_exists($key, $this->_headers)) {
             return $this->_headers[$key];
         }
     }

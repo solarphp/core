@@ -2240,7 +2240,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             throw $this->_exception(
                 "ERR_FOCUS_IS_" . strtoupper($this->_focus),
                 array(
-                    'allow' => $focus,
+                    'allow' => $allow,
                 )
             );
         }

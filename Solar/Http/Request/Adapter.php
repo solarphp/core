@@ -100,6 +100,17 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
+     * Content to send along with the request.
+     * 
+     * If an array, will be encoded with http_build_query() at fetch() time.
+     * 
+     * @var string|array
+     * 
+     */
+    public $content = null;
+    
+    /**
+     * 
      * The URI for the request.
      * 
      * @var Solar_Uri
@@ -115,17 +126,6 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      */
     protected $_user_agent = null;
-    
-    /**
-     * 
-     * Content to send along with the request.
-     * 
-     * If an array, will be encoded with http_build_query() at fetch() time.
-     * 
-     * @var string|array
-     * 
-     */
-    protected $_content = null;
     
     /**
      * 
@@ -319,7 +319,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function getContent()
     {
-        return $this->_content;
+        return $this->content;
     }
     
     /**
@@ -413,7 +413,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
-     * Sets the body content.
+     * Sets the body content; technically you can use the public $content 
+     * property, but this allows method-chaining.
      * 
      * If you pass an array, the _prepare() method will automatically call
      * http_build_query() on the array and set the content-type for you.
@@ -425,7 +426,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setContent($val)
     {
-        $this->_content = $val;
+        $this->content = $val;
         return $this;
     }
     
@@ -881,7 +882,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
-     * Prepares $this->_headers, $this->_cookies, and $this->_content for the
+     * Prepares $this->_headers, $this->_cookies, and $this->content for the
      * request.
      * 
      * @return array A sequential array where element 0 is a string of headers
@@ -905,31 +906,31 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         $is_put  = ($this->_method == 'PUT');
         
         // do we have any body content?
-        if (is_array($this->_content) && ($is_post || $is_put)) {
+        if (is_array($this->content) && ($is_post || $is_put)) {
             
             // is a POST or PUT with a data array.
             // convert from array and force the content-type.
-            $content      = http_build_query($this->_content);
+            $content      = http_build_query($this->content);
             $content_type = 'application/x-www-form-urlencoded';
             
-        } elseif (is_array($this->_content) && $is_get) {
+        } elseif (is_array($this->content) && $is_get) {
             
             // is a GET with a data array.
             // merge the content array to the cloned uri query params.
             $uri->query = array_merge(
                 $uri->query,
-                $this->_content
+                $this->content
             );
             
             // now clear out the content
             $content      = null;
             $content_type = null;
             
-        } elseif (is_string($this->_content)) {
+        } elseif (is_string($this->content)) {
             
             // honor as set by the user
-            $content      = $this->_content;
-            $content_type = $this->_content_type;
+            $content      = $this->content;
+            $content_type = $this->content_type;
             
         } else {
             

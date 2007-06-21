@@ -76,6 +76,9 @@
  * counting ... although when you save, it still overwrites the increments from
  * any other instance.  :-(
  * 
+ * @todo How to "delete" from a collection without hitting the DB *right then*?
+ * Need a way to say "delete when saving" vs "delete now".
+ * 
  */
 abstract class Solar_Sql_Model extends Solar_Base
     implements ArrayAccess, Countable, IteratorAggregate {
@@ -107,6 +110,22 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_access_methods = array();
+    
+    /**
+     * 
+     * A list of column names that are calculated on-the-fly by the model, and
+     * are not stored in the database (so-called "virtual" columns).
+     * 
+     * Each calculate-col should have a corresponding __getColName() and
+     * __setColName() method to calculate the column value.
+     * 
+     * @var array
+     * 
+     * @todo On fetching, pre-populate each of these in $this->_data via the
+     * related __get*() method.
+     * 
+     */
+    protected $_calculate_cols = array();
     
     /**
      * 
@@ -215,6 +234,16 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_focus = 'master';
+    
+    /**
+     * 
+     * Is this record part of a collection?
+     * 
+     * Useful for when 
+     * @var bool
+     * 
+     */
+    protected $_in_collection = false;
     
     /**
      * 
@@ -516,6 +545,18 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
+     * A list of column names to serialize/unserialize automatically.
+     * 
+     * Will be unserialized by the Record class as the values are loaded,
+     * then re-serialized just before insert/update in the Model class.
+     * 
+     * @var array
+     * 
+     */
+    protected $_serialize_cols = array();
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -568,34 +609,32 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // allow property-like access to record data
         $this->_checkFocus('record');
-        if ($this->_focus == 'record') {
             
-            // disallow if status is 'deleted'
-            $this->_checkDeleted();
-            
-            // do we need to load relationship data?
-            $load_related = empty($this->_data[$key]) &&
-                array_key_exists($key, $this->_related);
-            
-            if ($load_related) {
-                // the key was for a relation that has no data yet.
-                // load the data.
-                $this->_data[$key] = $this->_fetchRelated(
-                    $key,
-                    $this->_related_page[$key]
-                );
-            }
-            
-            // if an accessor method exists, use it.
-            if (! empty($this->_access_methods['get'][$key])) {
-                $method = $this->_access_methods['get'][$key];
-                return $this->$method();
-            }
-            
-            // look for the data key and return its value.
-            if (array_key_exists($key, $this->_data)) {
-                return $this->_data[$key];
-            }
+        // disallow if status is 'deleted'
+        $this->_checkDeleted();
+        
+        // do we need to load relationship data?
+        $load_related = empty($this->_data[$key]) &&
+            array_key_exists($key, $this->_related);
+        
+        if ($load_related) {
+            // the key was for a relation that has no data yet.
+            // load the data.
+            $this->_data[$key] = $this->_fetchRelated(
+                $key,
+                $this->_related_page[$key]
+            );
+        }
+        
+        // if an accessor method exists, use it.
+        if (! empty($this->_access_methods['get'][$key])) {
+            $method = $this->_access_methods['get'][$key];
+            return $this->$method();
+        }
+        
+        // look for the data key and return its value.
+        if (array_key_exists($key, $this->_data)) {
+            return $this->_data[$key];
         }
     }
     
@@ -615,27 +654,25 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // allow property-like access to record data
         $this->_checkFocus('record');
-        if ($this->_focus == 'record') {
-            
-            // disallow if status is 'deleted'
-            $this->_checkDeleted();
-            
-            // set to dirty only if not 'new'
-            if ($this->_status != 'new') {
-                $this->_status = 'dirty';
-            }
-            
-            // how to set the value?
-            if (! empty($this->_access_methods['set'][$key])) {
-                // use accessor method
-                $method = $this->_access_methods['set'][$key];
-                $this->$method($val);
-            } elseif ($key == $this->_primary_col) {
-                // disallow setting of primary keys; do nothing.
-            } else {
-                // no accessor method, not a primary key; assign directly.
-                $this->_data[$key] = $val;
-            }
+        
+        // disallow if status is 'deleted'
+        $this->_checkDeleted();
+        
+        // set to dirty only if not 'new'
+        if ($this->_status != 'new') {
+            $this->_status = 'dirty';
+        }
+        
+        // how to set the value?
+        if (! empty($this->_access_methods['set'][$key])) {
+            // use accessor method
+            $method = $this->_access_methods['set'][$key];
+            $this->$method($val);
+        } elseif ($key == $this->_primary_col) {
+            // disallow setting of primary keys; do nothing.
+        } else {
+            // no accessor method, not a primary key; assign directly.
+            $this->_data[$key] = $val;
         }
     }
     
@@ -1426,16 +1463,14 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Reloads data for this record from the database.
+     * Refreshes data for this record from the database.
      * 
-     * Note that this does not reload any related values.
+     * Note that this does not refresh any related or calculated values.
      * 
      * @return void
      * 
-     * @todo rename to refresh(), so we can have a load() method?
-     * 
      */
-    public function reload()
+    public function refresh()
     {
         $this->_checkFocus('record');
         if ($this->_status != 'new') {
@@ -1608,6 +1643,13 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // either way, set the default related page
             $this->_related_page[$name] = $opts['page'];
+        }
+        
+        // load placeholders for calculated columns. we don't calculate
+        // right away because they might be using related columns, which would
+        // defeat the purpose of lazy-loading relationships.
+        foreach ($this->_calculate_cols as $name) {
+            $this->_data[$name] = null;
         }
     }
     
@@ -2409,7 +2451,10 @@ abstract class Solar_Sql_Model extends Solar_Base
             if (empty($this->_records[$key])) {
                 $this->_records[$key] = $this->_newRecord($this->_data[$key]);
             }
-        
+            
+            // tell the record it is part of a collection
+            $this->_records[$key]->_in_collection = true;
+            
             // return the record
             return $this->_records[$key];
         }
@@ -2438,12 +2483,14 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         if ($this->_focus == 'collection') {
+            
             if ($key === null) {
                 $key = $this->count();
                 if (! $key) {
                     $key = 0;
                 }
             }
+            
             return $this->_data[$key] = $val;
         }
     }

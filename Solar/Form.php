@@ -263,7 +263,10 @@ class Solar_Form extends Solar_Base {
         parent::__construct($config);
         
         // retain setups, create validator/filter objects
-        $this->attribs = $this->_config['attribs'];
+        $this->attribs = array_merge(
+            $this->_Solar_Form['attribs'],
+            $this->_config['attribs']
+        );
         $this->_obj_filter = Solar::factory('Solar_Filter');
         $this->_obj_valid = Solar::factory('Solar_Valid');
     }

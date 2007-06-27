@@ -259,13 +259,16 @@ abstract class Solar_Sql_Model extends Solar_Base
      *     
      *     // index on a single column:
      *     // CREATE INDEX idx_name ON table_name (col_name)
-     *     $this->_indexes['idx_name'] = array($type, 'col_name');
-     * 
+     *     $this->_indexes['idx_name'] = array(
+     *         'type' => $type,
+     *         'cols' => 'col_name'
+     *     );
+     *     
      *     // index on multiple columns:
      *     // CREATE INDEX idx_name ON table_name (col_1, col_2, ... col_N)
      *     $this->_indexes['idx_name'] = array(
-     *         $type,
-     *         array('col_1', 'col_2', ..., 'col_N')
+     *         'type' => $type,
+     *         'cols' => array('col_1', 'col_2', ..., 'col_N')
      *     );
      *     
      *     // easy shorthand for an index on a single column,

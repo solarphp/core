@@ -203,13 +203,13 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected function _getPageClass($page)
     {
-        $page = str_replace('-',' ', $page);
-        $page = str_replace(' ', '', ucwords(trim($page)));
         if (! empty($this->_routing[$page])) {
             // found an explicit route
             $class = $this->_routing[$page];
         } else {
             // no explicit route, try to find a matching class
+            $page = str_replace('-',' ', $page);
+            $page = str_replace(' ', '', ucwords(trim($page)));
             $class = $this->_stack->load($page, false);
         }
         return $class;

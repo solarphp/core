@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: en_US.php 2174 2007-02-07 21:19:55Z pmjones $
+ * @version $Id$
  * 
  */
 return array(

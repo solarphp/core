@@ -13,7 +13,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: browse.php 2346 2007-03-15 22:37:24Z pmjones $
+ * @version $Id$
  * 
  */
 ?>

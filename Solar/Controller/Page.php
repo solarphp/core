@@ -462,6 +462,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         if ($this->_layout) {
+            $this->_setLayoutTemplates();
             $this->_renderLayout();
         }
         
@@ -517,9 +518,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _renderLayout()
     {
-        // reset the view object to use layout templates.
-        $this->_setLayoutTemplates();
-        
         // assign the previous output
         $this->_view_object->assign($this->_layout_var, $this->_response->content);
         

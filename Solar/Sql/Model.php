@@ -545,18 +545,6 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * A list of column names to serialize/unserialize automatically.
-     * 
-     * Will be unserialized by the Record class as the values are loaded,
-     * then re-serialized just before insert/update in the Model class.
-     * 
-     * @var array
-     * 
-     */
-    protected $_serialize_cols = array();
-    
-    /**
-     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.

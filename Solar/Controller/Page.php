@@ -60,8 +60,8 @@
  * 6. [[_postRun()]] after the last action, and before rendering
  * 
  * 7. [[_render()]] to render the view and layout; this in its turn calls
- *    [[_getViewObject()]] for the view object, and [[_addViewLayout()]] to
- *    reset the view object to use layout templates.
+ *    [[_setViewObject()]] and [[_renderView()]] for the view, then
+ *    [[_setLayoutTemplates()]] and [[_renderLayout()]] for the layout.
  * 
  * @category Solar
  * 

@@ -109,6 +109,33 @@ class Solar_Locale extends Solar_Base {
      * 
      * Loads translations as needed.
      * 
+     * You can also pass an array of replacement values.  If the `$replace`
+     * array is sequential, this method will use it with vsprintf(); if the
+     * array is associative, this method will replace "{:key}" with the array
+     * value.
+     * 
+     * For example:
+     * 
+     * {{code: php
+     *     $page  = 2;
+     *     $pages = 10;
+     *     
+     *     // given a class of 'Solar_Example' with a locale string
+     *     // TEXT_PAGES => 'Page %d of %d', uses vsprintf() internally:
+     *     $replace = array($page, $pages);
+     *     echo Solar::$locale->fetch('Solar_Example', 'TEXT_PAGES',
+     *         $pages, $replace);
+     *     // echo "Page 2 of 10"
+     *     
+     *     // given a class of 'Solar_Example' with a locale string
+     *     // TEXT_PAGES => 'Page {:page} of {:pages}', uses str_replace()
+     *     // internally:
+     *     $replace = array('page' => $page, 'pages' => $pages);
+     *     echo Solar::$locale->fetch('Solar_Example', 'TEXT_PAGES',
+     *         $pages, $replace);
+     *     // echo "Page 2 of 10"
+     * }}
+     * 
      * @param string|object $spec The class name (or object) for the translation.
      * 
      * @param string $key The translation key.
@@ -116,10 +143,11 @@ class Solar_Locale extends Solar_Base {
      * @param mixed $num Helps determine whether to get a singular
      * or plural translation.
      * 
-     * @param array $replace An array of replacement values for the string, to
-     * be applied using [[php::vsprintf() | ]].
+     * @param array $replace An array of replacement values for the string.
      * 
      * @return string A translated locale string.
+     * 
+     * @see _trans()
      * 
      * @see Solar_Base::locale()
      * 
@@ -193,8 +221,7 @@ class Solar_Locale extends Solar_Base {
      * @param mixed $num Helps determine if we need a singular or plural
      * translation.
      * 
-     * @param array $replace An array of replacement values for the string, to
-     * be applied using [[php::vsprintf() | ]].
+     * @param array $replace An array of replacement values for the string.
      * 
      * @return string The translation string if it exists, or null if it
      * does not.
@@ -219,9 +246,19 @@ class Solar_Locale extends Solar_Base {
             $string = $trans[0];
         }
         
-        // do replacements
+        // do replacements?
         if ($replace) {
-            $string = vsprintf($string, (array) $replace);
+            // by vsprintf(), or by str_replace?()
+            $key = key($replace);
+            if (is_int($key)) {
+                // sequential array, use vsprintf()
+                $string = vsprintf($string, (array) $replace);
+            } else {
+                // associative array, use str_replace()
+                foreach ($replace as $key => $val) {
+                    $string = str_replace("{:$key}", $val, $string);
+                }
+            }
         }
         
         // done!

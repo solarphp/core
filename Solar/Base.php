@@ -192,13 +192,36 @@ abstract class Solar_Base {
      * This is a convenient shortcut for calling [[Solar::$locale]]->fetch()
      * that automatically uses the current class name.
      * 
+     * You can also pass an array of replacement values.  If the `$replace`
+     * array is sequential, this method will use it with vsprintf(); if the
+     * array is associative, this method will replace "{:key}" with the array
+     * value.
+     * 
+     * For example:
+     * 
+     * {{code: php
+     *     $page  = 2;
+     *     $pages = 10;
+     *     
+     *     // given a locale string TEXT_PAGES => 'Page %d of %d'
+     *     $replace = array($page, $pages);
+     *     return $this->locale('Solar_Example', 'TEXT_PAGES',
+     *         $pages, $replace);
+     *     // returns "Page 2 of 10"
+     *     
+     *     // given a locale string TEXT_PAGES => 'Page {:page} of {:pages}'
+     *     $replace = array('page' => $page, 'pages' => $pages);
+     *     return $this->locale('Solar_Example', 'TEXT_PAGES',
+     *         $pages, $replace);
+     *     // returns "Page 2 of 10"
+     * }}
+     * 
      * @param string $key The key to get a locale string for.
      * 
      * @param string $num If 1, returns a singular string; otherwise, returns
      * a plural string (if one exists).
      * 
-     * @param array $replace An array of replacement values for the string, to
-     * be applied using [[php::vsprintf() | ]].
+     * @param array $replace An array of replacement values for the string.
      * 
      * @return string The locale string, or the original $key if no
      * string found.

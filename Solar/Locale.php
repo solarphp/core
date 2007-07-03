@@ -248,11 +248,14 @@ class Solar_Locale extends Solar_Base {
         
         // do replacements?
         if ($replace) {
+            // force to an array first
+            $replace = (array) $replace;
+            
             // by vsprintf(), or by str_replace?()
             $key = key($replace);
             if (is_int($key)) {
                 // sequential array, use vsprintf()
-                $string = vsprintf($string, (array) $replace);
+                $string = vsprintf($string, $replace);
             } else {
                 // associative array, use str_replace()
                 foreach ($replace as $key => $val) {

@@ -25,6 +25,9 @@
  * 
  * @package Solar_Console_Getopt
  * 
+ * @todo Add load() method similar to Solar_Form::load(), for loading from 
+ * external XML, PHP array, etc. files.
+ * 
  */
 class Solar_Console_Getopt extends Solar_Base {
     
@@ -69,7 +72,7 @@ class Solar_Console_Getopt extends Solar_Base {
      * : (string) When the option is present, does it take a parameter?  If so,
      *   the param can be "required" every time, or be "optional". If empty, no
      *   parameter for the option will be recognized (the option's value will be
-     *   boolean true).  Default is 'optional'.
+     *   boolean true when the option is present).  Default is 'optional'.
      * 
      * `value`
      * : (mixed) The default value for the option parameter, if any.  This way,

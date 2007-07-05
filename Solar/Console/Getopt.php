@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Base library for console-based applications
+ * Retrieves and validates command-line options and parameter values.
  * 
  * @category Solar
  * 
@@ -19,13 +19,7 @@
 
 /**
  * 
- * Base library for console-based applications. 
- * 
- * Many thanks to the following sources of inspiration:
- * 
- * * Paul M. Jones, Solar_Form
- * * Bertrand Mansion, PEAR::Console_Getargs
- * * Stefan Walk, PEAR::Console_Color
+ * Retrieves and validates command-line options and parameter values.
  * 
  * @category Solar
  * 
@@ -33,276 +27,112 @@
  * 
  */
 class Solar_Console_Getopt extends Solar_Base {
-
-    /**
-     * 
-     * User-provided configuration.
-     * 
-     * Keys are ...
-     * 
-     * `single_dash_ok`
-     * : Boolean switch to allow/disallow single dashs in 
-     * front of long options. Default: false
-     * 
-     * `auto_assign_shorts`
-     * : Boolean switch to automatically assign values that follow
-     * single-dash arguments to the switch that preceeded it. 
-     * Default: true
-     * 
-     * `sub_command_factory`
-     * : Boolean switch to allow treating the first parameter as a sub
-     * commmand. Enables automatic running of applications, for example:
-     * 
-     *    sungrazr generator [args...]
-     * 
-     * ... would automatically run Solar_Console_GetoptApp_Generator with 
-     * any args that came *after* 'generator'.
-     * 
-     * @var array
-     * 
-     */
+    
     protected $_Solar_Console_Getopt = array(
-        'single_dash_ok'        => true,
-        'auto_assign_shorts'    => true,
-        'sub_command_factory'   => false,
+        'request'          => 'request',
+        'datafilter_class' => 'Solar_DataFilter',
     );
-
+    
     /**
      * 
-     * The array of acceptable arguments.
+     * The array of acceptable options.
      * 
-     * The `$arguments` array contains all arguments accepted by the
+     * The `$options` array contains all options accepted by the
      * application, including their types, default values, descriptions,
      * requirements, and validation callbacks.
      * 
-     * In general, you should not try to set $arguments yourself; 
-     * instead, use Solar_Console_Getopt_Args::setArg() and/or
-     * Solar_Console_Getopt_Args::setArgs()
-     *
+     * In general, you should not try to set $options yourself;
+     * instead, use [[Solar_Console_Getopt::setOption()]] and/or
+     * [[Solar_Console_Getopt::setOptions()]].
+     * 
      */
-    public $arguments = array();
+    public $options = array();
     
     /**
      * 
-     * Default settings for each argument.
+     * Default option settings.
      * 
      * Keys are ...
      * 
-     * `name`
-     * : (string) The name of the argument. If the string contains a pipe
-     * character (|), the string preceeding the pipe will be the long version
-     * of the name, and the string following the pipe will be the short
-     * version of the name.
+     * `long`
+     * : (string) The long-form of the option name (e.g., "--foo-bar" would
+     *   be "foo-bar").
      * 
      * `short`
-     * : (string) The short name of the argument. Can be used instead of the
-     * combo pipe format in the `name` setting.
-     * 
-     * `type`
-     * : (string) The type of argument ('option' or 'switch')
-     * 
-     * `require`
-     * : (bool) Whether or not the argument is required
-     * 
-     * `value`
-     * : (mixed) The default value for the option
+     * : (string) The short-form of the option, if any (e.g., "-f" would be
+     *   "f").
      * 
      * `descr`
-     * : (string) A description of the option/switch, which will 
-     * be displayed if help text is requested.
+     * : (string) A description of the option (used in "help" output).
      * 
-     * `valid`
-     * : (array) An array of validation parameters for Solar_Valid
+     * `param`
+     * : (string) When the option is present, does it take a parameter?  If so,
+     *   the param can be "required" every time, or be "optional". If empty, no
+     *   parameter for the option will be recognized (the option's value will be
+     *   boolean true).
      * 
-     * `filter`
-     * : (array) An array of Solar_Filter callbacks to apply to the value
+     * `value`
+     * : (mixed) The default value for the option parameter, if any.  This way,
+     *   options not specified in the arguments can have a default value.
+     * 
+     * `require`
+     * : (bool) At validation time, the option must have a non-blank value
+     *   of some sort.
+     * 
+     * `filters`
+     * : (array) An array of filters to apply to the parameter value.
+     * 
+     * @var array
      * 
      */
     protected $_default = array(
-        'name'      => null,
-        'short'     => null,
-        'type'      => 'option',
-        'require'   => false,
-        'value'     => null,
-        'descr'     => null,
-        'valid'     => array(),
-        'filter'    => array(),
+        'long'    => null,
+        'short'   => null,
+        'param'   => null,
+        'value'   => null,
+        'descr'   => null,
+        'require' => false,
+        'filters' => array(),
     );
-        
+    
     /**
      * 
-     * Arguments and properties parsed from the command line
+     * The arguments passed in from the command line.
+     * 
+     * @var array
+     * 
+     * @see populate()
+     * 
+     */
+    protected $_argv;
+    
+    /**
+     * 
+     * List of names for invalid option values, and error messages.
      * 
      * @var array
      * 
      */
-    protected $_args;
-
-    /**
-     * 
-     * The array of pre-filters for the arguments.
-     * 
-     * @var array 
-     * 
-     */
-    protected $_filter = array();
+    protected $_invalid = array();
     
     /**
      * 
-     * The array of validations for the arguments.
+     * List of filters to apply to option values.
      * 
      * @var array
      * 
      */
-    protected $_valid = array();
-
-    /**
-     * 
-     * A Solar_Filter object for internal filtering needs.
-     * 
-     * @var Solar_Filter
-     * 
-     */
-    protected $_obj_filter;
+    protected $_filters = array();
     
     /**
      * 
-     * A Solar_Valid object for internal validation needs.
-     * 
-     * @var Solar_Valid
-     * 
-     */
-    protected $_obj_valid;
-
-    /**
-     *
-     * Request environment details
-     *
-     * @var Solar_Request
-     *
-     */
-    protected $_request;
-    
-    /**
-     * 
-     * Shorthand type reference
+     * Option values parsed from the arguments, as well as remaining (numeric)
+     * arguments.
      * 
      * @var array
      * 
      */
-    protected $_types;
-    
-    /**
-     * 
-     * Current type of argument being examined
-     * 
-     * @var string
-     * 
-     */
-    protected $_type;
-    
-    /**
-     * 
-     * Flag indicating whether the current argument appears
-     * to be a compound "multishort" argument
-     * 
-     * @var boolean
-     * 
-     */
-    protected $_multishort;
-    
-    /**
-     * 
-     * Flag to indicate that at least some of the $_args array has been
-     * filled.
-     * 
-     * @var boolean
-     * 
-     */
-    protected $_populated;
-    
-    /**
-     * 
-     * Command (or script name) used to call the script whose arguments 
-     * are being parsed.
-     * 
-     * @var string
-     * 
-     */
-    public $command;
-    
-    /**
-     * 
-     * Processed version of command string to be used in help output.
-     * 
-     * @var string
-     * 
-     */
-    public $command_help;
-    
-    /**
-     * 
-     * Sub-command called under a sub_command_factory scenario.
-     * 
-     * @var string
-     * 
-     */
-    public $sub_command;
-        
-    /**
-     * 
-     * Array of format conversions for use of a variety of pre-set console
-     * style combinations.
-     * 
-     * Based on ANSI VT100 Color/Style Codes, according to the VT100 
-     * User Guide[1] and the ANSI/VT100 Terminal Control[2] reference.
-     * 
-     * [1]: http://vt100.net/docs/vt100-ug
-     * [2]: http://www.termsys.demon.co.uk/vtansi.htm
-     * 
-     * @var array
-     * 
-     */
-    public $style_map = array(
-        // color, normal weight
-        '%k'    => "\033[30m",      // black
-        '%r'    => "\033[31m",      // red
-        '%g'    => "\033[32m",      // green
-        '%y'    => "\033[33m",      // yellow
-        '%b'    => "\033[34m",      // blue
-        '%m'    => "\033[35m",      // magenta/purple
-        '%p'    => "\033[35m",      // magenta/purple
-        '%c'    => "\033[36m",      // cyan/light blue
-        '%w'    => "\033[37m",      // white
-        '%n'    => "\033[0m",       // reset to terminal default
-        // color, bold
-        '%K'    => "\033[30;1m",    // black, bold
-        '%R'    => "\033[31;1m",    // red, bold
-        '%G'    => "\033[32;1m",    // green, bold
-        '%Y'    => "\033[33;1m",    // yellow, bold
-        '%B'    => "\033[34;1m",    // blue, bold
-        '%M'    => "\033[35;1m",    // magenta/purple, bold
-        '%P'    => "\033[35;1m",    // magenta/purple, bold
-        '%C'    => "\033[36;1m",    // cyan/light blue, bold
-        '%W'    => "\033[37;1m",    // white, bold
-        '%N'    => "\033[0;1m",     // terminal default, bold
-        // background color
-        '%0'    => "\033[40m",      // black background
-        '%1'    => "\033[41m",      // red background
-        '%2'    => "\033[42m",      // green background
-        '%3'    => "\033[43m",      // yellow background
-        '%4'    => "\033[44m",      // blue background
-        '%5'    => "\033[45m",      // magenta/purple background
-        '%6'    => "\033[46m",      // cyan/light blue background
-        '%7'    => "\033[47m",      // white background
-        // assorted style shortcuts
-        '%F'    => "\033[5m",       // blink/flash
-        '%_'    => "\033[5m",       // blink/flash
-        '%U'    => "\033[4m",       // underline
-        '%I'    => "\033[7m",       // reverse/inverse
-        '%*'    => "\033[1m",       // bold
-        '%d'    => "\033[2m",       // dim        
-    );
+    protected $_values;
     
     /**
      * 
@@ -313,128 +143,92 @@ class Solar_Console_Getopt extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // Command line arguments must be available.
-        if (!isset($_SERVER['argv']) || !is_array($_SERVER['argv'])) {
-            throw $this->_exception(
-                'ERR_ARGV_UNAVAILABLE'
-            );
-        }
-        
         // "real" contruction
         parent::__construct($config);
-
-        // Set up type reference list
-        $typeref = array(
-            '-'     => 'short',
-            '--'    => 'long',
+        
+        // inject the request dependency
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
         );
-        if ($this->_config['single_dash_ok']) {
-            // treat short multi-char args like longs
-            $typeref['-'] = 'long';
-        }
-        $this->_types = $typeref;
         
-        // Set up request, validator and filter objects
-        $this->_request = Solar::factory('Solar_Request');
-        $this->_obj_filter = Solar::factory('Solar_Filter');
-        $this->_obj_valid = Solar::factory('Solar_Valid');
-        
+        // set up the data-filter class
+        $this->_datafilter = Solar::factory($this->_config['datafilter_class']);
     }
-
+    
     // -----------------------------------------------------------------
-    // 
-    // Argument-management methods
-    // 
+    //
+    // Option-management methods
+    //
     // -----------------------------------------------------------------
 
     /**
      * 
-     * Sets one acceptable argument. 
+     * Sets one option for recognition.
      * 
-     * @param string $name The argument name to set or add; overrides 
-     * $info['name'].
+     * @param string $name The option name to set or add; overrides
+     * $info['short'] if 1 character long, otherwise overrides $info['long'].
      * 
-     * @param array $info Argument information using the same keys 
-     * as Solar_Console_Getopt::$_default.
+     * @param array $info Option information using the same keys
+     * as [[Solar_Console_Getopt::$_default]].
      * 
      * @return void
      * 
      */
-    public function setArg($name, $info)
+    public function setOption($name, $info)
     {
-        // Prepare the name's long and short versions
-        $name = $this->_prepareName($name);
-        $short = null;
-        if (is_array($name)) {
-            $short = $name['short'];
-            $name = $name['long'];
-        }
-        
-        // prepare the argument info
+        // prepare the option info
         $info = array_merge($this->_default, $info);
         
-        // double-check that we're catching short option
-        if ($info['short'] !== null) {
-            $short = $info['short'];
+        // override the short- or long-form of the option
+        if (strlen($name) == 1) {
+            $info['short'] = $name;
+        } else {
+            $info['long'] = $name;
         }
         
-        // convert string format of require
-        if (is_string($info['require'])) {            
-            if ($info['require'] == 'true') {
-                $info['require'] = true;
-            } else {
-                $info['require'] = false;
-            }
+        // normalize the "param" setting
+        $param = strtolower($info['param']);
+        if ($param == 'r' || substr($param, 0, 3) == 'req') {
+            $info['param'] = 'required';
+        } elseif ($param == 'o' || substr($param, 0, 3) == 'opt') {
+            $info['param'] = 'optional';
+        } else {
+            $info['param'] = null;
         }
         
-        // forcibly cast each of the keys in the arguments array
-        $this->arguments[$name] = array(
-            'name'      =>          $name,
-            'short'     =>          $short,
-            'type'      => (string) $info['type'],
-            'require'   => (bool)   $info['require'],
-            'value'     =>          $info['value'],
-            'descr'     => (string) $info['descr'],            
+        // forcibly cast each of the keys in the options array
+        $this->options[$name] = array(
+            'long'    => $info['long'],
+            'short'   => substr($info['short'], 0, 1),
+            'param'   => $info['param'],
+            'value'   => $info['value'],
+            'descr'   => $info['descr'],
+            'require' => (bool) $info['require']
         );
         
-        // add the filters
-        if (! empty($info['filter'])) {
-            foreach ( (array) $info['filter'] as $tmp) {
-                $this->_filter[$name][] = $tmp;
-            }
-        }
-        
-        // add validations
-        if (! empty($info['valid'])) {
+        // retain and fix any filters for the option value
+        if ($info['filters']) {
             
-            foreach ( (array) $info['valid'] as $tmp) {
-                
-                // make sure $tmp is an array
-                settype($tmp, 'array');
-                
-                // shift the name onto the top of $tmp
-                array_unshift($tmp, $name);
-                
-                // add the validation to the argument
-                call_user_func_array(
-                    array($this, 'addValid'),
-                    $tmp
-                );
-                
+            // make sure filters are an array
+            settype($info['filters'], 'array');
+            
+            // make sure that strings are converted to arrays so that
+            // validate() works properly.
+            foreach ($info['filters'] as $key => $list) {
+                if (is_string($list)) {
+                    $info['filters'][$key] = array($list);
+                }
             }
             
+            // save the filters
+            $this->_filters[$name] = $info['filters'];
         }
-        
-        // Set reference for short version
-        //if ($short !== null) {
-        //    $this->arguments[$short] = &$this->arguments[$name];
-        //}
-        
     }
-
+    
     /**
      * 
-     * Sets multiple acceptable arguments. Appends if they do not exist.
+     * Sets multiple acceptable options. Appends if they do not exist.
      * 
      * @param array $list Argument information as array(name => info), where
      * each info value is an array like Solar_Console_Getopt::$_default.
@@ -442,603 +236,398 @@ class Solar_Console_Getopt extends Solar_Base {
      * @return void
      * 
      */
-    public function setArgs($list)
+    public function setOptions($list)
     {
         if (! empty($list)) {
             foreach ($list as $name => $info) {
-                $this->setArg($name, $info);
+                $this->setOption($name, $info);
             }
         }
-    }
-
-    /**
-     * 
-     * Adds a Solar_Filter method callback for an argument.
-     * 
-     * All pre-filters are applied via 
-     * Solar_Filter::multiple() and should conform to the 
-     * specifications for that method.
-     * 
-     * All parameters after $method are treated as added parameters
-     * for the Solar_Filter method call.
-     * 
-     * @param string $name The argument name. Use the long version if the
-     * argument supports long and short.
-     * 
-     * @param string $method Solar_Filter method or PHP function to use
-     * for filtering.
-     * 
-     * @return void
-     * 
-     */
-    public function addFilter($name, $method) 
-    {
-        // Get the arguments, drop the element name
-        $args = func_get_args();
-        array_shift($args);
-
-        $this->_filter[$name][] = $args;
-    }
-
-    /**
-     * 
-     * Adds a Solar_Valid method callback as a validation for an argument.
-     * 
-     * @param string $name The argument name. Use the long version if the
-     * argument supports long and short.
-     * 
-     * @param string $method The Solar_Valid callback method.
-     * 
-     * @param string $message The feedback message to use if validation fails.
-     * 
-     * @return void
-     * 
-     */
-    public function addValid($name, $method, $message = null)
-    {
-        // get the arguments, drop the element name
-        $args = func_get_args();
-
-        $name = array_shift($args);
-        
-        // add a default validation message (args[0] is the method,
-        // args[1] is the message)
-        if (empty($args[1]) || trim($args[1]) == '') {
-            
-            // see if we have an method-specific validation message
-            $key = 'VALID_' . strtoupper($method);
-            $args[1] = $this->locale($key);
-            
-            // if the message is the same as the key,
-            // there was no method-specific validation
-            // message.  revert to the generic default.
-            if ($key == $args[1]) {
-                $args[1] = $this->locale('ERR_INVALID');
-            }
-        }
-        
-        // add to the validation array
-        $this->_valid[$name][] = $args;
-    }
-
-    /**
-     * 
-     * Loads the arguments/options that have been set into logical
-     * groupings.
-     * 
-     * Argument parsing follows this convention:
-     * 
-     * --some-long-option
-     *   Args array will look like:
-     *   $args['long']['some-long-option'] = true;
-     * 
-     * --long-option=hasValue
-     *   Args array will look like:
-     *   $args['long']['some-long-option'] = 'hasValue';
-     * 
-     * -s
-     *   Args array will look like:
-     *   $args['short']['s'] = true;
-     * 
-     * -s value
-     *   Args array will look like:
-     *   $args['short']['s'] = 'value';
-     *   ... unless the 'auto_assign_shorts' config option is false.
-     * 
-     * -svkd
-     *   Args array will look like:
-     *   $args['short'] = array(
-     *     's' => true,
-     *     'v' => true,
-     *     'k' => true,
-     *     'd' => true,
-     *   );
-     *  ... unless this is a valid option with single_dash_ok, in which case:
-     *  $args['long']['svkd'] = true;
-     *   
-     *  -svkd=foo
-     *   $args['short'] = array(
-     *     's' => true,
-     *     'v' => true,
-     *     'k' => true,
-     *     'd' => 'foo',
-     *   );
-     * 
-     * 
-     * @return void
-     * 
-     */
-    public function populate() 
-    {
-        // reset args to ensure we avoid double-population
-        $this->_args = array(
-            'long' => array(),
-            'short' => array(),
-            'parameters' => array()
-        );
-        
-        $argv = $this->_request->server['argv'];
-        
-        // Drop the first argument if it's not an option, because it's 
-        // the script name
-        if (substr($argv[0], 0, 1) != '-') {
-            $cmd = array_shift($argv);
-            $this->_setCommandName($cmd);
-        }
-        
-        // If the next argument isn't an option, and we're acting as a 
-        // subcommand factory, validate before continuing
-        if (substr($argv[0], 0, 1) != '-' && 
-            $this->_config['sub_command_factory'] === true) {
-
-            $subcmd = array_shift($argv);
-            $this->sub_command = trim($subcmd);        
-        }
-
-        $previous_arg = null;
-        $no_more_options = false;
-        
-        foreach ($argv as $arg) {
-            
-            // Follow standard shell conventions
-            if ($arg == '--') {
-                $no_more_options = true;
-                continue;
-            }
-            if ($no_more_options) {
-                $this->_args['parameters'][] = $arg;
-                continue;
-            }
-                        
-            // reset baseline
-            $len                = strlen($arg);
-            $this->_type        = null;
-            $this->_multishort  = false;
-            $parsed             = array();
-            
-            // long opt?
-            if ($len > 2) { 
-                if (substr($arg, 0, 2) == '--') {
-                    $this->_type = '--';
-                }
-            }
-            
-            // short opt?
-            if (substr($arg, 0, 1) == '-' && substr($arg, 1, 1) != '-') {
-                $this->_type = '-';
-                
-                if ($len > 2 && !$this->_config['single_dash_ok']) {
-                    // more than one short option being passed at once
-                    $this->_multishort = true;
-                }
-            }
-
-            // Neither a short or long opt?
-            // Check if previous was a short option, and if it's 
-            // expecting a value
-            if ($this->_type === null) {
-                
-                if ($previous_arg != null &&
-                    $previous_arg['dash'] == '-' && 
-                    $this->_config['auto_assign_shorts']) {
-                        
-                    $bucket = $this->_types[$previous_arg['dash']];
-                        
-                    $this->_args[$bucket][$previous_arg['value']] = $arg;
-                    continue;
-                    
-                } else {
-                        
-                    // Otherwise, throw in parameters
-                    $this->_args['parameters'][] = $arg;
-                    $previous_arg = array('type' => 'parameter', 
-                                          'value' => $arg);
-                    continue;
-                    
-                }
-            }
-                        
-            // Check for value assignment
-            $parsed = $this->_assignValues($arg);
-
-            // File this pair
-            $type = $this->_types[$this->_type];
-            
-            
-            $this->_args[$type] = array_merge($this->_args[$type], $parsed);
-            
-            // set previous arg for next pass
-            $previous_arg = array(
-                'type'  => $type, 
-                'value' => key($parsed),
-                'dash'  => $this->_type,
-            );
-
-        }
-        
-        // Set the values we've collected in the arguments array
-        //$this->_setArgumentValues();
-        
-        // Set the populated flag
-        $this->_populated = true;
     }
     
     /**
      * 
-     * Performs filtering and validation on each argument.
+     * Populates the options with values from $argv.
      * 
-     * Updates the feedback keys for each argument that fails validation.
-     * Values are either pulled from the command line, or from the configured
-     * argument's value default.
+     * For a given option on the command line, these values will result:
      * 
-     * @return bool True if all arguments are valid, false if not
+     * `--foo-bar`
+     * : `'foo-bar' => true`
+     * 
+     * `--foo-bar=baz`
+     * : `'foo-bar' => 'baz'`
+     * 
+     * `--foo-bar="baz dib zim"`
+     * : `'foo-bar' => 'baz dib zim'`
+     * 
+     * `-s`
+     * : `'s' => true`
+     * 
+     * `-s dib`
+     * : `'s' => 'dib'`
+     * 
+     * `-s "dib zim gir"`
+     * : `'s' => 'dib zim gir'`
+     * 
+     * Short-option clusters are parsed as well, so that `-fbz` will result
+     * in `array('f' => true, 'b' => true, 'z' => true)`.  Note that you cannot
+     * pass parameters to an option in a cluster.
+     * 
+     * If an option is not defined, it will not be populated.
+     * 
+     * Options values are stored under the option key name, not
+     * the short- or long-format version of the option.  For example, an option
+     * named 'foo-bar' with a short-form of 'f' will be stored under 'foo-bar'.
+     * This helps deconflict between long- and short-form aliases.
+     * 
+     * @param array $argv The argument values passed on the command line.  If
+     * empty, will use $_SERVER['argv'] after shifting off its first element.
+     * 
+     * @return void
+     * 
+     */
+    public function populate($argv = null)
+    {
+        // get the command-line arguments
+        if ($argv === null) {
+            $argv = $this->_request->server['argv'];
+            array_shift($argv);
+        } else {
+            $argv = (array) $argv;
+        }
+        
+        // hold onto the argv source
+        $this->_argv = $argv;
+        
+        // reset values to defaults
+        $this->_values = array();
+        foreach ($this->options as $name => $info) {
+            $this->_values[$name] = $info['value'];
+        }
+        
+        // flag to say when we've reached the end of options
+        $done = false;
+        
+        // shift each element from the top of the $argv source
+        while (true) {
+            
+            // get the next argument
+            $arg = array_shift($this->_argv);
+            if ($arg === null) {
+                // no more args, we're done
+                break;
+            }
+            
+            // after a plain double-dash, all values are numeric (not options)
+            if ($arg == '--') {
+                $done = true;
+                continue;
+            }
+            
+            // if we're reached the end of options, just add to the numeric
+            // values.
+            if ($done) {
+                $this->_values[] = $arg;
+                continue;
+            }
+            
+            // long, short, or numeric?
+            if (substr($arg, 0, 2) == '--') {
+                // long
+                $this->_values = array_merge(
+                    $this->_values,
+                    (array) $this->_parseLong($arg)
+                );
+            } elseif (substr($arg, 0, 1) == '-') {
+                // short
+                $this->_values = array_merge(
+                    $this->_values,
+                    (array) $this->_parseShort($arg)
+                );
+            } else {
+                // numeric
+                $this->_values[] = $arg;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Applies validation and sanitizing filters to the values.
+     * 
+     * @return bool True if all values are valid, false if not.
      * 
      */
     public function validate()
     {
-        if (empty($this->_populated)) {
-            $this->populate();
-        }
-
-        // Set the values we've collected in the arguments array
-        $this->_setArgumentValues();
-                
-        // loop through each argument to filter
-        foreach ($this->_filter as $name => $filters) {
-            $value = $this->arguments[$name]['value'];
-            $this->arguments[$name]['value'] = $this->_obj_filter->multiple(
-                $value, $filters
-            );
-        }
+        // reset previous invalidations
+        $this->_invalid = array();
         
-        // Valid unless proven otherwise
-        $validated = true;
-        
-        // loop through each argument to be validated
-        foreach ($this->_valid as $name => $list) {
+        // note that we use &$val here, which allows sanitizing methods to
+        // work directly with the value.
+        foreach ($this->_values as $key => &$val) {
             
-            // loop through each validation for the argument
-            foreach ($list as $vargs) {
+            // does the option name exist?  (might not for numeric options)
+            if (empty($this->options[$key])) {
+                continue;
+            }
+            
+            // setup for 'require' on parameter values
+            $require = $this->options[$key]['require'];
+            $this->_datafilter->setRequire($require);
+            
+            // is a value required for the option?
+            if ($require && ! $this->_datafilter->validateNotBlank($val)) {
+                // value was blank, that means it is invalid.
+                // other validations will also be processed, meaning that their
+                // messages will override this one.
+                $this->_invalid[$key] = $this->locale('VALIDATE_NOT_BLANK');
+            }
+            
+            // are there other filters for this option?
+            if (empty($this->_filters[$key])) {
+                // no filters, skip it
+                continue;
+            }
+            
+            // apply other filters
+            foreach ($this->_filters[$key] as $params) {
                 
-                // the name of the Solar_Valid method
-                $method = array_shift($vargs);
+                // take the method name off the top of the params ...
+                $method = array_shift($params);
                 
-                // the text of the error message
-                $feedback = array_shift($vargs);
+                // ... and put the value in its place.
+                array_unshift($params, $val);
                 
-                // config is now the remaining bits, put the value
-                // on top of it.
-                array_unshift($vargs, $this->arguments[$name]['value']);
-                
-                // Required value or not?
-                $blank_ok = true;
-                if ($this->arguments[$name]['require'] === true) {
-                    $blank_ok = false;
-                }
-                array_push($vargs, $blank_ok);
-                
-                // Call the appropriate Solar_Valid method
+                // call the filtering method
                 $result = call_user_func_array(
-                    array($this->_obj_valid, $method),
-                    $vargs
+                    array($this->_datafilter, $method),
+                    $params
                 );
                 
-                // was it valid?
-                if (! $result) {
-                    // no, add the feedback message
-                    $validated = false;
-                    $this->arguments[$name]['feedback'][] = $feedback;
-                    $this->arguments[$name]['status'] = false;
-                } else {
-                    $this->arguments[$name]['status'] = true;
-                }
+                // did the filter sanitize, or did it validate?
+                $type = strtolower(substr($method, 0, 8));
                 
-            } // inner loop
-            
-        } // outer loop
+                // what to do with the result?
+                if ($type == 'sanitize') {
+                    // retain the sanitized value
+                    $val = $result;
+                } elseif ($type == 'validate' && ! $result) {
+                    // a validation method failed; use the method name as
+                    // the locale translation key, converting from camelCase
+                    // to camel_Case, then to CAMEL_CASE.
+                    $tmp = preg_replace('/([a-z])([A-Z])/', '$1_$2', $method);
+                    $tmp = strtoupper($tmp);
+                    $this->_invalid[$key] = $this->_datafilter->locale($tmp);
+                    // no more validations on this key
+                    break;
+                }
+            }
+        }
         
-        if ($validated && !empty($this->_config['success'])) {
-            $this->feedback = array($this->_config['success']);            
+        // if there were any invalids, keep them and return false
+        if ($this->_invalid) {
+            return false;
         } else {
-            if (!empty($this->_config['failure'])) {
-                $this->feedback = array($this->_config['failure']);
-            }
+            return true;
         }
-        
-        $this->_status = $validated;
-        return $validated;        
     }
     
     /**
      * 
-     * Returns the validated arguments as a Solar_Console_Getopt_Args object.
-     * 
-     * @param bool $raw Return the object with what was passed, prior to
-     * validation.
-     * 
-     * @return object
-     * 
-     */
-    public function args($raw = false)
-    {
-        // Creating the struct and using Solar_Struct::load() avoids 
-        // creating a temporary array representing the key => value pairs
-        // of the validated arguments.
-        
-        $args = new stdClass();
-        
-        if (! $raw) {
-            foreach ($this->arguments as $arg) {
-                $prop = str_replace('-', '_', $arg['name']);
-                $args->$prop = $arg['value'];
-            }
-            $args->parameters = $this->_args['parameters'];
-            return $args;
-        }
-        
-        // raw version
-        $args->long = $this->_args['long'];
-        $args->short = $this->_args['short'];
-        $args->parameters = $this->_args['parameters'];
-        return $args;
-    }
-    
-    /**
-     * Returns leftover parameters after all arguments were processed
-     * 
-     * @return array Array of values post-argument handling
-     * 
-     */
-    public function parameters()
-    {
-        return $this->_args['parameters'];
-    }
-
-    /**
-     * 
-     * Return true/false depending on whether or not the sub_command_factory
-     * option is set.
-     * 
-     * @return boolean
-     * 
-     */
-    public function isSubCommandFactory()
-    {
-        return $this->_config['sub_command_factory'];
-    }
-
-    /** 
-     * 
-     * Return default argument array for merging with arrays generated in 
-     * other areas.
+     * Returns a list of invalid options and their error messages (if any).
      * 
      * @return array
      * 
      */
-    public function getDefaultArgStructure()
+    public function getInvalid()
     {
-        return $this->_default;
-    }
-
-    // -----------------------------------------------------------------
-    // 
-    // Console output management methods
-    // 
-    // -----------------------------------------------------------------
-
-    /**
-     * 
-     * Looks up locale strings based on a key. Also applies console 
-     * style/colorization conversions based on format strings found in
-     * returned locale string.
-     * 
-     * @param string $key The key to get a locale string for.
-     * 
-     * @param string $num If 1, returns a singular string; otherwise, returns
-     * a plural string (if one exists).
-     * 
-     * @param array $replace An array of replacement values for the string, to
-     * be applied using [[php::vsprintf() | ]].
-     * 
-     * @return string The locale string, or the original $key if no
-     * string found.
-     * 
-     */
-    public function locale($key, $num = 1, $replace = null)
-    {
-        $string = Solar::$locale->fetch(get_class($this), $key, $num, $replace);
-        $string = str_replace(
-            array_keys($this->style_map),
-            $this->style_map,
-            $string
-        );
-        return $string;        
-    }    
-
-    // -----------------------------------------------------------------
-    //
-    // Support methods
-    //
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Prep command name for help output
-     * 
-     * @param string $cmd Command name pulled from $argv[0]
-     * 
-     * @return void
-     * 
-     */
-    protected function _setCommandName($cmd)
-    {
-        $cmd = trim($cmd);
-
-        // strip off path
-        $cmd = basename($cmd);
-        
-        $this->command = $cmd;
-        
-        if (substr($this->command, -4) == '.php') {
-            $this->command_help = 'php ' . $this->command;
-        } else {
-            $this->command_help = $this->command;
-        }
-        
+        return $this->_invalid;
     }
     
     /**
      * 
-     * Determine how the passed argument should treated in regard to
-     * assignment of values.
+     * Returns the populated option values.
      * 
-     * If an equal sign is present in the arg, the value of what follows the
-     * equal sign will be assigned to what precedes it. If no equal sign is
-     * present, the argument will be assigned a boolean true value.
-     * 
-     * @param string $arg Argument to examine
-     * 
-     * @return array Array of key => value determinations made on the passed
-     * argument.
-     * 
-     * @todo Once Solar has a PHP 5.2.0 requirement, use array_fill_keys where 
-     * noted below.
+     * @return array
      * 
      */
-    protected function _assignValues($arg)
+    public function values()
     {
-
-        $typelen = strlen($this->_type);
-        $equalpos = strpos($arg, '=');
+        return $this->_values;
+    }
+    
+    /**
+     * 
+     * Parse a long-form option.
+     * 
+     * @param string $arg The $argv element, e.g. "--foo" or "--bar=baz".
+     * 
+     * @return array An associative array where the key is the option name and
+     * the value is the option value.
+     * 
+     */
+    protected function _parseLong($arg)
+    {
+        // strip the leading "--"
+        $arg = substr($arg, 2);
         
-        if ($equalpos === false) {
-            
-
-            // No value assignment
-            $key = substr($arg, $typelen);
-
-            if ($this->_multishort) {
-                $key = str_split($key);
-                
-                // @todo: replace with array_fill_keys someday
-                $parsed = array_combine(
-                    $key,
-                    array_fill(0, sizeof($key), true)
-                );
-                
-            } else {
-                $parsed[$key] = true;
-            }
-            
+        // find the first = sign
+        $pos = strpos($arg, '=');
+        
+        // get the key for name lookup
+        if ($pos === false) {
+            $key = $arg;
+            $value = null;
         } else {
-            
-            // value assignment
-            $key = substr($arg, $typelen, $equalpos - $typelen);
-            $val = substr($arg, $equalpos + 1);
-                        
-            if ($this->_multishort) {
-                
-                $lastkey = substr($key, -1);
-                
-                $key = str_split($key);
-                
-                // @todo: replace with array_fill_keys someday
-                $parsed = array_combine(
-                    $key,
-                    array_fill(0, sizeof($key), true)
-                );
-                
-                $parsed[$lastkey] = $val;
-                
+            $key = substr($arg, 0, $pos);
+            $value = substr($arg, $pos+1);
+        }
+        
+        // is this a recognized option?
+        $name = $this->_getOptionName('long', $key);
+        if (! $name) {
+            return;
+        }
+        
+        // parse the value for the option param
+        return $this->_parseParam($name, $value);
+    }
+    
+    /**
+     * 
+     * Parse the parameter value for a named option.
+     * 
+     * @param string $name The option name.
+     * 
+     * @param string $value The parameter.
+     * 
+     * @return array An associative array where the option name is the key,
+     * and the parsed parameter is the value.
+     * 
+     */
+    protected function _parseParam($name, $value)
+    {
+        // get info about the option
+        $info = $this->options[$name];
+        
+        // is the value blank?
+        if (trim($value) == '') {
+            // value is blank. was it required for the option?
+            if ($info['param'] == 'required') {
+                // required but blank.
+                return array($name => null);
             } else {
-                $parsed[$key] = $val;
+                // optional but blank, treat as a flag.
+                return array($name => true);
             }
-            
         }
         
-        // return the parsed array
-        return $parsed;
+        // param was present and not blank.
+        return array($name => $value);
     }
-
+    
     /**
      * 
-     * Sets values from raw _args array in public $arguments for validation
-     * and filtering. Also performs short-to-long option mapping.
+     * Parse a short-form option (or cluster of options).
      * 
-     * @return void
+     * @param string $arg The $argv element, e.g. "-f" or "-fbz".
+     * 
+     * @param bool $cluster This option is part of a cluster.
+     * 
+     * @return array An associative array where the key is the option name and
+     * the value is the option value.
      * 
      */
-    protected function _setArgumentValues()
+    protected function _parseShort($arg, $cluster = false)
     {
-        foreach ($this->arguments as $name => $arg) {
-            if (!empty($arg['short'])) {
-                
-                // If single dashes for long options are ok, 
-                // short options are put in the same bucket as long options
-                $bucket = 'short';
-                if ($this->_config['single_dash_ok']) {
-                    $bucket = 'long';
-                }
-                
-                if (isset($this->_args[$bucket][$arg['short']])) {
-                    $arg['value'] = $this->_args[$bucket][$arg['short']];
-                }
+        // strip the leading "-"
+        $arg = substr($arg, 1);
+        
+        // re-process as a cluster?
+        if (strlen($arg) > 1) {
+            $data = array();
+            foreach (str_split($arg) as $key) {
+                $data = array_merge(
+                    $data,
+                    (array) $this->_parseShort("-$key", true)
+                );
             }
-            if (!empty($arg['name'])) {
-                if (isset($this->_args['long'][$arg['name']])) {
-                    $arg['value'] = $this->_args['long'][$arg['name']];
-                }
-            }
-            $this->arguments[$name] = $arg;
+            return $data;
         }
         
+        // is the option defined?
+        $name = $this->_getOptionName('short', $arg);
+        if (! $name) {
+            // not defined
+            return;
+        } else {
+            // keep the option info
+            $info = $this->options[$name];
+        }
+        
+        // are we processing as part of a cluster?
+        if ($cluster) {
+            // is a param required for the option?
+            if ($info['param'] == 'required') {
+                // can't get params when in a cluster.
+                return array($name => null);
+            } else {
+                // param was optional or not needed, treat as a flag.
+                return array($name => true);
+            }
+        }
+        
+        // not processing as part of a cluster.
+        // does the option need a param?
+        if (! $info['param']) {
+            // defined as not-needing a param, treat as a flag.
+            return array($name => true);
+        }
+        
+        // the option was defined as needing a param (required or optional).
+        // get the next element from $argv to see if it's a param.
+        $value = array_shift($this->_argv);
+        
+        // make sure the element not an option itself.
+        if (substr($value, 0, 1) == '-') {
+            
+            // the next element is an option, not a param.
+            // this means no param is present.
+            // put the element back into $argv.
+            array_unshift($this->_argv, $value);
+            
+            // was the missing param required?
+            if ($info['param'] == 'required') {
+                // required but not present
+                return array($name => null);
+            } else {
+                // optional but not present, treat as a flag
+                return array($name => true);
+            }
+        }
+        
+        // parse the parameter for a required or optional value
+        return $this->_parseParam($name, $value);
     }
-
+    
     /**
      * 
-     * Split a name into long and short versions if a pipe is present.
+     * Gets an option name from its short or long format.
      * 
-     * @param string $name Name of the argument
+     * @param string $type Look in the 'long' or 'short' key for option names.
      * 
-     * @return mixed Array if pipe was present, trimmed $name if not
+     * @param string $value The long or short format of the option name.
+     * 
+     * @return string
      * 
      */
-    protected function _prepareName($name)
+    protected function _getOptionName($type, $value)
     {
-        $name = trim($name);
-        
-        $pos = strpos($name, '|');
-        
-        if ($pos !== false) {
-            $combo = array();
-            
-            $combo['long'] = substr($name, 0, $pos);
-            $combo['short'] = substr($name, $pos + 1);
-
-            return $combo;
+        foreach ($this->options as $name => $info) {
+            if ($info[$type] == $value) {
+                return $name;
+            }
         }
-        
-        return $name;
     }
-
 }

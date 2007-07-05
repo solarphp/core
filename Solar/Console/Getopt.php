@@ -69,7 +69,7 @@ class Solar_Console_Getopt extends Solar_Base {
      * : (string) When the option is present, does it take a parameter?  If so,
      *   the param can be "required" every time, or be "optional". If empty, no
      *   parameter for the option will be recognized (the option's value will be
-     *   boolean true).
+     *   boolean true).  Default is 'optional'.
      * 
      * `value`
      * : (mixed) The default value for the option parameter, if any.  This way,
@@ -80,7 +80,9 @@ class Solar_Console_Getopt extends Solar_Base {
      *   of some sort.
      * 
      * `filters`
-     * : (array) An array of filters to apply to the parameter value.
+     * : (array) An array of filters to apply to the parameter value.  This can
+     *   be a single filter (`array('validateInt')`), or a series of filters
+     *   (`array('validateInt', array('validateRange', -10, +10)`).
      * 
      * @var array
      * 
@@ -88,7 +90,7 @@ class Solar_Console_Getopt extends Solar_Base {
     protected $_default = array(
         'long'    => null,
         'short'   => null,
-        'param'   => null,
+        'param'   => 'optional',
         'value'   => null,
         'descr'   => null,
         'require' => false,

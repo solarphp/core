@@ -65,6 +65,15 @@ class Solar_Controller_Console extends Solar_Base {
     
     /**
      * 
+     * The list of commands this controller can invoke.
+     * 
+     * @var array
+     * 
+     */
+    protected $_command_list = array();
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -91,74 +100,6 @@ class Solar_Controller_Console extends Solar_Base {
         
         // extended setup
         $this->_setup();
-    }
-    
-    /**
-     * 
-     * Sets up the environment for all commands.
-     * 
-     * @return void
-     * 
-     */
-    protected function _setup()
-    {
-    }
-    
-    /**
-     * 
-     * Returns a list of commands recognized by this console controller, and the
-     * related classes for those commands.
-     * 
-     * @return array An associative array where the key is the command name, and
-     * the value is the class for that command.
-     * 
-     */
-    public function getCommandList()
-    {
-        $list = array();
-        
-        // loop through class stack and add commands
-        $stack = $this->_stack->get();
-        foreach ($stack as $class) {
-            
-            $dir = Solar::isDir(str_replace('_', DIRECTORY_SEPARATOR, $class));
-            if (! $dir) {
-                continue;
-            }
-            
-            // loop through each file in the directory
-            $files = scandir($dir);
-            foreach ($files as $file) {
-                // file must end in .php and start with an upper-case letter
-                $char = $file[0];
-                $keep = substr($file, -4) == '.php' &&
-                        ctype_alpha($char) &&
-                        strtoupper($char) == $char;
-                
-                if (! $keep) {
-                    continue;
-                }
-                
-                // the list-value is the base class name, plus the file name,
-                // minus the .php extension, to give us a class name
-                $val = $class . substr($file, 0, -4);
-                
-                // the list-key is the command name; convert the file name to a
-                // command name.  FooBar.php becomes "foo-bar".
-                $key = substr($file, 0, -4);
-                $key = preg_replace('/([a-z])([A-Z])/', '$1-$2', $key);
-                $key = strtolower($key);
-                
-                // keep the command name and class name
-                $list[$key] = $val;
-            }
-        }
-        
-        // override with explicit routings
-        $list = array_merge($list, $this->_routing);
-        
-        // done!
-        return $list;
     }
     
     /**
@@ -202,6 +143,87 @@ class Solar_Controller_Console extends Solar_Base {
         $obj = Solar::factory($class);
         $obj->setConsoleController($this);
         return $obj->exec($argv);
+    }
+    
+    /**
+     * 
+     * Returns a list of commands recognized by this console controller, and the
+     * related classes for those commands.
+     * 
+     * @return array An associative array where the key is the command name, and
+     * the value is the class for that command.
+     * 
+     */
+    public function getCommandList()
+    {
+        if (! $this->_command_list) {
+            $this->_setCommandList();
+        }
+        return $this->_command_list;
+    }
+    
+    /**
+     * 
+     * Sets up the environment for all commands.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
+    }
+    
+    /**
+     * 
+     * Populates the list of recognized commands.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setCommandList()
+    {
+        $list = array();
+    
+        // loop through class stack and add commands
+        $stack = $this->_stack->get();
+        foreach ($stack as $class) {
+        
+            $dir = Solar::isDir(str_replace('_', DIRECTORY_SEPARATOR, $class));
+            if (! $dir) {
+                continue;
+            }
+        
+            // loop through each file in the directory
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                // file must end in .php and start with an upper-case letter
+                $char = $file[0];
+                $keep = substr($file, -4) == '.php' &&
+                        ctype_alpha($char) &&
+                        strtoupper($char) == $char;
+            
+                if (! $keep) {
+                    // doesn't look like a command class
+                    continue;
+                }
+                
+                // the list-value is the base class name, plus the file name,
+                // minus the .php extension, to give us a class name
+                $val = $class . substr($file, 0, -4);
+            
+                // the list-key is the command name; convert the file name to a
+                // command name.  FooBar.php becomes "foo-bar".
+                $key = substr($file, 0, -4);
+                $key = preg_replace('/([a-z])([A-Z])/', '$1-$2', $key);
+                $key = strtolower($key);
+            
+                // keep the command name and class name
+                $list[$key] = $val;
+            }
+        }
+    
+        // override with explicit routings
+        $this->_command_list = array_merge($list, $this->_routing);
     }
     
     /**

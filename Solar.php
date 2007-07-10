@@ -525,10 +525,61 @@ class Solar {
         
         // using a relative path on the file
         $path = explode(PATH_SEPARATOR, ini_get('include_path'));
-        foreach ($path as $dir) {
+        foreach ($path as $base) {
             // strip Unix '/' and Windows '\'
-            $target = rtrim($dir, '\\/') . DIRECTORY_SEPARATOR . $file;
+            $target = rtrim($base, '\\/') . DIRECTORY_SEPARATOR . $file;
             if (file_exists($target)) {
+                return $target;
+            }
+        }
+        
+        // never found it
+        return false;
+    }
+    
+    /**
+     * 
+     * Hack for [[php::is_dir() | ]] that checks the include_path.
+     * 
+     * Use this to see if a directory exists anywhere in the include_path.
+     * 
+     * {{code: php
+     *     $dir = Solar::isDir('path/to/dir')
+     *     if ($dir) {
+     *         $files = scandir($dir);
+     *     } else {
+     *         echo "Not found in the include-path.";
+     *     }
+     * }}
+     * 
+     * @param string $dir Check for this directory in the include_path.
+     * 
+     * @return mixed If the directory exists in the include_path, returns the
+     * absolute path; if not, returns boolean false.
+     * 
+     */
+    public static function isDir($dir)
+    {
+        // no file requested?
+        $dir = trim($dir);
+        if (! $dir) {
+            return false;
+        }
+        
+        // using an absolute path for the file?
+        // dual check for Unix '/' and Windows '\',
+        // or Windows drive letter and a ':'.
+        $abs = ($dir[0] == '/' || $dir[0] == '\\' || $dir[1] == ':');
+        if ($abs && is_dir($dir)) {
+            return $dir;
+        }
+        
+        // using a relative path on the file
+        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
+        foreach ($path as $base) {
+            // strip Unix '/' and Windows '\'
+            $target = rtrim($base, '\\/') . DIRECTORY_SEPARATOR . $dir;
+            if (is_dir($target)) {
                 return $target;
             }
         }

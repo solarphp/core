@@ -554,6 +554,8 @@ class Solar_DataFilter extends Solar_Base {
      * Validates that the value is null, or is a string composed only of
      * whitespace.
      * 
+     * Ignores the [[$_require]] setting.
+     * 
      * Non-strings and non-nulls never validate as blank; this includes
      * integers, floats, numeric zero, boolean true and false, any array with
      * zero or more elements, and all objects and resources.
@@ -1089,10 +1091,10 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Validates that the value is not blank whitespace.
      * 
-     * Boolean, integer, and float types are never "blank".
+     * Ignores the [[$_require]] setting.
      * 
-     * All other types are converted to string and trimmed; if '', then the
-     * value is blank.
+     * Boolean, integer, and float types are never "blank". All other types are
+     * converted to string and trimmed; if '', then the value is blank.
      * 
      * @param mixed $value The value to validate.
      * 

@@ -1,0 +1,263 @@
+<?php
+/**
+ * 
+ * The CLI equivalent of a front-controller to find and invoke a command
+ * (technically a sub-command).
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Controller
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * The CLI equivalent of a front-controller to find and invoke a command
+ * (technically a sub-command).
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Controller
+ * 
+ */
+class Solar_Controller_Console extends Solar_Base {
+    
+    /**
+     * 
+     * User-defined configuration values.
+     * 
+     * Keys are:
+     * 
+     * `request`
+     * : (dependency) A Solar_Request dependency injection.  Default is
+     *   'request'.
+     * 
+     * `classes`
+     * : (array) Base class names for commands.
+     * 
+     * `routing`
+     * : (array) An array of commands to class names.
+     * 
+     * @var array
+     * 
+     */
+    protected $_Solar_Controller_Console = array(
+        'request' => 'request',
+        'classes' => array('Solar_Cli'),
+        'routing' => array(),
+        'default' => '',
+    );
+    
+    /**
+     * 
+     * Explicit command-name to class-name mappings.
+     * 
+     * @var array
+     * 
+     */
+    protected $_routing;
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-provided configuration values.
+     * 
+     */
+    public function __construct($config)
+    {
+        // do the "real" construction
+        parent::__construct($config); 
+        
+        // inject the request dependency
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
+        
+        // set convenience vars from config
+        $this->_routing = $this->_config['routing'];
+        $this->_default = $this->_config['default'];
+        
+        // set up a class stack for finding commands
+        $this->_stack = Solar::factory('Solar_Class_Stack');
+        $this->_stack->add($this->_config['classes']);
+        
+        // extended setup
+        $this->_setup();
+    }
+    
+    /**
+     * 
+     * Sets up the environment for all commands.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
+    }
+    
+    /**
+     * 
+     * Returns a list of commands recognized by this console controller, and the
+     * related classes for those commands.
+     * 
+     * @return array An associative array where the key is the command name, and
+     * the value is the class for that command.
+     * 
+     */
+    public function getCommandList()
+    {
+        $list = array();
+        
+        // loop through class stack and add commands
+        $stack = $this->_stack->get();
+        foreach ($stack as $class) {
+            
+            $dir = Solar::isDir(str_replace('_', DIRECTORY_SEPARATOR, $class));
+            if (! $dir) {
+                continue;
+            }
+            
+            // loop through each file in the directory
+            $files = scandir($dir);
+            foreach ($files as $file) {
+                // file must end in .php and start with an upper-case letter
+                $char = $file[0];
+                $keep = substr($file, -4) == '.php' &&
+                        ctype_alpha($char) &&
+                        strtoupper($char) == $char;
+                
+                if (! $keep) {
+                    continue;
+                }
+                
+                // the list-value is the base class name, plus the file name,
+                // minus the .php extension, to give us a class name
+                $val = $class . substr($file, 0, -4);
+                
+                // the list-key is the command name; convert the file name to a
+                // command name.  FooBar.php becomes "foo-bar".
+                $key = substr($file, 0, -4);
+                $key = preg_replace('/([a-z])([A-Z])/', '$1-$2', $key);
+                $key = strtolower($key);
+                
+                // keep the command name and class name
+                $list[$key] = $val;
+            }
+        }
+        
+        // override with explicit routings
+        $list = array_merge($list, $this->_routing);
+        
+        // done!
+        return $list;
+    }
+    
+    /**
+     * 
+     * Finds and invokes a command.
+     * 
+     * @param array $argv The command-line arguments.
+     * 
+     * @return string The output of the page action.
+     * 
+     */
+    public function exec($argv = null)
+    {
+        // get the command-line arguments
+        if ($argv === null) {
+            $argv = $this->_request->server['argv'];
+            array_shift($argv);
+        } else {
+            $argv = (array) $argv;
+        }
+        
+        // take the command name off the top of the path and try to get a
+        // controller class from it.
+        $command = array_shift($argv);
+        $class = $this->_getCommandClass($command);
+        
+        // did we get a class from it?
+        if (! $class) {
+            // put the original segment back on top.
+            array_unshift($argv, $command);
+            // try to get a controller class from the default page name
+            $class = $this->_getCommandClass($this->_default);
+        }
+        
+        // last chance: do we have a class yet?
+        if (! $class) {
+            return $this->_notFound($command);
+        }
+        
+        // instantiate and invoke the command
+        $obj = Solar::factory($class);
+        $obj->setConsoleController($this);
+        return $obj->exec($argv);
+    }
+    
+    /**
+     * 
+     * Finds the command class from a command name.
+     * 
+     * @param string $command The command name.
+     * 
+     * @return string The related command class picked from
+     * the routing, or from the list of available classes.  If not found,
+     * returns false.
+     * 
+     */
+    protected function _getCommandClass($command)
+    {
+        // skip on leading dashes, it can't be a command
+        if (substr($command, 0, 1) == '-') {
+            return;
+        }
+        
+        // find the command class
+        if (! empty($this->_routing[$command])) {
+            // found an explicit route
+            $class = $this->_routing[$command];
+        } else {
+            // no explicit route, try to find a matching class
+            $command = str_replace('-',' ', $command);
+            $command = str_replace(' ', '', ucwords(trim($command)));
+            $class = $this->_stack->load($command, false);
+        }
+        
+        // done!
+        return $class;
+    }
+    
+    /**
+     * 
+     * This runs when exec() cannot find a related command class.
+     * 
+     * The method throws an exception, which should be caught by the calling
+     * script.
+     * 
+     * @param string $cmd The name of the command not found.
+     * 
+     * @throws Solar_Controller_Console_Exception
+     * 
+     */
+    protected function _notFound($cmd)
+    {
+        $cmd = trim($cmd);
+        if (empty($cmd)) {
+            throw $this->_exception('ERR_NO_COMMAND');
+        } else {
+            throw $this->_exception('ERR_COMMAND_NOT_FOUND', array(
+                'cmd' => $cmd,
+            ));
+        }
+    }
+}

@@ -172,6 +172,7 @@ class Solar_Controller_Front extends Solar_Base {
         
         // instantiate the controller class and fetch its content
         $obj = Solar::factory($class);
+        $obj->setFrontController($this);
         return $obj->fetch($uri);
     }
     

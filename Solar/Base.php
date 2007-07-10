@@ -265,7 +265,7 @@ abstract class Solar_Base {
         return Solar::exception(
             $class,
             $code,
-            Solar::$locale->fetch($class, $code),
+            Solar::$locale->fetch($class, $code, 1, $info),
             (array) $info
         );
     }

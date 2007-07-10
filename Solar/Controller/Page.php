@@ -270,6 +270,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * The front-controller object (if any) that invoked this page-controller.
+     * 
+     * @var Solar_Controller_Front
+     * 
+     */
+    protected $_front;
+    
+    /**
+     * 
      * Maps format name keys to Content-Type values.
      * 
      * When $this->_format matches one of the keys, the controller will set
@@ -377,6 +386,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
             'ERR_PROPERTY_NOT_DEFINED',
             array('property' => "\$$key")
         );
+    }
+    
+    /**
+     * 
+     * Injects the front-controller object that invoked this page-controller.
+     * 
+     * @param Solar_Controller_Front $front The front-controller.
+     * 
+     * @return void
+     * 
+     */
+    public function setFrontController($front)
+    {
+        $this->_front = $front;
     }
     
     /**

@@ -28,12 +28,40 @@
  * @todo Add load() method similar to Solar_Form::load(), for loading from 
  * external XML, PHP array, etc. files.
  * 
+ * @todo Config to stop processing options after first numeric?  This would 
+ * force options to come before the numeric params, making the invocation more
+ * strict (and cleaner-looking).
+ * 
  */
 class Solar_Console_Getopt extends Solar_Base {
     
+    /**
+     * 
+     * User-defined configuration values.
+     * 
+     * Keys are:
+     * 
+     * `request`
+     * : (dependency) A Solar_Request dependency injection.  Default is
+     *   'request'.
+     * 
+     * `datafilter_class`
+     * : (string) The data-filter class to use when validating and sanitizing
+     *   parameter values.  Default is 'Solar_DataFilter'.
+     * 
+     * `strict`
+     * : (bool) If true, will not process any more options after the first 
+     *   non-option-related parameter.  This forces all numeric parameters to
+     *   come after the last option.  If false, numeric parameters unrelated to
+     *   any particular option can be mixed in with the options.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_Console_Getopt = array(
         'request'          => 'request',
         'datafilter_class' => 'Solar_DataFilter',
+        'strict'           => true,
     );
     
     /**
@@ -352,6 +380,11 @@ class Solar_Console_Getopt extends Solar_Base {
             } else {
                 // numeric
                 $this->_values[] = $arg;
+                // in strict mode, this indicates that no more options
+                // should be procesed.
+                if ($this->_config['strict']) {
+                    $done = true;
+                }
             }
         }
     }
@@ -470,6 +503,8 @@ class Solar_Console_Getopt extends Solar_Base {
      * 
      * @return array An associative array where the key is the option name and
      * the value is the option value.
+     * 
+     * @todo Support param without equals, e.g. "--bar baz".
      * 
      */
     protected function _parseLong($arg)

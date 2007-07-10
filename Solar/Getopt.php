@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Console_Getopt
+ * @package Solar_Getopt
  * 
  * @author Clay Loveless <clay@killersoft.com>
  * 
@@ -23,7 +23,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_Console_Getopt
+ * @package Solar_Getopt
  * 
  * @todo Add load() method similar to Solar_Form::load(), for loading from 
  * external XML, PHP array, etc. files.
@@ -33,7 +33,7 @@
  * strict (and cleaner-looking).
  * 
  */
-class Solar_Console_Getopt extends Solar_Base {
+class Solar_Getopt extends Solar_Base {
     
     /**
      * 
@@ -58,7 +58,7 @@ class Solar_Console_Getopt extends Solar_Base {
      * @var array
      * 
      */
-    protected $_Solar_Console_Getopt = array(
+    protected $_Solar_Getopt = array(
         'request'          => 'request',
         'datafilter_class' => 'Solar_DataFilter',
         'strict'           => true,
@@ -73,8 +73,8 @@ class Solar_Console_Getopt extends Solar_Base {
      * requirements, and validation callbacks.
      * 
      * In general, you should not try to set $options yourself;
-     * instead, use [[Solar_Console_Getopt::setOption()]] and/or
-     * [[Solar_Console_Getopt::setOptions()]].
+     * instead, use [[Solar_Getopt::setOption()]] and/or
+     * [[Solar_Getopt::setOptions()]].
      * 
      */
     public $options = array();
@@ -203,7 +203,7 @@ class Solar_Console_Getopt extends Solar_Base {
      * $info['short'] if 1 character long, otherwise overrides $info['long'].
      * 
      * @param array $info Option information using the same keys
-     * as [[Solar_Console_Getopt::$_default]].
+     * as [[Solar_Getopt::$_default]].
      * 
      * @return void
      * 
@@ -264,7 +264,7 @@ class Solar_Console_Getopt extends Solar_Base {
      * Sets multiple acceptable options. Appends if they do not exist.
      * 
      * @param array $list Argument information as array(name => info), where
-     * each info value is an array like Solar_Console_Getopt::$_default.
+     * each info value is an array like Solar_Getopt::$_default.
      * 
      * @return void
      * 
@@ -504,8 +504,6 @@ class Solar_Console_Getopt extends Solar_Base {
      * @return array An associative array where the key is the option name and
      * the value is the option value.
      * 
-     * @todo Support param without equals, e.g. "--bar baz".
-     * 
      */
     protected function _parseLong($arg)
     {
@@ -513,15 +511,15 @@ class Solar_Console_Getopt extends Solar_Base {
         $arg = substr($arg, 2);
         
         // find the first = sign
-        $pos = strpos($arg, '=');
+        $eqpos = strpos($arg, '=');
         
         // get the key for name lookup
-        if ($pos === false) {
+        if ($eqpos === false) {
             $key = $arg;
             $value = null;
         } else {
-            $key = substr($arg, 0, $pos);
-            $value = substr($arg, $pos+1);
+            $key = substr($arg, 0, $eqpos);
+            $value = substr($arg, $eqpos+1);
         }
         
         // is this a recognized option?
@@ -530,7 +528,46 @@ class Solar_Console_Getopt extends Solar_Base {
             return;
         }
         
-        // parse the value for the option param
+        // was a value specified with equals?
+        if ($eqpos !== false) {
+            // parse the value for the option param
+            return $this->_parseParam($name, $value);
+        }
+        
+        // value was not specified with equals;
+        // is a param needed at all?
+        $info = $this->options[$name];
+        if (! $info['param']) {
+            // defined as not-needing a param, treat as a flag.
+            return array($name => true);
+        }
+        
+        // the option was defined as needing a param (required or optional),
+        // but there was no equals-sign.  this means we need to look at the
+        // next element for a possible param value.
+        // 
+        // get the next element from $argv to see if it's a param.
+        $value = array_shift($this->_argv);
+        
+        // make sure the element not an option itself.
+        if (substr($value, 0, 1) == '-') {
+            
+            // the next element is an option, not a param.
+            // this means no param is present.
+            // put the element back into $argv.
+            array_unshift($this->_argv, $value);
+            
+            // was the missing param required?
+            if ($info['param'] == 'required') {
+                // required but not present
+                return array($name => null);
+            } else {
+                // optional but not present, treat as a flag
+                return array($name => true);
+            }
+        }
+        
+        // parse the parameter for a required or optional value
         return $this->_parseParam($name, $value);
     }
     

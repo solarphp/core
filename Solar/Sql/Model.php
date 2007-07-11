@@ -1803,10 +1803,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _update()
     {
-        // auto-add an 'updated' value if there is an 'updated' column
-        // and its value is not already set.
+        // auto-add an 'updated' value if there is an 'updated' column.
         $key = $this->_updated_col;
-        if ($key && empty($this->_data[$key])) {
+        if ($key) {
             $this->_data[$key] = date('Y-m-d\\TH:i:s');
         }
         

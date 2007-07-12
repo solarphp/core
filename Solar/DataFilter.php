@@ -633,8 +633,7 @@ class Solar_DataFilter extends Solar_Base {
      * 
      * Validates that the value is an email address.
      * 
-     * Heavily adapted and modified from
-     * <http://www.ilovejackdaniels.com/php/email-address-validation/>.
+     * Taken directly from <http://www.iamcal.com/publish/articles/php/parsing_email/>.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -647,80 +646,32 @@ class Solar_DataFilter extends Solar_Base {
             return ! $this->_require;
         }
         
-        /**
-         * preliminaries
-         */
-        
-        // are there disallowed chars?
-        $valid = "a-zA-Z0-9"
-               . preg_quote("!#$%&'*+-/=?^_`{|}~@.[]", '/');
-        
-        $clean = preg_replace("/[^$valid]/", '', $value);
-        if ($value != $clean) {
-            return false;
-        }
-        
-        // split on the @
-        $parts = explode('@', $value);
-        if (count($parts) != 2) {
-            // more or less than one @-sign
-            return false;
-        } else {
-            $name = $parts[0];
-            $host = $parts[1];
-        }
-        
-        /**
-         * validate the name
-         */
-        // needs 1-64 chars
-        $len = strlen($name);
-        if ($len < 1 || $len > 64) {
-            return false;
-        }
-        
-        // each part must be normal or quoted
-        $parts = explode('.', $name);
-        $first = "[A-Za-z0-9!#$%&'*+\/=?^_`{|}~-]";
-        $other = "[A-Za-z0-9!#$%&'*+\/=?^_`{|}~\.-]{0,63}";
-        $quote = "(\"[^(\\|\")]{0,62}\")";
-        foreach ($parts as $part) {
-            if (! preg_match("/^($first$other)|($quote)\$/D", $part)) {
-                return false;
-            }
-        }
-        
-        /**
-         * validate the host
-         */
-        // needs 1-255 chars
-        $len = strlen($host);
-        if ($len < 1 || $len > 255) {
-            return false;
-        }
-        
-        // is the host a valid IPv4 address?
-        if ($this->validateIpv4($host)) {
-            // we're OK then
-            return true;
-        }
-        
-        // not an IP address, check for a domain name of at least two parts
-        $parts = explode(".", $host);
-        if (count($parts) < 2) {
-            return false;
-        }
-        
-        // check each part
-        foreach ($parts as $part) {
-            $ext = "[A-Za-z0-9]";
-            $int = "[A-Za-z0-9-]{0,61}";
-            if (! preg_match("/^$ext$int$ext\$/D", $part)) {
-                return false;
-            }
-        }
-        
-        return true;
+        $qtext = '[^\\x0d\\x22\\x5c\\x80-\\xff]';
+
+        $dtext = '[^\\x0d\\x5b-\\x5d\\x80-\\xff]';
+
+        $atom = '[^\\x00-\\x20\\x22\\x28\\x29\\x2c\\x2e\\x3a-\\x3c'.
+            '\\x3e\\x40\\x5b-\\x5d\\x7f-\\xff]+';
+
+        $quoted_pair = '\\x5c[\\x00-\\x7f]';
+
+        $domain_literal = "\\x5b($dtext|$quoted_pair)*\\x5d";
+
+        $quoted_string = "\\x22($qtext|$quoted_pair)*\\x22";
+
+        $domain_ref = $atom;
+
+        $sub_domain = "($domain_ref|$domain_literal)";
+
+        $word = "($atom|$quoted_string)";
+
+        $domain = "$sub_domain(\\x2e$sub_domain)*";
+
+        $local_part = "$word(\\x2e$word)*";
+
+        $addr_spec = "$local_part\\x40$domain";
+
+        return (bool) preg_match("!^$addr_spec$!D", $value);
     }
     
     /**

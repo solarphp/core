@@ -1557,6 +1557,9 @@ class Solar_DataFilterTest extends PHPUnit_Framework_TestCase
             'ab-db cd-ef',
             'example.com',
             'http://',
+            "http://example.com\r/index.html",
+            "http://example.com\n/index.html",
+            "http://example.com\t/index.html",
         );
         foreach ($test as $val) {
             $this->assertFalse($filter->validateUri($val));

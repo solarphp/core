@@ -12,9 +12,4 @@ return array(
         'value' => false,
         'descr' => 'Run only the named test class; do not descend into subclass tests.',
     ),
-    'include_path' => array(
-        'long' => 'include-path',
-        'param' => 'required',
-        'descr' => 'Prepends this value to the include-path.',
-    ),
 );

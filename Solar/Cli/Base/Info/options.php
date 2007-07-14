@@ -1,5 +1,10 @@
 <?php
 return array(
+    'config' => array(
+        'long' => 'config',
+        'param' => 'required',
+        'descr' => 'Use this configuration file when starting Solar.',
+    ),
     'verbose' => array(
         'long' => 'verbose',
         'short' => 'V',

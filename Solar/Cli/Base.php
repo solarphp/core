@@ -13,12 +13,14 @@ class Solar_Cli_Base extends Solar_Controller_Command {
     protected function _exec($cmd = null)
     {
         if ($cmd) {
-            $this->_println('ERR_UNKNOWN_COMMAND', 1, array('cmd' => $cmd));
+            // we use 'null' command because we could have gotten here from
+            // using an option or something else first, and a recognized 
+            // command later on.  showing that command here would be confusing.
+            $this->_println('ERR_UNKNOWN_COMMAND', 1, array('cmd' => null));
+            $this->_println('HELP_TRY_SOLAR_HELP');
         } else {
-            $this->_println('ERR_NO_COMMAND');
+            $this->_println($this->getInfoHelp());
         }
-        
-        $this->_println("HELP_TRY_SOLAR_HELP");
     }
     
     /**

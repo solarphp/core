@@ -102,8 +102,5 @@ class Solar_Cli_RunTests extends Solar_Cli_Base {
         
         // run the suite
         $suite->run($class, $only);
-        
-        // put the include-path back
-        set_include_path($include_path);
     }
 }

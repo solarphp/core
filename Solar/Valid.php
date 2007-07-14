@@ -887,8 +887,8 @@ class Solar_Valid extends Solar_Base {
      * 
      * @param mixed $value The value to validate.
      * 
-     * @param string|array $schemes Allowed schemes for the URI;
-     * for example, http, https, ftp.  If null, all schemes are allowed.
+     * @param string|array $schemes Allowed schemes for the URI; for example,
+     * array('http', 'https', 'ftp').  If null, all schemes are allowed.
      * 
      * @param bool $blank Allow blank values to be valid.
      * 
@@ -904,9 +904,8 @@ class Solar_Valid extends Solar_Base {
         }
         
         // TAKEN (almost) DIRECTLY FROM PEAR_VALIDATE::URI()
-        $delim = chr(255);
         $result = preg_match(
-            $delim . '^(?:([a-z][-+.a-z0-9]*):)?                                        # 1. scheme
+            '{^(?:([a-z][-+.a-z0-9]*):)?                                                # 1. scheme
             (?://                                                                       #    authority start
             (?:((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();:&=+$,])*)@)?                         # 2. authority-userinfo
             (?:((?:[a-z0-9](?:[-a-z0-9]*[a-z0-9])?\.)*[a-z](?:[-a-z0-9]*[a-z0-9])?\.?)  # 3. authority-hostname OR
@@ -915,7 +914,8 @@ class Solar_Valid extends Solar_Base {
             ((?:/(?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'():@&=+$,;])*)+)?                       # 6. path
             (?:\?([^#]*))?                                                              # 7. query
             (?:\#((?:%[0-9a-f]{2}|[-a-z0-9_.!~*\'();/?:@&=+$,])*))?                     # 8. fragment
-            $' . $delim . 'xi', $value, $matches);
+            $}xi', $value, $matches
+        );
         
         if ($result) {
             

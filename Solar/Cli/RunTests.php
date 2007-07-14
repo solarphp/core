@@ -98,7 +98,6 @@ class Solar_Cli_RunTests extends Solar_Cli_Base {
         // set up a test suite object 
         $suite = Solar::factory('Solar_Test_Suite', array(
             'dir' => $dir,
-            'error_reporting' => E_ALL | E_STRICT,
         ));
         
         // run the suite

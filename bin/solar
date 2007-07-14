@@ -1,39 +1,80 @@
 #!/usr/bin/env php
 <?php
-// make sure we have an include-path
+/**
+ * Error reporting turned way up
+ */
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', true);
+ini_set('html_errors', false);
+
+/**
+ * Discover and set the include-path
+ */
 if (! empty($_SERVER['PHP_SOLAR_INSTALL_DIR'])) {
-    
     // the solar-specific install dir
-    $include_path = $_SERVER['PHP_SOLAR_INSTALL_DIR'];
-    
+    set_include_path($_SERVER['PHP_SOLAR_INSTALL_DIR']);
 } elseif (! empty($_SERVER['PHP_PEAR_INSTALL_DIR'])) {
-    
     // the general-purpose pear dir
-    $include_path = $_SERVER['PHP_PEAR_INSTALL_DIR'];
-    
-} else {
-    
-    // can't find either one, fail and exit
-    echo "Please define 'PHP_SOLAR_INSTALL_DIR' or 'PHP_PEAR_INSTALL_DIR' in your shell.\n",
-         "In bash, the command looks something like this:\n",
-         "    bash-2.05\$ export PHP_SOLAR_INSTALL_DIR=/usr/share/pear/php\n",
-         "This will let the Solar command find its libraries.\n";
-    exit(1);
-    
+    set_include_path($_SERVER['PHP_PEAR_INSTALL_DIR']);
 }
 
-// set the include path and try to load the Solar base class
-set_include_path($include_path);
-require 'Solar.php';
-if (! class_exists('Solar', false)) {
-    echo "Could not load the Solar class using this include_path:\n",
-         $include_path;
+/**
+ * Can we find the Solar arch-class?
+ */
+include 'Solar.php';
+if (! class_exists('Solar')) {
+    echo "Could not load the file 'Solar.php' from the include_path:\n";
+    echo get_include_path();
     exit(-1);
 }
 
-// we can get started now
-// @todo Use PHP_SOLAR_CONFIG_FILE here
-Solar::start(false);
+/**
+ * Do we have a preferred config file?
+ * @todo Look for PHP_SOLAR_CONFIG_PATH
+ */
+ 
+$config = false;
+
+/**
+ * Look for a config file preference override
+ */
+
+// manually look for a --config (config file) argument
+$argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
+$found = false;
+foreach ($argv as $val) {
+    if ($val == '--config') {
+        // found the argument
+        $found = true;
+        // reset the default in preparation for the next argument
+        $config = false;
+        continue;
+    }
+    
+    if ($found && substr($val, 0, 1) != '-') {
+        $config = $val;
+        break;
+    }
+    
+    if (substr($val, 0, 9) == '--config=') {
+        $found = true;
+        $config = substr($val, 9);
+        break;
+    }
+}
+
+// if there was a --config but no param, that's a failure
+if ($found && ! $config) {
+    echo "Please specify a config file path after the --config option.\n";
+    exit(-1);
+}
+
+/**
+ * Main
+ */
+
+// Start Solar with the requested config file (if any)
+Solar::start($config);
 
 // register a request environment object for the controllers
 Solar::register('request', 'Solar_Request');
@@ -44,26 +85,27 @@ $console = Solar::factory('Solar_Controller_Console', array(
     'default' => 'base',
 ));
 
-// invoke the command passed from the command line
+// execute the requested command
 try {
     $console->exec();
     exit(0);
-} catch (Solar_Exception $e) {
+} catch (Exception $e) {
     
-    // print the error message
-    echo $e->getMessage() . "\n";
-    
-    // find the exit code, if any.  default code is -1.
-    $info = $e->getInfo();
-    if (array_key_exists('exit', $info)) {
-        $exit = (int) $info['exit'];
-        if (! $exit) {
-            $exit = -1;
+    // find an exit code, if any
+    $exit = false;
+    if ($e instanceof Solar_Exception) {
+        $info = $e->getInfo();
+        if (array_key_exists('exit', $info)) {
+            $exit = (int) $info['exit'];
         }
-    } else {
+    }
+    
+    // disallow empty or zero exit codes
+    if (! $exit) {
         $exit = -1;
     }
     
-    // done!
+    // print the error message and exit
+    echo $e . "\n";
     exit($exit);
 }

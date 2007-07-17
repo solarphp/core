@@ -461,14 +461,6 @@ class Solar_Http_Response extends Solar_Base {
      */
     protected function _sendHeaders()
     {
-        // have headers been sent already?
-        if (headers_sent($file, $line)) {
-            throw $this->_exception('ERR_HEADERS_SENT', array(
-                'file' => $file,
-                'line' => $line,
-            ));
-        }
-        
         // build the full status header string
         $status = "HTTP/{$this->_version} {$this->_status_code}";
         if ($this->_status_text) {

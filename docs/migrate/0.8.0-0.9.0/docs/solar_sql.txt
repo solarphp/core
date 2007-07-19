@@ -49,9 +49,9 @@ The quoteMulti() method works much the same way, except with arrays ot text-valu
 
 {{code: php
     $conditions = array(
-    	"date >= ?"   => '2005-01-01',
-    	"date <= ?"   => '2005-01-31',
-    	"type IN(?)"  => array('a', 'b', 'c'),
+        "date >= ?"   => '2005-01-01',
+        "date <= ?"   => '2005-01-31',
+        "type IN(?)"  => array('a', 'b', 'c'),
     );
     $output = $new_sql->quoteMulti($list, ' AND ');
     // $output = "date > '2005-01-02' AND date < 2005-02-01 AND type IN('a','b','c')"
@@ -63,7 +63,7 @@ Insert/Update/Delete
 --------------------
 
 Insert and update should be unchanged.
-	
+    
 {{code: php
     // insert
     $table = 'table_name';
@@ -116,10 +116,10 @@ The previous Solar_Sql class had no API support for transactions; the new API do
 {{code: php
     $new_sql->begin();
     try {
-    	$new_sql->insert('table', array('id' => 1));
-    	$new_sql->commit();
+        $new_sql->insert('table', array('id' => 1));
+        $new_sql->commit();
     } catch (Exception $e) {
-    	$new_sql->rollback();
+        $new_sql->rollback();
     }
 }}
 

@@ -8,7 +8,7 @@ $config['Solar']['ini_set']['display_errors'] = true;
 $config['Solar']['ini_set']['date.timezone'] = 'America/Chicago';
 
 $config['Solar_Test_Example'] = array(
-	'zim' => 'gaz',
+    'zim' => 'gaz',
 );
 
 $config['Solar_Debug_Var']['output'] = 'text';

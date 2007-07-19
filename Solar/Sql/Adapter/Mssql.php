@@ -81,9 +81,9 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         parent::__construct($config);
         
         // if we're on windows, use the 'mssql' PDO type
-    	if (substr(PHP_OS, 0, 3) == 'WIN') {
-    	    $this->_pdo_type = 'mssql';
-    	}
+        if (substr(PHP_OS, 0, 3) == 'WIN') {
+            $this->_pdo_type = 'mssql';
+        }
     }
     
     /**
@@ -110,7 +110,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
             $tmp = 'host=' . $this->_config['host'];
             // the port
             if (! empty($this->_config['port'])) {
-    		    $tmp = $tmp . ',' . $this->_config['port'];
+                $tmp = $tmp . ',' . $this->_config['port'];
             }
             $dsn[] = $tmp;
         }
@@ -119,8 +119,8 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         if (! empty($this->_config['name'])) {
             $dsn[] = 'dbname=' . $this->_config['name'];
         }
-	    
-	    // done!
+        
+        // done!
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }
     
@@ -227,8 +227,8 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      */
     public function fetchTableCols($table)
     {
- 	    $cmd = "
-     	    SELECT
+         $cmd = "
+             SELECT
                 C.COLUMN_NAME AS name, 
                 C.DATA_TYPE AS type,
                 C.IS_NULLABLE AS allow_nulls,
@@ -237,12 +237,12 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
                 (SELECT 't'
                     FROM
                         information_schema.key_column_usage AS k,
-                	    information_schema.table_constraints AS tc 
-                	WHERE
-                	    tc.constraint_name = k.constraint_name
-                	    AND tc.constraint_type = 'PRIMARY KEY'
-                	    AND k.table_name = :table
-                	    AND k.column_name  = c.COLUMN_NAME
+                        information_schema.table_constraints AS tc 
+                    WHERE
+                        tc.constraint_name = k.constraint_name
+                        AND tc.constraint_type = 'PRIMARY KEY'
+                        AND k.table_name = :table
+                        AND k.column_name  = c.COLUMN_NAME
                 ) AS primary_key,
                 c.COLUMN_DEFAULT,
                 COLUMNPROPERTY( OBJECT_ID('tabela'), C.COLUMN_NAME, 'IsIdentity') AS autoinc
@@ -307,7 +307,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
     public function lastInsertId($name = null)
     {
         $this->_connect();
-	    return $this->fetchValue('SELECT @@IDENTITY AS id');
+        return $this->fetchValue('SELECT @@IDENTITY AS id');
     }
     
     /**
@@ -395,22 +395,22 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      */
     protected function _getDefault($default)
     {
-    	$default = str_replace(
-    	    array('(', ')'),
-    	    '',
-    	    $default
-    	);
-    	
+        $default = str_replace(
+            array('(', ')'),
+            '',
+            $default
+        );
+        
         // numeric literal?
         if (is_numeric($default)) {
             return $default;
         }
-	
-    	if ($default == NULL) {
-    		return null;
-    	}
-    	
-    	return $default;
+    
+        if ($default == NULL) {
+            return null;
+        }
+        
+        return $default;
     }
     
     /**

@@ -84,20 +84,20 @@ class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
         );
         
         // atx
-    	$text = preg_replace_callback(
-    	    '{
-    			^(\#{1,6})	# $1 = string of #\'s
-    			[ \t]*
-    			(.+?)		# $2 = Header text
-    			[ \t]*
-    			\#*			# optional closing #\'s (not counted)
-    			(?:[ ]+\{\#([-_:a-zA-Z0-9]+)\}[ ]*)? # id attribute
-    			\n+
-    		}mx',
-    		array($this, '_parseAtx'),
-    		$text
-    	);
-		
+        $text = preg_replace_callback(
+            '{
+                ^(\#{1,6})     # $1 = string of #\'s
+                [ \t]*
+                (.+?)          # $2 = Header text
+                [ \t]*
+                \#*            # optional closing #\'s (not counted)
+                (?:[ ]+\{\#([-_:a-zA-Z0-9]+)\}[ ]*)? # id attribute
+                \n+
+            }mx',
+            array($this, '_parseAtx'),
+            $text
+        );
+        
         return $text;
     }
     

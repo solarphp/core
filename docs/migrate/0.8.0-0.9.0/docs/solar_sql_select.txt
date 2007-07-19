@@ -11,9 +11,9 @@ Let's build this native SQL statement as a Solar_Sql_Select command set.
     SELECT id, date, type, name
     FROM example
     WHERE
-    	date >= '2005-01-01' AND
-    	date <= '2005-01-31' AND
-    	type IN('a','b','c')
+        date >= '2005-01-01' AND
+        date <= '2005-01-31' AND
+        type IN('a','b','c')
 }}
 
 There are a number of ways to do this, depending on your logic flow.  You will always need a Solar_Sql_Select object, of course.
@@ -23,7 +23,7 @@ There are a number of ways to do this, depending on your logic flow.  You will a
 }}
 
 Now let's pick some columns from a table:
-	
+    
 {{code: php
     // comma-separated string of columns ...
     $select->from('example', 'id, date, type, name');
@@ -32,9 +32,9 @@ Now let's pick some columns from a table:
     $cols = array('id', 'date', 'type', 'name');
     $select->from('example', $cols);
 }}
-	
+    
 Add some WHERE conditions (these are ANDed together by default, you can also use the orWhere() method for ORed conditions):
-	
+    
 {{code: php
     // quote the value and overwrite "?" placeholders
     $select->where("date >= ?",  '2005-01-01');
@@ -48,7 +48,7 @@ Binding Data Into a Select
 --------------------
 
 Although the where() method above with its in-place quoting is useful in some situations, others may call for binding data all-at-once wityh named parameters (instead of one-by-one).  You can do so like this:
-	
+    
 {{code: php
     // set up the conditions with named placeholders
     $select->where("date >= :begin");
@@ -57,9 +57,9 @@ Although the where() method above with its in-place quoting is useful in some si
 
     // bind the data into the placeholders all at once...
     $data = array(
-    	'begin' => '2005-01-01',
-    	'end'   => '2005-01-31',
-    	'list'  => array('a', 'b', 'c')
+        'begin' => '2005-01-01',
+        'end'   => '2005-01-31',
+        'list'  => array('a', 'b', 'c')
     );
     $select->bind($data);
 
@@ -75,7 +75,7 @@ Fetching Results
 --------------------
 
 That puts together the SELECT statement for us.  Now let's fetch the results:
-	
+    
 {{code: php
     // fetch a Solar_Sql_Result
     $return_as = 'result';
@@ -93,7 +93,7 @@ That puts together the SELECT statement for us.  Now let's fetch the results:
     $return_as = 'row';
     $result = $select->fetch($return_as);
 }}
-	
+    
 The $return_as parameter can be any return type allowed by Solar_Sql::select() method:
 
 : all : return all rows as a sequential array (the row arrays are keyed on the column name)
@@ -119,7 +119,7 @@ Limit by Count and Offset
 You can set limits on the query, either by count and offset, or by page number.
 
 To set a count-and-offset limit, use the limit() method:
-	
+    
 {{code: php
     // get a count of 10 rows starting offset from row 50
     $select->limit(10, 50);
@@ -169,7 +169,7 @@ To join tables with a simple JOIN clause, use the join() method; you can also sp
 {{code: php
     /*
     SELECT
-    	users.id, users.name, contacts.email, contacts.phone
+        users.id, users.name, contacts.email, contacts.phone
     FROM users
     JOIN contacts ON contacts.user_id = users.id
     WHERE users.id = 1
@@ -178,17 +178,17 @@ To join tables with a simple JOIN clause, use the join() method; you can also sp
     $select = Solar::object('Solar_Sql_Select');
     $select->from('users', 'id, name');
     $select->join(
-    	'contacts', // table to join to
-    	'contacts.user_id = users.id', // join on this condition
-    	'email, phone' // columns from the joined table
+        'contacts', // table to join to
+        'contacts.user_id = users.id', // join on this condition
+        'email, phone' // columns from the joined table
     );
     $select->where('users.id = ?', 1);
 }}
-	
+    
 When joining tables, the column names are automatically deconflicted for you with AS aliases.  This deconfliction can be very useful when working with multiple tables, and allows you to select columns with the same name from different tables.
 
 If you ask for a Solar_Sql_Result when you fetch the results, the deconflicted columns will be arranged into arrays for you, so you can tell which columns came from which table. 
-	
+    
 {{code: php
     // get a Solar_Sql_Result object from the SELECT statement
     $result = $select->fetch('result');
@@ -198,14 +198,14 @@ If you ask for a Solar_Sql_Result when you fetch the results, the deconflicted c
 
     /*
     $row = array(
-    	'users' => array(
-    		'id' => 1,
-    		'name' => 'Jones'
-    	),
-    	'contacts' => array(
-    		'email' => 'nobody@nowhere.com',
-    		'phone' => '123-456-7890'
-    	)
+        'users' => array(
+            'id' => 1,
+            'name' => 'Jones'
+        ),
+        'contacts' => array(
+            'email' => 'nobody@nowhere.com',
+            'phone' => '123-456-7890'
+        )
     );
     */
 }}
@@ -216,13 +216,13 @@ When not using a Solar_Sql_Result, the deconflicted (aliased) column names will 
     $row = $select->fetch('row');
     /*
     $row = array(
-    	'users__id'       => 1,
-    	'users__name'     => 'Jones'
-    	'contacts__email' => 'nobody@nowhere.com',
-    	'contacts__phone' => '123-456-7890'
+        'users__id'       => 1,
+        'users__name'     => 'Jones'
+        'contacts__email' => 'nobody@nowhere.com',
+        'contacts__phone' => '123-456-7890'
     );
     */
 }}
-	
+    
 At this time, no additional JOIN types are supported (e.g., "LEFT JOIN", "RIGHT JOIN", etc).  This is because I am not fully educated on what JOIN types are available to, and therefore portable across, all the RDBMSes supported by PDO.
 

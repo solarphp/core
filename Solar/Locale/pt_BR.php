@@ -26,7 +26,7 @@ return array(
     'FORMAT_TIME'                => '%R', // strftime: 12-hour am/pm
     
     // page submissions
-    'PROCESS_ADD'                => 'Adicionar',	
+    'PROCESS_ADD'                => 'Adicionar',    
     'PROCESS_CANCEL'             => 'Cancelar',
     'PROCESS_CREATE'             => 'Criar',
     'PROCESS_DELETE'             => 'Remover',

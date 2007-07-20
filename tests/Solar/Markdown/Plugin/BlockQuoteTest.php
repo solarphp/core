@@ -122,4 +122,3 @@ class Solar_Markdown_Plugin_BlockQuoteTest extends Solar_Markdown_PluginTestCase
         $this->assertRegExp("@$expect@", $actual);
     }
 }
-?>

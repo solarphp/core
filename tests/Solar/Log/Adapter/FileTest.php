@@ -45,4 +45,3 @@ class Solar_Log_Adapter_FileTest extends Solar_Log_AdapterTestCase
         $this->assertEquals($actual, $expect);
     }
 }
-?>

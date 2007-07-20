@@ -75,4 +75,3 @@ class Solar_Markdown_Plugin_ImageTest extends Solar_Markdown_PluginTestCase {
         $this->assertSame($expect, $actual);
     }
 }
-?>

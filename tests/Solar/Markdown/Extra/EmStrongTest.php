@@ -125,4 +125,3 @@ class Solar_Markdown_Extra_EmStrongTest extends Solar_Markdown_PluginTestCase
         $this->assertSame($expect, $actual);
     }
 }
-?>

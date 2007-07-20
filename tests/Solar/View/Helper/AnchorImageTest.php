@@ -12,7 +12,6 @@ class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
         parent::setup();
         
         $this->_request = Solar::factory('Solar_Request');
-        $this->_request->load(true);
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
@@ -77,4 +76,3 @@ class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

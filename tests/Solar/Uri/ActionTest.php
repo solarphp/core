@@ -35,4 +35,3 @@ class Solar_Uri_ActionTest extends Solar_UriTest {
         $this->assertSame($actual, $expect);
     }
 }
-?>

@@ -22,4 +22,3 @@ class Solar_Cache_Adapter_EacceleratorTest extends Solar_Cache_AdapterTestCase {
         parent::setup();
     }
 }
-?>

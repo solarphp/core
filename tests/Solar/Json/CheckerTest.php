@@ -61,4 +61,3 @@ class Solar_Json_CheckerTest extends PHPUnit_Framework_TestCase
     }
 
 }
-?>

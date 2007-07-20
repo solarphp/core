@@ -37,11 +37,8 @@ abstract class Solar_Auth_AdapterTestCase extends PHPUnit_Framework_TestCase
         // get a new adapter
         $this->_auth = Solar::factory($this->_class, $this->_config);
         
-        // get the request environment ...
+        // get the request environment
         $this->_request = Solar::factory('Solar_Request');
-        
-        // and reload it fresh for this test.
-        $this->_request->load(true);
     }
     
     public function teardown()
@@ -162,4 +159,3 @@ abstract class Solar_Auth_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->_request->post['passwd'] = 'badpass';
     }
 }
-?>

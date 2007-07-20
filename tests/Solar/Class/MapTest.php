@@ -27,4 +27,3 @@ class Solar_Class_MapTest extends PHPUnit_Framework_TestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

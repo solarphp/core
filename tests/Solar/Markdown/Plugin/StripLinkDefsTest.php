@@ -81,4 +81,3 @@ class Solar_Markdown_Plugin_StripLinkDefsTest extends Solar_Markdown_PluginTestC
         $this->assertSame($actual, $text);
     }
 }
-?>

@@ -23,7 +23,6 @@ class Solar_View_Helper_FormTest extends PHPUnit_Framework_TestCase
         parent::setup();
         
         $this->_request = Solar::factory('Solar_Request');
-        $this->_request->load(true);
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
@@ -550,4 +549,3 @@ EXPECT;
         $this->assertProperty($helper, '_status', 'null');
     }
 }
-?>

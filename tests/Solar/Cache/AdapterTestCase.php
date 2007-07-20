@@ -173,4 +173,3 @@ abstract class Solar_Cache_AdapterTestCase extends PHPUnit_Framework_TestCase {
         $this->assertSame($this->_cache->fetch($id), $data);
     }
 }
-?>

@@ -57,4 +57,3 @@ Solar::start('config.inc.php');
 if (PHPUnit_MAIN_METHOD == 'AllTests::main') {
     AllTests::main();
 }
-?>

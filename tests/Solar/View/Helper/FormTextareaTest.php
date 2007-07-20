@@ -16,4 +16,3 @@ class Solar_View_Helper_FormTextareaTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

@@ -67,4 +67,3 @@ class Solar_View_Helper_FormCheckboxTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

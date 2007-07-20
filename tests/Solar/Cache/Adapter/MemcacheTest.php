@@ -38,4 +38,3 @@ class Solar_Cache_Adapter_MemcacheTest extends Solar_Cache_AdapterTestCase {
         sleep(1);
     }
 }
-?>

@@ -37,4 +37,3 @@ class Solar_Log_Adapter_EchoTest extends Solar_Log_AdapterTestCase
         $this->assertEquals($actual, $expect);
     }
 }
-?>

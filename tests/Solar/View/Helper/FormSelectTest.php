@@ -102,4 +102,3 @@ class Solar_View_Helper_FormSelectTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

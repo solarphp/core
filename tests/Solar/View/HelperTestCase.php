@@ -28,4 +28,3 @@ abstract class Solar_View_HelperTestCase extends PHPUnit_Framework_TestCase
         $this->assertType($expect, $actual);
     }
 }
-?>

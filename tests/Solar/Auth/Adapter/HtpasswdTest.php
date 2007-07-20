@@ -12,4 +12,3 @@ class Solar_Auth_Adapter_HtpasswdTest extends Solar_Auth_AdapterTestCase {
     }
 }
 }
-?>

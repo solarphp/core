@@ -49,4 +49,3 @@ class Solar_Markdown_WikiTest extends PHPUnit_Framework_TestCase {
         $this->_output(__FUNCTION__);
     }
 }
-?>

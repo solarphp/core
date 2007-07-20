@@ -78,4 +78,3 @@ class Solar_Markdown_Plugin_CodeBlockTest extends Solar_Markdown_PluginTestCase 
         $this->assertSame($expect, $actual);
     }
 }
-?>

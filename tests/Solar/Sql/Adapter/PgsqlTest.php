@@ -53,4 +53,3 @@ class Solar_Sql_Adapter_PgsqlTest extends Solar_Sql_AdapterTestCase {
         parent::setup();
     }
 }
-?>

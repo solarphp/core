@@ -30,4 +30,3 @@ class Solar_Log_Adapter_NoneTest extends Solar_Log_AdapterTestCase {
         $this->assertFalse($actual);
     }
 }
-?>

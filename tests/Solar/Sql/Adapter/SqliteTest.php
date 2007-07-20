@@ -57,4 +57,3 @@ class Solar_Sql_Adapter_SqliteTest extends Solar_Sql_AdapterTestCase {
         $this->markTestSkipped('sqlite does not support drop column');
     }
 }
-?>

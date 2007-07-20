@@ -171,4 +171,3 @@ the family Rosaceae.</dd>
         $this->assertSame(trim($actual), trim($expect));
     }
 }
-?>

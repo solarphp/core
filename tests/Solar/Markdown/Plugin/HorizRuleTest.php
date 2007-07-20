@@ -101,4 +101,3 @@ class Solar_Markdown_Plugin_HorizRuleTest extends Solar_Markdown_PluginTestCase 
         $this->assertSame($expect, $actual);
     }
 }
-?>

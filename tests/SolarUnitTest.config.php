@@ -97,4 +97,4 @@ foreach (scandir($config['config_path']) as $file) {
 }
 
 require dirname(__FILE__) . '/configRunner.php';
-?>
+

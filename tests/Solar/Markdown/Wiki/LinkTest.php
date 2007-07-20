@@ -223,4 +223,3 @@ class Solar_Markdown_Wiki_LinkTest extends Solar_Markdown_PluginTestCase {
         $this->assertSame($expect, $actual);
     }
 }
-?>

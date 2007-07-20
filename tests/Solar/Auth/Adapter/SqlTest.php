@@ -48,4 +48,3 @@ class Solar_Auth_Adapter_SqlTest extends Solar_Auth_AdapterTestCase {
         parent::setup();
     }
 }
-?>

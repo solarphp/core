@@ -39,4 +39,3 @@ class Solar_Markdown_Plugin_EncodeTest extends Solar_Markdown_PluginTestCase {
         $this->assertRegExp("@$expect@", $actual);
     }
 }
-?>

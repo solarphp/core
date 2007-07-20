@@ -28,4 +28,3 @@ $config['Solar_Auth_Adapter_TypeKey']['token'] = 'foobarbaz';
 
 
 return $config;
-?>

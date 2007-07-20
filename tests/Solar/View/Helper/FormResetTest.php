@@ -24,4 +24,3 @@ class Solar_View_Helper_FormResetTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

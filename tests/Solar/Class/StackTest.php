@@ -113,4 +113,3 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
         }
     }
 }
-?>

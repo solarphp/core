@@ -37,4 +37,3 @@ class Solar_View_Helper_DateTest extends Solar_View_HelperTestCase {
         $this->assertEquals($actual, $expect);
     }
 }
-?>

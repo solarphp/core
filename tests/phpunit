@@ -39,4 +39,3 @@
 
 require dirname(__FILE__) . '/SolarUnitTest.config.php';
 require 'PHPUnit/TextUI/Command.php';
-?>

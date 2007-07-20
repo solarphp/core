@@ -498,4 +498,3 @@ class Solar_Docs_PhpdocTest extends PHPUnit_Framework_TestCase
         $this->assertSame($actual['tech'], $expect);
     }
 }
-?>

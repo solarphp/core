@@ -15,4 +15,3 @@ alert(\'Hello world!\');
         $this->assertSame(trim($actual), trim($expect));
     }
 }
-?>

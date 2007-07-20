@@ -161,4 +161,3 @@ Content B     | Content D
         $this->assertSame(trim($actual), trim($expect));
     }
 }
-?>

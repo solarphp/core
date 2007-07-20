@@ -55,4 +55,3 @@ class Solar_Sql_Adapter_MysqlTest extends Solar_Sql_AdapterTestCase {
         parent::setup();
     }
 }
-?>

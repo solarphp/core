@@ -112,4 +112,3 @@ class Test_Solar_Form_Load_Table_Object extends Solar_Sql_Table {
     );
 }
 
-?>

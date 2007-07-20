@@ -699,4 +699,3 @@ abstract class Solar_Sql_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertFalse($actual['require']);
     }
 }
-?>

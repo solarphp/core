@@ -22,4 +22,3 @@ class Solar_Cache_Adapter_ApcTest extends Solar_Cache_AdapterTestCase {
         parent::setup();
     }
 }
-?>

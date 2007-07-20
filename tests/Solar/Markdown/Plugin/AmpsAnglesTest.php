@@ -47,4 +47,3 @@ class Solar_Markdown_Plugin_AmpsAnglesTest extends Solar_Markdown_PluginTestCase
         $this->assertSame($expect, $actual);
     }
 }
-?>

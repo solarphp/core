@@ -10,4 +10,3 @@ class Solar_Role_Adapter_FileTest extends Solar_Role_AdapterTestCase {
         parent::setup();
     }
 }
-?>

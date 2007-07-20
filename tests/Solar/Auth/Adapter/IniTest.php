@@ -13,4 +13,3 @@ class Solar_Auth_Adapter_IniTest extends Solar_Auth_AdapterTestCase {
         parent::setup();
     }
 }
-?>

@@ -80,4 +80,3 @@ abstract class Solar_Markdown_PluginTestCase extends PHPUnit_Framework_TestCase
         return "\s*<$tag>\s*";
     }
 }
-?>

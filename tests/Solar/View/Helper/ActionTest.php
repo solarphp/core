@@ -73,4 +73,3 @@ class Solar_View_Helper_ActionTest extends Solar_View_HelperTestCase
         $this->assertSame($expect, $actual);
     }
 }
-?>

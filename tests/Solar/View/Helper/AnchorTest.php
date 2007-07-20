@@ -9,9 +9,8 @@ class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
         Solar::start(false); // to get the $locale object
         parent::setup();
         
-        // forcibly reset the request environment
+        // load the request environment
         $request = Solar::factory('Solar_Request');
-        $request->load(true);
     }
     
     public function testAnchor_hrefFromString()
@@ -92,4 +91,3 @@ class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

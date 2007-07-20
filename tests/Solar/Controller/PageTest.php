@@ -33,9 +33,8 @@ class Solar_Controller_PageTest extends PHPUnit_Framework_TestCase
         
         Solar::start('config.inc.php');
         
-        // forcibly reload the request environment
+        // load the request environment
         $this->_request = Solar::factory('Solar_Request');
-        $this->_request->load(true);
         
         // set up the example page controller object
         $this->_page = Solar::factory('Solar_Controller_PageController');
@@ -280,4 +279,3 @@ class Solar_Controller_PageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(true);
     }
 }
-?>

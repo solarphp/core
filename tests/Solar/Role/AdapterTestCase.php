@@ -122,4 +122,3 @@ abstract class Solar_Role_AdapterTestCase extends PHPUnit_Framework_TestCase
         $this->assertFalse($actual);
     }
 }
-?>

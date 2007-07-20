@@ -51,4 +51,3 @@ class Solar_Auth_Adapter_NoneTest extends Solar_Auth_AdapterTestCase {
         $this->assertNull($this->_auth->email);
     }
 }
-?>

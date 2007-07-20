@@ -60,4 +60,3 @@ baz dib';
         $this->assertSame(trim($actual), trim($expect));
     }
 }
-?>

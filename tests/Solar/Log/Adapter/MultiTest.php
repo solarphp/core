@@ -80,4 +80,3 @@ class Solar_Log_Adapter_MultiTest extends Solar_Log_AdapterTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

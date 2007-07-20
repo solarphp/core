@@ -17,4 +17,3 @@ class Solar_View_Helper_AttribsTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

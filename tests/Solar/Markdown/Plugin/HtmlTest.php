@@ -68,4 +68,3 @@ EOT;
         $this->assertSame($expect, $actual);
     }
 }
-?>

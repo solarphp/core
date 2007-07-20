@@ -43,4 +43,3 @@ class Solar_Role_Adapter_SqlTest extends Solar_Role_AdapterTestCase {
         parent::setup();
     }
 }
-?>

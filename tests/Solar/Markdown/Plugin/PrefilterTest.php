@@ -69,4 +69,3 @@ class Solar_Markdown_Plugin_PrefilterTest extends Solar_Markdown_PluginTestCase 
         $this->assertSame($actual, $text);
     }
 }
-?>

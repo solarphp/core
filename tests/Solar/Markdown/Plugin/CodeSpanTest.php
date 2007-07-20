@@ -50,4 +50,3 @@ class Solar_Markdown_Plugin_CodeSpanTest extends Solar_Markdown_PluginTestCase {
         $this->assertRegExp("@$expect@", $actual);
     }
 }
-?>

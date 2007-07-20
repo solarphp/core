@@ -68,4 +68,3 @@ abstract class Solar_Log_AdapterTestCase extends PHPUnit_Framework_TestCase {
         $this->todo('incomplete');
     }
 }
-?>

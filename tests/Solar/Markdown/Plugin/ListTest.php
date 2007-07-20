@@ -130,4 +130,3 @@ class Solar_Markdown_Plugin_ListTest extends Solar_Markdown_PluginTestCase {
         $this->assertRegExp("@$expect@", $actual);
     }
 }
-?>

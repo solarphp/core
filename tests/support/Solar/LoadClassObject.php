@@ -12,5 +12,3 @@ class Solar_LoadClassObject
 {
     
 }
-
-?>

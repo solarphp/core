@@ -34,4 +34,3 @@ class Solar_View_Helper_FormOptionsTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

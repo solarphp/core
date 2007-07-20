@@ -10,9 +10,8 @@ class Solar_View_Helper_TypekeyLinkTest extends Solar_View_HelperTestCase {
     {
         parent::setup();
         
-        // forcibly reset the request environment
+        // load the request environment
         $this->_request = Solar::factory('Solar_Request');
-        $this->_request->load(true);
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
@@ -38,4 +37,3 @@ class Solar_View_Helper_TypekeyLinkTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

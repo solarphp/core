@@ -217,4 +217,3 @@ class Solar_Controller_PageController extends Solar_Controller_Page
         $this->hooks[__FUNCTION__] ++;
     }
 }
-?>

@@ -94,4 +94,3 @@ class Solar_Role_Adapter_NoneTest extends Solar_Role_AdapterTestCase {
     }
     
 }
-?>

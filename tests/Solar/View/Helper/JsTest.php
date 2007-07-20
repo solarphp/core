@@ -111,4 +111,3 @@ class Solar_View_Helper_JsTest extends PHPUnit_Framework_TestCase
 
 }
 
-?>

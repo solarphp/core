@@ -17,8 +17,7 @@ class Solar_RequestTest extends PHPUnit_Framework_TestCase
     
     protected function _getRequest()
     {
-        $config = array('reload' => true);
-        return Solar::factory('Solar_Request', $config);
+        return Solar::factory('Solar_Request');
     }
 
     public function testCanInstantiateThroughFactory()
@@ -209,29 +208,29 @@ class Solar_RequestTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($request->isXhr());
     }
     
-    public function testVarsChangedAfterInitialLoadDoNotEffectRequestObject()
-    {
-        // make sure that $_GET['foo'] is cleared
-        if (isset($_GET['foo'])) {
-            unset($_GET['foo']);
-        }
-        
-        // test loading the first time
-        $request = Solar::factory('Solar_Request', array('reload' => true));
-        
-        // test changing the vars, should not be reloaded
-        $_GET['foo'] = 'bar';
-        $actual = $request->get('foo');
-        $this->assertNull($actual);
-    }
+    // public function testVarsChangedAfterInitialLoadDoNotEffectRequestObject()
+    // {
+    //     // make sure that $_GET['foo'] is cleared
+    //     if (isset($_GET['foo'])) {
+    //         unset($_GET['foo']);
+    //     }
+    //     
+    //     // test loading the first time
+    //     $request = Solar::factory('Solar_Request', array('reload' => true));
+    //     
+    //     // test changing the vars, should not be reloaded
+    //     $_GET['foo'] = 'bar';
+    //     $actual = $request->get('foo');
+    //     $this->assertNull($actual);
+    // }
     
-    public function testVarsChangedBeforeInitialLoadAreReflectedInRequestObject()
-    {
-        $_GET['foo'] = 'bar';
-        
-        // now reload, should pick up the changed $_GET
-        $request = Solar::factory('Solar_Request', array('reload' => true));
-        $actual = $request->get('foo');
-        $this->assertSame($actual, 'bar');
-    }
+    // public function testVarsChangedBeforeInitialLoadAreReflectedInRequestObject()
+    // {
+    //     $_GET['foo'] = 'bar';
+    //     
+    //     // now reload, should pick up the changed $_GET
+    //     $request = Solar::factory('Solar_Request', array('reload' => true));
+    //     $actual = $request->get('foo');
+    //     $this->assertSame($actual, 'bar');
+    // }
 }

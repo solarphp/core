@@ -12,4 +12,3 @@ class Solar_View_Helper_MetaTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

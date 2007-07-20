@@ -40,5 +40,3 @@ foreach ($config['constants'] as $const_name => $const_value) {
 include_once 'Solar.php';
 
 unset($config);
-
-?>

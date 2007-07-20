@@ -15,4 +15,3 @@ class Solar_View_Helper_FormFileTest extends Solar_View_HelperTestCase {
         $this->assertSame($actual, $expect);
     }
 }
-?>

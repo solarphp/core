@@ -23,4 +23,3 @@ class Solar_Cache_Adapter_FileTest extends Solar_Cache_AdapterTestCase {
         parent::setup();
     }
 }
-?>

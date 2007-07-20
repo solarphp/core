@@ -42,4 +42,3 @@ class Solar_Debug_TimerTest extends PHPUnit_Framework_TestCase
         }
     }
 }
-?>

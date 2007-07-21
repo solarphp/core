@@ -275,8 +275,8 @@ class Solar_Form extends Solar_Base {
         );
         
         // make sure we have an action
-        if (empty($this->attribs['action'])) {
-            $this->attribs['action'] = $this->_request->server('REQUEST_URI');
+        if (empty($this->_config['attribs']['action'])) {
+            $this->_config['attribs']['action'] = $this->_request->server('REQUEST_URI');
         }
         
         $this->_obj_filter = Solar::factory('Solar_Filter');

@@ -11,8 +11,6 @@ class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
         Solar::start(false); // to get the $locale object
         parent::setup();
         
-        $this->_request = Solar::factory('Solar_Request');
-        
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
         $this->_request->server['HTTP_HOST']    = 'example.com';
@@ -23,16 +21,9 @@ class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
                                                 . $this->_request->server['PATH_INFO']
                                                 . '?'
                                                 . $this->_request->server['QUERY_STRING'];
-
-        // emulate GET vars from the URI
+        
+        // emulate GET vars from the URI and inject to $this->_request
         parse_str($this->_request->server['QUERY_STRING'], $this->_request->get);
-
-    }
-    
-    public function teardown() 
-    {
-        parent::teardown();
-        $this->_request = null;
     }
     
     public function testAnchorImage_linkFromString()
@@ -58,6 +49,7 @@ class Solar_View_Helper_AnchorImageTest extends Solar_View_HelperTestCase {
     public function testAnchorImage_linkFromUri()
     {
         $uri = Solar::factory('Solar_Uri');
+        
         $uri->setPath('/path/to/script.php');
         $src = '/images/example.gif';
         $a_attribs = array("class" => "foo");

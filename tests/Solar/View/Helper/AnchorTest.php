@@ -4,13 +4,12 @@ require_once dirname(__FILE__) . '/../HelperTestCase.php';
 
 class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
     
+    protected $_request = null;
+    
     public function setup()
     {
         Solar::start(false); // to get the $locale object
         parent::setup();
-        
-        // load the request environment
-        $request = Solar::factory('Solar_Request');
     }
     
     public function testAnchor_hrefFromString()
@@ -57,6 +56,7 @@ class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
     public function testAnchor_hrefFromUri()
     {
         $uri = Solar::factory('Solar_Uri');
+        
         $uri->setPath('/path/to/script.php');
         $uri->setQuery('page=1');
         
@@ -68,6 +68,7 @@ class Solar_View_Helper_AnchorTest extends Solar_View_HelperTestCase {
     public function testAnchor_linkFromUri()
     {
         $uri = Solar::factory('Solar_Uri');
+        
         $uri->setPath('/path/to/script.php');
         $uri->setQuery('page=1');
         

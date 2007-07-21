@@ -10,9 +10,6 @@ class Solar_View_Helper_TypekeyLinkTest extends Solar_View_HelperTestCase {
     {
         parent::setup();
         
-        // load the request environment
-        $this->_request = Solar::factory('Solar_Request');
-        
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
         $this->_request->server['HTTP_HOST']  = 'example.com';

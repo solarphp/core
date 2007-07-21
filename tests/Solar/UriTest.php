@@ -5,25 +5,27 @@ require_once 'Solar/Uri.php';
 
 class Solar_UriTest extends PHPUnit_Framework_TestCase
 {
-    protected $_uri = null;
-
+    protected $_request = null;
+    
+    protected $_uri;
+    
     public function setUp() 
     {
         Solar::start('config.inc.php');
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
-        $request = Solar::factory('Solar_Request');
-        $request->server['HTTP_HOST']  = 'example.com';
-        $request->server['SCRIPT_NAME']  = '/path/to/index.php';
-        $request->server['PATH_INFO']    = '/appname/action';
-        $request->server['QUERY_STRING'] = 'foo=bar&baz=dib';
-        $request->server['REQUEST_URI']  = $request->server['SCRIPT_NAME']
-                                                . $request->server['PATH_INFO']
+        $this->_request = Solar::factory('Solar_Request');
+        $this->_request->server['HTTP_HOST']  = 'example.com';
+        $this->_request->server['SCRIPT_NAME']  = '/path/to/index.php';
+        $this->_request->server['PATH_INFO']    = '/appname/action';
+        $this->_request->server['QUERY_STRING'] = 'foo=bar&baz=dib';
+        $this->_request->server['REQUEST_URI']  = $this->_request->server['SCRIPT_NAME']
+                                                . $this->_request->server['PATH_INFO']
                                                 . '?'
-                                                . $request->server['QUERY_STRING'];
+                                                . $this->_request->server['QUERY_STRING'];
         
-        $this->_uri = Solar::factory('Solar_Uri');
+        $this->_uri = $this->_getUri();
     }
     
     public function tearDown() 
@@ -32,9 +34,16 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
         $this->_uri = null;
     }
     
+    protected function _getUri()
+    {
+        return Solar::factory('Solar_Uri', array(
+            'request' => $this->_request
+        ));
+    }
+    
     public function testCanInstantiateThroughFactory()
     {
-        $object = Solar::factory('Solar_Uri');
+        $object = $this->_getUri();
         $this->assertTrue($object instanceof Solar_Uri);
     }
     
@@ -51,8 +60,6 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
     
     public function testSet()
     {
-        // the URI object itself
-
         // set up the expected values
         $scheme = 'http';
         $host = 'www.example.net';

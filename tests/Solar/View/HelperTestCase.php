@@ -8,12 +8,25 @@ abstract class Solar_View_HelperTestCase extends PHPUnit_Framework_TestCase
     protected $_view;
     
     protected $_name;
+    
+    protected $_request;
+    
     public function setup()
     {
         parent::setup();
         $this->_view = Solar::factory('Solar_View');
         $this->_name = substr(get_class($this), 18, -4);
         $this->_name[0] = strtolower($this->_name[0]);
+        
+        // register the request environment so all classes have access to it,
+        // not just the helpers.
+        if (! Solar::isRegistered('request')) {
+            Solar::register('request', 'Solar_Request');
+        }
+        
+        // retain and reset the request environment
+        $this->_request = Solar::registry('request');
+        $this->_request->reset();
     }
     
     public function teardown()

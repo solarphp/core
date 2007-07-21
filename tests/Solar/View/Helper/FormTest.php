@@ -6,7 +6,7 @@
  */
 require_once dirname(__FILE__) . '/../../../SolarUnitTest.config.php';
 
-class Solar_View_Helper_FormTest extends PHPUnit_Framework_TestCase
+class Solar_View_Helper_FormTest extends Solar_View_HelperTestCase
 {
     
     protected $_view;
@@ -22,8 +22,6 @@ class Solar_View_Helper_FormTest extends PHPUnit_Framework_TestCase
         Solar::start(false); // to get the $locale object
         parent::setup();
         
-        $this->_request = Solar::factory('Solar_Request');
-        
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
         $this->_request->server['HTTP_HOST']    = 'example.com';
@@ -37,13 +35,13 @@ class Solar_View_Helper_FormTest extends PHPUnit_Framework_TestCase
 
         // emulate GET vars from the URI
         parse_str($this->_request->server['QUERY_STRING'], $this->_request->get);
-
+        
+        // set up a "master" view object
         $this->_view = Solar::factory('Solar_View');
     }
     
     public function teardown()
     {
-        $this->_request = null;
         $this->_view = null;
     }
     
@@ -127,7 +125,9 @@ class Solar_View_Helper_FormTest extends PHPUnit_Framework_TestCase
     public function testForm_solarFormObject()
     {
         $form = Solar::factory('Solar_Form');
+        
         $form->attribs['foo'] = 'bar';
+        
         $form->setElement(
             'baz',
             array(
@@ -261,7 +261,11 @@ EXPECT;
     public function testAuto_solarFormObject()
     {
         $this->markTestSkipped('brittle test');
-        $form = Solar::factory('Solar_Form');
+        
+        $form = Solar::factory('Solar_Form', array(
+            'request' => $this->_request,
+        ));
+        
         $form->setElement(
             'baz',
             array(

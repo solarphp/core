@@ -124,6 +124,15 @@ class Solar_Request extends Solar_Base {
     public $http;
     
     /**
+     * 
+     * Imported $_SERVER['argv'] values.
+     * 
+     * @var array
+     * 
+     */
+    public $argv;
+    
+    /**
      *
      * Constructor.
      *
@@ -246,6 +255,24 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
+     * Retrieves a value by key from the [[$argv]] property, or an alternate
+     * default value if that key does not exist.
+     * 
+     * @param string $key The $argv key to retrieve the value of.
+     * 
+     * @param string $alt The value to return if the key does not exist.
+     * 
+     * @return mixed The value of $argv[$key], or the alternate default
+     * value.
+     * 
+     */
+    public function argv($key = null, $alt = null)
+    {
+        return $this->_getValue('argv', $key, $alt);
+    }
+    
+    /**
+     * 
      * Retrieves a value by key from the [[$http]] property, or an alternate
      * default value if that key does not exist.
      * 
@@ -260,6 +287,18 @@ class Solar_Request extends Solar_Base {
     public function http($key = null, $alt = null)
     {
         return $this->_getValue('http', strtolower($key), $alt);
+    }
+    
+    /**
+     * 
+     * Is this a command-line request?
+     * 
+     * @return bool
+     * 
+     */
+    public function isCli()
+    {
+        return PHP_SAPI == 'cli';
     }
     
     /**
@@ -364,6 +403,9 @@ class Solar_Request extends Solar_Base {
             unset($in);
         }
         
+        // load the "fake" argv request var
+        $this->argv = (array) $this->server('argv');
+        
         // load the "fake" http request var
         $this->http = array();
         foreach ($this->server as $key => $val) {
@@ -375,14 +417,14 @@ class Solar_Request extends Solar_Base {
                 $nicekey = strtolower(
                     str_replace('_', '-', substr($key, 5))
                 );
-
+                
                 // strip control characters from keys and values
                 $nicekey = preg_replace('/[\x00-\x1F]/', '', $nicekey);
                 $this->http[$nicekey] = preg_replace('/[\x00-\x1F]/', '', $val);
-
+                
                 // no control characters wanted in $this->server for these
                 $this->server[$key] = $this->http[$nicekey];
-
+                
                 // disallow external setting of X-JSON headers.
                 if ($nicekey == 'x-json') {
                     unset($this->http[$nicekey]);

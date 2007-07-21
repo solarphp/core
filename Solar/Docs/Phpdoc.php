@@ -103,10 +103,8 @@ class Solar_Docs_Phpdoc extends Solar_Base {
      */
     public function parse($block)
     {
-        // clear out prior info and pre-populate @ignore
-        $this->_info = array(
-            'ignore' => false,
-        );
+        // clear out prior info
+        $this->_info = array();
         
         // fix line-endings from windows
         $block = str_replace("\r\n", "\n", $block);

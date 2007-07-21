@@ -268,18 +268,18 @@ class Solar_Form extends Solar_Base {
             $this->_config['request']
         );
         
-        // retain setups, create validator/filter objects
-        $this->attribs = array_merge(
-            $this->_Solar_Form['attribs'],
-            $this->_config['attribs']
-        );
-        
         // make sure we have an action. normally we try not to change $_config
         // from what the user set, but in this case, we need $_config values
         // so that reset() works properly.
         if (empty($this->_config['attribs']['action'])) {
             $this->_config['attribs']['action'] = $this->_request->server('REQUEST_URI');
         }
+        
+        // retain setups, create validator/filter objects
+        $this->attribs = array_merge(
+            $this->_Solar_Form['attribs'],
+            $this->_config['attribs']
+        );
         
         $this->_obj_filter = Solar::factory('Solar_Filter');
         $this->_obj_valid = Solar::factory('Solar_Valid');

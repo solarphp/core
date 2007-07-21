@@ -274,7 +274,9 @@ class Solar_Form extends Solar_Base {
             $this->_config['attribs']
         );
         
-        // make sure we have an action
+        // make sure we have an action. normally we try not to change $_config
+        // from what the user set, but in this case, we need $_config values
+        // so that reset() works properly.
         if (empty($this->_config['attribs']['action'])) {
             $this->_config['attribs']['action'] = $this->_request->server('REQUEST_URI');
         }

@@ -73,6 +73,20 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * User-defined configuration keys.
+     * 
+     * Keys are ...
+     * 
+     * `request`
+     * : (dependency) A Solar_Request dependency object.
+     * 
+     */
+    protected $_Solar_Controller_Page = array(
+        'request' => 'request',
+    );
+    
+    /**
+     * 
      * The action being requested of (performed by) the page controller.
      * 
      * @var string
@@ -325,9 +339,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
     {
         $class = get_class($this);
         
-        // create the request object
-        $this->_request = Solar::factory('Solar_Request');
-        
         // create the session object for this class
         $this->_session = Solar::factory(
             'Solar_Session',
@@ -345,8 +356,14 @@ abstract class Solar_Controller_Page extends Solar_Base {
             $this->_name = strtolower($this->_name);
         }
         
-        // now do the parent construction
+        // do parent construction
         parent::__construct($config);
+        
+        // create the request object
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
         
         // extended setup
         $this->_setup();

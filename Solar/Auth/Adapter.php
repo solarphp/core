@@ -32,8 +32,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `adapter`
-     * : (string) The adapter class, for example 'Solar_Auth_Adapter_File'.
+     * `request`
+     * : (dependency) A Solar_Request dependency.
      * 
      * `config`
      * : (array) Construction-time config keys to pass to the adapter
@@ -88,6 +88,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      */
     protected $_Solar_Auth_Adapter = array(
+        'request'        => 'request',
         'expire'         => 14400,
         'idle'           => 1800,
         'allow'          => true,
@@ -311,7 +312,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // get the current request environment
-        $this->_request = Solar::factory('Solar_Request');
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
     }
     
     /**

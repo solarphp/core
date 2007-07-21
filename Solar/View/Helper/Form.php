@@ -38,6 +38,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * @var array
      */
     protected $_Solar_View_Helper_Form = array(
+        'request' => 'request',
         'attribs' => array(),
     );
     
@@ -174,7 +175,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     public function __construct($config = null)
     {
-        $this->_request = Solar::factory('Solar_Request');
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            'request'
+        );
+        
         $this->_default_attribs['action'] = $this->_request->server('REQUEST_URI');
         parent::__construct($config);
         $this->reset();

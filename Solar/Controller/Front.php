@@ -122,11 +122,16 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Sets up the environment for all pages.
      * 
+     * Registers a Solar_Request object as 'request'.
+     * 
      * @return void
      * 
      */
     protected function _setup()
     {
+        if (! Solar::isRegistered('request')) {
+            Solar::register('request', 'Solar_Request');
+        }
     }
     
     /**

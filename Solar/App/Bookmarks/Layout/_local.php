@@ -20,9 +20,7 @@
 <?php
     // always show the authentication box
     echo $this->partial('_auth.php');
-?>
-
-<?php
+    
     // should we show the "order" and "tags" lists?
     if ($this->action == 'user' || $this->action == 'tag'):
 ?>

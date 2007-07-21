@@ -137,6 +137,10 @@ class Solar_Uri extends Solar_Base {
      * 
      * Keys are ...
      * 
+     * `request`
+     * : (dependency) A Solar_Request dependency injection.  Default value is
+     *   'request', referring to a registry object.
+     * 
      * `path`
      * : (string) A path prefix.  Generally needed only
      *   for specific URI subclasses, for example Solar_Uri_Action.
@@ -149,6 +153,7 @@ class Solar_Uri extends Solar_Base {
      * 
      */
     protected $_Solar_Uri = array(
+        'request' => 'request',
         'path' => '',
         'uri'  => null,
     );
@@ -274,7 +279,10 @@ class Solar_Uri extends Solar_Base {
         parent::__construct($config);
         
         // get the request environment
-        $this->_request = Solar::factory('Solar_Request');
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
         
         // fix the base path by adding leading and trailing slashes
         if (trim($this->_config['path']) == '') {

@@ -18,7 +18,7 @@
  */
 header('Content-Type: text/xml; charset=iso-8859-1');
 echo '<?xml version="1.0" encoding="iso-8859-1" ?>' . "\n";
-$request = Solar::factory('Solar_Request');
+$request = Solar::registry('request');
 $server = $request->server();
 ?>
 <rss version="2.0">

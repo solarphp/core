@@ -39,6 +39,8 @@ abstract class Solar_Content_Abstract extends Solar_Base {
      * `paging`
      * : (int) The number of rows per page when fetching pages.
      * 
+     * `request`
+     * : (dependency) A Solar_Request dependency injection.
      * @var array
      * 
      */
@@ -46,6 +48,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         'content' => 'content',
         'area_id' => null,
         'paging'  => 10,
+        'request' => 'request',
     );
     
     /**
@@ -117,6 +120,15 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     
     /**
      * 
+     * A Solar_Request dependency object.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    protected $_request = null;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -125,10 +137,17 @@ abstract class Solar_Content_Abstract extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
+        
         $this->_content = Solar::dependency(
             'Solar_Content',
             $this->_config['content']
         );
+        
         $this->_area_id = $this->_config['area_id'];
     }
     
@@ -501,8 +520,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $data['type'] = $this->_type;
         
         // force the IP address
-        $request = Solar::factory('Solar_Request');
-        $data['editor_ipaddr'] = $request->server('REMOTE_ADDR');
+        $data['editor_ipaddr'] = $this->_request->server('REMOTE_ADDR');
         
         // force the created timestamp
         $data['created'] = date('Y-m-d\TH:i:s');
@@ -537,8 +555,7 @@ abstract class Solar_Content_Abstract extends Solar_Base {
         $data['type'] = $this->_type;
         
         // force the IP address
-        $request = Solar::factory('Solar_Request');
-        $data['editor_ipaddr'] = $request->server('REMOTE_ADDR');
+        $data['editor_ipaddr'] = $this->_request->server('REMOTE_ADDR');
         
         // force the updated timestamp
         $data['updated'] = date('Y-m-d\TH:i:s');

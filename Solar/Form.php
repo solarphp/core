@@ -34,23 +34,27 @@ class Solar_Form extends Solar_Base {
      * 
      * Keys are ...
      * 
+     * `request`
+     * : (dependency) A Solar_Request dependency object.
+     * 
      * `attribs`
-     * : An array of <form> tag attributes; used for hinting
+     * : (array) An array of <form> tag attributes; used for hinting
      * the view on how to present the form.  Defaults are 'method="post"',
      * 'action="REQUEST_URI"', and 'enctype="multipart/form-data"'.
      * 
      * `success`
-     * : The overall "success" message when validating form
+     * : (string) The overall "success" message when validating form
      * input. Default is Solar locale key SUCCESS_FORM.
      * 
      * `failure`
-     * : The overall "failure" message when validating form
+     * : (string) The overall "failure" message when validating form
      * input. Default is Solar locale key FAILURE_FORM.
      * 
      * @var array
      * 
      */
     protected $_Solar_Form = array(
+        'request' => 'request',
         'attribs' => array(
             'action'  => null,
             'method'  => 'post',
@@ -142,8 +146,8 @@ class Solar_Form extends Solar_Base {
      * Array of submitted values.
      * 
      * Populated on the first call to [[_populate()]], which itself uses
-     * [[Solar_Request::get()]] or [[Solar_Request::post()]], depending on the value of
-     * $this->attribs['method'].
+     * [[Solar_Request::get()]] or [[Solar_Request::post()]], depending on
+     * the value of $this->attribs['method'].
      * 
      * @var array
      * 
@@ -251,22 +255,30 @@ class Solar_Form extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // request environment
-        $this->_request = Solar::factory('Solar_Request');
-        
         // programmatic defaults
-        $this->_Solar_Form['attribs']['action'] = $this->_request->server('REQUEST_URI');
         $this->_Solar_Form['success'] = $this->locale('SUCCESS_FORM');
         $this->_Solar_Form['failure'] = $this->locale('FAILURE_FORM');
         
         // "real" contruction
         parent::__construct($config);
         
+        // request environment
+        $this->_request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
+        
+        // make sure we have an action
+        if (empty($this->_Solar_Form['attribs']['action'])) {
+            $this->_Solar_Form['attribs']['action'] = $this->_request->server('REQUEST_URI');
+        }
+        
         // retain setups, create validator/filter objects
         $this->attribs = array_merge(
             $this->_Solar_Form['attribs'],
             $this->_config['attribs']
         );
+        
         $this->_obj_filter = Solar::factory('Solar_Filter');
         $this->_obj_valid = Solar::factory('Solar_Valid');
     }

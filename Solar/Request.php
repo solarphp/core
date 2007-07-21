@@ -21,9 +21,6 @@
  *
  * Class for gathering details about the request environment.
  *
- * This is effectively a singleton class; all request variables are 
- * static, and are shared across all Solar_Request instances.
- * 
  * Which keys can be tampered with for XSS insertions?
  * 
  * For SERVER ...
@@ -61,26 +58,8 @@
 class Solar_Request extends Solar_Base {
     
     /**
-     * 
-     * User-defined configuration values.
-     * 
-     * Keys are ...
-     * 
-     * `reload`
-     * : (bool) Forcibly reload static properties at instantiation time.
-     *   Default false, which means properties are loaded only on first
-     *   instantiation.
-     * 
-     * @var array
-     * 
-     */
-    protected $_Solar_Request = array(
-        'reload' => false,
-    );
-    
-    /**
      *
-     * Reference to static $_request['env'] values.
+     * Imported $_ENV values.
      *
      * @var array
      *
@@ -89,7 +68,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['get'] values.
+     * Imported $_GET values.
      *
      * @var array
      *
@@ -98,7 +77,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['post'] values.
+     * Imported $_POST values.
      *
      * @var array
      *
@@ -107,7 +86,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['cookie'] values.
+     * Imported $_COOKIE values.
      *
      * @var array
      *
@@ -116,7 +95,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['server'] values.
+     * Imported $_SERVER values.
      *
      * @var array
      *
@@ -125,7 +104,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['files'] values.
+     * Imported $_FILES values.
      *
      * @var array
      *
@@ -134,10 +113,7 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Reference to static $_request['http'] values.
-     * 
-     * These are HTTP headers pulled from from the $_request['server']
-     * array.
+     * Imported $_SERVER['HTTP_*'] values.
      * 
      * Header keys are normalized and lower-cased; keys and values are
      * filtered for control characters.
@@ -146,35 +122,6 @@ class Solar_Request extends Solar_Base {
      *
      */
     public $http;
-    
-    /**
-     * 
-     * Processed request values.
-     * 
-     * Note that these are static; they are the same for every instance
-     * of Solar_Request.
-     * 
-     * @var array
-     * 
-     */
-    static protected $_request = array(
-        'env'    => array(),
-        'get'    => array(),
-        'post'   => array(),
-        'cookie' => array(),
-        'server' => array(),
-        'files'  => array(),
-        'http'   => array(),
-    );
-    
-    /**
-     * 
-     * Have values been loaded already?
-     * 
-     * @var bool
-     * 
-     */
-    static protected $_loaded = false;
     
     /**
      *
@@ -186,18 +133,7 @@ class Solar_Request extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        
-        // map public properties to static storage
-        $this->env    =& self::$_request['env'];
-        $this->get    =& self::$_request['get'];
-        $this->post   =& self::$_request['post'];
-        $this->cookie =& self::$_request['cookie'];
-        $this->server =& self::$_request['server'];
-        $this->files  =& self::$_request['files'];
-        $this->http   =& self::$_request['http'];
-        
-        // load values
-        $this->load($this->_config['reload']);
+        $this->_setup();
     }
     
     /**
@@ -396,31 +332,19 @@ class Solar_Request extends Solar_Base {
      * 
      * Normalizes HTTP header keys, dispels magic quotes.
      * 
-     * Subsequent calls will not reload properties, unless the $reload
-     * property is set to true.
-     * 
-     * @param bool $reload If true, reload all properties from the 
-     * original superglobal arrays, even if properties have already
-     * been loaded.
-     * 
      * @return void
      *
      */
-    public function load($reload = false)
+    protected function _setup()
     {
-        if (self::$_loaded && ! $reload) {
-            // already loaded and not forcing a reload
-            return;
-        }
-        
         // load the "real" request vars
         $vars = array('env', 'get', 'post', 'cookie', 'server', 'files');
         foreach ($vars as $key) {
             $var = '_' . strtoupper($key);
             if (isset($GLOBALS[$var])) {
-                self::$_request[$key] = $GLOBALS[$var];
+                $this->$key = $GLOBALS[$var];
             } else {
-                self::$_request[$key] = array();
+                $this->$key = array();
             }
         }
         
@@ -441,8 +365,8 @@ class Solar_Request extends Solar_Base {
         }
         
         // load the "fake" http request var
-        self::$_request['http'] = array();
-        foreach (self::$_request['server'] as $key => $val) {
+        $this->http = array();
+        foreach ($this->server as $key => $val) {
             
             // only retain HTTP headers
             if (substr($key, 0, 4) == 'HTTP') {
@@ -454,26 +378,23 @@ class Solar_Request extends Solar_Base {
 
                 // strip control characters from keys and values
                 $nicekey = preg_replace('/[\x00-\x1F]/', '', $nicekey);
-                self::$_request['http'][$nicekey] = preg_replace('/[\x00-\x1F]/', '', $val);
+                $this->http[$nicekey] = preg_replace('/[\x00-\x1F]/', '', $val);
 
-                // no control characters wanted in self::$_request['server'] for these
-                self::$_request['server'][$key] = self::$_request['http'][$nicekey];
+                // no control characters wanted in $this->server for these
+                $this->server[$key] = $this->http[$nicekey];
 
                 // disallow external setting of X-JSON headers.
                 if ($nicekey == 'x-json') {
-                    unset(self::$_request['http'][$nicekey]);
-                    unset(self::$_request['server'][$key]);
+                    unset($this->http[$nicekey]);
+                    unset($this->server[$key]);
                 }
             }
         }
-        
-        // done!
-        self::$_loaded = true;
     }
     
     /**
      * 
-     * Common method to get a static request value and return it.
+     * Common method to get a request value and return it.
      * 
      * @param string $var The request variable to fetch from: get, post,
      * etc.
@@ -492,10 +413,12 @@ class Solar_Request extends Solar_Base {
         // get the whole property, or just one key?
         if ($key === null) {
             // no key selected, return the whole array
-            return self::$_request[$var];
-        } elseif (array_key_exists($key, self::$_request[$var])) {
-            // found the requested key
-            return self::$_request[$var][$key];
+            return $this->$var;
+        } elseif (array_key_exists($key, $this->$var)) {
+            // found the requested key.
+            // need the funny {} becuase $var[$key] will try to find a
+            // property named for that element value, not for $var.
+            return $this->{$var}[$key];
         } else {
             // requested key does not exist
             return $alt;

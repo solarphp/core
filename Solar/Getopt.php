@@ -323,7 +323,7 @@ class Solar_Getopt extends Solar_Base {
     {
         // get the command-line arguments
         if ($argv === null) {
-            $argv = $this->_request->server['argv'];
+            $argv = $this->_request->argv();
             array_shift($argv);
         } else {
             $argv = (array) $argv;

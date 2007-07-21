@@ -175,13 +175,19 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     public function __construct($config = null)
     {
+        // "real" construction
+        parent::__construct($config);
+        
+        // get the request environment
         $this->_request = Solar::dependency(
             'Solar_Request',
-            'request'
+            $this->_config['request']
         );
         
+        // make sure we have a default action
         $this->_default_attribs['action'] = $this->_request->server('REQUEST_URI');
-        parent::__construct($config);
+        
+        // reset the form propertes
         $this->reset();
     }
     

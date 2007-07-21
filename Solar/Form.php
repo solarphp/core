@@ -269,8 +269,8 @@ class Solar_Form extends Solar_Base {
         );
         
         // make sure we have an action
-        if (empty($this->_Solar_Form['attribs']['action'])) {
-            $this->_Solar_Form['attribs']['action'] = $this->_request->server('REQUEST_URI');
+        if (empty($this->_config['attribs']['action'])) {
+            $this->_config['attribs']['action'] = $this->_request->server('REQUEST_URI');
         }
         
         // retain setups, create validator/filter objects

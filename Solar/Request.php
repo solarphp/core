@@ -133,7 +133,7 @@ class Solar_Request extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_setup();
+        $this->reset();
     }
     
     /**
@@ -328,14 +328,14 @@ class Solar_Request extends Solar_Base {
     
     /**
      *
-     * Loads properties from the superglobal arrays.
+     * Reloads properties from the superglobal arrays.
      * 
      * Normalizes HTTP header keys, dispels magic quotes.
      * 
      * @return void
      *
      */
-    protected function _setup()
+    public function reset()
     {
         // load the "real" request vars
         $vars = array('env', 'get', 'post', 'cookie', 'server', 'files');

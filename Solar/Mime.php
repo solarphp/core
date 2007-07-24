@@ -55,11 +55,13 @@ class Solar_Mime {
     
     /**
      * 
-     * Sanitizes header labels.
+     * Sanitizes header labels by removing all characters besides [a-zA-z0-9_-].
      * 
-     * Converts "foo \r bar_ \n 9" to "Foobar-9".
+     * Underscores are converted to dashes, and word case is normalized.
      * 
-     * @param string $label The header label sanitize.
+     * Converts "foo \r bar_ baz-dib \n 9" to "Foobar-Baz-Dib9".
+     * 
+     * @param string $label The header label to sanitize.
      * 
      * @return string The sanitized header label.
      * 
@@ -110,8 +112,11 @@ class Solar_Mime {
         // remove all instances of newline-with-space to unwrap lines
         $value = preg_replace('/(\r\n|\r|\n)([ \t]+)/m', '', $value);
         
-        // remove all control chars from the unwrapped line, including newlines
+        // remove all control chars from the unwrapped line, including newlines.
         $value = preg_replace('/[\x00-\x1F]/', '', $value);
+        
+        // also remove urlencode() equivalents.
+        $value = preg_replace('/%[0-1][0-9A-Fa-f]/', '', $value);
         
         // now do the encoding
         $hdr_vals  = preg_split("/(\s)/", $value, -1, PREG_SPLIT_DELIM_CAPTURE);

@@ -35,9 +35,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * Keys are ...
      * 
      * `sql`
-     * : (string|array) How to get the SQL object.  If a string, is
-     *   treated as a [[Solar::registry()]] object name.  If array, treated as
-     *   config for a standalone Solar_Sql object.
+     * : (dependency) A Solar_Sql dependency injection.
      * 
      * `table`
      * : (string) Name of the table holding authentication data.

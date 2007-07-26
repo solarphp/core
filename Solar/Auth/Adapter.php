@@ -65,7 +65,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * `source_redirect`
      * : (string) Element key in the credential array source to indicate
-     *   where to redirect on successful authentication.
+     *   where to redirect on successful login or logout.
      * 
      * `source_process`
      * : (string) Element key in the credential array source to indicate
@@ -390,9 +390,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // if current auth **is** valid, and processing is allowed,
-        // process logout attempts.
+        // process logout attempts, and redirect if requested.
         if ($this->isValid() && $this->allow && $this->isLogoutRequest()) {
             $this->processLogout();
+            $this->_redirect();
         }
     }
     

@@ -866,7 +866,16 @@ class Solar_Form extends Solar_Base {
         } else {
             // populate an element value, but only if it exists.
             if (isset($this->elements[$elem])) {
-                $this->elements[$elem]['value'] = $src;
+                
+                // do not populate certain elements, as this will
+                // reset their value inappropriately.
+                $skip = $this->elements[$elem]['type'] == 'submit' ||
+                        $this->elements[$elem]['type'] == 'button' ||
+                        $this->elements[$elem]['type'] == 'reset';
+                        
+                if (! $skip) {
+                    $this->elements[$elem]['value'] = $src;
+                }
             }
         }
     }

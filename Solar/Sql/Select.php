@@ -954,7 +954,57 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // return the fetch result
-        return $this->_sql->$fetch($this->_parts, $this->_bind);
+        return $this->_sql->$fetch($this->_parts, $this->_bind, $class);
+    }
+    
+    public function fetchAll()
+    {
+        return $this->fetch('all');
+    }
+    
+    public function fetchAssoc()
+    {
+        return $this->fetch('assoc');
+    }
+    
+    public function fetchCol()
+    {
+        return $this->fetch('col');
+    }
+    
+    public function fetchValue()
+    {
+        return $this->fetch('value');
+    }
+    
+    public function fetchPairs()
+    {
+        return $this->fetch('pairs');
+    }
+    
+    public function fetchPdo()
+    {
+        return $this->fetch('pdo');
+    }
+    
+    public function fetchOne()
+    {
+        return $this->fetch('one');
+    }
+    
+    public function fetchRow($class = null)
+    {
+        return $this->fetch('row', $class);
+    }
+    
+    public function fetchRowset($class = null)
+    {
+        return $this->fetch('rowset', $class);
+    }
+    
+    public function fetchSql()
+    {
+        return $this->fetch('sql');
     }
     
     /**

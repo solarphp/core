@@ -225,6 +225,11 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         if ($this->_config['port']) {
             $this->_port = $this->_config['port'];
         }
+        
+        // set explicit client
+        if ($this->_config['client']) {
+            $this->_client = $this->_config['client'];
+        }
     }
     
     /**

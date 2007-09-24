@@ -29,15 +29,15 @@ if (! class_exists('Solar')) {
 }
 
 /**
- * Do we have a preferred config file?
- * @todo Look for PHP_SOLAR_CONFIG_PATH
+ * Find the config file, if any
  */
- 
-$config = false;
 
-/**
- * Look for a config file preference override
- */
+// default config file
+if (! empty($_SERVER['PHP_SOLAR_CONFIG_PATH'])) {
+    $config = $_SERVER['PHP_SOLAR_CONFIG_PATH'];
+} else {
+    $config = false;
+}
 
 // manually look for a --config (config file) argument
 $argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
@@ -68,6 +68,9 @@ if ($found && ! $config) {
     echo "Please specify a config file path after the --config option.\n";
     exit(-1);
 }
+
+$config = realpath($config);
+echo "Using config file '$config'.\n";
 
 /**
  * Main

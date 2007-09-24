@@ -390,7 +390,7 @@ class Solar_Request extends Solar_Base {
         // dispel magic quotes if they are enabled.
         // http://talks.php.net/show/php-best-practices/26
         if (get_magic_quotes_gpc()) {
-            $in = array(&$_GET, &$_POST, &$_COOKIE);
+            $in = array(&$this->get, &$this->post, &$this->cookie);
             while (list($k, $v) = each($in)) {
                 foreach ($v as $key => $val) {
                     if (! is_array($val)) {

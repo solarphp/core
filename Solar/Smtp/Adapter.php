@@ -743,7 +743,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
                     'host' => $this->_host,
                     'port' => $this->_port,
                     'code' => $code,
-                    'text' => $text,
+                    'text' => $line,
                 ));
             }
     

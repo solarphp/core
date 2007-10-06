@@ -52,14 +52,14 @@
  *     // limit by which page of results we want
  *     $select->limitPage(1);
  *     
- *     // get a PDOStatement object (the default)
- *     $result = $select->fetch(); // or fetch('pdo')
+ *     // get a PDOStatement object
+ *     $result = $select->fetchPdo();
  *     
- *     // alternatively, get an array of data
- *     $rows = $select->fetch('all');
+ *     // alternatively, get an array of all rows
+ *     $rows = $select->fetchAll();
  *     
- *     // or, get a Solar_Sql_Rowset object
- *     $rows = $select->fetch('rowset');
+ *     // or an array of one row
+ *     $rows = $select->fetchOne();
  *     
  *     // find out the count of rows, and how many pages there are.
  *     // this comes back as an array('count' => ?, 'pages' => ?).
@@ -883,13 +883,10 @@ class Solar_Sql_Select extends Solar_Base {
      * @param string $type The type of fetch to perform (all, one, col,
      * etc).  Default is 'pdo'.
      * 
-     * @param string $class When fetching 'row' or 'rowset', use this as 
-     * the return class.
-     * 
      * @return mixed The query results.
      * 
      */
-    public function fetch($type = 'pdo', $class = null)
+    public function fetch($type = 'pdo')
     {
         // does the fetch-method exist? (this allows for extended
         // adapters  to define their own fetch methods)
@@ -904,6 +901,12 @@ class Solar_Sql_Select extends Solar_Base {
         $this->_parts['cols'] = array();
         $this->_parts['from'] = array();
         $this->_parts['join'] = array();
+        
+        // get a count of how many sources there are. if there's only 1, we
+        // won't use column-name prefixes below. this will help soothe SQLite
+        // on JOINs of sub-selects.  e.g., `JOIN (SELECT alias.col FROM tbl AS alias) ...`
+        // won't work right, it needs `JOIN (SELECT col FROM tbl AS alias)`.
+        $count_sources = count($this->_sources);
         
         // build from sources.
         foreach ($this->_sources as $source) {
@@ -941,10 +944,10 @@ class Solar_Sql_Select extends Solar_Base {
                 $parens = strpos($col, '(');
                 
                 // choose our column-name deconfliction strategy
-                if ($prefix == '' || $parens) {
-                    // no prefix (generally because of countPages()).
-                    // if there are parens in the name, it's a function,
-                    // so don't prefix it.
+                if ($prefix == '' || $parens || $count_sources == 1) {
+                    // - if no prefix, that's a no-brainer.
+                    // - if there are parens in the name, it's a function.
+                    // - if there's only one source, deconfliction not needed.
                     $this->_parts['cols'][] = $col;
                 } else {
                     // auto deconfliction
@@ -956,6 +959,7 @@ class Solar_Sql_Select extends Solar_Base {
         // return the fetch result
         return $this->_sql->$fetch($this->_parts, $this->_bind, $class);
     }
+    
     
     public function fetchAll()
     {
@@ -992,16 +996,6 @@ class Solar_Sql_Select extends Solar_Base {
         return $this->fetch('one');
     }
     
-    public function fetchRow($class = null)
-    {
-        return $this->fetch('row', $class);
-    }
-    
-    public function fetchRowset($class = null)
-    {
-        return $this->fetch('rowset', $class);
-    }
-    
     public function fetchSql()
     {
         return $this->fetch('sql');
@@ -1030,16 +1024,16 @@ class Solar_Sql_Select extends Solar_Base {
         
         // add a single COUNT() column
         $select->_addSource(
-            'cols', // type
-            null,         // name
-            null,         // orig
-            null,         // join
-            null,         // cond
+            'cols',         // type
+            null,           // name
+            null,           // orig
+            null,           // join
+            null,           // cond
             "COUNT($col)"
         );
         
         // get the count and calculate pages
-        $count = $select->fetch('value');
+        $count = $select->fetchValue();
         $pages = 0;
         if ($count > 0) {
             $pages = ceil($count / $this->_paging);
@@ -1132,8 +1126,9 @@ class Solar_Sql_Select extends Solar_Base {
      */
     protected function _origAlias($name)
     {
-        // does the name have an "AS" alias?
-        $pos = stripos($name, ' AS ');
+        // does the name have an "AS" alias? pick the right-most one near the
+        // end of the string (note the "rr" in strripos).
+        $pos = strripos($name, ' AS ');
         if ($pos !== false) {
             return array(
                 'orig'  => trim(substr($name, 0, $pos)),

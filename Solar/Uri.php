@@ -80,7 +80,7 @@
  *     $uri->path[] = 'another';
  *     
  *     // and fetch it to a string.
- *     $new_uri = $uri->fetch();
+ *     $new_uri = $uri->get();
  * 
  *     // the $new_uri string is as follows; notice how the format
  *     // is always applied to the last path-element.
@@ -88,7 +88,7 @@
  * 
  *     // wait, there's no scheme or host!
  *     // we need to fetch the "full" URI.
- *     $full_uri = $uri->fetch(true);
+ *     $full_uri = $uri->get(true);
  * 
  *     // the $full_uri string is:
  *     // https://example.com/something/else/entirely/another.php?baz=zab&zim=gir#anchor
@@ -421,7 +421,7 @@ class Solar_Uri extends Solar_Base {
      * @return string An action URI string.
      * 
      */
-    public function fetch($full = false)
+    public function get($full = false)
     {
         // the uri string
         $uri = '';
@@ -472,7 +472,7 @@ class Solar_Uri extends Solar_Base {
     {
         $uri = clone($this);
         $uri->set($spec);
-        return $uri->fetch($full);
+        return $uri->get($full);
     }
     
     

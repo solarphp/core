@@ -147,13 +147,13 @@ class Solar_Mime {
                 // so later we can concat the encoded string and the double quotes back 
                 // together to get the intended string.
                 $quotePrefix = $quoteSuffix = '';
-                if ($hdr_value{0} == '"') {
-                    $hdr_value = substr($hdr_value, 1);
+                if ($hdr_val{0} == '"') {
+                    $hdr_val = substr($hdr_val, 1);
                     $quotePrefix = '"';
                 }
                 
-                if ($hdr_value{strlen($hdr_value)-1} == '"') {
-                    $hdr_value = substr($hdr_value, 0, -1);
+                if ($hdr_val{strlen($hdr_val)-1} == '"') {
+                    $hdr_val = substr($hdr_val, 0, -1);
                     $quoteSuffix = '"';
                 }
                 
@@ -189,7 +189,7 @@ class Solar_Mime {
                 $reg2nd = "|(.{0,$maxLength})[^\=]|";
                 
                 // Concat the double quotes if existant and encoded string together
-                $hdr_value = $quotePrefix . $hdr_value . $quoteSuffix;
+                $hdr_val = $quotePrefix . $hdr_val . $quoteSuffix;
                 
                 // Begin with the regexp for the first line.
                 $reg = $reg1st;

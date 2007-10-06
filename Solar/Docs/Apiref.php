@@ -231,7 +231,8 @@ class Solar_Docs_Apiref extends Solar_Base {
     public function addFiles($base, $class = null)
     {
         $map = Solar::factory('Solar_Class_Map');
-        $source = $map->fetch($base, $class);
+        $map->setBase($base);
+        $source = $map->fetch($class);
         foreach ($source as $class => $file) {
             require_once($file);
             $this->addClass($class);
@@ -253,9 +254,15 @@ class Solar_Docs_Apiref extends Solar_Base {
             return false;
         }
         
-        // add top-level class docs
         $reflect = new ReflectionClass($class);
+        
+        // add top-level class docs
         $this->api[$class] = $this->_phpdoc->parse($reflect->getDocComment());
+        
+        // definition info
+        $this->api[$class]['abstract'] = $reflect->isAbstract() ? 'abstract' : false;
+        $this->api[$class]['final'] = $reflect->isFinal() ? 'final' : false;
+        $this->api[$class]['interface'] = $reflect->isInterface() ? 'interface' : false;
         
         // needs a summary line
         if (empty($this->api[$class]['summ'])) {
@@ -275,7 +282,7 @@ class Solar_Docs_Apiref extends Solar_Base {
             $name = $this->api[$class]['tech']['subpackage']['name'];
             $this->subpackages[$name][] = $class;
         }
-
+        
         // add the class parents, properties and methods
         $this->_addParents($class);
         $this->_addConstants($class);
@@ -437,17 +444,18 @@ class Solar_Docs_Apiref extends Solar_Base {
             
             // the basic method information
             $info = array(
-                'from' => false,
-                'name'   => $name,
-                'summ'   => $docs['summ'],
-                'narr'   => $docs['narr'],
-                'tech'   => $docs['tech'],
-                'access' => null,
-                'static' => $method->isStatic() ? 'static' : false,
-                'final'  => $method->isFinal() ? 'final' : false,
-                'return' => null,
-                'byref'  => $method->returnsReference() ? '&' : false,
-                'params' => array(),
+                'from'     => false,
+                'name'     => $name,
+                'summ'     => $docs['summ'],
+                'narr'     => $docs['narr'],
+                'tech'     => $docs['tech'],
+                'abstract' => $method->isAbstract() ? 'abstract' : false,
+                'access'   => null,
+                'static'   => $method->isStatic() ? 'static' : false,
+                'final'    => $method->isFinal() ? 'final' : false,
+                'return'   => null,
+                'byref'    => $method->returnsReference() ? '&' : false,
+                'params'   => array(),
             );
             
             // add the access visibility

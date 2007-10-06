@@ -1,26 +1,26 @@
 <?php
 /**
- *
+ * 
  * Class for gathering details about the request environment.
  * 
  * @category Solar
- *
+ * 
  * @package Solar
- *
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @author Clay Loveless <clay@killersoft.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
- *
+ * 
  * Class for gathering details about the request environment.
- *
+ * 
  * Which keys can be tampered with for XSS insertions?
  * 
  * For SERVER ...
@@ -51,75 +51,75 @@
  * For FILES, the 'name' and 'type' keys for each file entry.
  * 
  * @category Solar
- *
+ * 
  * @package Solar
  * 
  */
 class Solar_Request extends Solar_Base {
     
     /**
-     *
+     * 
      * Imported $_ENV values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $env;
     
     /**
-     *
+     * 
      * Imported $_GET values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $get;
     
     /**
-     *
+     * 
      * Imported $_POST values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $post;
     
     /**
-     *
+     * 
      * Imported $_COOKIE values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $cookie;
     
     /**
-     *
+     * 
      * Imported $_SERVER values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $server;
     
     /**
-     *
+     * 
      * Imported $_FILES values.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $files;
     
     /**
-     *
+     * 
      * Imported $_SERVER['HTTP_*'] values.
      * 
      * Header keys are normalized and lower-cased; keys and values are
      * filtered for control characters.
-     *
+     * 
      * @var array
-     *
+     * 
      */
     public $http;
     
@@ -133,11 +133,11 @@ class Solar_Request extends Solar_Base {
     public $argv;
     
     /**
-     *
+     * 
      * Constructor.
-     *
+     * 
      * @param array $config User-defined configuration values.
-     *
+     * 
      */
     public function __construct($config = null)
     {
@@ -366,13 +366,13 @@ class Solar_Request extends Solar_Base {
     }
     
     /**
-     *
+     * 
      * Reloads properties from the superglobal arrays.
      * 
      * Normalizes HTTP header keys, dispels magic quotes.
      * 
      * @return void
-     *
+     * 
      */
     public function reset()
     {

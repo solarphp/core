@@ -45,9 +45,9 @@ class Solar_Getopt extends Solar_Base {
      * : (dependency) A Solar_Request dependency injection.  Default is
      *   'request'.
      * 
-     * `datafilter_class`
+     * `filter_class`
      * : (string) The data-filter class to use when validating and sanitizing
-     *   parameter values.  Default is 'Solar_DataFilter'.
+     *   parameter values.  Default is 'Solar_Filter'.
      * 
      * `strict`
      * : (bool) If true, will not process any more options after the first 
@@ -60,7 +60,7 @@ class Solar_Getopt extends Solar_Base {
      */
     protected $_Solar_Getopt = array(
         'request'          => 'request',
-        'datafilter_class' => 'Solar_DataFilter',
+        'filter_class' => 'Solar_Filter',
         'strict'           => true,
     );
     
@@ -186,7 +186,7 @@ class Solar_Getopt extends Solar_Base {
         );
         
         // set up the data-filter class
-        $this->_datafilter = Solar::factory($this->_config['datafilter_class']);
+        $this->_filter = Solar::factory($this->_config['filter_class']);
     }
     
     // -----------------------------------------------------------------
@@ -194,7 +194,7 @@ class Solar_Getopt extends Solar_Base {
     // Option-management methods
     //
     // -----------------------------------------------------------------
-
+    
     /**
      * 
      * Sets one option for recognition.
@@ -412,10 +412,10 @@ class Solar_Getopt extends Solar_Base {
             
             // setup for 'require' on parameter values
             $require = $this->options[$key]['require'];
-            $this->_datafilter->setRequire($require);
+            $this->_filter->setRequire($require);
             
             // is a value required for the option?
-            if ($require && ! $this->_datafilter->validateNotBlank($val)) {
+            if ($require && ! $this->_filter->validateNotBlank($val)) {
                 // value was blank, that means it is invalid.
                 // other validations will also be processed, meaning that their
                 // messages will override this one.
@@ -439,7 +439,7 @@ class Solar_Getopt extends Solar_Base {
                 
                 // call the filtering method
                 $result = call_user_func_array(
-                    array($this->_datafilter, $method),
+                    array($this->_filter, $method),
                     $params
                 );
                 
@@ -456,7 +456,7 @@ class Solar_Getopt extends Solar_Base {
                     // to camel_Case, then to CAMEL_CASE.
                     $tmp = preg_replace('/([a-z])([A-Z])/', '$1_$2', $method);
                     $tmp = strtoupper($tmp);
-                    $this->_invalid[$key] = $this->_datafilter->locale($tmp);
+                    $this->_invalid[$key] = $this->_filter->locale($tmp);
                     // no more validations on this key
                     break;
                 }

@@ -1,13 +1,13 @@
 <?php
 /**
  * 
- * APC cache controller.
+ * Variable (in-memory) cache controller.
  * 
  * @category Solar
  * 
  * @package Solar_Cache
  * 
- * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
+ * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -17,22 +17,36 @@
 
 /**
  * 
- * APC cache controller.
+ * Variable (in-memory) cache controller.
  * 
- * The Alternative PHP Cache (APC) is a free and open opcode cache for PHP.
- * It was conceived of to provide a free, open, and robust framework for
- * caching and optimizing PHP intermediate code.
- * 
- * The APC extension is not bundled with PHP; you will need to install it
- * on your server before you can use it.
- * More info on the [APC homepage](http://pecl.php.net/package/apc).
+ * Stores cache entries to an object variable.  This means that entries are
+ * available for the duration of the script, but are cleared out at the end
+ * of the script.
  * 
  * @category Solar
  * 
  * @package Solar_Cache
  * 
  */
-class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
+class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter {
+    
+    /**
+     * 
+     * Cache entries.
+     * 
+     * @var array
+     * 
+     */
+    protected $_entry = array();
+    
+    /**
+     * 
+     * Expiration timestamps for each cache entry.
+     * 
+     * @var array
+     * 
+     */
+    protected $_expires = array();
     
     /**
      * 
@@ -43,15 +57,6 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
      */
     public function __construct($config = null)
     {
-        // make sure we have apc available
-        if (! ( extension_loaded('apc') && ini_get('apc.enabled') ) ) {
-            throw $this->_exception(
-                'ERR_EXTENSION_NOT_LOADED',
-                array('extension' => 'apc')
-            );
-        }
-        
-        // we're ok
         parent::__construct($config);
     }
     
@@ -72,7 +77,9 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        return apc_store($key, $data, $this->_life);
+        $this->_entry[$key] = $data;
+        $this->_expires[$key] = time() + $this->_life;
+        return true;
     }
     
     /**
@@ -92,15 +99,11 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        // NOT AVAILABLE YET
-        // return apc_add($key, $data, $this->_life);
-        
-        // hack
-        if (apc_fetch($key) !== false) {
+        if (empty($this->_entry[$key])) {
+            return $this->save($key, $data);
+        } else {
             return false;
         }
-        
-        return $this->save($key, $data);
     }
     
     /**
@@ -118,7 +121,15 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        return apc_fetch($key);
+        if (! empty($this->_entry[$key]) && $this->_expires[$key] <= time()) {
+            // exists, and is within its lifetime
+            return $this->_entry[$key];
+        } else {
+            // clear the entry
+            unset($this->_entry[$key]);
+            unset($this->_expires[$key]);
+            return false;
+        }
     }
     
     /**
@@ -136,7 +147,8 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        apc_delete($key);
+        unset($this->_entry[$key]);
+        unset($this->_expires[$key]);
     }
     
     /**
@@ -155,7 +167,8 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        apc_clear_cache('user');
+        $this->_entry = array();
+        $this->_expires = array();
     }
     
     /**

@@ -1,29 +1,29 @@
 <?php
 /**
- *
+ * 
  * eAccelerator cache controller.
- *
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_Cache
- *
+ * 
  * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
- *
+ * 
  * eAccellerator cache controller.
- *
+ * 
  * eAccelerator is a free open-source PHP accelerator, optimizer,
  * encoder and dynamic content cache. It increases the performance of
  * PHP scripts by caching them in their compiled state, so that the
  * overhead of compiling is almost completely eliminated.
- *
+ * 
  * eAccelerator is not bundled with PHP; you will need to install it
  * on your server before you can use it.  More info on the
  * [eAccelerator homepage](http://eaccelerator.net/).
@@ -37,13 +37,13 @@
  * 
  */
 class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
-
+    
     /**
-     *
+     * 
      * Constructor.
-     *
+     * 
      * @param array $config User-provided configuration values.
-     *
+     * 
      */
     public function __construct($config = null)
     {
@@ -54,22 +54,22 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
                 array('extension' => 'eaccelerator')
             );
         }
-
+        
         // we're ok
         parent::__construct($config);
     }
-
+    
     /**
-     *
+     * 
      * Sets cache entry data. eAccelerator doesn't serialize object, so
      * you need to do it yourself or php will segfault on object retrieval.
-     *
+     * 
      * @param string $key The entry ID.
-     *
+     * 
      * @param mixed $data The data to write into the entry.
-     *
+     * 
      * @return bool True on success, false on failure.
-     *
+     * 
      */
     public function save($key, $data)
     {
@@ -79,7 +79,7 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
         
         return eaccelerator_put($key, $data, $this->_life);
     }
-
+    
     /**
      * 
      * Inserts cache entry data, but only if the entry does not already exist.
@@ -105,13 +105,13 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
     }
     
     /**
-     *
+     * 
      * Gets cache entry data.
-     *
+     * 
      * @param string $key The entry ID.
-     *
+     * 
      * @return mixed Boolean false on failure, string on success.
-     *
+     * 
      */
     public function fetch($key)
     {
@@ -121,15 +121,15 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
         
         return eaccelerator_get($key);
     }
-
+    
     /**
-     *
+     * 
      * Deletes a cache entry.
-     *
+     * 
      * @param string $key The entry ID.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     public function delete($key)
     {
@@ -139,13 +139,13 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
         
         eaccelerator_rm($key);
     }
-
+    
     /**
-     *
+     * 
      * Removes all cache entries.
-     *
+     * 
      * @return void
-     *
+     * 
      */
     public function deleteAll()
     {
@@ -155,15 +155,15 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
         
         eaccelerator_clean();
     }
-
+    
     /**
-     *
+     * 
      * Returns the name for the entry key.
-     *
+     * 
      * @param string $key The entry ID.
-     *
+     * 
      * @return string The cache entry name.
-     *
+     * 
      */
     public function entry($key)
     {

@@ -339,7 +339,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
             if ($result === true) {
                 $connection_count++;
             }
-
+        
         }
         
         // make sure we connected to at least one

@@ -28,6 +28,21 @@ class Solar_Class_Map extends Solar_Base {
     
     /**
      * 
+     * User-defined configuration values.
+     * 
+     * Keys are ...
+     * 
+     * `base`
+     * : (string) The base directory of the class hierarchy.  Default is the
+     *   base directory for this class, typically the PEAR directory.
+     * 
+     */
+    protected $_Solar_Class_Map = array(
+        'base' => null,
+    );
+    
+    /**
+     * 
      * The class-to-file mappings.
      * 
      * @var array
@@ -39,31 +54,70 @@ class Solar_Class_Map extends Solar_Base {
      * 
      * The path to the base of the class hierarchy.
      * 
-     * @var array
+     * By default, uses the base path for this class in the file system.
+     * 
+     * @var string
      * 
      */
     protected $_base;
     
     /**
      * 
-     * Gets the class-to-file map for a class hierarchy.
+     * Constructor.
      * 
-     * @param string $base The path to the top of the class hierarchy,
-     * typically the base PEAR directory.
+     * @param array $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        if ($this->_config['base']) {
+            $this->setBase($base);
+        } else {
+            $base = $this->_findBaseByClass(__CLASS__);
+            $this->setBase($base);
+        }
+    }
+    
+    /**
+     * 
+     * Sets the base directory for the class map.
+     * 
+     * @param string $base The base directory.
+     * 
+     * @return void
+     * 
+     */
+    public function setBase($base)
+    {
+        $this->_base = Solar::fixdir($base);
+    }
+    
+    /**
+     * 
+     * Gets the base directory for the class map.
+     * 
+     * @return string The base directory.
+     * 
+     */
+    public function getBase()
+    {
+        return $this->_base;
+    }
+    
+    /**
+     * 
+     * Gets the class-to-file map for a class hierarchy.
      * 
      * @param string $class Start mapping with this class.
      * 
      * @return array The class-to-file mappings.
      * 
      */
-    public function fetch($base, $class = null)
+    public function fetch($class = null)
     {
         // reset the map
         $this->_map = array();
-        
-        // keep the base path so we know where the class names
-        // start (in reference to file names).
-        $this->_base =  Solar::fixdir($base);
         
         // if starting with a specific class, add to the path
         // and look for that file specifically.
@@ -100,6 +154,38 @@ class Solar_Class_Map extends Solar_Base {
         // sort by class name, and we're done.
         ksort($this->_map);
         return $this->_map;
+    }
+    
+    /**
+     * 
+     * Finds the base directory from the include-path to the requested class.
+     * 
+     * @param string $class The requested class file.
+     * 
+     * @return string The base directory.
+     * 
+     */
+    protected function _findBaseByClass($class)
+    {
+        $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
+        $base = Solar::fileExists($file);
+        if ($base) {
+            $neglen = -1 * strlen($file);
+            $base = substr($base, 0, $neglen);
+            return $base;
+        }
+        
+        // no base yet, look for a dir (drop the .php, add a separator)
+        $dir = substr($file, 0, -4);
+        $base = Solar::isDir($dir);
+        if ($base) {
+            $neglen = -1 * strlen($dir);
+            $base = substr($base, 0, $neglen);
+            return $base;
+        }
+        
+        // still no base, we have a problem
+        throw $this->_exception('ERR_NO_BASE_DIR');
     }
     
     /**

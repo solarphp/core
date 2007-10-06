@@ -584,7 +584,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     public function setProxy($spec)
     {
         if ($spec instanceof Solar_Uri) {
-            $this->_proxy = $spec->fetch(true);
+            $this->_proxy = $spec->get(true);
         } else {
             $this->_proxy = $spec;
         }
@@ -790,7 +790,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
                 // increment to the next response
                 $i ++;
                 $response[$i] = Solar::factory('Solar_Http_Response');
-
+                
                 // set the version, status code, and status text in the response
                 preg_match('/HTTP\/(.+?) ([0-9]+)(.*)/i', $header, $matches);
                 $response[$i]->setVersion($matches[1]);
@@ -980,7 +980,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // done!
-        return array($uri->fetch(true), $headers, $content);
+        return array($uri->get(true), $headers, $content);
     }
     
     /**

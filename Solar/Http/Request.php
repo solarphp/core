@@ -1,18 +1,18 @@
 <?php
 /**
- *
+ * 
  * Factory to return an HTTP request adapter instance.
  * 
  * @category Solar
- *
+ * 
  * @package Solar_Http
- *
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
@@ -20,9 +20,9 @@
  * Factory to return an HTTP request adapter instance.
  * 
  * @category Solar
- *
+ * 
  * @package Solar_Http
- *
+ * 
  */
 class Solar_Http_Request extends Solar_Base {
     

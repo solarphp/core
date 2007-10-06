@@ -107,10 +107,10 @@ class Solar_App_Hello extends Solar_App_Base {
         
         // reset the locale strings to the new code
         Solar::$locale->setCode($this->code);
-
+        
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');
-
+        
         // tell the site layout what title to use
         $this->layout_head['title'] = 'Solar: Hello World!';
     }
@@ -129,13 +129,13 @@ class Solar_App_Hello extends Solar_App_Base {
     {
         // set the code from input
         $this->code = $code;
-
+        
         // reset the locale strings to the new code
         Solar::$locale->setCode($this->code);
-
+        
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');
-
+        
         // turn off the site layout so RSS is not mangled
         $this->_layout = false;
     }

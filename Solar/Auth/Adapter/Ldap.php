@@ -73,8 +73,7 @@ class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
         // continue construction
         parent::__construct($config);
     }
-
-
+    
     /**
      * 
      * Verifies a username handle and password.

@@ -1,18 +1,18 @@
 <?php
 /**
- *
+ * 
  * Locale file.  Returns the strings for a specific language.
- *
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_User
- *
+ * 
  * @author Rodrigo Moraes <http://tipos.org>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 return array(
     'VALID'   => 'Bem vindo!',

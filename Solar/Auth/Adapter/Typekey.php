@@ -10,7 +10,7 @@
  * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -18,7 +18,7 @@
  */
 
 /**
- *
+ * 
  * Authentication adapter for TypeKey.
  * 
  * Requires that PHP have been compiled using "--enable-bcmath" or
@@ -37,13 +37,13 @@
  * * <http://www.sixapart.com/movabletype/docs/tk-apps>
  * 
  * @category Solar
- *
+ * 
  * @package Solar_Auth
  * 
  * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
  * @author Paul M. Jones <pmjones@mashery.com>
- *
+ * 
  */
 class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
     
@@ -142,7 +142,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * @param array $config User-defined configuration values.
      * 
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         if (extension_loaded('gmp')) {
             $this->_ext = 'gmp';
@@ -264,7 +264,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         // re-create the message for signature comparison.
         // <email>::<name>::<nick>::<ts>
         $this->_msg = "$email::$name::$nick::$ts";
-
+        
         // get the TypeKey public key data
         $this->_key = $this->_fetchKeyData();
         
@@ -314,7 +314,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         $w = gmp_invert($s2, $key['q']);
         
         $hash_m = gmp_init('0x' . sha1($msg));
-
+        
         $u1 = gmp_mod(gmp_mul($hash_m, $w), $key['q']);
         $u2 = gmp_mod(gmp_mul($s1, $w), $key['q']);
         
@@ -335,15 +335,15 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
             return false;
         }
     }
-
+    
     /**
      * 
      * Converts a binary to a decimal value using GMP functions.
      * 
      * @param string $bin The original binary value string.
-     *
+     * 
      * @return string Decimal value string converted from $bin.
-     *
+     * 
      */
     protected function _gmp_bindec($bin) 
     {
@@ -355,7 +355,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         }
         return gmp_strval($dec);
     }
-
+    
     /**
      * 
      * DSA verification using bcmath.
@@ -374,19 +374,19 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         $sig = $this->_sig;
         
         list($r_sig, $s_sig) = explode(':', $sig);
-
+        
         $r_sig = base64_decode($r_sig);
         $s_sig = base64_decode($s_sig);
-
+        
         $s1 = $this->_bc_bindec($r_sig);
         $s2 = $this->_bc_bindec($s_sig);
-
+        
         $w = $this->_bc_invert($s2, $key['q']);
         $hash_m = $this->_bc_hexdec(sha1($msg));
-
+        
         $u1 = bcmod(bcmul($hash_m, $w), $key['q']);
         $u2 = bcmod(bcmul($s1, $w), $key['q']);
-
+        
         $v = bcmod(
                 bcmod(
                     bcmul(
@@ -397,19 +397,19 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
                 ),
              $key['q']
         );
-
+        
         return (bool) bccomp($v, $s1) == 0;
     }
-
+    
     /**
      * 
      * Converts a hex value string to a decimal value string using
      * bcmath functions.
      * 
      * @param string $hex The original hex value string.
-     *
+     * 
      * @return string Decimal string converted from $hex.
-     *
+     * 
      */
     protected function _bc_hexdec($hex)
     {
@@ -421,16 +421,16 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         }
         return $dec;
     }
-
+    
     /**
      * 
      * Converts a binary value string to a decimal value string using
      * bcmath functions.
      * 
      * @param string $bin The original binary value string.
-     *
+     * 
      * @return string Decimal value string converted from $bin.
-     *
+     * 
      */
     protected function _bc_bindec($bin)
     {
@@ -442,7 +442,7 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
         }
         return $dec;
     }
-
+    
     /**
      * 
      * Inverts two values using bcmath functions.
@@ -450,9 +450,9 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
      * @param string $x First value.
      * 
      * @param string $y Second value.
-     *
+     * 
      * @return string The inverse of $x and $y.
-     *
+     * 
      */
     protected function _bc_invert($x, $y) 
     {
@@ -470,18 +470,18 @@ class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
             return false;
         }
     }
-
+    
     /**
-     *
+     * 
      * Finds the extended greatest-common-denominator of two values
      * using bcmath functions.
      * 
      * @param string $x First value.
      * 
      * @param string $y Second value.
-     *
+     * 
      * @return array Extended GCD of $x and $y.
-     *
+     * 
      */
     protected function _bc_exgcd($x, $y) 
     {

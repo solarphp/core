@@ -45,7 +45,7 @@
  * 
  * {{code: php
  *     // an array to dump as an example
- *     $example = Solar::factory('Solar_Example_Class');
+ *     $example = Solar::factory('Solar_Example');
  *     $example->dump();
  * }}
  * 

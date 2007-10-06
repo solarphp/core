@@ -299,13 +299,18 @@ class Solar_View extends Solar_Base {
      */
     public function setHelperClass($list = null)
     {
-        $this->_helper_class->set('Solar_View_Helper');
+        $parents = array_reverse(Solar::parents($this, true));
+        array_shift($parents); // drops Solar_Base
+        foreach ($parents as $key => $val) {
+            $parents[$key] = $val . '_Helper';
+        }
+        $this->_helper_class->set($parents);
         $this->_helper_class->add($list);
     }
     
     /**
      * 
-     * Add to the helper directory path stack.
+     * Add to the helper class stack.
      * 
      * @param string|array $list The classes to add to the stack.
      * 
@@ -492,14 +497,23 @@ class Solar_View extends Solar_Base {
      */
     public function template($name)
     {
+        // append ".php" if needed
+        if (substr($name, -4) != '.php') {
+            $name .= '.php';
+        }
+        
         // get a path to the template
         $file = $this->_template_path->find($name);
+        
+        // could we find it?
         if (! $file) {
             throw $this->_exception(
                 'ERR_TEMPLATE_NOT_FOUND',
                 array('name' => $name, 'path' => $this->_template_path->get())
             );
         }
+        
+        // done!
         return $file;
     }
     
@@ -513,13 +527,17 @@ class Solar_View extends Solar_Base {
      * 
      * @param string $name The partial template to process.
      * 
-     * @param array $vars Additional variables to extract within the 
-     * partial template scope.
+     * @param array|object $spec Additional variables to use within the
+     * partial template scope. If an array, we use extract() on it.
+     * If an object, we create a new variable named after the partial template
+     * file and set that new variable to be the object.  E.g., passing an
+     * object to a partial template named `_foo-bar.php` will use that object
+     * as `$foo_bar` in the partial.
      * 
      * @return string The results of the partial template script.
      * 
      */
-    public function partial($name, $vars = null)
+    public function partial($name, $spec = null)
     {
         // use a try/catch block so that if a partial is not found, the
         // exception does not break the parent template.
@@ -533,25 +551,39 @@ class Solar_View extends Solar_Base {
             );
         }
         
-        // remove the partial name from local scope
-        unset($name);
-    
         // save partial vars externally. special cases for different types.
-        if ($vars instanceof Solar_Struct) {
-            $this->_partial_vars = $vars->toArray();
-        } elseif (is_object($vars)) {
-            $this->_partial_vars = get_object_vars($vars);
+        if (is_object($spec)) {
+            
+            // the object var name is based on the partial's template name.
+            // e.g., `foo/_bar-baz.php` becomes `$bar_baz`.
+            $key = basename($this->_partial_file); // file name
+            $key = substr($key, 1); // drop leading underscore
+            if (substr($key, -4) == '.php') {
+                $key = substr($key, 0, -4); // drop trailing .php
+            }
+            $key = str_replace('-', '_', $key); // convert dashes to underscores
+            
+            // keep the object under the key name
+            $this->_partial_vars[$key] = $spec;
+            
+            // remove the key name from the local scope
+            unset($key);
+            
         } else {
-            $this->_partial_vars = (array) $vars;
+            // keep vars as an array to be extracted
+            $this->_partial_vars = (array) $spec;
         }
         
-        // remove the partial vars from local scope
-        unset($vars);
-    
-        // disallow resetting of $this and inject vars into local scope
+        // remove the partial name and spec from local scope
+        unset($name);
+        unset($spec);
+        
+        // disallow resetting of $this
         unset($this->_partial_vars['this']);
+        
+        // inject vars into local scope
         extract($this->_partial_vars);
-    
+        
         // run the partial template
         ob_start();
         require $this->_partial_file;

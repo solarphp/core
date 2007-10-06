@@ -17,7 +17,7 @@
  */
 ?>
 <html>
-
+    
     <head>
         <title>Server Error</title>
     </head>
@@ -25,7 +25,7 @@
     <body>
         
         <h1>Server Error</h1>
-
+        
         <p>The application could not complete your request.  This is our
             fault, not yours.</p>
         

@@ -55,7 +55,7 @@ class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {
                         (?>                                         
                             [^_]+?                                  # Anthing not em markers.
                         |                                           
-                                                                    # Balence any regular _ emphasis inside.
+                                                                    # Balance any regular _ emphasis inside.
                             (?<![a-zA-Z0-9])_ (?=\S) (?! _) (.+?) 
                             (?<=\S) _ (?![a-zA-Z0-9])
                         )+?
@@ -91,7 +91,7 @@ class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {
             array($this, '_parseEm'),
             $text
         );
-
+        
         return $text;
     }
     

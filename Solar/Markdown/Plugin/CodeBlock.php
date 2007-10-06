@@ -67,7 +67,7 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -90,7 +90,7 @@ class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
             '',
             $code
         );
-
+        
         return "\n\n"
              . $this->_toHtmlToken("<pre><code>" . $code . "\n</code></pre>")
              . "\n\n";

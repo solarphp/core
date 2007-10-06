@@ -62,7 +62,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
     public function parse($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
-
+        
         // Re-usable pattern to match any entire dl list:
         $whole_list = '
             (                                               # $1 = whole list
@@ -90,7 +90,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
               )
             )
         '; // mx
-
+        
         $text = preg_replace_callback(
             '{
                 (?:(?<=\n\n)|\A\n?)
@@ -99,7 +99,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -123,8 +123,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
         $result = "<dl>\n" . $result . "\n</dl>";
         return $this->_toHtmlToken($result) . "\n\n";
     }
-
-
+    
     /**
      * 
      * Process the contents of a definition list, splitting it into
@@ -141,7 +140,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
     
         // trim trailing blank lines:
         $list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
-
+        
         // Process definition terms.
         $list_str = preg_replace_callback(
             '{
@@ -158,7 +157,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
             array($this, '_processDt'),
             $list_str
         );
-
+        
         // Process actual definitions.
         $list_str = preg_replace_callback(
             '{
@@ -176,7 +175,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
             array($this, '_processDd'),
             $list_str
         );
-
+        
         return $list_str;
     }
     
@@ -213,7 +212,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
     {
         $leading_line = $matches[1];
         $def          = $matches[2];
-
+        
         if ($leading_line || preg_match('/\n{2,}/', $def)) {
             $def = $this->_processBlocks($this->_outdent($def . "\n\n"));
             $def = "\n". $def ."\n";
@@ -221,7 +220,7 @@ class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {
             $def = rtrim($def);
             $def = $this->_processSpans($this->_outdent($def));
         }
-
+        
         return "\n<dd>" . $def . "</dd>\n";
     }
 }

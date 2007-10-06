@@ -97,7 +97,7 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
         'throws'        => "\n    <span class=\"throws\">throws <span class=\"type\">%type</span></span>",
         'list_sep'      => ', ',
     );
-
+    
     /**
      * 
      * Converts method synopsis to XHTML markup.
@@ -202,18 +202,18 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
         $html['%access'] = str_replace('%access', $this->_escape($access), $this->_config['access']);
         $html['%return'] = str_replace('%return', $this->_escape($return), $this->_config['return']);
         $html['%method'] = str_replace('%method', $this->_escape($method), $this->_config['method']);
-
+        
         // params
         $list = array();
         foreach ($params as $key => $val) {
-
+            
             // is there a default value?
             if (! is_null($val['default'])) {
                 $item = $this->_config['param_default'];
             } else {
                 $item = $this->_config['param'];
             }
-
+            
             // add the param elements
             $item = str_replace('%type',    $this->_escape($val['type']),    $item);
             $item = str_replace('%name',    $this->_escape($val['name']),    $item);
@@ -221,7 +221,7 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
             $list[] = $item;
         }
         $html['%params'] = implode($this->_config['list_sep'], $list);
-
+        
         // throws
         $list = array();
         foreach ($throws as $type) {
@@ -229,10 +229,10 @@ class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {
             $item = str_replace('%type', $this->_escape($type), $item);
             $list[] = $item;
         }
-
+        
         // insert throws into output
         $html['%throws'] = implode($this->_config['list_sep'], $list);
-
+        
         // build the whole thing
         $html = str_replace(
             array_keys($html),

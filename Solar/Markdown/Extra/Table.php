@@ -135,7 +135,7 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
             array($this, '_parsePlain'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -169,7 +169,7 @@ class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {
         $head       = $matches[1];
         $underline  = $matches[2];
         $content    = $matches[3];
-
+        
         // Remove any tailing pipes for each line.
         $head       = preg_replace('/[|] *$/m', '', $head);
         $underline  = preg_replace('/[|] *$/m', '', $underline);

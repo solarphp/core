@@ -734,7 +734,7 @@ class Solar_Markdown extends Solar_Base {
     {
         $index = 0;
         $list = array();
-
+        
         $match = '(?s:<!(?:--.*?--\s*)+>)|'.    # comment
                  '(?s:<\?.*?\?>)|'.             # processing instruction
                                                 # regular tags
@@ -749,7 +749,7 @@ class Solar_Markdown extends Solar_Base {
                 $list[] = array('tag', $part);
             }
         }
-
+        
         return $list;
     }
     

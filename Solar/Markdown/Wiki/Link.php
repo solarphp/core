@@ -191,7 +191,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
      * @param array $config Array of user-defined configuariont values.
      * 
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         parent::__construct($config);
         $this->_class = get_class($this);
@@ -410,7 +410,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {
         $pos = strpos($matches[1], '::');
         $site = trim(substr($matches[1], 0, $pos));
         $page = trim(substr($matches[1], $pos + 2));
-
+        
         // does the requested interwiki site exist?
         if (empty($this->_interwiki[$site])) {
             return $matches[0];

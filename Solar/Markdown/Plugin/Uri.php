@@ -89,8 +89,8 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
-        # Email addresses: <address@domain.foo>
+        
+        // email addresses: <address@domain.foo>
         $text = preg_replace_callback('{
                 <
                     (?:mailto:)?
@@ -104,10 +104,10 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
             array($this, '_parseEmail'),
             $text
         );
-
+        
         return $text;
     }
-
+    
     /**
      * 
      * Support callback for inline URIs.
@@ -152,7 +152,7 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
         $addr = $matches[1];
         $addr = "mailto:" . $addr;
         $length = strlen($addr);
-
+        
         // leave ':' alone (to spot mailto: later)
         // this is super-slow; it makes the callback one time for each
         // character in the string except ':'.
@@ -161,11 +161,12 @@ class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {
             array($this, '_obfuscateEmail'),
             $addr
         );
-
+        
         $addr = "<a href=\"$addr\">$addr</a>";
-        # strip the mailto: from the visible part
+        
+        // strip the mailto: from the visible part
         $addr = preg_replace('/">.+?:/', '">', $addr);
-
+        
         return $addr;
     }
     

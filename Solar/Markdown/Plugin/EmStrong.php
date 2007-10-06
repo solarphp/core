@@ -67,7 +67,7 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
      */
     public function parse($text)
     {
-        # <strong> must go first:
+        // <strong> must go first:
         $text = preg_replace_callback('{
                 (                                       # $1: Marker
                     (?<!\*\*) \*\* |                    #     (not preceded by two chars of
@@ -90,14 +90,14 @@ class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {
             array($this, '_parseStrong'),
             $text
         );
-
-        # Then <em>:
+        
+        // Then <em>:
         $text = preg_replace_callback(
             '{ ( (?<!\*)\* | (?<!_)_ ) (?=\S) (?! \1) (.+?) (?<=\S) \1 }sx',
             array($this, '_parseEm'),
             $text
         );
-
+        
         return $text;
     }
     

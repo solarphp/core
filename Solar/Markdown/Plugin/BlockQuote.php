@@ -72,7 +72,7 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -104,7 +104,7 @@ class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
             array($this, '_trimPreSpaces'),
             $bq
         );
-
+        
         return $this->_toHtmlToken("<blockquote>\n$bq\n</blockquote>") . "\n\n";
     }
     

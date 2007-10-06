@@ -120,7 +120,7 @@ class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {
         
         return $text;
     }
-
+    
     /**
      * 
      * Support callback for top-level setext headers ("h1").

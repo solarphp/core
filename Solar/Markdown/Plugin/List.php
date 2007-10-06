@@ -88,14 +88,14 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     public function parse($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
-
+        
         // Re-usable patterns to match list item bullets and number markers:
         $marker_ul  = '[*+-]';
         $marker_ol  = '\d+[.]';
         $marker_any = "(?:$marker_ul|$marker_ol)";
-
+        
         $markers = array($marker_ul, $marker_ol);
-
+        
         foreach ($markers as $marker) {
             // Re-usable pattern to match any entire ul or ol list:
             $whole_list = '
@@ -139,7 +139,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
                 );
             }
         }
-
+        
         return $text;
     }
     
@@ -185,7 +185,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
      */
     protected function _parseNested($matches)
     {
-        # Re-usable patterns to match list item bullets and number markers:
+        // Re-usable patterns to match list item bullets and number markers:
         $marker_ul  = '[*+-]';
         $marker_ol  = '\d+[.]';
         $marker_any = "(?:$marker_ul|$marker_ol)";
@@ -195,8 +195,8 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
     
         $marker_any = ( $list_type == "ul" ? $marker_ul : $marker_ol );
     
-        # Turn double returns into triple returns, so that we can make a
-        # paragraph for the last item in a list, if necessary:
+        // Turn double returns into triple returns, so that we can make a
+        // paragraph for the last item in a list, if necessary:
         $list = preg_replace("/\n{2,}/", "\n\n\n", $list);
         $result = $this->_processItems($list, $marker_any);
         return $this->_toHtmlToken("<$list_type>\n" . $result . "</$list_type>") . "\n\n"; // extra \n?
@@ -239,7 +239,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         // change the syntax rules such that sub-lists must start with a
         // starting cardinal number; for example "1." or "a.".
         $this->_list_level ++;
-
+        
         // trim trailing blank lines:
         $list_str = preg_replace("/\n{2,}\\z/", "\n", $list_str);
         
@@ -255,7 +255,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
             array($this, '_processItemsCallback'),
             $list_str
         );
-
+        
         $this->_list_level --;
         return $list_str;
     }
@@ -274,7 +274,7 @@ class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
         $item = $matches[4];
         $leading_line =& $matches[1];
         $leading_space =& $matches[2];
-
+        
         if ($leading_line || preg_match('/\n{2,}/', $item)) {
             $item = $this->_processBlocks($this->_outdent($item));
         } else {

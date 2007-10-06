@@ -143,7 +143,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
         // done
         return $text;
     }
-
+    
     /**
      * 
      * Support callback for ATX headers.
@@ -185,7 +185,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
     {
         return $this->_header('h1', $matches);
     }
-
+    
     /**
      * 
      * Support callback for H2 headers.
@@ -199,7 +199,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
     {
         return $this->_header('h2', $matches);
     }
-
+    
     /**
      * 
      * Support callback for H3 headers.
@@ -213,7 +213,7 @@ class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {
     {
         return $this->_header('h3', $matches);
     }
-
+    
     /**
      * 
      * Support callback for H4 headers.

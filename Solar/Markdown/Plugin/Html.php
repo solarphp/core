@@ -98,7 +98,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     public function parse($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
-
+        
         // We only want to do this for block-level HTML tags, such as
         // headers, lists, and tables. That's because we still want to
         // wrap <p>s around "paragraphs" that are wrapped in
@@ -109,7 +109,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
         
         $block_tags_b = 'p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|'.
                         'script|noscript|form|fieldset|iframe|math';
-
+        
         // First, look for nested blocks, for example:
         // 
         //     <div>
@@ -138,7 +138,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         // Now match more liberally, simply from `\n<tag>` to `</tag>\n`
         $text = preg_replace_callback("{
                     (                           # save in $1
@@ -154,7 +154,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         // Special case just for <hr />. It was easier to make a special
         // case than to make the other regex more complicated.
         $text = preg_replace_callback('{
@@ -176,7 +176,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         // Special case for standalone HTML comments:
         $text = preg_replace_callback('{
                 (?:
@@ -198,7 +198,7 @@ class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
             array($this, '_parse'),
             $text
         );
-
+        
         return $text;
     }
     

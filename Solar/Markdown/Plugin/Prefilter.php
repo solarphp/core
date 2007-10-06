@@ -57,13 +57,13 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     {
         // Standardize DOS and Mac OS 9 line endings
         $text = str_replace(array("\r\n", "\r"), "\n", $text);
-
+        
         // Make sure $text ends with a couple of newlines:
         $text .= "\n\n";
-
+        
         // Convert tabs to spaces in a surprisingly nice-looking way.
         $text = $this->_tabsToSpaces($text);
-
+        
         // Convert lines consisting only of spaces and tabs to simple
         // newlines.
         //
@@ -79,7 +79,7 @@ class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     /**
      * 
      * Replaces tabs with the appropriate number of spaces.
-     *
+     * 
      * <http://www.mail-archive.com/macperl-anyperl@perl.org/msg00144.html>
      * 
      * > It will take into account the length of the string before the tab

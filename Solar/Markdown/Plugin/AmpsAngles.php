@@ -63,14 +63,14 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin {
             array($this, '_processAmp'),
             $text
         );
-
+        
         // encode naked <'s
         $text = preg_replace_callback(
             '{<(?![a-z/?\$!])}i',
             array($this, '_processLt'),
             $text
         );
-
+        
         return $text;
     }
     

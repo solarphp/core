@@ -75,22 +75,22 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
               !\[
                 ('.$this->_nested_brackets.')   # alt text = $2
               \]
-
+              
               [ ]?                              # one optional space
               (?:\n[ ]*)?                       # one optional newline followed by spaces
                             
               \[            
                 (.*?)                           # id = $3
               \]
-
+            
             )
             }xs', 
             array($this, '_parseReference'),
             $text
         );
-
-        # Next, handle inline images:  ![alt text](url "optional title")
-        # Don't forget: encode * and _
+        
+        // Next, handle inline images:  ![alt text](url "optional title")
+        // Don't forget: encode * and _
         $text = preg_replace_callback('{
             (                                   # wrap whole match in $1
               !\[
@@ -112,7 +112,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
             array($this, '_parseInline'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -130,12 +130,12 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
         $whole_match = $matches[1];
         $alt         = $matches[2];
         $name        = strtolower(trim($matches[3]));
-
+        
         if (empty($name)) {
             // for shortcut links like ![this][].
             $name = strtolower($alt);
         }
-
+        
         $link = $this->_markdown->getLink($name);
         if ($link) {
             
@@ -154,7 +154,7 @@ class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {
             // no matching link reference
             $result = $whole_match;
         }
-
+        
         // encode special Markdown characters
         $result = $this->_encode($result);
         

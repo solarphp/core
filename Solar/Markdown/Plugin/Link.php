@@ -83,7 +83,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
                   \\[
                     (".$this->_nested_brackets.")    # link text = $2
                   \\]
-
+                  
                   [ ]?                               # one optional space
                   (?:\\n[ ]*)?                       # one optional newline followed by spaces
                                                  
@@ -95,7 +95,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
             array($this, '_parseReference'),
             $text
         );
-
+        
         // Next, inline-style links: [link text](url "optional title")
         $text = preg_replace_callback("{
                 (                                   # wrap whole match in $1
@@ -117,7 +117,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
             array($this, '_parseInline'),
             $text
         );
-
+        
         return $text;
     }
     
@@ -135,7 +135,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
         $whole_match = $matches[1];
         $alt_text    = $matches[2];
         $name        = strtolower(trim($matches[3]));
-
+        
         if (empty($name)) {
             // for shortcut links like [this][].
             $name = strtolower($alt_text);
@@ -177,7 +177,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
     {
         $alt_text = $this->_escape($matches[2]);
         $href     = $this->_escape($matches[3]);
-
+        
         $result   = "<a href=\"$href\"";
         
         if (! empty($matches[6])) {
@@ -189,7 +189,7 @@ class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {
         
         // encode special Markdown characters
         $result = $this->_encode($result);
-
+        
         return $this->_toHtmlToken($result);
     }
 }

@@ -57,8 +57,8 @@ class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
     public function prepare($text)
     {
         $less_than_tab = $this->_getTabWidth() - 1;
-
-        # Link defs are in the form: ^[id]: url "optional title"
+        
+        // Link defs are in the form: ^[id]: url "optional title"
         $text = preg_replace_callback('{
                 ^[ ]{0,'.$less_than_tab.'}\[(.+)\]:  # id = $1
                   [ \t]*                             

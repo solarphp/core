@@ -1,34 +1,34 @@
 <?php
 /**
- *
+ * 
  * Generates an anchor linking to the TypeKey login site.
- *
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_View
- *
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
- *
+ * 
  * Generates a anchor linking to the TypeKey login site.
  * 
  * Uses the same TypeKey token as Solar_Auth_Adapter_TypeKey
  * @category Solar
- *
+ * 
  * @package Solar_View
- *
+ * 
  */
 class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
     
     /**
-     *
+     * 
      * User-defined configuration values.
      * 
      * Keys are ...
@@ -47,7 +47,7 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
      *   Default false.
      * 
      * @var array
-     *
+     * 
      */
     protected $_Solar_View_Helper_TypekeyLink = array(
         'token'      => null,
@@ -57,13 +57,13 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
     );
     
     /**
-     *
+     * 
      * Generates a link to the TypeKey login site.
-     *
+     * 
      * @param string $text The text to display for the link.
      * 
      * @return string
-     *
+     * 
      */
     public function typekeyLink($text = null)
     {
@@ -78,7 +78,7 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
         }
         
         // save the current URI as the return location after typekey.
-        $return = $uri->fetch(true);
+        $return = $uri->get(true);
         
         // now reset the URI to point to the typekey service
         $uri->set($this->_config['href']);
@@ -97,6 +97,6 @@ class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {
         $uri->query['_return'] = $return;
         
         // done!
-        return $this->_view->anchor($uri->fetch(true), $text);
+        return $this->_view->anchor($uri->get(true), $text);
     }
 }

@@ -46,7 +46,7 @@ class Solar_View_Helper_Anchor extends Solar_View_Helper {
     {
         if ($spec instanceof Solar_Uri) {
             // fetch the full href, not just the path/query/fragment
-            $href = $spec->fetch(true);
+            $href = $spec->get(true);
         } else {
             $href = $spec;
         }

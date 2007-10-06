@@ -1,33 +1,33 @@
 <?php
 /**
- *
+ * 
  * Helper for <style>...</style> tags.
- *
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_View
- *
+ * 
  * @author Paul M. Jones <pmjones@solarphp.com>
- *
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
- *
+ * 
  * @version $Id$
- *
+ * 
  */
 
 /**
- *
+ * 
  * Helper for <style>...</style> tags.
- *
+ * 
  * @category Solar
- *
+ * 
  * @package Solar_View
- *
+ * 
  */
 class Solar_View_Helper_Style extends Solar_View_Helper {
-
+    
     /**
-     *
+     * 
      * Returns a <style>...</style> tag.
      * 
      * Adds "media" attribute if not specified, and always uses
@@ -38,7 +38,7 @@ class Solar_View_Helper_Style extends Solar_View_Helper {
      * @param array $attribs Additional attributes for the <style> tag.
      * 
      * @return string The <style>...</style> tag.
-     *
+     * 
      */
     public function style($href, $attribs = null)
     {

@@ -42,7 +42,7 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
      * @param array $config User-defined configuration.
      * 
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         // do the real configuration
         parent::__construct($config);
@@ -66,7 +66,7 @@ class Solar_View_Helper_PublicHref extends Solar_View_Helper {
     {
         if ($spec instanceof Solar_Uri_Public) {
             // already a public uri object
-            $href = $spec->fetch();
+            $href = $spec->get();
         } elseif (strpos($spec, '://')) {
             // use the href as-is
             $href = $spec;

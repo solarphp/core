@@ -42,7 +42,7 @@ class Solar_View_Helper_ActionImage extends Solar_View_Helper {
      * @param array $config User-specified configuration.
      * 
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         // do the real configuration
         parent::__construct($config);
@@ -70,7 +70,7 @@ class Solar_View_Helper_ActionImage extends Solar_View_Helper {
     {
         if ($spec instanceof Solar_Uri_Action) {
             // already an action uri object
-            $href = $spec->fetch();
+            $href = $spec->get();
         } else {
             // build-and-fetch the string as an action spec
             $href = $this->_uri->quick($spec);

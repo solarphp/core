@@ -154,7 +154,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         'options'  => array(),
         'disable'  => false,
         'require'  => false,
-        'feedback' => array(),
+        'invalid' => array(),
     );
     
     /**
@@ -587,7 +587,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 // handle differently if we're in a group.
                 if ($in_group) {
                     
-                    $feedback .= $this->listFeedback($info['feedback']);
+                    $feedback .= $this->listFeedback($info['invalid']);
                     $form[] = "                $element";
                     
                 } else {
@@ -600,7 +600,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     }
                     
                     // get the feedback list
-                    $feedback = $this->listFeedback($info['feedback']);
+                    $feedback = $this->listFeedback($info['invalid']);
                     
                     // add the form element
                     $form[] = "            <dt$require><label$require for=\"$id\">$label</label></dt>";

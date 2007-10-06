@@ -19,7 +19,7 @@
  * 
  * Helper for a formatted timestamp using [[php::date() | ]] format codes.
  * 
- * Default format is "Y-m-d\TH:i:s".
+ * Default format is "Y-m-d H:i:s".
  * 
  * Note that this helper is timezone-aware.  For example, if all your input
  * timestamps are in the GMT timezone, but you want to show them as being in the
@@ -58,7 +58,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * 
      * `format`
      * : (string) The default output formatting using [[php:date() | ]] codes.
-     *   Default is 'Y-m-d\TH:i:s'.
+     *   Default is 'Y-m-d H:i:s'.
      * 
      * `tz_origin`
      * : (string) Consider all input timestamps as being from this timezone.
@@ -73,7 +73,7 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper {
      * 
      */
     protected $_Solar_View_Helper_Timestamp = array(
-        'format' => 'Y-m-d\TH:i:s',
+        'format' => 'Y-m-d H:i:s',
         'tz_origin' => null,
         'tz_output' => null,
     );

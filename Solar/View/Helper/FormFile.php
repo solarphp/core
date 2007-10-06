@@ -27,7 +27,7 @@
  * 
  */
 class Solar_View_Helper_FormFile extends Solar_View_Helper_FormElement {
-
+    
     /**
      * 
      * Generates a 'file' element.

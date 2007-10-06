@@ -44,7 +44,7 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         'options' => array(),
         'require' => false,
         'disable' => false,
-        'feedback' => array(),
+        'invalid' => array(),
     );
     
     /**
@@ -64,7 +64,7 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         'options',
         'require',
         'disable',
-        'feedback',
+        'invalid',
         'attribs',
     );
     
@@ -171,7 +171,7 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         settype($info['options'], 'array');
         settype($info['require'], 'bool');
         settype($info['disable'], 'bool');
-        settype($info['feedback'], 'array');
+        settype($info['invalid'], 'array');
         
         
         foreach ($this->_keys as $key) {

@@ -45,7 +45,7 @@ class Solar_View_Helper_Base extends Solar_View_Helper {
             $uri->setQuery(null);
             
             // use that as the base
-            $href = $uri->fetch(true);
+            $href = $uri->get(true);
             
         } else {
             $href = $spec;

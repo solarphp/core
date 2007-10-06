@@ -36,23 +36,23 @@ if ($pos !== false) {
 // that date.
 $items = '';
 $updated = ''; // last update
-foreach ($this->list as $key => $val) {
+foreach ($this->list as $item) {
     
     $category = $this->escape(
-        $val['owner_handle'] . '/' . str_replace(' ', '+', $val['tags'])
+        $item->owner_handle . '/' . str_replace(' ', '+', $item->tags_as_string)
     );
     
-    $title = $this->escape($val['subj']);
+    $title = $this->escape($item->subj);
     
-    $pubDate = $this->date($val['updated'], DATE_RSS);
+    $pubDate = $this->date($item->updated, DATE_RSS);
     
-    if ($val['updated'] > $updated) {
-        $updated = $val['updated'];
+    if ($item->updated > $updated) {
+        $updated = $item->updated;
     }
     
-    $description = $this->escape($val['summ']);
+    $description = $this->escape($item->summ);
     
-    $uri = $this->escape($val['uri']);
+    $uri = $this->escape($item->uri);
     
     $items .= <<<ITEM
         
@@ -70,7 +70,7 @@ ITEM;
 <rss version="2.0">
     <channel>
         <title><?php echo $this->escape($this->feed['title']) ?></title>
-        <link><?php echo $this->escape($link->fetch(true)) ?></link>
+        <link><?php echo $this->escape($link->get(true)) ?></link>
         <description><?php echo $this->escape($this->feed['descr']) ?></description>
         <pubDate><?php echo $this->date($updated, DATE_RSS) ?></pubDate>
         <?php echo $items ?>

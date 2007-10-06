@@ -23,19 +23,19 @@
      */
     $uri = Solar::factory('Solar_Uri_Action');
     $uri->format = 'rss';
-
+    
     if ($this->tags) {
         // there are tags requested, so the RSS should show all pages
         // (i.e., page zero) and ignore the rows-per-page settings.
         $uri->query['page'] = 'all';
         unset($uri->query['rows_per_page']);
     }
-
+    
     $this->layout_head['link'][] = array(
         'rel'   => 'alternate',
         'type'  => 'application/rss+xml',
         'title' => implode('/', $uri->path),
-        'href'  => $uri->fetch(true),
+        'href'  => $uri->get(true),
     );
 ?>
 
@@ -51,7 +51,7 @@
             if ($this->tags) echo $this->getText('HEADING_TAGS') . ': ' . $this->escape($this->tags);
         ?></h2>
     <?php endif ?>
-
+    
     <!-- output the list of results -->
     <?php if (count($this->list)): ?>
         

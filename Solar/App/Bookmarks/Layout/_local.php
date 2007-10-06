@@ -38,7 +38,7 @@
         <p><?php
             $uri = Solar::factory('Solar_Uri_Action');
             $uri->set('bookmarks/quick');
-            $href = $uri->fetch(true);
+            $href = $uri->get(true);
             $js = "javascript:location.href='$href?uri='+encodeURIComponent(location.href)+'&subj='+encodeURIComponent(document.title)";
             echo $this->getText('DRAG_THIS') . ': ';
             echo $this->anchor($js, 'ACTION_QUICK');
@@ -54,8 +54,6 @@
             'created_desc' => 'ORDER_CREATED_DESC',
             'pos'          => 'ORDER_POS',
             'pos_desc'     => 'ORDER_POS_DESC',
-            'tags'         => 'ORDER_TAGS',
-            'tags_desc'    => 'ORDER_TAGS_DESC',
             'subj'         => 'ORDER_SUBJ',
             'subj_desc'    => 'ORDER_SUBJ_DESC',
         );
@@ -76,7 +74,7 @@
         }
     ?>
     </ul>
-
+    
     <h3><?php echo $this->getText('HEADING_TAGLIST') ?></h3>
     <ul>
     <?php
@@ -90,9 +88,10 @@
         $uri = Solar::factory('Solar_Uri_Action');
         unset($uri->query['page']);
         $tmp = array();
-        foreach ($this->tags_in_use as $tag => $count) {
-            $uri->setPath("$action/$tag");
-            $tmp[] = "<li>" . $this->action($uri, $tag) . " ($count)</li>";
+        foreach ($this->tags_in_use as $tag) {
+            $count = 'x';
+            $uri->setPath("$action/{$tag->name}");
+            $tmp[] = "<li>" . $this->action($uri, $tag->name) . " ({$tag->count})</li>";
         }
         echo implode("\n", $tmp);
     ?>

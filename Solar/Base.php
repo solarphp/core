@@ -101,7 +101,7 @@ abstract class Solar_Base {
             
             // properties only, no config file
             foreach ($parents as $class) {
-                $var = "_$class"; // for example, $_Solar_Test_Example
+                $var = "_$class"; // for example, $_Solar_Example
                 $prop = empty($this->$var) ? null : $this->$var;
                 $this->_config = array_merge(
                     // current values
@@ -151,7 +151,7 @@ abstract class Solar_Base {
     {
         return '@package_version@';
     }
-
+    
     /**
      * 
      * Convenience method for getting a dump the whole object, or one of its

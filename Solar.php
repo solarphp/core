@@ -47,13 +47,6 @@
  */
 
 /**
- * Define where the Solar.config.php file is located.
- */
-if (! defined('SOLAR_CONFIG_PATH')) {
-    define('SOLAR_CONFIG_PATH', $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'Solar.config.php');
-}
-
-/**
  * Define a random value that lets us avoid having to use func_num_args() and 
  * func_get_arg() for optional undefined parameters.
  */
@@ -64,8 +57,7 @@ if (! defined('SOLAR_IGNORE_PARAM')) {
 /**
  * Register Solar::loadClass() and Solar::loadInterface() for autoload.
  */
-spl_autoload_register(array('Solar', 'loadClass'));
-spl_autoload_register(array('Solar', 'loadInterface'));
+spl_autoload_register(array('Solar', 'autoload'));
 
 /**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
@@ -215,13 +207,9 @@ class Solar {
      * Note that this method is overloaded; you can pass in different
      * value types for the $config parameter.
      * 
-     * * `null` -- Equivalent to [[Solar::start()]], this will cause Solar to
-     *   read the value of the SOLAR_CONFIG_PATH global constant as the path to
-     *   a file; the return value of that file will be used for [[Solar::$config]].
-     * 
-     * * `false` -- This will explicitly **not** load any additional
-     *   configuration; you will get only the default [[Solar::$config]] array
-     *   values defined in the Solar class.
+     * * `null|false` -- This will not load any new configuration values;
+     *   you will get only the default [[Solar::$config]] array values defined
+     *   in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
      *   file; the return value from that file will be used for [[Solar::$config]].
@@ -238,13 +226,12 @@ class Solar {
      *     require_once 'Solar.php';
      * 
      *     // don't load any config values at all
-     *     Solar::start(false);
+     *     Solar::start();
      * 
-     *     // a "normal" start; loads the config file
-     *     // from SOLAR_CONFIG_PATH
-     *     Solar::start(null);
+     *     // point to a config file (which returns an array)
+     *     Solar::start('/path/to/another/config.php');
      * 
-     *     // use an array as the config source.
+     *     // use an array as the config source
      *     $config = array(
      *         'Solar' => array(
      *             'ini_set' => array(
@@ -254,7 +241,7 @@ class Solar {
      *     );
      *     Solar::start($config);
      * 
-     *     // use an object as the config source.
+     *     // use an object as the config source
      *     $config = new StdClass;
      *     $config->Solar = array(
      *         'ini_set' => array(
@@ -262,12 +249,9 @@ class Solar {
      *         ),
      *     );
      *     Solar::start($config);
-     * 
-     *     // point to an alternative config file
-     *     Solar::start('/path/to/another/config.php');
      * }}
      *  
-     * @param mixed $config An alternative configuration parameter.
+     * @param mixed $config The configuration source value.
      * 
      * @return void
      * 
@@ -361,6 +345,58 @@ class Solar {
     
     /**
      * 
+     * Loads a class or interface file from the include_path.
+     * 
+     * Thanks to Robert Gonzalez  for the report leading to this method.
+     * 
+     * @param string $name A Solar (or other) class or interface name.
+     * 
+     * @return void
+     * 
+     * @todo Add localization for errors
+     * 
+     */
+    public static function autoload($name)
+    {
+        // did we ask for a non-blank name?
+        if (trim($name) == '') {
+            throw Solar::exception(
+                'Solar',
+                'ERR_AUTOLOAD_EMPTY',
+                'No class or interface named for loading',
+                array('name' => $name)
+            );
+        }
+        
+        // pre-empt further searching for the named class or interface.
+        // do not use autoload, because this method is registered with
+        // spl_autoload already.
+        if (class_exists($name, false) || interface_exists($name, false)) {
+            return;
+        }
+        
+        // convert the class name to a file path.
+        $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
+        
+        // include the file and check for failure. we use run() here
+        // instead of require() so we can see the exception backtrace.
+        $result = Solar::run($file);
+        
+        // if the class or interface was not in the file, we have a problem.
+        // do not use autoload, because this method is registered with
+        // spl_autoload already.
+        if (! class_exists($name, false) && ! interface_exists($name, false)) {
+            throw Solar::exception(
+                'Solar',
+                'ERR_AUTOLOAD_FAILED',
+                'Class or interface does not exist in loaded file',
+                array('name' => $name, 'file' => $file)
+            );
+        }
+    }
+    
+    /**
+     * 
      * Loads a class file from the include_path.
      * 
      * @param string $class A Solar (or other) class name.
@@ -372,41 +408,7 @@ class Solar {
      */
     public static function loadClass($class)
     {
-        // did we ask for a non-blank class?
-        if (trim($class) == '') {
-            throw Solar::exception(
-                'Solar',
-                'ERR_LOADCLASS_EMPTY',
-                'No class named for loading',
-                array('class' => $class)
-            );
-        }
-        
-        // pre-empt further searching for the class.
-        // do not use autoload, because this method
-        // is registered with spl_autoload already.
-        if (class_exists($class, false)) {
-            return;
-        }
-        
-        // convert the class name to a file path.
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        
-        // include the file and check for failure. we use run() here
-        // instead of require() so we can see the exception backtrace.
-        $result = Solar::run($file);
-        
-        // if the class was not in the file, we have a problem.
-        // do not use autoload, because this method
-        // is registered with spl_autoload already.
-        if (! class_exists($class, false)) {
-            throw Solar::exception(
-                'Solar',
-                'ERR_LOADCLASS_EXIST',
-                'Class does not exist in loaded file',
-                array('class' => $class, 'file' => $file)
-            );
-        }
+        return Solar::autoload($class);
     }
     
     /**
@@ -422,41 +424,7 @@ class Solar {
      */
     public static function loadInterface($interface)
     {
-        // did we ask for a non-blank interface?
-        if (trim($interface) == '') {
-            throw Solar::exception(
-                'Solar',
-                'ERR_LOADINTERFACE_EMPTY',
-                'No interface named for loading',
-                array('interface' => $interface)
-            );
-        }
-
-        // pre-empt further searching for the interface
-        // do not use autoload, because this method
-        // is registered with spl_autoload already.
-        if (interface_exists($interface, false)) {
-            return;
-        }
-
-        // convert the interface name to a file path.
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $interface) . '.php';
-
-        // include the file and check for failure. we use run() here
-        // instead of require() so we can see the exception backtrace.
-        $result = Solar::run($file);
-
-        // if the interface was not in the file, we have a problem.
-        // do not use autoload, because this method
-        // is registered with spl_autoload already.
-        if (! interface_exists($interface, false)) {
-            throw Solar::exception(
-                'Solar',
-                'ERR_LOADINTERFACE_EXIST',
-                'Interface does not exist in loaded file',
-                array('interface' => $interface, 'file' => $file)
-            );
-        }
+        return Solar::autoload($interface);
     }
     
     /**
@@ -480,7 +448,7 @@ class Solar {
                 array('file' => $file)
             );
         }
-
+        
         // clean up the local scope, then include the file and
         // return its results.  keeps the include() outside of an if()
         // statement, which makes it possible to opcode-cache.
@@ -1025,10 +993,10 @@ class Solar {
     }
     
     /**
-     *
+     * 
      * Cleans the global scope of all variables that are found in other
      * super-globals.
-     *
+     * 
      * This code originally from Richard Heyes and Stefan Esser.
      * 
      * @return void
@@ -1075,18 +1043,18 @@ class Solar {
      * 
      * Note that this method is overloaded by the variable type of $spec ...
      * 
-     * * `null` -- Uses the value of the SOLAR_CONFIG_PATH global constant as
-     *   the path to a file, which should return a PHP array.
-     * 
-     * * `false` -- This will explicitly **not** search for additional
-     *   configuration and return a blank array.
+     * * `null|false` (or empty) -- This will not load any new configuration
+     *   values; you will get only the default [[Solar::$config]] array values
+     *   defined in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
-     *   file, which should return a PHP array.
+     *   file; the return value from that file will be used for [[Solar::$config]].
      * 
-     * * `array` -- This will use the passed array and return it as-is.
+     * * `array` -- This will use the passed array for the [[Solar::$config]]
+     *   values.
      * 
-     * * `object` -- The passed object will be cast as an array and returned.
+     * * `object` -- The passed object will be cast as an array, and those
+     *   values will be used for [[Solar::$config]].
      * 
      * @param mixed $spec A config specification.
      * 
@@ -1102,11 +1070,9 @@ class Solar {
         } elseif (is_string($spec)) {
             // merge from array file return
             $config = (array) Solar::run($spec);
-        } elseif ($spec === false) {
-            $config = array();
         } else {
-            // use the default config path
-            $config = (array) Solar::run(SOLAR_CONFIG_PATH);
+            // no added config
+            $config = array();
         }
         
         return $config;

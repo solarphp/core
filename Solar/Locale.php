@@ -237,7 +237,7 @@ class Solar_Locale extends Solar_Base {
         
         // get the translation of the key and force to an array.
         $trans = (array) $this->trans[$class][$key];
-
+        
         // find the number-appropriate version of the
         // translated key, if multiple values exist.
         if ($num != 1 && ! empty($trans[1])) {
@@ -259,7 +259,7 @@ class Solar_Locale extends Solar_Base {
             } else {
                 // associative array, use str_replace()
                 foreach ($replace as $key => $val) {
-                    $string = str_replace("{:$key}", $val, $string);
+                    $string = str_replace("{:$key}", (string) $val, $string);
                 }
             }
         }
@@ -285,7 +285,7 @@ class Solar_Locale extends Solar_Base {
         $base = str_replace('_', '/', $class);
         $file = Solar::fixdir($base . '/Locale/')
               . $this->_code . '.php';
-
+        
         // can we find the file?
         $target = Solar::fileExists($file);
         if ($target) {

@@ -139,10 +139,8 @@ class Solar_Test_Suite extends Solar_Base {
             // create a new log object
             $log_config = array(
                 'adapter' => 'Solar_Log_Adapter_Echo',
-                'config'  => array(
-                    'format' => '%m',
-                    'events' => 'test',
-                ),
+                'format' => '%m',
+                'events' => 'test',
             );
             $this->_log = Solar::factory('Solar_Log', $log_config);
         }
@@ -266,7 +264,7 @@ class Solar_Test_Suite extends Solar_Base {
      * `fail`
      * : (array) Log of tests that failed.
      * 
-     * @param string $class Only prepare tests for this class series.  Don't
+     * @param string $class Prepare tests for this class series only.  Don't
      * include the 'Test_' prefix.  If empty, will run all test classes.
      * 
      * @param bool $only When true, run **only** the $class test; when false,
@@ -299,13 +297,28 @@ class Solar_Test_Suite extends Solar_Base {
                 $this->_done('todo', $class, $e->getMessage());
                 $this->_info['done'] += count($methods) - 1;
                 continue;
-            } catch (Solar_Test_Exception_Fail $e) {
+            } catch (Exception $e) {
+                // catches Solar_Test_Exception_Fail and all others
                 $this->_info['done'] ++;
                 $this->_done('fail', $class, $e->getMessage(),
                     $e->__toString());
                 $this->_info['done'] += count($methods) - 1;
                 continue;
             }
+            
+            // turn on all error reporting
+            $reporting = ini_get('error_reporting');
+            ini_set('error_reporting', $this->_config['error_reporting']);
+            
+            // set the error handler for the test
+            set_error_handler(array($test, 'error'));
+            
+            // even though the handler deals with errors (and does not
+            // print them), we still want error display turned on,
+            // because the error handler **does not** catch fatal
+            // errors.
+            $display = ini_get('display_errors');
+            ini_set('display_errors', true);
             
             // test each method in the class
             foreach ($methods as $method) {
@@ -314,24 +327,11 @@ class Solar_Test_Suite extends Solar_Base {
                 $this->_info['done'] ++;
                 $name = "$class::$method";
                 
-                // method setup
-                $test->setup();
-                
                 // run test method and check validity
                 try {
-                    
-                    // turn on all error reporting
-                    $reporting = ini_get('error_reporting');
-                    ini_set('error_reporting', $this->_config['error_reporting']);
-                    
-                    // turn off error display so that the exceptions
-                    // are the only thing generating output
-                    $display = ini_get('display_errors');
-                    ini_set('display_errors', false);
-                    
-                    // set the error handler for the test
-                    set_error_handler(array($test, 'error'));
-            
+                    // method setup
+                    $test->setup();
+                
                     // run the test
                     $test->$method();
                     
@@ -345,18 +345,12 @@ class Solar_Test_Suite extends Solar_Base {
                         $this->_done('pass', $name);
                     }
                     
-                    // return to previous error handler
-                    restore_error_handler();
-                    
-                    // return to previous error display and reporting
-                    ini_set('display_errors', $display);
-                    ini_set('error_reporting', $reporting);
-                    
                 } catch (Solar_Test_Exception_Skip $e) {
                     $this->_done('skip', $name, $e->getMessage());
                 } catch (Solar_Test_Exception_Todo $e) {
                     $this->_done('todo', $name, $e->getMessage());
-                } catch (Solar_Test_Exception_Fail $e) {
+                } catch (Exception $e) {
+                    // catches Solar_Test_Exception_Fail and all others
                     $this->_done('fail', $name, $e->getMessage(),
                         $e->__toString());
                 }
@@ -367,6 +361,14 @@ class Solar_Test_Suite extends Solar_Base {
                 // reset the assertion counter for the next pass
                 $test->resetAssertCount();
             }
+            
+                    
+            // return to previous error handler
+            restore_error_handler();
+            
+            // return to previous error display and reporting
+            ini_set('display_errors', $display);
+            ini_set('error_reporting', $reporting);
             
             // class teardown
             unset($test);

@@ -423,7 +423,7 @@ class Solar_Test extends Solar_Base {
     /**
      * 
      * Asserts that two variables are equal; type is not strict.
-     *
+     * 
      * @param mixed $actual The variable to test.
      * 
      * @param mixed $expect The expected value.
@@ -745,7 +745,7 @@ class Solar_Test extends Solar_Base {
      * Recursively [[php::ksort() | ]] an array.
      * 
      * Used so that order of array elements does not affect equality.
-     *
+     * 
      * @param array $array The array to sort.
      * 
      * @return void

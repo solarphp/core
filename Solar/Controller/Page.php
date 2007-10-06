@@ -16,9 +16,9 @@
  */
 
 /**
- *
+ * 
  * Abstract page controller class.
- *
+ * 
  * Expects a directory structure similar to the following ...
  * 
  *     Vendor/              # your vendor namespace
@@ -842,7 +842,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Retrieves the TAINTED value of a path-info parameter by position.
      * 
      * Note that this value is direct user input; you should sanitize it
-     * with Solar_DataFilter (or some other technique) before using it.
+     * with Solar_Filter (or some other technique) before using it.
      * 
      * @param int $key The path-info parameter position.
      * 
@@ -866,7 +866,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Retrieves the TAINTED value of a query request key by name.
      * 
      * Note that this value is direct user input; you should sanitize it
-     * with Solar_DataFilter (or some other technique) before using it.
+     * with Solar_Filter (or some other technique) before using it.
      * 
      * @param string $key The query key.
      * 
@@ -900,7 +900,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _redirect($spec, $code = 302)
     {
         if ($spec instanceof Solar_Uri_Action) {
-            $href = $spec->fetch(true);
+            $href = $spec->get(true);
         } elseif (strpos($spec, '://') !== false) {
             // external link, protect against header injections
             $href = str_replace(array("\r", "\n"), '', $spec);

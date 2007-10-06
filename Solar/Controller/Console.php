@@ -79,7 +79,7 @@ class Solar_Controller_Console extends Solar_Base {
      * @param array $config User-provided configuration values.
      * 
      */
-    public function __construct($config)
+    public function __construct($config = null)
     {
         // do the "real" construction
         parent::__construct($config); 

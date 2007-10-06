@@ -1,250 +1,251 @@
 <?php
-/**
- * 
- * Nodes within an area, equivalent to containers for related content parts.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Nodes within an area, equivalent to containers for related content parts.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
-class Solar_Model_Nodes extends Solar_Sql_Table {
-    
-    /**
-     * 
-     * Schema setup.
-     * 
-     * @return void
-     * 
-     */
+class Solar_Model_Nodes extends Solar_Model {
     protected function _setup()
     {
-        // the table name
-        $this->_name = 'nodes';
+        /**
+         * Table name, columns, and indexes.
+         */
         
-        // default order
-        $this->order = array(
-            'pos ASC',
-            'LOWER(name) ASC'
-        );
+        $this->_table_name = 'nodes';
         
-        
-        // -------------------------------------------------------------
-        // 
-        // COLUMNS
-        // 
-        
-        // the area in which this node belongs
-        $this->_col['area_id'] = array(
-            'type'    => 'int',
-            'require' => true,
-            'valid'   => 'word',
-        );
-        
-        // the node name (equivalent to a wiki-word)
-        $this->_col['name'] = array(
-            'type'    => 'varchar',
-            'size'    => 127,
-            'valid'   => 'word',
-        );
-        
-        // is this node part of another node?
-        $this->_col['parent_id'] = array(
-            'type'    => 'int',
-            'require' => true,
-            'default' => 0,
-        );
-        
-        // username of the node owner
-        $this->_col['owner_handle'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-            'require' => true,
-        );
-        
-        // node has been assigned to this username by the owner/editor
-        $this->_col['assign_handle'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
-        
-        // username of the most-recent editor
-        $this->_col['editor_handle'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-            'require' => true,
-        );
-        
-        // ip address of the most-recent editor
-        $this->_col['editor_ipaddr'] = array(
-            'type'    => 'char',
-            'size'    => 15,
-            'require' => true,
-            'valid'   => 'ipv4',
-        );
-        
-        // the node type (bookmark, wiki, blog, comment, trackback, etc)
-        $this->_col['type'] = array(
-            'type'    => 'varchar',
-            'size'    => 32,
-        );
-        
-        // the locale for this node
-        $this->_col['locale'] = array(
-            'type'    => 'char',
-            'size'    => 5,
-            'default' => 'en_US',
-            'valid'   => 'localeCode',
-        );
-        
-        // tags on this node (space-separated words)
-        $this->_col['tags'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-            'valid'   => 'sepWords'
-        );
-        
-        // arbitrary list-order, sequence, or posing
-        $this->_col['pos'] = array(
-            'type'    => 'int',
-            'default' => 0,
-        );
-        
-        // arbitrary user-assigned rating, score, level, or value
-        $this->_col['rating'] = array(
-            'type'    => 'int',
-            'default' => 0,
-        );
-        
-        // status assigned to this node (public, draft, moderate, etc)
-        $this->_col['status'] = array(
-            'type'    => 'varchar',
-            'size'    => '32',
-        );
-        
-        // email related to this node
-        $this->_col['email'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-            'valid'   => 'email',
-        );
-        
-        // uri related to this node
-        $this->_col['uri'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-            'valid'   => 'uri',
-        );
-        
-        // display-name, nickname, or related title name for this node
-        $this->_col['moniker'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
-        
-        // the node "subject" or title
-        $this->_col['subj'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
-        
-        // mime type of the body
-        $this->_col['mime'] = array(
-            'type'    => 'varchar',
-            'size'    => 64,
-            'default' => 'text/plain',
-            'valid'   => 'mimeType',
-        );
-        
-        // summary description of the node
-        $this->_col['summ'] = array(
-            'type'    => 'clob',
-        );
-        
-        // the actual node content
-        $this->_col['body'] = array(
-            'type'    => 'clob',
-        );
-        
-        // serialized array of preferences for this node
-        $this->_col['prefs'] = array(
-            'type'    => 'clob',
-        );
-        
-        // -------------------------------------------------------------
-        // 
-        // KEYS AND INDEXES
-        // 
-        
-        $this->_idx = array(
-            // composite unique index to ensure unique node names among
-            // an area_id and a given node type.  this allows type X to have
-            // a name and type Z to have the same name, but only in different
-            // areas.
-            'area_type_name' => array(
-                'type' => 'unique',
-                'cols' => array('area_id', 'type', 'name'),
+        $this->_table_cols = array(
+            'id' => array(
+                'type'    => 'int',
+                'require' => true,
+                'primary' => true,
+                'autoinc' => true,
             ),
-            // other indexes
-            'area_id'       => 'normal',
-            'name'          => 'normal',
-            'parent_id'     => 'normal',
-            'owner_handle'  => 'normal',
-            'assign_handle' => 'normal',
-            'type'          => 'normal',
-            'locale'        => 'normal',
-            'tags'          => 'normal',
-            'pos'           => 'normal',
-            'rating'        => 'normal',
-            'uri'           => 'normal',
-            'email'         => 'normal',
-            'status'        => 'normal',
+            'created' => 'timestamp',
+            'updated' => 'timestamp',
+            'area_id' => array(
+                'type'    => 'int',
+                'require' => true,
+            ),
+            'inherit' => array(
+                'type'    => 'varchar',
+                'size'    => 32,
+            ),
+            'name' => array(
+                'type'    => 'varchar',
+                'size'    => 127,
+            ),
+            'parent_id' => 'int',
+            'owner_handle' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'editor_handle' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'editor_ipaddr' => array(
+                'type'    => 'varchar',
+                'size'    => 15,
+            ),
+            'assign_handle' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'locale' => array(
+                'type'    => 'varchar',
+                'size'    => 5,
+            ),
+            'rating' => 'int',
+            'email' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'uri' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'moniker' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'pos' => 'int',
+            'status' => array(
+                'type'    => 'varchar',
+                'size'    => 32,
+            ),
+            'mime' => array(
+                'type'    => 'varchar',
+                'size'    => 64,
+                'default' => 'text/plain',
+            ),
+            'subj' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'summ' => 'clob',
+            'body' => 'clob',
+            'prefs' => 'clob',
         );
+        
+        $this->_index = array(
+            'created',
+            'updated',
+            'area_id',
+            'name',
+            'parent_id',
+            'owner_handle',
+            'assign_handle',
+            'inherit',
+            'locale',
+            'pos',
+            'rating',
+            'uri',
+            'email',
+            'status',
+        );
+        
+        /**
+         * Special columns
+         */
+        $this->_serialize_cols[] = 'prefs';
+        $this->_calculate_cols[] = 'tags_as_string';
+        
+        /**
+         * Filters
+         */
+        
+        // make sure the name is unique for its area and model
+        $where = array(
+            'inherit = :inherit',
+            'area_id = :area_id',
+        );
+        $this->_addFilter('name', 'validateUnique', $where);
+        
+        // other filters
+        $this->_addFilter('email', 'validateEmail');
+        $this->_addFilter('uri', 'validateUri');
+        $this->_addFilter('editor_ipaddr', 'validateIpv4');
+        $this->_addFilter('locale', 'validateLocaleCode');
+        $this->_addFilter('mime', 'validateMimeType');
+        $this->_addFilter('tags_as_string', 'validateSepWords');
+        
+        /**
+         * Relationships.
+         */
+        $this->_belongsTo('area', array(
+            'foreign_class' => 'areas',
+            'foreign_key'   => 'area_id',
+            'eager'         => false,
+        ));
+        
+        $this->_hasMany('taggings', array(
+            'foreign_class' => 'taggings',
+            'foreign_key'   => 'node_id',
+        ));
+        
+        $this->_hasMany('tags', array(
+            'foreign_class' => 'tags',
+            'through'       => 'taggings',
+            'through_key'   => 'tag_id',
+        ));
     }
     
-    /**
-     * 
-     * Inserts one row into the nodes table.
-     * 
-     * Automatically adds a sequential ID.  If no node-name is given,
-     * uses the sequential ID as the node-name.
-     * 
-     * @param array $data The data to be inserted.
-     * 
-     * @return array The data as inserted.
-     * 
-     */
-    public function insert($data)
+    public function fetchAllByTags($tag_list, $params = null)
     {
-        // although the Table object itself would increment the ID for
-        // us automatically, we do so manually here, because we may need
-        // it for a name (i.e., if the name is blank or not set).
-        if (empty($data['id'])) {
-            $data['id'] = $this->increment('id');
+        // no tags? fetch all to pre-empt errors related to "IN()" not
+        // having a list to work with.
+        $tag_list = $this->_fixTagList($tag_list);
+        if (! $tag_list) {
+            return $this->fetchAll($params);
         }
         
-        // make sure we have a unique name for the node (specifically,
-        // a unique name in the area_id for this node).
-        if (empty($data['name']) || trim($data['name']) == '') {
-            $data['name'] = $data['id'];
+        // fetch
+        $select = $this->_newSelectByTags($tag_list, $params);
+        return $this->_fetchAll($select, $params);
+    }
+    
+    protected function _fixTagList($tag_list)
+    {
+        // convert to array
+        if (! is_array($tag_list)) {
+            $tag_list = preg_split('/\s+/', trim((string) $tag_list));
         }
         
-        return parent::insert($data);
+        // no duplicates allowed
+        $tag_list = array_unique($tag_list);
+        
+        // if the string tag-list is empty, the preg-split leaves one empty
+        // element in the array.
+        if ($tag_list[0] == '') {
+            $tag_list = array();
+        }
+        
+        // done!
+        return $tag_list;
+    }
+    
+    protected function _newSelectByTags($tag_list, $params)
+    {
+        // setup
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
+        
+        // catalog entries for joining
+        $taggings = $this->_related['taggings'];
+        $tags     = $this->_related['tags'];
+        
+        // primary key on the nodes table as an alias; e.g., "nodes.id"
+        $native_primary = "{$this->_model_name}.{$this->_primary_col}";
+        
+        // http://forge.mysql.com/wiki/TagSchema
+        // build the select differently from other fetchAll() statements
+        $select->distinct($params['distinct'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
+               // join taggings on nodes
+               ->join(
+                   "{$taggings->foreign_table} AS {$taggings->foreign_alias}",
+                   "{$taggings->foreign_alias}.node_id = $native_primary"
+               )
+               // join tags on taggings
+               ->join(
+                   "{$tags->foreign_table} AS {$tags->foreign_alias}",
+                   "{$tags->foreign_alias}.id = {$taggings->foreign_alias}.tag_id"
+               )
+               // select for the listed tags
+               ->where("{$tags->foreign_alias}.name IN (?)", $tag_list)
+               // user-provided WHERE
+               ->multiWhere($params['where'])
+               // group by nodes.id to collapse multiple nodes (1 for each tag)
+               ->group($native_primary)
+               // make sure the tag-count matches
+               ->having("COUNT($native_primary) = ?", count($tag_list))
+               // user-provided ORDER, paging, etc
+               ->order($params['order'])
+               ->setPaging($params['paging'])
+               ->limitPage($params['page'])
+               ->bind($params['bind']);
+        
+        // done!
+        return $select;
+    }
+    
+    public function countPagesByTags($tag_list, $params = null)
+    {
+        $tag_list = $this->_fixTagList($tag_list);
+        if (! $tag_list) {
+            return $this->countPages($params);
+        }
+        
+        // we need to select the nodes + tags as an "inner" sub-select;
+        // clear any limits on it.
+        $inner = $this->_newSelectByTags($tag_list, $params);
+        $inner->clear('limit');
+        
+        // set up the outer select, which will wrap the inner sub-select
+        $outer = Solar::factory($this->_select_class, array(
+            'sql' => $this->_sql
+        ));
+        
+        // wrap the sub-select and make sure paging is correct
+        $outer->fromSelect($inner, $this->_model_name);
+        $outer->setPaging($this->_paging);
+        
+        // *now* get the count of pages with the tags requested
+        return $outer->countPages("{$this->_model_name}.{$this->_primary_col}");
     }
 }

@@ -1,110 +1,60 @@
 <?php
-/**
- * 
- * Broad content areas equivalent to logical namespaces.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Broad content areas equivalent to logical namespaces.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
-class Solar_Model_Areas extends Solar_Sql_Table {
-    
-    /**
-     * 
-     * Schema setup.
-     * 
-     * @return void
-     * 
-     */
+class Solar_Model_Areas extends Solar_Model {
     protected function _setup()
     {
-        // the table name
-        $this->_name = 'areas';
+        /**
+         * Table name, columns, and indexes.
+         */
+        $this->_table_name = 'areas';
         
-        // the area name
-        $this->_col['name'] = array(
-            'type'    => 'varchar',
-            'size'    => 127,
-            'require' => true,
-            'valid'   => 'word',
+        $this->_table_cols = array(
+            'id' => array(
+                'type'    => 'int',
+                'require' => true,
+                'primary' => true,
+                'autoinc' => true,
+            ),
+            'created' => 'timestamp',
+            'updated' => 'timestamp',
+            'name' => array(
+                'type'    => 'varchar',
+                'size'    => 127,
+                'require' => true,
+            ),
+            'owner_handle' => array(
+                'type'    => 'varchar',
+                'size'    => 32,
+            ),
+            'subj' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'summ' => array(
+                'type'    => 'varchar',
+                'size'    => 255,
+            ),
+            'prefs' => 'clob',
         );
         
-        // the user who owns this area
-        $this->_col['owner_handle'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
+        $this->_index = array(
+            'created',
+            'updated',
+            'name' => 'unique',
+            'owner_handle',
         );
         
-        // freeform area "subject" or title
-        $this->_col['subj'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
+        /**
+         * Behaviors (serialize, sequence, filter).
+         */
+        $this->_serialize_cols[] = 'prefs';
         
-        // area summary description or tagline
-        $this->_col['summ'] = array(
-            'type'    => 'varchar',
-            'size'    => 255,
-        );
+        /**
+         * Relationships.
+         */
+        $this->_hasMany('nodes', array(
+            'foreign_class' => 'nodes',
+            'foreign_key'   => 'parent_id',
+        ));
         
-        // serialized preferences
-        $this->_col['prefs'] = array(
-            'type'    => 'clob',
-        );
-        
-        
-        // keys and indexes
-        $this->_idx = array(
-            'name'         => 'unique',
-            'owner_handle' => 'normal',
-        );
-    }
-    
-    /**
-     * 
-     * Returns one area row by name.
-     * 
-     * @param string $name The area name to fetch by.
-     * 
-     * @return Solar_Sql_Row
-     * 
-     */
-    public function fetchByName($name)
-    {
-        $where = array('name = ?' => $name);
-        return $this->select('row', $where);
-    }
-    
-    /**
-     * 
-     * Returns an array of area names and titles.
-     * 
-     * @param string $name The area name to fetch by.
-     * 
-     * @return array
-     * 
-     */
-    public function fetchAllNames()
-    {
-        $select = Solar::factory('Solar_Sql_Select');
-        $select->from($this, array('name', 'subj'));
-        return $select->fetch('pairs');
     }
 }

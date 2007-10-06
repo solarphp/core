@@ -744,7 +744,7 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * See notes here:
      * <http://www.webcheatsheet.com/php/send_email_text_html_attachment.php#attachment>
-     *
+     * 
      * If we have text *and* html, and attachments, the text and html are 
      * wrapped in their own multipart/alternative subpart, then the message as
      * a whole is built as multipart/mixed.

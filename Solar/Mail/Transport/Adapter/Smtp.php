@@ -74,7 +74,7 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter {
     /**
      * 
      * Sends the Solar_Mail_Message through an SMTP server.
-     *
+     * 
      * @return bool True on success, false on failure.
      * 
      */
@@ -119,7 +119,7 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter {
         
         // tell who this is MAIL FROM
         $this->_smtp->mail($from);
-
+        
         // tell who this is RCPT TO (each to, cc, and bcc)
         foreach ($rcpt as $addr) {
             $this->_smtp->rcpt($addr);

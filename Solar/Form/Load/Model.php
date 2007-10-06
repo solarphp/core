@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for loading form definitions from Solar_Sql_Table columns.
+ * Class for loading form definitions from Solar_Sql_Model columns.
  * 
  * @category Solar
  * 
@@ -11,59 +11,60 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: Table.php 2646 2007-07-29 15:49:30Z pmjones $
  * 
  */
 
 /**
  * 
- * Class for loading form definitions from Solar_Sql_Table columns.
+ * Class for loading form definitions from Solar_Sql_Model columns.
  * 
  * @category Solar
  * 
  * @package Solar_Form
  * 
  */
-class Solar_Form_Load_Table extends Solar_Base {
+class Solar_Form_Load_Model extends Solar_Base {
     
     /**
      * 
      * Loads Solar_Form elements based on Solar_Sql_Table columns.
      * 
-     * @param Solar_Sql_Table $table Load form elements from this table object.
+     * @param Solar_Sql_Table $model Load form elements from this model object.
      * 
-     * @param array $list Which table columns to load as form elements, default '*'.
+     * @param array $list Which model columns to load as form elements, default '*'.
      * 
-     * @param string $array_name Load the table columns as elements of this
+     * @param string $array_name Load the model columns as elements of this
      * array-name within the form.
      * 
      * @return Solar_Form|false Solar_Form object, or boolean false on error.
      * 
      */
-    public function fetch($table, $list = '*', $array_name = null)
+    public function fetch($model, $list = '*', $array_name = null)
     {
-        if (! $table instanceof Solar_Sql_Table) {
-            throw $this->_exception('ERR_NOT_TABLE_OBJECT');
+        // make sure it's a Model
+        if (! $model instanceof Solar_Sql_Model) {
+            throw $this->_exception('ERR_NOT_MODEL_OBJECT');
         }
         
-        // if not specified, set the array_name to the table name
+        // if not specified, set the array_name to the model name
         if (empty($array_name)) {
-            $array_name = $table->name;
+            $array_name = $model->model_name;
         }
         
-        // all columns known by the table
-        $all_cols = array_keys($table->col);
+        // table columns in the model
+        $cols = $model->table_cols;
         
         // special condition: if looking for '*' columns,
-        // get the list of all the table columns.
+        // set the list to all the model columns.
         if ($list == '*') {
-            $list = $all_cols;
+            $list = array_keys($cols);
         } else {
             settype($list, 'array');
         }
         
-        // default row values
-        $default = $table->fetchNew();
+        // default values
+        $default = $model->fetchNew();
         
         // loop through the list of requested columns and collect elements
         $elements = array();
@@ -78,37 +79,43 @@ class Solar_Form_Load_Table extends Solar_Base {
                 settype($info, 'array');
             }
             
-            // is the column name in the table?
-            if (! in_array($name, $all_cols)) {
-                continue;
+            // is the column name in the model table?
+            if (empty($cols[$name])) {
+                // not in the table, fake some elements
+                $cols[$name] = array(
+                    'primary' => false,
+                    'require' => false,
+                    'type'    => 'text',
+                    'size'    => false,
+                );
             }
             
-            // initial set of element info based on the table column
+            // initial set of element info based on the model column
             $base = array(
-                'name'     => $array_name . '[' . $name . ']',
-                'type'     => null,
-                'label'    => $table->locale(strtoupper("LABEL_$name")),
-                'descr'    => $table->locale(strtoupper("DESCR_$name")),
-                'value'    => $default[$name],
-                'require'  => $table->col[$name]['require'],
-                'disable'  => $table->col[$name]['primary'],
-                'options'  => array(),
-                'attribs'  => array(),
+                'name'    => $array_name . '[' . $name . ']',
+                'type'    => null,
+                'label'   => $model->locale(strtoupper("LABEL_$name")),
+                'descr'   => $model->locale(strtoupper("DESCR_$name")),
+                'value'   => $default[$name],
+                'require' => $cols[$name]['require'],
+                'disable' => $cols[$name]['primary'],
+                'options' => array(),
+                'attribs' => array(),
+                'filters' => array(),
                 'invalid' => array(),
-                'valid'    => array(),
             );
+            
             $info = array_merge($base, $info);
             
-            if (! empty($table->col[$name]['valid'])) {
-                // get the validation array...
-                $info['valid'][0] = $table->col[$name]['valid'];
-                // ... and translate the message using the 
-                // **table** locale strings.
-                $info['valid'][0][1] = $table->locale($info['valid'][0][1]);
+            // use the filters here
+            if (! empty($model->filters[$name])) {
+                $filters = $model->filters[$name];
+            } else {
+                $filters = array();
             }
             
             // make primary keys hidden and disabled
-            if ($table->col[$name]['primary']) {
+            if ($cols[$name]['primary']) {
                 $info['type'] = 'hidden';
                 $info['disable'] = true;
             }
@@ -116,7 +123,7 @@ class Solar_Form_Load_Table extends Solar_Base {
             // pick an element type based on the column type
             if (empty($info['type'])) {
                 // base the element type on the column type.
-                switch ($table->col[$name]['type']) {
+                switch ($cols[$name]['type']) {
                 
                 case 'bool':
                     $info['type'] = 'checkbox';
@@ -129,7 +136,7 @@ class Solar_Form_Load_Table extends Solar_Base {
                 case 'date':
                 case 'time':
                 case 'timestamp':
-                    $info['type'] = $table->col[$name]['type'];
+                    $info['type'] = $cols[$name]['type'];
                     break;
                     
                 default:
@@ -139,10 +146,10 @@ class Solar_Form_Load_Table extends Solar_Base {
                         $info['type'] = 'hidden';
                     }
                     
-                    // if there is a validation for 'inList' or 'inKeys',
+                    // if there is a filter to 'validateInList' or 'validateInKeys',
                     // make this a select element.
-                    foreach ($info['valid'] as $v) {
-                        if ($v[0] == 'inKeys' || $v[0] == 'inList') {
+                    foreach ($filters as $v) {
+                        if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
                             $info['type'] = 'select';
                             break;
                         }
@@ -156,47 +163,11 @@ class Solar_Form_Load_Table extends Solar_Base {
                 }
             }
             
-            // add validations based on column type, but only if
-            // not hidden or disabled
-            if ($info['type'] != 'hidden' && ! $info['disable'] &&
-                empty($info['valid'])) {
-            
-                $method = null;
-                
-                switch ($table->col[$name]['type']) {
-                case 'date':
-                    $method = 'isoDate';
-                    break;
-                case 'time':
-                    $method = 'isoTime';
-                    break;
-                case 'timestamp':
-                    $method = 'isoTimestamp';
-                    break;
-                case 'smallint':
-                case 'int':
-                case 'bigint':
-                    $method = 'integer';
-                    break;
-                }
-                
-                if ($method) {
-                    $code = 'VALID_' . strtoupper($method);
-                    $info['valid'] = array(
-                        array(
-                            $method,
-                            $this->locale($code),
-                            Solar_Valid::OR_BLANK
-                        )
-                    );
-                }
-            }
-            
             // set up options for checkboxes if none specified
             if ($info['type'] == 'checkbox' && empty($info['options'])) {
-                // look for 'inKeys' or 'inList' validation.
-                foreach ($info['valid'] as $v) {
-                    if ($v[0] == 'inKeys' || $v[0] == 'inList') {
+                // look for 'validateInKeys' or 'validateInList' validation.
+                foreach ($filters as $v) {
+                    if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
                         $info['options'] = $this->_autoOptions($v[0], $v[2]);
                         break;
                     }
@@ -210,9 +181,9 @@ class Solar_Form_Load_Table extends Solar_Base {
             // set up options for select and radio if none specified
             if (($info['type'] == 'select' || $info['type'] == 'radio') &&
                 empty($info['options'])) {
-                // look for 'inKeys' or 'inList' validation.
-                foreach ($info['valid'] as $v) {
-                    if ($v[0] == 'inKeys' || $v[0] == 'inList') {
+                // look for 'validateInKeys' or 'validateInList'
+                foreach ($filters as $v) {
+                    if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
                         $info['options'] = $this->_autoOptions($v[0], $v[2]);
                         break;
                     }
@@ -222,9 +193,9 @@ class Solar_Form_Load_Table extends Solar_Base {
             // for text elements, set up maxlength if none specified
             if ($info['type'] == 'text' &&
                 empty($info['attribs']['maxlength']) && 
-                $table->col[$name]['size'] > 0) {
+                $cols[$name]['size'] > 0) {
                 /** @todo Add +1 or +2 to 'size' for numeric types? */
-                $info['attribs']['maxlength'] = $table->col[$name]['size'];
+                $info['attribs']['maxlength'] = $cols[$name]['size'];
             }
             
             // if no label specified, set up based on element name
@@ -232,10 +203,19 @@ class Solar_Form_Load_Table extends Solar_Base {
                 $info['label'] = $info['name'];
             }
             
+            // if there is a validateNotBlank filter, mark to require
+            foreach ($filters as $v) {
+                if ($v[0] == 'validateNotBlank') {
+                    $info['require'] = true;
+                    break;
+                }
+            }
+            
             // keep the element
             $elements[$info['name']] = $info;
         }
         
+        // done!
         $result = array(
             'attribs'  => array(),
             'elements' => $elements
@@ -246,14 +226,14 @@ class Solar_Form_Load_Table extends Solar_Base {
     
     /**
      * 
-     * Builds an option list from inKeys and inList validations.
+     * Builds an option list from validateInKeys and validateInList values.
      * 
-     * The 'inKeys' options are not changed.
+     * The 'validateInKeys' options are not changed.
      * 
-     * The 'inList' options are generally sequential, so the label
+     * The 'validateInList' options are generally sequential, so the label
      * and the value are made to be identical (based on the label).
      * 
-     * @param string $type The validation type, 'inKeys' or 'inList'.
+     * @param string $type The validation type, 'validateInKeys' or 'validateInList'.
      * 
      * @param array $opts The options provided by the validation.
      * 
@@ -263,12 +243,12 @@ class Solar_Form_Load_Table extends Solar_Base {
     protected function _autoOptions($type, $opts)
     {
         // leave the labels and values alone
-        if ($type == 'inKeys') {
+        if ($type == 'validateInKeys') {
             return $opts;
         }
         
         // make the form display the labels as both labels and values
-        if ($type == 'inList') {
+        if ($type == 'validateInList') {
             $vals = array_values($opts);
             return array_combine($vals, $vals);
         }

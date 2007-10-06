@@ -41,7 +41,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
         'require',
         'disable',
     );
-
+    
     /**
      * 
      * Loads a Solar_Form definition from an XML file.
@@ -63,11 +63,11 @@ class Solar_Form_Load_Xml extends Solar_Base {
         $args     = func_get_args();
         $filename = array_shift($args);
         $param    = array_shift($args);
-
+        
         if (! file_exists($filename)) {
             throw $this->_exception('ERR_FILE_NOT_FOUND');
         }
-
+        
         // load the XML file data
         $xml = simplexml_load_file($filename);
         if (false === $xml) {
@@ -92,14 +92,14 @@ class Solar_Form_Load_Xml extends Solar_Base {
             // ... otherwise, get element name and initialize array
             $name = (string) $element['name'];
             $elementInfo = array();
-
+            
             // Get element attributes
             foreach ($this->elementAttribs as $attrib) {
                 if (isset($element[$attrib])) {
                     $elementInfo[$attrib] = (string) $element[$attrib];
                 }
             }
-
+            
             // Get element label/description, if present
             if (!empty($element->label)) {
                 $elementInfo['label'] = (string) $element->label;
@@ -107,7 +107,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
             if (!empty($element->descr)) {
                 $elementInfo['descr'] = (string) $element->descr;
             }
-
+            
             // Get attribs and options
             foreach (array('attribs', 'options') as $opt) {
                 if (!empty($element->$opt)) {
@@ -119,7 +119,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
                     $elementInfo[$opt] = $info;
                 }
             }
-
+            
             // Get element filters
             if (! empty($element->filters)) {
                 $filters = array();
@@ -127,10 +127,10 @@ class Solar_Form_Load_Xml extends Solar_Base {
                     
                     if (empty($filter['method'])) continue;
                     $method = (string) $filter['method'];
-
+                    
                     $params    = array();
                     $tmpFilter = array($method);
-
+                    
                     // Were any arguments passed?
                     if (!empty($filter->params)) {
                         $params = $this->getParams($filter->params->param);
@@ -140,7 +140,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
                     foreach ($params as $param) {
                         array_push($tmpFilter, $param);
                     }
-
+                    
                     // Add filter to element
                     $filters[] = $tmpFilter;
                 }
@@ -163,28 +163,28 @@ class Solar_Form_Load_Xml extends Solar_Base {
                     
                     $params  = array();
                     $tmpRule = array($method, $message);
-
+                    
                     // Were any arguments passed?
                     if (! empty($rule->args)) {
                         $params = $this->getParams($rule->args->arg);
                     }
-
+                    
                     // Add arguments to validation array
                     foreach ($params as $param) {
                         array_push($tmpRule, $param);
                     }
-
+                    
                     // Add validation to element
                     $validate[] = $tmpRule;
                 }
-
+                
                 $elementInfo['valid'] = $validate;
             }
             
             // Add element to formElements array
             $elements[$name] = $elementInfo;
         }
-
+        
         return array(
             'attribs'  => array(),
             'elements' => $elements
@@ -211,7 +211,7 @@ class Solar_Form_Load_Xml extends Solar_Base {
             if (!empty($param['type'])) {
                 $argType = (string) $param['type'];
             }
-
+            
             if ('array' == $argType) {
                 if (empty($param->item)) {
                     $param = (array) $param;
@@ -234,10 +234,10 @@ class Solar_Form_Load_Xml extends Solar_Base {
                     $param = (string) $param->item;
                 }
             }
-
+            
             array_push($final, $param);
         }
-
+        
         return $final;
     }
 }

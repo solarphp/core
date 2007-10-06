@@ -9,7 +9,7 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
- * @author Contributions from Matthew Weier O'Phinney <mweierophinney@gmail.com>
+ * @author Matthew Weier O'Phinney <mweierophinney@gmail.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -50,18 +50,19 @@ class Solar_Form extends Solar_Base {
      * : (string) The overall "failure" message when validating form
      * input. Default is Solar locale key FAILURE_FORM.
      * 
+     * `filter`
+     * : (dependency) A Solar_Filter dependency injection; default is empty,
+     *   which creates a standard Solar_Filter object on the fly.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Form = array(
         'request' => 'request',
-        'attribs' => array(
-            'action'  => null,
-            'method'  => 'post',
-            'enctype' => 'multipart/form-data',
-        ),
+        'filter'  => null,
         'success' => null,
         'failure' => null,
+        'attribs' => array(),
     );
     
     /**
@@ -70,8 +71,22 @@ class Solar_Form extends Solar_Base {
      * 
      * @var bool Null if validation has not occurred yet, true if
      * valid, false if not valid.
+     * 
      */
     protected $_status = null;
+    
+    /**
+     * 
+     * Default <form> tag attributes.
+     * 
+     * @var array
+     * 
+     */
+    protected $_default_attribs = array(
+        'action'  => null,
+        'method'  => 'post',
+        'enctype' => 'multipart/form-data',
+    );
     
     /**
      * 
@@ -93,8 +108,8 @@ class Solar_Form extends Solar_Base {
      * The array of elements in this form.
      * 
      * The `$elements` array contains all elements in the form,
-     * including their names, types, values, any feedback messages,
-     * validation and filter callbacks, and so on. 
+     * including their names, types, values, any invalidation messages,
+     * filter callbacks, and so on. 
      * 
      * In general, you should not try to set $elements yourself;
      * instead, Solar_Form::setElement() and Solar_Form::setElements().
@@ -115,8 +130,8 @@ class Solar_Form extends Solar_Base {
      * 
      * Note that the $feedback property pertains to the form as a
      * whole, not the individual elements.  This is as opposed to
-     * the 'feedback' key in each of the elements, which contains
-     * feedback specific to that element.
+     * the 'invalid' key in each of the elements, which contains
+     * invalidation messages specific to that element.
      * 
      * @var array
      * 
@@ -125,21 +140,12 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * The array of pre-filters for the form elements.
+     * The array of filters for the form elements.
      * 
      * @var array 
      * 
      */
-    protected $_filter = array();
-    
-    /**
-     * 
-     * The array of validations for the form elements.
-     * 
-     * @var array
-     * 
-     */
-    protected $_valid = array();
+    protected $_filters = array();
     
     /**
      * 
@@ -175,13 +181,13 @@ class Solar_Form extends Solar_Base {
      * : (string) The default or selected value(s) for the element.
      * 
      * `descr`
-     * : (string) A longer description of the element, for example a tooltip
+     * : (string) A longer description of the element, such as a tooltip
      *   or help text.
      * 
      * `status`
-     * : (bool) Whether or not the particular elements has
-     *   passed or failed validation (true or false), or null if there
-     *   has been no attempt at validation.
+     * : (bool) Whether or not the particular element has passed or failed
+     *   validation (true or false), or null if there has been no attempt at
+     *   validation.
      * 
      * `require`
      * : (bool) Whether or not the element is required.
@@ -198,44 +204,35 @@ class Solar_Form extends Solar_Base {
      * : (array) Additional XHTML attributes for the element in the
      *   form (attribute => value).
      * 
-     * `feedback`
-     * : (array) An array of feedback messages for this element,
-     *   generally based on validation of previous user input.
+     * `invalid`
+     * : (array) An array of messages if the value is invalid.
      * 
      * @var array
      * 
      */
-    protected $_default = array(
-        'name'     => null,
-        'type'     => null,
-        'label'    => null,
-        'descr'    => null,
-        'value'    => null,
-        'status'   => null,
-        'require'  => false,
-        'disable'  => false,
-        'options'  => array(),
-        'attribs'  => array(),
-        'feedback' => array(),
+    protected $_default_element = array(
+        'name'    => null,
+        'type'    => null,
+        'label'   => null,
+        'descr'   => null,
+        'value'   => null,
+        'status'  => null,
+        'require' => false,
+        'disable' => false,
+        'options' => array(),
+        'attribs' => array(),
+        'filters' => array(),
+        'invalid' => array(),
     );
     
     /**
      * 
-     * A Solar_Filter object for internal filtering needs.
+     * A Solar_Filter object for filtering form values.
      * 
      * @var Solar_Filter
      * 
      */
-    protected $_obj_filter;
-    
-    /**
-     * 
-     * A Solar_Valid object for internal validation needs.
-     * 
-     * @var Solar_Valid
-     * 
-     */
-    protected $_obj_valid;
+    protected $_filter;
     
     /**
      * 
@@ -268,21 +265,24 @@ class Solar_Form extends Solar_Base {
             $this->_config['request']
         );
         
-        // make sure we have an action. normally we try not to change $_config
-        // from what the user set, but in this case, we need $_config values
-        // so that reset() works properly.
-        if (empty($this->_config['attribs']['action'])) {
-            $this->_config['attribs']['action'] = $this->_request->server('REQUEST_URI');
-        }
+        // filter object
+        $this->_filter = Solar::dependency(
+            'Solar_Filter',
+            $this->_config['filter']
+        );
         
-        // retain setups, create validator/filter objects
-        $this->attribs = array_merge(
-            $this->_Solar_Form['attribs'],
+        // set the default action attribute
+        $action = $this->_request->server('REQUEST_URI');
+        $this->_default_attribs['action'] = $action;
+        
+        // now merge attribute configs
+        $this->_config['attribs'] = array_merge(
+            $this->_default_attribs,
             $this->_config['attribs']
         );
         
-        $this->_obj_filter = Solar::factory('Solar_Filter');
-        $this->_obj_valid = Solar::factory('Solar_Valid');
+        // reset all the properties based on config now
+        $this->reset();
     }
     
     // -----------------------------------------------------------------
@@ -299,7 +299,7 @@ class Solar_Form extends Solar_Base {
      * $info['name'].
      * 
      * @param array $info Element information using the same keys as
-     * in Solar_Form::$_default.
+     * in Solar_Form::$_default_element.
      * 
      * @param string $array Rename the element as a key in this array.
      * 
@@ -312,48 +312,22 @@ class Solar_Form extends Solar_Base {
         $name = $this->_prepareName($name, $array);
         
         // prepare the element info
-        $info = array_merge($this->_default, $info);
+        $info = array_merge($this->_default_element, $info);
         
         // forcibly cast each of the keys into the elements array
         $this->elements[$name] = array (
-            'name'     =>          $name,
-            'type'     => (string) $info['type'],
-            'label'    => (string) $info['label'],
-            'value'    =>          $info['value'], // mixed
-            'descr'    => (string) $info['descr'],
-            'require'  => (bool)   $info['require'],
-            'disable'  => (bool)   $info['disable'],
-            'options'  => (array)  $info['options'],
-            'attribs'  => (array)  $info['attribs'],
-            'feedback' => (array)  $info['feedback'],
+            'name'    => (string) $name,
+            'type'    => (string) $info['type'],
+            'label'   => (string) $info['label'],
+            'value'   =>          $info['value'], // mixed
+            'descr'   => (string) $info['descr'],
+            'require' => (bool)   $info['require'],
+            'disable' => (bool)   $info['disable'],
+            'options' => (array)  $info['options'],
+            'attribs' => (array)  $info['attribs'],
+            'filters' => (array)  $info['filters'],
+            'invalid' => (array)  $info['invalid'],
         );
-        
-        // add filters
-        if (array_key_exists('filter', $info)) {
-            foreach ( (array) $info['filter'] as $args) {
-                $this->_filter[$name][] = $args;
-            }
-        }
-        
-        // add validations
-        if (array_key_exists('valid', $info)) {
-        
-            foreach ( (array) $info['valid'] as $args) {
-            
-                // make sure $args is an array
-                settype($args, 'array');
-                
-                // shift the name onto the top of the args
-                array_unshift($args, $name);
-                
-                // add the validation to the element
-                call_user_func_array(
-                    array($this, 'addValid'),
-                    $args
-                );
-                
-            }
-        }
     }
     
     /**
@@ -361,7 +335,7 @@ class Solar_Form extends Solar_Base {
      * Sets multiple elements in the form.  Appends if they do not exist.
      * 
      * @param array $list Element information as array(name => info), where
-     * each info value is an array like Solar_Form::$_default.
+     * each info value is an array like Solar_Form::$_default_element.
      * 
      * @param string $array Rename each element as a key in this array.
      * 
@@ -406,94 +380,102 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Adds a Solar_Filter method callback for an element.
-     * 
-     * All pre-filters are applied via 
-     * Solar_Filter::multiple() and should conform to the 
-     * specifications for that method.
-     * 
-     * All parameters after $method are treated as added parameters
-     * for the Solar_Filter method call.
+     * Adds one filter to an element.
      * 
      * @param string $name The element name.
      * 
-     * @param string $method Solar_Filter method or PHP function to use
-     * for filtering.
+     * @param array|string $spec The filter specification; either a
+     * Solar_Filter method name (string), or an array where the first element
+     * is a method name and remaining elements are parameters to that method.
      * 
      * @return void
      * 
      */
-    public function addFilter($name, $method) 
+    public function addFilter($name, $spec, $array) 
     {
-        // Get the arguments, drop the element name
-        $args = func_get_args();
-        array_shift($args);
-
-        $this->_filter[$name][] = $args;
-    }
-    
-    /**
-     * 
-     * Adds a Solar_Valid method callback as a validation for an element.
-     * 
-     * @param string $name The element name.
-     * 
-     * @param string $method The Solar_Valid callback method.
-     * 
-     * @param string $message The feedback message to use if validation fails.
-     * 
-     * @return void
-     * 
-     */
-    public function addValid($name, $method, $message = null)
-    {
-        // get the arguments, drop the element name
-        $args = func_get_args();
-        $name = array_shift($args);
-        
-        // add a default validation message (args[0] is the method,
-        // args[1] is the message)
-        if (empty($args[1]) || trim($args[1]) == '') {
-            
-            // see if we have an method-specific validation message
-            $key = 'VALID_' . strtoupper($method);
-            $args[1] = $this->locale($key);
-            
-            // if the message is the same as the key,
-            // there was no method-specific validation
-            // message.  revert to the generic default.
-            if ($key == $args[1]) {
-                $args[1] = $this->locale('ERR_INVALID');
-            }
+        // make sure the element exists
+        $name = $this->_prepareName($name, $array);
+        if (empty($this->elements[$name])) {
+            throw $this->_exception('ERR_NO_SUCH_ELEMENT', array(
+                'name' => $name,
+            ));
         }
         
-        // add to the validation array
-        $this->_valid[$name][] = $args;
+        // add the filter
+        $this->elements[$name]['filters'][] = (array) $spec;
     }
     
     /**
      * 
-     * Adds multiple feedback messages to elements.
+     * Adds many filters to one element.
      * 
-     * @param array $list An associative array where the key is an element
-     * name and the value is a string or sequential array of feedback messages.
+     * @param string $name The element name.
+     * 
+     * @param array|string $spec The filter specification; either a
+     * Solar_Filter method name (string), or an array where the first element
+     * is a method name and remaining elements are parameters to that method.
      * 
      * @param string $array Rename each element as a key in this array.
      * 
      * @return void
      * 
      */
-    public function addFeedback($list, $array = null)
+    public function addFilters($name, $list, $array)
     {
-        foreach ($list as $name => $feedback) {
-            $name = $this->_prepareName($name, $array);
-            settype($feedback, 'array');
-            foreach ($feedback as $text) {
-                $this->elements[$name]['feedback'][] = $text;
-            }
+        foreach ((array) $list as $spec) {
+            $this->addFilter($name, $spec, $array);
         }
     }
     
+    /**
+     * 
+     * Adds one or more invalid message to an element, sets the element status
+     * to false (invalid), and sets the form status to false (invalid).
+     * 
+     * @param string $name The element name.
+     * 
+     * @param string|array $spec The invalidation message(s).
+     * 
+     * @param string $array Rename each element as a key in this array.
+     * 
+     * @return void
+     * 
+     */
+    public function addInvalid($name, $spec, $array = null)
+    {
+        // make sure the element exists
+        $name = $this->_prepareName($name, $array);
+        if (! empty($this->elements[$name])) {
+            // add the messages
+            foreach ((array) $spec as $text) {
+                $this->elements[$name]['invalid'][] = $text;
+            }
+        
+            // mark the status of the element, and of the form
+            $this->elements[$name]['status'] = false;
+            $this->_status = false;
+        }
+    }
+    
+    /**
+     * 
+     * Adds invalidation messages to multiple elements, sets their status to
+     * false (invalid) and sets the form status to false (invalid).
+     * 
+     * @param array $list An array where the key is the element name, and the
+     * value is a string or array of invalidation messages for that element.
+     * 
+     * @param string $array Rename each element as a key in this array.
+     * 
+     * @return void
+     * 
+     */
+    public function addInvalids($list, $array = null)
+    {
+        foreach ((array) $list as $name => $spec) {
+            $this->addInvalid($name, $spec, $array);
+        }
+    }
     
     // -----------------------------------------------------------------
     // 
@@ -503,7 +485,60 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Populates form elements with specified values.
+     * Manually set the value of one element.
+     * 
+     * Note that this is subtly different from [[populate()]].  This method
+     * takes full name of the element, whereas populate() takes a "natural"
+     * hierarchical array like $_POST.
+     * 
+     * @param string $name The element name.
+     * 
+     * @param mixes $value Set the element to this value.
+     * 
+     * @param string $array Rename the element as a key in this array.
+     * 
+     * @return void
+     * 
+     */
+    public function setValue($name, $value, $array = null)
+    {
+        // make sure the element exists
+        $name = $this->_prepareName($name, $array);
+        if (! empty($this->elements[$name])) {
+            $this->elements[$name]['value'] = $value;
+        }
+        
+    }
+    
+    /**
+     * 
+     * Manually set the value of several elements.
+     * 
+     * Note that this is subtly different from [[populate()]].  This method
+     * takes a flat array where the full name of the element is the key, 
+     * whereas populate() takes a "natural" hierarchical array like $_POST.
+     * 
+     * @param array $data An associative array where the key is the element
+     * name and the value is the element value to set.
+     * 
+     * @param string $array Rename each element as a key in this array.
+     * 
+     * @return void
+     * 
+     * @throws Solar_Form_Exception_NoSuchElement when the named element does
+     * not exist in the form.
+     * 
+     */
+    public function setValues($data, $array = null)
+    {
+        foreach ((array) $data as $name => $value) {
+            $this->setValue($name, $value, $array);
+        }
+    }
+    
+    /**
+     * 
+     * Automatically populates form elements with specified values.
      * 
      * @param array $submit The source data array for populating form
      * values as array(name => value); if null, will populate from POST
@@ -540,11 +575,9 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
-     * Performs filtering and validation on each form element.
-     * 
-     * Updates the feedback keys for each element that fails validation.
-     * Values are either pulled from the submitted form or from the array
-     * passed in $submit.
+     * Applies the filter chain to the form element values; in particular,
+     * checks validation and updates the 'invalid' keys for each element that
+     * fails.
      * 
      * This method cycles through each element in the form, where it ...
      * 
@@ -552,7 +585,7 @@ class Solar_Form extends Solar_Base {
      * 
      * 2. Validates the filtered value against the validation rules for the element,
      * 
-     * 3. Adds feedback messages to the element if it does not pass validation.
+     * 3. Adds invalidation messages to the element if it does not pass validation.
      * 
      * If all populated values pass validation, the method returns boolean
      * true, indicating the form as a whole it valid; if even one validation on
@@ -566,74 +599,46 @@ class Solar_Form extends Solar_Base {
      * please see those pages for more information on how to add filters and
      * validation to an element.
      * 
-     * @param array $submit The source data array for populating form
-     * values as array(name => info); if null, will populate from POST
-     * or GET vars as determined from the 'method' attribute.
-     * 
      * @return bool True if all elements are valid, false if not.
      * 
      */
-    public function validate($submit = null)
+    public function validate()
     {
-        // Populate the form values.
-        if (empty($this->_submitted)) {
-            $this->populate($submit);
-        }
-
-        // Loop through each element to filter
-        foreach ($this->_filter as $name => $filters) {
-            $value = $this->elements[$name]['value'];
-            $this->elements[$name]['value'] = $this->_obj_filter->multiple(
-                $value, $filters
-            );
-        }
-
-        $validated = true;
+        // reset the filter chain so we can rebuild it
+        $this->_filter->resetChain();
         
-        // loop through each element to be validated
-        foreach ($this->_valid as $name => $list) {
+        // build the filter chain and data values. note that the foreach()
+        // loop uses an info **reference**, not a copy.
+        $data = array();
+        foreach ($this->elements as $name => &$info) {
+            // keep a **reference** to the data (not a copy)
+            $data[$name] = &$info['value'];
             
-            // loop through each validation for the element
-            foreach ($list as $args) {
-                
-                // the name of the Solar_Valid method
-                $method = array_shift($args);
-                
-                // the text of the error message
-                $feedback = array_shift($args);
-                
-                // config is now the remaining arguments,
-                // put the value on top of it.
-                array_unshift($args, $this->elements[$name]['value']);
-                
-                // call the appropriate Solar_Valid method.
-                $result = call_user_func_array(
-                    array($this->_obj_valid, $method),
-                    $args
-                );
-                
-                // was it valid?
-                if (! $result) {
-                    // no, add the feedback message
-                    $validated = false;
-                    $this->elements[$name]['feedback'][] = $feedback;
-                    $this->elements[$name]['status'] = false;
-                } else {
-                    $this->elements[$name]['status'] = true;
-                }
-                
-            } // inner loop of validations
+            // set the filters and require-flag, reference not needed
+            $this->_filter->addChainFilters($name, $info['filters']);
+            $this->_filter->setChainRequire($name, $info['require']);
             
-        } // outer loop of elements
+        }
         
-        if ($validated) {
+        // apply the filter chain to the data, which will modify the 
+        // element data in place because of the references
+        $this->_status = $this->_filter->applyChain($data);
+        
+        // set the main feedback message
+        if ($this->_status) {
             $this->feedback = array($this->_config['success']);
         } else {
             $this->feedback = array($this->_config['failure']);
         }
         
-        $this->_status = $validated;
-        return $validated;
+        // retain any invalidation messages
+        $invalid = $this->_filter->getChainInvalid();
+        foreach ((array) $invalid as $key => $val) {
+            $this->addInvalid($key, $val);
+        }
+        
+        // done!
+        return $this->_status;
     }
     
     /**
@@ -647,7 +652,7 @@ class Solar_Form extends Solar_Base {
      * @return array An associative array of element values.
      * 
      */
-    public function values($key = null)
+    public function getValues($key = null)
     {
         $values = array();
         foreach ($this->elements as $name => $elem) {
@@ -686,8 +691,7 @@ class Solar_Form extends Solar_Base {
         $this->attribs    = $this->_config['attribs'];
         $this->elements   = array();
         $this->feedback   = null;
-        $this->_filter    = array();
-        $this->_valid     = array();
+        $this->_filters   = array();
         $this->_submitted = null;
     }
     

@@ -20,15 +20,15 @@
  * Class for reading access privileges from a text file.
  * 
  * The file format is ...
- *
+ * 
  *     0:flag 1:type 2:name 3:class 4:action 5:process
  * 
  * For example ...
  * 
- *     deny handle * * * *
- *     allow role sysadmin * * *
- *     allow handle + Solar_App_Bookmarks * *
- *     deny user boshag Solar_App_Bookmarks edit *
+ *     deny handle * * * * 
+ *     allow role sysadmin * * * 
+ *     allow handle + Solar_App_Bookmarks * * 
+ *     deny user boshag Solar_App_Bookmarks edit * 
  * 
  * @category Solar
  * 

@@ -1,7 +1,10 @@
 <?php
 /**
  * 
- * Acts as the "model" portion of Model-Controller-View.
+ * An SQL-centric Model class combining TableModule and TableDataGateway,
+ * using a Collection of ActiveRecord objects for returns.
+ * 
+ * This class is Solar_Sql converted to do only the data mapping part.
  * 
  * @category Solar
  * 
@@ -11,78 +14,22 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: Model.php 926 2007-07-24 10:22:08Z moraes $
  * 
  */
 
 /**
  * 
- * Acts as the "model" portion of Model-Controller-View.
- * 
- * Implements a number of design patterns:
- * 
- * - TableModule
- * - MetadataMapping
- * - DataMapper
- * - SingleTableInheritance
- * - ActiveRecord
- * - RecordSet
- * - AssociationTableMapping
- * - DomainModel (?)
+ * An SQL-centric Model class combining TableModule and TableDataGateway,
+ * using a Collection of ActiveRecord objects for returns.
  * 
  * @category Solar
  * 
  * @package Solar_Sql_Model
  * 
- * @todo Honor "eager" loading of to-many by fetching all has_many records for
- * all records in a collection, so as to hit the database only once per relation.
- * 
- * @todo Make it so you can add new records to the end of a collection?
- * 
- * @todo In __set(), make sure that we check for class and focus per the 
- * foriegn_model value (and has_many vice belong_to/has_one.)
- * 
- * @todo Add explicit hooks for pre/post save, pre-post insert, pre/post update,
- * pre/post delete, pre validate, pre/post fetch ... ?
- * 
- * @todo Add master-focus insert, update, and delete
- * 
- * @todo When setting a related value, make sure it's of a model of the 
- * proper type, in the proper focus.  Esp. important for to-one relations.
- * 
- * @todo Add isValid() method?
- * 
- * @todo Add isRecord(), isCollection(), isMaster(), getStatus(), getFocus()?
- * 
- * @todo Make delete() cascade as needed.
- * 
- * @todo Add saving of related records?  Need to wrap in a transaction.  Also
- * need to look up related values, insert-id's, etc.
- * 
- * @todo When saving, save related Record and Collection properties.
- * 
- * @todo When saving related, populate the related primary-key back to the 
- * native record.
- * 
- * @todo When saving, should we save the related "belongs-to" record?
- * 
- * @todo Make it possible to append to a Collection, and then insert as needed
- * when saving.
- * 
- * @todo Add "soft delete" feature? $deleted_col = 'deleted', and then only
- * retrieve non-deleted cols.
- * 
- * @todo Add "increment" and "decrement" feature?  Good for instant-update
- * counting ... although when you save, it still overwrites the increments from
- * any other instance.  :-(
- * 
- * @todo How to "delete" from a collection without hitting the DB *right then*?
- * Need a way to say "delete when saving" vs "delete now".
- * 
  */
 abstract class Solar_Sql_Model extends Solar_Base
-    implements ArrayAccess, Countable, IteratorAggregate {
-    
+{
     /**
      * 
      * User-provided configuration.
@@ -101,250 +48,12 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The list of accessor methods for individual column properties.
+     * A Solar_Sql dependency object.
      * 
-     * For example, a method called __getFooBar() will be registered for
-     * ['get']['foo_bar'] => '__getFooBar'.
-     * 
-     * @var array
+     * @var Solar_Sql
      * 
      */
-    protected $_access_methods = array();
-    
-    /**
-     * 
-     * A list of column names that are calculated on-the-fly by the model, and
-     * are not stored in the database (so-called "virtual" columns).
-     * 
-     * Each calculate-col should have a corresponding __getColName() and
-     * __setColName() method to calculate the column value.
-     * 
-     * @var array
-     * 
-     * @todo On fetching, pre-populate each of these in $this->_data via the
-     * related __get*() method.
-     * 
-     */
-    protected $_calculate_cols = array();
-    
-    /**
-     * 
-     * The results of get_class($this) so we don't call get_class() all the time.
-     * 
-     * @var string
-     * 
-     */
-    protected $_class;
-    
-    /**
-     * 
-     * The column name for 'created' timestamps; default is 'created'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_created_col = 'created';
-    
-    /**
-     * 
-     * Current data for the object.
-     * 
-     * When in "record" focus, the data for the current record.
-     * 
-     * When in "collection" focus, the data for all records in the collection.
-     * 
-     * @var array
-     * 
-     */
-    protected $_data = array();
-    
-    /**
-     * 
-     * The class to use for external filtering methods.
-     * 
-     * @param string
-     * 
-     * @see _applyFilters()
-     * 
-     * @var string
-     * 
-     */
-    protected $_datafilter_class;
-    
-    /**
-     * 
-     * Filters to validate and sanitize column data.
-     * 
-     * Default is to use validate*() and sanitize*() methods in the filter
-     * class, but if the method exists locally, it will be used instead.
-     * 
-     * Example usage follows; note that "_validate" and "_sanitize" refer
-     * to internal (protected) filtering methods that have access to the 
-     * entire data set being filtered.
-     * 
-     * {{code: php
-     *     // filter 'col_1' to have only alpha chars, with a max length of
-     *     // 32 chars
-     *     $this->_filters['col_1'][] = 'sanitizeStringAlpha';
-     *     $this->_filters['col_1'][] = array('validateMaxLength', 32);
-     *     
-     *     // filter 'col_2' to have only numeric chars, validate as an
-     *     // integer, in a range of -10 to +10.
-     *     $this->_filters['col_2'][] = 'sanitizeNumeric';
-     *     $this->_filters['col_2'][] = 'validateInteger';
-     *     $this->_filters['col_2'][] = array('validateRange', -10, +10);
-     *     
-     *     // filter 'handle' to have only alpha-numeric chars, with a length
-     *     // of 6-14 chars, and unique in the table.
-     *     $this->_filters['handle'][] = 'sanitizeStringAlnum';
-     *     $this->_filters['handle'][] = array('validateRangeLength', 6, 14);
-     *     $this->_filters['handle'][] = '_validateUnique';
-     *     
-     *     // filter 'email' to have only emails-allowed chars, validate as an
-     *     // email address, and be unique in the table.
-     *     $this->_filters['email'][] = 'sanitizeStringEmail';
-     *     $this->_filters['email'][] = 'validateEmail';
-     *     $this->_filters['email'][] = '_validateUnique';
-     *     
-     *     // filter 'passwd' to be not-blank, and should match any existing
-     *     // 'passwd_confirm' value.
-     *     $this->_filters['passwd'][] = 'validateRequire';
-     *     $this->_filters['passwd'][] = '_validateConfirm';
-     * }}
-     * 
-     * @var array
-     * 
-     * @see $_datafilter_class
-     * 
-     * @see _applyFilters()
-     * 
-     */
-    protected $_filters;
-    
-    /**
-     * 
-     * Is this model instance focused as a 'master', a 'collection' of
-     * records, or a single 'record'?
-     * 
-     * The focus determines which methods are available, and how iterators,
-     * countable, array-access, and magic methods operate.  When in 'record'
-     * mode, for example, you cannot fetch new records.
-     * 
-     * @var string
-     * 
-     */
-    protected $_focus = 'master';
-    
-    /**
-     * 
-     * Is this record part of a collection?
-     * 
-     * Useful for when 
-     * @var bool
-     * 
-     */
-    protected $_in_collection = false;
-    
-    /**
-     * 
-     * The index specification array for all indexes on this table.
-     * 
-     * Used only in auto-creation.
-     * 
-     * The array should be in this format ...
-     * 
-     * {{code: php
-     *     // the index type: 'normal' or 'unique'
-     *     $type = 'normal';
-     *     
-     *     // index on a single column:
-     *     // CREATE INDEX idx_name ON table_name (col_name)
-     *     $this->_indexes['idx_name'] = array(
-     *         'type' => $type,
-     *         'cols' => 'col_name'
-     *     );
-     *     
-     *     // index on multiple columns:
-     *     // CREATE INDEX idx_name ON table_name (col_1, col_2, ... col_N)
-     *     $this->_indexes['idx_name'] = array(
-     *         'type' => $type,
-     *         'cols' => array('col_1', 'col_2', ..., 'col_N')
-     *     );
-     *     
-     *     // easy shorthand for an index on a single column,
-     *     // giving the index the same name as the column:
-     *     // CREATE INDEX col_name ON table_name (col_name)
-     *     $this->_indexes['col_name'] = $type; 
-     * }}
-     * 
-     * The $type may be 'normal' or 'unique'.
-     * 
-     * @var array
-     * 
-     */
-    protected $_indexes = array();
-    
-    /**
-     * 
-     * When inheritance is turned on, the inherit-model value for this class
-     * in $_inherit_col.
-     * 
-     * @var string
-     * 
-     */
-    protected $_inherit_model;
-    
-    /**
-     * 
-     * Only fetch these columns from the table.
-     * 
-     * @var array
-     * 
-     */
-    protected $_fetch_cols;
-    
-    /**
-     * 
-     * Other models that relate to this model should use this as the foreign-key
-     * column name.
-     * 
-     * @var string
-     * 
-     */
-    protected $_foreign_col = null;
-    
-    /**
-     * 
-     * The base model this class is inherited from, in single-table inheritance.
-     * 
-     * @var string
-     * 
-     */
-    protected $_inherit_base = null;
-    
-    /**
-     * 
-     * The column name that tracks single-table inheritance; default is
-     * 'model'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_inherit_col = 'model';
-    
-    /**
-     * 
-     * Keeps track of validation failure messages from processing data
-     * filters.
-     * 
-     * @var array
-     * 
-     * @see _insert()
-     * 
-     * @see _update()
-     * 
-     */
-    protected $_invalid;
+    protected $_sql = null;
     
     /**
      * 
@@ -359,105 +68,15 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_model_name;
     
-    /**
-     * 
-     * The default order when fetching rows.
-     * 
-     * @var array
-     * 
-     */
-    protected $_order;
-    
-    /**
-     * 
-     * The number of rows per page when selecting.
-     * 
-     * @var int
-     * 
-     */
-    protected $_paging = 10;
-    
-    /**
-     * 
-     * The column name for the primary key; default is 'id'.
-     * 
-     * @var string
-     * 
-     */
-    protected $_primary_col = 'id';
-    
-    /**
-     * 
-     * Relationships to other Model classes.
-     * 
-     * Keyed on a "virtual" column name, which will be used as a property
-     * name in returned records.
-     * 
-     * @var array
-     * 
-     */
-    protected $_related = array();
-    
-    /**
-     * 
-     * When in "collection" focus, an array of model record objects as 
-     * instantiated from the data.
-     * 
-     * @var array
-     * 
-     */
-    protected $_records = array();
-    
-    /**
-     * 
-     * For a related record collection, what page are we on?
-     * 
-     * @var array
-     * 
-     */
-    protected $_related_page = array();
-    
-    /**
-     * 
-     * A list of column names that use sequence values.
-     * 
-     * When the column is present in a data array, but its value is null,
-     * a sequence value will automatically be added.
-     * 
-     * @var array
-     * 
-     */
-    protected $_sequence_cols = array();
-    
-    /**
-     * 
-     * A list of column names to serialize/unserialize automatically.
-     * 
-     * Will be unserialized by the Record class as the values are loaded,
-     * then re-serialized just before insert/update in the Model class.
-     * 
-     * @var array
-     * 
-     */
-    protected $_serialize_cols = array();
-    
-    /**
-     * 
-     * A Solar_Sql dependency object.
-     * 
-     * @var Solar_Sql
-     * 
-     */
-    protected $_sql = null;
+    // -----------------------------------------------------------------
+    //
+    // Classes
+    //
+    // -----------------------------------------------------------------
     
     /**
      * 
      * A Solar_Class_Stack object for fallback hierarchy.
-     * 
-     * Used for finding and loading these classes:
-     * 
-     * - DataFilter
-     * - The proper Model for single-table inheritance
      * 
      * @var Solar_Class_Stack
      * 
@@ -466,35 +85,67 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Tracks the of the status of this record.
+     * The results of get_class($this) so we don't call get_class() all the time.
      * 
-     * Status values are:
-     * 
-     * `clean`
-     * : The record is unmodified from the database.
-     * 
-     * `deleted`
-     * : This record has been deleted; load(), etc. will not work.
-     * 
-     * `dirty`
-     * : At least one record property has changed.
-     * 
-     * `inserted`
-     * : The record was inserted successfully.
-     * 
-     * `invalid`
-     * : Validation was attempted, with failure.
-     * 
-     * `new`
-     * : This is a new record and has not been saved to the database.
-     * 
-     * `updated`
-     * : The record was updated successfully.
-     * 
-     * @var bool
+     * @var string
      * 
      */
-    protected $_status = 'clean';
+    protected $_class;
+    
+    /**
+     * 
+     * The final fallback class for an individual record.
+     * 
+     * Default is Solar_Sql_Model_Record.
+     * 
+     * @var string
+     * 
+     */
+    protected $_record_class = 'Solar_Sql_Model_Record';
+    
+    /**
+     * 
+     * The final fallback class for collections of records.
+     * 
+     * Default is Solar_Sql_Model_Collection.
+     * 
+     * @var string
+     * 
+     */
+    protected $_collection_class = 'Solar_Sql_Model_Collection';
+    
+    /**
+     * 
+     * The class to use for building SELECT statements.
+     * 
+     * @var string
+     * 
+     */
+    protected $_select_class = 'Solar_Sql_Select';
+    
+    /**
+     * 
+     * The class to use for filter chains.
+     * 
+     * @var string
+     * 
+     */
+    protected $_filter_class = null;
+    
+    // -----------------------------------------------------------------
+    //
+    // Table and index definition
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * The table name.
+     * 
+     * @var string
+     * 
+     */
+    protected $_table_name = null;
     
     /**
      * 
@@ -530,12 +181,100 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * The table name.
+     * The index specification array for all indexes on this table.
+     * 
+     * Used only in auto-creation.
+     * 
+     * The array should be in this format ...
+     * 
+     * {{code: php
+     *     // the index type: 'normal' or 'unique'
+     *     $type = 'normal';
+     * 
+     *     // index on a single column:
+     *     // CREATE INDEX idx_name ON table_name (col_name)
+     *     $this->_index['idx_name'] = array(
+     *         'type' => $type,
+     *         'cols' => 'col_name'
+     *     );
+     * 
+     *     // index on multiple columns:
+     *     // CREATE INDEX idx_name ON table_name (col_1, col_2, ... col_N)
+     *     $this->_index['idx_name'] = array(
+     *         'type' => $type,
+     *         'cols' => array('col_1', 'col_2', ..., 'col_N')
+     *     );
+     * 
+     *     // easy shorthand for an index on a single column,
+     *     // giving the index the same name as the column:
+     *     // CREATE INDEX col_name ON table_name (col_name)
+     *     $this->_index['col_name'] = $type;
+     * }}
+     * 
+     * The $type may be 'normal' or 'unique'.
+     * 
+     * @var array
+     * 
+     */
+    protected $_index = array();
+    
+    // -----------------------------------------------------------------
+    //
+    // Special columns and column behaviors
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * A list of column names that don't exist in the table, but should be
+     * calculated by the model as-needed.
+     * 
+     * @var array
+     * 
+     */
+    protected $_calculate_cols = array();
+    
+    /**
+     * 
+     * A list of column names that use sequence values.
+     * 
+     * When the column is present in a data array, but its value is null,
+     * a sequence value will automatically be added.
+     * 
+     * @var array
+     * 
+     */
+    protected $_sequence_cols = array();
+    
+    /**
+     * 
+     * A list of column names to serialize/unserialize automatically.
+     * 
+     * Will be unserialized by the Record class as the values are loaded,
+     * then re-serialized just before insert/update in the Model class.
+     * 
+     * @var array
+     * 
+     */
+    protected $_serialize_cols = array();
+    
+    /**
+     * 
+     * The column name for the primary key; default is 'id'.
      * 
      * @var string
      * 
      */
-    protected $_table_name = null;
+    protected $_primary_col = 'id';
+    
+    /**
+     * 
+     * The column name for 'created' timestamps; default is 'created'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_created_col = 'created';
     
     /**
      * 
@@ -545,6 +284,162 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_updated_col = 'updated';
+    
+    /**
+     * 
+     * Other models that relate to this model should use this as the foreign-key
+     * column name.
+     * 
+     * @var string
+     * 
+     */
+    protected $_foreign_col = null;
+    
+    // -----------------------------------------------------------------
+    //
+    // Other/misc
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Relationships to other Model classes.
+     * 
+     * Keyed on a "virtual" column name, which will be used as a property
+     * name in returned records.
+     * 
+     * @var array
+     * 
+     */
+    protected $_related = array();
+    
+    /**
+     * 
+     * Filters to validate and sanitize column data.
+     * 
+     * Default is to use validate*() and sanitize*() methods in the filter
+     * class, but if the method exists locally, it will be used instead.
+     * 
+     * The filters apply only to Record objects from the model; if you use
+     * the model insert() and update() methods directly, the filters are not
+     * applied.
+     * 
+     * Example usage follows; note that "_validate" and "_sanitize" refer
+     * to internal (protected) filtering methods that have access to the
+     * entire data set being filtered.
+     * 
+     * {{code: php
+     *     // filter 'col_1' to have only alpha chars, with a max length of
+     *     // 32 chars
+     *     $this->_filters['col_1'][] = 'sanitizeStringAlpha';
+     *     $this->_filters['col_1'][] = array('validateMaxLength', 32);
+     * 
+     *     // filter 'col_2' to have only numeric chars, validate as an
+     *     // integer, in a range of -10 to +10.
+     *     $this->_filters['col_2'][] = 'sanitizeNumeric';
+     *     $this->_filters['col_2'][] = 'validateInteger';
+     *     $this->_filters['col_2'][] = array('validateRange', -10, +10);
+     * 
+     *     // filter 'handle' to have only alpha-numeric chars, with a length
+     *     // of 6-14 chars, and unique in the table.
+     *     $this->_filters['handle'][] = 'sanitizeStringAlnum';
+     *     $this->_filters['handle'][] = array('validateRangeLength', 6, 14);
+     *     $this->_filters['handle'][] = '_validateUnique';
+     * 
+     *     // filter 'email' to have only emails-allowed chars, validate as an
+     *     // email address, and be unique in the table.
+     *     $this->_filters['email'][] = 'sanitizeStringEmail';
+     *     $this->_filters['email'][] = 'validateEmail';
+     *     $this->_filters['email'][] = '_validateUnique';
+     * 
+     *     // filter 'passwd' to be not-blank, and should match any existing
+     *     // 'passwd_confirm' value.
+     *     $this->_filters['passwd'][] = 'validateRequire';
+     *     $this->_filters['passwd'][] = '_validateConfirm';
+     * }}
+     * 
+     * @var array
+     * 
+     * @see $_filter_class
+     * 
+     * @see _addFilter()
+     * 
+     */
+    protected $_filters;
+    
+    // -----------------------------------------------------------------
+    //
+    // Single-table inheritance
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * The base model this class is inherited from, in single-table inheritance.
+     * 
+     * @var string
+     * 
+     */
+    protected $_inherit_base = null;
+    
+    /**
+     * 
+     * When inheritance is turned on, the class name value for this class
+     * in $_inherit_col.
+     * 
+     * @var string
+     * 
+     */
+    protected $_inherit_model = false;
+    
+    /**
+     * 
+     * The column name that tracks single-table inheritance; default is
+     * 'inherit'.
+     * 
+     * @var string
+     * 
+     */
+    protected $_inherit_col = 'inherit';
+    
+    // -----------------------------------------------------------------
+    //
+    // Select options
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Only fetch these columns from the table.
+     * 
+     * @var array
+     * 
+     */
+    protected $_fetch_cols;
+    
+    /**
+     * 
+     * The default order when fetching rows.
+     * 
+     * @var array
+     * 
+     */
+    protected $_order;
+    
+    /**
+     * 
+     * The number of rows per page when selecting.
+     * 
+     * @var int
+     * 
+     */
+    protected $_paging = 10;
+    
+    // -----------------------------------------------------------------
+    //
+    // Constructor and magic methods
+    //
+    // -----------------------------------------------------------------
     
     /**
      * 
@@ -561,166 +456,106 @@ abstract class Solar_Sql_Model extends Solar_Base
         // connect to the database
         $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
-        // attach to the model catalog. be sure to use the same SQL
-        // connection for the catalog as in the model.
-        $catalog = Solar::factory(
-            'Solar_Sql_Model_Catalog',
-            array('sql' => $this->_sql)
-        );
-        
         // our class name so that we don't call get_class() all the time
         $this->_class = get_class($this);
         
-        // do we have a catalog entry for this model class yet?
-        if (! $catalog->exists($this->_class)) {
-            // call user-defined setup
-            $this->_setup();
-            // set and fix properties in the catalog.
-            $catalog->set($this->_class, get_object_vars($this));
-        }
-        
-        // get fixed properties back from the catalog
-        $vars = $catalog->get($this->_class);
-        foreach ($vars as $key => $val) {
-            $this->$key = $val;
-        }
+        // user-defined setup
+        $this->_setup();
+    
+        // follow-on cleanup of critical user-defined values
+        $this->_fixStack();
+        $this->_fixTableName();
+        $this->_fixIndex();
+        $this->_fixTableCols(); // also creates table if needed
+        $this->_fixModelName();
+        $this->_fixOrder();
+        $this->_fixPropertyCols();
+        $this->_fixFilters(); // including filter class
     }
     
     /**
      * 
-     * Magic getter for record properties; automatically calls __getColName()
-     * methods when they exist.
+     * Call this before you 
      * 
-     * @param string $key The property name.
-     * 
-     * @return mixed The property value.
+     * @param array $config User-provided configuration values.
      * 
      */
-    public function __get($key = null)
+    public function __destruct()
     {
-        // allow property-like access to record data
-        $this->_checkFocus('record');
-            
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
-        // do we need to load relationship data?
-        $load_related = empty($this->_data[$key]) &&
-            array_key_exists($key, $this->_related);
-        
-        if ($load_related) {
-            // the key was for a relation that has no data yet.
-            // load the data.
-            $this->_data[$key] = $this->_fetchRelated(
-                $key,
-                $this->_related_page[$key]
-            );
-        }
-        
-        // if an accessor method exists, use it.
-        if (! empty($this->_access_methods['get'][$key])) {
-            $method = $this->_access_methods['get'][$key];
-            return $this->$method();
-        }
-        
-        // look for the data key and return its value.
-        if (array_key_exists($key, $this->_data)) {
-            return $this->_data[$key];
+        foreach ($this->_related as $key => $val) {
+            unset($this->_related[$key]);
         }
     }
     
     /**
      * 
-     * Magic setter for record properties; automatically calls __setColName()
-     * methods when they exist.
-     * 
-     * @param string $key The property name.
-     * 
-     * @param mixed $val The value to set.
+     * User-defined setup.
      * 
      * @return void
      * 
      */
-    public function __set($key, $val)
+    protected function _setup()
     {
-        // allow property-like access to record data
-        $this->_checkFocus('record');
-        
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
-        // set to dirty only if not 'new'
-        if ($this->_status != 'new') {
-            $this->_status = 'dirty';
-        }
-        
-        // how to set the value?
-        if (! empty($this->_access_methods['set'][$key])) {
-            // use accessor method
-            $method = $this->_access_methods['set'][$key];
-            $this->$method($val);
-        } elseif ($key == $this->_primary_col) {
-            // disallow setting of primary keys; do nothing.
-        } else {
-            // no accessor method, not a primary key; assign directly.
-            $this->_data[$key] = $val;
-        }
-    }
-    
-    /**
-     * 
-     * Does a certain key exist in the data?
-     * 
-     * @param string $key The requested data key.
-     * 
-     * @param mixed $val The value to set the data to.
-     * 
-     * @return void
-     * 
-     */
-    public function __isset($key)
-    {
-        if ($this->_focus == 'record') {
-            // standard method, or special accessor?
-            if (! empty($this->_access_methods['isset'][$key])) {
-                // use accessor method
-                $method = $this->_access_methods['isset'][$key];
-                return $this->$method();
-            } else {
-                // no accessor method
-                return array_key_exists($key, $this->_data);
-            }
-        }
-    }
-    
-    /**
-     * 
-     * Sets a key in the data to null.
-     * 
-     * @param string $key The requested data key.
-     * 
-     * @return void
-     * 
-     */
-    public function __unset($key)
-    {
-        if ($this->_focus == 'record') {
-            // standard method, or special accessor?
-            if (! empty($this->_access_methods['unset'][$key])) {
-                // use accessor method
-                $method = $this->_access_methods['unset'][$key];
-                $this->$method();
-            } else {
-                // no accessor method
-                unset($this->_data[$key]);
-            }
-        }
     }
     
     // -----------------------------------------------------------------
-    // 
-    // Master methods
-    // 
+    //
+    // Getters and setters
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Read-only access to protected model properties.
+     * 
+     * @var string $key The requested property; e.g., `'foo'` will read from
+     * `$_foo`.
+     * 
+     */
+    public function __get($key)
+    {
+        $var = "_$key";
+        if (property_exists($this, $var)) {
+            return $this->$var;
+        } else {
+            throw $this->_exception('ERR_PROPERTY_NOT_DEFINED', array(
+                'class' => get_class($this),
+                'key' => $key,
+                'var' => $var,
+            ));
+        }
+    }
+    
+    /**
+     * 
+     * Gets the number of records per page.
+     * 
+     * @return int The number of records per page.
+     * 
+     */
+    public function getPaging()
+    {
+        return $this->_paging;
+    }
+    
+    /**
+     * 
+     * Sets the number of records per page.
+     * 
+     * @param int $paging The number of records per page.
+     * 
+     * @return void
+     * 
+     */
+    public function setPaging($paging)
+    {
+        $this->_paging = (int) $paging;
+    }
+    
+    // -----------------------------------------------------------------
+    //
+    // Fetch
+    //
     // -----------------------------------------------------------------
     
     /**
@@ -738,10 +573,10 @@ abstract class Solar_Sql_Model extends Solar_Base
      * {{code: php
      *     // fetches one record by status
      *     $model->fetchOneByStatus('draft');
-     *     
+     * 
      *     // fetches all records by area_id and owner_handle
      *     $model->fetchAllByAreaIdAndOwnerHandle($area_id, $owner_handle);
-     *     
+     * 
      *     // fetches all records by area_id and owner_handle,
      *     // with ordering and page-limiting
      *     $extra = array('order' => 'area_id DESC', 'page' => 2);
@@ -769,7 +604,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         } else {
             throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED', array(
                 'method' => $method,
-                'params' => $params,
             ));
         }
         
@@ -779,13 +613,11 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // build the fetch params
         $where = array();
-        $bind  = array();
         foreach ($list as $key => $col) {
             // convert from ColName to col_name
             $col = preg_replace('/([a-z])([A-Z])/', '$1_$2', $col);
             $col = strtolower($col);
-            $where[] = "$col = :$col";
-            $bind[$col] = $params[$key];
+            $where["$col = ?"] = $params[$key];
         }
         
         // add the last param after last column name as the "extra" settings
@@ -797,10 +629,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             $opts = array();
         }
         
-        // merge the where/bind with the base fetch params
+        // merge the where with the base fetch params
         $opts = array_merge($opts, array(
             'where' => $where,
-            'bind'  => $bind,
         ));
         
         // do the fetch
@@ -811,24 +642,22 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Fetches a record or collection by primary key value(s).
      * 
-     * @param int|array $spec The primary key value for a single record, or an 
+     * @param int|array $spec The primary key value for a single record, or an
      * array of primary key values for a collection of records.
      * 
-     * @return Solar_Sql_Model A Model object with a 'record' or 'collection'
-     * focus.
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or
+     * record-set object.
      * 
      */
     public function fetch($spec)
     {
-        $this->_checkFocus('master');
-        
-        $col = "{$this->_table_name}.{$this->_primary_col}";
+        $col = "{$this->_model_name}.{$this->_primary_col}";
         if (is_array($spec)) {
             $where = array("$col IN (?)" => $spec);
-            return $this->fetchAll(array('where' => $where));
+            return $this->fetchAll(array('where' => $where, 'order' => $col));
         } else {
             $where = array("$col = ?" => $spec);
-            return $this->fetchOne(array('where' => $where));
+            return $this->fetchOne(array('where' => $where, 'order' => $col));
         }
     }
     
@@ -842,7 +671,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (string|array) Return only these columns.
      * 
      * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to 
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
      *   restrict which records are returned.
      * 
      * `group`
@@ -861,26 +690,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (int) Return only records from this page-number.
      * 
      * `bind`
-     * : (array) Bind these placeholder keys to these values in the where,
-     *   group, having, etc. clauses.
+     * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, 'order', and 'page'.
      * 
-     * @return Solar_Sql_Model A model object with a 'collection' focus.
+     * @return Solar_Sql_Model_Collection A collection object.
      * 
      */
     public function fetchAll($params = array())
     {
-        $this->_checkFocus('master');
-        
         // setup
-        $params = $this->_fixSelectParams($params);
-        $select = $this->_newSelect($params['eager']);
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
         
         // build
         $select->distinct($params['distinct'])
-               ->from($this->_table_name, $params['cols'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
@@ -888,14 +714,24 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->setPaging($params['paging'])
                ->limitPage($params['page'])
                ->bind($params['bind']);
-               
-        // fetch
-        $data = $select->fetch('all');
+        
+        // fetch all with eager loading
+        return $this->_fetchAll($select, $params);
+    }
+    
+    protected function _fetchAll($select, $params)
+    {
+        $data = $select->fetchAll();
         if ($data) {
-            $result = Solar::factory($this->_class);
-            $result->_focus = 'collection';
-            $result->_data = $data;
-            return $result;
+            $coll = $this->newCollection($data);
+            foreach ((array) $params['eager'] as $name) {
+                $related = $this->getRelated($name);
+                if ($related->type == 'has_many') {
+                    $data = $this->fetchRelatedArray($params, $name);
+                    $coll->loadRelated($name, $data);
+                }
+            }
+            return $coll;
         } else {
             return array();
         }
@@ -913,7 +749,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (string|array) Return only these columns.
      * 
      * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to 
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
      *   restrict which records are returned.
      * 
      * `group`
@@ -932,25 +768,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (int) Return only records from this page-number.
      * 
      * `bind`
-     * : (array) Bind these placeholder keys to these values in the where,
-     * group, having, etc. clauses.
+     * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, 'order', and 'page'.
      * 
-     * @return Solar_Sql_Model A model in 'collection' focus.
+     * @return Solar_Sql_Model_Collection A collection object.
+     * 
      */
     public function fetchAssoc($params = array())
     {
-        $this->_checkFocus('master');
-        
         // setup
-        $params = $this->_fixSelectParams($params);
-        $select = $this->_newSelect($params['eager']);
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
         
         // build
         $select->distinct($params['distinct'])
-               ->from($this->_table_name, $params['cols'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
@@ -958,14 +792,24 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->setPaging($params['paging'])
                ->limitPage($params['page'])
                ->bind($params['bind']);
-               
+        
         // fetch
-        $data = $select->fetch('assoc');
+        return $this->_fetchAssoc($select, $params);
+    }
+    
+    protected function _fetchAssoc($select, $params)
+    {
+        $data = $select->fetchAssoc();
         if ($data) {
-            $result = Solar::factory($this->_class);
-            $result->_focus = 'collection';
-            $result->_data = $data;
-            return $result;
+            $coll = $this->newCollection($data);
+            foreach ((array) $params['eager'] as $name) {
+                $related = $this->getRelated($name);
+                if ($related->type == 'has_many') {
+                    $data = $this->fetchRelatedArray($params, $name);
+                    $coll->loadRelated($name, $data);
+                }
+            }
+            return $coll;
         } else {
             return array();
         }
@@ -984,7 +828,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (string|array) Return only these columns.
      * 
      * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to 
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
      *   restrict which records are returned.
      * 
      * `group`
@@ -997,26 +841,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (string|array) ORDER BY these columns.
      * 
      * `bind`
-     * : (array) Bind these placeholder keys to these values in the where,
-     * group, having, etc. clauses.
+     * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, and 'order'.
      * 
-     * @return Solar_Sql_Model A model object with a 'record' focus.
+     * @return Solar_Sql_Model_Record A record object.
      * 
      */
     public function fetchOne($params = array())
     {
-        $this->_checkFocus('master');
-        
         // setup
-        $params = $this->_fixSelectParams($params);
-        $select = $this->_newSelect($params['eager']);
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
         
         // build
         $select->distinct($params['distinct'])
-               ->from($this->_table_name, $params['cols'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
@@ -1024,27 +865,24 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->bind($params['bind']);
         
         // fetch
-        $data = $select->fetch('one');
-        if ($data) {
-            
-            // get the main record
-            $record = $this->_newRecord($data);
-            
-            // get related data from each eager has_many relationship
-            $list = (array) $params['eager'];
-            foreach ($this->_related as $name => $opts) {
-                $eager = in_array($name, $list);
-                if ($eager && $opts['type'] == 'has_many') {
-                    $record->_data[$name] = $this->_fetchRelated($name, $opts['page']);
-                }
-            }
-            
-            // done
-            return $record;
-            
-        } else {
+        $data = $select->fetchOne();
+        if (! $data) {
             return null;
         }
+        
+        // get the main record, which sets the belongs_to/has_one data
+        $record = $this->newRecord($data);
+        
+        // get related data from each eager has_many relationship
+        foreach ((array) $params['eager'] as $name) {
+            $related = $this->getRelated($name);
+            if ($related->type == 'has_many') {
+                $record->$name = $this->fetchRelatedObject($record, $name);
+            }
+        }
+        
+        // done
+        return $record;
     }
     
     /**
@@ -1059,7 +897,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * be honored.
      * 
      * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to 
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
      *   restrict which records are returned.
      * 
      * `group`
@@ -1078,8 +916,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (int) Return only records from this page-number.
      * 
      * `bind`
-     * : (array) Bind these placeholder keys to these values in the where,
-     * group, having, etc. clauses.
+     * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, and 'order'.
@@ -1089,15 +926,13 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchCol($params = array())
     {
-        $this->_checkFocus('master');
-        
         // setup
-        $params = $this->_fixSelectParams($params);
-        $select = $this->_newSelect($params['eager']);
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
         
         // build
         $select->distinct($params['distinct'])
-               ->from($this->_table_name, $params['cols'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
@@ -1105,9 +940,9 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->setPaging($params['paging'])
                ->limitPage($params['page'])
                ->bind($params['bind']);
-               
+        
         // fetch
-        $data = $select->fetch('col');
+        $data = $select->fetchCol();
         if ($data) {
             return $data;
         } else {
@@ -1127,7 +962,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      *   be honored.
      * 
      * `where`
-     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to 
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
      *   restrict which records are returned.
      * 
      * `group`
@@ -1146,8 +981,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (int) Return only elements from this page-number.
      * 
      * `bind`
-     * : (array) Bind these placeholder keys to these values in the where,
-     * group, having, etc. clauses.
+     * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
      * for 'cols', 'where', 'group', 'having, and 'order'.
@@ -1157,15 +991,13 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchPairs($params = array())
     {
-        $this->_checkFocus('master');
-        
         // setup
-        $params = $this->_fixSelectParams($params);
-        $select = $this->_newSelect($params['eager']);
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
         
         // build
         $select->distinct($params['distinct'])
-               ->from($this->_table_name, $params['cols'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
@@ -1173,9 +1005,9 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->setPaging($params['paging'])
                ->limitPage($params['page'])
                ->bind($params['bind']);
-               
+        
         // fetch
-        $data = $select->fetch('pairs');
+        $data = $select->fetchPairs();
         if ($data) {
             return $data;
         } else {
@@ -1185,34 +1017,76 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
+     * Fetches a single value from the model (i.e., the first column of the 
+     * first record of the returned page set).
+     * 
+     * Recognized parameters for the fetch are:
+     * 
+     * `cols`
+     * : (string|array) Return only these columns; only the first one will
+     *   be honored.
+     * 
+     * `where`
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
+     *   restrict which records are returned.
+     * 
+     * `group`
+     * : (string|array) GROUP BY these columns.
+     * 
+     * `having`
+     * : (string|array) HAVING these column values.
+     * 
+     * `order`
+     * : (string|array) ORDER BY these columns.
+     * 
+     * `paging`
+     * : (int) Return this many records per page.
+     * 
+     * `page`
+     * : (int) Return only elements from this page-number.
+     * 
+     * `bind`
+     * : (array) Key-value pairs to bind into the query.
+     * 
+     * @param array $params An array of parameters for the fetch, with keys
+     * for 'cols', 'where', 'group', 'having, and 'order'.
+     * 
+     * @return mixed The single value from the model query, or null.
+     * 
+     */
+    public function fetchValue($params = array())
+    {
+        // setup
+        $params = $this->fixSelectParams($params);
+        $select = $this->newSelect($params['eager']);
+        $col = current($params['cols']);
+        
+        // build
+        $select->distinct($params['distinct'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $col)
+               ->multiWhere($params['where'])
+               ->group($params['group'])
+               ->having($params['having'])
+               ->order($params['order'])
+               ->setPaging($params['paging'])
+               ->limitPage($params['page'])
+               ->bind($params['bind']);
+        
+        // fetch
+        return $select->fetchValue();
+    }
+    
+    /**
+     * 
      * Returns a new record with default values.
      * 
      * @param array $spec An array of user-specified data to place into the
      * new record, if any.
      * 
-     * @return Solar_Sql_Model
+     * @return Solar_Sql_Model_Record A record object.
      * 
      */
     public function fetchNew($spec = null)
-    {
-        $this->_checkFocus('master');
-        return $this->_fetchNew($spec);
-    }
-    
-    /**
-     * 
-     * Internal-only support method to fetch new (blank) records.
-     * 
-     * @param array $spec An array of user-specified data to place into the
-     * new record, if any.
-     * 
-     * @return Solar_Sql_Model
-     * 
-     * @todo Add placeholder keys for related models?  Set as null, or as
-     * new record/collection objects?
-     * 
-     */
-    protected function _fetchNew($spec = null)
     {
         // the user-specifed data
         settype($spec, 'array');
@@ -1238,43 +1112,16 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // set placeholders for relateds.
-        foreach ($this->_related as $key => $val) {
-            $data[$key] = null;
+        $names = array_keys($this->_related);
+        foreach ($names as $name) {
+            $data[$name] = null;
         }
         
         // done, return the proper record object
-        $record = $this->_newRecord($data);
-        $record->_status = 'new';
+        $record = $this->newRecord($data);
+        $record->setStatus('new');
         return $record;
     }
-    
-    /**
-     * 
-     * Converts the properties of this model Record or Collection to an array,
-     * including related models stored in properties.
-     * 
-     * @return array
-     * 
-     */
-    public function toArray()
-    {
-        // only works with records and collections
-        $this->_checkFocus(array('record', 'collection'));
-        
-        // get a copy of everything
-        $data = array();
-        foreach ($this->_data as $key => $val) {
-            if ($val instanceof Solar_Sql_Model) {
-                $data[$key] = $val->toArray();
-            } else {
-                $data[$key] = $val;
-            }
-        }
-        
-        // done!
-        return $data;
-    }
-    
     
     /**
      * 
@@ -1289,259 +1136,20 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function countPages($params = null)
     {
-        $this->_checkFocus('master');
+        $params = $this->fixSelectParams($params);
         
-        $params = $this->_fixSelectParams($params);
-        
-        $select = $this->_newSelect();
+        $select = $this->newSelect();
         $select->distinct($params['distinct'])
-               ->from($this->_table_name)
+               ->from("{$this->_table_name} AS {$this->_model_name}")
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
-               ->setPaging($this->_paging);
-               
-        $col = "{$this->_table_name}.{$this->_primary_col}";
+               ->setPaging($this->_paging)
+               ->bind($params['bind']);
+        
+        $col = "{$this->_model_name}.{$this->_primary_col}";
         
         return $select->countPages($col);
-    }
-    
-    /**
-     * 
-     * Sets the number of records per page.
-     * 
-     * @param int $paging The number of records per page.
-     * 
-     * @return void
-     * 
-     */
-    public function setPaging($paging)
-    {
-        $this->_checkFocus('master');
-        $this->_paging = (int) $paging;
-    }
-    
-    /**
-     * 
-     * Gets the number of records per page.
-     * 
-     * @return int The number of records per page.
-     * 
-     */
-    public function getPaging()
-    {
-        $this->_checkFocus('master');
-        return $this->_paging;
-    }
-    
-    
-    // -----------------------------------------------------------------
-    // 
-    // Record-focused methods
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Inserts or updates the current record based on its primary key,
-     * or if a collection, inserts or updates each record in the collection.
-     * 
-     * @param array $data If the model focus is 'record', an associative
-     * array of data to merge with existing record data.  Ignored in 
-     * 'collection' focus.
-     * 
-     * @return void
-     * 
-     * @todo Wrap these in transactions?  Need to track transaction status
-     * in the Catalog, so we don't start multiple transactions.
-     * 
-     * @todo When saving related, don't save deleted ones; catch ERR_DELETED
-     * and proceed ot the next related.
-     * 
-     */
-    public function save($data = null)
-    {
-        // only save records and collections, that have not been deleted
-        $this->_checkFocus(array('record', 'collection'));
-        $this->_checkDeleted();
-        
-        // ok, what kind of save?
-        if ($this->_focus == 'record') {
-            $this->_saveRecord($data);
-        } elseif ($this->_focus == 'collection') {
-            $this->_saveCollection();
-        }
-    }
-    
-    /**
-     * 
-     * Saves this individual record, along with any related record instances.
-     * 
-     * @param array $data An associative array of data to merge with existing
-     * record data.
-     * 
-     * @return void
-     * 
-     */
-    protected function _saveRecord($data = null)
-    {
-        // load data at save-time?
-        if ($data) {
-            
-            // force to an array
-            settype($data, 'array');
-            
-            // the model name in array keys
-            $name = $this->_model_name;
-            
-            // do we have an array-key for this model in the data?
-            if (array_key_exists($name, $data) && is_array($data[$name])) {
-                // get just the array-key values for this model name
-                $this->_loadRecord($data[$name]);
-            } else {
-                // use the top-level array keys as data input
-                $this->_loadRecord($data);
-            }
-            
-            // set the status
-            if ($this->_status != 'new') {
-                $this->_status = 'dirty';
-            }
-        }
-        
-        // only save if we're not clean
-        if ($this->_status != 'clean') {
-            // if the primary key value is not present, insert;
-            // otherwise, update.
-            $primary = $this->_primary_col;
-            if (empty($this->_data[$primary])) {
-                $this->_insert();
-            } else {
-                $this->_update();
-            }
-            $this->_status = 'clean';
-        }
-        
-        // now save each related, but only if instantiated
-        foreach ($this->_related as $name => $info) {
-            if (! empty($this->_data[$name]) &&
-                $this->_data[$name] instanceof Solar_Sql_Model) {
-                // not empty, and is a model instance
-                $this->_data[$name]->save();
-            }
-        }
-    }
-    
-    /**
-     * 
-     * Saves each record in the collection.
-     * 
-     * @param array $data An associative array of data to merge with existing
-     * record data.
-     * 
-     * @return void
-     * 
-     * @todo Don't attempt to save deleted records in a collection; or, catch
-     * ERR_DELETED and go on to the next record in the collection.
-     * 
-     */
-    protected function _saveCollection()
-    {
-        foreach ($this->_data as $key => $val) {
-            $val->save();
-        }
-    }
-    
-    /**
-     * 
-     * Refreshes data for this record from the database.
-     * 
-     * Note that this does not refresh any related or calculated values.
-     * 
-     * @return void
-     * 
-     */
-    public function refresh()
-    {
-        $this->_checkFocus('record');
-        if ($this->_status != 'new') {
-            $master = Solar::factory($this->_class, array('sql' => $this->_sql));
-            $result = $master->fetch($this->_data[$this->_primary_col]);
-            $this->_data = $result->_data;
-            $this->_status = 'clean';
-        }
-    }
-    
-    /**
-     * 
-     * Deletes this record from the database.
-     * 
-     * Note that it does not delete any related values.
-     * 
-     * @return void
-     * 
-     */
-    public function delete()
-    {
-        $this->_checkFocus('record');
-        if ($this->_status != 'new') {
-            $where = $this->_sql->quoteInto(
-                "{$this->_primary_col} = ?",
-                $this->_data[$this->_primary_col]
-            );
-            $this->_sql->delete($this->_table_name, $where);
-        }
-        $this->_status = 'deleted';
-        $this->_data = null;
-    }
-    
-    /**
-     * 
-     * Gets the list of invalid columns and their localized invalidation
-     * messages.
-     * 
-     * @return array
-     * 
-     */
-    public function getInvalid()
-    {
-        $this->_checkFocus('record');
-        return $this->_invalid;
-    }
-    
-    /**
-     * 
-     * Sets one or more invalidation messages for a column.
-     * 
-     * @param string $key The column name to set as invalid.
-     * 
-     * @param string $msg The reason for invalidation.
-     * 
-     * @return void
-     * 
-     */
-    public function setInvalid($key, $msg)
-    {
-        $this->_checkFocus('record');
-        $this->_status = 'invalid';
-        $this->_invalid[$key][] = $msg;
-    }
-    
-    /**
-     * 
-     * Sets the page-number for related collections.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param int $page The page-number to set.
-     * 
-     * @return void
-     * 
-     */
-    public function setRelatedPage($name, $page)
-    {
-        $this->_checkFocus('record');
-        $this->_related_page[$name] = (int) $page;
     }
     
     /**
@@ -1557,588 +1165,29 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 'pages' (the number of pages of records).
      * 
      */
-    public function countRelatedPages($name, $params = null)
+    public function countPagesRelated($record, $name, $params = null)
     {
-        $this->_checkFocus('record');
-        $params = $this->_fixSelectParams($params);
+        $related = $this->getRelated($name);
+        $params = $this->fixSelectParams($params);
+        $select = $related->newSelect($record);
         
-        $select = $this->_newRelatedSelect($name);
         $select->multiWhere($params['where'])
                ->group($params['group'])
                ->having($params['having'])
-               ->setPaging($params['paging']);
+               ->setPaging($params['paging'])
+               ->bind($params['bind']);
         
-        $opts = $this->_related[$name];
-        $col  = "{$opts['foreign_alias']}.{$opts['foreign_primary_col']}";
+        $col = "{$related->foreign_alias}.{$related->foreign_primary_col}";
+        
         return $select->countPages($col);
     }
     
-    // -----------------------------------------------------------------
-    // 
-    // Other methods
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Loads data for a single record.
-     * 
-     * @param array $data The data to load into the object.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadRecord($data)
-    {
-        // collected data for related models
-        $rel_data = array();
-        
-        // load each key into $this->_data, or save in $rel_data
-        foreach ($data as $key => $val) {
-            
-            // don't set numeric or underscore-prefixed properties
-            $key = (string) $key;
-            if (is_numeric($key) || $key[0] == '_') {
-                continue;
-            }
-            
-            // if the key has double-underscores, it's an eager-load record.
-            if (strpos($key, '__') !== false) {
-                list($rel_name, $rel_key) = explode('__', $key);
-                $rel_data[$rel_name][$rel_key] = $val;
-                continue;
-            }
-            
-            // set the value
-            $this->_data[$key] = $data[$key];
-        }
-        
-        // unserialize as needed
-        $this->_unserialize();
-        
-        // load related data, if any was passed in
-        $related = $this->_related;
-        foreach ($related as $name => $opts) {
-            
-            // is this a "to-one" association with data already in place?
-            $type = $opts['type'];
-            if (($type == 'has_one' || $type == 'belongs_to') &&
-                ! empty($rel_data[$name])) {
-                // create a record object from the related model
-                $model = Solar::factory($opts['foreign_model']);
-                $this->_data[$name] = $model->_newRecord($rel_data[$name]);
-            } else {
-                // set a placeholder for lazy-loading in __get()
-                $this->_data[$name] = null;
-            }
-            
-            // either way, set the default related page
-            $this->_related_page[$name] = $opts['page'];
-        }
-        
-        // load placeholders for calculated columns. we don't calculate
-        // right away because they might be using related columns, which would
-        // defeat the purpose of lazy-loading relationships.
-        foreach ($this->_calculate_cols as $name) {
-            $this->_data[$name] = null;
-        }
-    }
-    
-    /**
-     * 
-     * Returns the appropriate record object for an inheritance model.
-     * 
-     * For example ...
-     * {{
-     *     class Solar_Model_Nodes extends Solar_Sql_Model {
-     *         // ...
-     *     }
-     *     
-     *     $nodes = Solar::factory('Solar_Model_Nodes');
-     *     $class = $nodes->getRecordClass('comment');
-     *     // $class == 'Solar_Model_Nodes_Comment';
-     * }}
-     * 
-     * @param array $data The data to load into the record.
-     * 
-     * @return Solar_Sql_Model A model with 'record' focus.
-     * 
-     */
-    protected function _newRecord($data)
-    {
-        // the model class we'll use for the record
-        $class = null;
-        
-        // look for an inheritance model in relation to $data
-        $inherit = null;
-        if ($this->_inherit_col && ! empty($data[$this->_inherit_col])) {
-            // inheritance is available, and a value is set for the
-            // inheritance column in the data
-            $inherit = trim($data[$this->_inherit_col]);
-        }
-        
-        // did we find an inheritance?
-        if ($inherit) {
-            // try to find a class based on inheritance, going up the stack
-            // as needed. this checks for Current_Model_Type,
-            // Parent_Model_Type, Grandparent_Model_Type, etc.
-            // suppress exceptions.
-            // 
-            // note that $class could still end up false, as we might not find
-            // a related class in the hierarchy.
-            $class = $this->_stack->load($inherit, false);
-        }
-        
-        // were we able to load the inheritance class?
-        if (! $class) {
-            // no, fall back to default.
-            $class = $this->_class;
-        }
-        
-        // get the appropriate model class, load it, and return it.
-        // use factory instead of registry, since STI may not have
-        // caught this particular class yet.
-        $obj = Solar::factory($class);
-        $obj->_focus = 'record';
-        $obj->_loadRecord($data);
-        return $obj;
-    }
-    
-    /**
-     * 
-     * Filters and inserts the current record data into the table.
-     * 
-     * @return void
-     * 
-     */
-    protected function _insert()
-    {
-        // keep a copy of the data for manipulation (filters, etc)
-        $this->_data = array_merge(
-            $this->_fetchNew()->toArray(), // use the *protected* version
-            $this->_data
-        );
-        
-        // needed for created/updated timestamps
-        $now = date('Y-m-d\\TH:i:s');
-        
-        // auto-add a 'created' value if there is a 'created' column
-        // and its value is not already set.
-        $key = $this->_created_col;
-        if ($key && empty($this->_data[$key])) {
-            $this->_data[$key] = $now;
-        }
-        
-        // auto-add an 'updated' value if there is an 'updated' column
-        // and its value is not already set.
-        $key = $this->_updated_col;
-        if ($key && empty($this->_data[$key])) {
-            $this->_data[$key] = $now;
-        }
-        
-        // auto-add sequence values
-        foreach ($this->_sequence_cols as $key => $val) {
-            if (empty($this->_data[$key])) {
-                // no value given for the key.
-                // add a new sequence value.
-                $this->_data[$key] = $this->_sql->nextSequence($val);
-            }
-        }
-        
-        // filter the data (sanitize and validate)
-        $filter = Solar::factory($this->_datafilter_class);
-        $filter->setModel($this);
-        $invalid = $filter->process($this->_data);
-        
-        // was there any invalid data?
-        $this->_invalid = array();
-        if ($invalid) {
-            foreach ($invalid as $key => $str) {
-                // set the generic invalidation message for this key
-                $this->setInvalid($key, $this->locale("INVALID_" . strtoupper($key)));
-                // set the invalidation reason
-                $this->setInvalid($key, $str);
-            }
-            throw $this->_exception('ERR_FAILED_VALIDATION', $this->_invalid);
-        }
-        
-        // remove non-existent ("virtual") columns from the data,
-        foreach ($this->_data as $key => $val) {
-            if (empty($this->_table_cols[$key])) {
-                unset($this->_data[$key]);
-            }
-        }
-        
-        // serialize and attempt the insert.
-        $this->_serialize();
-        $result = $this->_sql->insert($this->_table_name, $this->_data);
-        
-        // if there was an autoincrement column, set its value in the data.
-        foreach ($this->_table_cols as $key => $val) {
-            if ($val['autoinc']) {
-                // set the value and leave the loop (only one autoinc
-                // should be here anyway)
-                $this->_data[$key] = $this->_sql->lastInsertId();
-                break;
-            }
-        }
-        
-        // unserialize the data and return.
-        // @todo This does not reflect values from sql-based functions;
-        // would need to re-select from the DB to get those.
-        $this->_unserialize();
-        $this->_status = 'inserted';
-    }
-    
-    /**
-     * 
-     * Filters and updates an array of data in the table based on a WHERE
-     * clause.
-     * 
-     * @return void
-     * 
-     * @todo Currently allows changing of primary-key values; should this be
-     * disallowed as before?
-     * 
-     */
-    protected function _update()
-    {
-        // auto-add an 'updated' value if there is an 'updated' column.
-        $key = $this->_updated_col;
-        if ($key) {
-            $this->_data[$key] = date('Y-m-d\\TH:i:s');
-        }
-        
-        // auto-add sequence values
-        foreach ($this->_sequence_cols as $key => $val) {
-            if (array_key_exists($key, $this->_data) &&
-                empty($this->_data[$key])) {
-                // key exists, but has no value.
-                // update with new sequence value.
-                $this->_data[$key] = $this->_sql->nextSequence($val);
-            }
-        }
-        
-        // filter the data (sanitize and validate)
-        $filter = Solar::factory($this->_datafilter_class);
-        $filter->setModel($this);
-        $invalid = $filter->process($this->_data);
-        
-        // was there any invalid data?
-        $this->_invalid = array();
-        if ($invalid) {
-            foreach ($invalid as $key => $str) {
-                // set the generic invalidation message for this key
-                $this->setInvalid($key, $this->locale("INVALID_" . strtoupper($key)));
-                // set the invalidation reason
-                $this->setInvalid($key, $str);
-            }
-            throw $this->_exception('ERR_FAILED_VALIDATION', $this->_invalid);
-        }
-        
-        // remove non-existent ("virtual") columns from the data
-        foreach ($this->_data as $key => $val) {
-            if (empty($this->_table_cols[$key])) {
-                unset($this->_data[$key]);
-            }
-        }
-        
-        // serialize data
-        $this->_serialize();
-        
-        // keep the primary-key value and build a WHERE clause
-        
-        // attempt the update
-        $primary = $this->_primary_col;
-        $where = "$primary = :{$primary}";
-        $this->_sql->update($this->_table_name, $this->_data, $where);
-        
-        // unserialize the data and return.
-        // @todo This does not reflect values from sql-based functions;
-        // would need to re-select from the DB to get those.
-        $this->_unserialize();
-        $this->_status = 'updated';
-    }
-    
-    /**
-     * 
-     * Serializes values in $this->_data based on $this->_serialize_cols.
-     * 
-     * Does not attempt to serialize null values.
-     * 
-     * If serializing fails, stores 'null' in the data.
-     * 
-     * @return void
-     * 
-     */
-    protected function _serialize()
-    {
-        foreach ($this->_serialize_cols as $key) {
-            if (! empty($this->_data[$key]) && $this->_data[$key] !== null) {
-                $this->_data[$key] = serialize($this->_data[$key]);
-                if (! $this->_data[$key]) {
-                    // serializing failed
-                    $this->_data[$key] = null;
-                }
-            }
-        }
-    }
-    
-    /**
-     * 
-     * Unserializes values in $this->_data based on $this->_serialize_cols.
-     * 
-     * Does not attempt to unserialize null values.
-     * 
-     * If unserializing fails, stores 'null' in the data.
-     * 
-     * @return void
-     * 
-     */
-    protected function _unserialize()
-    {
-        foreach ($this->_serialize_cols as $key) {
-            if (! empty($this->_data[$key]) && $this->_data[$key] !== null) {
-                $this->_data[$key] = unserialize($this->_data[$key]);
-                if (! $this->_data[$key]) {
-                    // unserializing failed
-                    $this->_data[$key] = null;
-                }
-            }
-        }
-    }
     
     // -----------------------------------------------------------------
-    // 
-    // Record fetching and counting on *related* models.
-    // 
+    //
+    // Select
+    //
     // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Fetches the related record or collection for a named relationship and
-     * primary key.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param mixed $spec The primary key value; if an array, looks for the
-     * primary-key column name and uses the corresponding value.
-     * 
-     * @param int $page For to-many associations, the page-number of records
-     * to fetch (default null, which fetches all records).  Ignored by to-one
-     * associations.  Paging is based on the related model's "$_paging"
-     * property.
-     * 
-     * @return Solar_Sql_Model A model object with a 'record' or 'collection'
-     * focus.
-     * 
-     */
-    protected function _fetchRelated($name, $page = null)
-    {
-        $select = $this->_newRelatedSelect($name);
-        $opts = $this->_related[$name];
-        $type = $opts['type'];
-        
-        // fetch per the association type
-        if ($type == 'has_one' || $type == 'belongs_to') {
-            
-            // this is a to-one association; fetch the data.
-            $data = $select->fetch('one');
-            
-            // create and load into an appropriate Record object.
-            $model = Solar::factory($opts['foreign_model']);
-            $result = $model->_newRecord($data);
-            
-        } else {
-            
-            // this is a has_many association.  set the page ...
-            $select->limitPage($page);
-            
-            // ... and fetch the data.
-            $data = $select->fetch('all');
-            
-            // create and load a collection object
-            $result = Solar::factory($opts['foreign_model']);
-            $result->_focus = 'collection';
-            $result->_data = $data;
-        }
-        
-        // done!
-        return $result;
-    }
-    
-    /**
-     * 
-     * Returns a new Solar_Sql_Select tool, with the proper SQL object
-     * injected automatically, and with eager "to-one" associations joined.
-     * 
-     * @param array $eager An array of to-one relationship names to eager-
-     * load with LEFT JOIN clauses.
-     * 
-     * @return Solar_Sql_Select
-     * 
-     */
-    protected function _newSelect($eager = null)
-    {
-        // get the select object
-        $select = Solar::factory(
-            'Solar_Sql_Select',
-            array('sql' => $this->_sql)
-        );
-        
-        // add eager has_one/belongs_to joins
-        foreach ((array) $eager as $name) {
-            
-            if (empty($this->_related[$name])) {
-                // skip unrecognized relationship names
-                continue;
-            }
-            
-            // get the relationship options
-            $opts = $this->_related[$name];
-            
-            // only process eager to-one associations
-            if ($opts['type'] == 'has_many') {
-                continue;
-            }
-            
-            // build column names as "name__col" so that we can extract the
-            // the related data later.
-            $cols = array();
-            foreach ($opts['cols'] as $col) {
-                $cols[] = "$col AS {$name}__$col";
-            }
-            
-            // primary-key join condition on foreign table
-            // local.id = foreign_alias.local_id
-            $cond = "{$this->_table_name}.{$opts['native_col']} = "
-                  . "{$opts['foreign_alias']}.{$opts['foreign_col']}";
-            
-            // add the join
-            $select->leftJoin(
-                "{$opts['foreign_table']} AS {$opts['foreign_alias']}",
-                $cond,
-                $cols
-            );
-            
-            // inheritance for foreign model
-            if ($opts['foreign_inherit_col']) {
-                $select->where(
-                    "{$opts['foreign_alias']}.{$opts['foreign_inherit_col']} = ?",
-                    $opts['foreign_inherit_val']
-                );
-                
-            }
-            
-            // added where conditions for the join
-            $select->multiWhere($opts['where']);
-        }
-        
-        // inheritance for native model
-        if ($this->_inherit_model) {
-            $select->where(
-                "{$this->_table_name}.{$this->_inherit_col} = ?",
-                $this->_inherit_model
-            );
-        }
-        
-        // done!
-        return $select;
-    }
-    
-    /**
-     * 
-     * Returns a new Solar_Sql_Select tool for selecting related records.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @return Solar_Sql_Select
-     * 
-     */
-    protected function _newRelatedSelect($name)
-    {
-        if (! array_key_exists($name, $this->_related)) {
-            throw $this->_exception('ERR_RELATED_NOT_EXIST', array(
-                'name' => $name,
-            ));
-        }
-        
-        // get the options for this relationship
-        $opts = $this->_related[$name];
-        
-        // get a select object
-        $select = Solar::factory(
-            'Solar_Sql_Select',
-            array('sql' => $this->_sql)
-        );
-        
-        // is this to-many through another relationship?
-        if ($opts['type'] == 'has_many' && $opts['through']) {
-            
-            // more-complex 'has_many through' relationship.
-            // select from the foreign table.
-            $select->from(
-                "{$opts['foreign_table']} AS {$opts['foreign_alias']}",
-                $opts['cols']
-            );
-            
-            // join through the mapping table.
-            $join_table = "{$opts['through_table']} AS {$opts['through_alias']}";
-            $join_where = "{$opts['foreign_alias']}.{$opts['foreign_col']} = "
-                        . "{$opts['through_alias']}.{$opts['through_foreign_col']}";
-            
-            $select->leftJoin($join_table, $join_where);
-            
-            // restrict to the related native column value in the "through" table
-            $select->where(
-                "{$opts['through_alias']}.{$opts['through_native_col']} = ?",
-                $this->_data[$opts['native_col']]
-            );
-            
-            // honor foreign inheritance
-            if ($opts['foreign_inherit_col']) {
-                $select->where(
-                    "{$opts['foreign_alias']}.{$opts['foreign_inherit_col']} = ?",
-                    $opts['foreign_inherit_val']
-                );
-            }
-            
-        } else {
-            
-            // simple belongs_to, has_one, or has_many.
-            // select columns from the foreign table.
-            $select->from(
-                "{$opts['foreign_table']} AS {$opts['foreign_alias']}",
-                $opts['cols']
-            );
-            
-            // restrict to the related native column value in the foreign table
-            $select->where(
-                "{$opts['foreign_alias']}.{$opts['foreign_col']} = ?",
-                $this->_data[$opts['native_col']]
-            );
-            
-            // honor foreign inheritance
-            if ($opts['foreign_inherit_col']) {
-                $select->where(
-                    "{$opts['foreign_alias']}.{$opts['foreign_inherit_col']} = ?",
-                    $opts['foreign_inherit_val']
-                );
-            }
-        }
-        
-        // everything else
-        $select->distinct($opts['distinct'])
-               ->multiWhere($opts['where'])
-               ->group($opts['group'])
-               ->having($opts['having'])
-               ->order($opts['order'])
-               ->setPaging($opts['paging']);
-        
-        // done
-        return $select;
-    }
-    
     
     /**
      * 
@@ -2149,7 +1198,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return array A normalized set of clause params.
      * 
      */
-    protected function _fixSelectParams($params)
+    public function fixSelectParams($params)
     {
         settype($params, 'array');
         
@@ -2159,8 +1208,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         if (empty($params['cols'])) {
             $params['cols'] = array_keys($this->_table_cols);
-        } else {
-            // add primary and inherit cols?
         }
         
         if (empty($params['eager'])) {
@@ -2198,21 +1245,518 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $params;
     }
     
+    /**
+     * 
+     * Returns a new Solar_Sql_Select tool, with the proper SQL object
+     * injected automatically, and with eager "to-one" associations joined.
+     * 
+     * @param array $eager An array of to-one relationship names to eager-
+     * load with LEFT JOIN clauses.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function newSelect($eager = null)
+    {
+        // get the select object
+        $select = Solar::factory(
+            $this->_select_class,
+            array('sql' => $this->_sql)
+        );
+        
+        // add eager has_one/belongs_to joins
+        foreach ((array) $eager as $name) {
+            
+            // get the relationship options
+            $related = $this->getRelated($name);
+            
+            // only process eager to-one associations at this point
+            if ($related->type == 'has_many') {
+                continue;
+            }
+            
+            // build column names as "name__col" so that we can extract the
+            // the related data later.
+            $cols = array();
+            foreach ($related->cols as $col) {
+                $cols[] = "$col AS {$name}__$col";
+            }
+            
+            // primary-key join condition on foreign table
+            // local.id = foreign_alias.local_id
+            $cond = "{$this->_model_name}.{$related->native_col} = "
+                  . "{$related->foreign_alias}.{$related->foreign_col}";
+            
+            // add the join
+            $select->leftJoin(
+                "{$related->foreign_table} AS {$related->foreign_alias}",
+                $cond,
+                $cols
+            );
+            
+            // inheritance for foreign model
+            if ($related->foreign_inherit_col) {
+                $select->where(
+                    "{$related->foreign_alias}.{$related->foreign_inherit_col} = ?",
+                    $related->foreign_inherit_val
+                );
+            
+            }
+            
+            // added where conditions for the join
+            $select->multiWhere($related->where);
+        }
+        
+        // inheritance for native model
+        if ($this->_inherit_model) {
+            $select->where(
+                "{$this->_model_name}.{$this->_inherit_col} = ?",
+                $this->_inherit_model
+            );
+        }
+        
+        // done!
+        return $select;
+    }
+    
+    /**
+     * 
+     * Given a record, fetches a related record or collection for a named
+     * relationship.
+     * 
+     * @param string $name The relationship name.
+     * 
+     * @param int $page For to-many associations, the page-number of records
+     * to fetch (default null, which fetches all records).  Ignored by to-one
+     * associations.  Paging is based on the related model's "$_paging"
+     * property.
+     * 
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or collection
+     * object.
+     * 
+     */
+    public function fetchRelatedObject($spec, $name, $page = null, $bind = null)
+    {
+        // fetch the related data as an array
+        $data = $this->fetchRelatedArray($spec, $name, $page);
+        
+        // get the relationship type
+        $related = $this->getRelated($name);
+        
+        // record or collection?
+        if ($related->type == 'has_one' || $related->type == 'belongs_to') {
+            $result = $related->getModel()->newRecord($data);
+        } else {
+            $result = $related->getModel()->newCollection($data);
+        }
+        
+        // done!
+        return $result;
+    }
+    
+    public function fetchRelatedArray($spec, $name, $page = null, $bind = null)
+    {
+        $related = $this->getRelated($name);
+        
+        if (is_array($spec)) {
+            $spec = $this->fixSelectParams($spec);
+        }
+        
+        $select = $related->newSelect($spec);
+        $select->bind($bind);
+        $select->limitPage($page);
+        return $select->fetch($related->fetch);
+    }
+    
     // -----------------------------------------------------------------
-    // 
-    // Relationship definitions.
-    // 
+    //
+    // Record and Collection factories
+    //
     // -----------------------------------------------------------------
     
     /**
      * 
-     * Adds a named relationship.
+     * Returns the appropriate record object for an inheritance model.
      * 
-     * @param string $type The relationship type: belongs_to, has_many, or
-     * has_one.  Note that has-and-belongs-to-many (many-to-many) is 
-     * accomplished using "has_many" through another relationship.
+     * @param array $data The data to load into the record.
      * 
-     * @param string $name The relationship name, which will double as a 
+     * @return Solar_Sql_Model_Record A record object.
+     * 
+     */
+    public function newRecord($data)
+    {
+        // the record class we'll use
+        $class = null;
+        
+        // look for an inheritance in relation to $data
+        $inherit = null;
+        if ($this->_inherit_col && ! empty($data[$this->_inherit_col])) {
+            // inheritance is available, and a value is set for the
+            // inheritance column in the data
+            $inherit = trim($data[$this->_inherit_col]);
+        }
+        
+        // did we find an inheritance?
+        if ($inherit) {
+            // try to find a class based on inheritance, going up the stack
+            // as needed. this checks for Current_Model_Type,
+            // Parent_Model_Type, Grandparent_Model_Type, etc.
+            // suppress exceptions.
+            //
+            // note that $class could still end up false, as we might not find
+            // a related class in the hierarchy.
+            $class = $this->_stack->load($inherit . '_Record', false);
+        }
+        
+        // even if inheritance failed, look for a model-specific record class
+        if (! $class) {
+            $class = $this->_stack->load('Record', false);
+        }
+        
+        // final fallback: the default record class
+        if (! $class) {
+            $class = $this->_record_class;
+        }
+        
+        // factory the appropriate record class, load it, and return it.
+        $record = Solar::factory($class);
+        $record->setModel($this);
+        $record->load($data);
+        return $record;
+    }
+    
+    /**
+     * 
+     * Returns the appropriate collection object for this model.
+     * 
+     * @param array $data The data to load into the collection, if any.
+     * 
+     * @return Solar_Sql_Model_Collection A collection object.
+     * 
+     */
+    public function newCollection($data = null)
+    {
+        // the collection class we'll use
+        $class = $this->_stack->load('Collection', false);
+        
+        // final fallback
+        if (! $class) {
+            $class = $this->_collection_class;
+        }
+        
+        // factory the collection class, load it, and return it.
+        $collection = Solar::factory($class);
+        $collection->setModel($this);
+        $collection->load($data);
+        return $collection;
+    }
+    
+    // -----------------------------------------------------------------
+    //
+    // Insert, update, or delete rows in the model.
+    //
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Inserts one row to the model table.
+     * 
+     * @param array|Solar_Sql_Model_Record $spec The row data to insert.
+     * 
+     * @return array The data as inserted, including auto-incremented values,
+     * auto-sequence values, created/updated/inherit values, etc.
+     * 
+     */
+    public function insert($spec)
+    {
+        if (! is_array($spec) && ! ($spec instanceof Solar_Sql_Model_Record)) {
+            throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
+        }
+        
+        /**
+         * Force or auto-set special columns
+         */
+        // force the 'created' value if there is a 'created' column
+        $now = date('Y-m-d H:i:s');
+        $key = $this->_created_col;
+        if ($key) {
+            $spec[$key] = $now;
+        }
+        
+        // force the 'updated' value if there is an 'updated' column (same as
+        // the 'created' timestamp)
+        $key = $this->_updated_col;
+        if ($key) {
+            $spec[$key] = $now;
+        }
+        
+        // if inheritance is turned on, auto-set the inheritance value,
+        // if not already set.
+        $key = $this->_inherit_col;
+        if ($key && $this->_inherit_model && empty($spec[$key])) {
+            $spec[$key] = $this->_inherit_model;
+        }
+        
+        // auto-set sequence values if needed
+        foreach ($this->_sequence_cols as $key => $val) {
+            if (empty($spec[$key])) {
+                // no value given for the key.
+                // add a new sequence value.
+                $spec[$key] = $this->_sql->nextSequence($val);
+            }
+        }
+        
+        /**
+         * Record filtering
+         */
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            // apply record filters and convert to array
+            $spec->filter();
+            $data = $spec->toArray();
+        } else {
+            // already an array
+            $data = $spec;
+        }
+        
+        /**
+         * Final prep, then insert
+         */
+        // remove non-existent table columns from the data
+        foreach ($data as $key => $val) {
+            if (empty($this->_table_cols[$key])) {
+                unset($data[$key]);
+                // not in the table, so no need to check for autoinc
+                continue;
+            }
+            
+            // remove empty autoinc columns to soothe postgres, which won't
+            // take explicit NULLs in SERIAL cols.
+            if ($this->_table_cols[$key]['autoinc'] && empty($val)) {
+                unset($data[$key]);
+            }
+        }
+        
+        // do the insert
+        $this->serializeCols($data);
+        $this->_sql->insert($this->_table_name, $data);
+        $this->unserializeCols($data);
+        
+        /**
+         * Post-insert
+         */
+        // no exception thrown, so it must have worked.
+        // if there was an autoincrement column, set its value in the data.
+        foreach ($this->_table_cols as $key => $val) {
+            if ($val['autoinc']) {
+                // set the value and leave the loop (should be only one)
+                $data[$key] = $this->_sql->lastInsertId($this->_table_name, $key);
+                break;
+            }
+        }
+        
+        // reload the data into the record if needed
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            $spec->load($data);
+        }
+        
+        // return the data as inserted
+        return $data;
+    }
+    
+    /**
+     * 
+     * Updates rows in the model table.
+     * 
+     * @param array|Solar_Sql_Model_Record $spec The row data to insert.
+     * 
+     * @param string|array $where The WHERE clause to identify which rows to 
+     * update.
+     * 
+     * @return array The data as updated.
+     * 
+     */
+    public function update($spec, $where)
+    {
+        if (! is_array($spec) && ! ($spec instanceof Solar_Sql_Model_Record)) {
+            throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
+        }
+        
+        /**
+         * Force or auto-set special columns
+         */
+        // force the 'updated' value
+        $key = $this->_updated_col;
+        if ($key) {
+            $spec[$key] = date('Y-m-d H:i:s');
+        }
+        
+        // if inheritance is turned on, auto-set the inheritance value,
+        // if not already set.
+        $key = $this->_inherit_col;
+        if ($key && $this->_inherit_model && empty($this->$key)) {
+            $spec[$key] = $this->_inherit_model;
+        }
+        
+        // auto-set sequences where keys exist and values are empty
+        foreach ($this->_sequence_cols as $key => $val) {
+            // hack to to account for arrays *and* Record/Struct objects
+            $exists = array_key_exists($key, $spec) || isset($spec[$key]);
+            if ($exists && empty($spec[$key])) {
+                // key is present but no value is given.
+                // add a new sequence value.
+                $spec[$key] = $this->_sql->nextSequence($val);
+            }
+        }
+        
+        /**
+         * Record filtering and WHERE clause
+         */
+        
+        // what's the primary key?
+        $primary = $this->_primary_col;
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            // apply record filters and convert to array, then force the
+            // WHERE clause
+            $spec->filter();
+            $data = $spec->toArray();
+            $where = array("$primary = ?" => $data[$primary]);
+        } else {
+            // already an array
+            $data = $spec;
+        }
+        
+        // don't update the primary key
+        unset($data[$primary]);
+        
+        /**
+         * Final prep, then update
+         */
+        // remove non-existent table columns from the data
+        foreach ($data as $key => $val) {
+            if (empty($this->_table_cols[$key])) {
+                unset($data[$key]);
+            }
+        }
+        
+        // perform the update
+        $this->serializeCols($data);
+        $this->_sql->update($this->_table_name, $data, $where);
+        $this->unserializeCols($data);
+        
+        // reload the data into the record if needed
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            $spec->load($data);
+        }
+        
+        // unserialize cols and return the data as updated
+        return $data;
+    }
+    
+    /**
+     * 
+     * Deletes rows from the model table.
+     * 
+     * @param string|array|Solar_Sql_Model_Record $spec The WHERE clause to
+     * identify which rows to delete, or a record to delete.
+     * 
+     * @return void
+     * 
+     */
+    public function delete($spec)
+    {
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            $primary = $this->_primary_col;
+            $where = array("$primary = ?" => $spec->$primary);
+        } else {
+            $where = $spec;
+        }
+        
+        return $this->_sql->delete($this->_table_name, $where);
+    }
+    
+    /**
+     * 
+     * Serializes data values in-place based on $this->_serialize_cols.
+     * 
+     * Does not attempt to serialize null values.
+     * 
+     * If serializing fails, stores 'null' in the data.
+     * 
+     * @param array &$data Record data.
+     * 
+     * @return void
+     * 
+     */
+    public function serializeCols(&$data)
+    {
+        foreach ($this->_serialize_cols as $key) {
+            if (! empty($data[$key]) && $data[$key] !== null) {
+                $data[$key] = serialize($data[$key]);
+                if (! $data[$key]) {
+                    // serializing failed
+                    $data[$key] = null;
+                }
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Unerializes data values in-place based on $this->_serialize_cols.
+     * 
+     * Does not attempt to unserialize null values.
+     * 
+     * If unserializing fails, stores 'null' in the data.
+     * 
+     * @param array &$data Record data.
+     * 
+     * @return void
+     * 
+     */
+    public function unserializeCols(&$data)
+    {
+        // unseralize columns as-needed
+        foreach ($this->_serialize_cols as $key) {
+            // only unserialize if a non-empty string
+            if (! empty($data[$key]) && is_string($data[$key])) {
+                $data[$key] = unserialize($data[$key]);
+                if (! $data[$key]) {
+                    // unserializing failed
+                    $data[$key] = null;
+                }
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Adds a column filter.
+     * 
+     * This can be a "real" (table) or "virtual" (calculate) column.
+     * 
+     * Remember, filters are applied only to Record object data.
+     * 
+     * @param string $col The column name to filter.
+     * 
+     * @param string $method The filter method name, e.g. 'validateUnique'.
+     * 
+     * @args Remaining arguments are passed to the filter method.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addFilter($col, $method)
+    {
+        $args = func_get_args();
+        array_shift($args); // the first param is $col
+        $this->_filters[$col][] = $args;
+    }
+    
+    /**
+     * 
+     * Adds a named has-one relationship.
+     * 
+     * @param string $name The relationship name, which will double as a
      * property when records are fetched from the model.
      * 
      * @param array $opts Additional options for the relationship.
@@ -2220,326 +1764,541 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return void
      * 
      */
-    protected function _addRelated($type, $name, $opts = null)
+    protected function _hasOne($name, $opts = null)
     {
-        if ($type == 'belongs_to' || $type == 'has_one' || $type == 'has_many') {
-            settype($opts, 'array');
-            $opts['type'] = $type;
-            $this->_related[$name] = $opts;
+        $this->_addRelated($name, 'HasOne', $opts);
+    }
+    
+    /**
+     * 
+     * Adds a named belongs-to relationship.
+     * 
+     * @param string $name The relationship name, which will double as a
+     * property when records are fetched from the model.
+     * 
+     * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _belongsTo($name, $opts = null)
+    {
+        $this->_addRelated($name, 'BelongsTo', $opts);
+    }
+    
+    /**
+     * 
+     * Adds a named has-many relationship.
+     * 
+     * Note that you can get "has-and-belongs-to-many" using "has-many"
+     * with a "through" option ("has-many-through").
+     * 
+     * @param string $name The relationship name, which will double as a
+     * property when records are fetched from the model.
+     * 
+     * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _hasMany($name, $opts = null)
+    {
+        $this->_addRelated($name, 'HasMany', $opts);
+    }
+    
+    /**
+     * 
+     * Support method for adding relations.
+     * 
+     * @param string $name The relationship name, which will double as a
+     * property when records are fetched from the model.
+     * 
+     * @param string $type The relationship type.
+     * 
+     * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addRelated($name, $type, $opts)
+    {
+        // is the relation name already a column name?
+        if (array_key_exists($name, $this->_table_cols)) {
+            throw $this->_exception(
+                'ERR_RELATED_NAME_CONFLICT',
+                array(
+                    'name'  => $name,
+                    'class' => $this->_class,
+                )
+            );
+        }
+        
+        // is the relation name already in use?
+        if (array_key_exists($name, $this->_related)) {
+            throw $this->_exception(
+                'ERR_RELATED_NAME_EXISTS',
+                array(
+                    'name'  => $name,
+                    'class' => $this->_class,
+                )
+            );
+        }
+        
+        // keep it!
+        $opts['name']  = $name;
+        $opts['class'] = "Solar_Sql_Model_Related_$type";
+        $this->_related[$name] = (array) $opts;
+    }
+    
+    /**
+     * 
+     * Gets the control object for a named relationship.
+     * 
+     * @param string $name The related name.
+     * 
+     * @return Solar_Sql_Model_Related The relationship control object.
+     * 
+     */
+    public function getRelated($name)
+    {
+        if (! array_key_exists($name, $this->_related)) {
+            throw $this->_exception(
+                'ERR_RELATED_NAME_NOT_EXISTS',
+                array(
+                    'name'  => $name,
+                    'class' => $this->_class,
+                )
+            );
+        }
+        
+        if (is_array($this->_related[$name])) {
+            $opts = $this->_related[$name];
+            $this->_related[$name] = Solar::factory($opts['class']);
+            unset($opts['class']);
+            $this->_related[$name]->setNativeModel($this);
+            $this->_related[$name]->load($opts);
+        }
+        
+        return $this->_related[$name];
+    }
+    
+    /**
+     * 
+     * Fixes the stack of parent classes for the model.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixStack()
+    {
+        $parents = Solar::parents($this->_class, true);
+        array_pop($parents); // Solar_Base
+        array_pop($parents); // Solar_Sql_Model
+        $this->_stack = Solar::factory('Solar_Class_Stack');
+        $this->_stack->add($parents);
+    }
+    
+    /**
+     * 
+     * Loads table name into $this->_table_name, and pre-sets the value of
+     * $this->_inherit_model based on the class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixTableName()
+    {
+        /**
+         * Pre-set the value of $_inherit_model.  Will be modified one
+         * more time in _fixTableCols().
+         */
+        // find the closest parent called *_Model.  we do this so that
+        // we can honor the top-level table name with inherited models.
+        // *do not* use the class stack, as Solar_Sql_Model has been
+        // removed from it.
+        $parents = Solar::parents($this->_class, true);
+        foreach ($parents as $key => $val) {
+            if (substr($val, -6) == '_Model') {
+                break;
+            }
+        }
+        
+        // $key is now the value of the closest "_Model" class.
+        // -1 to get the first class below that (e.g., *_Model_Nodes).
+        // $parent is then the parent class name that represents the base of
+        // the model-inheritance hierarchy (which may not be the immediate
+        // parent in some cases).
+        $parent = $parents[$key - 1];
+        
+        // compare parent class name to the current class name.
+        // if it has an undersore after the parent class name, this class
+        // is considered to be an inheritance model.
+        $len = strlen($parent) + 1;
+        if (substr($this->_class, 0, $len) == "{$parent}_") {
+            $this->_inherit_model = substr($this->_class, $len);
+            $this->_inherit_base = $parent;
+        }
+        
+        // get the part after the last underscore in the parent class name.
+        // e.g., "Solar_Model_Node" => "Node".  If no underscores, use the
+        // parent class name as-is.
+        $pos = strrpos($parent, '_');
+        if ($pos === false) {
+            $table = $parent;
         } else {
-            throw $this->_exception('ERR_RELATED_TYPE', array(
-                'type' => $type,
-                'name' => $name,
-                'opts' => $opts,
-            ));
+            $table = substr($parent, $pos + 1);
+        }
+        
+        /**
+         * Auto-set the table name, if needed.
+         */
+        if (empty($this->_table_name)) {
+            // auto-defined table name. change TableName to table_name.
+            // this is our one concession on inflecting names, because if the
+            // class was called Table_Name, it would set the inheritance
+            // model improperly.
+            $table = preg_replace('/([a-z])([A-Z])/', '$1_$2', $table);
+            $this->_table_name = strtolower($table);
+        } else {
+            // user-defined table name.
+            $this->_table_name = strtolower($this->_table_name);
         }
     }
     
-    
-    // -----------------------------------------------------------------
-    // 
-    // User setup and post-setup corrections.
-    // 
-    // -----------------------------------------------------------------
-    
     /**
      * 
-     * User-defined setup.
+     * Fixes $this->_index listings.
      * 
      * @return void
      * 
      */
-    protected function _setup()
+    protected function _fixIndex()
     {
+        // baseline index definition
+        $baseidx = array(
+            'name'    => null,
+            'type'    => 'normal',
+            'cols'    => null,
+        );
+        
+        // fix up each index to have a full set of info
+        foreach ($this->_index as $key => $val) {
+            
+            if (is_int($key) && is_string($val)) {
+                // array('col')
+                $info = array(
+                    'name' => $val,
+                    'type' => 'normal',
+                    'cols' => array($val),
+                );
+            } elseif (is_string($key) && is_string($val)) {
+                // array('col' => 'unique')
+                $info = array(
+                    'name' => $key,
+                    'type' => $val,
+                    'cols' => array($key),
+                );
+            } else {
+                // array('alt' => array('type' => 'normal', 'cols' => array(...)))
+                $info = array_merge($baseidx, (array) $val);
+                $info['name'] = (string) $key;
+                settype($info['cols'], 'array');
+            }
+            
+            $this->_index[$key] = $info;
+        }
     }
     
     /**
      * 
-     * Checks the current focus, and throws an exception if they don't match.
+     * Fixes table column definitions into $_table_cols, and post-sets
+     * inheritance values.
      * 
-     * @param string|array $allow The focus we should have right now.
+     * @param StdClass $model The model property catalog.
      * 
      * @return void
      * 
-     * @throws Solar_Sql_Model_Exception_Focus_Is_* Indicates the focus
-     * is not the requested one.
+     */
+    protected function _fixTableCols()
+    {
+        // is a table with the same name already at the database?
+        $list = $this->_sql->fetchTableList();
+        
+        // if not found, attempt to create it
+        if (! in_array($this->_table_name, $list)) {
+            $this->_createTableAndIndexes($this);
+        }
+        
+        // reset the columns to be **as they are at the database**
+        $this->_table_cols = $this->_sql->fetchTableCols($this->_table_name);
+        
+        // @todo add a "sync" check to see if column data in the class
+        // matches column data in the database, and throw an exception
+        // if they don't match pretty closely.
+        
+        // set the primary column based on the first primary key;
+        // ignores later primary keys
+        foreach ($this->_table_cols as $key => $val) {
+            if ($val['primary']) {
+                $this->_primary_col = $key;
+                break;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the array-name and table-alias for user input to this model.
+     * 
+     * @return void
      * 
      */
-    protected function _checkFocus($allow)
+    protected function _fixModelName()
     {
-        settype($allow, 'array');
-        if (! in_array($this->_focus, $allow)) {
-            throw $this->_exception(
-                "ERR_FOCUS_IS_" . strtoupper($this->_focus),
-                array(
-                    'allow' => $allow,
-                )
+        if (! $this->_model_name) {
+            if ($this->_inherit_model) {
+                $this->_model_name = $this->_inherit_model;
+            } else {
+                // get the part after the last Model_ portion
+                $pos = strpos($this->_class, 'Model_');
+                if ($pos) {
+                    $this->_model_name = substr($this->_class, $pos+6);
+                } else {
+                    $this->_model_name = $this->_class;
+                }
+            }
+            
+            // convert FooBar to foo_bar
+            $this->_model_name = strtolower(
+                preg_replace('/([a-z])([A-Z])/', '$1_$2', $this->_model_name)
             );
         }
     }
     
     /**
      * 
-     * Throws an exception if this record status is 'deleted'.
+     * Fixes the default order when fetching records from this model.
      * 
      * @return void
      * 
-     * @throws Solar_Sql_Model_Exception_Deleted Indicates that the
-     * record object has been deleted and cannot be used.
-     * 
      */
-    protected function _checkDeleted()
+    protected function _fixOrder()
     {
-        if ($this->_status == 'deleted') {
-            throw $this->_exception('ERR_DELETED');
+        if (! $this->_order) {
+            $this->_order = $this->_model_name . '.' . $this->_primary_col;
         }
     }
     
     /**
      * 
-     * Custom dumper so that you don't get a gigantic readout of all
-     * embedded objects.
-     * 
-     * @param string $var The property name to dump; if empty, dumps a
-     * reduced set of properties.
-     * 
-     * @param string $label Add this label to the dump output.  If empty,
-     * uses a default label.
+     * Fixes up special column indicator properties, and post-sets the
+     * $_inherit_model value based on the existence of the inheritance column.
      * 
      * @return void
      * 
-     */
-    public function dump($var = null, $label = null)
-    {
-        if ($this->_focus == 'record' || $this->_focus == 'collection') {
-            $copy = $this->_dump($this);
-            return parent::dump($copy, $label);
-        }
-        
-        if ($var) {
-            Solar::dump($this->$var, $label);
-        } else {
-            // clone $this and remove the parent config arrays
-            $clone = clone($this);
-            foreach (Solar::parents($this) as $class) {
-                $key = "_$class";
-                unset($clone->$key);
-            }
-            
-            // unset some other big items
-            unset($clone->_sql);
-            unset($clone->_model);
-            
-            // done!
-            parent::dump($clone, $label);
-        }
-    }
-    
-    /**
-     * 
-     * Helper method for dump(); copies object and unsets properties from the
-     * copy.
-     * 
-     * @param mixed $orig The original variable.
-     * 
-     * @return mixed A copy of the variable with some properties unset.
+     * @todo How to make foreign_col recognize that it's inherited, and should
+     * use the parent foreign_col value?  Can we just work up the chain?
      * 
      */
-    protected function _dump($orig)
+    protected function _fixPropertyCols()
     {
-        $copy = clone($orig);
-        
-        // unset filters, table info, etc. note related to the record
-        // directly.
-        $unset = array(
-            '_class',
-            '_config',
+        // make sure these actually exist in the table, otherwise unset them
+        $list = array(
             '_created_col',
-            '_datafilter_class',
-            '_fetch_cols',
-            '_filters',
-            '_foreign_col',
-            '_indexes',
-            '_inherit_base',
-            '_inherit_col',
-            '_inherit_model',
-            '_model_name',
-            '_order',
-            '_paging',
-            '_primary_col',
-            '_records',
-            '_related',
-            '_sequence_cols',
-            '_serialize_cols',
-            '_sql',
-            '_stack',
-            '_table_cols',
-            '_table_name',
             '_updated_col',
+            '_primary_col',
+            '_inherit_col',
         );
         
-        // remove parent configs too
-        foreach (Solar::parents($copy) as $class) {
-            $unset[] = "_$class";
-        }
-        
-        // actually unset
-        foreach ($unset as $var) {
-            unset($copy->$var);
-        }
-        
-        // unset internal sub-records
-        foreach ($copy->_data as $key => $val) {
-            if ($val instanceof Solar_Sql_Model) {
-                // get a copy for the dump
-                $copy->_data[$key] = $this->_dumpRecord($val);
+        foreach ($list as $col) {
+            if (trim($this->$col) == '' ||
+                ! array_key_exists($this->$col, $this->_table_cols)) {
+                // doesn't exist in the table
+                $this->$col = null;
             }
         }
         
-        // done!
-        return $copy;
-    }
-    
-    /**
-     * 
-     * ArrayAccess: does the requested key exist?
-     * 
-     * @param string $key The requested key.
-     * 
-     * @return bool
-     * 
-     */
-    final public function offsetExists($key)
-    {
-        return array_key_exists($key, $this->_data);
-    }
-    
-    /**
-     * 
-     * ArrayAccess: get a key value.
-     * 
-     * @param string $key The requested key.
-     * 
-     * @return mixed
-     * 
-     */
-    final public function offsetGet($key)
-    {
-        $this->_checkFocus(array('record', 'collection'));
-        
-        if ($this->_focus == 'record') {
-            return $this->__get($key);
+        // post-set the inheritance model value
+        if (! $this->_inherit_col) {
+            $this->_inherit_model = null;
+            $this->_inherit_base = null;
         }
         
-        if ($this->_focus == 'collection') {
-            // don't return records that don't exist in the original data
-            if (empty($this->_data[$key])) {
-                return false;
+        // set up the fetch-cols list
+        settype($this->_fetch_cols, 'array');
+        if (! $this->_fetch_cols) {
+            $this->_fetch_cols = array_keys($this->_table_cols);
+        }
+        
+        // simply force to array
+        settype($this->_serialize_cols, 'array');
+        
+        // the "sequence" columns.  make sure they point to a sequence name.
+        // e.g., string 'col' becomes 'col' => 'col'.
+        $tmp = array();
+        foreach ((array) $this->_sequence_cols as $key => $val) {
+            if (is_int($key)) {
+                $tmp[$val] = $val;
+            } else {
+                $tmp[$key] = $val;
             }
-            
-            // load the record if needed, honoring single table inheritance
-            if (empty($this->_records[$key])) {
-                $this->_records[$key] = $this->_newRecord($this->_data[$key]);
+        }
+        $this->_sequence_cols = $tmp;
+        
+        // make sure we have a hint to foreign models as to what colname
+        // to use when referring to this model
+        if (empty($this->_foreign_col)) {
+            if (! $this->_inherit_model) {
+                // not inherited
+                $this->_foreign_col = strtolower($this->_model_name)
+                                     . '_' . $this->_primary_col;
+            } else {
+                // inherited, can't just use the model name as a column name.
+                // need to find base model foreign_col value.
+                $base = Solar::factory($this->_inherit_base, array('sql' => $this->_sql));
+                $this->_foreign_col = $base->foreign_col;
+                unset($base);
             }
-            
-            // tell the record it is part of a collection
-            $this->_records[$key]->_in_collection = true;
-            
-            // return the record
-            return $this->_records[$key];
         }
     }
     
     /**
      * 
-     * ArrayAccess: set a key value.
-     * 
-     * @param string $key The requested key.
-     * 
-     * @param string $val The value to set it to.
+     * Loads the baseline data filters for each column.
      * 
      * @return void
      * 
-     * @todo If $key is null, that is [] ("append") notation.  Only let it
-     * work for collections?
-     * 
      */
-    final public function offsetSet($key, $val)
+    protected function _fixFilters()
     {
-        $this->_checkFocus(array('record', 'collection'));
-        
-        if ($this->_focus == 'record') {
-            return $this->__set($key, $val);
+        // make sure we have a filter class
+        if (empty($this->_filter_class)) {
+            $class = $this->_stack->load('Filter', false);
+            if (! $class) {
+                $class = 'Solar_Sql_Model_Filter';
+            }
+            $this->_filter_class = $class;
         }
         
-        if ($this->_focus == 'collection') {
-            
-            if ($key === null) {
-                $key = $this->count();
-                if (! $key) {
-                    $key = 0;
+        // make sure filters are an array
+        settype($this->_filters, 'array');
+        
+        // make sure that strings are converted
+        // to arrays so that _applyFilters() works properly.
+        foreach ($this->_filters as $col => $list) {
+            foreach ($list as $key => $val) {
+                if (is_string($val)) {
+                    $this->_filters[$col][$key] = array($val);
                 }
             }
+        }
+        
+        // low and high range values for integer filters
+        $range = array(
+            'smallint' => array(pow(-2, 15), pow(+2, 15) - 1),
+            'int'      => array(pow(-2, 31), pow(+2, 31) - 1),
+            'bigint'   => array(pow(-2, 63), pow(+2, 63) - 1)
+        );
+        
+        // add final fallback filters based on data type
+        foreach ($this->_table_cols as $col => $info) {
             
-            return $this->_data[$key] = $val;
+            $type = $info['type'];
+            switch ($type) {
+            case 'bool':
+                $this->_filters[$col][] = array('validateBool');
+                $this->_filters[$col][] = array('sanitizeBool');
+                break;
+            
+            case 'char':
+            case 'varchar':
+                // only add filters if not serializing
+                if (! in_array($col, $this->_serialize_cols)) {
+                    $this->_filters[$col][] = array('validateString');
+                    $this->_filters[$col][] = array('validateMaxLength',
+                        $info['size']);
+                    $this->_filters[$col][] = array('sanitizeString');
+                }
+                break;
+            
+            case 'smallint':
+            case 'int':
+            case 'bigint':
+                $this->_filters[$col][] = array('validateInt');
+                $this->_filters[$col][] = array('validateRange',
+                    $range[$type][0], $range[$type][1]);
+                $this->_filters[$col][] = array('sanitizeInt');
+                break;
+            
+            case 'numeric':
+                $this->_filters[$col][] = array('validateNumeric');
+                $this->_filters[$col][] = array('validateSizeScope',
+                    $info['size'], $info['scope']);
+                $this->_filters[$col][] = array('sanitizeNumeric');
+                break;
+            
+            case 'float':
+                $this->_filters[$col][] = array('validateFloat');
+                $this->_filters[$col][] = array('sanitizeFloat');
+                break;
+            
+            case 'clob':
+                // no filters, clobs are pretty generic
+                break;
+            
+            case 'date':
+                $this->_filters[$col][] = array('validateIsoDate');
+                $this->_filters[$col][] = array('sanitizeIsoDate');
+                break;
+            
+            case 'time':
+                $this->_filters[$col][] = array('validateIsoTime');
+                $this->_filters[$col][] = array('sanitizeIsoTime');
+                break;
+            
+            case 'timestamp':
+                $this->_filters[$col][] = array('validateIsoTimestamp');
+                $this->_filters[$col][] = array('sanitizeIsoTimestamp');
+                break;
+            }
         }
     }
     
     /**
      * 
-     * ArrayAccess: unset a key (sets it to null).
-     * 
-     * @param string $key The requested key.
+     * Creates the table and indexes in the database using $this->_table_cols
+     * and $this->_index.
      * 
      * @return void
      * 
      */
-    final public function offsetUnset($key)
+    protected function _createTableAndIndexes()
     {
-        $this->__set($key, null);
-    }
-    
-    /**
-     * 
-     * Countable: how many keys are there?
-     * 
-     * @return int
-     * 
-     */
-    final public function count()
-    {
-        if ($this->_focus == 'record') {
-            return count($this->_data);
-        }
+        /**
+         * Create the table.
+         */
+        $this->_sql->createTable(
+            $this->_table_name,
+            $this->_table_cols
+        );
         
-        if ($this->_focus == 'collection') {
-            return count($this->_data);
+        /**
+         * Create the indexes.
+         */
+        foreach ($this->_index as $name => $info) {
+            try {
+                // create this index
+                $this->_sql->createIndex(
+                    $this->_table_name,
+                    $info['name'],
+                    $info['type'] == 'unique',
+                    $info['cols']
+                );
+            } catch (Exception $e) {
+                // cancel the whole deal.
+                $this->_sql->dropTable($this->_table_name);
+                throw $e;
+            }
         }
-        
-        return false;
-    }
-    
-    /**
-     * 
-     * IteratorAggregate: return an Iterator appropriate for the model focus.
-     * 
-     * @return Solar_Sql_Model_RecordIterator|Solar_Sql_Model_CollectionIterator
-     * 
-     */
-    final public function getIterator()
-    {
-        if ($this->_focus == 'record') {
-            $class = 'Solar_Sql_Model_RecordIterator';
-        } elseif ($this->_focus == 'collection') {
-            $class = 'Solar_Sql_Model_CollectionIterator';
-        } else {
-            // not in the right focus for iteration
-            return null;
-        }
-        
-        $iter = Solar::factory($class);
-        $iter->setData($this->_data);
-        $iter->setModel($this);
-        return $iter;
     }
 }

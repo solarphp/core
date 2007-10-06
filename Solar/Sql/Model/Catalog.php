@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: Catalog.php 907 2007-07-22 19:05:26Z moraes $
  * 
  */
 
@@ -32,10 +32,10 @@
  * class matches column data in the database, and throw an exception if they
  * don't match pretty closely.
  * 
- * @todo Add 'delete' key to $_related, to allow cascading (or refusal) of
+ * @todo Add 'delete' key to $related, to allow cascading (or refusal) of
  * deleting related records when a main record is deleted.
  * 
- * @todo Add 'custom' or 'sql' key to $_related, to allow completely
+ * @todo Add 'custom' or 'sql' key to $related, to allow completely
  * customized SELECT statement?
  * 
  */
@@ -104,7 +104,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
             $this->_config['sql']
         );
         
-        // get the optional dependency object for caching column definitions
+        // get the optional dependency object for caching the catalog
         if ($this->_config['cache']) {
             $this->_cache = Solar::dependency(
                 'Solar_Cache',
@@ -147,12 +147,12 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * 
      * Sets the catalog data for a model class.
      * 
+     * Generally called from Solar_Sql_Model::__construct().
+     * 
      * @param string $class The model class name.
      * 
      * @param array $vars All the class properties for the model as key-value
      * pairs.
-     * 
-     * @param array $methods All the class methods for the model.
      * 
      * @return void
      * 
@@ -178,12 +178,12 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         // follow-on cleanup of critical user-defined values
         $this->_fixStack($model);
         $this->_fixTableName($model);
-        $this->_fixIndexes($model);
+        $this->_fixIndex($model);
         $this->_fixTableCols($model);
         $this->_fixModelName($model);
+        $this->_fixOrder($model);
         $this->_fixPropertyCols($model);
-        $this->_fixAccessMethods($model);
-        $this->_fixFilters($model); // including datafilter class
+        $this->_fixFilters($model); // including filter class
         $this->_fixRelated($model);
         
         // do we have a cache?
@@ -193,6 +193,31 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 "Solar_Sql_Model_Catalog/$class",
                 $model
             );
+        }
+    }
+    
+    /**
+     * 
+     * Resets (removes) all the catalog data, or resets (removes) just the
+     * catalog data for one class.
+     * 
+     * Be very careful when using this method.  If you have model instances
+     * that refer to each other, the relationships might break (because
+     * they use the catalog data to know what the other objects need).  Other
+     * things might break too, so beware.
+     * 
+     * @param string $class The model class name; if empty, all catalog data
+     * will be removed.
+     * 
+     * @return void
+     * 
+     */
+    public function reset($class = null)
+    {
+        if ($class) {
+            unset(self::$_catalog[$class]);
+        } else {
+            self::$_catalog = array();
         }
     }
     
@@ -218,8 +243,9 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         // see if it already exists; this also loads from cache if available
         if (! $this->exists($class)) {
             // cause it to self-register
-            Solar::factory($class);
-        
+            // make sure to use the same SQL connection
+            Solar::factory($class, array('sql' => $this->_sql));
+            
             // save it in the cache
             if ($this->_cache) {
                 $this->_cache->save(
@@ -350,7 +376,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         // matches column data in the database, and throw an exception
         // if they don't match pretty closely.
         
-        // set the primary column
+        // set the primary column based on the first primary key;
+        // ignores later primary keys
         foreach ($model->_table_cols as $key => $val) {
             if ($val['primary']) {
                 $model->_primary_col = $key;
@@ -361,7 +388,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
     
     /**
      * 
-     * Fixes up special column indicator properties, and post-sets the 
+     * Fixes up special column indicator properties, and post-sets the
      * $_inherit_model value based on the existence of the inheritance column.
      * 
      * @param StdClass $model The model property catalog.
@@ -374,9 +401,6 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      */
     protected function _fixPropertyCols($model)
     {
-        // simply force these to arrays
-        settype($model->_serialize_cols, 'array');
-        
         // make sure these actually exist in the table, otherwise unset them
         $list = array(
             '_created_col',
@@ -404,6 +428,9 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         if (! $model->_fetch_cols) {
             $model->_fetch_cols = array_keys($model->_table_cols);
         }
+        
+        // simply force to array
+        settype($model->_serialize_cols, 'array');
         
         // the "sequence" columns.  make sure they point to a sequence name.
         // e.g., string 'col' becomes 'col' => 'col'.
@@ -436,46 +463,6 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
     
     /**
      * 
-     * Loads accessor method lists for column and related properties.
-     * 
-     * These let users override how the column properties are accessed
-     * through the magic __get, __set, etc. methods.
-     * 
-     * @param StdClass $model The model property catalog.
-     * 
-     * @param array $methods The list of all methods from the model.
-     * 
-     * @return void
-     * 
-     */
-    protected function _fixAccessMethods($model)
-    {
-        // get a list of table-column and related-data properties names
-        $vars = array_merge(
-            array_keys($model->_table_cols),
-            array_keys($model->_related)
-        );
-        
-        // look for access methods on each one
-        foreach ($vars as $var) {
-            $name = str_replace('_', ' ', $var);
-            $name = str_replace(' ', '', ucwords($name));
-            $list = array(
-                "get"   => "__get$name",
-                "set"   => "__set$name",
-                "isset" => "__isset$name",
-                "unset" => "__unset$name",
-            );
-            foreach ($list as $type => $method) {
-                if (method_exists($model->_class, $method)) {
-                    $model->_access_methods[$type][$var] = $method;
-                }
-            }
-        }
-    }
-    
-    /**
-     * 
      * Loads the array-name for user input to this model.
      * 
      * @param StdClass $model The model property catalog.
@@ -497,6 +484,18 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                     $model->_model_name = $model->_class;
                 }
             }
+            
+            // convert FooBar to foo_bar
+            $model->_model_name = strtolower(
+                preg_replace('/([a-z])([A-Z])/', '$1_$2', $model->_model_name)
+            );
+        }
+    }
+    
+    protected function _fixOrder($model)
+    {
+        if (! $model->_order) {
+            $model->_order = $model->_model_name . '.' . $model->_primary_col;
         }
     }
     
@@ -511,13 +510,13 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      */
     protected function _fixFilters($model)
     {
-        // make sure we have a datafilter class
-        if (empty($model->_datafilter_class)) {
-            $class = $model->_stack->load('DataFilter', false);
+        // make sure we have a filter class
+        if (empty($model->_filter_class)) {
+            $class = $model->_stack->load('Filter', false);
             if (! $class) {
-                $class = 'Solar_Sql_Model_DataFilter';
+                $class = 'Solar_Sql_Model_Filter';
             }
-            $model->_datafilter_class = $class;
+            $model->_filter_class = $class;
         }
         
         // make sure filters are an array
@@ -543,22 +542,25 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         // add final fallback filters based on data type
         foreach ($model->_table_cols as $col => $info) {
             
-            $type = $info['type'];
             
+            $type = $info['type'];
             switch ($type) {
             case 'bool':
                 $model->_filters[$col][] = array('validateBool');
                 $model->_filters[$col][] = array('sanitizeBool');
                 break;
-                
+            
             case 'char':
             case 'varchar':
-                $model->_filters[$col][] = array('validateString');
-                $model->_filters[$col][] = array('validateMaxLength',
-                    $info['size']);
-                $model->_filters[$col][] = array('sanitizeString');
+                // only add filters if not serializing
+                if (! in_array($col, $model->_serialize_cols)) {
+                    $model->_filters[$col][] = array('validateString');
+                    $model->_filters[$col][] = array('validateMaxLength',
+                        $info['size']);
+                    $model->_filters[$col][] = array('sanitizeString');
+                }
                 break;
-                
+            
             case 'smallint':
             case 'int':
             case 'bigint':
@@ -567,34 +569,33 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                     $range[$type][0], $range[$type][1]);
                 $model->_filters[$col][] = array('sanitizeInt');
                 break;
-                
+            
             case 'numeric':
                 $model->_filters[$col][] = array('validateNumeric');
                 $model->_filters[$col][] = array('validateSizeScope',
                     $info['size'], $info['scope']);
                 $model->_filters[$col][] = array('sanitizeNumeric');
                 break;
-                
+            
             case 'float':
                 $model->_filters[$col][] = array('validateFloat');
                 $model->_filters[$col][] = array('sanitizeFloat');
                 break;
-                
+            
             case 'clob':
-                $model->_filters[$col][] = array('validateString');
-                $model->_filters[$col][] = array('sanitizeString');
+                // no filters, clobs are pretty generic
                 break;
-                
+            
             case 'date':
                 $model->_filters[$col][] = array('validateIsoDate');
                 $model->_filters[$col][] = array('sanitizeIsoDate');
                 break;
-                
+            
             case 'time':
                 $model->_filters[$col][] = array('validateIsoTime');
                 $model->_filters[$col][] = array('sanitizeIsoTime');
                 break;
-                
+            
             case 'timestamp':
                 $model->_filters[$col][] = array('validateIsoTimestamp');
                 $model->_filters[$col][] = array('sanitizeIsoTimestamp');
@@ -613,7 +614,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      *   column names.
      * 
      * `type`
-     * : (string) The association type: has_one/belongs_to, has_many,
+     * : (string) The association type: has_one, belongs_to, has_many,
      *   shares_many.
      * 
      * `foreign_model`
@@ -626,7 +627,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      *   table specified by the foreign model.
      * 
      * `foreign_alias`
-     * : (string) Aliases the foreign table to this name. Default is the 
+     * : (string) Aliases the foreign table to this name. Default is the
      *   relationship name.
      * 
      * `foreign_col`
@@ -636,9 +637,9 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * 
      * `foreign_inherit`
      * : (string) If the foreign model has an inheritance type, this is a
-     *   condition suitable for WHERE and JOIN clauses to retrieve only 
+     *   condition suitable for WHERE and JOIN clauses to retrieve only
      *   records of the proper model.
-     *   
+     * 
      * `native_col`
      * : (string) The name of the column to join with in the *native* table.
      *   This forms one-half of the relationship.  Default is per association
@@ -677,14 +678,22 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
      * 
      * <http://ar.rubyonrails.com/classes/ActiveRecord/Associations/ClassMethods.html>
      * 
-     * There is a "virtual" key as well, `foreign_key`, that automatically
+     * There is a virtual element called `foreign_key` that automatically
      * populates the `native_col` or `foreign_col` value for you, based on the
      * association type.  This will be used **only** when `native_col` **and**
      * `foreign_col` are not set.
      * 
+     * There is a virtual element called `through_key` that automatically 
+     * populates the 'through_foreign_col' value for you.
+     * 
      * @param StdClass $model The model property catalog.
      * 
      * @return void
+     * 
+     * @todo Add `through*` keys to the definition list above.
+     * 
+     * @todo Add 'native_table' and 'native_alias' values? Then *everything*
+     * is in the array, no need for $this->_whatever.
      * 
      */
     protected function _fixRelated($model)
@@ -695,7 +704,10 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
             if (array_key_exists($name, $model->_table_cols)) {
                 throw $this->_exception(
                     'ERR_RELATION_NAME_CONFLICT',
-                    array('name' => $name)
+                    array(
+                        'name'  => $name,
+                        'model' => $model,
+                    )
                 );
             } else {
                 $opts['name'] = $name;
@@ -709,17 +721,37 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 $opts['foreign_model'] = $name;
             }
             
-            // can we load a related model class?
-            // first, look through the hierarchy.
+            // can we load a related model class from the hierarchy stack?
             $class = $model->_stack->load($opts['foreign_model'], false);
-            if ($class) {
-                $opts['foreign_model'] = $class;
-            } else {
-                // not in the hierarchy. look for the model class literally.
-                // this will throw an exception if the class cannot be 
-                // found anywhere.
+            
+            // did we find it?
+            if (! $class) {
+                // look for a "parallel" class name, based on where the word
+                // "Model" is in the current class name. this lets you pull
+                // model classes from the same level, not from the inheritance
+                // stack.
+                $pos = strrpos($model->_class, 'Model_');
+                if ($pos !== false) {
+                    $pos += 6; // "Model_"
+                    $tmp = substr($model->_class, 0, $pos) . ucfirst($opts['foreign_model']);
+                    try {
+                        Solar::loadClass($tmp);
+                        // if no exception, $class gets set
+                        $class = $tmp;
+                    } catch (Exception $e) {
+                        // do nothing, 
+                    }
+                }
+            }
+            
+            // not in the hierarchy, and no parallel class name. look for the
+            // model class literally. this will throw an exception if the
+            // class cannot be found anywhere.
+            if (! $class) {
                 try {
                     Solar::loadClass($opts['foreign_model']);
+                    // if no exception, $class gets set
+                    $class = $opts['foreign_model'];
                 } catch (Solar_Exception $e) {
                     throw $this->_exception('ERR_LOAD_FOREIGN_MODEL', array(
                         'native_model' => $model->_class,
@@ -729,8 +761,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 }
             }
             
-            // retain the model class name
-            $class = $opts['foreign_model'];
+            // finally we have a class name, keep it as the foreign model class
+            $opts['foreign_model'] = $class;
             
             // catalog data for the foreign model
             $foreign = $this->get($class);
@@ -750,12 +782,6 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 $opts['where'] = array();
             }
             settype($opts['where'], 'array');
-            
-            // custom ORDER clause
-            if (empty($opts['order'])) {
-                $opts['order'] = $foreign->_order;
-            }
-            settype($opts['order'], 'array');
             
             // the list of foreign table cols to retrieve
             if (empty($opts['cols'])) {
@@ -795,10 +821,11 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 $opts['paging'] = $foreign->_paging;
             }
             
-            // default page number. note that we don't use empty() here,
-            // because we want to allow for "page = 0".
+            // default page number; use "all pages" if not specified.
+            // note that we don't use empty() here, because we want to allow
+            // for "page = 0".
             if (! array_key_exists('page', $opts)) {
-                $opts['page'] = 1;
+                $opts['page'] = 0;
             }
             
             // distinct?
@@ -830,6 +857,12 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 break;
             }
             
+            // custom ORDER clause
+            if (empty($opts['order'])) {
+                $opts['order'] = "{$opts['foreign_alias']}.{$foreign->_primary_col}";
+            }
+            settype($opts['order'], 'array');
+            
             // retain the corrected values in a standard order
             $model->_related[$name] = array(
                 'name'                => $name,
@@ -841,6 +874,8 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 'foreign_inherit_col' => $opts['foreign_inherit_col'],
                 'foreign_inherit_val' => $opts['foreign_inherit_val'],
                 'foreign_primary_col' => $foreign->_primary_col,
+                'native_table'        => $model->_table_name,
+                'native_alias'        => $model->_model_name,
                 'native_col'          => $opts['native_col'],
                 'through'             => $opts['through'],
                 'through_table'       => $opts['through_table'],
@@ -1093,14 +1128,14 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
     
     /**
      * 
-     * Fixes $this->_indexes listings.
+     * Fixes $this->_index listings.
      * 
      * @param StdClass $model The model property catalog.
      * 
      * @return void
      * 
      */
-    protected function _fixIndexes($model)
+    protected function _fixIndex($model)
     {
         // baseline index definition
         $baseidx = array(
@@ -1110,7 +1145,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         );
         
         // fix up each index to have a full set of info
-        foreach ($model->_indexes as $key => $val) {
+        foreach ($model->_index as $key => $val) {
             
             if (is_int($key) && is_string($val)) {
                 // array('col')
@@ -1133,14 +1168,14 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
                 settype($info['cols'], 'array');
             }
             
-            $model->_indexes[$key] = $info;
+            $model->_index[$key] = $info;
         }
     }
     
     /**
      * 
      * Creates the table and indexes in the database using $model->_table_cols
-     * and $model->_indexes.
+     * and $model->_index.
      * 
      * @param StdClass $model The model property catalog.
      * 
@@ -1160,7 +1195,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base {
         /**
          * Create the indexes.
          */
-        foreach ($model->_indexes as $name => $info) {
+        foreach ($model->_index as $name => $info) {
             try {
                 // create this index
                 $this->_sql->createIndex(

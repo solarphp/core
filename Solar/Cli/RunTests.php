@@ -86,6 +86,9 @@ class Solar_Cli_RunTests extends Solar_Cli_Base {
         // make sure it matches the OS
         $dir = Solar::fixdir($dir);
         
+        // feedback
+        $this->_println("Run tests from '$dir'.");
+        
         // make sure it ends in "/Test/".
         $end = DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR;
         if (substr($dir, -5) != $end) {

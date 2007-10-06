@@ -55,7 +55,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
         'format' => '%t %c %e %m', // time, class, event, message
         'output' => null,
     );
-
+    
     /**
      * 
      * Constructor.  Detect output mode by SAPI if none is specified.
@@ -72,7 +72,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
             $this->_config['output'] = $mode;
         }
     }
-
+    
     /**
      * 
      * Echos the log message.
@@ -95,7 +95,7 @@ class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
             array($this->_getTime(), $class, $event, $descr, '%'),
             $this->_config['format']
         );
-
+        
         if (strtolower($this->_config['output']) == 'html') {
             $text = htmlspecialchars($text) . '<br />';
         } else {

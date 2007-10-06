@@ -93,7 +93,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      * `data`
      * : (array) Key-value pairs.
-     *
+     * 
      * @var array
      * 
      */
@@ -147,9 +147,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __get($key)
     {
-        if (array_key_exists($key, $this->_data)) {
-            return $this->_data[$key];
-        }
+        return $this->_data[$key];
     }
     
     /**
@@ -171,6 +169,9 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     /**
      * 
      * Does a certain key exist in the data?
+     * 
+     * Note that this is slightly different from normal PHP isset(); it will
+     * say the key is set, even if the key value is null or otherwise empty.
      * 
      * @param string $key The requested data key.
      * 
@@ -195,6 +196,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __unset($key)
     {
+        $this->_data[$key] = null;
         unset($this->_data[$key]);
     }
     
@@ -246,7 +248,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function offsetExists($key)
     {
-        return array_key_exists($key, $this->_data);
+        return $this->__isset($key);
     }
     
     /**
@@ -281,7 +283,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * ArrayAccess: unset a key (sets it to null).
+     * ArrayAccess: unset a key.
      * 
      * @param string $key The requested key.
      * 
@@ -290,7 +292,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function offsetUnset($key)
     {
-        $this->__set($key, null);
+        $this->__unset($key);
     }
     
     /**
@@ -307,19 +309,19 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Iterator: get the current key value.
+     * Iterator: get the current value for the array pointer.
      * 
      * @return mixed
      * 
      */
     public function current()
     {
-        return current($this->_data);
+        return $this->__get($this->key());
     }
-
+    
     /**
      * 
-     * Iterator: what is the key at the current position?
+     * Iterator: get the current key for the array pointer.
      * 
      * @return mixed
      * 
@@ -328,7 +330,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         return key($this->_data);
     }
-
+    
     /**
      * 
      * Iterator: move to the next position.
@@ -340,7 +342,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         $this->_iterator_valid = (next($this->_data) !== false);
     }
-
+    
     /**
      * 
      * Iterator: move to the first position.
@@ -352,7 +354,7 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     {
         $this->_iterator_valid = (reset($this->_data) !== false);
     }
-
+    
     /**
      * 
      * Iterator: is the current position valid?

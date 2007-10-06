@@ -55,7 +55,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
         'clob'      => 'TEXT',
         'date'      => 'CHAR(10)',
         'time'      => 'CHAR(8)',
-        'timestamp' => 'CHAR(19)'
+        'timestamp' => 'DATETIME'
     );
     
     /**
@@ -208,7 +208,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return array All table names in the database.
      * 
      */
-    public function fetchTableList()
+    protected function _fetchTableList()
     {
         $cmd = "SELECT name FROM sysobjects WHERE type = 'U' ORDER BY name";
         $result = $this->query($cmd);
@@ -225,7 +225,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return array An array of table columns.
      * 
      */
-    public function fetchTableCols($table)
+    protected function _fetchTableCols($table)
     {
          $cmd = "
              SELECT
@@ -304,7 +304,7 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * @return int The last auto-increment ID value inserted to the database.
      * 
      */
-    public function lastInsertId($name = null)
+    public function lastInsertId($table = null, $col = null)
     {
         $this->_connect();
         return $this->fetchValue('SELECT @@IDENTITY AS id');

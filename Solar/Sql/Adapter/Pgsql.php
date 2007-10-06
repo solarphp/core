@@ -98,7 +98,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return array All table names in the database.
      * 
      */
-    public function fetchTableList()
+    protected function _fetchTableList()
     {
         $cmd = "
             SELECT DISTINCT table_name
@@ -118,7 +118,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      * @return array
      * 
      */
-    public function fetchTableCols($table)
+    protected function _fetchTableCols($table)
     {
         //          name         |            type             | require | primary |                           default                           
         // ----------------------+-----------------------------+---------+---------+-------------------------------------------------------------
@@ -276,7 +276,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        return $this->query("DROP SEQUENCE $name");
+        return $this->query("DROP SEQUENCE IF EXISTS $name");
     }
     
     /**
@@ -311,6 +311,29 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**
      * 
+     * Get the last auto-incremented insert ID from the database.
+     * 
+     * Postgres SERIAL and BIGSERIAL types create sequences named in this
+     * fashion:  `{$table}_{$col}_seq`.
+     * 
+     * <http://www.postgresql.org/docs/7.4/interactive/datatype.html#DATATYPE-SERIAL>
+     * 
+     * @param string $table The table name on which the auto-increment occurred.
+     * 
+     * @param string $col The name of the auto-increment column.
+     * 
+     * @return int The last auto-increment ID value inserted to the database.
+     * 
+     */
+    public function lastInsertId($table = null, $col = null)
+    {
+        $this->_connect();
+        $name = "{$table}_{$col}_seq";
+        return $this->_pdo->lastInsertId($name);
+    }
+    
+    /**
+     * 
      * Given a column definition, modifies the auto-increment and primary-key
      * clauses in place.
      * 
@@ -339,5 +362,43 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
         if ($primary) {
             $coldef .= ' PRIMARY KEY';
         }
+    }
+    
+    /**
+     * 
+     * Modifies the sequence name.
+     * 
+     * PostgreSQL won't allow a sequence with the same name as a table or
+     * index. This method modifies the name by appending '__s'.
+     * 
+     * @param string $name The requested sequence name.
+     * 
+     * @return string The modified sequence name.
+     * 
+     */
+    protected function _modSequenceName($name)
+    {
+        return $name . '__s';
+    }
+    
+    /**
+     * 
+     * Modifies the index name.
+     * 
+     * PostgreSQL won't allow two indexes of the same name, even if they are
+     * on different tables.  This method modifies the name by prefixing with
+     * the table name and two underscores.  Thus, for a index named 'foo' on 
+     * a table named 'bar', the modified name will be 'foo__bar'.
+     * 
+     * @param string $table The table on which the index occurs.
+     * 
+     * @param string $name The requested index name.
+     * 
+     * @return string The modified index name.
+     * 
+     */
+    protected function _modIndexName($table, $name)
+    {
+        return $table . '__' . $name;
     }
 }

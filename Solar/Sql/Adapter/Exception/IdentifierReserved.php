@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: table name is a reserved word.
+ * Exception: table/column/index identifier name is a reserved word.
  * 
  * @category Solar
  * 
@@ -17,11 +17,11 @@
 
 /**
  * 
- * Exception: table name is a reserved word.
+ * Exception: table/column/index identifier name is a reserved word.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Adapter_Exception_TableNameReserved extends Solar_Sql_Adapter_Exception {}
+class Solar_Sql_Adapter_Exception_IdentifierReserved extends Solar_Sql_Adapter_Exception {}

@@ -76,7 +76,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         // date & time
         'date'              => 'date',
         'datetime'          => 'timestamp',
-        'timestamp'         => 'integer',
+        'timestamp'         => 'int',
         'time'              => 'time',
         
         // string
@@ -111,7 +111,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return array All table names in the database.
      * 
      */
-    public function fetchTableList()
+    protected function _fetchTableList()
     {
         return $this->fetchCol('SHOW TABLES');
     }
@@ -125,7 +125,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      * @return array An array of table column information.
      * 
      */
-    public function fetchTableCols($table)
+    protected function _fetchTableCols($table)
     {
         // mysql> DESCRIBE table_name;
         // +--------------+--------------+------+-----+---------+-------+
@@ -172,6 +172,11 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
                 'primary' => (bool) ($val['key'] == 'PRI'),
                 'autoinc' => (bool) (strpos($val['extra'], 'auto_increment') !== false),
             );
+            
+            // don't keep "size" for integers
+            if (substr($type, -3) == 'int') {
+                $descr[$name]['size'] = null;
+            }
         }
             
         // done!
@@ -265,7 +270,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        return $this->query("DROP TABLE $name");
+        return $this->query("DROP TABLE IF EXISTS $name");
     }
     
     /**
@@ -295,6 +300,24 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
         
         // get the sequence number
         return $this->_pdo->lastInsertID();
+    }
+    
+    /**
+     * 
+     * Modifies the sequence name.
+     * 
+     * MySQL doesn't have sequences, so this adapter uses a table instead.
+     * This means we have to deconflict between "real" tables and tables being
+     * used for sequences, so this method appends "__s" to the sequnce name.
+     * 
+     * @param string $name The requested sequence name.
+     * 
+     * @return string The modified sequence name.
+     * 
+     */
+    protected function _modSequenceName($name)
+    {
+        return $name . '__s';
     }
     
     /**

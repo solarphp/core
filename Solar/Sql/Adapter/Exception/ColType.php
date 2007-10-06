@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: index name is too long or too short.
+ * Exception: column type is unknown.
  * 
  * @category Solar
  * 
@@ -17,11 +17,11 @@
 
 /**
  * 
- * Exception: index name is too long or too short.
+ * Exception: column type is unknown.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Adapter_Exception_IdxNameLength extends Solar_Sql_Adapter_Exception {}
+class Solar_Sql_Adapter_Exception_ColType extends Solar_Sql_Adapter_Exception {}

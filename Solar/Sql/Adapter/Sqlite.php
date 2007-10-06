@@ -113,7 +113,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * @return array All table names in the database.
      * 
      */
-    public function fetchTableList()
+    protected function _fetchTableList()
     {
         // copied from PEAR DB
         $cmd = "SELECT name FROM sqlite_master WHERE type='table' " .
@@ -132,7 +132,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      * @return array
      * 
      */
-    public function fetchTableCols($table)
+    protected function _fetchTableCols($table)
     {
         // sqlite> create table areas (id INTEGER PRIMARY KEY AUTOINCREMENT,
         //         name VARCHAR(32) NOT NULL);
@@ -169,12 +169,17 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
                 $matches
             );
             
+            // literal default values come back with single-quotes
+            $default = is_string($val['dflt_value'])
+                     ? trim($val['dflt_value'], "'")
+                     : $val['dflt_value'];
+            
             $descr[$name] = array(
                 'name'    => $name,
                 'type'    => $type,
                 'size'    => ($size  ? (int) $size  : null),
                 'scope'   => ($scope ? (int) $scope : null),
-                'default' => $val['dflt_value'],
+                'default' => $default,
                 'require' => (bool) ($val['notnull']),
                 'primary' => (bool) ($val['pk'] == 1),
                 'autoinc' => (bool) $autoinc,
@@ -259,7 +264,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
      */
     protected function _dropSequence($name)
     {
-        return $this->query("DROP TABLE $name");
+        return $this->query("DROP TABLE IF EXISTS $name");
     }
     
     /**
@@ -276,6 +281,27 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     protected function _dropIndex($table, $name)
     {
         return $this->query("DROP INDEX $name");
+    }
+    
+    /**
+     * 
+     * Modifies the index name.
+     * 
+     * SQLite won't allow two indexes of the same name, even if they are
+     * on different tables.  This method modifies the name by prefixing with
+     * the table name and two underscores.  Thus, for a index named 'foo' on 
+     * a table named 'bar', the modified name will be 'foo__bar'.
+     * 
+     * @param string $table The table on which the index occurs.
+     * 
+     * @param string $name The requested index name.
+     * 
+     * @return string The modified index name.
+     * 
+     */
+    protected function _modIndexName($table, $name)
+    {
+        return $table . '__' . $name;
     }
     
     /**
@@ -304,7 +330,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
         }
         
         // get the sequence number
-        return $this->lastInsertId();
+        return $this->_pdo->lastInsertId();
     }
     
     /**

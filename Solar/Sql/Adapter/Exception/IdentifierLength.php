@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: index has no columns.
+ * Exception: table/column/index identifier name is too long or too short.
  * 
  * @category Solar
  * 
@@ -17,11 +17,11 @@
 
 /**
  * 
- * Exception: index has no columns.
+ * Exception: table/column/index identifier name is too long or too short.
  * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  */
-class Solar_Sql_Adapter_Exception_IdxNoColumns extends Solar_Sql_Adapter_Exception {}
+class Solar_Sql_Adapter_Exception_IdentifierLength extends Solar_Sql_Adapter_Exception {}

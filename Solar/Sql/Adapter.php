@@ -19,7 +19,7 @@
  * 
  * Abstract base class for specific RDBMS adapters.
  * 
- * WHen writing an adapter, you need to override these abstract methods:
+ * When writing an adapter, you need to override these abstract methods:
  * 
  * {{code: php
  *     abstract public function fetchTableList();
@@ -31,9 +31,14 @@
  *     abstract protected function _modAutoincPrimary(&$coldef, $autoinc, $primary);
  * }}
  * 
- * Additionally, if backend does not have explicit "LIMIT ... OFFSET" support,
- * you will want to override _limitSelect($stmt, $parts) to rewrite the query
- * in order to emulate limit/select behavior.
+ * If the backend needs identifier deconfliction (e.g., PostgreSQL), you will
+ * want to override _modIndexName() and _modSequenceName().  Most times this
+ * will not be necessary.
+ * 
+ * If the backend does not have explicit "LIMIT ... OFFSET" support,
+ * you will want to override _modSelect($stmt, $parts) to rewrite the query
+ * in order to emulate limit/select behavior.  This is particularly necessary
+ * for Microsoft SQL and Oracle.
  * 
  * @category Solar
  * 
@@ -76,7 +81,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         'pass'      => null,
         'name'      => null,
         'profiling' => false,
+        'cache'     => array('adapter' => 'Solar_Cache_Adapter_Var'),
     );
+    
+    protected $_cache;
+    
+    protected $_cache_key_prefix;
     
     /**
      * 
@@ -186,29 +196,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Max identifier lengths for table, column, and index names used when
      * creating portable tables.
      * 
-     * The reasoning behind these numbers is as follows:
-     * 
-     * - The total length cannot exceed 63 (the Postgres limit).
-     * 
-     * - Reserve 3 chars for suffixes ("__i" for indexes, "__s" for
-     *   sequences) because Postgres cannot have a table with the same name
-     *   as an index or sequence.
-     * 
-     * - Reserve 2 chars for table__index separator, because Postgres needs
-     *   needs unique names for indexes even on different tables.
-     * 
-     * This leaves 58 characters to split between table name and column/index
-     * name.  I figure table names need more "space", so they get 30 chars,
-     * and tables/indexes get 28.
+     * We use 30 characters to comply with Oracle maximums.
      * 
      * @var array
      * 
      */
-    protected $_len = array(
-        'table' => 30,
-        'col'   => 28,
-        'index' => 28
-    );
+    protected $_maxlen = 30;
     
     /**
      * 
@@ -243,6 +236,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->_cache = Solar::dependency('Solar_Cache', $this->_config['cache']);
         $this->setProfiling($this->_config['profiling']);
     }
     
@@ -324,6 +318,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Creates a PDO object and connects to the database.
      * 
+     * Also sets the query-cache key prefix.
+     * 
      * @return void
      * 
      */
@@ -340,7 +336,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // build a DSN
         $dsn = $this->_dsn();
         
-        // create PDO object
+        // save the cache-key prefix
+        $this->_cache_key_prefix = get_class($this) . '/' . md5($dsn);
+        
         // attempt the connection
         $this->_pdo = new PDO(
             $dsn,
@@ -348,24 +346,51 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $this->_config['pass']
         );
         
-        // always emulate prepared statements; this is faster, and works
-        // better with CREATE, DROP, ALTER statements.  requires PHP 5.1.3
-        // or later. note that we do this *first* (before using exceptions)
-        // because not all adapters support it.
-        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
-        @$this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
-        
-        // always use exceptions.
-        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-        // force names to lower case
-        $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        // post-connection tasks
+        $this->_postConnect();
         
         // retain the profile data?
         if ($this->_profiling) {
             $after = microtime(true);
             $this->_profile[] = array($after - $before, '__CONNECT');
         }
+    }
+    
+    /**
+     * 
+     * After connection, set various connection attributes.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConnect()
+    {
+        // always emulate prepared statements; this is faster, and works
+        // better with CREATE, DROP, ALTER statements.  requires PHP 5.1.3
+        // or later. note that we do this *first* (before using exceptions)
+        // because not all adapters support it.
+        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
+        $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+        
+        // always use exceptions
+        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+        // force names to lower case
+        $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+    }
+    
+    /**
+     * 
+     * Gets a full cache key.
+     * 
+     * @var string $key The partial cache key.
+     * 
+     * @return string The full cache key.
+     * 
+     */
+    protected function _getCacheKey($key)
+    {
+        return $this->_cache_key_prefix . "/$key";
     }
     
     /**
@@ -767,6 +792,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Fetches all rows from the database using associative keys (defined by
      * the first column).
      * 
+     * N.b.: if multiple rows have the same first column value, the last
+     * row with that value will override earlier rows.
+     * 
      * @param array|string $spec An array of component parts for a
      * SELECT, or a literal query string.
      * 
@@ -860,7 +888,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         return $data;
     }
-
+    
     /**
      * 
      * Fetches a PDOStatement result object.
@@ -913,66 +941,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         $result = $this->fetchPdo($spec, $data);
         return $result->fetch(PDO::FETCH_ASSOC);
-    }
-    
-    /**
-     * 
-     * DEPRECATED: Fetch one row as a Solar_Sql_Row object.
-     * 
-     * This method is provided as a transitional aid while moving from Table
-     * to Model.
-     * 
-     * @deprecated
-     * 
-     * @param array|string $spec An array of component parts for a
-     * SELECT, or a literal query string.
-     * 
-     * @param array $data An associative array of data to bind into the
-     * SELECT statement.
-     * 
-     * @param string $class The class name of the object to return; default is
-     * 'Solar_Sql_Row'.
-     * 
-     * @return Solar_Sql_Row
-     * 
-     */
-    public function fetchRow($spec, $data = array(), $class = null)
-    {
-        if (! $class) {
-            $class = 'Solar_Sql_Row';
-        }
-        $result = $this->fetchOne($spec, $data);
-        return Solar::factory($class, array('data' => $result));
-    }
-    
-    /**
-     * 
-     * DEPRECATED: Fetch all rows as a Solar_Sql_Rowset object.
-     * 
-     * This method is provided as a transitional aid while moving from Table
-     * to Model.
-     * 
-     * @deprecated
-     * 
-     * @param array|string $spec An array of component parts for a
-     * SELECT, or a literal query string.
-     * 
-     * @param array $data An associative array of data to bind into the
-     * SELECT statement.
-     * 
-     * @param string $class The class name of the object to return; default is
-     * 'Solar_Sql_Rowset'.
-     * 
-     * @return Solar_Sql_Rowset
-     * 
-     */
-    public function fetchRowset($spec, $data = array(), $class = null)
-    {
-        if (! $class) {
-            $class = 'Solar_Sql_Rowset';
-        }
-        $result = $this->fetchAll($spec, $data);
-        return Solar::factory($class, array('data' => $result));
     }
     
     /**
@@ -1127,7 +1095,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
       
         // add the count and offset
         if ($count > 0) {
-            $stmt .= " LIMIT $count";
+            $stmt .= "LIMIT $count";
             if ($offset > 0) {
                 $stmt .= " OFFSET $offset";
             }
@@ -1279,16 +1247,17 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Get the last auto-incremented insert ID from the database.
      * 
-     * @param string $name The name of the auto-increment series; optional,
-     * not normally required.
+     * @param string $table The table name on which the auto-increment occurred.
+     * 
+     * @param string $col The name of the auto-increment column.
      * 
      * @return int The last auto-increment ID value inserted to the database.
      * 
      */
-    public function lastInsertId($name = null)
+    public function lastInsertId($table = null, $col = null)
     {
         $this->_connect();
-        return $this->_pdo->lastInsertId($name);
+        return $this->_pdo->lastInsertId();
     }
     
     /**
@@ -1303,7 +1272,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function nextSequence($name)
     {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $name = $this->_modSequenceName($name);
         $result = $this->_nextSequence($name);
         return $result;
     }
@@ -1333,7 +1302,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array A sequential array of table names in the database.
      * 
      */
-    abstract public function fetchTableList();
+    public function fetchTableList()
+    {
+        $key = $this->_getCacheKey(__FUNCTION__);
+        $result = $this->_cache->fetch($key);
+        if (! $result) {
+            $result = $this->_fetchTableList();
+            $this->_cache->add($key, $result);
+        }
+        return $result;
+    }
+    
+    abstract protected function _fetchTableList();
     
     /**
      * 
@@ -1344,7 +1324,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return array An array of table columns.
      * 
      */
-    abstract public function fetchTableCols($table);
+    public function fetchTableCols($table)
+    {
+        $key = $this->_getCacheKey(__FUNCTION__ . "/$table");
+        $result = $this->_cache->fetch($key);
+        if (! $result) {
+            $result = $this->_fetchTableCols($table);
+            $this->_cache->add($key, $result);
+        }
+        return $result;
+    }
+    
+    abstract protected function _fetchTableCols($table);
     
     /**
      * 
@@ -1411,7 +1402,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * {{code: php
      *     $cols = array(
-     *       'fieldOne' => array(
+     *       'col_1' => array(
      *         'type'    => (string) bool, char, int, ...
      *         'size'    => (int) total length for char|varchar|numeric
      *         'scope'   => (int) decimal places for numeric
@@ -1420,7 +1411,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      *         'primary' => (bool) is this a primary key column?
      *         'autoinc' => (bool) is this an auto-increment column?
      *       ),
-     *       'fieldTwo' => array(...)
+     *       'col_2' => array(...)
      *     );
      * }}
      * 
@@ -1437,6 +1428,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function createTable($table, $cols)
     {
+        $this->_cache->deleteAll();
         $stmt = $this->_sqlCreateTable($table, $cols);
         $this->query($stmt);
     }
@@ -1457,23 +1449,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _sqlCreateTable($table, $cols)
     {
-        // table name can only be so many chars
-        $len = strlen($table);
-        if ($len < 1 || $len > $this->_len['table']) {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_LENGTH',
-                array('table' => $table)
-            );
-        }
-        
-        // table name must be a valid word, and cannot end in
-        // "__s" (this is to prevent sequence table collisions)
-        if (! $this->_validIdentifier($table) || substr($table, -3) == "__s") {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_RESERVED',
-                array('table' => $table)
-            );
-        }
+        // make sure the table name is a valid identifier
+        $this->_checkIdentifier('table', $table);
         
         // array of column definitions
         $coldef = array();
@@ -1486,13 +1463,16 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             try {
                 $coldef[] = $this->_sqlColdef($name, $info);
             } catch (Exception $e) {
-                $err[$name] = $e->getInfo();
+                $err[$name] = array($e->getCode(), $e->getInfo());
             }
         }
         
+        // were there errors?
         if ($err) {
+            // add the table name to the info and throw the exception
+            $err['__table'] = $table;
             throw $this->_exception(
-                'ERR_CREATE_TABLE',
+                'ERR_TABLE_NOT_CREATED',
                 $err
             );
         }
@@ -1504,7 +1484,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Drops a table from the database.
+     * Drops a table from the database, if it exists.
      * 
      * @param string $table The table name.
      * 
@@ -1513,7 +1493,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function dropTable($table)
     {
-        return $this->query("DROP TABLE $table");
+        $this->_cache->deleteAll();
+        return $this->query("DROP TABLE IF EXISTS $table");
     }
     
     /**
@@ -1545,6 +1526,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function addColumn($table, $name, $info)
     {
+        $this->_cache->deleteAll();
         $coldef = $this->_sqlColdef($name, $info);
         $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
         return $this->query($stmt);
@@ -1563,6 +1545,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function dropColumn($table, $name)
     {
+        $this->_cache->deleteAll();
         return $this->query("ALTER TABLE $table DROP COLUMN $name");
     }
     
@@ -1570,12 +1553,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Creates a portable index on a table.
      * 
-     * Indexes are automatically renamed to "tablename__indexname__i" for
-     * portability reasons.
+     * @param string $table The name of the table for the index.
      * 
-     * @param string $table The name of the table for the index (1-30 chars).
-     * 
-     * @param string $name The name of the index (1-28 chars).
+     * @param string $name The name of the index.
      * 
      * @param bool $unique Whether or not the index is unique.
      * 
@@ -1593,39 +1573,21 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $cols = $name;
         }
         
-        // check the table name length
-        $len = strlen($table);
-        if ($len < 1 || $len > $this->_len['table']) {
-            throw $this->_exception(
-                'ERR_TABLE_NAME_LENGTH',
-                array('table' => $table)
-            );
-        }
-        
-        // check the index name length
-        $len = strlen($name);
-        if ($len < 1 || $len > $this->_len['index']) {
-            throw $this->_exception(
-                'ERR_IDX_NAME_LENGTH',
-                array('table' => $table, 'index' => $name)
-            );
-        }
+        // check the table and index names
+        $this->_checkIdentifier('table', $table);
+        $this->_checkIdentifier('index', $name);
         
         // create a string of column names
         $cols = implode(', ', (array) $cols);
         
-        // we prefix all index names with the table name,
-        // and suffix all index names with '__i'.  this
-        // is to soothe PostgreSQL, which demands that index
-        // names not collide, even when they indexes are on
-        // different tables.
-        $fullname = $table . '__' . $name . '__i';
+        // modify the index name as-needed
+        $name = $this->_modIndexName($table, $name);
         
         // create index entry
         if ($unique) {
-            $cmd = "CREATE UNIQUE INDEX $fullname ON $table ($cols)";
+            $cmd = "CREATE UNIQUE INDEX $name ON $table ($cols)";
         } else {
-            $cmd = "CREATE INDEX $fullname ON $table ($cols)";
+            $cmd = "CREATE INDEX $name ON $table ($cols)";
         }
         return $this->query($cmd);
     }
@@ -1644,8 +1606,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function dropIndex($table, $name)
     {
-        $fullname = $table . '__' . $name . '__i';
-        return $this->_dropIndex($table, $fullname);
+        $name = $this->_modIndexName($table, $name);
+        return $this->_dropIndex($table, $name);
     }
     
     /**
@@ -1663,10 +1625,28 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Modifies an index name for adapters.
+     * 
+     * Most adapters don't need this, but some do (e.g. PostgreSQL and SQLite).
+     * 
+     * @param string $table The table on which the index occurs.
+     * 
+     * @param string $name The requested index name.
+     * 
+     * @return string The modified index name (most adapters do not modify the
+     * name).
+     * 
+     */
+    protected function _modIndexName($table, $name)
+    {
+        return $name;
+    }
+    
+    /**
+     * 
      * Creates a sequence in the database.
      * 
-     * @param string $name The sequence name to create; this will be 
-     * automatically suffixed with '__s' for portability reasons.
+     * @param string $name The sequence name to create.
      * 
      * @param string $start The starting sequence number.
      * 
@@ -1677,7 +1657,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function createSequence($name, $start = 1)
     {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $this->_cache->deleteAll();
+        $name = $this->_modSequenceName($name);
         $result = $this->_createSequence($name, $start);
         return $result;
     }
@@ -1699,15 +1680,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Drops a sequence from the database.
      * 
-     * @param string $name The sequence name to drop; this will be 
-     * automatically suffixed with '__s' for portability reasons.
+     * @param string $name The sequence name to drop.
      * 
      * @return void
      * 
      */
     public function dropSequence($name)
     {
-        $name .= '__s'; // we do this to deconflict in PostgreSQL
+        $this->_cache->deleteAll();
+        $name = $this->_modSequenceName($name);
         $result = $this->_dropSequence($name);
         return $result;
     }
@@ -1722,6 +1703,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     abstract protected function _dropSequence($name);
+    
+    /**
+     * 
+     * Modifies a sequence name for adapters.
+     * 
+     * Most adapters don't need this, but some do (esp. MySQL and PostgreSQL).
+     * 
+     * @param string $name The requested sequence name.
+     * 
+     * @return string The modified sequence name (most adapters do not
+     * modify the name).
+     * 
+     */
+    protected function _modSequenceName($name)
+    {
+        return $name;
+    }
     
     
     // -----------------------------------------------------------------
@@ -1757,22 +1755,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _sqlColdef($name, $info)
     {
-        // validate column name length
-        $len = strlen($name);
-        if ($len < 1 || $len > $this->_len['col']) {
-            throw $this->_exception(
-                'ERR_COL_NAME_LENGTH',
-                array('col' => $name)
-            );
-        }
-        
-        // column name must be a valid word
-        if (! $this->_validIdentifier($name)) {
-            throw $this->_exception(
-                'ERR_COL_NAME_RESERVED',
-                array('col' => $name)
-            );
-        }
+        // make sure the column name is a valid identifier
+        $this->_checkIdentifier('column', $name);
         
         // short-form of definition
         if (is_string($info)) {
@@ -1803,7 +1787,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // is it a recognized column type?
         if (! array_key_exists($type, $this->_solar_native)) {
             throw $this->_exception(
-                'ERR_COL_TYPE_UNKNOWN',
+                'ERR_COL_TYPE',
                 array('col' => $name, 'type' => $type)
             );
         }
@@ -1855,6 +1839,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // set the "NULL"/"NOT NULL" portion
         $coldef .= ($require) ? ' NOT NULL' : ' NULL';
         
+        // set the default value, if any
+        if ($default) {
+            $coldef .= ' DEFAULT ' . $this->quote($default);
+        }
+        
         // modify with auto-increment and primary-key portions
         $this->_modAutoincPrimary($coldef, $autoinc, $primary);
         
@@ -1882,35 +1871,70 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Check if a table, column, or index name is a valid identifier.
      * 
-     * @param string $word The word to check.
+     * @param string $type The indentifier type: table, index, sequence, etc.
+     * 
+     * @param string $name The identifier name to check.
      * 
      * @return bool True if valid, false if not.
      * 
      */
-    protected function _validIdentifier($word)
+    protected function _checkIdentifier($type, $name)
     {
+        // list of reserved words
         static $reserved;
         if (! isset($reserved)) {
             $reserved = Solar::factory('Solar_Sql_Reserved');
         }
         
-        // is it a reserved word?
-        if (in_array(strtoupper($word), $reserved->words)) {
-            return false;
+        // identifier must not be a reserved word
+        if (in_array(strtoupper($name), $reserved->words)) {
+            throw $this->_exception(
+                'ERR_IDENTIFIER_RESERVED',
+                array(
+                    'type' => $type,
+                    'name' => $name,
+                )
+            );
+        }
+        
+        // validate identifier length
+        $len = strlen($name);
+        if ($len < 1 || $len > $this->_maxlen) {
+            throw $this->_exception(
+                'ERR_IDENTIFIER_LENGTH',
+                array(
+                    'type' => $type,
+                    'name' => $name,
+                    'min'  => 1,
+                    'max'  => $this->_maxlen,
+                )
+            );
         }
         
         // only a-z, 0-9, and _ are allowed in words.
         // must start with a letter, not a number or underscore.
-        if (! preg_match('/^[a-z][a-z0-9_]*$/', $word)) {
-            return false;
+        $regex = '/^[a-z][a-z0-9_]*$/';
+        if (! preg_match($regex, $name)) {
+            throw $this->_exception(
+                'ERR_IDENTIFIER_CHARS',
+                array(
+                    'type'  => $type,
+                    'name'  => $name,
+                    'regex' => $regex,
+                )
+            );
         }
         
         // must not have two or more underscores in a row
-        if (strpos($word, '__') !== false) {
-            return false;
+        if (strpos($name, '__') !== false) {
+            throw $this->_exception(
+                'ERR_IDENTIFIER_UNDERSCORES',
+                array(
+                    'type'  => $type,
+                    'name'  => $name,
+                    'regex' => $regex,
+                )
+            );
         }
-        
-        // guess it's OK
-        return true;
     }
 }

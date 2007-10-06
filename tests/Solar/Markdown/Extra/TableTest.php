@@ -10,21 +10,21 @@ First Header  | Second Header
 Content A     | Content C    
 Content B     | Content D    
 ";
-
+    
     protected $_pipes = "
 | First Header  | Second Header |
 | ------------- | ------------- |
 | Content A     | Content C     |
 | Content B     | Content D     |
 ";
-
+    
     protected $_align = "
 | Left      | Right     |
 | :-------- | --------: |
 | Content A | Content C |
 | Content B | Content D |
 ";
-
+    
     public function testIsBlock()
     {
         $this->assertTrue($this->_plugin->isBlock());
@@ -129,7 +129,7 @@ Content B     | Content D
         </tr>
     </tbody>
 </table>';
-
+        
         $this->assertSame(trim($actual), trim($expect));
     }
     
@@ -157,7 +157,7 @@ Content B     | Content D
         </tr>
     </tbody>
 </table>';
-
+        
         $this->assertSame(trim($actual), trim($expect));
     }
 }

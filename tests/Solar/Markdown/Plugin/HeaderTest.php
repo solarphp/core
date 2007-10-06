@@ -84,7 +84,7 @@ class Solar_Markdown_Plugin_HeaderTest extends Solar_Markdown_PluginTestCase {
         $actual = $this->_markdown->transform($source);
         $this->assertSame($expect, $actual);
     }
-
+    
     public function testRender_atx()
     {
         $source = array();

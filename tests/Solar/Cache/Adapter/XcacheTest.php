@@ -3,9 +3,9 @@
 require_once dirname(__FILE__) . '/../AdapterTestCase.php';
 
 class Solar_Cache_Adapter_XcacheTest extends Solar_Cache_AdapterTestCase {
-
+    
     protected $_cache;
-
+    
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Xcache',
         'config'  => array(
@@ -14,8 +14,7 @@ class Solar_Cache_Adapter_XcacheTest extends Solar_Cache_AdapterTestCase {
             'pass' => 'bar',
         ),
     );
-
-
+    
     public function setup()
     {
         if (! extension_loaded('xcache')) {

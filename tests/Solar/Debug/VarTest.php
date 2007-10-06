@@ -17,7 +17,7 @@ class Solar_Debug_VarTest extends PHPUnit_Framework_TestCase
     );
     
     protected $_actual_string = 'foo < bar > baz " dib & zim ? gir';
-
+    
     public function setUp()
     {
         // expected output for arrays
@@ -36,8 +36,8 @@ EXPECT;
         // expected output for strings
         $this->_expect_string = 'string(33) "foo < bar > baz " dib & zim ? gir"' . "\n";
         
-        // Solar_Test_Example class
-        $this->_actual_object = Solar::factory('Solar_Test_Example');
+        // Solar_Example class
+        $this->_actual_object = Solar::factory('Solar_Example');
         
         // var dumpers
         $this->_var_text = Solar::factory('Solar_Debug_Var', array('output' => 'text'));

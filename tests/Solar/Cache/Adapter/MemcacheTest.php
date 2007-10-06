@@ -5,7 +5,7 @@ require_once dirname(__FILE__) . '/../AdapterTestCase.php';
 class Solar_Cache_Adapter_MemcacheTest extends Solar_Cache_AdapterTestCase {
     
     protected $_cache;
-
+    
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Memcache',
         'config'  => array(
@@ -14,7 +14,7 @@ class Solar_Cache_Adapter_MemcacheTest extends Solar_Cache_AdapterTestCase {
             'life' => 7, // 7 seconds
         ),
     );
-
+    
     public function setup()
     {
         if (! extension_loaded('memcache')) {

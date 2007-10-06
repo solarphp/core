@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/../HelperTestCase.php';
 
 class Solar_View_Helper_InlineScriptTest extends Solar_View_HelperTestCase {
-
+    
     public function testScript()
     {
         $actual = $this->_view->inlineScript('alert(\'Hello world!\');');

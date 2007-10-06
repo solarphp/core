@@ -11,7 +11,7 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
           'Base_Bar_',
           'Base_Baz_',
         );
-
+        
         $stack = Solar::factory('Solar_Class_Stack');
         $stack->set('Base_Foo, Base_Bar, Base_Baz');
         $this->assertSame($stack->get(), $expect);
@@ -21,7 +21,7 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
     {
         $stack = Solar::factory('Solar_Class_Stack');
         $stack->add(array('Base_Foo', 'Base_Bar', 'Base_Baz'));
-
+        
         $expect = array(
           "Base_Foo_",
           "Base_Bar_",
@@ -36,7 +36,7 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
         // add to the stack as a csv list
         $stack = Solar::factory('Solar_Class_Stack');
         $stack->add('Base_Foo, Base_Bar, Base_Baz');
-
+        
         $expect = array(
           "Base_Foo_",
           "Base_Bar_",
@@ -52,7 +52,7 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
         $stack->add('Base_Foo');
         $stack->add('Base_Bar');
         $stack->add('Base_Baz');
-
+        
         $expect = array(
           "Base_Baz_",
           "Base_Bar_",
@@ -68,11 +68,11 @@ class Solar_Class_StackTest extends PHPUnit_Framework_TestCase
           'Base_Bar_',
           'Base_Baz_',
         );
-
+        
         $stack = Solar::factory('Solar_Class_Stack');
         $stack->set('Base_Foo, Base_Bar, Base_Baz');
         $this->assertSame($stack->get(), $expect);
-
+    
     }
     
     public function testSet_byArray()

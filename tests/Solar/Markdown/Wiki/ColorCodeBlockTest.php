@@ -10,7 +10,6 @@ class Solar_Markdown_Wiki_ColorCodeBlockTest extends Solar_Markdown_PluginTestCa
 }}
 
 baz dib";
-
     
     public function testIsBlock()
     {

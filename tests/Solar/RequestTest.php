@@ -19,7 +19,7 @@ class Solar_RequestTest extends PHPUnit_Framework_TestCase
     {
         return Solar::factory('Solar_Request');
     }
-
+    
     public function testCanInstantiateThroughFactory()
     {
         $request = $this->_getRequest();

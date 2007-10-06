@@ -3,9 +3,9 @@
 require_once dirname(__FILE__) . '/../AdapterTestCase.php';
 
 class Solar_Cache_Adapter_ApcTest extends Solar_Cache_AdapterTestCase {
-
+    
     protected $_cache;
-
+    
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Apc',
         'config'  => array(

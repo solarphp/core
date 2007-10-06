@@ -144,7 +144,7 @@ abstract class Solar_Cache_AdapterTestCase extends PHPUnit_Framework_TestCase {
     public function testSave_Object()
     {
         $id = 'coyote';
-        $data = Solar::factory('Solar_Test_Example');
+        $data = Solar::factory('Solar_Example');
         $this->assertTrue($this->_cache->save($id, $data));
         $this->assertEquals($this->_cache->fetch($id), $data);
     }

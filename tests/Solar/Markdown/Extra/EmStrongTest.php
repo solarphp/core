@@ -111,14 +111,14 @@ class Solar_Markdown_Extra_EmStrongTest extends Solar_Markdown_PluginTestCase
     public function testRender_underscoreWords()
     {
         $source = array();
-        $source[] = "Solar_Test_Example";
-        $source[] = "_Solar_Test_Example_";
-        $source[] = "_ Solar_Test_Example _";
+        $source[] = "Solar_Example";
+        $source[] = "_Solar_Example_";
+        $source[] = "_ Solar_Example _";
         $source = implode(" ", $source);
         
-        $expect[] = "Solar_Test_Example";
-        $expect[] = "<em>Solar_Test_Example</em>";
-        $expect[] = "_ Solar_Test_Example _";
+        $expect[] = "Solar_Example";
+        $expect[] = "<em>Solar_Example</em>";
+        $expect[] = "_ Solar_Example _";
         $expect = implode(" ", $expect);
         
         $actual = $this->_spanTransform($source);

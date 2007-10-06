@@ -9,12 +9,12 @@ class Solar_Uri_PublicTest extends Solar_UriTest {
     public function testFetch()
     {
         $this->_uri->set('Solar/styles/default.css');
-
+        
         // partial fetch
-        $this->assertSame($this->_uri->fetch(), '/Solar/styles/default.css');
-
+        $this->assertSame($this->_uri->get(), '/Solar/styles/default.css');
+        
         // full fetch
-        $this->assertSame($this->_uri->fetch(true), 'http://example.com/Solar/styles/default.css');
+        $this->assertSame($this->_uri->get(true), 'http://example.com/Solar/styles/default.css');
         
     }
     
@@ -24,7 +24,7 @@ class Solar_Uri_PublicTest extends Solar_UriTest {
         $expect = 'Solar/styles/default.css';
         $actual = $this->_uri->quick($expect);
         $this->assertSame($actual, "/$expect");
-
+        
         // full
         $expect = 'http://example.com/Solar/styles/default.css';
         $actual = $this->_uri->quick($expect, true);

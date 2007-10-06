@@ -9,12 +9,12 @@ class Solar_Uri_ActionTest extends Solar_UriTest {
     public function testFetch()
     {
         $this->_uri->set('controller/action/id/?page=1');
-
+        
         // partial fetch
-        $this->assertSame($this->_uri->fetch(), '/controller/action/id?page=1');
-
+        $this->assertSame($this->_uri->get(), '/controller/action/id?page=1');
+        
         // full fetch
-        $this->assertSame($this->_uri->fetch(true), 'http://example.com/controller/action/id?page=1');
+        $this->assertSame($this->_uri->get(true), 'http://example.com/controller/action/id?page=1');
     }
     
     public function testQuick()
@@ -28,7 +28,7 @@ class Solar_Uri_ActionTest extends Solar_UriTest {
         $expect = '/controller/action/id?foo=bar';
         $actual = $this->_uri->quick($expect);
         $this->assertSame($actual, $expect);
-
+        
         // full
         $expect = 'http://example.com/controller/action?foo=bar';
         $actual = $this->_uri->quick($expect, true);

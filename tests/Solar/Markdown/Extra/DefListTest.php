@@ -12,7 +12,7 @@ Apple
 Orange
 :   The fruit of an evergreen tree of the genus Citrus.
 ";
-
+    
     protected $_lazy = "
 Apple
 :   Pomaceous fruit of plants of the genus Malus in 
@@ -68,7 +68,7 @@ Term 3
         $actual = $this->_plugin->cleanup($source);
         $this->assertSame($expect, $actual);
     }
-
+    
     public function testParse()
     {
         $source = "foo bar\n$this->_basic\nbaz dib";
@@ -117,7 +117,7 @@ the family Rosaceae.</dd>
 ';
         $this->assertSame(trim($actual), trim($expect));
     }
-
+    
     public function testRender_lazy()
     {
         $source = $this->_lazy;
@@ -134,7 +134,7 @@ the family Rosaceae.</dd>
 ';
         $this->assertSame(trim($actual), trim($expect));
     }
-
+    
     public function testRender_multiDef()
     {
         $source = $this->_multi_def;
@@ -153,7 +153,7 @@ the family Rosaceae.</dd>
 ';
         $this->assertSame(trim($actual), trim($expect));
     }
-
+    
     public function testRender_multiTerm()
     {
         $source = $this->_multi_term;

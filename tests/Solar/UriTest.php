@@ -70,15 +70,15 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
             'b?key' => 'this that other',
             'c\'key' => 'tag+tag+tag',
         );
-
+        
         $spec = "$scheme://$host:$port/$path/";
-
+        
         $tmp = array();
         foreach ($query as $k => $v) {
             $tmp[] .= urlencode($k) . '=' . urlencode($v);
         }
         $spec .= '?' . implode('&', $tmp);
-
+        
         // import the URI spec and test that it imported properly
         $this->_uri->set($spec);
         $this->assertSame($this->_uri->scheme, $scheme);
@@ -86,10 +86,10 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
         $this->assertSame($this->_uri->port, $port);
         $this->assertSame($this->_uri->path, explode('/', $path));
         $this->assertSame($this->_uri->query, $query);
-
+        
         // npw export in full, then re-import and check again.
         // do this to make sure there are no translation errors.
-        $spec = $this->_uri->fetch(true);
+        $spec = $this->_uri->get(true);
         $this->_uri->set($spec);
         $this->assertSame($this->_uri->scheme, $scheme);
         $this->assertSame($this->_uri->host, $host);
@@ -105,38 +105,38 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
         $host = 'www.example.net';
         $port = 8080;
         $path = '/some/path/index.php';
-
+        
         $info = array(
             'more', 'path', 'info'
         );
-
+        
         $istr = implode('/', $info);
-
+        
         $query = array(
             'a"key' => 'a&value',
             'b?key' => 'this that other',
             'c\'key' => 'tag+tag+tag',
         );
-
+        
         $tmp = array();
         foreach ($query as $k => $v) {
             $tmp[] .= urlencode($k) . '=' . urlencode($v);
         }
-
+        
         $qstr = implode('&', $tmp);
-
+        
         // set up expectations
         $expect_full = "$scheme://$host:$port$path/$istr?$qstr";
         $expect_part = "$path/$istr?$qstr";
-
+        
         // set the URI
         $this->_uri->set($expect_full);
-
+        
         // full fetch
-        $this->assertSame($this->_uri->fetch(true), $expect_full);
-
+        $this->assertSame($this->_uri->get(true), $expect_full);
+        
         // partial fetch
-        $this->assertSame($this->_uri->fetch(false), $expect_part);
+        $this->assertSame($this->_uri->get(false), $expect_part);
     }
     
     public function testQuick()
@@ -145,7 +145,7 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
         $expect = '/path/to/index.php?foo=bar';
         $actual = $this->_uri->quick("http://example.com$expect");
         $this->assertSame($actual, $expect);
-
+        
         // full
         $expect = 'http://example.com/path/to/index.php?foo=bar';
         $actual = $this->_uri->quick($expect, true);

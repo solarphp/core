@@ -6,7 +6,7 @@ require_once 'Solar/View.php';
 class Solar_ViewTest extends PHPUnit_Framework_TestCase
 {
     private $_view = null;
-
+    
     public function setUp() 
     {
         Solar::start('config.inc.php');

@@ -26,7 +26,7 @@ class Solar_Docs_PhpdocTest extends PHPUnit_Framework_TestCase
             /**
              * @param string $var1 Parameter summary.
              */';
-
+        
         $expect = array(
             'param' => array(
                 'var1' => array(
@@ -367,7 +367,7 @@ class Solar_Docs_PhpdocTest extends PHPUnit_Framework_TestCase
         $actual = $this->_phpdoc->parse($source);
         $this->assertSame($actual, $expect);
     }
-
+    
     // throws lines
     protected $_throws = array(
         // partial line

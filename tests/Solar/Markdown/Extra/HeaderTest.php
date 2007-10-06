@@ -184,7 +184,7 @@ class Solar_Markdown_Extra_HeaderTest extends Solar_Markdown_PluginTestCase
         $expect[] = "<h3 id=\"atx\">Header</h3>\n";
         $expect[] = "baz dib";
         $expect = implode("\n", $expect);
-
+        
         $actual = $this->_markdown->transform($source);
         $this->assertSame($expect, $actual);
     }

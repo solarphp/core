@@ -19,7 +19,7 @@ class Solar_StructTest extends PHPUnit_Framework_TestCase
         );
         return $struct;
     }
-
+    
     public function setUp() 
     {
         Solar::start('config.inc.php');

@@ -32,7 +32,7 @@ class Solar_View_Helper_FormTest extends Solar_View_HelperTestCase
                                                 . $this->_request->server['PATH_INFO']
                                                 . '?'
                                                 . $this->_request->server['QUERY_STRING'];
-
+        
         // emulate GET vars from the URI
         parse_str($this->_request->server['QUERY_STRING'], $this->_request->get);
         
@@ -80,7 +80,7 @@ class Solar_View_Helper_FormTest extends Solar_View_HelperTestCase
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
-                    'feedback' => array(),
+                    'invalid' => array(),
                 ),
             ),
         );
@@ -140,11 +140,11 @@ class Solar_View_Helper_FormTest extends Solar_View_HelperTestCase
         $actual = $this->_view->form($form);
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
-
+        
         <dl>
             <dt><label for="baz"></label></dt>
             <dd><input type="text" name="baz" value="dib" size="10" id="baz" class="input-text baz" /></dd>
-
+        
         </dl>
 </form>
 EXPECT;
@@ -218,7 +218,7 @@ EXPECT;
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
-                    'feedback' => array(),
+                    'invalid' => array(),
                 ),
             ),
         );
@@ -295,7 +295,7 @@ EXPECT;
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
-                    'feedback' => array(),
+                    'invalid' => array(),
                 ),
             ),
         );
@@ -334,7 +334,7 @@ EXPECT;
                     'options' => array(),
                     'disable' => false,
                     'require' => false,
-                    'feedback' => array(),
+                    'invalid' => array(),
                 ),
             ),
         );
@@ -468,11 +468,11 @@ EXPECT;
         $actual = $helper->fetch();
         $expect = <<<EXPECT
 <form action="/path/to/index.php/appname/action?foo=bar&amp;baz=dib" method="post" enctype="multipart/form-data" foo="bar">
-
+        
         <dl>
             <dt><label for="baz"></label></dt>
             <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
-
+        
         </dl>
 </form>
 EXPECT;
@@ -499,7 +499,7 @@ EXPECT;
         <dl>
             <dt><label for="baz"></label></dt>
             <dd><input type="text" name="baz" value="dib" id="baz" class="input-text baz" /></dd>
-
+        
         </dl>
 EXPECT;
         $this->assertSame(trim($actual), trim($expect));

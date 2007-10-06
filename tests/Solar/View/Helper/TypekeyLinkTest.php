@@ -20,7 +20,7 @@ class Solar_View_Helper_TypekeyLinkTest extends Solar_View_HelperTestCase {
                                                 . $this->_request->server['PATH_INFO']
                                                 . '?'
                                                 . $this->_request->server['QUERY_STRING'];
-
+        
         // emulate GET vars from the URI
         parse_str($this->_request->server['QUERY_STRING'], $this->_request->get);
     }

@@ -16,7 +16,6 @@ class Solar_Markdown_Wiki_MethodSynopsisTest extends Solar_Markdown_PluginTestCa
 }}
 
 baz dib";
-
     
     public function testIsBlock()
     {

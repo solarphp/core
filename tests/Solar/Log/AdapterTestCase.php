@@ -27,7 +27,7 @@ abstract class Solar_Log_AdapterTestCase extends PHPUnit_Framework_TestCase {
     {
         $log = Solar::factory($this->_adapter);
         
-        // default is always *
+        // default is always "*"
         $actual = $log->getEvents();
         $expect = array('*');
         $this->assertSame($actual, $expect);

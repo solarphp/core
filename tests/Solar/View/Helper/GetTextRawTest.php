@@ -15,10 +15,10 @@ class Solar_View_Helper_GetTextRawTest extends Solar_View_HelperTestCase {
     public function testGetTextRaw_resetClass()
     {
         Solar::start(false);
-        $example = Solar::factory('Solar_Test_Example');
+        $example = Solar::factory('Solar_Example');
         
         $helper = $this->_view->getHelper('getTextRaw');
-        $helper->setClass('Solar_Test_Example');
+        $helper->setClass('Solar_Example');
         
         $actual = $this->_view->getTextRaw('HELLO_WORLD');
         $expect = 'hello world';

@@ -37,7 +37,7 @@ class Solar_Controller_PageTest extends PHPUnit_Framework_TestCase
         $this->_request = Solar::factory('Solar_Request');
         
         // set up the example page controller object
-        $this->_page = Solar::factory('Solar_Controller_PageController');
+        $this->_page = Solar::factory('Solar_Example_Controller_Page');
     }
     
     public function teardown()

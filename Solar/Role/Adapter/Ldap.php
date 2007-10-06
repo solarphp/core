@@ -83,8 +83,7 @@ class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
         // continue construction
         parent::__construct($config);
     }
-
-
+    
     /**
      * 
      * Fetch roles for a user.

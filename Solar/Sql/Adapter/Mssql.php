@@ -298,8 +298,9 @@ class Solar_Sql_Adapter_Mssql extends Solar_Sql_Adapter {
      * 
      * Get the last auto-incremented insert ID from the database.
      * 
-     * @param string $name The name of the auto-increment series; optional,
-     * not normally required.
+     * @param string $table The table name on which the auto-increment occurred.
+     * 
+     * @param string $col The name of the auto-increment column.
      * 
      * @return int The last auto-increment ID value inserted to the database.
      * 

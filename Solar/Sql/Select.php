@@ -960,42 +960,103 @@ class Solar_Sql_Select extends Solar_Base {
         return $this->_sql->$fetch($this->_parts, $this->_bind);
     }
     
-    
+    /**
+     * 
+     * Fetches all rows from the database using sequential keys.
+     * 
+     * @return array
+     * 
+     */
     public function fetchAll()
     {
         return $this->fetch('all');
     }
     
+    /**
+     * 
+     * Fetches all rows from the database using associative keys (defined by
+     * the first column).
+     * 
+     * N.b.: if multiple rows have the same first column value, the last
+     * row with that value will override earlier rows.
+     * 
+     * @return array
+     * 
+     */
     public function fetchAssoc()
     {
         return $this->fetch('assoc');
     }
     
+    /**
+     * 
+     * Fetches the first column of all rows as a sequential array.
+     * 
+     * @return array
+     * 
+     */
     public function fetchCol()
     {
         return $this->fetch('col');
     }
     
+    /**
+     * 
+     * Fetches the very first value (i.e., first column of the first row).
+     * 
+     * @return mixed
+     * 
+     */
     public function fetchValue()
     {
         return $this->fetch('value');
     }
     
+    /**
+     * 
+     * Fetches an associative array of all rows as key-value pairs (first 
+     * column is the key, second column is the value).
+     * 
+     * @return array
+     * 
+     */
     public function fetchPairs()
     {
         return $this->fetch('pairs');
     }
     
+    /**
+     * 
+     * Fetches a PDOStatement result object.
+     * 
+     * @return PDOStatement
+     * 
+     */
     public function fetchPdo()
     {
         return $this->fetch('pdo');
     }
     
+    /**
+     * 
+     * Fetches one row from the database.
+     * 
+     * @return array
+     * 
+     */
     public function fetchOne()
     {
         return $this->fetch('one');
     }
     
+    /**
+     * 
+     * Builds the SQL statement and returns it as a string instead of 
+     * executing it.  Useful for debugging.
+     * 
+     * @return string
+     * 
+     */
     public function fetchSql()
     {
         return $this->fetch('sql');

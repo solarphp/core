@@ -957,7 +957,7 @@ class Solar_Sql_Select extends Solar_Base {
         }
         
         // return the fetch result
-        return $this->_sql->$fetch($this->_parts, $this->_bind, $class);
+        return $this->_sql->$fetch($this->_parts, $this->_bind);
     }
     
     

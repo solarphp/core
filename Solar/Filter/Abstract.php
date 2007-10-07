@@ -35,6 +35,8 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
      * `filter`
      * : (Solar_Filter) The "parent" Solar_Filter object.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Filter_Abstract = array(
         'filter' => null,

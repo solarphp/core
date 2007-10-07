@@ -73,7 +73,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
     
     /**
      * 
-     * The source class to work with
+     * The source class to work with.
      * 
      * @var string
      * 
@@ -82,7 +82,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
     
     /**
      * 
-     * The target directory for writing tests
+     * The target directory for writing tests.
      * 
      * @var string
      * 

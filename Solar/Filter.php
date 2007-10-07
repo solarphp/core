@@ -398,6 +398,8 @@ class Solar_Filter extends Solar_Base {
      * 
      * Adds many filter-chain methods for a data key.
      * 
+     * @param string $key The data key.
+     * 
      * @param array $list An array of data keys and filter specifications.
      * 
      * @return void

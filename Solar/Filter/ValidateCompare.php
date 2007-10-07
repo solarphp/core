@@ -1,4 +1,31 @@
 <?php
+/**
+ * 
+ * Validates that this value is the same as some other value in the
+ * data filter chain.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Filter
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Validates that this value is the same as some other value in the
+ * data filter chain.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Filter
+ * 
+ */
 class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract {
     
     /**

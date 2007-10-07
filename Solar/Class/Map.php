@@ -36,6 +36,8 @@ class Solar_Class_Map extends Solar_Base {
      * : (string) The base directory of the class hierarchy.  Default is the
      *   base directory for this class, typically the PEAR directory.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Class_Map = array(
         'base' => null,

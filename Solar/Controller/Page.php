@@ -80,6 +80,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * `request`
      * : (dependency) A Solar_Request dependency object.
      * 
+     * @var array
+     * 
      */
     protected $_Solar_Controller_Page = array(
         'request' => 'request',

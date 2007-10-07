@@ -313,7 +313,13 @@ class Solar_Controller_Command extends Solar_Base {
      * 
      * Automatically replaces style-format codes for shell output.
      * 
-     * @param string $text The text to print to STDOUT.
+     * @param string $text The text to print to STDOUT, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
      * 
      * @return void
      * 
@@ -345,7 +351,13 @@ class Solar_Controller_Command extends Solar_Base {
      * 
      * Automatically replaces style-format codes for shell output.
      * 
-     * @param string $text The text to print to STDOUT.
+     * @param string $text The text to print to STDOUT, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
      * 
      * @return void
      * 

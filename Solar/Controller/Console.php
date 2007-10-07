@@ -270,6 +270,8 @@ class Solar_Controller_Console extends Solar_Base {
      * 
      * @throws Solar_Controller_Console_Exception
      * 
+     * @return void
+     * 
      */
     protected function _notFound($cmd)
     {

@@ -1,17 +1,64 @@
 <?php
+/**
+ * 
+ * Solar command to make a model class from an SQL table.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Auth.php 2428 2007-04-02 00:44:19Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Solar command to make a model class from an SQL table.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ */
 class Solar_Cli_MakeModel extends Solar_Controller_Command {
     
+    /**
+     * 
+     * The base directory where we will write the class file to, typically
+     * the local PEAR directory.
+     * 
+     * @var string
+     * 
+     */
     protected $_target = null;
     
+    /**
+     * 
+     * The table name we're making the model from.
+     * 
+     * @var string
+     * 
+     */
     protected $_table = null;
     
+    /**
+     * 
+     * Array of model-class templates (skeletons).
+     * 
+     * @var array
+     * 
+     */
     protected $_tpl = array();
     
     /**
      * 
-     * Displays a "command not recognized" message.
+     * Write out a series of model, record, and collection classes for a model.
      * 
-     * @param string $cmd The requested command.
+     * @param string $class The target class name for the model.
      * 
      * @return void
      * 
@@ -33,7 +80,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         
         // emit feedback
         $this->_println("Using table '{$this->_table}'.");
-        $this->_println("Writing to '$class' to '{$this->_target}'.");
+        $this->_println("Writing '$class' to '{$this->_target}'.");
         
         // load the templates
         $this->_loadTemplates();
@@ -119,6 +166,13 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $this->_println("Done.");
     }
     
+    /**
+     * 
+     * Loads the template array from skeleton files.
+     * 
+     * @return void
+     * 
+     */
     protected function _loadTemplates()
     {
         $this->_tpl = array();
@@ -130,6 +184,13 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         }
     }
     
+    /**
+     * 
+     * Sets the base directory target.
+     * 
+     * @return void
+     * 
+     */
     protected function _setTarget()
     {
         $target = $this->_options['target'];
@@ -142,6 +203,16 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $this->_target = Solar::fixdir($target);
     }
     
+    /**
+     * 
+     * Sets the table name; determines from the class name if no table name is
+     * given.
+     * 
+     * @param string $class The class name for the model.
+     * 
+     * @return void
+     * 
+     */
     protected function _setTable($class)
     {
         $table = $this->_options['table'];
@@ -161,6 +232,14 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $this->_table = $table;
     }
     
+    /**
+     * 
+     * Gets the SQL connection parameters from the command line options.
+     * 
+     * @return array An array of SQL connection parameters suitable for 
+     * passing as a Solar_Sql_Adapter class config.
+     * 
+     */
     protected function _getSqlConfig()
     {
         $config = array();

@@ -1,9 +1,36 @@
 <?php
-class Solar_Cli_Base extends Solar_Controller_Command {
+/**
+ * 
+ * Base Solar command class.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Auth.php 2428 2007-04-02 00:44:19Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Base Solar command class.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ */
+abstract class Solar_Cli_Base extends Solar_Controller_Command {
     
     /**
      * 
      * Displays a "command not recognized" message.
+     * 
+     * Extends this class and override _exec() to get real functionality.
      * 
      * @param string $cmd The requested command.
      * 

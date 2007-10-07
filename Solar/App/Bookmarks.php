@@ -187,8 +187,22 @@ class Solar_App_Bookmarks extends Solar_App_Base {
      */
     public $user;
     
+    /**
+     * 
+     * Bookmarks model.
+     * 
+     * @var Solar_Model_Nodes_Bookmarks
+     * 
+     */
     protected $_bookmarks;
     
+    /**
+     * 
+     * Tags model.
+     * 
+     * @var Solar_Model_Tags
+     * 
+     */
     protected $_tags;
     
     /**
@@ -545,7 +559,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
      * 
      * Shows a list of bookmarks filtered by tag, regardless of owner.
      * 
-     * @param string|array $tags The tags to show; either a space- (or
+     * @param string|array $tag_list The tags to show; either a space- (or
      * plus-) separated list of tags, or a sequential array of tags.
      * 
      * @return void

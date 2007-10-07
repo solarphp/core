@@ -62,16 +62,61 @@
  */
 class Solar_Cli_MakeTests extends Solar_Cli_Base {
     
-    protected $_tpl; // templates for classes and methods
+    /**
+     * 
+     * Skeleton templates for classes and methods.
+     * 
+     * @var array
+     * 
+     */
+    protected $_tpl;
     
-    protected $_class; // the source class to work with
+    /**
+     * 
+     * The source class to work with
+     * 
+     * @var string
+     * 
+     */
+    protected $_class;
     
-    protected $_target; // the target directory for writing tests
+    /**
+     * 
+     * The target directory for writing tests
+     * 
+     * @var string
+     * 
+     */
+    protected $_target;
     
-    protected $_file; // name of the test file to work with
+    /**
+     * 
+     * Name of the test file to work with.
+     * 
+     * @var string
+     * 
+     */
+    protected $_file;
     
-    protected $_code; // the code in the test file
+    /**
+     * 
+     * The code in the test file.
+     * 
+     * @var string
+     * 
+     */
+    protected $_code;
     
+    /**
+     * 
+     * Builds one or more test files starting at the requested class, usually
+     * descending recursively into subdirectories of that class.
+     * 
+     * @param string $class The class name to build tests for.
+     * 
+     * @return void
+     * 
+     */
     protected function _exec($class = null)
     {
         $this->_println("Making tests.");
@@ -133,6 +178,13 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         $this->_println('Done.');
     }
     
+    /**
+     * 
+     * Loads the template array from skeleton files.
+     * 
+     * @return void
+     * 
+     */
     protected function _loadTemplates()
     {
         $this->_tpl = array();
@@ -144,6 +196,13 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         }
     }
     
+    /**
+     * 
+     * Sets the base directory target.
+     * 
+     * @return void
+     * 
+     */
     protected function _setTarget()
     {
         // look for a test directory, otherwise assume that the tests are
@@ -162,6 +221,22 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         }
     }
     
+    /**
+     * 
+     * Sets the file name for the test file, creating it if needed.
+     * 
+     * Uses a different class template for abstract, factory, and normal
+     * (concrete) classes.  Also looks to see if this is an Adapter-based
+     * class and takes that into account.
+     * 
+     * @param string $class The class name to work with.
+     * 
+     * @param array $api The list of methods in the class API to write test
+     * stubs for.
+     * 
+     * @return void
+     * 
+     */
     protected function _setFile($class, $api)
     {
         $this->_file = $this->_target 
@@ -211,6 +286,17 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         file_put_contents($this->_file, $code);
     }
     
+    
+    /**
+     * 
+     * Adds test methods to the code for a test file.
+     * 
+     * @param array $api The list of methods in the class API to write test
+     * stubs for.
+     * 
+     * @return void
+     * 
+     */
     protected function _addTestMethods($api)
     {
         // prepare the testing code for appending new methods.
@@ -277,6 +363,6 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         }
         
         // append the last brace
-        $this->_code .= "\n}\n";
+        $this->_code = trim($this->_code) . "\n}\n";
     }
 }

@@ -1,6 +1,41 @@
 <?php
+/**
+ * 
+ * Solar "help" command.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Auth.php 2428 2007-04-02 00:44:19Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Solar "help" command.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Cli
+ * 
+ */
 class Solar_Cli_Help extends Solar_Cli_Base {
     
+    /**
+     * 
+     * Displays a list of help options for a command, or the list of commands
+     * if no command was requested.
+     * 
+     * @param string $cmd The requested command.
+     * 
+     * @return void
+     * 
+     */
     protected function _exec($cmd = null)
     {
         if ($cmd) {
@@ -10,6 +45,16 @@ class Solar_Cli_Help extends Solar_Cli_Base {
         }
     }
     
+    /**
+     * 
+     * Displays a list of help options for a command, or the list of commands
+     * if no command was requested.
+     * 
+     * @param string $cmd The requested command.
+     * 
+     * @return void
+     * 
+     */
     protected function _displayCommandHelp($cmd = null)
     {
         $this->_println();
@@ -49,6 +94,15 @@ class Solar_Cli_Help extends Solar_Cli_Base {
         }
     }
     
+    /**
+     * 
+     * Displays a list of available commands.
+     * 
+     * @param string $cmd The requested command.
+     * 
+     * @return void
+     * 
+     */
     protected function _displayCommandList()
     {
         $this->_println($this->getInfoHelp());

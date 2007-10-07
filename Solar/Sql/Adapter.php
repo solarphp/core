@@ -22,8 +22,8 @@
  * When writing an adapter, you need to override these abstract methods:
  * 
  * {{code: php
- *     abstract public function fetchTableList();
- *     abstract public function fetchTableCols($table);
+ *     abstract protected function _fetchTableList();
+ *     abstract protected function _fetchTableCols($table);
  *     abstract protected function _createSequence($name, $start = 1);
  *     abstract protected function _dropSequence($name);
  *     abstract protected function _nextSequence($name);
@@ -84,8 +84,22 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         'cache'     => array('adapter' => 'Solar_Cache_Adapter_Var'),
     );
     
+    /**
+     * 
+     * A cache object for keeping query results.
+     * 
+     * @var Solar_Cache_Adapter
+     * 
+     */
     protected $_cache;
     
+    /**
+     * 
+     * Prefix all cache keys with this string.
+     * 
+     * @var string
+     * 
+     */
     protected $_cache_key_prefix;
     
     /**
@@ -383,7 +397,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Gets a full cache key.
      * 
-     * @var string $key The partial cache key.
+     * @param string $key The partial cache key.
      * 
      * @return string The full cache key.
      * 
@@ -1297,7 +1311,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Returns a list of database tables.
+     * Returns a list of database tables from the cache; if the cache entry
+     * is not available, queries the database for the list of tables.
      * 
      * @return array A sequential array of table names in the database.
      * 
@@ -1313,11 +1328,20 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return $result;
     }
     
+    /**
+     * 
+     * Returns a list of database tables.
+     * 
+     * @return array A sequential array of table names in the database.
+     * 
+     */
     abstract protected function _fetchTableList();
     
     /**
      * 
-     * Returns an array describing the columns in a table.
+     * Returns an array describing table columns from the cache; if the cache
+     * entry is not available, queries the database for the column
+     * descriptions.
      * 
      * @param string $table The table name to fetch columns for.
      * 
@@ -1335,6 +1359,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return $result;
     }
     
+    /**
+     * 
+     * Returns an array describing the columns in a table.
+     * 
+     * @param string $table The table name to fetch columns for.
+     * 
+     * @return array An array of table columns.
+     * 
+     */
     abstract protected function _fetchTableCols($table);
     
     /**

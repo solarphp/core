@@ -388,6 +388,8 @@ class Solar_Form extends Solar_Base {
      * Solar_Filter method name (string), or an array where the first element
      * is a method name and remaining elements are parameters to that method.
      * 
+     * @param string $array Rename the element as a key in this array.
+     * 
      * @return void
      * 
      */
@@ -411,11 +413,9 @@ class Solar_Form extends Solar_Base {
      * 
      * @param string $name The element name.
      * 
-     * @param array|string $spec The filter specification; either a
-     * Solar_Filter method name (string), or an array where the first element
-     * is a method name and remaining elements are parameters to that method.
+     * @param array|string $list The list of filters for this element.
      * 
-     * @param string $array Rename each element as a key in this array.
+     * @param string $array Rename the element as a key in this array.
      * 
      * @return void
      * 

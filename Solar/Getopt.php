@@ -76,6 +76,8 @@ class Solar_Getopt extends Solar_Base {
      * instead, use [[Solar_Getopt::setOption()]] and/or
      * [[Solar_Getopt::setOptions()]].
      * 
+     * @var array
+     * 
      */
     public $options = array();
     

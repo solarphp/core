@@ -42,8 +42,48 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * 
      * Data for related objects.
      * 
+     * @var array
+     * 
      */
     protected $_related = array();
+    
+    /**
+     * 
+     * Returns a record from the collection based on its key value.  Converts
+     * the stored data array to a record of the correct class on-the-fly.
+     * 
+     * @param int|string $key The sequential or associative key value for the
+     * record.
+     * 
+     */
+    public function __get($key)
+    {
+        // convert array to record object
+        // honors single-table inheritance
+        if (is_array($this->_data[$key])) {
+            
+            // convert the data array to an object.
+            // get the main data to load to the record.
+            $load = $this->_data[$key];
+            
+            // add related data to load data
+            $primary = $load[$this->_model->primary_col];
+            foreach ($this->_related as $name => $data) {
+                if (! empty($data[$primary])) {
+                    // add the data 
+                    $load[$name] = $data[$primary];
+                    // save some memory
+                    unset($data[$primary]);
+                }
+            }
+            
+            // done
+            $this->_data[$key] = $this->_model->newRecord($load);
+        }
+        
+        // return the record
+        return $this->_data[$key];
+    }
     
     /**
      * 
@@ -87,7 +127,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * 
      * @param string $name The relationship name.
      * 
-     * @param $data The related data.
+     * @param array $data The related data.
      * 
      * @return void
      * 
@@ -108,6 +148,13 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         }
     }
     
+    /**
+     * 
+     * Returns the data for each record in this collection as an array.
+     * 
+     * @return array
+     * 
+     */
     public function toArray()
     {
         $data = array();
@@ -120,8 +167,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
-     * Saves all the records from this collection to the database, inserting
-     * or updating as needed.
+     * Saves all the records from this collection to the database one-by-one,
+     * inserting or updating as needed.
      * 
      * @return void
      * 
@@ -143,15 +190,35 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         $this->_postSave();
     }
     
+    /**
+     * 
+     * User-defined pre-save logic for the collection.
+     * 
+     * @return void
+     * 
+     */
     public function _preSave()
     {
     }
     
+    /**
+     * 
+     * User-defined post-save logic for the collection.
+     * 
+     * @return void
+     * 
+     */
     public function _postSave()
     {
     }
     
-    // deletes each record in the collection
+    /**
+     * 
+     * Deletes each record in the collection one-by-one.
+     * 
+     * @return void
+     * 
+     */
     public function delete()
     {
         $this->_preDelete();
@@ -164,30 +231,26 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         $this->_postDelete();
     }
     
+    /**
+     * 
+     * User-defined pre-delete logic.
+     * 
+     * @return void
+     * 
+     */
     public function _preDelete()
     {
     }
     
-    protected function _postDelete()
-    {
-    }
-    
-    // -----------------------------------------------------------------
-    //
-    // Iterator
-    //
-    // -----------------------------------------------------------------
-    
     /**
      * 
-     * Iterator: returns the current record from the collection.
+     * User-defined post-delete logic.
      * 
-     * @return Solar_Sql_Model_Record A model with a focus on one record.
+     * @return void
      * 
      */
-    public function current()
+    protected function _postDelete()
     {
-        return $this->offsetGet($this->key());
     }
     
     // -----------------------------------------------------------------
@@ -196,38 +259,9 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     //
     // -----------------------------------------------------------------
     
-    public function __get($key)
-    {
-        // convert array to record object
-        // honors single-table inheritance
-        if (is_array($this->_data[$key])) {
-            
-            // convert the data array to an object.
-            // get the main data to load to the record.
-            $load = $this->_data[$key];
-            
-            // add related data to load data
-            $primary = $load[$this->_model->primary_col];
-            foreach ($this->_related as $name => $data) {
-                if (! empty($data[$primary])) {
-                    // add the data 
-                    $load[$name] = $data[$primary];
-                    // save some memory
-                    unset($data[$primary]);
-                }
-            }
-            
-            // done
-            $this->_data[$key] = $this->getModel()->newRecord($load);
-        }
-        
-        // return the record
-        return $this->_data[$key];
-    }
-    
     /**
      * 
-     * ArrayAccess: set a key value.
+     * ArrayAccess: set a key value; appends to the 
      * 
      * @param string $key The requested key.
      * 

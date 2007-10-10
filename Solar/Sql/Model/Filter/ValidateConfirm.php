@@ -1,4 +1,31 @@
 <?php
+/**
+ * 
+ * Validates that the "confirmation" value is the same as the "real"
+ * value being confirmed.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Validates that the "confirmation" value is the same as the "real"
+ * value being confirmed.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ */
 class Solar_Sql_Model_Filter_ValidateConfirm extends Solar_Filter_Abstract {
     
     /**

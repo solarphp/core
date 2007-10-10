@@ -1,4 +1,31 @@
 <?php
+/**
+ * 
+ * Validates that a value for the current data key is unique among all
+ * model records of its inheritance type.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Validates that a value for the current data key is unique among all
+ * model records of its inheritance type.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ */
 class Solar_Sql_Model_Filter_ValidateUnique extends Solar_Filter_Abstract {
     
     /**

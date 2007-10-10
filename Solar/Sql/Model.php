@@ -2,9 +2,7 @@
 /**
  * 
  * An SQL-centric Model class combining TableModule and TableDataGateway,
- * using a Collection of ActiveRecord objects for returns.
- * 
- * This class is Solar_Sql converted to do only the data mapping part.
+ * using a Collection of Record objects for returns.
  * 
  * @category Solar
  * 
@@ -21,7 +19,7 @@
 /**
  * 
  * An SQL-centric Model class combining TableModule and TableDataGateway,
- * using a Collection of ActiveRecord objects for returns.
+ * using a Collection of Record objects for returns.
  * 
  * @category Solar
  * 
@@ -475,9 +473,10 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Call this before you 
+     * Call this before you unset the instance so that you release the memory
+     * from all the internal child objects.
      * 
-     * @param array $config User-provided configuration values.
+     * @return void
      * 
      */
     public function __destruct()
@@ -508,8 +507,10 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Read-only access to protected model properties.
      * 
-     * @var string $key The requested property; e.g., `'foo'` will read from
+     * @param string $key The requested property; e.g., `'foo'` will read from
      * `$_foo`.
+     * 
+     * @return mixed
      * 
      */
     public function __get($key)
@@ -719,6 +720,19 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $this->_fetchAll($select, $params);
     }
     
+    /**
+     * 
+     * Support method for fetchAll() to add eager related records.
+     * 
+     * @param Solar_Sql_Select $select The select object for fetching.
+     * 
+     * @param array $params The original params passed to fetchAll(). In
+     * general, only needed for the 'eager' key.
+     * 
+     * @return mixed Solar_Sql_Model_Collection of found records, or an empty
+     * array if no records were found.
+     * 
+     */
     protected function _fetchAll($select, $params)
     {
         $data = $select->fetchAll();
@@ -797,6 +811,19 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $this->_fetchAssoc($select, $params);
     }
     
+    /**
+     * 
+     * Support method for fetchAssoc() to add eager related records.
+     * 
+     * @param Solar_Sql_Select $select The select object for fetching.
+     * 
+     * @param array $params The original params passed to fetchAll(). In
+     * general, only needed for the 'eager' key.
+     * 
+     * @return mixed Solar_Sql_Model_Collection of found records, or an empty
+     * array if no records were found.
+     * 
+     */
     protected function _fetchAssoc($select, $params)
     {
         $data = $select->fetchAssoc();
@@ -1156,7 +1183,10 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Counts the number of records in a related model for a given record.
      * 
-     * @param string $name The relationship name.
+     * @param Solar_Sql_Model_Record $record The record to count related pages
+     * for.
+     * 
+     * @param string $name The name of the relationship to count pages for.
      * 
      * @param array $params Parameters for the related SELECT; honors keys for
      * 'where', 'having', 'group', and 'paging'.

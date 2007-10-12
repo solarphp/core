@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * A model of content "nodes" (individual pieces of content).
+ * A model of content "taggings" (maps tags to nodes).
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * A model of content "nodes" (individual pieces of content).
+ * A model of content "taggings" (maps tags to nodes).
  * 
  * @category Solar
  * 
@@ -25,6 +25,14 @@
  * 
  */
 class Solar_Model_Taggings extends Solar_Model {
+    
+    /**
+     * 
+     * Model setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         $this->_table_name = 'taggings';

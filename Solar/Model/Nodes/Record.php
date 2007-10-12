@@ -1,6 +1,38 @@
 <?php
+/**
+ * 
+ * A single record from the "nodes" model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Exception.php 2804 2007-10-06 14:01:27Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * A single record from the "nodes" model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ */
 class Solar_Model_Nodes_Record extends Solar_Model_Record {
     
+    /**
+     * 
+     * Magic method to get the 'tags_as_string' property.
+     * 
+     * @return string
+     * 
+     */
     public function __getTagsAsString()
     {
         // if exactly null, populate for the first time.
@@ -15,6 +47,15 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record {
         return $this->_data['tags_as_string'];
     }
     
+    /**
+     * 
+     * Magic method to set the 'tags_as_string' property.
+     * 
+     * @param string $val A space-separated list of tags.
+     * 
+     * @return void
+     * 
+     */
     public function __setTagsAsString($val)
     {
         $val = preg_replace('/[ ]{2,}/', ' ', $val);
@@ -35,8 +76,13 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record {
         $this->tags = $coll;
     }
     
-    // work with related values before they get saved.
-    // relateds:  areas, nodes, taggings, tags
+    /**
+     * 
+     * Corrects and saves related records and collections.
+     * 
+     * @return void
+     * 
+     */
     public function _postSave()
     {
         // -------------------------------------------------------------

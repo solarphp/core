@@ -55,6 +55,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @param int|string $key The sequential or associative key value for the
      * record.
      * 
+     * @return Solar_Sql_Model_Record
+     * 
      */
     public function __get($key)
     {
@@ -261,7 +263,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
-     * ArrayAccess: set a key value; appends to the 
+     * ArrayAccess: set a key value; appends to the array when using []
+     * notation.
      * 
      * @param string $key The requested key.
      * 

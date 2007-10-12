@@ -1,12 +1,57 @@
 <?php
+/**
+ * 
+ * Represents the characteristics of a relationship where a native model
+ * "has many" of a foreign model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Exception.php 2440 2007-04-21 14:33:44Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Represents the characteristics of a relationship where a native model
+ * "has many" of a foreign model.  This includes "has many through" (i.e.,
+ * a many-to-many relationship through an interceding mapping model).
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ */
 class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
     
+    /**
+     * 
+     * Sets the relationship type.
+     * 
+     * @return void
+     * 
+     */
     protected function _setType()
     {
         $this->type = 'has_many';
     }
     
-    // foreign key is stored in the foreign model
+    /**
+     * 
+     * Fixes the related column names in the user-defined options **in place**.
+     * 
+     * The foreign key is stored in the **foreign** model.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedCol(&$opts)
     {
         $opts['foreign_col'] = $opts['foreign_key'];
@@ -135,6 +180,20 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
         }
     }
     
+    /**
+     * 
+     * Special-case modification for selections of has-many-through records.
+     * 
+     * @param Solar_Sql_Select $select The selection object to modify.
+     * 
+     * @param Solar_Sql_Select|Solar_Sql_Model_Record $spec If a
+     * Solar_Sql_Select, used as an "inner" select to find the correct native
+     * IDs.  If a Solar_Sql_Model_Record, will find based on the ID of the
+     * record.
+     * 
+     * @return void
+     * 
+     */
     protected function _modSelect($select, $spec)
     {
         // for non-through relationship, go with the parent method

@@ -96,7 +96,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      * Keys on the relationship name.
      * 
-     * @param array
+     * @var array
      * 
      */
     protected $_related_page = array();
@@ -459,7 +459,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     // -----------------------------------------------------------------
     //
-    // Database operations
+    // Persistence: save, insert, update, delete, refresh.
     //
     // -----------------------------------------------------------------
     
@@ -543,6 +543,36 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
+    /**
+     * 
+     * User-defined pre-save logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preSave()
+    {
+    }
+    
+    /**
+     * 
+     * User-defined post-save logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postSave()
+    {
+    }
+    
+    /**
+     * 
+     * Inserts the current record into the database, making calls to pre- and
+     * post-insert logic.
+     * 
+     * @return void
+     * 
+     */
     protected function _insert()
     {
         try {
@@ -558,6 +588,36 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
+    /**
+     * 
+     * User-defined pre-insert logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preInsert()
+    {
+    }
+    
+    /**
+     * 
+     * User-defined post-insert logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postInsert()
+    {
+    }
+    
+    /**
+     * 
+     * Updates the current record at the database, making calls to pre- and
+     * post-update logic.
+     * 
+     * @return void
+     * 
+     */
     protected function _update()
     {
         try {
@@ -574,43 +634,25 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
-    protected function _preSave()
-    {
-    }
-    
-    protected function _postSave()
-    {
-    }
-    
-    protected function _preInsert()
-    {
-    }
-    
-    protected function _postInsert()
-    {
-    }
-    
+    /**
+     * 
+     * User-defined pre-update logic.
+     * 
+     * @return void
+     * 
+     */
     protected function _preUpdate()
     {
     }
     
+    /**
+     * 
+     * User-defined post-update logic.
+     * 
+     * @return void
+     * 
+     */
     protected function _postUpdate()
-    {
-    }
-    
-    protected function _preDelete()
-    {
-    }
-    
-    protected function _postDelete()
-    {
-    }
-    
-    protected function _preFilter()
-    {
-    }
-    
-    protected function _postFilter()
     {
     }
     
@@ -631,6 +673,28 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
+     * User-defined pre-delete logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preDelete()
+    {
+    }
+    
+    /**
+     * 
+     * User-defined post-delete logic.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postDelete()
+    {
+    }
+    
+    /**
+     * 
      * Refreshes data for this record from the database.
      * 
      * Note that this does not refresh any related or calculated values.
@@ -645,6 +709,153 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $result = $this->_model->fetch($this->$primary);
             $this->load($result);
             $this->_status = 'clean';
+        }
+    }
+    
+    // -----------------------------------------------------------------
+    // 
+    // Filtering and data invalidation.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Filter the data.
+     * 
+     * @return void
+     * 
+     */
+    public function filter()
+    {
+        $this->_preFilter();
+        
+        // create a filter object based on the model's filter class
+        $filter = Solar::factory($this->_model->filter_class);
+        
+        // set filters as specified by the model
+        foreach ($this->_model->filters as $key => $list) {
+            $filter->addChainFilters($key, $list);
+        }
+        
+        // set which elements are required by the table itself
+        foreach ($this->_model->table_cols as $key => $info) {
+            if ($info['autoinc']) {
+                // autoinc are not required
+                $flag = false;
+            } elseif (in_array($key, $this->_model->sequence_cols)) {
+                // auto-sequence are not required
+                $flag = false;
+            } else {
+                // go with the col info
+                $flag = $info['require'];
+            }
+            
+            // set the requirement flag
+            $filter->setChainRequire($key, $flag);
+        }
+        
+        // tell the filter to use the model for locale strings
+        $filter->setChainLocaleObject($this->_model);
+        
+        // apply filters and retain invalids
+        $valid = $filter->applyChain($this);
+        $invalid = $filter->getChainInvalid();
+        
+        // reclaim memory
+        $filter->__destruct();
+        unset($filter);
+        
+        // was it valid?
+        if (! $valid) {
+            $this->_status = 'invalid';
+            $this->_invalid = $invalid;
+            throw $this->_exception('ERR_INVALID', array($this->_invalid));
+        }
+        
+        // post-logic, and done
+        $this->_postFilter();
+    }
+    
+    /**
+     * 
+     * User-defined logic executed before filters are applied to the record
+     * data.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preFilter()
+    {
+    }
+    
+    /**
+     * 
+     * User-defined logic executed after filters are applied to the record
+     * data.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postFilter()
+    {
+    }
+    
+    /**
+     * 
+     * Forces one property to be "invalid" and sets a validation failure message
+     * for it.
+     * 
+     * @param string $key The property name.
+     * 
+     * @param string $message The validation failure message.
+     * 
+     * @return void
+     * 
+     */
+    public function setInvalid($key, $message)
+    {
+        $this->_status = 'invalid';
+        $this->_invalid[$key][] = $message;
+    }
+    
+    /**
+     * 
+     * Forces multiple properties to be "invalid" and sets validation failure
+     * message for them.
+     * 
+     * @param array $list An associative array where the key is the property
+     * name, and the value is a string (or array of strings) of invalidation
+     * messages.
+     * 
+     * @return void
+     * 
+     */
+    public function setInvalids($list)
+    {
+        $this->_status = 'invalid';
+        foreach ($list as $key => $messages) {
+            foreach ((array) $messages as $message) {
+                $this->_invalid[$key][] = $message;
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Returns the validation failure message for one or more properties.
+     * 
+     * @param string $key Return the message for this property; if empty,
+     * returns messages for all invalid properties.
+     * 
+     * @return string|array
+     * 
+     */
+    public function getInvalid($key = null)
+    {
+        if ($key) {
+            return $this->_invalid[$key];
+        } else {
+            return $this->_invalid;
         }
     }
     
@@ -733,53 +944,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Forces one property to be "invalid" and sets a validation failure message
-     * for it.
-     * 
-     * @param string $key The property name.
-     * 
-     * @param string $message The validation failure message.
-     * 
-     * @return void
-     * 
-     */
-    public function setInvalid($key, $message)
-    {
-        $this->_status = 'invalid';
-        $this->_invalid[$key][] = $message;
-    }
-    
-    public function setInvalids($list)
-    {
-        $this->_status = 'invalid';
-        foreach ($list as $key => $messages) {
-            foreach ((array) $messages as $message) {
-                $this->_invalid[$key][] = $message;
-            }
-        }
-    }
-    
-    /**
-     * 
-     * Returns the validation failure message for one or more properties.
-     * 
-     * @param string $key Return the message for this property; if empty,
-     * returns messages for all invalid properties.
-     * 
-     * @return string|array
-     * 
-     */
-    public function getInvalid($key = null)
-    {
-        if ($key) {
-            return $this->_invalid[$key];
-        } else {
-            return $this->_invalid;
-        }
-    }
-    
-    /**
-     * 
      * Throws an exception if this record status is 'deleted'.
      * 
      * @return void
@@ -795,64 +959,24 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
+    // -----------------------------------------------------------------
+    // 
+    // Automated forms.
+    // 
+    // -----------------------------------------------------------------
+    
     /**
      * 
-     * Filter the data.
+     * Returns a Solar_Form object pre-populated with column properties,
+     * values, and filters ready for processing (all based on the model for
+     * this record).
      * 
-     * @return void
+     * @param array $cols An array of column property names to include in
+     * the form; if empty, uses all columns.
+     * 
+     * @return Solar_Form
      * 
      */
-    public function filter()
-    {
-        $this->_preFilter();
-        
-        // create a filter object based on the model's filter class
-        $filter = Solar::factory($this->_model->filter_class);
-        
-        // set filters as specified by the model
-        foreach ($this->_model->filters as $key => $list) {
-            $filter->addChainFilters($key, $list);
-        }
-        
-        // set which elements are required by the table itself
-        foreach ($this->_model->table_cols as $key => $info) {
-            if ($info['autoinc']) {
-                // autoinc are not required
-                $flag = false;
-            } elseif (in_array($key, $this->_model->sequence_cols)) {
-                // auto-sequence are not required
-                $flag = false;
-            } else {
-                // go with the col info
-                $flag = $info['require'];
-            }
-            
-            // set the requirement flag
-            $filter->setChainRequire($key, $flag);
-        }
-        
-        // tell the filter to use the model for locale strings
-        $filter->setChainLocaleObject($this->_model);
-        
-        // apply filters and retain invalids
-        $valid = $filter->applyChain($this);
-        $invalid = $filter->getChainInvalid();
-        
-        // reclaim memory
-        $filter->__destruct();
-        unset($filter);
-        
-        // was it valid?
-        if (! $valid) {
-            $this->_status = 'invalid';
-            $this->_invalid = $invalid;
-            throw $this->_exception('ERR_INVALID', array($this->_invalid));
-        }
-        
-        // post-logic, and done
-        $this->_postFilter();
-    }
-    
     public function form($cols = null)
     {
         $array_name = $this->_model->model_name;

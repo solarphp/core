@@ -1,12 +1,56 @@
 <?php
+/**
+ * 
+ * Represents the characteristics of a relationship where a native model
+ * "belongs to" a foreign model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Exception.php 2440 2007-04-21 14:33:44Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Represents the characteristics of a relationship where a native model
+ * "belongs to" a foreign model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ */
 class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related {
     
+    /**
+     * 
+     * Sets the relationship type.
+     * 
+     * @return void
+     * 
+     */
     protected function _setType()
     {
         $this->type = 'belongs_to';
     }
     
-    // foreign key is stored in the native model
+    /**
+     * 
+     * Fixes the related column names in the user-defined options **in place**.
+     * 
+     * The foreign key is stored in the **native** model.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixRelatedCol(&$opts)
     {
         $opts['native_col'] = $opts['foreign_key'];

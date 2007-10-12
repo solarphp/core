@@ -1,9 +1,48 @@
 <?php
-// <http://ar.rubyonrails.com/classes/ActiveRecord/Associations/ClassMethods.html>
+/**
+ * 
+ * Abstract class to represent the characteristics of a related model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Exception.php 2440 2007-04-21 14:33:44Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Abstract class to represent the characteristics of a related model.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Sql_Model
+ * 
+ */
 abstract class Solar_Sql_Model_Related extends Solar_Base {
     
+    /**
+     * 
+     * The name of the relationship as defined by the original (native) model.
+     * 
+     * @var string
+     * 
+     */
     public $name;
     
+    /**
+     * 
+     * The type of the relationship as defined by the original (native) model;
+     * e.g., 'has_one', 'belongs_to', 'has_many'.
+     * 
+     * @var string
+     * 
+     */
     public $type;
     
     /**
@@ -44,10 +83,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_class`
-     * : (string) The class name of the foreign model. Default is the first
-     *   matching class for the relationship name, as loaded from the parent
-     *   class stack. Automatically honors single-table inheritance.
+     * The class name of the foreign model. Default is the first
+     * matching class for the relationship name, as loaded from the parent
+     * class stack. Automatically honors single-table inheritance.
      * 
      * 
      * @var string
@@ -57,9 +95,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_table`
-     * : (string) The name of the table for the foreign model. Default is the
-     *   table specified by the foreign model.
+     * The name of the table for the foreign model. Default is the
+     * table specified by the foreign model.
      * 
      * @var string
      * 
@@ -68,9 +105,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_alias`
-     * : (string) Aliases the foreign table to this name. Default is the
-     *   relationship name.
+     * Aliases the foreign table to this name. Default is the
+     * relationship name.
      * 
      * @var string
      * 
@@ -79,10 +115,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_col`
-     * : (string) The name of the column to join with in the *foreign* table.
-     *   This forms one-half of the relationship.  Default is per association
-     *   type.
+     * The name of the column to join with in the *foreign* table.
+     * This forms one-half of the relationship.  Default is per association
+     * type.
      * 
      * @var string
      * 
@@ -100,9 +135,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_inherit_col`
-     * : (string) If the foreign model uses single-table inheritance, this is
-     *   the column where the inheritance value is stored.
+     * If the foreign model uses single-table inheritance, this is
+     * the column where the inheritance value is stored.
      * 
      * 
      * @var string
@@ -112,9 +146,8 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * `foreign_inherit_val`
-     * : (string) If the foreign model has an inheritance type, the value of
-     *   that inheritance type (as stored in foreign_inherit_col).
+     * If the foreign model has an inheritance type, the value of
+     * that inheritance type (as stored in foreign_inherit_col).
      * 
      * @var string
      * 
@@ -240,7 +273,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * There is a virtual element called `foreign_key` that automatically
+     * The virtual element called `foreign_key` automatically
      * populates the `native_col` or `foreign_col` value for you, based on the
      * association type.  This will be used **only** when `native_col` **and**
      * `foreign_col` are not set.
@@ -248,22 +281,45 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * @var string
      * 
      */
-    // public $foreign_key;
+    public $foreign_key;
     
     /**
      * 
-     * There is a virtual element called `through_key` that automatically 
+     * The virtual element `through_key` automatically 
      * populates the 'through_foreign_col' value for you.
      * 
      * @var string.
      * 
      */
-    // public $through_key;
+    public $through_key;
     
+    /**
+     * 
+     * An instance of the native (origin) model that defined this relationship.
+     * 
+     * @var Solar_Sql_Model
+     * 
+     */
     protected $_native_model;
     
+    /**
+     * 
+     * An instance of the foreign (related) model.
+     * 
+     * @var Solar_Sql_Model
+     * 
+     */
     protected $_foreign_model;
     
+    /**
+     * 
+     * Sets the native (origin) model instance.
+     * 
+     * @param Solar_Sql_Model $model The native model instance.
+     * 
+     * @return void
+     * 
+     */
     public function setNativeModel($model)
     {
         $this->_native_model = $model;
@@ -272,12 +328,25 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $this->native_alias = $this->_native_model->model_name;
     }
     
-    // gets the *related* model, not the native model
+    /**
+     * 
+     * Returns the **related** model instance.
+     * 
+     * @return Solar_Sql_Model
+     * 
+     */
     public function getModel()
     {
         return $this->_foreign_model;
     }
     
+    /**
+     * 
+     * Returns the relation characteristics as an array.
+     * 
+     * @return array
+     * 
+     */
     public function toArray()
     {
         $vars = get_object_vars($this);
@@ -291,7 +360,10 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Corrects the relationship definitions.
+     * Loads this relationship object with user-defined characteristics
+     * (options), and corrects them as needed.
+     * 
+     * @param array $opts The user-defined options for the relationship.
      * 
      * @return void
      * 
@@ -317,6 +389,18 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $this->_setRelated($opts);
     }
     
+    /**
+     * 
+     * Creates a new selection object for records on this relationship.
+     * 
+     * @param mixed $spec If an array, treated as params for a select 
+     * statement (where, group, having, etc) for finding the native-model IDs.
+     * If a Record object, the record's primary-key is used for the native-
+     * model ID.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
     public function newSelect($spec)
     {
         // specification must be a record, or params for a select
@@ -363,6 +447,20 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         return $select;
     }
     
+    /**
+     * 
+     * Modifies the base select statement for the relationship type.
+     * 
+     * @param Solar_Sql_Select $select The selection object to modify.
+     * 
+     * @param Solar_Sql_Select|Solar_Sql_Model_Record $spec If a
+     * Solar_Sql_Select, used as an "inner" select to find the correct native
+     * IDs.  If a Solar_Sql_Model_Record, will find based on the ID of the
+     * record.
+     * 
+     * @return void
+     * 
+     */
     protected function _modSelect($select, $spec)
     {
         // simple belongs_to, has_one, or has_many.
@@ -399,6 +497,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Sets the foreign model instance based on user-defined relationship
+     * options.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _setForeignModel($opts)
     {
         // make sure we have at least a base class name
@@ -468,6 +576,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     }
     
     
+    /**
+     * 
+     * Sets the foreign columns to be selected based on user-defined 
+     * relationship options.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _setCols($opts)
     {
         // the list of foreign table cols to retrieve
@@ -504,6 +622,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Sets additional selection clauses ('where', 'having', 'group') for
+     * related records based on user-defined relationship options.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _setSelect($opts)
     {
         // distinct
@@ -550,9 +678,35 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Sets the relationship type.
+     * 
+     * @return void
+     * 
+     */
     abstract protected function _setType();
     
+    /**
+     * 
+     * Fixes the related column names in the user-defined options **in place**.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     abstract protected function _fixRelatedCol(&$opts);
     
+    /**
+     * 
+     * Sets the characteristics for the related model, table, etc. based on
+     * the user-defined relationship options.
+     * 
+     * @param array $opts The user-defined options for the relationship.
+     * 
+     * @return void
+     * 
+     */
     abstract protected function _setRelated($opts);
 }

@@ -1354,12 +1354,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Given a record, fetches a related record or collection for a named
      * relationship.
      * 
+     * @param array|Solar_Sql_Model_Record $spec The specification for the
+     * native selection.  If an array, treated as selection criteria; if a
+     * record object, uses the primary key from that record.
+     * 
      * @param string $name The relationship name.
      * 
      * @param int $page For to-many associations, the page-number of records
      * to fetch (default null, which fetches all records).  Ignored by to-one
      * associations.  Paging is based on the related model's "$_paging"
      * property.
+     * 
+     * @param array $bind Key-value pairs to bind to the select.
      * 
      * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or collection
      * object.
@@ -1384,6 +1390,27 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $result;
     }
     
+    /**
+     * 
+     * Given a record, fetches related data for a named relationship as an
+     * array.
+     * 
+     * @param array|Solar_Sql_Model_Record $spec The specification for the
+     * native selection.  If an array, treated as selection criteria; if a
+     * record object, uses the primary key from that record.
+     * 
+     * @param string $name The relationship name.
+     * 
+     * @param int $page For to-many associations, the page-number of records
+     * to fetch (default null, which fetches all records).  Ignored by to-one
+     * associations.  Paging is based on the related model's "$_paging"
+     * property.
+     * 
+     * @param array $bind Key-value pairs to bind to the select.
+     * 
+     * @return array An array of data from the fetch.
+     * 
+     */
     public function fetchRelatedArray($spec, $name, $page = null, $bind = null)
     {
         $related = $this->getRelated($name);

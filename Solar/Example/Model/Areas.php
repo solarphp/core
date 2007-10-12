@@ -1,6 +1,38 @@
 <?php
+/**
+ * 
+ * Example for testing a model of content "areas".
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Example
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Exception.php 2804 2007-10-06 14:01:27Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Example for testing a model of content "areas".
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Example
+ * 
+ */
 class Solar_Example_Model_Areas extends Solar_Sql_Model {
     
+    /**
+     * 
+     * Model setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)

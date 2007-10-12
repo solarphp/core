@@ -1,6 +1,13 @@
 <?php
 class Solar_Example_Model_TestSolarSpecialCols extends Solar_Sql_Model {
     
+    /**
+     * 
+     * Model setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)

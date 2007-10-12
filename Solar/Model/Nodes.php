@@ -1,5 +1,38 @@
 <?php
+/**
+ * 
+ * Model for nodes of content.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Mime.php 2826 2007-10-06 15:55:03Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * Model for nodes of content.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ */
 class Solar_Model_Nodes extends Solar_Model {
+    
+    /**
+     * 
+     * Model setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         /**
@@ -145,6 +178,17 @@ class Solar_Model_Nodes extends Solar_Model {
         ));
     }
     
+    /**
+     * 
+     * Fetches a collection of nodes with certain tags.
+     * 
+     * @param array $tag_list Fetch only nodes with all of these tags.
+     * 
+     * @param array $params Added parameters for the SELECT.
+     * 
+     * @return Solar_Model_Nodes_Collection
+     * 
+     */
     public function fetchAllByTags($tag_list, $params = null)
     {
         // no tags? fetch all to pre-empt errors related to "IN()" not
@@ -159,6 +203,15 @@ class Solar_Model_Nodes extends Solar_Model {
         return $this->_fetchAll($select, $params);
     }
     
+    /**
+     * 
+     * Support method to "fix" tag-list arrays: no duplicates, no spaces, etc.
+     * 
+     * @param array $tag_list The list of tags to "fix".
+     * 
+     * @return array The fixed tag list.
+     * 
+     */
     protected function _fixTagList($tag_list)
     {
         // convert to array
@@ -179,6 +232,17 @@ class Solar_Model_Nodes extends Solar_Model {
         return $tag_list;
     }
     
+    /**
+     * 
+     * Support method to create a new selection tool based on tag lists.
+     * 
+     * @param array $tag_list The list of tags to select by.
+     * 
+     * @param array $params Added parameters for the SELECT.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
     protected function _newSelectByTags($tag_list, $params)
     {
         // setup
@@ -224,6 +288,18 @@ class Solar_Model_Nodes extends Solar_Model {
         return $select;
     }
     
+    /**
+     * 
+     * Gets a count of nodes and pages-of-nodes with certain tags.
+     * 
+     * @param array $tag_list Count only nodes with all of these tags.
+     * 
+     * @param array $params Added parameters for the SELECT.
+     * 
+     * @return array An array with elemets 'count' (the number of nodes) and
+     * 'pages' (the number of pages-of-nodes).
+     * 
+     */
     public function countPagesByTags($tag_list, $params = null)
     {
         $tag_list = $this->_fixTagList($tag_list);

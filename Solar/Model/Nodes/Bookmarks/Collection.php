@@ -24,4 +24,4 @@
  * @package Solar_Model
  * 
  */
-class Solar_Model_Nodes_Bookmarks_Collection extends Solar_Sql_Model_Nodes_Collection {}
+class Solar_Model_Nodes_Bookmarks_Collection extends Solar_Model_Nodes_Collection {}

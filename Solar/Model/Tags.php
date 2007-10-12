@@ -1,5 +1,38 @@
 <?php
+/**
+ * 
+ * A model of "tags" that can be applied to nodes.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id: Mime.php 2826 2007-10-06 15:55:03Z pmjones $
+ * 
+ */
+
+/**
+ * 
+ * A model of "tags" that can be applied to nodes.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Model
+ * 
+ */
 class Solar_Model_Tags extends Solar_Model {
+    
+    /**
+     * 
+     * Model setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         /**
@@ -48,6 +81,16 @@ class Solar_Model_Tags extends Solar_Model {
         ));
     }
     
+    /**
+     * 
+     * Fetches a collection of all tags, with an added "count" column saying
+     * how many nodes use that tag.
+     * 
+     * @param array $params Added paramters for the select.
+     * 
+     * @return Solar_Model_Tags_Collection
+     * 
+     */
     public function fetchAllWithCount($params = null)
     {
         $params = $this->fixSelectParams($params);
@@ -55,6 +98,18 @@ class Solar_Model_Tags extends Solar_Model {
         return $this->_fetchAll($select, $params);
     }
     
+    /**
+     * 
+     * Fetches a collection of all tags applied by a particular owner, as
+     * identified by that user's "handle".
+     * 
+     * @param string $owner_handle Only select tags in use by this handle.
+     * 
+     * @param array $params Added parameters for the select.
+     * 
+     * @return Solar_Model_Tags_Collection
+     * 
+     */
     public function fetchAllByOwnerHandle($owner_handle, $params = null)
     {
         $owner_handle = trim($owner_handle);
@@ -106,6 +161,15 @@ class Solar_Model_Tags extends Solar_Model {
         return $this->_fetchAll($select, $params);
     }
     
+    /**
+     * 
+     * Support method to add the tag-count to a selection tool.
+     * 
+     * @param array $params Added parameters for the select.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
     protected function _newSelectWithCount($params)
     {
         // params should have been fixed by this point

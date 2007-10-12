@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Model for nodes of content.
+ * A model of content "nodes" (individual pieces of content).
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Model for nodes of content.
+ * A model of content "nodes" (individual pieces of content).
  * 
  * @category Solar
  * 

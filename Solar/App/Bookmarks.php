@@ -585,8 +585,11 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         // get the total pages and row-count
         $total = $this->_bookmarks->countPagesByTags($tag_list, $params);
         
-        // flash forward the backlink in case we go to edit
-        $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
+        // flash forward the backlink in case we go to edit, but only if this
+        // is a regular-format request
+        if (! $this->_format) {
+            $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
+        }
         
         // assign the list of tags in use
         $this->tags_in_use   = $this->_tags->fetchAllWithCount(array(
@@ -651,14 +654,17 @@ class Solar_App_Bookmarks extends Solar_App_Base {
             $total = $this->_bookmarks->countPages($params);
         }
         
-        // flash forward the backlink in case we go to edit
-        $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
+        // flash forward the backlink in case we go to edit, but only if this
+        // is a regular-format request
+        if (! $this->_format) {
+            $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
+        }
         
         // assign the list of tags in use
         $this->tags_in_use = $this->_tags->fetchAllByOwnerHandle(
             $owner_handle,
             array(
-            'order' => 'tags.name'
+                'order' => 'tags.name'
             )
         );
         

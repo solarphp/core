@@ -44,6 +44,8 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     public $controller;
     
+    public $layout;
+    
     /**
      * 
      * Error messages, usually for the 'error' action/view.
@@ -218,6 +220,9 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
         
         // let the view know what action this is
         $this->action = $this->_action;
+        
+        // let the view know what layout this is
+        $this->layout = $this->_layout;
     }
     
     /**

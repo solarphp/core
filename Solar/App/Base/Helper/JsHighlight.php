@@ -70,14 +70,10 @@ class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper {
      * @param string $color A color by word (e.g., "red") or RGB hex (e.g.,
      * "#ff0000").
      * 
-     * @param string $callback A jQuery callback to execute when the
-     * highlighting is done.
-     * 
      * @return void
      * 
      */
-    public function jsHighlight($sel, $color = "yellow", $speed = "slow",
-        $easing = null, $callback = null)
+    public function jsHighlight($sel, $color = "yellow", $speed = "slow")
     {
         if (is_numeric($speed)) {
             $speed = (int) $speed;
@@ -87,6 +83,6 @@ class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper {
         
         $this->_view
              ->head()
-             ->addScriptInline("\$(\"$sel\").highlight(\"$color\", $speed, \"$easing\", $callback);");
+             ->addScriptInline("\$(\"$sel\").highlight(\"$color\", $speed);");
     }
 }

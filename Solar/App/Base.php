@@ -44,6 +44,13 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     public $controller;
     
+    /**
+     * 
+     * The name of the layout being used; populated from $this->_layout.
+     * 
+     * @var string
+     * 
+     */
     public $layout;
     
     /**

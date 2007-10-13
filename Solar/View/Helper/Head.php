@@ -225,9 +225,9 @@ class Solar_View_Helper_Head extends Solar_View_Helper {
      * @return Solar_View_Helper_Head
      * 
      */
-    public function setBase($spec)
+    public function setBase($base)
     {
-        $this->_base = $spec;
+        $this->_base = $base;
         return $this;
     }
     
@@ -293,7 +293,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper {
      * Generally used by layouts, not views.  If the file has already been
      * added, it does not get added again.
      * 
-     * @param string $href The file HREF for the script source.
+     * @param string $src The file HREF for the script source.
      * 
      * @param array $attribs Attributes for the tag.
      * 
@@ -314,7 +314,7 @@ class Solar_View_Helper_Head extends Solar_View_Helper {
      * Generally used by views, not layouts.  If the file has already been
      * added, it does not get added again.
      * 
-     * @param string $href The file HREF for the script source.
+     * @param string $src The file HREF for the script source.
      * 
      * @param array $attribs Attributes for the tag.
      * 

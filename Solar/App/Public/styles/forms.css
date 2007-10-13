@@ -48,3 +48,12 @@ option {
     color: red;
     font-size: 90%;
 }
+
+#content #main form ul.success {
+    background-color: #aaaaff;
+}
+
+
+#content #main form ul.failure {
+    background-color: #ffaaaa;
+}

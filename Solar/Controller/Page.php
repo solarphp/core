@@ -1023,32 +1023,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_view = $this->_getActionView($this->_action);
         
         // run the action method, which may itself _forward() to
-        // other actions.  pass all parameters in order.  use a
-        // little speed boost for shorter param lists.
-        switch (count($params)) {
-        case 0:
-            $this->$method();
-            break;
-        case 1:
-            $this->$method($params[0]);
-            break;
-        case 2:
-            $this->$method($params[0], $params[1]);
-            break;
-        case 3:
-            $this->$method($params[0], $params[1], $params[2]);
-            break;
-        case 4:
-            $this->$method($params[0], $params[1], $params[2], $params[3]);
-            break;
-        default:
-            // this is 2x slower than $this->$method
-            call_user_func_array(
-                array($this, $method),
-                $params
-            );
-            break;
-        }
+        // other actions.  pass all parameters in order.
+        call_user_func_array(
+            array($this, $method),
+            $params
+        );
         
         // run this after every action
         $this->_postAction();

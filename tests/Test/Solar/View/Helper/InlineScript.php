@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_View_Helper_InlineScript extends Solar_Test {
+class Test_Solar_View_Helper_ScriptInline extends Solar_Test {
     
     /**
      * 
@@ -13,7 +13,7 @@ class Test_Solar_View_Helper_InlineScript extends Solar_Test {
      * @var array
      * 
      */
-    protected $_Test_Solar_View_Helper_InlineScript = array(
+    protected $_Test_Solar_View_Helper_ScriptInline = array(
     );
     
     // -----------------------------------------------------------------
@@ -79,8 +79,8 @@ class Test_Solar_View_Helper_InlineScript extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_View_Helper_InlineScript');
-        $this->assertInstance($obj, 'Solar_View_Helper_InlineScript');
+        $obj = Solar::factory('Solar_View_Helper_ScriptInline');
+        $this->assertInstance($obj, 'Solar_View_Helper_ScriptInline');
     }
     
     /**
@@ -88,7 +88,7 @@ class Test_Solar_View_Helper_InlineScript extends Solar_Test {
      * Test -- Returns a <script></script> block that properly commented for inclusion in XHTML documents.
      * 
      */
-    public function testInlineScript()
+    public function testScriptInline()
     {
         $this->todo('stub');
     }

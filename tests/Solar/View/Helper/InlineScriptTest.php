@@ -2,7 +2,7 @@
 
 require_once dirname(__FILE__) . '/../HelperTestCase.php';
 
-class Solar_View_Helper_InlineScriptTest extends Solar_View_HelperTestCase {
+class Solar_View_Helper_ScriptInlineTest extends Solar_View_HelperTestCase {
     
     public function testScript()
     {

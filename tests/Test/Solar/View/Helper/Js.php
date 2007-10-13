@@ -98,7 +98,7 @@ class Test_Solar_View_Helper_Js extends Solar_Test {
      * Test -- Add the script defined in $src to the inline scripts array.
      * 
      */
-    public function testAddInlineScript()
+    public function testAddScriptInline()
     {
         $this->todo('stub');
     }

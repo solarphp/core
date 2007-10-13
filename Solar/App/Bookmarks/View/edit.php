@@ -37,23 +37,6 @@
               ->endGroup()
               ->fetch();
     
-    // add highlighting to all UL elements in the form.
-    // this works for success and failure, and for all
-    // individual failed elements.
-    $this->jsScriptaculous()->effect->highlight(
-        "#form-bookmark ul.success",
-        array(
-            'duration' => 3,
-            'endcolor' => '#aaaaff',
-            'restorecolor' => true,
-        )
-    );
-    
-    $this->jsScriptaculous()->effect->highlight(
-        "#form-bookmark ul.failure",
-        array(
-            'duration' => 3,
-            'endcolor' => '#ffaaaa',
-            'restorecolor' => true,
-        )
-    );
+    // javascript highlight effects
+    $this->jsHighlight("#form-bookmark ul.success");
+    $this->jsHighlight("#form-bookmark ul.failure");

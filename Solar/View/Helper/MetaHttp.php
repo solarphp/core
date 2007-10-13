@@ -30,18 +30,18 @@ class Solar_View_Helper_MetaHttp extends Solar_View_Helper {
      * 
      * Returns a <meta http-equiv="" content="" /> tag.
      * 
-     * @param string $key The http-equiv type.
+     * @param string $http_equiv The http-equiv type.
      * 
-     * @param string $val The content value.
+     * @param string $content The content value.
      * 
      * @return string The <meta http-equiv="" content="" /> tag.
      * 
      */
-    public function metaHttp($key, $val)
+    public function metaHttp($http_equiv, $content)
     {
         $spec = array(
-            'http-equiv' => $key,
-            'content' => $val,
+            'http-equiv' => $http_equiv,
+            'content' => $content,
         );
         return '<meta' . $this->_view->attribs($spec) . ' />';
     }

@@ -32,15 +32,15 @@ class Solar_View_Helper_Meta extends Solar_View_Helper {
      * 
      * Returns a <meta ... /> tag.
      * 
-     * @param string $spec The specification array, typically
+     * @param string $attribs The specification array, typically
      * with keys 'name' or 'http-equiv', and 'content'.
      * 
      * @return string The <meta ... /> tag.
      * 
      */
-    public function meta($spec)
+    public function meta($attribs)
     {
-        return '<meta' . $this->_view->attribs($spec) . ' />';
+        return '<meta' . $this->_view->attribs($attribs) . ' />';
     }
 
 }

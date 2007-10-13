@@ -30,18 +30,18 @@ class Solar_View_Helper_MetaName extends Solar_View_Helper {
      * 
      * Returns a <meta name="" content="" /> tag.
      * 
-     * @param string $key The name value.
+     * @param string $name The name value.
      * 
-     * @param string $val The content value.
+     * @param string $content The content value.
      * 
      * @return string The <meta name="" content="" /> tag.
      * 
      */
-    public function metaName($key, $val)
+    public function metaName($name, $content)
     {
         $spec = array(
-            'name' => $key,
-            'content' => $val,
+            'name' => $name,
+            'content' => $content,
         );
         return '<meta' . $this->_view->attribs($spec) . ' />';
     }

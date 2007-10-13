@@ -24,23 +24,23 @@
  * @package Solar_View
  * 
  */
-class Solar_View_Helper_InlineScript extends Solar_View_Helper {
+class Solar_View_Helper_ScriptInline extends Solar_View_Helper {
     
     /**
      * 
      * Returns a <script></script> block that properly commented for inclusion
      * in XHTML documents.
      * 
-     * @param string $src The source of the script.
+     * @param string $code The source of the script.
      * 
      * @param array $attribs Additional attributes for the <script> tag.
      * 
-     * @return string The <script></script> tag.
+     * @return string The <script></script> tag with the inline script.
      * 
      * @see http://developer.mozilla.org/en/docs/Properly_Using_CSS_and_JavaScript_in_XHTML_Documents
      * 
      */
-    public function inlineScript($src, $attribs = null)
+    public function scriptInline($code, $attribs = null)
     {
         settype($attribs, 'array');
         unset($attribs['src']);
@@ -52,7 +52,7 @@ class Solar_View_Helper_InlineScript extends Solar_View_Helper {
         return '<script'
              . $this->_view->attribs($attribs) . ">\n"
              . "//<![CDATA[\n"
-             . trim($src)
+             . trim($code)
              . "\n//]]>\n"
              . "</script>\n";
     }

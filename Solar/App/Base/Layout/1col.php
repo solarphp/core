@@ -20,23 +20,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <?php
-    // put these styles at the top of the stack
-    $style = array(
-        'Solar/styles/cssfw/tools.css',
-        'Solar/styles/cssfw/typo.css',
-        'Solar/styles/cssfw/forms.css',
-        'Solar/styles/cssfw/layout-1col.css',
-        'Solar/styles/typo.css',
-        'Solar/styles/forms.css',
-        'Solar/styles/app/' . $this->controller . '.css',
-    );
-    
-    // merge with overrides
-    $this->layout_head['style'] = array_merge(
-        (array) $style,
-        (array) $this->layout_head['style']
-    );
-    
     // generate the <head>
     include $this->template('_head.php');
     

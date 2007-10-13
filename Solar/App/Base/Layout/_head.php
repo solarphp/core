@@ -17,62 +17,42 @@
 ?>
 <head>
 <?php
-    // meta elements
-    if (! empty($this->layout_head['meta'])) {
-        foreach ((array) $this->layout_head['meta'] as $val) {
-            echo "    " . $this->meta($val) . "\n";
-        }
+    // add meta tags
+    foreach ((array) $this->layout_head['meta'] as $val) {
+        $this->head()->addMeta($val);
     }
     
-    // title
-    if (! empty($this->layout_head['title'])) {
-        echo "    " . $this->title($this->layout_head['title']) . "\n";
+    // set the title
+    $this->head()->setTitle($this->layout_head['title']);
+    
+    // set the uri base
+    $this->head()->setBase($this->layout_head['base']);
+    
+    // add links
+    foreach ((array) $this->layout_head['link'] as $val) {
+        $this->head()->addLink($val);
     }
     
-    // base url
-    if (! empty($this->layout_head['base'])) {
-        echo "    " . $this->base($this->layout_head['base']) . "\n";
+    // add baseline styles
+    $this->head()->addStyleBase("Solar/styles/cssfw/tools.css")
+                 ->addStyleBase("Solar/styles/cssfw/typo.css")
+                 ->addStyleBase("Solar/styles/cssfw/forms.css")
+                 ->addStyleBase("Solar/styles/cssfw/layout-{$this->layout}.css")
+                 ->addStyleBase("Solar/styles/typo.css")
+                 ->addStyleBase("Solar/styles/forms.css")
+                 ->addStyleBase("Solar/styles/app/{$this->controller}.css");
+    
+    // additional baseline styles
+    foreach ((array) $this->layout_head['style'] as $val) {
+        $this->head()->addStyleBase($val);
     }
     
-    // links
-    if (! empty($this->layout_head['link'])) {
-        foreach ((array) $this->layout_head['link'] as $val) {
-            echo "    " . $this->link($val) . "\n";
-        }
+    // additional baseline scripts
+    foreach ((array) $this->layout_head['script'] as $val) {
+        $this->head()->addScriptBase($val);
     }
     
-    // javascript helper styles before app styles, so that app styles may
-    // override bundled style files
-    echo $this->js()->fetchStyles();
-    
-    // styles
-    if (! empty($this->layout_head['style'])) {
-        foreach ((array) $this->layout_head['style'] as $val) {
-            settype($val, 'array');
-            if (empty($val[0])) $val[0] = null;
-            if (empty($val[1])) $val[1] = array();
-            echo "    " . $this->style($val[0], $val[1]) . "\n";
-        }
-    }
-    
-    // load helper-required scripts before app scripts, so that app scripts
-    // may rely on bundled script files
-    echo $this->js()->fetchFiles();
-    
-    // *now* the app script overrides
-    if (! empty($this->layout_head['script'])) {
-        foreach ((array) $this->layout_head['script'] as $val) {
-            settype($val, 'array');
-            if (empty($val[0])) $val[0] = null;
-            if (empty($val[1])) $val[1] = array();
-            echo "    " . $this->script($val[0], $val[1]) . "\n";
-        }
-    }
-    
-    // finally, any inline scripts
-    echo $this->js()->fetchInline();
-    
-    /** @todo object */
+    // done!
+    echo $this->head()->fetch();
 ?>
 </head>
-

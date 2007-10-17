@@ -109,13 +109,13 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
     public function __construct($config = null)
     {
         // set the default cache directory location
-        $this->_Solar_Cache_Adapter_File['path'] = Solar::temp('/Solar_Cache_File/');
+        $this->_Solar_Cache_Adapter_File['path'] = Solar_Dir::tmp('/Solar_Cache_File/');
         
         // basic construction
         parent::__construct($config);
         
         // keep local values so they can't be changed
-        $this->_path = Solar::fixdir($this->_config['path']);
+        $this->_path = Solar_Dir::fix($this->_config['path']);
         
         // build the context property
         if (is_resource($this->_config['context'])) {

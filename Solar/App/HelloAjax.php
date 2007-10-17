@@ -83,8 +83,8 @@ class Solar_App_HelloAjax extends Solar_App_Base {
     {
         // register a Solar_User object if not already.
         // this will trigger the authentication process.
-        if (! Solar::isRegistered('user')) {
-            Solar::register('user', Solar::factory('Solar_User'));
+        if (! Solar_Registry::exists('user')) {
+            Solar_Registry::set('user', Solar::factory('Solar_User'));
         }
         
         // set the layout title

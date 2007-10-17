@@ -119,7 +119,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
      */
     protected function _exec($class = null)
     {
-        $this->_println("Making tests.");
+        $this->_outln("Making tests.");
         
         // make sure we have a class to work with
         if (! $class) {
@@ -136,24 +136,24 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         $map = Solar::factory('Solar_Class_Map');
         
         // tell the user where the source and targets are
-        $this->_println("Source: " . $map->getBase());
-        $this->_println("Target: $this->_target");
+        $this->_outln("Source: " . $map->getBase());
+        $this->_outln("Target: $this->_target");
         
         // get the class and file locations
         $class_file = $map->fetch($class);
         foreach ($class_file as $class => $file) {
             
             // tell the user what class we're on
-            $this->_print("$class: "); 
+            $this->_out("$class: "); 
             
             // if this is an exception class, skip it
             if (strpos($class, '_Exception')) {
-                $this->_println("skip (exception class)");
+                $this->_outln("skip (exception class)");
                 continue;
             }
             
             // load the class and get its API reference
-            Solar::loadClass($class);
+            Solar::autoload($class);
             $apiref = Solar::factory('Solar_Docs_Apiref');
             $apiref->addClass($class);
             $api = $apiref->api[$class];
@@ -171,11 +171,11 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
             file_put_contents($this->_file, $this->_code);
             
             // done with this class
-            $this->_println(' ;');
+            $this->_outln(' ;');
         }
         
         // done with all classes.
-        $this->_println('Done.');
+        $this->_outln('Done.');
     }
     
     /**
@@ -188,7 +188,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
     protected function _loadTemplates()
     {
         $this->_tpl = array();
-        $dir = Solar::fixdir(dirname(__FILE__) . '/MakeTests/Data');
+        $dir = Solar_Dir::fix(dirname(__FILE__) . '/MakeTests/Data');
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
             $key = substr(basename($file), 0, -4);
@@ -213,7 +213,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         }
         
         // make sure it matches the OS.
-        $this->_target = Solar::fixdir($this->_target);
+        $this->_target = Solar_Dir::fix($this->_target);
         
         // make sure it exists
         if (! is_dir($this->_target)) {
@@ -322,13 +322,13 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
             
             // is this an ignored method?
             if (in_array($name, $ignore)) {
-                $this->_print('.');
+                $this->_out('.');
                 continue;
             }
             
             // is this a public method?
             if ($info['access'] != 'public') {
-                $this->_print('.');
+                $this->_out('.');
                 continue;
             };
             
@@ -339,7 +339,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
             $def = "public function {$test_name}()";
             $pos = strpos($this->_code, $def);
             if ($pos) {
-                $this->_print('.');
+                $this->_out('.');
                 continue;
             }
             
@@ -359,7 +359,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
             
             // append to the test code
             $this->_code .= $test_code;
-            $this->_print('+');
+            $this->_out('+');
         }
         
         // append the last brace

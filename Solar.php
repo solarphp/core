@@ -55,11 +55,6 @@ if (! defined('SOLAR_IGNORE_PARAM')) {
 }
 
 /**
- * Register Solar::loadClass() and Solar::loadInterface() for autoload.
- */
-spl_autoload_register(array('Solar', 'autoload'));
-
-/**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
  * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
  * in some environments.
@@ -68,6 +63,21 @@ if (! class_exists('Solar_Base', false)) {
     require dirname(__FILE__) . DIRECTORY_SEPARATOR
           . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
 }
+
+/**
+ * Make sure Solar_File is loaded even before Solar::start() is called.
+ * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
+ * in some environments.
+ */
+if (! class_exists('Solar_File', false)) {
+    require dirname(__FILE__) . DIRECTORY_SEPARATOR
+          . 'Solar' . DIRECTORY_SEPARATOR . 'File.php';
+}
+
+/**
+ * Register Solar::autoload() with SPL.
+ */
+spl_autoload_register(array('Solar', 'autoload'));
 
 /**
  * 
@@ -131,42 +141,6 @@ class Solar {
     
     /**
      * 
-     * Object registry.
-     * 
-     * Objects are registered using [[Solar::register()]]; the registry
-     * array is keyed on the name of the registered object.
-     * 
-     * Although this property is public, you generally shouldn't need
-     * to manipulate it in any way.
-     * 
-     * @var array
-     * 
-     */
-    public static $registry = array();
-    
-    /**
-     * 
-     * Status flag (whether Solar has started or not).
-     * 
-     * @var bool
-     * 
-     */
-    protected static $_status = false;
-    
-    /**
-     * 
-     * A filename to include; used by [[Solar::run()]] to keep the filename
-     * out of the execution scope.
-     * 
-     * @var string
-     * 
-     * @see Solar::run()
-     * 
-     */
-    protected static $_file = null;
-    
-    /**
-     * 
      * Locale class for managing translations.
      * 
      * In general, you should never need to address this directly; instead,
@@ -192,6 +166,15 @@ class Solar {
      * 
      */
     public static $parents = array();
+    
+    /**
+     * 
+     * Status flag (whether Solar has started or not).
+     * 
+     * @var bool
+     * 
+     */
+    protected static $_status = false;
     
     /**
      * 
@@ -300,7 +283,7 @@ class Solar {
         
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {
-            Solar::run($file);
+            Solar_File::load($file);
         }
         
         // and we're done!
@@ -318,11 +301,10 @@ class Solar {
     {
         // run the user-defined stop scripts.
         foreach ((array) Solar::config('Solar', 'stop') as $file) {
-            Solar::run($file);
+            Solar_File::load($file);
         }
         
         // clean up
-        Solar::$registry = array();
         Solar::$config = array();
         Solar::$parents = array();
         Solar::$locale = null;
@@ -378,9 +360,9 @@ class Solar {
         // convert the class name to a file path.
         $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
         
-        // include the file and check for failure. we use run() here
+        // include the file and check for failure. we use Solar_File::load()
         // instead of require() so we can see the exception backtrace.
-        $result = Solar::run($file);
+        Solar_File::load($file);
         
         // if the class or interface was not in the file, we have a problem.
         // do not use autoload, because this method is registered with
@@ -397,167 +379,6 @@ class Solar {
     
     /**
      * 
-     * Loads a class file from the include_path.
-     * 
-     * @param string $class A Solar (or other) class name.
-     * 
-     * @return void
-     * 
-     * @todo Add localization for errors
-     * 
-     */
-    public static function loadClass($class)
-    {
-        return Solar::autoload($class);
-    }
-    
-    /**
-     * 
-     * Loads an interface file from the include_path.
-     * 
-     * @param string $interface A Solar (or other) interface class name.
-     * 
-     * @return void
-     * 
-     * @todo Add localization for errors
-     * 
-     */
-    public static function loadInterface($interface)
-    {
-        return Solar::autoload($interface);
-    }
-    
-    /**
-     * 
-     * Uses [[php::include() | ]] to run a script in a limited scope.
-     * 
-     * @param string $file The file to include.
-     * 
-     * @return mixed The return value of the included file.
-     * 
-     */
-    public static function run($file)
-    {
-        Solar::$_file = Solar::fileExists($file);
-        if (! Solar::$_file) {
-            // could not open the file for reading
-            throw Solar::exception(
-                'Solar',
-                'ERR_FILE_NOT_READABLE',
-                'File does not exist or is not readable',
-                array('file' => $file)
-            );
-        }
-        
-        // clean up the local scope, then include the file and
-        // return its results.  keeps the include() outside of an if()
-        // statement, which makes it possible to opcode-cache.
-        unset($file);
-        return include Solar::$_file;
-    }
-    
-    /**
-     * 
-     * Hack for [[php::file_exists() | ]] that checks the include_path.
-     * 
-     * Use this to see if a file exists anywhere in the include_path.
-     * 
-     * {{code: php
-     *     $file = 'path/to/file.php';
-     *     if (Solar::fileExists('path/to/file.php')) {
-     *         include $file;
-     *     }
-     * }}
-     * 
-     * @param string $file Check for this file in the include_path.
-     * 
-     * @return mixed If the file exists and is readble in the include_path,
-     * returns the path and filename; if not, returns boolean false.
-     * 
-     */
-    public static function fileExists($file)
-    {
-        // no file requested?
-        $file = trim($file);
-        if (! $file) {
-            return false;
-        }
-        
-        // using an absolute path for the file?
-        // dual check for Unix '/' and Windows '\',
-        // or Windows drive letter and a ':'.
-        $abs = ($file[0] == '/' || $file[0] == '\\' || $file[1] == ':');
-        if ($abs && file_exists($file)) {
-            return $file;
-        }
-        
-        // using a relative path on the file
-        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
-        foreach ($path as $base) {
-            // strip Unix '/' and Windows '\'
-            $target = rtrim($base, '\\/') . DIRECTORY_SEPARATOR . $file;
-            if (file_exists($target)) {
-                return $target;
-            }
-        }
-        
-        // never found it
-        return false;
-    }
-    
-    /**
-     * 
-     * Hack for [[php::is_dir() | ]] that checks the include_path.
-     * 
-     * Use this to see if a directory exists anywhere in the include_path.
-     * 
-     * {{code: php
-     *     $dir = Solar::isDir('path/to/dir')
-     *     if ($dir) {
-     *         $files = scandir($dir);
-     *     } else {
-     *         echo "Not found in the include-path.";
-     *     }
-     * }}
-     * 
-     * @param string $dir Check for this directory in the include_path.
-     * 
-     * @return mixed If the directory exists in the include_path, returns the
-     * absolute path; if not, returns boolean false.
-     * 
-     */
-    public static function isDir($dir)
-    {
-        // no file requested?
-        $dir = trim($dir);
-        if (! $dir) {
-            return false;
-        }
-        
-        // using an absolute path for the file?
-        // dual check for Unix '/' and Windows '\',
-        // or Windows drive letter and a ':'.
-        $abs = ($dir[0] == '/' || $dir[0] == '\\' || $dir[1] == ':');
-        if ($abs && is_dir($dir)) {
-            return $dir;
-        }
-        
-        // using a relative path on the file
-        $path = explode(PATH_SEPARATOR, ini_get('include_path'));
-        foreach ($path as $base) {
-            // strip Unix '/' and Windows '\'
-            $target = rtrim($base, '\\/') . DIRECTORY_SEPARATOR . $dir;
-            if (is_dir($target)) {
-                return $target;
-            }
-        }
-        
-        // never found it
-        return false;
-    }
-    
-    /**
-     * 
      * Convenience method to instantiate and configure an object.
      * 
      * @param string $class The class name.
@@ -569,7 +390,7 @@ class Solar {
      */
     public static function factory($class, $config = null)
     {
-        Solar::loadClass($class);
+        Solar::autoload($class);
         $obj = new $class($config);
         
         // is it an object factory?
@@ -584,108 +405,19 @@ class Solar {
     
     /**
      * 
-     * Accesses an object in the registry.
+     * Combination dependency-injection and service-locator method; returns
+     * a dependency object as passed, or an object from the registry, or a 
+     * new factory instance.
      * 
-     * @param string $key The registered name.
+     * @param string $class The dependency object should be an instance of
+     * this class. Technically, this is more a hint than a requirement, 
+     * although it will be used as the class name if [[Solar::factory()]] 
+     * gets called.
      * 
-     * @return object The object registered under $key.
-     * 
-     * @todo Localize these errors.
-     * 
-     */
-    public static function registry($key)
-    {
-        // has the shared object already been loaded?
-        if (! Solar::isRegistered($key)) {
-            throw Solar::exception(
-                'Solar',
-                'ERR_NOT_IN_REGISTRY',
-                "Object with name '$key' not in registry.",
-                array('name' => $key)
-            );
-        }
-        
-        // was the registration for a lazy-load?
-        if (is_array(Solar::$registry[$key])) {
-            $val = Solar::$registry[$key];
-            $obj = Solar::factory($val[0], $val[1]);
-            Solar::$registry[$key] = $obj;
-        }
-        
-        // done
-        return Solar::$registry[$key];
-    }
-    
-    /**
-     * 
-     * Registers an object under a unique name.
-     * 
-     * @param string $key The name under which to register the object.
-     * 
-     * @param object|string $spec The registry specification.
-     * 
-     * @param mixed $config If lazy-loading, use this as the config.
-     * 
-     * @return void
-     * 
-     * @todo Localize these errors.
-     * 
-     */
-    public static function register($key, $spec, $config = null)
-    {
-        if (Solar::isRegistered($key)) {
-            // name already exists in registry
-            $class = get_class(Solar::$registry[$key]);
-            throw Solar::exception(
-                'Solar',
-                'ERR_REGISTRY_NAME_EXISTS',
-                "Object with '$key' of class '$class' already in registry", 
-                array('name' => $key, 'class' => $class)
-            );
-        }
-        
-        // register as an object, or as a class and config?
-        if (is_object($spec)) {
-            // directly register the object
-            Solar::$registry[$key] = $spec;
-        } elseif (is_string($spec)) {
-            // register a class and config for lazy loading
-            Solar::$registry[$key] = array($spec, $config);
-        } else {
-            throw Solar::exception(
-                'Solar',
-                'ERR_REGISTRY_FAILURE',
-                'Please pass an object, or a class name and a config array',
-                array()
-            );
-        }
-    }
-    
-    /**
-     * 
-     * Check to see if an object name already exists in the registry.
-     * 
-     * @param string $key The name to check.
-     * 
-     * @return bool
-     * 
-     */
-    public static function isRegistered($key)
-    {
-        return ! empty(Solar::$registry[$key]);
-    }
-    
-    /**
-     * 
-     * Returns a dependency object.
-     * 
-     * @param string $class The dependency object should be an instance of this class.
-     * Technically, this is more a hint than a requirement, although it will be used
-     * as the class name if [[Solar::factory()]] gets called.
-     * 
-     * @param mixed $spec If an object, check to make sure it's an instance of $class.
-     * If a string, treat as a [[Solar::registry()]] key. Otherwise, use this as a config
-     * param to [[Solar::factory()]] to create a $class object.
+     * @param mixed $spec If an object, check to make sure it's an instance 
+     * of $class. If a string, treat as a [[Solar_Registry::get()]] key. 
+     * Otherwise, use this as a config param to [[Solar::factory()]] to 
+     * create a $class object.
      * 
      * @return object The dependency object.
      * 
@@ -699,7 +431,7 @@ class Solar {
         
         // check for registry objects
         if (is_string($spec)) {
-            return Solar::registry($spec);
+            return Solar_Registry::get($spec);
         }
         
         // not an object, not in registry.
@@ -906,48 +638,6 @@ class Solar {
     
     /**
      * 
-     * "Fixes" a directory string for the operating system.
-     * 
-     * Use slashes anywhere you need a directory separator. Then run the
-     * string through fixdir() and the slashes will be converted to the
-     * proper separator (for example '\' on Windows).
-     * 
-     * Always adds a final trailing separator.
-     * 
-     * @param string $dir The directory string to 'fix'.
-     * 
-     * @return string The "fixed" directory string.
-     * 
-     */
-    public static function fixdir($dir)
-    {
-        $dir = str_replace('/', DIRECTORY_SEPARATOR, $dir);
-        return rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-    }
-    
-    /**
-     * 
-     * Convenience method for dirname() and higher-level directories.
-     * 
-     * @param string $file Get the dirname() of this file.
-     * 
-     * @param int $up Move up in the directory structure this many 
-     * times, default 0.
-     * 
-     * @return string The dirname() of the file.
-     * 
-     */
-    public static function dirname($file, $up = 0)
-    {
-        $dir = dirname($file);
-        while ($up --) {
-            $dir = dirname($dir);
-        }
-        return $dir;
-    }
-    
-    /**
-     * 
      * Returns an array of the parent classes for a given class.
      * 
      * Parents in "reverse" order ... element 0 is the immediate parent,
@@ -1024,7 +714,7 @@ class Solar {
             array_keys($_COOKIE),
             array_keys($_SERVER),
             array_keys($_FILES),
-            // $_SESSION = null if you have not started the session yet.
+            // $_SESSION is null if you have not started the session yet.
             // This insures that a check is performed regardless.
             isset($_SESSION) && is_array($_SESSION) ? array_keys($_SESSION) : array()
         );
@@ -1069,86 +759,12 @@ class Solar {
             $config = (array) $spec;
         } elseif (is_string($spec)) {
             // merge from array file return
-            $config = (array) Solar::run($spec);
+            $config = (array) Solar_File::load($spec);
         } else {
             // no added config
             $config = array();
         }
         
         return $config;
-    }
-    
-    /**
-     * 
-     * Returns the OS-specific directory for temporary files, optionally with
-     * a path added to it.
-     * 
-     * @param string $add Add this to the end of the temporary directory
-     * path.
-     * 
-     * @return string The temp directory path, with optional suffix added.
-     * 
-     */
-    public static function temp($add = '')
-    {
-        if (function_exists('sys_get_temp_dir')) {
-            $tmp = sys_get_temp_dir();
-        } else {
-            $tmp = Solar::_getTempDir();
-        }
-        
-        if ($add) {
-            // convert slashes to os-specific separators,
-            // and remove leading separators
-            $add = str_replace('/', DIRECTORY_SEPARATOR, $add);
-            $add = ltrim($add, DIRECTORY_SEPARATOR);
-            
-            // remove trailing separators, and append $add.
-            $tmp = rtrim($tmp, DIRECTORY_SEPARATOR);
-            $tmp .= DIRECTORY_SEPARATOR . $add;
-        }
-        
-        return $tmp;
-    }
-    
-    /**
-     * 
-     * Returns the OS-specific temporary directory location.
-     * 
-     * @return string The temp directory path.
-     * 
-     */
-    protected static function _getTempDir()
-    {
-        // non-Windows system?
-        if (strtolower(substr(PHP_OS, 0, 3)) != 'win') {
-            $tmp = empty($_ENV['TMPDIR']) ? getenv('TMPDIR') : $_ENV['TMPDIR'];
-            if ($tmp) {
-                return $tmp;
-            } else {
-                return '/tmp';
-            }
-        }
-        
-        // Windows 'TEMP'
-        $tmp = empty($_ENV['TEMP']) ? getenv('TEMP') : $_ENV['TEMP'];
-        if ($tmp) {
-            return $tmp;
-        }
-    
-        // Windows 'TMP'
-        $tmp = empty($_ENV['TMP']) ? getenv('TMP') : $_ENV['TMP'];
-        if ($tmp) {
-            return $tmp;
-        }
-    
-        // Windows 'windir'
-        $tmp = empty($_ENV['windir']) ? getenv('windir') : $_ENV['windir'];
-        if ($tmp) {
-            return $tmp;
-        }
-    
-        // final fallback for Windows
-        return getenv('SystemRoot') . '\\temp';
     }
 }

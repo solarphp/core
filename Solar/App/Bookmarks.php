@@ -180,7 +180,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
     
     /**
      * 
-     * Local reference to the 'user' object in [[Solar::registry()]].
+     * Local reference to the 'user' object in [[Solar_Registry::get()]].
      * 
      * @var Solar_User
      * 
@@ -235,7 +235,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         }
 
         // get a user object for privileges
-        $this->user = Solar::registry('user');
+        $this->user = Solar_Registry::get('user');
         
         // keep a bookmarks model
         $this->_bookmarks = Solar::factory('Solar_Model_Nodes_Bookmarks');

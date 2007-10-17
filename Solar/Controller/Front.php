@@ -129,8 +129,8 @@ class Solar_Controller_Front extends Solar_Base {
      */
     protected function _setup()
     {
-        if (! Solar::isRegistered('request')) {
-            Solar::register('request', 'Solar_Request');
+        if (! Solar_Registry::exists('request')) {
+            Solar_Registry::set('request', 'Solar_Request');
         }
     }
     

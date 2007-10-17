@@ -27,7 +27,7 @@
 
 <div id="bookmarks-local">
     
-    <?php if (Solar::registry('user')->auth->isValid()): ?>
+    <?php if (Solar_Registry::get('user')->auth->isValid()): ?>
     
         <!-- Add a new bookmark -->
         <p><?php

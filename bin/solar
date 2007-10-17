@@ -80,7 +80,7 @@ echo "Using config file '$config'.\n";
 Solar::start($config);
 
 // register a request environment object for the controllers
-Solar::register('request', 'Solar_Request');
+Solar_Registry::set('request', 'Solar_Request');
 
 // create a console controller
 $console = Solar::factory('Solar_Controller_Console', array(

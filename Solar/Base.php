@@ -129,7 +129,7 @@ abstract class Solar_Base {
         
             // is construct-time config a file name?
             if (is_string($config)) {
-                $config = Solar::run($config);
+                $config = Solar_File::load($config);
             }
         
             // final override with construct-time config

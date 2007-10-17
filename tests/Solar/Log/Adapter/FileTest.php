@@ -13,7 +13,7 @@ class Solar_Log_Adapter_FileTest extends Solar_Log_AdapterTestCase
     
     public function setup()
     {
-        $this->_config['file'] = Solar::temp('test_solar_log_adapter_file.log');
+        $this->_config['file'] = Solar_File::tmp('test_solar_log_adapter_file.log');
         parent::setup();
         @unlink($this->_config['file']);
     }

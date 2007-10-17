@@ -283,14 +283,14 @@ class Solar_Locale extends Solar_Base {
         // method, which automatically replaces '/' with the
         // correct directory separator.
         $base = str_replace('_', '/', $class);
-        $file = Solar::fixdir($base . '/Locale/')
+        $file = Solar_Dir::fix($base . '/Locale/')
               . $this->_code . '.php';
         
         // can we find the file?
-        $target = Solar::fileExists($file);
+        $target = Solar_File::exists($file);
         if ($target) {
             // put the locale values into the shared locale array
-            $this->trans[$class] = (array) Solar::run($target);
+            $this->trans[$class] = (array) Solar_File::load($target);
         } else {
             // could not find file.
             // fail silently, as it's often the case that the

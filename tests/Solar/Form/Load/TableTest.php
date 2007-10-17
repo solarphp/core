@@ -2,9 +2,9 @@
 
 require_once dirname(__FILE__) . '/../../../SolarUnitTest.config.php';
 
-Solar::loadClass('Solar_Sql');
+Solar::autoload('Solar_Sql');
 
-Solar::loadClass('Solar_Sql_Table');
+Solar::autoload('Solar_Sql_Table');
 
 /**
  * @todo This test is way too dependant on location and uses real classes where

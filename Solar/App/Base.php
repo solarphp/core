@@ -172,14 +172,14 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     protected function _setup()
     {
         // register a Solar_Sql object if not already
-        if (! Solar::isRegistered('sql')) {
-            Solar::register('sql', Solar::factory('Solar_Sql'));
+        if (! Solar_Registry::exists('sql')) {
+            Solar_Registry::set('sql', Solar::factory('Solar_Sql'));
         }
         
         // register a Solar_User object if not already.
         // this will trigger the authentication process.
-        if (! Solar::isRegistered('user')) {
-            Solar::register('user', Solar::factory('Solar_User'));
+        if (! Solar_Registry::exists('user')) {
+            Solar_Registry::set('user', Solar::factory('Solar_User'));
         }
         
         // set the layout title
@@ -199,7 +199,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     protected function _preAction()
     {
-        $allow = Solar::registry('user')->access->isAllowed(
+        $allow = Solar_Registry::get('user')->access->isAllowed(
             get_class($this),
             $this->_action
         );

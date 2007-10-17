@@ -17,7 +17,7 @@ class Solar_Cache_Adapter_FileTest extends Solar_Cache_AdapterTestCase {
     public function setup()
     {
         if (is_null($this->_config['config']['path'])) {
-            $this->_config['config']['path'] = Solar::temp('/Solar_Cache_Testing/');
+            $this->_config['config']['path'] = Solar_Dir::tmp('/Solar_Cache_Testing/');
         }
         
         parent::setup();

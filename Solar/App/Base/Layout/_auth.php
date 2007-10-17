@@ -15,13 +15,13 @@
  * 
  */
 ?>
-<?php if (Solar::isRegistered('user')): ?>
+<?php if (Solar_Registry::exists('user')): ?>
     <div id="auth">
-        <?php if (Solar::registry('user')->auth->isValid()): ?>
+        <?php if (Solar_Registry::get('user')->auth->isValid()): ?>
             <p>
                 <?php echo $this->getText('TEXT_AUTH_USERNAME'); ?><br />
                 <strong><?php
-                    echo $this->escape(Solar::registry('user')->auth->handle);
+                    echo $this->escape(Solar_Registry::get('user')->auth->handle);
                 ?></strong>
             </p>
             <?php
@@ -57,7 +57,7 @@
             ?>
         <?php endif; ?>
         <p><?php
-            $status = Solar::registry('user')->auth->getFlash('status_text');
+            $status = Solar_Registry::get('user')->auth->getFlash('status_text');
             echo nl2br(wordwrap($this->escape($status), 20));
         ?></p>
     </div>

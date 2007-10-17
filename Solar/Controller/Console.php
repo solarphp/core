@@ -188,7 +188,7 @@ class Solar_Controller_Console extends Solar_Base {
         $stack = $this->_stack->get();
         foreach ($stack as $class) {
         
-            $dir = Solar::isDir(str_replace('_', DIRECTORY_SEPARATOR, $class));
+            $dir = Solar_Dir::exists(str_replace('_', DIRECTORY_SEPARATOR, $class));
             if (! $dir) {
                 continue;
             }

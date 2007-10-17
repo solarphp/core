@@ -65,7 +65,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
      */
     protected function _exec($class = null)
     {
-        $this->_println('Making model.');
+        $this->_outln('Making model.');
         
         // we need a class name, at least
         if (! $class) {
@@ -79,8 +79,8 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $this->_setTarget();
         
         // emit feedback
-        $this->_println("Using table '{$this->_table}'.");
-        $this->_println("Writing '$class' to '{$this->_target}'.");
+        $this->_outln("Using table '{$this->_table}'.");
+        $this->_outln("Writing '$class' to '{$this->_target}'.");
         
         // load the templates
         $this->_loadTemplates();
@@ -110,26 +110,26 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
                 . '.php';
         
         if (file_exists($target)) {
-            $this->_println('Model class exists.');
+            $this->_outln('Model class exists.');
         } else {
-            $this->_println('Writing model class.');
+            $this->_outln('Writing model class.');
             file_put_contents($target, $text);
         }
         
         
         // get the setup dir
-        $dir = Solar::fixdir(
+        $dir = Solar_Dir::fix(
             $this->_target . str_replace('_', '/', $class) . '/Setup'
         );
         @mkdir($dir, 0777, true);
         
         // write the cols file
-        $this->_println('Updating table cols.');
+        $this->_outln('Updating table cols.');
         $text = var_export($table_cols, true);
         file_put_contents($dir . 'table_cols.php', "<?php\nreturn $text;");
         
         // write the name file
-        $this->_println('Updating table name.');
+        $this->_outln('Updating table name.');
         file_put_contents($dir . 'table_name.php', "<?php\nreturn '{$this->_table}';");
         
         // write the record template
@@ -141,9 +141,9 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         );
         
         if (file_exists($record_target)) {
-            $this->_println('Record class exists.');
+            $this->_outln('Record class exists.');
         } else {
-            $this->_println('Writing record class.');
+            $this->_outln('Writing record class.');
             file_put_contents($record_target, $text);
         }
         
@@ -156,14 +156,14 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         );
         
         if (file_exists($collection_target)) {
-            $this->_println('Collection class exists.');
+            $this->_outln('Collection class exists.');
         } else {
-            $this->_println('Writing collection class.');
+            $this->_outln('Writing collection class.');
             file_put_contents($collection_target, $text);
         }
         
         // done!
-        $this->_println("Done.");
+        $this->_outln("Done.");
     }
     
     /**
@@ -176,7 +176,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
     protected function _loadTemplates()
     {
         $this->_tpl = array();
-        $dir = Solar::fixdir(dirname(__FILE__) . '/MakeModel/Data');
+        $dir = Solar_Dir::fix(dirname(__FILE__) . '/MakeModel/Data');
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
             $key = substr(basename($file), 0, -4);
@@ -197,10 +197,10 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         if (! $target) {
             // use the same target as 2 levels up from this class,
             // should be the PEAR dir (or main Solar dir)
-            $target = Solar::dirname(__FILE__, 2);
+            $target = Solar_Dir::name(__FILE__, 2);
         }
         
-        $this->_target = Solar::fixdir($target);
+        $this->_target = Solar_Dir::fix($target);
     }
     
     /**

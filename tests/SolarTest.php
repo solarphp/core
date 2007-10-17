@@ -7,7 +7,7 @@ class SolarTest extends PHPUnit_Framework_TestCase
 {
     public function testLoadClassThrowsExceptionOnEmptyString() {
         try {
-            Solar::loadClass('');
+            Solar::autoload('');
             $this->fail('Should throw exception on empty string');
         }
         catch (Solar_Exception $e) {
@@ -22,11 +22,11 @@ class SolarTest extends PHPUnit_Framework_TestCase
                 'Insure class has not been loaded.'
             );
             
-            Solar::loadClass('Solar_LoadClassObject');
+            Solar::autoload('Solar_LoadClassObject');
             
             $this->assertTrue(
                 class_exists('Solar_LoadClassObject', false),
-                'Insure Solar::loadClass() loaded the requested class.'
+                'Insure Solar::autoload() loaded the requested class.'
             );
         } catch (Exception $e) {
             echo $e;

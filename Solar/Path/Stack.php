@@ -171,7 +171,7 @@ class Solar_Path_Stack {
     {
         foreach ($this->_stack as $dir) {
             $spec = $dir . $file;
-            if (Solar::fileExists($spec)) {
+            if (Solar_File::exists($spec)) {
                 return $spec;
             }
         }

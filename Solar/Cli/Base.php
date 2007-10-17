@@ -43,10 +43,10 @@ abstract class Solar_Cli_Base extends Solar_Controller_Command {
             // we use 'null' command because we could have gotten here from
             // using an option or something else first, and a recognized 
             // command later on.  showing that command here would be confusing.
-            $this->_println('ERR_UNKNOWN_COMMAND', 1, array('cmd' => null));
-            $this->_println('HELP_TRY_SOLAR_HELP');
+            $this->_outln('ERR_UNKNOWN_COMMAND', 1, array('cmd' => null));
+            $this->_outln('HELP_TRY_SOLAR_HELP');
         } else {
-            $this->_println($this->getInfoHelp());
+            $this->_outln($this->getInfoHelp());
         }
     }
     
@@ -66,8 +66,8 @@ abstract class Solar_Cli_Base extends Solar_Controller_Command {
         switch (true) {
         
         case $this->_options['version']:
-            $this->_print("Solar command-line tool, version ");
-            $this->_println($this->apiVersion() . '.');
+            $this->_out("Solar command-line tool, version ");
+            $this->_outln($this->apiVersion() . '.');
             $skip_exec = true;
             break;
         
@@ -88,7 +88,7 @@ abstract class Solar_Cli_Base extends Solar_Controller_Command {
         parent::_postExec();
         
         // return terminal to normal colors
-        $this->_print("%n");
+        $this->_out("%n");
     }
 }
 

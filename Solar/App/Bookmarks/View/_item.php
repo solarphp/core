@@ -66,7 +66,7 @@
                         
                     </li>
                         
-                    <?php if (Solar::registry('user')->auth->handle == $item->owner_handle): ?>
+                    <?php if (Solar_Registry::get('user')->auth->handle == $item->owner_handle): ?>
                     <li class="edit">
                         <?php echo $this->action("bookmarks/edit/{$item->id}", 'PROCESS_EDIT'); ?>
                     </li>

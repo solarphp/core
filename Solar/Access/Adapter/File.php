@@ -65,7 +65,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         $file = realpath($this->_config['file']);
         
         // does the file exist?
-        if (! Solar::fileExists($file)) {
+        if (! Solar_File::exists($file)) {
             throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
                 array('file' => $file)

@@ -16,7 +16,7 @@ class Solar_Log_Adapter_MultiTest extends Solar_Log_AdapterTestCase {
                     'adapter' => 'Solar_Log_Adapter_File',
                     'config'  => array(
                         'events'  => 'debug',
-                        'file'    => Solar::temp('test_solar_log_adapter_multi.debug.log'),
+                        'file'    => Solar_File::tmp('test_solar_log_adapter_multi.debug.log'),
                         'format' => '%e %m',
                     ),
                 ),
@@ -24,7 +24,7 @@ class Solar_Log_Adapter_MultiTest extends Solar_Log_AdapterTestCase {
                     'adapter' => 'Solar_Log_Adapter_File',
                     'config'  => array(
                         'events'  => 'info, notice',
-                        'file'    => Solar::temp('test_solar_log_adapter_multi.other.log'),
+                        'file'    => Solar_File::tmp('test_solar_log_adapter_multi.other.log'),
                         'format' => '%e %m',
                     ),
                 ),

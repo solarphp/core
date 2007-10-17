@@ -191,11 +191,11 @@ class Solar_Class_Stack extends Solar_Base {
             $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
             
             // does the file exist?
-            if (! Solar::fileExists($file)) {
+            if (! Solar_File::exists($file)) {
                 continue;
             }
             
-            // include it in a limited scope. we don't use Solar::run()
+            // include it in a limited scope. we don't use Solar_File::load()
             // because we want to avoid exceptions.
             $this->_run($file);
             

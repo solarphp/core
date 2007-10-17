@@ -20,12 +20,12 @@ abstract class Solar_View_HelperTestCase extends PHPUnit_Framework_TestCase
         
         // register the request environment so all classes have access to it,
         // not just the helpers.
-        if (! Solar::isRegistered('request')) {
-            Solar::register('request', 'Solar_Request');
+        if (! Solar_Registry::exists('request')) {
+            Solar_Registry::set('request', 'Solar_Request');
         }
         
         // retain and reset the request environment
-        $this->_request = Solar::registry('request');
+        $this->_request = Solar_Registry::get('request');
         $this->_request->reset();
     }
     

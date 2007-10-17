@@ -112,6 +112,10 @@ class Solar_Controller_Command extends Solar_Base {
      */
     protected $_console;
     
+    protected $_stdout;
+    
+    protected $_stderr;
+    
     /**
      * 
      * Constructor.
@@ -123,6 +127,10 @@ class Solar_Controller_Command extends Solar_Base {
     {
         parent::__construct($config);
         
+        // stdout and stderr
+        $this->_stdout = fopen('php://stdout', 'w');
+        $this->_stderr = fopen('php://stderr', 'w');
+        
         // set the recognized options
         $options = $this->_getOptionSettings();
         $this->_getopt = Solar::factory('Solar_Getopt');
@@ -130,6 +138,12 @@ class Solar_Controller_Command extends Solar_Base {
         
         // follow-on setup
         $this->_setup();
+    }
+    
+    public function __destruct()
+    {
+        fclose($this->_stdout);
+        fclose($this->_stderr);
     }
     
     /**
@@ -262,7 +276,7 @@ class Solar_Controller_Command extends Solar_Base {
               . DIRECTORY_SEPARATOR . 'help.txt';
         
         // does that file exist?
-        $file = Solar::fileExists($file);
+        $file = Solar_File::exists($file);
         if ($file) {
             return file_get_contents($file);
         }
@@ -292,7 +306,7 @@ class Solar_Controller_Command extends Solar_Base {
                     . DIRECTORY_SEPARATOR . 'Info'
                     . DIRECTORY_SEPARATOR . 'options.php';
             
-            $file  = Solar::fileExists($file);
+            $file  = Solar_File::exists($file);
             
             if ($file) {
                 $options = array_merge(
@@ -311,7 +325,7 @@ class Solar_Controller_Command extends Solar_Base {
      * 
      * If the text is a locale key, that text will be used instead.
      * 
-     * Automatically replaces style-format codes for shell output.
+     * Automatically replaces style-format codes for VT100 shell output.
      * 
      * @param string $text The text to print to STDOUT, usually a translation
      * key.
@@ -324,7 +338,112 @@ class Solar_Controller_Command extends Solar_Base {
      * @return void
      * 
      */
-    protected function _print($text = null, $num = 1, $replace = null)
+    protected function _out($text = null, $num = 1, $replace = null)
+    {
+        fwrite(
+            $this->_stdout,
+            $this->_vt100($text, $num, $replace)
+        );
+    }
+    
+    /**
+     * 
+     * Prints text to STDOUT and appends a newline.
+     * 
+     * If the text is a locale key, that text will be used instead.
+     * 
+     * Automatically replaces style-format codes for VT100 shell output.
+     * 
+     * @param string $text The text to print to STDOUT, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return void
+     * 
+     */
+    protected function _outln($text = null, $num = 1, $replace = null)
+    {
+        fwrite(
+            $this->_stdout,
+            $this->_vt100($text, $num, $replace) . "\n"
+        );
+    }
+    
+    /**
+     * 
+     * Prints text to STDERR **without** a trailing newline.
+     * 
+     * If the text is a locale key, that text will be used instead.
+     * 
+     * Automatically replaces style-format codes for VT100 shell output.
+     * 
+     * @param string $text The text to print to STDERR, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return void
+     * 
+     */
+    protected function _err($text = null, $num = 1, $replace = null)
+    {
+        fwrite(
+            $this->_stderr,
+            $this->_vt100($text, $num, $replace)
+        );
+    }
+    
+    /**
+     * 
+     * Prints text to STDERR and appends a newline.
+     * 
+     * If the text is a locale key, that text will be used instead.
+     * 
+     * Automatically replaces style-format codes for VT100 shell output.
+     * 
+     * @param string $text The text to print to STDERR, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return void
+     * 
+     */
+    protected function _errln($text = null, $num = 1, $replace = null)
+    {
+        fwrite(
+            $this->_stderr,
+            $this->_vt100($text, $num, $replace) . "\n"
+        );
+    }
+    
+    /**
+     * 
+     * Frontend to locale() that replaces style-format codes for VT100 shell
+     * output.
+     * 
+     * @param string $text The text to print to STDERR, usually a translation
+     * key.
+     * 
+     * @param mixed $num Helps determine whether to get a singular
+     * or plural translation.
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return string The localized string with VT100 shell codes.
+     * 
+     */
+    protected function _vt100($text, $num, $replace)
     {
         static $vt100_keys;
         if (! $vt100_keys) {
@@ -336,35 +455,11 @@ class Solar_Controller_Command extends Solar_Base {
             $vt100_vals = array_values($this->_vt100);
         }
         
-        echo str_replace(
+        return str_replace(
             $vt100_keys,
             $vt100_vals,
             $this->locale($text, $num, $replace)
         );
-    }
-    
-    /**
-     * 
-     * Prints text to STDOUT and appends a newline.
-     * 
-     * If the text is a locale key, that text will be used instead.
-     * 
-     * Automatically replaces style-format codes for shell output.
-     * 
-     * @param string $text The text to print to STDOUT, usually a translation
-     * key.
-     * 
-     * @param mixed $num Helps determine whether to get a singular
-     * or plural translation.
-     * 
-     * @param array $replace An array of replacement values for the string.
-     * 
-     * @return void
-     * 
-     */
-    protected function _println($text = null, $num = 1, $replace = null)
-    {
-        echo $this->_print($text, $num, $replace) . "\n";
     }
     
     /**

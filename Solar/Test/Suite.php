@@ -126,7 +126,7 @@ class Solar_Test_Suite extends Solar_Base {
         parent::__construct($config);
         
         // where are the tests located?
-        $this->_dir = Solar::fixdir($this->_config['dir']);
+        $this->_dir = Solar_Dir::fix($this->_config['dir']);
         
         // keep a Solar_Debug_Var object around for later
         $this->_var = Solar::factory('Solar_Debug_Var');
@@ -412,7 +412,7 @@ class Solar_Test_Suite extends Solar_Base {
         // running tests for one class series?
         if ($class) {
             $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
-            $dir = $this->_dir . Solar::fixdir($sub);
+            $dir = $this->_dir . Solar_Dir::fix($sub);
             $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
             if (is_readable($file)) {
                 require_once $file;

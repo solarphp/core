@@ -2,7 +2,7 @@
 
 /**
  * 
- * This test exists for the purpose of testing loadClass().
+ * This test exists for the purpose of testing autoload().
  * 
  * @see SolarTest::testLoadClassReturnsAnObjectOnKnownClass()
  * 

@@ -92,7 +92,7 @@ class Solar_Class_Map extends Solar_Base {
      */
     public function setBase($base)
     {
-        $this->_base = Solar::fixdir($base);
+        $this->_base = Solar_Dir::fix($base);
     }
     
     /**
@@ -170,7 +170,7 @@ class Solar_Class_Map extends Solar_Base {
     protected function _findBaseByClass($class)
     {
         $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        $base = Solar::fileExists($file);
+        $base = Solar_File::exists($file);
         if ($base) {
             $neglen = -1 * strlen($file);
             $base = substr($base, 0, $neglen);
@@ -179,7 +179,7 @@ class Solar_Class_Map extends Solar_Base {
         
         // no base yet, look for a dir (drop the .php, add a separator)
         $dir = substr($file, 0, -4);
-        $base = Solar::isDir($dir);
+        $base = Solar_Dir::exists($dir);
         if ($base) {
             $neglen = -1 * strlen($dir);
             $base = substr($base, 0, $neglen);

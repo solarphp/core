@@ -47,14 +47,6 @@
  */
 
 /**
- * Define a random value that lets us avoid having to use func_num_args() and 
- * func_get_arg() for optional undefined parameters.
- */
-if (! defined('SOLAR_IGNORE_PARAM')) {
-    define('SOLAR_IGNORE_PARAM', uniqid('SOLAR_IGNORE_PARAM' . rand(), true));
-}
-
-/**
  * Make sure Solar_Base is loaded even before Solar::start() is called.
  * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
  * in some environments.
@@ -455,14 +447,14 @@ class Solar {
      * @return mixed The value of the configuration group or element.
      * 
      */
-    public static function config($group, $elem = null, $default = SOLAR_IGNORE_PARAM)
+    public static function config($group, $elem = null, $default = null)
     {
         // are we looking for a group or an element?
         if (is_null($elem)) {
             
             // looking for a group. if no default passed, set up an
             // empty array.
-            if ($default === SOLAR_IGNORE_PARAM) {
+            if ($default === null) {
                 $default = array();
             }
             
@@ -474,12 +466,6 @@ class Solar {
             }
             
         } else {
-            
-            // looking for an element. if no default passed, set up a
-            // null.
-            if ($default === SOLAR_IGNORE_PARAM) {
-                $default = null;
-            }
             
             // find the requested group and element.
             if (! isset(Solar::$config[$group][$elem])) {

@@ -75,6 +75,19 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
+     * A constant so we can find "ignored" params, to avoid func_num_args().
+     * 
+     * The md5() value of 'Solar_Sql_Select::IGNORE', so it should be unique.
+     * 
+     * Yes, this is hackery, and perhaps a micro-optimization at that.
+     * 
+     * @const
+     * 
+     */
+    const IGNORE = '--5a333dc50d9341d8e73e56e2ba591b87';
+    
+    /**
+     * 
      * User-provided configuration.
      * 
      * Keys are ...
@@ -411,13 +424,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function where($cond, $val = SOLAR_IGNORE_PARAM)
+    public function where($cond, $val = Solar_Sql_Select::IGNORE)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if ($val !== SOLAR_IGNORE_PARAM) {
+        if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -446,13 +459,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @see where()
      * 
      */
-    public function orWhere($cond, $val = SOLAR_IGNORE_PARAM)
+    public function orWhere($cond, $val = Solar_Sql_Select::IGNORE)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if ($val !== SOLAR_IGNORE_PARAM) {
+        if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -564,13 +577,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @return Solar_Sql_Select
      * 
      */
-    public function having($cond, $val = SOLAR_IGNORE_PARAM)
+    public function having($cond, $val = Solar_Sql_Select::IGNORE)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if ($val !== SOLAR_IGNORE_PARAM) {
+        if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         
@@ -599,13 +612,13 @@ class Solar_Sql_Select extends Solar_Base {
      * @see having()
      * 
      */
-    public function orHaving($cond, $val = SOLAR_IGNORE_PARAM)
+    public function orHaving($cond, $val = Solar_Sql_Select::IGNORE)
     {
         if (empty($cond)) {
             return $this;
         }
         
-        if ($val !== SOLAR_IGNORE_PARAM) {
+        if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
         

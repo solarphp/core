@@ -387,7 +387,7 @@ class Solar {
         
         // is it an object factory?
         if (method_exists($obj, 'solarFactory')) {
-            // yes, return the class from the object factory
+            // return an instance from the object factory
             return $obj->solarFactory();
         }
         

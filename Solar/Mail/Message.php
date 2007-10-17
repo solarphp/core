@@ -141,6 +141,15 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
+     * The "Reply-To:" address and display-name.
+     * 
+     * @var array
+     * 
+     */
+    protected $_reply_to = array('', '');
+    
+    /**
+     * 
      * The "Return-Path" value.
      * 
      * @var string 
@@ -328,12 +337,47 @@ class Solar_Mail_Message extends Solar_Base {
      * 
      * Returns the "From:" address for this message.
      * 
-     * @return string
+     * @return array
      * 
      */
     public function getFrom()
     {
         return $this->_from;
+    }
+    
+    /**
+     * 
+     * Sets the "Reply-To:" on this message.
+     * 
+     * Strips CR/LF from the address and name to help avoid header injections.
+     * 
+     * @param string $addr The email address of the sender.
+     * 
+     * @param string $name The display-name for the sender, if any.
+     * 
+     * @return Solar_Mail_Message This object.
+     * 
+     */
+    public function setReplyTo($addr, $name = '')
+    {
+        $this->_reply_to = array(
+            $addr,
+            $name,
+        );
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * Returns the "Reply-To:" address for this message.
+     * 
+     * @return array
+     * 
+     */
+    public function getReplyTo()
+    {
+        return $this->_reply_to;
     }
     
     /**
@@ -637,6 +681,15 @@ class Solar_Mail_Message extends Solar_Base {
             $value = '"' . $this->_from[1] . '" ' . $value;
         }
         $headers[] = array("From", $value);
+        
+        // Reply-To: (optional)
+        if ($this->_reply_to[0]) {
+            $value = "<{$this->_reply_to[0]}>";
+            if ($this->_reply_to[1]) {
+                $value = '"' . $this->_reply_to[1] . '" ' . $value;
+            }
+            $headers[] = array("Reply-To", $value);
+        }
         
         // To:, Cc:, Bcc:
         foreach ($this->_rcpt as $label => $rcpt) {

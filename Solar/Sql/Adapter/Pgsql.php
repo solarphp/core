@@ -327,7 +327,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
      */
     public function lastInsertId($table = null, $col = null)
     {
-        $this->_connect();
+        $this->connect();
         $name = "{$table}_{$col}_seq";
         return $this->_pdo->lastInsertId($name);
     }

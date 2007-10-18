@@ -21,9 +21,9 @@
 $config = array();
 
 /**
- * Document root.
+ * Location for sensitive files.
  */
-$docroot = $_SERVER['DOCUMENT_ROOT'];
+$safe = '/path/to/safe/dir';
 
 /**
  * General ini settings.
@@ -39,9 +39,7 @@ $config['Solar']['ini_set'] = array(
  */
 $config['Solar_Sql'] = array(
     'adapter' => 'Solar_Sql_Adapter_Sqlite',
-    'config'  => array(
-        'name'   => "$docroot/solar.sqlite",
-    )
+    'name'    => "$safe/solar.sqlite",
 );
 
 /**
@@ -49,9 +47,7 @@ $config['Solar_Sql'] = array(
  */
 $config['Solar_Auth'] = array(
     'adapter' => 'Solar_Auth_Adapter_Htpasswd',
-    'config' => array(
-        'file' => "$docroot/htpasswd.conf",
-    ),
+    'file' => "$safe/htpasswd.conf",
 );
 
 /**

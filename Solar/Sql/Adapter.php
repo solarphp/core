@@ -289,7 +289,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function getPdo()
     {
-        $this->_connect();
+        $this->connect();
         return $this->_pdo;
     }
     
@@ -337,7 +337,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return void
      * 
      */
-    protected function _connect()
+    public function connect()
     {
         // if we already have a PDO object, no need to re-connect.
         if ($this->_pdo) {
@@ -391,6 +391,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             
         // force names to lower case
         $this->_pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+    }
+    
+    /**
+     * 
+     * Closes the database connection.
+     * 
+     * This isn't generally necessary as PHP will automatically close the
+     * connection in the end of the script execution, but it can be useful
+     * to free resources when a script needs to connect tomultiple databases
+     * in sequence.
+     * 
+     * @return void
+     * 
+     */
+    public function disconnect()
+    {
+        $this->_pdo = null;
     }
     
     /**
@@ -487,7 +504,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function query($stmt, $data = array())
     {
-        $this->_connect();
+        $this->connect();
         
         // begin the profile time
         $before = microtime(true);
@@ -580,7 +597,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function begin()
     {
-        $this->_connect();
+        $this->connect();
         $before = microtime(true);
         $result = $this->_pdo->beginTransaction();
         if ($this->_profiling) {
@@ -599,7 +616,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function commit()
     {
-        $this->_connect();
+        $this->connect();
         $before = microtime(true);
         $result = $this->_pdo->commit();
         if ($this->_profiling) {
@@ -618,7 +635,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function rollback()
     {
-        $this->_connect();
+        $this->connect();
         $before = microtime(true);
         $result = $this->_pdo->rollBack();
         if ($this->_profiling) {
@@ -1160,7 +1177,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             return $val;
         } else {
             // quote all other scalars
-            $this->_connect();
+            $this->connect();
             return $this->_pdo->quote($val);
         }
     }
@@ -1270,7 +1287,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function lastInsertId($table = null, $col = null)
     {
-        $this->_connect();
+        $this->connect();
         return $this->_pdo->lastInsertId();
     }
     

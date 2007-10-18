@@ -1,6 +1,40 @@
 <?php
+/**
+ * 
+ * Utility class for static file methods.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_File
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Utility class for static file methods.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_File
+ * 
+ */
 class Solar_File {
     
+    /**
+     * 
+     * The path of the file currently being used by Solar_File::load().
+     * 
+     * @var string
+     * 
+     * @see load()
+     * 
+     */
     protected static $_file;
     
     /**
@@ -54,13 +88,13 @@ class Solar_File {
     
     /**
      * 
-     * Returns the OS-specific directory for temporary files, optionally with
-     * a path added to it.
+     * Returns the OS-specific directory for temporary files, with a file
+     * name appended.
      * 
-     * @param string $add Add this to the end of the temporary directory
+     * @param string $file The file name to append to the temporary directory
      * path.
      * 
-     * @return string The temp directory path, with optional suffix added.
+     * @return string The temp directory and file name.
      * 
      */
     public static function tmp($file)

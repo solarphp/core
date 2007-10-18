@@ -1,4 +1,29 @@
 <?php
+/**
+ * 
+ * Utility class for static directory methods.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Dir
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Utility class for static directory methods.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Dir
+ * 
+ */
 class Solar_Dir {
     
     /**
@@ -106,6 +131,9 @@ class Solar_Dir {
     /**
      * 
      * Returns the OS-specific directory for temporary files.
+     * 
+     * @param string $sub Add this subdirectory to the returned temporary
+     * directory name.
      * 
      * @return string The temporary directory path.
      * 

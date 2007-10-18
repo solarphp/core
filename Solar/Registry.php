@@ -1,4 +1,29 @@
 <?php
+/**
+ * 
+ * Registry for storing objects, with built-in lazy loading.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Registry
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+
+/**
+ * 
+ * Registry for storing objects, with built-in lazy loading.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Registry
+ * 
+ */
 class Solar_Registry {
     
     /**
@@ -6,7 +31,7 @@ class Solar_Registry {
      * Map of registry names to object instances (or their specs for on-demand 
      * creation).
      * 
-     * @param array
+     * @var array
      * 
      */
     protected static $_obj = array();

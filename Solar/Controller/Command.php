@@ -112,8 +112,22 @@ class Solar_Controller_Command extends Solar_Base {
      */
     protected $_console;
     
+    /**
+     * 
+     * File handle pointing to STDOUT for normal output.
+     * 
+     * @var resource
+     * 
+     */
     protected $_stdout;
     
+    /**
+     * 
+     * File handle pointing to STDERR for error output.
+     * 
+     * @var resource
+     * 
+     */
     protected $_stderr;
     
     /**
@@ -140,6 +154,13 @@ class Solar_Controller_Command extends Solar_Base {
         $this->_setup();
     }
     
+    /**
+     * 
+     * Destructor; closes STDOUT and STDERR file handles.
+     * 
+     * @return void
+     * 
+     */
     public function __destruct()
     {
         fclose($this->_stdout);

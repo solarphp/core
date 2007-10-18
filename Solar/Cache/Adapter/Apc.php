@@ -19,13 +19,15 @@
  * 
  * APC cache controller.
  * 
+ * Requires APC 3.0.13 or later.
+ * 
  * The Alternative PHP Cache (APC) is a free and open opcode cache for PHP.
  * It was conceived of to provide a free, open, and robust framework for
  * caching and optimizing PHP intermediate code.
  * 
  * The APC extension is not bundled with PHP; you will need to install it
- * on your server before you can use it.
- * More info on the [APC homepage](http://pecl.php.net/package/apc).
+ * on your server before you can use it. You can read more about it at the
+ * [APC homepage](http://pecl.php.net/package/apc).
  * 
  * @category Solar
  * 
@@ -92,15 +94,7 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {
             return;
         }
         
-        // NOT AVAILABLE YET
-        // return apc_add($key, $data, $this->_life);
-        
-        // hack
-        if (apc_fetch($key) !== false) {
-            return false;
-        }
-        
-        return $this->save($key, $data);
+        return apc_add($key, $data, $this->_life);
     }
     
     /**

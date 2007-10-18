@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: file was not found.
+ * Exception: file was not readable, or does not exist.
  * 
  * @category Solar
  * 
@@ -17,11 +17,11 @@
 
 /**
  * 
- * Exception: file was not found.
+ * Exception: file was not readable, or does not exist.
  * 
  * @category Solar
  * 
  * @package Solar
  * 
  */
-class Solar_File_Exception_NotFound extends Solar_File_Exception {}
+class Solar_File_Exception_NotReadable extends Solar_File_Exception {}

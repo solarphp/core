@@ -124,7 +124,7 @@ class Solar_File {
             // could not open the file for reading
             throw Solar::exception(
                 'Solar_File',
-                'ERR_FILE_NOT_READABLE',
+                'ERR_NOT_READABLE',
                 'File does not exist or is not readable',
                 array('file' => $file)
             );

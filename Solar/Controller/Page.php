@@ -665,8 +665,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * 2. Vendor/App/Base/View/
      * 
-     * @param Solar_View $view The view object to add template paths to.
-     * 
      * @return void
      * 
      */
@@ -707,8 +705,6 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 2. Vendor/App/Layout/
      * 
      * 3. Solar/App/Layout/
-     * 
-     * @param Solar_View $view The Solar_View object to modify.
      * 
      * @return Solar_View
      * 

@@ -102,7 +102,22 @@ class Solar_Locale extends Solar_Base {
     {
         return $this->_code;
     }
-    
+
+    /**
+     * 
+     * Returns ISO 3166 country code for current locale code.
+     * 
+     * This is basically just the last two uppercase letters
+     * from the locale code.
+     * 
+     * @return string
+     * 
+     */
+    public function getCountryCode()
+    {
+        return substr($this->_code, -2);
+    }
+
     /**
      * 
      * Returns the translated locale string for a class and key.

@@ -47,7 +47,7 @@ $config['Solar_Sql'] = array(
  */
 $config['Solar_Auth'] = array(
     'adapter' => 'Solar_Auth_Adapter_Htpasswd',
-    'file' => "$safe/htpasswd.conf",
+    'file'    => "$safe/htpasswd.conf",
 );
 
 /**

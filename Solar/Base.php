@@ -139,6 +139,18 @@ abstract class Solar_Base {
     
     /**
      * 
+     * Default destructor; does nothing other than provide a safe fallback
+     * for calls to parent::__destruct().
+     * 
+     * @return void
+     * 
+     */
+    public function __destruct()
+    {
+    }
+    
+    /**
+     * 
      * Reports the API version for this class.
      * 
      * If you don't override this method, your classes will use the same

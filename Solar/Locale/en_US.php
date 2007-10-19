@@ -54,30 +54,6 @@ return array(
     'ERR_METHOD_NOT_CALLABLE'    => 'Method not callable.',
     'ERR_METHOD_NOT_IMPLEMENTED' => 'Method not implemented.',
     
-    // validation messages (used when validation fails)
-    'VALID_ALPHA'                => 'Please use only the letters A-Z.',
-    'VALID_ALNUM'                => 'Please use only letters (A-Z) and numbers (0-9).',
-    'VALID_BLANK'                => 'This value must be blank.',
-    'VALID_EMAIL'                => 'Please enter a valid email address.',
-    'VALID_INKEYS'               => 'Please choose a different value.',
-    'VALID_INLIST'               => 'Please choose a different value.',
-    'VALID_INTEGER'              => 'Please use only whole numbers.',
-    'VALID_ISODATE'              => 'Please enter a date in "yyyy-mm-dd" format.',
-    'VALID_ISOTIMESTAMP'         => 'Please enter a timestamp in "yyyy-mm-ddThh:ii:ss" format.',
-    'VALID_ISOTIME'              => 'Please enter a time in "hh:ii:ss" format.',
-    'VALID_MAX'                  => 'Please enter a smaller value.',
-    'VALID_MAXLENGTH'            => 'Please enter a shorter string.',
-    'VALID_MIN'                  => 'Please enter a larger value.',
-    'VALID_MINLENGTH'            => 'Please enter a longer string.',
-    'VALID_NOTZERO'              => 'This value is not allowed to be zero.',
-    'VALID_NOTBLANK'             => 'This value is not allowed to be blank.',
-    'VALID_RANGE'                => 'This value is outside the allowed range.',
-    'VALID_RANGELENGTH'          => 'This value is too short, or too long.',
-    'VALID_SCOPE'                => 'This value is not in the proper scope.',
-    'VALID_SEPWORDS'             => 'Please use only letters (A-Z), numbers (0-9), underscores(_), and separators.',
-    'VALID_URI'                  => 'Please enter a valid web address.',
-    'VALID_WORD'                 => 'Please use only letters (A-Z), numbers (0-9), and underscores(_).',
-    
     // success feedback messages
     'SUCCESS_FORM'               => 'Saved.',
     

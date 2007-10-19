@@ -563,7 +563,7 @@ class Solar_Filter extends Solar_Base {
             
             // is it blank?
             if ($blank) {
-                $msg = $this->_chainLocale('VALIDATE_NOT_BLANK');
+                $msg = $this->_chainLocale('INVALID_NOT_BLANK');
                 $this->_chain_invalid[$key][] = $msg;
             }
         }
@@ -638,8 +638,10 @@ class Solar_Filter extends Solar_Base {
      */
     protected function _chainLocale($key)
     {
-        // the translation key ... converts from
-        // 'validatePregReplace' => 'VALIDATE_PREG_REPLACE'
+        // 'validatePregReplace' => 'invalidPregReplace'
+        $key = 'invalid' . substr($key, 8);
+        
+        // 'validatePregReplace' => 'INVALID_PREG_REPLACE'
         $key = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $key));
         
         // the translated message

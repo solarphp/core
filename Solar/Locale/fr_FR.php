@@ -43,26 +43,6 @@ return array(
     'ERR_CONNECTION_FAILED'    => 'Connection invalide.',
     'ERR_INVALID'              => 'Donnée invalide.',
     
-    // validation messages
-    'VALID_ALPHA'        => 'Veuillez utiliser esclusivement les lettres A-Z.',
-    'VALID_ALNUM'        => 'Veuillez utiliser esclusivement les lettres (A-Z) et les nombres (0-9)',
-    'VALID_BLANK'        => 'Cette valeur n\'est pas autorisée.',
-    'VALID_EMAIL'        => 'Veuillez entrer une adresse email valide.',
-    'VALID_INKEYS'       => 'Veuillez choisir une valeur différente.',
-    'VALID_INLIST'       => 'Veuillez choisir une valeur différente.',
-    'VALID_SCOPE'      => 'Cette valeur n\'appartient pas à la cible définie.',
-    'VALID_INTEGER'      => 'Veuillez exclusivement utiliser des nombres entiers.',
-    'VALID_ISODATE'      => 'Veuillez entrer une date au format "yyyy-mm-dd".',
-    'VALID_ISOTIMESTAMP' => 'Veuillez entrer une date-temps au format "yyyy-mm-ddThh:mm:ss".',
-    'VALID_ISOTIME'      => 'Veuillez entrer un temps au format "hh:mm:ss".',
-    'VALID_MAX'          => 'Veuillez entrer une valeur plus petite.',
-    'VALID_MAXLENGTH'    => 'Veuillez entrer un texte moins long.',
-    'VALID_MIN'          => 'Veuillez entrer une plus grande valeur.',
-    'VALID_MINLENGTH'    => 'Veuillez entrer un texte plus long.',
-    'VALID_NOTZERO'      => 'Cette valeur ne peut pas être zéro.',
-    'VALID_NOTBLANK'     => 'Cette valeur doit être laissée en blanc.',
-    'VALID_URI'          => 'Veuiilez entrer une adresse web valide.',
-    
     // success/failure messages
     'SUCCESS_SAVED'           => 'Sauvegardé.',
     'FAILURE_FORM'                 => 'Merci de corriger les erreurs affichées.',

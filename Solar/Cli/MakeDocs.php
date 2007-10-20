@@ -24,7 +24,7 @@
  * @subpackage Solar_Cli_MakeDocs
  * 
  */
-class Solar_Cli_MakeDocs extends Solar_Controller_Command {
+class Solar_Cli_MakeDocs extends Solar_Cli_Base {
     
     // source code dir
     protected $_source;
@@ -192,13 +192,13 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command {
             // write the class home page
             $this->_out("$class ");
             $this->writeClassOverview($class);
-            $this->_out('.';)
+            $this->_out('.');
             
             // @todo write the list of all config options and default values
             
             // write the list of all constants
             $this->writeClassConstants($class);
-            $this->_out('.';)
+            $this->_out('.');
             
             // write the list of all class properties
             $this->writeClassProperties($class);
@@ -206,12 +206,12 @@ class Solar_Cli_MakeDocs extends Solar_Controller_Command {
             
             // write the list of all class methods
             $this->writeClassMethods($class);
-            $this->_out('.';)
+            $this->_out('.');
             
             // write each class method
             foreach ($api['methods'] as $name => $info) {
                 $this->writeClassMethod($class, $name, $info);
-                $this->_out('.';)
+                $this->_out('.');
             }
             
             // write the class table-of-contents

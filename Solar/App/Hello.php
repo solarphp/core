@@ -7,7 +7,7 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_Hello
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -25,10 +25,10 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_Hello
  * 
  */
-class Solar_App_HelloMini extends Solar_Controller_Page {
+class Solar_App_Hello extends Solar_Controller_Page {
     
     /**
      * 

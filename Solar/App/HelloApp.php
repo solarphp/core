@@ -28,7 +28,7 @@
  * @subpackage Solar_App_Hello
  * 
  */
-class Solar_App_Hello extends Solar_App_Base {
+class Solar_App_HelloApp extends Solar_App_Base {
     
     /**
      * 

@@ -95,7 +95,12 @@ class Solar {
      * [[php::ini_set | ]] key, and the value is the value for that setting.
      * 
      * `locale_class`
-     * : (string) Use this class for Solar::$locale.
+     * : (string) Use this class for the registered 'locale' object. Default
+     *   'Solar_Locale'.
+     * 
+     * `request_class`
+     * : (string) Use this class for the registered 'request' object. Default
+     *   'Solar_Request'.
      * 
      * `start`
      * : (array) Run these scripts at the end of Solar::start().
@@ -107,10 +112,11 @@ class Solar {
      * 
      */
     protected static $_Solar = array(
-        'ini_set'      => array(),
-        'locale_class' => 'Solar_Locale',
-        'start'        => array(),
-        'stop'         => array(),
+        'ini_set'        => array(),
+        'locale_class'   => 'Solar_Locale',
+        'request_class'  => 'Solar_Request',
+        'start'          => array(),
+        'stop'           => array(),
     );
     
     /**
@@ -121,28 +127,6 @@ class Solar {
      * 
      */
     public static $config = array();
-    
-    /**
-     * 
-     * Where this class (the Solar arch-class) is in the filesystem.
-     * 
-     * @var string
-     * 
-     */
-    public static $dir = null;
-    
-    /**
-     * 
-     * Locale class for managing translations.
-     * 
-     * In general, you should never need to address this directly; instead,
-     * use [[Solar_Base::locale() | $this->locale()]] in classes extended
-     * from [[Class::Solar_Base]].
-     * 
-     * @var Solar_Locale
-     * 
-     */
-    public static $locale;
     
     /**
      * 
@@ -242,9 +226,6 @@ class Solar {
             return;
         }
         
-        // where is Solar in the filesystem?
-        Solar::$dir = dirname(__FILE__);
-        
         // clear out registered globals
         if (ini_get('register_globals')) {
             Solar::cleanGlobals();
@@ -269,9 +250,17 @@ class Solar {
             ini_set($key, $val);
         }
         
-        // load the locale class
-        $class = Solar::config('Solar', 'locale_class', 'Solar_Locale');
-        Solar::$locale = Solar::factory($class);
+        // register the locale class (lazy-load)
+        Solar_Registry::set(
+            'locale',
+            Solar::config('Solar', 'locale_class', 'Solar_Locale')
+        );
+        
+        // register the request-envivronment class (lazy-load)
+        Solar_Registry::set(
+            'request',
+            Solar::config('Solar', 'request_class', 'Solar_Request')
+        );
         
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {
@@ -299,7 +288,6 @@ class Solar {
         // clean up
         Solar::$config = array();
         Solar::$parents = array();
-        Solar::$locale = null;
         
         // reset the status flag, and we're done.
         Solar::$_status = false;

@@ -199,9 +199,10 @@ abstract class Solar_Base {
     
     /**
      * 
-     * Looks up locale strings based on a key.
+     * Looks up class-specific locale strings based on a key.
      * 
-     * This is a convenient shortcut for calling [[Solar::$locale]]->fetch()
+     * This is a convenient shortcut for calling
+     * [[Solar_Registry]]::get('locale')->fetch()
      * that automatically uses the current class name.
      * 
      * You can also pass an array of replacement values.  If the `$replace`
@@ -240,8 +241,6 @@ abstract class Solar_Base {
      * 
      * @see Manual::Solar/Using_locales
      * 
-     * @see Solar::$locale
-     * 
      * @see Class::Solar_Locale
      * 
      */
@@ -252,7 +251,12 @@ abstract class Solar_Base {
             $class = get_class($this);
         }
         
-        return Solar::$locale->fetch($class, $key, $num, $replace);
+        static $locale;
+        if (! $locale) {
+            $locale = Solar_Registry::get('locale');
+        }
+        
+        return $locale->fetch($class, $key, $num, $replace);
     }
     
     /**
@@ -269,15 +273,10 @@ abstract class Solar_Base {
      */
     protected function _exception($code, $info = array())
     {
-        static $class;
-        if (! $class) {
-            $class = get_class($this);
-        }
-        
         return Solar::exception(
             $class,
             $code,
-            Solar::$locale->fetch($class, $code, 1, $info),
+            $this->locale($code, 1, $info),
             (array) $info
         );
     }

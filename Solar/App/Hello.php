@@ -106,7 +106,7 @@ class Solar_App_Hello extends Solar_App_Base {
         $this->code = $code;
         
         // reset the locale strings to the new code
-        Solar::$locale->setCode($this->code);
+        Solar_Registry::get('locale')->setCode($this->code);
         
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');
@@ -131,7 +131,7 @@ class Solar_App_Hello extends Solar_App_Base {
         $this->code = $code;
         
         // reset the locale strings to the new code
-        Solar::$locale->setCode($this->code);
+        Solar_Registry::get('locale')->setCode($this->code);
         
         // set the translated text
         $this->text = $this->locale('TEXT_HELLO_WORLD');

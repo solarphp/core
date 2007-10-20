@@ -34,11 +34,6 @@ abstract class Solar_Auth_AdapterTestCase extends PHPUnit_Framework_TestCase
     
     public function setup()
     {
-        // register the request environment
-        if (! Solar_Registry::exists('request')) {
-            Solar_Registry::set('request', 'Solar_Request');
-        }
-        
         // keep the request environment
         $this->_request = Solar_Registry::get('request');
         $this->_request->reset();

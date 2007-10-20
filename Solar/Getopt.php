@@ -41,10 +41,6 @@ class Solar_Getopt extends Solar_Base {
      * 
      * Keys are:
      * 
-     * `request`
-     * : (dependency) A Solar_Request dependency injection.  Default is
-     *   'request'.
-     * 
      * `filter_class`
      * : (string) The data-filter class to use when validating and sanitizing
      *   parameter values.  Default is 'Solar_Filter'.
@@ -59,9 +55,8 @@ class Solar_Getopt extends Solar_Base {
      * 
      */
     protected $_Solar_Getopt = array(
-        'request'          => 'request',
         'filter_class' => 'Solar_Filter',
-        'strict'           => true,
+        'strict'       => true,
     );
     
     /**
@@ -181,11 +176,8 @@ class Solar_Getopt extends Solar_Base {
         // "real" contruction
         parent::__construct($config);
         
-        // inject the request dependency
-        $this->_request = Solar::dependency(
-            'Solar_Request',
-            $this->_config['request']
-        );
+        // get the current request environment
+        $this->_request = Solar_Registry::get('request');
         
         // set up the data-filter class
         $this->_filter = Solar::factory($this->_config['filter_class']);

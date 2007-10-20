@@ -262,9 +262,7 @@ EXPECT;
     {
         $this->markTestSkipped('brittle test');
         
-        $form = Solar::factory('Solar_Form', array(
-            'request' => $this->_request,
-        ));
+        $form = Solar::factory('Solar_Form');
         
         $form->setElement(
             'baz',

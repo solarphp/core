@@ -58,7 +58,6 @@ class Solar_Form extends Solar_Base {
      * 
      */
     protected $_Solar_Form = array(
-        'request' => 'request',
         'filter'  => null,
         'success' => null,
         'failure' => null,
@@ -260,10 +259,7 @@ class Solar_Form extends Solar_Base {
         parent::__construct($config);
         
         // request environment
-        $this->_request = Solar::dependency(
-            'Solar_Request',
-            $this->_config['request']
-        );
+        $this->_request = Solar_Registry::get('request');
         
         // filter object
         $this->_filter = Solar::dependency(

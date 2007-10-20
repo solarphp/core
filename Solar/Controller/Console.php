@@ -34,21 +34,19 @@ class Solar_Controller_Console extends Solar_Base {
      * 
      * Keys are:
      * 
-     * `request`
-     * : (dependency) A Solar_Request dependency injection.  Default is
-     *   'request'.
-     * 
      * `classes`
      * : (array) Base class names for commands.
      * 
      * `routing`
      * : (array) An array of commands to class names.
      * 
+     * `default`
+     * : (string) The default command to run.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Controller_Console = array(
-        'request' => 'request',
         'classes' => array('Solar_Cli'),
         'routing' => array(),
         'default' => '',
@@ -84,11 +82,8 @@ class Solar_Controller_Console extends Solar_Base {
         // do the "real" construction
         parent::__construct($config); 
         
-        // inject the request dependency
-        $this->_request = Solar::dependency(
-            'Solar_Request',
-            $this->_config['request']
-        );
+        // get the current request environment
+        $this->_request = Solar_Registry::get('request');
         
         // set convenience vars from config
         $this->_routing = $this->_config['routing'];

@@ -36,9 +36,7 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
     
     protected function _getUri()
     {
-        return Solar::factory('Solar_Uri', array(
-            'request' => $this->_request
-        ));
+        return Solar::factory('Solar_Uri');
     }
     
     public function testCanInstantiateThroughFactory()

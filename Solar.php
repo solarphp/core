@@ -95,11 +95,11 @@ class Solar {
      * [[php::ini_set | ]] key, and the value is the value for that setting.
      * 
      * `locale_class`
-     * : (string) Use this class for the registered 'locale' object. Default
+     * : (string) Use this class for the 'locale' registry object. Default
      *   'Solar_Locale'.
      * 
      * `request_class`
-     * : (string) Use this class for the registered 'request' object. Default
+     * : (string) Use this class for the 'request' registry object. Default
      *   'Solar_Request'.
      * 
      * `start`

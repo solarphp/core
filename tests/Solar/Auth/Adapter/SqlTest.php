@@ -12,9 +12,7 @@ class Solar_Auth_Adapter_SqlTest extends Solar_Auth_AdapterTestCase {
             'Solar_Sql',
             array(
                 'adapter' => 'Solar_Sql_Adapter_Sqlite',
-                'config' => array(
-                    'name' => ':memory:',
-                )
+                'name' => ':memory:',
             )
         );
         

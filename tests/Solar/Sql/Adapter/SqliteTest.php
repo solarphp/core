@@ -6,9 +6,7 @@ class Solar_Sql_Adapter_SqliteTest extends Solar_Sql_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
-        'config' => array(
-            'name' => ':memory:',
-        ),
+        'name' => ':memory:',
     );
     
     protected $_quote_expect = "'\"foo\" bar ''baz'''";

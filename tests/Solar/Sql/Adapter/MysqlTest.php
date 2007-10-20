@@ -6,12 +6,10 @@ class Solar_Sql_Adapter_MysqlTest extends Solar_Sql_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Sql_Adapter_Mysql',
-        'config' => array(
-            'name'   => 'test',
-            'user'   => '',
-            'pass'   => '',
-            'host'   => '127.0.0.1',
-        ),
+        'name'    => 'test',
+        'user'    => '',
+        'pass'    => '',
+        'host'    => '127.0.0.1',
     );
     
     protected $_quote_expect = "'\\\"foo\\\" bar \\'baz\\''";

@@ -8,9 +8,7 @@ class Solar_Cache_Adapter_EacceleratorTest extends Solar_Cache_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Eaccelerator',
-        'config'  => array(
-            'life'   => 7, // 7 seconds
-        ),
+        'life'   => 7, // 7 seconds
     );
     
     public function setup()

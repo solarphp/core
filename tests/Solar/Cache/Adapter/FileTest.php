@@ -8,16 +8,14 @@ class Solar_Cache_Adapter_FileTest extends Solar_Cache_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_File',
-        'config'  => array(
-            'path'   => null, // set in constructor
-            'life'   => 7, // 7 seconds
-        ),
+        'path'   => null, // set in constructor
+        'life'   => 7, // 7 seconds
     );
     
     public function setup()
     {
-        if (is_null($this->_config['config']['path'])) {
-            $this->_config['config']['path'] = Solar_Dir::tmp('/Solar_Cache_Testing/');
+        if (is_null($this->_config['path'])) {
+            $this->_config['path'] = Solar_Dir::tmp('/Solar_Cache_Testing/');
         }
         
         parent::setup();

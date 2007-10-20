@@ -32,10 +32,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * Keys are ...
      * 
-     * `config`
-     * : (array) Construction-time config keys to pass to the adapter
-     *   to override Solar.config.php values.  Default is null.
-     * 
      * `expire`
      * : (int) Authentication lifetime in seconds; zero is
      *   forever.  Default is 14400 (4 hours).

@@ -8,9 +8,7 @@ class Solar_Cache_Adapter_ApcTest extends Solar_Cache_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Apc',
-        'config'  => array(
-            'life'   => 7, // 7 seconds
-        ),
+        'life'   => 7, // 7 seconds
     );
     
     public function setup()

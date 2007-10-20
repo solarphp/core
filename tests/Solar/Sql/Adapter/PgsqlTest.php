@@ -6,10 +6,8 @@ class Solar_Sql_Adapter_PgsqlTest extends Solar_Sql_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Sql_Adapter_Pgsql',
-        'config' => array(
-            'name'   => 'test',
-            'host'   => '127.0.0.1',
-        ),
+        'name'   => 'test',
+        'host'   => '127.0.0.1',
     );
     
     protected $_quote_expect = "'\"foo\" bar ''baz'''";

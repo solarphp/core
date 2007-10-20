@@ -97,7 +97,7 @@ abstract class Solar_Cache_AdapterTestCase extends PHPUnit_Framework_TestCase {
         $data = 'Wile E. Coyote';
         
         // configured from setup
-        $this->assertSame($this->_cache->getLife(), $this->_config['config']['life']);
+        $this->assertSame($this->_cache->getLife(), $this->_config['life']);
         
         // store something
         $this->assertTrue($this->_cache->save($id, $data));

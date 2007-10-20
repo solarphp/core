@@ -8,11 +8,9 @@ class Solar_Cache_Adapter_XcacheTest extends Solar_Cache_AdapterTestCase {
     
     protected $_config = array(
         'adapter' => 'Solar_Cache_Adapter_Xcache',
-        'config'  => array(
-            'life'   => 7, // 7 seconds
-            'user' => 'foo',
-            'pass' => 'bar',
-        ),
+        'life'   => 7, // 7 seconds
+        'user' => 'foo',
+        'pass' => 'bar',
     );
     
     public function setup()

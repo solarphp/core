@@ -72,14 +72,7 @@ class Solar_Log extends Solar_Base {
         $class = $config['adapter'];
         unset($config['adapter']);
         
-        // deprecated: support a 'config' key for the adapter configs.
-        // this was needed for facades, but is not needed for factories.
-        if (isset($config['config'])) {
-            $tmp = $config['config'];
-            unset($config['config']);
-            $config = array_merge($config, (array) $tmp);
-        }
-        
+        // return the factoried adapter object
         return Solar::factory($class, $config);
     }
 }

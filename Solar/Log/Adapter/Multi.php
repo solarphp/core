@@ -76,9 +76,7 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
         'adapters' => array(
             array(
                 'adapter' => 'Solar_Log_Adapter_None',
-                'config'  => array(
-                    'events'  => '*',
-                ),
+                'events'  => '*',
             ),
         ),
     );
@@ -105,17 +103,18 @@ class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
         $events = $this->_config['events'];
         
         // build each sub-adapter
-        foreach ($this->_config['adapters'] as $val) {
+        foreach ($this->_config['adapters'] as $config) {
             
-            // basic config
-            $class = $val['adapter'];
-            $config = empty($val['config']) ? null : $val['config'];
+            // extract adapter class from the config
+            $class = $config['adapter'];
+            unset($config['adapter']);
             
             // use default events?
             if (empty($config['events'])) {
                 $config['events'] = $events;
             }
             
+            // instantiate and retain the adapter
             $this->_adapters[] = Solar::factory($class, $config);
         }
     }

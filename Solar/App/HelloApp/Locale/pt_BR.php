@@ -7,7 +7,7 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_HelloApp
  * 
  * @author Rodrigo Moraes <http://tipos.org>
  * 

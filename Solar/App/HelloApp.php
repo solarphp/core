@@ -7,7 +7,7 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_HelloApp
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -46,7 +46,7 @@ class Solar_App_HelloApp extends Solar_App_Base {
      * @var array
      * 
      */
-    public $list = array('en_US', 'es_ES', 'fr_FR');
+    public $list = array('en_US', 'fr_FR', 'pt_BR');
     
     /**
      * 
@@ -56,7 +56,6 @@ class Solar_App_HelloApp extends Solar_App_Base {
      * 
      */
     public $code;
-    
     
     /**
      * 
@@ -104,6 +103,9 @@ class Solar_App_HelloApp extends Solar_App_Base {
     {
         // set the code from input
         $this->code = $code;
+        if (! $this->code) {
+            $this->code = 'en_US';
+        }
         
         // reset the locale strings to the new code
         Solar_Registry::get('locale')->setCode($this->code);
@@ -129,6 +131,9 @@ class Solar_App_HelloApp extends Solar_App_Base {
     {
         // set the code from input
         $this->code = $code;
+        if (! $this->code) {
+            $this->code = 'en_US';
+        }
         
         // reset the locale strings to the new code
         Solar_Registry::get('locale')->setCode($this->code);

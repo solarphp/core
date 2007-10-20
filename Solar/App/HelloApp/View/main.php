@@ -7,7 +7,7 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_HelloApp
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -22,8 +22,8 @@
 <ul>
     <?php foreach ($this->list as $code): ?>
     <li>
-        <?php echo $this->action("hello/main/$code", $code) ?>
-        (<?php echo $this->action("hello/rss/$code", 'RSS') ?>)
+        <?php echo $this->action("hello-app/main/$code", $code) ?>
+        (<?php echo $this->action("hello-app/rss/$code", 'RSS') ?>)
     </li>
     <?php endforeach ?>
 </ul>

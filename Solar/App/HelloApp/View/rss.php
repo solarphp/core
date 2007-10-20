@@ -7,7 +7,7 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloWorld
+ * @subpackage Solar_App_HelloApp
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -25,7 +25,7 @@ $server = $request->server();
     <channel>
         <title>Solar: Hello World</title>
         <link><?php echo $this->escape($server['REQUEST_URI']) ?></link>
-        <description>Example hello world RSS feed</description>
+        <description>Example hello-app RSS feed</description>
         <pubDate><?php echo $this->date('', DATE_RFC822) ?></pubDate>
         <item>
             <category><?php echo $this->escape($this->code) ?></category>

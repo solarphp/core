@@ -30,10 +30,10 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
     protected $_source;
     
     // target dir for API files
-    protected $_api_dir;
+    protected $_class_dir;
     
     // target dir for package files
-    protected $_pkg_dir;
+    protected $_package_dir;
     
     // summary list of classes
     protected $_classes_list = array();
@@ -67,18 +67,6 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
     {
         parent::_setup();
         
-        // get the source dir
-        $this->_source = $this->_options['source'];
-        if (! $this->_source) {
-            // get the directory where this class is stored
-            $this->_source = Solar_Dir::name(__FILE__, 3);
-        }
-        
-        // get the target API die (if any)
-        $this->_api_dir = Solar_Dir::fix($this->_options['api_dir']);
-        
-        // get the target package dir (if any)
-        $this->_pkg_dir = Solar_Dir::fix($this->_options['pkg_dir']);
     }
 
     /**
@@ -88,13 +76,31 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
      * @return void
      * 
      */
-    public function actionMain()
+    protected function _exec($class = null)
     {
         $begin = time();
         
-        $this->_outln("Parsing source files from '{$this->_source}'...");
+        if (! $class) {
+            $class = 'Solar';
+        }
+        
+        // get the source dir
+        $this->_source = $this->_options['source'];
+        if (! $this->_source) {
+            // get the directory where this class is stored
+            $this->_source = Solar_Dir::name(__FILE__, 2);
+        }
+        
+        // get the target API die (if any)
+        $this->_class_dir = Solar_Dir::fix($this->_options['class-dir']);
+        
+        // get the target package dir (if any)
+        $this->_package_dir = Solar_Dir::fix($this->_options['package-dir']);
+        
+        // start parsing
+        $this->_outln("Parsing source files from '{$this->_source}' ... ");
         $ref = Solar::factory('Solar_Docs_Apiref');
-        $ref->addFiles($this->_source, 'Solar');
+        $ref->addFiles($this->_source, $class);
         
         // import the class data
         $this->api = $ref->api;
@@ -127,7 +133,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
      */
     public function writePackages()
     {
-        $this->_outln("Writing package pages to '{$this->_pkg_dir}':");
+        $this->_outln("Writing package pages to '{$this->_package_dir}':");
         $this->_outln("Writing package class lists:");
         $list = array_keys($this->packages);
         foreach ($list as $package) {
@@ -179,7 +185,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
      */
     public function writeClasses()
     {
-        $this->_out("Writing class pages to '{$this->_api_dir}': ");
+        $this->_outln("Writing class pages to '{$this->_class_dir}':");
         
         foreach ($this->api as $class => $api) {
             
@@ -190,7 +196,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
             }
             
             // write the class home page
-            $this->_out("$class ");
+            $this->_out("$class: ");
             $this->writeClassOverview($class);
             $this->_out('.');
             
@@ -216,7 +222,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
             
             // write the class table-of-contents
             $this->writeClassContents($class);
-            $this->_out(".");
+            $this->_outln(". ;");
             
             // retain the class name and info
             if ($api['summ']) {
@@ -229,7 +235,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
         $this->_outln("Done.");
         
         // write the overall list of classes and summaries.
-        $this->_out("Writing summary list of all classes...");
+        $this->_out("Writing summary list of all classes ... ");
         $this->writeClassesList();
         $this->_outln("done.");
     }
@@ -744,11 +750,11 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base {
     protected function _getFile($type, $file)
     {
         if ($type == 'class') {
-            $file = $this->_api_dir . "$file";
+            $file = $this->_class_dir . "$file";
         }
         
         if ($type == 'package') {
-            $file = $this->_pkg_dir . "$file";
+            $file = $this->_package_dir . "$file";
         }
         
         return $file;

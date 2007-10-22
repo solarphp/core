@@ -24,7 +24,7 @@
  * @package Solar_Cli
  * 
  */
-abstract class Solar_Cli_Base extends Solar_Controller_Command {
+class Solar_Cli_Base extends Solar_Controller_Command {
     
     /**
      * 
@@ -32,14 +32,15 @@ abstract class Solar_Cli_Base extends Solar_Controller_Command {
      * 
      * Extends this class and override _exec() to get real functionality.
      * 
-     * @param string $cmd The requested command.
+     * @args string $cmd The requested command.
      * 
      * @return void
      * 
      */
-    protected function _exec($cmd = null)
+    protected function _exec()
     {
-        if ($cmd) {
+        $args = func_get_args();
+        if ($args) {
             // we use 'null' command because we could have gotten here from
             // using an option or something else first, and a recognized 
             // command later on.  showing that command here would be confusing.

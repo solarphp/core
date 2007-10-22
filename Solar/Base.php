@@ -273,6 +273,11 @@ abstract class Solar_Base {
      */
     protected function _exception($code, $info = array())
     {
+        static $class;
+        if (! $class) {
+            $class = get_class($this);
+        }
+        
         return Solar::exception(
             $class,
             $code,

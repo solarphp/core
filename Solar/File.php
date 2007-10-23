@@ -5,7 +5,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_File
+ * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
@@ -21,7 +21,7 @@
  * 
  * @category Solar
  * 
- * @package Solar_File
+ * @package Solar
  * 
  */
 class Solar_File {

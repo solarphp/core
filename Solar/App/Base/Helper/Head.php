@@ -37,8 +37,10 @@ class Solar_App_Base_Helper_Head extends Solar_View_Helper_Head {
     protected function _fetchScriptInline()
     {
         $code = parent::_fetchScriptInline();
-        $code = str_replace("\n", "\n{$this->_indent}", $code);
-        $code = "\$(document).ready(function() {\n{$this->_indent}$code\n});";
+        if ($code) {
+            $code = str_replace("\n", "\n{$this->_indent}", $code);
+            $code = "\$(document).ready(function() {\n{$this->_indent}$code\n});";
+        }
         return $code;
     }
 }

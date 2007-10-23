@@ -230,6 +230,11 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
         
         // let the view know what layout this is
         $this->layout = $this->_layout;
+        
+        // add an app-specific CSS file
+        $tmp = explode('_', get_class($this));
+        $vendor = $tmp[0];
+        $this->layout_head['style'][] = "{$vendor}/styles/app/{$this->_name}.css";
     }
     
     /**

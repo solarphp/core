@@ -7,12 +7,12 @@ return array(
     ),
     'verbose' => array(
         'long' => 'verbose',
-        'short' => 'V',
+        'short' => 'v',
         'descr' => 'Display verbose output when available.',
     ),
     'version' => array(
         'long' => 'version',
-        'short' => 'v',
+        'short' => 'V',
         'descr' => 'Display version information and exit.',
     ),
 );

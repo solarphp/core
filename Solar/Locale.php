@@ -132,22 +132,23 @@ class Solar_Locale extends Solar_Base {
      * For example:
      * 
      * {{code: php
+     *     
+     *     $locale = Solar_Registry('locale');
+     *     
      *     $page  = 2;
      *     $pages = 10;
      *     
      *     // given a class of 'Solar_Example' with a locale string
      *     // TEXT_PAGES => 'Page %d of %d', uses vsprintf() internally:
      *     $replace = array($page, $pages);
-     *     echo Solar::$locale->fetch('Solar_Example', 'TEXT_PAGES',
-     *         $pages, $replace);
+     *     echo $locale->fetch('Solar_Example', 'TEXT_PAGES', $pages, $replace);
      *     // echo "Page 2 of 10"
      *     
      *     // given a class of 'Solar_Example' with a locale string
      *     // TEXT_PAGES => 'Page {:page} of {:pages}', uses str_replace()
      *     // internally:
      *     $replace = array('page' => $page, 'pages' => $pages);
-     *     echo Solar::$locale->fetch('Solar_Example', 'TEXT_PAGES',
-     *         $pages, $replace);
+     *     echo $locale->fetch('Solar_Example', 'TEXT_PAGES', $pages, $replace);
      *     // echo "Page 2 of 10"
      * }}
      * 

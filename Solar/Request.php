@@ -21,34 +21,7 @@
  * 
  * Class for gathering details about the request environment.
  * 
- * Which keys can be tampered with for XSS insertions?
- * 
- * For SERVER ...
- * 
- * - All HTTP_* keys
- * 
- * - QUERY_STRING
- * 
- * - REQUEST_URI
- * 
- * - SERVER_NAME
- * 
- * - PHP_SELF
- * 
- * - PATH_TRANSLATED
- * 
- * - PATH_INFO
- * 
- * - argv
- * 
- * - PHP_AUTH_USER
- * 
- * - PHP_AUTH_PW
- * 
- * - REMOTE_HOST is usually the result of a DNS lookup made by
- *   the webserver, so it's much harder to insert XSS.
- * 
- * For FILES, the 'name' and 'type' keys for each file entry.
+ * To be safe, treat everything in the superglobals as tainted.
  * 
  * @category Solar
  * 
@@ -147,8 +120,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$get]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$get]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $get key to retrieve the value of.
      * 
@@ -165,8 +138,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$post]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$post]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $post key to retrieve the value of.
      * 
@@ -183,8 +156,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$cookie]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$cookie]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $cookie key to retrieve the value of.
      * 
@@ -201,8 +174,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$env]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$env]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $env key to retrieve the value of.
      * 
@@ -219,8 +192,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$server]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$server]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $server key to retrieve the value of.
      * 
@@ -237,8 +210,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$files]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$files]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $files key to retrieve the value of.
      * 
@@ -255,8 +228,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$argv]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$argv]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $argv key to retrieve the value of.
      * 
@@ -273,8 +246,8 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Retrieves a value by key from the [[$http]] property, or an alternate
-     * default value if that key does not exist.
+     * Retrieves an **unfiltered** value by key from the [[$http]] property,
+     * or an alternate default value if that key does not exist.
      * 
      * @param string $key The $http key to retrieve the value of.
      * 

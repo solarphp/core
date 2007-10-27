@@ -599,8 +599,10 @@ class Solar_Filter extends Solar_Base {
                 // take the method name off the top of the params ...
                 $method = array_shift($params);
                 
-                // ... and put the value in its place.
-                array_unshift($params, $val);
+                // ... and put the value in its place. we use the
+                // $data[$key] instead of $val so that the data
+                // array itself is updated, not the local-scope $val.
+                array_unshift($params, $this->_data[$key]);
                 
                 // call the filtering method
                 $result = $this->__call($method, $params);
@@ -658,7 +660,6 @@ class Solar_Filter extends Solar_Base {
         if ($msg === null || $msg == $key) {
             $msg = $this->locale($key);
         }
-        
         
         // done
         return $msg;

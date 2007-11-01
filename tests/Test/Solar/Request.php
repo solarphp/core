@@ -79,7 +79,7 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Request');
+        $obj = Solar_Registry::get('request');
         $this->assertInstance($obj, 'Solar_Request');
     }
     

@@ -238,7 +238,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * {{code: php
      *     // create a request object
-     *     $request = Solar::factory('Solar_Request');
+     *     $request = Solar_Registry::get('request');
      *     
      *     // get the request URI as an identifier
      *     $id = $request->server('REQUEST_URI');
@@ -264,7 +264,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * {{code: php
      *     // create a request object
-     *     $request = Solar::factory('Solar_Request');
+     *     $request = Solar_Registry::get('request');
      *     
      *     // create an entry ID named for the current URI
      *     $id = $request->server('REQUEST_URI');
@@ -309,7 +309,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * {{code: php
      *     // create a request object
-     *     $request = Solar::factory('Solar_Request');
+     *     $request = Solar_Registry::get('request');
      *     
      *     // create an entry ID named for the current URI
      *     $id = $request->server('REQUEST_URI');

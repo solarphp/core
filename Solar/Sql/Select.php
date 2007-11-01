@@ -250,7 +250,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds a FROM table and columns to the query.
      * 
-     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * @param string|object $spec If a Solar_Sql_Model object, the table
      * to select from; if a string, the table name to select from.
      * 
      * @param array|string $cols The columns to select from this table.
@@ -261,14 +261,14 @@ class Solar_Sql_Select extends Solar_Base {
     public function from($spec, $cols = null)
     {
         // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Table) {
+        if ($spec instanceof Solar_Sql_Model) {
             
             // get the table name
-            $name = $spec->name;
+            $name = $spec->table_name;
             
             // add all columns?
             if ($cols == '*') {
-                $cols = array_keys($spec->col);
+                $cols = array_keys($spec->table_cols);
             }
             
         } else {
@@ -339,7 +339,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds a JOIN table and columns to the query.
      * 
-     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * @param string|object $spec If a Solar_Sql_Model object, the table
      * to join to; if a string, the table name to join to.
      * 
      * @param string $cond Join on this condition.
@@ -359,7 +359,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds a LEFT JOIN table and columns to the query.
      * 
-     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * @param string|object $spec If a Solar_Sql_Model object, the table
      * to join to; if a string, the table name to join to.
      * 
      * @param string $cond Join on this condition.
@@ -379,7 +379,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds an INNER JOIN table and columns to the query.
      * 
-     * @param string|object $spec If a Solar_Sql_Table object, the table
+     * @param string|object $spec If a Solar_Sql_Model object, the table
      * to join to; if a string, the table name to join to.
      * 
      * @param string $cond Join on this condition.
@@ -1223,7 +1223,7 @@ class Solar_Sql_Select extends Solar_Base {
      * @param string $type The type of join; empty for a plain JOIN, or
      * "LEFT", "INNER", etc.
      * 
-     * @param string|Solar_Sql_Table $spec If a Solar_Sql_Table
+     * @param string|Solar_Sql_Model $spec If a Solar_Sql_Model
      * object, the table to join to; if a string, the table name to
      * join to.
      * 
@@ -1238,14 +1238,14 @@ class Solar_Sql_Select extends Solar_Base {
     protected function _join($type, $spec, $cond, $cols)
     {
         // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Table) {
+        if ($spec instanceof Solar_Sql_Model) {
             
             // get the table name
-            $name = $spec->name;
+            $name = $spec->table_name;
             
             // add all columns?
             if ($cols == '*') {
-                $cols = array_keys($spec->col);
+                $cols = array_keys($spec->table_cols);
             }
             
         } else {

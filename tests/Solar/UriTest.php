@@ -15,7 +15,7 @@ class Solar_UriTest extends PHPUnit_Framework_TestCase
         
         // when running from the command line, these elements are empty.
         // add them so that web-like testing can occur.
-        $this->_request = Solar::factory('Solar_Request');
+        $this->_request = Solar_Registry::get('request');
         $this->_request->server['HTTP_HOST']  = 'example.com';
         $this->_request->server['SCRIPT_NAME']  = '/path/to/index.php';
         $this->_request->server['PATH_INFO']    = '/appname/action';

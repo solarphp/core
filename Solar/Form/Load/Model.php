@@ -28,9 +28,9 @@ class Solar_Form_Load_Model extends Solar_Base {
     
     /**
      * 
-     * Loads Solar_Form elements based on Solar_Sql_Table columns.
+     * Loads Solar_Form elements based on Solar_Sql_Model columns.
      * 
-     * @param Solar_Sql_Table $model Load form elements from this model object.
+     * @param Solar_Sql_Model $model Load form elements from this model object.
      * 
      * @param array $list Which model columns to load as form elements, default '*'.
      * 

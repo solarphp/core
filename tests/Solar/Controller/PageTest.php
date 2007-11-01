@@ -34,7 +34,7 @@ class Solar_Controller_PageTest extends PHPUnit_Framework_TestCase
         Solar::start('config.inc.php');
         
         // load the request environment
-        $this->_request = Solar::factory('Solar_Request');
+        $this->_request = Solar_Registry::get('request');
         
         // set up the example page controller object
         $this->_page = Solar::factory('Solar_Example_Controller_Page');

@@ -37,7 +37,7 @@ class Solar_Form_Load_Model extends Solar_Base {
      * @param string $array_name Load the model columns as elements of this
      * array-name within the form.
      * 
-     * @return Solar_Form|false Solar_Form object, or boolean false on error.
+     * @return array An array of form attributes and elements.
      * 
      */
     public function fetch($model, $list = '*', $array_name = null)

@@ -1,7 +1,10 @@
 <?php
 /**
  * 
- * Pseudo-transport that just prints the message headers and content.
+ * Pseudo-transport that does nothing at all.
+ * 
+ * Useful for some kinds of tests, and for "turning off" mail sending in some
+ * cases.
  * 
  * @category Solar
  * 
@@ -12,19 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Pseudo-transport that does nothing at all.
- * 
- * Useful for some kinds of tests, and for "turning off" mail sending in some
- * cases.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
  * 
  */
 class Solar_Mail_Transport_Adapter_None extends Solar_Mail_Transport_Adapter {

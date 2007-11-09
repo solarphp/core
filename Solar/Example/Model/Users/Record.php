@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a single user record.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_Users_Record extends Solar_Sql_Model_Record {
 }

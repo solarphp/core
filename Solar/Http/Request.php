@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Factory to return an HTTP request adapter instance.
- * 
- * @category Solar
- * 
- * @package Solar_Http
- * 
- */
 class Solar_Http_Request extends Solar_Base {
     
     /**

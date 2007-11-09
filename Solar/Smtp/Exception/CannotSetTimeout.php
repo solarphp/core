@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Cannot set the communication timeout.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
-
 class Solar_Smtp_Exception_CannotSetTimeout extends Solar_Smtp_Exception {}

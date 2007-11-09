@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example for testing a model of content "nodes".
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_Nodes extends Solar_Sql_Model {
     
     /**

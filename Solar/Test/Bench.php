@@ -3,6 +3,9 @@
  * 
  * Class for benchmarking the speed of different methods.
  * 
+ * Benchmark methods are prefixed with "bench" and are automatically
+ * run $loops number of times when you call Solar_Test_Bench::run($loops).
+ * 
  * @category Solar
  * 
  * @package Solar_Test
@@ -12,19 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for benchmarking the speed of different methods.
- * 
- * Benchmark methods are prefixed with "bench" and are automatically
- * run $loops number of times when you call Solar_Test_Bench::run($loops).
- * 
- * @category Solar
- * 
- * @package Solar_Test
  * 
  */
 class Solar_Test_Bench extends Solar_Base {

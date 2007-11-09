@@ -3,26 +3,6 @@
  * 
  * Span plugin to place image tags.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin to place image tags.
- * 
  * Syntax is the same as the Link plugin, except you prefix with `!` to 
  * indicate an image instead of an anchor.
  * 
@@ -36,6 +16,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Plugin_Image extends Solar_Markdown_Plugin {

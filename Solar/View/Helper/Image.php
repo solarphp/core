@@ -15,16 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper to generate an <img ... /> tag.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_Image extends Solar_View_Helper {
     
     /**

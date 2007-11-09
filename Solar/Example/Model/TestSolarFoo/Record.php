@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a single "foo" record.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_TestSolarFoo_Record extends Solar_Sql_Model_Record {
 }

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for locale strings, with escaping.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_GetText extends Solar_View_Helper {
     
     /**

@@ -3,22 +3,6 @@
  * 
  * Block plugin to for method synopsis markup.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to for method synopsis markup.
- * 
  *     {{method: methodName
  *        @access level
  *        @param  type
@@ -32,6 +16,12 @@
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Wiki_MethodSynopsis extends Solar_Markdown_Plugin {

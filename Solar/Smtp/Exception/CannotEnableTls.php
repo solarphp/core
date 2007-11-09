@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Cannot establish TLS connection with the server.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
-
 class Solar_Smtp_Exception_CannotEnableTls extends Solar_Smtp_Exception {}

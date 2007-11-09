@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for MySQL behaviors.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**

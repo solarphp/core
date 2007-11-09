@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Top-level abstract class for models in Solar applications.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 abstract class Solar_Model extends Solar_Sql_Model {
 }

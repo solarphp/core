@@ -3,26 +3,6 @@
  * 
  * Plugin-aware text-to-XHTML converter based on Markdown.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Plugin-aware text-to-XHTML converter based on Markdown.
- * 
  * This package is ported from John Gruber's [Markdown][] script in Perl,
  * with many thanks to Michel Fortin for his [PHP Markdown][] port to
  * PHP 4.  Be sure to read up on [Markdown syntax][] as well.
@@ -47,6 +27,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo How to configure plugins at the start?
  * 

@@ -18,16 +18,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Pre-filters source text in the preparation phase.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_Prefilter extends Solar_Markdown_Plugin {
     
     /**

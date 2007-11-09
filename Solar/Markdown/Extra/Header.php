@@ -3,26 +3,6 @@
  * 
  * Block plugin to convert Markdown headers into XHTML headers.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Extra
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to convert Markdown headers into XHTML headers.
- * 
  * This plugin is just like the normal Markdown header plugin, but lets
  * you set an ID on the header using {#id-word} after the header text.
  * 
@@ -45,6 +25,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown_Extra
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {

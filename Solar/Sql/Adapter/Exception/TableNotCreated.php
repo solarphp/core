@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Exception: table not created.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql_Adapter_Exception_TableNotCreated extends Solar_Sql_Adapter_Exception {}

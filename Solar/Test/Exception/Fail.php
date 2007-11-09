@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Exception to note a failed test.
- * 
- * @category Solar
- * 
- * @package Solar_Test
- * 
- */
 class Solar_Test_Exception_Fail extends Solar_Test_Exception {}

@@ -3,6 +3,8 @@
  * 
  * Handler for validating and sanitizing user input.
  * 
+ * Includes one-off filtering as well as filter chains for flat data arrays.
+ * 
  * @category Solar
  * 
  * @package Solar_Filter
@@ -14,18 +16,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Handler for validating and sanitizing user input.
- * 
- * Includes one-off filtering as well as filter chains for flat data arrays.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
  * 
  */
 class Solar_Filter extends Solar_Base {

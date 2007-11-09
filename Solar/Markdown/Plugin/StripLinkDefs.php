@@ -3,6 +3,12 @@
  * 
  * Strips named-link definitions in the preparation phase.
  * 
+ * This is in support of the Link and Image plugins.
+ * 
+ * A named link reference looks like this ...
+ * 
+ *     [name]: http://example.com "Optional Title"
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown
@@ -16,22 +22,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Strips named-link definitions in the preparation phase.
- * 
- * This is in support of the Link and Image plugins.
- * 
- * A named link reference looks like this ...
- * 
- *     [name]: http://example.com "Optional Title"
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
  * 
  */
 class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {

@@ -19,17 +19,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Span plugin to add <br /> tags to each line ending with two or more
- * spaces.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_Break extends Solar_Markdown_Plugin {
     
     /**

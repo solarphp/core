@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a single record from the "areas" model.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Areas_Record extends Solar_Model_Record {}

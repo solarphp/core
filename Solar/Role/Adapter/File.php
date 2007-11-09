@@ -3,6 +3,12 @@
  * 
  * Adapter to fetch roles from a Unix-style groups file.
  * 
+ * The file format is "group:user1,user2,user3\n".
+ * 
+ *     sysadmin:pmjones
+ *     writer:pmjones,boshag,agtsmith
+ *     editor:pmjones,agtsmith
+ * 
  * @category Solar
  * 
  * @package Solar_Role
@@ -14,22 +20,6 @@
  * @version $Id$
  * 
  * @todo rename to Unix, add Ini file handler as well
- * 
- */
-
-/**
- * 
- * Adapter to fetch roles from a Unix-style groups file.
- * 
- * The file format is "group:user1,user2,user3\n".
- * 
- *     sysadmin:pmjones
- *     writer:pmjones,boshag,agtsmith
- *     editor:pmjones,agtsmith
- * 
- * @category Solar
- * 
- * @package Solar_Role
  * 
  */
 class Solar_Role_Adapter_File extends Solar_Role_Adapter {

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A model of content "nodes" (individual pieces of content).
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Nodes extends Solar_Model {
     
     /**

@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a single describe-table record.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_TestSolarSqlDescribe_Record extends Solar_Sql_Model_Record {
 }

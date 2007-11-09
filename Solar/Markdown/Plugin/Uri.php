@@ -3,26 +3,6 @@
  * 
  * Span plugin to create anchors from inline URIs.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin to create anchors from inline URIs.
- * 
  * Syntax looks like this ...
  * 
  *     <http://example.com>
@@ -40,6 +20,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Plugin_Uri extends Solar_Markdown_Plugin {

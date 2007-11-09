@@ -3,6 +3,11 @@
  * 
  * Solar port of Markdown-Extra by Michel Fortin.
  * 
+ * This class implements a plugin set for the Markdown-Extra syntax;
+ * be sure to visit the [Markdown-Extra][] site for syntax examples.
+ * 
+ * [Markdown-Extra]: http://www.michelf.com/projects/php-markdown/extra/
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown_Extra
@@ -14,21 +19,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Solar port of Markdown-Extra by Michel Fortin.
- * 
- * This class implements a plugin set for the Markdown-Extra syntax;
- * be sure to visit the [Markdown-Extra][] site for syntax examples.
- * 
- * [Markdown-Extra]: http://www.michelf.com/projects/php-markdown/extra/
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Extra
  * 
  * @todo Implement the markdown-in-html portion of Markdown-Extra.
  * 

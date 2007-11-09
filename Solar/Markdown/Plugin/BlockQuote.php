@@ -18,16 +18,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Block plugin to convert email-style blockquotes to <blockquote> tags.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_BlockQuote extends Solar_Markdown_Plugin {
     
     /**

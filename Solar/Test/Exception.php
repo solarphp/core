@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Test exception.
- * 
- * @category Solar
- * 
- * @package Solar_Test
- * 
- */
 class Solar_Test_Exception extends Solar_Exception {}

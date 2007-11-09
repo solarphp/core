@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a collection of "test_solar_foo" records.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_TestSolarFoo_Collection extends Solar_Sql_Model_Collection {
 }

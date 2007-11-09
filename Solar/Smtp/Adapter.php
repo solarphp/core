@@ -6,6 +6,8 @@
  * Heavily modified and refactored from the Zend_Protocol_Smtp package and
  * related classes.
  * 
+ * Concrete classes should implement the auth() method.
+ * 
  * @category Solar
  * 
  * @package Solar_Smtp
@@ -15,18 +17,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Abstract SMTP adapter.
- * 
- * Concrete classes should implement the auth() method.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
  * 
  */
 abstract class Solar_Smtp_Adapter extends Solar_Base {

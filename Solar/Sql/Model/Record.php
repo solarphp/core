@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents a single record returned from a Solar_Sql_Model.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
- */
 class Solar_Sql_Model_Record extends Solar_Struct
 {
     /**

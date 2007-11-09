@@ -3,22 +3,6 @@
  * 
  * Manipulates and generates URI strings.
  * 
- * @category Solar
- * 
- * @package Solar_Uri
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Manipulates and generates URI strings.
- * 
  * This class helps you to create and manipulate URIs, including query
  * strings and path elements. It does so by splitting up the pieces of the
  * URI and allowing you modify them individually; you can then then fetch
@@ -127,6 +111,12 @@
  * @category Solar
  * 
  * @package Solar_Uri
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Uri extends Solar_Base {

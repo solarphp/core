@@ -3,6 +3,9 @@
  * 
  * Helper for building CSS-based forms.
  * 
+ * This is a fluent class; all method calls except fetch() return
+ * $this, which means you can chain method calls for easier readability.
+ * 
  * @category Solar
  * 
  * @package Solar_View_Helper_Form
@@ -12,21 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Helper for building CSS-based forms.
- * 
- * This is a fluent class; all method calls except fetch() return
- * $this, which means you can chain method calls for easier readability.
- * 
- * @category Solar
- * 
- * @package Solar_View_Helper_Form
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
 class Solar_View_Helper_Form extends Solar_View_Helper {

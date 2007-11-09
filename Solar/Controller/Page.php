@@ -58,7 +58,6 @@
  * @version $Id$
  * 
  */
-
 abstract class Solar_Controller_Page extends Solar_Base {
     
     /**

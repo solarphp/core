@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Helper for a formatted timestamp using date() format codes.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * Helper for a formatted timestamp using [[php::date() | ]] format codes.
  * 
  * Default format is "Y-m-d H:i:s".
@@ -46,6 +30,10 @@
  * @package Solar_View
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_View_Helper_Timestamp extends Solar_View_Helper {

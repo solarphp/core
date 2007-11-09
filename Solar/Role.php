@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for reading user roles and groups.
- * 
- * @category Solar
- * 
- * @package Solar_Role
- * 
- */
 class Solar_Role extends Solar_Base {
     
     /**

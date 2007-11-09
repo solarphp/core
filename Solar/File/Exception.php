@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic file exception.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_File_Exception extends Solar_Exception {}

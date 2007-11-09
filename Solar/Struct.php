@@ -3,22 +3,6 @@
  * 
  * Greatly simplified one-dimensional array object.
  * 
- * @category Solar
- * 
- * @package Solar
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Greatly simplified one-dimensional array object.
- * 
  * Using this class, you can access data using both array notation
  * ($foo['bar']) and object notation ($foo->bar).  This helps with 
  * moving data among form objects, view helpers, SQL objects, etc.
@@ -81,6 +65,12 @@
  * @category Solar
  * 
  * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterator {

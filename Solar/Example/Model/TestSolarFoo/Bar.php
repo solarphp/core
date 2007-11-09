@@ -14,15 +14,5 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example for testing a "bar" model (inherited from test_solar_foo).
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_TestSolarFoo_Bar extends Solar_Example_Model_TestSolarFoo {
 }

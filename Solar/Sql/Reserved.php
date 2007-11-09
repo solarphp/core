@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * List of all reserved words for all supported databases.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql_Reserved {
     
     /**

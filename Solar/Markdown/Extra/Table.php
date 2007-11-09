@@ -3,24 +3,6 @@
  * 
  * Block class to form tables from Markdown syntax.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Extra
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block class to form tables from Markdown syntax.
- * 
  * Syntax is ...
  * 
  *     |  Header 1  |  Header 2  |  Header N 
@@ -40,10 +22,17 @@
  *     | data cell    | data cell | data cell      
  *     | data cell    | data cell | data cell      
  * 
- * 
  * @category Solar
  * 
  * @package Solar_Markdown_Extra
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Extra_Table extends Solar_Markdown_Plugin {

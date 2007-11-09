@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Block plugin to change indented text to <pre><code>...</code></pre>
- * blocks, with code colorization.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- */
 class Solar_Markdown_Wiki_ColorCodeBlock extends Solar_Markdown_Plugin {
     
     /**

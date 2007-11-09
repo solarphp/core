@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Adapter to fetch roles from an LDAP server.
- * 
- * @category Solar
- * 
- * @package Solar_Role
- * 
- */
 class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
     
     /**

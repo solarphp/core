@@ -16,16 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class to build an email message for sending through a transport.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Message extends Solar_Base {
     
     /**

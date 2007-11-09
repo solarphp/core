@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A model of nodes used as bookmarks.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Nodes_Bookmarks extends Solar_Model_Nodes {
     
     /**

@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic mail-message exception.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Exception extends Solar_Exception {}
-

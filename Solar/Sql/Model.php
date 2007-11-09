@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * An SQL-centric Model class combining TableModule and TableDataGateway,
- * using a Collection of Record objects for returns.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
- */
 abstract class Solar_Sql_Model extends Solar_Base
 {
     /**

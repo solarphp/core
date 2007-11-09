@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Exception class.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql_Adapter_Exception extends Solar_Sql_Exception {}

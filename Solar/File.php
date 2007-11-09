@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Utility class for static file methods.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_File {
     
     /**

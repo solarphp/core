@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for <link rel="stylesheet"> tags.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_LinkStylesheet extends Solar_View_Helper {
     
     /**

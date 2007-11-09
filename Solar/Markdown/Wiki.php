@@ -3,6 +3,11 @@
  * 
  * Markdown engine rules for wiki markup.
  * 
+ * This class implements a plugin set for the Markdown-Extra syntax;
+ * be sure to visit the [Markdown-Extra][] site for syntax examples.
+ * 
+ * [Markdown-Extra]: http://www.michelf.com/projects/php-markdown/extra/
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki
@@ -12,21 +17,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Markdown engine rules for wiki markup.
- * 
- * This class implements a plugin set for the Markdown-Extra syntax;
- * be sure to visit the [Markdown-Extra][] site for syntax examples.
- * 
- * [Markdown-Extra]: http://www.michelf.com/projects/php-markdown/extra/
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
  * 
  * @todo Implement the markdown-in-html portion of Markdown-Extra.
  * 

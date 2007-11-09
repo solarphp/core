@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * SMTP adapter with no authentication.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
 class Solar_Smtp_Adapter_NoAuth extends Solar_Smtp_Adapter {
     
     /**

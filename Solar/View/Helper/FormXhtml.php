@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for raw XHTML pseudo-element.
- * 
- * @category Solar
- * 
- * @package Solar_View_Helper_Form
- * 
- * @author Clay Loveless <clay@killersoft.com>
- * 
- */
 class Solar_View_Helper_FormXhtml extends Solar_View_Helper_FormElement {
     
     /**

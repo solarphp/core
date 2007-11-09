@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example for testing a "describe-table" model.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_TestSolarSqlDescribe extends Solar_Sql_Model {
     
     /**

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example for testing Solar class-to-file hierarchy, locales, and exceptions.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Exception extends Solar_Test_Exception {}

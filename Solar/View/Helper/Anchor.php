@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for anchor href tags, with built-in text translation.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_Anchor extends Solar_View_Helper {
     
     /**

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for inline JavaScript blocks.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_ScriptInline extends Solar_View_Helper {
     
     /**

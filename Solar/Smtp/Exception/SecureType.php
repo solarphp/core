@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * The requested "secure" type is not recognized.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
-
 class Solar_Smtp_Exception_SecureType extends Solar_Smtp_Exception {}

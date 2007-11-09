@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Mail-transport adapter using an SMTP connection.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter {
     
     /**

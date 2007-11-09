@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract log adapter class.
- * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- */
 abstract class Solar_Log_Adapter extends Solar_Base {
     
     /**

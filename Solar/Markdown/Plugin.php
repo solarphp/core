@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract class for Markdown plugins.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 abstract class Solar_Markdown_Plugin extends Solar_Base {
     
     /**

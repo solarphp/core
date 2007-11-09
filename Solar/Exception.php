@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic exception class.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Exception extends Exception {
     
     /**

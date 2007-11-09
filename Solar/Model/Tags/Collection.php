@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A collection of records from the "tags" model.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Tags_Collection extends Solar_Model_Collection {
     
     /**

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Exception: file was not readable, or does not exist.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_File_Exception_NotReadable extends Solar_File_Exception {}

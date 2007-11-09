@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * MIME utility methods for mail messages and HTTP requests.
- * 
- * @category Solar
- * 
- * @package Solar_Mime
- * 
- */
 class Solar_Mime {
     
     /**

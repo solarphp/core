@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic SMTP exception.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
 class Solar_Smtp_Exception extends Solar_Exception {}

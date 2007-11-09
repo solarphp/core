@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Span plugin to escape HTML remaining the span.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- */
 class Solar_Markdown_Wiki_Escape extends Solar_Markdown_Plugin {
     
     /**

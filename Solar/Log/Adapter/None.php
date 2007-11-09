@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Log adapter to ignore all messages.
- * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- */
 class Solar_Log_Adapter_None extends Solar_Log_Adapter {
     
     /**

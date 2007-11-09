@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * There was no response from the server.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
-
 class Solar_Smtp_Exception_NoResponse extends Solar_Smtp_Exception {}

@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for a formatted date using [[php::date() | ]] format codes.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- */
 class Solar_View_Helper_Date extends Solar_View_Helper_Timestamp {
     
     /**

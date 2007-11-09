@@ -13,16 +13,6 @@
  * 
  * @version $Id$
  * 
- */
-
-/**
- * 
- * Represents a collection of Solar_Sql_Model_Record objects.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
  * @todo Implement an internal unit-of-work status registry so that we can 
  * handle mass insert/delete without hitting the database unnecessarily.
  * 

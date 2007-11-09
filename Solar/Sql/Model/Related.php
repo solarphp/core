@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract class to represent the characteristics of a related model.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
- */
 abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**

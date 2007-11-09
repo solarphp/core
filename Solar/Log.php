@@ -3,22 +3,6 @@
  * 
  * Factory for a log adapter.
  * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Factory for a log adapter.
- * 
  * {{code: php
  *     // example setup of a single adapter
  *     $config = array(
@@ -37,6 +21,12 @@
  * @category Solar
  * 
  * @package Solar_Log
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Log extends Solar_Base {

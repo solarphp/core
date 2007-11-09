@@ -15,16 +15,6 @@
  * 
  * @version $Id$
  * 
- */
-
-/**
- * 
- * Retrieves and validates command-line options and parameter values.
- * 
- * @category Solar
- * 
- * @package Solar_Getopt
- * 
  * @todo Add load() method similar to Solar_Form::load(), for loading from 
  * external XML, PHP array, etc. files.
  * 

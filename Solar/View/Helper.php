@@ -14,17 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract Solar_View_Helper class.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
-
 abstract class Solar_View_Helper extends Solar_Base {
     
     /**

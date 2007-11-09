@@ -3,26 +3,6 @@
  * 
  * Block plugin to convert Markdown headers into XHTML headers.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to convert Markdown headers into XHTML headers.
- * 
  * For Setext-style headers, this code ...
  * 
  *     Header 1
@@ -57,6 +37,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Plugin_Header extends Solar_Markdown_Plugin {

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * One or more column properties failed validation.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
- */
 class Solar_Sql_Model_Record_Exception_Invalid extends Solar_Sql_Model_Record_Exception {}

@@ -3,6 +3,9 @@
  * 
  * Span plugin to encode backslashed Markdown characters.
  * 
+ * For example, `\*foo\*` will not be parsed as an emphasis span;
+ * instead, it will show up as a literal `*foo*` in the text.
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown
@@ -16,19 +19,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin to encode backslashed Markdown characters.
- * 
- * For example, `\*foo\*` will not be parsed as an emphasis span;
- * instead, it will show up as a literal `*foo*` in the text.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
  * 
  */
 class Solar_Markdown_Plugin_Encode extends Solar_Markdown_Plugin {

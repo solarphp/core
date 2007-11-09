@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Adapter to fetch roles from an SQL database table.
- * 
- * @category Solar
- * 
- * @package Solar_Role
- * 
- */
 class Solar_Role_Adapter_Sql extends Solar_Role_Adapter {
     
     /**

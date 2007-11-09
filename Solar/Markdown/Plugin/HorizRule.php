@@ -3,6 +3,9 @@
  * 
  * Block plugin to add horizontal rule tags.
  * 
+ * Start a line with three or more `*`, `-`, or `_` characters.  You can
+ * have spaces between them if you like.
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown
@@ -16,19 +19,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to add horizontal rule tags.
- * 
- * Start a line with three or more `*`, `-`, or `_` characters.  You can
- * have spaces between them if you like.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
  * 
  */
 class Solar_Markdown_Plugin_HorizRule extends Solar_Markdown_Plugin {

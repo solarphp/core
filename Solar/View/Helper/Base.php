@@ -7,19 +7,11 @@
  * 
  * @package Solar_View
  * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Helper for base tags.
- * 
- * @category Solar
- * 
- * @package Solar_View
  * 
  */
 class Solar_View_Helper_Base extends Solar_View_Helper {

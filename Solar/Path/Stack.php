@@ -3,6 +3,10 @@
  * 
  * Stack for finding files in user-defined path hierarchies.
  * 
+ * As you add directory paths, they are searched first when you call
+ * find($file).  This allows users to add override paths so their files will
+ * be used instead of default files.
+ * 
  * @category Solar
  * 
  * @package Solar
@@ -12,20 +16,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Stack for finding files in user-defined path hierarchies.
- * 
- * As you add directory paths, they are searched first when you call
- * find($file).  This allows users to add override paths so their files will
- * be used instead of default files.
- * 
- * @category Solar
- * 
- * @package Solar
  * 
  */
 class Solar_Path_Stack {

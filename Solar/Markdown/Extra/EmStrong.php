@@ -3,6 +3,9 @@
  * 
  * Span plugin to insert emphasis and strong tags.
  * 
+ * Differs from default Markdown in that underscores and stars inside a
+ * word will not trigger the markup.
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown_Extra
@@ -16,19 +19,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin to insert emphasis and strong tags.
- * 
- * Differs from default Markdown in that underscores and stars inside a
- * word will not trigger the markup.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Extra
  * 
  */
 class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {

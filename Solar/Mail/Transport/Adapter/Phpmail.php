@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Mail-transport adapter using PHP's mail() function.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Transport_Adapter_Phpmail extends Solar_Mail_Transport_Adapter {
     
     /**

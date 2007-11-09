@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic Solar_View exception.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Exception extends Solar_Exception {}

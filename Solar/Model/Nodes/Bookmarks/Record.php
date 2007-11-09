@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A single record from the "bookmarks" model.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Nodes_Bookmarks_Record extends Solar_Model_Nodes_Record {
     
     /**

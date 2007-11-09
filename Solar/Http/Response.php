@@ -3,22 +3,6 @@
  * 
  * Generic HTTP response object for sending headers, cookies, and content.
  * 
- * @category Solar
- * 
- * @package Solar_Http
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Generic HTTP response object for sending headers, cookies, and content.
- * 
  * This is a fluent class; the set() methods can be chained together like so:
  * 
  * {{code: php
@@ -29,9 +13,16 @@
  *              ->setContent('Page not found.')
  *              ->display();
  * }}
+ * 
  * @category Solar
  * 
  * @package Solar_Http
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo Add charset param so that headers get sent with right encoding?
  * 

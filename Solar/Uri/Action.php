@@ -3,22 +3,6 @@
  * 
  * Manipulates and generates action URI strings.
  * 
- * @category Solar
- * 
- * @package Solar_Uri
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Manipulates and generates action URI strings.
- * 
  * This class is functionally identical to Solar_Uri, except that it
  * automatically adds a prefix to the "path" portion of all URIs.  This
  * makes it easy to work with front-controller and page-controller URIs.
@@ -29,6 +13,12 @@
  * @category Solar
  * 
  * @package Solar_Uri
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Uri_Action extends Solar_Uri {

@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Plugin to convert an associative array to a string of tag attributes.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- */
 class Solar_View_Helper_Attribs extends Solar_View_Helper {
     
     /**

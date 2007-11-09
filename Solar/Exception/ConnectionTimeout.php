@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Exception: connection to a resource timed out.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Exception_ConnectionTimeout extends Solar_Exception {}

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Registry for storing objects, with built-in lazy loading.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Registry {
     
     /**

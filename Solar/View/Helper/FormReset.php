@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for a 'reset' button.
- * 
- * @category Solar
- * 
- * @package Solar_View_Helper_Form
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- */
 class Solar_View_Helper_FormReset extends Solar_View_Helper_FormElement {
     
     /**

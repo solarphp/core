@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Helper for a formatted time using date() format codes.
+ * Helper for a formatted time using [[php::date() | ]] format codes.
  * 
  * @category Solar
  * 
@@ -12,18 +12,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Helper for a formatted time using [[php::date() | ]] format codes.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  */
 class Solar_View_Helper_Time extends Solar_View_Helper_Timestamp {

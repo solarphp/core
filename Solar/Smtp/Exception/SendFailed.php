@@ -14,15 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Sending a command line to the server failed.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
-
 class Solar_Smtp_Exception_SendFailed extends Solar_Smtp_Exception {}

@@ -3,22 +3,6 @@
  * 
  * Log adapter to save one event in multiple logs.
  * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Log adapter to echo messages directly.
- * 
  * {{code: php
  *     // config for a multiple log
  *     $config = array(
@@ -52,6 +36,12 @@
  * @category Solar
  * 
  * @package Solar_Log
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {

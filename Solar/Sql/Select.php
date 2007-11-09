@@ -3,22 +3,6 @@
  * 
  * Class for SQL select generation and results.
  * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for SQL select generation and results.
- * 
  * {{code: php
  *     $select = Solar::factory('Solar_Sql_Select');
  *     
@@ -69,6 +53,12 @@
  * @category Solar
  * 
  * @package Solar_Sql
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Sql_Select extends Solar_Base {

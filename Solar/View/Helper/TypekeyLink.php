@@ -1,7 +1,10 @@
 <?php
 /**
  * 
- * Generates an anchor linking to the TypeKey login site.
+ * Generates a anchor linking to the TypeKey login site.
+ * 
+ * Uses the same TypeKey token as Solar_Auth_Adapter_TypeKey
+ * @category Solar
  * 
  * @category Solar
  * 
@@ -12,17 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Generates a anchor linking to the TypeKey login site.
- * 
- * Uses the same TypeKey token as Solar_Auth_Adapter_TypeKey
- * @category Solar
- * 
- * @package Solar_View
  * 
  */
 class Solar_View_Helper_TypekeyLink extends Solar_View_Helper {

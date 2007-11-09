@@ -16,16 +16,6 @@
  * @todo rename to Unix, add Ini file handler as well
  * 
  */
-
-/**
- * 
- * Abstract role adapter.
- * 
- * @category Solar
- * 
- * @package Solar_Role
- * 
- */
 abstract class Solar_Role_Adapter extends Solar_Base {
     
     /**

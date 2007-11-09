@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents the characteristics of a relationship where a native model
- * "has one" of a foreign model.
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
- * 
- */
 class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related {
     
     /**

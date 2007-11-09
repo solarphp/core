@@ -1,8 +1,13 @@
 <?php
 /**
- * 
+ *
+ * JSON validation class to determine syntactic correctness prior to decoding.
+ *  
  * A port of JSON_checker.c designed to quickly scan a block of JSON text
  * and determine if it is syntactically correct.
+ * 
+ * Learn more about Pushdown automatons at
+ * <http://en.wikipedia.org/wiki/Pushdown_automaton>
  * 
  * @category Solar
  * 
@@ -39,20 +44,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * JSON validation class to determine syntactic correctness prior to decoding.
- * 
- * Learn more about Pushdown automatons at
- * <http://en.wikipedia.org/wiki/Pushdown_automaton>
- * 
- * @category Solar
- * 
- * @package Solar_Json
- * 
- */
-
 class Solar_Json_Checker extends Solar_Base {
     
     /**

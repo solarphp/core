@@ -18,16 +18,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Block plugin to save literal blocks of HTML.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
     
     /**

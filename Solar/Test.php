@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A single unit test.
- * 
- * @category Solar
- * 
- * @package Solar_Test
- * 
- */
 class Solar_Test extends Solar_Base {
     
     /**

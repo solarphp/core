@@ -3,26 +3,6 @@
  * 
  * Span plugin for Markdown anchor shortcuts.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin for Markdown anchor shortcuts.
- * 
  * You can link to another page using `[display text](http://example.com)`.
  * 
  * Alternatively, you can use defined links ...
@@ -44,6 +24,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Plugin_Link extends Solar_Markdown_Plugin {

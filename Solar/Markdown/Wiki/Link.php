@@ -3,22 +3,6 @@
  * 
  * Replaces wiki and interwiki links in source text with XHTML anchors.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Replaces wiki and interwiki links in source text with XHTML anchors.
- * 
  * Wiki links are in this format ...
  * 
  *     [[wiki page]]
@@ -52,6 +36,12 @@
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin {

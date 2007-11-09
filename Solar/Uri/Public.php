@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Manipulates and generates public URI strings.
- * 
- * @category Solar
- * 
- * @package Solar_Uri
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * Manipulates generates public URI strings.
  * 
  * This class is functionally identical to Solar_Uri, except that it
@@ -29,6 +13,12 @@
  * @category Solar
  * 
  * @package Solar_Uri
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Uri_Public extends Solar_Uri {

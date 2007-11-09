@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Manages locale strings for all Solar classes.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Locale extends Solar_Base {
     
     /**

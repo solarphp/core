@@ -3,28 +3,6 @@
  * 
  * Class for wrapping JSON encoding/decoding functionality.
  * 
- * @category Solar
- * 
- * @package Solar_Json
- * 
- * @author Michal Migurski <mike-json@teczno.com>
- * 
- * @author Matt Knapp <mdknapp[at]gmail[dot]com>
- * 
- * @author Brett Stimmerman <brettstimmerman[at]gmail[dot]com>
- * 
- * @author Clay Loveless <clay@killersoft.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for wrapping JSON encoding/decoding functionality.
- * 
  * Given that the json extension to PHP will be enabled by default in
  * PHP 5.2.0+, Solar_Json allows users to get a jump on JSON encoding and
  * decoding early if the native json_* functions are not present.
@@ -47,6 +25,10 @@
  * @author Brett Stimmerman <brettstimmerman[at]gmail[dot]com>
  * 
  * @author Clay Loveless <clay@killersoft.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Json extends Solar_Base {

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * SMTP adapter with "cram-md5" authentication at connection time.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
 class Solar_Smtp_Adapter_CramMd5Auth extends Solar_Smtp_Adapter_PlainAuth {
     
     /**

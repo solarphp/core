@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Pseudo-transport that just prints the message headers and content.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Transport_Adapter_Echo extends Solar_Mail_Transport_Adapter {
     
     /**

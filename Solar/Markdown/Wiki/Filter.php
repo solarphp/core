@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Escapes all remaining HTML, and replaces HTML tokens.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- */
 class Solar_Markdown_Wiki_Filter extends Solar_Markdown_Plugin_Prefilter {
     
     /**

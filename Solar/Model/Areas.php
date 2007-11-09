@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * A model of content "areas" (logical groups or buckets of nodes).
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- */
 class Solar_Model_Areas extends Solar_Model {
     
     /**

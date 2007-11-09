@@ -3,6 +3,14 @@
  * 
  * Span plugin to insert emphasis and strong tags.
  * 
+ * * `*foo*` and `_foo_` become `<em>foo</em>`.
+ * 
+ * * `**bar**` and `__bar__` become `<strong>bar</strong>`.
+ * 
+ * * `***zim***` and `___zim___` become `<strong><em>zim</em></strong>`.
+ * 
+ * * `**_zim_**` and `__*zim*__` become `<strong><em>zim</em></strong>`.
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown
@@ -16,24 +24,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Span plugin to insert emphasis and strong tags.
- * 
- * * `*foo*` and `_foo_` become `<em>foo</em>`.
- * 
- * * `**bar**` and `__bar__` become `<strong>bar</strong>`.
- * 
- * * `***zim***` and `___zim___` become `<strong><em>zim</em></strong>`.
- * 
- * * `**_zim_**` and `__*zim*__` become `<strong><em>zim</em></strong>`.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
  * 
  */
 class Solar_Markdown_Plugin_EmStrong extends Solar_Markdown_Plugin {

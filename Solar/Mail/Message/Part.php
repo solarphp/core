@@ -16,16 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Represents one MIME part of a Solar_Mail_Message.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 class Solar_Mail_Message_Part extends Solar_Base {
     
     /**

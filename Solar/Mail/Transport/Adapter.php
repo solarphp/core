@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract mail-transport adapter.
- * 
- * @category Solar
- * 
- * @package Solar_Mail
- * 
- */
 abstract class Solar_Mail_Transport_Adapter extends Solar_Base {
     
     /**

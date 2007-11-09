@@ -16,16 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper for meta tags.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Helper_Meta extends Solar_View_Helper {
     
     /**

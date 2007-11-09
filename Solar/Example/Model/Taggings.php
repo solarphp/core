@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example for testing a model of content "taggings" (nodes-to-tags mappings).
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example_Model_Taggings extends Solar_Sql_Model {
     
     /**

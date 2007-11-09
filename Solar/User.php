@@ -16,18 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Meta-container for the current user to hold auth and roles.
- * 
- * When prefs and permissions come along, will hold those too.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_User extends Solar_Base {
     
     /**

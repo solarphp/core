@@ -19,17 +19,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Block plugin to changes indented text to <pre><code>...</code></pre>
- * blocks.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_CodeBlock extends Solar_Markdown_Plugin {
     
     /**

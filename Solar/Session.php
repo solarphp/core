@@ -4,23 +4,6 @@
  * Class for working with the $_SESSION array, including read-once
  * flashes.
  * 
- * @category Solar
- * 
- * @package Solar
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for working with the $_SESSION array, including read-once
- * flashes.
- * 
  * On instantiation, starts a session if one has not yet been started.
  * 
  * Instantiate this once for each class that wants access to $_SESSION
@@ -37,6 +20,12 @@
  * @category Solar
  * 
  * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Session extends Solar_Base {

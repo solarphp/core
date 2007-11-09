@@ -16,16 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Form-processing class; also hints the view on how to present the form.
- * 
- * @category Solar
- * 
- * @package Solar_Form
- * 
- */
 class Solar_Form extends Solar_Base {
     
     /**

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Solar_View exception for partial-not-found.
- * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- */
 class Solar_View_Exception_PartialNotFound extends Solar_View_Exception {}

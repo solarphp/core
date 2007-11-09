@@ -3,26 +3,6 @@
  * 
  * Block plugin to convert wiki-fied headers into XHTML headers.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Wiki
- * 
- * @author John Gruber <http://daringfireball.net/projects/markdown/>
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to convert wiki-fied headers into XHTML headers.
- * 
  * This code ...
  * 
  *     =======
@@ -62,6 +42,16 @@
  * @category Solar
  * 
  * @package Solar_Markdown_Wiki
+ * 
+ * @author John Gruber <http://daringfireball.net/projects/markdown/>
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Wiki_Header extends Solar_Markdown_Plugin {

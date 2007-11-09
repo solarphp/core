@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Factory class for SQL connections.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql extends Solar_Base {
     
     /**

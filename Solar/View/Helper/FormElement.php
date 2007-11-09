@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract helper for form elements.
- * 
- * @category Solar
- * 
- * @package Solar_View_Helper_Form
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- */
 abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
     
     /**

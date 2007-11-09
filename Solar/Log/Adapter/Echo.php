@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Log adapter to echo messages directly.
- * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- */
 class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
     
     /**

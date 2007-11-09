@@ -16,16 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Helper to collect <head> elements and display them in the correct order.
- * 
- * @category Solar
- * 
- * @package Solar_View_Helper
- * 
- */
 class Solar_View_Helper_Head extends Solar_View_Helper {
     
     /**

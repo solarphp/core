@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for loading form definitions from Solar_Sql_Model columns.
- * 
- * @category Solar
- * 
- * @package Solar_Form
- * 
- */
 class Solar_Form_Load_Model extends Solar_Base {
     
     /**

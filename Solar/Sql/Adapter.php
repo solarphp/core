@@ -3,22 +3,6 @@
  * 
  * Abstract base class for specific RDBMS adapters.
  * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Abstract base class for specific RDBMS adapters.
- * 
  * When writing an adapter, you need to override these abstract methods:
  * 
  * {{code: php
@@ -43,6 +27,12 @@
  * @category Solar
  * 
  * @package Solar_Sql
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 abstract class Solar_Sql_Adapter extends Solar_Base {

@@ -3,22 +3,6 @@
  * 
  * Abstract adapter to support various HTTP request backends.
  * 
- * @category Solar
- * 
- * @package Solar_Http
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Abstract adapter to support various HTTP request backends.
- * 
  * Note that this class represents a standalone HTTP request, whereas
  * Solar_Request represents the PHP request environment superglobals (including
  * $_SERVER, $_ENV, $_POST, etc).
@@ -66,6 +50,12 @@
  * @category Solar
  * 
  * @package Solar_Http
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo Support multipart/form-data and file uploads (must be in conjunction).
  * <http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.2>  Probably need

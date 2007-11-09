@@ -3,6 +3,12 @@
  * 
  * Block plugin to create ordered and unordered lists.
  * 
+ * Start a line with `-`, `+`, or `*` (and a space) to
+ * indicate an unordered bullet list.
+ * 
+ * Start a line with a number and period (and a space)
+ * (for example `1. `) to indicate a numbered list.
+ * 
  * @category Solar
  * 
  * @package Solar_Markdown
@@ -16,22 +22,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Block plugin to create ordered and unordered lists.
- * 
- * Start a line with `-`, `+`, or `*` (and a space) to
- * indicate an unordered bullet list.
- * 
- * Start a line with a number and period (and a space)
- * (for example `1. `) to indicate a numbered list.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
  * 
  */
 class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for connecting to PostgreSQL databases.
- * 
- * @category Solar
- * 
- * @package Solar_Sql
- * 
- */
 class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter {
     
     /**

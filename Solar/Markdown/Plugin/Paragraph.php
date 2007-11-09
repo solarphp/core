@@ -18,16 +18,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Block plugin to form paragraphs of text with 2 newlines around it.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_Paragraph extends Solar_Markdown_Plugin {
     
     /**

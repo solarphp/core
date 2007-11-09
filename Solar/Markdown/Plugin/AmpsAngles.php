@@ -19,17 +19,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Span class to convert ampersands and less-than angle brackets to 
- * their HTML entity equivalents.
- * 
- * @category Solar
- * 
- * @package Solar_Markdown
- * 
- */
 class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin {
     
     /**

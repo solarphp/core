@@ -3,24 +3,6 @@
  * 
  * Block class to form definition lists.
  * 
- * @category Solar
- * 
- * @package Solar_Markdown_Extra
- * 
- * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Block class to form definition lists.
- * 
  * Syntax is ...
  * 
  *     term
@@ -37,6 +19,14 @@
  * @category Solar
  * 
  * @package Solar_Markdown_Extra
+ * 
+ * @author Michel Fortin <http://www.michelf.com/projects/php-markdown/>
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Markdown_Extra_DefList extends Solar_Markdown_Plugin {

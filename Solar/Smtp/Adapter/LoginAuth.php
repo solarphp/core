@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * SMTP adapter with "login" authentication at connection time.
- * 
- * @category Solar
- * 
- * @package Solar_Smtp
- * 
- */
 class Solar_Smtp_Adapter_LoginAuth extends Solar_Smtp_Adapter_PlainAuth {
     
     /**

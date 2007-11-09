@@ -2,7 +2,8 @@
 /**
  * 
  * Represents the characteristics of a relationship where a native model
- * "has many" of a foreign model.
+ * "has many" of a foreign model.  This includes "has many through" (i.e.,
+ * a many-to-many relationship through an interceding mapping model).
  * 
  * @category Solar
  * 
@@ -13,18 +14,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Represents the characteristics of a relationship where a native model
- * "has many" of a foreign model.  This includes "has many through" (i.e.,
- * a many-to-many relationship through an interceding mapping model).
- * 
- * @category Solar
- * 
- * @package Solar_Sql_Model
  * 
  */
 class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {

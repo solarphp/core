@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Log adapter for appending to a file.
- * 
- * @category Solar
- * 
- * @package Solar_Log
- * 
- */
 class Solar_Log_Adapter_File extends Solar_Log_Adapter {
     
     /**

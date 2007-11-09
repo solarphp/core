@@ -1,4 +1,3 @@
-<?php
 /**
  * 
  * Factory class test.

@@ -1,4 +1,3 @@
-<?php
 /**
  * 
  * Abstract class test.

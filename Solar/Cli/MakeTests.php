@@ -182,7 +182,10 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
             $key = substr(basename($file), 0, -4);
-            $this->_tpl[$key] = file_get_contents($file);
+            // we need to add the php-open tag ourselves, instead of
+            // having it in the template file, becuase the PEAR packager
+            // complains about parsing the skeleton code.
+            $this->_tpl[$key] = "<\?php\n" . file_get_contents($file);
         }
     }
     

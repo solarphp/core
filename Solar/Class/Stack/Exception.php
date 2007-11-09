@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic class-stack exception.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Class_Stack_Exception extends Solar_Exception {}

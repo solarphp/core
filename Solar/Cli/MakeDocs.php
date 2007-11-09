@@ -9,19 +9,11 @@
  * 
  * @subpackage Solar_Cli_MakeDocs
  * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
  * @version $Id$
- * 
- */
- 
-/**
- * 
- * Generates package and API documentation files.
- * 
- * @category Solar
- * 
- * @package Solar_Cli
- * 
- * @subpackage Solar_Cli_MakeDocs
  * 
  */
 class Solar_Cli_MakeDocs extends Solar_Cli_Base {

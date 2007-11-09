@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Example class to support unit tests.
- * 
- * @category Solar
- * 
- * @package Solar_Example
- * 
- */
 class Solar_Example extends Solar_Base {
     
     /**

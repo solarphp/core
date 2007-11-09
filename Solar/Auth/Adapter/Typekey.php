@@ -3,24 +3,6 @@
  * 
  * Authentication adapter for TypeKey.
  * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- * @author Daiji Hirata <hirata@uva.ne.jp>
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Authentication adapter for TypeKey.
- * 
  * Requires that PHP have been compiled using "--enable-bcmath" or
  * '--with-gmp'.
  * 
@@ -43,6 +25,10 @@
  * @author Daiji Hirata <hirata@uva.ne.jp>
  * 
  * @author Paul M. Jones <pmjones@mashery.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {

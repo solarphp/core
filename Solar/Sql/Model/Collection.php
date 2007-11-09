@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Collection.php 918 2007-07-24 00:30:40Z moraes $
+ * @version $Id$
  * 
  */
 

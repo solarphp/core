@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class-stack exception: the requested class name is not valid.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Class_Stack_Exception_ClassNotValid extends Solar_Class_Stack_Exception {}

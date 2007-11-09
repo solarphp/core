@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract base class for Solar application classes.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- */
 abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**

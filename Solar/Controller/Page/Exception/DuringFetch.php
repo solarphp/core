@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Page-controller encountered an exception during the fetch() routine.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Page_Exception_DuringFetch extends Solar_Controller_Page_Exception {}

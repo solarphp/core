@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Generic page-controller exception.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Page_Exception extends Solar_Controller_Exception {}

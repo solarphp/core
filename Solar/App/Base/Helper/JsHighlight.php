@@ -11,17 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Link.php 2440 2007-04-21 14:33:44Z pmjones $
- * 
- */
-
-/**
- * 
- * Helper to call jQuery for highlighting on a CSS-selected element.
- * 
- * @category Solar
- * 
- * @package Solar_App
+ * @version $Id$
  * 
  */
 class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper {

@@ -3,6 +3,10 @@
  * 
  * Variable (in-memory) cache controller.
  * 
+ * Stores cache entries to an object variable.  This means that entries are
+ * available for the duration of the script, but are cleared out at the end
+ * of the script.
+ * 
  * @category Solar
  * 
  * @package Solar_Cache
@@ -12,20 +16,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Variable (in-memory) cache controller.
- * 
- * Stores cache entries to an object variable.  This means that entries are
- * available for the duration of the script, but are cleared out at the end
- * of the script.
- * 
- * @category Solar
- * 
- * @package Solar_Cache
  * 
  */
 class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter {

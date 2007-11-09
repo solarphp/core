@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Page-controller could not find a property name.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Page_Exception_PropertyNotDefined extends Solar_Controller_Page_Exception {}

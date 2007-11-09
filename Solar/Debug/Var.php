@@ -3,22 +3,6 @@
  * 
  * Class to help examine and debug variables.
  * 
- * @category Solar
- * 
- * @package Solar_Debug
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Class to help examine and debug variables.
- * 
  * Captures the output of
  * [[php::var_dump() | ]] and outputs it to the screen either as
  * plaintext or in HTML format.
@@ -55,6 +39,12 @@
  * @category Solar
  * 
  * @package Solar_Debug
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Debug_Var extends Solar_Base {

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Page-controller could not find the class method for a named action.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Page_Exception_ActionNotFound extends Solar_Controller_Page_Exception {}

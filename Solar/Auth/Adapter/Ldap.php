@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Authenticate against an LDAP server.
- * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- */
 class Solar_Auth_Adapter_Ldap extends Solar_Auth_Adapter {
     
     /**

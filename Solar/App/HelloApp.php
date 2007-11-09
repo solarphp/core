@@ -7,25 +7,13 @@
  * 
  * @package Solar_App
  * 
- * @subpackage Solar_App_HelloApp
+ * @subpackage Solar_App_Hello
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Simple "hello world" application with actions, views, and localization.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Hello
  * 
  */
 class Solar_App_HelloApp extends Solar_App_Base {

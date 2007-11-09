@@ -3,22 +3,6 @@
  * 
  * Abstract base class for all Solar objects.
  * 
- * @category Solar
- * 
- * @package Solar
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Abstract base class for all Solar objects.
- * 
  * This is the class from which almost all other Solar classes are
  * extended.  Solar_Base is relatively light, and provides ...
  * 
@@ -41,6 +25,12 @@
  * @category Solar
  * 
  * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 abstract class Solar_Base {

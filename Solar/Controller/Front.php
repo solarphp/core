@@ -3,22 +3,6 @@
  * 
  * Front-controller class to find and invoke a page-controller.
  * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Front-controller class to find and invoke a page-controller.
- * 
  * An example bootstrap "index.php" for your web root using the front
  * controller ...
  * 
@@ -33,6 +17,12 @@
  * @category Solar
  * 
  * @package Solar_Controller
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Controller_Front extends Solar_Base {

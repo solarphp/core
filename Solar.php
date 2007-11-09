@@ -1,13 +1,41 @@
 <?php
 /**
+ * Make sure Solar_Base is loaded even before Solar::start() is called.
+ * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
+ * in some environments.
+ */
+if (! class_exists('Solar_Base', false)) {
+    require dirname(__FILE__) . DIRECTORY_SEPARATOR
+          . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
+}
+
+/**
+ * Make sure Solar_File is loaded even before Solar::start() is called.
+ * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
+ * in some environments.
+ */
+if (! class_exists('Solar_File', false)) {
+    require dirname(__FILE__) . DIRECTORY_SEPARATOR
+          . 'Solar' . DIRECTORY_SEPARATOR . 'File.php';
+}
+
+/**
+ * Register Solar::autoload() with SPL.
+ */
+spl_autoload_register(array('Solar', 'autoload'));
+
+/**
  * 
- * Solar: Simple Object Library and Application Repository for PHP5.
+ * The Solar arch-class provides static methods needed throughout the
+ * framework environment.
  * 
  * @category Solar
  * 
  * @package Solar
  * 
  * @author Paul M. Jones <pmjones@solarphp.net>
+ * 
+ * @version $Id$
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -41,45 +69,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * @version $Id$
- * 
- */
-
-/**
- * Make sure Solar_Base is loaded even before Solar::start() is called.
- * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
- * in some environments.
- */
-if (! class_exists('Solar_Base', false)) {
-    require dirname(__FILE__) . DIRECTORY_SEPARATOR
-          . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
-}
-
-/**
- * Make sure Solar_File is loaded even before Solar::start() is called.
- * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
- * in some environments.
- */
-if (! class_exists('Solar_File', false)) {
-    require dirname(__FILE__) . DIRECTORY_SEPARATOR
-          . 'Solar' . DIRECTORY_SEPARATOR . 'File.php';
-}
-
-/**
- * Register Solar::autoload() with SPL.
- */
-spl_autoload_register(array('Solar', 'autoload'));
-
-/**
- * 
- * The Solar arch-class provides static methods needed throughout the Solar environment.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- * @version @package_version@
  * 
  */
 class Solar {

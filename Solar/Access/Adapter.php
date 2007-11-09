@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Abstract adapter for reading access privileges.
- * 
- * @category Solar
- * 
- * @package Solar_Access
- * 
- */
 abstract class Solar_Access_Adapter extends Solar_Base {
     
     /**

@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Page-controller could not find the file for a named view.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Page_Exception_ViewNotFound extends Solar_Controller_Page_Exception {}

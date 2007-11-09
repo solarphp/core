@@ -16,18 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Provides locale strings for the app.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Bookmarks
- * 
- */
 return array(
     'ADD_NEW_BOOKMARK'      => 'Ajouter un nouveau signet.',
     'BACKLINK'              => 'Retour',

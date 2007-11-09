@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for allowing open access to all users.
- * 
- * @category Solar
- * 
- * @package Solar_Access
- * 
- */
 class Solar_Access_Adapter_Open extends Solar_Access_Adapter {
     
     /**

@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Table.php 2646 2007-07-29 15:49:30Z pmjones $
+ * @version $Id$
  * 
  */
 

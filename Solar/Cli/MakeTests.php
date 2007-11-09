@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Command to make a test class (or set of classes) from a named class.
- * 
- * @category Solar
- * 
- * @package Solar_Cli
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id: Base.php 2498 2007-06-01 19:36:45Z pmjones $
- * 
- */
-
-/**
- * 
  * Command to make a test class (or set of classes) from a given class.
  * 
  * The class should be in the include_path.
@@ -58,6 +42,12 @@
  * @category Solar
  * 
  * @package Solar_Cli
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Cli_MakeTests extends Solar_Cli_Base {

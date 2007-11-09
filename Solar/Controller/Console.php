@@ -15,17 +15,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * The CLI equivalent of a front-controller to find and invoke a command
- * (technically a sub-command).
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- */
 class Solar_Controller_Console extends Solar_Base {
     
     /**
@@ -276,6 +265,8 @@ class Solar_Controller_Console extends Solar_Base {
         } else {
             throw $this->_exception('ERR_COMMAND_NOT_FOUND', array(
                 'cmd' => $cmd,
+                'classes' => $this->_config['classes'],
+                'routing' => $this->_config['routing'],
             ));
         }
     }

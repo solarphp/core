@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Authenticate against an IMAP or POP3 mail server.
- * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- */
 class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
     
     /**

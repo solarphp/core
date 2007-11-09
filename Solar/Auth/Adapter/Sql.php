@@ -14,18 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Authenticate against an SQL database table.
- * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- * @todo add support for email, moniker, uri retrieval
- * 
- */
 class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
     
     /**

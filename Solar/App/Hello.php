@@ -16,18 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Absolute minimal "hello world" application for benchmarking.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Hello
- * 
- */
 class Solar_App_Hello extends Solar_Controller_Page {
     
     /**

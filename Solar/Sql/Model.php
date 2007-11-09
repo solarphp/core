@@ -12,7 +12,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Model.php 926 2007-07-24 10:22:08Z moraes $
+ * @version $Id$
  * 
  */
 

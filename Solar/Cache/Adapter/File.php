@@ -3,22 +3,6 @@
  * 
  * File-based cache controller.
  * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * File-based cache controller.
- * 
  * This is the file-based adapter for [Solar_Cache:HomePage Solar_Cache].
  * In general, you never need to instantiate it yourself; instead,
  * use Solar_Cache as the frontend for it and specify
@@ -41,6 +25,12 @@
  * @category Solar
  * 
  * @package Solar_Cache
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo Add CRC32 to check for cache corruption?
  * 

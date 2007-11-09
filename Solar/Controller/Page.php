@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Abstract page controller class for Solar.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * Abstract page controller class.
  * 
  * Expects a directory structure similar to the following ...
@@ -66,6 +50,12 @@
  * @category Solar
  * 
  * @package Solar_Controller
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 

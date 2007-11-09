@@ -3,22 +3,6 @@
  * 
  * Memcache cache controller.
  * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Memcache cache controller.
- * 
  * This adapter lets you connect to a
  * [memcached](http://www.danga.com/memcached/) server, which uses system
  * memory to cache data. In general, you never need to instantiate it 
@@ -36,6 +20,12 @@
  * @category Solar
  * 
  * @package Solar_Cache
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {

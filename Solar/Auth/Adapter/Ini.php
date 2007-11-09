@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Authenticate against .ini style files (not very secure).
- * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * Authenticate against .ini style files.
  * 
  * Each group is a user handle, with keys for 'passwd', 'moniker', 'email',
@@ -31,6 +15,12 @@
  * @category Solar
  * 
  * @package Solar_Auth
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter {

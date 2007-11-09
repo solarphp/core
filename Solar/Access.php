@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Factory class for reading access privileges.
- * 
- * @category Solar
- * 
- * @package Solar_Access
- * 
- */
 class Solar_Access extends Solar_Base {
     
     /**

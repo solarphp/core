@@ -1,8 +1,8 @@
 <?php
 /**
  * 
- * The CLI equivalent of a page-controller; a single command to be invoked from
- * the command-line.
+ * The CLI equivalent of a page-controller; a single command to be invoked
+ * from the command-line.
  * 
  * @category Solar
  * 
@@ -15,17 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * The CLI equivalent of a page-controller; a single command to be invoked from
- * the command-line.
- * 
- * @category Solar
- * 
- * @package Solar_Controller
  * 
  */
 class Solar_Controller_Command extends Solar_Base {

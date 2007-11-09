@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * eAccelerator cache controller.
- * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * eAccellerator cache controller.
  * 
  * eAccelerator is a free open-source PHP accelerator, optimizer,
@@ -31,6 +15,12 @@
  * @category Solar
  * 
  * @package Solar_Cache
+ * 
+ * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo Does not work with objects.  Need to add custom support for them.
  * <http://bart.eaccelerator.net/doc/phpdoc/eAccelerator/_shared_memory_php.html#functioneaccelerator_put>

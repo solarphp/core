@@ -3,22 +3,6 @@
  * 
  * Authenticate via simple HTTP POST request-and-reply.
  * 
- * @category Solar
- * 
- * @package Solar_Auth
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Authenticate via simple HTTP POST request-and-reply.
- * 
  * Based in part on php.net user comments ...
  * 
  * - <http://us3.php.net/manual/en/function.fsockopen.php#57275>
@@ -28,6 +12,12 @@
  * @category Solar
  * 
  * @package Solar_Auth
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Auth_Adapter_Post extends Solar_Auth_Adapter {

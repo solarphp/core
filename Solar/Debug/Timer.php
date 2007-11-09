@@ -3,22 +3,6 @@
  * 
  * Tracks code execution times.
  * 
- * @category Solar
- * 
- * @package Solar_Debug
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Tracks code execution times.
- * 
  * This class allows you to profile the execution time of your script:
  * you start the timer, set marks within your script, then stop the
  * timer and display the profile.
@@ -66,6 +50,12 @@
  * @category Solar
  * 
  * @package Solar_Debug
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Debug_Timer extends Solar_Base {

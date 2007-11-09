@@ -13,16 +13,6 @@
  * 
  * @version $Id$
  * 
- */
-
-/**
- * 
- * Recursively parses a class directory for API reference documentation.
- * 
- * @category Solar
- * 
- * @package Solar_Docs
- * 
  * @todo parse constants
  * 
  * @todo report when a method is missing documentation (at least a summary)

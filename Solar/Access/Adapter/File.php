@@ -3,22 +3,6 @@
  * 
  * Class for reading access privileges from a text file.
  * 
- * @category Solar
- * 
- * @package Solar_Access
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for reading access privileges from a text file.
- * 
  * The file format is ...
  * 
  *     0:flag 1:type 2:name 3:class 4:action 5:process
@@ -33,6 +17,12 @@
  * @category Solar
  * 
  * @package Solar_Access
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Access_Adapter_File extends Solar_Access_Adapter {

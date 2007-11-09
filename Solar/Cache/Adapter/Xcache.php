@@ -1,22 +1,6 @@
 <?php
 /**
  * 
- * Xcache cache controller.
- * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
  * XCache cache controller.
  * 
  * XCache is a fast, stable PHP opcode cacher tested and supported on
@@ -29,6 +13,12 @@
  * @category Solar
  * 
  * @package Solar_Cache
+ * 
+ * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  * @todo Does not work with objects.  Need to add custom support for them.
  * <http://trac.lighttpd.net/xcache/wiki/XcacheApi>

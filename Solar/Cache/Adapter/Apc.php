@@ -3,22 +3,6 @@
  * 
  * APC cache controller.
  * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * APC cache controller.
- * 
  * Requires APC 3.0.13 or later.
  * 
  * The Alternative PHP Cache (APC) is a free and open opcode cache for PHP.
@@ -32,6 +16,12 @@
  * @category Solar
  * 
  * @package Solar_Cache
+ * 
+ * @author Rodrigo Moraes <rodrigo.moraes@gmail.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter {

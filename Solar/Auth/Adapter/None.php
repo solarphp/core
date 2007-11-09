@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Authenticate against nothing; defaults all authentication to "failed."
+ * Authenticate against nothing; defaults all authentication to "failed".
  * 
  * @category Solar
  * 
@@ -12,16 +12,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Authenticate against nothing; defaults all authentication to "failed".
- * 
- * @category Solar
- * 
- * @package Solar_Auth
  * 
  */
 class Solar_Auth_Adapter_None extends Solar_Auth_Adapter {

@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Creates an array of class-to-file mappings for a class hierarchy.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Class_Map extends Solar_Base {
     
     /**

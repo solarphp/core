@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Filter.php 889 2007-07-21 16:09:34Z moraes $
+ * @version $Id$
  * 
  */
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for checking user authentication credentials.
+ * Factory class for authentication adapters.
  * 
  * @category Solar
  * 
@@ -12,16 +12,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Class for checking user authentication credentials.
- * 
- * @category Solar
- * 
- * @package Solar_Auth
  * 
  */
 class Solar_Auth extends Solar_Base {

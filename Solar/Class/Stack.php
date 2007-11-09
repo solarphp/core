@@ -3,6 +3,9 @@
  * 
  * Stack for loading classes from user-defined hierarchies.
  * 
+ * As you add classes to the stack, they are searched-for first when you 
+ * call [[Solar_Stack_Class::load()]].
+ * 
  * @category Solar
  * 
  * @package Solar
@@ -12,19 +15,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Stack for loading classes from user-defined hierarchies.
- * 
- * As you add classes to the stack, they are searched-for first when you 
- * call [[Solar_Stack_Class::load()]].
- * 
- * @category Solar
- * 
- * @package Solar
  * 
  */
 class Solar_Class_Stack extends Solar_Base {

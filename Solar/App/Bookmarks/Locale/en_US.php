@@ -16,18 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Provides locale strings for the app.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Bookmarks
- * 
- */
 return array(
     
     'ACTION_ADD'            => 'Add new bookmark.',

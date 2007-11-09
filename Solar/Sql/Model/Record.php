@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Record.php 920 2007-07-24 04:53:21Z moraes $
+ * @version $Id$
  * 
  */
 

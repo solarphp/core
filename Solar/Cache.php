@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Factory class for cache adapters.
- * 
- * @category Solar
- * 
- * @package Solar_Cache
- * 
- */
 class Solar_Cache extends Solar_Base {
     
     /**

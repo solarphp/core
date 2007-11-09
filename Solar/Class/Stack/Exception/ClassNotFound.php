@@ -14,14 +14,4 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class-stack exception: the requested class name was not found in the stack.
- * 
- * @category Solar
- * 
- * @package Solar
- * 
- */
 class Solar_Class_Stack_Exception_ClassNotFound extends Solar_Class_Stack_Exception {}

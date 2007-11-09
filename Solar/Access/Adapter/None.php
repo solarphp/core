@@ -14,16 +14,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Class for denying all access to all users.
- * 
- * @category Solar
- * 
- * @package Solar_Access
- * 
- */
 class Solar_Access_Adapter_None extends Solar_Access_Adapter {
     
     /**

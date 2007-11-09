@@ -11,17 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Auth.php 2428 2007-04-02 00:44:19Z pmjones $
- * 
- */
-
-/**
- * 
- * Solar command to make a model class from an SQL table.
- * 
- * @category Solar
- * 
- * @package Solar_Cli
+ * @version $Id$
  * 
  */
 class Solar_Cli_MakeModel extends Solar_Controller_Command {

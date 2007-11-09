@@ -16,18 +16,6 @@
  * @version $Id$
  * 
  */
-
-/**
- * 
- * Anti-social bookmarking application.
- * 
- * @category Solar
- * 
- * @package Solar_App
- * 
- * @subpackage Solar_App_Bookmarks
- * 
- */
 class Solar_App_Bookmarks extends Solar_App_Base {
     
     /**

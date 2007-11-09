@@ -69,8 +69,34 @@ if ($found && ! $config) {
     exit(-1);
 }
 
-$config = realpath($config);
-echo "Using config file '$config'.\n";
+// was there a config file at all?
+if ($config) {
+    $config = realpath($config);
+    echo "Using config file '$config'.\n";
+} else {
+    echo "Not using a config file.\n";
+}
+
+/**
+ * Find the "vendor" (top-level class name)
+ */
+
+// the command used to invoke this script
+// e.g., '/usr/local/bin/foo'
+$cmd = $_SERVER['argv'][0];
+
+// get the last part of the command.
+// e.g., '/usr/local/bin/foo' => 'foo'
+$path = explode(DIRECTORY_SEPARATOR, $cmd);
+$vendor = end($path);
+
+// change to a class name prefix set.
+// 'foo' => 'Foo'
+// 'foo-bar' => 'FooBar'
+// 'foo_bar' => 'FooBar'
+$vendor = str_replace(array('-', '_'), ' ', $vendor);
+$vendor = ucwords($vendor);
+$vendor = str_replace(' ', '', $vendor);
 
 /**
  * Main
@@ -79,10 +105,10 @@ echo "Using config file '$config'.\n";
 // Start Solar with the requested config file (if any)
 Solar::start($config);
 
-// create a console controller
+// create a console controller using the Vendor_Cli classes
 $console = Solar::factory('Solar_Controller_Console', array(
-    'classes' => 'Solar_Cli',
-    'default' => 'base',
+    'classes' => "{$vendor}_Cli",
+    'default' => "base",
 ));
 
 // execute the requested command

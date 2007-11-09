@@ -3,22 +3,6 @@
  * 
  * Provides a Template View pattern implementation for Solar.
  * 
- * @category Solar
- * 
- * @package Solar_View
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
- * 
- */
-
-/**
- * 
- * Provides a Template View pattern implementation for Solar.
- * 
  * This implementation is good for all (X)HTML and XML template
  * formats, and provides a built-in escaping mechanism for values,
  * along with lazy-loading and persistence of helper objects.
@@ -29,6 +13,12 @@
  * @category Solar
  * 
  * @package Solar_View
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
  * 
  */
 class Solar_View extends Solar_Base {

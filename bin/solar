@@ -7,39 +7,84 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', true);
 ini_set('html_errors', false);
 
+
+/**
+ * Find the "vendor" (top-level class name)
+ */
+
+// the command used to invoke this script
+// e.g., '/usr/local/bin/foo'
+$cmd = $_SERVER['argv'][0];
+
+// get the last part of the command.
+// e.g., '/usr/local/bin/foo' => 'foo'
+$path = explode(DIRECTORY_SEPARATOR, $cmd);
+$vendor = end($path);
+
+// change to a class name prefix set.
+// 'foo' => 'Foo'
+// 'foo-bar' => 'FooBar'
+// 'foo_bar' => 'FooBar'
+$vendor = str_replace(array('-', '_'), ' ', $vendor);
+$vendor = ucwords($vendor);
+$vendor = str_replace(' ', '', $vendor);
+
+
 /**
  * Discover and set the include-path
  */
-if (! empty($_SERVER['PHP_SOLAR_INSTALL_DIR'])) {
-    // the solar-specific install dir
-    set_include_path($_SERVER['PHP_SOLAR_INSTALL_DIR']);
-} elseif (! empty($_SERVER['PHP_PEAR_INSTALL_DIR'])) {
-    // the general-purpose pear dir
-    set_include_path($_SERVER['PHP_PEAR_INSTALL_DIR']);
+
+$include_key = 'PHP_' . strtoupper($vendor) . '_INCLUDE_PATH';
+switch (true) {
+    
+// the vendor-specific include path
+case (! empty($_SERVER[$include_key])):
+    $include = $_SERVER[$include_key];
+    break;
+    
+// fall back to the solar include path
+case (! empty($_SERVER['PHP_SOLAR_INCLUDE_PATH'])):
+    $include = $_SERVER['PHP_SOLAR_INCLUDE_PATH'];
+    break;
+    
+// fall back to the pear dir
+case (! empty($_SERVER['PHP_PEAR_INSTALL_DIR'])):
+    $include = $_SERVER['PHP_PEAR_INSTALL_DIR'];
+    break;
+
+// stick with the php.ini include path
+default:
+    $include = get_include_path();
+    break;
 }
 
-/**
- * Can we find the Solar arch-class?
- */
-include 'Solar.php';
-if (! class_exists('Solar')) {
-    echo "Could not load the file 'Solar.php' from the include_path:\n";
-    echo get_include_path();
-    exit(-1);
-}
+set_include_path($include);
+echo "Using include_path '" . get_include_path() . "'.\n";
+
 
 /**
- * Find the config file, if any
+ * Discover the config file
  */
 
-// default config file
-if (! empty($_SERVER['PHP_SOLAR_CONFIG_PATH'])) {
-    $config = $_SERVER['PHP_SOLAR_CONFIG_PATH'];
-} else {
+$config_key = 'PHP_' . strtoupper($vendor) . '_CONFIG_FILE';
+switch (true) {
+
+// the vendor-specific default config
+case (! empty($_SERVER[$config_key])):
+    $config = $_SERVER[$config_key];
+    break;
+    
+// fall back to the solar default config
+case (! empty($_SERVER['PHP_SOLAR_CONFIG_FILE'])):
+    $config = $_SERVER['PHP_SOLAR_CONFIG_FILE'];
+    break;
+
+// no default config
+default:
     $config = false;
 }
 
-// manually look for a --config (config file) argument
+// manually look for a --config argument that overrides the default
 $argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
 $found = false;
 foreach ($argv as $val) {
@@ -77,32 +122,13 @@ if ($config) {
     echo "Not using a config file.\n";
 }
 
-/**
- * Find the "vendor" (top-level class name)
- */
-
-// the command used to invoke this script
-// e.g., '/usr/local/bin/foo'
-$cmd = $_SERVER['argv'][0];
-
-// get the last part of the command.
-// e.g., '/usr/local/bin/foo' => 'foo'
-$path = explode(DIRECTORY_SEPARATOR, $cmd);
-$vendor = end($path);
-
-// change to a class name prefix set.
-// 'foo' => 'Foo'
-// 'foo-bar' => 'FooBar'
-// 'foo_bar' => 'FooBar'
-$vendor = str_replace(array('-', '_'), ' ', $vendor);
-$vendor = ucwords($vendor);
-$vendor = str_replace(' ', '', $vendor);
 
 /**
  * Main
  */
 
 // Start Solar with the requested config file (if any)
+require 'Solar.php';
 Solar::start($config);
 
 // create a console controller using the Vendor_Cli classes
@@ -115,6 +141,24 @@ $console = Solar::factory('Solar_Controller_Console', array(
 try {
     $console->exec();
     exit(0);
+} catch (Solar_Controller_Console_Exception $e) {
+    
+    // find an exit code, if any
+    $exit = false;
+    $info = $e->getInfo();
+    if (array_key_exists('exit', $info)) {
+        $exit = (int) $info['exit'];
+    }
+    
+    // disallow empty or zero exit codes
+    if (! $exit) {
+        $exit = -1;
+    }
+    
+    // print the error message and exit
+    echo $e->getMessage() . "\n";
+    exit($exit);
+    
 } catch (Exception $e) {
     
     // find an exit code, if any

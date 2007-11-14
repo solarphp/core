@@ -59,7 +59,7 @@ default:
 }
 
 set_include_path($include);
-echo "Using include_path '" . get_include_path() . "'.\n";
+echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
 
 
 /**
@@ -110,7 +110,7 @@ foreach ($argv as $val) {
 
 // if there was a --config but no param, that's a failure
 if ($found && ! $config) {
-    echo "Please specify a config file path after the --config option.\n";
+    echo "Please specify a config file path after the --config option." . PHP_EOL;
     exit(-1);
 }
 

@@ -581,6 +581,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @return mixed
      * 
+     * @todo Expand to cover assoc, col, pairs, and value.
+     * 
      */
     public function __call($method, $params)
     {
@@ -730,7 +732,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             foreach ((array) $params['eager'] as $name) {
                 $related = $this->getRelated($name);
                 if ($related->type == 'has_many') {
-                    $data = $this->fetchRelatedArray($params, $name);
+                    $data = $this->fetchRelatedArray($select, $name);
                     $coll->loadRelated($name, $data);
                 }
             }
@@ -821,7 +823,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             foreach ((array) $params['eager'] as $name) {
                 $related = $this->getRelated($name);
                 if ($related->type == 'has_many') {
-                    $data = $this->fetchRelatedArray($params, $name);
+                    $data = $this->fetchRelatedArray($select, $name);
                     $coll->loadRelated($name, $data);
                 }
             }

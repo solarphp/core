@@ -379,7 +379,7 @@ class Solar_Controller_Command extends Solar_Base {
     {
         fwrite(
             $this->_stdout,
-            $this->_vt100($text, $num, $replace) . "\n"
+            $this->_vt100($text, $num, $replace) . PHP_EOL
         );
     }
     
@@ -433,7 +433,7 @@ class Solar_Controller_Command extends Solar_Base {
     {
         fwrite(
             $this->_stderr,
-            $this->_vt100($text, $num, $replace) . "\n"
+            $this->_vt100($text, $num, $replace) . PHP_EOL
         );
     }
     

@@ -138,7 +138,7 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Record sources, typically "from", "select", and "join".
+     * Column sources, typically "from", "select", and "join".
      * 
      * We use this for automated deconfliction of column names.
      * 
@@ -233,6 +233,34 @@ class Solar_Sql_Select extends Solar_Base {
     public function distinct($flag = true)
     {
         $this->_parts['distinct'] = (bool) $flag;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Adds 1 or more columns to the SELECT, without regard to a FROM or JOIN.
+     * 
+     * Multiple calls to cols() will append to the list of columns, not
+     * overwrite the previous columns.
+     * 
+     * @param string|array $cols The column(s) to add to the SELECT.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function cols($cols)
+    {
+        // save in the sources list
+        $this->_addSource(
+            'cols',
+            null,
+            null,
+            null,
+            null,
+            $cols
+        );
+        
+        // done
         return $this;
     }
     
@@ -746,17 +774,17 @@ class Solar_Sql_Select extends Solar_Base {
     
     /**
      * 
-     * Clears query properties and record sources.
+     * Clears query properties and row sources.
      * 
-     * @param string $key The property to clear; if empty, clears all
+     * @param string $part The property to clear; if empty, clears all
      * query properties.
      * 
      * @return Solar_Sql_Select
      * 
      */
-    public function clear($key = null)
+    public function clear($part = null)
     {
-        if (empty($key)) {
+        if (empty($part)) {
             // clear all parts
             $this->_parts = array(
                 'distinct' => false,
@@ -780,8 +808,8 @@ class Solar_Sql_Select extends Solar_Base {
             return $this;
         }
         
-        $key = strtolower($key);
-        switch ($key) {
+        $part = strtolower($part);
+        switch ($part) {
             
         case 'distinct':
             $this->_parts['distinct'] = false;
@@ -813,11 +841,17 @@ class Solar_Sql_Select extends Solar_Base {
             break;
         
         case 'cols':
+            $this->_parts['cols'] = array();
+            foreach ($this->_sources as $skey => $sval) {
+                $this->_sources[$skey]['cols'] = array();
+            }
+            break;
+        
         case 'where':
         case 'group':
         case 'having':
         case 'order':
-            $this->_parts[$key] = array();
+            $this->_parts[$part] = array();
             break;
         }
         
@@ -900,7 +934,7 @@ class Solar_Sql_Select extends Solar_Base {
             ));
         }
         
-        // build from scratch using the table and record sources.
+        // build from scratch using the table and row sources.
         $this->_parts['cols'] = array();
         $this->_parts['from'] = array();
         $this->_parts['join'] = array();
@@ -1082,6 +1116,7 @@ class Solar_Sql_Select extends Solar_Base {
         $select->clear('order');
         
         // clear all columns so there are no name conflicts
+        // @todo Replace with $select->clear('cols') ?
         foreach ($select->_sources as $key => $val) {
             $select->_sources[$key]['cols'] = array();
         }
@@ -1291,14 +1326,25 @@ class Solar_Sql_Select extends Solar_Base {
             $cols[$key] = trim($val);
         }
         
-        $this->_sources[$name] = array(
-            'type' => $type,
-            'name' => $name,
-            'orig' => $orig,
-            'join' => $join,
-            'cond' => $cond,
-            'cols' => $cols,
-        );
+        if ($type == 'cols') {
+            $this->_sources[] = array(
+                'type' => $type,
+                'name' => $name,
+                'orig' => $orig,
+                'join' => $join,
+                'cond' => $cond,
+                'cols' => $cols,
+            );
+        } else {
+            $this->_sources[$name] = array(
+                'type' => $type,
+                'name' => $name,
+                'orig' => $orig,
+                'join' => $join,
+                'cond' => $cond,
+                'cols' => $cols,
+            );
+        }
     }
     
     /**

@@ -500,7 +500,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $before = microtime(true);
         
         // prepare the statment
-        $obj = $this->_pdo->prepare($stmt);
+        try {
+            $obj = $this->_pdo->prepare($stmt);
+        } catch (PDOException $e) {
+            throw $this->_exception(
+                'ERR_PREPARE_FAILED',
+                array(
+                    'pdo_code'  => $e->getCode(),
+                    'pdo_text'  => $e->getMessage(),
+                    'host'      => $this->_config['host'],
+                    'port'      => $this->_config['port'],
+                    'user'      => $this->_config['user'],
+                    'name'      => $this->_config['name'],
+                    'stmt'      => $stmt,
+                    'pdo_trace' => $e->getTraceAsString(),
+                )
+            );
+        }
         
         // was data passed for binding?
         if ($data) {

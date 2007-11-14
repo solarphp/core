@@ -386,15 +386,22 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * @param mixed $spec If an array, treated as params for a select 
      * statement (where, group, having, etc) for finding the native-model IDs.
      * If a Record object, the record's primary-key is used for the native-
-     * model ID.
+     * model ID.  If a Solar_Sql_Select, used as-is for finding the native-
+     * model IDs.
      * 
      * @return Solar_Sql_Select
+     * 
+     * @todo Can we get away without using a params array at all, and use only
+     * Select or Record for the $spec?
      * 
      */
     public function newSelect($spec)
     {
-        // specification must be a record, or params for a select
-        if (! ($spec instanceof Solar_Sql_Model_Record) && ! is_array($spec)) {
+        // specification must be a record, or params for a select, or a select
+        if (! ($spec instanceof Solar_Sql_Model_Record)
+            && ! is_array($spec)
+            && ! ($spec instanceof Solar_Sql_Select)) {
+            // problem
             throw $this->_exception('ERR_RELATED_SPEC', array(
                 'spec' => $spec
             ));
@@ -461,9 +468,18 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
                 $spec->{$this->native_col}
             );
         } else {
-            // $spec is a Select object
-            // restrict to a sub-select of IDs from the native table
-            $inner = str_replace("\n", "\n\t\t", $spec->fetchSql());
+            // $spec is a Select object. restrict to a sub-select of IDs from
+            // the native table.
+            $clone = clone $spec;
+            
+            // sub-select **only** the native column, so that we're not
+            // pulling back everything, just the part we need to join on.
+            // this also helps SQLite, which is picky about fully-qualified
+            // names in sub-selects.
+            $clone->clear('cols');
+            $clone->cols($this->native_col);
+            $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
+            
             // add the native table ID at the top through a join
             $select->innerJoin(
                 "($inner) AS {$this->native_alias}",

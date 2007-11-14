@@ -206,9 +206,17 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
                 $spec->{$this->native_col} // this is where we set the filtering clause
             );
         } else {
-            // $spec is a Select object. restrict to a sub-query of IDs
-            // from the native table as an inner join.
-            $inner = str_replace("\n", "\n\t", $spec->fetchSql());
+            // $spec is a Select object. restrict to a sub-select of IDs from
+            // the native table.
+            $clone = clone $spec;
+            
+            // sub-select **only** the native column, so that we're not
+            // pulling back everything, just the part we need to join on.
+            // this also helps SQLite, which is picky about fully-qualified
+            // names in sub-selects.
+            $clone->clear('cols');
+            $clone->cols($this->native_col);
+            $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
             
             // add the native table ID at the top through a join
             $select->innerJoin(

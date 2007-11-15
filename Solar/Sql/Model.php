@@ -1998,7 +1998,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         /**
-         * Auto-set the table name, if needed.
+         * Auto-set the table name, if needed; leave it alone if already
+         * user-specified.
          */
         if (empty($this->_table_name)) {
             // auto-defined table name. change TableName to table_name.
@@ -2007,9 +2008,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             // model improperly.
             $table = preg_replace('/([a-z])([A-Z])/', '$1_$2', $table);
             $this->_table_name = strtolower($table);
-        } else {
-            // user-defined table name.
-            $this->_table_name = strtolower($this->_table_name);
         }
     }
     

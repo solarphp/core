@@ -215,7 +215,9 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
             // this also helps SQLite, which is picky about fully-qualified
             // names in sub-selects.
             $clone->clear('cols');
-            $clone->cols($this->native_col);
+            $disambig_col = $clone->disambiguate($this->native_alias, $this->native_col);
+            $clone->cols($disambig_col);
+            
             $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
             
             // add the native table ID at the top through a join

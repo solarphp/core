@@ -474,10 +474,10 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             
             // sub-select **only** the native column, so that we're not
             // pulling back everything, just the part we need to join on.
-            // this also helps SQLite, which is picky about fully-qualified
-            // names in sub-selects.
             $clone->clear('cols');
-            $clone->cols($this->native_col);
+            $disambig_col = $clone->disambiguate($this->native_alias, $this->native_col);
+            $clone->cols($disambig_col);
+            
             $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
             
             // add the native table ID at the top through a join

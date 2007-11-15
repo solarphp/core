@@ -941,8 +941,13 @@ class Solar_Sql_Select extends Solar_Base {
         
         // get a count of how many sources there are. if there's only 1, we
         // won't use column-name prefixes below. this will help soothe SQLite
-        // on JOINs of sub-selects.  e.g., `JOIN (SELECT alias.col FROM tbl AS alias) ...`
-        // won't work right, it needs `JOIN (SELECT col FROM tbl AS alias)`.
+        // on JOINs of sub-selects.
+        // 
+        // e.g., `JOIN (SELECT alias.col FROM tbl AS alias) ...`  won't work
+        // right, SQLite needs `JOIN (SELECT col FROM tbl AS alias)`.
+        // 
+        // @todo Use $this->disambiguate() instead?
+        // 
         $count_sources = count($this->_sources);
         
         // build from sources.
@@ -1202,6 +1207,27 @@ class Solar_Sql_Select extends Solar_Base {
     public function quoteMulti($list, $sep = null)
     {
         return $this->_sql->quoteMulti($list, $sep);
+    }
+    
+    /**
+     * 
+     * Disambiguates columns in certain situations, per the adapter.
+     * 
+     * We need this because sometimes we need to put a single column in place,
+     * but some adapters need it fully-qualified, and others fail when it it
+     * fully qualified.  This lets the adapter specify the correct behavior.
+     * 
+     * @param string $table The table name.
+     * 
+     * @param string $col The column name.
+     * 
+     * @return string Some adapters (SQLite) return only the column name,
+     * others return "table.col".
+     * 
+     */
+    public function disambiguate($table, $col)
+    {
+        return $this->_sql->disambiguate($table, $col);
     }
     
     // -----------------------------------------------------------------

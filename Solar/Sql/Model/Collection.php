@@ -110,6 +110,33 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
+     * Loads the struct with data from an array or another struct.
+     * 
+     * This is a complete override from the parent load() method.
+     * 
+     * We need this so that fetchAssoc() loading works properly; otherwise, 
+     * integer keys get renumbered, which disconnects the association.
+     * 
+     * @param array|Solar_Struct $spec The data to load into the object.
+     * 
+     * @return void
+     * 
+     */
+    public function load($spec)
+    {
+        // force to array
+        if ($spec instanceof Solar_Struct) {
+            // we can do this because $spec is of the same class
+            $this->_data = $spec->_data;
+        } elseif (is_array($spec)) {
+            $this->_data = $spec;
+        } else {
+            $this->_data = array();
+        }
+    }
+    
+    /**
+     * 
      * Loads *related* data for the collection.
      * 
      * Applies particularly to has-many eager loading.
@@ -130,9 +157,9 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     {
         $related = $this->_model->getRelated($name);
         if ($related->type == 'has_many') {
-            foreach ($data as $item) {
-                $id = array_shift($item);
-                $this->_related[$name][$id][] = $item;
+            foreach ($data as $key => $val) {
+                $id = array_shift($val);
+                $this->_related[$name][$id][$key] = $val;
             }
         } else {
             $id = array_shift($data);

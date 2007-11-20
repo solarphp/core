@@ -1003,26 +1003,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Disambiguates columns in certain situations.
-     * 
-     * We need this because sometimes we need to put a single column in place,
-     * but some adapters need it fully-qualified, and others fail when it it
-     * fully qualified.  This lets the adapter specify the correct behavior.
-     * 
-     * @param string $table The table name.
-     * 
-     * @param string $col The column name.
-     * 
-     * @return string The fully-qualified column name, "table.col".
-     * 
-     */
-    public function disambiguate($table, $col)
-    {
-        return "$table.$col";
-    }
-    
-    /**
-     * 
      * Returns a SELECT statement built from its component parts.
      * 
      * @param array $parts The component parts of the SELECT.

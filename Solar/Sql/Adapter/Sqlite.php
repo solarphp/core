@@ -80,26 +80,6 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
     
     /**
      * 
-     * Disambiguates columns in certain situations.
-     * 
-     * SQLite doesn't like fully-qualified column names sometimes (e.g., in
-     * a `JOIN (SELECT ...) ON ...` clause).  This helps with proper
-     * disambiguation in those circumstances.
-     * 
-     * @param string $table The table name.
-     * 
-     * @param string $col The column name.
-     * 
-     * @return string Just the column name.
-     * 
-     */
-    public function disambiguate($table, $col)
-    {
-        return $col;
-    }
-    
-    /**
-     * 
      * Creates a PDO-style DSN.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"

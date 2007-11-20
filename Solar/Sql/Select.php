@@ -944,7 +944,7 @@ class Solar_Sql_Select extends Solar_Base {
         // on JOINs of sub-selects.
         // 
         // e.g., `JOIN (SELECT alias.col FROM tbl AS alias) ...`  won't work
-        // right, SQLite needs `JOIN (SELECT col FROM tbl AS alias)`.
+        // right, SQLite needs `JOIN (SELECT col AS col FROM tbl AS alias)`.
         // 
         // @todo Use $this->disambiguate() instead?
         // 

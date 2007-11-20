@@ -212,11 +212,11 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
             
             // sub-select **only** the native column, so that we're not
             // pulling back everything, just the part we need to join on.
-            // this also helps SQLite, which is picky about fully-qualified
-            // names in sub-selects.
+            // SQLite needs the explicit "AS" here.
+            // <http://osdir.com/ml/db.sqlite.general/2003-05/msg00228.html>
             $clone->clear('cols');
-            $disambig_col = $clone->disambiguate($this->native_alias, $this->native_col);
-            $clone->cols($disambig_col);
+            $primary_col = "{$this->native_alias}.{$this->native_col} AS {$this->native_col}";
+            $clone->cols($primary_col);
             
             $inner = str_replace("\n", "\n\t\t", $clone->fetchSql());
             

@@ -158,7 +158,7 @@ class Solar_Form_Load_Model extends Solar_Base {
                 // look for 'validateInKeys' or 'validateInList' validation.
                 foreach ($filters as $v) {
                     if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
-                        $info['options'] = $this->_autoOptions($v[0], $v[2]);
+                        $info['options'] = $this->_autoOptions($v[0], $v[1]);
                         break;
                     }
                 }
@@ -174,7 +174,7 @@ class Solar_Form_Load_Model extends Solar_Base {
                 // look for 'validateInKeys' or 'validateInList'
                 foreach ($filters as $v) {
                     if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
-                        $info['options'] = $this->_autoOptions($v[0], $v[2]);
+                        $info['options'] = $this->_autoOptions($v[0], $v[1]);
                         break;
                     }
                 }

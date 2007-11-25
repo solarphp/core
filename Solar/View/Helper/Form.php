@@ -619,8 +619,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     }
                     
                     // ... add the raw descr XHTML, and close the tag.
-                    $descr .= $info['descr']
-                           . '/' . $this->_view->escape($this->_descr_tag) . '>';
+                    $descr .= '>' . $info['descr']
+                           . '</' . $this->_view->escape($this->_descr_tag) . '>';
                     
                     
                     // build both the <dt> and <dd> forms so we can use

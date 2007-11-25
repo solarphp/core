@@ -27,6 +27,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     protected $_Solar_View_Helper_Form = array(
         'attribs' => array(),
+        'descr_elem' => 'dd',
+        'descr_tag' => 'div',
+        'descr_class' => 'descr',
     );
     
     /**
@@ -152,6 +155,36 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      */
     protected $_request;
+    
+    /**
+     * 
+     * When the raw description XHTML is rendered, do so within this type of
+     * tag block (default is 'div' for a `<div>...</div>` tag block.)
+     * 
+     * @var string
+     * 
+     */
+    protected $_descr_tag = 'div';
+    
+    /**
+     * 
+     * Use this class attribute when rendering the raw descripton XHTML.
+     * Default is 'descr'; e.g., `<div class="descr">...</div>`.
+     * 
+     * @var string
+     * 
+     */
+    protected $_descr_class = 'descr';
+    
+    /**
+     * When rendering the raw description XHTML, do so within this structural
+     * element; default is 'dd' for the value portion (as vs 'dl' for the
+     * label portion).
+     * 
+     * @var string
+     * 
+     */
+    protected $_descr_elem = 'dd';
     
     /**
      * 
@@ -489,6 +522,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      * 
      * @return string
      * 
+     * @todo Refactor this down into sub-methods.
+     * 
      */
     public function fetch($with_form_tag = true)
     {
@@ -563,15 +598,50 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 if (strtolower($info['type']) == 'checkbox' && ! $in_group) {
                     $info['label'] = null;
                 }
-        
+                
                 // get the element output
                 $element = $helper->$method($info);
                 
+                // get the element description
+                $dt_descr = '';
+                $dd_descr = '';
+                if ($info['descr']) {
+                    
+                    // build the base description.
+                    // open the tag ...
+                    $descr = "<" . $this->_view->escape($this->_descr_tag);
+                    
+                    // ... add a CSS class ...
+                    if ($this->_descr_class) {
+                        $descr .= ' class="'
+                               . $this->_view->escape($this->_descr_class)
+                               . '"';
+                    }
+                    
+                    // ... add the raw descr XHTML, and close the tag.
+                    $descr .= $info['descr']
+                           . '/' . $this->_view->escape($this->_descr_tag) . '>';
+                    
+                    
+                    // build both the <dt> and <dd> forms so we can use
+                    // them in the right place.
+                    if ($this->_descr_elem == 'dt') {
+                        // using <dt>
+                        $dt_descr = $descr;
+                    } else {
+                        // using <dd>
+                        $dd_descr = $descr;
+                    }
+                }
+                       
                 // add the element and its feedback;
                 // handle differently if we're in a group.
                 if ($in_group) {
                     
+                    // append to the group feedback
                     $feedback .= $this->listFeedback($info['invalid']);
+                    
+                    // add the element itself
                     $form[] = "                $element";
                     
                 } else {
@@ -586,9 +656,9 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                     // get the feedback list
                     $feedback = $this->listFeedback($info['invalid']);
                     
-                    // add the form element
-                    $form[] = "            <dt$require><label$require for=\"$id\">$label</label></dt>";
-                    $form[] = "            <dd$require>$element$feedback</dd>";
+                    // add the form element with all parts in place
+                    $form[] = "            <dt$require><label$require for=\"$id\">$label</label>$dt_descr</dt>";
+                    $form[] = "            <dd$require>$element$feedback$dd_descr</dd>";
                     $form[] = '';
                     
                 }
@@ -694,11 +764,24 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     public function reset()
     {
+        // attributed for the <form> tag
         $this->_attribs = array_merge(
             $this->_default_attribs,
             $this->_config['attribs']
         );
         
+        // form-element descriptions
+        $this->_descr_elem = $this->_config['descr_elem'];
+        $this->_descr_tag = $this->_config['descr_tag'];
+        $this->_descr_class = $this->_config['descr_class'];
+        
+        // make sure we force the description to be in either the <dt>
+        // element or the <dd> portion
+        if ($this->_descr_elem != 'dt') {
+            $this->_descr_elem = 'dd';
+        }
+        
+        // everything else
         $this->_feedback = array();
         $this->_hidden = array();
         $this->_stack = array();

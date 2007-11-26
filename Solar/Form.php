@@ -379,7 +379,7 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    public function addFilter($name, $spec, $array) 
+    public function addFilter($name, $spec, $array = null) 
     {
         // make sure the element exists
         $name = $this->_prepareName($name, $array);
@@ -406,7 +406,7 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    public function addFilters($name, $list, $array)
+    public function addFilters($name, $list, $array = null)
     {
         foreach ((array) $list as $spec) {
             $this->addFilter($name, $spec, $array);

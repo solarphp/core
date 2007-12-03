@@ -58,6 +58,36 @@ default:
     break;
 }
 
+// manually look for a --include-path argument that overrides the default
+$argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
+$found = false;
+foreach ($argv as $val) {
+    if ($val == '--include-path') {
+        // found the argument
+        $found = true;
+        // reset the default in preparation for the next argument
+        $include = false;
+        continue;
+    }
+    
+    if ($found && substr($val, 0, 1) != '-') {
+        $include = $val;
+        break;
+    }
+    
+    if (substr($val, 0, 15) == '--include-path=') {
+        $found = true;
+        $include = substr($val, 15);
+        break;
+    }
+}
+
+// if there was a --include-path but no param, that's a failure
+if ($found && ! $include) {
+    echo "Please specify an include-path after the --include-path option." . PHP_EOL;
+    exit(-1);
+}
+
 set_include_path($include);
 echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
 

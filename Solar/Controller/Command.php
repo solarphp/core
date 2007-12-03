@@ -442,7 +442,7 @@ class Solar_Controller_Command extends Solar_Base {
      * Frontend to locale() that replaces style-format codes for VT100 shell
      * output.
      * 
-     * @param string $text The text to print to STDERR, usually a translation
+     * @param string $text The text for printing, usually a translation
      * key.
      * 
      * @param mixed $num Helps determine whether to get a singular

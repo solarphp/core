@@ -463,8 +463,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      * 2. `_preInsert()` and `_preUpdate()` run before the insert or update.
      * 
-     * 3. The record is validated, then inserted or updated.
-     * 
+     * 3. As part of the model insert()/update() logic, `filter()` gets called,
+     *    which itself has `_preFilter()` and `_postFilter()` hooks.
+     *    
      * 4. `_postInsert()` and `_postUpdate()` run after the insert or update.
      * 
      * 5. `_postSave()` runs after all save operations, but before related
@@ -476,7 +477,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * @param array $data An associative array of data to merge with existing
      * record data.
      * 
-     * @return bool
+     * @return void
      * 
      * @todo Automatic connection of related IDs to each other?
      * 

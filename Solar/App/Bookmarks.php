@@ -416,11 +416,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         
         // load from posted data
         $data = $this->_request->post('bookmarks', array());
-        // Solar::dump($data, 'from POST');
-        // Solar::$config['TEST']['BREAK'] = true;
-        // Solar::dump($item);
         $item->load($data, $cols);
-        // die('postload');
         
         // force these values
         $item->area_id = $this->area->id;

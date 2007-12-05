@@ -24,16 +24,20 @@ class Solar_Controller_Command extends Solar_Base {
      * Array of format conversions for use on a variety of pre-set console
      * style combinations.
      * 
-     * Based on ANSI VT100 Color/Style Codes, according to the VT100 
-     * User Guide[1] and the ANSI/VT100 Terminal Control[2] reference.
+     * Based on ANSI VT100 Color/Style Codes, according to the [VT100 User Guide][1]
+     * and the [ANSI/VT100 Terminal Control reference][2]. Inspired by
+     * [PEAR Console_Color][3].
      * 
      * [1]: http://vt100.net/docs/vt100-ug
      * [2]: http://www.termsys.demon.co.uk/vtansi.htm
+     * [3]: http://pear.php.net/Console_Color
      * 
      * @var array
      * 
      */
     protected $_vt100 = array(
+        // literal percent sign
+        '%%'    => '%',             // percent-sign
         // color, normal weight
         '%k'    => "\033[30m",      // black
         '%r'    => "\033[31m",      // red

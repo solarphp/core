@@ -605,7 +605,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 // get the element description
                 $dt_descr = '';
                 $dd_descr = '';
-                if ($info['descr']) {
+                
+                // only build a description if it's non-empty, and isn't a
+                // DESCR_* "empty" locale value.
+                if ($info['descr'] && substr($info['descr'], 0, 6) != 'DESCR_') {
                     
                     // build the base description.
                     // open the tag ...

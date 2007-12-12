@@ -23,7 +23,9 @@ class Solar_Http_Request extends Solar_Base {
      * Keys are ...
      * 
      * `adapter`
-     * : (string) The adapter class, for example 'Solar_Auth_Adapter_File'.
+     * : (string) The adapter class; for example, 'Solar_Http_Request_Adapter_Stream'
+     *   (the default).  When the `curl` extension is loaded, the default is
+     *   'Solar_Http_Request_Adapter_Curl'.
      * 
      * @var array
      * 
@@ -31,6 +33,21 @@ class Solar_Http_Request extends Solar_Base {
     protected $_Solar_Http_Request = array(
         'adapter' => 'Solar_Http_Request_Adapter_Stream',
     );
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param mixed $config User-defined configuration values.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        if (extension_loaded('curl')) {
+            $this->_Solar_Http_Request['adapter'] = 'Solar_Http_Request_Adapter_Curl';
+        }
+        parent::__construct($config);
+    }
     
     /**
      * 

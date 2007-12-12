@@ -1,0 +1,225 @@
+<?php
+/**
+ * 
+ * Uses cURL for a standalone HTTP request.
+ * 
+ * @category Solar
+ * 
+ * @package Solar_Http
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
+class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter {
+    
+    /**
+     * 
+     * Support method to make the request, then return headers and content.
+     * 
+     * @param string $uri The URI get a response from.
+     * 
+     * @param array $headers A sequential array of header lines for the request.
+     * 
+     * @param string $content A string of content for the request.
+     * 
+     * @return array A sequential array where element 0 is a sequential array of
+     * header lines, and element 1 is the body content.
+     * 
+     * @todo Implement an exception for timeouts.
+     * 
+     */
+    protected function _fetch($uri, $headers, $content)
+    {
+        // prepare the connection and get the response
+        $ch = $this->_prepareCurlHandle($uri, $headers, $content);
+        $response = curl_exec($ch);
+        
+        // did we hit any errors?
+        if ($content === false) {
+            throw $this->_exception(
+                'ERR_CONNECTION_FAILED',
+                array(
+                    'code' => curl_get_errno($ch),
+                    'text' => curl_get_error($ch),
+                )
+            );
+        }
+        
+        // get the metadata and close the connection
+        $meta = curl_getinfo($ch);
+        curl_close($ch);
+        
+        // // did it time out?
+        // if ($meta['timed_out']) {
+        //     throw $this->_exception('ERR_CONNECTION_TIMEOUT', array(
+        //         'uri'     => $uri,
+        //         'meta'    => $meta,
+        //         'content' => $content,
+        //     ));
+        // }
+        
+        // get the header lines from the response
+        $headers = explode(
+            "\r\n",
+            substr($response, 0, $meta['header_size'])
+        );
+        
+        // get the content portion from the response
+        $content = substr($response, $meta['header_size']);
+        
+        // done!
+        return array($headers, $content);
+    }
+    
+    /**
+     * 
+     * Builds a cURL resource handle for _fetch() from property options.
+     * 
+     * @param array $headers A sequential array of headers.
+     * 
+     * @param string $content The body content.
+     * 
+     * @see <http://php.net/curl>
+     * 
+     * @todo HTTP Authentication
+     * 
+     */
+    protected function _prepareCurlHandle($uri, $headers, $content)
+    {
+        /**
+         * the basic handle and the url for it
+         */
+        $ch = curl_init($uri);
+        
+        /**
+         * request method
+         */
+        switch ($this->_method) {
+        case 'GET':
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            break;
+        case 'POST':
+            curl_setopt($ch, CURLOPT_POST, true);
+            break;
+        default:
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->_method);
+            break;
+        }
+        
+        /**
+         * headers
+         */
+        // HTTP version
+        switch ($this->_version) {
+        case '1.0':
+            // HTTP/1.0
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+            break;
+        case '1.1':
+            // HTTP/1.1
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            break;
+        default:
+            // let curl decide
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_NONE);
+            break;
+        }
+        
+        // set specialized headers and retain all others
+        $http_header = array();
+        foreach ($headers as $label => $value) {
+            switch ($label) {
+            case 'User-Agent':
+                curl_setopt($ch, CURLOPT_USERAGENT, $value);
+                break;
+            case 'Referer':
+                curl_setopt($ch, CURLOPT_REFERER, $value);
+                break;
+            default:
+                $http_header[] = "$label: $value";
+            }
+        }
+        
+        // all remaining headers
+        if ($http_header) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $http_header);
+        }
+        
+        /**
+         * content
+         */
+        // only send content if we're POST
+        if ($this->_method == 'POST' && ! empty($content)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+        }
+        
+        /**
+         * curl behaviors
+         */
+        // convert Unix newlines to CRLF newlines on transfers.
+        curl_setopt($ch, CURLOPT_CRLF, true);
+        
+        // automatically set the Referer: field in requests where it
+        // follows a Location: redirect.
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        
+        // follow any "Location: " header that the server sends as
+        // part of the HTTP header (note this is recursive, PHP will follow
+        // as many "Location: " headers that it is sent, unless
+        // CURLOPT_MAXREDIRS is set).
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        
+        // include the headers in the response
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        
+        // return the transfer as a string instead of printing it
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        // property-name => curlopt-constant
+        $var_opt = array(
+            '_proxy'         => CURLOPT_PROXY,
+            '_max_redirects' => CURLOPT_MAXREDIRS,
+            '_timeout'       => CURLOPT_TIMEOUT,
+        );
+        
+        // set other behaviors
+        foreach ($var_opt as $var => $opt) {
+            if ($this->$var) {
+                curl_setopt($ch, $opt, $this->$var);
+            }
+        }
+        
+        /**
+         * secure transport behaviors
+         */
+        $is_secure = strtolower(substr($uri, 0, 5)) == 'https' ||
+                     strtolower(substr($uri, 0, 3)) == 'ssl';
+        
+        if ($is_secure) {
+            // property-name => curlopt-constant
+            $var_opt = array(
+                '_ssl_verify_peer' => CURLOPT_SSL_VERIFYPEER,
+                '_ssl_cafile'      => CURLOPT_CAINFO,
+                '_ssl_capath'      => CURLOPT_CAPATH,
+                '_ssl_local_cert'  => CURLOPT_SSLCERT,
+                '_ssl_passphrase'  => CURLOPT_SSLCERTPASSWD,
+            );
+            
+            // set other behaviors
+            foreach ($var_opt as $var => $opt) {
+                if ($this->$var) {
+                    curl_setopt($ch, $opt, $this->$var);
+                }
+            }
+        }
+        
+        /**
+         * Done
+         */
+        return $ch;
+    }
+}

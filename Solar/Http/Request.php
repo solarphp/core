@@ -53,7 +53,7 @@ class Solar_Http_Request extends Solar_Base {
      * 
      * Factory method for returning adapters.
      * 
-     * @return Solar_Auth_Adapter
+     * @return Solar_Http_Request_Adapter
      * 
      */
     public function solarFactory()

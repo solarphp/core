@@ -182,6 +182,15 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
+     * The URI this request came from (if any).
+     * 
+     * @var Solar_Uri
+     * 
+     */
+    protected $_referer = null;
+    
+    /**
+     * 
      * Let the request time out after this many seconds.
      * 
      * @var string
@@ -360,7 +369,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $passwd The associated password for the handle.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setBasicAuth($handle, $passwd)
@@ -392,7 +401,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The character set, e.g. "utf-8".
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setCharset($val)
@@ -411,7 +420,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string|array $val The body content.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setContent($val)
@@ -426,7 +435,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The content-type, e.g. "text/plain".
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setContentType($val)
@@ -444,13 +453,32 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * @param string $val The value of the cookie; will be URL-encoded at
      * fetch() time.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setCookie($key, $val = '')
     {
         $key = str_replace(array("\r", "\n"), '', $key);
         $this->_cookies[$key] = $val;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Sets multiple cookie values in $this->_cookies to add to the request.
+     * 
+     * @param array $cookies An array of key-value pairs where the key is the
+     * cookie name and the value is the cookie value.  The values will be
+     * URL-encoded at fetch() time.
+     * 
+     * @return Solar_Http_Request_Adapter This adapter object.
+     * 
+     */
+    public function setCookies($cookies)
+    {
+        foreach ($cookies as $key => $val) {
+            $this->setCookie($key, $val);
+        }
         return $this;
     }
     
@@ -467,6 +495,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * | Content-Type  | [[setContentType()]], [[setCharset()]] |
      * | Cookie        | [[setCookie()]]                        |
      * | HTTP          | [[setVersion()]]                       |
+     * | Referer       | [[setReferer()]]                       |
      * | User-Agent    | [[setUserAgent()]]                     |
      * 
      * @param string $key The header label, such as "X-Foo-Bar".
@@ -478,7 +507,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * values of the same key.  When false, the same header key is sent
      * multiple times with the different values.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      * @see [[php::header() | ]]
      * 
@@ -490,13 +519,14 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // disallow certain headers
         $lower = strtolower($key);
-        $notok = array('authorization', 'content-type', 'cookie', 'http', 'user-agent');
+        $notok = array('authorization', 'content-type', 'cookie', 'http', 'referer', 'user-agent');
         if (in_array($lower, $notok)) {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
                 'Authorization' => 'setBasicAuth()',
                 'Content-Type'  => 'setContentType()',
                 'Cookie'        => 'setCookie()',
                 'HTTP'          => 'setVersion()',
+                'Referer'       => 'setReferer()',
                 'User-Agent'    => 'setUserAgent()',
             ));
         }
@@ -524,7 +554,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param int $max The max number of redirects to allow.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setMaxRedirects($max)
@@ -542,7 +572,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $method The method to use for the request.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setMethod($method)
@@ -568,7 +598,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string|Solar_Uri $spec The URI for the proxy server.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setProxy($spec)
@@ -585,11 +615,30 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
+     * Sets the referer for the request.
+     * 
+     * @param Solar_Uri|string $spec The referer URI.
+     * 
+     * @return Solar_Http_Request_Adapter This adapater object.
+     * 
+     */
+    public function setReferer($spec)
+    {
+        if ($spec instanceof Solar_Uri) {
+            $this->_referer = $spec;
+        } else {
+            $this->_referer = Solar::factory('Solar_Uri', array('uri' => $spec));
+        }
+        return $this;
+    }
+    
+    /**
+     * 
      * Sets the request timeout in seconds.
      * 
      * @param float $time The timeout in seconds.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setTimeout($time)
@@ -604,7 +653,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param Solar_Uri|string $spec The URI for the request.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setUri($spec)
@@ -624,7 +673,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The User-Agent value.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setUserAgent($val)
@@ -639,7 +688,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $version The version number (1.0 or 1.1).
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setVersion($version)
@@ -657,7 +706,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param bool $flag True or false.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setSslVerifyPeer($flag)
@@ -674,7 +723,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The CA file.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setSslCafile($val)
@@ -692,7 +741,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The CA path.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setSslCapath($val)
@@ -709,7 +758,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The local certificate file path.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setSslLocalCert($val)
@@ -724,7 +773,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * @param string $val The passphrase.
      * 
-     * @return Solar_Http_Adapter This adapter object.
+     * @return Solar_Http_Request_Adapter This adapter object.
      * 
      */
     public function setSslPassphrase($val)
@@ -735,21 +784,29 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
     
     /**
      * 
-     * Fetches from the specified URI and returns a Solar_Http_Response object
-     * (or an array of objects if there was more than one response).
+     * Fetches the last Solar_Http_Response object from the specified URI.
      * 
-     * @param bool $as_array When false, returns only the last response from the
-     * request (a Solar_Http_Response object).  When true, returns an array of
-     * response objects representing all responses.  Useful when the request
-     * has one or more redirections.
+     * @return Solar_Http_Response
      * 
-     * @return Solar_Http_Response|array
+     */
+    public function fetch()
+    {
+        $response = $this->fetchAll();
+        return end($response);
+    }
+    
+    /**
+     * 
+     * Fetches all Solar_Http_Response objects from the specified URI (this
+     * includes all intervening redirects).
+     * 
+     * @return Solar_Http_Response
      * 
      * @todo Would it make more sense to have a stack in the response object
      * for holding on to the stack of responses?
      * 
      */
-    public function fetch($as_array = false)
+    public function fetchAll()
     {
         // get prepared headers and content for the request
         list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
@@ -822,13 +879,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         $response[$i]->content = $content;
         
         // done!
-        if ($as_array) {
-            // return the whole stack
-            return $response;
-        } else {
-            // only return the last response
-            return $response[$i];
-        }
+        return $response;
     }
     
     /**
@@ -953,6 +1004,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             $list['User-Agent'] = $this->_user_agent;
         }
         
+        // force the referer if needed
+        if ($this->_referer) {
+            $list['Referer'] = $this->_referer->get(true);
+        }
+        
         // convert the list of all header values to a sequential array
         $headers = array();
         foreach ($list as $key => $set) {
@@ -963,10 +1019,12 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // create additional cookies in the headers array
-        $key = 'Cookie';
-        foreach ($this->_cookies as $name => $data) {
-            $val = "$name=" . urlencode($data);
-            $headers[] = Solar_Mime::headerLine($key, $val);
+        if ($this->_cookies) {
+            $val = array();
+            foreach ($this->_cookies as $name => $data) {
+                $val[] = "$name=" . urlencode($data);
+            }
+            $headers[] = Solar_Mime::headerLine('Cookie', implode(';', $val));
         }
         
         // done!

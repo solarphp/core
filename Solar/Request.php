@@ -249,7 +249,10 @@ class Solar_Request extends Solar_Base {
      */
     public function http($key = null, $alt = null)
     {
-        return $this->_getValue('http', strtolower($key), $alt);
+        if ($key !== null) {
+            $key = strtolower($key);
+        }
+        return $this->_getValue('http', $key, $alt);
     }
     
     /**
@@ -290,26 +293,39 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
-     * Is this a 'PUT' request?
+     * Is this a 'PUT' request? Supports Google's X-HTTP-Method-Override
+     * solution to languages like PHP not fully honoring the HTTP PUT method.
      * 
      * @return bool
      * 
      */
     public function isPut()
     {
-        return $this->server('REQUEST_METHOD') == 'PUT';
+        $is_put      = $this->server('REQUEST_METHOD') == 'PUT';
+        
+        $is_override = $this->server('REQUEST_METHOD') == 'POST' &&
+                       $this->http('X-HTTP-Method-Override') == 'PUT';
+        
+        return ($is_put || $is_override);
     }
     
     /**
      * 
-     * Is this a 'DELETE' request?
+     * Is this a 'DELETE' request? Supports Google's X-HTTP-Method-Override
+     * solution to languages like PHP not fully honoring the HTTP DELETE
+     * method.
      * 
      * @return bool
      * 
      */
     public function isDelete()
     {
-        return $this->server('REQUEST_METHOD') == 'DELETE';
+        $is_delete   = $this->server('REQUEST_METHOD') == 'DELETE';
+        
+        $is_override = $this->server('REQUEST_METHOD') == 'POST' &&
+                       $this->http('X-HTTP-Method-Override') == 'DELETE';
+        
+        return ($is_delete || $is_override);
     }
     
     /**

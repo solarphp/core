@@ -39,12 +39,12 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter {
         $response = curl_exec($ch);
         
         // did we hit any errors?
-        if ($content === false) {
+        if ($content === false || $content === null) {
             throw $this->_exception(
                 'ERR_CONNECTION_FAILED',
                 array(
-                    'code' => curl_get_errno($ch),
-                    'text' => curl_get_error($ch),
+                    'code' => curl_errno($ch),
+                    'text' => curl_error($ch),
                 )
             );
         }

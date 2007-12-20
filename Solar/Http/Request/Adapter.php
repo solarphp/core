@@ -519,15 +519,17 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         
         // disallow certain headers
         $lower = strtolower($key);
-        $notok = array('authorization', 'content-type', 'cookie', 'http', 'referer', 'user-agent');
-        if (in_array($lower, $notok)) {
+        $notok = array(
+            'authorization' => 'setBasicAuth()',
+            'content-type'  => 'setContentType()',
+            'cookie'        => 'setCookie()',
+            'http'          => 'setVersion()',
+            'referer'       => 'setReferer()',
+            'user-agent'    => 'setUserAgent()',
+        );
+        if (! empty($notok[$lower])) {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
-                'Authorization' => 'setBasicAuth()',
-                'Content-Type'  => 'setContentType()',
-                'Cookie'        => 'setCookie()',
-                'HTTP'          => 'setVersion()',
-                'Referer'       => 'setReferer()',
-                'User-Agent'    => 'setUserAgent()',
+                $lower => $notok[$lower],
             ));
         }
         

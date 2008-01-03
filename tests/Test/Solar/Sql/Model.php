@@ -151,7 +151,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -179,7 +179,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -285,7 +285,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -314,7 +314,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -343,7 +343,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -376,7 +376,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -411,7 +411,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -441,7 +441,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -479,7 +479,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -509,7 +509,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -533,7 +533,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -560,7 +560,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -597,7 +597,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -619,7 +619,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -654,7 +654,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -691,7 +691,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -724,7 +724,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -750,7 +750,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -782,7 +782,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -829,7 +829,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -881,7 +881,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -940,7 +940,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -981,7 +981,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -1018,7 +1018,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -1053,7 +1053,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
     
@@ -1134,7 +1134,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         /**
          * recover memory
          */
-        $model->__destruct();
+        $model->free();
         unset($model);
     }
 

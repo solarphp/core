@@ -54,7 +54,7 @@ class Test_Solar_Sql_ModelRelated_HasMany extends Test_Solar_Sql_ModelRelated {
         $this->assertSame($actual, $expect);
         
         // recover memory
-        $areas->__destruct();
+        $areas->free();
         unset($areas);
     }
     
@@ -91,7 +91,7 @@ class Test_Solar_Sql_ModelRelated_HasMany extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_final, $count_after);
         
         // recover memory
-        $areas->__destruct();
+        $areas->free();
         unset($areas);
     }
     
@@ -129,7 +129,7 @@ class Test_Solar_Sql_ModelRelated_HasMany extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_final, $count_after);
         
         // recover memory
-        $areas->__destruct();
+        $areas->free();
         unset($areas);
     }
     
@@ -162,7 +162,7 @@ class Test_Solar_Sql_ModelRelated_HasMany extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $areas->__destruct();
+        $areas->free();
         unset($areas);
     }
     
@@ -192,7 +192,7 @@ class Test_Solar_Sql_ModelRelated_HasMany extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $areas->__destruct();
+        $areas->free();
         unset($areas);
     }
 }

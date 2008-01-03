@@ -753,7 +753,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $invalid = $filter->getChainInvalid();
         
         // reclaim memory
-        $filter->__destruct();
+        $filter->free();
         unset($filter);
         
         // was it valid?

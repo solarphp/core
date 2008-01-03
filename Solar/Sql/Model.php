@@ -468,7 +468,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return void
      * 
      */
-    public function __destruct()
+    public function free()
     {
         foreach ($this->_related as $key => $val) {
             unset($this->_related[$key]);

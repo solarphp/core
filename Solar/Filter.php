@@ -173,7 +173,7 @@ class Solar_Filter extends Solar_Base {
      * @return void
      * 
      */
-    public function __destruct()
+    public function free()
     {
         // each filter object instance
         foreach ($this->_filter as $key => $val) {

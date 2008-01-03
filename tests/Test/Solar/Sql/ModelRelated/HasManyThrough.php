@@ -89,7 +89,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertSame($actual, $expect);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -148,7 +148,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertEquals($count3, $count2);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -212,7 +212,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertEquals($count_final, $count_after);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -244,7 +244,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -272,7 +272,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -310,11 +310,11 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $taggings->__destruct();
+        $taggings->free();
         unset($taggings);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
 }

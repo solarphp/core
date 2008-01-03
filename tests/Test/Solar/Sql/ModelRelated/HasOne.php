@@ -83,7 +83,7 @@ class Test_Solar_Sql_ModelRelated_HasOne extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_final, $count_after);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -118,7 +118,7 @@ class Test_Solar_Sql_ModelRelated_HasOne extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_final, $count_after);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -148,7 +148,7 @@ class Test_Solar_Sql_ModelRelated_HasOne extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
     
@@ -175,7 +175,7 @@ class Test_Solar_Sql_ModelRelated_HasOne extends Test_Solar_Sql_ModelRelated {
         $this->assertEquals($count_after, $count_before);
         
         // recover memory
-        $nodes->__destruct();
+        $nodes->free();
         unset($nodes);
     }
 }

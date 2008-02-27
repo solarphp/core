@@ -165,7 +165,11 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             
             // yes.  exclusive lock for writing.
             flock($fp, LOCK_EX);
-            fwrite($fp, $data, strlen($data));
+            
+            // don't need the 3rd param (byte length) because Solar has
+            // already turned off magic_quotes_runtime.
+            // <http://php.net/fwrite>
+            fwrite($fp, $data);
             
             // add a .serial file? (do this while the file is locked to avoid
             // race conditions)
@@ -243,20 +247,22 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         // this avoids race conditions.
         $file = $this->entry($key);
         
-        // make sure the file exists and is readable,
-        if (file_exists($file) && is_readable($file)) {
-            // has the file expired?
-            $expire_time = filemtime($file) + $this->_config['life'];
-            if (time() > $expire_time) {
-                // expired, remove it
-                $this->delete($key);
-                return false;
-            }
-        } else {
+        // make sure the file exists and is readable
+        if (! file_exists($file) || ! is_readable($file)) {
             return false;
         }
         
-        // file exists; open it for reading
+        // make sure file is still within its lifetime
+        if ($this->_isExpired($file)) {
+            // expired, remove it
+            $this->delete($key);
+            return false;
+        }
+        
+        // the file data, if we can open the file.
+        $data = false;
+        
+        // file exists and is not expired; open it for reading
         $fp = @fopen($file, 'rb', false, $this->_context);
         
         // could it be opened?
@@ -265,10 +271,11 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             // lock the file right away
             flock($fp, LOCK_SH);
             
-            // get the cache entry data.
             // PHP caches file lengths; clear that out so we get
             // an accurate file length.
             clearstatcache();
+            
+            // get the cache entry data.
             $len = filesize($file);
             $data = fread($fp, $len);
             
@@ -281,12 +288,33 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             // unlock and close the file
             flock($fp, LOCK_UN);
             fclose($fp);
-            
-            // done!
-            return $data;
         }
         
-        // could not open file.
+        // will be false if fopen() failed, otherwise is the file contents.
+        return $data;
+    }
+    
+    /**
+     * 
+     * Checks if a file has expired (is past its lifetime) or not.
+     * 
+     * If lifetime is empty (zero), then the file never expires.
+     * 
+     * @param string $file The file name.
+     * 
+     * @return bool
+     * 
+     */
+    protected function _isExpired($file)
+    {
+        if ($this->_config['life']) {
+            $expire_time = filemtime($file) + $this->_config['life'];
+            if (time() > $expire_time) {
+                return true;
+            }
+        }
+        
+        // lifetime is forever, or not past expiration yet.
         return false;
     }
     

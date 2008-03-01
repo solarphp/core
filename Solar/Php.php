@@ -25,7 +25,7 @@
  *     $php->setIniFile(false)
  *         ->setIniArray($ini)
  *         ->setMode('passthru')
- *         ->run('echo "hello world!\n"');
+ *         ->runCode('echo "hello world!\n"');
  *     
  *     Solar::stop();
  * }}
@@ -149,7 +149,6 @@ class Solar_Php extends Solar_Base {
      */
     protected $_exit_code;
     
-    
     /**
      * 
      * Constructor.
@@ -265,6 +264,32 @@ class Solar_Php extends Solar_Base {
         return $this;
     }
     
+    /**
+     * 
+     * Sets the execution mode for the process.
+     * 
+     * Valid modes are:
+     * 
+     * `echo`
+     * : Echoes the command, does not execute it.
+     * 
+     * `exec`
+     * : Uses [[php::exec() | ]] for the process.
+     * 
+     * `passthru`
+     * : Uses [[php::passthru() | ]] for the process.
+     * 
+     * `shell_exec`
+     * : Uses [[php::shell_exec() | ]] for the process.
+     * 
+     * `system`
+     * : Uses [[php::system() | ]] for the process.
+     * 
+     * @param string $mode One of the reconized modes.
+     * 
+     * @return Solar_Php
+     * 
+     */
     public function setMode($mode)
     {
         $list = array('echo', 'exec', 'passthru', 'shell_exec', 'system');
@@ -276,60 +301,111 @@ class Solar_Php extends Solar_Base {
         return $this;
     }
     
-    public function runFile($file)
+    /**
+     * 
+     * Runs the named file as the PHP code for the process.
+     * 
+     * @param string $file The script file name.
+     * 
+     * @return Solar_Php
+     * 
+     */
+    public function run($file)
     {
         $code = file_get_contents($file);
         return $this->run($code);
     }
     
-    // @todo strip the opening and closing php tags from $code
-    public function run($code)
+    /**
+     * 
+     * Runs the given string as the PHP code for the process.
+     * 
+     * @param string $code The script code.
+     * 
+     * @return Solar_Php
+     * 
+     */
+    public function runCode($code)
     {
         // clean up from last run
         $this->_output    = array();
         $this->_last_line = null;
         $this->_exit_code = null;
         
+        // build the full command with PHP code
         $cmd = $this->_buildCommand() . " --run " . $this->_buildCode($code);
         
+        // what execution mode?
         switch ($this->_mode) {
-            case 'echo':
-                echo $cmd;
-                break;
-            case 'exec':
-                $this->_last_line = exec($cmd, $this->_output, $this->_exit_code);
-                break;
-            case 'passthru':
-                passthru($cmd, $this->_exit_code);
-                break;
-            case 'shell_exec':
-                $this->_output = shell_exec($cmd);
-                $this->_last_line = end($this->_output);
-                reset($this->_output);
-                break;
-            case 'system':
-                $this->_last_line = system($cmd, $this->_exit_code);
-                break;
+        case 'echo':
+            echo $cmd;
+            break;
+        case 'exec':
+            $this->_last_line = exec($cmd, $this->_output, $this->_exit_code);
+            break;
+        case 'passthru':
+            passthru($cmd, $this->_exit_code);
+            break;
+        case 'shell_exec':
+            $this->_output = shell_exec($cmd);
+            $this->_last_line = end($this->_output);
+            reset($this->_output);
+            break;
+        case 'system':
+            $this->_last_line = system($cmd, $this->_exit_code);
+            break;
         }
         
+        // done!
         return $this;
     }
     
+    /**
+     * 
+     * Gets the exit code from the separate process.
+     * 
+     * @return int
+     * 
+     */
     public function getExitCode()
     {
         return $this->_exit_code;
     }
     
+    /**
+     * 
+     * Gets all lines of output from the separate process.
+     * 
+     * @return array
+     * 
+     */
     public function getOutput()
     {
         return $this->_output;
     }
     
+    /**
+     * 
+     * Gets the last line of output from the separate process.
+     * 
+     * @return string
+     * 
+     */
     public function getLastLine()
     {
         return $this->_last_line;
     }
     
+    /**
+     * 
+     * Wraps the given code string in extra code to load, start, and stop
+     * Solar.
+     * 
+     * @param string $code The code to run in the separate process.
+     * 
+     * @return string
+     * 
+     */
     protected function _buildCode($code)
     {
         // strip long opening tag
@@ -360,6 +436,13 @@ class Solar_Php extends Solar_Base {
         return escapeshellarg($code);
     }
     
+    /**
+     * 
+     * Builds the command-line invocation of PHP.
+     * 
+     * @return string The PHP command with the necessary switches.
+     * 
+     */
     protected function _buildCommand()
     {
         // the PHP binary
@@ -384,4 +467,3 @@ class Solar_Php extends Solar_Base {
         return $cmd;
     }
 }
-?>

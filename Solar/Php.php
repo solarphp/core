@@ -6,7 +6,7 @@
  * 
  * Intended use is for documentation and testing, where you don't want the
  * classes loaded in the main environment to interact with the classes in the
- * working environment.
+ * current environment.
  * 
  * An example to run `echo "hello world!"` in a separate process:
  * 

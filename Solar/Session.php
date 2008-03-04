@@ -37,8 +37,13 @@ class Solar_Session extends Solar_Base {
      * Keys are ...
      * 
      * `class`
-     * : Store values in this top-level key in $_SESSION.  Default is
+     * : (string) Store values in this top-level key in $_SESSION.  Default is
      *   'Solar'.
+     * 
+     * `handler`
+     * : (dependency) A Solar_Session_Handler dependency injection. Default
+     *   is the string 'php', which means to use the native PHP session save.
+     *   handler instead of a dependency injection.
      * 
      * `P3P`
      * : Compact [Platform for Privacy Preferences][] policy. Default is
@@ -157,18 +162,20 @@ class Solar_Session extends Solar_Base {
      * 
      */
     protected $_Solar_Session = array(
-        'class' => 'Solar',
-        'P3P'   => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
+        'class'   => 'Solar',
+        'handler' => 'php',
+        'P3P'     => 'CP="CAO COR CURa ADMa DEVa TAIa OUR BUS IND UNI COM NAV INT STA"',
     );
     
     /**
      * 
-     * The top-level $_SESSION class key for segmenting values.
+     * The session save handler object, or a string 'php' to use the native
+     * PHP session handler instead.
      * 
-     * @var array
+     * @param Solar_Session_Handler|string
      * 
      */
-    protected $_class = 'Solar';
+    static public $handler = 'php';
     
     /**
      * 
@@ -194,6 +201,15 @@ class Solar_Session extends Solar_Base {
     
     /**
      * 
+     * The top-level $_SESSION class key for segmenting values.
+     * 
+     * @var array
+     * 
+     */
+    protected $_class = 'Solar';
+    
+    /**
+     * 
      * Constructor.
      * 
      * Starts the session if one does not exist, but only if we're not at the
@@ -209,6 +225,11 @@ class Solar_Session extends Solar_Base {
     {
         parent::__construct($config);
         
+        // only set up the handler if it doesn't exist yet.
+        if (! self::$handler) {
+            self::setHandler($this->_config['handler']);
+        }
+        
         // start a session if one does not exist, but not if we're at
         // the command line.
         if (session_id() === '' && PHP_SAPI != 'cli') {
@@ -218,12 +239,52 @@ class Solar_Session extends Solar_Base {
             session_start();
         }
         
+        // set the storage segment
         $this->_class = trim($this->_config['class']);
         if ($this->_class == '') {
             $this->_class = 'Solar';
         }
         
         $this->setClass($this->_class);
+    }
+    
+    /**
+     * 
+     * Sets the save-handler for **all** session objecs.
+     * 
+     * Once a session is started, the handler cannot be changed.
+     * 
+     * @param dependency $hander A Solar_Sesssion_Handler dependency injection..
+     * 
+     * @return void
+     * 
+     */
+    static public function setHandler($handler)
+    {
+        if (session_id() === '' && self::$handler) {
+            // if the handler is set and the session is already running,
+            // can't change it.
+            throw $this->_exception(
+                'ERR_HANDLER_ALREADY_SET',
+                array(
+                    'handler' => self::$handler,
+                )
+            );
+        }
+        
+        // use native php sessions?
+        if (is_string($handler) && strtolower($handler) == 'php') {
+            // set the handler to a non-object, so that we know we're
+            // asking for the native php session handler.
+            $handler = 'php';
+            return;
+        }
+        
+        // build the handler up from a dependency otherwise
+        self::$handler = Solar::dependency(
+            'Solar_Session_Handler',
+            $handler
+        );
     }
     
     /**

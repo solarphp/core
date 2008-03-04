@@ -676,7 +676,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * 3. Solar/App/Layout/
      * 
-     * @return Solar_View
+     * @return void
      * 
      */
     protected function _setLayoutTemplates()

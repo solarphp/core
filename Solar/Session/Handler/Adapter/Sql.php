@@ -63,7 +63,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
     
     /**
      * 
-     * Open session handler
+     * Open session handler.
      * 
      * @return bool
      * 
@@ -78,6 +78,19 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
         }
         
         return true;
+    }
+    
+    /**
+     * 
+     * Close session handler.
+     * 
+     * @return bool
+     * 
+     */
+    public function close()
+    {
+        $this->_sql->disconnect();
+        $this->_sql = null;
     }
     
     /**
@@ -197,12 +210,14 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
      * 
      * Inserts a new session-data row in the database.
      * 
+     * @param string $id The session ID.
+     * 
      * @param string $data The serialized session data.
      * 
      * @return bool
      * 
      */
-    protected function _insert($data)
+    protected function _insert($id, $data)
     {
         $now = date('Y-m-d H:i:s');
         
@@ -214,7 +229,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
         );
         
         try {
-            $this->_sql->insert($this->_config['table'], $values);
+            $this->_sql->insert($this->_config['table'], $cols);
         } catch (Solar_Sql_Exception $e) {
             // @todo log this somehow?
             return false;
@@ -225,6 +240,8 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
      * 
      * Updates an existing session-data row in the database.
      * 
+     * @param string $id The session ID.
+     * 
      * @param string $data The serialized session data.
      * 
      * @return bool
@@ -232,7 +249,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
      * @todo Should we log caught exceptions?
      *
      */
-    protected function _update($data)
+    protected function _update($id, $data)
     {
         $cols = array(
             $this->_config['updated_col'] => date('Y-m-d H:i:s'),

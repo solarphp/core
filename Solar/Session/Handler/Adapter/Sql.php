@@ -149,10 +149,10 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
         // insert or update?
         if ($count == 0) {
             // no data yet, insert
-            return $this->_insert($data);
+            return $this->_insert($id, $data);
         } elseif ($count == 1) {
             // existing data, update
-            return $this->_update($data);
+            return $this->_update($id, $data);
         } else {
             // more than one row means an ID collision
             // @todo log this somehow?

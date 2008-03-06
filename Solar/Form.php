@@ -844,27 +844,51 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    protected function _populate($src, $elem = null)
+    protected function _populate($src, $name = null)
     {
         // are we working with an array?
         if (is_array($src)) {
-            // yes, descend through each of the sub-elements.
-            foreach ($src as $key => $val) {
-                $sub = empty($elem) ? $key : $elem . "[$key]";
-                $this->_populate($val, $sub);
+            // is the array sequential?  check only the first key.
+            if (is_int(key($src))) {
+                // assign the sequential array to the element.
+                // this is for multiple-select options.
+                $this->elements[$name]['value'] = $src;
+            } else {
+                // not sequential. descend through each of the sub-elements.
+                foreach ($src as $key => $val) {
+                    $sub = empty($name) ? $key : $name . "[$key]";
+                    $this->_populate($val, $sub);
+                }
             }
         } else {
             // populate an element value, but only if it exists.
-            if (isset($this->elements[$elem])) {
+            if (isset($this->elements[$name])) {
+                
+                // convenient reference
+                $elem =& $this->elements[$name];
                 
                 // do not populate certain elements, as this will
                 // reset their value inappropriately.
-                $skip = $this->elements[$elem]['type'] == 'submit' ||
-                        $this->elements[$elem]['type'] == 'button' ||
-                        $this->elements[$elem]['type'] == 'reset';
+                $skip = $name['type'] == 'submit' ||
+                        $name['type'] == 'button' ||
+                        $name['type'] == 'reset';
                         
-                if (! $skip) {
-                    $this->elements[$elem]['value'] = $src;
+                if ($skip) {
+                    return;
+                }
+                
+                // is this a multiple select?
+                $multiple = $elem['type'] == 'select' &&
+                            ! empty($elem['attribs']['multiple']);
+                
+                // set the value appropriately
+                if ($multiple && ! $src) {
+                    // empty on a multiple.  force it to an empty array.
+                    // (merely casting to array gets us an array with one
+                    // empty-string value.)
+                    $elem['value'] = array();
+                } else {
+                    $elem['value'] = $src;
                 }
             }
         }

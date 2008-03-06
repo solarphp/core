@@ -40,10 +40,21 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
             $this->_name .= '[]';
         }
         
-        // check for multiple implied by the name, and set attrib if
-        // needed
+        // check for multiple implied by the name
         if (substr($this->_name, -2) == '[]') {
+            // set multiple attrib
             $this->_attribs['multiple'] = 'multiple';
+            // if no value is selected, the element won't be sent back to the
+            // server at all (like an unchecked checkbox).  add a default
+            // blank value under a non-array name so that if no values are
+            // selected, an empty value is sent back to the server.
+            $xhtml = $this->_view->formHidden(array(
+                'name'  => substr($this->_name, 0, -2),
+                'value' => null,
+            ));
+        } else {
+            // not multiple, start with blank xhtml
+            $xhtml = '';
         }
         
         // build the list of options
@@ -60,8 +71,9 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
                     . '>' . $this->_view->escape($opt_label) . "</option>";
         }
         
-        // now build the XHTML
-        return '<select name="' . $this->_view->escape($this->_name) . '"'
+        // build and return the remaining xhtml
+        return $xhtml
+             . '<select name="' . $this->_view->escape($this->_name) . '"'
              . $this->_view->attribs($this->_attribs) . ">\n"
              . "    " . implode("\n    ", $list) . "\n"
              . "</select>";

@@ -973,7 +973,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
             
             // honor as set by the user
             $content      = $this->content;
-            $content_type = $this->content_type;
+            $content_type = $this->_content_type;
             
         } else {
             

@@ -1178,11 +1178,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 $val[$k] = $this->quote($v);
             }
             return implode(', ', $val);
-        } elseif (is_numeric($val)) {
-            // no need to quote numerics
-            return $val;
         } else {
-            // quote all other scalars
+            // quote all other scalars, including numerics
             $this->connect();
             return $this->_pdo->quote($val);
         }

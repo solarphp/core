@@ -297,23 +297,25 @@ class Solar_Form extends Solar_Base {
         // prepare the name as an array key?
         $name = $this->_prepareName($name, $array);
         
-        // prepare the element info
+        // make sure we have all the required keys.
         $info = array_merge($this->_default_element, $info);
         
-        // forcibly cast each of the keys into the elements array
-        $this->elements[$name] = array (
-            'name'    => (string) $name,
-            'type'    => (string) $info['type'],
-            'label'   => (string) $info['label'],
-            'value'   =>          $info['value'], // mixed
-            'descr'   => (string) $info['descr'],
-            'require' => (bool)   $info['require'],
-            'disable' => (bool)   $info['disable'],
-            'options' => (array)  $info['options'],
-            'attribs' => (array)  $info['attribs'],
-            'filters' => (array)  $info['filters'],
-            'invalid' => (array)  $info['invalid'],
-        );
+        // forcibly cast each of the keys of the info array. do it this way
+        // so that extra keys are not removed from the info array.
+        $info['name']    = (string) $name;
+        $info['type']    = (string) $info['type'];
+        $info['label']   = (string) $info['label'];
+        $info['value']   =          $info['value']; // mixed
+        $info['descr']   = (string) $info['descr'];
+        $info['require'] = (bool)   $info['require'];
+        $info['disable'] = (bool)   $info['disable'];
+        $info['options'] = (array)  $info['options'];
+        $info['attribs'] = (array)  $info['attribs'];
+        $info['filters'] = (array)  $info['filters'];
+        $info['invalid'] = (array)  $info['invalid'];
+        
+        // retain info as an element.
+        $this->elements[$name] = $info;
     }
     
     /**

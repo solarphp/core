@@ -28,6 +28,13 @@ class Solar_Registry {
     
     /**
      * 
+     * Constructor is disabled to enforce a singleton pattern.
+     * 
+     */
+    final private function __construct() {}
+    
+    /**
+     * 
      * Accesses an object in the registry.
      * 
      * @param string $name The registered name.

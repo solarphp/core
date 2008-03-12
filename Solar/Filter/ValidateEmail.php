@@ -65,7 +65,7 @@ class Solar_Filter_ValidateEmail extends Solar_Filter_Abstract {
         
         $word = "($atom|$quoted_string)";
         
-        $domain = "$sub_domain(\\x2e$sub_domain)*";
+        $domain = "$sub_domain(\\x2e$sub_domain)+";
         
         $local_part = "$word(\\x2e$word)*";
         

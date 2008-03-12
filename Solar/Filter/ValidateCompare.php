@@ -43,6 +43,10 @@ class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract {
      * Be sure to use this only as part of a filter chain, as it will attempt
      * to look up the other value in the filter data.
      * 
+     * 
+     * E.g., `validateCompare('email_confirm', 'email')`.  This means that
+     * when `email_confirm` is exactly null, it will validate.
+     * 
      * @param mixed $value The value to validate.  If exactly null, the 
      * validation will automatically pass.
      * 

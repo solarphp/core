@@ -83,13 +83,12 @@ class Solar {
      * : (array) An array of key-value pairs where the key is an
      * [[php::ini_set | ]] key, and the value is the value for that setting.
      * 
-     * `locale_class`
-     * : (string) Use this class for the 'locale' registry object. Default
-     *   'Solar_Locale'.
-     * 
-     * `request_class`
-     * : (string) Use this class for the 'request' registry object. Default
-     *   'Solar_Request'.
+     * `registry_set`
+     * : (array) An array of key-value pairs to use in pre-setting registry
+     *   objects.  The key is a registry name to use.  The value is either
+     *   a string class name, or is a sequential array where element 0 is
+     *   a string class name and element 1 is a configuration array for that
+     *   class.  Cf. [[Solar_Registry::set()]].
      * 
      * `start`
      * : (array) Run these scripts at the end of Solar::start().
@@ -101,11 +100,10 @@ class Solar {
      * 
      */
     protected static $_Solar = array(
-        'ini_set'        => array(),
-        'locale_class'   => 'Solar_Locale',
-        'request_class'  => 'Solar_Request',
-        'start'          => array(),
-        'stop'           => array(),
+        'ini_set'      => array(),
+        'registry_set' => array(),
+        'start'        => array(),
+        'stop'         => array(),
     );
     
     /**
@@ -239,17 +237,31 @@ class Solar {
             ini_set($key, $val);
         }
         
-        // register the locale class (lazy-load)
-        Solar_Registry::set(
-            'locale',
-            Solar::config('Solar', 'locale_class', 'Solar_Locale')
-        );
+        // auto-set registry entries
+        $register = Solar::config('Solar', 'registry_set', array());
+        foreach ($register as $name => $list) {
+            // make sure we have the class-name and a config
+            $list = array_pad((array) $list, 2, null);
+            list($spec, $config) = $list;
+            // register the item
+            Solar_Registry::set($name, $spec, $config);
+        }
         
-        // register the request-envivronment class (lazy-load)
-        Solar_Registry::set(
-            'request',
-            Solar::config('Solar', 'request_class', 'Solar_Request')
-        );
+        // make sure a locale object is registered
+        if (! Solar_Registry::exists('locale')) {
+            Solar_Registry::set(
+                'locale',
+                'Solar_Locale'
+            );
+        }
+        
+        // make sure a request-environment object is registered
+        if (! Solar_Registry::exists('request')) {
+            Solar_Registry::set(
+                'request',
+                'Solar_Request'
+            );
+        }
         
         // run any 'start' hook scripts
         foreach ((array) Solar::config('Solar', 'start') as $file) {

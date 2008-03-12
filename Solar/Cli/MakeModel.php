@@ -169,16 +169,13 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $dir = Solar_Dir::fix(dirname(__FILE__) . '/MakeModel/Data');
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
-            $key = substr(basename($file), 0, -4);
-            if (substr($key, 0, 5) == 'class') {
-                // we need to add the php-open tag ourselves, instead of
-                // having it in the template file, becuase the PEAR packager
-                // complains about parsing the skeleton code.
-                $this->_tpl[$key] = "<\?php\n" . file_get_contents($file);
-            } else {
-                // no need for an opening tag on the method files
-                $this->_tpl[$key] = file_get_contents($file);
-            }
+            // strip .php off the end of the file name
+            $key = susbtr(basename($file), 0, -4);
+            
+            // we need to add the php-open tag ourselves, instead of
+            // having it in the template file, becuase the PEAR packager
+            // complains about parsing the skeleton code.
+            $this->_tpl[$key] = "<?php\n" . file_get_contents($file);
         }
     }
     

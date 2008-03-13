@@ -325,14 +325,9 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         $item->editor_handle = $this->user->auth->handle;
         
         // save?
-        if ($this->_isProcess('save')) {
-            try {
-                $item->save();
-                $this->_session->setFlash('add_ok', true);
-                $this->_redirect("bookmarks/edit/{$item->id}");
-            } catch (Solar_Sql_Model_Record_Exception_Invalid $e) {
-                // do nothing, the item form will show invalids
-            }
+        if ($this->_isProcess('save') && $item->save()) {
+            $this->_session->setFlash('add_ok', true);
+            $this->_redirect("bookmarks/edit/{$item->id}");
         }
         
         // cancel?
@@ -429,11 +424,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         // 
         
         if ($this->_isProcess('save')) {
-            try {
-                $item->save();
-            } catch (Solar_Sql_Model_Record_Exception_Invalid $e) {
-                // do nothing, the item form will show invalids
-            }
+            $item->save();
         }
         
         // cancel
@@ -524,14 +515,9 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         $item->editor_handle = $this->user->auth->handle;
         
         // save?
-        if ($this->_isProcess('save')) {
-            try {
-                $item->save();
-                $this->_session->setFlash('add_ok', true);
-                $this->_redirect("bookmarks/edit/{$item->id}");
-            } catch (Solar_Sql_Model_Record_Exception_Invalid $e) {
-                // do nothing, the item form will show invalids
-            }
+        if ($this->_isProcess('save') && $item->save()) {
+            $this->_session->setFlash('add_ok', true);
+            $this->_redirect("bookmarks/edit/{$item->id}");
         }
         
         // assign data for the view, and done
@@ -555,7 +541,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         $params = array(
             'where'  => array(
                 // only this area
-                'bookmarks.area_id = ?'      => $this->area->id,
+                'bookmarks.area_id = ?' => $this->area->id,
             ),
             'order'  => $this->_getSqlOrder(),
             'paging' => $this->_query('paging', 10),
@@ -572,7 +558,10 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         // flash forward the backlink in case we go to edit, but only if this
         // is a regular-format request
         if (! $this->_format) {
-            $this->_session->setFlash('backlink', $this->_request->server('REQUEST_URI'));
+            $this->_session->setFlash(
+                'backlink',
+                $this->_request->server('REQUEST_URI')
+            );
         }
         
         // assign the list of tags in use

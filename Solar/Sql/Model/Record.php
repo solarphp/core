@@ -104,6 +104,25 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
+     * If you call save() and an exception gets thrown, this stores that
+     * exception.
+     * 
+     * @var Solar_Exception
+     * 
+     */
+    protected $_save_exception;
+    
+    /**
+     * 
+     * Filters added for this one record object.
+     * 
+     * @var array
+     * 
+     */
+    protected $_filters = array();
+    
+    /**
+     * 
      * Magic getter for record properties; automatically calls __getColName()
      * methods when they exist.
      * 
@@ -485,6 +504,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function save($data = null)
     {
         $this->_checkDeleted();
+        $this->_save_exception = null;
         
         // load data at save-time?
         if ($data) {
@@ -492,15 +512,27 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $this->setStatus('dirty');
         }
         
+        try {
+            $this->_save();
+            $this->_saveRelated();
+            return true;
+        } catch (Exception $e) {
+            $this->_save_exception = $e;
+            return false;
+        }
+    }
+    
+    protected function _save()
+    {
         // only save if we're not clean
         if ($this->_status != 'clean') {
-            
+        
             // pre-save routine
             $this->_preSave();
-            
+        
             // turn off lazy loading
             $this->_lazy_load = false;
-            
+        
             // insert or update based on primary key value
             $primary = $this->_model->primary_col;
             if (empty($this->$primary)) {
@@ -508,30 +540,37 @@ class Solar_Sql_Model_Record extends Solar_Struct
             } else {
                 $this->_update();
             }
-            
+        
             // turn on lazy-loading for post-save routines
             $this->_lazy_load = true;
-            
+        
             // post-save routine
             $this->_postSave();
         }
+    }
+    
+    protected function _saveRelated()
+    {
+        $this->_preSaveRelated();
         
         // now save each related, but only if instantiated
         foreach ($this->_model->related as $name => $info) {
-            
+        
             // use $this->_data[$name] **instead of** $this->$name,
             // to avoid lazy-loading the related record (which in turn
             // causes infinite recursion)
             if (empty($this->_data[$name])) {
                 continue;
             }
-            
+        
             if ($this->_data[$name] instanceof Solar_Sql_Model_Record ||
                 $this->_data[$name] instanceof Solar_Sql_Model_Collection) {
                 // is a record or collection, save them
                 $this->_data[$name]->save();
             }
         }
+        
+        $this->_postSaveRelated();
     }
     
     /**
@@ -553,6 +592,14 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      */
     protected function _postSave()
+    {
+    }
+    
+    protected function _preSaveRelated()
+    {
+    }
+    
+    protected function _postSaveRelated()
     {
     }
     
@@ -725,6 +772,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // set filters as specified by the model
         foreach ($this->_model->filters as $key => $list) {
+            $filter->addChainFilters($key, $list);
+        }
+        
+        // set filters added to this record
+        foreach ($this->_filters as $key => $list) {
             $filter->addChainFilters($key, $list);
         }
         
@@ -933,6 +985,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
         return $this->_status;
     }
     
+    public function getSaveException()
+    {
+        return $this->_save_exception;
+    }
+    
     /**
      * 
      * Throws an exception if this record status is 'deleted'.
@@ -994,5 +1051,25 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // elements are missing.
         
         return $form;
+    }
+    
+    /**
+     * 
+     * Adds a column filter to this record instance.
+     * 
+     * @param string $col The column name to filter.
+     * 
+     * @param string $method The filter method name, e.g. 'validateUnique'.
+     * 
+     * @args Remaining arguments are passed to the filter method.
+     * 
+     * @return void
+     * 
+     */
+    public function addFilter($col, $method)
+    {
+        $args = func_get_args();
+        array_shift($args); // the first param is $col
+        $this->_filters[$col][] = $args;
     }
 }

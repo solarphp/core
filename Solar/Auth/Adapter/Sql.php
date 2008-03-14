@@ -46,6 +46,10 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
      * `uid_col`
      * : (string) Name of the column with the numeric user ID ("user_id").
      * 
+     * `hash_algo`
+     * : (string) The hashing algorithm for the password.  Default is 'md5'.
+     *   See [[php::hash_alogos() | ]] for a list of accepted algorithms.
+     * 
      * `salt`
      * : (string) A salt prefix to make cracking passwords harder.
      * 
@@ -65,6 +69,7 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         'moniker_col' => null,
         'uri_col'     => null,
         'uid_col'     => null,
+        'hash_algo'   => 'md5',
         'salt'        => null,
         'where'       => array(),
     );
@@ -108,13 +113,18 @@ class Solar_Auth_Adapter_Sql extends Solar_Auth_Adapter {
         }
         
         // salt and hash the password
-        $md5 = hash('md5', $this->_config['salt'] . $this->_passwd);
+        $hash = hash(
+            $this->_config['hash_algo'],
+            $this->_config['salt'] . $this->_passwd
+        );
         
-        // build the select
+        // build the select, fetch up to 2 rows (just in case there's actually
+        // more than one, we don't want to select *all* of them).
         $select->from($this->_config['table'], $cols)
                ->where("{$this->_config['handle_col']} = ?", $this->_handle)
-               ->where("{$this->_config['passwd_col']} = ?", $md5)
-               ->multiWhere($this->_config['where']);
+               ->where("{$this->_config['passwd_col']} = ?", $hash)
+               ->multiWhere($this->_config['where'])
+               ->limit(2);
                
         // get the results
         $rows = $select->fetchAll();

@@ -94,6 +94,15 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
             $this->_tpl['model']
         );
         
+        // create the class dir before attempting to write the model class
+        $cdir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class)
+        );
+        
+        if (! file_exists($cdir)) {
+            mkdir($cdir, 0755, true);
+        }
+        
         // write the model class
         $target = $this->_target
                 . str_replace('_', DIRECTORY_SEPARATOR, $class)
@@ -111,7 +120,10 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $dir = Solar_Dir::fix(
             $this->_target . str_replace('_', '/', $class) . '/Setup'
         );
-        @mkdir($dir, 0777, true);
+        
+        if (! file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
         
         // write the cols file
         $this->_outln('Updating table cols.');
@@ -170,7 +182,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
             // strip .php off the end of the file name
-            $key = susbtr(basename($file), 0, -4);
+            $key = substr(basename($file), 0, -4);
             
             // we need to add the php-open tag ourselves, instead of
             // having it in the template file, becuase the PEAR packager

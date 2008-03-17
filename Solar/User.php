@@ -26,8 +26,8 @@ class Solar_User extends Solar_Base {
      * 
      */
     protected $_Solar_User = array(
-        'auth' => null,
-        'role' => null,
+        'auth'   => null,
+        'role'   => null,
         'access' => null
     );
     
@@ -72,23 +72,15 @@ class Solar_User extends Solar_Base {
         // construction
         parent::__construct($config);
         
-        // set up an authentication object.
-        $this->auth = Solar::dependency('Solar_Auth', $this->_config['auth']);
-        
-        // set up the roles object.
-        $this->role = Solar::dependency('Solar_Role', $this->_config['role']);
-        
-        // set up the access object.
-        $this->access = Solar::dependency('Solar_Access', $this->_config['access']);
+        // setup
+        $this->_setup();
         
         // start up authentication
-        $this->auth->start();
+        $this->_authStart();
         
         // is this a valid authenticated user?
         if ($this->auth->isValid()) {
-            // yes, the user is authenticated as valid.
-            // load up any roles for the user.
-            $this->role->load($this->auth->handle);
+            $this->_loadRoles();
         } else {
             // no, user is not valid.  
             // clear out any previous roles.
@@ -97,6 +89,61 @@ class Solar_User extends Solar_Base {
         }
         
         // load up the access list for the handle and roles
+        $this->_loadAccess();
+    }
+    
+    /**
+     * 
+     * Setup for the auth, role, and access objects.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
+        // set up an authentication object.
+        $this->auth = Solar::dependency('Solar_Auth', $this->_config['auth']);
+        
+        // set up the roles object.
+        $this->role = Solar::dependency('Solar_Role', $this->_config['role']);
+        
+        // set up the access object.
+        $this->access = Solar::dependency('Solar_Access', $this->_config['access']);
+    }
+    
+    /**
+     * 
+     * Starts authenticated session.
+     * 
+     * @return void
+     * 
+     */
+    protected function _authStart()
+    {
+        $this->auth->start();
+    }
+    
+    /**
+     * 
+     * Loads the role object.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadRoles()
+    {
+        $this->role->load($this->auth->handle);
+    }
+    
+    /**
+     * 
+     * Loads the access object.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadAccess()
+    {
         $this->access->load($this->auth->handle, $this->role->list);
     }
 }

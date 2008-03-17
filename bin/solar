@@ -34,12 +34,18 @@ $vendor = str_replace(' ', '', $vendor);
  * Discover and set the include-path
  */
 
-$include_key = 'PHP_' . strtoupper($vendor) . '_INCLUDE_PATH';
+$vendor_key = 'PHP_' . strtoupper($vendor) . '_INCLUDE_PATH';
 switch (true) {
+
+// are we in a "solar system" installation? recognize this from the standard
+// directory structure and the physical file location within it.
+case (substr(__FILE__, -23) == '/source/solar/bin/solar'):
+    $include = substr(__FILE__, 0, -23) . '/include';
+    break;
     
-// the vendor-specific include path
-case (! empty($_SERVER[$include_key])):
-    $include = $_SERVER[$include_key];
+// use a vendor-specific include path?
+case (! empty($_SERVER[$vendor_key])):
+    $include = $_SERVER[$vendor_key];
     break;
     
 // fall back to the solar include path

@@ -102,12 +102,18 @@ echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
  * Discover the config file
  */
 
-$config_key = 'PHP_' . strtoupper($vendor) . '_CONFIG_FILE';
+$vendor_key = 'PHP_' . strtoupper($vendor) . '_CONFIG_FILE';
 switch (true) {
 
+// are we in a "solar system" installation? recognize this from the standard
+// directory structure and the physical file location within it.
+case (substr(__FILE__, -23) == '/source/solar/bin/solar'):
+    $config = substr(__FILE__, 0, -23) . "/config/$vendor.config.php";
+    break;
+    
 // the vendor-specific default config
-case (! empty($_SERVER[$config_key])):
-    $config = $_SERVER[$config_key];
+case (! empty($_SERVER[$vendor_key])):
+    $config = $_SERVER[$vendor_key];
     break;
     
 // fall back to the solar default config

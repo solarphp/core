@@ -95,6 +95,34 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     
     /**
      * 
+     * Provides magic "isRoleName()" to map to "is('role_name')".
+     * 
+     * @param string $method The called method name.
+     * 
+     * @param array $params Parameters passed to the method.
+     * 
+     * @return bool
+     * 
+     */
+    public function __call($method, $params)
+    {
+        if (substr($method, 2) == 'is') {
+            // convert from isRoleName to role_name
+            $role = substr($method, 2);
+            $role = preg_replace('/([a-z])([A-Z])/', '$1_$2', $role);
+            $role = strtolower($role);
+            // call is() on the role name
+            return $this->is($role);
+        } else {
+            throw $this->_exception('ERR_METHOD_NOT_IMPLEMENTED', array(
+                'method' => $method,
+                'params' => $params,
+            ));
+        }
+    }
+    
+    /**
+     * 
      * Load the list of roles for the given user from the adapter.
      * 
      * @param string $handle The username to load roles for.

@@ -586,11 +586,17 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function __call($method, $params)
     {
-        // is it "fetchOneBy" or "fetchAllBy"?
-        if (substr($method, 0, 10) == 'fetchOneBy') {
+        // fetch a record, or a collection?
+        if (substr($method, 0, 7) == 'fetchBy') {
+            // fetch a record
+            $fetch = 'fetchOne';
+            $method = substr($method, 7);
+        } elseif (substr($method, 0, 10) == 'fetchOneBy') {
+            // fetch a record
             $fetch = 'fetchOne';
             $method = substr($method, 10);
         } elseif (substr($method, 0, 10) == 'fetchAllBy') {
+            // fetch a collection
             $fetch = 'fetchAll';
             $method = substr($method, 10);
         } else {

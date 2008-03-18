@@ -252,8 +252,8 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      */
     protected function _error($locale_key)
     {
-        $this->_action = 'error';
         $this->errors[] = $this->locale($locale_key);
+        return $this->_forward('error');
     }
     
     /**

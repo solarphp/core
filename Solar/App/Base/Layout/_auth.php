@@ -26,33 +26,23 @@
             </p>
             <?php
                 echo $this->form()
-                          ->submit(array(
-                                'name'    => 'process',
-                                'value'   => $this->getTextRaw('PROCESS_LOGOUT')
-                          ))
+                          ->addProcess('logout', array('id' => 'logout-process'))
                           ->fetch();
             ?>
         <?php else: ?>
             <?php
                 echo $this->form()
-                          ->hidden(array(
-                                'name'    => 'process',
-                                'value'   => $this->getTextRaw('PROCESS_LOGIN')
-                          ))
                           ->text(array(
                                 'name'    => 'handle',
-                                'label'   => $this->getTextRaw('LABEL_HANDLE'),
-                                'attribs' => array('size' => 10),
+                                'label'   => 'LABEL_HANDLE',
+                                'attribs' => array('size' => 10, 'id' => 'login-handle'),
                           ))
                           ->password(array(
                                 'name'    => 'passwd',
-                                'label'   => $this->getTextRaw('LABEL_PASSWD'),
-                                'attribs' => array('size' => 10)
+                                'label'   => 'LABEL_PASSWD',
+                                'attribs' => array('size' => 10, 'id' => 'login-password')
                           ))
-                          ->submit(array(
-                                'name'    => 'process',
-                                'value'   => $this->getTextRaw('PROCESS_LOGIN')
-                          ))
+                          ->addProcess('login', array('id' => 'login-process'))
                           ->fetch();
             ?>
         <?php endif; ?>

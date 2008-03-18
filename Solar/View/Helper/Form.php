@@ -643,7 +643,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 }
                 
                 // setup
-                $label    = $this->_view->escape($info['label']);
+                $label    = $this->_view->getText($info['label']);
                 $id       = $this->_view->escape($info['attribs']['id']);
                 $method   = 'form' . ucfirst($info['type']);
                 try {

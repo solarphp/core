@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Solar_View template for editing a bookmark.
+ * Solar_View template for adding a bookmark.
  * 
  * @category Solar
  * 
@@ -23,8 +23,7 @@
 <p>[ <?php echo $this->anchor($this->backlink, 'BACKLINK') ?> ]</p>
 
 <?php echo $this->form()
-    ->auto($this->formdata)
-    ->hidden(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
-    ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
-    ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_CANCEL')))
-    ->fetch();
+                ->auto($this->formdata)
+                ->addProcess('save')
+                ->addProcess('cancel')
+                ->fetch();

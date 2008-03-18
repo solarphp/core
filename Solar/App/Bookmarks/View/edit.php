@@ -29,12 +29,11 @@
     
     echo $this->form(array('id' => 'form-bookmark'))
               ->auto($this->formdata)
-              ->hidden(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
-              ->beginGroup()
-              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_SAVE')))
-              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_CANCEL')))
-              ->submit(array('name' => 'process', 'value' => $this->getTextRaw('PROCESS_DELETE'), 'attribs' => $attribs))
-              ->endGroup()
+              ->addProcessGroup(array(
+                  'save',
+                  'cancel',
+                  'delete' => array('attribs' => $attribs)
+              ))
               ->fetch();
     
     // javascript highlight effects

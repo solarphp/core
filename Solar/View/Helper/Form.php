@@ -380,6 +380,34 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
+     * Adds a submit button named 'process' to the form, using a translated
+     * locale key stub as the submit value.
+     * 
+     * @param string $key The locale key stub.  E.g., $key is 'save', the
+     * submit-button value is the locale translated 'PROCESS_SAVE' string.
+     * 
+     * @param array $info Additional element info.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function addProcess($key, $info = null)
+    {
+        $key = 'PROCESS_' . strtoupper($key);
+        
+        $base = array(
+            'type'  => 'submit',
+            'name'  => 'process',
+            'value' => $this->_view->getTextRaw($key),
+        );
+        
+        $info = array_merge((array) $info, $base);
+        
+        return $this->addElement($info);
+    }
+    
+    /**
+     * 
      * Sets the form validation status.
      * 
      * @param bool $flag True if you want to say the form is valid,

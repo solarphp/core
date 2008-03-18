@@ -296,8 +296,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
     {
         // must be logged in to proceed
         if (! $this->user->auth->isValid()) {
-            $this->errors[] = 'ERR_NOT_LOGGED_IN';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_LOGGED_IN');
         }
         
         // build a link for _redirect() calls and the backlink.
@@ -353,15 +352,13 @@ class Solar_App_Bookmarks extends Solar_App_Base {
     {
         // must be logged in to proceed
         if (! $this->user->auth->isValid()) {
-            $this->errors[] = 'ERR_NOT_LOGGED_IN';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_LOGGED_IN');
         }
         
         // get the bookmark ID
         $id = (int) $id;
         if (! $id) {
-            $this->errors[] = 'ERR_NOT_SELECTED';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_SELECTED');
         }
         
         // fetch the bookmark
@@ -369,8 +366,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         
         // must be in this area
         if ($item->area_id != $this->area->id) {
-            $this->errors[] = 'ERR_NOT_IN_AREA';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_IN_AREA');
         }
         
         // must be the item owner to edit it
@@ -379,8 +375,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         ));
         
         if ($this->user->auth->handle != $item->owner_handle) {
-            $this->errors[] = 'ERR_NOT_OWNER';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_OWNER');
         }
         
         // -------------------------------------------------------------------
@@ -447,7 +442,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         $form = $item->form($cols);
         
         // was this from a quickmark or an "add" process request?
-        if ($this->_session->getFlash('add_ok')) {
+        if ($this->_session->getFlash('success_added')) {
             $form->setStatus(true);
             $form->feedback = $this->locale('SUCCESS_ADDED');
         }
@@ -473,8 +468,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
     {
         // must be logged in to proceed
         if (! $this->user->auth->isValid()) {
-            $this->errors[] = 'ERR_NOT_LOGGED_IN';
-            return $this->_forward('error');
+            return $this->_error('ERR_NOT_LOGGED_IN');
         }
         
         // get the quickmark info from the query
@@ -516,7 +510,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         
         // save?
         if ($this->_isProcess('save') && $item->save()) {
-            $this->_session->setFlash('add_ok', true);
+            $this->_session->setFlash('success_added', true);
             $this->_redirect("bookmarks/edit/{$item->id}");
         }
         
@@ -600,8 +594,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
     {
         // must have passed an owner handle
         if (! $owner_handle) {
-            $this->errors[] = 'ERR_NO_OWNER_HANDLE';
-            return $this->_forward('error');
+            return $this->_error('ERR_NO_OWNER_HANDLE');
         }
         
         // params for the query

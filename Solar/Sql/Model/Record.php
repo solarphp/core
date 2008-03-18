@@ -848,6 +848,16 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // was it valid?
         if (! $valid) {
+            
+            // use custom validation messages per column when available
+            foreach ($invalid as $key => $old) {
+                $locale_key = "INVALID_" . strtoupper($key);
+                $new = $this->_model->locale($locale_key);
+                if ($new != $locale_key) {
+                    $invalid[$key] = $new;
+                }
+            }
+            
             $this->_status = 'invalid';
             $this->_invalid = $invalid;
             throw $this->_exception('ERR_INVALID', array($this->_invalid));

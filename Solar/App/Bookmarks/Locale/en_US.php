@@ -24,6 +24,7 @@ return array(
     'ERR_NOT_LOGGED_IN'     => 'You are not signed in.',
     'ERR_NOT_OWNER'         => 'You do not own this bookmark, or it does not exist.',
     'ERR_NOT_SELECTED'      => 'No bookmark selected.',
+    'ERR_NO_SUCH_BOOKMARK'  => 'No such bookmark exists.',
     
     'HEADING_BOOKMARKS'     => 'Bookmarks',
     'HEADING_ADD'           => 'Add New Bookmark',

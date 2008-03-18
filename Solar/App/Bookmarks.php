@@ -364,6 +364,11 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         // fetch the bookmark
         $item = $this->_bookmarks->fetch($id);
         
+        // does it exist?
+        if (! $item) {
+            return $this->_error('ERR_NO_SUCH_BOOKMARK');
+        }
+        
         // must be in this area
         if ($item->area_id != $this->area->id) {
             return $this->_error('ERR_NOT_IN_AREA');

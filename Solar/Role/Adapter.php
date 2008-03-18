@@ -106,7 +106,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function __call($method, $params)
     {
-        if (substr($method, 2) == 'is') {
+        if (substr($method, 0, 2) == 'is') {
             // convert from isRoleName to role_name
             $role = substr($method, 2);
             $role = preg_replace('/([a-z])([A-Z])/', '$1_$2', $role);

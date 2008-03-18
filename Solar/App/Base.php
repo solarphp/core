@@ -242,6 +242,22 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
+     * Use this to set the action to "error" with a locale key to be
+     * translated.
+     * 
+     * @param string $locale_key The error-message locale key.
+     * 
+     * @return void
+     * 
+     */
+    protected function _error($locale_key)
+    {
+        $this->_action = 'error';
+        $this->errors[] = $this->locale($locale_key);
+    }
+    
+    /**
+     * 
      * Shows the "exception during fetch" page.
      * 
      * @param Exception $e The exception encountered during fetch().

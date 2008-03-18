@@ -408,6 +408,44 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
     
     /**
      * 
+     * Adds a group of process buttons with an optional label.
+     * 
+     * @param array $list An array of process button names. Normally you would
+     * pass a sequential array ('save', 'delete', 'cancel').  If you like, you
+     * can pass the process name as the key, with an associative array value
+     * of element info for that particular submit button.
+     * 
+     * @param string $label The label for the group.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function addProcessGroup($list, $label = null)
+    {
+        $this->beginGroup($label);
+        
+        foreach ((array) $list as $key => $val) {
+            if (is_array($val)) {
+                // $key stays the same
+                $info = $val;
+            } else {
+                // sequential array; the value is the process key.
+                $key = $val;
+                // no info
+                $info = array();
+            }
+            
+            // add the process within the group
+            $this->addProcess($key, $info);
+        }
+        
+        $this->endGroup();
+        
+        return $this;
+    }
+    
+    /**
+     * 
      * Sets the form validation status.
      * 
      * @param bool $flag True if you want to say the form is valid,

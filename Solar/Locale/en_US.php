@@ -56,6 +56,7 @@ return array(
     
     // success feedback messages
     'SUCCESS_FORM'               => 'Saved.',
+    'SUCCESS_ADDED'              => 'Added.',
     
     // failure feedback messages  
     'FAILURE_FORM'               => 'Not saved; please correct the noted errors.',

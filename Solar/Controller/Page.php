@@ -62,6 +62,24 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * The short-name for this controller, populated in _preRender().
+     * 
+     * @var string
+     * 
+     */
+    public $controller;
+    
+    /**
+     * 
+     * The short-name for the executed action, populated in _preRender().
+     * 
+     * @var string
+     * 
+     */
+    public $action;
+    
+    /**
+     * 
      * The action being requested of (performed by) the page controller.
      * 
      * @var string
@@ -152,7 +170,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var string
      * 
      */
-    protected $_name = null;
+    protected $_controller = null;
     
     /**
      * 
@@ -324,11 +342,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_response = Solar::factory('Solar_Http_Response');
         
         // auto-set the name; for example Vendor_App_SomeThing => 'some-thing'
-        if (empty($this->_name)) {
+        if (empty($this->_controller)) {
             $pos = strrpos($class, '_');
-            $this->_name = substr($class, $pos + 1);
-            $this->_name = preg_replace('/([a-z])([A-Z])/', '$1-$2', $this->_name);
-            $this->_name = strtolower($this->_name);
+            $this->_controller = substr($class, $pos + 1);
+            $this->_controller = preg_replace('/([a-z])([A-Z])/', '$1-$2', $this->_controller);
+            $this->_controller = strtolower($this->_controller);
         }
         
         // do parent construction
@@ -750,7 +768,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // if the first param is the page name, drop it.
         // needed when no spec is passed and we're using the default URI.
-        if (! empty($this->_info[0]) && $this->_info[0] == $this->_name) {
+        if (! empty($this->_info[0]) && $this->_info[0] == $this->_controller) {
             array_shift($this->_info);
         }
         
@@ -1219,6 +1237,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set the locale class for the getText helper
         $class = get_class($this);
         $this->_view_object->getHelper('getTextRaw')->setClass($class);
+        
+        // set the public controller and action vars
+        $this->controller = $this->_controller;
+        $this->action     = $this->_action;
     }
     
     /**

@@ -18,24 +18,6 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
-     * The current action for the contoller; populated from $this->_action.
-     * 
-     * @var string
-     * 
-     */
-    public $action;
-    
-    /**
-     * 
-     * The name of this contoller; populated from $this->_name.
-     * 
-     * @var string
-     * 
-     */
-    public $controller;
-    
-    /**
-     * 
      * The name of the layout being used; populated from $this->_layout.
      * 
      * @var string
@@ -202,8 +184,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
-     * Calls parent _preRender(), then sets $this->controller from $this->_name
-     * and $this->action from $this->_action.
+     * Calls parent _preRender(), then sets additional view properties.
      * 
      * @return void
      * 
@@ -212,19 +193,13 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     {
         parent::_preRender();
         
-        // let the view know what controller this is
-        $this->controller = $this->_name;
-        
-        // let the view know what action this is
-        $this->action = $this->_action;
-        
         // let the view know what layout this is
         $this->layout = $this->_layout;
         
         // add an app-specific CSS file
         $tmp = explode('_', get_class($this));
         $vendor = $tmp[0];
-        $this->layout_head['style'][] = "{$vendor}/styles/app/{$this->_name}.css";
+        $this->layout_head['style'][] = "{$vendor}/styles/app/{$this->_controller}.css";
     }
     
     /**

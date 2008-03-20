@@ -403,6 +403,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
         
         $info = array_merge((array) $info, $base);
         
+        if (empty($info['attribs']['id'])) {
+            $id = str_replace('_', '-', strtolower($key));
+            $info['attribs']['id'] = $id;
+        }
+        
         return $this->addElement($info);
     }
     
@@ -649,14 +654,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
                 try {
                     // look for the requested element helper
                     $helper = $this->_view->getHelper($method);
-                } catch (Solar_View_Exception $e) {
+                } catch (Solar_Class_Stack_Exception_ClassNotFound $e) {
                     // use 'text' helper as a fallback
-                    if ($e->getCode() == 'ERR_HELPER_FILE_NOT_FOUND' ||
-                        $e->getCode() == 'ERR_HELPER_CLASS_NOT_FOUND') {
-                        // use 'text' helper
-                        $method = 'formText';
-                        $helper = $this->_view->getHelper($method);
-                    }
+                    $method = 'formText';
+                    $helper = $this->_view->getHelper($method);
                 }
                 
                 // SPECIAL CASE:

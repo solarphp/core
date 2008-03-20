@@ -16,7 +16,7 @@
  * @version $Id$
  * 
  */
-class Solar_App_HelloApp extends Solar_App_Base {
+class Solar_App_HelloApp extends Solar_AppBase {
     
     /**
      * 

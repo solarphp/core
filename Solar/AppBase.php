@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-abstract class Solar_App_Base extends Solar_Controller_Page {
+abstract class Solar_AppBase extends Solar_Controller_Page {
     
     /**
      * 

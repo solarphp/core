@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_App_Base extends Solar_Test {
+class Test_Solar_AppBase extends Solar_Test {
     
     /**
      * 
@@ -13,7 +13,7 @@ class Test_Solar_App_Base extends Solar_Test {
      * @var array
      * 
      */
-    protected $_Test_Solar_App_Base = array(
+    protected $_Test_Solar_AppBase = array(
     );
     
     // -----------------------------------------------------------------
@@ -80,8 +80,8 @@ class Test_Solar_App_Base extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_App_Base');
-        $this->assertInstance($obj, 'Solar_App_Base');
+        $obj = Solar::factory('Solar_AppBase');
+        $this->assertInstance($obj, 'Solar_AppBase');
     }
     
     /**

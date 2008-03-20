@@ -284,7 +284,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
         if ($extends) {
             $this->_extends = $extends;
         } else {
-            $this->_extends = 'Solar_App_Base';
+            $this->_extends = 'Solar_AppBase';
         }
     }
     

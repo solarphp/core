@@ -155,8 +155,9 @@ class Solar_Controller_Front extends Solar_Base {
             $class = $this->_getPageClass($this->_default);
         }
         
-        // last chance: do we have a class yet?
+        // last chance
         if (! $class) {
+            // no class, and no default class either
             return $this->_notFound($page);
         }
         

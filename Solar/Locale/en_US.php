@@ -28,6 +28,7 @@ return array(
     'PROCESS_CANCEL'             => 'Cancel',
     'PROCESS_CREATE'             => 'Create',
     'PROCESS_DELETE'             => 'Delete',
+    'PROCESS_DELETE_CONFIRM'     => 'Delete (Confirm)',
     'PROCESS_EDIT'               => 'Edit',
     'PROCESS_GO'                 => 'Go!',
     'PROCESS_LOGIN'              => 'Sign In',
@@ -57,6 +58,7 @@ return array(
     // success feedback messages
     'SUCCESS_FORM'               => 'Saved.',
     'SUCCESS_ADDED'              => 'Added.',
+    'SUCCESS_DELETED'            => 'Deleted.',
     
     // failure feedback messages  
     'FAILURE_FORM'               => 'Not saved; please correct the noted errors.',

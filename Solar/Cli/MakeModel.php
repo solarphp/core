@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_MakeModel extends Solar_Controller_Command {
+class Solar_Cli_MakeModel extends Solar_Cli_Base {
     
     /**
      * 
@@ -34,6 +34,15 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
      * 
      */
     protected $_table = null;
+    
+    /**
+     * 
+     * The class name this model extends from.
+     * 
+     * @var string
+     * 
+     */
+    protected $_extends = 'Solar_Sql_Model';
     
     /**
      * 
@@ -68,6 +77,9 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         // we need a target directory
         $this->_setTarget();
         
+        // extend this class
+        $this->_setExtends();
+        
         // emit feedback
         $this->_outln("Using table '{$this->_table}'.");
         $this->_outln("Writing '$class' to '{$this->_target}'.");
@@ -84,13 +96,10 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
             ));
         }
         
-        // what class the model extends from
-        $extends = 'Solar_Sql_Model';
-        
         // get the class model template
         $text = str_replace(
             array(':class', ':extends'),
-            array($class, $extends),
+            array($class, $this->_extends),
             $this->_tpl['model']
         );
         
@@ -138,7 +147,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $record_target = substr($target, 0, -4) . DIRECTORY_SEPARATOR . 'Record.php';
         $text = str_replace(
             array(':class', ':extends'),
-            array($class, $extends),
+            array($class, $this->_extends),
             $this->_tpl['record']
         );
         
@@ -153,7 +162,7 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         $collection_target = substr($target, 0, -4) . DIRECTORY_SEPARATOR . 'Collection.php';
         $text = str_replace(
             array(':class', ':extends'),
-            array($class, $extends),
+            array($class, $this->_extends),
             $this->_tpl['collection']
         );
         
@@ -237,6 +246,23 @@ class Solar_Cli_MakeModel extends Solar_Controller_Command {
         }
         
         $this->_table = $table;
+    }
+    
+    /**
+     * 
+     * Sets the class this model will extend from.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setExtends()
+    {
+        $extends = $this->_options['extends'];
+        if ($extends) {
+            $this->_extends = $extends;
+        } else {
+            $this->_extends = 'Solar_Sql_Model';
+        }
     }
     
     /**

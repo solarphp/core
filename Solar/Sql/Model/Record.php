@@ -409,6 +409,31 @@ class Solar_Sql_Model_Record extends Solar_Struct
         return $this->_model;
     }
     
+    /**
+     * 
+     * Gets the name of the primary-key column.
+     * 
+     * @return string
+     * 
+     */
+    public function getPrimaryCol()
+    {
+        return $this->_model->primary_col;
+    }
+    
+    /**
+     * 
+     * Gets the value of the primary-key column.
+     * 
+     * @return mixed
+     * 
+     */
+    public function getPrimaryVal()
+    {
+        $col = $this->_model->primary_col;
+        return $this->$col;
+    }
+    
     // -----------------------------------------------------------------
     //
     // Record data
@@ -1078,29 +1103,57 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * this record).
      * 
      * @param array $cols An array of column property names to include in
-     * the form; if empty, uses all columns.
+     * the form.  If empty, uses all columns except the "special" ones
+     * (primary, created, updated, inherit, and sequence).
      * 
      * @return Solar_Form
      * 
      */
     public function form($cols = null)
     {
-        $array_name = $this->_model->model_name;
         if (empty($cols)) {
-            $cols = '*';
+            if ($this->_model->fetch_cols) {
+                // use the fetch columns
+                $cols = $this->_model->fetch_cols;
+            } else {
+                // use all columns
+                $cols = array_keys($this->_model->table_cols);
+            }
+            
+            // flip around so we can unset easier
+            $cols = array_flip($cols);
+            
+            // remove special columns
+            unset($cols[$this->_model->primary_col]);
+            unset($cols[$this->_model->created_col]);
+            unset($cols[$this->_model->updated_col]);
+            unset($cols[$this->_model->inherit_col]);
+            
+            // remove sequence columns
+            foreach ($this->_model->sequence_cols as $key => $val) {
+                unset($cols[$key]);
+            }
+            
+            // done!
+            $cols = array_keys($cols);
         }
         
+        // put into this array in the form
+        $array_name = $this->_model->model_name;
+        
+        // build the form
         $form = Solar::factory('Solar_Form');
         $form->load('Solar_Form_Load_Model', $this->_model, $cols, $array_name);
         $form->setValues($this->toArray(), $array_name);
         $form->addInvalids($this->_invalid, $array_name);
         
         // set the form status
-        switch (true) {
-        case $this->_status == 'invalid':
+        switch ($this->_status) {
+        case 'invalid':
             $form->setStatus(false);
             break;
-        case $this->_status == 'inserted' || $this->_status == 'updated':
+        case 'inserted':
+        case 'updated':
             $form->setStatus(true);
             break;
         }

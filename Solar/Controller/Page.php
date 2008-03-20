@@ -186,7 +186,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Name of the form element that holds the process request value (such as
      * 'Save', 'Next', 'Cancel', etc)
      * 
-     * Default is 'process', as in $_POST['process'] or $_GET['process'].
+     * Default is 'process', as in $_POST['process'].
      * 
      * @var string
      * 
@@ -414,7 +414,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * Executes the requested action and returns its output with layout.
      * 
      * If an exception is thrown during the fetch() process, it is caught
-     * and sent along to the _rescueException() method, which may generate
+     * and sent along to the _exceptionDuringFetch() method, which may generate
      * and return alternative output.
      * 
      * @param string $spec The action specification string, for example,
@@ -773,17 +773,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // do we have an initial info element as an action method?
-        if (! empty($this->_info[0])) {
-            $method = $this->_getActionMethod($this->_info[0]);
-            if ($method) {
-                // save it and remove from info
-                $this->_action = array_shift($this->_info);
-            }
-        }
-        
-        // if no action yet, use the default
-        if (! $this->_action) {
+        if (empty($this->_info[0])) {
+            // use the default action
             $this->_action = $this->_action_default;
+        } else {
+            // save it and remove from info
+            $this->_action = array_shift($this->_info);
         }
         
         // are we asking for a non-default format?
@@ -992,26 +987,29 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // set the current action on entry
         $this->_action = $action;
         
-        // run this before every action, may change the
-        // requested action.
+        // run this before every action, may change the requested action.
         $this->_preAction();
         
         // does a related action-method exist?
         $method = $this->_getActionMethod($this->_action);
         if (! $method) {
-            // try to recover from not having a method
-            $method = $this->_forwardActionMethod($this->_action);
+            
+            // no method found for the action.
+            // this is the last thing we do in this chain.
+            $this->_notFound($this->_action, $params);
+            
+        } else {
+            
+            // set the view to the requested action
+            $this->_view = $this->_getActionView($this->_action);
+        
+            // run the action method, which may itself _forward() to other
+            // actions.  pass all parameters in order.
+            call_user_func_array(
+                array($this, $method),
+                $params
+            );
         }
-        
-        // set the view to the requested action
-        $this->_view = $this->_getActionView($this->_action);
-        
-        // run the action method, which may itself _forward() to
-        // other actions.  pass all parameters in order.
-        call_user_func_array(
-            array($this, $method),
-            $params
-        );
         
         // run this after every action
         $this->_postAction();
@@ -1260,25 +1258,26 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes when _forward() cannot find a method for the current action.
+     * Executes when _forward() cannot find a method for the requested action.
      * 
      * This default implementation throws an exception, but extended classes
-     * may override the behavior to return an alternative method name for the
-     * action.
+     * may override the behavior to be the action that executes when the
+     * requested action was not found.
      * 
-     * @param string $action The action name.
+     * @param string $action The name for the action that was not found.
      * 
-     * @param string $method The method name the controller looked for.
+     * @param string $params The params for the action that was not found.
      * 
-     * @return string An alternative method name for the action.
+     * @return void
      * 
      */
-    protected function _forwardActionMethod($action)
+    protected function _notFound($action, $params)
     {
         throw $this->_exception(
             'ERR_ACTION_NOT_FOUND',
             array(
                 'action' => $action,
+                'params' => $params,
             )
         );
     }

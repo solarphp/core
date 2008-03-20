@@ -434,6 +434,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         return $this->$col;
     }
     
+    
     // -----------------------------------------------------------------
     //
     // Record data

@@ -54,8 +54,8 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
      */
     protected $_Solar_View_Helper_Pager = array(
         'type'       => 'ul',
-        'id'         => 'pager',
-        'class'      => '',
+        'id'         => '',
+        'class'      => 'pager',
         'prev'       => 'PAGER_PREV',
         'next'       => 'PAGER_NEXT',
         'prev_class' => 'prev',

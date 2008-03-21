@@ -37,6 +37,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     protected $_related = array();
     
+    protected $_pager_info;
+    
     /**
      * 
      * Returns a record from the collection based on its key value.  Converts
@@ -106,6 +108,23 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     public function getModel()
     {
         return $this->_model;
+    }
+    
+    public function setPagerInfo($info)
+    {
+        $base = array(
+            'count'  => null,
+            'pages'  => null,
+            'paging' => null,
+            'page'   => null,
+        );
+        
+        $this->_pager_info = array_merge($base, $info);
+    }
+    
+    public function getPagerInfo()
+    {
+        return $this->_pager_info;
     }
     
     /**

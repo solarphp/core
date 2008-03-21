@@ -742,6 +742,19 @@ abstract class Solar_Sql_Model extends Solar_Base
                     $coll->loadRelated($name, $data);
                 }
             }
+            
+            // if we're doing "count_pages", add pager info to the collection
+            if ($params['count_pages']) {
+                $total = $this->countPages($params);
+                $coll->setPagerInfo(array(
+                    'count' => $total['count'],
+                    'pages' => $total['pages'],
+                    'paging' => $params['paging'],
+                    'page'   => $params['page'],
+                ));
+            }
+            
+            // done
             return $coll;
         } else {
             return array();
@@ -833,6 +846,19 @@ abstract class Solar_Sql_Model extends Solar_Base
                     $coll->loadRelated($name, $data);
                 }
             }
+            
+            // if we're doing "count_pages", add pager info to the collection
+            if ($params['count_pages']) {
+                $total = $this->countPages($params);
+                $coll->setPagerInfo(array(
+                    'count' => $total['count'],
+                    'pages' => $total['pages'],
+                    'paging' => $params['paging'],
+                    'page'   => $params['page'],
+                ));
+            }
+            
+            // done
             return $coll;
         } else {
             return array();
@@ -1267,6 +1293,10 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         if (empty($params['bind'])) {
             $params['bind'] = null;
+        }
+        
+        if (empty($params['count_pages'])) {
+            $params['count_pages'] = false;
         }
         
         return $params;

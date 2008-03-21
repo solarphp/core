@@ -64,11 +64,15 @@ return array(
     'FAILURE_FORM'               => 'Not saved; please correct the noted errors.',
     'FAILURE_INVALID'            => 'Invalid data.',
     
+    // pagers
+    'PAGER_PREV'                 => 'Prev',
+    'PAGER_NEXT'                 => 'Next',
+    
     // generic text      
     'TEXT_AUTH_USERNAME'         => 'Signed in as',
     
     // generic form element labels  
-    'LABEL_SUBMIT'               => 'Action',
+    'LABEL_SUBMIT'               => 'Process',
     'LABEL_HANDLE'               => 'Username',
     'LABEL_PASSWD'               => 'Password',
     'LABEL_EMAIL'                => 'Email',

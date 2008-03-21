@@ -656,6 +656,21 @@ class Solar_Form extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Returns one form element value.
+     * 
+     * @param string $key The element key, including the array name (if any).
+     * 
+     * @return mixed The element value.
+     * 
+     */
+    public function getValue($key)
+    {
+        if (array_key_exists($key, $this->elements)) {
+            return $this->elements[$key]['value'];
+        }
+    }
     
     // -----------------------------------------------------------------
     // 

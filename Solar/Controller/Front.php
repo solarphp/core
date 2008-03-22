@@ -36,35 +36,49 @@ class Solar_Controller_Front extends Solar_Base {
      * `classes`
      * : (array) Base class names for page controllers.
      * 
+     * `disable`
+     * : (array) A list of class names that should be disallowed and treated
+     *   as "not found" if a URI maps to them.
+     * 
      * `default`
-     * : (string) The default page-name.
+     * : (string) The default controller name (e.g., 'foo-bar').
      * 
      * `routing`
-     * : (array) Key-value pairs explicitly mapping a page-name to a
-     *   controller class.
+     * : (array) Key-value pairs explicitly mapping a controller name to a
+     *   controller class. E.g., 'foo-bar' => 'Vendor_App_FooBar'.
      * 
      * @var array
      * 
      */
     protected $_Solar_Controller_Front = array(
         'classes' => array('Solar_App'),
+        'disable' => array('Solar_App_Base'),
         'default' => 'hello',
-        'routing' => array(
-            'bookmarks'  => 'Solar_App_Bookmarks',
-            'hello'      => 'Solar_App_Hello',
-            'hello-ajax' => 'Solar_App_HelloAjax',
-            'hello-mini' => 'Solar_App_HelloMini',
-        ),
+        'routing' => array(),
     );
     
     /**
      * 
-     * The default page name when none is specified.
+     * The default page-controller name when none is specified.
+     * 
+     * This is the URI-form or short-form name; i.e., "foo-bar", not "FooBar"
+     * or "Vendor_App_FooBar".
+     * 
+     * @var string
+     * 
+     */
+    protected $_default = 'hello';
+    
+    /**
+     * 
+     * A list of class names that should be disallowed and treated as "not
+     * found" if a URI maps to them.
+     * 
      * 
      * @var array
      * 
      */
-    protected $_default;
+    protected $_disable = array('Solar_App_Base');
     
     /**
      * 
@@ -73,7 +87,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @var array
      * 
      */
-    protected $_routing;
+    protected $_routing = array();
     
     /**
      * 
@@ -97,8 +111,9 @@ class Solar_Controller_Front extends Solar_Base {
         parent::__construct($config); 
         
         // set convenience vars from config
-        $this->_default = $this->_config['default'];
-        $this->_routing = $this->_config['routing'];
+        $this->_default = (string) $this->_config['default'];
+        $this->_disable = (array)  $this->_config['disable'];
+        $this->_routing = (array)  $this->_config['routing'];
         
         // set up a class stack for finding apps
         $this->_stack = Solar::factory('Solar_Class_Stack');
@@ -142,22 +157,26 @@ class Solar_Controller_Front extends Solar_Base {
             ));
         }
         
-        // take the page name off the top of the path and try to get a
-        // controller class from it.
+        // take the page name off the top of the path.
         $page = array_shift($uri->path);
-        $class = $this->_getPageClass($page);
         
-        // did we get a class from it?
+        // try to get a class name from the page name
+        $class = $this->_getPageClass($page);
         if (! $class) {
-            // put the original segment back on top.
+            
+            // put the page name back on top
             array_unshift($uri->path, $page);
+            
             // try to get a controller class from the default page name
             $class = $this->_getPageClass($this->_default);
+            if (! $class) {
+                // no class could be found for the default page name
+                return $this->_notFound($page);
+            }
         }
         
-        // last chance
-        if (! $class) {
-            // no class, and no default class either
+        // does the page map to a disabled class?
+        if (in_array($class, $this->_disable)) {
             return $this->_notFound($page);
         }
         
@@ -211,10 +230,13 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Executes when fetch() cannot find a related page-controller class.
      * 
+     * Note that the only time this will execute is when the requested
+     * page-controller class **and** the default class cannot be found.
+     * 
      * Generates an "HTTP 1.1/404 Not Found" status header and returns a
      * short HTML page describing the error.
      * 
-     * @param string $page The name of the page not found.
+     * @param string $page The URI-form/short-form name of the page not found.
      * 
      * @return string
      * 

@@ -228,12 +228,12 @@ class Solar_Model_Nodes extends Solar_Model {
      * 
      * @param array $tag_list The list of tags to select by.
      * 
-     * @param array $params Added parameters for the SELECT.
+     * @param array &$params A reference to added parameters for the SELECT.
      * 
      * @return Solar_Sql_Select
      * 
      */
-    protected function _newSelectByTags($tag_list, $params)
+    protected function _newSelectByTags($tag_list, &$params)
     {
         // setup
         $params = $this->fixSelectParams($params);

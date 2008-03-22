@@ -159,7 +159,10 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base {
         }
         
         // write the record template
-        $collection_target = substr($target, 0, -4) . DIRECTORY_SEPARATOR . 'Collection.php';
+        $collection_target = substr($target, 0, -4)
+                           . DIRECTORY_SEPARATOR
+                           . 'Collection.php';
+        
         $text = str_replace(
             array(':class', ':extends'),
             array($class, $this->_extends),

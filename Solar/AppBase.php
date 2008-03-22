@@ -233,6 +233,28 @@ abstract class Solar_AppBase extends Solar_Controller_Page {
     
     /**
      * 
+     * Shows the "error" page.
+     * 
+     * @param string $action The name of the not-found action.
+     * 
+     * @param array $params The params for the not-found action.
+     * 
+     * @return void
+     * 
+     */
+    public function _notFound($action, $params)
+    {
+        $this->_response->setStatusCode(404);
+        $this->errors[] = $this->locale('ACTION_NOT_FOUND');
+        $this->errors[] = "Action: $action";
+        foreach ($params as $key => $val) {
+            $this->errors[] = "Param $key: $val";
+        }
+        return $this->_forward('error');
+    }
+    
+    /**
+     * 
      * Shows the "exception during fetch" page.
      * 
      * @param Exception $e The exception encountered during fetch().

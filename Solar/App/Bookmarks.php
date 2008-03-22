@@ -16,7 +16,7 @@
  * @version $Id$
  * 
  */
-class Solar_App_Bookmarks extends Solar_AppBase {
+class Solar_App_Bookmarks extends Solar_App_Base {
     
     /**
      * 

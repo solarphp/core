@@ -47,7 +47,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
      * @var string
      * 
      */
-    protected $_extends = 'Solar_AppBase';
+    protected $_extends = 'Solar_App_Base';
     
     /**
      * 
@@ -284,7 +284,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
         if ($extends) {
             $this->_extends = $extends;
         } else {
-            $this->_extends = 'Solar_AppBase';
+            $this->_extends = 'Solar_App_Base';
         }
     }
     

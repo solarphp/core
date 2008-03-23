@@ -41,44 +41,40 @@ class Solar_Controller_Front extends Solar_Base {
      *   as "not found" if a URI maps to them.
      * 
      * `default`
-     * : (string) The default controller name (e.g., 'foo-bar').
+     * : (string) The default page-name.
      * 
      * `routing`
-     * : (array) Key-value pairs explicitly mapping a controller name to a
-     *   controller class. E.g., 'foo-bar' => 'Vendor_App_FooBar'.
+     * : (array) Key-value pairs explicitly mapping a page-name to a
+     *   controller class.
      * 
      * @var array
      * 
      */
     protected $_Solar_Controller_Front = array(
         'classes' => array('Solar_App'),
-        'disable' => array('Solar_App_Base'),
+        'disable' => array('base'),
         'default' => 'hello',
         'routing' => array(),
     );
     
     /**
      * 
-     * The default page-controller name when none is specified.
-     * 
-     * This is the URI-form or short-form name; i.e., "foo-bar", not "FooBar"
-     * or "Vendor_App_FooBar".
-     * 
-     * @var string
-     * 
-     */
-    protected $_default = 'hello';
-    
-    /**
-     * 
-     * A list of class names that should be disallowed and treated as "not
-     * found" if a URI maps to them.
-     * 
+     * The default page name when none is specified.
      * 
      * @var array
      * 
      */
-    protected $_disable = array('Solar_App_Base');
+    protected $_default;
+    
+    /**
+     * 
+     * A list of page-controller names that should be disallowed; will be
+     * treated as actions on the default controller instead.
+     * 
+     * @var array
+     * 
+     */
+    protected $_disable = array('base');
     
     /**
      * 
@@ -87,7 +83,7 @@ class Solar_Controller_Front extends Solar_Base {
      * @var array
      * 
      */
-    protected $_routing = array();
+    protected $_routing;
     
     /**
      * 
@@ -148,35 +144,42 @@ class Solar_Controller_Front extends Solar_Base {
     public function fetch($spec = null)
     {
         if ($spec instanceof Solar_Uri_Action) {
-            // a URI was passed directly
+            // a uri object was passed directly
             $uri = $spec;
         } else {
-            // user spec is a URI string; if empty, is the current URI
+            // spec is a uri string; if empty, uses the current uri
             $uri = Solar::factory('Solar_Uri_Action', array(
                 'uri' => (string) $spec,
             ));
         }
         
-        // take the page name off the top of the path.
-        $page = array_shift($uri->path);
-        
-        // try to get a class name from the page name
-        $class = $this->_getPageClass($page);
-        if (! $class) {
-            
-            // put the page name back on top
-            array_unshift($uri->path, $page);
-            
-            // try to get a controller class from the default page name
+        // first path-element is the page-name.
+        $page = reset($uri->path);
+        if (empty($page)) {
+            // page-name is blank. get the default class.
+            // remove the empty element from the path.
             $class = $this->_getPageClass($this->_default);
+            array_shift($uri->path);
+        } elseif (in_array($page, $this->_disable)) {
+            // page-name is disabled. get the default class.
+            // leave existing elements in the path.
+            $class = $this->_getPageClass($this->_default);
+        } else {
+            // look for a controller for the requested page.
+            $class = $this->_getPageClass($page);
             if (! $class) {
-                // no class could be found for the default page name
-                return $this->_notFound($page);
+                // no class for the page-name. get the default class.
+                // leave existing elements in the path.
+                $class = $this->_getPageClass($this->_default);
+            } else {
+                // found a class. don't need the page-name any more, so
+                // remove it from the path.
+                array_shift($uri->path);
             }
         }
         
-        // does the page map to a disabled class?
-        if (in_array($class, $this->_disable)) {
+        // do we have a page-controller class?
+        if (! $class) {
             return $this->_notFound($page);
         }
         
@@ -230,13 +233,10 @@ class Solar_Controller_Front extends Solar_Base {
      * 
      * Executes when fetch() cannot find a related page-controller class.
      * 
-     * Note that the only time this will execute is when the requested
-     * page-controller class **and** the default class cannot be found.
-     * 
      * Generates an "HTTP 1.1/404 Not Found" status header and returns a
      * short HTML page describing the error.
      * 
-     * @param string $page The URI-form/short-form name of the page not found.
+     * @param string $page The name of the page not found.
      * 
      * @return string
      * 

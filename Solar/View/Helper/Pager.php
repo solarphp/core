@@ -88,6 +88,12 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
         // output config
         $config = array_merge($this->_config, (array) $config);
         
+        // do we really need paging?
+        if ($pages <= 1) {
+            // zero or one pages, nothing to do here
+            return;
+        }
+        
         // make sure we have ol or ul
         $config['type'] = strtolower($config['type']);
         if ($config['type'] != 'ol') {

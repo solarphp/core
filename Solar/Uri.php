@@ -84,7 +84,7 @@
  * 
  * | Name       | Type    | Description
  * | ---------- | ------- | --------------------------------------------------------------
- * | `schema`   | string  | The schema protocol; e.g.: http, https, ftp, mailto
+ * | `scheme`   | string  | The scheme protocol; e.g.: http, https, ftp, mailto
  * | `host`     | string  | The host name; e.g.: example.com
  * | `port`     | string  | The port number
  * | `user`     | string  | The username for the URI
@@ -98,7 +98,7 @@
  * 
  *     http://anonymous:guest@example.com:8080/foo/bar.xml?baz=dib#anchor
  *     
- *     schema   => 'http'
+ *     scheme   => 'http'
  *     host     => 'example.com'
  *     port     => '8080'
  *     user     => 'anonymous'
@@ -132,7 +132,7 @@ class Solar_Uri extends Solar_Base {
      *   for specific URI subclasses, for example Solar_Uri_Action.
      * 
      * `uri`
-     * : (string) Call set() with this URI string at construct-time, instead
+     * : (string) Calls set() with this URI string at construct-time, instead
      *   of loading from the current URI.
      * 
      * @var array

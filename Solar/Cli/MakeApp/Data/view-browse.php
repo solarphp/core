@@ -1,5 +1,10 @@
 <h2><?php echo $this->getText('HEADING_BROWSE'); ?></h2>
 
+<?php
+    $pager = $this->pager($this->list->getPagerInfo());
+    echo $pager . "<br />";
+?>
+
 <ol>
 <?php foreach ($this->list as $item): ?>
     <li><ul>
@@ -19,5 +24,7 @@
     </ul></li>
 <?php endforeach; ?>
 </ol>
+
+<?php echo $pager . "<br />"; ?>
 
 <p><?php echo $this->action("{$this->controller}/add", 'ACTION_ADD'); ?>

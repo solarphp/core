@@ -14,7 +14,11 @@ class :class extends :extends {
         $model = Solar::factory(':model');
         
         // get the collection
-        $this->list = $model->fetchAll();
+        $this->list = $model->fetchAll(array(
+            'page'        => $this->_query('page', 1),
+            'paging'      => $this->_query('paging', 10),
+            'count_pages' => true,
+        ));
     }
     
     public function actionRead($id = null)

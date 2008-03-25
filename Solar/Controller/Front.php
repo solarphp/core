@@ -154,7 +154,7 @@ class Solar_Controller_Front extends Solar_Base {
         }
         
         // first path-element is the page-name.
-        $page = reset($uri->path);
+        $page = strtolower(reset($uri->path));
         if (empty($page)) {
             // page-name is blank. get the default class.
             // remove the empty element from the path.
@@ -222,7 +222,7 @@ class Solar_Controller_Front extends Solar_Base {
             $class = $this->_routing[$page];
         } else {
             // no explicit route, try to find a matching class
-            $page = str_replace('-',' ', $page);
+            $page = str_replace('-',' ', strtolower($page));
             $page = str_replace(' ', '', ucwords(trim($page)));
             $class = $this->_stack->load($page, false);
         }

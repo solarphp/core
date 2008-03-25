@@ -22,15 +22,16 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
      * 
      * Keys are...
      * 
-     * `type`
+     * `list_type`
      * : (string) The type of list to use; default is 'ul'. Only 'ul' and 'ol'
      *   are honored.
      * 
-     * `id`
-     * :(string) The CSS ID for the list.  Default is 'pager'.
+     * `div_id`
+     * :(string) The CSS ID for the <div> wrapping the list. Default empty.
      * 
-     * `class`
-     * : (string) The CSS class for the list. Default empty.
+     * `div_class`
+     * : (string) The CSS class for the <div> wrapping the list. Default is
+     *   'pager'.
      * 
      * `prev`
      * : (string) The locale key for the "previous" link text.  Default is
@@ -53,9 +54,9 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
      * 
      */
     protected $_Solar_View_Helper_Pager = array(
-        'type'       => 'ul',
-        'id'         => '',
-        'class'      => 'pager',
+        'list_type'  => 'ul',
+        'div_id'     => '',
+        'div_class'  => 'pager',
         'prev'       => 'PAGER_PREV',
         'next'       => 'PAGER_NEXT',
         'prev_class' => 'prev',
@@ -95,9 +96,9 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
         }
         
         // make sure we have ol or ul
-        $config['type'] = strtolower($config['type']);
-        if ($config['type'] != 'ol') {
-            $config['type'] = 'ul';
+        $list_type = strtolower($config['list_type']);
+        if ($list_type != 'ol') {
+            $list_type = 'ul';
         }
         // get the base href to work with, and use str_replace on it later.
         // this will be faster than calling $uri->get() multiple times.
@@ -108,14 +109,16 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
         // html we're building
         $html = array();
         
-        // start the list
+        // start the div
         $attribs = $this->_view->attribs(array(
-            'id'    => $config['id'],
-            'class' => $config['class'],
+            'id'    => $config['div_id'],
+            'class' => $config['div_class'],
         ));
         
-        $html[] = "<" . $this->_view->escape($config['type'])
-                . $attribs . ">";
+        $html[] = "<div$attribs>";
+        
+        // start the list
+        $html[] = "<$list_type>";
         
         // show the "prev" link?
         $html[] = "    <li>";
@@ -128,7 +131,6 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
         }
         $html[] = "</li>";
 
-        
         // build the list of page links
         $list = $this->_getPageList($page, $pages);
         foreach ($list as $item) {
@@ -161,8 +163,9 @@ class Solar_View_Helper_Pager extends Solar_View_Helper {
         }
         $html[] = "</li>";
         
-        // close the list, and done
-        $html[] = "</" . $this->_view->escape($config['type']) . ">";
+        // close the list and div, and done
+        $html[] = "</$list_type>";
+        $html[] = "</div>";
         return implode("\n", $html);
     }
     

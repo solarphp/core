@@ -1,19 +1,19 @@
-.pager {
+.pager ul {
     padding: 1em;
     margin: 1em 0;
     clear: left;
     font-size: 85%;
-	list-style: none;
-	text-align: center;
-	white-space: nowrap;
+    list-style: none;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .pager li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	display: inline;
-	color: #666;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline;
+    color: #666;
 }
 
 .pager a, .pager li {

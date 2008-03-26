@@ -1112,31 +1112,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function form($cols = null)
     {
+        // use all columns?
         if (empty($cols)) {
-            if ($this->_model->fetch_cols) {
-                // use the fetch columns
-                $cols = $this->_model->fetch_cols;
-            } else {
-                // use all columns
-                $cols = array_keys($this->_model->table_cols);
-            }
-            
-            // flip around so we can unset easier
-            $cols = array_flip($cols);
-            
-            // remove special columns
-            unset($cols[$this->_model->primary_col]);
-            unset($cols[$this->_model->created_col]);
-            unset($cols[$this->_model->updated_col]);
-            unset($cols[$this->_model->inherit_col]);
-            
-            // remove sequence columns
-            foreach ($this->_model->sequence_cols as $key => $val) {
-                unset($cols[$key]);
-            }
-            
-            // done!
-            $cols = array_keys($cols);
+            $cols = '*';
         }
         
         // put into this array in the form
@@ -1159,8 +1137,21 @@ class Solar_Sql_Model_Record extends Solar_Struct
             break;
         }
         
-        // @todo: add invalidation messages to the form itself, where
-        // elements are missing.
+        // if a column is invalid, and an element for it does not exist in the
+        // form, add the invalidation message as feedback on the form as a 
+        // whole.  this helps you track down errors on columns that prevented
+        // a save but were not part of the form, like IDs.
+        foreach ($this->_invalid as $key => $val) {
+            // the element name in the form
+            $elem_name = $array_name . "[$key]";
+            // is the column invalid, but not in the form?
+            if ($this->_invalid[$key] && empty($form->elements[$elem_name])) {
+                // add the invalidation messages as feedback
+                foreach ((array) $this->_invalid[$key] as $text) {
+                    $form->feedback[] = "$key: $text";
+                }
+            }
+        }
         
         return $form;
     }

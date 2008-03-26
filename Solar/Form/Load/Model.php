@@ -48,6 +48,29 @@ class Solar_Form_Load_Model extends Solar_Base {
         // special condition: if looking for '*' columns,
         // set the list to all the model columns.
         if ($list == '*') {
+            if ($model->fetch_cols) {
+                // use the fetch columns
+                $list = $model->fetch_cols;
+            } else {
+                // use all columns
+                $list = array_keys($model->table_cols);
+            }
+            
+            // flip around so we can unset easier
+            $list = array_flip($list);
+            
+            // remove special columns
+            unset($list[$model->primary_col]);
+            unset($list[$model->created_col]);
+            unset($list[$model->updated_col]);
+            unset($list[$model->inherit_col]);
+            
+            // remove sequence columns
+            foreach ($model->sequence_cols as $key => $val) {
+                unset($list[$key]);
+            }
+            
+            // done!
             $list = array_keys($cols);
         } else {
             settype($list, 'array');

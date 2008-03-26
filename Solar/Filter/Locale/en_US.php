@@ -15,8 +15,8 @@
  * 
  */
 return array(
-    'INVALID_ALNUM'                => 'Please use only letters (A-Z) and numbers (0-9).',
-    'INVALID_ALPHA'                => 'Please use only the letters A-Z.',
+    'INVALID_ALNUM'                => 'Please use only letters (A-Z and a-z) and numbers (0-9).',
+    'INVALID_ALPHA'                => 'Please use only the letters A-Z and a-z.',
     'INVALID_BLANK'                => 'This value must be blank.',
     'INVALID_BOOL'                 => 'This value should be true (yes) or false (no).',
     'INVALID_COMPARE'              => 'This value is not the same as the other one.',
@@ -44,9 +44,9 @@ return array(
     'INVALID_PREG_MATCH'           => 'This value does not match the required expression.',
     'INVALID_RANGE'                => 'This value is outside the allowed range.',
     'INVALID_RANGE_LENGTH'         => 'This value is too short, or too long.',
-    'INVALID_SEP_WORDS'            => 'Please use only letters (A-Z), numbers (0-9), underscores(_), and separators.',
+    'INVALID_SEP_WORDS'            => 'Please use only letters (A-Z and a-z), numbers (0-9), underscores(_), and separators.',
     'INVALID_SIZE_SCOPE'           => 'This value is not of the proper size and scope.',
     'INVALID_STRING'               => 'Please enter a string.',
     'INVALID_URI'                  => 'Please enter a valid web address.',
-    'INVALID_WORD'                 => 'Please use only letters (A-Z), numbers (0-9), and underscores(_).',
+    'INVALID_WORD'                 => 'Please use only letters (A-Z and a-z), numbers (0-9), and underscores(_).',
 );

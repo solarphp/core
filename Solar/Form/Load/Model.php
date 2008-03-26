@@ -71,7 +71,7 @@ class Solar_Form_Load_Model extends Solar_Base {
             }
             
             // done!
-            $list = array_keys($cols);
+            $list = array_keys($list);
         } else {
             settype($list, 'array');
         }

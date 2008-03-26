@@ -1148,7 +1148,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             if ($this->_invalid[$key] && empty($form->elements[$elem_name])) {
                 // add the invalidation messages as feedback
                 foreach ((array) $this->_invalid[$key] as $text) {
-                    $form->feedback[] = "$key: $text";
+                    $form->feedback[] = "$elem_name: $text";
                 }
             }
         }

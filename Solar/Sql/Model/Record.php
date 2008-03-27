@@ -123,6 +123,19 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
+     * An array of the initial (clean) data for the record.
+     * 
+     * This tracks only table-column data, not calculate-cols or related-cols.
+     * 
+     * @var array
+     * 
+     * @see setStatus()
+     * 
+     */
+    protected $_initial = array();
+    
+    /**
+     * 
      * Magic getter for record properties; automatically calls __getColName()
      * methods when they exist.
      * 
@@ -182,7 +195,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // set to dirty only if not 'new'
         if ($this->_status != 'new') {
-            $this->_status = 'dirty';
+            $this->setStatus('dirty');
         }
         
         // if an accessor method exists, use it
@@ -625,11 +638,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
         try {
             $this->_preInsert();
             $this->_model->insert($this);
-            $this->setStatus('inserted');
             $this->_postInsert();
         } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
             // failed at at the database for some reason
-            $this->setStatus('invalid');
             $this->setInvalid('*', $e->getInfo('pdo_text'));
             throw $e;
         }
@@ -671,11 +682,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $this->_preUpdate();
             $where = null;
             $this->_model->update($this, $where);
-            $this->setStatus('updated');
             $this->_postUpdate();
         } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
             // failed at at the database for some reason
-            $this->setStatus('invalid');
             $this->setInvalid('*', $e->getInfo('pdo_text'));
             throw $e;
         }
@@ -810,7 +819,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $primary = $this->_model->primary_col;
             $result = $this->_model->fetch($this->$primary);
             $this->load($result);
-            $this->_status = 'clean';
+            $this->setStatus('clean');
         }
     }
     
@@ -884,7 +893,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 }
             }
             
-            $this->_status = 'invalid';
+            $this->setStatus('invalid');
             $this->_invalid = $invalid;
             throw $this->_exception('ERR_INVALID', array($this->_invalid));
         }
@@ -931,7 +940,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function setInvalid($key, $message)
     {
-        $this->_status = 'invalid';
+        $this->setStatus('invalid');
         $this->_invalid[$key][] = $message;
     }
     
@@ -949,7 +958,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function setInvalids($list)
     {
-        $this->_status = 'invalid';
+        $this->setStatus('invalid');
         foreach ($list as $key => $messages) {
             foreach ((array) $messages as $message) {
                 $this->_invalid[$key][] = $message;
@@ -1044,6 +1053,16 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function setStatus($status)
     {
         $this->_status = $status;
+        if ($this->_status != 'dirty' && $this->_status != 'invalid') {
+            
+            // reset the initial data for table columns
+            foreach (array_keys($this->_model->table_cols) as $col) {
+                $this->_initial[$col] = $this->$col;
+            }
+            
+            // can't be invalid, either
+            $this->_invalid = array();
+        }
     }
     
     /**
@@ -1057,6 +1076,43 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function getStatus()
     {
         return $this->_status;
+    }
+    
+    /**
+     * 
+     * Tells if a particular table-column has changed.
+     * 
+     * @param string $col The table-column name.
+     * 
+     * @return void|bool Returns null if the table-column name does not exist,
+     * boolean true if the data is changed, boolean false if not changed.
+     * 
+     */
+    public function isChanged($col)
+    {
+        if (! array_key_exists($col, $this->_initial)) {
+            return null;
+        } else {
+            return $this->$col !== $this->_initial[$col];
+        }
+    }
+    
+    /**
+     * 
+     * Gets a list of all changed table columns.
+     * 
+     * @return array
+     * 
+     */
+    public function getChanged()
+    {
+        $list = array();
+        foreach ($this->_initial as $col => $val) {
+            if ($this->$col !== $val) {
+                $list[] = $col;
+            }
+        }
+        return $list;
     }
     
     /**

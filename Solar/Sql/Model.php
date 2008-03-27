@@ -1506,6 +1506,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $record = Solar::factory($class);
         $record->setModel($this);
         $record->load($data);
+        $record->setStatus('clean');
         return $record;
     }
     
@@ -1641,6 +1642,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // reload the data into the record if needed
         if ($spec instanceof Solar_Sql_Model_Record) {
             $spec->load($data);
+            $spec->setStatus('inserted');
         }
         
         // return the data as inserted
@@ -1730,6 +1732,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // reload the data into the record if needed
         if ($spec instanceof Solar_Sql_Model_Record) {
             $spec->load($data);
+            $spec->setStatus('updated');
         }
         
         // unserialize cols and return the data as updated

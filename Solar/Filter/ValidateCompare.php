@@ -54,6 +54,10 @@ class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract {
      */
     public function validateCompare($value, $compare_key, $strict = false)
     {
+        if ($value === null) {
+            return true;
+        }
+        
         $compare_val = $this->_filter->getData($compare_key);
         
         if ($strict) {

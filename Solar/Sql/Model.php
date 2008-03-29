@@ -745,13 +745,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // if we're doing "count_pages", add pager info to the collection
             if ($params['count_pages']) {
-                $total = $this->countPages($params);
-                $coll->setPagerInfo(array(
-                    'count' => $total['count'],
-                    'pages' => $total['pages'],
-                    'paging' => $params['paging'],
-                    'page'   => $params['page'],
-                ));
+                $this->_setCollectionPagerInfo($coll, $params);
             }
             
             // done
@@ -849,13 +843,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // if we're doing "count_pages", add pager info to the collection
             if ($params['count_pages']) {
-                $total = $this->countPages($params);
-                $coll->setPagerInfo(array(
-                    'count' => $total['count'],
-                    'pages' => $total['pages'],
-                    'paging' => $params['paging'],
-                    'page'   => $params['page'],
-                ));
+                $this->_setCollectionPagerInfo($coll, $params);
             }
             
             // done
@@ -863,6 +851,33 @@ abstract class Solar_Sql_Model extends Solar_Base
         } else {
             return array();
         }
+    }
+    
+    /**
+     * 
+     * Sets the pager info in a collection, calling countPages() along the
+     * way.
+     * 
+     * @param Solar_Sql_Model_Collection $coll The record collection to set
+     * pager info on.
+     * 
+     * @param array $params The params for the original fetchAll() or
+     * fetchAssoc().
+     * 
+     * @return void
+     */
+    protected function _setCollectionPagerInfo($coll, $params)
+    {
+        $total = $this->countPages($params);
+        $begin = ($params['page'] - 1) * $params['paging'] + 1;
+        $coll->setPagerInfo(array(
+            'count'  => $total['count'],
+            'pages'  => $total['pages'],
+            'paging' => $params['paging'],
+            'page'   => $params['page'],
+            'begin'  => $begin,
+            'end'    => $begin + $coll->count(),
+        ));
     }
     
     /**

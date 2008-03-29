@@ -98,7 +98,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base {
         
         // get the class model template
         $text = str_replace(
-            array(':class', ':extends'),
+            array('{:class}', '{:extends}'),
             array($class, $this->_extends),
             $this->_tpl['model']
         );
@@ -146,7 +146,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base {
         // write the record template
         $record_target = substr($target, 0, -4) . DIRECTORY_SEPARATOR . 'Record.php';
         $text = str_replace(
-            array(':class', ':extends'),
+            array('{:class}', '{:extends}'),
             array($class, $this->_extends),
             $this->_tpl['record']
         );
@@ -164,7 +164,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base {
                            . 'Collection.php';
         
         $text = str_replace(
-            array(':class', ':extends'),
+            array('{:class}', '{:extends}'),
             array($class, $this->_extends),
             $this->_tpl['collection']
         );

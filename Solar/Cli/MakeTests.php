@@ -270,7 +270,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
         
         // do replacements
         $code = str_replace(
-            array(':class', ':extends'),
+            array('{:class}', '{:extends}'),
             array($class, $extends),
             $code
         );
@@ -345,7 +345,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base {
             
             // do replacements
             $test_code = str_replace(
-                array(':name', ':summ'),
+                array('{:name}', '{:summ}'),
                 array($test_name, $info['summ']),
                 $test_code
             );

@@ -1,4 +1,4 @@
-class :class extends :extends {
+class {:class} extends {:extends} {
     
     protected function _setup()
     {

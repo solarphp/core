@@ -1,2 +1,2 @@
-class :class_Collection extends :extends_Collection {
+class {:class}_Collection extends {:extends}_Collection {
 }

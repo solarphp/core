@@ -1,4 +1,4 @@
-class :class extends :extends {
+class {:class} extends {:extends} {
     
     protected $_action_default = 'browse';
     
@@ -11,7 +11,7 @@ class :class extends :extends {
     public function actionBrowse()
     {
         // get the model
-        $model = Solar::factory(':model');
+        $model = Solar::factory('{:model}');
         
         // get the collection
         $this->list = $model->fetchAll(array(
@@ -29,7 +29,7 @@ class :class extends :extends {
         }
                 
         // get the model
-        $model = Solar::factory(':model');
+        $model = Solar::factory('{:model}');
         
         // get the record
         $item = $model->fetch($id);
@@ -63,7 +63,7 @@ class :class extends :extends {
         }
         
         // get the model
-        $model = Solar::factory(':model');
+        $model = Solar::factory('{:model}');
         
         // get the record
         $item = $model->fetch($id);
@@ -113,7 +113,7 @@ class :class extends :extends {
         }
         
         // get the model
-        $model = Solar::factory(':model');
+        $model = Solar::factory('{:model}');
         
         // get a new record
         $item = $model->fetchNew();
@@ -155,7 +155,7 @@ class :class extends :extends {
         }
         
         // get the model
-        $model = Solar::factory(':model');
+        $model = Solar::factory('{:model}');
         
         // get the record
         $item = $model->fetch($id);

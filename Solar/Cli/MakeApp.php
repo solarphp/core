@@ -139,7 +139,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
         
         // get the app class template
         $text = str_replace(
-            array(':class', ':extends', ':model'),
+            array('{:class}', '{:extends}', '{:model}'),
             array($this->_class, $this->_extends, $this->_model),
             $this->_tpl[$tpl_key]
         );
@@ -207,7 +207,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
         foreach ($list as $view) {
             
             $text = str_replace(
-                array(':class', ':extends', ':model'),
+                array('{:class}', '{:extends}', '{:model}'),
                 array($this->_class, $this->_extends, $this->_model),
                 $this->_tpl["view-$view"]
             );

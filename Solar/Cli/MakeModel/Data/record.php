@@ -1,2 +1,2 @@
-class :class_Record extends :extends_Record {
+class {:class}_Record extends {:extends}_Record {
 }

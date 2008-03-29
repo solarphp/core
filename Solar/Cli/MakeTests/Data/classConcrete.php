@@ -3,7 +3,7 @@
  * Concrete class test.
  * 
  */
-class Test_:class extends :extends {
+class Test_{:class} extends {:extends} {
     
     /**
      * 
@@ -12,7 +12,7 @@ class Test_:class extends :extends {
      * @var array
      * 
      */
-    protected $_Test_:class = array(
+    protected $_Test_{:class} = array(
     );
     
     // -----------------------------------------------------------------
@@ -78,7 +78,7 @@ class Test_:class extends :extends {
      */
     public function test__construct()
     {
-        $obj = Solar::factory(':class');
-        $this->assertInstance($obj, ':class');
+        $obj = Solar::factory('{:class}');
+        $this->assertInstance($obj, '{:class}');
     }
 }

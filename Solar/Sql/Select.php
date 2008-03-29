@@ -501,44 +501,70 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds multiple WHERE conditions to the query.
      * 
-     * Otherwise identical to where()/orWhere().
+     * @param array $list An array of WHERE conditions.  Conditions starting
+     * with "OR" and "AND" are honored correctly.
      * 
-     * @param array $list An array of WHERE conditions.
-     * 
-     * @param string $op How to add the conditions, by 'AND' (the
-     * default) or by 'OR'.
+     * @param string $op If a condition does not explicitly start with "AND"
+     * or "OR", connect the condition with this operator.  Default "AND".
      * 
      * @return Solar_Sql_Select
+     * 
+     * @see _multiWhere()
+     * 
+     */
+    public function multiWhere($list, $op = 'AND')
+    {
+        $op = strtoupper(trim($op));
+        
+        foreach ((array) $list as $key => $val) {
+            if (is_int($key)) {
+                // integer key means a literal condition
+                // and no value to be quoted into it
+                $this->_multiWhere($val, Solar_Sql_Select::IGNORE, $op);
+            } else {
+                // string $key means the key is a condition,
+                // and the $val should be quoted into it.
+                $this->_multiWhere($key, $val, $op);
+            }
+        }
+        
+        // done
+        return $this;
+    }
+    
+    /**
+     * 
+     * Backend support for multiWhere().
+     * 
+     * @param string $cond The WHERE condition.
+     * 
+     * @param mixed $val A value (if any) to quote into the condition.
+     * 
+     * @param string $op The implicit operator to use for the condition, if
+     * needed.
      * 
      * @see where()
      * 
      * @see orWhere()
      * 
      */
-    public function multiWhere($list, $op = 'AND')
+    public function _multiWhere($cond, $val, $op)
     {
-        // normally use where() ...
-        $method = 'where';
-        if (strtoupper($op) == 'OR') {
-            // unless it's orWhere().
-            $method = 'orWhere';
+        if (strtoupper(substr($cond, 0, 3)) == 'OR ') {
+            // explicit OR
+            $cond = substr($cond, 3);
+            $this->orWhere($cond, $val);
+        } elseif (strtoupper(substr($cond, 0, 4)) == 'AND ') {
+            // explicit AND
+            $cond = substr($cond, 4);
+            $this->where($cond, $val);
+        } elseif ($op == 'OR') {
+            // implicit OR
+            $this->orWhere($cond, $val);
+        } else {
+            // implicit AND (the default)
+            $this->where($cond, $val);
         }
-        
-        // add each condition.
-        foreach ((array) $list as $key => $val) {
-            if (is_int($key)) {
-                // integer key means a literal condition
-                // and no value to be quoted into it
-                $this->$method($val);
-            } else {
-                // string $key means the key is a condition,
-                // and the $val should be quoted into it.
-                $this->$method($key, $val);
-            }
-        }
-        
-        // done
-        return $this;
     }
     
     /**
@@ -654,41 +680,70 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      * Adds multiple HAVING conditions to the query.
      * 
-     * Otherwise identical to having()/orHaving().
+     * @param array $list An array of HAVING conditions.  Conditions starting
+     * with "OR" and "AND" are honored correctly.
      * 
-     * @param array $list An array of HAVING conditions.
-     * 
-     * @param string $op How to add the conditions, by 'AND' (the
-     * default) or by 'OR'.
+     * @param string $op If a condition does not explicitly start with "AND"
+     * or "OR", connect the condition with this operator.  Default "AND".
      * 
      * @return Solar_Sql_Select
+     * 
+     * @see _multiHaving()
+     * 
+     */
+    public function multiHaving($list, $op = 'AND')
+    {
+        $op = strtoupper(trim($op));
+        
+        foreach ((array) $list as $key => $val) {
+            if (is_int($key)) {
+                // integer key means a literal condition
+                // and no value to be quoted into it
+                $this->_multiHaving($val, Solar_Sql_Select::IGNORE, $op);
+            } else {
+                // string $key means the key is a condition,
+                // and the $val should be quoted into it.
+                $this->_multiHaving($key, $val, $op);
+            }
+        }
+        
+        // done
+        return $this;
+    }
+    
+    /**
+     * 
+     * Backend support for multiHaving().
+     * 
+     * @param string $cond The HAVING condition.
+     * 
+     * @param mixed $val A value (if any) to quote into the condition.
+     * 
+     * @param string $op The implicit operator to use for the condition, if
+     * needed.
      * 
      * @see having()
      * 
      * @see orHaving()
      * 
      */
-    public function multiHaving($list, $op = 'AND')
+    public function _multiHaving($cond, $val, $op)
     {
-        $method = 'having';
-        if (strtoupper($op) == 'OR') {
-            $method = 'orHaving';
+        if (strtoupper(substr($cond, 0, 3)) == 'OR ') {
+            // explicit OR
+            $cond = substr($cond, 3);
+            $this->orHaving($cond, $val);
+        } elseif (strtoupper(substr($cond, 0, 4)) == 'AND ') {
+            // explicit AND
+            $cond = substr($cond, 4);
+            $this->having($cond, $val);
+        } elseif ($op == 'OR') {
+            // implicit OR
+            $this->orHaving($cond, $val);
+        } else {
+            // implicit AND (the default)
+            $this->having($cond, $val);
         }
-        
-        foreach ((array) $list as $key => $val) {
-            if (is_int($key)) {
-                // integer key means a literal condition
-                // and no value to be quoted into it
-                $this->$method($val);
-            } else {
-                // string $key means the key is a condition,
-                // and the $val should be quoted into it.
-                $this->$method($key, $val);
-            }
-        }
-        
-        // done
-        return $this;
     }
     
     /**

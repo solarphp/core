@@ -37,7 +37,45 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     protected $_related = array();
     
-    protected $_pager_info;
+    /**
+     * 
+     * The pager information for this collection.
+     * 
+     * Keys are ...
+     * 
+     * `count`
+     * : (int) The total number of rows in the database.
+     * 
+     * `pages`
+     * : (int) The total number of pages in the database (count / paging).
+     * 
+     * `paging`
+     * : (int) The number of rows per page for the collection.
+     * 
+     * `page`
+     * : (int) The page-number of the collection.
+     * 
+     * `begin`
+     * : (int) The row-number at which the collection begins.
+     * 
+     * `end`
+     * : (int) The row-number at which the collection ends.
+     * 
+     * @param array
+     * 
+     * @see setPagerInfo()
+     * 
+     * @see getPagerInfo()
+     * 
+     */
+    protected $_pager_info = array(
+        'count'  => null,
+        'pages'  => null,
+        'paging' => null,
+        'page'   => null,
+        'begin'  => null,
+        'end'    => null,
+    );
     
     /**
      * 
@@ -110,6 +148,20 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         return $this->_model;
     }
     
+    /**
+     * 
+     * Injects pager information for the collection.
+     * 
+     * Generally used only by the model fetchAll() and fetchAssoc() methods.
+     * 
+     * @param array $info An array of information with keys for `count`,
+     * `pages`, `paging`, `page`, `begin`, and `end`.
+     * 
+     * @return void
+     * 
+     * @see $_pager_info
+     * 
+     */
     public function setPagerInfo($info)
     {
         $base = array(
@@ -117,11 +169,23 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             'pages'  => null,
             'paging' => null,
             'page'   => null,
+            'begin'  => null,
+            'end'    => null,
         );
         
         $this->_pager_info = array_merge($base, $info);
     }
     
+    /**
+     * 
+     * Gets the injected pager information for the collection.
+     * 
+     * @return array An array of information with keys for `count`,
+     * `pages`, `paging`, `page`, `begin`, and `end`.
+     * 
+     * @see $_pager_info
+     * 
+     */
     public function getPagerInfo()
     {
         return $this->_pager_info;

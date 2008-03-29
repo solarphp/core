@@ -2,13 +2,7 @@
 
 <p>[ <?php echo $this->action("/{$this->controller}", 'ACTION_BROWSE');?> ]</p>
 
-<ul>
-    <?php foreach ($this->item as $key => $val) {
-        echo "<li>" . $this->escape($key) . ": "
-           . $this->escape($val)
-           . "</li>\n";
-    } ?>
-</ul>
+<?php echo $this->partial('_record', $this->item); ?>
 
 <p><?php echo $this->action(
     "/{$this->controller}/edit/{$this->item->getPrimaryVal()}",

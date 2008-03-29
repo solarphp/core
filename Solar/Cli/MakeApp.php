@@ -195,6 +195,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base {
             $list = array('index');
         } else {
             $list = array(
+                '_record',
                 'browse',
                 'read',
                 'edit',

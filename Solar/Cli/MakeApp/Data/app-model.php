@@ -147,7 +147,7 @@ class {:class} extends {:extends} {
         $this->form = $item->form();
     }
     
-    public function actionDelete($id)
+    public function actionDelete($id = null)
     {
         // need an id
         if (! $id) {

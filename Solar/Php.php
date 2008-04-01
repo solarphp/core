@@ -313,7 +313,7 @@ class Solar_Php extends Solar_Base {
     public function run($file)
     {
         $code = file_get_contents($file);
-        return $this->run($code);
+        return $this->runCode($code);
     }
     
     /**

@@ -12,6 +12,7 @@
  * 
  * {{code: php
  *     require_once 'Solar.php';
+ *     Solar::start();
  *     
  *     $ini = array(
  *         'include_path'    =>  '/path/to/lib',
@@ -453,7 +454,7 @@ class Solar_Php extends Solar_Base {
             // non-default file or path
             $cmd .= " --php-ini " . escapeshellarg($this->_ini_file);
         } elseif ($this->_ini_file === false) {
-            // explicitly *no* file ot be used
+            // explicitly *no* file to be used
             $cmd .= " --no-php-ini";
         }
         

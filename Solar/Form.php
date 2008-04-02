@@ -339,6 +339,31 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
+     * Sets the attributes of one element.
+     * 
+     * @param string $name The element name.
+     * 
+     * @param array $attribs Set these attribs on the element; the key is the
+     * attribute name, and the value is the attribute value.
+     * 
+     * @param string $array Rename the element as a key in this array.
+     * 
+     * @return void
+     * 
+     */
+    public function setAttribs($name, $attribs, $array = null)
+    {
+        // make sure the element exists
+        $name = $this->_prepareName($name, $array);
+        if (! empty($this->elements[$name])) {
+            foreach ((array) $attribs as $key => $val) {
+                $this->elements[$name]['attribs'][$key] = $val;
+            }
+        }
+    }
+    
+    /**
+     * 
      * Reorders the existing elements.
      * 
      * @param array $list The order in which elements should be placed; each
@@ -481,7 +506,7 @@ class Solar_Form extends Solar_Base {
      * 
      * @param string $name The element name.
      * 
-     * @param mixes $value Set the element to this value.
+     * @param mixed $value Set the element to this value.
      * 
      * @param string $array Rename the element as a key in this array.
      * 

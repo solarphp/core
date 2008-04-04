@@ -1045,7 +1045,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * Forces the status of this record.
      * 
      * @param string $status The new status: 'clean', 'deleted', 'dirty',
-     * 'inserted', 'invalid', 'new' or 'updated'.
+     * 'inserted', 'invalid', 'new', or 'updated'.
      * 
      * @return void
      * 
@@ -1082,19 +1082,56 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      * Tells if a particular table-column has changed.
      * 
+     * This is slightly complicated.  Changes to or from a null are reported
+     * as "changed".  If both the initial value and new value are numeric
+     * (that is, whether they are string/float/int), they are compared using
+     * normal inequality (!=).  Otherwise, the initial value and new value
+     * are compared using strict inequality (!==).
+     * 
+     * This complexity results from converting string and numeric values in
+     * and out of the database.  Coming from the database, a string numeric
+     * '1' might be filtered to an integer 1 at some point, making it look
+     * like the value was changed when in practice it has not.
+     * 
+     * Similarly, we need to make allowances for nulls, because a non-numeric
+     * null is loosely equal to zero or an empty string.
+     * 
      * @param string $col The table-column name.
      * 
      * @return void|bool Returns null if the table-column name does not exist,
      * boolean true if the data is changed, boolean false if not changed.
      * 
+     * @todo How to handle changes to array values?
+     * 
      */
     public function isChanged($col)
     {
+        // col needs to exist in the initial array
         if (! array_key_exists($col, $this->_initial)) {
             return null;
-        } else {
-            return $this->$col !== $this->_initial[$col];
         }
+        
+        // track changes to or from null
+        $from_null = $this->_initial[$col] === null &&
+                     $this->$col !== null;
+        
+        $to_null   = $this->_initial[$col] !== null &&
+                     $this->$col === null;
+        
+        if ($from_null || $to_null) {
+            return true;
+        }
+        
+        // track numeric changes
+        $both_numeric = is_numeric($this->_initial[$col]) &&
+                        is_numeric($this->$col);
+        if ($both_numeric) {
+            // use normal inequality
+            return $this->_initial[$col] != (string) $this->$col;
+        }
+        
+        // use strict inequality
+        return $this->_initial[$col] !== (string) $this->$col;
     }
     
     /**
@@ -1108,7 +1145,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $list = array();
         foreach ($this->_initial as $col => $val) {
-            if ($this->$col !== $val) {
+            if ($this->isChanged($col)) {
                 $list[] = $col;
             }
         }

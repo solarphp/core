@@ -583,7 +583,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // retain the profile data?
         if ($this->_profiling) {
             $after = microtime(true);
-            $this->_profile[] = array($after - $before, $obj->queryString);
+            $this->_profile[] = array($after - $before, $obj->queryString, $data);
         }
         
         // done!

@@ -1769,7 +1769,8 @@ abstract class Solar_Sql_Model extends Solar_Base
             $spec->setStatus('updated');
         }
         
-        // unserialize cols and return the data as updated
+        // unserialize cols and return the data as updated. note that if this
+        // was a record, only the changed columns will be returned here.
         return $data;
     }
     

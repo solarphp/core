@@ -1894,8 +1894,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // set the "NULL"/"NOT NULL" portion
         $coldef .= ($require) ? ' NOT NULL' : ' NULL';
         
-        // set the default value, if any
-        if ($default) {
+        // set the default value, if any.
+        // use isset() to allow for '0' and '' values.
+        if (isset($default)) {
             $coldef .= ' DEFAULT ' . $this->quote($default);
         }
         

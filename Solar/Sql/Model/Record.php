@@ -823,6 +823,75 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
+    /**
+     * 
+     * Increments the value of a column **immediately at the database** and
+     * retains the incremented value in the record.
+     * 
+     * Incrementing by a negative value effectively decrements the value.
+     * 
+     * N.b.: This results in 2 SQL calls: one to update the value at the
+     * database, then one to select the new value from the database.
+     * 
+     * N.b.: You may have trouble incrementing from a NULL starting point.
+     * You should define columns to be incremented with a  "DEFAULT '0'" so
+     * they never are null (although strictly speaking you do *not* need to 
+     * define them as NOT NULL).
+     * 
+     * @param string $col The column to increment.
+     * 
+     * @param int|float $amt The amount to increment by (default 1).
+     * 
+     * @return int|float The value after incrementing.  Note that other 
+     * processes may have incremented the column as well, so this may not
+     * correspond directly with adding the amount to the current value in the
+     * record.
+     * 
+     */
+    public function increment($col, $amt = 1)
+    {
+        // make sure the column exists
+        if (! array_key_exists($col, $this->_model->table_cols)) {
+            throw $this->_exception('ERR_NO_SUCH_COLUMN', array(
+                'name' => $col,
+            ));
+        }
+        
+        // the table and primary-key col name
+        $table = $this->_model->table_name;
+        $key = $this->getPrimaryCol();
+        $sql = $this->_model->sql;
+        
+        // we need to have a primary value
+        $val = $this->getPrimaryVal();
+        if (! $val) {
+            throw $this->_exception('ERR_NO_PRIMARY_VAL', array(
+                'primary_col' => $col
+            ));
+        };
+        
+        // change column by $amt
+        $cmd = "UPDATE $table SET $col = $col + :amt WHERE $key = :$key";
+        $sql->query($cmd, array(
+            $key  => $val,
+            'amt' => $amt,
+        ));
+        
+        // get the most-current value
+        $cmd = "SELECT $col FROM $table WHERE $key = :$key";
+        $new = $sql->fetchValue($cmd, array($key => $val));
+        
+        // set the data directly, **without** passing through
+        // __set(), so as not to dirty the record.
+        $this->_data[$col] = $new;
+        
+        // fake the initial value so that isChanged() won't trigger
+        $this->_initial[$col] = $new;
+        
+        // done!
+        return $new;
+    }
+    
     // -----------------------------------------------------------------
     // 
     // Filtering and data invalidation.

@@ -11,7 +11,7 @@
 $model_name = $record->getModel()->model_name;
 
 // the CSS class to use for the <dl> tag
-$css_class = $this->escape($model_name) . ' record';
+$css_class = $this->escape($model_name) . '-record';
 
 // the CSS id to use for the <dl> tag
 $css_id = $this->escape(

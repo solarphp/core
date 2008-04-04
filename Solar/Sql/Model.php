@@ -1716,11 +1716,28 @@ abstract class Solar_Sql_Model extends Solar_Base
         // what's the primary key?
         $primary = $this->_primary_col;
         if ($spec instanceof Solar_Sql_Model_Record) {
-            // apply record filters and convert to array, then force the
-            // WHERE clause
+            
+            // apply record filters
             $spec->filter();
+            
+            // convert to array, and retain only changed columns.
             $data = $spec->toArray();
+            foreach ($data as $key => $val) {
+                if (! $spec->isChanged($key)) {
+                    unset($data[$key]);
+                }
+            }
+            
+            // it's possible there are no columns that changed.
+            // if so, we're done -- make it match what's at the DB.
+            if (! $data) {
+                $spec->refresh();
+                return $data;
+            }
+            
+            // force the WHERE clause
             $where = array("$primary = ?" => $data[$primary]);
+            
         } else {
             // already an array
             $data = $spec;
@@ -1804,11 +1821,11 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Unerializes data values in-place based on $this->_serialize_cols.
+     * Un-serializes data values in-place based on $this->_serialize_cols.
      * 
-     * Does not attempt to unserialize null values.
+     * Does not attempt to un-serialize null values.
      * 
-     * If unserializing fails, stores 'null' in the data.
+     * If un-serializing fails, stores 'null' in the data.
      * 
      * @param array &$data Record data.
      * 

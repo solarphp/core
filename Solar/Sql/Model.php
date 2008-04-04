@@ -1720,8 +1720,13 @@ abstract class Solar_Sql_Model extends Solar_Base
             // apply record filters
             $spec->filter();
             
-            // convert to array, and retain only changed columns.
+            // convert to array
             $data = $spec->toArray();
+            
+            // force the WHERE clause
+            $where = array("$primary = ?" => $data[$primary]);
+            
+            // retain only changed columns
             foreach ($data as $key => $val) {
                 if (! $spec->isChanged($key)) {
                     unset($data[$key]);
@@ -1734,9 +1739,6 @@ abstract class Solar_Sql_Model extends Solar_Base
                 $spec->refresh();
                 return $data;
             }
-            
-            // force the WHERE clause
-            $where = array("$primary = ?" => $data[$primary]);
             
         } else {
             // already an array

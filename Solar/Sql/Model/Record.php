@@ -1131,7 +1131,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
         
         // use strict inequality
-        return $this->_initial[$col] !== (string) $this->$col;
+        return $this->_initial[$col] !== $this->$col;
     }
     
     /**

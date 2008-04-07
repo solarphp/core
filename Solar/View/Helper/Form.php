@@ -760,7 +760,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             } elseif ($type == 'fieldset') {
                 
                 $flag = $info[0];
-                $legend = $info[1];
+                $legend = $this->_view->getText($info[1]);
                 if ($flag) {
                     $form[] = "    <fieldset><legend>$legend</legend>";
                     $form[] = "        <dl>";

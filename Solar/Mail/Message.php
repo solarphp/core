@@ -221,6 +221,21 @@ class Solar_Mail_Message extends Solar_Base {
     
     /**
      * 
+     * Sets the Solar_Mail_Transport dependency.
+     * 
+     * @param Solar_Mail_Transport_Adapter $transport
+     * 
+     * @return Solar_Mail_Message
+     * 
+     */
+    public function setTransport($transport)
+    {
+        $this->_transport = $transport;
+        return $this;
+    }
+    
+    /**
+     * 
      * Sets the CRLF sequence for this message.
      * 
      * @param string $crlf The CRLF line-ending string.

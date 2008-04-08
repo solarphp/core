@@ -561,6 +561,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $this->_saveRelated();
             return true;
         } catch (Exception $e) {
+            // @todo Set status on other-than-invalid exceptions for better
+            // error reporting?  Or, blow up on non-invalid exceptions?
             $this->_save_exception = $e;
             return false;
         }
@@ -583,10 +585,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
             // pre-save routine
             $this->_preSave();
-        
-            // turn off lazy loading
-            $this->_lazy_load = false;
-        
+            
             // insert or update based on primary key value
             $primary = $this->_model->primary_col;
             if (empty($this->$primary)) {
@@ -594,9 +593,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
             } else {
                 $this->_update();
             }
-        
-            // turn on lazy-loading for post-save routines
-            $this->_lazy_load = true;
         
             // post-save routine
             $this->_postSave();
@@ -907,6 +903,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function filter()
     {
+        // pre-filter hook
         $this->_preFilter();
         
         // create a filter object based on the model's filter class
@@ -923,6 +920,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
         
         // set which elements are required by the table itself
+        // 
+        // @todo Turn off created/updated, as they will get populated?  Also
+        // turn off "inherit" values?  Or auto-set them in _preInsert() and
+        // _preUpdate() ?
         foreach ($this->_model->table_cols as $key => $info) {
             if ($info['autoinc']) {
                 // autoinc are not required
@@ -942,8 +943,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // tell the filter to use the model for locale strings
         $filter->setChainLocaleObject($this->_model);
         
-        // apply filters and retain invalids
+        // turn off lazy-loading while applying filters to make sure we don't
+        // get recursive behavior
+        $this->_lazy_load = false;
         $valid = $filter->applyChain($this);
+        $this->_lazy_load = true;
+        
+        // retain invalids
         $invalid = $filter->getChainInvalid();
         
         // reclaim memory

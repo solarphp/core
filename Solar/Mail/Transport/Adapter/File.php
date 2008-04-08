@@ -4,7 +4,7 @@
  * Pseudo-transport that writes the message headers and content to a file.
  * 
  * The files are saved in a configurable directory location, and are named
- * "solar_email_{date('Y-m-d_H:i:s.u')}" by default.
+ * "solar_email_{date('Y-m-d_H-i-s.u')}" by default.
  * 
  * @category Solar
  * 
@@ -39,7 +39,6 @@ class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter {
         'dir'    => null,
         'prefix' => 'solar_email_',
     );
-    
     
     /**
      * 

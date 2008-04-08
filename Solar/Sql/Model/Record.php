@@ -560,9 +560,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $this->_save();
             $this->_saveRelated();
             return true;
-        } catch (Exception $e) {
-            // @todo Set status on other-than-invalid exceptions for better
-            // error reporting?  Or, blow up on non-invalid exceptions?
+        } catch (Solar_Sql_Model_Record_Exception_Invalid $e) {
             $this->_save_exception = $e;
             return false;
         }

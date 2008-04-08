@@ -769,6 +769,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      * @return void
      * 
+     * @todo Keep track of invalid saves on related records and collections?
+     * 
      */
     protected function _saveRelated()
     {

@@ -566,6 +566,61 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
+    // @todo Make this the default save() behavior. That means renamaing and
+    // refactoring the record/collection save() methods.
+    public function saveInTransaction($data = null)
+    {
+        // convenient reference to the SQL connection
+        $sql = $this->_model->sql;
+        
+        // start the transaction
+        $sql->begin();
+        
+        try {
+            
+            // attempt the save
+            if ($this->save($data)) {
+                // entire save was valid, keep it
+                $sql->commit();
+                return true;
+            } else {
+                // at least one part of the save was *not* valid.
+                // throw it all away.
+                $sql->rollback();
+                
+                // note that we're not invalid, exactly, but that we
+                // rolled back.
+                $this->_status = 'rollback';
+                return false;
+            }
+            
+        } catch (Exception $e) {
+            
+            // some sort of exception came up **besides** invalid data (which
+            // is handled inside save() already).  get its message.
+            if ($e->getCode() == 'ERR_QUERY_FAILED') {
+                // special treatment for failed queries.
+                $info = $e->getInfo();
+                $text = $info['pdo_text'] . ". "
+                      . "Please call getSaveException() for more information.";
+            } else {
+                // normal treatment.
+                $text = $e->getCode() . ': ' . $e->getMessage();
+            }
+            
+            // roll back and retain the exception
+            $sql->rollback();
+            $this->_save_exception = $e;
+            
+            // set as invalid and force the record status afterwards
+            $this->setInvalid('*', $text);
+            $this->_status = 'rollback';
+            
+            // done
+            return false;
+        }
+    }
+    
     /**
      * 
      * Saves the current record, but only if the record is "dirty".
@@ -1295,6 +1350,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // set the form status
         switch ($this->_status) {
         case 'invalid':
+        case 'rollback':
             $form->setStatus(false);
             break;
         case 'inserted':

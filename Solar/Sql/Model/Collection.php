@@ -90,8 +90,13 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     public function __get($key)
     {
-        // convert array to record object
-        // honors single-table inheritance
+        if (! $this->__isset($key)) {
+            // create a new blank record for the missing key
+            $this->_data[$key] = $this->_model->fetchNew();
+        }
+        
+        // convert array to record object.
+        // honors single-table inheritance.
         if (is_array($this->_data[$key])) {
             
             // convert the data array to an object.

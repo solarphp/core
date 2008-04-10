@@ -76,8 +76,8 @@ class Solar_Form_Load_Model extends Solar_Base {
             settype($list, 'array');
         }
         
-        // default values
-        $default = $model->fetchNew();
+        // default values as an array
+        $default = $model->fetchNew()->toArray();
         
         // loop through the list of requested columns and collect elements
         $elements = array();
@@ -103,13 +103,18 @@ class Solar_Form_Load_Model extends Solar_Base {
                 );
             }
             
+            // default value
+            $defval = array_key_exists($name, $default)
+                    ? $default[$name]
+                    : null;
+            
             // initial set of element info based on the model column
             $base = array(
                 'name'    => $array_name . '[' . $name . ']',
                 'type'    => null,
                 'label'   => $model->locale(strtoupper("LABEL_$name")),
                 'descr'   => $model->locale(strtoupper("DESCR_$name")),
-                'value'   => $default[$name],
+                'value'   => $defval,
                 'require' => $cols[$name]['require'],
                 'disable' => $cols[$name]['primary'],
                 'options' => array(),

@@ -264,6 +264,26 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
+     * Overrides normal locale() to use the **model** locale strings.
+     * 
+     * @param string $key The key to get a locale string for.
+     * 
+     * @param string $num If 1, returns a singular string; otherwise, returns
+     * a plural string (if one exists).
+     * 
+     * @param array $replace An array of replacement values for the string.
+     * 
+     * @return string The locale string, or the original $key if no
+     * string found.
+     * 
+     */
+    public function locale($key, $num = 1, $replace = null)
+    {
+        return $this->_model->locale($key, $num, $replace);
+    }
+    
+    /**
+     * 
      * Loads the struct with data from an array or another struct.
      * 
      * Also unserializes columns per the "serialize_cols" model property.

@@ -364,6 +364,27 @@ class Solar_Form extends Solar_Base {
     
     /**
      * 
+     * Sets the type of one element.
+     * 
+     * @param string $name The element name.
+     * 
+     * @param string $type The element type ('text', 'select', etc).
+     * 
+     * @param string $array Rename the element as a key in this array.
+     * 
+     * @return void
+     * 
+     */
+    public function setType($name, $type, $array = null)
+    {
+        $name = $this->_prepareName($name, $array);
+        if (! empty($this->elements[$name])) {
+            $this->elements[$name]['type'] = $type;
+        }
+    }
+    
+    /**
+     * 
      * Reorders the existing elements.
      * 
      * @param array $list The order in which elements should be placed; each

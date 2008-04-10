@@ -1654,9 +1654,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // reload the data into the record if needed
+        // refresh the table data in the record
         if ($spec instanceof Solar_Sql_Model_Record) {
-            $spec->load($data);
+            $spec->refresh();
             $spec->setStatus('inserted');
         }
         
@@ -1763,9 +1763,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_sql->update($this->_table_name, $data, $where);
         $this->unserializeCols($data);
         
-        // reload the data into the record if needed
+        // refresh the table data in the record
         if ($spec instanceof Solar_Sql_Model_Record) {
-            $spec->load($data);
+            $spec->refresh();
             $spec->setStatus('updated');
         }
         

@@ -282,43 +282,47 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // force to array
         if ($spec instanceof Solar_Struct) {
             // we can do this because $spec is of the same class
-            $data = $spec->_data;
+            $load = $spec->_data;
         } elseif (is_array($spec)) {
-            $data = $spec;
+            $load = $spec;
         } else {
-            $data = array();
+            $load = array();
         }
         
-        // remove columns not in the whitelist
+        // remove any load columns not in the whitelist
         if (! empty($cols)) {
             $cols = (array) $cols;
-            foreach ($data as $key => $val) {
+            foreach ($load as $key => $val) {
                 if (! in_array($key, $cols)) {
-                    unset($data[$key]);
+                    unset($load[$key]);
                 }
             }
         }
         
-        // pull out belongs_to/has_one related data.
-        foreach ($data as $key => $val) {
-            // if the key has double-underscores, it's an eager-load record.
-            if (strpos($key, '__') !== false) {
-                list($rel_name, $rel_key) = explode('__', $key);
-                $this->_data[$rel_name][$rel_key] = $val;
-                unset($data[$key]);
+        // unserialize any serialize_cols in the load
+        $this->_model->unserializeCols($load);
+        
+        // set actual table columns, removing from the load as we go
+        foreach ($this->_model->table_cols as $col => $info) {
+            if (array_key_exists($col, $load)) {
+                $this->__set($col, $load[$col]);
+                unset($load[$col]);
             }
         }
         
-        // unserialize as needed, then add remaining "real" columns.
-        // it's not enough to just merge the data.  although slower, we need
-        // to loop so that __set() is honored.
-        $this->_model->unserializeCols($data);
-        
-        foreach ($data as $key => $val) {
-            $this->__set($key, $val);
+        // restructure belongs_to/has_one eager-loaded data
+        foreach ($load as $key => $val) {
+            // if the key has double-underscores anywhere besides the very
+            // first characters, it's from a single eager-load record.
+            if (strpos($key, '__')) {
+                list($rel_name, $rel_key) = explode('__', $key);
+                $load[$rel_name][$rel_key] = $val;
+                unset($load[$key]);
+            }
         }
         
-        // load related data as records and collections
+        // set related data as records and collections, removing from the load
+        // as we go.
         $list = array_keys($this->_model->related);
         foreach ($list as $name) {
             
@@ -326,30 +330,39 @@ class Solar_Sql_Model_Record extends Solar_Struct
             
             // is this a "to-one" association with data already in place?
             $type = $related->type;
-            if (($type == 'has_one' || $type == 'belongs_to') && ! empty($this->_data[$name])) {
-                    
+            if (($type == 'has_one' || $type == 'belongs_to') && ! empty($load[$name])) {
+                
                 // create a record object from the related model
                 $model = Solar::factory($related->foreign_class, array(
                     'sql' => $this->_model->sql
                 ));
-                $this->_data[$name] = $model->newRecord($this->_data[$name]);
+                $this->_data[$name] = $model->newRecord($load[$name]);
                 
-            } elseif ($type == 'has_many' && ! empty($this->_data[$name])) {
+            } elseif ($type == 'has_many' && ! empty($load[$name])) {
                 
                 // create a collection object from the related model
                 $model = Solar::factory($related->foreign_class, array(
                     'sql' => $this->_model->sql
                 ));
-                $this->_data[$name] = $model->newCollection($this->_data[$name]);
+                $this->_data[$name] = $model->newCollection($load[$name]);
                 
-            } else {
+            } elseif (! array_key_exists($name, $this->_data)) {
                 // set a placeholder for lazy-loading in __get()
                 $this->_data[$name] = null;
             }
             
             // by default get all related records
             $this->_related_page[$name] = 0;
+            
+            // remove from the load data
+            unset($load[$name]);
         }
+        
+        // set all remaining values in the load
+        foreach ($load as $key => $val) {
+            $this->__set($key, $val);
+        }
+        
     }
     
     // -----------------------------------------------------------------
@@ -465,7 +478,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function toArray()
     {
         $data = array();
-        $keys = array_keys($this->_data);
+        
+        $keys = array_merge(
+            array_keys($this->_data),
+            $this->_model->calculate_cols
+        );
         
         foreach ($keys as $key) {
             
@@ -477,8 +494,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 
                 $related = $this->_model->getRelated($key);
                 
-                // do not fetch related just for array convertion, this leads
-                // to some deep (perhaps infinite?) recurstion
+                // do not fetch related just for array conversion, this leads
+                // to some deep (perhaps infinite?) recursion
                 if ($related->type == 'has_many') {
                     $val = array();
                 } else {
@@ -869,7 +886,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         if ($this->_status != 'new') {
             $primary = $this->_model->primary_col;
             $result = $this->_model->fetch($this->$primary);
-            $this->load($result);
+            $cols = $this->_model->table_cols;
+            foreach ($cols as $col => $info) {
+                $this->$col = $result->$col;
+            }
             $this->setStatus('clean');
         }
     }

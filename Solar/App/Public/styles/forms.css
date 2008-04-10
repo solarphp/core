@@ -3,6 +3,9 @@ option {
 }
 
 .input-text,
+.input-date,
+.input-time,
+.input-timestamp,
 .input-password,
 .input-textarea {
     font-family: "Lucida Sans Typewriter", "Courier New", monospace;

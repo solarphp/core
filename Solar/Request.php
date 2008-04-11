@@ -259,7 +259,7 @@ class Solar_Request extends Solar_Base {
      * 
      * Retrieves an **unfiltered** value by key from the [[$post]] *and* 
      * [[$files]] properties, or an alternate default value if that key does 
-     * not exist in either location.
+     * not exist in either location.  Files takes precedence over post.
      * 
      * @param string $key The $post and $files key to retrieve the value of.
      * 

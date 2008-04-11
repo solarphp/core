@@ -257,6 +257,66 @@ class Solar_Request extends Solar_Base {
     
     /**
      * 
+     * Retrieves an **unfiltered** value by key from the [[$post]] *and* 
+     * [[$files]] properties, or an alternate default value if that key does 
+     * not exist in either location.
+     * 
+     * @param string $key The $post and $files key to retrieve the value of.
+     * 
+     * @param string $alt The value to return if the key does not exist in
+     * either $post or $files.
+     * 
+     * @return mixed The value of $post[$key] combined with $files[$key], or 
+     * the alternate default value.
+     * 
+     */
+    public function postAndFiles($key = null, $alt = null)
+    {
+        $post  = $this->_getValue('post',  $key, $alt);
+        $files = $this->_getValue('files', $key, $alt);
+        
+        // no matches in post or files
+        if (! $post && ! $files) {
+            return $alt;
+        }
+        
+        // match in post, not in files
+        if ($post && ! $files) {
+            return $post;
+        }
+        
+        // match in files, not in post
+        if (! $post && $files) {
+            return $files;
+        }
+        
+        // are either or both arrays?
+        $post_array  = is_array($post);
+        $files_array = is_array($files);
+        
+        // both are arrays, merge them
+        if ($post_array && $files_array) {
+            return array_merge($post, $files);
+        }
+        
+        // post array but single files, append to post
+        if ($post_array && ! $files_array) {
+            array_push($post, $files);
+            return $post;
+        }
+        
+        // files array but single post, append to files
+        if (! $post_array && $files_array) {
+            array_push($files, $post);
+            return $files;
+        }
+        
+        // now what?
+        throw $this->_exception('ERR_UNUSUAL');
+    }
+    
+    /**
+     * 
      * Is this a command-line request?
      * 
      * @return bool
@@ -409,6 +469,60 @@ class Solar_Request extends Solar_Base {
                     unset($this->http[$nicekey]);
                     unset($this->server[$key]);
                 }
+            }
+        }
+        
+        // rebuild the files array to make it look more like POST
+        if ($this->files) {
+            $files = $this->files;
+            $this->files = array();
+            $this->_rebuildFiles($files, &$this->files);
+        }
+    }
+    
+    /**
+     * 
+     * Recursive method to rebuild $_FILES structure to be more like $_POST.
+     * 
+     * @param array $src The source $_FILES array, perhaps from a sub-
+     * element of that array/
+     * 
+     * @param array &$tgt Where we will store the restructured data when we
+     * find it.
+     * 
+     * @return void
+     * 
+     */
+    protected function _rebuildFiles($src, &$tgt)
+    {
+        // an array with these keys is a "target" for us (pre-sorted)
+        $tgtkeys = array('error', 'name', 'size', 'tmp_name', 'type');
+        
+        // the keys of the source array (sorted so that comparisons work
+        // regardless of original order)
+        $srckeys = array_keys((array) $src);
+        sort($srckeys);
+        
+        // is the source array a target?
+        if ($srckeys == $tgtkeys) {
+            // get error, name, size, etc
+            foreach ($srckeys as $key) {
+                if (is_array($src[$key])) {
+                    // multiple file field names for each error, name, size, etc.
+                    foreach ((array) $src[$key] as $field => $value) {
+                        $tgt[$field][$key] = $value;
+                    }
+                } else {
+                    // the key itself is error, name, size, etc., and the
+                    // target is already the file field name
+                    $tgt[$key] = $src[$key];
+                }
+            }
+        } else {
+            // not a target, create sub-elements and rebuild them too
+            foreach ($src as $key => $val) {
+                $tgt[$key] = array();
+                $this->_rebuildFiles($val, $tgt[$key], $key);
             }
         }
     }

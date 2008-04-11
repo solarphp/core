@@ -89,19 +89,6 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract {
             return false;
         }
         
-        // was a file was uploaded?
-        if ($value['error'] == UPLOAD_ERR_NO_FILE) {
-            // no file uploaded, but was it actually required?
-            if ($this->_filter->getRequire()) {
-                // required, so not valid
-                $this->_invalid = $this->_error_invalid[UPLOAD_ERR_NO_FILE];
-                return false;
-            } else {
-                // not required, so valid
-                return true;
-            }
-        }
-        
         // was the upload explicitly ok?
         if ($value['error'] != UPLOAD_ERR_OK) {
             foreach ($this->_error_invalid as $error => $invalid) {

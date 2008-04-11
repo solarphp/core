@@ -20,6 +20,8 @@ class Solar_View_Helper_FormFile extends Solar_View_Helper_FormElement {
      * 
      * Generates a 'file' element.
      * 
+     * Note that this helper ignores the "value" entirely.
+     * 
      * @param array $info An array of element information.
      * 
      * @return string The element XHTML.
@@ -30,7 +32,6 @@ class Solar_View_Helper_FormFile extends Solar_View_Helper_FormElement {
         $this->_prepare($info);
         return '<input type="file"'
              . ' name="' . $this->_view->escape($this->_name) . '"'
-             . ' value="' . $this->_view->escape($this->_value) . '"'
              . $this->_view->attribs($this->_attribs)
              . ' />';
     }

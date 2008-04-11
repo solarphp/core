@@ -53,6 +53,15 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
     
     /**
      * 
+     * The locale key to use when a value is invalid.
+     * 
+     * @var string
+     * 
+     */
+    protected $_invalid;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -62,5 +71,48 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
     {
         parent::__construct($config);
         $this->_filter = $this->_config['filter'];
+        $this->_resetInvalid();
+    }
+    
+    /**
+     * 
+     * Returns the value of the $_invalid property.
+     * 
+     * @return string
+     * 
+     */
+    public function getInvalid()
+    {
+        return $this->_invalid;
+    }
+    
+    /**
+     * 
+     * Resets the $_invalid property to its default value.
+     * 
+     * For all non-validate classes, the value is null.
+     * 
+     * For a class ValidateFooBar, the value is "INVALID_FOO_BAR".
+     * 
+     * @return void
+     * 
+     */
+    protected function _resetInvalid()
+    {
+        $parts = explode('_', get_class($this));
+        $name = end($parts);
+        if (substr($name, 0, 8 != 'Validate')) {
+            // skip it, sanitizers don't use error messages.
+            $this->error = null;
+        }
+        
+        // 'validateFooBar' => 'invalidFooBar'
+        $name = 'invalid' . substr($name, 8);
+    
+        // 'invalidFoobar' => 'INVALID_FOO_BAR'
+        $name = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $name));
+        
+        // keep it
+        $this->_invalid = $name;
     }
 }

@@ -583,38 +583,53 @@ class Solar_Filter extends Solar_Base {
                 $this->setRequire(false);
             }
             
-            // run the filters for the data element
-            foreach ($this->_chain_filters[$key] as $params) {
-                
-                // take the method name off the top of the params ...
-                $method = array_shift($params);
-                
-                // ... and put the value in its place. we use the
-                // $data[$key] instead of $val so that the data
-                // array itself is updated, not the local-scope $val.
-                array_unshift($params, $this->_data[$key]);
-                
-                // call the filtering method
-                $result = $this->__call($method, $params);
-                
-                // what to do with the result?
-                $type = strtolower(substr($method, 0, 8));
-                if ($type == 'sanitize') {
-                    // retain the sanitized value
-                    $this->_data[$key] = $result;
-                } elseif ($type == 'validate' && ! $result) {
-                    // a validation method failed; use the method name as
-                    // the locale translation key, converting from camelCase
-                    // to camel_Case, then to CAMEL_CASE.
-                    $this->_chain_invalid[$key][] = $this->_chainLocale($method);
-                }
-            }
+            // run the filters for each data element
+            $this->_applyChain($key);
         }
         
         // return the validation status; if not empty, at least one of the
         // data elements was not valid.
         $result = empty($this->_chain_invalid);
         return $result;
+    }
+    
+    /**
+     * 
+     * Support method for [[applyChain()]] to apply all the filters on a
+     * single data element.
+     * 
+     * @param string $key The data element key.
+     * 
+     * @return void
+     * 
+     */
+    protected function _applyChain($key)
+    {
+        foreach ($this->_chain_filters[$key] as $params) {
+            
+            // take the method name off the top of the params ...
+            $method = array_shift($params);
+            
+            // ... and put the value in its place. we use the
+            // $data[$key] instead of $val so that the data
+            // array itself is updated, not the local-scope $val.
+            array_unshift($params, $this->_data[$key]);
+            
+            // call the filtering method
+            $result = $this->__call($method, $params);
+            
+            // what to do with the result?
+            $type = strtolower(substr($method, 0, 8));
+            if ($type == 'sanitize') {
+                // retain the sanitized value
+                $this->_data[$key] = $result;
+            } elseif ($type == 'validate' && ! $result) {
+                // a validation method failed, get the locale key for the
+                // invalid message and translate it.
+                $invalid = $this->getFilter($method)->getInvalid();
+                $this->_chain_invalid[$key][] = $this->_chainLocale($invalid);
+            }
+        }
     }
     
     /**
@@ -630,12 +645,6 @@ class Solar_Filter extends Solar_Base {
      */
     protected function _chainLocale($key)
     {
-        // 'validatePregReplace' => 'invalidPregReplace'
-        $key = 'invalid' . substr($key, 8);
-        
-        // 'validatePregReplace' => 'INVALID_PREG_REPLACE'
-        $key = strtoupper(preg_replace('/([a-z])([A-Z])/', '$1_$2', $key));
-        
         // the translated message
         $msg = null;
         

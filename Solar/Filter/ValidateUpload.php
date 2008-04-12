@@ -72,8 +72,7 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract {
         
         // has to be an array
         if (! is_array($value)) {
-            $this->_invalid = 'INVALID_UPLOAD_NOT_ARRAY';
-            return false;
+            return $this->_invalid('INVALID_UPLOAD_NOT_ARRAY');
         }
         
         // presorted list of expected keys
@@ -85,8 +84,7 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract {
         
         // make sure the expected and actual keys match up
         if ($expect != $actual) {
-            $this->_invalid = 'INVALID_UPLOAD_ARRAY_MALFORMED';
-            return false;
+            return $this->_invalid('INVALID_UPLOAD_ARRAY_MALFORMED');
         }
         
         // was the upload explicitly ok?
@@ -99,34 +97,24 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract {
                 }
             }
             // some other error
-            $this->_invalid = 'INVALID_UPLOAD_UNKNOWN_ERROR';
-            return false;
+            return $this->_invalid('INVALID_UPLOAD_UNKNOWN_ERROR');
         }
         
         // is it actually an uploaded file?
         if (! is_uploaded_file($value['tmp_name'])) {
             // nefarious happenings are afoot.
-            $this->_invalid = 'INVALID_UPLOAD_NOT_UPLOADED_FILE';
-            return false;
+            return $this->_invalid('INVALID_UPLOAD_NOT_UPLOADED_FILE');
         }
         
         // check file extension?
         if ($file_ext) {
             
-            // find the file name extension
-            $pos = strrpos($value['name'], '.');
-            if ($pos !== false) {
-                // get the extension without dot
-                $ext = substr($value['name'], $pos + 1);
-            } else {
-                // no filename extension
-                $ext = null;
-            }
+            // find the file name extension, minus the dot
+            $ext = substr(strrchr($value['name'], '.'), 1);
             
             // is the extension allowed?
             if (! in_array($ext, (array) $file_ext)) {
-                $this->_invalid = 'INVALID_UPLOAD_FILENAME_EXT';
-                return false;
+                return $this->_invalid('INVALID_UPLOAD_FILENAME_EXT');
             }
         }
         

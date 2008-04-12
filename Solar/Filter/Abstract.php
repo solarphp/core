@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Abstract class for filters.
+ * Abstract class for filters, both 'sanitize' and  'validate'.
  * 
  * @category Solar
  * 
@@ -12,16 +12,6 @@
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
- * 
- */
-
-/**
- * 
- * Abstract class for filters.
- * 
- * @category Solar
- * 
- * @package Solar_Filter
  * 
  */
 abstract class Solar_Filter_Abstract extends Solar_Base {
@@ -114,5 +104,23 @@ abstract class Solar_Filter_Abstract extends Solar_Base {
         
         // keep it
         $this->_invalid = $name;
+    }
+    
+    /**
+     * 
+     * Sets $this->_invalid to the specified value and returns false.
+     * 
+     * @param string $key A locale key for $this->_invalid.  If empty, leaves
+     * $this->_invalid as it it.
+     * 
+     * @return false
+     * 
+     */
+    protected function _invalid($key = null)
+    {
+        if ($key) {
+            $this->_invalid = $key;
+        }
+        return false;
     }
 }

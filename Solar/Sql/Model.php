@@ -1646,10 +1646,14 @@ abstract class Solar_Sql_Model extends Solar_Base
          */
         // no exception thrown, so it must have worked.
         // if there was an autoincrement column, set its value in the data.
+        $id = $this->_sql->lastInsertId($this->_table_name, $key);
         foreach ($this->_table_cols as $key => $val) {
             if ($val['autoinc']) {
                 // set the value and leave the loop (should be only one)
-                $data[$key] = $this->_sql->lastInsertId($this->_table_name, $key);
+                $data[$key] = $id;
+                if ($spec instanceof Solar_Sql_Model_Record) {
+                    $spec->$key = $id;
+                }
                 break;
             }
         }

@@ -18,10 +18,6 @@
  * @todo Add load() method similar to Solar_Form::load(), for loading from 
  * external XML, PHP array, etc. files.
  * 
- * @todo Config to stop processing options after first numeric?  This would 
- * force options to come before the numeric params, making the invocation more
- * strict (and cleaner-looking).
- * 
  */
 class Solar_Getopt extends Solar_Base {
     
@@ -35,18 +31,11 @@ class Solar_Getopt extends Solar_Base {
      * : (string) The data-filter class to use when validating and sanitizing
      *   parameter values.  Default is 'Solar_Filter'.
      * 
-     * `strict`
-     * : (bool) If true, will not process any more options after the first 
-     *   non-option-related parameter.  This forces all numeric parameters to
-     *   come after the last option.  If false, numeric parameters unrelated to
-     *   any particular option can be mixed in with the options.
-     * 
      * @var array
      * 
      */
     protected $_Solar_Getopt = array(
         'filter_class' => 'Solar_Filter',
-        'strict'       => true,
     );
     
     /**
@@ -364,11 +353,6 @@ class Solar_Getopt extends Solar_Base {
             } else {
                 // numeric
                 $this->_values[] = $arg;
-                // in strict mode, this indicates that no more options
-                // should be procesed.
-                if ($this->_config['strict']) {
-                    $done = true;
-                }
             }
         }
     }

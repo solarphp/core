@@ -113,7 +113,7 @@ class Solar_Sql_Select extends Solar_Base {
      * 
      */
     protected $_parts = array(
-        'distinct' => false,
+        'distinct' => null,
         'cols'     => array(),
         'from'     => array(),
         'join'     => array(),
@@ -225,14 +225,16 @@ class Solar_Sql_Select extends Solar_Base {
      * Makes the query SELECT DISTINCT.
      * 
      * @param bool $flag Whether or not the SELECT is DISTINCT (default
-     * true).
+     * true).  If null, the current distinct setting is not changed.
      * 
      * @return Solar_Sql_Select
      * 
      */
     public function distinct($flag = true)
     {
-        $this->_parts['distinct'] = (bool) $flag;
+        if ($flag !== null) {
+            $this->_parts['distinct'] = (bool) $flag;
+        }
         return $this;
     }
     
@@ -1171,28 +1173,47 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function countPages($col = 'id')
     {
-        $select = clone($this);
-        $select->clear('limit');
-        $select->clear('order');
+        // prepare the current query to become a subselect of all matching
+        // rows; this means no limit, and no need to order them.
+        $inner = clone($this);
+        $inner->clear('limit');
+        $inner->clear('order');
         
         // clear all columns so there are no name conflicts
-        // @todo Replace with $select->clear('cols') ?
-        foreach ($select->_sources as $key => $val) {
-            $select->_sources[$key]['cols'] = array();
+        foreach ($inner->_sources as $key => $val) {
+            $inner->_sources[$key]['cols'] = array();
         }
         
-        // add a single COUNT() column
-        $select->_addSource(
+        // add the one column we're counting on
+        $inner->_addSource(
             'cols',         // type
             null,           // name
             null,           // orig
             null,           // join
             null,           // cond
-            "COUNT($col)"
+            $col
         );
         
+        // does the counting column have a dot in it?
+        $pos = strpos($col, '.');
+        if ($pos) {
+            // alias the subselect to the same table name as the column
+            $alias = substr($col, 0, $pos);
+            $col   = substr($col, $pos + 1);
+        } else {
+            // default alias 'subselect' in lieu of an explicit one
+            $alias = 'subselect';
+        }
+        
+        // build the outer select, which will do the actual count.
+        // wrapping with an outer select lets us have all manner of weirdness
+        // in the inner query, so that it doesn't conflict with the count.
+        $outer = clone($this);
+        $outer->clear();
+        $outer->fromSelect($inner, $alias, "COUNT($alias.$col)");
+        
         // get the count and calculate pages
-        $count = $select->fetchValue();
+        $count = $outer->fetchValue();
         $pages = 0;
         if ($count > 0) {
             $pages = ceil($count / $this->_paging);

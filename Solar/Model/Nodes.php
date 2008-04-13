@@ -172,7 +172,8 @@ class Solar_Model_Nodes extends Solar_Model {
      * 
      * Fetches a collection of nodes with certain tags.
      * 
-     * @param array $tag_list Fetch only nodes with all of these tags.
+     * @param array $tag_list Fetch only nodes with all of these tags. If
+     * empty, will fetch all nodes.
      * 
      * @param array $params Added parameters for the SELECT.
      * 
@@ -181,16 +182,26 @@ class Solar_Model_Nodes extends Solar_Model {
      */
     public function fetchAllByTags($tag_list, $params = null)
     {
-        // no tags? fetch all to pre-empt errors related to "IN()" not
-        // having a list to work with.
         $tag_list = $this->_fixTagList($tag_list);
-        if (! $tag_list) {
-            return $this->fetchAll($params);
+        if ($tag_list) {
+            // use this so we can inherit different model names
+            $native_primary = "{$this->_model_name}.{$this->_primary_col}";
+            
+            // eager-join to tags
+            $params['eager'][] = 'tags';
+            
+            // find tags in this list
+            $params['where']['tags.name in (?)'] = $tag_list;
+            
+            // group by the model primary key so that multiple tag matches
+            // only return one row
+            $params['group'][] = $native_primary;
+            
+            // make sure that all tags match
+            $params['having']["COUNT($native_primary) = ?"] = count($tag_list);
         }
         
-        // fetch
-        $select = $this->_newSelectByTags($tag_list, $params);
-        return $this->_fetchAll($select, $params);
+        return $this->fetchAll($params);
     }
     
     /**
@@ -212,106 +223,13 @@ class Solar_Model_Nodes extends Solar_Model {
         // no duplicates allowed
         $tag_list = array_unique($tag_list);
         
-        // if the string tag-list is empty, the preg-split leaves one empty
+        // if the string tag-list was empty, the preg-split leaves one empty
         // element in the array.
-        if ($tag_list[0] == '') {
+        if (count($tag_list) == 1 && reset($tag_list) == '') {
             $tag_list = array();
         }
         
         // done!
         return $tag_list;
-    }
-    
-    /**
-     * 
-     * Support method to create a new selection tool based on tag lists.
-     * 
-     * @param array $tag_list The list of tags to select by.
-     * 
-     * @param array &$params A reference to added parameters for the SELECT.
-     * 
-     * @return Solar_Sql_Select
-     * 
-     */
-    protected function _newSelectByTags($tag_list, &$params)
-    {
-        // setup
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        
-        // catalog entries for joining
-        $taggings = $this->_related['taggings'];
-        $tags     = $this->_related['tags'];
-        
-        // primary key on the nodes table as an alias; e.g., "nodes.id"
-        $native_primary = "{$this->_model_name}.{$this->_primary_col}";
-        
-        // http://forge.mysql.com/wiki/TagSchema
-        // build the select differently from other fetchAll() statements
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               // join taggings on nodes
-               ->join(
-                   "{$taggings->foreign_table} AS {$taggings->foreign_alias}",
-                   "{$taggings->foreign_alias}.node_id = $native_primary"
-               )
-               // join tags on taggings
-               ->join(
-                   "{$tags->foreign_table} AS {$tags->foreign_alias}",
-                   "{$tags->foreign_alias}.id = {$taggings->foreign_alias}.tag_id"
-               )
-               // select for the listed tags
-               ->where("{$tags->foreign_alias}.name IN (?)", $tag_list)
-               // user-provided WHERE
-               ->multiWhere($params['where'])
-               // group by nodes.id to collapse multiple nodes (1 for each tag)
-               ->group($native_primary)
-               // make sure the tag-count matches
-               ->having("COUNT($native_primary) = ?", count($tag_list))
-               // user-provided ORDER, paging, etc
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
-        
-        // done!
-        return $select;
-    }
-    
-    /**
-     * 
-     * Gets a count of nodes and pages-of-nodes with certain tags.
-     * 
-     * @param array $tag_list Count only nodes with all of these tags.
-     * 
-     * @param array $params Added parameters for the SELECT.
-     * 
-     * @return array An array with elemets 'count' (the number of nodes) and
-     * 'pages' (the number of pages-of-nodes).
-     * 
-     */
-    public function countPagesByTags($tag_list, $params = null)
-    {
-        $tag_list = $this->_fixTagList($tag_list);
-        if (! $tag_list) {
-            return $this->countPages($params);
-        }
-        
-        // we need to select the nodes + tags as an "inner" sub-select;
-        // clear any limits on it.
-        $inner = $this->_newSelectByTags($tag_list, $params);
-        $inner->clear('limit');
-        
-        // set up the outer select, which will wrap the inner sub-select
-        $outer = Solar::factory($this->_select_class, array(
-            'sql' => $this->_sql
-        ));
-        
-        // wrap the sub-select and make sure paging is correct
-        $outer->fromSelect($inner, $this->_model_name);
-        $outer->setPaging($this->_paging);
-        
-        // *now* get the count of pages with the tags requested
-        return $outer->countPages("{$this->_model_name}.{$this->_primary_col}");
     }
 }

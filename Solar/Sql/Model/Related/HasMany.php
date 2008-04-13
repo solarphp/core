@@ -20,6 +20,108 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
     
     /**
      * 
+     * When the native model is doing a select and an eager-join is requested
+     * for this relation, this method modifies the select to add the eager
+     * join.
+     * 
+     * **Does not** add the foreign columns to the select, because that would
+     * result in really large result tables. Note that we fetch rows from the
+     * has-many relation separately, so not adding columns here is OK.
+     * 
+     * @param Solar_Sql_Select $select The SELECT to be modified.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    public function modSelectEager($select)
+    {
+        if (empty($this->through)) {
+            // less-complex "has many" relationship.
+            $this->_modSelectEager($select);
+            
+            // make the rows distinct, so we only get one row regardless of
+            // the number of related rows (since we're not selecting cols).
+            $select->distinct(true);
+            
+            // done!
+            return;
+        }
+        
+        // more-complex "has many through" relationship.
+        // join the native table to the mapping table.
+        $join_table = "{$this->through_table} AS {$this->through_alias}";
+        $join_where = "{$this->native_alias}.{$this->native_col} = "
+                    . "{$this->through_alias}.{$this->through_native_col}";
+        
+        $select->leftJoin($join_table, $join_where);
+        
+        // join the mapping table to the foreign table.
+        $join_table = "{$this->foreign_table} AS {$this->foreign_alias}";
+        $join_where = "{$this->through_alias}.{$this->through_foreign_col} = "
+                    . "{$this->foreign_alias}.{$this->foreign_col}";
+        
+        $select->leftJoin($join_table, $join_where);
+        
+        // make the rows distinct, so we only get one row regardless of
+        // the number of related rows (since we're not selecting cols).
+        $select->distinct(true);
+        
+        // honor foreign inheritance
+        if ($this->foreign_inherit_col) {
+            $select->where(
+                "{$this->foreign_alias}.{$this->foreign_inherit_col} = ?",
+                $this->foreign_inherit_val
+            );
+        }
+    }
+    
+    /**
+     * 
+     * Modifies the SELECT from a native model countPages() call to join
+     * with the foreign model (especially on eager fetches).
+     * 
+     * While a regular "has many" relation uses the standard parent method,
+     * a "has many through" relation requires this override.
+     * 
+     * @param Solar_Sql_Select $select The SELECT from the native model
+     * countPages() method.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    public function modSelectCountPages($select)
+    {
+        if (empty($this->through)) {
+            // less-complex "has many" relationship.
+            return parent::modSelectCountPages($select);
+        }
+        
+        // more-complex "has many through" relationship.
+        // join the native table to the mapping table.
+        $join_table = "{$this->through_table} AS {$this->through_alias}";
+        $join_where = "{$this->native_alias}.{$this->native_col} = "
+                    . "{$this->through_alias}.{$this->through_native_col}";
+        
+        $select->leftJoin($join_table, $join_where);
+        
+        // join the mapping table to the foreign table.
+        $join_table = "{$this->foreign_table} AS {$this->foreign_alias}";
+        $join_where = "{$this->through_alias}.{$this->through_foreign_col} = "
+                    . "{$this->foreign_alias}.{$this->foreign_col}";
+        
+        $select->leftJoin($join_table, $join_where);
+        
+        // honor foreign inheritance
+        if ($this->foreign_inherit_col) {
+            $select->where(
+                "{$this->foreign_alias}.{$this->foreign_inherit_col} = ?",
+                $this->foreign_inherit_val
+            );
+        }
+    }
+    
+    /**
+     * 
      * Sets the relationship type.
      * 
      * @return void

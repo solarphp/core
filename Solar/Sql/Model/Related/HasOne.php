@@ -19,6 +19,31 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related {
     
     /**
      * 
+     * When the native model is doing a select and an eager-join is requested
+     * for this relation, this method modifies the select to add the eager
+     * join.
+     * 
+     * Automatically adds the foreign columns to the select.
+     * 
+     * @param Solar_Sql_Select $select The SELECT to be modified.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    public function modSelectEager($select)
+    {
+        // build column names as "name__col" so that we can extract the
+        // the related data later.
+        $cols = array();
+        foreach ($this->cols as $col) {
+            $cols[] = "$col AS {$this->name}__$col";
+        }
+        
+        $this->_modSelectEager($select, $cols);
+    }
+    
+    /**
+     * 
      * Sets the relationship type.
      * 
      * @return void

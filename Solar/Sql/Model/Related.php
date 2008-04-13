@@ -381,7 +381,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Creates a new selection object for records on this relationship.
+     * Creates a new selection object for fetching records from this relation.
      * 
      * @param mixed $spec If an array, treated as params for a select 
      * statement (where, group, having, etc) for finding the native-model IDs.
@@ -446,6 +446,41 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
+     * Modifies the SELECT from a native model countPages() call to join
+     * with the foreign model (especially on eager fetches).
+     * 
+     * @param Solar_Sql_Select $select The SELECT from the native model
+     * countPages() method.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    public function modSelectCountPages($select)
+    {
+        // primary-key join condition on foreign table
+        $cond = "{$this->native_alias}.{$this->native_col} = "
+              . "{$this->foreign_alias}.{$this->foreign_col}";
+        
+        // add the join, no columns.
+        $select->leftJoin(
+            "{$this->foreign_table} AS {$this->foreign_alias}",
+            $cond
+        );
+        
+        // inheritance for foreign model
+        if ($this->foreign_inherit_col) {
+            $select->where(
+                "{$this->foreign_alias}.{$this->foreign_inherit_col} = ?",
+                $this->foreign_inherit_val
+            );
+        }
+        
+        // added where conditions for the join
+        $select->multiWhere($this->where);
+    }
+    
+    /**
+     * 
      * Modifies the base select statement for the relationship type.
      * 
      * @param Solar_Sql_Select $select The selection object to modify.
@@ -503,6 +538,44 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
                 $this->foreign_inherit_val
             );
         }
+    }
+    
+    /**
+     * 
+     * Support method for modSelectEager().  This implementation works for
+     * belongs_to and has_one (with columns) and has_many (without columns).
+     * The "has_many through" relation needs its own implementation.
+     * 
+     * @param Solar_Sql_Select $select The SELECT to be modified.
+     * 
+     * @param array $cols Any columns to add to the SELECT.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    protected function _modSelectEager($select, $cols = null)
+    {
+        // primary-key join condition on foreign table
+        $cond = "{$this->native_alias}.{$this->native_col} = "
+              . "{$this->foreign_alias}.{$this->foreign_col}";
+        
+        // add the join
+        $select->leftJoin(
+            "{$this->foreign_table} AS {$this->foreign_alias}",
+            $cond,
+            $cols
+        );
+        
+        // inheritance for foreign model
+        if ($this->foreign_inherit_col) {
+            $select->where(
+                "{$this->foreign_alias}.{$this->foreign_inherit_col} = ?",
+                $this->foreign_inherit_val
+            );
+        }
+        
+        // added where conditions for the join
+        $select->multiWhere($this->where);
     }
     
     /**
@@ -685,6 +758,19 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $this->paging = (int) $opts['paging'];
         }
     }
+    
+    /**
+     * 
+     * When the native model is doing a select and an eager-join is requested
+     * for this relation, this method modifies the select to add the eager
+     * join.
+     * 
+     * @param Solar_Sql_Select $select The SELECT to be modified.
+     * 
+     * @return void The SELECT is modified in place.
+     * 
+     */
+    abstract public function modSelectEager($select);
     
     /**
      * 

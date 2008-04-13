@@ -615,7 +615,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             // convert from ColName to col_name
             $col = preg_replace('/([a-z])([A-Z])/', '$1_$2', $col);
             $col = strtolower($col);
-            $where["$col = ?"] = $params[$key];
+            $where["{$this->_model_name}.$col = ?"] = $params[$key];
         }
         
         // add the last param after last column name as the "extra" settings
@@ -698,61 +698,35 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchAll($params = array())
     {
-        // setup
+        // prepare
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
+        $select = $this->newSelect($params);
         
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
-        
-        // fetch all with eager loading
-        return $this->_fetchAll($select, $params);
-    }
-    
-    /**
-     * 
-     * Support method for fetchAll() to add eager related records.
-     * 
-     * @param Solar_Sql_Select $select The select object for fetching.
-     * 
-     * @param array $params The original params passed to fetchAll(). In
-     * general, only needed for the 'eager' key.
-     * 
-     * @return mixed Solar_Sql_Model_Collection of found records, or an empty
-     * array if no records were found.
-     * 
-     */
-    protected function _fetchAll($select, $params)
-    {
-        $data = $select->fetchAll();
-        if ($data) {
-            $coll = $this->newCollection($data);
-            foreach ((array) $params['eager'] as $name) {
-                $related = $this->getRelated($name);
-                if ($related->type == 'has_many') {
-                    $data = $this->fetchRelatedArray($select, $name);
-                    $coll->loadRelated($name, $data);
-                }
-            }
-            
-            // if we're doing "count_pages", add pager info to the collection
-            if ($params['count_pages']) {
-                $this->_setCollectionPagerInfo($coll, $params);
-            }
-            
-            // done
-            return $coll;
-        } else {
+        // fetch
+        $result = $select->fetchAll();
+        if (! $result) {
             return array();
         }
+        
+        // create a collection from the result
+        $coll = $this->newCollection($result);
+        
+        // add has-many eager data to the collection
+        foreach ((array) $params['eager'] as $name) {
+            $related = $this->getRelated($name);
+            if ($related->type == 'has_many') {
+                $result = $this->fetchRelatedArray($select, $name);
+                $coll->loadRelated($name, $result);
+            }
+        }
+        
+        // add pager-info to the collection
+        if ($params['count_pages']) {
+            $this->_setCollectionPagerInfo($coll, $params);
+        }
+        
+        // done
+        return $coll;
     }
     
     /**
@@ -796,61 +770,35 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchAssoc($params = array())
     {
-        // setup
+        // prepare
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
+        $select = $this->newSelect($params);
         
         // fetch
-        return $this->_fetchAssoc($select, $params);
-    }
-    
-    /**
-     * 
-     * Support method for fetchAssoc() to add eager related records.
-     * 
-     * @param Solar_Sql_Select $select The select object for fetching.
-     * 
-     * @param array $params The original params passed to fetchAll(). In
-     * general, only needed for the 'eager' key.
-     * 
-     * @return mixed Solar_Sql_Model_Collection of found records, or an empty
-     * array if no records were found.
-     * 
-     */
-    protected function _fetchAssoc($select, $params)
-    {
-        $data = $select->fetchAssoc();
-        if ($data) {
-            $coll = $this->newCollection($data);
-            foreach ((array) $params['eager'] as $name) {
-                $related = $this->getRelated($name);
-                if ($related->type == 'has_many') {
-                    $data = $this->fetchRelatedArray($select, $name);
-                    $coll->loadRelated($name, $data);
-                }
-            }
-            
-            // if we're doing "count_pages", add pager info to the collection
-            if ($params['count_pages']) {
-                $this->_setCollectionPagerInfo($coll, $params);
-            }
-            
-            // done
-            return $coll;
-        } else {
+        $result = $select->fetchAssoc();
+        if (! $result) {
             return array();
         }
+        
+        // create a collection from the result
+        $coll = $this->newCollection($result);
+        
+        // add has-many eager data to the collection
+        foreach ((array) $params['eager'] as $name) {
+            $related = $this->getRelated($name);
+            if ($related->type == 'has_many') {
+                $result = $this->fetchRelatedArray($select, $name);
+                $coll->loadRelated($name, $result);
+            }
+        }
+        
+        // add pager-info to the collection
+        if ($params['count_pages']) {
+            $this->_setCollectionPagerInfo($coll, $params);
+        }
+        
+        // done
+        return $coll;
     }
     
     /**
@@ -869,14 +817,14 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _setCollectionPagerInfo($coll, $params)
     {
         $total = $this->countPages($params);
-        $begin = ($params['page'] - 1) * $params['paging'] + 1;
+        $start = ($params['page'] - 1) * $params['paging'];
         $coll->setPagerInfo(array(
             'count'  => $total['count'],
             'pages'  => $total['pages'],
             'paging' => $params['paging'],
             'page'   => $params['page'],
-            'begin'  => $begin,
-            'end'    => $begin + $coll->count(),
+            'begin'  => $start + 1,
+            'end'    => $start + $coll->count(),
         ));
     }
     
@@ -916,27 +864,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchOne($params = array())
     {
-        // setup
+        // prepare
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->bind($params['bind']);
+        $select = $this->newSelect($params);
         
         // fetch
-        $data = $select->fetchOne();
-        if (! $data) {
+        $result = $select->fetchOne();
+        if (! $result) {
             return null;
         }
         
         // get the main record, which sets the belongs_to/has_one data
-        $record = $this->newRecord($data);
+        $record = $this->newRecord($result);
         
         // get related data from each eager has_many relationship
         foreach ((array) $params['eager'] as $name) {
@@ -991,25 +930,14 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchCol($params = array())
     {
-        // setup
+        // prepare
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
+        $select = $this->newSelect($params);
         
         // fetch
-        $data = $select->fetchCol();
-        if ($data) {
-            return $data;
+        $result = $select->fetchCol();
+        if ($result) {
+            return $result;
         } else {
             return array();
         }
@@ -1056,25 +984,14 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchPairs($params = array())
     {
-        // setup
+        // prepare
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
+        $select = $this->newSelect($params);
         
         // fetch
-        $data = $select->fetchPairs();
-        if ($data) {
-            return $data;
+        $result = $select->fetchPairs();
+        if ($result) {
+            return $result;
         } else {
             return array();
         }
@@ -1121,23 +1038,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchValue($params = array())
     {
-        // setup
         $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params['eager']);
-        $col = current($params['cols']);
-        
-        // build
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $col)
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->order($params['order'])
-               ->setPaging($params['paging'])
-               ->limitPage($params['page'])
-               ->bind($params['bind']);
-        
-        // fetch
+        $select = $this->newSelect($params);
         return $select->fetchValue();
     }
     
@@ -1201,19 +1103,25 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function countPages($params = null)
     {
+        // fix up the parameters
         $params = $this->fixSelectParams($params);
         
-        $select = $this->newSelect();
-        $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}")
-               ->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->setPaging($this->_paging)
-               ->bind($params['bind']);
+        // remove the 'eager' param for now, so we don't get the column-
+        // based eager joins.
+        $eager = (array) $params['eager'];
+        $params['eager'] = array();
         
+        // get the base select
+        $select = $this->newSelect($params);
+        
+        // add count-based eager joins
+        foreach ($eager as $name) {
+            $related = $this->getRelated($name);
+            $related->modSelectCountPages($select);
+        }
+        
+        // done, count on the primary column
         $col = "{$this->_model_name}.{$this->_primary_col}";
-        
         return $select->countPages($col);
     }
     
@@ -1271,13 +1179,25 @@ abstract class Solar_Sql_Model extends Solar_Base
         settype($params, 'array');
         
         if (empty($params['distinct'])) {
-            $params['distinct'] = false;
+            $params['distinct'] = null;
         }
         
+        // if we have columns, make sure they're unique
+        if (! empty($params['cols'])) {
+            $params['cols'] = array_unique((array) $params['cols']);
+        }
+        
+        // even after uniqing, cols might still be empty
         if (empty($params['cols'])) {
             $params['cols'] = array_keys($this->_table_cols);
         }
         
+        // if we have eager values, make sure they're unique
+        if (! empty($params['eager'])) {
+            $params['eager'] = array_unique((array) $params['eager']);
+        }
+        
+        // even after uniqing, the eager values might still be empty
         if (empty($params['eager'])) {
             $params['eager'] = null;
         }
@@ -1322,13 +1242,13 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Returns a new Solar_Sql_Select tool, with the proper SQL object
      * injected automatically, and with eager "to-one" associations joined.
      * 
-     * @param array $eager An array of to-one relationship names to eager-
-     * load with LEFT JOIN clauses.
+     * @param array $params An array of SELECT parameters (esp. the 'eager'
+     * param).
      * 
      * @return Solar_Sql_Select
      * 
      */
-    public function newSelect($eager = null)
+    public function newSelect($params)
     {
         // get the select object
         $select = Solar::factory(
@@ -1336,47 +1256,10 @@ abstract class Solar_Sql_Model extends Solar_Base
             array('sql' => $this->_sql)
         );
         
-        // add eager has_one/belongs_to joins
-        foreach ((array) $eager as $name) {
-            
-            // get the relationship options
+        // modify the select to add eager joins
+        foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
-            
-            // only process eager to-one associations at this point
-            if ($related->type == 'has_many') {
-                continue;
-            }
-            
-            // build column names as "name__col" so that we can extract the
-            // the related data later.
-            $cols = array();
-            foreach ($related->cols as $col) {
-                $cols[] = "$col AS {$name}__$col";
-            }
-            
-            // primary-key join condition on foreign table
-            // local.id = foreign_alias.local_id
-            $cond = "{$this->_model_name}.{$related->native_col} = "
-                  . "{$related->foreign_alias}.{$related->foreign_col}";
-            
-            // add the join
-            $select->leftJoin(
-                "{$related->foreign_table} AS {$related->foreign_alias}",
-                $cond,
-                $cols
-            );
-            
-            // inheritance for foreign model
-            if ($related->foreign_inherit_col) {
-                $select->where(
-                    "{$related->foreign_alias}.{$related->foreign_inherit_col} = ?",
-                    $related->foreign_inherit_val
-                );
-            
-            }
-            
-            // added where conditions for the join
-            $select->multiWhere($related->where);
+            $related->modSelectEager($select);
         }
         
         // inheritance for native model
@@ -1386,6 +1269,17 @@ abstract class Solar_Sql_Model extends Solar_Base
                 $this->_inherit_model
             );
         }
+        
+        // all the other pieces
+        $select->distinct($params['distinct'])
+               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
+               ->multiWhere($params['where'])
+               ->group($params['group'])
+               ->multiHaving($params['having'])
+               ->order($params['order'])
+               ->setPaging($params['paging'])
+               ->limitPage($params['page'])
+               ->bind($params['bind']);
         
         // done!
         return $select;
@@ -1646,20 +1540,20 @@ abstract class Solar_Sql_Model extends Solar_Base
          */
         // no exception thrown, so it must have worked.
         // if there was an autoincrement column, set its value in the data.
-        $id = $this->_sql->lastInsertId($this->_table_name, $key);
         foreach ($this->_table_cols as $key => $val) {
             if ($val['autoinc']) {
                 // set the value and leave the loop (should be only one)
-                $data[$key] = $id;
-                if ($spec instanceof Solar_Sql_Model_Record) {
-                    $spec->$key = $id;
-                }
+                $data[$key] = $this->_sql->lastInsertId($this->_table_name, $key);
                 break;
             }
         }
         
         // refresh the table data in the record
         if ($spec instanceof Solar_Sql_Model_Record) {
+            // set the primary column so refresh will work
+            $key = $this->_primary_col;
+            $spec->$key = $data[$key];
+            // now refresh it
             $spec->refresh();
             $spec->setStatus('inserted');
         }

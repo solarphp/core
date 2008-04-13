@@ -1033,7 +1033,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     protected function _sqlSelect($parts)
     {
         $default = array(
-            'distinct' => false,
+            'distinct' => null,
             'cols'     => array(),
             'from'     => array(),
             'where'    => array(),

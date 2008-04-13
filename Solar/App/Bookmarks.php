@@ -376,7 +376,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         
         // must be the item owner to edit it
         $item = $this->_bookmarks->fetchOneById($id, array(
-            'eager' => array('taggings', 'tags'),
+            'eager' => array('tags'),
         ));
         
         if ($this->user->auth->handle != $item->owner_handle) {
@@ -545,14 +545,12 @@ class Solar_App_Bookmarks extends Solar_App_Base {
             'order'  => $this->_getSqlOrder(),
             'paging' => $this->_query('paging', 10),
             'page'   => $this->_query('page', 1),
-            'eager'  => array('taggings', 'tags'),
+            'eager'  => array('tags'),
+            'count_pages' => true,
         );
         
         // get the list of bookmarks
         $this->list = $this->_bookmarks->fetchAllByTags($tag_list, $params);
-        
-        // get the total pages and row-count
-        $total = $this->_bookmarks->countPagesByTags($tag_list, $params);
         
         // flash forward the backlink in case we go to edit, but only if this
         // is a regular-format request
@@ -564,11 +562,13 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         }
         
         // assign the list of tags in use
-        $this->tags_in_use   = $this->_tags->fetchAllWithCount(array(
+        $this->tags_in_use = $this->_tags->fetchAllWithCount(array(
             'order' => 'tags.name'
         ));
         
         // assign everything else for the view
+        $total = $this->list->getPagerInfo();
+        
         $this->count         = $total['count'];
         $this->pages         = $total['pages'];
         $this->order         = $this->_query('order');
@@ -613,16 +613,15 @@ class Solar_App_Bookmarks extends Solar_App_Base {
             'order'  => $this->_getSqlOrder(),
             'paging' => $this->_query('paging', 10),
             'page'   => $this->_query('page', 1),
-            'eager'  => array('taggings', 'tags'),
+            'eager'  => array('tags'),
+            'count_pages' => true,
         );
         
         // tags or no-tags?
         if ($tag_list) {
             $this->list = $this->_bookmarks->fetchAllByTags($tag_list, $params);
-            $total = $this->_bookmarks->countPagesByTags($tag_list, $params);
         } else {
             $this->list = $this->_bookmarks->fetchAll($params);
-            $total = $this->_bookmarks->countPages($params);
         }
         
         // flash forward the backlink in case we go to edit, but only if this
@@ -640,6 +639,7 @@ class Solar_App_Bookmarks extends Solar_App_Base {
         );
         
         // assign remaining view vars
+        $total = $this->list->getPagerInfo();
         $this->count         = $total['count'];
         $this->pages         = $total['pages'];
         $this->order         = $this->_query('order');

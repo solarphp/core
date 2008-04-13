@@ -1036,6 +1036,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             'distinct' => null,
             'cols'     => array(),
             'from'     => array(),
+            'join'     => array(),
             'where'    => array(),
             'group'    => array(),
             'having'   => array(),

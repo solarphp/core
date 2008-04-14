@@ -1378,6 +1378,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newRecord($data)
     {
+        // the model object to use -- might get overridden by inheritance
+        $model = $this;
+        
         // the record class we'll use
         $class = null;
         
@@ -1389,13 +1392,22 @@ abstract class Solar_Sql_Model extends Solar_Base
             $inherit = trim($data[$this->_inherit_col]);
         }
         
-        // did we find an inheritance?
+        // did we find an inheritance value?
         if ($inherit) {
-            // try to find a class based on inheritance, going up the stack
-            // as needed. this checks for Current_Model_Type,
-            // Parent_Model_Type, Grandparent_Model_Type, etc.
-            // suppress exceptions.
-            //
+            // try to find a model class based on inheritance, going up the
+            // stack as needed. this checks for Current_Model_Type,
+            // Parent_Model_Type, Grandparent_Model_Type, etc.  blow up if we
+            // can't find it.
+            $model_class = $this->_stack->load($inherit);
+            
+            // if different from the current class, reset the model object.
+            if ($model_class != $this->_class) {
+                // use the inherited model class, it's different from the
+                // current model
+                $model = Solar::factory($model_class, array($this->_config));
+            }
+            
+            // now we need the inherited record class.  suppress exceptions.
             // note that $class could still end up false, as we might not find
             // a related class in the hierarchy.
             $class = $this->_stack->load($inherit . '_Record', false);
@@ -1411,9 +1423,10 @@ abstract class Solar_Sql_Model extends Solar_Base
             $class = $this->_record_class;
         }
         
-        // factory the appropriate record class, load it, and return it.
+        // factory the appropriate record class, set the model for it, then
+        // load and return it.
         $record = Solar::factory($class);
-        $record->setModel($this);
+        $record->setModel($model);
         $record->load($data);
         $record->setStatus('clean');
         return $record;

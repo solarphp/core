@@ -1382,7 +1382,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $model = $this;
         
         // the record class we'll use
-        $class = null;
+        $record_class = null;
         
         // look for an inheritance in relation to $data
         $inherit = null;
@@ -1408,24 +1408,24 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
             
             // now we need the inherited record class.  suppress exceptions.
-            // note that $class could still end up false, as we might not find
+            // note that $record_class could still end up false, as we might not find
             // a related class in the hierarchy.
-            $class = $this->_stack->load($inherit . '_Record', false);
+            $record_class = $this->_stack->load($inherit . '_Record', false);
         }
         
         // even if inheritance failed, look for a model-specific record class
-        if (! $class) {
-            $class = $this->_stack->load('Record', false);
+        if (! $record_class) {
+            $record_class = $this->_stack->load('Record', false);
         }
         
         // final fallback: the default record class
-        if (! $class) {
-            $class = $this->_record_class;
+        if (! $record_class) {
+            $record_class = $this->_record_class;
         }
         
         // factory the appropriate record class, set the model for it, then
         // load and return it.
-        $record = Solar::factory($class);
+        $record = Solar::factory($record_class);
         $record->setModel($model);
         $record->load($data);
         $record->setStatus('clean');

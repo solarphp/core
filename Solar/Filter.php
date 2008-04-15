@@ -558,33 +558,20 @@ class Solar_Filter extends Solar_Base {
             }
         }
         
-        // loop through each data element
-        foreach ($this->_data as $key => $val) {
-            
-            // keep the key name
-            $this->_data_key = $key;
-            
+        // which elements to filter?
+        $keys = array_keys($this->_chain_filters);
+        
+        // loop through each element to be filtered
+        foreach ($keys as $key) {
             // if it's already invalid (from "require" above)
             // then skip it.  this avoids multiple validation
             // messages on missing elements.
             if (! empty($this->_chain_invalid[$key])) {
                 continue;
-            }
-            
-            // are there filters on this key?
-            if (empty($this->_chain_filters[$key])) {
-                continue;
-            }
-            
-            // is this key required?
-            if (! empty($this->_chain_require[$key])) {
-                $this->setRequire(true);
             } else {
-                $this->setRequire(false);
+                // run the filters for the data element
+                $this->_applyChain($key);
             }
-            
-            // run the filters for each data element
-            $this->_applyChain($key);
         }
         
         // return the validation status; if not empty, at least one of the
@@ -605,7 +592,17 @@ class Solar_Filter extends Solar_Base {
      */
     protected function _applyChain($key)
     {
-        foreach ($this->_chain_filters[$key] as $params) {
+        // keep the key name
+        $this->_data_key = $key;
+        
+        // is this key required?
+        if (! empty($this->_chain_require[$key])) {
+            $this->setRequire(true);
+        } else {
+            $this->setRequire(false);
+        }
+        
+        foreach ((array) $this->_chain_filters[$key] as $params) {
             
             // take the method name off the top of the params ...
             $method = array_shift($params);

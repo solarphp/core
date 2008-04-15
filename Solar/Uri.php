@@ -428,13 +428,14 @@ class Solar_Uri extends Solar_Base {
                   . (empty($this->port) ? '' : ':' . (int) $this->port);
         }
         
-        // add the rest of the URI
+        // add the rest of the URI. we use trim() instead of empty() on string
+        // elements to allow for string-zero values.
         return $uri
              . $this->_config['path']
-             . (empty($this->path)     ? '' : $this->_pathEncode($this->path))
-             . (empty($this->format)   ? '' : '.' . urlencode($this->format))
-             . (empty($this->query)    ? '' : '?' . http_build_query($this->query))
-             . (empty($this->fragment) ? '' : '#' . urlencode($this->fragment));
+             . (empty($this->path)           ? '' : $this->_pathEncode($this->path))
+             . (trim($this->format) == ''    ? '' : '.' . urlencode($this->format))
+             . (empty($this->query)          ? '' : '?' . http_build_query($this->query))
+             . (trim($this->fragment) == ''  ? '' : '#' . urlencode($this->fragment));
     }
     
     /**
@@ -456,7 +457,6 @@ class Solar_Uri extends Solar_Base {
         $uri->set($spec);
         return $uri->get($full);
     }
-    
     
     /**
      * 

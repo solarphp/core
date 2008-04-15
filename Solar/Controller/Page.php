@@ -782,11 +782,12 @@ abstract class Solar_Controller_Page extends Solar_Base {
         }
         
         // are we asking for a non-default format?
-        if ($this->_format) {
+        // the trim() lets us get a string-zero format.
+        if (trim($this->_format) != '') {
             
             // what formats does the action allow?
             $action_format = $this->_getActionFormat($this->_action);
-        
+            
             // does the action support the requested format?
             if (in_array($this->_format, $action_format)) {
                 // action supports the format; turn off layouts by default.

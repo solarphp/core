@@ -93,17 +93,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Tells whether or not __get() should lazy-load relateds.
-     * 
-     * We need this so that when saving, we don't load every related record.
-     * 
-     * @var bool
-     * 
-     */
-    protected $_lazy_load = true;
-    
-    /**
-     * 
      * If you call save() and an exception gets thrown, this stores that
      * exception.
      * 
@@ -150,8 +139,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $this->_checkDeleted();
         
         // do we need to load relationship data?
-        $load_related = $this->_lazy_load &&
-                        empty($this->_data[$key]) &&
+        $load_related = empty($this->_data[$key]) &&
                         ! empty($this->_model->related[$key]);
         
         if ($load_related) {
@@ -378,11 +366,17 @@ class Solar_Sql_Model_Record extends Solar_Struct
             unset($load[$name]);
         }
         
+        // set placeholders for calculate cols
+        foreach ((array) $this->_model->calculate_cols as $col) {
+            if (! array_key_exists($col, $this->_data)) {
+                $this->_data[$col] = null;
+            }
+        }
+        
         // set all remaining values in the load
         foreach ($load as $key => $val) {
             $this->__set($key, $val);
         }
-        
     }
     
     // -----------------------------------------------------------------
@@ -1038,11 +1032,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // tell the filter to use the model for locale strings
         $filter->setChainLocaleObject($this->_model);
         
-        // turn off lazy-loading while applying filters to make sure we don't
-        // get recursive behavior
-        $this->_lazy_load = false;
+        // apply filters
         $valid = $filter->applyChain($this);
-        $this->_lazy_load = true;
         
         // retain invalids
         $invalid = $filter->getChainInvalid();

@@ -164,11 +164,17 @@ class Solar_Form_Load_Model extends Solar_Base {
                         $info['type'] = 'hidden';
                     }
                     
-                    // if there is a filter to 'validateInList' or 'validateInKeys',
-                    // make this a select element.
                     foreach ($filters as $v) {
+                        // if there is a filter to 'validateInList' or
+                        // 'validateInKeys', make this a select element.
                         if ($v[0] == 'validateInKeys' || $v[0] == 'validateInList') {
                             $info['type'] = 'select';
+                            break;
+                        }
+                        // if there is a filter to 'validateUpload', make this
+                        // a file element
+                        if ($v[0] == 'validateUpload') {
+                            $info['type'] = 'file';
                             break;
                         }
                     }

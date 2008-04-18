@@ -476,7 +476,7 @@ class Solar_Request extends Solar_Base {
         if ($this->files) {
             $files = $this->files;
             $this->files = array();
-            $this->_rebuildFiles($files, &$this->files);
+            $this->_rebuildFiles($files, $this->files);
         }
     }
     

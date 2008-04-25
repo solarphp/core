@@ -424,9 +424,9 @@ class Solar_Form extends Solar_Base {
      * @return void
      * 
      */
-    public function setFilterLocaleObj($obj)
+    public function setFilterLocaleObject($obj)
     {
-        $this->_filter->setChainLocaleObj($obj);
+        $this->_filter->setChainLocaleObject($obj);
     }
     
     /**

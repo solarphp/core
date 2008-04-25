@@ -625,6 +625,8 @@ class Solar_Filter extends Solar_Base {
                 // invalid message and translate it.
                 $invalid = $this->getFilter($method)->getInvalid();
                 $this->_chain_invalid[$key][] = $this->_chainLocale($invalid);
+                // skip remaining filters on this key
+                return;
             }
         }
     }

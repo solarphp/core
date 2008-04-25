@@ -24,7 +24,7 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateIsoDate extends Solar_Filter_Abstract {
+class Solar_Filter_ValidateIsoDate extends Solar_Filter_ValidateIsoTimestamp {
     
     /**
      * 
@@ -40,6 +40,11 @@ class Solar_Filter_ValidateIsoDate extends Solar_Filter_Abstract {
      */
     public function validateIsoDate($value)
     {
+        // look for Ymd keys?
+        if (is_array($value)) {
+            $value = $this->_arrayToDate($value);
+        }
+        
         if ($this->_filter->validateBlank($value)) {
             return ! $this->_filter->getRequire();
         }

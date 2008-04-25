@@ -24,7 +24,7 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeIsoDate extends Solar_Filter_Abstract {
+class Solar_Filter_SanitizeIsoDate extends Solar_Filter_SanitizeIsoTimestamp {
     
     /**
      * 
@@ -39,6 +39,11 @@ class Solar_Filter_SanitizeIsoDate extends Solar_Filter_Abstract {
      */
     public function sanitizeIsoDate($value)
     {
+        // look for Ymd keys?
+        if (is_array($value)) {
+            $value = $this->_arrayToDate($value);
+        }
+        
         // if the value is not required, and is blank, sanitize to null
         $null = ! $this->_filter->getRequire() &&
                 $this->_filter->validateBlank($value);

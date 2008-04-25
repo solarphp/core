@@ -220,6 +220,8 @@ class Solar_Form extends Solar_Base {
      * 
      * @var Solar_Filter
      * 
+     * @see setFilterLocaleObj()
+     * 
      */
     protected $_filter;
     
@@ -410,6 +412,21 @@ class Solar_Form extends Solar_Base {
             $this->elements[$name] = $info;
         }
         // done!
+    }
+    
+    /**
+     * 
+     * Tells the internal filter what object it should use for locale
+     * translations.
+     * 
+     * @param Solar_Base $obj The object to use for locale translations.
+     * 
+     * @return void
+     * 
+     */
+    public function setFilterLocaleObj($obj)
+    {
+        $this->_filter->setChainLocaleObj($obj);
     }
     
     /**

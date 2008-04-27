@@ -895,15 +895,17 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * @return void
      * 
      */
-    public function refresh()
+    public function refresh($status = null)
     {
-        if ($this->_status != 'new') {
-            $primary = $this->_model->primary_col;
-            $result = $this->_model->fetch($this->$primary);
-            $cols = $this->_model->table_cols;
-            foreach ($cols as $col => $info) {
-                $this->$col = $result->$col;
-            }
+        $primary = $this->_model->primary_col;
+        $result  = $this->_model->fetch($this->$primary);
+        foreach ($this->_model->table_cols as $col => $info) {
+            $this->$col = $result->$col;
+        }
+        
+        if ($status) {
+            $this->setStatus($status)
+        } else {
             $this->setStatus('clean');
         }
     }

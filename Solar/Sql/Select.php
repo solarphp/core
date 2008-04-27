@@ -1173,18 +1173,81 @@ class Solar_Sql_Select extends Solar_Base {
      */
     public function countPages($col = 'id')
     {
-        // prepare the current query to become a subselect of all matching
-        // rows; this means no limit, and no need to order them.
-        $inner = clone($this);
-        $inner->clear('limit');
-        $inner->clear('order');
+        // prepare a copy of this object as a COUNT query
+        $select = clone($this);
+        
+        // no limit, and no need to order rows
+        $select->clear('limit');
+        $select->clear('order');
         
         // clear all columns so there are no name conflicts
-        foreach ($inner->_sources as $key => $val) {
-            $inner->_sources[$key]['cols'] = array();
+        foreach ($select->_sources as $key => $val) {
+            $select->_sources[$key]['cols'] = array();
         }
         
-        // add the one column we're counting on
+        // look in the WHERE and HAVING clauses for a `COUNT` condition
+        $has_count_cond = $this->_hasCountCond($select->_parts['where']) ||
+                          $this->_hasCountCond($select->_parts['having']);
+        
+        // is there a count condition?
+        if ($has_count_cond) {
+            
+            // count on a sub-select instead.
+            $count = $this->_countSubSelect($select, $col);
+            
+        } else {
+            
+            // "normal" case (no count condition in WHERE or HAVING).
+            // add the one column we're counting on...
+            $select->_addSource(
+                'cols',         // type
+                null,           // name
+                null,           // orig
+                null,           // join
+                null,           // cond
+                "COUNT($col)"
+            );
+            
+            // ... and do the count.
+            $count = $select->fetchValue();
+        }
+        
+        // calculate pages
+        $pages = 0;
+        if ($count > 0) {
+            $pages = ceil($count / $this->_paging);
+        }
+        
+        // done!
+        return array(
+            'count' => $count,
+            'pages' => $pages,
+        );
+    }
+    
+    protected function _hasCountCond($parts)
+    {
+        foreach ($parts as $key => $val) {
+            if (is_int($key)) {
+                // val is a literal condition
+                $cond = strtoupper($val);
+            } else {
+                // key is a condition with a placeholder,
+                // and val is the placeholder value.
+                $cond = strtoupper($key);
+            }
+            // does the condition have COUNT in it?
+            if (strpos($cond, 'COUNT') !== false) {
+                return true;
+            }
+        }
+        // no COUNT condition found
+        return false;
+    }
+    
+    protected function _countSubSelect($inner, $col)
+    {
+        // add the one column we're counting on, to the inner subselect
         $inner->_addSource(
             'cols',         // type
             null,           // name
@@ -1201,7 +1264,7 @@ class Solar_Sql_Select extends Solar_Base {
             $alias = substr($col, 0, $pos);
             $col   = substr($col, $pos + 1);
         } else {
-            // default alias 'subselect' in lieu of an explicit one
+            // default alias 'subselect' in lieu of an explicit alias
             $alias = 'subselect';
         }
         
@@ -1212,18 +1275,8 @@ class Solar_Sql_Select extends Solar_Base {
         $outer->clear();
         $outer->fromSelect($inner, $alias, "COUNT($alias.$col)");
         
-        // get the count and calculate pages
-        $count = $outer->fetchValue();
-        $pages = 0;
-        if ($count > 0) {
-            $pages = ceil($count / $this->_paging);
-        }
-        
-        // done!
-        return array(
-            'count' => $count,
-            'pages' => $pages,
-        );
+        // get the count
+        return $outer->fetchValue();
     }
     
     /**

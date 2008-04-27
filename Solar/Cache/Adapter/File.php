@@ -68,6 +68,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         'path'    => null, // default set in constructor
         'mode'    => 0740,
         'context' => null,
+        'hash'    => true,
     );
     
     /**
@@ -78,6 +79,15 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      * 
      */
     protected $_path;
+    
+    /**
+     * 
+     * Whether or not to hash key names.
+     * 
+     * @var bool
+     * 
+     */
+    protected $_hash;
     
     /**
      * 
@@ -104,8 +114,11 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
         // basic construction
         parent::__construct($config);
         
-        // keep local values so they can't be changed
+        // path to storage
         $this->_path = Solar_Dir::fix($this->_config['path']);
+        
+        // whether or not to hash
+        $this->_hash = $this->_config['hash'];
         
         // build the context property
         if (is_resource($this->_config['context'])) {
@@ -154,43 +167,51 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
             $serial = false;
         }
         
+        // what file should we write to?
+        $file = $this->entry($key);
+        
+        // does the directory exist?
+        $dir = dirname($file);
+        if (! is_dir($dir)) {
+            mkdir($dir, $this->_config['mode'], true, $this->_context);
+        }
+        
         // open the file for over-writing. not using file_put_contents 
         // becuase we may need to write a serial file too (and avoid race
         // conditions while doing so). don't use include path.
-        $file = $this->entry($key);
-        $fp = @fopen($file, 'wb', false, $this->_context);
+        $fp = fopen($file, 'wb', false, $this->_context);
         
         // was it opened?
-        if ($fp) {
-            
-            // yes.  exclusive lock for writing.
-            flock($fp, LOCK_EX);
-            
-            // don't need the 3rd param (byte length) because Solar has
-            // already turned off magic_quotes_runtime.
-            // <http://php.net/fwrite>
-            fwrite($fp, $data);
-            
-            // add a .serial file? (do this while the file is locked to avoid
-            // race conditions)
-            if ($serial) {
-                // use this instead of touch() because it supports stream
-                // contexts.
-                file_put_contents($file . '.serial', null, LOCK_EX, $this->_context);
-            } else {
-                // make sure no serial file is there from any previous entries
-                // with the same name
-                @unlink($file . '.serial', $this->_context);
-            }
-            
-            // unlock and close, then done.
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            return true;
+        if (! $fp) {
+            // could not open the file for writing.
+            return false;
         }
         
-        // could not open the file for writing.
-        return false;
+        // set exclusive lock for writing.
+        flock($fp, LOCK_EX);
+        
+        // don't need the 3rd param (byte length) because Solar has
+        // already turned off magic_quotes_runtime.
+        // <http://php.net/fwrite>
+        fwrite($fp, $data);
+        
+        // add a .serial file? (do this while the file is locked to avoid
+        // race conditions)
+        if ($serial) {
+            // use this instead of touch() because it supports stream
+            // contexts.
+            file_put_contents($file . '.serial', null, LOCK_EX, $this->_context);
+        } else {
+            // make sure no serial file is there from any previous entries
+            // with the same name
+            @unlink($file . '.serial', $this->_context);
+        }
+        
+        // unlock and close, then done.
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        return true;
+        
     }
     
     /**
@@ -371,7 +392,15 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
      */
     public function entry($key)
     {
-        return $this->_path . hash('md5', $key);
+        if ($this->_config['hash']) {
+            return $this->_path . hash('md5', $key);
+        } else {
+            // try to avoid file traversal exploits
+            $key = str_replace('..', '_', $key);
+            // colons mess up Mac OS X
+            $key = str_replace(':', '_', $key);
+            // done
+            return $this->_path . $key;
+        }
     }
 } 
-

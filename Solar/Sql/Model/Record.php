@@ -904,7 +904,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
         
         if ($status) {
-            $this->setStatus($status)
+            $this->setStatus($status);
         } else {
             $this->setStatus('clean');
         }

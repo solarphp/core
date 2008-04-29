@@ -96,6 +96,48 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter {
     
     /**
      * 
+     * Creates a PDO-style DSN.
+     * 
+     * For example, "mysql:host=127.0.0.1;dbname=test"
+     * 
+     * @return string A PDO-style DSN.
+     * 
+     */
+    protected function _dsn()
+    {
+        $dsn = array();
+        
+        // socket, or host-and-port? (can't use both.)
+        if (! empty($this->_config['sock'])) {
+            
+            // use a socket
+            $dsn[] = 'unix_socket=' . $this->_config['sock'];
+            
+        } else {
+            
+            // use host and port
+            if (! empty($this->_config['host'])) {
+                $dsn[] = 'host=' . $this->_config['host'];
+            }
+        
+            if (! empty($this->_config['port'])) {
+                $dsn[] = 'port=' . $this->_config['port'];
+            }
+            
+        }
+        
+        // database name
+        if (! empty($this->_config['name'])) {
+            $dsn[] = 'dbname=' . $this->_config['name'];
+        }
+        
+        return $this->_pdo_type . ':' . implode(';', $dsn);
+    }
+    
+    
+
+    /**
+     * 
      * Returns a list of all tables in the database.
      * 
      * @return array All table names in the database.

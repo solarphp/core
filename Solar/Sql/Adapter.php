@@ -49,6 +49,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * `port`
      * : (string) Port number for the host name.
      * 
+     * `sock`
+     * : (string) The Unix socket for the connection. Should not be used with
+     *   host and port.
+     * 
      * `user`
      * : (string) Connect to the database as this username.
      * 
@@ -67,6 +71,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     protected $_Solar_Sql_Adapter = array(
         'host'      => null,
         'port'      => null,
+        'sock'      => null,
         'user'      => null,
         'pass'      => null,
         'name'      => null,

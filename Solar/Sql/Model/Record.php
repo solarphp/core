@@ -1360,8 +1360,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * this record).
      * 
      * @param array $cols An array of column property names to include in
-     * the form.  If empty, uses all columns except the "special" ones
-     * (primary, created, updated, inherit, and sequence).
+     * the form.  If empty, uses all fetch columns and all calculate columns.
      * 
      * @return Solar_Form
      * 
@@ -1370,7 +1369,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         // use all columns?
         if (empty($cols)) {
-            $cols = '*';
+            $cols = array_merge(
+                array_keys($this->_model->table_cols),
+                $this->_model->calculate_cols
+            );
         }
         
         // put into this array in the form

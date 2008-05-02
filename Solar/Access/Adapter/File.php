@@ -12,7 +12,7 @@
  *     deny handle * * * * 
  *     allow role sysadmin * * * 
  *     allow handle + Solar_App_Bookmarks * * 
- *     deny user boshag Solar_App_Bookmarks edit * 
+ *     deny handle boshag Solar_App_Bookmarks edit * 
  * 
  * @category Solar
  * 
@@ -58,7 +58,10 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         if (! Solar_File::exists($file)) {
             throw $this->_exception(
                 'ERR_FILE_NOT_READABLE',
-                array('file' => $file)
+                array(
+                    'file' => $this->_config['file'],
+                    'realpath' => $file,
+                )
             );
         }
         
@@ -73,6 +76,20 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         $lines = explode("\n", $src);
         
         foreach ($lines as $line) {
+            
+            $trim = trim($line);
+            
+            // allow blank lines
+            if ($trim == '') {
+                continue;
+            }
+            
+            // allow comment lines
+            $char = substr($trim, 0, 1);
+            if ($char == '#') {
+                continue;
+            }
+            
             // $info keys are ...
             // 0 => "allow" or "deny"
             // 1 => "handle" or "role"
@@ -85,7 +102,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
                 $info[1] == 'handle' && $info[2] == '+' && $handle || // any authenticated user
                 $info[1] == 'handle' && $info[2] == '*' ||            // any user (incl anon)
                 $info[1] == 'role'   && in_array($info[2], $roles) || // direct role match
-                $info[2] == 'role'   && $info[2] == '*') {            // any role (incl anon)
+                $info[1] == 'role'   && $info[2] == '*') {            // any role (incl anon)
                 
                 // keep the line
                 $list[] = array(

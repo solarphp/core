@@ -44,7 +44,7 @@ class Solar_View_Helper_Attribs extends Solar_View_Helper {
             // add the attribute, but only if really empty.
             // using the string cast and strict equality to make sure that
             // a string zero is not counted as an empty value.
-            if ((string) $val === '') {
+            if ((string) $val !== '') {
                 $xhtml .= ' ' . $this->_view->escape($key)
                        .  '="' . $this->_view->escape($val) . '"';
             }

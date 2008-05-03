@@ -144,6 +144,6 @@ class Solar_User extends Solar_Base {
      */
     protected function _loadAccess()
     {
-        $this->access->load($this->auth->handle, $this->role->list);
+        $this->access->load($this->auth, $this->role);
     }
 }

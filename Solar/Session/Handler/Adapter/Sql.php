@@ -91,6 +91,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
     {
         $this->_sql->disconnect();
         $this->_sql = null;
+        return true;
     }
     
     /**
@@ -230,6 +231,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
         
         try {
             $this->_sql->insert($this->_config['table'], $cols);
+            return true;
         } catch (Solar_Sql_Exception $e) {
             // @todo log this somehow?
             return false;
@@ -260,6 +262,7 @@ class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
         
         try {
             $this->_sql->update($this->_config['table'], $cols, $where);
+            return true;
         } catch (Solar_Sql_Exception $e) {
             // @todo log this somehow?
             return false;

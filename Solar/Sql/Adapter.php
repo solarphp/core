@@ -234,6 +234,15 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      */
     protected $_profiling = false;
+
+    /**
+     * 
+     * A PDO-style DSN, for example, "mysql:host=127.0.0.1;dbname=test"
+     * 
+     * @var string
+     * 
+     */
+    protected $_dsn;
     
     /**
      * 
@@ -247,6 +256,12 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         parent::__construct($config);
         $this->_cache = Solar::dependency('Solar_Cache', $this->_config['cache']);
         $this->setProfiling($this->_config['profiling']);
+        
+        // build a DSN
+        $this->_dsn = $this->_dsn();
+        
+        // save the cache-key prefix
+        $this->_cache_key_prefix = get_class($this) . '/' . md5($this->_dsn);
     }
     
     /**
@@ -342,15 +357,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // start profile time
         $before = microtime(true);
         
-        // build a DSN
-        $dsn = $this->_dsn();
-        
-        // save the cache-key prefix
-        $this->_cache_key_prefix = get_class($this) . '/' . md5($dsn);
-        
         // attempt the connection
         $this->_pdo = new PDO(
-            $dsn,
+            $this->_dsn,
             $this->_config['user'],
             $this->_config['pass']
         );

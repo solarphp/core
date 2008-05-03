@@ -59,16 +59,23 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
         
         // build the list of options
         $list = array();
-        foreach ($this->_options as $opt_value => $opt_label) {
-            $selected = '';
-            if (in_array($opt_value, $this->_value)) {
-                $selected = ' selected="selected"';
+        foreach ($this->_options as $value => $label) {
+            if (is_array($label)) {
+                
+                // Use <optgroup>
+                $list[] = '<optgroup label="'
+                        . $this->_view->escape($value)
+                        . '">';
+                
+                foreach ($label as $grp_value => $grp_label) {
+                    $list[] = $this->_getOption($grp_value, $grp_label);
+                }
+                
+                $list[] = '</optgroup>';
+                
+            } else {
+                $list[] = $this->_getOption($value, $label);
             }
-            $list[] = '<option'
-                    . ' value="' . $this->_view->escape($opt_value) . '"'
-                    . ' label="' . $this->_view->escape($opt_label) . '"'
-                    . $selected
-                    . '>' . $this->_view->escape($opt_label) . "</option>";
         }
         
         // build and return the remaining xhtml
@@ -77,5 +84,33 @@ class Solar_View_Helper_FormSelect extends Solar_View_Helper_FormElement {
              . $this->_view->attribs($this->_attribs) . ">\n"
              . "    " . implode("\n    ", $list) . "\n"
              . "</select>";
+    }
+    
+    /**
+     *
+     * Builds an option for the select.
+     *
+     * @param string $value The option value.
+     *
+     * @param string $label The option lavel.
+     * 
+     * @return string The option XHTML.
+     * 
+     */
+    protected function _getOption($value, $label)
+    {
+        $selected = '';
+        
+        if (in_array($value, $this->_value)) {
+            $selected = ' selected="selected"';
+        }
+        
+        $option = '<option'
+                . ' value="' . $this->_view->escape($value) . '"'
+                . ' label="' . $this->_view->escape($label) . '"'
+                . $selected
+                . '>' . $this->_view->escape($label) . "</option>";
+        
+        return $option;        
     }
 }

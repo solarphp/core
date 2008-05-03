@@ -32,10 +32,16 @@ class Solar_Access_Adapter_None extends Solar_Access_Adapter {
         return array(
             array(
                 'allow'   => false,
+                'type'    => '*',
+                'name'    => '*',
                 'class'   => '*',
                 'action'  => '*',
-                'process' => '*',
             ),
         );
+    }
+    
+    public function isOwner($content)
+    {
+        return false;
     }
 }

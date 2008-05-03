@@ -32,10 +32,16 @@ class Solar_Access_Adapter_Open extends Solar_Access_Adapter {
         return array(
             array(
                 'allow'   => true,
+                'type'    => '*',
+                'name'    => '*',
                 'class'   => '*',
                 'action'  => '*',
-                'process' => '*',
             ),
         );
+    }
+    
+    public function isOwner($content)
+    {
+        return true;
     }
 }

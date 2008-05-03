@@ -77,42 +77,48 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
         
         foreach ($lines as $line) {
             
-            $trim = trim($line);
+            $line = trim($line);
             
             // allow blank lines
-            if ($trim == '') {
+            if ($line == '') {
                 continue;
             }
             
             // allow comment lines
-            $char = substr($trim, 0, 1);
+            $char = substr($line, 0, 1);
             if ($char == '#') {
                 continue;
             }
             
             // $info keys are ...
             // 0 => "allow" or "deny"
-            // 1 => "handle" or "role"
-            // 2 => handle/role name
+            // 1 => "handle", "role", or "owner"
+            // 2 => handle/role name (not used by 'owner' type)
             // 3 => class name
             // 4 => action name
-            // 5 => process name
             $info = explode(' ', $line);
             if ($info[1] == 'handle' && $info[2] == $handle ||        // direct user handle match
                 $info[1] == 'handle' && $info[2] == '+' && $handle || // any authenticated user
                 $info[1] == 'handle' && $info[2] == '*' ||            // any user (incl anon)
                 $info[1] == 'role'   && in_array($info[2], $roles) || // direct role match
-                $info[1] == 'role'   && $info[2] == '*') {            // any role (incl anon)
+                $info[1] == 'role'   && $info[2] == '*'               // any role (incl anon)
+                $info[1] == 'owner' ) {                               // content owner
                 
                 // keep the line
                 $list[] = array(
                     'allow'   => ($info[0] == 'allow' ? true : false),
+                    'type'    => $info[1],
+                    'name'    => $info[2],
                     'class'   => $info[3],
                     'action'  => $info[4],
-                    'process' => $info[5],
                 );
             }
         }
         return $list;
+    }
+    
+    public function isOwner($content)
+    {
+        return true;
     }
 }

@@ -101,7 +101,7 @@ class Solar_Access_Adapter_File extends Solar_Access_Adapter {
                 $info[1] == 'handle' && $info[2] == '+' && $handle || // any authenticated user
                 $info[1] == 'handle' && $info[2] == '*' ||            // any user (incl anon)
                 $info[1] == 'role'   && in_array($info[2], $roles) || // direct role match
-                $info[1] == 'role'   && $info[2] == '*'               // any role (incl anon)
+                $info[1] == 'role'   && $info[2] == '*' ||            // any role (incl anon)
                 $info[1] == 'owner' ) {                               // content owner
                 
                 // keep the line

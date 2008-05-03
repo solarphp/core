@@ -779,6 +779,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
             }
         }
         
+        if ($in_group) {
+            $form[] = '            </dd>';
+        }
+        
         if ($in_dl) {
             $form[] = '        </dl>';
         }

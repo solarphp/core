@@ -841,7 +841,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper {
      */
     public function reset()
     {
-        // attributed for the <form> tag
+        // attributes for the <form> tag
         $this->_attribs = array_merge(
             $this->_default_attribs,
             $this->_config['attribs']

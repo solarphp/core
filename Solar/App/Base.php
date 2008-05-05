@@ -242,7 +242,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      * @return void
      * 
      */
-    public function _notFound($action, $params)
+    protected function _notFound($action, $params)
     {
         $this->_response->setStatusCode(404);
         $this->errors[] = $this->locale('ACTION_NOT_FOUND');

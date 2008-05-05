@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_App_Bookmarks extends Solar_App_Base {
-    
+class Solar_App_Bookmarks extends Solar_App_Base
+{
     /**
      * 
      * User-defined configuration values.

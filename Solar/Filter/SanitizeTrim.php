@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeTrim extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeTrim extends Solar_Filter_Abstract
+{
     /**
      * 
      * Trims characters from the beginning and end of the value.

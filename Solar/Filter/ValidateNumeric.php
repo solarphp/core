@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateNumeric extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateNumeric extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is numeric (any number or number string).

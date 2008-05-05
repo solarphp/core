@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter {
-    
+class Solar_Session_Handler_Adapter_Sql extends Solar_Session_Handler_Adapter
+{
     /**
      * 
      * Solar_Sql object to connect to the database.

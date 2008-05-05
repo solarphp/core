@@ -19,8 +19,8 @@
  * external XML, PHP array, etc. files.
  * 
  */
-class Solar_Getopt extends Solar_Base {
-    
+class Solar_Getopt extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter {
-    
+class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
+{
     /**
      * 
      * Map of Solar generic types to RDBMS native types used when creating

@@ -25,8 +25,8 @@
  * @version $Id$
  * 
  */
-class Solar_Controller_Front extends Solar_Base {
-    
+class Solar_Controller_Front extends Solar_Base
+{
     /**
      * 
      * User-defined configuration array.

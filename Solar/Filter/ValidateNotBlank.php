@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateNotBlank extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateNotBlank extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is not blank whitespace.

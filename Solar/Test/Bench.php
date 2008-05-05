@@ -17,8 +17,8 @@
  * @version $Id$
  * 
  */
-class Solar_Test_Bench extends Solar_Base {
-    
+class Solar_Test_Bench extends Solar_Base
+{
     /**
      * 
      * User-defined configuration.

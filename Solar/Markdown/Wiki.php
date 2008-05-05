@@ -21,8 +21,8 @@
  * @todo Implement the markdown-in-html portion of Markdown-Extra.
  * 
  */
-class Solar_Markdown_Wiki extends Solar_Markdown {
-    
+class Solar_Markdown_Wiki extends Solar_Markdown
+{
     /**
      * 
      * User-defined configuration values.

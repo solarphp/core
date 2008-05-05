@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormPassword extends Solar_View_Helper_FormElement
+{
     /**
      * 
      * Generates a 'password' element.

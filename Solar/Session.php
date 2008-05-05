@@ -30,8 +30,8 @@
  * @version $Id$
  * 
  */
-class Solar_Session extends Solar_Base {
-    
+class Solar_Session extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

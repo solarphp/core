@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Session_Handler extends Solar_Base {
-    
+class Solar_Session_Handler extends Solar_Base
+{
     /**
      * 
      * User-provided configuration.

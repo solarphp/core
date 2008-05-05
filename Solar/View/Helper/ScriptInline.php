@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_ScriptInline extends Solar_View_Helper {
-    
+class Solar_View_Helper_ScriptInline extends Solar_View_Helper
+{
     /**
      * 
      * Returns a <script></script> block that properly commented for inclusion

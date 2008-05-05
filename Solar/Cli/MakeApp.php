@@ -14,8 +14,8 @@
  * @version $Id: MakeModel.php 2995 2008-03-12 13:58:29Z pmjones $
  * 
  */
-class Solar_Cli_MakeApp extends Solar_Cli_Base {
-    
+class Solar_Cli_MakeApp extends Solar_Cli_Base
+{
     /**
      * 
      * The base directory where we will write the class file to, typically

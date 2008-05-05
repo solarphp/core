@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateInKeys extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateInKeys extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is a key in the list of allowed options.

@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related {
-    
+class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
+{
     /**
      * 
      * When the native model is doing a select and an eager-join is requested

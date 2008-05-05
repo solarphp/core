@@ -17,8 +17,8 @@
  * @version $Id$
  * 
  */
-class Solar_Controller_Command extends Solar_Base {
-    
+class Solar_Controller_Command extends Solar_Base
+{
     /**
      * 
      * Array of format conversions for use on a variety of pre-set console

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter {
-    
+class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
+{
     /**
      * 
      * Support method to make the request, then return headers and content.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_Attribs extends Solar_View_Helper {
-    
+class Solar_View_Helper_Attribs extends Solar_View_Helper
+{
     /**
      * 
      * Converts an associative array to an attribute string.

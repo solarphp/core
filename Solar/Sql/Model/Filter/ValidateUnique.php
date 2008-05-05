@@ -15,8 +15,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Filter_ValidateUnique extends Solar_Filter_Abstract {
-    
+class Solar_Sql_Model_Filter_ValidateUnique extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that a value for the current data key is unique among all

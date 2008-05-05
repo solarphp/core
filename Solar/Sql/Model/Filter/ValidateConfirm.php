@@ -15,8 +15,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Filter_ValidateConfirm extends Solar_Filter_Abstract {
-    
+class Solar_Sql_Model_Filter_ValidateConfirm extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the "confirmation" value is the same as the "real"

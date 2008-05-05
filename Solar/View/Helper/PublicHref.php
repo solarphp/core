@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_PublicHref extends Solar_View_Helper {
-    
+class Solar_View_Helper_PublicHref extends Solar_View_Helper
+{
     /**
      * 
      * Internal URI object for creating links.

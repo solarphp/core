@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Smtp_Adapter_LoginAuth extends Solar_Smtp_Adapter_PlainAuth {
-    
+class Solar_Smtp_Adapter_LoginAuth extends Solar_Smtp_Adapter_PlainAuth
+{
     /**
      * 
      * Performs AUTH LOGIN authentication with username and password.

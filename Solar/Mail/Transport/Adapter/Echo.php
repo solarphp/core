@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Transport_Adapter_Echo extends Solar_Mail_Transport_Adapter {
-    
+class Solar_Mail_Transport_Adapter_Echo extends Solar_Mail_Transport_Adapter
+{
     /**
      * 
      * Prints the Solar_Mail_Message headers and content.

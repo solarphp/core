@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateNotInList extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateNotInList extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that a value **is not** in a list of disallowed values.

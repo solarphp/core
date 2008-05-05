@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_MakeDocs extends Solar_Cli_Base {
-    
+class Solar_Cli_MakeDocs extends Solar_Cli_Base
+{
     // source code dir
     protected $_source;
     

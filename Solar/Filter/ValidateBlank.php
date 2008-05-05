@@ -26,8 +26,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateBlank extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateBlank extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is null, or is a string composed only of

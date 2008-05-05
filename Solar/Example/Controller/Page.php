@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Example_Controller_Page extends Solar_Controller_Page {
-    
+class Solar_Example_Controller_Page extends Solar_Controller_Page
+{
     /**
      * 
      * Default action.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Nodes_Bookmarks_Record extends Solar_Model_Nodes_Record {
-    
+class Solar_Model_Nodes_Bookmarks_Record extends Solar_Model_Nodes_Record
+{
     /**
      * 
      * Returns a pre-populated Solar_Form object.

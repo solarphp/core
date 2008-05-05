@@ -22,8 +22,8 @@
  * @version $Id: FormText.php 2933 2007-11-09 20:37:35Z moraes $
  * 
  */
-class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormTimestamp extends Solar_View_Helper_FormElement
+{
     /**
      * 
      * Helper for a 'timestamp' pseudo-element.

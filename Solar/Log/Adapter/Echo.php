@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Log_Adapter_Echo extends Solar_Log_Adapter {
-    
+class Solar_Log_Adapter_Echo extends Solar_Log_Adapter
+{
     /**
      * 
      * User-defined configuration values.

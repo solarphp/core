@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter {
-    
+class Solar_Role_Adapter_Ldap extends Solar_Role_Adapter
+{
     /**
      * 
      * Array of user configuration values.

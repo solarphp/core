@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateAlpha extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateAlpha extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is letters only (upper or lower case).

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Dir {
-    
+class Solar_Dir
+{
     /**
      * 
      * The OS-specific temporary directory location.

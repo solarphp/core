@@ -28,8 +28,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter {
-    
+class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
+{
     /**
      * 
      * User-provided configuration.

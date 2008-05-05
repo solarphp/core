@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Log_Adapter_None extends Solar_Log_Adapter {
-    
+class Solar_Log_Adapter_None extends Solar_Log_Adapter
+{
     /**
      * 
      * Support method to save (write) an event and message to the log.

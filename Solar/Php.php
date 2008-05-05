@@ -32,8 +32,8 @@
  * }}
  * 
  */
-class Solar_Php extends Solar_Base {
-    
+class Solar_Php extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

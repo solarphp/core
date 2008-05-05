@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Smtp_Adapter_CramMd5Auth extends Solar_Smtp_Adapter_PlainAuth {
-    
+class Solar_Smtp_Adapter_CramMd5Auth extends Solar_Smtp_Adapter_PlainAuth
+{
     /**
      * 
      * Performs AUTH CRAM-MD5 with username, password, and server challenge.

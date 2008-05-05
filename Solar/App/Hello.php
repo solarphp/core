@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_App_Hello extends Solar_Controller_Page {
-    
+class Solar_App_Hello extends Solar_Controller_Page
+{
     /**
      * 
      * Default action.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter {
-    
+class Solar_Auth_Adapter_Mail extends Solar_Auth_Adapter
+{
     /**
      * 
      * User-supplied configuration values.

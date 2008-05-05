@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Locale extends Solar_Base {
-    
+class Solar_Locale extends Solar_Base
+{
     /**
      * 
      * User-provided configuration values.

@@ -17,8 +17,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Transport_Adapter_None extends Solar_Mail_Transport_Adapter {
-    
+class Solar_Mail_Transport_Adapter_None extends Solar_Mail_Transport_Adapter
+{
     /**
      * 
      * Does nothing.

@@ -26,8 +26,8 @@
  * @package Solar_Access
  * 
  */
-class Solar_Access_Adapter_Sql extends Solar_Access_Adapter {
-    
+class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
+{
     /**
      * 
      * Config keys

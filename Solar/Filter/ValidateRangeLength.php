@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateRangeLength extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateRangeLength extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the length of the value is within a given range.

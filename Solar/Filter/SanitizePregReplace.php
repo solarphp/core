@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizePregReplace extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizePregReplace extends Solar_Filter_Abstract
+{
     /**
      * 
      * Applies [[php::preg_replace() | ]] to the value.

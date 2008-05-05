@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Registry {
-    
+class Solar_Registry
+{
     /**
      * 
      * Map of registry names to object instances (or their specs for on-demand 

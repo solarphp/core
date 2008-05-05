@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidatePregMatch extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidatePregMatch extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates the value against a regular expression.

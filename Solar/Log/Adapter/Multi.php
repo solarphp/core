@@ -44,8 +44,8 @@
  * @version $Id$
  * 
  */
-class Solar_Log_Adapter_Multi extends Solar_Log_Adapter {
-    
+class Solar_Log_Adapter_Multi extends Solar_Log_Adapter
+{
     /**
      * 
      * User-defined configuration values.

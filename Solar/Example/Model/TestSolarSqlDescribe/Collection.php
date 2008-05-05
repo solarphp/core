@@ -14,5 +14,6 @@
  * @version $Id$
  * 
  */
-class Solar_Example_Model_TestSolarSqlDescribe_Collection extends Solar_Sql_Model_Collection {
+class Solar_Example_Model_TestSolarSqlDescribe_Collection extends Solar_Sql_Model_Collection
+{
 }

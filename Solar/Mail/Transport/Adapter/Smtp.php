@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter {
-    
+class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter
+{
     /**
      * 
      * User-defined configuration values.

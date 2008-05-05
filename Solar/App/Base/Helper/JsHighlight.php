@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper {
-    
+class Solar_App_Base_Helper_JsHighlight extends Solar_View_Helper
+{
     /**
      * 
      * Constructor.

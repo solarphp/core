@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateSizeScope extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateSizeScope extends Solar_Filter_Abstract
+{
     /**
      * 
      * See the value has only a certain number of digits and decimals.

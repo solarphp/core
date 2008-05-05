@@ -15,8 +15,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_Image extends Solar_View_Helper {
-    
+class Solar_View_Helper_Image extends Solar_View_Helper
+{
     /**
      * 
      * Returns an <img ... /> tag.

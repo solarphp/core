@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Exception extends Exception {
-    
+class Solar_Exception extends Exception
+{
     /**
      * 
      * User-defined information array.

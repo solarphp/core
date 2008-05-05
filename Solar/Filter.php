@@ -18,8 +18,8 @@
  * @version $Id$
  * 
  */
-class Solar_Filter extends Solar_Base {
-    
+class Solar_Filter extends Solar_Base
+{
     /**
      * 
      * The chain of filters to be applied to the data array.

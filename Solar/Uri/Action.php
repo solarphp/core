@@ -21,8 +21,8 @@
  * @version $Id$
  * 
  */
-class Solar_Uri_Action extends Solar_Uri {
-    
+class Solar_Uri_Action extends Solar_Uri
+{
     /**
      * 
      * User-provided configuration values.

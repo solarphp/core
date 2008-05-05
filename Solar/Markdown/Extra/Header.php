@@ -37,8 +37,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header {
-    
+class Solar_Markdown_Extra_Header extends Solar_Markdown_Plugin_Header
+{
     /**
      * 
      * Reports these as special markdown characters.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Tags extends Solar_Model {
-    
+class Solar_Model_Tags extends Solar_Model
+{
     /**
      * 
      * Model setup.

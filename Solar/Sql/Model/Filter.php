@@ -17,5 +17,6 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Filter extends Solar_Filter {
+class Solar_Sql_Model_Filter extends Solar_Filter
+{
 }

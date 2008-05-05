@@ -26,8 +26,8 @@
  * @todo Validate IPv6 too.
  * 
  */
-class Solar_Filter_ValidateIp extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateIp extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that the value is a legal IP address.

@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Form extends Solar_Base {
-    
+class Solar_Form extends Solar_Base
+{
     /**
      * 
      * User-provided configuration.

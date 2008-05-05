@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Role_Adapter_None extends Solar_Role_Adapter {
-    
+class Solar_Role_Adapter_None extends Solar_Role_Adapter
+{
     /**
      * 
      * Fetch the roles.

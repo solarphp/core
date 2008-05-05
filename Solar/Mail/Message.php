@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Message extends Solar_Base {
-    
+class Solar_Mail_Message extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

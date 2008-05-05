@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Session_Handler_Adapter_Native extends Solar_Session_Handler_Adapter {
-    
+class Solar_Session_Handler_Adapter_Native extends Solar_Session_Handler_Adapter
+{
     /**
      * 
      * Sets the session save handler.

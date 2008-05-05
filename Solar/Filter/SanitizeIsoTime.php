@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeIsoTime extends Solar_Filter_SanitizeIsoTimestamp {
-    
+class Solar_Filter_SanitizeIsoTime extends Solar_Filter_SanitizeIsoTimestamp
+{
     /**
      * 
      * Forces the value to an ISO-8601 formatted time ("hh:ii:ss").

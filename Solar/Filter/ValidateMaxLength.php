@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateMaxLength extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateMaxLength extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that a string is no longer than a certain length.

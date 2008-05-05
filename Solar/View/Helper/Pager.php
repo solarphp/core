@@ -14,8 +14,8 @@
  * @version $Id: Action.php 2933 2007-11-09 20:37:35Z moraes $
  * 
  */
-class Solar_View_Helper_Pager extends Solar_View_Helper {
-    
+class Solar_View_Helper_Pager extends Solar_View_Helper
+{
     /**
      * 
      * User-defined configuration values.

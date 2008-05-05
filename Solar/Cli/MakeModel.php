@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_MakeModel extends Solar_Cli_Base {
-    
+class Solar_Cli_MakeModel extends Solar_Cli_Base
+{
     /**
      * 
      * The base directory where we will write the class file to, typically

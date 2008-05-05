@@ -18,8 +18,8 @@
  * @version $Id$
  * 
  */
-class Solar_Path_Stack {
-    
+class Solar_Path_Stack
+{
     /**
      * 
      * The stack of directories.

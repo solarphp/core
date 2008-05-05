@@ -21,8 +21,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Plugin_Encode extends Solar_Markdown_Plugin {
-    
+class Solar_Markdown_Plugin_Encode extends Solar_Markdown_Plugin
+{
     /**
      * 
      * This is a span plugin.

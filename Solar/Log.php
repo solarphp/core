@@ -29,8 +29,8 @@
  * @version $Id$
  * 
  */
-class Solar_Log extends Solar_Base {
-    
+class Solar_Log extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

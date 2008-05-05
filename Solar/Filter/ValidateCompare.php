@@ -26,8 +26,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that this value is the same as some other value in the

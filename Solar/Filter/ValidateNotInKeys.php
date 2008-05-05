@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateNotInKeys extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateNotInKeys extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that a value **is not** a key in the list of allowed

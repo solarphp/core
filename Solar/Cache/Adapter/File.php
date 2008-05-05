@@ -35,8 +35,8 @@
  * @todo Add CRC32 to check for cache corruption?
  * 
  */
-class Solar_Cache_Adapter_File extends Solar_Cache_Adapter {
-    
+class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
+{
     /**
      * 
      * User-provided configuration.

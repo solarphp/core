@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Smtp_Adapter_PlainAuth extends Solar_Smtp_Adapter {
-    
+class Solar_Smtp_Adapter_PlainAuth extends Solar_Smtp_Adapter
+{
     /**
      * 
      * User-defined confiuration values.

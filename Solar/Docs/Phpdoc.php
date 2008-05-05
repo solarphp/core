@@ -67,8 +67,8 @@
  * @version $Id$
  * 
  */
-class Solar_Docs_Phpdoc extends Solar_Base {
-    
+class Solar_Docs_Phpdoc extends Solar_Base
+{
     /**
      * 
      * Where the technical information from block tags is stored.

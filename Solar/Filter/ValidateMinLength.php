@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateMinLength extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateMinLength extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates that a string is at least a certain length.

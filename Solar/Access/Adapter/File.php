@@ -25,8 +25,8 @@
  * @version $Id$
  * 
  */
-class Solar_Access_Adapter_File extends Solar_Access_Adapter {
-    
+class Solar_Access_Adapter_File extends Solar_Access_Adapter
+{
     /**
      * 
      * User-provided configuration values.

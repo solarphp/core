@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_File {
-    
+class Solar_File
+{
     /**
      * 
      * The path of the file currently being used by Solar_File::load().

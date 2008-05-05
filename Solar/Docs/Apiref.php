@@ -22,8 +22,8 @@
  * @todo actually set up a log object
  * 
  */
-class Solar_Docs_Apiref extends Solar_Base {
-    
+class Solar_Docs_Apiref extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

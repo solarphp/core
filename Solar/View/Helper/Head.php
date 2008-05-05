@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_Head extends Solar_View_Helper {
-    
+class Solar_View_Helper_Head extends Solar_View_Helper
+{
     /**
      * 
      * The indent string for each element; default is 4 spaces.

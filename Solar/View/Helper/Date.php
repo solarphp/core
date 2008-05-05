@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_Date extends Solar_View_Helper_Timestamp {
-    
+class Solar_View_Helper_Date extends Solar_View_Helper_Timestamp
+{
     /**
      * 
      * User-defined configuration values.

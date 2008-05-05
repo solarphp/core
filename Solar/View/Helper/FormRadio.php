@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormRadio extends Solar_View_Helper_FormElement
+{
     /**
      * 
      * Generates a set of radio button elements.

@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateCtype extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateCtype extends Solar_Filter_Abstract
+{
     /**
      * 
      * Validates the value against a [[php::ctype | ]] function.

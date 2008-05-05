@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_AnchorImage extends Solar_View_Helper {
-    
+class Solar_View_Helper_AnchorImage extends Solar_View_Helper
+{
     /**
      * 
      * Returns an image wrapped by an anchor href tag.

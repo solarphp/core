@@ -18,8 +18,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin {
-    
+class Solar_Markdown_Plugin_Html extends Solar_Markdown_Plugin
+{
     /**
      * 
      * Run this plugin during the "prepare" phase.

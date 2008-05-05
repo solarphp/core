@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_MetaName extends Solar_View_Helper {
-    
+class Solar_View_Helper_MetaName extends Solar_View_Helper
+{
     /**
      * 
      * Returns a <meta name="" content="" /> tag.

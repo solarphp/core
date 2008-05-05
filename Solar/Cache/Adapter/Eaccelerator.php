@@ -26,8 +26,8 @@
  * <http://bart.eaccelerator.net/doc/phpdoc/eAccelerator/_shared_memory_php.html#functioneaccelerator_put>
  * 
  */
-class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter {
-    
+class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
+{
     /**
      * 
      * Constructor.

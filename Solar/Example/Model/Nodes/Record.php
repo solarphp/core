@@ -14,5 +14,6 @@
  * @version $Id$
  * 
  */
-class Solar_Example_Model_Nodes_Record extends Solar_Sql_Model_Record {
+class Solar_Example_Model_Nodes_Record extends Solar_Sql_Model_Record
+{
 }

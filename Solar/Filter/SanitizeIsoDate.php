@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeIsoDate extends Solar_Filter_SanitizeIsoTimestamp {
-    
+class Solar_Filter_SanitizeIsoDate extends Solar_Filter_SanitizeIsoTimestamp
+{
     /**
      * 
      * Forces the value to an ISO-8601 formatted date ("yyyy-mm-dd").

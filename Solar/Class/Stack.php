@@ -17,8 +17,8 @@
  * @version $Id$
  * 
  */
-class Solar_Class_Stack extends Solar_Base {
-    
+class Solar_Class_Stack extends Solar_Base
+{
     /**
      * 
      * The class stack.

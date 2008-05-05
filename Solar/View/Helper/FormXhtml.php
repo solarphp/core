@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_FormXhtml extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormXhtml extends Solar_View_Helper_FormElement
+{
     /**
      * 
      * A pseudo-element that inserts unmodified XHTML into the flow of a form.

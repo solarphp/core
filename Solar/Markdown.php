@@ -43,8 +43,8 @@
  * @todo How to send a plugin object in the config?
  * 
  */
-class Solar_Markdown extends Solar_Base {
-    
+class Solar_Markdown extends Solar_Base
+{
     /**
      * 
      * Default configuration for the class.

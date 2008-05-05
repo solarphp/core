@@ -16,8 +16,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Message_Part extends Solar_Base {
-    
+class Solar_Mail_Message_Part extends Solar_Base
+{
     /**
      * 
      * The character set for this part.

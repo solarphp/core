@@ -31,8 +31,8 @@
  * @version $Id$
  * 
  */
-class Solar_Json extends Solar_Base {
-    
+class Solar_Json extends Solar_Base
+{
     /**
      * 
      * User-defined configuration, primarily of use in unit testing.

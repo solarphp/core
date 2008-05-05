@@ -58,8 +58,8 @@
  * @version $Id$
  * 
  */
-class Solar_Debug_Timer extends Solar_Base {
-    
+class Solar_Debug_Timer extends Solar_Base
+{
     /**
      * 
      * User-provided configuration.

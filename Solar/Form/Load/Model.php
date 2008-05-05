@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Form_Load_Model extends Solar_Base {
-    
+class Solar_Form_Load_Model extends Solar_Base
+{
     /**
      * 
      * Loads Solar_Form elements based on Solar_Sql_Model columns.

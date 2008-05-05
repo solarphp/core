@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeUpload extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeUpload extends Solar_Filter_Abstract
+{
     /**
      * 
      * Sanitizes a file-upload information array.  If no file has been 

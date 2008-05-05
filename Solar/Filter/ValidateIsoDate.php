@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateIsoDate extends Solar_Filter_ValidateIsoTimestamp {
-    
+class Solar_Filter_ValidateIsoDate extends Solar_Filter_ValidateIsoTimestamp
+{
     /**
      * 
      * Validates that the value is an ISO 8601 date string.

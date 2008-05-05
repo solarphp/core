@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Access_Adapter_Open extends Solar_Access_Adapter {
-    
+class Solar_Access_Adapter_Open extends Solar_Access_Adapter
+{
     /**
      * 
      * Fetch access privileges for a user handle and roles.

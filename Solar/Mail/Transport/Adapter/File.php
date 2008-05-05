@@ -17,8 +17,8 @@
  * @version $Id: Echo.php 2933 2007-11-09 20:37:35Z moraes $
  * 
  */
-class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter {
-    
+class Solar_Mail_Transport_Adapter_File extends Solar_Mail_Transport_Adapter
+{
     /**
      * 
      * User-defined configuration values.

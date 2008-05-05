@@ -39,8 +39,8 @@
  * @version $Id: Filter.php 2976 2008-01-03 14:05:49Z pmjones $
  * 
  */
-class Solar_Service_Akismet extends Solar_Base {
-    
+class Solar_Service_Akismet extends Solar_Base
+{
     /**
      * 
      * User-defined configuration values.

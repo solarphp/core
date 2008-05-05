@@ -25,8 +25,8 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter {
-    
+class Solar_Auth_Adapter_Htpasswd extends Solar_Auth_Adapter
+{
     /**
      * 
      * User-provided configuration values.

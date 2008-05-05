@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeWord extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeWord extends Solar_Filter_Abstract
+{
     /**
      * 
      * Strips non-word characters within the value.

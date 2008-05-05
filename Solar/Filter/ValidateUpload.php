@@ -25,8 +25,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract {
-    
+class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract
+{
     /**
      * 
      * Upload error codes matched with locale string keys.

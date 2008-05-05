@@ -21,8 +21,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong {
-    
+class Solar_Markdown_Extra_EmStrong extends Solar_Markdown_Plugin_EmStrong
+{
     /**
      * 
      * Converts emphasis and strong text.

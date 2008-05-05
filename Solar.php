@@ -71,8 +71,8 @@ spl_autoload_register(array('Solar', 'autoload'));
  * POSSIBILITY OF SUCH DAMAGE.
  * 
  */
-class Solar {
-    
+class Solar
+{
     /**
      * 
      * Default config values for the Solar arch-class.

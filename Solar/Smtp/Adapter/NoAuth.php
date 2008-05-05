@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Smtp_Adapter_NoAuth extends Solar_Smtp_Adapter {
-    
+class Solar_Smtp_Adapter_NoAuth extends Solar_Smtp_Adapter
+{
     /**
      * 
      * Authentication is never attempted, and always fails.

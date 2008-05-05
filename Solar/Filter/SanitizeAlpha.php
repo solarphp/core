@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeAlpha extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeAlpha extends Solar_Filter_Abstract
+{
     /**
      * 
      * Strips non-alphabetic characters from the value.

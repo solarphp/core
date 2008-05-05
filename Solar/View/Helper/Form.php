@@ -17,8 +17,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_Form extends Solar_View_Helper {
-    
+class Solar_View_Helper_Form extends Solar_View_Helper
+{
     /**
      * 
      * User-provided configuration values.

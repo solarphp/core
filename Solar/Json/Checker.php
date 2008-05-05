@@ -44,8 +44,8 @@
  * @version $Id$
  * 
  */
-class Solar_Json_Checker extends Solar_Base {
-    
+class Solar_Json_Checker extends Solar_Base
+{
     /**
      * Error
      * @constant

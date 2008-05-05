@@ -22,8 +22,8 @@
  * @todo rename to Unix, add Ini file handler as well
  * 
  */
-class Solar_Role_Adapter_File extends Solar_Role_Adapter {
-    
+class Solar_Role_Adapter_File extends Solar_Role_Adapter
+{
     /**
      * 
      * User-supplied configuration values.

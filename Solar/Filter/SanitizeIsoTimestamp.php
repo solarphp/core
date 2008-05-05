@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeIsoTimestamp extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeIsoTimestamp extends Solar_Filter_Abstract
+{
     /**
      * 
      * Forces the value to an ISO-8601 formatted timestamp using a space

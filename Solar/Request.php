@@ -18,8 +18,8 @@
  * @version $Id$
  * 
  */
-class Solar_Request extends Solar_Base {
-    
+class Solar_Request extends Solar_Base
+{
     /**
      * 
      * Imported $_ENV values.

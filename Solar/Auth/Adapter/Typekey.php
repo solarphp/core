@@ -31,8 +31,8 @@
  * @version $Id$
  * 
  */
-class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter {
-    
+class Solar_Auth_Adapter_Typekey extends Solar_Auth_Adapter
+{
     /**
      * 
      * User-defined configuration.

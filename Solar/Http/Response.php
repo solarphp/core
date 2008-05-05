@@ -27,8 +27,8 @@
  * @todo Add charset param so that headers get sent with right encoding?
  * 
  */
-class Solar_Http_Response extends Solar_Base {
-    
+class Solar_Http_Response extends Solar_Base
+{
     /**
      * 
      * The response body content.

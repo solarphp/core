@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_LinkStylesheet extends Solar_View_Helper {
-    
+class Solar_View_Helper_LinkStylesheet extends Solar_View_Helper
+{
     /**
      * 
      * Returns a <link rel="stylesheet" ... /> tag.

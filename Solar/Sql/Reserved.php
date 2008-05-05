@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Reserved {
-    
+class Solar_Sql_Reserved
+{
     /**
      * 
      * The array of words reserved across all supported databases.

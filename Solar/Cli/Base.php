@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_Base extends Solar_Controller_Command {
-    
+class Solar_Cli_Base extends Solar_Controller_Command
+{
     /**
      * 
      * Displays a "command not recognized" message.

@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Transport_Adapter_Phpmail extends Solar_Mail_Transport_Adapter {
-    
+class Solar_Mail_Transport_Adapter_Phpmail extends Solar_Mail_Transport_Adapter
+{
     /**
      * 
      * Sends a Solar_Mail_Message using the mail() function.

@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeString extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeString extends Solar_Filter_Abstract
+{
     /**
      * 
      * Forces the value to a string.

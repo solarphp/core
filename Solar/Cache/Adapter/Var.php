@@ -18,8 +18,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter {
-    
+class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
+{
     /**
      * 
      * Cache entries.

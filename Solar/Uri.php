@@ -119,8 +119,8 @@
  * @version $Id$
  * 
  */
-class Solar_Uri extends Solar_Base {
-    
+class Solar_Uri extends Solar_Base
+{
     /**
      * 
      * User-provided configuration values.

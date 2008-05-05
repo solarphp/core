@@ -61,8 +61,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Select extends Solar_Base {
-    
+class Solar_Sql_Select extends Solar_Base
+{
     /**
      * 
      * A constant so we can find "ignored" params, to avoid func_num_args().

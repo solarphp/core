@@ -50,8 +50,8 @@
  * @version $Id$
  * 
  */
-class Solar_Cli_MakeTests extends Solar_Cli_Base {
-    
+class Solar_Cli_MakeTests extends Solar_Cli_Base
+{
     /**
      * 
      * Skeleton templates for classes and methods.

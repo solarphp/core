@@ -24,8 +24,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin {
-    
+class Solar_Markdown_Plugin_List extends Solar_Markdown_Plugin
+{
     /**
      * 
      * This is a block plugin.

@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeIpv4 extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeIpv4 extends Solar_Filter_Abstract
+{
     /**
      * 
      * Forces the value to an IPv4 address.

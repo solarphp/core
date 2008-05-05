@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_App_Base_Helper_Head extends Solar_View_Helper_Head {
-    
+class Solar_App_Base_Helper_Head extends Solar_View_Helper_Head
+{
     /**
      * 
      * Returns all inline scripts wrapped in a jQuery "$document.ready()"

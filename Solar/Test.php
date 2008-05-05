@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Test extends Solar_Base {
-    
+class Solar_Test extends Solar_Base
+{
     /**
      * 
      * A running count of how many times an assert*() method is called.

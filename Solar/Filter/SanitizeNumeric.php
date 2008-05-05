@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeNumeric extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeNumeric extends Solar_Filter_Abstract
+{
     /**
      * 
      * Strips non-numeric characters from the value.

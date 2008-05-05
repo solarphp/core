@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_View_Helper_FormSubmit extends Solar_View_Helper_FormElement {
-    
+class Solar_View_Helper_FormSubmit extends Solar_View_Helper_FormElement
+{
     /**
      * 
      * Generates a 'submit' button.

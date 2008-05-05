@@ -24,8 +24,8 @@
  * @package Solar_Filter
  * 
  */
-class Solar_Filter_SanitizeBool extends Solar_Filter_Abstract {
-    
+class Solar_Filter_SanitizeBool extends Solar_Filter_Abstract
+{
     /**
      * 
      * String representations of "true" boolean values.

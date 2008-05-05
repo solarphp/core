@@ -14,8 +14,8 @@
  * @version $Id$
  * 
  */
-class Solar_Mime {
-    
+class Solar_Mime
+{
     /**
      * 
      * Creates a header label/value line after sanitizing, encoding, and

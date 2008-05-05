@@ -24,8 +24,8 @@
  * @version $Id$
  * 
  */
-class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin {
-    
+class Solar_Markdown_Plugin_StripLinkDefs extends Solar_Markdown_Plugin
+{
     /**
      * 
      * Run this plugin during the "prepare" phase.

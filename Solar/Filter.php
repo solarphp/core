@@ -46,7 +46,7 @@ class Solar_Filter extends Solar_Base
      * @see process()
      * 
      */
-    protected $_chain_filters;
+    protected $_chain_filters = array();
     
     /**
      * 
@@ -56,7 +56,7 @@ class Solar_Filter extends Solar_Base
      * @var array
      * 
      */
-    protected $_chain_invalid;
+    protected $_chain_invalid = array();
     
     /**
      * 
@@ -81,7 +81,7 @@ class Solar_Filter extends Solar_Base
      * @see setRequire()
      * 
      */
-    protected $_chain_require;
+    protected $_chain_require = array();
     
     /**
      * 
@@ -539,7 +539,7 @@ class Solar_Filter extends Solar_Base
         }
         
         // see if we actually have all the required data keys
-        foreach ($this->_chain_require as $key => $flag) {
+        foreach ((array) $this->_chain_require as $key => $flag) {
             
             if (! $flag) {
                 // not required

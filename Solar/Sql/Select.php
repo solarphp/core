@@ -1185,23 +1185,23 @@ class Solar_Sql_Select extends Solar_Base
             $select->_sources[$key]['cols'] = array();
         }
         
-        // look for a DISTINCT setting
-        $is_distinct = $select->_parts['distinct'];
+        // look for a GROUP setting
+        $has_grouping = (bool) $select->_parts['group'];
         
         // look in the WHERE and HAVING clauses for a `COUNT` condition
         $has_count_cond = $this->_hasCountCond($select->_parts['where']) ||
                           $this->_hasCountCond($select->_parts['having']);
         
-        // is there a count condition or a distinct?
-        if ($has_count_cond || $is_distinct) {
+        // is there a grouping or a count condition?
+        if ($has_grouping || $has_count_cond) {
             
             // count on a sub-select instead.
             $count = $this->_countSubSelect($select, $col);
             
         } else {
             
-            // "normal" case (no count condition in WHERE or HAVING).
-            // add the one column we're counting on...
+            // "normal" case (no grouping, and no count condition in WHERE or
+            // HAVING).  add the one column we're counting on...
             $select->_addSource(
                 'cols',         // type
                 null,           // name

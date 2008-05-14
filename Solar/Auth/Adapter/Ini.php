@@ -49,7 +49,6 @@ class Solar_Auth_Adapter_Ini extends Solar_Auth_Adapter
      * @return mixed An array of verified user information, or boolean false
      * if verification failed.
      * 
-     * 
      */
     protected function _processLogin()
     {

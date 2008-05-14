@@ -928,48 +928,56 @@ class Solar_Form extends Solar_Base
     {
         // are we working with an array?
         if (is_array($src)) {
-            // is the array sequential?  check only the first key.
-            if (is_int(key($src))) {
-                // assign the sequential array to the element.
-                // this is for multiple-select options.
+            
+            // sequential arrays are generally multiple-select items.
+            // only check the first key on the array.
+            $is_sequential = is_int(key($src));
+            
+            // temporal values may also be expressed as arrays
+            $types = array('date', 'time', 'timestamp');
+            $is_temporal = isset($this->elements[$name]) &&
+                           in_array($this->elements[$name]['type'], $types);
+            
+            // retain value as-is, or descend through sub-elements?
+            if ($is_sequential || $is_temporal) {
+                // retain value as-is (no recursive descent)
                 $this->elements[$name]['value'] = $src;
             } else {
-                // not sequential. descend through each of the sub-elements.
+                // not sequential, not temporal. descend through each of the
+                // sub-elements.
                 foreach ($src as $key => $val) {
                     $sub = empty($name) ? $key : $name . "[$key]";
                     $this->_populate($val, $sub);
                 }
             }
-        } else {
-            // populate an element value, but only if it exists.
-            if (isset($this->elements[$name])) {
-                
-                // convenient reference
-                $elem =& $this->elements[$name];
-                
-                // do not populate certain elements, as this will
-                // reset their value inappropriately.
-                $skip = $name['type'] == 'submit' ||
-                        $name['type'] == 'button' ||
-                        $name['type'] == 'reset';
-                        
-                if ($skip) {
-                    return;
-                }
-                
-                // is this a multiple select?
-                $multiple = $elem['type'] == 'select' &&
-                            ! empty($elem['attribs']['multiple']);
-                
-                // set the value appropriately
-                if ($multiple && ! $src) {
-                    // empty on a multiple.  force it to an empty array.
-                    // (merely casting to array gets us an array with one
-                    // empty-string value.)
-                    $elem['value'] = array();
-                } else {
-                    $elem['value'] = $src;
-                }
+            
+        } elseif (isset($this->elements[$name])) {
+            
+            // convenient reference
+            $elem =& $this->elements[$name];
+            
+            // do not populate certain elements, as this will
+            // reset their value inappropriately.
+            $skip = $name['type'] == 'submit' ||
+                    $name['type'] == 'button' ||
+                    $name['type'] == 'reset';
+                    
+            if ($skip) {
+                return;
+            }
+            
+            // is this a multiple select?
+            $multiple = $elem['type'] == 'select' &&
+                        ! empty($elem['attribs']['multiple']);
+            
+            // set the value appropriately
+            if ($multiple && ! $src) {
+                // empty on a multiple.  force it to an empty array.
+                // (merely casting to array gets us an array with one
+                // empty-string value.)
+                $elem['value'] = array();
+            } else {
+                $elem['value'] = $src;
             }
         }
     }

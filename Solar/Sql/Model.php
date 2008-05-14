@@ -2089,6 +2089,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         if (! $this->_model_name) {
             if ($this->_inherit_model) {
                 $this->_model_name = $this->_inherit_model;
+            } elseif ($this->_table_name) {
+                $this->_model_name = $this->_table_name;
             } else {
                 // get the part after the last Model_ portion
                 $pos = strpos($this->_class, 'Model_');

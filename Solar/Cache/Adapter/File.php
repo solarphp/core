@@ -211,7 +211,6 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         flock($fp, LOCK_UN);
         fclose($fp);
         return true;
-        
     }
     
     /**
@@ -234,14 +233,12 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         // what file should we look for?
         $file = $this->entry($key);
         
-        // if the file does not exists or is unreadable, key is available
-        if (! file_exists($file) || ! is_readable($file)) {
-            return $this->save($key, $data);
-        }
+        // is the key available for adding?
+        $available = ! file_exists($file) ||
+                     ! is_readable($file) ||
+                     $this->_isExpired($file);
         
-        // if the file has expired, key is available
-        $expire_time = filemtime($file) + $this->_config['life'];
-        if (time() > $expire_time) {
+        if ($available) {
             return $this->save($key, $data);
         }
         
@@ -337,6 +334,62 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         
         // lifetime is forever, or not past expiration yet.
         return false;
+    }
+    
+    /**
+     * 
+     * Increments a cache entry value by the specified amount.  If the entry
+     * does not exist, creates it at zero, then increments it.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param string $amt The amount to increment by (default +1).  Using
+     * negative values is effectively a decrement.
+     * 
+     * @return int The new value of the cache entry.
+     * 
+     */
+    public function increment($key, $amt = 1)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        // make sure we have a key to increment
+        $this->add($key, '0', null, $this->_life);
+        
+        // what file should we write to?
+        $file = $this->entry($key);
+        
+        // open the file for read/write.
+        $fp = fopen($file, 'r+b', false, $this->_context);
+        
+        // was it opened?
+        if (! $fp) {
+            return false;
+        }
+        
+        // set exclusive lock for read/write.
+        flock($fp, LOCK_EX);
+        
+        // PHP caches file lengths; clear that out so we get
+        // an accurate file length.
+        clearstatcache();
+        $len = filesize($file);
+        
+        // get the current value and increment it
+        $val = fread($fp, $len);
+        $val += $amt;
+        
+        // clear the file, rewind the pointer, and write the new value
+        ftruncate($fp, 0);
+        rewind($fp);
+        fwrite($fp, $val);
+        
+        // unlock and close, then done.
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        return $val;
     }
     
     /**

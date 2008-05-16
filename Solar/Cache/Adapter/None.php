@@ -1,11 +1,7 @@
 <?php
 /**
  * 
- * Variable (in-memory) cache controller.
- * 
- * Stores cache entries to an object variable.  This means that entries are
- * available for the duration of the script, but are cleared out at the end
- * of the script.
+ * The cache of no-cache.
  * 
  * @category Solar
  * 
@@ -15,41 +11,11 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: Var.php 3153 2008-05-05 23:14:16Z pmjones $
  * 
  */
-class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
+class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
 {
-    /**
-     * 
-     * Cache entries.
-     * 
-     * @var array
-     * 
-     */
-    protected $_entry = array();
-    
-    /**
-     * 
-     * Expiration timestamps for each cache entry.
-     * 
-     * @var array
-     * 
-     */
-    protected $_expires = array();
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
     /**
      * 
      * Sets cache entry data.
@@ -63,13 +29,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function save($key, $data)
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        $this->_entry[$key] = $data;
-        $this->_expires[$key] = time() + $this->_life;
-        return true;
     }
     
     /**
@@ -85,15 +44,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function add($key, $data)
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        if (empty($this->_entry[$key])) {
-            return $this->save($key, $data);
-        } else {
-            return false;
-        }
     }
     
     /**
@@ -107,19 +57,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function fetch($key)
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        if (! empty($this->_entry[$key]) && $this->_expires[$key] <= time()) {
-            // exists, and is within its lifetime
-            return $this->_entry[$key];
-        } else {
-            // clear the entry
-            unset($this->_entry[$key]);
-            unset($this->_expires[$key]);
-            return false;
-        }
     }
     
     /**
@@ -137,18 +74,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function increment($key, $amt = 1)
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        // make sure we have a key to increment
-        $this->add($key, 0, null, $this->_life);
-        
-        // increment it
-        $this->_entry[$key] += $amt;
-        
-        // done!
-        return $this->_entry[$key];
     }
     
     /**
@@ -162,12 +87,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function delete($key)
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        unset($this->_entry[$key]);
-        unset($this->_expires[$key]);
     }
     
     /**
@@ -182,12 +101,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function deleteAll()
     {
-        if (! $this->_active) {
-            return;
-        }
-        
-        $this->_entry = array();
-        $this->_expires = array();
     }
     
     /**
@@ -201,6 +114,5 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      */
     public function entry($key)
     {
-        return $key;
     }
 }

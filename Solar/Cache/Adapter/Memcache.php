@@ -240,6 +240,35 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
     
     /**
      * 
+     * Increments a cache entry value by the specified amount.  If the entry
+     * does not exist, creates it at zero, then increments it.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param string $amt The amount to increment by (default +1).  Using
+     * negative values is effectively a decrement.
+     * 
+     * @return int The new value of the cache entry.
+     * 
+     */
+    public function increment($key, $amt = 1)
+    {
+        if (! $this->_active) {
+            return;
+        }
+        
+        // make sure we have a key to increment
+        $this->add($key, 0, null, $this->_life);
+        
+        // let memcache do the increment and retain its value
+        $val = $this->memcache->increment($key, $amt);
+        
+        // done
+        return $val;
+    }
+    
+    /**
+     * 
      * Deletes a cache entry.
      * 
      * @param string $key The entry ID.

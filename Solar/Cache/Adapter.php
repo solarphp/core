@@ -246,6 +246,21 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     
     /**
      * 
+     * Increments a cache entry value by the specified amount.  If the entry
+     * does not exist, creates it at zero, then increments it.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param string $amt The amount to increment by (default +1).  Using
+     * negative values is effectively a decrement.
+     * 
+     * @return int The new value of the cache entry.
+     * 
+     */
+    abstract public function increment($key, $amt = 1);
+    
+    /**
+     * 
      * Deletes a cache entry.
      * 
      * {{code: php

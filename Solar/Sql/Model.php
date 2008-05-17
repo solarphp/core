@@ -1122,7 +1122,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // attempt to fetch from database, and add to the cache
         $result = $select->fetch($type);
         
-        // add to cache? (use 'add' to avoid race conditions.)
+        // add to cache?
         if ($params['cache']) {
             $this->_cache->add($key, $result);
         }
@@ -1194,6 +1194,20 @@ abstract class Solar_Sql_Model extends Solar_Base
         // fix up the parameters
         $params = $this->fixSelectParams($params);
         
+        // add a fake param called 'count' to make this different from the
+        // orginating query (for cache deconfliction).
+        $params['__count__'] = true;
+        
+        // check the cache
+        if ($params['cache']) {
+            $key = $this->_cache->entry($params);
+            $result = $this->_cache->fetch($key);
+            if ($result !== false) {
+                // cache hit
+                return $result;
+            }
+        }
+        
         // remove the 'eager' param for now, so we don't get the column-
         // based eager joins.
         $eager = (array) $params['eager'];
@@ -1208,9 +1222,17 @@ abstract class Solar_Sql_Model extends Solar_Base
             $related->modSelectCountPages($select);
         }
         
-        // done, count on the primary column
+        // count on the primary column
         $col = "{$this->_model_name}.{$this->_primary_col}";
-        return $select->countPages($col);
+        $result = $select->countPages($col);
+        
+        // save in cache?
+        if ($params['cache']) {
+            $this->_cache->add($key, $result);
+        }
+        
+        // done
+        return $result;
     }
     
     /**

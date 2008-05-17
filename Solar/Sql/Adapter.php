@@ -1399,7 +1399,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchTableCols($table)
     {
-        $key = $this->_getCacheKey("tables/$table/cols");
+        $key = $this->_getCacheKey("table/$table/cols");
         $result = $this->_cache->fetch($key);
         if (! $result) {
             $result = $this->_fetchTableCols($table);

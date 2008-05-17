@@ -1368,7 +1368,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchTableList()
     {
-        $key = $this->_getCacheKey(__FUNCTION__);
+        $key = $this->_getCacheKey('table_list');
         $result = $this->_cache->fetch($key);
         if (! $result) {
             $result = $this->_fetchTableList();
@@ -1399,7 +1399,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     public function fetchTableCols($table)
     {
-        $key = $this->_getCacheKey(__FUNCTION__ . "/$table");
+        $key = $this->_getCacheKey("tables/$table/cols");
         $result = $this->_cache->fetch($key);
         if (! $result) {
             $result = $this->_fetchTableCols($table);

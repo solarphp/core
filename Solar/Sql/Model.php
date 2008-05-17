@@ -2,7 +2,8 @@
 /**
  * 
  * An SQL-centric Model class combining TableModule and TableDataGateway,
- * using a Collection of Record objects for returns.
+ * using a Collection of Record objects for returns, with integrated caching
+ * of versioned result data.
  * 
  * @category Solar
  * 
@@ -26,21 +27,38 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `sql`
      * : (dependency) A Solar_Sql dependency.
      * 
+     * `cache`
+     * : (dependency) A Solar_Cache dependency for the Solar_Sql_Model_Cache
+     *   object.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Sql_Model = array(
-        'sql' => 'sql',
+        'sql'   => 'sql',
+        'cache' => array(
+            'adapter' => 'Solar_Cache_Adapter_Var',
+        ),
+        'auto_cache' => false,
     );
     
     /**
      * 
      * A Solar_Sql dependency object.
      * 
-     * @var Solar_Sql
+     * @var Solar_Sql_Adapter
      * 
      */
     protected $_sql = null;
+    
+    /**
+     * 
+     * A Solar_Sql_Model_Cache object.
+     * 
+     * @var Solar_Sql_Model_Cache
+     * 
+     */
+    protected $_cache = null;
     
     /**
      * 
@@ -118,6 +136,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_filter_class = null;
+    
+    protected $_cache_class = 'Solar_Sql_Model_Cache';
     
     // -----------------------------------------------------------------
     //
@@ -440,11 +460,11 @@ abstract class Solar_Sql_Model extends Solar_Base
         // main construction
         parent::__construct($config);
         
-        // connect to the database
-        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
-        
         // our class name so that we don't call get_class() all the time
         $this->_class = get_class($this);
+        
+        // connect to the database
+        $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
         // user-defined setup
         $this->_setup();
@@ -458,6 +478,13 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixOrder();
         $this->_fixPropertyCols();
         $this->_fixFilters(); // including filter class
+        $this->_fixCache(); // including cache class
+        
+        // create the cache object and set its model
+        $this->_cache = Solar::factory($this->_cache_class, array(
+            'cache'  => $this->_config['cache'],
+        ));
+        $this->_cache->setModel($this);
     }
     
     /**
@@ -473,6 +500,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         foreach ($this->_related as $key => $val) {
             unset($this->_related[$key]);
         }
+        
+        unset($this->_cache);
     }
     
     /**
@@ -690,20 +719,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, 'order', and 'page'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return Solar_Sql_Model_Collection A collection object.
      * 
      */
     public function fetchAll($params = array())
     {
-        // prepare
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params);
-        
-        // fetch
-        $result = $select->fetchAll();
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('all', $params);
         if (! $result) {
             return array();
         }
@@ -762,20 +794,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, 'order', and 'page'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return Solar_Sql_Model_Collection A collection object.
      * 
      */
     public function fetchAssoc($params = array())
     {
-        // prepare
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params);
-        
-        // fetch
-        $result = $select->fetchAssoc();
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('assoc', $params);
         if (! $result) {
             return array();
         }
@@ -856,20 +891,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, and 'order'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return Solar_Sql_Model_Record A record object.
      * 
      */
     public function fetchOne($params = array())
     {
-        // prepare
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params);
-        
-        // fetch
-        $result = $select->fetchOne();
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('one', $params);
         if (! $result) {
             return null;
         }
@@ -922,20 +960,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, and 'order'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return array
      * 
      */
     public function fetchCol($params = array())
     {
-        // prepare
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params);
-        
-        // fetch
-        $result = $select->fetchCol();
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('col', $params);
         if ($result) {
             return $result;
         } else {
@@ -977,19 +1018,15 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (array) Key-value pairs to bind into the query.
      * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, and 'order'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return array
      * 
      */
     public function fetchPairs($params = array())
     {
-        // prepare
-        $params = $this->fixSelectParams($params);
-        $select = $this->newSelect($params);
-        
-        // fetch
-        $result = $select->fetchPairs();
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('pairs', $params);
         if ($result) {
             return $result;
         } else {
@@ -1030,17 +1067,68 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params An array of parameters for the fetch, with keys
-     * for 'cols', 'where', 'group', 'having, and 'order'.
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return mixed The single value from the model query, or null.
      * 
      */
     public function fetchValue($params = array())
     {
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('value', $params);
+        return $result;
+    }
+    
+    /**
+     * 
+     * Returns a data result and the select used to fetch the data.
+     * 
+     * If caching is turned on, this will fetch from the cache (if available)
+     * and save the result back to the cache (if needed).
+     * 
+     * @param string $type The type of fetch to perform: 'all', 'one', etc.
+     * 
+     * @param array &$params A reference to the params for the select; these
+     * will be passed through fixSelectParams(), so the calling code doesn't
+     * have to do it twice.
+     * 
+     * @return array An array of two elements; element 0 is the result data,
+     * element 1 is the Solar_Sql_Select object used to fetch the data.  Note
+     * that if the 
+     */
+    public function _fetchResultSelect($type, &$params)
+    {
         $params = $this->fixSelectParams($params);
         $select = $this->newSelect($params);
-        return $select->fetchValue();
+        
+        // fetch from cache?
+        if ($params['cache']) {
+            $key = $this->_cache->entry($params);
+            $result = $this->_cache->fetch($key);
+            if ($result !== false) {
+                // found some data!
+                return array($result, $select);
+            }
+        }
+        
+        // attempt to fetch from database, and add to the cache
+        $result = $select->fetch($type);
+        
+        // add to cache? (use 'add' to avoid race conditions.)
+        if ($params['cache']) {
+            $this->_cache->add($key, $result);
+        }
+        
+        // done
+        return array($result, $select);
     }
     
     /**
@@ -1169,6 +1257,47 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * "Cleans up" SELECT clause parameters.
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
+     * `cols`
+     * : (string|array) Return only these columns.
+     * 
+     * `where`
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
+     *   restrict which records are returned.
+     * 
+     * `group`
+     * : (string|array) GROUP BY these columns.
+     * 
+     * `having`
+     * : (string|array) HAVING these column values.
+     * 
+     * `order`
+     * : (string|array) ORDER BY these columns.
+     * 
+     * `paging`
+     * : (int) Return this many records per page.
+     * 
+     * `page`
+     * : (int) Return only records from this page-number.
+     * 
+     * `bind`
+     * : (array) Key-value pairs to bind into the query.
+     * 
+     * `count_pages`
+     * : (bool) Perform a second query for count and pages.
+     * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
      * @param array $params The parameters for the SELECT clauses.
      * 
      * @return array A normalized set of clause params.
@@ -1177,6 +1306,16 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function fixSelectParams($params)
     {
         settype($params, 'array');
+        
+        // if we have eager values, make sure they're unique
+        if (! empty($params['eager'])) {
+            $params['eager'] = array_unique((array) $params['eager']);
+        }
+        
+        // even after uniqing, the eager values might still be empty
+        if (empty($params['eager'])) {
+            $params['eager'] = null;
+        }
         
         if (empty($params['distinct'])) {
             $params['distinct'] = null;
@@ -1190,16 +1329,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         // even after uniqing, cols might still be empty
         if (empty($params['cols'])) {
             $params['cols'] = array_keys($this->_table_cols);
-        }
-        
-        // if we have eager values, make sure they're unique
-        if (! empty($params['eager'])) {
-            $params['eager'] = array_unique((array) $params['eager']);
-        }
-        
-        // even after uniqing, the eager values might still be empty
-        if (empty($params['eager'])) {
-            $params['eager'] = null;
         }
         
         if (empty($params['where'])) {
@@ -1234,6 +1363,22 @@ abstract class Solar_Sql_Model extends Solar_Base
             $params['count_pages'] = false;
         }
         
+        // go by array_key_exists() so that an explicit "false" does not
+        // accidentally get overwritten
+        if (! array_key_exists('cache', $params)) {
+            // key not present, use the default
+            $params['cache'] = $this->_config['auto_cache'];
+        }
+        
+        // force to boolean
+        $params['cache'] = (bool) $params['cache'];
+        
+        // explicit cache key?
+        if (empty($params['cache_key'])) {
+            $params['cache_key'] = false;
+        }
+        
+        // done
         return $params;
     }
     
@@ -1242,14 +1387,15 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Returns a new Solar_Sql_Select tool, with the proper SQL object
      * injected automatically, and with eager "to-one" associations joined.
      * 
-     * @param array $params An array of SELECT parameters (esp. the 'eager'
-     * param).
+     * @param array $params An array of SELECT parameters.
      * 
      * @return Solar_Sql_Select
      * 
      */
-    public function newSelect($params)
+    public function newSelect($params = null)
     {
+        $params = $this->fixSelectParams($params);
+        
         // get the select object
         $select = Solar::factory(
             $this->_select_class,
@@ -1466,12 +1612,14 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Inserts one row to the model table.
+     * Inserts one row to the model table and deletes cache entries.
      * 
      * @param array|Solar_Sql_Model_Record $spec The row data to insert.
      * 
      * @return array The data as inserted, including auto-incremented values,
      * auto-sequence values, created/updated/inherit values, etc.
+     * 
+     * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
     public function insert($spec)
@@ -1552,6 +1700,7 @@ abstract class Solar_Sql_Model extends Solar_Base
          * Post-insert
          */
         // no exception thrown, so it must have worked.
+        
         // if there was an autoincrement column, set its value in the data.
         foreach ($this->_table_cols as $key => $val) {
             if ($val['autoinc']) {
@@ -1560,6 +1709,9 @@ abstract class Solar_Sql_Model extends Solar_Base
                 break;
             }
         }
+        
+        // clear the cache for this model and related models
+        $this->_cache->deleteAll();
         
         // refresh the table data in the record
         if ($spec instanceof Solar_Sql_Model_Record) {
@@ -1577,7 +1729,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Updates rows in the model table.
+     * Updates rows in the model table and deletes cache entries.
      * 
      * @param array|Solar_Sql_Model_Record $spec The row data to insert.
      * 
@@ -1585,6 +1737,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      * update.
      * 
      * @return array The data as updated.
+     * 
+     * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
     public function update($spec, $where)
@@ -1674,6 +1828,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_sql->update($this->_table_name, $data, $where);
         $this->unserializeCols($data);
         
+        // clear the cache for this model and related models
+        $this->_cache->deleteAll();
+        
         // refresh the table data in the record
         if ($spec instanceof Solar_Sql_Model_Record) {
             $spec->refresh();
@@ -1687,12 +1844,14 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Deletes rows from the model table.
+     * Deletes rows from the model table and deletes cache entries.
      * 
      * @param string|array|Solar_Sql_Model_Record $spec The WHERE clause to
      * identify which rows to delete, or a record to delete.
      * 
      * @return void
+     * 
+     * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
     public function delete($spec)
@@ -1704,7 +1863,14 @@ abstract class Solar_Sql_Model extends Solar_Base
             $where = $spec;
         }
         
-        return $this->_sql->delete($this->_table_name, $where);
+        // perform the deletion
+        $result = $this->_sql->delete($this->_table_name, $where);
+        
+        // clear the cache for this model and related models
+        $this->_cache->deleteAll();
+        
+        // done
+        return $result;
     }
     
     /**
@@ -2294,6 +2460,25 @@ abstract class Solar_Sql_Model extends Solar_Base
                 $this->_filters[$col][] = array('sanitizeIsoTimestamp');
                 break;
             }
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the cache class name.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixCache()
+    {
+        // make sure we have a cache class
+        if (empty($this->_cache_class)) {
+            $class = $this->_stack->load('Cache', false);
+            if (! $class) {
+                $class = 'Solar_Sql_Model_Cache';
+            }
+            $this->_cache_class = $class;
         }
     }
     

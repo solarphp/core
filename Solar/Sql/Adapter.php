@@ -266,6 +266,18 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Gets the connection-specific cache key prefix.
+     * 
+     * @return string
+     * 
+     */
+    public function getCacheKeyPrefix()
+    {
+        return $this->_cache_key_prefix;
+    }
+    
+    /**
+     * 
      * Turns profiling on and off.
      * 
      * @param bool $flag True to turn profiling on, false to turn it off.

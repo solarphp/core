@@ -112,7 +112,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * Technically, this just increases the data version number.  This means
      * that older versions will no longer be valid, causing a cache miss.
      * 
-     * The version entry is keyed under `$prefix/table/$table/data_version`.
+     * The version entry is keyed under `$prefix/model/$model_name/data_version`.
      * 
      * @return void
      * 
@@ -120,8 +120,8 @@ class Solar_Sql_Model_Cache extends Solar_Base
     public function delete()
     {
         $key = $this->_prefix
-             . "/table"
-             . "/{$this->_model->table_name}"
+             . "/model"
+             . "/{$this->_model->model_name}"
              . "/data_version";
         
         $this->_cache->increment($key);
@@ -147,7 +147,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * 
      * Gets the key for a cache entry based on fetch parameters for a select.
      * 
-     * The entry is keyed under `$prefix/table/$table/data/$version/$hash`,
+     * The entry is keyed under `$prefix/model/$model_name/data/$version/$hash`,
      * where $hash is an MD5 hash of the serialized parameters.
      * 
      * If the params include a `cache_key` entry, that value is used instead
@@ -167,13 +167,14 @@ class Solar_Sql_Model_Cache extends Solar_Base
         } else {
             unset($params['cache']);
             unset($params['cache_key']);
+            unset($params['count_pages']);
             $serial = serialize($params);
             $key = hash('md5', $serial);
         }
         
         $key = $this->_prefix
-             . "/table"
-             . "/{$this->_model->table_name}"
+             . "/model"
+             . "/{$this->_model->model_name}"
              . "/data"
              . "/$version"
              . "/$key";
@@ -221,7 +222,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * 
      * Fetches the current model data version from the cache.
      * 
-     * The entry is keyed under `$prefix/table/$table/data_version`.
+     * The entry is keyed under `$prefix/model/$model_name/data_version`.
      * 
      * @return int The model data version.
      * 
@@ -229,8 +230,8 @@ class Solar_Sql_Model_Cache extends Solar_Base
     protected function _fetchVersion()
     {
         $key = $this->_prefix
-             . "/table"
-             . "/{$this->_model->table_name}"
+             . "/model"
+             . "/{$this->_model->model_name}"
              . "/data_version";
         
         $result = $this->_cache->fetch($key);

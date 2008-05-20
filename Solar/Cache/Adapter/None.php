@@ -24,11 +24,12 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * 
      * @param mixed $data The data to write into the entry.
      * 
-     * @return bool True on success, false on failure.
+     * @return true Always reports a successsful save.
      * 
      */
     public function save($key, $data)
     {
+        return true;
     }
     
     /**
@@ -39,11 +40,12 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * 
      * @param mixed $data The data to write into the entry.
      * 
-     * @return bool True on success, false on failure.
+     * @return true Always reports a successsful add.
      * 
      */
     public function add($key, $data)
     {
+        return true;
     }
     
     /**
@@ -52,11 +54,12 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * 
      * @param string $key The entry ID.
      * 
-     * @return mixed Boolean false on failure, cache data on success.
+     * @return true Always reports a failed fetch.
      * 
      */
     public function fetch($key)
     {
+        return false;
     }
     
     /**
@@ -69,7 +72,7 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * @param string $amt The amount to increment by (default +1).  Using
      * negative values is effectively a decrement.
      * 
-     * @return int The new value of the cache entry.
+     * @return void Never increments.
      * 
      */
     public function increment($key, $amt = 1)
@@ -109,7 +112,7 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      * 
      * @param string $key The entry ID.
      * 
-     * @return string The cache entry name.
+     * @return void Never caches, so never has a key.
      * 
      */
     public function entry($key)

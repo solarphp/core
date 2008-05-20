@@ -1151,7 +1151,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // loop through each specified column and collect default data
         foreach ($this->_table_cols as $key => $val) {
-            if (! empty($spec[$key])) {
+            if (array_key_exists($key, $spec)) {
                 // user-specified
                 $data[$key] = $spec[$key];
             } else {

@@ -184,7 +184,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
     
     /**
      * 
-     * Fetchs the data for a cache entry.
+     * Fetches the data for a cache entry.
      * 
      * @param string $key The cache entry key.
      * 

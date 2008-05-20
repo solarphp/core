@@ -1038,8 +1038,10 @@ class Solar_Sql_Select extends Solar_Base
             // add each of the columns from the source, deconflicting
             // along the way.
             foreach ($source['cols'] as $col) {
-        
-                // does it use a function?
+                
+                // does it use a function?  we don't care if it's the first
+                // char, since a paren in the first position means there's no
+                // function name before it.
                 $parens = strpos($col, '(');
                 
                 // choose our column-name deconfliction strategy

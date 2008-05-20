@@ -925,6 +925,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * they never are null (although strictly speaking you do *not* need to 
      * define them as NOT NULL).
      * 
+     * N.b.: This **will not** clear the cache for the model, since it uses
+     * direct SQL to effefct the increment.  Thus, you will need to clear the
+     * cache manually if you want to the incremented values to show up from
+     * the cache.
+     * 
      * @param string $col The column to increment.
      * 
      * @param int|float $amt The amount to increment by (default 1).

@@ -1514,6 +1514,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * @return array An array of data from the fetch.
      * 
+     * @todo CACHE THIS!!!  In fact, need to move it entirely out to the
+     * "related" class.
+     * 
      */
     public function fetchRelatedArray($spec, $name, $page = null, $bind = null)
     {

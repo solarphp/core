@@ -367,7 +367,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // start profile time
-        $before = microtime(true);
+        $time = microtime(true);
         
         // attempt the connection
         $this->_pdo = new PDO(
@@ -380,10 +380,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $this->_postConnect();
         
         // retain the profile data?
-        if ($this->_profiling) {
-            $after = microtime(true);
-            $this->_profile[] = array($after - $before, '__CONNECT');
-        }
+        $this->_addProfile($time, '__CONNECT');
     }
     
     /**
@@ -523,7 +520,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $this->connect();
         
         // begin the profile time
-        $before = microtime(true);
+        $time = microtime(true);
         
         // prepare the statment
         try {
@@ -607,13 +604,39 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // retain the profile data?
-        if ($this->_profiling) {
-            $after = microtime(true);
-            $this->_profile[] = array($after - $before, $obj->queryString, $data);
-        }
+        $this->_addProfile($time, $obj->queryString, $data);
         
         // done!
         return $obj;
+    }
+    
+    /**
+     * 
+     * Adds an element to the profile array.
+     * 
+     * @param int $time The microtime when the profile element started.
+     * 
+     * @param string $stmt The SQL statement being profiled.
+     * 
+     * @param array $data Any data bound into the statement.
+     * 
+     * @return void
+     * 
+     */
+    protected function _addProfile($time, $stmt, $data = null)
+    {
+        if (! $this->_profiling) {
+            return;
+        }
+        
+        $timespan = microtime(true) - $time;
+        $e = new Exception();
+        $this->_profile[] = array(
+            $timespan,
+            $stmt,
+            $data,
+            $e->getTraceAsString(),
+        );
     }
     
     // -----------------------------------------------------------------
@@ -632,12 +655,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function begin()
     {
         $this->connect();
-        $before = microtime(true);
+        $time = microtime(true);
         $result = $this->_pdo->beginTransaction();
-        if ($this->_profiling) {
-            $after = microtime(true);
-            $this->_profile[] = array($after - $before, "__BEGIN");
-        }
+        $this->_addProfile($time, '__BEGIN');
         return $result;
     }
     
@@ -651,12 +671,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function commit()
     {
         $this->connect();
-        $before = microtime(true);
+        $time = microtime(true);
         $result = $this->_pdo->commit();
-        if ($this->_profiling) {
-            $after = microtime(true);
-            $this->_profile[] = array($after - $before, "__COMMIT");
-        }
+        $this->_addProfile($time, '__COMMIT');
         return $result;
     }
     
@@ -670,12 +687,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function rollback()
     {
         $this->connect();
-        $before = microtime(true);
+        $time = microtime(true);
         $result = $this->_pdo->rollBack();
-        if ($this->_profiling) {
-            $after = microtime(true);
-            $this->_profile[] = array($after - $before, "__ROLLBACK");
-        }
+        $this->_addProfile($time, '__ROLLBACK');
         return $result;
     }
     

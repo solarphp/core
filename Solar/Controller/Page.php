@@ -483,6 +483,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _render()
     {
+        // if no view and no layout, there's nothing to render
+        if (! $this->_view && ! $this->_layout) {
+            return;
+        }
+        
         $this->_setViewObject();
         $this->_preRender();
         $this->_view_object->assign($this);

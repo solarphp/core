@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Dir
+class Solar_Dir extends Solar_Base
 {
     /**
      * 
@@ -195,5 +195,61 @@ class Solar_Dir
     
         // final fallback for Windows
         return getenv('SystemRoot') . '\\temp';
+    }
+    
+    /**
+     * 
+     * Replacement for mkdir() to supress warnings and throw exceptions in 
+     * their place.
+     * 
+     * @param string $path The directory path to create.
+     * 
+     * @param int $mode The permissions mode for the directory.
+     * 
+     * @param bool $recursive Recursively create directories along the way.
+     * 
+     * @return bool True on success; throws exception on failure.
+     * 
+     * @see [[php::mkdir() | ]]
+     * 
+     */
+    public static function mkdir($path, $mode = 0777, $recursive = false)
+    {
+        $result = @mkdir($path, $mode, $recursive);
+        if (! $result) {
+            $self = Solar::factory(__CLASS__);
+            $info = error_get_last();
+            $info['mkdir_path'] = $path;
+            $info['mkdir_mode'] = $mode;
+            $info['mkdir_recursive'] = $recursive;
+            throw $self->_exception('ERR_MKDIR_FAILED', $info);
+        } else {
+            return true;
+        }
+    }
+    
+    /**
+     * 
+     * Replacement for rmdir() to supress warnings and throw exceptions in 
+     * their place.
+     * 
+     * @param string $path The directory path to remove
+     * 
+     * @return bool True on success; throws exception on failure.
+     * 
+     * @see [[php::rmdir() | ]]
+     * 
+     */
+    public static function rmdir($path)
+    {
+        $result = @rmdir($path);
+        if (! $result) {
+            $self = Solar::factory(__CLASS__);
+            $info = error_get_last();
+            $info['rmdir_path'] = $path;
+            throw $self->_exception('ERR_RMDIR_FAILED', $info);
+        } else {
+            return true;
+        }
     }
 }

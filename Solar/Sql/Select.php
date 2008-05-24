@@ -1202,6 +1202,14 @@ class Solar_Sql_Select extends Solar_Base
             
         } else {
             
+            // track distinctness
+            if ($select->_parts['distinct']) {
+                $distinct = 'DISTINCT ';
+                $select->distinct(false);
+            } else {
+                $distinct = '';
+            }
+        
             // "normal" case (no grouping, and no count condition in WHERE or
             // HAVING).  add the one column we're counting on...
             $select->_addSource(
@@ -1210,7 +1218,7 @@ class Solar_Sql_Select extends Solar_Base
                 null,           // orig
                 null,           // join
                 null,           // cond
-                "COUNT($col)"
+                "COUNT($distinct$col)"
             );
             
             // ... and do the count.
@@ -1273,12 +1281,20 @@ class Solar_Sql_Select extends Solar_Base
             $alias = 'subselect';
         }
         
+        // track distinctness
+        if ($inner->_parts['distinct']) {
+            $distinct = 'DISTINCT ';
+            $inner->distinct(false);
+        } else {
+            $distinct = '';
+        }
+    
         // build the outer select, which will do the actual count.
         // wrapping with an outer select lets us have all manner of weirdness
         // in the inner query, so that it doesn't conflict with the count.
         $outer = clone($this);
         $outer->clear();
-        $outer->fromSelect($inner, $alias, "COUNT($alias.$col)");
+        $outer->fromSelect($inner, $alias, "COUNT($distinct$alias.$col)");
         
         // get the count
         return $outer->fetchValue();

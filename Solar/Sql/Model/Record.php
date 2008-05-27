@@ -146,9 +146,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
             // the key was for a relation that has no data yet.
             // load the data.  don't return at this point, look
             // for accessor methods later.
-            $this->_data[$key] = $this->_model->fetchRelatedObject(
+            $related = $this->_model->getRelated($key);
+            $this->_data[$key] = $related->fetchObject(
                 $this,
-                $key,
                 $this->_related_page[$key]
             );
         }
@@ -1150,55 +1150,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
             return $this->_invalid[$key];
         } else {
             return $this->_invalid;
-        }
-    }
-    
-    // -----------------------------------------------------------------
-    //
-    // Record relationships
-    //
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Returns the current page number for a named relation.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @return int
-     * 
-     */
-    public function getRelatedPage($name)
-    {
-        $this->_checkDeleted();
-        
-        if (array_key_exists($name, $this->_data)) {
-            return $this->_model->related_page[$name];
-        }
-    }
-    
-    /**
-     * 
-     * Sets the page number for a named relation, so that only records from
-     * that page are loaded.
-     * 
-     * Resets the loaded records to NULL so that the new records are lazy-
-     * loaded on demand.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param int $page The page number of records to load.
-     * 
-     * @return void
-     * 
-     */
-    public function setRelatedPage($name, $page)
-    {
-        $this->_checkDeleted();
-        
-        if (array_key_exists($name, $this->_data)) {
-            $this->_model->related_page[$name] = (int) $page;
-            $this->_data[$name] = null;
         }
     }
     

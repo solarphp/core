@@ -20,6 +20,19 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
 {
     /**
      * 
+     * When calling fetchObject(), return this kind of result object.
+     * 
+     * Typically 'record' or 'collection'.
+     * 
+     * @var string
+     * 
+     * @see fetchObject()
+     * 
+     */
+    protected $_fetch_object = 'collection';
+    
+    /**
+     * 
      * When the native model is doing a select and an eager-join is requested
      * for this relation, this method modifies the select to add the eager
      * join.

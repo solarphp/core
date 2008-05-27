@@ -351,18 +351,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      *     // of 6-14 chars, and unique in the table.
      *     $this->_filters['handle'][] = 'sanitizeStringAlnum';
      *     $this->_filters['handle'][] = array('validateRangeLength', 6, 14);
-     *     $this->_filters['handle'][] = '_validateUnique';
+     *     $this->_filters['handle'][] = 'validateUnique';
      * 
      *     // filter 'email' to have only emails-allowed chars, validate as an
      *     // email address, and be unique in the table.
      *     $this->_filters['email'][] = 'sanitizeStringEmail';
      *     $this->_filters['email'][] = 'validateEmail';
-     *     $this->_filters['email'][] = '_validateUnique';
+     *     $this->_filters['email'][] = 'validateUnique';
      * 
      *     // filter 'passwd' to be not-blank, and should match any existing
      *     // 'passwd_confirm' value.
-     *     $this->_filters['passwd'][] = 'validateRequire';
-     *     $this->_filters['passwd'][] = '_validateConfirm';
+     *     $this->_filters['passwd'][] = 'validateNotBlank';
+     *     $this->_filters['passwd'][] = 'validateConfirm';
      * }}
      * 
      * @var array
@@ -690,7 +690,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fetches all records by arbitrary parameters.
+     * Fetches a collection of all records by arbitrary parameters.
      * 
      * Recognized parameters for the fetch are:
      * 
@@ -747,7 +747,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
             if ($related->type == 'has_many') {
-                $result = $this->fetchRelatedArray($select, $name);
+                // should we send along $params instead for easier caching?
+                $result = $related->fetchArray($select);
                 $coll->loadRelated($name, $result);
             }
         }
@@ -822,7 +823,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
             if ($related->type == 'has_many') {
-                $result = $this->fetchRelatedArray($select, $name);
+                $result = $related->fetchArray($select);
                 $coll->loadRelated($name, $result);
             }
         }
@@ -834,6 +835,58 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // done
         return $coll;
+    }
+    
+    /**
+     * 
+     * Fetches an array of rows by arbitrary parameters.
+     * 
+     * Recognized parameters for the fetch are:
+     * 
+     * `cols`
+     * : (string|array) Return only these columns.
+     * 
+     * `where`
+     * : (string|array) A Solar_Sql_Select::multiWhere() value parameter to
+     *   restrict which records are returned.
+     * 
+     * `group`
+     * : (string|array) GROUP BY these columns.
+     * 
+     * `having`
+     * : (string|array) HAVING these column values.
+     * 
+     * `order`
+     * : (string|array) ORDER BY these columns.
+     * 
+     * `paging`
+     * : (int) Return this many records per page.
+     * 
+     * `page`
+     * : (int) Return only records from this page-number.
+     * 
+     * `bind`
+     * : (array) Key-value pairs to bind into the query.
+     * 
+     * `cache`
+     * : (bool) Use the cache?
+     * 
+     * `cache_key`
+     * : (bool) An explicit cache key to use; otherwise, defaults to the
+     *   serialized SELECT params.
+     * 
+     * @return array
+     * 
+     */
+    public function fetchArray($params = array())
+    {
+        // fetch the result array and select object
+        list($result, $select) = $this->_fetchResultSelect('all', $params);
+        if (! $result) {
+            return array();
+        } else {
+            return $result;
+        }
     }
     
     /**
@@ -919,7 +972,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
             if ($related->type == 'has_many') {
-                $record->$name = $this->fetchRelatedObject($record, $name);
+                $record->$name = $related->fetchObject($record);
             }
         }
         
@@ -1235,40 +1288,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         return $result;
     }
     
-    /**
-     * 
-     * Counts the number of records in a related model for a given record.
-     * 
-     * @param Solar_Sql_Model_Record $record The record to count related pages
-     * for.
-     * 
-     * @param string $name The name of the relationship to count pages for.
-     * 
-     * @param array $params Parameters for the related SELECT; honors keys for
-     * 'where', 'having', 'group', and 'paging'.
-     * 
-     * @return array An array with keys 'count' (the count of records) and
-     * 'pages' (the number of pages of records).
-     * 
-     */
-    public function countPagesRelated($record, $name, $params = null)
-    {
-        $related = $this->getRelated($name);
-        $params = $this->fixSelectParams($params);
-        $select = $related->newSelect($record);
-        
-        $select->multiWhere($params['where'])
-               ->group($params['group'])
-               ->having($params['having'])
-               ->setPaging($params['paging'])
-               ->bind($params['bind']);
-        
-        $col = "{$related->foreign_alias}.{$related->foreign_primary_col}";
-        
-        return $select->countPages($col);
-    }
-    
-    
     // -----------------------------------------------------------------
     //
     // Select
@@ -1369,6 +1388,15 @@ abstract class Solar_Sql_Model extends Solar_Base
             $params['order'] = $this->_order;
         }
         
+        if (empty($params['limit'])) {
+            $params['limit'] = null;
+        } else {
+            // force to array
+            settype($params['limit'], 'array');
+            // pad out to 2 elements (count, offset)
+            $params['limit'] = array_pad($params['limit'], 2, 0);
+        }
+        
         if (empty($params['paging'])) {
             $params['paging'] = $this->_paging;
         }
@@ -1446,90 +1474,18 @@ abstract class Solar_Sql_Model extends Solar_Base
                ->multiHaving($params['having'])
                ->order($params['order'])
                ->setPaging($params['paging'])
-               ->limitPage($params['page'])
                ->bind($params['bind']);
+        
+        // limit by count/offset, or by page?
+        if ($params['limit']) {
+            list($count, $offset) = $params['limit'];
+            $select->limit($count, $offset);
+        } else {
+            $select->limitPage($params['page']);
+        }
         
         // done!
         return $select;
-    }
-    
-    /**
-     * 
-     * Given a record, fetches a related record or collection for a named
-     * relationship.
-     * 
-     * @param array|Solar_Sql_Model_Record $spec The specification for the
-     * native selection.  If an array, treated as selection criteria; if a
-     * record object, uses the primary key from that record.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param int $page For to-many associations, the page-number of records
-     * to fetch (default null, which fetches all records).  Ignored by to-one
-     * associations.  Paging is based on the related model's "$_paging"
-     * property.
-     * 
-     * @param array $bind Key-value pairs to bind to the select.
-     * 
-     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or collection
-     * object.
-     * 
-     */
-    public function fetchRelatedObject($spec, $name, $page = null, $bind = null)
-    {
-        // fetch the related data as an array
-        $data = $this->fetchRelatedArray($spec, $name, $page);
-        
-        // get the relationship type
-        $related = $this->getRelated($name);
-        
-        // record or collection?
-        if ($related->type == 'has_one' || $related->type == 'belongs_to') {
-            $result = $related->getModel()->newRecord($data);
-        } else {
-            $result = $related->getModel()->newCollection($data);
-        }
-        
-        // done!
-        return $result;
-    }
-    
-    /**
-     * 
-     * Given a record, fetches related data for a named relationship as an
-     * array.
-     * 
-     * @param array|Solar_Sql_Model_Record $spec The specification for the
-     * native selection.  If an array, treated as selection criteria; if a
-     * record object, uses the primary key from that record.
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param int $page For to-many associations, the page-number of records
-     * to fetch (default null, which fetches all records).  Ignored by to-one
-     * associations.  Paging is based on the related model's "$_paging"
-     * property.
-     * 
-     * @param array $bind Key-value pairs to bind to the select.
-     * 
-     * @return array An array of data from the fetch.
-     * 
-     * @todo CACHE THIS!!!  In fact, need to move it entirely out to the
-     * "related" class.
-     * 
-     */
-    public function fetchRelatedArray($spec, $name, $page = null, $bind = null)
-    {
-        $related = $this->getRelated($name);
-        
-        if (is_array($spec)) {
-            $spec = $this->fixSelectParams($spec);
-        }
-        
-        $select = $related->newSelect($spec);
-        $select->bind($bind);
-        $select->limitPage($page);
-        return $select->fetch($related->fetch);
     }
     
     // -----------------------------------------------------------------
@@ -2164,7 +2120,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // get the part after the last underscore in the parent class name.
-        // e.g., "Solar_Model_Node" => "Node".  If no underscores, use the
+        // e.g., "Solar_Model_Nodes" => "Nodes".  If no underscores, use the
         // parent class name as-is.
         $pos = strrpos($parent, '_');
         if ($pos === false) {

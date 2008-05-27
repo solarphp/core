@@ -303,6 +303,19 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
+     * When calling fetchObject(), return this kind of result object.
+     * 
+     * Typically 'record' or 'collection'.
+     * 
+     * @var string
+     * 
+     * @see fetchObject()
+     * 
+     */
+    protected $_fetch_object = 'record';
+    
+    /**
+     * 
      * Sets the native (origin) model instance.
      * 
      * @param Solar_Sql_Model $model The native model instance.
@@ -320,7 +333,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     
     /**
      * 
-     * Returns the **related** model instance.
+     * Returns the related (foreign) model instance.
      * 
      * @return Solar_Sql_Model
      * 
@@ -409,7 +422,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         
         // convert $spec array to a Select object for the native column ID list
         if (is_array($spec)) {
-            // build the select
+            // rebuild the spec as a select object
             $params = $spec;
             $spec = $this->_native_model->newSelect();
             $spec->distinct($params['distinct'])
@@ -477,6 +490,78 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         
         // added where conditions for the join
         $select->multiWhere($this->where);
+    }
+    
+    /**
+     * 
+     * Fetches foreign data as a record or collection object.
+     * 
+     * @param array|Solar_Sql_Model_Record $spec The specification for the
+     * native selection.  If an array, treated as selection criteria; if a
+     * record object, uses the primary key from that record.
+     * 
+     * @param int $page For to-many associations, the page-number of records
+     * to fetch (default null, which fetches all records).  Ignored by to-one
+     * associations.  Paging is based on the related model's `$_paging`
+     * property.
+     * 
+     * @param array $bind Key-value pairs to bind to the select.
+     * 
+     * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or 
+     * collection object.
+     * 
+     */
+    public function fetchObject($spec, $page = null, $bind = null)
+    {
+        // fetch the related data as an array
+        $data = $this->fetchArray($spec, $page);
+        
+        // record or collection?
+        if ($this->_fetch_object == 'record') {
+            $result = $this->_foreign_model->newRecord($data);
+        } elseif ($this->_fetch_object == 'collection') {
+            $result = $this->_foreign_model->newCollection($data);
+        } else {
+            throw $this->_exception('ERR_FETCH_OBJECT_TYPE', array(
+                'type' => $this->_fetch_object,
+            ));
+        }
+        
+        // done!
+        return $result;
+    }
+    
+    /**
+     * 
+     * Fetches foreign data as an array.
+     * 
+     * @param array|Solar_Sql_Model_Record $spec The specification for the
+     * native selection.  If an array, treated as selection criteria; if a
+     * record object, uses the primary key from that record.
+     * 
+     * @param int $page For to-many associations, the page-number of records
+     * to fetch (default null, which fetches all records).  Ignored by to-one
+     * associations.  Paging is based on the related model's "$_paging"
+     * property.
+     * 
+     * @param array $bind Key-value pairs to bind to the select.
+     * 
+     * @return array An array of data from the fetch.
+     * 
+     * @todo CACHE THIS!!!  In fact, need to move it entirely out to the
+     * "related" class.
+     * 
+     */
+    public function fetchArray($spec, $page = null, $bind = null)
+    {
+        if (is_array($spec)) {
+            $spec = $this->_native_model->fixSelectParams($spec);
+        }
+        
+        $select = $this->newSelect($spec);
+        $select->bind($bind);
+        $select->limitPage($page);
+        return $select->fetch($this->fetch);
     }
     
     /**

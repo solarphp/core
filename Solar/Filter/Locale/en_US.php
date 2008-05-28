@@ -47,6 +47,13 @@ return array(
     'INVALID_SEP_WORDS'            => 'Please use only letters (A-Z and a-z), numbers (0-9), underscores(_), and separators.',
     'INVALID_SIZE_SCOPE'           => 'This value is not of the proper size and scope.',
     'INVALID_STRING'               => 'Please enter a string.',
+    'INVALID_UPLOAD_INI_SIZE'      => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
+    'INVALID_UPLOAD_FORM_SIZE'     => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
+    'INVALID_UPLOAD_PARTIAL'       => 'The uploaded file was only partially uploaded.',
+    'INVALID_UPLOAD_NO_FILE'       => 'No file was uploaded.',
+    'INVALID_UPLOAD_NO_TMP_DIR'    => 'Missing a temporary folder.',
+    'INVALID_UPLOAD_CANT_WRITE'    => 'Failed to write file to disk.',
+    'INVALID_UPLOAD_EXTENSION'     => 'File upload stopped by a PHP extension.',
     'INVALID_URI'                  => 'Please enter a valid web address.',
     'INVALID_WORD'                 => 'Please use only letters (A-Z and a-z), numbers (0-9), and underscores(_).',
 );

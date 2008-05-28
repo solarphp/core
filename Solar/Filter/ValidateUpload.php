@@ -112,10 +112,21 @@ class Solar_Filter_ValidateUpload extends Solar_Filter_Abstract
             // find the file name extension, minus the dot
             $ext = substr(strrchr($value['name'], '.'), 1);
             
-            // is the extension allowed?
-            if (! in_array($ext, (array) $file_ext)) {
-                return $this->_invalid('INVALID_UPLOAD_FILENAME_EXT');
+            // force to lower-case for comparisons
+            $ext = strtolower($ext);
+            
+            // check against the allowed extensions
+            foreach ((array) $file_ext as $val) {
+                // force to lower-case for comparisons
+                $val = strtolower($val);
+                if ($ext == $val) {
+                    // it's an allowed extension
+                    return true;
+                }
             }
+            
+            // didn't find the extension in the allowed list
+            return $this->_invalid('INVALID_UPLOAD_FILENAME_EXT');
         }
         
         // looks like we're ok!

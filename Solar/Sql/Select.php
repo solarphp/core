@@ -1539,7 +1539,7 @@ class Solar_Sql_Select extends Solar_Base
         if ($name == $orig) {
             $this->_parts['from'][] = $name;
         } else {
-            $this->_parts['from'][] = "$orig AS $name";
+            $this->_parts['from'][] = "$orig $name";
         }
     }
     
@@ -1569,7 +1569,7 @@ class Solar_Sql_Select extends Solar_Base
         if ($name == $orig) {
             $tmp['name'] = $name;
         } else {
-            $tmp['name'] = "$orig AS $name";
+            $tmp['name'] = "$orig $name";
         }
         
         $this->_parts['join'][] = $tmp;
@@ -1588,6 +1588,6 @@ class Solar_Sql_Select extends Solar_Base
      */
     protected function _buildSelect($name, $orig)
     {
-        $this->_parts['from'][] = "($orig) AS $name";
+        $this->_parts['from'][] = "($orig) $name";
     }
 }

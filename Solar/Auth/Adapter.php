@@ -321,7 +321,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // initialize the session array as needed
         if (empty($this->_session->store)) {
             $this->_session->store = array(
-                'status'  => 'ANON',
+                'status'  => Solar_Auth::ANON,
                 'initial' => null,
                 'active'  => null,
                 'handle'  => null,
@@ -424,7 +424,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             if ($this->_config['expire'] > 0 && $tmp < time()) {
                 // past the expiration time
                 // flash forward the status text, and return
-                $this->reset('EXPIRED');
+                $this->reset(Solar_Auth::EXPIRED);
                 return false;
             }
     
@@ -433,7 +433,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             if ($this->_config['idle'] > 0 && $tmp < time()) {
                 // past the idle time
                 // flash forward the status text, and return
-                $this->reset('IDLED');
+                $this->reset(Solar_Auth::IDLED);
                 return false;
             }
             
@@ -456,7 +456,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     public function isValid()
     {
         $this->_loadSession();
-        return $this->status == 'VALID';
+        return $this->status == Solar_Auth::VALID;
     }
     
     /**
@@ -468,16 +468,16 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * Typically used for idling, expiration, and logout.  Calls
      * [[php::session_regenerate_id() | ]] to clear previous session.
      * 
-     * @param string $status A Solar_Auth status string; default is 'ANON'.
+     * @param string $status A Solar_Auth status string; default is Solar_Auth::ANON.
      * 
-     * @param array $info If status is 'VALID', populate properties with this
+     * @param array $info If status is Solar_Auth::VALID, populate properties with this
      * user data, with keys for 'handle', 'email', 'moniker', 'uri', and 
      * 'uid'.  If a key is empty or does not exist, its value is set to null.
      * 
      * @return void
      * 
      */
-    public function reset($status = 'ANON', $info = array())
+    public function reset($status = Solar_Auth::ANON, $info = array())
     {
         // load the session
         $this->_loadSession();
@@ -495,7 +495,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->status = strtoupper($status);
         
         // change properties
-        if ($this->status == 'VALID') {
+        if ($this->status == Solar_Auth::VALID) {
             // update the timers, leave user info alone
             $now = time();
             $this->initial = $now;
@@ -598,7 +598,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // did it work?
         if (is_array($result)) {
             // successful login, treat result as user info
-            $this->reset('VALID', $result);
+            $this->reset(Solar_Auth::VALID, $result);
             return true;
         } elseif (is_string($result)) {
             // failed login, treat result as error code
@@ -606,7 +606,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             return false;
         } else {
             // failed login, generic error code
-            $this->reset('WRONG');
+            $this->reset(Solar_Auth::WRONG);
             return false;
         }
     }
@@ -648,6 +648,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     protected function _processLogout()
     {
-        return 'ANON';
+        return Solar_Auth::ANON;
     }
 }

@@ -338,8 +338,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
             array('class' => $class)
         );
         
-        // create the response object
-        $this->_response = Solar::factory('Solar_Http_Response');
+        // get the registered response object
+        $this->_response = Solar_Registry::get('response');
         
         // auto-set the name; for example Vendor_App_SomeThing => 'some-thing'
         if (empty($this->_controller)) {
@@ -886,38 +886,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _redirect($spec, $code = 302)
     {
-        if ($spec instanceof Solar_Uri_Action) {
-            $href = $spec->get(true);
-        } elseif (strpos($spec, '://') !== false) {
-            // external link, protect against header injections
-            $href = str_replace(array("\r", "\n"), '', $spec);
-        } else {
-            $uri = Solar::factory('Solar_Uri_Action');
-            $href = $uri->quick($spec, true);
-        }
-        
-        // make sure there's actually an href
-        $href = trim($href);
-        if (! $href || trim($spec) == '') {
-            throw $this->_exception('ERR_REDIRECT_FAILED', array(
-                'spec' => $spec,
-                'href' => $href,
-            ));
-        }
-        
-        // kill off all output buffers
-        while(@ob_end_clean());
-        
-        // save the session
-        session_write_close();
-        
-        // clear the response body
-        $this->_response->content = null;
-        
-        // set headers and send the response directly
-        $this->_response->setStatusCode($code);
-        $this->_response->setHeader('Location', $href);
-        $this->_response->display();
+        $this->_response->redirect($spec, $code);
         exit(0);
     }
     
@@ -952,24 +921,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _redirectNoCache($spec, $code = 303)
     {
-        // reset cache-control
-        $this->_response->setHeader(
-            'Cache-Control',
-            'no-store, no-cache, must-revalidate'
-        );
-        
-        // append cache-control
-        $this->_response->setHeader(
-            'Cache-Control',
-            'post-check=0, pre-check=0',
-            false
-        );
-        
-        // reset pragma header
-        $this->_response->setHeader('Pragma', 'no-cache');
-        
-        // continue with redirection
-        return $this->_redirect($spec, $code);
+        $this->_response->redirectNoCache($spec, $code);
+        exit(0);
     }
     
     /**

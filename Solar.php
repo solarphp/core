@@ -237,7 +237,7 @@ class Solar
             ini_set($key, $val);
         }
         
-        // auto-set registry entries
+        // user-defined registry entries
         $register = Solar::config('Solar', 'registry_set', array());
         foreach ($register as $name => $list) {
             // make sure we have the class-name and a config
@@ -247,20 +247,17 @@ class Solar
             Solar_Registry::set($name, $spec, $config);
         }
         
-        // make sure a locale object is registered
-        if (! Solar_Registry::exists('locale')) {
-            Solar_Registry::set(
-                'locale',
-                'Solar_Locale'
-            );
-        }
+        // Solar itself needs these objects registered
+        $name_class = array(
+            'locale'   => 'Solar_Locale',
+            'request'  => 'Solar_Request',
+            'response' => 'Solar_Http_Response',
+        );
         
-        // make sure a request-environment object is registered
-        if (! Solar_Registry::exists('request')) {
-            Solar_Registry::set(
-                'request',
-                'Solar_Request'
-            );
+        foreach ($name_class as $name => $class) {
+            if (! Solar_Registry::exists($name)) {
+                Solar_Registry::set($name, $class);
+            }
         }
         
         // run any 'start' hook scripts

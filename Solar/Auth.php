@@ -18,6 +18,52 @@ class Solar_Auth extends Solar_Base
 {
     /**
      * 
+     * The user is anonymous/unauthenticated (no attempt has been made to 
+     * authenticate).
+     * 
+     * @const string
+     * 
+     */
+    const ANON = 'ANON';
+    
+    /**
+     * 
+     * The max time for authentication has expired.
+     * 
+     * @const string
+     * 
+     */
+    const EXPIRED = 'EXPIRED';
+    
+    /**
+     * 
+     * The authenticated user has been idle for too long.
+     * 
+     * @const string
+     * 
+     */
+    const IDLED = 'IDLED';
+    
+    /**
+     * 
+     * The user is authenticated and has not timed out.
+     * 
+     * @const string
+     * 
+     */
+    const VALID = 'VALID';
+    
+    /**
+     * 
+     * The user attempted authentication but failed.
+     * 
+     * @const string
+     * 
+     */
+    const WRONG = 'WRONG';
+    
+    /**
+     * 
      * User-supplied configuration values.
      * 
      * Keys are ...

@@ -247,13 +247,14 @@ class Solar
             Solar_Registry::set($name, $spec, $config);
         }
         
-        // Solar itself needs these objects registered
+        // Solar itself needs these objects registered ...
         $name_class = array(
             'locale'   => 'Solar_Locale',
             'request'  => 'Solar_Request',
             'response' => 'Solar_Http_Response',
         );
         
+        // ... but only if not already registered by the user.
         foreach ($name_class as $name => $class) {
             if (! Solar_Registry::exists($name)) {
                 Solar_Registry::set($name, $class);

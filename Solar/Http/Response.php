@@ -352,7 +352,6 @@ class Solar_Http_Response extends Solar_Base
         return $this->content;
     }
     
-    
     /**
      * 
      * Sets a cookie value in $this->_cookies; will be sent to the client at
@@ -438,6 +437,113 @@ class Solar_Http_Response extends Solar_Base
     {
         $this->_sendHeaders();
         echo $this->content;
+    }
+    
+    /**
+     * 
+     * Issues an immediate "Location" redirect.  Use instead of display()
+     * to perform a redirect.  You should die() or exit() after calling this.
+     * 
+     * @param Solar_Uri_Action|string $spec The URI to redirect to.
+     * 
+     * @param int|string $code The HTTP status code to redirect with; default
+     * is '302 Found'.
+     * 
+     * @return void
+     * 
+     */
+    public function redirect($href, $code = '302')
+    {
+        if ($spec instanceof Solar_Uri_Action) {
+            $href = $spec->get(true);
+        } elseif (strpos($spec, '://') !== false) {
+            // external link, protect against header injections
+            $href = str_replace(array("\r", "\n"), '', $spec);
+        } else {
+            $uri = Solar::factory('Solar_Uri_Action');
+            $href = $uri->quick($spec, true);
+        }
+        
+        // kill off all output buffers
+        while(@ob_end_clean());
+        
+        // save the session
+        session_write_close();
+        
+        // make sure there's actually an href
+        $href = trim($href);
+        if (! $href) {
+            throw $this->_exception('ERR_REDIRECT_FAILED', array(
+                'href' => $href,
+            ));
+        }
+        
+        // set headers and send the response directly
+        $this->setHeader('Location', $href);
+        
+        // clear the response body
+        $this->_response->content = null;
+        
+        // done!
+        $this->display();
+    }
+    
+    /**
+     * 
+     * Redirects to another page and action after disabling HTTP caching.
+     * This effectively implements the "POST-Redirect-GET" pattern.
+     * 
+     * The _redirect() method is often called after a successful POST
+     * operation, to show a "success" or "edit" page. In such cases, clicking
+     * clicking "back" or "reload" will generate a warning in the
+     * browser allowing for a possible re-POST if the user clicks OK.
+     * Typically this is not what you want.
+     * 
+     * In those cases, use _redirectNoCache() to turn off HTTP caching, so
+     * that the re-POST warning does not occur.
+     * 
+     * This method sends the following headers before setting Location:
+     * 
+     * {{code: php
+     *     header("Pragma: no-cache");
+     *     header("Cache-Control: no-store, no-cache, must-revalidate");
+     *     header("Cache-Control: post-check=0, pre-check=0", false);
+     *     header("Expires: 1");
+     * }}
+     * 
+     * @param Solar_Uri_Action|string $spec The URI to redirect to.
+     * 
+     * @param int|string $code The HTTP status code to redirect with; default
+     * is '303 See Other'.
+     * 
+     * @return void
+     * 
+     * @see <http://www.theserverside.com/tt/articles/article.tss?l=RedirectAfterPost>
+     * 
+     */
+    public function redirectNoCache($href, $code = '303')
+    {
+        // reset pragma header
+        $this->setHeader('Pragma', 'no-cache');
+        
+        // reset cache-control
+        $this->setHeader(
+            'Cache-Control',
+            'no-store, no-cache, must-revalidate'
+        );
+        
+        // append cache-control
+        $this->setHeader(
+            'Cache-Control',
+            'post-check=0, pre-check=0',
+            false
+        );
+        
+        // force immediate expiration
+        $this->setHeader('Expires', 1);
+        
+        // continue with redirection
+        return $this->redirect($spec);
     }
     
     /**

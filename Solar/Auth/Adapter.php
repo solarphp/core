@@ -395,13 +395,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $method = strtolower($this->_config['source']);
         $href = $this->_request->$method($this->_config['source_redirect']);
         if ($href) {
-            // protect against header injection
-            $href = str_replace(array("\r", "\n"), '', (string) $href);
-            // commit any session values
-            session_write_close();
-            // redirect; note that this terminates all further processing.
-            header("Location: $href");
-            exit();
+            $response = Solar_Registry::get('response');
+            $response->redirectNoCache($href);
+            exit(0);
         }
     }
     

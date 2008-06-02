@@ -2330,12 +2330,16 @@ abstract class Solar_Sql_Model extends Solar_Base
         if (empty($this->_foreign_col)) {
             if (! $this->_inherit_model) {
                 // not inherited
-                $this->_foreign_col = strtolower($this->_model_name)
+                $inflect = Solar_Registry::get('inflect');
+                $prefix = $inflect->toSingular($this->_model_name);
+                $this->_foreign_col = strtolower($prefix)
                                      . '_' . $this->_primary_col;
             } else {
                 // inherited, can't just use the model name as a column name.
                 // need to find base model foreign_col value.
-                $base = Solar::factory($this->_inherit_base, array('sql' => $this->_sql));
+                $base = Solar::factory($this->_inherit_base, array(
+                    'sql' => $this->_sql
+                ));
                 $this->_foreign_col = $base->foreign_col;
                 unset($base);
             }

@@ -247,8 +247,9 @@ class Solar
             Solar_Registry::set($name, $spec, $config);
         }
         
-        // Solar itself needs these objects registered ...
+        // Solar itself needs these default objects registered ...
         $name_class = array(
+            'inflect'  => 'Solar_Inflect',
             'locale'   => 'Solar_Locale',
             'request'  => 'Solar_Request',
             'response' => 'Solar_Http_Response',

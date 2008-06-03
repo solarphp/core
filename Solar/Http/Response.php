@@ -482,7 +482,7 @@ class Solar_Http_Response extends Solar_Base
         $this->setHeader('Location', $href);
         
         // clear the response body
-        $this->_response->content = null;
+        $this->content = null;
         
         // done!
         $this->display();

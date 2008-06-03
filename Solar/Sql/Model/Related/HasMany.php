@@ -31,6 +31,15 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
      */
     protected $_fetch_object = 'collection';
     
+    // unlike has-one and belongs-to, assume the related name is plural
+    protected function _setForeignClass($opts)
+    {
+        if (empty($opts['foreign_class'])) {
+            $opts['foreign_class'] = $opts['name'];
+        }
+        parent::_setForeignClass($opts);
+    }
+    
     /**
      * 
      * When the native model is doing a select and an eager-join is requested
@@ -65,13 +74,13 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
             $table = "{$this->foreign_table} AS {$this->foreign_alias}";
             $where = "{$this->through_alias}.{$this->through_foreign_col} = "
                    . "{$this->foreign_alias}.{$this->foreign_col}";
-        
+            
             $select->leftJoin($table, $where);
-        
+            
             // make the rows distinct, so we only get one row regardless of
             // the number of related rows (since we're not selecting cols).
             $select->distinct(true);
-        
+            
             // honor foreign inheritance
             if ($this->foreign_inherit_col) {
                 $select->where(
@@ -146,6 +155,23 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
     protected function _setType()
     {
         $this->type = 'has_many';
+    }
+    
+    protected function _fixForeignKey(&$opts)
+    {
+        if (empty($opts['through'])) {
+            // has-many, not through anything
+            $prefix = $this->_inflect->toSingular(
+                $this->_native_model->table_name
+            );
+        
+            $column = $this->_native_model->primary_col;
+        
+            $opts['foreign_key'] = "{$prefix}_{$column}";
+        } else {
+            // has-many through
+            $opts['foreign_key'] = $this->_foreign_model->primary_col;
+        }
     }
     
     /**
@@ -262,6 +288,7 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
             empty($opts['through_foreign_col']) &&
             ! empty($opts['through_key'])) {
             // pre-define through_foreign_col
+            $this->through_key = $opts['through_key'];
             $opts['through_foreign_col'] = $opts['through_key'];
         }
         

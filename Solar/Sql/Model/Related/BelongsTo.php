@@ -54,6 +54,17 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related
         $this->type = 'belongs_to';
     }
     
+    protected function _fixForeignKey(&$opts)
+    {
+        $prefix = $this->_inflect->toSingular(
+            $this->_foreign_model->table_name
+        );
+        
+        $column = $this->_foreign_model->primary_col;
+        
+        $opts['foreign_key'] = "{$prefix}_{$column}";
+    }
+    
     /**
      * 
      * Fixes the related column names in the user-defined options **in place**.

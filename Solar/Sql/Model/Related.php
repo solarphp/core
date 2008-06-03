@@ -314,6 +314,14 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     protected $_fetch_object = 'record';
     
+    protected $_inflect;
+    
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+        $this->_inflect = Solar_Registry::get('inflect');
+    }
+    
     /**
      * 
      * Sets the native (origin) model instance.
@@ -375,6 +383,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     {
         $this->name = $opts['name'];
         $this->_setType();
+        $this->_setForeignClass($opts);
         $this->_setForeignModel($opts);
         $this->_setCols($opts);
         $this->_setSelect($opts);
@@ -382,14 +391,35 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         // if the user has specified *neither* a foreign_col *nor* a native_col,
         // but *has* specified a foreign_key, use the foreign_key to define 
         // the foreign_col or native col (depending on relation type). 
-        if (empty($opts['native_col']) &&
-            empty($opts['foreign_col']) &&
-            ! empty($opts['foreign_key'])) {
-            // redefine based on the "virtual" foreign_key value
+        if (empty($opts['native_col']) && empty($opts['foreign_col'])) {
+            
+            // if a "virtual" foreign_key value is not set, define one
+            if (empty($opts['foreign_key'])) {
+                $this->_fixForeignKey($opts);
+            }
+            
+            // retaing the foreign key
+            $this->foreign_key = $opts['foreign_key'];
+            
+            // now set the related column based on the foreign_key value
             $this->_fixRelatedCol($opts);
         }
         
         $this->_setRelated($opts);
+    }
+    
+    public function dump($var = null, $label = null)
+    {
+        if ($var) {
+            return parent::dump($var, $label);
+        }
+        
+        $clone = clone($this);
+        unset($clone->_config);
+        unset($clone->_native_model);
+        unset($clone->_foreign_model);
+        unset($clone->_inflect);
+        return parent::dump($clone, $label);
     }
     
     /**
@@ -663,6 +693,22 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $select->multiWhere($this->where);
     }
     
+    // make sure we have at least a base class name.  assume the related name
+    // is singular.
+    protected function _setForeignClass($opts)
+    {
+        if (empty($opts['foreign_class'])) {
+            // no class given.  change 'foo_bar' to 'FooBar' ...
+            $class = $this->_inflect->underToStudly($opts['name']);
+            // ... then use the plural form of the name.
+            $this->foreign_class = $this->_inflect->toPlural($class);
+        } else {
+            $this->foreign_class = $opts['foreign_class'];
+        }
+    }
+    
+    abstract protected function _fixForeignKey(&$opts);
+    
     /**
      * 
      * Sets the foreign model instance based on user-defined relationship
@@ -675,13 +721,6 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     protected function _setForeignModel($opts)
     {
-        // make sure we have at least a base class name
-        if (empty($opts['foreign_class'])) {
-            $this->foreign_class = $opts['name'];
-        } else {
-            $this->foreign_class = $opts['foreign_class'];
-        }
-        
         // can we load a related model class from the hierarchy stack?
         $class = $this->_native_model->stack->load($this->foreign_class, false);
         
@@ -740,7 +779,6 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         // set the foreign alias based on the relationship name
         $this->foreign_alias = $opts['name'];
     }
-    
     
     /**
      * 

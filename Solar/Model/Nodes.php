@@ -150,21 +150,12 @@ class Solar_Model_Nodes extends Solar_Model
         /**
          * Relationships.
          */
-        $this->_belongsTo('area', array(
-            'foreign_class' => 'areas',
-            'foreign_key'   => 'area_id',
-            'eager'         => false,
-        ));
+        $this->_belongsTo('area');
         
-        $this->_hasMany('taggings', array(
-            'foreign_class' => 'taggings',
-            'foreign_key'   => 'node_id',
-        ));
+        $this->_hasMany('taggings');
         
         $this->_hasMany('tags', array(
-            'foreign_class' => 'tags',
-            'through'       => 'taggings',
-            'through_key'   => 'tag_id',
+            'through' => 'taggings',
         ));
     }
     

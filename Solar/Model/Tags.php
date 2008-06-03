@@ -60,15 +60,10 @@ class Solar_Model_Tags extends Solar_Model
         /**
          * Relationships.
          */
-        $this->_hasMany('taggings', array(
-            'foreign_class' => 'taggings',
-            'foreign_key'   => 'tag_id',
-        ));
+        $this->_hasMany('taggings');
         
         $this->_hasMany('nodes', array(
-            'foreign_class' => 'nodes',
-            'through'       => 'taggings',
-            'through_key'   => 'node_id',
+            'through' => 'taggings',
         ));
     }
     

@@ -75,7 +75,7 @@ class Solar_Model_Areas extends Solar_Model
          * Relationships.
          */
         $this->_hasMany('nodes', array(
-            'foreign_class' => 'nodes',
+            // use a non-standard foreign key
             'foreign_key'   => 'parent_id',
         ));
         

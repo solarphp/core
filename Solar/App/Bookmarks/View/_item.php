@@ -15,7 +15,7 @@
  * 
  * @version $Id$
  * 
- * @var Solar_Model_Nodes_Bookmarks_Record $item
+ * @var Solar_Model_Bookmarks_Record $item
  * 
  */
 ?>

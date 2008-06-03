@@ -179,7 +179,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
      * 
      * Bookmarks model.
      * 
-     * @var Solar_Model_Nodes_Bookmarks
+     * @var Solar_Model_Bookmarks
      * 
      */
     protected $_bookmarks;
@@ -226,7 +226,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         $this->user = Solar_Registry::get('user');
         
         // keep a bookmarks model
-        $this->_bookmarks = Solar::factory('Solar_Model_Nodes_Bookmarks');
+        $this->_bookmarks = Solar::factory('Solar_Model_Bookmarks');
         
         // keep a tags model
         $this->_tags = Solar::factory('Solar_Model_Tags');

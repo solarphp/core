@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Model_Nodes_Bookmarks extends Solar_Model_Nodes
+class Solar_Model_Bookmarks extends Solar_Model_Nodes
 {
     /**
      * 

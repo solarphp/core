@@ -452,7 +452,7 @@ class Solar_Http_Response extends Solar_Base
      * @return void
      * 
      */
-    public function redirect($href, $code = '302')
+    public function redirect($spec, $code = '302')
     {
         if ($spec instanceof Solar_Uri_Action) {
             $href = $spec->get(true);
@@ -521,7 +521,7 @@ class Solar_Http_Response extends Solar_Base
      * @see <http://www.theserverside.com/tt/articles/article.tss?l=RedirectAfterPost>
      * 
      */
-    public function redirectNoCache($href, $code = '303')
+    public function redirectNoCache($spec, $code = '303')
     {
         // reset pragma header
         $this->setHeader('Pragma', 'no-cache');
@@ -543,7 +543,7 @@ class Solar_Http_Response extends Solar_Base
         $this->setHeader('Expires', 1);
         
         // continue with redirection
-        return $this->redirect($spec);
+        return $this->redirect($spec, $code);
     }
     
     /**

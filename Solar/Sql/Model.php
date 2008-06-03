@@ -442,6 +442,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_paging = 10;
     
+    protected $_inflect;
+    
     // -----------------------------------------------------------------
     //
     // Constructor and magic methods
@@ -459,6 +461,9 @@ abstract class Solar_Sql_Model extends Solar_Base
     {
         // main construction
         parent::__construct($config);
+        
+        // inflection reference
+        $this->_inflect = Solar_Registry::get('inflect');
         
         // our class name so that we don't call get_class() all the time
         $this->_class = get_class($this);
@@ -642,8 +647,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         $where = array();
         foreach ($list as $key => $col) {
             // convert from ColName to col_name
-            $col = preg_replace('/([a-z])([A-Z])/', '$1_$2', $col);
-            $col = strtolower($col);
+            $col = strtolower(
+                $this->_inflect->camelToUnder($col)
+            );
             $where["{$this->_model_name}.$col = ?"] = $params[$key];
         }
         
@@ -2092,41 +2098,51 @@ abstract class Solar_Sql_Model extends Solar_Base
          * Pre-set the value of $_inherit_model.  Will be modified one
          * more time in _fixTableCols().
          */
-        // find the closest parent called *_Model.  we do this so that
+        // find the closest base called *_Model.  we do this so that
         // we can honor the top-level table name with inherited models.
         // *do not* use the class stack, as Solar_Sql_Model has been
         // removed from it.
+        $base_class = null;
+        $base_name  = null;
         $parents = Solar::parents($this->_class, true);
         foreach ($parents as $key => $val) {
             if (substr($val, -6) == '_Model') {
+                // $key is now the value of the closest "_Model" class. -1 to
+                // get the first class below that (e.g., *_Model_Nodes).
+                // $base_class is then the class name that represents the
+                // base of the model-inheritance hierarchy (which may not be
+                // the immediate base in some cases).
+                $base_class = $parents[$key - 1];
+                
+                // the base model name (e.g., Nodes).
+                $base_name = substr($base_class, strlen($val) + 1);
                 break;
             }
         }
         
-        // $key is now the value of the closest "_Model" class.
-        // -1 to get the first class below that (e.g., *_Model_Nodes).
-        // $parent is then the parent class name that represents the base of
-        // the model-inheritance hierarchy (which may not be the immediate
-        // parent in some cases).
-        $parent = $parents[$key - 1];
-        
-        // compare parent class name to the current class name.
-        // if it has an undersore after the parent class name, this class
-        // is considered to be an inheritance model.
-        $len = strlen($parent) + 1;
-        if (substr($this->_class, 0, $len) == "{$parent}_") {
-            $this->_inherit_model = substr($this->_class, $len);
-            $this->_inherit_base = $parent;
+        // find the current model name (the part after "*_Model_")
+        $pos = strrpos($this->_class, '_Model_');
+        if ($pos !== false) {
+            $curr_name = substr($this->_class, $pos + 7);
+        } else {
+            $curr_name = $this->_class;
         }
         
-        // get the part after the last underscore in the parent class name.
-        // e.g., "Solar_Model_Nodes" => "Nodes".  If no underscores, use the
-        // parent class name as-is.
-        $pos = strrpos($parent, '_');
-        if ($pos === false) {
-            $table = $parent;
-        } else {
-            $table = substr($parent, $pos + 1);
+        // compare base model name to the current model name.
+        // if they are different, consider this class an inherited one.
+        if ($curr_name != $base_name) {
+            
+            // Solar_Model_Bookmarks and Solar_Model_Bookmarks
+            // both result in "bookmarks".
+            $len = strlen($base_name);
+            if (substr($curr_name, 0, $len + 1) == "{$base_name}_") {
+                $this->_inherit_model = substr($curr_name, $len + 1);
+            } else {
+                $this->_inherit_model = $curr_name;
+            }
+            
+            // set the base-class for inheritance
+            $this->_inherit_base = $base_class;
         }
         
         /**
@@ -2134,12 +2150,11 @@ abstract class Solar_Sql_Model extends Solar_Base
          * user-specified.
          */
         if (empty($this->_table_name)) {
-            // auto-defined table name. change TableName to table_name.
-            // this is our one concession on inflecting names, because if the
-            // class was called Table_Name, it would set the inheritance
-            // model improperly.
-            $table = preg_replace('/([a-z])([A-Z])/', '$1_$2', $table);
-            $this->_table_name = strtolower($table);
+            // auto-define the table name.
+            // change TableName to table_name.
+            $this->_table_name = strtolower(
+                $this->_inflect->camelToUnder($base_name)
+            );
         }
     }
     
@@ -2250,7 +2265,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // convert FooBar to foo_bar
             $this->_model_name = strtolower(
-                preg_replace('/([a-z])([A-Z])/', '$1_$2', $this->_model_name)
+                $this->_inflect->camelToUnder($this->_model_name)
             );
         }
     }
@@ -2330,8 +2345,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         if (empty($this->_foreign_col)) {
             if (! $this->_inherit_model) {
                 // not inherited
-                $inflect = Solar_Registry::get('inflect');
-                $prefix = $inflect->toSingular($this->_model_name);
+                $prefix = $this->_inflect->toSingular($this->_model_name);
                 $this->_foreign_col = strtolower($prefix)
                                      . '_' . $this->_primary_col;
             } else {

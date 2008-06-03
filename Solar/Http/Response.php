@@ -478,13 +478,13 @@ class Solar_Http_Response extends Solar_Base
             ));
         }
         
-        // set headers and send the response directly
+        // set the redirect location 
         $this->setHeader('Location', $href);
         
         // clear the response body
         $this->content = null;
         
-        // done!
+        // send the response directly -- done.
         $this->display();
     }
     

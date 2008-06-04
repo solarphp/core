@@ -1,0 +1,14 @@
+SQL-level caching
+
+{:prefix}/
+    table_list.entry
+    table/
+        {:name}/
+            cols
+            cols.serial
+    model/
+        data_version
+        data/
+            {:version}/
+                {:key}
+                {:key}.serial

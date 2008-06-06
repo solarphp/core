@@ -346,6 +346,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 ));
                 $this->_data[$name] = $model->newRecord($load[$name]);
                 
+                // free the model so we don't get memory leaks
+                $model->free();
+                
             } elseif ($type == 'has_many' && ! empty($load[$name])) {
                 
                 // create a collection object from the related model
@@ -353,6 +356,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
                     'sql' => $this->_model->sql
                 ));
                 $this->_data[$name] = $model->newCollection($load[$name]);
+                
+                // free the model so we don't get memory leaks
+                $model->free();
                 
             } elseif (! array_key_exists($name, $this->_data)) {
                 // set a placeholder for lazy-loading in __get()

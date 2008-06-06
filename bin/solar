@@ -40,7 +40,9 @@ switch (true) {
 // are we in a "solar system" installation? recognize this from the standard
 // directory structure and the physical file location within it.
 case (substr(__FILE__, -23) == '/source/solar/bin/solar'):
-    $include = substr(__FILE__, 0, -23) . '/include';
+    $include = '.' . PATH_SEPARATOR
+             . '..' . PATH_SEPARATOR
+             . substr(__FILE__, 0, -23) . '/include';
     break;
     
 // use a vendor-specific include path?

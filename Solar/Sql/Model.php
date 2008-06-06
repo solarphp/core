@@ -2115,7 +2115,15 @@ abstract class Solar_Sql_Model extends Solar_Base
                 $base_class = $parents[$key - 1];
                 
                 // the base model name (e.g., Nodes).
-                $base_name = substr($base_class, strlen($val) + 1);
+                $pos = strrpos($base_class, '_Model_');
+                if ($pos !== false) {
+                    // the part after "*_Model_"
+                    $base_name = substr($base_class, $pos + 7);
+                } else {
+                    // the whole class name
+                    $base_name = $base_class;
+                }
+                
                 break;
             }
         }
@@ -2132,7 +2140,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // if they are different, consider this class an inherited one.
         if ($curr_name != $base_name) {
             
-            // Solar_Model_Bookmarks and Solar_Model_Bookmarks
+            // Solar_Model_Bookmarks and Solar_Model_Nodes_Bookmarks
             // both result in "bookmarks".
             $len = strlen($base_name);
             if (substr($curr_name, 0, $len + 1) == "{$base_name}_") {

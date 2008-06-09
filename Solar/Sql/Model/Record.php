@@ -904,7 +904,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
     public function refresh($status = null)
     {
         $primary = $this->_model->primary_col;
-        $result  = $this->_model->fetch($this->$primary);
+        $id = $this->$primary;
+        if (! $id) {
+            throw $this->_exception("ERR_CANNOT_REFRESH_BLANK_ID");
+        }
+        
+        $result = $this->_model->fetch($id);
         foreach ($this->_model->table_cols as $col => $info) {
             $this->$col = $result->$col;
         }

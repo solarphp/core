@@ -567,10 +567,12 @@ class Solar_App_Bookmarks extends Solar_App_Base
         ));
         
         // assign everything else for the view
-        $total = $this->list->getPagerInfo();
+        if ($this->list) {
+            $total = $this->list->getPagerInfo();
+            $this->count = $total['count'];
+            $this->pages = $total['pages'];
+        }
         
-        $this->count         = $total['count'];
-        $this->pages         = $total['pages'];
         $this->order         = $this->_query('order');
         $this->page          = $params['page'];
         $this->owner_handle  = null; // requested owner_handle

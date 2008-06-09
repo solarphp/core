@@ -89,7 +89,6 @@
         unset($uri->query['page']);
         $tmp = array();
         foreach ($this->tags_in_use as $tag) {
-            $count = 'x';
             $uri->setPath("$action/{$tag->name}");
             $tmp[] = "<li>" . $this->action($uri, $tag->name) . " ({$tag->count})</li>";
         }

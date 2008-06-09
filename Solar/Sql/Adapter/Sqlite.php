@@ -80,6 +80,24 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     
     /**
      * 
+     * The quote character before an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_prefix = '"';
+    
+    /**
+     * 
+     * The quote character after an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_suffix = '"';
+    
+    /**
+     * 
      * Creates a PDO-style DSN.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
@@ -94,6 +112,16 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             $dsn[] = $this->_config['name'];
         }
         return $this->_pdo_type . ':' . implode(';', $dsn);
+    }
+    
+    protected function _postConnect()
+    {
+        parent::_postConnect();
+        $this->query("PRAGMA encoding = 'UTF-8';");
+        
+        // // these don't actually work in 3.x yet :-/
+        // $this->query("PRAGMA short_column_names = 1;");
+        // $this->query("PRAGMA full_column_names = 0;");
     }
     
     /**
@@ -143,16 +171,19 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             array('table' => $table)
         );
         
-        // loop through the result rows; each describes a column.
+        // get the table column info
+        $table = $this->quoteName($table);
         $cols = $this->fetchAll("PRAGMA TABLE_INFO($table)");
+        
+        // loop through the result rows; each describes a column.
         foreach ($cols as $val) {
             $name = $val['name'];
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             
             // find autoincrement column in CREATE TABLE sql.
-            // non-word char, followed by the col name, followed by "INTEGER
+            // non-word char, followed by "colname"", followed by "INTEGER
             // PRIMARY KEY AUTOINCREMENT", followed by non-word char
-            $find = "/\W$name\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT\W/Ui";
+            $find = "/\W\"$name\"\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT\W/Ui";
             $autoinc = preg_match(
                 $find,
                 $create_table,
@@ -239,6 +270,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     protected function _createSequence($name, $start = 1)
     {
         $start -= 1;
+        $name = $this->quoteName($name);
         $this->query("CREATE TABLE $name (id INTEGER PRIMARY KEY)");
         return $this->query("INSERT INTO $name (id) VALUES ($start)");
     }
@@ -254,6 +286,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      */
     protected function _dropSequence($name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP TABLE IF EXISTS $name");
     }
     
@@ -270,6 +303,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      */
     protected function _dropIndex($table, $name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP INDEX $name");
     }
     
@@ -305,7 +339,8 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      */
     protected function _nextSequence($name)
     {
-        $cmd = "INSERT INTO $name (id) VALUES (NULL)";
+        $cmd = "INSERT INTO " . $this->quoteName($name)
+             . " (id) VALUES (NULL)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.

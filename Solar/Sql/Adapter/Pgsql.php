@@ -83,6 +83,24 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
     
     /**
      * 
+     * The quote character before an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_prefix = '"';
+    
+    /**
+     * 
+     * The quote character after an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_suffix = '"';
+    
+    /**
+     * 
      * Returns a list of all tables in the database.
      * 
      * @return array All table names in the database.
@@ -236,6 +254,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
         // postgres index names are for the entire database,
         // not for a single table.
         // http://www.postgresql.org/docs/7.4/interactive/sql-dropindex.html
+        $name = $this->quoteName($name);
         return $this->query("DROP INDEX $name");
     }
     
@@ -252,6 +271,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      */
     protected function _createSequence($name, $start = 1)
     {
+        $name = $this->quoteName($name);
         return $this->query("CREATE SEQUENCE $name START $start");
     }
     
@@ -266,6 +286,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      */
     protected function _dropSequence($name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP SEQUENCE IF EXISTS $name");
     }
     
@@ -280,7 +301,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
      */
     protected function _nextSequence($name)
     {
-        $cmd = 'SELECT NEXTVAL(' . $this->quote($name) . ')';
+        $cmd = "SELECT NEXTVAL(" . $this->quoteName($name) . ")";
         
         // first, try to increment the sequence number, assuming
         // the table exists.
@@ -319,6 +340,7 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
     {
         $this->connect();
         $name = "{$table}_{$col}_seq";
+        $name = $this->quoteName($name);
         return $this->_pdo->lastInsertId($name);
     }
     

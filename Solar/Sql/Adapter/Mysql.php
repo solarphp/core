@@ -96,6 +96,24 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
     
     /**
      * 
+     * The quote character before an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_prefix = '`';
+    
+    /**
+     * 
+     * The quote character after an entity name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_suffix = '`';
+    
+    /**
+     * 
      * Creates a PDO-style DSN.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
@@ -172,8 +190,10 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
         // | prefs        | longtext     | YES  |     | NULL    |       |
         // +--------------+--------------+------+-----+---------+-------+
      
-        // strip non-word characters to try and prevent SQL injections
+        // strip non-word characters to try and prevent SQL injections,
+        // then quote it to avoid reserved-word issues
         $table = preg_replace('/[^\w]/', '', $table);
+        $table = $this->quoteName($table);
         
         // where the description will be stored
         $descr = array();
@@ -254,6 +274,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
     {
         $stmt = parent::_sqlCreateTable($name, $cols);
         $stmt .= " TYPE=InnoDB"; // for transactions
+        $stmt .= " DEFAULT CHARSET=utf8 COLLATE=utf8_bin"; // for UTF8
         return $stmt;
     }
     
@@ -270,6 +291,8 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
      */
     protected function _dropIndex($table, $name)
     {
+        $table = $this->quoteName($table);
+        $name = $this->quoteName($name);
         return $this->query("DROP INDEX $name ON $table");
     }
     
@@ -287,6 +310,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
     protected function _createSequence($name, $start = 1)
     {
         $start -= 1;
+        $name = $this->quoteName($name);
         $this->query("CREATE TABLE $name (id INT NOT NULL) TYPE=InnoDB");
         return $this->query("INSERT INTO $name (id) VALUES ($start)");
     }
@@ -302,6 +326,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
      */
     protected function _dropSequence($name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP TABLE IF EXISTS $name");
     }
     
@@ -316,7 +341,8 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
      */
     protected function _nextSequence($name)
     {
-        $cmd = "UPDATE $name SET id = LAST_INSERT_ID(id+1)";
+        $cmd = "UPDATE " . $this->quoteName($name)
+             . " SET id = LAST_INSERT_ID(id+1)";
         
         // first, try to increment the sequence number, assuming
         // the table exists.

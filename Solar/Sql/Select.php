@@ -450,6 +450,8 @@ class Solar_Sql_Select extends Solar_Base
             return $this;
         }
         
+        $cond = $this->_sql->quoteNamesIn($cond);
+        
         if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
@@ -484,6 +486,8 @@ class Solar_Sql_Select extends Solar_Base
         if (empty($cond)) {
             return $this;
         }
+        
+        $cond = $this->_sql->quoteNamesIn($cond);
         
         if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
@@ -590,6 +594,8 @@ class Solar_Sql_Select extends Solar_Base
             settype($spec, 'array');
         }
         
+        $spec = $this->_sql->quoteName($spec);
+        
         $this->_parts['group'] = array_merge($this->_parts['group'], $spec);
         return $this;
     }
@@ -629,6 +635,8 @@ class Solar_Sql_Select extends Solar_Base
             return $this;
         }
         
+        $cond = $this->_sql->quoteNamesIn($cond);
+        
         if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
@@ -667,6 +675,8 @@ class Solar_Sql_Select extends Solar_Base
         if ($val !== Solar_Sql_Select::IGNORE) {
             $cond = $this->_sql->quoteInto($cond, $val);
         }
+        
+        $cond = $this->_sql->quoteNamesIn($cond);
         
         if ($this->_parts['having']) {
             $this->_parts['having'][] = "OR $cond";
@@ -768,6 +778,8 @@ class Solar_Sql_Select extends Solar_Base
         } else {
             settype($spec, 'array');
         }
+        
+        $spec = $this->_sql->quoteNamesIn($spec);
         
         // force 'ASC' or 'DESC' on each order spec, default is ASC.
         foreach ($spec as $key => $val) {
@@ -1013,9 +1025,8 @@ class Solar_Sql_Select extends Solar_Base
             // build the from and join parts.  note that we don't
             // build from 'cols' sources, since they are just named
             // columns without reference to a particular from or join.
-            $build = ucfirst($source['type']);
-            if ($build != 'Cols') {
-                $method = "_build$build";
+            if ($source['type'] != 'cols') {
+                $method = "_build" . ucfirst($source['type']);
                 $this->$method(
                     $source['name'],
                     $source['orig'],
@@ -1027,8 +1038,8 @@ class Solar_Sql_Select extends Solar_Base
             // determine a prefix for the columns from this source
             if ($source['type'] == 'select' ||
                 $source['name'] != $source['orig']) {
-                // use the alias name, not the original name, for sub-
-                // selects, and where aliases are explicitly named.
+                // use the alias name, not the original name,
+                // and where aliases are explicitly named.
                 $prefix = $source['name'];
             } else {
                 // use the original name
@@ -1044,16 +1055,37 @@ class Solar_Sql_Select extends Solar_Base
                 // function name before it.
                 $parens = strpos($col, '(');
                 
-                // choose our column-name deconfliction strategy
-                if ($prefix == '' || $parens || $count_sources == 1) {
-                    // - if no prefix, that's a no-brainer.
-                    // - if there are parens in the name, it's a function.
-                    // - if there's only one source, deconfliction not needed.
-                    $this->_parts['cols'][] = $col;
+                // choose our column-name deconfliction strategy.
+                // catches any existing AS in the name.
+                if ($parens) {
+                    // if there are parens in the name, it's a function.
+                    $tmp = $this->_sql->quoteNamesIn($col);
+                } elseif ($prefix == '' || $count_sources == 1) {
+                    // if no prefix, that's a no-brainer.
+                    // if there's only one source, deconfliction not needed.
+                    $tmp = $this->_sql->quoteName($col);
                 } else {
-                    // auto deconfliction
-                    $this->_parts['cols'][] = "{$prefix}.$col";
+                    // auto deconfliction.
+                    $tmp = $this->_sql->quoteName("$prefix.$col");
                 }
+                
+                // force an "AS" if not already there, but only if the source
+                // is not a manually-set column name.
+                if ($source['type'] != 'cols') {
+                    // force an AS if not already there. this is because
+                    // sqlite returns col names as '"table"."col"' when there
+                    // are 2 or more joins. so let's just standardize on
+                    // always doing it.
+                    // 
+                    //  make sure there's no parens, or we get a bad col name
+                    $pos = strpos($col, ' AS ');
+                    if ($pos === false && ! $parens) {
+                        $tmp .= " AS " . $this->_sql->quoteName($col);
+                    }
+                }
+                
+                // add to the parts
+                $this->_parts['cols'][] = $tmp;
             }
         }
         
@@ -1537,9 +1569,11 @@ class Solar_Sql_Select extends Solar_Base
     protected function _buildFrom($name, $orig)
     {
         if ($name == $orig) {
-            $this->_parts['from'][] = $name;
+            $this->_parts['from'][] = $this->_sql->quoteName($name);
         } else {
-            $this->_parts['from'][] = "$orig $name";
+            $this->_parts['from'][] = $this->_sql->quoteName($orig)
+                                    . ' '
+                                    . $this->_sql->quoteName($name);
         }
     }
     
@@ -1563,13 +1597,19 @@ class Solar_Sql_Select extends Solar_Base
         $tmp = array(
             'type' => $join,
             'name' => null,
-            'cond' => $cond,
+            'cond' => $this->_sql->quoteNamesIn($cond),
         );
         
         if ($name == $orig) {
-            $tmp['name'] = $name;
+            $tmp['name'] = $this->_sql->quoteName($name);
+        } elseif ($orig[0] == '(') {
+            $tmp['name'] = $orig
+                         . ' '
+                         . $this->_sql->quoteName($name);
         } else {
-            $tmp['name'] = "$orig $name";
+            $tmp['name'] = $this->_sql->quoteName($orig)
+                         . ' '
+                         . $this->_sql->quoteName($name);
         }
         
         $this->_parts['join'][] = $tmp;
@@ -1588,6 +1628,6 @@ class Solar_Sql_Select extends Solar_Base
      */
     protected function _buildSelect($name, $orig)
     {
-        $this->_parts['from'][] = "($orig) $name";
+        $this->_parts['from'][] = "($orig) " . $this->_sql->quoteName($name);
     }
 }

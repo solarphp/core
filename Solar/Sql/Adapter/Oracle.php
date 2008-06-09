@@ -303,6 +303,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     protected function _createSequence($name, $start = 1)
     {
+        $name = $this->quoteName($name);
         return $this->query("CREATE SEQUENCE $name START WITH $start");
     }
     
@@ -317,6 +318,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     protected function _dropSequence($name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP SEQUENCE IF EXISTS $name");
     }
     
@@ -332,19 +334,22 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     protected function _nextSequence($name)
     {
         try {
-            $result = $this->query("SELECT $name.NEXTVAL FROM DUAL");
+            $cmd = "SELECT " . $this->quoteName($name)
+                 . ".NEXTVAL FROM DUAL";
+            
+            $result = $this->query($cmd);
         } catch (Exception $e) {
             // error when trying to select the nextValue from the sequence.
-            // assume we need to create it, then
-            // try to increment again.
+            // assume we need to create it, then try to increment again.
             $this->_createSequence($name);
-            $result = $this->query("SELECT $name.NEXTVAL FROM DUAL");
+            $result = $this->query($cmd);
         }
         return $result;
     }
     
     protected function _dropIndex($table, $name)
     {
+        $name = $this->quoteName($name);
         return $this->query("DROP INDEX IF EXISTS $name");
     }
     

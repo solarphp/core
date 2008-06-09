@@ -246,6 +246,24 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * The quote character before an identifier name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_prefix = null;
+    
+    /**
+     * 
+     * The quote character after an identifier name (table, index, etc).
+     * 
+     * @var string
+     * 
+     */
+    protected $_ident_quote_suffix = null;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-provided configuration values.
@@ -732,16 +750,23 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function insert($table, $data)
     {
         // the base statement
+        $table = $this->quoteName($table);
         $stmt = "INSERT INTO $table ";
         
-        // field names come from the array keys
-        $fields = array_keys($data);
+        // col names come from the array keys
+        $keys = array_keys($data);
         
-        // add field names themselves
-        $stmt .= '(' . implode(', ', $fields) . ') ';
+        // quote the col names
+        $cols = array();
+        foreach ($keys as $key) {
+            $cols[] = $this->quoteName($key);
+        }
         
-        // add value placeholders
-        $stmt .= 'VALUES (:' . implode(', :', $fields) . ')';
+        // add quoted col names
+        $stmt .= '(' . implode(', ', $cols) . ') ';
+        
+        // add value placeholders (use unquoted key names)
+        $stmt .= 'VALUES (:' . implode(', :', $keys) . ')';
         
         // execute the statement
         $result = $this->query($stmt, $data);
@@ -768,18 +793,20 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function update($table, $data, $where)
     {
         // the base statement
+        $table = $this->quoteName($table);
         $stmt = "UPDATE $table SET ";
         
         // add "col = :col" pairs to the statement
         $tmp = array();
         foreach ($data as $col => $val) {
-            $tmp[] = "$col = :$col";
+            $tmp[] = $this->quoteName($col) . " = :$col";
         }
         $stmt .= implode(', ', $tmp);
         
         // add the where clause
         if ($where) {
-            $where = $this->quoteMulti($where, ' AND ' );
+            $where = $this->quoteMulti($where, ' AND ');
+            $where = $this->quoteNamesIn($where);
             $stmt .= " WHERE $where";
         }
         
@@ -836,7 +863,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     {
         if ($where) {
             $where = $this->quoteMulti($where, ' AND ');
+            $where = $this->quoteNamesIn($where);
         }
+        
+        $table = $this->quoteName($table);
         $result = $this->query("DELETE FROM $table WHERE $where");
         return $result->rowCount();
     }
@@ -1313,6 +1343,211 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return $result;
     }
     
+    /**
+     * 
+     * Quotes a single identifier name (table, table alias, table column, 
+     * index, sequence).  Ignores empty values.
+     * 
+     * If the name contains ' AS ', this method will separately quote the
+     * parts before and after the ' AS '.
+     * 
+     * If the name contains a space, this method will separately quote the
+     * parts before and after the space.
+     * 
+     * If the name contains a dot, this method will separately quote the
+     * parts before and after the dot.
+     * 
+     * @param string|array $spec The identifier name to quote.  If an array,
+     * quotes each element in the array as an identifier name.
+     * 
+     * @return string|array The quoted identifier name (or array of names).
+     * 
+     * @see _quoteName()
+     * 
+     */
+    public function quoteName($spec)
+    {
+        if (is_array($spec)) {
+            foreach ($spec as $key => $val) {
+                $spec[$key] = $this->quoteName($val);
+            }
+            return $spec;
+        }
+        
+        // no extraneous spaces
+        $spec = trim($spec);
+        
+        // `original` AS `alias`
+        $pos = strrpos($spec, ' AS ');
+        if ($pos) {
+            // recurse to allow for "table.col"
+            $orig  = $this->quoteName(substr($spec, 0, $pos));
+            // use as-is
+            $alias = $this->_quoteName(substr($spec, $pos + 4));
+            return "$orig AS $alias";
+        }
+        
+        // `original` `alias`
+        $pos = strrpos($spec, ' ');
+        if ($pos) {
+            // recurse to allow for "table.col"
+            $orig = $this->quoteName(substr($spec, 0, $pos));
+            // use as-is
+            $alias = $this->_quoteName(substr($spec, $pos + 1));
+            return "$orig $alias";
+        }
+        
+        // `table`.`column`
+        $pos = strrpos($spec, '.');
+        if ($pos) {
+            // use both as-is
+            $table = $this->_quoteName(substr($spec, 0, $pos));
+            $col   = $this->_quoteName(substr($spec, $pos + 1));
+            return "$table.$col";
+        }
+        
+        // `name`
+        return $this->_quoteName($spec);
+    }
+    
+    /**
+     * 
+     * Quotes an identifier name (table, index, etc). Ignores empty values.
+     * 
+     * @param string $name The identifier name to quote.
+     * 
+     * @return string The quoted identifier name.
+     * 
+     * @see quoteName()
+     * 
+     */
+    protected function _quoteName($name)
+    {
+        $name = trim($name);
+        if ($name) {
+            return $this->_ident_quote_prefix
+                 . $name
+                 . $this->_ident_quote_suffix;
+        }
+    }
+    
+    /**
+     * 
+     * Quotes all fully-qualified identifier names ("table.col") in a string,
+     * typically an SQL snippet for a SELECT clause.
+     * 
+     * Does not quote identifier names that are string literals (i.e., inside
+     * single or double quotes).
+     * 
+     * Looks for a trailing ' AS alias' and quotes the alias as well.
+     * 
+     * @param string|array $spec The string in which to quote fully-qualified
+     * identifier names to quote.  If an array, quotes names in each element
+     * in the array.
+     * 
+     * @return string|array The string (or array) with names quoted in it.
+     * 
+     * @see _quoteNamesIn()
+     * 
+     */
+    public function quoteNamesIn($spec)
+    {
+        if (is_array($spec)) {
+            foreach ($spec as $key => $val) {
+                $spec[$key] = $this->quoteNamesIn($val);
+            }
+            return $spec;
+        }
+        
+        // single and double quotes
+        $apos = "'";
+        $quot = '"';
+        
+        // look for ', ", \', or \" in the string.
+        // match closing quotes against the same number of opening quotes.
+        $list = preg_split(
+            "/(($apos+|$quot+|\\$apos+|\\$quot+).*?\\2)/",
+            $spec,
+            -1,
+            PREG_SPLIT_DELIM_CAPTURE
+        );
+        
+        // concat the pieces back together, quoting names as we go.
+        $spec = null;
+        $last = count($list) - 1;
+        foreach ($list as $key => $val) {
+            
+            // skip elements 2, 5, 8, 11, etc. as artifacts of the back-
+            // referenced split; these are the trailing/ending quote
+            // portions, and already included in the previous element.
+            // this is the same as every third element from zero.
+            if (($key+1) % 3 == 0) {
+                continue;
+            }
+            
+            // is there an apos or quot anywhere in the part?
+            $is_string = strpos($val, $apos) !== false ||
+                         strpos($val, $quot) !== false;
+            
+            if ($is_string) {
+                // string literal
+                $spec .= $val;
+            } else {
+                // sql language.
+                // look for an AS alias if this is the last element.
+                if ($key == $last) {
+                    $pos = strrpos($val, ' AS ');
+                    if ($pos) {
+                        // quote the alias name directly
+                        $alias = $this->_quoteName(substr($val, $pos + 4));
+                        $val = substr($val, 0, $pos) . " AS $alias";
+                    }
+                }
+                
+                // now quote names in the language.
+                $spec .= $this->_quoteNamesIn($val);
+            }
+        }
+        
+        // done!
+        return $spec;
+    }
+    
+    /**
+     * 
+     * Quotes all fully-qualified identifier names ("table.col") in a string.
+     * 
+     * @param string|array $spec The string in which to quote fully-qualified
+     * identifier names to quote.  If an array, quotes names in  each 
+     * element in the array.
+     * 
+     * @return string|array The string (or array) with names quoted in it.
+     * 
+     * @see quoteNamesIn()
+     * 
+     */
+    protected function _quoteNamesIn($text)
+    {
+        $word = "[a-z_][a-z0-9_]+";
+        
+        $find = "/(\\b)($word)\\.($word)(\\b)/i";
+        
+        $repl = '$1'
+              . $this->_ident_quote_prefix
+              . '$2'
+              . $this->_ident_quote_suffix
+              . '.'
+              . $this->_ident_quote_prefix
+              . '$3'
+              . $this->_ident_quote_suffix
+              . '$4'
+              ;
+              
+        $text = preg_replace($find, $repl, $text);
+        
+        return $text;
+    }
+    
     
     // -----------------------------------------------------------------
     // 
@@ -1575,6 +1810,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // no errors, build a return the CREATE statement
         $cols = implode(",\n\t", $coldef);
+        $table = $this->quoteName($table);
         return "CREATE TABLE $table (\n\t$cols\n)";
     }
     
@@ -1590,6 +1826,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function dropTable($table)
     {
         $this->_cache->deleteAll();
+        $table = $this->quoteName($table);
         return $this->query("DROP TABLE IF EXISTS $table");
     }
     
@@ -1624,6 +1861,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     {
         $this->_cache->deleteAll();
         $coldef = $this->_sqlColdef($name, $info);
+        $table = $this->quoteName($table);
         $stmt = "ALTER TABLE $table ADD COLUMN $coldef";
         return $this->query($stmt);
     }
@@ -1642,6 +1880,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function dropColumn($table, $name)
     {
         $this->_cache->deleteAll();
+        $table = $this->quoteName($table);
         return $this->query("ALTER TABLE $table DROP COLUMN $name");
     }
     
@@ -1673,19 +1912,24 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $this->_checkIdentifier('table', $table);
         $this->_checkIdentifier('index', $name);
         
-        // create a string of column names
-        $cols = implode(', ', (array) $cols);
-        
         // modify the index name as-needed
         $name = $this->_modIndexName($table, $name);
         
-        // create index entry
+        // quote identifiers
+        $name = $this->quoteName($name);
+        $table = $this->quoteName($table);
+        $cols = $this->quoteName($cols);
+        
+        // create a string of column names
+        $cols = implode(', ', (array) $cols);
+        
+        // create index entry statement
         if ($unique) {
-            $cmd = "CREATE UNIQUE INDEX $name ON $table ($cols)";
+            $stmt = "CREATE UNIQUE INDEX $name ON $table ($cols)";
         } else {
-            $cmd = "CREATE INDEX $name ON $table ($cols)";
+            $stmt = "CREATE INDEX $name ON $table ($cols)";
         }
-        return $this->query($cmd);
+        return $this->query($stmt);
     }
     
     
@@ -1945,6 +2189,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         $this->_modAutoincPrimary($coldef, $autoinc, $primary);
         
         // done
+        $name = $this->quoteName($name);
         return "$name $coldef";
     }
     
@@ -1977,23 +2222,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _checkIdentifier($type, $name)
     {
-        // list of reserved words
-        static $reserved;
-        if (! isset($reserved)) {
-            $reserved = Solar::factory('Solar_Sql_Reserved');
-        }
-        
-        // identifier must not be a reserved word
-        if (in_array(strtoupper($name), $reserved->words)) {
-            throw $this->_exception(
-                'ERR_IDENTIFIER_RESERVED',
-                array(
-                    'type' => $type,
-                    'name' => $name,
-                )
-            );
-        }
-        
         // validate identifier length
         $len = strlen($name);
         if ($len < 1 || $len > $this->_maxlen) {

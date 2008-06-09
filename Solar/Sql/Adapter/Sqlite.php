@@ -181,11 +181,13 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             
             // find autoincrement column in CREATE TABLE sql.
-            // non-word char, followed by "colname"", followed by "INTEGER
-            // PRIMARY KEY AUTOINCREMENT", followed by non-word char
-            $find = "/\W\"$name\"\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT\W/Ui";
+            $find = "\\b"           // word border
+                  . "\"?$name\"?"   // '"colname"' (quotes optional),
+                  . "\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT"
+                  . "\\b";          // word border
+                  
             $autoinc = preg_match(
-                $find,
+                "/$find/Ui",
                 $create_table,
                 $matches
             );

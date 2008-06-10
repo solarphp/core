@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class for connecting to SQLite databases.
+ * Class for connecting to SQLite (version 3) databases.
  * 
  * @category Solar
  * 

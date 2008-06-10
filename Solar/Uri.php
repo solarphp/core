@@ -433,9 +433,9 @@ class Solar_Uri extends Solar_Base
         return $uri
              . $this->_config['path']
              . (empty($this->path)           ? '' : $this->_pathEncode($this->path))
-             . (trim($this->format) == ''    ? '' : '.' . urlencode($this->format))
+             . (trim($this->format) === ''   ? '' : '.' . urlencode($this->format))
              . (empty($this->query)          ? '' : '?' . http_build_query($this->query))
-             . (trim($this->fragment) == ''  ? '' : '#' . urlencode($this->fragment));
+             . (trim($this->fragment) === '' ? '' : '#' . urlencode($this->fragment));
     }
     
     /**

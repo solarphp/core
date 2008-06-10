@@ -788,7 +788,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         
         // are we asking for a non-default format?
         // the trim() lets us get a string-zero format.
-        if (trim($this->_format) != '') {
+        if (trim($this->_format) !== '') {
             
             // what formats does the action allow?
             $action_format = $this->_getActionFormat($this->_action);
@@ -815,7 +815,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
         // sure that action default parameters are honored.
         $i = count($this->_info);
         while ($i --) {
-            if (! empty($this->_info[$i])) {
+            // the trim lets us get a string-zero param
+            if (trim($this->_info[$i]) !== '') {
                 // not empty, stop removing blanks
                 break;
             } else {

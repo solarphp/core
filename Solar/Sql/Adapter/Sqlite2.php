@@ -48,4 +48,18 @@ class Solar_Sql_Adapter_Sqlite2 extends Solar_Sql_Adapter_Sqlite
             return $this->query("DROP TABLE $table");
         }
     }
+    
+    /**
+     * 
+     * Drops a sequence.
+     * 
+     * @param string $name The sequence name to drop.
+     * 
+     * @return void
+     * 
+     */
+    protected function _dropSequence($name)
+    {
+        return $this->dropTable($name);
+    }
 }

@@ -24,4 +24,28 @@ class Solar_Sql_Adapter_Sqlite2 extends Solar_Sql_Adapter_Sqlite
      * 
      */
     protected $_pdo_type = 'sqlite2';
+    
+    /**
+     * 
+     * Drops a table from the database, if it exists.
+     * 
+     * @param string $table The table name.
+     * 
+     * @return mixed
+     * 
+     */
+    public function dropTable($table)
+    {
+        // get a fresh list of tables
+        $this->_cache->deleteAll();
+        $list = $this->fetchTableList();
+        
+        // does the table exist?
+        if (in_array($table, $list)) {
+            // kill the cache again, then drop the table
+            $this->_cache->deleteAll();
+            $table = $this->quoteName($table);
+            return $this->query("DROP TABLE $table");
+        }
+    }
 }

@@ -6,22 +6,36 @@
 error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', true);
 ini_set('html_errors', false);
+$argv = empty($_SERVER['argv']) ? array(0 => '') : $_SERVER['argv'];
 
-
-/**
- * Find the "vendor" (top-level class name)
- */
-
-// the command used to invoke this script
-// e.g., '/usr/local/bin/foo'
-$cmd = $_SERVER['argv'][0];
-
-// get the last part of the command.
-// e.g., '/usr/local/bin/foo' => 'foo'
-$path = explode(DIRECTORY_SEPARATOR, $cmd);
+// get the last part of the command used to invoke this script and use as the
+// vendor name.  e.g., './scripts/solar' => 'solar'
+$path = explode(DIRECTORY_SEPARATOR, $argv[0]);
 $vendor = end($path);
 
-// change to a class name prefix set.
+// what is the solar system root, if anywhere?
+$dirs = array(
+    // symlink solar
+    "/source/solar/bin/solar",
+    // symlink vendor
+    "/source/$vendor/bin/$vendor",
+    // copy solar
+    "/scripts/solar",
+    // copy vendor
+    "/scripts/$vendor",
+);
+
+$root = false;
+$file = __FILE__;
+foreach ($dirs as $dir) {
+    $len = -1 * strlen($dir);
+    if (substr($file, $len) == $dir) {
+        $root = substr($file, 0, $len);
+        break;
+    }
+}
+
+// change vendor name to a class name prefix:
 // 'foo' => 'Foo'
 // 'foo-bar' => 'FooBar'
 // 'foo_bar' => 'FooBar'
@@ -29,45 +43,22 @@ $vendor = str_replace(array('-', '_'), ' ', $vendor);
 $vendor = ucwords($vendor);
 $vendor = str_replace(' ', '', $vendor);
 
-
 /**
- * Discover and set the include-path
+ * 
+ * Discover and set the include-path.
+ * 
+ * Use the solar system root include path, fall back to the default path.
+ * 
+ * Override with the value of --include-path, if any.
+ * 
  */
-
-$vendor_key = 'PHP_' . strtoupper($vendor) . '_INCLUDE_PATH';
-switch (true) {
-
-// are we in a "solar system" installation? recognize this from the standard
-// directory structure and the physical file location within it.
-case (substr(__FILE__, -23) == '/source/solar/bin/solar'):
-    $include = '.' . PATH_SEPARATOR
-             . '..' . PATH_SEPARATOR
-             . substr(__FILE__, 0, -23) . '/include';
-    break;
-    
-// use a vendor-specific include path?
-case (! empty($_SERVER[$vendor_key])):
-    $include = $_SERVER[$vendor_key];
-    break;
-    
-// fall back to the solar include path
-case (! empty($_SERVER['PHP_SOLAR_INCLUDE_PATH'])):
-    $include = $_SERVER['PHP_SOLAR_INCLUDE_PATH'];
-    break;
-    
-// fall back to the pear dir
-case (! empty($_SERVER['PHP_PEAR_INSTALL_DIR'])):
-    $include = $_SERVER['PHP_PEAR_INSTALL_DIR'];
-    break;
-
-// stick with the php.ini include path
-default:
+if ($root) {
+    $include = '.' . PATH_SEPARATOR . '..' . PATH_SEPARATOR . "$root/include";
+} else {
     $include = get_include_path();
-    break;
 }
 
 // manually look for a --include-path argument that overrides the default
-$argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
 $found = false;
 foreach ($argv as $val) {
     if ($val == '--include-path') {
@@ -90,7 +81,7 @@ foreach ($argv as $val) {
     }
 }
 
-// if there was a --include-path but no param, that's a failure
+// if there was an --include-path but no param, that's a failure
 if ($found && ! $include) {
     echo "Please specify an include-path after the --include-path option." . PHP_EOL;
     exit(-1);
@@ -101,35 +92,24 @@ echo "Using include_path '" . get_include_path() . "'." . PHP_EOL;
 
 
 /**
- * Discover the config file
+ * 
+ * Discover the config file.
+ * 
+ * Look first for Vendor.config.php, fall back to Solar.config.php.
+ * 
+ * Override with the value of --config, if any.
+ * 
  */
-
-$vendor_key = 'PHP_' . strtoupper($vendor) . '_CONFIG_FILE';
-switch (true) {
-
-// are we in a "solar system" installation? recognize this from the standard
-// directory structure and the physical file location within it.
-case (substr(__FILE__, -23) == '/source/solar/bin/solar'):
-    $config = substr(__FILE__, 0, -23) . "/config/$vendor.config.php";
-    break;
-    
-// the vendor-specific default config
-case (! empty($_SERVER[$vendor_key])):
-    $config = $_SERVER[$vendor_key];
-    break;
-    
-// fall back to the solar default config
-case (! empty($_SERVER['PHP_SOLAR_CONFIG_FILE'])):
-    $config = $_SERVER['PHP_SOLAR_CONFIG_FILE'];
-    break;
-
-// no default config
-default:
+if ($root) {
+    $config = "$root/config/$vendor.config.php";
+    if (! file_exists($config) || ! is_readable($config)) {
+        $config = "$root/config/Solar.config.php";
+    }
+} else {
     $config = false;
 }
 
 // manually look for a --config argument that overrides the default
-$argv = empty($_SERVER['argv']) ? array() : $_SERVER['argv'];
 $found = false;
 foreach ($argv as $val) {
     if ($val == '--config') {
@@ -175,11 +155,29 @@ if ($config) {
 require 'Solar.php';
 Solar::start($config);
 
-// create a console controller using the Vendor_Cli classes
-$console = Solar::factory('Solar_Controller_Console', array(
-    'classes' => "{$vendor}_Cli",
-    'default' => "base",
-));
+// is there a config for the console?
+if (Solar::config('Solar_Controller_Console')) {
+    
+    // use the config as-is and create the console
+    $console = Solar::factory('Solar_Controller_Console');
+    
+} else {
+    
+    // create a config for the console
+    $config = array();
+    
+    // use Vendor_Cli, then Solar_Cli as the fallback
+    $config['classes'][] = "{$vendor}_Cli";
+    if ($vendor != 'Solar') {
+        $config['classes'][] = "Solar_Cli";
+    }
+    
+    // default command is "base"
+    $config['default'] = 'base';
+    
+    // create the console
+    $console = Solar::factory('Solar_Controller_Console', $config);
+}
 
 // execute the requested command
 try {

@@ -34,8 +34,8 @@ class Solar_Cli_Base extends Solar_Controller_Command
             // we use 'null' command because we could have gotten here from
             // using an option or something else first, and a recognized 
             // command later on.  showing that command here would be confusing.
-            $this->_outln('ERR_UNKNOWN_COMMAND', 1, array('cmd' => null));
-            $this->_outln('HELP_TRY_SOLAR_HELP');
+            $this->_errln('ERR_UNKNOWN_COMMAND', 1, array('cmd' => null));
+            $this->_errln('HELP_TRY_SOLAR_HELP');
         } else {
             $this->_outln($this->getInfoHelp());
         }
@@ -54,10 +54,13 @@ class Solar_Cli_Base extends Solar_Controller_Command
     {
         $skip_exec = false;
         
+        $tmp = explode('_', get_class($this));
+        $vendor = $tmp[0];
+        
         switch (true) {
         
         case $this->_options['version']:
-            $this->_out("Solar command-line tool, version ");
+            $this->_out("$vendor command-line tool, version ");
             $this->_outln($this->apiVersion() . '.');
             $skip_exec = true;
             break;

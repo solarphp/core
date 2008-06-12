@@ -208,6 +208,9 @@ class Solar_Controller_Console extends Solar_Base
     
         // override with explicit routings
         $this->_command_list = array_merge($list, $this->_routing);
+        
+        // sort, and done
+        ksort($this->_command_list);
     }
     
     /**

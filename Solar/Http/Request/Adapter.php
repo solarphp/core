@@ -486,16 +486,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Sets a header value in $this->_headers for sending at fetch() time.
      * 
-     * This method will not set certain headers; use the provided methods
+     * This method will not set cookie values; use setCookie() or setCookies()
      * instead.
-     * 
-     * | Header        | Method                                 |
-     * | ------------- | -------------------------------------- |
-     * | Content-Type  | [[setContentType()]], [[setCharset()]] |
-     * | Cookie        | [[setCookie()]]                        |
-     * | HTTP          | [[setVersion()]]                       |
-     * | Referer       | [[setReferer()]]                       |
-     * | User-Agent    | [[setUserAgent()]]                     |
      * 
      * @param string $key The header label, such as "X-Foo-Bar".
      * 
@@ -513,21 +505,27 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setHeader($key, $val, $replace = true)
     {
-        // normalize the header key
+        // normalize the header key and keep a lower-case version
         $key = Solar_Mime::headerLabel($key);
+        $low = strtolower($key);
         
-        // disallow certain headers
-        $lower = strtolower($key);
-        $notok = array(
-            'content-type'  => 'setContentType()',
-            'cookie'        => 'setCookie()',
-            'http'          => 'setVersion()',
-            'referer'       => 'setReferer()',
-            'user-agent'    => 'setUserAgent()',
+        // use special methods when available
+        $special = array(
+            'content-type'  => 'setContentType',
+            'http'          => 'setVersion',
+            'referer'       => 'setReferer',
+            'user-agent'    => 'setUserAgent',
         );
-        if (! empty($notok[$lower])) {
+        
+        if (! empty($special[$low])) {
+            $method = $special[$low];
+            return $this->$method($val);
+        }
+        
+        // don't allow setting of cookies
+        if ($low == 'cookie') {
             throw $this->_exception('ERR_USE_OTHER_METHOD', array(
-                $lower => $notok[$lower],
+                'cookie' => 'setCookie() or setCookies()',
             ));
         }
         

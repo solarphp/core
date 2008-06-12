@@ -491,7 +491,6 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * | Header        | Method                                 |
      * | ------------- | -------------------------------------- |
-     * | Authorization | [[setBasicAuth()]]                     |
      * | Content-Type  | [[setContentType()]], [[setCharset()]] |
      * | Cookie        | [[setCookie()]]                        |
      * | HTTP          | [[setVersion()]]                       |
@@ -520,7 +519,6 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         // disallow certain headers
         $lower = strtolower($key);
         $notok = array(
-            'authorization' => 'setBasicAuth()',
             'content-type'  => 'setContentType()',
             'cookie'        => 'setCookie()',
             'http'          => 'setVersion()',

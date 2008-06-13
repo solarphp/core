@@ -3,6 +3,16 @@
  * 
  * Wraps an HTTP stream to act as a standalone HTTP request.
  * 
+ * N.b.: With this adapter, under PHP 5.2.x and earlier, if the request gets
+ * back a response with a "4xx" (failure) status, the response content will
+ * **not** be included.  This is a known issue in the way HTTP streams work
+ * under PHP 5.2.x and earlier.  PHP 5.3 and later do not have this problem.
+ * 
+ * If you are on PHP 5.2.x or earlier and need the response content on when
+ * a failure status code is returned, please use the curl-based adapter.
+ * 
+ * Cf. <http://php.net/manual/en/context.http.php>
+ * 
  * @category Solar
  * 
  * @package Solar_Http
@@ -88,7 +98,6 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
      */
     protected function _prepareContext($headers, $content)
     {
-        
         /**
          * HTTP context
          */
@@ -125,6 +134,12 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
                 $http[$key] = $this->$var;
             }
         }
+        
+        // before php 5.3, a failure status in the response header means the
+        // stream **will not** fetch the content of the response, even if
+        // content was sent. in php 5.3 and later, the following context
+        // setting will fetch the content regardless of failure code.
+        $http['ignore_errors'] = true;
         
         /**
          * HTTPS context

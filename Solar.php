@@ -262,10 +262,9 @@ class Solar
             }
         }
         
-        // run any 'start' hook scripts
-        foreach ((array) Solar::config('Solar', 'start') as $file) {
-            Solar_File::load($file);
-        }
+        // run any 'start' hooks
+        $hooks = Solar::config('Solar', 'stop', array());
+        Solar::callbacks($hooks);
         
         // and we're done!
         Solar::$_status = true;
@@ -280,10 +279,9 @@ class Solar
      */
     public static function stop()
     {
-        // run the user-defined stop scripts.
-        foreach ((array) Solar::config('Solar', 'stop') as $file) {
-            Solar_File::load($file);
-        }
+        // run any 'stop' hook methods
+        $hooks = Solar::config('Solar', 'stop', array());
+        Solar::callbacks($hooks);
         
         // clean up
         Solar::$config = array();
@@ -291,6 +289,64 @@ class Solar
         
         // reset the status flag, and we're done.
         Solar::$_status = false;
+    }
+    
+    /**
+     * 
+     * Runs a series of callbacks using call_user_func_array().
+     * 
+     * The callback array looks like this:
+     * 
+     * {{code: php
+     *     $callbacks = array(
+     *         // static method call
+     *         array('Class_Name', 'method', $param1, $param2, ...),
+     *         
+     *         // instance method call on a registry object
+     *         array('registry-key', 'method', $param1, $param2, ...),
+     *         
+     *         // instance method call
+     *         array($object, 'method', $param1, $param2, ...),
+     *         
+     *         // function call
+     *         array(null, 'function', $param1, $param2, ...),
+     *     );
+     * }}
+     * 
+     * @param array $list The array of callbacks.
+     * 
+     * @return void
+     * 
+     * @see start()
+     * 
+     * @see stop()
+     * 
+     */
+    public static function callbacks($callbacks)
+    {
+        foreach ((array) $callbacks as $params) {
+            
+            // $spec is an object instance, class name, or registry key
+            $spec = array_shift($params);
+            if (! is_object($spec)) {
+                // not an object, so treat as a class name ...
+                $spec = (string) $spec;
+                // ... unless it's a registry key.
+                if (Solar_Registry::exists($spec)) {
+                    $spec = Solar_Registry::get($spec);
+                }
+            }
+            
+            // the method to call on $spec
+            $func = array_shift($params);
+            
+            // make the call
+            if ($spec) {
+                call_user_func_array(array($spec, $func), $params);
+            } else {
+                call_user_func_array($func, $params);
+            }
+        }
     }
     
     /**

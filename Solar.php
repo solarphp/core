@@ -263,7 +263,7 @@ class Solar
         }
         
         // run any 'start' hooks
-        $hooks = Solar::config('Solar', 'stop', array());
+        $hooks = Solar::config('Solar', 'start', array());
         Solar::callbacks($hooks);
         
         // and we're done!

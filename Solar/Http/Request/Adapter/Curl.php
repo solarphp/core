@@ -146,7 +146,7 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
                 curl_setopt($ch, CURLOPT_REFERER, $value);
                 break;
             default:
-                $http_header[$label] = $value;
+                $http_header[] = $header;
             }
         }
         

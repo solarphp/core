@@ -130,29 +130,29 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
         }
         
         // set specialized headers and retain all others
-        $http_header = array();
-        foreach ($headers as $header) {
+        foreach ($headers as $i => $header) {
             $pos = strpos($header, ':');
             $label = substr($header, 0, $pos);
             $value = substr($header, $pos + 2);
             switch ($label) {
             case 'Cookie':
                 curl_setopt($ch, CURLOPT_COOKIE, $value);
+                unset($headers[$i]);
                 break;
             case 'User-Agent':
                 curl_setopt($ch, CURLOPT_USERAGENT, $value);
+                unset($headers[$i]);
                 break;
             case 'Referer':
                 curl_setopt($ch, CURLOPT_REFERER, $value);
+                unset($headers[$i]);
                 break;
-            default:
-                $http_header[] = $header;
             }
         }
         
         // all remaining headers
-        if ($http_header) {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $http_header);
+        if ($headers) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
         
         /**

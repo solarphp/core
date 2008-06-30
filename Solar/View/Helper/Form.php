@@ -404,7 +404,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             'value' => $this->_view->getTextRaw($key),
         );
         
-        $info = array_merge((array) $info, $base);
+        $info = array_merge((array) $base, $info);
         
         if (empty($info['attribs']['id'])) {
             $id = str_replace('_', '-', strtolower($key));

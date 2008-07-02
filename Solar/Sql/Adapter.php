@@ -1424,7 +1424,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     protected function _quoteName($name)
     {
         $name = trim($name);
-        if ($name) {
+        if ($name == '*') {
+            return $name;
+        } else {
             return $this->_ident_quote_prefix
                  . $name
                  . $this->_ident_quote_suffix;

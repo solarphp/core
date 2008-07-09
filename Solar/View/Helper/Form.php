@@ -240,7 +240,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * @param Solar_Form|array $spec If a Solar_Form object, does a
      * full auto build and fetch of a form based on the Solar_Form
      * properties.  If an array, treated as attribute keys and values
-     * for the form tag.
+     * for the <form> tag.
      * 
      * @return string|Solar_View_Helper_Form
      * 

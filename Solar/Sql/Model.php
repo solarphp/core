@@ -700,6 +700,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Recognized parameters for the fetch are:
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
      * `cols`
      * : (string|array) Return only these columns.
      * 
@@ -776,6 +782,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Recognized parameters for the fetch are:
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
      * `cols`
      * : (string|array) Return only these columns.
      * 
@@ -848,6 +860,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Fetches an array of rows by arbitrary parameters.
      * 
      * Recognized parameters for the fetch are:
+     * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
      * 
      * `cols`
      * : (string|array) Return only these columns.
@@ -928,6 +946,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Recognized parameters for the fetch are:
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
      * `distinct`
      * : (bool) Is this a SELECT DISTINCT?
      * 
@@ -993,6 +1017,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Recognized parameters for the fetch are:
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
      * `cols`
      * : (string|array) Return only these columns; only the first one will
      * be honored.
@@ -1050,6 +1080,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Recognized parameters for the fetch are:
      * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
+     * 
      * `cols`
      * : (string|array) Return only these columns; only the first two will
      *   be honored.
@@ -1099,6 +1135,12 @@ abstract class Solar_Sql_Model extends Solar_Base
      * first record of the returned page set).
      * 
      * Recognized parameters for the fetch are:
+     * 
+     * `eager`
+     * : (string|array) Eager-fetch records from these related models.
+     * 
+     * `distinct`
+     * : (bool) Use DISTINCT?
      * 
      * `cols`
      * : (string|array) Return only these columns; only the first one will

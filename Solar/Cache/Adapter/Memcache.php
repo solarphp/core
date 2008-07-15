@@ -118,7 +118,7 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
         'timeout'           => 1,
         'retry_interval'    => 1,
         'status'            => true,
-        'faliure_callback'  => null,        
+        'failure_callback'  => null,        
     );
     
     

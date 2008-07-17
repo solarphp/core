@@ -310,6 +310,9 @@ class Solar
      *         
      *         // function call
      *         array(null, 'function', $param1, $param2, ...),
+     *         
+     *         // file include, as in previous versions of Solar
+     *         'path/to/file.php',
      *     );
      * }}
      * 
@@ -325,6 +328,12 @@ class Solar
     public static function callbacks($callbacks)
     {
         foreach ((array) $callbacks as $params) {
+            
+            // include a file as in previous versions of Solar
+            if (is_string($params)) {
+                Solar_File::load($params);
+                continue;
+            }
             
             // $spec is an object instance, class name, or registry key
             $spec = array_shift($params);

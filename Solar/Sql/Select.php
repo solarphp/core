@@ -1070,8 +1070,9 @@ class Solar_Sql_Select extends Solar_Base
                 }
                 
                 // force an "AS" if not already there, but only if the source
-                // is not a manually-set column name.
-                if ($source['type'] != 'cols') {
+                // is not a manually-set column name, and the column is not a
+                // literal star for all columns.
+                if ($source['type'] != 'cols' && $col != '*') {
                     // force an AS if not already there. this is because
                     // sqlite returns col names as '"table"."col"' when there
                     // are 2 or more joins. so let's just standardize on

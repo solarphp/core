@@ -279,7 +279,10 @@ class Solar_Docs_Phpdoc extends Solar_Base
     public function parseTodo($line)
     {
         // no parsing needed
-        $this->_info['todo'][] = $line;
+        $line = trim($line);
+        if ($line) {
+            $this->_info['todo'][] = $line;
+        }
     }
     
     /**
@@ -293,8 +296,10 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     public function parseSee($line)
     {
-        // no parsing needed
-        $this->_info['see'][] = $line;
+        $line = trim($line);
+        if ($line) {
+            $this->_info['see'][] = $line;
+        }
     }
     
     /**
@@ -423,8 +428,11 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     public function parseAuthor($line)
     {
-        // no parsing needed (yet)
-        $this->_info['author'][] = $line;
+        // no parsing needed
+        $line = trim($line);
+        if ($line) {
+            $this->_info['author'][] = $line;
+        }
     }
     
     /**
@@ -439,7 +447,10 @@ class Solar_Docs_Phpdoc extends Solar_Base
     public function parseCopyright($line)
     {
         // no parsing needed
-        $this->_info['copyright'] = $line;
+        $line = trim($line);
+        if ($line) {
+            $this->_info['copyright'][] = $line;
+        }
     }
     
     /**
@@ -467,7 +478,7 @@ class Solar_Docs_Phpdoc extends Solar_Base
      */
     public function parseDeprec($line)
     {
-        return $this->parseDeprectated($line);
+        return $this->parseDeprecated($line);
     }
     
     /**

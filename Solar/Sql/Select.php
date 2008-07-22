@@ -29,7 +29,7 @@
  *     $select->setPaging(50);
  *     
  *     // bind data into the query.
- *     // remember :lastname and :city in the setWhere() calls above.
+ *     // remember :lastname and :city in the where() calls above.
  *     $data = ('lastname' => 'Jones', 'city' => 'Memphis');
  *     $select->bind($data);
  *     
@@ -280,20 +280,8 @@ class Solar_Sql_Select extends Solar_Base
      */
     public function from($spec, $cols = null)
     {
-        // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Model) {
-            
-            // get the table name
-            $name = $spec->table_name;
-            
-            // add all columns?
-            if ($cols == '*') {
-                $cols = array_keys($spec->table_cols);
-            }
-            
-        } else {
-            $name = $spec;
-        }
+        // get the table name and columns from the specifcation
+        list($name, $cols) = $this->_nameCols($spec, $cols);
         
         // convert to an array with keys 'orig' and 'alias'
         $name = $this->_origAlias($name);
@@ -1471,20 +1459,8 @@ class Solar_Sql_Select extends Solar_Base
      */
     protected function _join($type, $spec, $cond, $cols)
     {
-        // the $spec may be a table object, or a string.
-        if ($spec instanceof Solar_Sql_Model) {
-            
-            // get the table name
-            $name = $spec->table_name;
-            
-            // add all columns?
-            if ($cols == '*') {
-                $cols = array_keys($spec->table_cols);
-            }
-            
-        } else {
-            $name = $spec;
-        }
+        // get the table name and columns from the specifcation
+        list($name, $cols) = $this->_nameCols($spec, $cols);
         
         // convert to an array of orig and alias
         $name = $this->_origAlias($name);
@@ -1500,6 +1476,41 @@ class Solar_Sql_Select extends Solar_Base
         );
         
         return $this;
+    }
+    
+    /**
+     * 
+     * Support method for finding a table name and column names.
+     * 
+     * @param string|Solar_Sql_Model $spec The specification for the table
+     * name; if a model object, returns the $table_name property.
+     * 
+     * @param string|array $cols The columns to use from the table; if '*' and
+     * the $spec is a model object, returns an array of all columns for the
+     * model's table.
+     * 
+     * @return array A sequential array where element 0 is the table name, and
+     * element 1 is the table columns.
+     * 
+     */
+    protected function _nameCols($spec, $cols)
+    {
+        // the $spec may be a model object, or a string
+        if ($spec instanceof Solar_Sql_Model) {
+            
+            // get the table name
+            $name = $spec->table_name;
+            
+            // add all columns?
+            if ($cols == '*') {
+                $cols = array_keys($spec->table_cols);
+            }
+            
+        } else {
+            $name = $spec;
+        }
+        
+        return array($name, $cols);
     }
     
     /**

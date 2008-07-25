@@ -118,12 +118,21 @@ class Solar_Markdown extends Solar_Base
     
     /**
      * 
-     * Delimiter for encoded Markdown characters.
+     * Left-delimiter for encoded Markdown characters.
      * 
      * @var string
      * 
      */
-    protected $_char_delim = "\x1B";
+    protected $_char_ldelim = "\x02";
+    
+    /**
+     * 
+     * Right-delimiter for encoded Markdown characters.
+     * 
+     * @var string
+     * 
+     */
+    protected $_char_rdelim = "\x03";
     
     /**
      * 
@@ -280,7 +289,7 @@ class Solar_Markdown extends Solar_Base
                 $plugin = Solar::factory($class);
             }
             
-            // save the plygin
+            // save the plugin
             $this->_plugin[$class] = $plugin;
             $plugin->setMarkdown($this);
             
@@ -313,7 +322,7 @@ class Solar_Markdown extends Solar_Base
         $k = strlen($this->_chars);
         for ($i = 0; $i < $k; ++ $i) {
             $char = $this->_chars[$i];
-            $delim = $this->_char_delim . $i. $this->_char_delim;
+            $delim = $this->_char_ldelim . $i. $this->_char_rdelim;
             $this->_esc[$char] = $delim;
             $this->_bs_esc["\\$char"] = $delim;
             
@@ -322,7 +331,7 @@ class Solar_Markdown extends Solar_Base
     
     /**
      * 
-     * Returns an internal Markdow plugin object for direct manipulation
+     * Returns an internal Markdown plugin object for direct manipulation
      * and inspection.
      * 
      * @param string $class The plugin class name.

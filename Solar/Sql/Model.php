@@ -728,6 +728,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `page`
      * : (int) Return only records from this page-number.
      * 
+     * `limit`
+     * : (int|array) Limit to a count of this many records (when an integer), 
+     *   or limit by count and offset (when an array).  When `limit` is non-
+     *   empty, the `page` and `paging` params are ignored.
+     * 
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
@@ -810,6 +815,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `page`
      * : (int) Return only records from this page-number.
      * 
+     * `limit`
+     * : (int|array) Limit to a count of this many records (when an integer), 
+     *   or limit by count and offset (when an array).  When `limit` is non-
+     *   empty, the `page` and `paging` params are ignored.
+     * 
      * `bind`
      * : (array) Key-value pairs to bind into the query.
      * 
@@ -888,6 +898,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * `page`
      * : (int) Return only records from this page-number.
+     * 
+     * `limit`
+     * : (int|array) Limit to a count of this many records (when an integer), 
+     *   or limit by count and offset (when an array).  When `limit` is non-
+     *   empty, the `page` and `paging` params are ignored.
      * 
      * `bind`
      * : (array) Key-value pairs to bind into the query.
@@ -1045,6 +1060,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * `page`
      * : (int) Return only records from this page-number.
+     * 
+     * `limit`
+     * : (int|array) Limit to a count of this many records (when an integer), 
+     *   or limit by count and offset (when an array).  When `limit` is non-
+     *   empty, the `page` and `paging` params are ignored.
      * 
      * `bind`
      * : (array) Key-value pairs to bind into the query.
@@ -1373,6 +1393,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * `page`
      * : (int) Return only records from this page-number.
+     * 
+     * `limit`
+     * : (int|array) Limit to a count of this many records (when an integer), 
+     *   or limit by count and offset (when an array).  When `limit` is non-
+     *   empty, the `page` and `paging` params are ignored.
      * 
      * `bind`
      * : (array) Key-value pairs to bind into the query.

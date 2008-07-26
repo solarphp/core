@@ -100,23 +100,8 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
     public function fetch($handle, $roles)
     {
         /**
-         * prepare query elements
+         * prepare handle and role lists
          */
-        
-        // columns to select
-        $cols = array(
-            $this->_config['flag_col']    . ' AS allow',
-            $this->_config['type_col']    . ' AS type',
-            $this->_config['name_col']    . ' AS name',
-            $this->_config['class_col']   . ' AS class',
-            $this->_config['action_col']  . ' AS action',
-        );
-        
-        // the "handle" condition
-        // `(type = 'handle' AND name IN (...))`
-        $handle_cond = "({$this->_config['type_col']} = :handle_type"
-                     . " AND {$this->_config['name_col']} IN (:handle_list))";
-        
         // the handle list
         if ($handle) {
             // user is authenticated
@@ -126,32 +111,13 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
             $handle_list = array('*');
         }
         
-        // the "role" condition
-        // `(type = 'role' AND name IN (...))`
-        $role_cond = "({$this->_config['type_col']} = :role_type"
-                   . " AND {$this->_config['name_col']} IN (:role_list))";
-        
         // the role list
         $role_list = (array) $roles;
         $role_list[] = '*';
         
-        // the "owner" condition
-        // `type = 'owner'`
-        $owner_cond = "({$this->_config['type_col']} = :owner_type)";
-        
-        // collect data to bind into the query
-        $data = array(
-            'handle_type' => 'handle',
-            'handle_list' => $handle_list,
-            'role_type'   => 'role',
-            'role_list'   => $role_list,
-            'owner_type'  => 'owner',
-        );
-        
         /**
-         * build and execute the query
+         * prepare the sql object
          */
-        
         // get the dependency object of class Solar_Sql
         $sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
@@ -160,14 +126,39 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
             'sql' => $sql
         ));
         
-        // build the select
-        $select->from($this->_config['table'], $cols)
-               ->where($handle_cond)
-               ->orWhere($role_cond)
-               ->orWhere($owner_cond)
-               ->order($this->_config['order_col'])
-               ->bind($data);
+        // select these columns from the table
+        $cols = array(
+            $this->_config['flag_col']    . ' AS allow',
+            $this->_config['type_col']    . ' AS type',
+            $this->_config['name_col']    . ' AS name',
+            $this->_config['class_col']   . ' AS class',
+            $this->_config['action_col']  . ' AS action',
+        );
         
+        $select->from($this->_config['table'], $cols);
+        
+        /**
+         * add major conditions
+         */
+        
+        // pretty vars
+        $type_col = $this->_config['type_col'];
+        $name_col = $this->_config['name_col'];
+        
+        // `WHERE (type = 'handle' AND name IN (...))`
+        $select->where("($type_col = ?", 'handle');
+        $select->where("$name_col IN (?))", $handle_list);
+        
+        // `OR (type = 'role' AND name IN (...))`
+        $select->orWhere("($type_col = ?", 'role');
+        $select->where("$name_col IN (?))", $role_list);
+        
+        // `OR (type = 'owner')`
+        $select->orWhere("($type_col = ?)", 'owner');
+        
+        /**
+         * fetch, process, and return
+         */
         // fetch the access list
         $access = $select->fetchAll();
         

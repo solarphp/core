@@ -260,11 +260,13 @@ class Solar_Uri extends Solar_Base
      */
     public function __construct($config = null)
     {
-        // real construction
         parent::__construct($config);
         
-        // get the current request environment
-        $this->_request = Solar_Registry::get('request');
+        // get the current request environment.  may already have been set by
+        // extended classes.
+        if (! $this->_request) {
+            $this->_request = Solar_Registry::get('request');
+        }
         
         // fix the base path by adding leading and trailing slashes
         if (trim($this->_config['path']) == '') {

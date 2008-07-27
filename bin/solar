@@ -199,7 +199,7 @@ try {
     
     // print the error message and exit
     echo $e->getMessage() . PHP_EOL;
-    exit($exit);
+    exit((int) $exit);
     
 } catch (Exception $e) {
     
@@ -222,6 +222,6 @@ try {
     
     // print the error message and exit
     echo $e . PHP_EOL;
-    exit($exit);
+    exit((int) $exit);
     
 }

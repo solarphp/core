@@ -84,7 +84,7 @@ foreach ($argv as $val) {
 // if there was an --include-path but no param, that's a failure
 if ($found && ! $include) {
     echo "Please specify an include-path after the --include-path option." . PHP_EOL;
-    exit(-1);
+    exit(1);
 }
 
 set_include_path($include);
@@ -135,7 +135,7 @@ foreach ($argv as $val) {
 // if there was a --config but no param, that's a failure
 if ($found && ! $config) {
     echo "Please specify a config file path after the --config option." . PHP_EOL;
-    exit(-1);
+    exit(1);
 }
 
 // was there a config file at all?
@@ -191,7 +191,7 @@ try {
     
     // disallow empty or zero exit codes
     if (! $exit) {
-        $exit = -1;
+        $exit = 1;
     }
     
     // stop Solar
@@ -214,7 +214,7 @@ try {
     
     // disallow empty or zero exit codes
     if (! $exit) {
-        $exit = -1;
+        $exit = 1;
     }
     
     // stop Solar

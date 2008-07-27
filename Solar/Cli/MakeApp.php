@@ -109,11 +109,11 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
             $this->_target . str_replace('_', '/', $this->_class)
         );
         
-        // write the app class itself
-        $this->_writeAppClass();
-        
         // create the View, Locale, Helper, Layout dirs
         $this->_createDirs();
+        
+        // write the app class itself
+        $this->_writeAppClass();
         
         // write Locale/en_US.php
         $this->_writeLocale();

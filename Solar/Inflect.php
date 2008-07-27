@@ -291,7 +291,7 @@ class Solar_Inflect extends Solar_Base
      * @return string The word in camel-caps.
      * 
      */
-    public function dashToCamel($str)
+    public function dashesToCamel($str)
     {
         $str = ucwords(str_replace('-', ' ', $str));
         $str = str_replace(' ', '', $str);
@@ -324,9 +324,9 @@ class Solar_Inflect extends Solar_Base
      * @return string The word in studly-caps.
      * 
      */
-    public function dashToStudly($str)
+    public function dashesToStudly($str)
     {
-        $str = $this->dashToCamel($str);
+        $str = $this->dashesToCamel($str);
         $str[0] = strtoupper($str[0]);
         return $str;
     }
@@ -356,11 +356,11 @@ class Solar_Inflect extends Solar_Base
      * @return string The word with dashes in place of camel caps.
      * 
      */
-    public function camelToDash($str)
+    public function camelToDashes($str)
     {
         $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);
         $str = str_replace(' ', '-', ucwords($str));
-        return $str;
+        return strtolower($str);
     }
     
     /**

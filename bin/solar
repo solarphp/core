@@ -164,16 +164,10 @@ if (Solar::config('Solar_Controller_Console')) {
 } else {
     
     // create a config for the console
-    $config = array();
-    
-    // use Vendor_Cli, then Solar_Cli as the fallback
-    $config['classes'][] = "{$vendor}_Cli";
-    if ($vendor != 'Solar') {
-        $config['classes'][] = "Solar_Cli";
-    }
-    
-    // default command is "base"
-    $config['default'] = 'base';
+    $config = array(
+        'classes' => "{$vendor}_Cli",
+        'default' => 'base'
+    );
     
     // create the console
     $console = Solar::factory('Solar_Controller_Console', $config);

@@ -52,8 +52,6 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         // we need a vendor name, at least
         if (! $vendor) {
             throw $this->_exception('ERR_NO_VENDOR_NAME');
-        } else {
-            $this->_vendor = $vendor;
         }
         
         // build "foo-bar" and "FooBar" versions of the vendor name.
@@ -109,8 +107,14 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         passthru($cmd);
         
         // docroot/public/Vendor -> include/Vendor/App/Public
-        $public = "$system/docroot/public/{$this->_vendor}";
+        $public = "$system/docroot/public/{$this->_studly}";
         $cmd    = "ln -s $include/App/Public $public";
+        $this->_outln($cmd);
+        passthru($cmd);
+        
+        // script/vendor -> source/solar/bin/solar
+        $script = "$system/script/{$this->_dashes}";
+        $cmd    = "ln -s $system/source/solar/bin/solar $script";
         $this->_outln($cmd);
         passthru($cmd);
     }

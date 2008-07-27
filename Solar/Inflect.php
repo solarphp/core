@@ -284,6 +284,23 @@ class Solar_Inflect extends Solar_Base
     
     /**
      * 
+     * Returns "foo-bar-baz" as "fooBarBaz".
+     * 
+     * @param string $str The dashed word.
+     * 
+     * @return string The word in camel-caps.
+     * 
+     */
+    public function dashToCamel($str)
+    {
+        $str = ucwords(str_replace('-', ' ', $str));
+        $str = str_replace(' ', '', $str);
+        $str[0] = strtolower($str[0]);
+        return $str;
+    }
+    
+    /**
+     * 
      * Returns "foo_bar_baz" as "FooBarBaz".
      * 
      * @param string $str The underscore word.
@@ -294,6 +311,22 @@ class Solar_Inflect extends Solar_Base
     public function underToStudly($str)
     {
         $str = $this->underToCamel($str);
+        $str[0] = strtoupper($str[0]);
+        return $str;
+    }
+    
+    /**
+     * 
+     * Returns "foo-bar-baz" as "FooBarBaz".
+     * 
+     * @param string $str The dashed word.
+     * 
+     * @return string The word in studly-caps.
+     * 
+     */
+    public function dashToStudly($str)
+    {
+        $str = $this->dashToCamel($str);
         $str[0] = strtoupper($str[0]);
         return $str;
     }
@@ -311,6 +344,22 @@ class Solar_Inflect extends Solar_Base
     {
         $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);
         $str = str_replace(' ', '_', ucwords($str));
+        return $str;
+    }
+    
+    /**
+     * 
+     * Returns "camelCapsWord" and "CamelCapsWord" as "camel-caps-word".
+     * 
+     * @param string $str The camel-caps word.
+     * 
+     * @return string The word with dashes in place of camel caps.
+     * 
+     */
+    public function camelToDash($str)
+    {
+        $str = preg_replace('/([a-z])([A-Z])/', '$1 $2', $str);
+        $str = str_replace(' ', '-', ucwords($str));
         return $str;
     }
     

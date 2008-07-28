@@ -26,7 +26,7 @@
  *     $php->setIniFile(false)
  *         ->setIniArray($ini)
  *         ->setMode('passthru')
- *         ->runCode('echo "hello world!\n"');
+ *         ->runSolarCode('echo "hello world!\n"');
  *     
  *     Solar::stop();
  * }}
@@ -150,6 +150,8 @@ class Solar_Php extends Solar_Base
      */
     protected $_exit_code;
     
+    protected $_argv = array();
+    
     /**
      * 
      * Constructor.
@@ -247,6 +249,18 @@ class Solar_Php extends Solar_Base
         return $this;
     }
     
+    public function addArgv($val)
+    {
+        $this->_argv[] = $val;
+        return $this;
+    }
+    
+    public function setArgv($array)
+    {
+        $this->_argv = (array) $array;
+        return $this;
+    }
+    
     /**
      * 
      * Sets an array of php.ini values, overriding the php.ini file.
@@ -302,6 +316,18 @@ class Solar_Php extends Solar_Base
         return $this;
     }
     
+    public function runSolar($file)
+    {
+        $code = file_get_contents($file);
+        return $this->runSolarCode($code);
+    }
+    
+    public function runSolarCode($code)
+    {
+        $code = $this->_buildSolarCode($code);
+        return $this->_run($code);
+    }
+    
     /**
      * 
      * Runs the named file as the PHP code for the process.
@@ -328,13 +354,19 @@ class Solar_Php extends Solar_Base
      */
     public function runCode($code)
     {
+        $code = $this->_buildCode($code);
+        return $this->_run($code);
+    }
+    
+    protected function _run($code)
+    {
         // clean up from last run
         $this->_output    = array();
         $this->_last_line = null;
         $this->_exit_code = null;
         
         // build the full command with PHP code
-        $cmd = $this->_buildCommand() . " --run " . $this->_buildCode($code);
+        $cmd = $this->_buildCommand($code);
         
         // what execution mode?
         switch ($this->_mode) {
@@ -349,8 +381,13 @@ class Solar_Php extends Solar_Base
             break;
         case 'shell_exec':
             $this->_output = shell_exec($cmd);
-            $this->_last_line = end($this->_output);
-            reset($this->_output);
+            $tmp = $this->_output;
+            $len = strlen(PHP_EOL) * -1;
+            if (substr($tmp, $len) == PHP_EOL) {
+                $tmp = substr($tmp, 0, $len);
+            }
+            $tmp = explode(PHP_EOL, $tmp);
+            $this->_last_line = end($tmp);
             break;
         case 'system':
             $this->_last_line = system($cmd, $this->_exit_code);
@@ -397,16 +434,6 @@ class Solar_Php extends Solar_Base
         return $this->_last_line;
     }
     
-    /**
-     * 
-     * Wraps the given code string in extra code to load, start, and stop
-     * Solar.
-     * 
-     * @param string $code The code to run in the separate process.
-     * 
-     * @return string
-     * 
-     */
     protected function _buildCode($code)
     {
         // strip long opening tag
@@ -424,6 +451,24 @@ class Solar_Php extends Solar_Base
             $code = substr($code, 0, -2);
         }
         
+        return $code;
+    }
+    
+    /**
+     * 
+     * Wraps the given code string in extra code to load, start, and stop
+     * Solar.
+     * 
+     * @param string $code The code to run in the separate process.
+     * 
+     * @return string
+     * 
+     */
+    protected function _buildSolarCode($code)
+    {
+        // the core code
+        $code = $this->_buildCode($code);
+        
         // get the solar config as a variable
         $solar_config = var_export($this->_solar_config, true);
         
@@ -433,18 +478,20 @@ class Solar_Php extends Solar_Base
               . "$code; "
               . "Solar::stop();";
         
-        // escape for shell, and done
-        return escapeshellarg($code);
+        // done!
+        return $code;
     }
     
     /**
      * 
      * Builds the command-line invocation of PHP.
      * 
+     * @param string $code The code to execute.
+     * 
      * @return string The PHP command with the necessary switches.
      * 
      */
-    protected function _buildCommand()
+    protected function _buildCommand($code)
     {
         // the PHP binary
         $cmd = $this->_php;
@@ -465,6 +512,14 @@ class Solar_Php extends Solar_Base
             $cmd .= " --define $key=$val";
         }
         
+        // add the code
+        $cmd .= " --run " . escapeshellarg($code);
+        
+        foreach ($this->_argv as $val) {
+            $cmd .= " $val";
+        }
+        
+        // done
         return $cmd;
     }
 }

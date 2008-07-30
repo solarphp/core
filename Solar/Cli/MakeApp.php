@@ -232,7 +232,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     protected function _loadTemplates()
     {
         $this->_tpl = array();
-        $dir = Solar_Dir::fix(dirname(__FILE__) . '/MakeApp/Data');
+        $dir = Solar_Class::dir($this, 'Data');
         $list = glob($dir . '*.php');
         foreach ($list as $file) {
             
@@ -264,9 +264,9 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     {
         $target = $this->_options['target'];
         if (! $target) {
-            // use the same target as 2 levels up from this class,
-            // should be the PEAR dir (or main Solar dir)
-            $target = Solar_Dir::name(__FILE__, 2);
+            // use the solar system "include" directory.
+            // that should automatically point to the right vendor for us.
+            $target = Solar::$system . "/include";
         }
         
         $this->_target = Solar_Dir::fix($target);

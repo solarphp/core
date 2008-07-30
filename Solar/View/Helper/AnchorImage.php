@@ -36,15 +36,8 @@ class Solar_View_Helper_AnchorImage extends Solar_View_Helper
     public function anchorImage($spec, $src, $a_attribs = array(),
         $img_attribs = array())
     {
-        if ($spec instanceof Solar_Uri) {
-            // fetch the full href, not just the path/query/fragment
-            $href = $spec->get(true);
-        } else {
-            $href = $spec;
-        }
-        
-        // escape the anchor href itself
-        $href = $this->_view->escape($href);
+        // get an escaped href value
+        $href = $this->_view->href($spec);
         
         // get the <img /> tag
         $img = $this->_view->image($src, $img_attribs);

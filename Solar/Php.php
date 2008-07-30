@@ -436,6 +436,10 @@ class Solar_Php extends Solar_Base
     
     protected function _buildCode($code)
     {
+        // trim leading and trailing space so as not to mess up the removal of
+        // opening and closing tags.
+        $code = trim($code);
+        
         // strip long opening tag
         if (substr($code, 0, 5) == '<?php') {
             $code = substr($code, 5);

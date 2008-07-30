@@ -18,6 +18,63 @@ class Solar_Class
     
     /**
      * 
+     * Loads a class or interface file from the include_path.
+     * 
+     * Thanks to Robert Gonzalez  for the report leading to this method.
+     * 
+     * @param string $name A Solar (or other) class or interface name.
+     * 
+     * @return void
+     * 
+     * @todo Add localization for errors
+     * 
+     */
+    public static function autoload($name)
+    {
+        // did we ask for a non-blank name?
+        if (trim($name) == '') {
+            throw Solar::exception(
+                'Solar_Class',
+                'ERR_AUTOLOAD_EMPTY',
+                'No class or interface named for loading',
+                array('name' => $name)
+            );
+        }
+        
+        // pre-empt further searching for the named class or interface.
+        // do not use autoload, because this method is registered with
+        // spl_autoload already.
+        if (class_exists($name, false) || interface_exists($name, false)) {
+            return;
+        }
+        
+        // convert the class name to a file path.
+        $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
+        
+        // using autoload-include?
+        if (Solar::$include) {
+            $file = Solar::$include . DIRECTORY_SEPARATOR . $file;
+        }
+        
+        // include the file and check for failure. we use Solar_File::load()
+        // instead of require() so we can see the exception backtrace.
+        Solar_File::load($file);
+        
+        // if the class or interface was not in the file, we have a problem.
+        // do not use autoload, because this method is registered with
+        // spl_autoload already.
+        if (! class_exists($name, false) && ! interface_exists($name, false)) {
+            throw Solar::exception(
+                'Solar_Class',
+                'ERR_AUTOLOAD_FAILED',
+                'Class or interface does not exist in loaded file',
+                array('name' => $name, 'file' => $file)
+            );
+        }
+    }
+    
+    /**
+     * 
      * Returns an array of the parent classes for a given class.
      * 
      * Parents in "reverse" order ... element 0 is the immediate parent,

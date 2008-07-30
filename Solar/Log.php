@@ -29,7 +29,7 @@
  * @version $Id$
  * 
  */
-class Solar_Log extends Solar_Base
+class Solar_Log extends Solar_Factory
 {
     /**
      * 
@@ -47,22 +47,4 @@ class Solar_Log extends Solar_Base
     protected $_Solar_Log = array(
         'adapter' => 'Solar_Log_Adapter_None',
     );
-    
-    /**
-     * 
-     * Factory method for returning adapters.
-     * 
-     * @return Solar_Log_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        // bring in the config and get the adapter class.
-        $config = $this->_config;
-        $class = $config['adapter'];
-        unset($config['adapter']);
-        
-        // return the factoried adapter object
-        return Solar::factory($class, $config);
-    }
 }

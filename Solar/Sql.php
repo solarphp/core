@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Sql extends Solar_Base
+class Solar_Sql extends Solar_Factory
 {
     /**
      * 
@@ -31,22 +31,4 @@ class Solar_Sql extends Solar_Base
     protected $_Solar_Sql = array(
         'adapter' => 'Solar_Sql_Adapter_Sqlite',
     );
-    
-    /**
-     * 
-     * Factory method to create SQL adapter objects.
-     * 
-     * @return Solar_Sql_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        // bring in the config and get the adapter class.
-        $config = $this->_config;
-        $class = $config['adapter'];
-        unset($config['adapter']);
-        
-        // return the factoried adapter object
-        return Solar::factory($class, $config);
-    }
 }

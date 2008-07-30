@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Mail_Transport extends Solar_Base
+class Solar_Mail_Transport extends Solar_Factory
 {
     /**
      * 
@@ -32,18 +32,4 @@ class Solar_Mail_Transport extends Solar_Base
     protected $_Solar_Mail_Transport = array(
         'adapter' => 'Solar_Mail_Transport_Adapter_Phpmail',
     );
-    
-    /**
-     * 
-     * Factory method to create transport adapter objects.
-     * 
-     * @return Solar_Mail_Transport_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        $class = $this->_config['adapter'];
-        unset($this->_config['adapter']);
-        return Solar::factory($class, $this->_config);
-    }
 }

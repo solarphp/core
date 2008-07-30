@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Session_Handler extends Solar_Base
+class Solar_Session_Handler extends Solar_Factory
 {
     /**
      * 
@@ -32,22 +32,4 @@ class Solar_Session_Handler extends Solar_Base
     protected $_Solar_Session_Handler = array(
         'adapter' => 'Solar_Session_Handler_Adapter_Native',
     );
-    
-    /**
-     * 
-     * Factory method to create session adapter objects.
-     * 
-     * @return Solar_Session_Handler_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        // bring in the config and get the adapter class.
-        $config = $this->_config;
-        $class = $config['adapter'];
-        unset($config['adapter']);
-        
-        // return the factoried adapter object
-        return Solar::factory($class, $config);
-    }
 }

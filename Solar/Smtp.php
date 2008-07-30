@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Smtp extends Solar_Base
+class Solar_Smtp extends Solar_Factory
 {
     /**
      * 
@@ -31,18 +31,4 @@ class Solar_Smtp extends Solar_Base
     protected $_Solar_Smtp = array(
         'adapter' => 'Solar_Smtp_Adapter_NoAuth',
     );
-    
-    /**
-     * 
-     * Factory method to create SMTP adapter objects.
-     * 
-     * @return Solar_Smtp_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        $class = $this->_config['adapter'];
-        unset($this->_config['adapter']);
-        return Solar::factory($class, $this->_config);
-    }
 }

@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Cache extends Solar_Base
+class Solar_Cache extends Solar_Factory
 {
     /**
      * 
@@ -32,22 +32,4 @@ class Solar_Cache extends Solar_Base
     protected $_Solar_Cache = array(
         'adapter' => 'Solar_Cache_Adapter_File',
     );
-    
-    /**
-     * 
-     * Factory method to create cache adapter objects.
-     * 
-     * @return Solar_Cache_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        // bring in the config and get the adapter class.
-        $config = $this->_config;
-        $class = $config['adapter'];
-        unset($config['adapter']);
-        
-        // return the factoried adapter object
-        return Solar::factory($class, $config);
-    }
 }

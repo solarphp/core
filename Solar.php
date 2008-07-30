@@ -467,9 +467,9 @@ class Solar
         $obj = new $class($config);
         
         // is it an object factory?
-        if (method_exists($obj, 'solarFactory')) {
+        if ($obj instanceof Solar_Factory) {
             // return an instance from the object factory
-            return $obj->solarFactory();
+            return $obj->factory();
         }
         
         // return the object itself

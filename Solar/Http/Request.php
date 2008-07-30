@@ -14,7 +14,7 @@
  * @version $Id$
  * 
  */
-class Solar_Http_Request extends Solar_Base
+class Solar_Http_Request extends Solar_Factory
 {
     /**
      * 
@@ -47,23 +47,5 @@ class Solar_Http_Request extends Solar_Base
             $this->_Solar_Http_Request['adapter'] = 'Solar_Http_Request_Adapter_Curl';
         }
         parent::__construct($config);
-    }
-    
-    /**
-     * 
-     * Factory method for returning adapters.
-     * 
-     * @return Solar_Http_Request_Adapter
-     * 
-     */
-    public function solarFactory()
-    {
-        // bring in the config and get the adapter class.
-        $config = $this->_config;
-        $class = $config['adapter'];
-        unset($config['adapter']);
-        
-        // factory the new class with its config
-        return Solar::factory($class, $config);
     }
 }

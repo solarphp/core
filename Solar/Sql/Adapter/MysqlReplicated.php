@@ -87,155 +87,179 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
-     * A PDO-style DSN for the slave server.
-     * 
-     * The [[$_dsn]] property is for the master server.
-     * 
-     * @var string
-     * 
-     */
-    protected $_dsn_slave;
-    
-    /**
-     * 
-     * Which slave key the [[$_dsn_slave]] property was built from.
+     * Which slave key the [[$_dsn]] property was built from.
      * 
      * @var mixed
      * 
      */
-    protected $_dsn_slave_key;
+    protected $_dsn_key;
     
     /**
      * 
-     * A PDO object for accessing the slave server.
+     * A PDO-style DSN for the master server.
      * 
-     * The [[$_pdo]] property is for the master server.
+     * The [[$_dsn]] property is for the slave server.
+     * 
+     * @var string
+     * 
+     */
+    protected $_dsn_master;
+    
+    /**
+     * 
+     * A PDO object for accessing the master server.
+     * 
+     * The [[$_pdo]] property is for the slave server.
      * 
      * @var PDO
      * 
      * @see $_pdo
      * 
      */
-    protected $_pdo_slave;
+    protected $_pdo_master;
     
     /**
      * 
-     * Get the slave PDO connection object (connects to the database if 
+     * Sets the connection-specific cache key prefix.
+     * 
+     * @param string $prefix The cache-key prefix.  When null, defaults to
+     * the class name, a slash, and the md5() of the DSN **for the master**.
+     * 
+     * @return string
+     * 
+     */
+    public function setCacheKeyPrefix($prefix = null)
+    {
+        if ($prefix === null) {
+            $prefix = get_class($this) . '/' . md5($this->_dsn_master);
+        }
+        
+        $this->_cache_key_prefix = $prefix;
+    }
+    
+    /**
+     * 
+     * Get the master PDO connection object (connects to the database if 
      * needed).
      * 
      * @return PDO
      * 
      */
-    public function getPdoSlave()
+    public function getPdoMaster()
     {
-        $this->connect();
-        return $this->_pdo_slave;
+        $this->connectMaster();
+        return $this->_pdo_master;
     }
     
     /**
      * 
-     * Sets the DSN for the slave to a random slave server.
+     * Sets the DSN for the slave and the master; the slave is picked at 
+     * random from the list of slaves.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
      * @return void
      * 
-     * @see $_dsn_slave
+     * @see $_dsn
      * 
-     * @see $_dsn_slave_key
+     * @see $_dsn_key
+     * 
+     * @see $_dsn_master
      * 
      */
-    protected function _setDsnSlave()
+    protected function _setDsn()
     {
-        // the dsn info
-        $dsn = array();
+        // convenient reference to all slaves
+        $slaves = $this->_config['slaves'];
         
-        // pick a random slave from the list
-        $key = array_rand($this->_config['slaves']);
+        // pick a random slave key
+        $this->_dsn_key = array_rand(array_keys($slaves));
         
-        // convenience copy of the slave info
-        $slave = $this->_config['slaves'][$key];
+        // set DSN for slave
+        $this->_dsn = $this->_buildDsn($slaves[$this->_dsn_key]);
         
-        // socket, or host-and-port? (can't use both.)
-        if (! empty($slave['sock'])) {
-            
-            // use a socket
-            $dsn[] = 'unix_socket=' . $slave['sock'];
-            
-        } else {
-            
-            // use host and port
-            if (! empty($slave['host'])) {
-                $dsn[] = 'host=' . $slave['host'];
-            }
-        
-            if (! empty($slave['port'])) {
-                $dsn[] = 'port=' . $slave['port'];
-            }
-            
-        }
-        
-        // database name
-        if (! empty($slave['name'])) {
-            $dsn[] = 'dbname=' . $slave['name'];
-        }
-        
-        // done, set values
-        $this->_dsn_slave_key = $key;
-        $this->_dsn_slave = $this->_pdo_type . ':' . implode(';', $dsn);
+        // set DSN for master
+        $this->_dsn_master = $this->_buildDsn($this->_config);
     }
     
     /**
      * 
-     * Connects to the master server and a random slave server.
+     * Connects to a random slave server.
      * 
      * Does not re-connect if we already have active connections.
      * 
      * @return void
      * 
      */
-    protected function connect()
+    public function connect()
     {
-        // connect to master
-        parent::connect();
-        
-        // connect to slave?
-        if ($this->_pdo_slave) {
+        // already connected?
+        if ($this->_pdo) {
             return;
         }
         
-        // set the slave dsn and key
-        $this->_setDsnSlave();
-        
         // which slave dsn key was used?
         // need this so we have the right credentials.
-        $key = $this->_dsn_slave_key;
+        $key = $this->_dsn_key;
         
         // start profile time
         $time = microtime(true);
         
         // attempt the connection
-        $this->_pdo_slave = new PDO(
-            $this->_dsn_slave,
+        $this->_pdo = new PDO(
+            $this->_dsn,
             $this->_config['slaves'][$key]['user'],
             $this->_config['slaves'][$key]['pass']
         );
         
         // post-connection tasks
-        $this->_postConnectSlave();
+        $this->_postConnect();
         
         // retain the profile data?
-        $this->_addProfile($time, '__CONNECT_SLAVE');
+        $this->_addProfile($time, '__CONNECT');
     }
     
     /**
      * 
-     * Force the slave connection to use the same attributes as the master.
+     * Connects to the master server.
+     * 
+     * Does not re-connect if we already have an active connection.
      * 
      * @return void
      * 
      */
-    protected function _postConnectSlave()
+    public function connectMaster()
+    {
+        // already connected?
+        if ($this->_pdo_master) {
+            return;
+        }
+        
+        // start profile time
+        $time = microtime(true);
+        
+        // attempt the connection
+        $this->_pdo = new PDO(
+            $this->_dsn,
+            $this->_config['user'],
+            $this->_config['pass']
+        );
+        
+        // post-connection tasks
+        $this->_postConnectMaster();
+        
+        // retain the profile data?
+        $this->_addProfile($time, '__CONNECT_MASTER');
+    }
+    
+    /**
+     * 
+     * Force the master connection to use the same attributes as the slave.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postConnectMaster()
     {
         // adapted from example at
         // <http://us.php.net/manual/en/pdo.getattribute.php>
@@ -248,7 +272,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         foreach ($attribs as $attr) {
             $key = constant("PDO::ATTR_$attr");
             $val = $this->_pdo->getAttribute($key);
-            $this->_pdo_slave->setAttribute($key, $val);
+            $this->_pdo_master->setAttribute($key, $val);
         }
     }
     
@@ -262,7 +286,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     public function disconnect()
     {
         parent::diconnect();
-        $this->_pdo_slave = null;
+        $this->_pdo_master = null;
     }
     
     /**
@@ -286,18 +310,16 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         // prepare the statment
         try {
             if ($is_select) {
-                // all SELECTs go to the slave.
-                // keep config info in case of exception
-                $key = $this->_dsn_slave_key;
+                // slave
+                $this->connect();
+                $key = $this->_dsn_key;
                 $config = $this->_config['slaves'][$key];
-                // prepare the statement
-                $prep = $this->_pdo_slave->prepare($stmt);
+                $prep = $this->_pdo_master->prepare($stmt);
             } else {
-                // all other commands go to the master.
-                // keep config info in case of exception
+                // master
+                $this->connectMaster();
                 $config = $this->_config;
-                // prepare the statement
-                $prep = $this->_pdo->prepare($stmt);
+                $prep = $this->_pdo_master->prepare($stmt);
             }
         } catch (PDOException $e) {
             // note that we use $config as set in the try block above
@@ -318,5 +340,70 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         }
         
         return $prep;
+    }
+    
+    /**
+     * 
+     * Leave autocommit mode and begin a transaction **on the master**.
+     * 
+     * @return void
+     * 
+     */
+    public function begin()
+    {
+        $this->connectMaster();
+        $time = microtime(true);
+        $result = $this->_pdo_master->beginTransaction();
+        $this->_addProfile($time, '__BEGIN');
+        return $result;
+    }
+    
+    /**
+     * 
+     * Commit a transaction and return to autocommit mode **on the master**.
+     * 
+     * @return void
+     * 
+     */
+    public function commit()
+    {
+        $this->connectMaster();
+        $time = microtime(true);
+        $result = $this->_pdo_master->commit();
+        $this->_addProfile($time, '__COMMIT');
+        return $result;
+    }
+    
+    /**
+     * 
+     * Roll back a transaction and return to autocommit mode **on the master**.
+     * 
+     * @return void
+     * 
+     */
+    public function rollback()
+    {
+        $this->connectMaster();
+        $time = microtime(true);
+        $result = $this->_pdo_master->rollBack();
+        $this->_addProfile($time, '__ROLLBACK');
+        return $result;
+    }
+    
+    /**
+     * 
+     * Get the last auto-incremented insert ID from the database.
+     * 
+     * @param string $table The table name on which the auto-increment occurred.
+     * 
+     * @param string $col The name of the auto-increment column.
+     * 
+     * @return int The last auto-increment ID value inserted to the database.
+     * 
+     */
+    public function lastInsertId($table = null, $col = null)
+    {
+        $this->connectMaster();
+        return $this->_pdo_master->lastInsertId();
     }
 }

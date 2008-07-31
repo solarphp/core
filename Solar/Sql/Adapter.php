@@ -286,7 +286,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         );
         
         // set the cache-key prefix
-        $this->_setCacheKeyPrefix();
+        $this->setCacheKeyPrefix();
     }
     
     /**

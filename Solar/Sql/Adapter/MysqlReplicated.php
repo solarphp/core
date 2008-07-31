@@ -360,14 +360,13 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         try {
             if ($is_select) {
                 // slave
+                $config = $this->_slaves[$this->_slave_key];
                 $this->connect();
-                $key = $this->_slave_key;
-                $config = $this->_slaves[$key];
                 $prep = $this->_pdo->prepare($stmt);
             } else {
                 // master
-                $this->connectMaster();
                 $config = $this->_config;
+                $this->connectMaster();
                 $prep = $this->_pdo_master->prepare($stmt);
             }
         } catch (PDOException $e) {

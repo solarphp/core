@@ -314,7 +314,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
                 $this->connect();
                 $key = $this->_dsn_key;
                 $config = $this->_config['slaves'][$key];
-                $prep = $this->_pdo_master->prepare($stmt);
+                $prep = $this->_pdo->prepare($stmt);
             } else {
                 // master
                 $this->connectMaster();

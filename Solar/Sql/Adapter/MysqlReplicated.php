@@ -82,8 +82,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      */
     protected $_Solar_Sql_Adapter_MysqlReplicated = array(
-        'slaves' => array(
-        ),
+        'slaves' => array(),
     );
     
     /**
@@ -99,7 +98,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
-     * Which slave key the $_dsn_slave was built from.
+     * Which slave key the [[$_dsn_slave]] property was built from.
      * 
      * @var mixed
      * 

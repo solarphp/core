@@ -321,16 +321,10 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             'ATTR_ERRMODE',
             'ATTR_ORACLE_NULLS',
             'ATTR_PERSISTENT',
-            // 'ATTR_PREFETCH', // exception, "not supported by driver"
+            // 'ATTR_PREFETCH', // not supported by driver
             'ATTR_SERVER_INFO',
             'ATTR_SERVER_VERSION',
-            // 'ATTR_TIMEOUT', // exception, "not supported by driver"
-            'MYSQL_ATTR_DIRECT_QUERY',
-            'MYSQL_ATTR_INIT_COMMAND',
-            'MYSQL_ATTR_LOCAL_INFILE',
-            'MYSQL_ATTR_MAX_BUFFER_SIZE',
-            'MYSQL_ATTR_READ_DEFAULT_FILE',
-            'MYSQL_ATTR_READ_DEFAULT_GROUP',
+            // 'ATTR_TIMEOUT', // not supported by driver
         );
         
         foreach ($attribs as $attr) {

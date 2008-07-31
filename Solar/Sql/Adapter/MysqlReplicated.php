@@ -129,6 +129,17 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
+     * Whether or not we're in a transaction.
+     * 
+     * When true, all SELECTs go to the master.
+     * 
+     * @param bool
+     * 
+     */
+    protected $_in_transaction = false;
+    
+    /**
+     * 
      * Follow-on setup for the constructor to build the $_slaves array.
      * 
      * @return void
@@ -350,8 +361,8 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     /**
      * 
      * Prepares an SQL query as a PDOStatement object, using the slave PDO
-     * connection for all 'SELECT' queries, and the master PDO connection for
-     * all other queries.
+     * connection for all SELECT queries outside a transation, and the master
+     * PDO connection for all other queries (incl. in-transaction SELECTs).
      * 
      * @param string $stmt The text of the SQL statement, optionally with
      * named placeholders.
@@ -367,7 +378,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         
         // prepare the statment
         try {
-            if ($is_select) {
+            if ($is_select && ! $this->_in_transaction) {
                 // slave
                 $config = $this->_slaves[$this->_slave_key];
                 $this->connect();
@@ -410,6 +421,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->beginTransaction();
+        $this->_in_transaction = true;
         $this->_addProfile($time, '__BEGIN_MASTER');
         return $result;
     }
@@ -426,6 +438,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->commit();
+        $this->_in_transaction = false;
         $this->_addProfile($time, '__COMMIT_MASTER');
         return $result;
     }
@@ -442,6 +455,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->rollBack();
+        $this->_in_transaction = false;
         $this->_addProfile($time, '__ROLLBACK_MASTER');
         return $result;
     }

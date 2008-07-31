@@ -540,70 +540,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // begin the profile time
         $time = microtime(true);
         
-        // prepare the statment
-        try {
-            $obj = $this->_pdo->prepare($stmt);
-        } catch (PDOException $e) {
-            throw $this->_exception(
-                'ERR_PREPARE_FAILED',
-                array(
-                    'pdo_code'  => $e->getCode(),
-                    'pdo_text'  => $e->getMessage(),
-                    'host'      => $this->_config['host'],
-                    'port'      => $this->_config['port'],
-                    'user'      => $this->_config['user'],
-                    'name'      => $this->_config['name'],
-                    'stmt'      => $stmt,
-                    'data'      => $data,
-                    'pdo_trace' => $e->getTraceAsString(),
-                )
-            );
-        }
-        
-        // was data passed for binding?
-        if ($data) {
-            
-            // find all :placeholder matches.  note that this is a little
-            // brain-dead; it will find placeholders in literal text, which
-            // will cause errors later.  so in general, you should *either*
-            // bind at query time *or* bind as you go, not both.
-            preg_match_all(
-                "/\W:([a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
-                $stmt . "\n",
-                $matches
-            );
-            
-            // bind values to placeholders, repeating as needed
-            $repeat = array();
-            foreach ($matches[1] as $key) {
-                
-                // only attempt to bind if the data key exists.
-                // this allows for nulls and empty strings.
-                if (! array_key_exists($key, $data)) {
-                    // skip it
-                    continue;
-                }
-            
-                // what does PDO expect as the placeholder name?
-                if (empty($repeat[$key])) {
-                    // first time is ":foo"
-                    $repeat[$key] = 1;
-                    $name = $key;
-                } else {
-                    // repeated times of ":foo" are treated by PDO as
-                    // ":foo2", ":foo3", etc.
-                    $repeat[$key] ++;
-                    $name = $key . $repeat[$key];
-                }
-                
-                // bind the value to the placeholder name
-                $obj->bindValue($name, $data[$key]);
-            }
-        }
+        // prepre the statement and bind data to it
+        $prep = $this->_prepare($stmt);
+        $this->_bind($prep, $data);
         
         // now try to execute
         try {
-            $obj->execute();
+            $prep->execute();
         } catch (PDOException $e) {
             throw $this->_exception(
                 'ERR_QUERY_FAILED',
@@ -622,10 +565,99 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // retain the profile data?
-        $this->_addProfile($time, $obj->queryString, $data);
+        $this->_addProfile($time, $prep->queryString, $data);
         
         // done!
-        return $obj;
+        return $prep;
+    }
+    
+    /**
+     * 
+     * Prepares an SQL query as a PDOStatement object.
+     * 
+     * @param string $stmt The text of the SQL statement, optionally with
+     * named placeholders.
+     * 
+     * @return PDOStatement
+     * 
+     */
+    protected function _prepare($stmt)
+    {
+        // prepare the statment
+        try {
+            $prep = $this->_pdo->prepare($stmt);
+        } catch (PDOException $e) {
+            throw $this->_exception(
+                'ERR_PREPARE_FAILED',
+                array(
+                    'pdo_code'  => $e->getCode(),
+                    'pdo_text'  => $e->getMessage(),
+                    'host'      => $this->_config['host'],
+                    'port'      => $this->_config['port'],
+                    'user'      => $this->_config['user'],
+                    'name'      => $this->_config['name'],
+                    'stmt'      => $stmt,
+                    'data'      => $data,
+                    'pdo_trace' => $e->getTraceAsString(),
+                )
+            );
+        }
+        
+        return $prep;
+    }
+    
+    /**
+     * 
+     * Binds data as values into a prepared PDOStatment.
+     * 
+     * @param PDOStatement $prep The prepared PDOStatement.
+     * 
+     * @return void
+     * 
+     */
+    protected function _bind($prep, $data)
+    {
+        // was data passed for binding?
+        if (! $data) {
+            return;
+        }
+            
+        // find all :placeholder matches.  note that this is a little
+        // brain-dead; it will find placeholders in literal text, which
+        // will cause errors later.  so in general, you should *either*
+        // bind at query time *or* bind as you go, not both.
+        preg_match_all(
+            "/\W:([a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
+            $stmt . "\n",
+            $matches
+        );
+        
+        // bind values to placeholders, repeating as needed
+        $repeat = array();
+        foreach ($matches[1] as $key) {
+            
+            // only attempt to bind if the data key exists.
+            // this allows for nulls and empty strings.
+            if (! array_key_exists($key, $data)) {
+                // skip it
+                continue;
+            }
+        
+            // what does PDO expect as the placeholder name?
+            if (empty($repeat[$key])) {
+                // first time is ":foo"
+                $repeat[$key] = 1;
+                $name = $key;
+            } else {
+                // repeated times of ":foo" are treated by PDO as
+                // ":foo2", ":foo3", etc.
+                $repeat[$key] ++;
+                $name = $key . $repeat[$key];
+            }
+            
+            // bind the value to the placeholder name
+            $prep->bindValue($name, $data[$key]);
+        }
     }
     
     /**

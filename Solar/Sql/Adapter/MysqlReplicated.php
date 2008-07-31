@@ -1,7 +1,8 @@
 <?php
 /**
  * 
- * Uses a master for writes, and a slave for reads.
+ * Uses a random slave server for SELECT queries, and a master server for all
+ * other queries.
  * 
  * Multiple slaves can be configured, but once we start reading from a slave,
  * we read from that slave for the remainder of the connection.  (Invoking

@@ -87,12 +87,21 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
+     * Array of slave connection parameters for DSNs.
+     * 
+     * @var array
+     * 
+     */
+    protected $_slaves;
+    
+    /**
+     * 
      * Which slave key the [[$_dsn]] property was built from.
      * 
      * @var mixed
      * 
      */
-    protected $_dsn_key;
+    protected $_slave_key;
     
     /**
      * 
@@ -117,6 +126,36 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      */
     protected $_pdo_master;
+    
+    /**
+     * 
+     * Follow-on setup for the constructor to build the $_slaves array.
+     * 
+     * @return void
+     * 
+     * @see $_slaves
+     * 
+     */
+    protected function _setup()
+    {
+        // build up the $_slaves array info, using some of the values from
+        // the master as defaults
+        $base = array(
+            'host' => null,
+            'port' => $this->_config['port'],
+            'sock' => null,
+            'user' => $this->_config['user'],
+            'pass' => $this->_config['pass'],
+            'name' => $this->_config['name'],
+        );
+        
+        foreach ($this->_config['slaves'] as $key => $val) {
+            $this->_slaves[$key] = array_merge($base, $val);
+        }
+        
+        // done, on to the main setup
+        parent::_setup();
+    }
     
     /**
      * 
@@ -167,7 +206,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * @see $_dsn
      * 
-     * @see $_dsn_key
+     * @see $_slave_key
      * 
      * @see $_dsn_master
      * 
@@ -175,18 +214,12 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     protected function _setDsn()
     {
         // pick a random slave key
-        $this->_dsn_key = array_rand(array_keys($this->_config['slaves']));
+        $this->_slave_key = array_rand(
+            array_keys($this->_slaves)
+        );
         
         // get the slave info
-        $slave = $this->_config['slaves'][$this->_dsn_key];
-        
-        // set missing information from the master
-        $list = array('port', 'user', 'pass', 'name');
-        foreach ($list as $item) {
-            if (empty($slave[$item])) {
-                $slave[$item] = $this->_config[$item];
-            }
-        }
+        $slave = $this->_slaves[$this->_slave_key];
         
         // set DSN for slave
         $this->_dsn = $this->_buildDsn($slave);
@@ -213,7 +246,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         
         // which slave dsn key was used?
         // need this so we have the right credentials.
-        $key = $this->_dsn_key;
+        $key = $this->_slave_key;
         
         // start profile time
         $time = microtime(true);
@@ -221,8 +254,8 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         // attempt the connection
         $this->_pdo = new PDO(
             $this->_dsn,
-            $this->_config['slaves'][$key]['user'],
-            $this->_config['slaves'][$key]['pass']
+            $this->_slaves[$key]['user'],
+            $this->_slaves[$key]['pass']
         );
         
         // post-connection tasks
@@ -325,8 +358,8 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             if ($is_select) {
                 // slave
                 $this->connect();
-                $key = $this->_dsn_key;
-                $config = $this->_config['slaves'][$key];
+                $key = $this->_slave_key;
+                $config = $this->_slaves[$key];
                 $prep = $this->_pdo->prepare($stmt);
             } else {
                 // master

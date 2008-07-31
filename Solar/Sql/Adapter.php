@@ -273,9 +273,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     {
         parent::__construct($config);
         
-        // set the DSN from the config info
-        $this->_setDsn();
-        
         // turn on profiling?
         $this->setProfiling($this->_config['profiling']);
         
@@ -284,6 +281,22 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             'Solar_Cache',
             $this->_config['cache']
         );
+        
+        // follow-on setup
+        $this->_setup();
+    }
+    
+    /**
+     * 
+     * Follow-on setup from the constructor; useful for extended classes.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setup()
+    {
+        // set the DSN from the config info
+        $this->_setDsn();
         
         // set the cache-key prefix
         $this->setCacheKeyPrefix();

@@ -288,7 +288,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $time = microtime(true);
         
         // attempt the connection
-        $this->_pdo = new PDO(
+        $this->_pdo_master = new PDO(
             $this->_dsn,
             $this->_config['user'],
             $this->_config['pass']

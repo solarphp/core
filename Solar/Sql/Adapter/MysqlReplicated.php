@@ -381,7 +381,6 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
                     'user'      => $config['user'],
                     'name'      => $config['name'],
                     'stmt'      => $stmt,
-                    'data'      => $data,
                     'pdo_trace' => $e->getTraceAsString(),
                 )
             );

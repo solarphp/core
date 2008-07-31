@@ -354,7 +354,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->beginTransaction();
-        $this->_addProfile($time, '__BEGIN');
+        $this->_addProfile($time, '__BEGIN_MASTER');
         return $result;
     }
     
@@ -370,7 +370,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->commit();
-        $this->_addProfile($time, '__COMMIT');
+        $this->_addProfile($time, '__COMMIT_MASTER');
         return $result;
     }
     
@@ -386,7 +386,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         $this->connectMaster();
         $time = microtime(true);
         $result = $this->_pdo_master->rollBack();
-        $this->_addProfile($time, '__ROLLBACK');
+        $this->_addProfile($time, '__ROLLBACK_MASTER');
         return $result;
     }
     

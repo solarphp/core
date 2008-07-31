@@ -121,38 +121,38 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
      * @return string A PDO-style DSN.
      * 
      */
-    protected function _dsn()
+    protected function _buildDsn($info)
     {
+        // the dsn info
         $dsn = array();
         
         // socket, or host-and-port? (can't use both.)
-        if (! empty($this->_config['sock'])) {
+        if (! empty($info['sock'])) {
             
             // use a socket
-            $dsn[] = 'unix_socket=' . $this->_config['sock'];
+            $dsn[] = 'unix_socket=' . $info['sock'];
             
         } else {
             
             // use host and port
-            if (! empty($this->_config['host'])) {
-                $dsn[] = 'host=' . $this->_config['host'];
+            if (! empty($info['host'])) {
+                $dsn[] = 'host=' . $info['host'];
             }
         
-            if (! empty($this->_config['port'])) {
-                $dsn[] = 'port=' . $this->_config['port'];
+            if (! empty($info['port'])) {
+                $dsn[] = 'port=' . $info['port'];
             }
             
         }
         
         // database name
-        if (! empty($this->_config['name'])) {
-            $dsn[] = 'dbname=' . $this->_config['name'];
+        if (! empty($info['name'])) {
+            $dsn[] = 'dbname=' . $info['name'];
         }
         
+        // done
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }
-    
-    
 
     /**
      * 

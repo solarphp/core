@@ -272,26 +272,21 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function __construct($config = null)
     {
         parent::__construct($config);
-        $this->_cache = Solar::dependency('Solar_Cache', $this->_config['cache']);
+        
+        // set the DSN from the config info
+        $this->_setDsn();
+        
+        // turn on profiling?
         $this->setProfiling($this->_config['profiling']);
         
-        // build a DSN
-        $this->_dsn = $this->_dsn();
+        // set a cache object
+        $this->_cache = Solar::dependency(
+            'Solar_Cache',
+            $this->_config['cache']
+        );
         
-        // save the cache-key prefix
-        $this->_cache_key_prefix = get_class($this) . '/' . md5($this->_dsn);
-    }
-    
-    /**
-     * 
-     * Gets the connection-specific cache key prefix.
-     * 
-     * @return string
-     * 
-     */
-    public function getCacheKeyPrefix()
-    {
-        return $this->_cache_key_prefix;
+        // set the cache-key prefix
+        $this->_setCacheKeyPrefix();
     }
     
     /**
@@ -306,6 +301,37 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     public function setProfiling($flag)
     {
         $this->_profiling = (bool) $flag;
+    }
+    
+    /**
+     * 
+     * Sets the connection-specific cache key prefix.
+     * 
+     * @param string $prefix The cache-key prefix.  When null, defaults to
+     * the class name, a slash, and the md5() of the DSN.
+     * 
+     * @return string
+     * 
+     */
+    public function setCacheKeyPrefix($prefix = null)
+    {
+        if ($prefix === null) {
+            $prefix = get_class($this) . '/' . md5($this->_dsn);
+        }
+        
+        $this->_cache_key_prefix = $prefix;
+    }
+    
+    /**
+     * 
+     * Gets the connection-specific cache key prefix.
+     * 
+     * @return string
+     * 
+     */
+    public function getCacheKeyPrefix()
+    {
+        return $this->_cache_key_prefix;
     }
     
     /**
@@ -333,7 +359,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         return $this->_pdo;
     }
     
-    
     // -----------------------------------------------------------------
     // 
     // Connection and basic queries
@@ -342,27 +367,41 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Sets the DSN value for the connection from the config info.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setDsn()
+    {
+        $this->_dsn = $this->_buildDsn($this->_config);
+    }
+    
+    /**
+     * 
      * Creates a PDO-style DSN.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
-     * @return string A PDO-style DSN.
+     * @param array $info An array with host, post, name, etc. keys.
+     * 
+     * @return void
      * 
      */
-    protected function _dsn()
+    protected function _buildDsn($info)
     {
         $dsn = array();
         
-        if (! empty($this->_config['host'])) {
-            $dsn[] = 'host=' . $this->_config['host'];
+        if (! empty($info['host'])) {
+            $dsn[] = 'host=' . $info['host'];
         }
         
-        if (! empty($this->_config['port'])) {
-            $dsn[] = 'port=' . $this->_config['port'];
+        if (! empty($info['port'])) {
+            $dsn[] = 'port=' . $info['port'];
         }
         
-        if (! empty($this->_config['name'])) {
-            $dsn[] = 'dbname=' . $this->_config['name'];
+        if (! empty($info['name'])) {
+            $dsn[] = 'dbname=' . $info['name'];
         }
         
         return $this->_pdo_type . ':' . implode(';', $dsn);

@@ -105,7 +105,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * @return string A PDO-style DSN.
      * 
      */
-    protected function _dsn()
+    protected function _buildDsn()
     {
         $dsn = array();
         if (! empty($this->_config['name'])) {
@@ -114,6 +114,13 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }
     
+    /**
+     * 
+     * After connection, set various connection attributes.
+     * 
+     * @return void
+     * 
+     */
     protected function _postConnect()
     {
         parent::_postConnect();

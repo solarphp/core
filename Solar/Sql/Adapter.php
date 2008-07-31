@@ -628,7 +628,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // bind at query time *or* bind as you go, not both.
         preg_match_all(
             "/\W:([a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
-            $stmt . "\n",
+            $prep->queryString . "\n",
             $matches
         );
         

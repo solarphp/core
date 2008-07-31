@@ -281,6 +281,9 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             return;
         }
         
+        // need a slave connection first
+        $this->connect();
+        
         // start profile time
         $time = microtime(true);
         

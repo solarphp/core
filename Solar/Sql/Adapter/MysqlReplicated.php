@@ -7,6 +7,16 @@
  * we read from that slave for the remainder of the connection.  (Invoking
  * disconnect() will let you connect to new random slave.)
  * 
+ * @category Solar
+ * 
+ * @package Solar_Sql
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
  */
 class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
 {
@@ -72,14 +82,6 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      */
     protected $_Solar_Sql_Adapter_MysqlReplicated = array(
         'slaves' => array(
-            0 => array(
-                'host'      => null,
-                'port'      => null,
-                'sock'      => null,
-                'user'      => null,
-                'pass'      => null,
-                'name'      => null,
-            ),
         ),
     );
     

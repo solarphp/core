@@ -158,6 +158,11 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
+     * For the keys 'port', 'user', 'pass', and 'name', if one is missing, it
+     * gets set automatically from the master value. This lets you avoid some
+     * repetition in your slave config setups, assuming that the values are 
+     * the same for the master and slaves.
+     * 
      * @return void
      * 
      * @see $_dsn
@@ -169,14 +174,22 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      */
     protected function _setDsn()
     {
-        // convenient reference to all slaves
-        $slaves = $this->_config['slaves'];
-        
         // pick a random slave key
-        $this->_dsn_key = array_rand(array_keys($slaves));
+        $this->_dsn_key = array_rand(array_keys($this->_config['slaves']));
+        
+        // get the slave info
+        $slave = $this->_config['slaves'][$this->_dsn_key];
+        
+        // set missing information from the master
+        $list = array('port', 'user', 'pass', 'name');
+        foreach ($list as $item) {
+            if (empty($slave[$item])) {
+                $slave[$item] = $this->_config[$item];
+            }
+        }
         
         // set DSN for slave
-        $this->_dsn = $this->_buildDsn($slaves[$this->_dsn_key]);
+        $this->_dsn = $this->_buildDsn($slave);
         
         // set DSN for master
         $this->_dsn_master = $this->_buildDsn($this->_config);

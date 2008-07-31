@@ -311,15 +311,30 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     protected function _postConnectMaster()
     {
         // adapted from example at
-        // <http://us.php.net/manual/en/pdo.getattribute.php>
+        // <http://php.net/manual/en/pdo.getattribute.php>.
+        // uses extra attribs listed at <http://php.net/pdo_mysql>.
         $attribs = array(
-            'AUTOCOMMIT', 'ERRMODE', 'CASE', 'CLIENT_VERSION',
-            'CONNECTION_STATUS', 'ORACLE_NULLS', 'PERSISTENT', 'PREFETCH',
-            'SERVER_INFO', 'SERVER_VERSION', 'TIMEOUT',
+            'ATTR_AUTOCOMMIT',
+            'ATTR_CASE',
+            'ATTR_CLIENT_VERSION',
+            'ATTR_CONNECTION_STATUS',
+            'ATTR_ERRMODE',
+            'ATTR_ORACLE_NULLS',
+            'ATTR_PERSISTENT',
+            // 'ATTR_PREFETCH', // exception, "not supported by driver"
+            'ATTR_SERVER_INFO',
+            'ATTR_SERVER_VERSION',
+            // 'ATTR_TIMEOUT', // exception, "not supported by driver"
+            'MYSQL_ATTR_DIRECT_QUERY',
+            'MYSQL_ATTR_INIT_COMMAND',
+            'MYSQL_ATTR_LOCAL_INFILE',
+            'MYSQL_ATTR_MAX_BUFFER_SIZE',
+            'MYSQL_ATTR_READ_DEFAULT_FILE',
+            'MYSQL_ATTR_READ_DEFAULT_GROUP',
         );
         
         foreach ($attribs as $attr) {
-            $key = constant("PDO::ATTR_$attr");
+            $key = constant("PDO::$attr");
             $val = $this->_pdo->getAttribute($key);
             $this->_pdo_master->setAttribute($key, $val);
         }

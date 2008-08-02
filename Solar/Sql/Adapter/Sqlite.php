@@ -102,14 +102,16 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
-     * @return string A PDO-style DSN.
+     * @param array $info An array with host, post, name, etc. keys.
+     * 
+     * @return string The DSN string.
      * 
      */
-    protected function _buildDsn()
+    protected function _buildDsn($info)
     {
         $dsn = array();
-        if (! empty($this->_config['name'])) {
-            $dsn[] = $this->_config['name'];
+        if (! empty($info['name'])) {
+            $dsn[] = $info['name'];
         }
         return $this->_pdo_type . ':' . implode(';', $dsn);
     }

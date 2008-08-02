@@ -398,7 +398,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * @param array $info An array with host, post, name, etc. keys.
      * 
-     * @return void
+     * @return string The DSN string.
      * 
      */
     protected function _buildDsn($info)

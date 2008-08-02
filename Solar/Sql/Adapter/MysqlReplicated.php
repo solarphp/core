@@ -77,7 +77,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      *         ),
      *     );
      * }}
-     *
+     * 
      * @var array
      * 
      */

@@ -74,6 +74,7 @@ class Solar_Model_Nodes extends Solar_Model
                 'size'    => 5,
             ),
             'rating' => 'int',
+            'publish' => 'timestamp',
             'email' => array(
                 'type'    => 'varchar',
                 'size'    => 255,
@@ -117,6 +118,7 @@ class Solar_Model_Nodes extends Solar_Model
             'locale',
             'pos',
             'rating',
+            'publish',
             'uri',
             'email',
             'status',

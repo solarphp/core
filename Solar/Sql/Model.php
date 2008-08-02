@@ -1578,8 +1578,6 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newRecord($data)
     {
-        Solar::dump($data);
-        
         // the model object to use -- might get overridden by inheritance
         $model = $this;
         

@@ -1,7 +1,7 @@
 <?php
 return array(
     'target' => array(
-        'long'    => 'table',
+        'long'    => 'target',
         'descr'   => 'The target directory, typically the PEAR directory.',
         'param'   => 'optional',
     ),

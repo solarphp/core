@@ -6,5 +6,5 @@
 
 <p><?php echo $this->action(
     "/{$this->controller}/edit/{$this->item->getPrimaryVal()}",
-    'ACTION_EDIT');
-?></p>
+    'ACTION_EDIT'
+); ?></p>

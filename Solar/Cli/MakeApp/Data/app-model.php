@@ -1,13 +1,53 @@
+/**
+ * 
+ * Generic BREAD application for {:model}.
+ * 
+ */
 class {:class} extends {:extends} {
     
+    /**
+     * 
+     * The default action when no action is specified.
+     * 
+     * @var string
+     * 
+     */
     protected $_action_default = 'browse';
     
+    /**
+     * 
+     * A list of records.
+     * 
+     * @var Solar_Sql_Model_Collection
+     * 
+     */
     public $list;
     
+    /**
+     * 
+     * A single record.
+     * 
+     * @var Solar_Sql_Model_Record
+     * 
+     */
     public $item;
     
+    /**
+     * 
+     * A form for editing a single record.
+     * 
+     * @var Solar_Form
+     * 
+     */
     public $form;
     
+    /**
+     * 
+     * Browses records by page.
+     * 
+     * @return void
+     * 
+     */
     public function actionBrowse()
     {
         // get the model
@@ -21,6 +61,15 @@ class {:class} extends {:extends} {
         ));
     }
     
+    /**
+     * 
+     * View one record by ID.
+     * 
+     * @param int $id The record ID to view.
+     * 
+     * @return void
+     * 
+     */
     public function actionRead($id = null)
     {
         // need an id
@@ -43,6 +92,15 @@ class {:class} extends {:extends} {
         $this->item = $item;
     }
     
+    /**
+     * 
+     * Edit a record by ID.
+     * 
+     * @param int $id The record id.
+     * 
+     * @return void
+     * 
+     */
     public function actionEdit($id = null)
     {
         // process: cancel
@@ -104,6 +162,13 @@ class {:class} extends {:extends} {
         $this->form = $form;
     }
     
+    /**
+     * 
+     * Add a new record.
+     * 
+     * @return void
+     * 
+     */
     public function actionAdd()
     {
         // process: cancel
@@ -147,6 +212,15 @@ class {:class} extends {:extends} {
         $this->form = $item->form();
     }
     
+    /**
+     * 
+     * Deletes a record by ID. Asks for confirmation before actually deleting.
+     * 
+     * @param int $id The record ID.
+     * 
+     * @return void
+     * 
+     */
     public function actionDelete($id = null)
     {
         // need an id

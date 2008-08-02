@@ -4,5 +4,5 @@
 
 <?php echo $this->form()
                 ->addProcess('delete_confirm')
-                ->fetch()
+                ->fetch();
 ?>

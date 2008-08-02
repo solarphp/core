@@ -1578,6 +1578,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newRecord($data)
     {
+        Solar::dump($data);
+        
         // the model object to use -- might get overridden by inheritance
         $model = $this;
         
@@ -2144,11 +2146,27 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _fixStack()
     {
+        $this->_stack = Solar::factory('Solar_Class_Stack');
+        
+        // get the class parents and work from this class upwards
         $parents = Solar::parents($this->_class, true);
         array_pop($parents); // Solar_Base
         array_pop($parents); // Solar_Sql_Model
-        $this->_stack = Solar::factory('Solar_Class_Stack');
-        $this->_stack->add($parents);
+        $parents = array_reverse($parents);
+        
+        // any time we change vendors, add NewVendor_Model in between.
+        // this helps with single-table-inheritance between vendors,
+        // provided they use the Vendor_Model convention.
+        $old_vendor = false;
+        foreach ($parents as $class) {
+            $tmp = explode('_', $class);
+            $new_vendor = $tmp[0];
+            if ($old_vendor && $new_vendor != $old_vendor) {
+                $this->_stack->add("{$new_vendor}_Model");
+            }
+            $this->_stack->add($class);
+            $old_vendor = $new_vendor;
+        }
     }
     
     /**

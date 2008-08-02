@@ -163,4 +163,16 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record
             }
         }
     }
+    
+    /**
+     * 
+     * Deletes all tag mappings, leaving tags in place.
+     * 
+     * @return void
+     * 
+     */
+    protected function _postDelete()
+    {
+        $this->taggings->delete();
+    }
 }

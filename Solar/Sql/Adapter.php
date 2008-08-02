@@ -649,7 +649,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                     'user'      => $this->_config['user'],
                     'name'      => $this->_config['name'],
                     'stmt'      => $stmt,
-                    'data'      => $data,
                     'pdo_trace' => $e->getTraceAsString(),
                 )
             );

@@ -267,6 +267,24 @@ class Solar_Inflect extends Solar_Base
     
     /**
      * 
+     * Returns any string, converted to using dashes with only lowercase 
+     * alphanumerics.
+     * 
+     * @param string $str The string to convert.
+     * 
+     * @return string The converted string.
+     * 
+     */
+    public function toDashes($str)
+    {
+        $str = preg_replace('/[^a-z0-9 _-]/i', '', $str);
+        $str = $this->camelToDashes($str);
+        $str = preg_replace('/[ _-]+/', '-', $str);
+        return $str;
+    }
+    
+    /**
+     * 
      * Returns "foo_bar_baz" as "fooBarBaz".
      * 
      * @param string $str The underscore word.

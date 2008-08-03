@@ -74,8 +74,7 @@ class Solar_Model_Nodes extends Solar_Model
                 'size'    => 5,
             ),
             'rating' => 'int',
-            'publish_date' => 'date',
-            'publish_time' => 'time',
+            'publish' => 'timestamp',
             'email' => array(
                 'type'    => 'varchar',
                 'size'    => 255,
@@ -119,8 +118,7 @@ class Solar_Model_Nodes extends Solar_Model
             'locale',
             'pos',
             'rating',
-            'publish_date',
-            'publish_time',
+            'publish',
             'uri',
             'email',
             'status',
@@ -186,7 +184,7 @@ class Solar_Model_Nodes extends Solar_Model
             $params['eager'][] = 'tags';
             
             // find tags in this list
-            $params['where']['tags.name in (?)'] = $tag_list;
+            $params['where']['tags.name IN (?)'] = $tag_list;
             
             // group by the model primary key so that multiple tag matches
             // only return one row

@@ -16,13 +16,23 @@
         <li><ul>
         <?php
             foreach ($item as $key => $val) {
-                echo "<li>" . $this->escape($key) . ": "
-                   . $this->escape($val)
-                   . "</li>\n";
+                
+                $label = $this->escape($key);
+                
+                if (is_scalar($val)) {
+                    $value = $this->escape($val);
+                } elseif (is_object($val)) {
+                    $value = get_class($val);
+                } else {
+                    $value = gettype($val);
+                }
+                
+                echo "<li>$label: $value</li>\n";
+                
             }
-    
+            
             $id = $item->getPrimaryVal();
-        
+            
             echo "<li>"
                . $this->action("{$this->controller}/read/$id", 'ACTION_READ')
                . "</li>\n";

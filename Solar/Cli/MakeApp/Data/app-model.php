@@ -18,7 +18,7 @@ class {:class} extends {:extends} {
      * 
      * A list of records.
      * 
-     * @var Solar_Sql_Model_Collection
+     * @var {:model}_Collection
      * 
      */
     public $list;
@@ -27,7 +27,7 @@ class {:class} extends {:extends} {
      * 
      * A single record.
      * 
-     * @var Solar_Sql_Model_Record
+     * @var {:model}_Record
      * 
      */
     public $item;

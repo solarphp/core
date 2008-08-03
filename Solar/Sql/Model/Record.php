@@ -1337,7 +1337,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // use all columns?
         if (empty($cols)) {
             $cols = array_merge(
-                array_keys($this->_model->table_cols),
+                $this->_model->fetch_cols,
                 $this->_model->calculate_cols
             );
         }

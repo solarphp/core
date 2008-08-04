@@ -318,6 +318,36 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
+     * Returns the cache object.
+     * 
+     * @return Solar_Cache
+     * 
+     * @see $_cache
+     * 
+     */
+    public function getCache()
+    {
+        return $this->_cache;
+    }
+    
+    /**
+     * 
+     * Injects a cache dependency for [[$_cache]].
+     * 
+     * @param mixed $spec A [[Solar::dependency()]] specification.
+     * 
+     * @return void
+     * 
+     * @see $_cache
+     * 
+     */
+    public function setCache($spec)
+    {
+        $this->_cache = Solar::dependency('Solar_Cache', $spec);
+    }
+    
+    /**
+     * 
      * Sets the connection-specific cache key prefix.
      * 
      * @param string $prefix The cache-key prefix.  When null, defaults to

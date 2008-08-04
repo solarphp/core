@@ -1,19 +1,28 @@
 <?php
 return array(
     'target' => array(
-        'long'    => 'table',
-        'descr'   => 'The target directory, typically the PEAR directory.',
-        'param'   => 'optional',
+        'long'    => 'target',
+        'descr'   => 'Write files to this directory, typically the include directory.',
+        'param'   => 'required',
+        'value'   => Solar::$system . DIRECTORY_SEPARATOR . 'include',
     ),
     'table' => array(
         'long'    => 'table',
-        'descr'   => 'The table name to derive the model from.',
+        'descr'   => 'The table name for the model to use.',
         'param'   => 'required',
     ),
     'extends' => array(
         'long'    => 'extends',
-        'descr'   => 'Extends from this class name.',
+        'descr'   => 'Extend the model class from this parent class name.',
         'param'   => 'required',
+        'value'   => 'Solar_Sql_Model',
+    ),
+    'connect' => array(
+        'long'    => 'connect',
+        'descr'   => 'Connect to the database and fetch cols for the model setup.',
+        'param'   => 'required',
+        'value'   => true,
+        'filters' => array('validateBool', 'sanitizeBool'),
     ),
     'adapter' => array(
         'long'    => 'adapter',
@@ -22,12 +31,12 @@ return array(
     ),
     'host' => array(
         'long'    => 'host',
-        'descr'   => 'The database host.',
+        'descr'   => 'The host for the database connection.',
         'param'   => 'required',
     ),
     'port' => array(
         'long'    => 'port',
-        'descr'   => 'The database port.',
+        'descr'   => 'The port for the database connection.',
         'param'   => 'required',
     ),
     'user' => array(
@@ -42,7 +51,7 @@ return array(
     ),
     'name' => array(
         'long'    => 'name',
-        'descr'   => 'The name of the database.',
+        'descr'   => 'The name of the database to connect to.',
         'param'   => 'required',
     ),
 );

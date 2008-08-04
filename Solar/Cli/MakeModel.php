@@ -53,6 +53,10 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      */
     protected $_tpl = array();
     
+    protected $_connect = true;
+    
+    protected $_inherit = false;
+    
     /**
      * 
      * Write out a series of model, record, and collection classes for a model.
@@ -64,120 +68,47 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      */
     protected function _exec($class = null)
     {
-        $this->_outln('Making model.');
-        
         // we need a class name, at least
         if (! $class) {
             throw $this->_exception('ERR_NO_CLASS');
         }
         
-        // we need a table name
-        $this->_setTable($class);
-        
-        // we need a target directory
-        $this->_setTarget();
-        
-        // extend this class
-        $this->_setExtends();
-        
-        // emit feedback
-        $this->_outln("Using table '{$this->_table}'.");
-        $this->_outln("Writing '$class' to '{$this->_target}'.");
+        $this->_outln("Making model '$class'.");
         
         // load the templates
         $this->_loadTemplates();
         
-        // get the table info
-        $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
-        $table_cols = $sql->fetchTableCols($this->_table);
-        if (! $table_cols) {
-            throw $this->_exception('ERR_NO_COLS', array(
-                'table' => $this->_table
-            ));
-        }
+        // we need a target directory
+        $this->_setTarget();
         
-        // get the class model template
-        $text = str_replace(
-            array('{:class}', '{:extends}'),
-            array($class, $this->_extends),
-            $this->_tpl['model']
-        );
+        // connect?
+        $this->_setConnect();
         
-        // create the class dir before attempting to write the model class
-        $cdir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class)
-        );
+        // we need a table name
+        $this->_setTable($class);
         
-        if (! file_exists($cdir)) {
-            mkdir($cdir, 0755, true);
-        }
+        // extend this class
+        $this->_setExtends();
         
-        // write the model class
-        $target = $this->_target
-                . str_replace('_', DIRECTORY_SEPARATOR, $class)
-                . '.php';
+        // using inheritance?
+        $this->_setInherit();
         
-        if (file_exists($target)) {
-            $this->_outln('Model class exists.');
+        // write the model/record/collection files
+        $this->_writeModel($class);
+        $this->_writeRecord($class);
+        $this->_writeCollection($class);
+        
+        // write out the setup information
+        if ($this->_inherit) {
+            $this->_outln('Using inheritance, so skipping setup.');
         } else {
-            $this->_outln('Writing model class.');
-            file_put_contents($target, $text);
-        }
-        
-        
-        // get the setup dir
-        $dir = Solar_Dir::fix(
-            $this->_target . str_replace('_', '/', $class) . '/Setup'
-        );
-        
-        if (! file_exists($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        
-        // write the cols file
-        $this->_outln('Updating table cols.');
-        $text = var_export($table_cols, true);
-        file_put_contents($dir . 'table_cols.php', "<?php\nreturn $text;");
-        
-        // write the name file
-        $this->_outln('Updating table name.');
-        file_put_contents($dir . 'table_name.php', "<?php\nreturn '{$this->_table}';");
-        
-        // write the record template
-        $record_target = substr($target, 0, -4) . DIRECTORY_SEPARATOR . 'Record.php';
-        $text = str_replace(
-            array('{:class}', '{:extends}'),
-            array($class, $this->_extends),
-            $this->_tpl['record']
-        );
-        
-        if (file_exists($record_target)) {
-            $this->_outln('Record class exists.');
-        } else {
-            $this->_outln('Writing record class.');
-            file_put_contents($record_target, $text);
-        }
-        
-        // write the record template
-        $collection_target = substr($target, 0, -4)
-                           . DIRECTORY_SEPARATOR
-                           . 'Collection.php';
-        
-        $text = str_replace(
-            array('{:class}', '{:extends}'),
-            array($class, $this->_extends),
-            $this->_tpl['collection']
-        );
-        
-        if (file_exists($collection_target)) {
-            $this->_outln('Collection class exists.');
-        } else {
-            $this->_outln('Writing collection class.');
-            file_put_contents($collection_target, $text);
+            $this->_createSetupDir($class);
+            $this->_writeTableName($class);
+            $this->_writeTableCols($class);
         }
         
         // done!
-        $this->_outln("Done.");
+        $this->_outln('Done.');
     }
     
     /**
@@ -214,12 +145,14 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
     {
         $target = $this->_options['target'];
         if (! $target) {
-            // use the solar system "include" directory.
+            // use the solar system 'include' directory.
             // that should automatically point to the right vendor for us.
-            $target = Solar::$system . "/include";
+            $target = Solar::$system . '/include';
         }
         
         $this->_target = Solar_Dir::fix($target);
+        
+        $this->_outln("Will write to '{$this->_target}'.");
     }
     
     /**
@@ -235,6 +168,7 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
     protected function _setTable($class)
     {
         $table = $this->_options['table'];
+        
         if (! $table) {
             // try to determine from the class name
             $pos = strpos($class, 'Model_');
@@ -249,6 +183,29 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         }
         
         $this->_table = $table;
+        
+        $this->_outln("Using table '{$this->_table}'.");
+    }
+    
+    protected function _setConnect()
+    {
+        $this->_connect = $this->_options['connect'];
+        if ($this->_connect) {
+            $this->_outln('Will connect to database for column information.');
+        } else {
+            $this->_outln('Will not connect to database.');
+        }
+    }
+    
+    protected function _setInherit()
+    {
+        if (substr($this->_extends, -6) == '_Model') {
+            $this->_inherit = false;
+            $this->_outln('Not using inheritance.');
+        } else {
+            $this->_inherit = true;
+            $this->_outln('Using inheritance.');
+        }
     }
     
     /**
@@ -287,6 +244,163 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
             }
         }
         return $config;
+    }
+    
+    protected function _writeModel($class)
+    {
+        // the target file
+        $file = $this->_target
+              . str_replace('_', DIRECTORY_SEPARATOR, $class)
+              . '.php';
+        
+        // does the class file already exist?
+        if (file_exists($file)) {
+            $this->_outln('Model class exists.');
+            return;
+        }
+        
+        // create the class dir before attempting to write the model class
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class)
+        );
+        
+        if (! file_exists($dir)) {
+            $this->_out('Making class directory ... ');
+            mkdir($dir, 0755, true);
+            $this->_outln('done.');
+        }
+        
+        // get the class model template
+        $tpl_key = $this->_inherit ? 'model-inherit' : 'model';
+        $text = str_replace(
+            array('{:class}', '{:extends}'),
+            array($class, $this->_extends),
+            $this->_tpl[$tpl_key]
+        );
+        
+        $this->_out('Writing model class ... ');
+        file_put_contents($file, $text);
+        $this->_outln('done.');
+    }
+    
+    protected function _writeRecord($class)
+    {
+        $file = $this->_target
+              . str_replace('_', DIRECTORY_SEPARATOR, $class)
+              . DIRECTORY_SEPARATOR
+              . 'Record.php';
+
+        if (file_exists($file)) {
+            $this->_outln('Record class exists.');
+            return;
+        }
+        
+        $text = str_replace(
+            array('{:class}', '{:extends}'),
+            array($class, $this->_extends),
+            $this->_tpl['record']
+        );
+        
+        $this->_out('Writing record class ... ');
+        file_put_contents($file, $text);
+        $this->_outln('done.');
+    }
+    
+    protected function _writeCollection($class)
+    {
+        $file = $this->_target
+              . str_replace('_', DIRECTORY_SEPARATOR, $class)
+              . DIRECTORY_SEPARATOR
+              . 'Collection.php';
+
+        if (file_exists($file)) {
+            $this->_outln('Collection class exists.');
+            return;
+        }
+        
+        $text = str_replace(
+            array('{:class}', '{:extends}'),
+            array($class, $this->_extends),
+            $this->_tpl['collection']
+        );
+        
+        $this->_out('Writing collection class ... ');
+        file_put_contents($file, $text);
+        $this->_outln('done.');
+    }
+    
+    protected function _createSetupDir($class)
+    {
+        // get the setup dir
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Setup'
+        );
+        
+        if (! file_exists($dir)) {
+            $this->_out('Creating setup directory ... ');
+            mkdir($dir, 0755, true);
+            $this->_outln('Done.');
+        } else {
+            $this->_outln('Setup directory exists.');
+        }
+    }
+    
+    protected function _writeTableName($class)
+    {
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Setup'
+        );
+        
+        $file = $dir . DIRECTORY_SEPARATOR . 'table_name.php';
+        $text = "<?php\nreturn '{$this->_table}';";
+        
+        // write the name file
+        $this->_out('Saving table name for setup ... ');
+        file_put_contents($file, $text);
+        $this->_outln('done.');
+    }
+    
+    protected function _writeTableCols($class)
+    {
+        $dir = Solar_Dir::fix(
+            $this->_target . str_replace('_', '/', $class) . '/Setup'
+        );
+        
+        $file = $dir . DIRECTORY_SEPARATOR . 'table_cols.php';
+        
+        if (! file_exists($file)) {
+            $this->_out('Creating empty table cols setup ... ');
+            $text = "<?php\nreturn array();";
+            file_put_contents($file, $text);
+            $this->_outln('done.');
+        }
+        
+        if (! $this->_connect) {
+            $this->_outln('Not connecting to database.');
+            $this->_outln('Not fetching table cols.');
+            return;
+        }
+        
+        // connect to database
+        $this->_out('Connecting to database ... ');
+        $sql = Solar::factory('Solar_Sql', $this->_getSqlConfig());
+        $this->_outln('connected.');
+        
+        // fetch table cols
+        $this->_out('Fetching table cols ... ');
+        $table_cols = $sql->fetchTableCols($this->_table);
+        if (! $table_cols) {
+            throw $this->_exception('ERR_NO_COLS', array(
+                'table' => $this->_table
+            ));
+        }
+        $this->_outln('done.');
+        
+        // write the cols file
+        $this->_out('Saving table cols for setup ...');
+        $text = var_export($table_cols, true);
+        file_put_contents($dir . 'table_cols.php', "<?php\nreturn $text;");
+        $this->_outln('done.');
     }
 }
 

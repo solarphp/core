@@ -35,7 +35,7 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
     protected function _setForeignClass($opts)
     {
         if (empty($opts['foreign_class'])) {
-            $opts['foreign_class'] = $opts['name'];
+            $opts['foreign_class'] = $this->_inflect->underToStudly($opts['name']);
         }
         parent::_setForeignClass($opts);
     }

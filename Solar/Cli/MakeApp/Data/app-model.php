@@ -43,6 +43,17 @@ class {:class} extends {:extends} {
     
     /**
      * 
+     * Use only these columns in the form, and when loading record data.
+     * 
+     * When empty, uses all columns.
+     * 
+     * @var array
+     * 
+     */
+    protected $_cols = array();
+    
+    /**
+     * 
      * Browses records by page.
      * 
      * @return void
@@ -81,15 +92,12 @@ class {:class} extends {:extends} {
         $model = Solar::factory('{:model}');
         
         // get the record
-        $item = $model->fetch($id);
+        $this->item = $model->fetch($id);
         
         // does the record exist?
-        if (! $item) {
+        if (! $this->item) {
             return $this->_error('ERR_NO_SUCH_ITEM');
         }
-        
-        // done
-        $this->item = $item;
     }
     
     /**
@@ -124,10 +132,10 @@ class {:class} extends {:extends} {
         $model = Solar::factory('{:model}');
         
         // get the record
-        $item = $model->fetch($id);
+        $this->item = $model->fetch($id);
         
         // does the record exist?
-        if (! $item) {
+        if (! $this->item) {
             return $this->_error('ERR_NO_SUCH_ITEM');
         }
         
@@ -140,26 +148,22 @@ class {:class} extends {:extends} {
             // get the POST data using the array name
             $data = $this->_request->post($model_name, array());
             
-            // load the data to the record
-            $item->load($data);
+            // load the data cols to the record
+            $this->item->load($data, $this->_cols);
             
             // attempt the save.  this will update the record and
             // set invalidation messages if it didn't work.
-            $item->save();
+            $this->item->save();
         }
         
-        // get the form-building hints
-        $form = $item->form();
+        // get the form-building hints for the cols
+        $this->form = $this->item->form($this->_cols);
         
         // catch flash indicating a successful add
         if ($this->_session->getFlash('success_added')) {
-            $form->setStatus(true);
-            $form->feedback = $this->locale('SUCCESS_ADDED');
+            $this->form->setStatus(true);
+            $this->form->feedback = $this->locale('SUCCESS_ADDED');
         }
-        
-        // done
-        $this->item = $item;
-        $this->form = $form;
     }
     
     /**
@@ -181,7 +185,7 @@ class {:class} extends {:extends} {
         $model = Solar::factory('{:model}');
         
         // get a new record
-        $item = $model->fetchNew();
+        $this->item = $model->fetchNew();
         
         // process: save
         if ($this->_isProcess('save')) {
@@ -192,24 +196,21 @@ class {:class} extends {:extends} {
             // get the POST data using the array name
             $data = $this->_request->post($model_name, array());
             
-            // load the data to the record
-            $item->load($data);
+            // load the data cols to the record
+            $this->item->load($data, $this->_cols);
             
             // attempt the save.  this will update the record and
             // set invalidation messages if it didn't work.
-            if ($item->save()) {
+            if ($this->item->save()) {
                 // save a flash value for the next page
                 $this->_session->setFlash('success_added', true);
                 // redirect to editing.
-                return $this->_redirectNoCache("/{$this->_controller}/edit/{$item->id}");
+                return $this->_redirectNoCache("/{$this->_controller}/edit/{$this->item->id}");
             }
         }
         
-        // set the item
-        $this->item = $item;
-        
-        // get the form-building hints
-        $this->form = $item->form();
+        // get the form-building hints for the cols
+        $this->form = $this->item->form($this->_cols);
     }
     
     /**
@@ -232,22 +233,19 @@ class {:class} extends {:extends} {
         $model = Solar::factory('{:model}');
         
         // get the record
-        $item = $model->fetch($id);
+        $this->item = $model->fetch($id);
         
         // does the record exist?
-        if (! $item) {
+        if (! $this->item) {
             return $this->_error('ERR_NO_SUCH_ITEM');
         }
         
         // process: delete confirm
         if ($this->_isProcess('delete_confirm')) {
             // delete it
-            $item->delete();
+            $this->item->delete();
             // redirect to browse
             $this->_redirectNoCache("/{$this->_controller}");
         }
-        
-        // show the item for deletion
-        $this->item = $item;
     }
 }

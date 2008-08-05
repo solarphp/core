@@ -577,7 +577,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * @param array $data An associative array of data to merge with existing
      * record data.
      * 
-     * @return void
+     * @return bool True on success, false on failure.
      * 
      * @todo Automatic connection of related IDs to each other?
      * 
@@ -603,8 +603,20 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
     }
     
-    // @todo Make this the default save() behavior. That means renamaing and
-    // refactoring the record/collection save() methods.
+    /**
+     * 
+     * Perform a save() within a transaction, with automatic commit and
+     * rollback.
+     * 
+     * @param array $data An associative array of data to merge with existing
+     * record data.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     * @todo Make this the default save() behavior? That means renamaing and
+     * refactoring the record/collection save() methods.
+     * 
+     */
     public function saveInTransaction($data = null)
     {
         // convenient reference to the SQL connection
@@ -897,6 +909,9 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * Refreshes data for this record from the database.
      * 
      * Note that this does not refresh any related or calculated values.
+     * 
+     * @param string $status Set the record status to this value when done
+     * with the refresh.
      * 
      * @return void
      * 

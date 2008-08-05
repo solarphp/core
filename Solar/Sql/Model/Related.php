@@ -314,8 +314,22 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     protected $_fetch_object = 'record';
     
+    /**
+     * 
+     * The registered Solar_Inflect object.
+     * 
+     * @var Solar_Inflect
+     * 
+     */
     protected $_inflect;
     
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param mixed $config User-defined configuration values.
+     * 
+     */
     public function __construct($config = null)
     {
         parent::__construct($config);
@@ -408,6 +422,19 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $this->_setRelated($opts);
     }
     
+    /**
+     * 
+     * Convenience method for getting a dump the whole object, or one of its
+     * properties, or an external variable.
+     * 
+     * @param mixed $var If null, dump $this; if a string, dump $this->$var;
+     * otherwise, dump $var.
+     * 
+     * @param string $label Label the dump output with this string.
+     * 
+     * @return void
+     * 
+     */
     public function dump($var = null, $label = null)
     {
         if ($var) {
@@ -693,8 +720,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         $select->multiWhere($this->where);
     }
     
-    // make sure we have at least a base class name.  assume the related name
-    // is singular.
+    /**
+     * 
+     * Sets the base name for the foreign class; assumes the related name is
+     * is singular and inflects it to plural.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _setForeignClass($opts)
     {
         if (empty($opts['foreign_class'])) {
@@ -707,6 +742,15 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
     }
     
+    /**
+     * 
+     * Corrects the foreign_key value in the options.
+     * 
+     * @param array &$opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     abstract protected function _fixForeignKey(&$opts);
     
     /**

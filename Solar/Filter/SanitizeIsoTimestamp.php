@@ -68,7 +68,7 @@ class Solar_Filter_SanitizeIsoTimestamp extends Solar_Filter_Abstract
      * 
      * Converts an array of timestamp parts to a string timestamp.
      * 
-     * @var array $array The array of timestamp parts.
+     * @param array $array The array of timestamp parts.
      * 
      * @return string
      * 
@@ -86,7 +86,7 @@ class Solar_Filter_SanitizeIsoTimestamp extends Solar_Filter_Abstract
      * 
      * Converts an array of date parts to a string date.
      * 
-     * @var array $array The array of date parts.
+     * @param array $array The array of date parts.
      * 
      * @return string
      * 
@@ -113,7 +113,7 @@ class Solar_Filter_SanitizeIsoTimestamp extends Solar_Filter_Abstract
      * 
      * Converts an array of time parts to a string time.
      * 
-     * @var array $array The array of time parts.
+     * @param array $array The array of time parts.
      * 
      * @return string
      * 

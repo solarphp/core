@@ -172,6 +172,16 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
         return $access;
     }
     
+    /**
+     * 
+     * Checks to see if the current user is the owner of application-specific
+     * content; always returns true, to allow for programmatic owner checks.
+     * 
+     * @param mixed $content The content to check ownership of.
+     * 
+     * @return bool
+     * 
+     */
     public function isOwner($content)
     {
         return true;

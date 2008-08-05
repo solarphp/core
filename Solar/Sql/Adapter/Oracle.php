@@ -347,6 +347,17 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         return $result;
     }
     
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
     protected function _dropIndex($table, $name)
     {
         $name = $this->quoteName($name);

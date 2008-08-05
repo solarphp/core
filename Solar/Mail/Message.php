@@ -223,7 +223,7 @@ class Solar_Mail_Message extends Solar_Base
      * 
      * Sets the Solar_Mail_Transport dependency.
      * 
-     * @param Solar_Mail_Transport_Adapter $transport
+     * @param Solar_Mail_Transport_Adapter $transport The transport adapter.
      * 
      * @return Solar_Mail_Message
      * 

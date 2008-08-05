@@ -53,8 +53,22 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
      */
     protected $_tpl = array();
     
+    /**
+     * 
+     * Whether or not to connect to the database.
+     * 
+     * @var bool
+     * 
+     */
     protected $_connect = true;
     
+    /**
+     * 
+     * Is the model class inherited or not?
+     * 
+     * @var bool
+     * 
+     */
     protected $_inherit = false;
     
     /**
@@ -187,6 +201,13 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln("Using table '{$this->_table}'.");
     }
     
+    /**
+     * 
+     * Sets the $_connect property based on the command-line --connect flag.
+     * 
+     * @return void
+     * 
+     */
     protected function _setConnect()
     {
         $this->_connect = $this->_options['connect'];
@@ -197,6 +218,13 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Sets the $_inherit property based on the $_extends value.
+     * 
+     * @return void
+     * 
+     */
     protected function _setInherit()
     {
         if (substr($this->_extends, -6) == '_Model') {
@@ -246,6 +274,15 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         return $config;
     }
     
+    /**
+     * 
+     * Writes the model class file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeModel($class)
     {
         // the target file
@@ -283,6 +320,15 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
     }
     
+    /**
+     * 
+     * Writes the record class file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeRecord($class)
     {
         $file = $this->_target
@@ -306,6 +352,15 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
     }
     
+    /**
+     * 
+     * Writes the collection class file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeCollection($class)
     {
         $file = $this->_target
@@ -329,6 +384,15 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
     }
     
+    /**
+     * 
+     * Creates the model "Setup/" directory.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _createSetupDir($class)
     {
         // get the setup dir
@@ -345,6 +409,15 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Writes the "Setup/table_name.php" file.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeTableName($class)
     {
         $dir = Solar_Dir::fix(
@@ -360,6 +433,16 @@ class Solar_Cli_MakeModel extends Solar_Cli_Base
         $this->_outln('done.');
     }
     
+    /**
+     * 
+     * Writes the "Setup/table_cols.php" file, connecting to the database if
+     * needed.
+     * 
+     * @param string $class The model class name.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeTableCols($class)
     {
         $dir = Solar_Dir::fix(

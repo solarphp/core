@@ -237,7 +237,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
 
     /**
      * 
-     * A PDO-style DSN, for example, "mysql:host=127.0.0.1;dbname=test"
+     * A PDO-style DSN, for example, "mysql:host=127.0.0.1;dbname=test".
      * 
      * @var string
      * 
@@ -692,6 +692,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * Binds data as values into a prepared PDOStatment.
      * 
      * @param PDOStatement $prep The prepared PDOStatement.
+     * 
+     * @param array $data The data to bind as values to the PDOStatement.
      * 
      * @return void
      * 
@@ -1632,7 +1634,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * Quotes all fully-qualified identifier names ("table.col") in a string.
      * 
-     * @param string|array $spec The string in which to quote fully-qualified
+     * @param string|array $text The string in which to quote fully-qualified
      * identifier names to quote.  If an array, quotes names in  each 
      * element in the array.
      * 

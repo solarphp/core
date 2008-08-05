@@ -31,6 +31,16 @@
  *     Solar::stop();
  * }}
  * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
  */
 class Solar_Php extends Solar_Base
 {
@@ -150,6 +160,13 @@ class Solar_Php extends Solar_Base
      */
     protected $_exit_code;
     
+    /**
+     * 
+     * Command-line arguments to pass to the code.
+     * 
+     * @var array
+     * 
+     */
     protected $_argv = array();
     
     /**
@@ -249,12 +266,31 @@ class Solar_Php extends Solar_Base
         return $this;
     }
     
+    /**
+     * 
+     * Add a command-line argument for the code.
+     * 
+     * @param mixed $val The command-line argument value.
+     * 
+     * @return Solar_Php
+     * 
+     */
     public function addArgv($val)
     {
         $this->_argv[] = $val;
         return $this;
     }
     
+    /**
+     * 
+     * Set all command-line arguments for the code at one time; clears all
+     * previous argument values.
+     * 
+     * @param array $array A sequential array of command-line arguments.
+     * 
+     * @return Solar_Php
+     * 
+     */
     public function setArgv($array)
     {
         $this->_argv = (array) $array;
@@ -263,12 +299,10 @@ class Solar_Php extends Solar_Base
     
     /**
      * 
-     * Sets an array of php.ini values, overriding the php.ini file.
+     * When calling Solar::start() in the new process, use this as the $config
+     * value.
      * 
-     * Each key in the array is a php.ini setting name, and each value is the
-     * corresponding php.ini value.
-     * 
-     * @param string $list The array of php.ini key-value pairs.
+     * @param mixed $solar_config The value to use for Solar::start().
      * 
      * @return Solar_Php
      * 
@@ -316,12 +350,30 @@ class Solar_Php extends Solar_Base
         return $this;
     }
     
+    /**
+     * 
+     * Runs a file as a Solar script.
+     * 
+     * @param string $file The file to load as a Solar script.
+     * 
+     * @return Solar_Php
+     * 
+     */
     public function runSolar($file)
     {
         $code = file_get_contents($file);
         return $this->runSolarCode($code);
     }
     
+    /**
+     * 
+     * Runs a code string as a Solar script.
+     * 
+     * @param string $code The code to run as a Solar script.
+     * 
+     * @return Solar_Php
+     * 
+     */
     public function runSolarCode($code)
     {
         $code = $this->_buildSolarCode($code);
@@ -358,6 +410,16 @@ class Solar_Php extends Solar_Base
         return $this->_run($code);
     }
     
+    /**
+     * 
+     * Support method to actually run the code and retain information about
+     * the run.
+     * 
+     * @param string $code The code to execute.
+     * 
+     * @return Solar_Php
+     * 
+     */
     protected function _run($code)
     {
         // clean up from last run
@@ -434,6 +496,15 @@ class Solar_Php extends Solar_Base
         return $this->_last_line;
     }
     
+    /**
+     * 
+     * Builds a code string appropriate for the PHP command-line call.
+     * 
+     * @param string $code The code to run.
+     * 
+     * @return string The "fixed" code.
+     * 
+     */
     protected function _buildCode($code)
     {
         // trim leading and trailing space so as not to mess up the removal of

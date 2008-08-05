@@ -14,13 +14,37 @@
  * 
  * @version $Id: MakeModel.php 2995 2008-03-12 13:58:29Z pmjones $
  * 
+ * @todo Make Vendor_App_Hello, Vendor_Cli_Help.  Also make Vendor_App_Base
+ * and Vendor_Cli_Base?
+ * 
  */
 class Solar_Cli_MakeVendor extends Solar_Cli_Base
 {
+    /**
+     * 
+     * The "StudlyCaps" version of the vendor name.
+     * 
+     * @var string
+     * 
+     */
     protected $_studly = null;
     
+    /**
+     * 
+     * The "lowercase-dashes" version of the vendor name.
+     * 
+     * @var string
+     * 
+     */
     protected $_dashes = null;
     
+    /**
+     * 
+     * The various "source/" dirs to create.
+     * 
+     * @var array
+     * 
+     */
     protected $_dirs = array(
         '/{:dashes}/bin',
         '/{:dashes}/docs',
@@ -36,13 +60,20 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         '/{:dashes}/{:studly}/View/Helper',
     );
     
+    /**
+     * 
+     * The registered Solar_Inflect instance.
+     * 
+     * @var Solar_Inflect
+     * 
+     */
     protected $_inflect;
     
     /**
      * 
-     * Write out a series of files and dirs for a page-controller.
+     * Write out a series of dirs and symlinks for a new Vendor source.
      * 
-     * @param string $class The target class name for the app.
+     * @param string $vendor The Vendor name.
      * 
      * @return void
      * 
@@ -71,6 +102,13 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         $this->_outln($done);
     }
     
+    /**
+     * 
+     * Creates the "source/" directories for the vendor.
+     * 
+     * @return void
+     * 
+     */
     protected function _createDirs()
     {
         $this->_outln('Making vendor source directories.');
@@ -93,6 +131,13 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Creates the various symlinks for the vendor directories.
+     * 
+     * @return void
+     * 
+     */
     protected function _createLinks()
     {
         $this->_outln('Making symlinks.');

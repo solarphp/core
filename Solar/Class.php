@@ -1,4 +1,19 @@
 <?php
+/**
+ * 
+ * Staic support methods for class information.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
 class Solar_Class
 {
     /**
@@ -128,6 +143,8 @@ class Solar_Class
      * for.
      * 
      * @param string $sub Append this subdirectory.
+     * 
+     * @return string The class directory, with optional subdirectory.
      * 
      */
     public static function dir($spec, $sub = null)

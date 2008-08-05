@@ -173,7 +173,7 @@ class Solar_Session extends Solar_Base
      * 
      * The session save handler object.
      * 
-     * @param Solar_Session_Handler_Adapter
+     * @var Solar_Session_Handler_Adapter
      * 
      */
     static public $handler;

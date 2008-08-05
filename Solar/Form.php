@@ -917,7 +917,7 @@ class Solar_Form extends Solar_Base
      * values.  If an array, will recursively descend into the array;
      * if a scalar, will map the value into a form element.
      * 
-     * @param string $elem The name of the current element mapped from
+     * @param string $name The name of the current element mapped from
      * the array of submitted values.  For example, $src['foo']['bar']['baz']
      * maps to "foo[bar][baz]".
      * 

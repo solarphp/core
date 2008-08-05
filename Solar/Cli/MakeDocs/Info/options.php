@@ -7,7 +7,7 @@ return array(
     ),
     'class-dir' => array(
         'long'    => 'class-dir',
-        'descr'   => 'Write API docs to this directory.',
+        'descr'   => 'Write class API docs to this directory.',
         'param'   => 'optional',
     ),
     'package-dir' => array(

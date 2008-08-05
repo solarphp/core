@@ -137,6 +137,15 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_filter_class = null;
     
+    /**
+     * 
+     * The class to use for the cache object.
+     * 
+     * @var string
+     * 
+     * @see $_cache
+     * 
+     */
     protected $_cache_class = 'Solar_Sql_Model_Cache';
     
     // -----------------------------------------------------------------
@@ -442,6 +451,13 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_paging = 10;
     
+    /**
+     * 
+     * The registered Solar_Inflect object.
+     * 
+     * @var Solar_Inflect
+     * 
+     */
     protected $_inflect;
     
     // -----------------------------------------------------------------
@@ -913,6 +929,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * `cache_key`
      * : (bool) An explicit cache key to use; otherwise, defaults to the
      *   serialized SELECT params.
+     * 
+     * @param array $params An array of parameters for the fetch, with keys
+     * for 'cols', 'where', 'group', 'having', 'order', etc.
      * 
      * @return array
      * 

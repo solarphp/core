@@ -31,7 +31,16 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
      */
     protected $_fetch_object = 'collection';
     
-    // unlike has-one and belongs-to, assume the related name is plural
+    /**
+     * 
+     * Sets the base name for the foreign class; assumes the related name is
+     * is already plural.
+     * 
+     * @param array $opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _setForeignClass($opts)
     {
         if (empty($opts['foreign_class'])) {
@@ -157,6 +166,17 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
         $this->type = 'has_many';
     }
     
+    /**
+     * 
+     * Corrects the foreign_key value in the options; uses the native-model
+     * table name as singular when a regular has-many, and the foreign-
+     * model primary column as-is when a 'has-many through'.
+     * 
+     * @param array &$opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixForeignKey(&$opts)
     {
         if (empty($opts['through'])) {

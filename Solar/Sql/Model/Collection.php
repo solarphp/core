@@ -61,7 +61,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * `end`
      * : (int) The row-number at which the collection ends.
      * 
-     * @param array
+     * @var array
      * 
      * @see setPagerInfo()
      * 

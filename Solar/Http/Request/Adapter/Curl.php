@@ -79,9 +79,13 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
      * 
      * Builds a cURL resource handle for _fetch() from property options.
      * 
+     * @param string $uri The URI get a response from.
+     * 
      * @param array $headers A sequential array of headers.
      * 
      * @param string $content The body content.
+     * 
+     * @return resource The cURL resource handle.
      * 
      * @see <http://php.net/curl>
      * 

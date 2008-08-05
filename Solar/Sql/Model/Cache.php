@@ -94,7 +94,7 @@ class Solar_Sql_Model_Cache extends Solar_Base
      * Sets the model this cache will work with; picks up the SQL cache key
      * prefix along with it.
      * 
-     * @param $model Solar_Sql_Model The model this cache will work with.
+     * @param Solar_Sql_Model $model The model this cache will work with.
      * 
      * @return void
      * 

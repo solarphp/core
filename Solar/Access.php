@@ -20,7 +20,13 @@ class Solar_Access extends Solar_Factory
      * 
      * User-supplied configuration values.
      * 
+     * Keys are ...
+     * 
+     * `adapter`
+     * : (string) The adapter class, for example 'Solar_Access_Adapter_Open'.
+     * 
      * @var array
+     * 
      */
     protected $_Solar_Access = array(
         'adapter' => 'Solar_Access_Adapter_Open',

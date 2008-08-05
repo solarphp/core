@@ -54,6 +54,16 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related
         $this->type = 'belongs_to';
     }
     
+    /**
+     * 
+     * Corrects the foreign_key value in the options; uses the foreign-model
+     * table name as singular.
+     * 
+     * @param array &$opts The user-defined relationship options.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixForeignKey(&$opts)
     {
         $prefix = $this->_inflect->toSingular(

@@ -1,6 +1,33 @@
 <?php
+/**
+ * 
+ * Abstract factory class to standardize adapter construction and return.
+ * 
+ * @category Solar
+ * 
+ * @package Solar
+ * 
+ * @author Paul M. Jones <pmjones@solarphp.com>
+ * 
+ * @license http://opensource.org/licenses/bsd-license.php BSD
+ * 
+ * @version $Id$
+ * 
+ */
 abstract class Solar_Factory extends Solar_Base
 {
+    /**
+     * 
+     * User-provided configuration.
+     * 
+     * Keys are ...
+     * 
+     * `adapter`
+     * : (string) The adapter class for the factory to generate.
+     * 
+     * @var array
+     * 
+     */
     protected $_Solar_Factory = array(
         'adapter' => null,
     );
@@ -9,6 +36,10 @@ abstract class Solar_Factory extends Solar_Base
      * 
      * Disallow all calls to methods besides factory() and the existing
      * support methods.
+     * 
+     * @param string $method The method called.
+     * 
+     * @param string $params Params for the method.
      * 
      * @return void
      * 

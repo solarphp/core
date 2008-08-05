@@ -164,7 +164,7 @@ abstract class Solar_Base {
      * 
      * @param string $label Label the dump output with this string.
      * 
-     * @return string
+     * @return void
      * 
      */
     public function dump($var = null, $label = null)

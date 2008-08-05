@@ -133,7 +133,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * When true, all SELECTs go to the master.
      * 
-     * @param bool
+     * @var bool
      * 
      */
     protected $_in_transaction = false;

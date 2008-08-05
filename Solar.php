@@ -339,7 +339,7 @@ class Solar
      *     );
      * }}
      * 
-     * @param array $list The array of callbacks.
+     * @param array $callbacks The array of callbacks.
      * 
      * @return void
      * 

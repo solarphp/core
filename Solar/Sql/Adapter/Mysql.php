@@ -118,6 +118,8 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
      * 
+     * @param array $info An array with host, post, name, etc. keys.
+     * 
      * @return string A PDO-style DSN.
      * 
      */

@@ -541,6 +541,8 @@ class Solar_Sql_Select extends Solar_Base
      * 
      * @see orWhere()
      * 
+     * @return void
+     * 
      */
     public function _multiWhere($cond, $val, $op)
     {
@@ -725,6 +727,8 @@ class Solar_Sql_Select extends Solar_Base
      * @see having()
      * 
      * @see orHaving()
+     * 
+     * @return void
      * 
      */
     public function _multiHaving($cond, $val, $op)
@@ -1259,9 +1263,18 @@ class Solar_Sql_Select extends Solar_Base
         );
     }
     
-    protected function _hasCountCond($parts)
+    /**
+     * 
+     * Determines if there is a COUNT() in any of the condition snippets.
+     * 
+     * @param array $list The list of condition snippets.
+     * 
+     * @return bool True if a COUNT() is present anywhere, false if not.
+     * 
+     */
+    protected function _hasCountCond($list)
     {
-        foreach ($parts as $key => $val) {
+        foreach ($list as $key => $val) {
             if (is_int($key)) {
                 // val is a literal condition
                 $cond = strtoupper($val);
@@ -1279,6 +1292,17 @@ class Solar_Sql_Select extends Solar_Base
         return false;
     }
     
+    /**
+     * 
+     * When doing a countPages(), count using a subselect.
+     * 
+     * @param Solar_Sql_Select $inner The inner subselect to use.
+     * 
+     * @param string $col Count on this column in the subselect.
+     * 
+     * @return int The count on the subselect column.
+     * 
+     */
     protected function _countSubSelect($inner, $col)
     {
         // add the one column we're counting on, to the inner subselect

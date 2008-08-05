@@ -40,6 +40,16 @@ class Solar_Access_Adapter_None extends Solar_Access_Adapter
         );
     }
     
+    /**
+     * 
+     * Checks to see if the current user is the owner of application-specific
+     * content; always returns false, since no access is allowed at all.
+     * 
+     * @param mixed $content The content to check ownership of.
+     * 
+     * @return bool
+     * 
+     */
     public function isOwner($content)
     {
         return false;

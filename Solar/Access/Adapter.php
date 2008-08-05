@@ -51,7 +51,7 @@ abstract class Solar_Access_Adapter extends Solar_Base {
      * this user handle.  If a string, is assumed to be the handle directly;
      * otherwise, the handle is pulled from a Solar_Auth_Adapter object.
      * 
-     * @param array|Solar_Auth_Adapter $auth_spec Fetch access controls for
+     * @param array|Solar_Auth_Adapter $role_spec Fetch access controls for
      * these user roles.  If an array, is assumed to be the roles directly;
      * otherwise, the roles are pulled from a Solar_Role_Adapter object.
      * 

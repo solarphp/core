@@ -18,16 +18,40 @@
  */
 class Solar_Cli_MakeDocs extends Solar_Cli_Base
 {
-    // source code dir
+    /**
+     * 
+     * The source code directory, typically the 'include' directory.
+     * 
+     * @var string
+     * 
+     */
     protected $_source;
     
-    // target dir for API files
+    /**
+     * 
+     * Write class API files to this directory.
+     * 
+     * @var string
+     * 
+     */
     protected $_class_dir;
     
-    // target dir for package files
+    /**
+     * 
+     * Write package files to this directory.
+     * 
+     * @var string
+     * 
+     */
     protected $_package_dir;
     
-    // summary list of classes
+    /**
+     * 
+     * Summary list of all classes.
+     * 
+     * @var array
+     * 
+     */
     protected $_classes_list = array();
     
     /**
@@ -50,20 +74,10 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
     
     /**
      * 
-     * Setup method to add valid command line arguments
+     * Main action: parse the classes and write documentation.
      * 
-     * @return void
-     * 
-     */
-    protected function _setup()
-    {
-        parent::_setup();
-        
-    }
-
-    /**
-     * 
-     * Main action of application
+     * @param string $class Start parsing with this class and recursively
+     * descend.
      * 
      * @return void
      * 
@@ -705,10 +719,14 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
      * 
      * Writes a file to the target directory.
      * 
+     * @param string $type The type of file to write: 'class' or 'package'.
+     * 
      * @param string $file A relative file name, e.g. "class/Class_Name/Overview".
      * 
      * @param mixed $text A text string or array to write to the file; if an
      * array, is imploded with newlines and trimmed before writing.
+     * 
+     * @return void
      * 
      */
     protected function _write($type, $file, $text)
@@ -733,12 +751,34 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         file_put_contents($file, $text);
     }
     
+    /**
+     * 
+     * Touches a file to create it or update its timestamp.
+     * 
+     * @param string $type The type of file to write: 'class' or 'package'.
+     * 
+     * @param string $file A relative file name, e.g. "class/Class_Name/Overview".
+     * 
+     * @return void
+     * 
+     */
     protected function _touch($type, $file)
     {
         $file = $this->_getFile($type, $file);
         touch($file);
     }
     
+    /**
+     * 
+     * Builds a target filename path in the 'class' or 'package' directory.
+     * 
+     * @param string $type The type of file to work with: 'class' or 'package'.
+     * 
+     * @param string $file A relative file name, e.g. "class/Class_Name/Overview".
+     * 
+     * @return string
+     * 
+     */
     protected function _getFile($type, $file)
     {
         if ($type == 'class') {

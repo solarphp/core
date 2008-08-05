@@ -1,6 +1,6 @@
 /**
  * 
- * Generic BREAD application for {:model}.
+ * Generic BREAD application for {:model_class}.
  * 
  */
 class {:class} extends {:extends} {
@@ -18,7 +18,7 @@ class {:class} extends {:extends} {
      * 
      * A list of records.
      * 
-     * @var {:model}_Collection
+     * @var {:model_class}_Collection
      * 
      */
     public $list;
@@ -27,7 +27,7 @@ class {:class} extends {:extends} {
      * 
      * A single record.
      * 
-     * @var {:model}_Record
+     * @var {:model_class}_Record
      * 
      */
     public $item;
@@ -54,18 +54,40 @@ class {:class} extends {:extends} {
     
     /**
      * 
-     * Browses records by page.
+     * An instance of the model class.
+     * 
+     * @var {:model_class}
+     * 
+     */
+    protected $_{:model_var};
+    
+    /**
+     * 
+     * Pre-run logic to load a model instance.
+     * 
+     * @return void
+     * 
+     */
+    protected function _preRun()
+    {
+        // parent logic
+        parent::_preRun();
+        
+        // load a model instance
+        $this->_{:model_var} = Solar::factory('{:model_class}');
+    }
+    
+    /**
+     * 
+     * Browse records by page.
      * 
      * @return void
      * 
      */
     public function actionBrowse()
     {
-        // get the model
-        $model = Solar::factory('{:model}');
-        
         // get the collection
-        $this->list = $model->fetchAll(array(
+        $this->list = $this->_{:model_var}->fetchAll(array(
             'page'        => $this->_query('page', 1),
             'paging'      => $this->_query('paging', 10),
             'count_pages' => true,
@@ -88,11 +110,8 @@ class {:class} extends {:extends} {
             return $this->_error('ERR_NO_ID_SPECIFIED');
         }
                 
-        // get the model
-        $model = Solar::factory('{:model}');
-        
         // get the record
-        $this->item = $model->fetch($id);
+        $this->item = $this->_{:model_var}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {
@@ -128,11 +147,8 @@ class {:class} extends {:extends} {
             return $this->_error('ERR_NO_ID_SPECIFIED');
         }
         
-        // get the model
-        $model = Solar::factory('{:model}');
-        
         // get the record
-        $this->item = $model->fetch($id);
+        $this->item = $this->_{:model_var}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {
@@ -142,11 +158,11 @@ class {:class} extends {:extends} {
         // process: save
         if ($this->_isProcess('save')) {
             
-            // what array name should we look for?
-            $model_name = $model->model_name;
+            // what array name should we look for in the POST data?
+            $name = $this->_{:model_var}->model_name;
             
             // get the POST data using the array name
-            $data = $this->_request->post($model_name, array());
+            $data = $this->_request->post($name, array());
             
             // load the data cols to the record
             $this->item->load($data, $this->_cols);
@@ -181,20 +197,17 @@ class {:class} extends {:extends} {
             return $this->_redirect("/{$this->_controller}/browse");
         }
         
-        // get the model
-        $model = Solar::factory('{:model}');
-        
         // get a new record
-        $this->item = $model->fetchNew();
+        $this->item = $this->_{:model_var}->fetchNew();
         
         // process: save
         if ($this->_isProcess('save')) {
             
-            // what array name should we look for?
-            $model_name = $model->model_name;
+            // what array name should we look for in the POST data?
+            $name = $this->_{:model_var}->model_name;
             
             // get the POST data using the array name
-            $data = $this->_request->post($model_name, array());
+            $data = $this->_request->post($name, array());
             
             // load the data cols to the record
             $this->item->load($data, $this->_cols);
@@ -215,7 +228,7 @@ class {:class} extends {:extends} {
     
     /**
      * 
-     * Deletes a record by ID. Asks for confirmation before actually deleting.
+     * Delete a record by ID; asks for confirmation before actually deleting.
      * 
      * @param int $id The record ID.
      * 
@@ -229,11 +242,8 @@ class {:class} extends {:extends} {
             return $this->_error('ERR_NO_ID_SPECIFIED');
         }
         
-        // get the model
-        $model = Solar::factory('{:model}');
-        
         // get the record
-        $this->item = $model->fetch($id);
+        $this->item = $this->_{:model_var}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {

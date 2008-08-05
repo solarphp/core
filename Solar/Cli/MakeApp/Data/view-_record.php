@@ -3,7 +3,7 @@
  * 
  * Generic record display.
  * 
- * @var $record Solar_Sql_Model_Record from the calling code.
+ * @var $record {:model_class}_Record from the calling code.
  * 
  */
 

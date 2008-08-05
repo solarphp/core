@@ -35,9 +35,22 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
      */
     protected $_class;
     
-    
+    /**
+     * 
+     * The directory for the app class.
+     * 
+     * @var string
+     * 
+     */
     protected $_class_dir;
     
+    /**
+     * 
+     * The filename for the app class.
+     * 
+     * @var string
+     * 
+     */
     protected $_class_file;
     
     /**
@@ -51,12 +64,21 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     
     /**
      * 
-     * Is there one model that we're using?
+     * The name of the model class we're using, if any.
      * 
      * @var string
      * 
      */
-    protected $_model = null;
+    protected $_model_class = null;
+    
+    /**
+     * 
+     * The name of the property to create for the model instance.
+     * 
+     * @var string
+     * 
+     */
+    protected $_model_var = null;
     
     /**
      * 
@@ -125,24 +147,27 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         $this->_outln("Done.");
     }
     
+    /**
+     * 
+     * Writes the application class file itself.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeAppClass()
     {
         // emit feedback
         $this->_outln("Preparing to write '{$this->_class}' to '{$this->_target}'.");
         
         // using app, or app-model?
-        if ($this->_model) {
+        if ($this->_model_class) {
             $tpl_key = 'app-model';
         } else {
             $tpl_key = 'app';
         }
         
         // get the app class template
-        $text = str_replace(
-            array('{:class}', '{:extends}', '{:model}'),
-            array($this->_class, $this->_extends, $this->_model),
-            $this->_tpl[$tpl_key]
-        );
+        $text = $this->_parseTemplate($tpl_key);
         
         // write the app class
         if (file_exists($this->_class_file)) {
@@ -153,6 +178,13 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Creates the application directories..
+     * 
+     * @return void
+     * 
+     */
     protected function _createDirs()
     {
         $dir = $this->_class_dir;
@@ -176,6 +208,13 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Writes the en_US application locale file.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeLocale()
     {
         $text = $this->_tpl['locale'];
@@ -189,9 +228,16 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         }
     }
     
+    /**
+     * 
+     * Writes the application view files.
+     * 
+     * @return void
+     * 
+     */
     protected function _writeViews()
     {
-        if (! $this->_model) {
+        if (! $this->_model_class) {
             $list = array('index');
         } else {
             $list = array(
@@ -206,11 +252,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
         
         foreach ($list as $view) {
             
-            $text = str_replace(
-                array('{:class}', '{:extends}', '{:model}'),
-                array($this->_class, $this->_extends, $this->_model),
-                $this->_tpl["view-$view"]
-            );
+            $text = $this->_parseTemplate("view-$view");
             
             $file = $this->_class_dir . "/View/$view.php";
             if (file_exists($file)) {
@@ -220,6 +262,31 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
                 file_put_contents($file, $text);
             }
         }
+    }
+    
+    /**
+     * 
+     * Parses a template and sets placeholder values.
+     * 
+     * @param string $key The template array key.
+     * 
+     * @return string The template with placeholder values set.
+     * 
+     */
+    protected function _parseTemplate($key)
+    {
+        $data = array(
+            '{:class}'          => $this->_class,
+            '{:extends}'        => $this->_extends,
+            '{:model_class}'    => $this->_model_class,
+            '{:model_var}'      => $this->_model_var,
+        );
+        
+        return str_replace(
+            array_keys($data),
+            array_values($data),
+            $this->_tpl[$key]
+        );
     }
     
     /**
@@ -291,7 +358,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     
     /**
      * 
-     * Sets the model this class will use.
+     * Sets the model class and var name the app class will use.
      * 
      * @return void
      * 
@@ -300,9 +367,21 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     {
         $model = $this->_options['model'];
         if ($model) {
-            $this->_model = $model;
+            
+            // the class name
+            $this->_model_class = $model;
+            
+            // find a var name based on the class name
+            $pos = strpos($model, 'Model_');
+            if ($pos === false) {
+                $this->_model_var = strtolower($model);
+            } else {
+                $this->_model_var = strtolower(substr($model, $pos+6));
+            }
+            
         } else {
-            $this->_model = null;
+            $this->_model_class = null;
+            $this->_model_var   = null;
         }
     }
 }

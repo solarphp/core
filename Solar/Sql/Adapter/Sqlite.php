@@ -162,18 +162,11 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     {
         if (is_numeric($val)) {
             return $val;
-        } elseif (is_array($val)) {
-            // quote array values, not keys, then combine with commas.
-            foreach ($val as $k => $v) {
-                $val[$k] = $this->quote($v);
-            }
-            return implode(', ', $val);
         } else {
-            // quote all other scalars
-            $this->connect();
-            return $this->_pdo->quote($val);
+            return parent::quote($val);
         }
     }
+    
     /**
      * 
      * Returns a list of all tables in the database.

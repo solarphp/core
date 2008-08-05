@@ -503,10 +503,17 @@ class Solar_Uri extends Solar_Base
      */
     public function setPath($spec)
     {
-        $this->path = explode('/', trim($spec, '/'));
+        $spec = trim($spec, '/');
+        
+        $this->path = array();
+        if (! empty($spec)) {
+            $this->path = explode('/', $spec);
+        }
+        
         foreach ($this->path as $key => $val) {
             $this->path[$key] = urldecode($val);
         }
+        
         $this->_setFormatFromPath();
     }
     

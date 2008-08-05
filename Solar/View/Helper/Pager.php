@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Action.php 2933 2007-11-09 20:37:35Z moraes $
+ * @version $Id$
  * 
  */
 class Solar_View_Helper_Pager extends Solar_View_Helper
@@ -52,6 +52,12 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
      * `next_class`
      * : (string) The CSS class for the next-page <a> tag. Default is 'next'.
      * 
+     * `style_href`
+     * : (string) An HREF to the pager stylesheet to load. Default is
+     *   'Solar/styles/pager.css'.
+     * 
+     * @var array
+     * 
      */
     protected $_Solar_View_Helper_Pager = array(
         'list_type'  => 'ul',
@@ -62,6 +68,7 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
         'prev_class' => 'prev',
         'curr_class' => 'curr',
         'next_class' => 'next',
+        'style_href' => 'Solar/styles/pager.css',
     );
     
     /**
@@ -95,11 +102,15 @@ class Solar_View_Helper_Pager extends Solar_View_Helper
             return;
         }
         
+        // add the pager stylesheet
+        $this->_view->head()->addStyle($config['style_href']);
+        
         // make sure we have ol or ul
         $list_type = strtolower($config['list_type']);
         if ($list_type != 'ol') {
             $list_type = 'ul';
         }
+        
         // get the base href to work with, and use str_replace on it later.
         // this will be faster than calling $uri->get() multiple times.
         $uri = Solar::factory('Solar_Uri_Action');

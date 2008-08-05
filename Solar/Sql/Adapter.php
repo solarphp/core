@@ -1230,13 +1230,13 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // is this a SELECT or SELECT DISTINCT?
         if ($parts['distinct']) {
-            $stmt = "SELECT DISTINCT\n\t";
+            $stmt = "SELECT DISTINCT\n    ";
         } else {
-            $stmt = "SELECT\n\t";
+            $stmt = "SELECT\n    ";
         }
         
         // add columns
-        $stmt .= implode(",\n\t", $parts['cols']) . "\n";
+        $stmt .= implode(",\n    ", $parts['cols']) . "\n";
         
         // from these tables
         $stmt .= "FROM ";
@@ -1263,26 +1263,26 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // with these where conditions
         if ($parts['where']) {
-            $stmt .= "WHERE\n\t";
-            $stmt .= implode("\n\t", $parts['where']) . "\n";
+            $stmt .= "WHERE\n    ";
+            $stmt .= implode("\n    ", $parts['where']) . "\n";
         }
         
         // grouped by these columns
         if ($parts['group']) {
-            $stmt .= "GROUP BY\n\t";
-            $stmt .= implode(",\n\t", $parts['group']) . "\n";
+            $stmt .= "GROUP BY\n    ";
+            $stmt .= implode(",\n    ", $parts['group']) . "\n";
         }
         
         // having these conditions
         if ($parts['having']) {
-            $stmt .= "HAVING\n\t";
-            $stmt .= implode("\n\t", $parts['having']) . "\n";
+            $stmt .= "HAVING\n    ";
+            $stmt .= implode("\n    ", $parts['having']) . "\n";
         }
         
         // ordered by these columns
         if ($parts['order']) {
-            $stmt .= "ORDER BY\n\t";
-            $stmt .= implode(",\n\t", $parts['order']) . "\n";
+            $stmt .= "ORDER BY\n    ";
+            $stmt .= implode(",\n    ", $parts['order']) . "\n";
         }
         
         // done!
@@ -1924,9 +1924,9 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // no errors, build a return the CREATE statement
-        $cols = implode(",\n\t", $coldef);
+        $cols = implode(",\n    ", $coldef);
         $table = $this->quoteName($table);
-        return "CREATE TABLE $table (\n\t$cols\n)";
+        return "CREATE TABLE $table (\n    $cols\n)";
     }
     
     /**

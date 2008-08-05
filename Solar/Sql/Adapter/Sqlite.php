@@ -135,6 +135,47 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     
     /**
      * 
+     * Safely quotes a value for an SQL statement; unlike the main adapter,
+     * the SQLite adapter **does not** quote numeric values.
+     * 
+     * If an array is passed as the value, the array values are quoted
+     * and then returned as a comma-separated string; this is useful 
+     * for generating IN() lists.
+     * 
+     * {{code: php
+     *     $sql = Solar::factory('Solar_Sql');
+     *     
+     *     $safe = $sql->quote('foo"bar"');
+     *     // $safe == "'foo\"bar\"'"
+     *     
+     *     $safe = $sql->quote(array('one', 'two', 'three'));
+     *     // $safe == "'one', 'two', 'three'"
+     * }}
+     * 
+     * @param mixed $val The value to quote.
+     * 
+     * @return string An SQL-safe quoted value (or a string of 
+     * separated-and-quoted values).
+     * 
+     */
+    public function quote($val)
+    {
+        if (is_numeric($val)) {
+            return $val;
+        } elseif (is_array($val)) {
+            // quote array values, not keys, then combine with commas.
+            foreach ($val as $k => $v) {
+                $val[$k] = $this->quote($v);
+            }
+            return implode(', ', $val);
+        } else {
+            // quote all other scalars
+            $this->connect();
+            return $this->_pdo->quote($val);
+        }
+    }
+    /**
+     * 
      * Returns a list of all tables in the database.
      * 
      * @return array All table names in the database.

@@ -1302,6 +1302,9 @@ class Solar_Sql_Select extends Solar_Base
             $alias = 'subselect';
         }
         
+        // quote the column name directly, as it won't have the alias on it
+        $col = $this->_sql->quoteName($col);
+        
         // track distinctness
         if ($inner->_parts['distinct']) {
             $distinct = 'DISTINCT ';
@@ -1309,13 +1312,14 @@ class Solar_Sql_Select extends Solar_Base
         } else {
             $distinct = '';
         }
-    
+        
         // build the outer select, which will do the actual count.
         // wrapping with an outer select lets us have all manner of weirdness
         // in the inner query, so that it doesn't conflict with the count.
+        // don't alias the column itself, to soothe sqlite.
         $outer = clone($this);
         $outer->clear();
-        $outer->fromSelect($inner, $alias, "COUNT($distinct$alias.$col)");
+        $outer->fromSelect($inner, $alias, "COUNT($distinct$col)");
         
         // get the count
         return $outer->fetchValue();

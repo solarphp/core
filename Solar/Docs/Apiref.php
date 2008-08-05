@@ -45,7 +45,10 @@ class Solar_Docs_Apiref extends Solar_Base
      */
     protected $_Solar_Docs_Apiref = array(
         'phpdoc'  => null,
-        'log'     => null,
+        'log'     => array(
+            'adapter' => 'Solar_Log_Adapter_Echo',
+            'format'  => '%m',
+        ),
         'unknown' => 'void',
     );
     

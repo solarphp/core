@@ -38,7 +38,7 @@
                  ->addStyleBase("Solar/styles/cssfw/typo.css")
                  ->addStyleBase("Solar/styles/cssfw/forms.css")
                  ->addStyleBase("Solar/styles/cssfw/layout-{$this->layout}.css")
-                 ->addStyleBase("Solar/styles/solar.css")
+                 ->addStyleBase("Solar/styles/solar.css");
     
     // additional baseline styles
     foreach ((array) $this->layout_head['style'] as $val) {

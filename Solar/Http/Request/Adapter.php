@@ -557,7 +557,11 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      */
     public function setMaxRedirects($max)
     {
-        $this->_max_redirects = (int) $max;
+        if ($max === null) {
+            $this->_max_redirects = null;
+        } else {
+            $this->_max_redirects = (int) $max;
+        }
         return $this;
     }
     

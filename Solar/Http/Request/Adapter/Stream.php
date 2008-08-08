@@ -130,7 +130,9 @@ class Solar_Http_Request_Adapter_Stream extends Solar_Http_Request_Adapter
         
         // set other options
         foreach ($var_key as $var => $key) {
-            if ($this->$var) {
+            // use this comparison so boolean false and integer zero values
+            // are honored
+            if ($this->$var !== null) {
                 $http[$key] = $this->$var;
             }
         }

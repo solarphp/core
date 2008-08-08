@@ -198,7 +198,9 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
         
         // set other behaviors
         foreach ($var_opt as $var => $opt) {
-            if ($this->$var) {
+            // use this comparison so boolean false and integer zero values
+            // are honored
+            if ($this->$var !== null) {
                 curl_setopt($ch, $opt, $this->$var);
             }
         }

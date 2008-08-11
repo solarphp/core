@@ -130,6 +130,11 @@ class {:class} extends {:extends} {
      */
     public function actionEdit($id = null)
     {
+        // need an id
+        if (! $id) {
+            return $this->_error('ERR_NO_ID_SPECIFIED');
+        }
+        
         // process: cancel
         if ($this->_isProcess('cancel')) {
             // forward back to reading
@@ -140,11 +145,6 @@ class {:class} extends {:extends} {
         if ($this->_isProcess('delete')) {
             // forward to the delete method for confirmation
             return $this->_redirect("/{$this->_controller}/delete/$id");
-        }
-        
-        // need an id
-        if (! $id) {
-            return $this->_error('ERR_NO_ID_SPECIFIED');
         }
         
         // get the record

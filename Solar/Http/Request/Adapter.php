@@ -301,7 +301,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         list($uri, $headers, $content) = $this->_prepareRequest();
         
         // add the request line
-        array_unshift($headers, "{$this->_method} $uri HTTP/{$this->_version}");
+        $loc = $uri->get(true);
+        array_unshift($headers, "{$this->_method} $loc HTTP/{$this->_version}");
         
         // the request line, headers, and content
         return implode("\r\n", $headers)
@@ -814,7 +815,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        list($headers, $content) = $this->_fetch($req_uri, $req_headers,
+        $req_loc = $uri->get(true);
+        list($headers, $content) = $this->_fetch($req_loc, $req_headers,
             $req_content);
         
         // a stack of responses; this is because there may have been redirects,
@@ -898,7 +900,8 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        list($headers, $content) = $this->_fetch($req_uri, $req_headers,
+        $req_loc = $uri->get(true);
+        list($headers, $content) = $this->_fetch($req_loc, $req_headers,
             $req_content);
         
         // return the raw message
@@ -911,7 +914,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * 
      * Support method to make the request, then return headers and content.
      * 
-     * @param string $uri The URI get a response from.
+     * @param Solar_Uri $uri The URI get a response from.
      * 
      * @param array $headers A sequential array of header lines for the request.
      * 
@@ -928,8 +931,9 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
      * Prepares $this->_headers, $this->_cookies, and $this->content for the
      * request.
      * 
-     * @return array A sequential array where element 0 is a string of headers
-     * (including cookies), and element 1 is a string of content.
+     * @return array A sequential array where element 0 is a URI object,
+     * element 1 is string of headers (including cookies), and element 2 is a 
+     * string of content.
      * 
      * @todo Only generate $content on POST and PUT?
      * 
@@ -1030,7 +1034,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         }
         
         // done!
-        return array($uri->get(true), $headers, $content);
+        return array($uri, $headers, $content);
     }
     
     /**

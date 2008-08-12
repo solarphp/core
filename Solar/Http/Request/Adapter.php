@@ -815,7 +815,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        $req_loc = $uri->get(true);
+        $req_loc = $req_uri->get(true);
         list($headers, $content) = $this->_fetch($req_loc, $req_headers,
             $req_content);
         
@@ -900,7 +900,7 @@ abstract class Solar_Http_Request_Adapter extends Solar_Base {
         list($req_uri, $req_headers, $req_content) = $this->_prepareRequest();
         
         // fetch the headers and content from the response
-        $req_loc = $uri->get(true);
+        $req_loc = $req_uri->get(true);
         list($headers, $content) = $this->_fetch($req_loc, $req_headers,
             $req_content);
         

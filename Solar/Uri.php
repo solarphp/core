@@ -209,12 +209,45 @@ class Solar_Uri extends Solar_Base
     
     /**
      * 
-     * Query string elements split apart into an array.
+     * Contents of virtual $query property. Public access is allowed via
+     * __get() with $query.
+     * 
+     * If you access this property, Solar_Uri treats Solar_Uri::$query as
+     * authoritative, *not* the internal Solar_Uri::$_query_str. If the
+     * original query string did not follow PHP's query string rules, you may
+     * lose data; however, for all other URIs this change should be
+     * transparent. If you are emulating forms, be sure to set $query to an
+     * empty array before adding elements.
+     * 
+     * Why do things this way? The reason is that parse_str() and
+     * http_build_query() may not return the query string *exactly* the way
+     * it was set in the first place. E.g., "?foo&bar" will come back as
+     * "?foo=&bar=", which may or may not be expected.
+     * 
+     * So instead, we **do not** parse the query string to an array until
+     * the user attempts to manipulate the query elements. This guarantees
+     * that if you don't examine or modify the query, you will get back
+     * exactly what you put in.
+     * 
+     * If you examine or modify the query elements, though, that will invoke
+     * parse_str() and http_build_query(), so you may not get back *exactly*
+     * what you set in the first place. In almost every case this won't
+     * matter.
+     * 
+     * Many thanks to Edward Z. Yang for this implementation.
      * 
      * @var array
      * 
+     * @see $_query_str
+     * 
+     * @see __set()
+     * 
+     * @see __get()
+     * 
+     * @see _loadQuery()
+     * 
      */
-    public $query = array();
+    protected $_query = null;
     
     /**
      * 
@@ -224,6 +257,24 @@ class Solar_Uri extends Solar_Base
      * 
      */
     public $fragment = null;
+    
+    /**
+     * 
+     * Internal "original" query string; if you examine or modify the $query
+     * virtual property, this property is ignored when building the URI.
+     * 
+     * @var string
+     * 
+     * @see $_query
+     * 
+     * @see __set()
+     * 
+     * @see __get()
+     * 
+     * @see _loadQuery()
+     * 
+     */
+    protected $_query_str = null;
     
     /**
      * 
@@ -279,6 +330,42 @@ class Solar_Uri extends Solar_Base
         
         // set properties
         $this->set($this->_config['uri']);
+    }
+    
+    /**
+     * 
+     * Implements the virtual $query property.
+     * 
+     * @param string $key The virtual property to set.
+     * 
+     * @param string $val Set the virtual property to this value.
+     * 
+     * @return mixed The value of the virtual property.
+     * 
+     */
+    public function __set($key, $val)
+    {
+        if ($key == 'query') {
+            $this->_query = $val;
+        }
+    }
+    
+    /**
+     * 
+     * Implements access to $_query **by reference** so that it appears to be 
+     * a public $query property.
+     * 
+     * @param string $key The virtual property to return.
+     * 
+     */
+    public function &__get($key)
+    {
+        if ($key == 'query') {
+            if (is_null($this->_query)) {
+                $this->_loadQuery();
+            }
+            return $this->_query;
+        }
     }
     
     /**
@@ -390,7 +477,7 @@ class Solar_Uri extends Solar_Base
         // if we had to force values, remove dummy placeholders
         if ($forced && ! $this->_request->server('HTTP_HOST')) {
             $this->scheme = null;
-            $this->host = null;
+            $this->host   = null;
         }
     }
     
@@ -430,13 +517,16 @@ class Solar_Uri extends Solar_Base
                   . (empty($this->port) ? '' : ':' . (int) $this->port);
         }
         
+        // get the query as a string
+        $query = $this->getQuery();
+        
         // add the rest of the URI. we use trim() instead of empty() on string
         // elements to allow for string-zero values.
         return $uri
              . $this->_config['path']
              . (empty($this->path)           ? '' : $this->_pathEncode($this->path))
              . (trim($this->format) === ''   ? '' : '.' . urlencode($this->format))
-             . (empty($this->query)          ? '' : '?' . http_build_query($this->query))
+             . (empty($query)                ? '' : '?' . $query)
              . (trim($this->fragment) === '' ? '' : '#' . urlencode($this->fragment));
     }
     
@@ -462,28 +552,43 @@ class Solar_Uri extends Solar_Base
     
     /**
      * 
-     * Sets the Solar_Uri::$query array from a string.
+     * Sets the query string in the URI, for Solar_Uri::getQuery() and
+     * Solar_Uri::$query.
      * 
      * This will overwrite any previous values.
      * 
      * @param string $spec The query string to use; for example,
-     * "foor=bar&baz=dib".
+     * `foo=bar&baz=dib`.
      * 
      * @return void
      * 
      */
     public function setQuery($spec)
     {
-        parse_str($spec, $tmp);
-        if (get_magic_quotes_gpc()) {
-            $this->query = array();
-            foreach ($tmp as $key => $val) {
-                $key = stripslashes($key);
-                $val = stripslashes($val);
-                $this->query[$key] = $val;
-            }
+        // reset the origin value
+        $this->_query_str = $spec;
+        
+        // reset the parsed version
+        $this->_query = null;
+    }
+    
+    /**
+     * 
+     * Returns the query portion as a string.  When [[$_query]] is non-null,
+     * uses [[php::http_build_query() | ]] on it; otherwise, returns the
+     * [[$_query_str]] property.
+     * 
+     * @return string The query string; e.g., `foo=bar&baz=dib`.
+     * 
+     */
+    public function getQuery()
+    {
+        // check against the protected property, not the virtual public one,
+        // to avoid __get() when it's not needed.
+        if (is_array($this->_query)) {
+            return http_build_query($this->_query);
         } else {
-            $this->query = $tmp;
+            return $this->_query_str;
         }
     }
     
@@ -515,6 +620,28 @@ class Solar_Uri extends Solar_Base
         }
         
         $this->_setFormatFromPath();
+    }
+    
+    /**
+     * 
+     * Loads $this->_query with an array representation of $this->_query_string
+     * using [[php::parse_str() | ]].
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadQuery()
+    {
+        // although the manual claims that setting magic_quotes_gpc at runtime
+        // will have no effect since $_GET is already populated, it still
+        // affects the behavior of parse_str().
+        $old = get_magic_quotes_gpc();
+        ini_set('magic_quotes_gpc', false);
+        parse_str($this->_query_str, $this->_query);
+        
+        // reset to old behavior for consistency's sake.  There really should
+        // be no reason for code to be relying on this.
+        ini_set('magic_quotes_gpc', $old);
     }
     
     /**

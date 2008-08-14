@@ -3,11 +3,16 @@
  * 
  * Class for Oracle (OCI) behaviors.
  * 
+ * Many thanks to James Kilbride, Darwin Cruz, and others at General Dynamics
+ * for this BSD-Licensed contribution.
+ * 
  * @category Solar
  * 
  * @package Solar_Sql
  * 
  * @author James Kilbride <james.kilbride@gd-ais.com>
+ * 
+ * @copyright 2008 General Dynamics Advanced Information Systems
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
@@ -146,7 +151,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         $table = preg_replace('/[^\w]/', '', $table);
         
         // upper-case the table name for queries
-        $table_upper = strtoupper($table);
+        $table_name = strtoupper($table);
         
         // where the description will be stored
         $descr = array();
@@ -154,9 +159,9 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // get the column info
         $stmt = "SELECT *
                  FROM USER_TAB_COLUMNS
-                 WHERE TABLE_NAME = :table";
+                 WHERE TABLE_NAME = :table_name";
         
-        $data = array('table' => $table_upper);
+        $data = array('table_name' => $table_name);
         
         $cols = $this->fetchAll($stmt, $data);
 
@@ -200,9 +205,9 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // type P(primary) and then lookup the associated Column name.
         $stmt = "SELECT *
                  FROM USER_CONSTRAINTS
-                 WHERE TABLE_NAME = :table";
+                 WHERE TABLE_NAME = :table_name";
         
-        $data = array('table' => $table_upper);
+        $data = array('table_name' => $table_name);
         
         $constraints = $this->fetchAll($stmt, $data);
         
@@ -227,22 +232,20 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // really doesn't have a way to automatically identify
         // autoincrementing columns unless it's going to be done via a
         // trigger and sequence maybe.
-        $stmt = "SELECT *
+        $stmt = "SELECT TRIGGER_NAME
                  FROM USER_TRIGGERS
-                 WHERE TABLE_NAME = :table
+                 WHERE TABLE_NAME = :table_name
                  AND TRIGGERING_EVENT = :event
                  AND STATUS = :status";
         
         $data = array(
-            'table' => $table_upper,
+            'table_name' => $table_name,
             'event' => 'INSERT',
             'status' => 'ENABLED',
         );
-        
         $triggers = $this->fetchAll($stmt, $data);
         
         foreach ($triggers as $trigger) {
-            
             $compare = substr_compare(
                 $trigger['trigger_name'],
                 "IN_",
@@ -250,15 +253,15 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
                 strlen("IN_"),
                 true
             );
-            
             if ($compare == 0) {
                 $col_name = substr(
                     $trigger['trigger_name'],
                     strlen("IN_")
                 );
-                
-                if (array_key_exists($col_name, $descr)) {
-                    $descr[$col_name]['autoinc'] = true;
+                foreach ($descr as $col_key => $col_desc) {
+	                if (strcmp(strtoupper($col_name),strtoupper($col_key)) == 0) {
+	                    $descr[$col_key]['autoinc'] = true;
+	                }	                
                 }
             }
         }
@@ -303,7 +306,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     protected function _createSequence($name, $start = 1)
     {
-        $name = $this->quoteName($name);
+        $name = $this->quoteName(strtoupper($name));
         return $this->query("CREATE SEQUENCE $name START WITH $start");
     }
     
@@ -318,7 +321,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     protected function _dropSequence($name)
     {
-        $name = $this->quoteName($name);
+        $name = $this->quoteName(strtoupper($name));
         return $this->query("DROP SEQUENCE IF EXISTS $name");
     }
     
@@ -334,7 +337,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     protected function _nextSequence($name)
     {
         try {
-            $cmd = "SELECT " . $this->quoteName($name)
+            $cmd = "SELECT " . $this->quoteName(strtoupper($name))
                  . ".NEXTVAL FROM DUAL";
             
             $result = $this->query($cmd);
@@ -347,20 +350,9 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         return $result;
     }
     
-    /**
-     * 
-     * Drops an index.
-     * 
-     * @param string $table The table of the index.
-     * 
-     * @param string $name The full index name.
-     * 
-     * @return void
-     * 
-     */
     protected function _dropIndex($table, $name)
     {
-        $name = $this->quoteName($name);
+        $name = $this->quoteName(strtoupper($name));
         return $this->query("DROP INDEX IF EXISTS $name");
     }
     
@@ -464,27 +456,25 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
      */
     public function createTable($table, $cols)
     {
+    	$table_name = strtoupper($table);
         // main creation routine
         parent::createTable($table, $cols);
         
         // create auto-increment triggers
-        foreach ($cols as $name => $info) {
-            if (! empty($info['autoinc'])) {
-                
-                // create a sequence for the auto-increment
-                $this->_createSequence($name."_seq", 1);
-                
-                // create a trigger for the auto-increment
-                $trigger = "CREATE OR REPLACE TRIGGER \"IN_{$name}\"
-                            BEFORE INSERT ON {$table}
-                            REFERENCING NEW AS NEW
-                            FOR EACH ROW BEGIN
-                                SELECT {$name}_seq.NEXTVAL
-                                INTO :NEW.{$name}
-                                FROM DUAL;
-                            END;";
-                $this->query($trigger);
-            }    
+        foreach ($cols as $col_name => $info) {
+        	$name = strtoupper($col_name);
+        	if (array_key_exists('autoinc',$info)) {
+	            if (! empty($info['autoinc'])) {
+	                
+	                // create a sequence for the auto-increment
+	                $this->_createSequence($name."_SEQ", 1);
+	                
+	                // create a trigger for the auto-increment
+	                // Do NOT reformat to have line breaks. Oracle throws a fit if you do.
+	                $trigger = "CREATE OR REPLACE TRIGGER \"IN_{$name}\" BEFORE INSERT ON {$table_name} REFERENCING NEW AS NEW FOR EACH ROW BEGIN SELECT {$name}_SEQ.NEXTVAL INTO :NEW.{$name} FROM DUAL; END;";
+	                $this->query($trigger);
+	            }    
+        	}
         }
     }
     
@@ -518,6 +508,8 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     protected function _postConnect()
     {
         parent::_postConnect();
+        $alter = "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD'";
+        $this->query($alter);
         $this->_pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
     }
 }

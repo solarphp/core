@@ -192,6 +192,8 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
                 'scope'   => ($scope ? (int) $scope : null),
                 'default' => $this->_getDefault($val['data_default']),
                 'require' => (bool) ($val['nullable'] != 'Y'),
+                'primary' => false, // default, may change later
+                'autoinc' => false, // default, may change later
             );
             
             // don't keep "size" for integers
@@ -243,6 +245,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
             'event' => 'INSERT',
             'status' => 'ENABLED',
         );
+        
         $triggers = $this->fetchAll($stmt, $data);
         
         foreach ($triggers as $trigger) {
@@ -350,6 +353,17 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         return $result;
     }
     
+    /**
+     * 
+     * Drops an index.
+     * 
+     * @param string $table The table of the index.
+     * 
+     * @param string $name The full index name.
+     * 
+     * @return void
+     * 
+     */
     protected function _dropIndex($table, $name)
     {
         $name = $this->quoteName(strtoupper($name));
@@ -379,13 +393,10 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
             $coldef .= " PRIMARY KEY";
         }
     }
-
+    
     /**
      * 
      * Modifies a SELECT statement in place to add a LIMIT clause.
-     * 
-     * The default code adds a LIMIT for MySQL, PostgreSQL, and Sqlite, but
-     * adapters can override as needed.
      * 
      * @param string &$stmt The SELECT statement.
      * 
@@ -457,6 +468,7 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
     public function createTable($table, $cols)
     {
     	$table_name = strtoupper($table);
+    	
         // main creation routine
         parent::createTable($table, $cols);
         
@@ -467,12 +479,19 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
 	            if (! empty($info['autoinc'])) {
 	                
 	                // create a sequence for the auto-increment
-	                $this->_createSequence($name."_SEQ", 1);
+	                $this->_createSequence("{$name}_SEQ", 1);
 	                
-	                // create a trigger for the auto-increment
-	                // Do NOT reformat to have line breaks. Oracle throws a fit if you do.
-	                $trigger = "CREATE OR REPLACE TRIGGER \"IN_{$name}\" BEFORE INSERT ON {$table_name} REFERENCING NEW AS NEW FOR EACH ROW BEGIN SELECT {$name}_SEQ.NEXTVAL INTO :NEW.{$name} FROM DUAL; END;";
-	                $this->query($trigger);
+	                // create a trigger for the auto-increment.
+	                // Do NOT reformat to have line breaks.
+	                // Oracle throws a fit if you do.
+	                $stmt = "CREATE OR REPLACE TRIGGER \"IN_{$name}\" "
+	                      . "BEFORE INSERT ON {$table_name} "
+	                      . "REFERENCING NEW AS NEW "
+	                      . "FOR EACH ROW BEGIN "
+	                      . "SELECT {$name}_SEQ.NEXTVAL INTO :NEW.{$name} FROM DUAL; "
+	                      . "END;";
+	                
+	                $this->query($stmt);
 	            }    
         	}
         }

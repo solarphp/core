@@ -79,7 +79,7 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
      * 
      * Builds a cURL resource handle for _fetch() from property options.
      * 
-     * @param string $uri The URI get a response from.
+     * @param Solar_Uri $uri The URI get a response from.
      * 
      * @param array $headers A sequential array of headers.
      * 
@@ -223,7 +223,9 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
             
             // set other behaviors
             foreach ($var_opt as $var => $opt) {
-                if ($this->$var) {
+                // use this comparison so boolean false and integer zero
+                // values are honored
+                if ($this->$var !== null) {
                     curl_setopt($ch, $opt, $this->$var);
                 }
             }

@@ -6,6 +6,10 @@
  * Many thanks to James Kilbride, Darwin Cruz, and others at General Dynamics
  * for this BSD-Licensed contribution.
  * 
+ * Special note: make sure the connecting user has permission to issue an
+ * `ALTER SESSION SET NLS_DATE_FORMAT` command; this makes the Oracle dates
+ * ISO compliant.
+ * 
  * @category Solar
  * 
  * @package Solar_Sql

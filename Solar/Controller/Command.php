@@ -335,6 +335,39 @@ class Solar_Controller_Command extends Solar_Base
     
     /**
      * 
+     * Escapes ASCII control codes (0-31, 127) and %-signs.
+     * 
+     * Note that this will catch newlines and carriage returns as well.
+     * 
+     * @param string $text The text to escape.
+     * 
+     * @return string The escaped text.
+     * 
+     */
+    protected function _escape($text)
+    {
+        static $keys;
+        static $vals;
+        
+        if (! $keys) {
+            $list = array(
+                '%' => '%%',
+            );
+            
+            for ($i = 0; $i < 32; $i ++) {
+                $list[chr($i)] = "\\$i";
+            }
+            
+            $list[chr(127)] = "\\127";
+            $keys = array_keys($list);
+            $vals = array_values($list);
+        }
+        
+        return str_replace($keys, $vals, $text);
+    }
+    
+    /**
+     * 
      * Prints text to STDOUT **without** a trailing newline.
      * 
      * If the text is a locale key, that text will be used instead.

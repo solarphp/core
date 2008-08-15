@@ -31,7 +31,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      *   forever.  Default is 1800 (30 minutes).
      * 
      * `allow`
-     * : (bool) Whether or not to allow login/logout attempts.
+     * : (bool) Whether or not to allow automatic login/logout at start()
+     *   time. Default true.
      * 
      * `source`
      * : (string) The source for auth credentials, 'get' (via the
@@ -48,7 +49,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * 
      * `source_redirect`
      * : (string) Element key in the credential array source to indicate
-     *   where to redirect on successful login or logout.
+     *   where to redirect on successful login or logout, default 'redirect'.
      * 
      * `source_process`
      * : (string) Element key in the credential array source to indicate
@@ -140,7 +141,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Whether or not to allow authentication actions (login/logout).
+     * Whether or not to allow automatic login/logout at start() time.
      * 
      * @var bool
      * 
@@ -281,7 +282,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         }
         
         // make sure the source is either 'get' or 'post'.
-        if ($this->_config['source'] != 'get' && $this->_config['source'] != 'post') {
+        $is_get_or_post = $this->_config['source'] == 'get' 
+                       || $this->_config['source'] == 'post';
+                       
+        if (! $is_get_or_post) {
             // default to post
             $this->_config['source'] = 'post';
         }
@@ -295,6 +299,9 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         
         // get the current request environment
         $this->_request = Solar_Registry::get('request');
+        
+        // set per config
+        $this->allow = (bool) $this->_config['allow'];
     }
     
     /**
@@ -358,20 +365,26 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // update idle and expire times no matter what
         $this->updateIdleExpire();
         
-        // if current auth **is not** valid, and processing is allowed,
-        // process login attempts
-        if (! $this->isValid() && $this->allow && $this->isLoginRequest()) {
+        // allow auto-processing?
+        if (! $this->allow) {
+            return;
+        }
+        
+        // auto-login
+        if (! $this->isValid() && $this->isLoginRequest()) {
+            // process login attempt
             $this->processLogin();
             if ($this->isValid()) {
-                // was a valid login, attempt to redirect.
+                // attempt to redirect.
                 $this->_redirect();
             }
         }
         
-        // if current auth **is** valid, and processing is allowed,
-        // process logout attempts, and redirect if requested.
-        if ($this->isValid() && $this->allow && $this->isLogoutRequest()) {
+        // auto-logout
+        if ($this->isValid() && $this->isLogoutRequest()) {
+            // process logout attempts
             $this->processLogout();
+            // attempt to redirect.
             $this->_redirect();
         }
     }

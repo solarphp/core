@@ -383,6 +383,22 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * Whether or not the session currently has a particular flash key stored.
+     * Does not return or remove the value of the key.
+     * 
+     * @param string $key The flash key.
+     * 
+     * @return bool True if the session has this flash key in it, false if
+     * not.
+     * 
+     */
+    public function hasFlash($key)
+    {
+        return array_key_exists($key, $this->flash);
+    }
+    
+    /**
+     * 
      * Sets a flash value by key.
      * 
      * @param string $key The flash key.

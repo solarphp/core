@@ -475,25 +475,23 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         // create auto-increment triggers
         foreach ($cols as $col_name => $info) {
         	$name = strtoupper($col_name);
-        	if (array_key_exists('autoinc',$info)) {
-	            if (! empty($info['autoinc'])) {
-	                
-	                // create a sequence for the auto-increment
-	                $this->_createSequence("{$name}_SEQ", 1);
-	                
-	                // create a trigger for the auto-increment.
-	                // Do NOT reformat to have line breaks.
-	                // Oracle throws a fit if you do.
-	                $stmt = "CREATE OR REPLACE TRIGGER \"IN_{$name}\" "
-	                      . "BEFORE INSERT ON {$table_name} "
-	                      . "REFERENCING NEW AS NEW "
-	                      . "FOR EACH ROW BEGIN "
-	                      . "SELECT {$name}_SEQ.NEXTVAL INTO :NEW.{$name} FROM DUAL; "
-	                      . "END;";
-	                
-	                $this->query($stmt);
-	            }    
-        	}
+            if (! empty($info['autoinc'])) {
+                
+                // create a sequence for the auto-increment
+                $this->_createSequence("{$name}_SEQ", 1);
+                
+                // create a trigger for the auto-increment.
+                // Do NOT reformat to have line breaks.
+                // Oracle throws a fit if you do.
+                $stmt = "CREATE OR REPLACE TRIGGER \"IN_{$name}\" "
+                      . "BEFORE INSERT ON {$table_name} "
+                      . "REFERENCING NEW AS NEW "
+                      . "FOR EACH ROW BEGIN "
+                      . "SELECT {$name}_SEQ.NEXTVAL INTO :NEW.{$name} FROM DUAL; "
+                      . "END;";
+                
+                $this->query($stmt);
+            }    
         }
     }
     

@@ -346,10 +346,8 @@ class Solar_Controller_Command extends Solar_Base
      */
     protected function _escape($text)
     {
-        static $keys;
-        static $vals;
-        
-        if (! $keys) {
+        static $list;
+        if (! $list) {
             $list = array(
                 '%' => '%%',
             );
@@ -359,11 +357,9 @@ class Solar_Controller_Command extends Solar_Base
             }
             
             $list[chr(127)] = "\\127";
-            $keys = array_keys($list);
-            $vals = array_values($list);
         }
         
-        return str_replace($keys, $vals, $text);
+        return strtr($text, $list);
     }
     
     /**
@@ -492,20 +488,9 @@ class Solar_Controller_Command extends Solar_Base
      */
     protected function _vt100($text, $num, $replace)
     {
-        static $vt100_keys;
-        if (! $vt100_keys) {
-            $vt100_keys = array_keys($this->_vt100);
-        }
-        
-        static $vt100_vals;
-        if (! $vt100_vals) {
-            $vt100_vals = array_values($this->_vt100);
-        }
-        
-        return str_replace(
-            $vt100_keys,
-            $vt100_vals,
-            $this->locale($text, $num, $replace)
+        return strtr(
+            $this->locale($text, $num, $replace),
+            $this->_vt100
         );
     }
     

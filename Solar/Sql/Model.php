@@ -694,19 +694,25 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param int|array $spec The primary key value for a single record, or an
      * array of primary key values for a collection of records.
      * 
+     * @param array $params An array of parameters for the fetch, with keys
+     * for 'cols', 'group', 'having', 'order', etc.  Note that the 'where'
+     * and 'order' elements are overridden and have no effect.
+     * 
      * @return Solar_Sql_Model_Record|Solar_Sql_Model_Collection A record or
      * record-set object.
      * 
      */
-    public function fetch($spec)
+    public function fetch($spec, $params = null)
     {
         $col = "{$this->_model_name}.{$this->_primary_col}";
         if (is_array($spec)) {
-            $where = array("$col IN (?)" => $spec);
-            return $this->fetchAll(array('where' => $where, 'order' => $col));
+            $params['where'] = array("$col IN (?)" => $spec);
+            $params['order'] = $col;
+            return $this->fetchAll($params);
         } else {
-            $where = array("$col = ?" => $spec);
-            return $this->fetchOne(array('where' => $where, 'order' => $col));
+            $params['where'] = array("$col = ?" => $spec);
+            $params['order'] = $col;
+            return $this->fetchOne($params);
         }
     }
     

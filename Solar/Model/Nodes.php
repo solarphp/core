@@ -104,7 +104,6 @@ class Solar_Model_Nodes extends Solar_Model
             'summ' => 'clob',
             'body' => 'clob',
             'prefs' => 'clob',
-            'xhtml' => 'clob',
         );
         
         $this->_index = array(

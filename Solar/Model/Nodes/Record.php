@@ -28,8 +28,12 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record
         // if exactly null, populate for the first time.
         if ($this->_data['tags_as_string'] === null) {
             $text = '';
-            foreach ($this->tags as $tag) {
-                $text .= "{$tag->name} ";
+            // $this->tags forces the __get() call to the related object,
+            // then only proceeds if there are tags there.
+            if ($this->tags) {
+                foreach ($this->tags as $tag) {
+                    $text .= "{$tag->name} ";
+                }
             }
             $this->_data['tags_as_string'] = rtrim($text);
         }

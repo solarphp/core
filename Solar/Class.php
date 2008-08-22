@@ -59,7 +59,10 @@ class Solar_Class
         // pre-empt further searching for the named class or interface.
         // do not use autoload, because this method is registered with
         // spl_autoload already.
-        if (class_exists($name, false) || interface_exists($name, false)) {
+        $exists = class_exists($name, false)
+               || interface_exists($name, false);
+        
+        if (! $exists) {
             return;
         }
         
@@ -78,7 +81,10 @@ class Solar_Class
         // if the class or interface was not in the file, we have a problem.
         // do not use autoload, because this method is registered with
         // spl_autoload already.
-        if (! class_exists($name, false) && ! interface_exists($name, false)) {
+        $exists = class_exists($name, false)
+               || interface_exists($name, false);
+        
+        if (! $exists) {
             throw Solar::exception(
                 'Solar_Class',
                 'ERR_AUTOLOAD_FAILED',

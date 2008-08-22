@@ -11,5 +11,6 @@ return array(
         'param' => null,
         'value' => false,
         'descr' => 'Run only the named test class; do not descend into subclass tests.',
+        'filters' => array('validateBool', 'sanitizeBool')
     ),
 );

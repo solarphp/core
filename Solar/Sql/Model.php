@@ -31,6 +31,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (dependency) A Solar_Cache dependency for the Solar_Sql_Model_Cache
      *   object.
      * 
+     * `auto_cache`
+     * : (bool) Automatically maintain the data cache.  Default false.
+     * 
      * @var array
      * 
      */

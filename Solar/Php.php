@@ -341,7 +341,7 @@ class Solar_Php extends Solar_Base
      */
     public function setMode($mode)
     {
-        $list = array('echo', 'exec', 'passthru', 'shell_exec', 'system');
+        $list = array('echo', 'exec', 'passthru', 'popen', 'shell_exec', 'system');
         if (! in_array($mode, $list)) {
             throw $this->_exception('ERR_UNKNOWN_MODE');
         } else {
@@ -432,15 +432,35 @@ class Solar_Php extends Solar_Base
         
         // what execution mode?
         switch ($this->_mode) {
+            
         case 'echo':
             echo $cmd;
             break;
+            
         case 'exec':
             $this->_last_line = exec($cmd, $this->_output, $this->_exit_code);
             break;
+            
         case 'passthru':
             passthru($cmd, $this->_exit_code);
             break;
+        
+        case 'popen':
+            $handle = popen($cmd, 'r');
+            while (! feof($handle)) {
+                $read = fread($handle, 4096);
+                echo $read;
+                $this->_output .= $read;
+            }
+            $this->_exit_code = pclose($handle);
+            $tmp = $this->_output;
+            $len = strlen(PHP_EOL) * -1;
+            if (substr($tmp, $len) == PHP_EOL) {
+                $tmp = substr($tmp, 0, $len);
+            }
+            $tmp = explode(PHP_EOL, $tmp);
+            $this->_last_line = end($tmp);
+        
         case 'shell_exec':
             $this->_output = shell_exec($cmd);
             $tmp = $this->_output;
@@ -451,6 +471,7 @@ class Solar_Php extends Solar_Base
             $tmp = explode(PHP_EOL, $tmp);
             $this->_last_line = end($tmp);
             break;
+        
         case 'system':
             $this->_last_line = system($cmd, $this->_exit_code);
             break;

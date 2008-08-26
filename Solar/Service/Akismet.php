@@ -36,7 +36,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Filter.php 2976 2008-01-03 14:05:49Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Service_Akismet extends Solar_Base

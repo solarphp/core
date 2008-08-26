@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: Sqlite.php 3210 2008-06-09 23:50:06Z pmjones $
+ * @version $Id$
  * 
  */
 class Solar_Sql_Adapter_Sqlite2 extends Solar_Sql_Adapter_Sqlite

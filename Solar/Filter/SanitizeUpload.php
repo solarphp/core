@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id: ValidateWord.php 2926 2007-11-09 16:25:44Z pmjones $
+ * @version $Id$
  * 
  */
 

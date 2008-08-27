@@ -44,9 +44,14 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * 
      * Keys are:
      * 
+     * `strftime`
+     * : (bool) When true, uses strftime() instead of date() for formatting 
+     *   dates. Default is false.
+     * 
      * `format`
      * : (string) The default output formatting using [[php:date() | ]] codes.
-     *   Default is 'Y-m-d H:i:s'.
+     *   When `strftime` is true, uses [[php:strftime() | ]] codes instead.
+     *   Default is 'Y-m-d H:i:s' (using date() format codes).
      * 
      * `tz_origin`
      * : (string) Consider all input timestamps as being from this timezone.
@@ -61,7 +66,8 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
      * 
      */
     protected $_Solar_View_Helper_Timestamp = array(
-        'format' => 'Y-m-d H:i:s',
+        'strftime'  => false,
+        'format'    => 'Y-m-d H:i:s',
         'tz_origin' => null,
         'tz_output' => null,
     );
@@ -194,7 +200,13 @@ class Solar_View_Helper_Timestamp extends Solar_View_Helper
         // move by the offset
         $time += $this->_tz_offset;
         
-        // now generate output
-        return $this->_view->escape(date($format, $time));
+        // use strftime() or date()?
+        if ($this->_config['strftime']) {
+            $val = strftime($format, $time);
+        } else {
+            $val = date($format, $time);
+        }
+        
+        return $this->_view->escape($val);
     }
 }

@@ -700,6 +700,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _bind($prep, $data)
     {
+        Solar::dump($data);
+        
         // was data passed for binding?
         if (! $data) {
             return;
@@ -710,7 +712,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // will cause errors later.  so in general, you should *either*
         // bind at query time *or* bind as you go, not both.
         preg_match_all(
-            "/\W:([a-zA-Z_][a-zA-Z0-9_]+?)\W/m",
+            "/\W:([a-zA-Z_][a-zA-Z0-9_]*)/m",
             $prep->queryString . "\n",
             $matches
         );

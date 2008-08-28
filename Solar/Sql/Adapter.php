@@ -700,8 +700,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _bind($prep, $data)
     {
-        Solar::dump($data);
-        
         // was data passed for binding?
         if (! $data) {
             return;

@@ -1,12 +1,12 @@
 <?php
 /**
  * 
- * Abstract page controller class.
+ * Abstract page-controller class.
  * 
  * Expects a directory structure similar to the following ...
  * 
  *     Vendor/              # your vendor namespace
- *       App/               # subdirectory for page controllers
+ *       App/               # subdirectory for page-controllers
  *         Base/
  *           Helper/        # shared helper classes
  *           Layout/        # shared layout files
@@ -80,7 +80,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The action being requested of (performed by) the page controller.
+     * The action being requested of (performed by) the controller.
      * 
      * @var string
      * 
@@ -89,7 +89,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The default page controller action.
+     * The default controller action.
      * 
      * @var string
      * 
@@ -154,7 +154,16 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The name of the variable where page content is placed in the layout.
+     * The default layout to use.
+     * 
+     * @var string
+     * 
+     */
+    protected $_layout_default = null;
+    
+    /**
+     * 
+     * The name of the variable where content is placed in the layout.
      * 
      * Default is 'layout_content'.
      * 
@@ -165,7 +174,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * The short-name of this page controller.
+     * The short-name of this page-controller.
      * 
      * @var string
      * 
@@ -227,7 +236,24 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * @var string
      * 
      */
-    protected $_format_default = 'xhtml';
+    protected $_format_default = null;
+    
+    /**
+     * 
+     * Which formats go with which layouts?
+     * 
+     * Empty/false/null means "no layout", boolean true means "the current or 
+     * default layout", and a string means that particular layout.
+     * 
+     * The default is that XHTML formats use the current layout, and all other
+     * explicit formats get no layout.
+     * 
+     * @var string
+     * 
+     */
+    protected $_format_layout = array(
+        'xhtml' => true,
+    );
     
     /**
      * 
@@ -240,8 +266,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * These helper classes will be added in the middle of the stack, between the
-     * Solar_View_Helper final fallbacks and the vendor+app specific helpers.
+     * These helper classes will be added in the middle of the stack, between
+     * the Solar_View_Helper final fallbacks and the vendor+app specific 
+     * helpers.
      * 
      * @var array
      * 
@@ -309,6 +336,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         'rtf'       => 'application/rtf',
         'text'      => 'text/plain',
         'txt'       => 'text/plain',
+        'xhtml'     => 'application/xhtml+xml',
         'xml'       => 'application/xml',
     );
     
@@ -345,7 +373,11 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (empty($this->_controller)) {
             $pos = strrpos($class, '_');
             $this->_controller = substr($class, $pos + 1);
-            $this->_controller = preg_replace('/([a-z])([A-Z])/', '$1-$2', $this->_controller);
+            $this->_controller = preg_replace(
+                '/([a-z])([A-Z])/',
+                '$1-$2',
+                $this->_controller
+            );
             $this->_controller = strtolower($this->_controller);
         }
         
@@ -413,15 +445,15 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Executes the requested action and returns its output with layout.
      * 
-     * If an exception is thrown during the fetch() process, it is caught
-     * and sent along to the _exceptionDuringFetch() method, which may generate
+     * If an exception is thrown during the fetch() process, it is caught and
+     * sent along to the _exceptionDuringFetch() method, which may generate
      * and return alternative output.
      * 
      * @param string $spec The action specification string, for example,
      * "tags/php+framework" or "user/pmjones/php+framework?page=3"
      * 
-     * @return Solar_Http_Response A response object with headers and body from
-     * the action, view, and layout.
+     * @return Solar_Http_Response A response object with headers and body 
+     * from the action, view, and layout.
      * 
      */
     public function fetch($spec = null)
@@ -579,8 +611,9 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _setContentType()
     {
-        // get the current format, or the default if not specified
-        $format = $this->_format ? $this->_format : $this->_format_default;
+        // get the current format (the _fixFormat() method will have set the
+        // default already, if needed)
+        $format = $this->_format;
         
         // do we have a content-type for the format?
         if (! empty($this->_format_type[$format])) {
@@ -726,18 +759,30 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * Loads properties from an action specification.
      * 
-     * Note that if the action info ends in a format extension, layout will
-     * automatically be turned off.
-     * 
-     * For example, "foo/bar/baz.xml" will set $this->_format = "xml" and
-     * $this->_layout = null.
-     * 
      * @param string $spec The action specification.
      * 
      * @return void
      * 
      */
     protected function _load($spec)
+    {
+        $this->_loadInfoQueryFormat($spec);
+        $this->_loadAction();
+        $this->_fixFormat();
+        $this->_fixLayout();
+        $this->_fixInfo();
+    }
+    
+    /**
+     * 
+     * Given an action specification, loads $_info, $_query, and $_format.
+     * 
+     * @param string $spec The action specification.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadInfoQueryFormat($spec)
     {
         // process the action/param.format?query specification
         if (! $spec) {
@@ -766,17 +811,30 @@ abstract class Solar_Controller_Page extends Solar_Base {
             
         }
         
+        // if the first param is the controller name, drop it.
+        // needed when no spec is passed and we're using the default URI.
+        $shift = ! empty($this->_info[0])
+              && $this->_info[0] == $this->_controller;
+              
+        if ($shift) {
+            array_shift($this->_info);
+        }
+        
         // ignore .php formats
         if (strtolower($this->_format) == 'php') {
             $this->_format = null;
         }
-        
-        // if the first param is the page name, drop it.
-        // needed when no spec is passed and we're using the default URI.
-        if (! empty($this->_info[0]) && $this->_info[0] == $this->_controller) {
-            array_shift($this->_info);
-        }
-        
+    }
+    
+    /**
+     * 
+     * Loads $_action from the existing $_info values.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadAction()
+    {
         // do we have an initial info element as an action method?
         if (empty($this->_info[0])) {
             // use the default action
@@ -785,37 +843,94 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // save it and remove from info
             $this->_action = array_shift($this->_info);
         }
-        
+    }
+    
+    /**
+     * 
+     * Fixes the requested $_format value based on the various properties
+     * available.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixFormat()
+    {
         // are we asking for a non-default format?
         // the trim() lets us get a string-zero format.
-        if (trim($this->_format) !== '') {
+        if (trim($this->_format) === '') {
+            // no explicit format requested, use the default format
+            $this->_format = $this->_format_default;
+            return;
+        }
             
-            // what formats does the action allow?
-            $action_format = $this->_getActionFormat($this->_action);
-            
-            // does the action support the requested format?
-            if (in_array($this->_format, $action_format)) {
-                // action supports the format; turn off layouts by default.
-                $this->_layout = null;
-            } else {
-                // action does not support the format.
-                // add the format extension to the last param.
-                // that's because it might be an actual file name.
-                $val = end($this->_info);
-                $key = key($this->_info);
-                $this->_info[$key] = $val . '.' . $this->_format;
-                // discard the unrecognized format.
-                $this->_format = null;
-            }
+        // what formats does the action allow?
+        $action_format = $this->_getActionFormat($this->_action);
+        
+        // does the action support the requested format?
+        if (!  in_array($this->_format, $action_format)) {
+            // action does not support the format.
+            // add the format extension to the last param.
+            // that's because it might be an actual file name.
+            $val = end($this->_info);
+            $key = key($this->_info);
+            $this->_info[$key] = $val . '.' . $this->_format;
+            // use the default format
+            $this->_format = $this->_format_default;
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the $_layout value based on the various properties available.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixLayout()
+    {
+        // convenience variable
+        $format = $this->_format;
+        
+        // "no format" means "use the default layout"
+        if (! $format) {
+            $this->_layout = $this->_layout_default;
+            return;
         }
         
-        // finally, remove blank info elements from the end.
-        // this happens sometimes with elements being added
-        // and removed from format checking, and helps make
-        // sure that action default parameters are honored.
+        // no format => layout mapping means no layout
+        if (empty($this->_format_layout[$format])) {
+            $this->_layout = null;
+            return;
+        }
+        
+        // use the default, or a specific one?
+        $layout = $this->_format_layout[$format];
+        if ($layout === true) {
+            // use the default
+            $this->_layout = $this->_layout_default;
+        } else {
+            // use a specific layout
+            $this->_layout = $layout;
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the $_info value based on the various properties available.
+     * 
+     * Removes empty-string info elements from the end of the array. this
+     * happens sometimes with elements being added and removed from format
+     * checking, and helps make sure that action default parameters are
+     * honored.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixInfo()
+    {
         $i = count($this->_info);
         while ($i --) {
-            // the trim lets us get a string-zero param
+            // the trim lets us keep literal '0' strings
             if (trim($this->_info[$i]) !== '') {
                 // not empty, stop removing blanks
                 break;
@@ -842,7 +957,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _info($key, $val = null)
     {
-        if (array_key_exists($key, $this->_info) && $this->_info[$key] !== null) {
+        $exists = array_key_exists($key, $this->_info)
+               && $this->_info[$key] !== null;
+               
+        if ($exists) {
             return $this->_info[$key];
         } else {
             return $val;
@@ -866,7 +984,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _query($key, $val = null)
     {
-        if (array_key_exists($key, $this->_query) && $this->_query[$key] !== null) {
+        $exists = array_key_exists($key, $this->_query)
+               && $this->_query[$key] !== null;
+        
+        if ($exists) {
             return $this->_query[$key];
         } else {
             return $val;
@@ -875,7 +996,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Redirects to another page and action, then calls exit(0).
+     * Redirects to another controller and action, then calls exit(0).
      * 
      * @param Solar_Uri_Action|string $spec The URI to redirect to.
      * 
@@ -893,10 +1014,10 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Redirects to another page and action after disabling HTTP caching.
+     * Redirects to another controller and action after disabling HTTP caching.
      * 
      * The _redirect() method is often called after a successful POST
-     * operation, to show a "success" or "edit" page. In such cases, clicking
+     * operation, to show a "success" or "edit" controller. In such cases, clicking
      * clicking "back" or "reload" will generate a warning in the
      * browser allowing for a possible re-POST if the user clicks OK.
      * Typically this is not what you want.
@@ -1070,30 +1191,34 @@ abstract class Solar_Controller_Page extends Solar_Base {
             return array();
         }
         
-        // look for the action as passed (foo-bar) in action_format
+        // look for "all actions" formats
+        $all = empty($this->_action_format['*'])
+             ? array()
+             : (array) $this->_action_format['*'];
+             
+        // look for the action as passed (foo-bar)
         $key = $action;
         if (! empty($this->_action_format[$key])) {
-            return (array) $this->_action_format[$key];
+            return array_merge($all, (array) $this->_action_format[$key]);
         }
         
-        // convert the action to method style (foo-bar to fooBar) and look again
+        // convert the action to method style (fooBar) and look again
         $key = str_replace('-', ' ', $action);
         $key = ucwords(trim($key));
         $key = str_replace(' ', '', $key);
         $key[0] = strtolower($key[0]);
         if (! empty($this->_action_format[$key])) {
-            return (array) $this->_action_format[$key];
+            return array_merge($all, (array) $this->_action_format[$key]);
         }
         
-        // convert the action to full method style (actionFooBar) and look for
-        // the last time
+        // convert the action to full method style (actionFooBar)
         $key = 'action' . ucfirst($key);
         if (! empty($this->_action_format[$key])) {
-            return (array) $this->_action_format[$key];
+            return array_merge($all, (array) $this->_action_format[$key]);
         }
         
-        // fail
-        return array();
+        // no other ways to look for it
+        return $all;
     }
     
     /**
@@ -1179,7 +1304,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes before rendering the page view and layout.
+     * Executes before rendering the controller view and layout.
      * 
      * Use this to pre-process $this->_view_object, or to manipulate
      * controller properties with view helpers.
@@ -1203,7 +1328,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
-     * Executes after rendering the page view and layout.
+     * Executes after rendering the controller view and layout.
      * 
      * Use this to do a final filter or maniuplation of $this->_response
      * from the view and layout scripts.  By default, it leaves the

@@ -87,6 +87,17 @@ class Solar_Controller_Front extends Solar_Base
     
     /**
      * 
+     * The page-name key matched to the routing map, if any.
+     * 
+     * @var array
+     * 
+     * @see _getPageClass()
+     * 
+     */
+    protected $_routing_key;
+    
+    /**
+     * 
      * Stack of page-controller class prefixes.
      * 
      * @var Solar_Class_Stack
@@ -186,6 +197,14 @@ class Solar_Controller_Front extends Solar_Base
         // instantiate the controller class and fetch its content
         $obj = Solar::factory($class);
         $obj->setFrontController($this);
+        
+        // was this the result of a static routing? if so, force the
+        // page controller to use the route name.
+        if ($this->_routing_key) {
+            $obj->setController($this->_routing_key);
+        }
+        
+        // done, fetch the page-controller results
         return $obj->fetch($uri);
     }
     
@@ -219,9 +238,13 @@ class Solar_Controller_Front extends Solar_Base
     {
         if (! empty($this->_routing[$page])) {
             // found an explicit route
+            $this->_routing_key = $page;
             $class = $this->_routing[$page];
         } else {
-            // no explicit route, try to find a matching class
+            // no explicit route
+            $this->_routing_key = null;
+            
+            // try to find a matching class
             $page = str_replace('-',' ', strtolower($page));
             $page = str_replace(' ', '', ucwords(trim($page)));
             $class = $this->_stack->load($page, false);
@@ -248,7 +271,7 @@ class Solar_Controller_Front extends Solar_Base
                  . htmlspecialchars("Page controller for '$page' not found.")
                  . "</p></body></html>";
         
-        $response = Solar::factory('Solar_Http_Response');
+        $response = Solar_Registry::get('response');
         $response->setStatusCode(404);
         $response->content = $content;
         

@@ -443,6 +443,21 @@ abstract class Solar_Controller_Page extends Solar_Base {
     
     /**
      * 
+     * Sets the name for this page-controller; generally used only by the 
+     * front-controller when static routing leads to this page.
+     * 
+     * @param string $controller The name for this page controller.
+     * 
+     * @return void
+     * 
+     */
+    public function setController($controller)
+    {
+        $this->_controller = $controller;
+    }
+    
+    /**
+     * 
      * Executes the requested action and returns its output with layout.
      * 
      * If an exception is thrown during the fetch() process, it is caught and

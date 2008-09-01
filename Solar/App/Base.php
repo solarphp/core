@@ -129,7 +129,7 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
      * @var string
      * 
      */
-    protected $_layout = 'navtop-localright';
+    protected $_layout_default = 'navtop-localright';
     
     /**
      * 

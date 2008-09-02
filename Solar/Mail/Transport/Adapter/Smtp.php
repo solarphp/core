@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Mail-transport adapter using an SMTP connection.
+ * Mail-transport adapter using an SMTP adapter connection.
  * 
  * @category Solar
  * 
@@ -23,7 +23,7 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter
      * Keys are:
      * 
      * `smtp`
-     * : (dependency) A Solar_Smtp dependency object.  Default is 'smtp',
+     * : (dependency) A Solar_Smtp_Adapter dependency.  Default is 'smtp',
      *   which means to use the registered object named 'smtp'.
      * 
      * @var array
@@ -35,19 +35,12 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter
     
     /**
      * 
-     * Constructor.
+     * The SMTP adapter dependency.
      * 
-     * @param array $config User-defined configuration values.
+     * @var Solar_Smtp_Adapter
      * 
      */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-        $this->_smtp = Solar::dependency(
-            'Solar_Smtp',
-            $this->_config['smtp']
-        );
-    }
+    protected $_smtp;
     
     /**
      * 
@@ -58,18 +51,43 @@ class Solar_Mail_Transport_Adapter_Smtp extends Solar_Mail_Transport_Adapter
      */
     public function __destruct()
     {
-        $this->_smtp->disconnect();
+        if ($this->_smtp) {
+            $this->_smtp->disconnect();
+        }
     }
     
     /**
      * 
-     * Sends the Solar_Mail_Message through an SMTP server.
+     * Sets the SMTP adapter.
+     * 
+     * @param Solar_Smtp_Adapter $smtp The SMTP adapter.
+     * 
+     * @return void
+     * 
+     */
+    public function setSmtp(Solar_Smtp_Adapter $smtp)
+    {
+        $this->_smtp = $smtp;
+    }
+    
+    /**
+     * 
+     * Sends the Solar_Mail_Message through an SMTP server connection; 
+     * lazy-loads the SMTP dependency if needed.
      * 
      * @return bool True on success, false on failure.
      * 
      */
-    public function _send()
+    protected function _send()
     {
+        // lazy-load the SMTP dependency if it's not already present
+        if (! $this->_smtp) {
+            $this->_smtp = Solar::dependency(
+                'Solar_Smtp',
+                $this->_config['smtp']
+            );
+        }
+        
         // get the headers for the message
         $headers = $this->_mail->fetchHeaders();
         

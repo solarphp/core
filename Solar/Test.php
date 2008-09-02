@@ -375,7 +375,7 @@ class Solar_Test extends Solar_Base
             $this->fail(
                 'Non-supported type.',
                 array(
-                    'actual' => $this->_export($actual),
+                    'actual' => gettype($actual),
                     'type'   => $expect,
                 )
             );

@@ -558,7 +558,8 @@ class Solar_Http_Response extends Solar_Base
      */
     protected function _sendHeaders()
     {
-        // build the full status header string
+        // build the full status header string.  the values have already been
+        // sanitized by setStatus() and setStatusText().
         $status = "HTTP/{$this->_version} {$this->_status_code}";
         if ($this->_status_text) {
             $status .= " {$this->_status_text}";
@@ -576,11 +577,12 @@ class Solar_Http_Response extends Solar_Base
                 continue;
             }
             
-            // set each value for the header
+            // send each value for the header
             foreach ((array) $list as $val) {
-                // sanitize and set
-                $line = Solar_Mime::headerLine($key, $val);
-                header($line);
+                // we don't need full MIME escaping here, just sanitize the
+                //  value by stripping CR and LF chars
+                $val = str_replace(array("\r", "\n"), '', $val);
+                header("$key: $val");
             }
         }
         

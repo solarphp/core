@@ -333,6 +333,68 @@ class Solar_Test extends Solar_Base
     }
     
     /**
+     *
+     * Asserts that a variable is of a certain PHP type.
+     * 
+     * Recognized types are:
+     * 
+     * - array
+     * - bool
+     * - float
+     * - int
+     * - numeric
+     * - object
+     * - resource
+     * - scalar
+     * - string
+     * 
+     * @param mixed $actual The variable to test.
+     *
+     * @param string $expect The type to expect.
+     *
+     * @return bool The assertion result.
+     *
+     */
+    public function assertType($actual, $expect)
+    {
+        $this->_assert_count ++;
+
+        $types = array(
+            'array',
+            'bool',
+            'float',
+            'int',
+            'numeric',
+            'object',
+            'resource',
+            'scalar',
+            'string',
+        );
+
+        if (! in_array($expect, $types)) {
+            $this->fail(
+                'Non-supported type.',
+                array(
+                    'actual' => $this->_export($actual),
+                    'type'   => $expect,
+                )
+            );
+        }
+
+        $func = 'is_' . $expect;
+        if(! $func($actual)) {
+            $this->fail(
+                'Expected ' . $expect . ', actually not',
+                array(
+                    'actual' => gettype($actual),
+                )
+            );
+        }
+        
+        return true;
+    }
+    
+    /**
      * 
      * Asserts that two variables have the same type and value.
      * 

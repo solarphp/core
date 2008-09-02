@@ -358,7 +358,7 @@ class Solar_Test extends Solar_Base
     public function assertType($actual, $expect)
     {
         $this->_assert_count ++;
-
+        
         $types = array(
             'array',
             'bool',
@@ -370,7 +370,7 @@ class Solar_Test extends Solar_Base
             'scalar',
             'string',
         );
-
+        
         if (! in_array($expect, $types)) {
             $this->fail(
                 'Non-supported type.',
@@ -380,7 +380,7 @@ class Solar_Test extends Solar_Base
                 )
             );
         }
-
+        
         $func = 'is_' . $expect;
         if(! $func($actual)) {
             $this->fail(

@@ -33,7 +33,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter
      * 
      * `format`
      * : (string) The line format for each saved event.
-     *   Use '%t' for the timestamp, '%e' for the class name, '%e' for
+     *   Use '%t' for the timestamp, '%c' for the class name, '%e' for
      *   the event type, '%m' for the event description, and '%%' for a
      *   literal percent.  Default is '%t %c %e %m'.
      * 
@@ -43,7 +43,7 @@ class Solar_Log_Adapter_File extends Solar_Log_Adapter
     protected $_Solar_Log_Adapter_File = array(
         'events' => '*',
         'file'   => '',
-        'format' => '%t %e %m', // time, event, descr
+        'format' => '%t %c %e %m',
     );
     
     /**

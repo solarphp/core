@@ -8,11 +8,13 @@ return array(
     'class-dir' => array(
         'long'    => 'class-dir',
         'descr'   => 'Write class API docs to this directory.',
-        'param'   => 'optional',
+        'param'   => 'required', 
+        'require' => true,
     ),
     'package-dir' => array(
         'long'    => 'package-dir',
         'descr'   => 'Write package docs to this directory.',
-        'param'   => 'optional',
+        'param'   => 'required', 
+        'require' => true,
     ),
 );

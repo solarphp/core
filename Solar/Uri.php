@@ -357,6 +357,8 @@ class Solar_Uri extends Solar_Base
      * 
      * @param string $key The virtual property to return.
      * 
+     * @return array
+     * 
      */
     public function &__get($key)
     {

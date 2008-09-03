@@ -1174,7 +1174,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _getActionMethod($action)
     {
-        // convert example-name and example_name to "actionExampleName"
+        // convert example-name to "actionExampleName"
         $method = str_replace('-', ' ', $action);
         $method = ucwords(trim($method));
         $method = 'action' . str_replace(' ', '', $method);
@@ -1247,7 +1247,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      */
     protected function _getActionView($action)
     {
-        // convert example-name and example_name to exampleName
+        // convert example-name to exampleName
         $view = str_replace('-', ' ', $action);
         $view = ucwords(trim($view));
         $view = str_replace(' ', '', $view);

@@ -77,7 +77,7 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record
      * @return void
      * 
      */
-    public function _postSave()
+    protected function _postSave()
     {
         // -------------------------------------------------------------
         // 

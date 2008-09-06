@@ -25,7 +25,6 @@
  *     
  *     $php->setIniFile(false)
  *         ->setIniArray($ini)
- *         ->setMode('passthru')
  *         ->runSolarCode('echo "hello world!\n"');
  *     
  *     Solar::stop();
@@ -56,7 +55,7 @@ class Solar_Php extends Solar_Base
         'ini_file'     => null,
         'ini_set'      => null,
         'solar_config' => null,
-        'mode'         => null,
+        'echo'         => null,
     );
     
     /**
@@ -65,7 +64,7 @@ class Solar_Php extends Solar_Base
      * 
      * @var string
      * 
-     * @todo switch this based on Windows/Mac/Linux.
+     * @todo switch this based on BSD/Linux/Mac/Solaris.
      * 
      */
     protected $_php = '/usr/local/bin/php';
@@ -106,29 +105,12 @@ class Solar_Php extends Solar_Base
     
     /**
      * 
-     * The process execution mode.
+     * Whether or not to echo the process output as it goes.
      * 
-     * Valid settings are:
-     * 
-     * `echo`
-     * : Echoes the command, does not execute it.
-     * 
-     * `exec`
-     * : Uses [[php::exec() | ]] for the process.
-     * 
-     * `passthru`
-     * : Uses [[php::passthru() | ]] for the process.
-     * 
-     * `shell_exec`
-     * : Uses [[php::shell_exec() | ]] for the process.
-     * 
-     * `system`
-     * : Uses [[php::system() | ]] for the process.
-     * 
-     * @var mixed
+     * @var bool
      * 
      */
-    protected $_mode = 'exec';
+    protected $_echo = true;
     
     /**
      * 
@@ -315,39 +297,17 @@ class Solar_Php extends Solar_Base
     
     /**
      * 
-     * Sets the execution mode for the process.
+     * Turns execution process output on and off.
      * 
-     * Valid modes are:
-     * 
-     * `echo`
-     * : Echoes the command, does not execute it.
-     * 
-     * `exec`
-     * : Uses [[php::exec() | ]] for the process.
-     * 
-     * `passthru`
-     * : Uses [[php::passthru() | ]] for the process.
-     * 
-     * `shell_exec`
-     * : Uses [[php::shell_exec() | ]] for the process.
-     * 
-     * `system`
-     * : Uses [[php::system() | ]] for the process.
-     * 
-     * @param string $mode One of the reconized modes.
+     * @param bool $echo True to echo the process as it runs, or false to
+     * suppress output.
      * 
      * @return Solar_Php
      * 
      */
-    public function setMode($mode)
+    public function setEcho($echo)
     {
-        $list = array('echo', 'exec', 'passthru', 'popen', 'shell_exec', 'system');
-        if (! in_array($mode, $list)) {
-            throw $this->_exception('ERR_UNKNOWN_MODE');
-        } else {
-            $this->_mode = $mode;
-        }
-        return $this;
+        $this->_echo = (bool) $echo;
     }
     
     /**
@@ -430,52 +390,29 @@ class Solar_Php extends Solar_Base
         // build the full command with PHP code
         $cmd = $this->_buildCommand($code);
         
-        // what execution mode?
-        switch ($this->_mode) {
-            
-        case 'echo':
-            echo $cmd;
-            break;
-            
-        case 'exec':
-            $this->_last_line = exec($cmd, $this->_output, $this->_exit_code);
-            break;
-            
-        case 'passthru':
-            passthru($cmd, $this->_exit_code);
-            break;
+        // open a process handle and send the command
+        $handle = popen($cmd, 'rb');
         
-        case 'popen':
-            $handle = popen($cmd, 'r');
-            while (! feof($handle)) {
-                $read = fread($handle, 4096);
+        // read from the handle
+        while (! feof($handle)) {
+            $read = fread($handle, 4096);
+            if ($this->_echo) {
                 echo $read;
-                $this->_output .= $read;
             }
-            $this->_exit_code = pclose($handle);
-            $tmp = $this->_output;
-            $len = strlen(PHP_EOL) * -1;
-            if (substr($tmp, $len) == PHP_EOL) {
-                $tmp = substr($tmp, 0, $len);
-            }
-            $tmp = explode(PHP_EOL, $tmp);
-            $this->_last_line = end($tmp);
-        
-        case 'shell_exec':
-            $this->_output = shell_exec($cmd);
-            $tmp = $this->_output;
-            $len = strlen(PHP_EOL) * -1;
-            if (substr($tmp, $len) == PHP_EOL) {
-                $tmp = substr($tmp, 0, $len);
-            }
-            $tmp = explode(PHP_EOL, $tmp);
-            $this->_last_line = end($tmp);
-            break;
-        
-        case 'system':
-            $this->_last_line = system($cmd, $this->_exit_code);
-            break;
+            $this->_output .= $read;
         }
+        
+        // close the handle and retain the exit code
+        $this->_exit_code = pclose($handle);
+        
+        // get the last line of output.
+        $tmp = $this->_output;
+        $len = strlen(PHP_EOL) * -1;
+        if (substr($tmp, $len) == PHP_EOL) {
+            $tmp = substr($tmp, 0, $len);
+        }
+        $tmp = explode(PHP_EOL, $tmp);
+        $this->_last_line = end($tmp);
         
         // done!
         return $this;

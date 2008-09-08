@@ -177,6 +177,10 @@ class Solar_Model_Nodes extends Solar_Model
     {
         $tag_list = $this->_fixTagList($tag_list);
         if ($tag_list) {
+            
+            // make sure the params are right before we manipulate them
+            $params = $this->fixSelectParams($params);
+            
             // use this so we can inherit different model names
             $native_primary = "{$this->_model_name}.{$this->_primary_col}";
             

@@ -1553,6 +1553,14 @@ abstract class Solar_Sql_Model extends Solar_Base
             array('sql' => $this->_sql)
         );
         
+        // add the explicitly asked-for columns before the eager-join cols.
+        // this is to make sure the fetchPairs() method works right, because
+        // adding the eager columns first will mess that up.
+        $select->from(
+            "{$this->_table_name} AS {$this->_model_name}",
+            $params['cols']
+        );
+        
         // modify the select to add eager joins
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
@@ -1569,7 +1577,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // all the other pieces
         $select->distinct($params['distinct'])
-               ->from("{$this->_table_name} AS {$this->_model_name}", $params['cols'])
                ->multiWhere($params['where'])
                ->group($params['group'])
                ->multiHaving($params['having'])

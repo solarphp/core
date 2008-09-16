@@ -250,9 +250,8 @@ class Solar
             );
         }
         
-        // set the system and autoload-include directories
+        // set the system directory
         Solar::$system = Solar::config('Solar', 'system');
-        Solar::$include = Solar::config('Solar', 'include');
         
         // process ini settings from config file
         $settings = Solar::config('Solar', 'ini_set', array());
@@ -427,11 +426,6 @@ class Solar
         
         // convert the class name to a file path.
         $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
-        
-        // using autoload-include?
-        if (Solar::$include) {
-            $file = Solar::$include . DIRECTORY_SEPARATOR . $file;
-        }
         
         // include the file and check for failure. we use Solar_File::load()
         // instead of require() so we can see the exception backtrace.

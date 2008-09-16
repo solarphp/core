@@ -69,11 +69,6 @@ class Solar_Class
         // convert the class name to a file path.
         $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
         
-        // using autoload-include?
-        if (Solar::$include) {
-            $file = Solar::$include . DIRECTORY_SEPARATOR . $file;
-        }
-        
         // include the file and check for failure. we use Solar_File::load()
         // instead of require() so we can see the exception backtrace.
         Solar_File::load($file);
@@ -163,11 +158,6 @@ class Solar_Class
         
         // convert the class to a base directory to stem from
         $base = str_replace('_', DIRECTORY_SEPARATOR, $class);
-        
-        // if we have a static include directory, use it
-        if (Solar::$include) {
-            $base = Solar::$include . DIRECTORY_SEPARATOR . $base;
-        }
         
         // does the directory exist?
         $dir = Solar_Dir::exists($base);

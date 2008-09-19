@@ -374,17 +374,20 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         if (! $this->isValid() && $this->isLoginRequest()) {
             // process login attempt
             $this->processLogin();
+            // did it work?
             if ($this->isValid()) {
                 // attempt to redirect.
                 $this->_redirect();
             }
+            // done, do not try to process a logout after this ;-)
+            return;
         }
         
         // auto-logout
         if ($this->isValid() && $this->isLogoutRequest()) {
             // process logout attempts
             $this->processLogout();
-            // attempt to redirect.
+            // logout always works ;-) so attempt to redirect
             $this->_redirect();
         }
     }

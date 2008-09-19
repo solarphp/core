@@ -306,23 +306,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic get to make the `session` property public and read-only.
-     * 
-     * @param string $key The magic property name to read.
-     * 
-     * @return mixed
-     * 
-     */
-    public function __get($key)
-    {
-        if ($key == 'session') {
-            $this->_loadSession();
-            return $this->_session;
-        }
-    }
-    
-    /**
-     * 
      * Loads the class properties from the $_SESSION values, starting the
      * session if needed.
      * 

@@ -137,7 +137,7 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
      * @var bool
      * 
      */
-    protected $_feedback;
+    protected $_invalid;
     
     /**
      * 

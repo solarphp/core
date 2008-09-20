@@ -161,7 +161,6 @@ abstract class Solar_View_Helper_FormElement extends Solar_View_Helper {
         settype($info['disable'], 'bool');
         settype($info['invalid'], 'array');
         
-        
         foreach ($this->_keys as $key) {
             unset($info['attribs'][$key]);
             $prop = "_$key";

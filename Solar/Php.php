@@ -308,6 +308,7 @@ class Solar_Php extends Solar_Base
     public function setEcho($echo)
     {
         $this->_echo = (bool) $echo;
+        return $this;
     }
     
     /**
@@ -383,7 +384,7 @@ class Solar_Php extends Solar_Base
     protected function _run($code)
     {
         // clean up from last run
-        $this->_output    = array();
+        $this->_output    = null;
         $this->_last_line = null;
         $this->_exit_code = null;
         

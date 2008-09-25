@@ -759,7 +759,7 @@ class Solar
      * @return void
      * 
      */
-    public function cleanGlobals()
+    public static function cleanGlobals()
     {
         $list = array(
             'GLOBALS',

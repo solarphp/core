@@ -13,4 +13,11 @@ return array(
         'descr' => 'Run only the named test class; do not descend into subclass tests.',
         'filters' => array('validateBool', 'sanitizeBool')
     ),
+    'verbose' => array(
+        'long' => 'verbose',
+        'param' => null,
+        'value' => false,
+        'descr' => 'Show all diagnostic output.',
+        'filters' => array('validateBool', 'sanitizeBool')
+    ),
 );

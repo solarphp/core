@@ -76,6 +76,10 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
      */
     protected function _exec($class = null)
     {
+        if (! $class) {
+            throw $this->_exception('ERR_NEED_CLASS_NAME');
+        }
+        
         // look for a test directory, otherwise assume that the tests are
         // in the same dir.
         $dir = $this->_options['dir'];
@@ -99,11 +103,12 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
         $only = (bool) $this->_options['only'];
         
         // set up a test suite object 
-        $suite = Solar::factory('Solar_Test_Suite', array(
-            'dir' => $dir,
+        $runner = Solar::factory('Solar_Test_Runner', array(
+            'dir'       => $dir,
+            'verbose'   => $this->_options['verbose'],
         ));
         
         // run the suite
-        $suite->run($class, $only);
+        $runner->run($class, $only);
     }
 }

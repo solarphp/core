@@ -16,13 +16,13 @@ $vendor = end($path);
 // what is the solar system root, if anywhere?
 $dirs = array(
     // symlink solar
-    "/source/solar/bin/solar",
+    "/source/solar/script/solar",
     // symlink vendor
-    "/source/$vendor/bin/$vendor",
+    "/source/$vendor/script/$vendor",
     // copy solar
-    "/scripts/solar",
+    "/script/solar",
     // copy vendor
-    "/scripts/$vendor",
+    "/script/$vendor",
 );
 
 $root = false;
@@ -53,7 +53,7 @@ $vendor = str_replace(' ', '', $vendor);
  * 
  */
 if ($root) {
-    $include = '.' . PATH_SEPARATOR . '..' . PATH_SEPARATOR . "$root/include";
+    $include = "$root/include:.";
 } else {
     $include = get_include_path();
 }

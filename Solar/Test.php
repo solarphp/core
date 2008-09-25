@@ -17,6 +17,31 @@
 class Solar_Test extends Solar_Base
 {
     /**
+     * Exit code for premature termination from error or exception.
+     */
+    const EXIT_TERM = 0;
+    
+    /**
+     * Exit code for a failed test.
+     */
+    const EXIT_FAIL = 101;
+    
+    /**
+     * Exit code for an incomplete test.
+     */
+    const EXIT_TODO = 102;
+    
+    /**
+     * Exit code for a skipped test.
+     */
+    const EXIT_SKIP = 103;
+    
+    /**
+     * Exit code for a successful test.
+     */
+    const EXIT_PASS = 104;
+    
+    /**
      * 
      * A running count of how many times an assert*() method is called.
      * 
@@ -87,7 +112,7 @@ class Solar_Test extends Solar_Base
      * @return int
      * 
      */
-    final public function getAssertCount()
+    public function getAssertCount()
     {
         return $this->_assert_count;
     }
@@ -99,7 +124,7 @@ class Solar_Test extends Solar_Base
      * @return void
      * 
      */
-    final public function resetAssertCount()
+    public function resetAssertCount()
     {
         $this->_assert_count = 0;
     }
@@ -326,68 +351,6 @@ class Solar_Test extends Solar_Base
         if ($actual instanceof $expect) {
             $this->fail(
                 "Expected instance not-of class '$expect', actually is"
-            );
-        }
-        
-        return true;
-    }
-    
-    /**
-     *
-     * Asserts that a variable is of a certain PHP type.
-     * 
-     * Recognized types are:
-     * 
-     * - array
-     * - bool
-     * - float
-     * - int
-     * - numeric
-     * - object
-     * - resource
-     * - scalar
-     * - string
-     * 
-     * @param mixed $actual The variable to test.
-     *
-     * @param string $expect The type to expect.
-     *
-     * @return bool The assertion result.
-     *
-     */
-    public function assertType($actual, $expect)
-    {
-        $this->_assert_count ++;
-        
-        $types = array(
-            'array',
-            'bool',
-            'float',
-            'int',
-            'numeric',
-            'object',
-            'resource',
-            'scalar',
-            'string',
-        );
-        
-        if (! in_array($expect, $types)) {
-            $this->fail(
-                'Non-supported type.',
-                array(
-                    'actual' => gettype($actual),
-                    'type'   => $expect,
-                )
-            );
-        }
-        
-        $func = 'is_' . $expect;
-        if(! $func($actual)) {
-            $this->fail(
-                'Expected ' . $expect . ', actually not',
-                array(
-                    'actual' => gettype($actual),
-                )
             );
         }
         
@@ -672,6 +635,42 @@ class Solar_Test extends Solar_Base
     
     /**
      * 
+     * Prints diagnostic output.
+     * 
+     * @param mixed $spec The diagnostic outpyt. If a string, prints line-by-
+     * line; otherwise, prints a var_export() of the value line-by-line.
+     * 
+     * @param string $label The label for the diagnostic output, if any.
+     * 
+     * @return void
+     * 
+     */
+    public function diag($spec, $label = null)
+    {
+        // print the label if any
+        if ($label) {
+            $this->diag($label);
+        }
+        
+        // print the diagnostic output
+        if ($spec) {
+            if ($spec instanceof Exception) {
+                $text = $spec->__toString();
+                $this->diag($text);
+            } elseif (is_string($spec)) {
+                $lines = explode(PHP_EOL, $spec);
+                foreach ($lines as $line) {
+                    echo "# " . $line . PHP_EOL;
+                }
+            } else {
+                $dump = var_export($spec, true);
+                $this->diag($dump);
+            }
+        }
+    }
+    
+    /**
+     * 
      * Throws an exception indicating a failed test.
      * 
      * @param string $text The failed-test message.
@@ -683,6 +682,7 @@ class Solar_Test extends Solar_Base
      */
     public function fail($text = null, $info = null)
     {
+        $info['exit'] = Solar_Test::EXIT_FAIL;
         throw Solar::factory('Solar_Test_Exception_Fail', array(
             'class' => get_class($this),
             'code'  => 'ERR_FAIL',
@@ -704,6 +704,7 @@ class Solar_Test extends Solar_Base
      */
     public function todo($text = null, $info = null)
     {
+        $info['exit'] = Solar_Test::EXIT_TODO;
         throw Solar::factory('Solar_Test_Exception_Todo', array(
             'class' => get_class($this),
             'code'  => 'ERR_TODO',
@@ -725,6 +726,7 @@ class Solar_Test extends Solar_Base
      */
     public function skip($text = null, $info = null)
     {
+        $info['exit'] = Solar_Test::EXIT_SKIP;
         throw Solar::factory('Solar_Test_Exception_Skip', array(
             'class' => get_class($this),
             'code'  => 'ERR_SKIP',

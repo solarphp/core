@@ -21,7 +21,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: Suite.php 3153 2008-05-05 23:14:16Z pmjones $
  * 
  */
 class Solar_Test_Suite extends Solar_Base
@@ -32,24 +32,19 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * Keys are ...
      * 
-     * `dir`
-     * : (string) The directory where tests are located.
-     * 
      * `log`
-     * : (dependency) A Solar_Log dependency for logging test
-     * results.
-     * 
-     * `error_reporting`
-     * : (int) The level of error reporting we 
-     * want to catch; default is E_ALL|E_STRICT.
+     * : (dependency) A Solar_Log dependency for logging test results.
      * 
      * @var array
      * 
      */
-    protected $_Solar_Test_Suite = array(
-        'dir'             => '',
-        'log'             => null,
-        'error_reporting' => null,
+    protected $_Solar_Test_Runner = array(
+        'log'           => array(
+            'adapter'   => 'Solar_Log_Adapter_Echo',
+            'format'    => '%m',
+        ),
+        'test_config'   => null,
+        'verbose'       => null,
     );
     
     /**
@@ -79,7 +74,7 @@ class Solar_Test_Suite extends Solar_Base
      * @var array
      * 
      */
-    protected $_test;
+    protected $_tests;
     
     /**
      * 
@@ -99,6 +94,8 @@ class Solar_Test_Suite extends Solar_Base
      */
     protected $_var;
     
+    protected $_verbose = false;
+    
     /**
      * 
      * Constructor.
@@ -108,123 +105,79 @@ class Solar_Test_Suite extends Solar_Base
      */
     public function __construct($config = null)
     {
-        // set error_reporting here; doing so in the property 
-        // declaration generates errors.
-        $this->_Solar_Test_Suite['error_reporting'] = E_ALL | E_STRICT;
-        
         // main construction
         parent::__construct($config);
         
+        // verbosity
+        if ($this->_config['verbose'] !== null) {
+            $this->setVerbose($this->_config['verbose']);
+        }
+        
         // where are the tests located?
-        $this->_dir = Solar_Dir::fix($this->_config['dir']);
+        $this->_dir = Solar::$system . "/include/Test";
         
         // keep a Solar_Debug_Var object around for later
         $this->_var = Solar::factory('Solar_Debug_Var');
         
         // logging
-        if (! empty($this->_config['log'])) {
-            // retain the passed log dependency
-            $this->_log = Solar::dependency('Solar_Log', $this->_config['log']);
-        } else {
-            // create a new log object
-            $log_config = array(
-                'adapter' => 'Solar_Log_Adapter_Echo',
-                'format' => '%m',
-                'events' => 'test',
-            );
-            $this->_log = Solar::factory('Solar_Log', $log_config);
-        }
+        $this->_log = Solar::dependency(
+            'Solar_Log',
+            $this->_config['log']
+        );
+    }
+    
+    public function setVerbose($flag)
+    {
+        $this->_verbose = (bool) $flag;
+    }
+    
+    protected function _newPhp()
+    {
+        $system = Solar::$system;
+        $php = Solar::factory('Solar_Php');
+        $php->setEcho($this->_verbose)
+            ->setIniVal('include_path', "$system/include")
+            ->setIniVal('error_reporting', E_ALL | E_STRICT)
+            ->setIniVal('display_errors', true)
+            ->setIniVal('html_errors', false)
+            ->setIniVal('log_errors', true)
+            ->setIniVal('error_log', '/tmp/php_errors.log');
+        
+        return $php;
     }
     
     /**
      * 
-     * Recursively iterates through a directory looking for test classes.
+     * Finds tests, loads them into the plan.
      * 
-     * Skips dot-files, files that do not start with upper-case
-     * letters, and files that do not end in ".php".
+     * @param string $dir The Test directory, typically "include/Test".
      * 
-     * @param RecursiveDirectoryIterator $iter Directory iterator.
-     * 
-     * @return void
+     * @return void $class Start with this test class suffix.  E.g., if $class
+     * is "Foo", then the tests will start with "Test_Foo".
      * 
      */
-    public function findTests(RecursiveDirectoryIterator $iter = null)
+    public function loadTests($dir, $class, $only = false)
     {
-        for ($iter->rewind(); $iter->valid(); $iter->next()) {
+        $system = Solar::$system;
+        $file = Solar_Class::dir($this) . '/load-tests.php';
         
-            $path = $iter->current()->getPathname();
-            $file = basename($path);
-            
-            // skip dotfiles and files not starting with a capital letter,
-            if ($iter->isDot() ||
-                ! ctype_alpha($file[0]) ||
-                $file != ucfirst($file)) {
-                continue;
-            }
-            
-            // skip dirs not starting with a capital letter
-            if ($iter->isDir()) {
-                $dir = dirname($path);
-                $tmp = explode(DIRECTORY_SEPARATOR, $dir);
-                $last = array_pop($tmp);
-                if (! ctype_alpha($last[0]) ||
-                    $last != ucfirst($last)) {
-                    // dirname does not start with capital letter
-                    continue;
-                }
-            }
-            
-            if ($iter->isDir() && $iter->hasChildren()) {
-                // recursively find tests in child dirs
-                $this->findTests($iter->getChildren());
-            } elseif ($iter->isFile() && substr($file, -4) == ".php") {
-                // looks like a test file
-                require_once $path;
-                $len = strlen($this->_dir);
-                $class = substr($path, $len, -4); // drops .php
-                $class = 'Test_' . str_replace(DIRECTORY_SEPARATOR,
-                    '_', $class);
-                $this->addTestMethods($class);
-            }
-        }
-    }
-    
-    /**
-     * 
-     * Adds the test methods from a given test class.
-     * 
-     * Skips abstract and interface classes.
-     * 
-     * @param string $class The class name to add methods from,
-     * typically a Test_* class.
-     * 
-     * @return int The number of methods added, or boolean false if the
-     * class did not exist.
-     * 
-     */
-    public function addTestMethods($class)
-    {
-        if (! class_exists($class)) {
-            return false;
+        $php = $this->_newPhp();
+        $php->addArgv($dir)
+            ->addArgv($class)
+            ->addArgv((int) $only)
+            ->run($file);
+        
+        $exit_code = $php->getExitCode();
+        if ($exit_code != Solar_Test::EXIT_PASS) {
+            throw $this->_exception('ERR_LOAD_TESTS', array(
+                'exit_code' => $exit_code,
+                'last_line' => $php->getLastLine(),
+            ));
         }
         
-        $reflect = new ReflectionClass($class);
-        if ($reflect->isAbstract() || $reflect->isInterface()) {
-            return;
-        }
-        
-        $count = 0;
-        $methods = $reflect->getMethods();
-        foreach ($methods as $method) {
-            $name = $method->getName();
-            if (substr($name, 0, 4) == 'test') {
-                $this->_test[$class][] = $name;
-                $this->_info['plan'] ++;
-                $count++;
-            }
-        }
-        
-        return $count;
+        $data = unserialize($php->getOutput());
+        $this->_info['plan'] = $data['plan'];
+        $this->_tests = $data['tests'];
     }
     
     /**
@@ -269,106 +222,76 @@ class Solar_Test_Suite extends Solar_Base
         // prepare
         $this->_prepare($class, $only);
         
-        // run the tests
-        $time = time();
-        $this->_log("1..{$this->_info['plan']}");
-        foreach ($this->_test as $class => $methods) {
-            
-            // class setup
-            try {
-                $test = Solar::factory($class);
-            } catch (Solar_Test_Exception_Skip $e) {
-                $this->_info['done'] ++;
-                $this->_done('skip', $class, $e->getMessage());
-                $this->_info['done'] += count($methods) - 1;
-                continue;
-            } catch (Solar_Test_Exception_Todo $e) {
-                $this->_info['done'] ++;
-                $this->_done('todo', $class, $e->getMessage());
-                $this->_info['done'] += count($methods) - 1;
-                continue;
-            } catch (Exception $e) {
-                // catches Solar_Test_Exception_Fail and all others
-                $this->_info['done'] ++;
-                $this->_done('fail', $class, $e->getMessage(),
-                    $e->__toString());
-                $this->_info['done'] += count($methods) - 1;
-                continue;
-            }
-            
-            // turn on all error reporting
-            $reporting = ini_get('error_reporting');
-            ini_set('error_reporting', $this->_config['error_reporting']);
-            
-            // set the error handler for the test
-            set_error_handler(array($test, 'error'));
-            
-            // even though the handler deals with errors (and does not
-            // print them), we still want error display turned on,
-            // because the error handler **does not** catch fatal
-            // errors.
-            $display = ini_get('display_errors');
-            ini_set('display_errors', true);
-            
-            // test each method in the class
-            foreach ($methods as $method) {
-                
-                // info
-                $this->_info['done'] ++;
-                $name = "$class::$method";
-                
-                // run test method and check validity
-                try {
-                    // method setup
-                    $test->setup();
-                
-                    // run the test
-                    $test->$method();
-                    
-                    // check for non-exception failures
-                    if (! $test->getAssertCount()) {
-                        // no assertions made, which means nothing was
-                        // actually tested.
-                        $this->_done('todo', $name, 'made no assertions');
-                    } else {
-                        // no non-exception failures, so it passes.
-                        $this->_done('pass', $name);
-                    }
-                    
-                } catch (Solar_Test_Exception_Skip $e) {
-                    $this->_done('skip', $name, $e->getMessage());
-                } catch (Solar_Test_Exception_Todo $e) {
-                    $this->_done('todo', $name, $e->getMessage());
-                } catch (Exception $e) {
-                    // catches Solar_Test_Exception_Fail and all others
-                    $this->_done('fail', $name, $e->getMessage(),
-                        $e->__toString());
-                }
-                
-                // method teardown
-                $test->teardown();
-                
-                // reset the assertion counter for the next pass
-                $test->resetAssertCount();
-            }
-            
-                    
-            // return to previous error handler
-            restore_error_handler();
-            
-            // return to previous error display and reporting
-            ini_set('display_errors', $display);
-            ini_set('error_reporting', $reporting);
-            
-            // class teardown
-            unset($test);
+        // is there a plan?
+        if (! $this->_info['plan']) {
+            throw $this->_exception('ERR_NO_PLAN');
         }
         
+        // show the plan
+        $this->_log("1..{$this->_info['plan']}");
+        
+        // set up the PHP environment
+        $php = $this->_newPhp();
+        $php->setSolarConfig($this->_config['test_config']);
+        
+        // the time before running the tests
+        $time = time();
+        
+        // run the test cases
+        foreach ($this->_tests as $class => $methods) {
+            // try constructing the test case once
+            $exit = $this->_testConstruct($php, $class);
+            if ($exit != Solar_Test::EXIT_PASS) {
+                // construction failed, skip to the next test case
+                continue;
+            }
+            // run each test method
+            foreach ($methods as $method) {
+                $this->_testMethod($php, $class, $method);
+            }
+        }
+        
+        // the test time duration
         $this->_info['time'] = time() - $time;
         
         // report, then return the run information
         $this->_report();
         return $this->_info;
+    }
+    
+    protected function _testConstruct($php, $class)
+    {
+        $file = Solar_Class::dir($this) . 'pre-test.php';
+        
+        $php->setArgv(array($class))
+            ->runSolar($file);
+        
+        $exit = $php->getExitCode();
+        
+        if ($exit != Solar_Test::EXIT_PASS) {
+            $this->_done($exit, $class, $php->getLastLine());
+            $this->_info['done'] += count($this->_tests[$class]) - 1;
+        }
+        
+        return $exit;
+    }
+    
+    protected function _testMethod($php, $class, $method)
+    {
+        $file = Solar_Class::dir($this) . 'run-test.php';
+        
+        $php->setArgv(array($class, $method))
+            ->runSolar($file);
+        
+        $exit = $php->getExitCode();
+        $last = $php->getLastLine();
+        $name = "$class::$method";
+        
+        $this->_done(
+            $php->getExitCode(),
+            "$class::$method",
+            $php->getLastLine()
+        );
     }
     
     /**
@@ -397,31 +320,9 @@ class Solar_Test_Suite extends Solar_Base
             'todo' => array(),
             'fail' => array(),
         );
-        $this->_test = array();
         
-        // running tests for one class series?
-        if ($class) {
-            $sub = str_replace('_', DIRECTORY_SEPARATOR, $class);
-            $dir = $this->_dir . Solar_Dir::fix($sub);
-            $file = rtrim($dir, DIRECTORY_SEPARATOR) . '.php';
-            if (is_readable($file)) {
-                require_once $file;
-                $this->addTestMethods("Test_$class");
-            }
-        } else {
-            $dir = $this->_dir;
-        }
-        
-        // running only the one class?
-        if ($class && $only) {
-            return;
-        }
-        
-        // find sub-tests
-        if (is_dir($dir)) {
-            $iter = new RecursiveDirectoryIterator($dir);
-            $this->findTests($iter);
-        }
+        $dir = Solar::$system . "/include/Test";
+        $this->loadTests($dir, $class, $only);
     }
     
     /**
@@ -460,7 +361,7 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * Formats a test line, logs it, and saves the info.
      * 
-     * @param string $type Pass, skip, todo, or fail.
+     * @param int $exit Pass, skip, todo, or fail.
      * 
      * @param string $name The test name.
      * 
@@ -471,31 +372,11 @@ class Solar_Test_Suite extends Solar_Base
      * @return void
      * 
      */
-    protected function _done($type, $name, $note = null, $diag = null)
+    protected function _done($exit, $name, $note = null, $diag = null)
     {
-        $message = '';
-        $num = $this->_info['done'];
+        $this->_info['done'] ++;
         
-        switch ($type) {
-        case 'pass':
-            $message = "ok $num - $name";
-            break;
-        
-        case 'skip':
-            $message = "ok $num - $name # SKIP"
-                  . ($note ? " $note" : "");
-            break;
-        
-        case 'todo':
-            $message = "not ok $num - $name # TODO"
-                  . ($note ? " $note" : "");
-            break;
-        
-        case 'fail':
-            $message = "not ok $num - $name"
-                  . ($note ? " $note" : "");
-            break;
-        }
+        $text = '';
         
         if (is_array($diag) || is_object($diag)) {
             $diag = $this->_var->dump($diag);
@@ -503,10 +384,45 @@ class Solar_Test_Suite extends Solar_Base
         
         $diag = trim($diag);
         if ($diag) {
-            $message = "$message\n# " . str_replace("\n", "\n# ", trim($diag));
+            $text = "$text\n# " . str_replace("\n", "\n# ", trim($diag));
         }
         
-        $this->_log($message);
+        if ($text) {
+            $text .= "\n";
+        }
+        
+        $num = $this->_info['done'];
+        
+        $note = ltrim($note, '# ');
+        
+        switch ($exit) {
+        case Solar_Test::EXIT_FAIL:
+            $type = 'fail';
+            $text .= "not ok $num - $name $note";
+            break;
+        
+        case Solar_Test::EXIT_TODO:
+            $type = 'todo';
+            $text .= "not ok $num - $name # TODO $note";
+            break;
+        
+        case Solar_Test::EXIT_SKIP:
+            $type = 'skip';
+            $text .= "ok $num - $name # SKIP $note";
+            break;
+        
+        case Solar_Test::EXIT_PASS:
+            $type = 'pass';
+            $text .= "ok $num - $name $note";
+            break;
+        
+        default:
+            $type = 'fail';
+            $text .= "not ok $num - $name # exit code '$exit'";
+            break;
+        }
+        
+        $this->_log($text);
         $this->_info[$type][$name] = array($num, $note);
     }
     

@@ -14,4 +14,4 @@
  * @version $Id$
  * 
  */
-class Solar_Example_Exception extends Solar_Test_Exception {}
+class Solar_Example_Exception extends Solar_Exception {}

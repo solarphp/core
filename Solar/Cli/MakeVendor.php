@@ -46,7 +46,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
      * 
      */
     protected $_dirs = array(
-        '/{:dashes}/bin',
+        '/{:dashes}/script',
         '/{:dashes}/docs',
         '/{:dashes}/tests',
         '/{:dashes}/{:studly}/App',
@@ -159,7 +159,7 @@ class Solar_Cli_MakeVendor extends Solar_Cli_Base
         
         // script/vendor -> source/solar/bin/solar
         $script = "$system/script/{$this->_dashes}";
-        $cmd    = "ln -s $system/source/solar/bin/solar $script";
+        $cmd    = "ln -s $system/source/solar/script/solar $script";
         $this->_outln($cmd);
         passthru($cmd);
     }

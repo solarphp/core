@@ -38,7 +38,7 @@ class Solar_Test_Suite extends Solar_Base
      * @var array
      * 
      */
-    protected $_Solar_Test_Runner = array(
+    protected $_Solar_Test_Suite = array(
         'log'           => array(
             'adapter'   => 'Solar_Log_Adapter_Echo',
             'format'    => '%m',

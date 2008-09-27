@@ -103,7 +103,7 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
         $only = (bool) $this->_options['only'];
         
         // set up a test suite object 
-        $runner = Solar::factory('Solar_Test_Runner', array(
+        $runner = Solar::factory('Solar_Test_Suite', array(
             'dir'       => $dir,
             'verbose'   => $this->_options['verbose'],
         ));

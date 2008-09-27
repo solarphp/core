@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Test_Runner extends Solar_Test {
+class Test_Solar_Test_Suite extends Solar_Test {
     
     /**
      * 
@@ -13,7 +13,7 @@ class Test_Solar_Test_Runner extends Solar_Test {
      * @var array
      * 
      */
-    protected $_Test_Solar_Test_Runner = array(
+    protected $_Test_Solar_Test_Suite = array(
     );
     
     // -----------------------------------------------------------------
@@ -79,16 +79,26 @@ class Test_Solar_Test_Runner extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Test_Runner');
-        $this->assertInstance($obj, 'Solar_Test_Runner');
+        $obj = Solar::factory('Solar_Test_Suite');
+        $this->assertInstance($obj, 'Solar_Test_Suite');
     }
     
     /**
      * 
-     * Test -- Finds tests, loads them with the plan.
+     * Test -- Adds the test methods from a given test class.
      * 
      */
-    public function testLoadTests()
+    public function testAddTestMethods()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Recursively iterates through a directory looking for test classes.
+     * 
+     */
+    public function testFindTests()
     {
         $this->todo('stub');
     }

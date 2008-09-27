@@ -85,20 +85,10 @@ class Test_Solar_Test_Suite extends Solar_Test {
     
     /**
      * 
-     * Test -- Adds the test methods from a given test class.
+     * Test -- Finds tests, loads them with the plan.
      * 
      */
-    public function testAddTestMethods()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Recursively iterates through a directory looking for test classes.
-     * 
-     */
-    public function testFindTests()
+    public function testLoadTests()
     {
         $this->todo('stub');
     }

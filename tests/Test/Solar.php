@@ -303,7 +303,16 @@ class Test_Solar extends Solar_Test {
      */
     public function testFetchConfig()
     {
-        $this->todo('stub');
+        // from $dir/Test/Solar.php, find $dir
+        $dir = dirname(dirname(__FILE__));
+        $file = "$dir/support/fetchConfig.php";
+        $actual = Solar::fetchConfig($file);
+        $expect = array(
+            'foo' => 'bar',
+            'baz' => 'sub',
+            'zim' => 'gir',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**

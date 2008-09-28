@@ -16,6 +16,14 @@ class Test_Solar extends Solar_Test {
     protected $_Test_Solar = array(
     );
     
+    protected $_test_config = array(
+        'foo' => 'bar',
+        'baz' => array(
+            'dib' => 'zim',
+            'gir' => 'irk',
+        ),
+    );
+
     // -----------------------------------------------------------------
     // 
     // Support methods.
@@ -182,7 +190,34 @@ class Test_Solar extends Solar_Test {
      */
     public function testConfig()
     {
-        $this->todo('stub');
+        Solar::$config['__TEST__'] = $this->_test_config;
+        $expect = $this->_test_config;
+        $actual = Solar::config('__TEST__');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testConfig_elem()
+    {
+        Solar::$config['__TEST__'] = $this->_test_config;
+        $expect = $this->_test_config['foo'];
+        $actual = Solar::config('__TEST__', 'foo');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testConfig_groupDefault()
+    {
+        Solar::$config['__TEST__'] = $this->_test_config;
+        $expect = '*default*';
+        $actual = Solar::config('no-such-group', null, $expect);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testConfig_elemDefault()
+    {
+        Solar::$config['__TEST__'] = $this->_test_config;
+        $expect = '*default*';
+        $actual = Solar::config('__TEST__', 'no-such-elem', $expect);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -194,7 +229,32 @@ class Test_Solar extends Solar_Test {
      */
     public function testDependency()
     {
-        $this->todo('stub');
+        // a direct dependency object
+        $expect = Solar::factory('Solar_Example');
+        $actual = Solar::dependency('Solar_Example', $expect);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testDependency_registry()
+    {
+        $expect = Solar::factory('Solar_Example');
+        Solar_Registry::set('example', $expect);
+        $actual = Solar::dependency('Solar_Example', 'example');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testDependency_config()
+    {
+        // set a random config-key and value so we know we're getting back
+        // the "right" factoried object.
+        $key = __FUNCTION__;
+        $val = rand();
+        $actual = Solar::dependency('Solar_Example', array(
+            $key => $val,
+        ));
+        
+        $this->assertInstance($actual, 'Solar_Example');
+        $this->assertEquals($actual->getConfig($key), $val);
     }
     
     /**

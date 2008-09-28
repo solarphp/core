@@ -4,6 +4,7 @@ $config = array();
 /**
  * General ini settings.
  */
+ 
 $config['Solar']['ini_set'] = array(
 	'error_reporting' => (E_ALL|E_STRICT),
 	'display_errors'  => true,
@@ -16,7 +17,7 @@ $config['Solar']['ini_set'] = array(
  */
 
 $config['Solar_Sql'] = array(
-	'adapter' => 'Solar_Sql_Adapter_Mysql',
+	'adapter' => 'Solar_Sql_Adapter_Sqlite',
 );
 
 $config['Solar_Sql_Adapter_Mysql'] = array(
@@ -32,5 +33,13 @@ $config['Solar_Sql_Adapter_Pgsql'] = array(
 $config['Solar_Sql_Adapter_Sqlite'] = array(
     'name' => ':memory:',
 );
+
+// $config['Solar_Example'] = array(
+//     'zim' => 'gaz',
+// );
+// 
+// $config['Solar_Debug_Var']['output'] = 'text';
+// 
+// $config['Solar_Auth_Adapter_TypeKey']['token'] = 'foobarbaz';
 
 return $config;

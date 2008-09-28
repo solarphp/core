@@ -49,6 +49,24 @@ class Solar_Example extends Solar_Base
     
     /**
      * 
+     * Gets a config value.
+     * 
+     * @param string $key The config key.
+     * 
+     * @return mixed
+     * 
+     */
+    public function getConfig($key = null)
+    {
+        if (! $key) {
+            return $this->_config;
+        } elseif (! empty($this->_config[$key])) {
+            return $this->_config[$key];
+        }
+    }
+    
+    /**
+     * 
      * Throws ERR_CUSTOM_CONDITION for this class.
      * 
      * @return void

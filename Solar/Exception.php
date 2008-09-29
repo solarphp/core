@@ -67,12 +67,24 @@ class Solar_Exception extends Exception
      */
     public function __toString()
     {
-        return "exception '" . get_class($this) . "'\n"
-             . "class::code '" . $this->_class . "::" . $this->code . "' \n"
+        $class_code = $this->_class . "::" . $this->code;
+        
+        // basic string
+        $str = "exception '" . get_class($this) . "'\n"
+             . "class::code '$class_code' \n"
              . "with message '" . $this->message . "' \n"
              . "information " . var_export($this->_info, true) . " \n"
              . "Stack trace:\n"
              . "  " . str_replace("\n", "\n  ", $this->getTraceAsString());
+        
+        // at the CLI, repeat the message so it shows up as the last line
+        // of output, not the trace.
+        if (PHP_SAPI == 'cli') {
+            $str .= "\n\n{$this->message}";
+        }
+        
+        // done
+        return $str;
     }
     
     /**

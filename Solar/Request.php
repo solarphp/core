@@ -272,8 +272,8 @@ class Solar_Request extends Solar_Base
      */
     public function postAndFiles($key = null, $alt = null)
     {
-        $post  = $this->_getValue('post',  $key, $alt);
-        $files = $this->_getValue('files', $key, $alt);
+        $post  = $this->_getValue('post',  $key, false);
+        $files = $this->_getValue('files', $key, false);
         
         // no matches in post or files
         if (! $post && ! $files) {

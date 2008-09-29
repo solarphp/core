@@ -14,8 +14,6 @@
  * If `CLASS` is given, runs that test class, and recursively descends into
  * its subdirectory to run tests there as well.
  * 
- * If the --only option is specified, does not run tests in subdirectories.
- * 
  * 
  * Options
  * =======
@@ -26,10 +24,6 @@
  * `--dir _arg_`
  * : Directory where the test classes are located.  Default is the current
  *   working directory.
- * 
- * `--only`
- * : Run only the named test class, do not recurse into subdirectories.
- * 
  * 
  * Examples
  * ========
@@ -46,10 +40,6 @@
  * Run the Vendor_Example test and all its subdirectories:
  * 
  *     $ solar run-tests Vendor_Example
- * 
- * Run only the Vendor_Example test (no subdirectories):
- * 
- *     $ solar run-tests --only Vendor_Example
  * 
  * @category Solar
  * 
@@ -74,41 +64,32 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
      * @return void
      * 
      */
-    protected function _exec($class = null)
+    protected function _exec($spec = null)
     {
-        if (! $class) {
-            throw $this->_exception('ERR_NEED_CLASS_NAME');
+        if (! $spec) {
+            throw $this->_exception('ERR_NEED_TEST_SPEC');
         }
         
-        // look for a test directory, otherwise assume that the tests are
-        // in the same dir.
-        $dir = $this->_options['dir'];
-        if (! $dir) {
-            $dir = getcwd();
-        }
-        
-        // make sure it matches the OS
-        $dir = Solar_Dir::fix($dir);
-        
-        // feedback
-        $this->_outln("Run tests from '$dir'.");
-        
-        // make sure it ends in "/Test/".
-        $end = DIRECTORY_SEPARATOR . 'Test' . DIRECTORY_SEPARATOR;
-        if (substr($dir, -5) != $end) {
-            $dir = rtrim($dir, DIRECTORY_SEPARATOR) . $end;
+        // look for a :: in the class name; if it's there, split into class
+        // and method
+        $pos = strpos($spec, '::');
+        if ($pos) {
+            $class  = substr($spec, 0, $pos);
+            $method = substr($spec, $pos+2);
+        } else {
+            $class = $spec;
+            $method = null;
         }
         
         // run just the one test?
         $only = (bool) $this->_options['only'];
         
         // set up a test suite object 
-        $runner = Solar::factory('Solar_Test_Suite', array(
-            'dir'       => $dir,
+        $suite = Solar::factory('Solar_Test_Suite', array(
             'verbose'   => $this->_options['verbose'],
         ));
         
         // run the suite
-        $runner->run($class, $only);
+        $suite->run($class, $method, $only);
     }
 }

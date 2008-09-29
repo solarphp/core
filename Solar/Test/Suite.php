@@ -113,11 +113,11 @@ class Solar_Test_Suite extends Solar_Base
             $this->setVerbose($this->_config['verbose']);
         }
         
-        // where are the tests located?
-        $this->_dir = Solar::$system . "/include/Test";
-        
         // keep a Solar_Debug_Var object around for later
         $this->_var = Solar::factory('Solar_Debug_Var');
+        
+        // set the include directory
+        $this->_dir = Solar::$system . "/include";
         
         // logging
         $this->_log = Solar::dependency(
@@ -133,10 +133,9 @@ class Solar_Test_Suite extends Solar_Base
     
     protected function _newPhp()
     {
-        $system = Solar::$system;
         $php = Solar::factory('Solar_Php');
         $php->setEcho($this->_verbose)
-            ->setIniVal('include_path', "$system/include")
+            ->setIniVal('include_path', $this->_dir)
             ->setIniVal('error_reporting', E_ALL | E_STRICT)
             ->setIniVal('display_errors', true)
             ->setIniVal('html_errors', false)
@@ -156,17 +155,30 @@ class Solar_Test_Suite extends Solar_Base
      * is "Foo", then the tests will start with "Test_Foo".
      * 
      */
-    public function loadTests($dir, $class, $only = false)
+    public function loadTests($class = null, $method = null, $only = null)
     {
-        $system = Solar::$system;
+        // if no class, at least pass a string zero
+        if (! $class) {
+            $method = '0';
+        }
+        
+        // if no method, at least pass a string zero
+        if (! $method) {
+            $method = '0';
+        }
+        
+        // the load-tests file to run
         $file = Solar_Class::dir($this) . '/load-tests.php';
         
+        // find the tests using a separate php process
         $php = $this->_newPhp();
-        $php->addArgv($dir)
+        $php->addArgv($this->_dir . '/Test/')
             ->addArgv($class)
+            ->addArgv($method)
             ->addArgv((int) $only)
             ->run($file);
         
+        // how'd it go?
         $exit_code = $php->getExitCode();
         if ($exit_code != Solar_Test::EXIT_PASS) {
             throw $this->_exception('ERR_LOAD_TESTS', array(
@@ -175,6 +187,7 @@ class Solar_Test_Suite extends Solar_Base
             ));
         }
         
+        // retain the list of found tests
         $data = unserialize($php->getOutput());
         $this->_info['plan'] = $data['plan'];
         $this->_tests = $data['tests'];
@@ -207,20 +220,21 @@ class Solar_Test_Suite extends Solar_Base
      * `fail`
      * : (array) Log of tests that failed.
      * 
-     * @param string $class Prepare tests for this class series only.  Don't
-     * include the 'Test_' prefix.  If empty, will run all test classes.
+     * @param string $class Prepare tests for this class series.  If empty, 
+     * will run all Test_* classes.
      * 
-     * @param bool $only When true, run **only** the $class test; when false,
-     * will recurse into subdirectories and run sub-tests.  Default false.
-     * Ignored when $class is empty.
+     * @param string $method When empty, recurse into subdirectories and run 
+     * sub-test classes and methods.  When non-empty, run **only** this test 
+     * method in the named test class; do not include the "test" prefix. 
+     * Default null; ignored when $class is empty.
      * 
      * @return array A statistics array.
      * 
      */
-    public function run($class = null, $only = false)
+    public function run($class = null, $method = false, $only = false)
     {
         // prepare
-        $this->_prepare($class, $only);
+        $this->_prepare($class, $method, $only);
         
         // is there a plan?
         if (! $this->_info['plan']) {
@@ -301,14 +315,15 @@ class Solar_Test_Suite extends Solar_Base
      * @param string $class Only prepare tests for this class series.  Don't
      * include the 'Test_' prefix.  If empty, will run all test classes.
      * 
-     * @param bool $only When true, run **only** the $class test; when false,
-     * will recurse into subdirectories and run sub-tests.  Default false.
-     * Ignored when $class is empty.
+     * @param string $method When empty, recurse into subdirectories and run 
+     * sub-test classes and methods.  When non-empty, run **only** this test 
+     * method in the named test class; do not include the "test" prefix. 
+     * Default null; ignored when $class is empty.
      * 
      * @return void
      * 
      */
-    protected function _prepare($class = null, $only = false)
+    protected function _prepare($class = null, $method = null, $only = false)
     {
         // reset
         $this->_info = array(
@@ -321,8 +336,7 @@ class Solar_Test_Suite extends Solar_Base
             'fail' => array(),
         );
         
-        $dir = Solar::$system . "/include/Test";
-        $this->loadTests($dir, $class, $only);
+        $this->loadTests($class, $method, $only);
     }
     
     /**

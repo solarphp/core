@@ -16,10 +16,4 @@
  */
 class Solar_Test_Exception extends Solar_Exception
 {
-    public function __toString()
-    {
-        $output = parent::__toString();
-        $output .= "\n" . $this->message;
-        return $output;
-    }
 }

@@ -90,7 +90,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testArgv()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['argv'] = array('foo');
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->argv(0);
+        $this->assertSame($actual, 'foo');
+        
+        // get a non-existent key
+        $actual = $request->argv(1);
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->get(1, 'bar');
+        $this->assertSame($actual, 'bar');
     }
     
     /**
@@ -227,7 +241,12 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsCli()
     {
-        $this->todo('stub');
+        $request = Solar::factory('Solar_Request');
+        if (PHP_SAPI == 'cli') {
+            $this->assertTrue($request->isCli());
+        } else {
+            $this->assertFalse($request->isCli());
+        }
     }
     
     /**
@@ -387,7 +406,13 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testReset()
     {
-        $this->todo('stub');
+        $_GET['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        $this->assertSame($request->get('foo'), 'bar');
+        
+        $_GET = array();
+        $request->reset();
+        $this->assertNull($request->get('foo'));
     }
     
     /**

@@ -100,7 +100,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testCookie()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_COOKIE['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->cookie('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a non-existent key
+        $actual = $request->cookie('baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->cookie('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -110,7 +124,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testEnv()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_ENV['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // env a key
+        $actual = $request->env('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // env a non-existent key
+        $actual = $request->env('baz');
+        $this->assertNull($actual);
+        
+        // env a non-existent key with default value
+        $actual = $request->env('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -120,7 +148,28 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testFiles()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_FILES['foo'] = array(
+            'error'     => null,
+            'name'      => 'bar',
+            'size'      => null,
+            'tmp_name'  => null,
+            'type'      => null,
+        );
+        
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->files('foo');
+        $this->assertSame($actual['name'], 'bar');
+        
+        // get a non-existent key
+        $actual = $request->files('baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->files('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -130,7 +179,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testGet()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_GET['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->get('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a non-existent key
+        $actual = $request->get('baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->get('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -140,7 +203,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testHttp()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['HTTP_FOO'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->http('Foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a non-existent key
+        $actual = $request->http('Baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->http('Baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -160,7 +237,15 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsDelete()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'DELETE';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isDelete());
+        
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'XXX';
+        $request = Solar::factory('Solar_Request');
+        $this->assertFalse($request->isDelete());
     }
     
     /**
@@ -170,7 +255,15 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsGet()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isGet());
+        
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'XXX';
+        $request = Solar::factory('Solar_Request');
+        $this->assertFalse($request->isGet());
     }
     
     /**
@@ -180,7 +273,15 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsPost()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isPost());
+        
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'XXX';
+        $request = Solar::factory('Solar_Request');
+        $this->assertFalse($request->isPost());
     }
     
     /**
@@ -190,7 +291,15 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsPut()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'PUT';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isPut());
+        
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['REQUEST_METHOD'] = 'XXX';
+        $request = Solar::factory('Solar_Request');
+        $this->assertFalse($request->isPut());
     }
     
     /**
@@ -200,7 +309,15 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testIsXhr()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+        $request = Solar::factory('Solar_Request');
+        $this->assertTrue($request->isXhr());
+        
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XXX';
+        $request = Solar::factory('Solar_Request');
+        $this->assertFalse($request->isXhr());
     }
     
     /**
@@ -210,7 +327,21 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testPost()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_POST['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->post('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a non-existent key
+        $actual = $request->post('baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->post('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
     
     /**
@@ -220,7 +351,33 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testPostAndFiles()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_POST['foo'] = 'bar';
+        $_FILES['baz'] = array(
+            'error'     => null,
+            'name'      => 'dib',
+            'size'      => null,
+            'tmp_name'  => null,
+            'type'      => null,
+        );
+        
+        $request = Solar::factory('Solar_Request');
+        
+        // get a POST key
+        $actual = $request->postAndFiles('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a FILES key
+        $actual = $request->postAndFiles('baz');
+        $this->assertSame($actual['name'], 'dib');
+        
+        // get a non-existent key
+        $actual = $request->postAndFiles('zim');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->postAndFiles('zim', 'gir');
+        $this->assertSame($actual, 'gir');
     }
     
     /**
@@ -240,6 +397,20 @@ class Test_Solar_Request extends Solar_Test {
      */
     public function testServer()
     {
-        $this->todo('stub');
+        // pre-populate the superglobal with fake value for testing
+        $_SERVER['foo'] = 'bar';
+        $request = Solar::factory('Solar_Request');
+        
+        // get a key
+        $actual = $request->server('foo');
+        $this->assertSame($actual, 'bar');
+        
+        // get a non-existent key
+        $actual = $request->server('baz');
+        $this->assertNull($actual);
+        
+        // get a non-existent key with default value
+        $actual = $request->server('baz', 'dib');
+        $this->assertSame($actual, 'dib');
     }
 }

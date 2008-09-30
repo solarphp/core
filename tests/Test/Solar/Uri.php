@@ -3,6 +3,8 @@
  * 
  * Concrete class test.
  * 
+ * @todo add tests for format values, and look for string zeroes
+ * 
  */
 class Test_Solar_Uri extends Solar_Test {
     
@@ -54,6 +56,17 @@ class Test_Solar_Uri extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        
+        // when running from the command line, these elements are empty.
+        // fake them so that web-like testing can occur.
+        $_SERVER['HTTP_HOST']    = 'example.com';
+        $_SERVER['SCRIPT_NAME']  = '/path/to/index.php';
+        $_SERVER['PATH_INFO']    = '/appname/action';
+        $_SERVER['QUERY_STRING'] = 'foo=bar&baz=dib';
+        $_SERVER['REQUEST_URI']  = $_SERVER['SCRIPT_NAME']
+                                 . $_SERVER['PATH_INFO']
+                                 . '?'
+                                 . $_SERVER['QUERY_STRING'];
     }
     
     /**
@@ -64,6 +77,22 @@ class Test_Solar_Uri extends Solar_Test {
     public function teardown()
     {
         parent::teardown();
+    }
+    
+    /**
+     * 
+     * Returns a new URI instance.  Because this class is extended to test
+     * Solar_Uri_Action and Solar_Uri_Public, we want to make sure we're 
+     * getting the right class type.
+     * 
+     * @return Solar_Uri
+     * 
+     */
+    protected function _newUri()
+    {
+        // get the class name, minus the 'Test_' prefix
+        $class = substr(get_class($this), 5);
+        return Solar::factory($class);
     }
     
     // -----------------------------------------------------------------
@@ -79,8 +108,21 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Uri');
+        $obj = $this->_newUri();
         $this->assertInstance($obj, 'Solar_Uri');
+        
+    }
+    
+    public function test_default()
+    {
+        $uri = $this->_newUri();
+        $this->assertSame($uri->scheme, 'http');
+        $this->assertSame($uri->host, 'example.com');
+        $this->assertSame($uri->port, null);
+        $this->assertSame($uri->user, null);
+        $this->assertSame($uri->pass, null);
+        $this->assertSame($uri->path, array('path', 'to', 'index.php', 'appname', 'action'));
+        $this->assertSame($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
     }
     
     /**
@@ -110,7 +152,45 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testGet()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        
+        // preliminaries
+        $scheme = 'http';
+        $host = 'www.example.net';
+        $port = 8080;
+        $path = '/some/path/index.php';
+        
+        $info = array(
+            'more', 'path', 'info'
+        );
+        
+        $istr = implode('/', $info);
+        
+        $query = array(
+            'a"key' => 'a&value',
+            'b?key' => 'this that other',
+            'c\'key' => 'tag+tag+tag',
+        );
+        
+        $tmp = array();
+        foreach ($query as $k => $v) {
+            $tmp[] .= urlencode($k) . '=' . urlencode($v);
+        }
+        
+        $qstr = implode('&', $tmp);
+        
+        // set up expectations
+        $expect_full = "$scheme://$host:$port$path/$istr?$qstr";
+        $expect_part = "$path/$istr?$qstr";
+        
+        // set the URI
+        $uri->set($expect_full);
+        
+        // full fetch
+        $this->assertSame($uri->get(true), $expect_full);
+        
+        // partial fetch
+        $this->assertSame($uri->get(false), $expect_part);
     }
     
     /**
@@ -120,7 +200,9 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testGetQuery()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        $uri->setQuery('a=b&c=d');
+        $this->assertSame($uri->getQuery(), 'a=b&c=d');
     }
     
     /**
@@ -130,7 +212,17 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testQuick()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        
+        // partial
+        $expect = '/path/to/index.php?foo=bar';
+        $actual = $uri->quick("http://example.com$expect");
+        $this->assertSame($actual, $expect);
+        
+        // full
+        $expect = 'http://example.com/path/to/index.php?foo=bar';
+        $actual = $uri->quick($expect, true);
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -140,7 +232,44 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testSet()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        
+        // set up the expected values
+        $scheme = 'http';
+        $host = 'www.example.net';
+        $port = 8080;
+        $path = 'some/path/index.php/more/path/info';
+        $query = array(
+            'a"key' => 'a&value',
+            'b?key' => 'this that other',
+            'c\'key' => 'tag+tag+tag',
+        );
+        
+        $spec = "$scheme://$host:$port/$path/";
+        
+        $tmp = array();
+        foreach ($query as $k => $v) {
+            $tmp[] .= urlencode($k) . '=' . urlencode($v);
+        }
+        $spec .= '?' . implode('&', $tmp);
+        
+        // import the URI spec and test that it imported properly
+        $uri->set($spec);
+        $this->assertSame($uri->scheme, $scheme);
+        $this->assertSame($uri->host, $host);
+        $this->assertSame($uri->port, $port);
+        $this->assertSame($uri->path, explode('/', $path));
+        $this->assertSame($uri->query, $query);
+        
+        // npw export in full, then re-import and check again.
+        // do this to make sure there are no translation errors.
+        $spec = $uri->get(true);
+        $uri->set($spec);
+        $this->assertSame($uri->scheme, $scheme);
+        $this->assertSame($uri->host, $host);
+        $this->assertSame($uri->port, $port);
+        $this->assertSame($uri->path, explode('/', $path));
+        $this->assertSame($uri->query, $query);
     }
     
     /**
@@ -150,7 +279,9 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testSetPath()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        $uri->setPath('/very/special/example/');
+        $this->assertSame($uri->path, array('very', 'special', 'example'));
     }
     
     /**
@@ -160,6 +291,8 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function testSetQuery()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        $uri->setQuery('a=b&c=d');
+        $this->assertSame($uri->query, array('a' => 'b', 'c' => 'd'));
     }
 }

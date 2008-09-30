@@ -33,6 +33,15 @@ class Test_Solar_Uri_Action extends Test_Solar_Uri {
         $this->assertInstance($obj, 'Solar_Uri_Action');
     }
     
+    public function test_zero()
+    {
+        $uri = $this->_newUri();
+        $uri->set('/foo/bar/baz.0#0');
+        $actual = $uri->get();
+        $expect = "/index.php/foo/bar/baz.0#0";
+        $this->assertSame($actual, $expect);
+    }
+    
     public function testGet()
     {
         $uri = $this->_newUri();

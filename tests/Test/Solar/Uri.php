@@ -3,8 +3,6 @@
  * 
  * Concrete class test.
  * 
- * @todo add tests for format values, and look for string zeroes
- * 
  */
 class Test_Solar_Uri extends Solar_Test {
     
@@ -125,14 +123,24 @@ class Test_Solar_Uri extends Solar_Test {
         $this->assertSame($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
     }
     
+    public function test_zero()
+    {
+        $uri = $this->_newUri();
+        $uri->set('/foo/bar/baz.0#0');
+        $actual = $uri->get();
+        $expect = "/foo/bar/baz.0#0";
+        $this->assertSame($actual, $expect);
+    }
+    
     /**
      * 
-     * Test -- Implements access to $_query **by reference** so that it appears to be  a public $query property.
+     * Test -- Implements access to $_query **by reference** so that it appears to be a public $query property.
      * 
      */
     public function test__get()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        $this->assertSame($uri->query, array('foo'=>'bar', 'baz'=>'dib'));
     }
     
     /**
@@ -142,7 +150,10 @@ class Test_Solar_Uri extends Solar_Test {
      */
     public function test__set()
     {
-        $this->todo('stub');
+        $uri = $this->_newUri();
+        $uri->query['zim'] = 'gir';
+        $expect = array('foo'=>'bar', 'baz'=>'dib', 'zim'=>'gir');
+        $this->assertSame($uri->query, $expect);
     }
     
     /**
@@ -272,6 +283,51 @@ class Test_Solar_Uri extends Solar_Test {
         $this->assertSame($uri->query, $query);
     }
     
+    public function testSet_format()
+    {
+        $uri = $this->_newUri();
+        
+        // set up the expected values
+        $scheme = 'http';
+        $host = 'www.example.net';
+        $port = 8080;
+        $path = 'some/path/index.php/more/path/info';
+        $format = 'xml';
+        $query = array(
+            'a"key' => 'a&value',
+            'b?key' => 'this that other',
+            'c\'key' => 'tag+tag+tag',
+        );
+        
+        $spec = "$scheme://$host:$port/$path.$format";
+        
+        $tmp = array();
+        foreach ($query as $k => $v) {
+            $tmp[] .= urlencode($k) . '=' . urlencode($v);
+        }
+        $spec .= '?' . implode('&', $tmp);
+        
+        // import the URI spec and test that it imported properly
+        $uri->set($spec);
+        $this->assertSame($uri->scheme, $scheme);
+        $this->assertSame($uri->host, $host);
+        $this->assertSame($uri->port, $port);
+        $this->assertSame($uri->path, explode('/', $path));
+        $this->assertSame($uri->format, $format);
+        $this->assertSame($uri->query, $query);
+        
+        // npw export in full, then re-import and check again.
+        // do this to make sure there are no translation errors.
+        $spec = $uri->get(true);
+        $uri->set($spec);
+        $this->assertSame($uri->scheme, $scheme);
+        $this->assertSame($uri->host, $host);
+        $this->assertSame($uri->port, $port);
+        $this->assertSame($uri->path, explode('/', $path));
+        $this->assertSame($uri->format, $format);
+        $this->assertSame($uri->query, $query);
+    }
+    
     /**
      * 
      * Test -- Sets the Solar_Uri::$path array from a string.
@@ -282,6 +338,17 @@ class Test_Solar_Uri extends Solar_Test {
         $uri = $this->_newUri();
         $uri->setPath('/very/special/example/');
         $this->assertSame($uri->path, array('very', 'special', 'example'));
+    }
+    
+    public function testSetPath_format()
+    {
+        $uri = $this->_newUri();
+        $uri->setPath('/very/special/example.rss');
+        $this->assertSame($uri->path, array('very', 'special', 'example'));
+        $this->assertSame($uri->format, 'rss');
+        
+        $actual = $uri->get();
+        $expect = "/index.php/very/special/example.rss?foo=bar&baz=dib";
     }
     
     /**

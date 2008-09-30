@@ -74,6 +74,11 @@ foreach ($test_classes as $test_class) {
         continue;
     }
     
+    // is it an "only" class?
+    if ($only && $test_class != "Test_$class") {
+        continue;
+    }
+    
     // find all the test*() methods in the Test_* class
     $test_methods = get_class_methods($test_class);
     foreach ($test_methods as $test_method) {

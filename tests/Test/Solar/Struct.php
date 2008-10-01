@@ -148,7 +148,6 @@ class Test_Solar_Struct extends Solar_Test {
         } catch (Solar_Struct_Exception_NoSuchKey $e) {
             // pass
         }
-        
     }
     
     /**
@@ -231,7 +230,10 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testCurrent()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $actual = $struct->current();
+        $expect = 'bar';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -241,7 +243,10 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testKey()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $actual = $struct->key();
+        $expect = 'foo';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -269,7 +274,16 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testNext()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $struct->next();
+        
+        $actual = $struct->key();
+        $expect = 'baz';
+        $this->assertSame($actual, $expect);
+        
+        $actual = $struct->current();
+        $expect = 'dib';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -279,7 +293,9 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testOffsetExists()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $this->assertTrue($struct->offsetExists('foo'));
+        $this->assertFalse($struct->offsetExists('noSuchKey'));
     }
     
     /**
@@ -289,27 +305,47 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testOffsetGet()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        
+        $actual = $struct->offsetGet('foo');
+        $expect = 'bar';
+        $this->assertSame($actual, $expect);
+        
+        try {
+            $actual = $struct->offsetGet('noSuchKey');
+            $this->fail('Should have thrown a NO_SUCH_KEY exception.');
+        } catch (Solar_Struct_Exception_NoSuchKey $e) {
+            // pass
+        }
     }
     
     /**
      * 
      * Test -- ArrayAccess: set a key value.
      * 
+     * Identical to __set().
+     * 
      */
     public function testOffsetSet()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $struct->offsetSet('zim', 'irk');
+        $this->assertSame($struct->offsetGet('zim'), 'irk');
     }
     
     /**
      * 
      * Test -- ArrayAccess: unset a key.
      * 
+     * Identical to __unset().
+     * 
      */
     public function testOffsetUnset()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        $this->assertTrue($struct->offsetExists('foo'));
+        $struct->offsetUnset('foo');
+        $this->assertFalse($struct->offsetExists('foo'));
     }
     
     /**
@@ -319,7 +355,30 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testRewind()
     {
-        $this->todo('stub');
+        $struct = $this->_newStruct();
+        
+        // next() to the end
+        $struct->next();
+        $struct->next();
+        
+        $actual = $struct->key();
+        $expect = 'zim';
+        $this->assertSame($actual, $expect);
+        
+        $actual = $struct->current();
+        $expect = 'gir';
+        $this->assertSame($actual, $expect);
+        
+        // rewind and check
+        $struct->rewind();
+        
+        $actual = $struct->key();
+        $expect = 'foo';
+        $this->assertSame($actual, $expect);
+        
+        $actual = $struct->current();
+        $expect = 'bar';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -346,9 +405,23 @@ class Test_Solar_Struct extends Solar_Test {
      */
     public function testValid()
     {
-        $this->todo('stub');
+        // foo
+        $struct = $this->_newStruct();
+        $this->assertTrue($struct->valid());
+        
+        // bar
+        $struct->next();
+        $this->assertTrue($struct->valid());
+        
+        // baz
+        $struct->next();
+        $this->assertTrue($struct->valid());
+        
+        // done!
+        $struct->next();
+        $this->assertFalse($struct->valid());
     }
-
+    
     public function test_iterator()
     {
         $struct = $this->_newStruct();

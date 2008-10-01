@@ -349,7 +349,6 @@ class Test_Solar_Struct extends Solar_Test {
         $this->todo('stub');
     }
 
-
     public function test_iterator()
     {
         $struct = $this->_newStruct();

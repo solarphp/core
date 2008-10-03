@@ -149,7 +149,7 @@ class Solar_Test_Suite extends Solar_Base
      * 
      * Finds tests, loads them into the plan.
      * 
-     * @param string $dir The Test directory, typically "include/Test".
+     * @param string $dir The Test directory, typically "include".
      * 
      * @return void $class Start with this test class suffix.  E.g., if $class
      * is "Foo", then the tests will start with "Test_Foo".

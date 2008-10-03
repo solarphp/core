@@ -124,6 +124,13 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         } else {
             $this->_data = array();
         }
+        
+        // set iterator validity
+        if ($this->_data) {
+            $this->_iterator_valid = true;
+        } else {
+            $this->_iterator_valid = false;
+        }
     }
     
     /**
@@ -233,6 +240,13 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
         
         // load new data, merging new values with old
         $this->_data = array_merge($this->_data, $data);
+        
+        // set iterator validity
+        if ($this->_data) {
+            $this->_iterator_valid = true;
+        } else {
+            $this->_iterator_valid = false;
+        }
     }
     
     /**

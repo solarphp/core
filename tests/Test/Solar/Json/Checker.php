@@ -90,6 +90,35 @@ class Test_Solar_Json_Checker extends Solar_Test {
      */
     public function testIsValid()
     {
-        $this->todo('stub');
+        $checker = Solar::factory('Solar_Json_Checker');
+        
+        $dir = Solar_Class::dir('Test_Solar_Json', '_support');
+        $tests = scandir($dir);
+        natsort($tests);
+        
+        foreach ($tests as $file) {
+            if (substr($file, 0, 4) == 'pass' && substr($file, -4) == 'json') {
+                $this->diag($file);
+                $before = file_get_contents($dir . $file);
+                $this->assertTrue($checker->isValid($before));
+            }
+        }
+    }
+    
+    public function testIsValid_failures()
+    {
+        $checker = Solar::factory('Solar_Json_Checker');
+        
+        $dir = Solar_Class::dir('Test_Solar_Json', '_support');
+        $tests = scandir($dir);
+        natsort($tests);
+        
+        foreach ($tests as $file) {
+            if (substr($file, 0, 4) == 'fail' && substr($file, -4) == 'json') {
+                $this->diag($file);
+                $before = file_get_contents($dir . $file);
+                $this->assertFalse($checker->isValid($before));
+            }
+        }
     }
 }

@@ -112,6 +112,11 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_request->post['passwd'] = 'badpass';
     }
     
+    protected function _fakePostLogout()
+    {
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGOUT');
+    }
+    
     // -----------------------------------------------------------------
     // 
     // Test methods.
@@ -211,7 +216,9 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testIsValid()
     {
-        $this->todo('stub');
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertTrue($this->_auth->isValid());
     }
     
     /**
@@ -224,6 +231,7 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertTrue($this->_auth->processLogin());
+        $this->assertTrue($this->_auth->isValid());
     }
     
     public function testProcessLogin_badPasswd()
@@ -231,6 +239,7 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_badPasswd();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->processLogin());
+        $this->assertFalse($this->_auth->isValid());
     }
     
     public function testProcessLogin_noSuchUser()
@@ -238,6 +247,7 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
         $this->_fakePostLogin_noSuchUser();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->processLogin());
+        $this->assertFalse($this->_auth->isValid());
     }
     
     /**
@@ -247,7 +257,16 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testProcessLogout()
     {
-        $this->todo('stub');
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertTrue($this->_auth->isValid());
+        
+        $this->_fakePostLogout();
+        $this->assertTrue($this->_auth->isLogoutRequest());
+        
+        $this->_auth->processLogout();
+        $this->assertFalse($this->_auth->isValid());
     }
     
     /**
@@ -272,7 +291,26 @@ abstract class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testStart()
     {
-        $this->todo('stub');
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertTrue($this->_auth->isValid());
+    }
+    
+    public function testStart_anon()
+    {
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
+    }
+    
+    public function testStart_logout()
+    {
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertTrue($this->_auth->isValid());
+        
+        $this->_fakePostLogout();
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
     }
     
     /**

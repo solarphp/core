@@ -308,6 +308,18 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * Gets the current class segment for $_SESSION.
+     * 
+     * @return string
+     * 
+     */
+    public function getClass()
+    {
+        return $this->_class;
+    }
+    
+    /**
+     * 
      * Sets a normal value by key.
      * 
      * @param string $key The data key.

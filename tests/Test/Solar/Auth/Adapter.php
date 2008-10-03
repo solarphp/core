@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_Auth_Adapter extends Solar_Test {
+abstract class Test_Solar_Auth_Adapter extends Solar_Test {
     
     /**
      * 
@@ -15,6 +15,22 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     protected $_Test_Solar_Auth_Adapter = array(
     );
+    
+    protected $_auth;
+    
+    protected $_class;
+    
+    protected $_post;
+    
+    protected $_handle = 'pmjones';
+    
+    protected $_email = null;
+    
+    protected $_moniker = null;
+    
+    protected $_uri = null;
+    
+    protected $_request;
     
     // -----------------------------------------------------------------
     // 
@@ -31,7 +47,6 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function __construct($config = null)
     {
-        $this->skip('abstract class');
         parent::__construct($config);
     }
     
@@ -55,6 +70,15 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        
+        // remove "Test_" prefix
+        $this->_class = substr(get_class($this), 5);
+        
+        // get the request environment
+        $this->_request = Solar_Registry::get('request');
+        
+        // get a new adapter
+        $this->_auth = Solar::factory($this->_class, $this->_config);
     }
     
     /**
@@ -65,6 +89,27 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
     public function teardown()
     {
         parent::teardown();
+    }
+    
+    protected function _fakePostLogin_valid()
+    {
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGIN');
+        $this->_request->post['handle'] = 'pmjones';
+        $this->_request->post['passwd'] = 'jones';
+    }
+    
+    protected function _fakePostLogin_badPasswd()
+    {
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGIN');
+        $this->_request->post['handle'] = 'pmjones';
+        $this->_request->post['passwd'] = 'badpass';
+    }
+    
+    protected function _fakePostLogin_noSuchUser()
+    {
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGIN');
+        $this->_request->post['handle'] = 'nouser';
+        $this->_request->post['passwd'] = 'badpass';
     }
     
     // -----------------------------------------------------------------
@@ -80,8 +125,39 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Auth_Adapter');
-        $this->assertInstance($obj, 'Solar_Auth_Adapter');
+        $this->assertInstance($this->_auth, $this->_class);
+    }
+    
+    public function test_handle()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->handle, $this->_handle);
+    }
+    
+    public function test_email()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->email, $this->_email);
+    }
+    
+    public function test_moniker()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->moniker, $this->_moniker);
+    }
+    
+    public function test_uri()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+        $this->assertSame($this->_auth->uri, $this->_uri);
     }
     
     /**
@@ -101,7 +177,14 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testIsLoginRequest()
     {
-        $this->todo('stub');
+        // fake the POST parameters
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGIN');
+        $this->assertTrue($this->_auth->isLoginRequest());
+    }
+    
+    public function testIsLoginRequest_false()
+    {
+        $this->assertFalse($this->_auth->isLoginRequest());
     }
     
     /**
@@ -111,7 +194,14 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testIsLogoutRequest()
     {
-        $this->todo('stub');
+        // fake the POST parameters
+        $this->_request->post['process'] = $this->_auth->locale('PROCESS_LOGOUT');
+        $this->assertTrue($this->_auth->isLogoutRequest());
+    }
+    
+    public function testIsLogoutRequest_false()
+    {
+        $this->assertFalse($this->_auth->isLogoutRequest());
     }
     
     /**
@@ -131,7 +221,23 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testProcessLogin()
     {
-        $this->todo('stub');
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertTrue($this->_auth->processLogin());
+    }
+    
+    public function testProcessLogin_badPasswd()
+    {
+        $this->_fakePostLogin_badPasswd();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertFalse($this->_auth->processLogin());
+    }
+    
+    public function testProcessLogin_noSuchUser()
+    {
+        $this->_fakePostLogin_noSuchUser();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertFalse($this->_auth->processLogin());
     }
     
     /**
@@ -151,7 +257,12 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
      */
     public function testReset()
     {
-        $this->todo('stub');
+        $this->_auth->reset();
+        $this->assertNull($this->_auth->handle);
+        $this->assertNull($this->_auth->email);
+        $this->assertNull($this->_auth->moniker);
+        $this->assertNull($this->_auth->uri);
+        $this->assertNull($this->_auth->uid);
     }
     
     /**
@@ -173,4 +284,5 @@ class Test_Solar_Auth_Adapter extends Solar_Test {
     {
         $this->todo('stub');
     }
+
 }

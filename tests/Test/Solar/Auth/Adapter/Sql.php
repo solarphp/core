@@ -1,10 +1,5 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
  * Adapter class test.
  * 
@@ -21,160 +16,46 @@ class Test_Solar_Auth_Adapter_Sql extends Test_Solar_Auth_Adapter {
     protected $_Test_Solar_Auth_Adapter_Sql = array(
     );
     
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
+    protected $_sql;
     
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
-     * Setup; runs before each test method.
-     * 
-     */
     public function setup()
     {
+        $this->_sql = Solar::factory(
+            'Solar_Sql',
+            array(
+                'adapter' => 'Solar_Sql_Adapter_Sqlite',
+                'name' => ':memory:',
+            )
+        );
+        
+        $cmd = "CREATE TABLE members ("
+             . "    handle VARCHAR(255),"
+             . "    passwd CHAR(32),"
+             . "    email VARCHAR(255),"
+             . "    moniker VARCHAR(255),"
+             . "    uri VARCHAR(255)"
+             . ")";
+        
+        $this->_sql->query($cmd);
+        
+        $dir = Solar_Class::dir('Test_Solar_Auth_Adapter', '_support');
+        $insert = parse_ini_file($dir . 'users.ini', true);
+        foreach ($insert as $handle => $data) {
+            $data['handle'] = $handle;
+            $data['passwd'] = hash('md5', $data['passwd']);
+            $this->_sql->insert('members', $data);
+        }
+        
+        $this->_moniker = 'Paul M. Jones';
+        $this->_email = 'pmjones@solarphp.com';
+        $this->_uri = 'http://paul-m-jones.com';
+        
+        $this->_config['sql']         = $this->_sql;
+        $this->_config['table']       = 'members';
+        $this->_config['email_col']   = 'email';
+        $this->_config['moniker_col'] = 'moniker';
+        $this->_config['uri_col']     = 'uri';
+        
         parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Auth_Adapter_Sql');
-        $this->assertInstance($obj, 'Solar_Auth_Adapter_Sql');
-    }
-    
-    /**
-     * 
-     * Test -- Retrieves a "read-once" session value for Solar_Auth.
-     * 
-     */
-    public function testGetFlash()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Tells if the current page load appears to be the result of an attempt to log in.
-     * 
-     */
-    public function testIsLoginRequest()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Tells if the current page load appears to be the result of an attempt to log out.
-     * 
-     */
-    public function testIsLogoutRequest()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Tells whether the current authentication is valid.
-     * 
-     */
-    public function testIsValid()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Processes login attempts and sets user credentials.
-     * 
-     */
-    public function testProcessLogin()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Processes logout attempts.
-     * 
-     */
-    public function testProcessLogout()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Resets any authentication data in the session.
-     * 
-     */
-    public function testReset()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Starts a session with authentication.
-     * 
-     */
-    public function testStart()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Updates idle and expire times, invalidating authentication if they are exceeded.
-     * 
-     */
-    public function testUpdateIdleExpire()
-    {
-        $this->todo('stub');
     }
 }

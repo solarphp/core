@@ -16,6 +16,10 @@ class Test_Solar_Session extends Solar_Test {
     protected $_Test_Solar_Session = array(
     );
     
+    protected $_class;
+    
+    protected $_session;
+    
     // -----------------------------------------------------------------
     // 
     // Support methods.
@@ -32,6 +36,7 @@ class Test_Solar_Session extends Solar_Test {
     public function __construct($config = null)
     {
         parent::__construct($config);
+        $this->_class = get_class($this);
     }
     
     /**
@@ -54,6 +59,8 @@ class Test_Solar_Session extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        $this->_session = Solar::factory('Solar_Session');
+        $this->_session->setClass($this->_class);
     }
     
     /**
@@ -90,7 +97,19 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testAdd()
     {
-        $this->todo('stub');
+        // add to session object
+        $expect = array('bar', 'baz', 'dib');
+        foreach ($expect as $val) {
+            $this->_session->add('foo', $val);
+        }
+        
+        // check session object
+        $actual = $this->_session->get('foo');
+        $this->assertSame($actual, $expect);
+        
+        // check superglobal
+        $actual = $_SESSION[$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -100,7 +119,19 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testAddFlash()
     {
-        $this->todo('stub');
+        // add to session object
+        $expect = array('bar', 'baz', 'dib');
+        foreach ($expect as $val) {
+            $this->_session->addFlash('foo', $val);
+        }
+        
+        // test the superglobal value
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // read from the session object
+        $actual = $this->_session->getFlash('foo');
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -110,7 +141,22 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testGet()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->set('foo', $expect);
+        
+        // check the superglobal
+        $actual = $_SESSION[$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // read the value from the object
+        $actual = $this->_session->get('foo');
+        $this->assertSame($actual, $expect);
+        
+        // ask for nonexistent value and get default instead
+        $actual = $this->_session->get('baz', 'dib');
+        $expect = 'dib';
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -120,7 +166,25 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testGetFlash()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->setFlash('foo', $expect);
+        
+        // check that it's in the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // read the value
+        $actual = $this->_session->getFlash('foo');
+        $this->assertSame($actual, $expect);
+        
+        // should have removed it from the superglobal
+        $actual = empty($_SESSION['Solar_Session']['flash'][$this->_class]['foo']);
+        $this->assertTrue($actual);
+        
+        // should have removed from the object
+        $actual = $this->_session->getFlash('foo');
+        $this->assertNull($actual, $expect);
     }
     
     /**
@@ -130,7 +194,21 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testHasFlash()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->setFlash('foo', $expect);
+        
+        // check that it's in the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // check that it's in the object
+        $actual = $this->_session->hasFlash('foo');
+        $this->assertTrue($actual);
+        
+        // should not have removed the value from the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -140,7 +218,24 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testRegenerateId()
     {
-        $this->todo('stub');
+        // at the command line, we need to start sessions manually
+        session_start();
+        
+        // get the old ID
+        $old = session_id();
+        
+        // regen the ID. DO NOT output until after regenerating the ID.
+        // otherwise it sends the headers, which will cause regenerateID() to
+        // faile.
+        $this->assertFalse(headers_sent());
+        $this->_session->regenerateId();
+        $new = session_id();
+        
+        // check them (now it's safe for output)
+        $this->diag("Old ID: $old");
+        $this->diag("New ID: $new");
+        $this->assertFalse(empty($new));
+        $this->assertNotSame($old, $new);
     }
     
     /**
@@ -150,7 +245,25 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testReset()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->set('foo', $expect);
+        
+        // check in the superglobal
+        $actual = $_SESSION[$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // check in the object
+        $actual = $this->_session->get('foo');
+        $this->assertSame($actual, $expect);
+        
+        // now reset
+        $this->_session->reset();
+        $expect = array();
+        
+        // should not be in the session superglobal
+        $actual = $_SESSION[$this->_class];
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -160,7 +273,32 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testResetAll()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->set('foo', $expect);
+        
+        // check in the superglobal
+        $actual = $_SESSION[$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // set a flash value
+        $this->_session->setFlash('foo', $expect);
+        
+        // check in the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // reset all
+        $this->_session->resetAll();
+        
+        // should be blank in superglobal store ...
+        $expect = array();
+        $actual = $_SESSION[$this->_class];
+        $this->assertSame($actual, $expect);
+        
+        // ... and in flash.
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class];
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -170,7 +308,21 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testResetFlash()
     {
-        $this->todo('stub');
+        // set the value
+        $expect = 'bar';
+        $this->_session->setFlash('foo', $expect);
+        
+        // check the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
+        
+        // now reset
+        $this->_session->resetFlash();
+        
+        // check the superglobal
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class];
+        $expect = array();
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -180,7 +332,17 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testSet()
     {
-        $this->todo('stub');
+        // set in the session object
+        $expect = 'bar';
+        $this->_session->set('foo', $expect);
+        
+        // check the session object
+        $actual = $this->_session->get('foo');
+        $this->assertSame($actual, $expect);
+        
+        // check the superglobal
+        $actual = $_SESSION[$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -190,7 +352,12 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testSetClass()
     {
-        $this->todo('stub');
+        $expect = get_class($this);
+        $this->assertSame($this->_session->getClass(), $expect);
+        
+        $expect = 'Some_Other_Class';
+        $this->_session->setClass($expect);
+        $this->assertSame($this->_session->getClass(), $expect);
     }
     
     /**
@@ -200,6 +367,9 @@ class Test_Solar_Session extends Solar_Test {
      */
     public function testSetFlash()
     {
-        $this->todo('stub');
+        $expect = 'bar';
+        $this->_session->setFlash('foo', $expect);
+        $actual = $_SESSION['Solar_Session']['flash'][$this->_class]['foo'];
+        $this->assertSame($actual, $expect);
     }
 }

@@ -14,16 +14,6 @@
  * @version $Id:$
  * 
  */
-
-/**
- * 
- * Log adapter for Firephp/Firebug.
- * 
- * @category Solar
- * 
- * @package Solar_log
- * 
- */
 class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
     
     /**

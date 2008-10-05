@@ -62,7 +62,7 @@ class Solar_Class
         $exists = class_exists($name, false)
                || interface_exists($name, false);
         
-        if (! $exists) {
+        if ($exists) {
             return;
         }
         

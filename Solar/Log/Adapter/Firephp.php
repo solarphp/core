@@ -92,12 +92,23 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
             'X-FirePHP-Data-399999999999',
             '["__SKIP__"]],'
         );
+
+        $this->_response->setHeader(
+            'X-FirePHP-Data-200000000001',
+            '"FirePHP.Dump":{'
+        );
+        
+        $this->_response->setHeader(
+            'X-FirePHP-Data-299999999999',
+            '"__SKIP__":"__SKIP__"},'
+        );
         
         $this->_response->setHeader(
             'X-FirePHP-Data-999999999999',
             '"__SKIP__":"__SKIP__"}'
         );
     }
+
 
     /**
      * 
@@ -116,10 +127,16 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      */
     protected function _save($class, $event, $descr)
     {
-        $data = $this->_json->encode(array($event,"$class: $descr"));
+        if(strtolower($event) == 'dump') {
+            $data = '"'.$class.'":' . $this->_json->encode($descr);
+            $type = 2;
+        } else {
+            $data = $this->_json->encode(array($event,"$class: $descr"));
+            $type = 3;
+        }
         
         if (strlen($data <= 5000)) {
-            $this->_setHeader($data);
+            $this->_setHeader($data, $type);
         } else {
             $chunks = chunk_split($msg, 5000, "\n");
             $parts = explode("\n", $chunks);
@@ -128,7 +145,7 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
                     // ensure microtime() increments with each loop.
                     // not very elegant but it works.
                     usleep(1);
-                    $this->_setHeader($part);
+                    $this->_setHeader($part, $type);
                 }
             }
         }
@@ -141,14 +158,16 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      * Sets the log message in the response headers.
      * 
      * @param string $data The JSON data for the header.
+     *
+     * @param int $type 3 - normal, 2 - dump
      * 
      * @return void
      * 
      */
-    protected function _setHeader($data)
+    protected function _setHeader($data, $type = 3)
     {
         $utime = explode(' ', microtime());
-        $utime = substr($mt[1], 7) . substr($mt[0], 2);  
-        $this->_response->setHeader("X-FirePHP-Data-3{$utime}: {$data},");
+        $utime = substr($utime[1], 7) . substr($utime[0], 2);  
+        $this->_response->setHeader("X-FirePHP-Data-{$type}{$utime}", "{$data},");
     }
 }

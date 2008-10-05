@@ -51,7 +51,7 @@ class Solar_Class
             throw Solar::exception(
                 'Solar_Class',
                 'ERR_AUTOLOAD_EMPTY',
-                'No class or interface named for loading',
+                'No class or interface named for loading.',
                 array('name' => $name)
             );
         }

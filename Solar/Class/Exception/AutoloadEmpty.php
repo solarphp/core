@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Exception: autoload could not find a file.
+ * Exception: autoload class name was empty.
  * 
  * @category Solar
  * 
@@ -11,7 +11,7 @@
  * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
- * @version $Id$
+ * @version $Id: AutoloadFailed.php 2933 2007-11-09 20:37:35Z moraes $
  * 
  */
-class Solar_Exception_AutoloadFailed extends Solar_Exception {}
+class Solar_Class_Exception_AutoloadEmpty extends Solar_Exception {}

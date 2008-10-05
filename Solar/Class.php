@@ -115,12 +115,9 @@ class Solar_Class
         
         // do we need to load the parent stack?
         if (empty(self::$parents[$class])) {
-            // get the stack of classes leading to this one
-            self::$parents[$class] = array();
-            $parent = $class;
-            while ($parent = get_parent_class($parent)) {
-                self::$parents[$class][] = $parent;
-            }
+            // use SPL class_parents(), which uses autoload by default.  use
+            // only the array values, not the keys, since that messes up BC.
+            self::$parents[$class] = array_values(class_parents($class));
         }
         
         // get the parent stack

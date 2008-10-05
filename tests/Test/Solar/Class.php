@@ -102,10 +102,14 @@ class Test_Solar_Class extends Solar_Test {
             Solar_Class::autoload('');
             $this->fail('Should throw exception on empty class name.');
         } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Exception');
+            $this->assertInstance($e, 'Solar_Class_Exception_AutoloadEmpty');
         }
     }
     
+    /**
+     * @todo this actually tests the file-not-found logic, not the file-found-
+     * but-class-not-there logic.  fix that.  :-/
+     */
     public function testAutoload_noSuchClass()
     {
         try {

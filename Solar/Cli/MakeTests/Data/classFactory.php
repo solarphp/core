@@ -57,7 +57,7 @@ class Test_{:class} extends {:extends} {
     
     /**
      * 
-     * Setup; runs after each test method.
+     * Teardown; runs after each test method.
      * 
      */
     public function teardown()

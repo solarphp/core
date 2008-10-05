@@ -309,7 +309,7 @@ class Solar_Controller_Command extends Solar_Base
         $options = array();
         
         // find the parents of this class, including this class
-        $parents = array_reverse(Solar_Class::parents(get_class($this), true));
+        $parents = Solar_Class::parents(get_class($this), true);
         array_shift($parents);
         array_shift($parents);
         

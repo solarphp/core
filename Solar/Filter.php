@@ -224,7 +224,7 @@ class Solar_Filter extends Solar_Base
      */
     public function setFilterClass($list = null)
     {
-        $parents = array_reverse(Solar_Class::parents($this, true));
+        $parents = Solar_Class::parents($this, true);
         array_shift($parents); // drops Solar_Base
         $this->_stack->set($parents);
         $this->_stack->add($list);

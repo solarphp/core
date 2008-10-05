@@ -645,7 +645,7 @@ class Solar
         );
         
         // get all parent classes, including the class itself
-        $stack = Solar_Class::parents($class, true);
+        $stack = array_reverse(Solar_Class::parents($class, true));
         
         // add the vendor namespace, (for example, 'Solar') to the stack as a
         // final fallback, even though it's not strictly part of the

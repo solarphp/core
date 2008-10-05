@@ -85,7 +85,7 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        $parents = array_reverse(Solar_Class::parents($this, true));
+        $parents = Solar_Class::parents($this, true);
         
         if ($config === false) {
             

@@ -680,7 +680,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $this->_view_object->addHelperClass($this->_helper_class);
         
         // get all parents including self
-        $stack = Solar_Class::parents(get_class($this), true);
+        $stack = array_reverse(Solar_Class::parents($this, true));
         
         // remove the last two parents
         array_pop($stack); // Solar_Base
@@ -712,7 +712,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _addViewTemplates()
     {
         // get the parents of the current class, including self
-        $stack = Solar_Class::parents(get_class($this), true);
+        $stack = array_reverse(Solar_Class::parents($this, true));
         
         // remove Solar_Base and Solar_Controller_Page
         array_pop($stack);
@@ -753,7 +753,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _setLayoutTemplates()
     {
         // get the parents of the current class, including self
-        $stack = Solar_Class::parents(get_class($this), true);
+        $stack = array_reverse(Solar_Class::parents($this, true));
         
         // remove Solar_Base and Solar_Controller_Page
         array_pop($stack);

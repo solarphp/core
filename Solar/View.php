@@ -289,7 +289,7 @@ class Solar_View extends Solar_Base
      */
     public function setHelperClass($list = null)
     {
-        $parents = array_reverse(Solar_Class::parents($this, true));
+        $parents = Solar_Class::parents($this, true);
         array_shift($parents); // drops Solar_Base
         foreach ($parents as $key => $val) {
             $parents[$key] = $val . '_Helper';

@@ -110,6 +110,37 @@ class Test_Solar_Class extends Solar_Test {
      */
     public function testParents()
     {
-        $this->todo('stub');
+        $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition');
+        $expect = array(
+            'Solar_Example_Exception',
+            'Solar_Exception',
+            'Exception',
+        );
+        $this->assertSame($actual, $expect);
     }
+    
+    public function testParents_withObject()
+    {
+        $object = Solar::factory('Solar_Example_Exception_CustomCondition');
+        $actual = Solar_Class::parents($object);
+        $expect = array(
+            'Solar_Example_Exception',
+            'Solar_Exception',
+            'Exception',
+        );
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testParents_includeSelf()
+    {
+        $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition', true);
+        $expect = array(
+            'Solar_Example_Exception_CustomCondition',
+            'Solar_Example_Exception',
+            'Solar_Exception',
+            'Exception',
+        );
+        $this->assertSame($actual, $expect);
+    }
+    
 }

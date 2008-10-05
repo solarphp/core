@@ -307,7 +307,6 @@ class Solar
         
         // clean up
         Solar::$config = array();
-        Solar::$parents = array();
         
         // reset the status flag, and we're done.
         Solar::$_status = false;
@@ -646,7 +645,7 @@ class Solar
         );
         
         // get all parent classes, including the class itself
-        $stack = Solar::parents($class, true);
+        $stack = Solar_Class::parents($class, true);
         
         // add the vendor namespace, (for example, 'Solar') to the stack as a
         // final fallback, even though it's not strictly part of the
@@ -701,52 +700,6 @@ class Solar
     {
         $obj = Solar::factory('Solar_Debug_Var');
         $obj->display($var, $label);
-    }
-    
-    /**
-     * 
-     * Returns an array of the parent classes for a given class.
-     * 
-     * Parents in "reverse" order ... element 0 is the immediate parent,
-     * element 1 the grandparent, etc.
-     * 
-     * @param string|object $spec The class or object to find parents
-     * for.
-     * 
-     * @param bool $include_class If true, the class name is element 0,
-     * the parent is element 1, the grandparent is element 2, etc.
-     * 
-     * @return array
-     * 
-     */
-    public static function parents($spec, $include_class = false)
-    {
-        if (is_object($spec)) {
-            $class = get_class($spec);
-        } else {
-            $class = $spec;
-        }
-        
-        // do we need to load the parent stack?
-        if (empty(Solar::$parents[$class])) {
-            // get the stack of classes leading to this one
-            Solar::$parents[$class] = array();
-            $parent = $class;
-            while ($parent = get_parent_class($parent)) {
-                Solar::$parents[$class][] = $parent;
-            }
-        }
-        
-        // get the parent stack
-        $stack = Solar::$parents[$class];
-        
-        // add the class itself?
-        if ($include_class) {
-            array_unshift($stack, $class);
-        }
-        
-        // done
-        return $stack;
     }
     
     /**

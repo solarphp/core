@@ -315,46 +315,6 @@ class Test_Solar extends Solar_Test {
     
     /**
      * 
-     * Test -- Returns an array of the parent classes for a given class.
-     * 
-     */
-    public function testParents()
-    {
-        $actual = Solar::parents('Solar_Example_Exception_CustomCondition');
-        $expect = array(
-            'Solar_Example_Exception',
-            'Solar_Exception',
-            'Exception',
-        );
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testParents_withObject()
-    {
-        $object = Solar::factory('Solar_Example_Exception_CustomCondition');
-        $actual = Solar::parents($object);
-        $expect = array(
-            'Solar_Example_Exception',
-            'Solar_Exception',
-            'Exception',
-        );
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testParents_includeSelf()
-    {
-        $actual = Solar::parents('Solar_Example_Exception_CustomCondition', true);
-        $expect = array(
-            'Solar_Example_Exception_CustomCondition',
-            'Solar_Example_Exception',
-            'Solar_Exception',
-            'Exception',
-        );
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
      * Test -- Starts Solar: loads configuration values and and sets up the environment.
      * 
      */

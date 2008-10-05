@@ -165,7 +165,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         foreach ($this->packages[$package] as $class) {
             
             // ignore classes descended from Solar_Exception
-            $parents = Solar::parents($class);
+            $parents = Solar_Class::parents($class);
             if (in_array('Solar_Exception', $parents)) {
                 continue;
             }
@@ -196,7 +196,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         foreach ($this->api as $class => $api) {
             
             // ignore classes descended from Solar_Exception
-            $parents = Solar::parents($class);
+            $parents = Solar_Class::parents($class);
             if (in_array('Solar_Exception', $parents)) {
                 continue;
             }

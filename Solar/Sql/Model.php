@@ -2182,7 +2182,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_stack = Solar::factory('Solar_Class_Stack');
         
         // get the class parents and work from this class upwards
-        $parents = Solar::parents($this->_class, true);
+        $parents = Solar_Class::parents($this->_class, true);
         array_pop($parents); // Solar_Base
         array_pop($parents); // Solar_Sql_Model
         $parents = array_reverse($parents);
@@ -2222,7 +2222,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // removed from it.
         $base_class = null;
         $base_name  = null;
-        $parents = Solar::parents($this->_class, true);
+        $parents = Solar_Class::parents($this->_class, true);
         foreach ($parents as $key => $val) {
             if (substr($val, -6) == '_Model') {
                 // $key is now the value of the closest "_Model" class. -1 to

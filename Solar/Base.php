@@ -85,7 +85,7 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        $parents = array_reverse(Solar::parents($this, true));
+        $parents = array_reverse(Solar_Class::parents($this, true));
         
         if ($config === false) {
             
@@ -173,7 +173,7 @@ abstract class Solar_Base {
         if (is_null($var)) {
             // clone $this and remove the parent config arrays
             $clone = clone($this);
-            foreach (Solar::parents($this) as $class) {
+            foreach (Solar_Class::parents($this) as $class) {
                 $key = "_$class";
                 unset($clone->$key);
             }

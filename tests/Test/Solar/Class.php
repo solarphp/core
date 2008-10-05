@@ -112,9 +112,9 @@ class Test_Solar_Class extends Solar_Test {
     {
         $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition');
         $expect = array(
-            'Solar_Example_Exception',
-            'Solar_Exception',
             'Exception',
+            'Solar_Exception',
+            'Solar_Example_Exception',
         );
         $this->assertSame($actual, $expect);
     }
@@ -124,9 +124,9 @@ class Test_Solar_Class extends Solar_Test {
         $object = Solar::factory('Solar_Example_Exception_CustomCondition');
         $actual = Solar_Class::parents($object);
         $expect = array(
-            'Solar_Example_Exception',
-            'Solar_Exception',
             'Exception',
+            'Solar_Exception',
+            'Solar_Example_Exception',
         );
         $this->assertSame($actual, $expect);
     }
@@ -135,10 +135,10 @@ class Test_Solar_Class extends Solar_Test {
     {
         $actual = Solar_Class::parents('Solar_Example_Exception_CustomCondition', true);
         $expect = array(
-            'Solar_Example_Exception_CustomCondition',
-            'Solar_Example_Exception',
-            'Solar_Exception',
             'Exception',
+            'Solar_Exception',
+            'Solar_Example_Exception',
+            'Solar_Example_Exception_CustomCondition',
         );
         $this->assertSame($actual, $expect);
     }

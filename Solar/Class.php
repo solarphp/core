@@ -93,9 +93,6 @@ class Solar_Class
      * 
      * Returns an array of the parent classes for a given class.
      * 
-     * Parents in "reverse" order ... element 0 is the immediate parent,
-     * element 1 the grandparent, etc.
-     * 
      * @param string|object $spec The class or object to find parents
      * for.
      * 
@@ -117,7 +114,8 @@ class Solar_Class
         if (empty(self::$parents[$class])) {
             // use SPL class_parents(), which uses autoload by default.  use
             // only the array values, not the keys, since that messes up BC.
-            self::$parents[$class] = array_values(class_parents($class));
+            $parents = array_values(class_parents($class));
+            self::$parents[$class] = array_reverse($parents);
         }
         
         // get the parent stack
@@ -125,7 +123,7 @@ class Solar_Class
         
         // add the class itself?
         if ($include_class) {
-            array_unshift($stack, $class);
+            $stack[] = $class;
         }
         
         // done

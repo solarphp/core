@@ -95,38 +95,6 @@ class Test_Solar extends Solar_Test {
     
     /**
      * 
-     * Test -- Loads a class or interface file from the include_path.
-     * 
-     */
-    public function testAutoload()
-    {
-        $this->assertFalse(class_exists('Solar_Example', false));
-        Solar::autoload('Solar_Example');
-        $this->assertTrue(class_exists('Solar_Example', false));
-    }
-    
-    public function testAutoload_emptyClass()
-    {
-        $this->assertFalse(class_exists('Solar_Example', false));
-        try {
-            Solar::autoload('');
-            $this->fail('Should throw exception on empty class name.');
-        } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Exception');
-        }
-    }
-    
-    public function testAutoload_noSuchClass()
-    {
-        try {
-            Solar::autoload('No_Such_Class');
-            $this->fail('Should throw exception when class does not exist.');
-        } catch (Exception $e) {
-            $this->assertInstance($e, 'Solar_Exception');
-        }
-    }
-    /**
-     * 
      * Test -- Runs a series of callbacks using call_user_func_array().
      * 
      */

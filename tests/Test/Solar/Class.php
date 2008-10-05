@@ -90,7 +90,30 @@ class Test_Solar_Class extends Solar_Test {
      */
     public function testAutoload()
     {
-        $this->todo('stub');
+        $this->assertFalse(class_exists('Solar_Example', false));
+        Solar_Class::autoload('Solar_Example');
+        $this->assertTrue(class_exists('Solar_Example', false));
+    }
+    
+    public function testAutoload_emptyClass()
+    {
+        $this->assertFalse(class_exists('Solar_Example', false));
+        try {
+            Solar_Class::autoload('');
+            $this->fail('Should throw exception on empty class name.');
+        } catch (Exception $e) {
+            $this->assertInstance($e, 'Solar_Exception');
+        }
+    }
+    
+    public function testAutoload_noSuchClass()
+    {
+        try {
+            Solar_Class::autoload('No_Such_Class');
+            $this->fail('Should throw exception when class does not exist.');
+        } catch (Exception $e) {
+            $this->assertInstance($e, 'Solar_Exception');
+        }
     }
     
     /**

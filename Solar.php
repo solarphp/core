@@ -373,7 +373,6 @@ class Solar
      */
     public static function factory($class, $config = null)
     {
-        Solar_Class::autoload($class);
         $obj = new $class($config);
         
         // is it an object factory?

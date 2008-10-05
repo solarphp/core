@@ -5,6 +5,13 @@
  */
 class {:class} extends {:extends} {
     
+    /**
+     * 
+     * Model-specific setup.
+     * 
+     * @return void
+     * 
+     */
     protected function _setup()
     {
         $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)

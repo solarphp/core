@@ -3,7 +3,7 @@
  * Abstract class test.
  * 
  */
-class Test_{:class} extends {:extends} {
+abstract class Test_{:class} extends {:extends} {
     
     /**
      * 

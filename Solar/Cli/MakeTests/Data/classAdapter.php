@@ -1,9 +1,4 @@
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
  * Adapter class test.
  * 

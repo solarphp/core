@@ -1,30 +1,5 @@
 <?php
 /**
- * Make sure Solar_Base is loaded even before Solar::start() is called.
- * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
- * in some environments.
- */
-if (! class_exists('Solar_Base', false)) {
-    require dirname(__FILE__) . DIRECTORY_SEPARATOR
-          . 'Solar' . DIRECTORY_SEPARATOR . 'Base.php';
-}
-
-/**
- * Make sure Solar_File is loaded even before Solar::start() is called.
- * DO NOT use spl_autoload() in this case, it causes segfaults from recursion
- * in some environments.
- */
-if (! class_exists('Solar_File', false)) {
-    require dirname(__FILE__) . DIRECTORY_SEPARATOR
-          . 'Solar' . DIRECTORY_SEPARATOR . 'File.php';
-}
-
-/**
- * Register Solar::autoload() with SPL.
- */
-spl_autoload_register(array('Solar', 'autoload'));
-
-/**
  * 
  * The Solar arch-class provides static methods needed throughout the
  * framework environment.
@@ -81,7 +56,7 @@ class Solar
      * 
      * `ini_set`
      * : (array) An array of key-value pairs where the key is an
-     * [[php::ini_set | ]] key, and the value is the value for that setting.
+     *   [[php::ini_set | ]] key, and the value is the value for that setting.
      * 
      * `registry_set`
      * : (array) An array of key-value pairs to use in pre-setting registry
@@ -118,36 +93,12 @@ class Solar
     
     /**
      * 
-     * Parent hierarchy for all classes.
-     * 
-     * We keep track of this so configs, locale strings, etc. can be
-     * inherited properly from parent classes.
-     * 
-     * Although this property is public, you generally shouldn't need
-     * to manipulate it in any way.
-     * 
-     * @var array
-     * 
-     */
-    public static $parents = array();
-    
-    /**
-     * 
      * The Solar system root directory.
      * 
      * @var string
      * 
      */
     public static $system = null;
-    
-    /**
-     * 
-     * A single directory to use for all autoload includes.
-     * 
-     * @var string
-     * 
-     */
-    public static $include = null;
     
     /**
      * 
@@ -232,6 +183,21 @@ class Solar
             return;
         }
         
+        // make sure these classes are loaded
+        $list = array(
+            'Base',
+            'Class',
+            'File',
+        );
+        foreach ($list as $name) {
+            require_once dirname(__FILE__) . DIRECTORY_SEPARATOR
+                         . 'Solar' . DIRECTORY_SEPARATOR
+                         . "$name.php";
+        }
+        
+        // register autoloader
+        spl_autoload_register(array('Solar_Class', 'autoload'));
+        
         // clear out registered globals
         if (ini_get('register_globals')) {
             Solar::cleanGlobals();
@@ -307,6 +273,9 @@ class Solar
         
         // clean up
         Solar::$config = array();
+        
+        // unregister autoloader
+        spl_autoload_unregister(array('Solar_Class', 'autoload'));
         
         // reset the status flag, and we're done.
         Solar::$_status = false;
@@ -393,58 +362,6 @@ class Solar
     
     /**
      * 
-     * Loads a class or interface file from the include_path.
-     * 
-     * Thanks to Robert Gonzalez  for the report leading to this method.
-     * 
-     * @param string $name A Solar (or other) class or interface name.
-     * 
-     * @return void
-     * 
-     * @todo Add localization for errors
-     * 
-     */
-    public static function autoload($name)
-    {
-        // did we ask for a non-blank name?
-        if (trim($name) == '') {
-            throw Solar::exception(
-                'Solar',
-                'ERR_AUTOLOAD_EMPTY',
-                'No class or interface named for loading',
-                array('name' => $name)
-            );
-        }
-        
-        // pre-empt further searching for the named class or interface.
-        // do not use autoload, because this method is registered with
-        // spl_autoload already.
-        if (class_exists($name, false) || interface_exists($name, false)) {
-            return;
-        }
-        
-        // convert the class name to a file path.
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $name) . '.php';
-        
-        // include the file and check for failure. we use Solar_File::load()
-        // instead of require() so we can see the exception backtrace.
-        Solar_File::load($file);
-        
-        // if the class or interface was not in the file, we have a problem.
-        // do not use autoload, because this method is registered with
-        // spl_autoload already.
-        if (! class_exists($name, false) && ! interface_exists($name, false)) {
-            throw Solar::exception(
-                'Solar',
-                'ERR_AUTOLOAD_FAILED',
-                'Class or interface does not exist in loaded file',
-                array('name' => $name, 'file' => $file)
-            );
-        }
-    }
-    
-    /**
-     * 
      * Convenience method to instantiate and configure an object.
      * 
      * @param string $class The class name.
@@ -456,7 +373,7 @@ class Solar
      */
     public static function factory($class, $config = null)
     {
-        Solar::autoload($class);
+        Solar_Class::autoload($class);
         $obj = new $class($config);
         
         // is it an object factory?

@@ -113,9 +113,9 @@ class Solar_File
         if (! Solar_File::$_file) {
             // could not open the file for reading
             throw Solar::exception(
-                'Solar_File',
-                'ERR_NOT_READABLE',
-                'File does not exist or is not readable',
+                'Solar',
+                'ERR_FILE_NOT_READABLE',
+                Solar_Locale::fetch('Solar', 'ERR_FILE_NOT_READABLE'),
                 array('file' => $file)
             );
         }

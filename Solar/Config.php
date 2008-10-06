@@ -55,19 +55,19 @@ class Solar_Config
             }
             
             // find the requested group.
-            if (empty(self::$store[$group])) {
+            if (empty(Solar_Config::$store[$group])) {
                 return $default;
             } else {
-                return self::$store[$group];
+                return Solar_Config::$store[$group];
             }
             
         } else {
             
             // find the requested group and element.
-            if (! isset(self::$store[$group][$elem])) {
+            if (! isset(Solar_Config::$store[$group][$elem])) {
                 return $default;
             } else {
-                return self::$store[$group][$elem];
+                return Solar_Config::$store[$group][$elem];
             }
         }
     }
@@ -85,7 +85,7 @@ class Solar_Config
      */
     static public function load($spec)
     {
-        self::$store = self::fetch($spec);
+        Solar_Config::$store = Solar_Config::fetch($spec);
     }
     
     /**
@@ -95,17 +95,17 @@ class Solar_Config
      * Note that this method is overloaded by the variable type of $spec ...
      * 
      * * `null|false` (or empty) -- This will not load any new configuration
-     *   values; you will get only the default [[self::$store]] array values
+     *   values; you will get only the default [[Solar_Config::$store]] array values
      *   defined in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
-     *   file; the return value from that file will be used for [[self::$store]].
+     *   file; the return value from that file will be used for [[Solar_Config::$store]].
      * 
-     * * `array` -- This will use the passed array for the [[self::$store]]
+     * * `array` -- This will use the passed array for the [[Solar_Config::$store]]
      *   values.
      * 
      * * `object` -- The passed object will be cast as an array, and those
-     *   values will be used for [[self::$store]].
+     *   values will be used for [[Solar_Config::$store]].
      * 
      * @param mixed $spec A config specification.
      * 
@@ -128,5 +128,5 @@ class Solar_Config
         
         return $config;
     }
-    
+
 }

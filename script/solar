@@ -156,7 +156,7 @@ require 'Solar.php';
 Solar::start($config);
 
 // is there a config for the console?
-if (Solar::config('Solar_Controller_Console')) {
+if (Solar_Config::get('Solar_Controller_Console')) {
     
     // use the config as-is and create the console
     $console = Solar::factory('Solar_Controller_Console');

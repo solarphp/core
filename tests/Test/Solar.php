@@ -153,43 +153,6 @@ class Test_Solar extends Solar_Test {
     
     /**
      * 
-     * Test -- Safely gets a configuration group array or element value.
-     * 
-     */
-    public function testConfig()
-    {
-        Solar::$config['__TEST__'] = $this->_test_config;
-        $expect = $this->_test_config;
-        $actual = Solar::config('__TEST__');
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testConfig_elem()
-    {
-        Solar::$config['__TEST__'] = $this->_test_config;
-        $expect = $this->_test_config['foo'];
-        $actual = Solar::config('__TEST__', 'foo');
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testConfig_groupDefault()
-    {
-        Solar::$config['__TEST__'] = $this->_test_config;
-        $expect = '*default*';
-        $actual = Solar::config('no-such-group', null, $expect);
-        $this->assertSame($actual, $expect);
-    }
-    
-    public function testConfig_elemDefault()
-    {
-        Solar::$config['__TEST__'] = $this->_test_config;
-        $expect = '*default*';
-        $actual = Solar::config('__TEST__', 'no-such-elem', $expect);
-        $this->assertSame($actual, $expect);
-    }
-    
-    /**
-     * 
      * Test -- Combination dependency-injection and service-locator method; 
      * returns a dependency object as passed, or an object from the registry, 
      * or a new factory instance.
@@ -262,23 +225,6 @@ class Test_Solar extends Solar_Test {
         $this->assertFalse(class_exists($class, false));
         $actual = Solar::factory('Solar_Example');
         $this->assertInstance($actual, $class);
-    }
-    
-    /**
-     * 
-     * Test -- Fetches config file values.
-     * 
-     */
-    public function testFetchConfig()
-    {
-        $file = Solar_Class::dir($this) . '_support/fetchConfig.php';
-        $actual = Solar::fetchConfig($file);
-        $expect = array(
-            'foo' => 'bar',
-            'baz' => 'sub',
-            'zim' => 'gir',
-        );
-        $this->assertSame($actual, $expect);
     }
     
     /**

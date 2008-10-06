@@ -16,6 +16,14 @@ class Test_Solar_Config extends Solar_Test {
     protected $_Test_Solar_Config = array(
     );
     
+    protected $_store = array(
+        'foo' => 'bar',
+        'baz' => array(
+            'dib' => 'zim',
+            'gir' => 'irk',
+        ),
+    );
+
     // -----------------------------------------------------------------
     // 
     // Support methods.
@@ -90,7 +98,14 @@ class Test_Solar_Config extends Solar_Test {
      */
     public function testFetch()
     {
-        $this->todo('stub');
+        $file = Solar_Class::dir($this) . '_support/fetch.php';
+        $actual = Solar_Config::fetch($file);
+        $expect = array(
+            'foo' => 'bar',
+            'baz' => 'sub',
+            'zim' => 'gir',
+        );
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -100,7 +115,34 @@ class Test_Solar_Config extends Solar_Test {
      */
     public function testGet()
     {
-        $this->todo('stub');
+        Solar_Config::$store['__TEST__'] = $this->_store;
+        $expect = $this->_store;
+        $actual = Solar_Config::get('__TEST__');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testGet_elem()
+    {
+        Solar_Config::$store['__TEST__'] = $this->_store;
+        $expect = $this->_store['foo'];
+        $actual = Solar_Config::get('__TEST__', 'foo');
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testGet_groupDefault()
+    {
+        Solar_Config::$store['__TEST__'] = $this->_store;
+        $expect = '*default*';
+        $actual = Solar_Config::get('no-such-group', null, $expect);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testGet_elemDefault()
+    {
+        Solar_Config::$store['__TEST__'] = $this->_store;
+        $expect = '*default*';
+        $actual = Solar_Config::get('__TEST__', 'no-such-elem', $expect);
+        $this->assertSame($actual, $expect);
     }
     
     /**

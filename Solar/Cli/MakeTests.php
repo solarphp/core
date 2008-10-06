@@ -143,7 +143,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
             }
             
             // load the class and get its API reference
-            Solar::autoload($class);
+            Solar_Class::autoload($class);
             $apiref = Solar::factory('Solar_Docs_Apiref');
             $apiref->addClass($class);
             $api = $apiref->api[$class];

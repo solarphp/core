@@ -779,7 +779,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
                 $pos += 6; // "Model_"
                 $tmp = substr($this->native_class, 0, $pos) . ucfirst($this->foreign_class);
                 try {
-                    Solar::autoload($tmp);
+                    Solar_Class::autoload($tmp);
                     // if no exception, $class gets set
                     $class = $tmp;
                 } catch (Exception $e) {
@@ -794,7 +794,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             // model class literally. this will throw an exception if the
             // class cannot be found anywhere.
             try {
-                Solar::autoload($this->foreign_class);
+                Solar_Class::autoload($this->foreign_class);
                 // if no exception, $class gets set
                 $class = $this->foreign_class;
             } catch (Solar_Exception $e) {

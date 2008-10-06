@@ -21,15 +21,13 @@ class Solar_Class
      * Parent hierarchy for all classes.
      * 
      * We keep track of this so configs, locale strings, etc. can be
-     * inherited properly from parent classes.
-     * 
-     * Although this property is public, you generally shouldn't need
-     * to manipulate it in any way.
+     * inherited properly from parent classes, and so we don't need to
+     * recalculate it on each request.
      * 
      * @var array
      * 
      */
-    public static $parents = array();
+    protected static $_parents = array();
     
     /**
      * 
@@ -111,15 +109,15 @@ class Solar_Class
         }
         
         // do we need to load the parent stack?
-        if (empty(self::$parents[$class])) {
+        if (empty(Solar_Class::$_parents[$class])) {
             // use SPL class_parents(), which uses autoload by default.  use
             // only the array values, not the keys, since that messes up BC.
             $parents = array_values(class_parents($class));
-            self::$parents[$class] = array_reverse($parents);
+            Solar_Class::$_parents[$class] = array_reverse($parents);
         }
         
         // get the parent stack
-        $stack = self::$parents[$class];
+        $stack = Solar_Class::$_parents[$class];
         
         // add the class itself?
         if ($include_class) {

@@ -113,7 +113,7 @@ abstract class Solar_Base {
                     // override with class property config
                     (array) $prop,
                     // override with solar config for the class
-                    Solar::config($class, null, array())
+                    Solar_Config::get($class, null, array())
                 );
             }
         

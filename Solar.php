@@ -84,15 +84,6 @@ class Solar
     
     /**
      * 
-     * The values read in from the configuration file.
-     * 
-     * @var array
-     * 
-     */
-    public static $config = array();
-    
-    /**
-     * 
      * The Solar system root directory.
      * 
      * @var string
@@ -128,13 +119,13 @@ class Solar
      *   in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
-     *   file; the return value from that file will be used for [[Solar::$config]].
+     *   file; the return value from that file will be used for [[Solar_Config::load()]].
      * 
-     * * `array` -- This will use the passed array for the [[Solar::$config]]
+     * * `array` -- This will use the passed array for the [[Solar_Config::load()]]
      *   values.
      * 
      * * `object` -- The passed object will be cast as an array, and those
-     *   values will be used for [[Solar::$config]].
+     *   values will be used for [[Solar_Config::load()]].
      * 
      * Here are some examples of starting with alternative configuration parameters:
      * 
@@ -173,8 +164,6 @@ class Solar
      * 
      * @see Solar::cleanGlobals()
      * 
-     * @see Solar::fetchConfig()
-     * 
      */
     public static function start($config = null)
     {
@@ -187,8 +176,10 @@ class Solar
         $list = array(
             'Base',
             'Class',
+            'Config',
             'File',
         );
+        
         foreach ($list as $name) {
             require_once dirname(__FILE__) . DIRECTORY_SEPARATOR
                          . 'Solar' . DIRECTORY_SEPARATOR
@@ -203,30 +194,30 @@ class Solar
             Solar::cleanGlobals();
         }
         
-        // fetch config values from file or other source
-        Solar::$config = Solar::fetchConfig($config);
+        // load config values from file or other source
+        Solar_Config::load($config);
         
         // make sure we have the Solar arch-class configs
-        if (empty(Solar::$config['Solar'])) {
-            Solar::$config['Solar'] = Solar::$_Solar;
+        if (empty(Solar_Config::$store['Solar'])) {
+            Solar_Config::$store['Solar'] = Solar::$_Solar;
         } else {
-            Solar::$config['Solar'] = array_merge(
+            Solar_Config::$store['Solar'] = array_merge(
                 Solar::$_Solar,
-                (array) Solar::$config['Solar']
+                (array) Solar_Config::$store['Solar']
             );
         }
         
         // set the system directory
-        Solar::$system = Solar::config('Solar', 'system');
+        Solar::$system = Solar_Config::get('Solar', 'system');
         
         // process ini settings from config file
-        $settings = Solar::config('Solar', 'ini_set', array());
+        $settings = Solar_Config::get('Solar', 'ini_set', array());
         foreach ($settings as $key => $val) {
             ini_set($key, $val);
         }
         
         // user-defined registry entries
-        $register = Solar::config('Solar', 'registry_set', array());
+        $register = Solar_Config::get('Solar', 'registry_set', array());
         foreach ($register as $name => $list) {
             // make sure we have the class-name and a config
             $list = array_pad((array) $list, 2, null);
@@ -251,7 +242,7 @@ class Solar
         }
         
         // run any 'start' hooks
-        $hooks = Solar::config('Solar', 'start', array());
+        $hooks = Solar_Config::get('Solar', 'start', array());
         Solar::callbacks($hooks);
         
         // and we're done!
@@ -268,11 +259,8 @@ class Solar
     public static function stop()
     {
         // run any 'stop' hook methods
-        $hooks = Solar::config('Solar', 'stop', array());
+        $hooks = Solar_Config::get('Solar', 'stop', array());
         Solar::callbacks($hooks);
-        
-        // clean up
-        Solar::$config = array();
         
         // unregister autoloader
         spl_autoload_unregister(array('Solar_Class', 'autoload'));
@@ -426,51 +414,6 @@ class Solar
         // not an object, not in registry.
         // try to create an object with $spec as the config
         return Solar::factory($class, $spec);
-    }
-    
-    /**
-     * 
-     * Safely gets a configuration group array or element value.
-     * 
-     * @param string $group The name of the group.
-     * 
-     * @param string $elem The name of the element in the group.
-     * 
-     * @param mixed $default If the group or element is not set, return
-     * this value instead.  If this is not set and group was requested,
-     * returns an empty array; if not set and an element was requested,
-     * returns null.
-     * 
-     * @return mixed The value of the configuration group or element.
-     * 
-     */
-    public static function config($group, $elem = null, $default = null)
-    {
-        // are we looking for a group or an element?
-        if (is_null($elem)) {
-            
-            // looking for a group. if no default passed, set up an
-            // empty array.
-            if ($default === null) {
-                $default = array();
-            }
-            
-            // find the requested group.
-            if (empty(Solar::$config[$group])) {
-                return $default;
-            } else {
-                return Solar::$config[$group];
-            }
-            
-        } else {
-            
-            // find the requested group and element.
-            if (! isset(Solar::$config[$group][$elem])) {
-                return $default;
-            } else {
-                return Solar::$config[$group][$elem];
-            }
-        }
     }
     
     /**
@@ -662,46 +605,5 @@ class Solar
                 unset($GLOBALS[$key]);
             }
         }
-    }
-    
-    /**
-     * 
-     * Fetches config file values.
-     * 
-     * Note that this method is overloaded by the variable type of $spec ...
-     * 
-     * * `null|false` (or empty) -- This will not load any new configuration
-     *   values; you will get only the default [[Solar::$config]] array values
-     *   defined in the Solar class.
-     * 
-     * * `string` -- The string is treated as a path to a Solar.config.php
-     *   file; the return value from that file will be used for [[Solar::$config]].
-     * 
-     * * `array` -- This will use the passed array for the [[Solar::$config]]
-     *   values.
-     * 
-     * * `object` -- The passed object will be cast as an array, and those
-     *   values will be used for [[Solar::$config]].
-     * 
-     * @param mixed $spec A config specification.
-     * 
-     * @return array A config array.
-     * 
-     */
-    public static function fetchConfig($spec = null)
-    {
-        // load the config file values.
-        // use alternate config source if one is given.
-        if (is_array($spec) || is_object($spec)) {
-            $config = (array) $spec;
-        } elseif (is_string($spec)) {
-            // merge from array file return
-            $config = (array) Solar_File::load($spec);
-        } else {
-            // no added config
-            $config = array();
-        }
-        
-        return $config;
     }
 }

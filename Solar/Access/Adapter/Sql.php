@@ -58,8 +58,8 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
      * `action_col`
      * : (string) Name of the column with the action name.
      * 
-     * `process_col`
-     * : (string) Name of the column with the submit key name.
+     * `order_col`
+     * : (string) Order the results by this column.
      * 
      * @var array
      * 
@@ -155,6 +155,9 @@ class Solar_Access_Adapter_Sql extends Solar_Access_Adapter
         
         // `OR (type = 'owner')`
         $select->orWhere("($type_col = ?)", 'owner');
+        
+        // order the columns
+        $select->order($this->_config['order_col']);
         
         /**
          * fetch, process, and return

@@ -18,7 +18,7 @@ class Solar_Config
 {
     /**
      * 
-     * The loaded values.
+     * The loaded values from the config file.
      * 
      * @var array
      * 
@@ -26,6 +26,20 @@ class Solar_Config
      * 
      */
     static public $store = array();
+    
+    /**
+     * 
+     * The config values built for a class, including inheritance from its
+     * parent class configs.
+     * 
+     * @var array
+     * 
+     * @see setBuild()
+     * 
+     * @see getBuild()
+     * 
+     */
+    static protected $_build = array();
     
     /**
      * 
@@ -128,5 +142,43 @@ class Solar_Config
         
         return $config;
     }
-
+    
+    /**
+     * 
+     * Sets the build config to retain for a class.
+     * 
+     * **DO NOT** use this unless you know what you're doing.  The only reason
+     * this is here is for Solar_Base::_buildConfig() to use it.
+     * 
+     * @param string $class The class name.
+     * 
+     * @param array $config The config built for that class.
+     * 
+     * @return void
+     * 
+     */
+    static public function setBuild($class, $config)
+    {
+        Solar_Config::$_build[$class] = (array) $config;
+    }
+    
+    /**
+     * 
+     * Gets the retained build config for a class.
+     * 
+     * **DO NOT** use this unless you know what you're doing.  The only reason
+     * this is here is for Solar_Base::_buildConfig() to use it.
+     * 
+     * @param string $class The class name to get the config build for.
+     * 
+     * @return mixed An array of retained config built for the class, or null
+     * if there's no build for it.
+     * 
+     */
+    static public function getBuild($class)
+    {
+        if (array_key_exists($class, Solar_Config::$_build)) {
+            return Solar_Config::$_build[$class];
+        }
+    }
 }

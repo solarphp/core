@@ -127,11 +127,11 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
      */
     protected function _save($class, $event, $descr)
     {
-        if(strtolower($event) == 'dump') {
-            $data = '"'.$class.'":' . $this->_json->encode($descr);
+        if (strtolower($event) == 'dump') {
+            $data = '"' . $class . '":' . $this->_json->encode($descr);
             $type = 2;
         } else {
-            $data = $this->_json->encode(array($event,"$class: $descr"));
+            $data = $this->_json->encode(array($event, "$class: $descr"));
             $type = 3;
         }
         
@@ -168,6 +168,9 @@ class Solar_Log_Adapter_Firephp extends Solar_Log_Adapter {
     {
         $utime = explode(' ', microtime());
         $utime = substr($utime[1], 7) . substr($utime[0], 2);  
-        $this->_response->setHeader("X-FirePHP-Data-{$type}{$utime}", "{$data},");
+        $this->_response->setHeader(
+            "X-FirePHP-Data-{$type}{$utime}",
+            "{$data},"
+        );
     }
 }

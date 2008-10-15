@@ -491,15 +491,16 @@ class Solar_Http_Response extends Solar_Base
     /**
      * 
      * Redirects to another page and action after disabling HTTP caching.
-     * This effectively implements the "POST-Redirect-GET" pattern.
+     * This effectively implements the "POST-Redirect-GET" pattern (also known
+     * as the "GET after POST").
      * 
-     * The _redirect() method is often called after a successful POST
+     * The redirect() method is often called after a successful POST
      * operation, to show a "success" or "edit" page. In such cases, clicking
      * clicking "back" or "reload" will generate a warning in the
      * browser allowing for a possible re-POST if the user clicks OK.
      * Typically this is not what you want.
      * 
-     * In those cases, use _redirectNoCache() to turn off HTTP caching, so
+     * In those cases, use redirectNoCache() to turn off HTTP caching, so
      * that the re-POST warning does not occur.
      * 
      * This method sends the following headers before setting Location:

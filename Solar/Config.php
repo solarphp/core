@@ -100,6 +100,12 @@ class Solar_Config
     static public function load($spec)
     {
         Solar_Config::$store = Solar_Config::fetch($spec);
+        Solar_Config::$_build = array();
+        $callback = Solar_Config::get('Solar_Config', 'load_callback');
+        if ($callback) {
+            $merge = (array) call_user_func($callback);
+            Solar_Config::$store = array_merge(Solar_Config::$store, $merge);
+        }
     }
     
     /**

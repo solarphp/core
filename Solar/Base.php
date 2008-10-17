@@ -85,46 +85,10 @@ abstract class Solar_Base {
      */
     public function __construct($config = null)
     {
-        $parents = Solar_Class::parents($this, true);
-        
-        if ($config === false) {
-            
-            // properties only, no config file
-            foreach ($parents as $class) {
-                $var = "_$class"; // for example, $_Solar_Example
-                $prop = empty($this->$var) ? null : $this->$var;
-                $this->_config = array_merge(
-                    // current values
-                    $this->_config,
-                    // override with class property config
-                    (array) $prop
-                );
-            }
-            
-        } else {
-            
-            // merge from config file too
-            foreach ($parents as $class) {
-                $var = "_$class";
-                $prop = empty($this->$var) ? null : $this->$var;
-                $this->_config = array_merge(
-                    // current values
-                    $this->_config,
-                    // override with class property config
-                    (array) $prop,
-                    // override with solar config for the class
-                    Solar_Config::get($class, null, array())
-                );
-            }
-        
-            // is construct-time config a file name?
-            if (is_string($config)) {
-                $config = Solar_File::load($config);
-            }
-        
-            // final override with construct-time config
-            $this->_config = array_merge($this->_config, (array) $config);
-        }
+        $this->_config = array_merge(
+            $this->_buildConfig(get_class($this)),
+            (array) $config
+        );
     }
     
     /**
@@ -247,6 +211,49 @@ abstract class Solar_Base {
         }
         
         return $locale->fetch($class, $key, $num, $replace);
+    }
+    
+    /**
+     * 
+     * Builds and returns the default config for a class, including all
+     * configs inherited from its parents.
+     * 
+     * @param string $class The class to get the config build for.
+     * 
+     * @return array The config build for the class.
+     * 
+     */
+    protected function _buildConfig($class)
+    {
+        if (! $class) {
+            return array();
+        }
+        
+        $config = Solar_Config::getBuild($class);
+        
+        if ($config === null) {
+        
+            $var    = "_$class";
+            $prop   = empty($this->$var)
+                    ? array()
+                    : (array) $this->$var;
+                    
+            $parent = get_parent_class($class);
+            
+            $config = array_merge(
+                // parent values
+                $this->_buildConfig($parent),
+                // override with class property config
+                $prop,
+                // override with solar config for the class
+                Solar_Config::get($class, null, array())
+            );
+            
+            // cache for future reference
+            Solar_Config::setBuild($class, $config);
+        }
+        
+        return $config;
     }
     
     /**

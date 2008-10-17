@@ -180,10 +180,9 @@ class Solar
             'File',
         );
         
+        $dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Solar';
         foreach ($list as $name) {
-            require_once dirname(__FILE__) . DIRECTORY_SEPARATOR
-                         . 'Solar' . DIRECTORY_SEPARATOR
-                         . "$name.php";
+            require_once $dir . DIRECTORY_SEPARATOR . "$name.php";
         }
         
         // register autoloader
@@ -194,7 +193,7 @@ class Solar
             Solar::cleanGlobals();
         }
         
-        // load config values from file or other source
+        // load config values
         Solar_Config::load($config);
         
         // make sure we have the Solar arch-class configs

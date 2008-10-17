@@ -198,13 +198,14 @@ class Solar
         Solar_Config::load($config);
         
         // make sure we have the Solar arch-class configs
-        if (empty(Solar_Config::$store['Solar'])) {
-            Solar_Config::$store['Solar'] = Solar::$_Solar;
+        $arch_config = Solar_Config::get('Solar');
+        if (! $arch_config) {
+            Solar_Config::set('Solar', null, Solar::$_Solar);
         } else {
-            Solar_Config::$store['Solar'] = array_merge(
+            Solar_Config::set('Solar', null, array_merge(
                 Solar::$_Solar,
-                (array) Solar_Config::$store['Solar']
-            );
+                (array) $arch_config
+            ));
         }
         
         // set the system directory

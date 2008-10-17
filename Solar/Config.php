@@ -43,56 +43,56 @@ class Solar_Config
     
     /**
      * 
-     * Safely gets a configuration group array or element value.
+     * Safely gets a configuration class array or key value.
      * 
-     * @param string $group The name of the group.  If not set, returns the
+     * @param string $class The name of the class.  If not set, returns the
      * entire configuration array.
      * 
-     * @param string $elem The name of the element in the group.  If not set, 
-     * returns the whole array for that group.
+     * @param string $key The name of the key in the class.  If not set, 
+     * returns the whole array for that class.
      * 
-     * @param mixed $default If the group or element is not set, return
-     * this value instead.  If this is not set and group was requested,
-     * returns an empty array; if not set and an element was requested,
+     * @param mixed $val If the class or key is not set, return
+     * this value instead.  If this is not set and class was requested,
+     * returns an empty array; if not set and a key was requested,
      * returns null.
      * 
-     * @return mixed The value of the configuration group or element.
+     * @return mixed The value of the configuration class or key.
      * 
      */
-    static public function get($group = null, $elem = null, $default = null)
+    static public function get($class = null, $key = null, $val = null)
     {
-        // are we looking for a group?
-        if ($group === null) {
+        // are we looking for a class?
+        if ($class === null) {
             // return the whole config array
             return Solar_Config::$_store;
         }
         
-        // are we looking for a elem in the group?
-        if ($elem === null) {
+        // are we looking for a key in the class?
+        if ($key === null) {
             
-            // looking for a group. if no default passed, set up an
+            // looking for a class. if no default passed, set up an
             // empty array.
-            if ($default === null) {
-                $default = array();
+            if ($val === null) {
+                $val = array();
             }
             
-            // find the requested group.
-            if (! array_key_exists($group, Solar_Config::$_store)) {
-                return $default;
+            // find the requested class.
+            if (! array_key_exists($class, Solar_Config::$_store)) {
+                return $val;
             } else {
-                return Solar_Config::$_store[$group];
+                return Solar_Config::$_store[$class];
             }
             
         } else {
             
-            // find the requested group and element.
-            $exists = array_key_exists($group, Solar_Config::$_store)
-                   && array_key_exists($elem, Solar_Config::$_store[$group]);
+            // find the requested class and key.
+            $exists = array_key_exists($class, Solar_Config::$_store)
+                   && array_key_exists($key, Solar_Config::$_store[$class]);
             
             if (! $exists) {
-                return $default;
+                return $val;
             } else {
-                return Solar_Config::$_store[$group][$elem];
+                return Solar_Config::$_store[$class][$key];
             }
         }
     }

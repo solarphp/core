@@ -457,7 +457,8 @@ class Solar
      * picking of the right exception class from the $code, and
      * automated translation of the error message.
      * 
-     * @param string|object $spec The class name (or object) that generated the exception.
+     * @param string|object $spec The class name (or object) that generated 
+     * the exception.
      * 
      * @param mixed $code A scalar error code, generally a string.
      * 

@@ -25,7 +25,7 @@ class Solar_Config
      * @see load()
      * 
      */
-    static public $store = array();
+    static protected $_store = array();
     
     /**
      * 
@@ -64,7 +64,7 @@ class Solar_Config
         // are we looking for a group?
         if ($group === null) {
             // return the whole config array
-            return Solar_Config::$store;
+            return Solar_Config::$_store;
         }
         
         // are we looking for a elem in the group?
@@ -77,22 +77,22 @@ class Solar_Config
             }
             
             // find the requested group.
-            if (! array_key_exists($group, Solar_Config::$store)) {
+            if (! array_key_exists($group, Solar_Config::$_store)) {
                 return $default;
             } else {
-                return Solar_Config::$store[$group];
+                return Solar_Config::$_store[$group];
             }
             
         } else {
             
             // find the requested group and element.
-            $exists = array_key_exists($group, Solar_Config::$store)
-                   && array_key_exists($elem, Solar_Config::$store[$group]);
+            $exists = array_key_exists($group, Solar_Config::$_store)
+                   && array_key_exists($elem, Solar_Config::$_store[$group]);
             
             if (! $exists) {
                 return $default;
             } else {
-                return Solar_Config::$store[$group][$elem];
+                return Solar_Config::$_store[$group][$elem];
             }
         }
     }
@@ -110,12 +110,12 @@ class Solar_Config
      */
     static public function load($spec)
     {
-        Solar_Config::$store = Solar_Config::fetch($spec);
+        Solar_Config::$_store = Solar_Config::fetch($spec);
         Solar_Config::$_build = array();
         $callback = Solar_Config::get('Solar_Config', 'load_callback');
         if ($callback) {
             $merge = (array) call_user_func($callback);
-            Solar_Config::$store = array_merge(Solar_Config::$store, $merge);
+            Solar_Config::$_store = array_merge(Solar_Config::$_store, $merge);
         }
     }
     
@@ -136,9 +136,9 @@ class Solar_Config
     static public function set($class, $key, $val)
     {
         if (! $key) {
-            Solar_Config::$store[$class] = $val;
+            Solar_Config::$_store[$class] = $val;
         } else {
-            Solar_Config::$store[$class][$key] = $val;
+            Solar_Config::$_store[$class][$key] = $val;
         }
         Solar_Config::$_build = array();
     }
@@ -150,17 +150,17 @@ class Solar_Config
      * Note that this method is overloaded by the variable type of $spec ...
      * 
      * * `null|false` (or empty) -- This will not load any new configuration
-     *   values; you will get only the default [[Solar_Config::$store]] array values
+     *   values; you will get only the default [[Solar_Config::$_store]] array values
      *   defined in the Solar class.
      * 
      * * `string` -- The string is treated as a path to a Solar.config.php
-     *   file; the return value from that file will be used for [[Solar_Config::$store]].
+     *   file; the return value from that file will be used for [[Solar_Config::$_store]].
      * 
-     * * `array` -- This will use the passed array for the [[Solar_Config::$store]]
+     * * `array` -- This will use the passed array for the [[Solar_Config::$_store]]
      *   values.
      * 
      * * `object` -- The passed object will be cast as an array, and those
-     *   values will be used for [[Solar_Config::$store]].
+     *   values will be used for [[Solar_Config::$_store]].
      * 
      * @param mixed $spec A config specification.
      * 

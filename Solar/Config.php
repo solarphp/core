@@ -45,9 +45,11 @@ class Solar_Config
      * 
      * Safely gets a configuration group array or element value.
      * 
-     * @param string $group The name of the group.
+     * @param string $group The name of the group.  If not set, returns the
+     * entire configuration array.
      * 
-     * @param string $elem The name of the element in the group.
+     * @param string $elem The name of the element in the group.  If not set, 
+     * returns the whole array for that group.
      * 
      * @param mixed $default If the group or element is not set, return
      * this value instead.  If this is not set and group was requested,
@@ -57,10 +59,16 @@ class Solar_Config
      * @return mixed The value of the configuration group or element.
      * 
      */
-    static public function get($group, $elem = null, $default = null)
+    static public function get($group = null, $elem = null, $default = null)
     {
-        // are we looking for a group or an element?
-        if (is_null($elem)) {
+        // are we looking for a group?
+        if ($group === null) {
+            // return the whole config array
+            return Solar_Config::$store;
+        }
+        
+        // are we looking for a elem in the group?
+        if ($elem === null) {
             
             // looking for a group. if no default passed, set up an
             // empty array.
@@ -69,7 +77,7 @@ class Solar_Config
             }
             
             // find the requested group.
-            if (empty(Solar_Config::$store[$group])) {
+            if (! array_key_exists($group, Solar_Config::$store)) {
                 return $default;
             } else {
                 return Solar_Config::$store[$group];
@@ -78,7 +86,10 @@ class Solar_Config
         } else {
             
             // find the requested group and element.
-            if (! isset(Solar_Config::$store[$group][$elem])) {
+            $exists = array_key_exists($group, Solar_Config::$store)
+                   && array_key_exists($elem, Solar_Config::$store[$group]);
+            
+            if (! $exists) {
                 return $default;
             } else {
                 return Solar_Config::$store[$group][$elem];
@@ -106,6 +117,30 @@ class Solar_Config
             $merge = (array) call_user_func($callback);
             Solar_Config::$store = array_merge(Solar_Config::$store, $merge);
         }
+    }
+    
+    /**
+     * 
+     * Sets the config values for a class and key.
+     * 
+     * @param string $class The name of the class.
+     * 
+     * @param string $key The name of the key for the class; if empty, will
+     * apply the changes to the entire class array.
+     * 
+     * @param mixed $val The value to set for the class and key.
+     * 
+     * @return void
+     * 
+     */
+    static public function set($class, $key, $val)
+    {
+        if (! $key) {
+            Solar_Config::$store[$class] = $val;
+        } else {
+            Solar_Config::$store[$class][$key] = $val;
+        }
+        Solar_Config::$_build = array();
     }
     
     /**

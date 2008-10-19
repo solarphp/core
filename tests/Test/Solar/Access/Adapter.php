@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_Access_Adapter extends Solar_Test {
+abstract class Test_Solar_Access_Adapter extends Solar_Test {
     
     /**
      * 
@@ -15,6 +15,8 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     protected $_Test_Solar_Access_Adapter = array(
     );
+    
+    protected $_access;
     
     // -----------------------------------------------------------------
     // 
@@ -31,7 +33,6 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function __construct($config = null)
     {
-        $this->skip('abstract class');
         parent::__construct($config);
     }
     
@@ -54,6 +55,11 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function setup()
     {
+        // remove "Test_" prefix
+        $this->_class = substr(get_class($this), 5);
+        
+        $this->_access = Solar::factory($this->_class, $this->_config);
+        
         parent::setup();
     }
     
@@ -91,7 +97,15 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function testFetch()
     {
-        $this->skip('abstract method');
+        // anonymous user
+        $list = $this->_access->fetch(null, array());
+        $this->assertTrue(count($list) == 1);
+        
+        $list = $this->_access->fetch('gir', array());
+        $this->assertTrue(count($list) == 4);
+        
+        $list = $this->_access->fetch('gir', array('bar'));
+        $this->assertTrue(count($list) == 5);
     }
     
     /**
@@ -101,7 +115,52 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function testIsAllowed()
     {
-        $this->todo('stub');
+        $this->_access->load('gir', array('bar'));
+        
+        // deny all override
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Deny',
+            '*'
+        ));
+        
+        // allowed for role bar
+        $this->assertTrue($this->_access->isAllowed(
+            'Vendor_App_Example',
+            'read'
+        ));
+        
+        // test wildcard actions
+        $this->assertTrue($this->_access->isAllowed(
+            'Vendor_App_Example2',
+            'read'
+        ));
+        
+        // test specific action
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example3',
+            'edit'
+        ));
+        
+        // allow access to all authenticated users ('+')
+        $this->assertTrue($this->_access->isAllowed(
+            'Vendor_App_Example4',
+            'read'
+        ));
+        
+        $this->_access->load('someone', array('foo'));
+        // deny access for role 'foo'
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Example',
+            'read'
+        ));
+        
+        // non-autenticated user
+        $this->_access->load(null, array());
+        
+        $this->assertFalse($this->_access->isAllowed(
+            'Vendor_App_Auth',
+            'read'
+        ));
     }
     
     /**
@@ -111,7 +170,7 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function testIsOwner()
     {
-        $this->skip('abstract method');
+        $this->skip('Not implemented by this adapter');
     }
     
     /**
@@ -121,7 +180,24 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function testLoad()
     {
-        $this->todo('stub');
+        // load with literal handle and roles
+        $this->_access->load('gir', array('bar'));
+        
+        // simply test there's correct amount of acl rows
+        $this->assertTrue(count($this->_access->list) == 5);
+        
+        $auth = Solar::factory('Solar_Auth');
+        $auth->handle = 'gir';
+        
+        $role = Solar::factory('Solar_Role');
+        $role->list = array('bar');
+        
+        // load with auth and role object
+        $this->_access->load($auth, $role);
+        
+        // simply test there's correct amount of acl rows
+        $this->assertTrue(count($this->_access->list) == 5);
+        
     }
     
     /**
@@ -131,6 +207,9 @@ class Test_Solar_Access_Adapter extends Solar_Test {
      */
     public function testReset()
     {
-        $this->todo('stub');
+        $this->_access->reset();
+        $this->assertProperty($this->_access, '_auth', 'same', null);
+        $this->assertProperty($this->_access, '_role', 'same', null);
+        $this->assertSame($this->_access->list, array());
     }
 }

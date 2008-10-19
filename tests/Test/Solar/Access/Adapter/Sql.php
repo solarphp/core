@@ -29,18 +29,6 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
      * Destructor; runs after all methods are complete.
      * 
      * @param array $config User-defined configuration parameters.
@@ -58,6 +46,54 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
      */
     public function setup()
     {
+        $this->_sql = Solar::factory(
+            'Solar_Sql',
+            array(
+                'adapter' => 'Solar_Sql_Adapter_Sqlite',
+                'name' => ':memory:',
+            )
+        );
+        
+        // forcibly add sql to registry
+        Solar_Registry::set('sql', $this->_sql);
+        
+        $cmd = "CREATE TABLE acl ("
+             . "    flag VARCHAR(10),"
+             . "    type CHAR(100),"
+             . "    name VARCHAR(255),"
+             . "    class_name VARCHAR(255),"
+             . "    action_name VARCHAR(255),"
+             . "    position VARCHAR(255)"
+             . ")";
+        
+        $this->_sql->query($cmd);
+        
+        $dir = Solar_Class::dir('Test_Solar_Access_Adapter', '_support');
+        $lines = file_get_contents($dir . 'access.txt');
+        $rows = explode("\n", $lines);
+        $pos = 0;
+        foreach ($rows as $row) {
+            $row = trim($row);
+            
+            // skip empty lines and comments
+            if (empty($row) || substr($row, 0, 1) == '#') {
+                continue;
+            }
+            
+            $row = preg_replace('/[ \t]{2,}/', ' ', $row);
+            $row = explode(' ', $row);
+            
+            $data['flag']        = trim($row[0]);
+            $data['type']        = trim($row[1]);
+            $data['name']        = trim($row[2]);
+            $data['class_name']  = trim($row[3]);
+            $data['action_name'] = trim($row[4]);
+            $data['position']    = $pos;
+            
+            $this->_sql->insert('acl', $data);
+            $pos ++;
+        }
+        
         parent::setup();
     }
     
@@ -86,55 +122,5 @@ class Test_Solar_Access_Adapter_Sql extends Test_Solar_Access_Adapter {
     {
         $obj = Solar::factory('Solar_Access_Adapter_Sql');
         $this->assertInstance($obj, 'Solar_Access_Adapter_Sql');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches access privileges for a user handle and roles.
-     * 
-     */
-    public function testFetch()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Tells whether or not to allow access to a class/action/process combination.
-     * 
-     */
-    public function testIsAllowed()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Checks to see if the current user is the owner of application-specific content; always returns true, to allow for programmatic owner checks.
-     * 
-     */
-    public function testIsOwner()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches the access list from the adapter into $this->list.
-     * 
-     */
-    public function testLoad()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Resets the current access controls to a blank array, along with the  $_auth and $_role properties.
-     * 
-     */
-    public function testReset()
-    {
-        $this->todo('stub');
     }
 }

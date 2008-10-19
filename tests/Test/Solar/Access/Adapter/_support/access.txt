@@ -1,0 +1,6 @@
+deny    handle  *       *                           *
+allow   role    bar     Vendor_App_Example          *
+deny    role    foo     Vendor_App_Example          *
+allow   handle  gir     Vendor_App_Example2         *
+allow   handle  gir     Vendor_App_Example3         read
+allow   handle  +       Vendor_App_Example4         *

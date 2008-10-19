@@ -29,46 +29,14 @@ class Test_Solar_Access_Adapter_File extends Test_Solar_Access_Adapter {
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
-    
-    /**
-     * 
      * Setup; runs before each test method.
      * 
      */
     public function setup()
     {
+        $dir = Solar_Class::dir('Test_Solar_Access_Adapter', '_support');
+        $this->_config['file'] = $dir . 'access.txt';
         parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
     }
     
     // -----------------------------------------------------------------
@@ -86,55 +54,5 @@ class Test_Solar_Access_Adapter_File extends Test_Solar_Access_Adapter {
     {
         $obj = Solar::factory('Solar_Access_Adapter_File');
         $this->assertInstance($obj, 'Solar_Access_Adapter_File');
-    }
-    
-    /**
-     * 
-     * Test -- Fetch access privileges for a user handle and roles.
-     * 
-     */
-    public function testFetch()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Tells whether or not to allow access to a class/action/process combination.
-     * 
-     */
-    public function testIsAllowed()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Checks to see if the current user is the owner of application-specific content; always returns true, to allow for programmatic owner checks.
-     * 
-     */
-    public function testIsOwner()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches the access list from the adapter into $this->list.
-     * 
-     */
-    public function testLoad()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Resets the current access controls to a blank array, along with the  $_auth and $_role properties.
-     * 
-     */
-    public function testReset()
-    {
-        $this->todo('stub');
     }
 }

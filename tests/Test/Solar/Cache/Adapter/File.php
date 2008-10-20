@@ -1,10 +1,5 @@
 <?php
 /**
- * Parent test.
- */
-require_once dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'Adapter.php';
-
-/**
  * 
  * Adapter class test.
  * 
@@ -19,37 +14,9 @@ class Test_Solar_Cache_Adapter_File extends Test_Solar_Cache_Adapter {
      * 
      */
     protected $_Test_Solar_Cache_Adapter_File = array(
+        'path'   => null, // set in constructor
+        'life'   => 7, // 7 seconds
     );
-    
-    // -----------------------------------------------------------------
-    // 
-    // Support methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Constructor.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        $this->todo('need adapter-specific config');
-    }
-    
-    /**
-     * 
-     * Destructor; runs after all methods are complete.
-     * 
-     * @param array $config User-defined configuration parameters.
-     * 
-     */
-    public function __destruct()
-    {
-        parent::__destruct();
-    }
     
     /**
      * 
@@ -58,133 +25,16 @@ class Test_Solar_Cache_Adapter_File extends Test_Solar_Cache_Adapter {
      */
     public function setup()
     {
+        if (is_null($this->_config['path'])) {
+            $this->_config['path'] = Solar_Dir::tmp('/Solar_Cache_Testing/');
+        }
+        
         parent::setup();
-    }
-    
-    /**
-     * 
-     * Setup; runs after each test method.
-     * 
-     */
-    public function teardown()
-    {
-        parent::teardown();
-    }
-    
-    // -----------------------------------------------------------------
-    // 
-    // Test methods.
-    // 
-    // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Cache_Adapter_File');
-        $this->assertInstance($obj, 'Solar_Cache_Adapter_File');
-    }
-    
-    /**
-     * 
-     * Test -- Inserts cache entry data, but only if the entry does not already exist.
-     * 
-     */
-    public function testAdd()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Deletes an entry from the cache.
-     * 
-     */
-    public function testDelete()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Removes all entries from the cache.
-     * 
-     */
-    public function testDeleteAll()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Returns the path and filename for the entry key.
-     * 
-     */
-    public function testEntry()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Fetches cache entry data.
-     * 
-     */
-    public function testFetch()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Gets the cache lifetime in seconds.
-     * 
-     */
-    public function testGetLife()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Increments a cache entry value by the specified amount.
-     * 
-     */
-    public function testIncrement()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Gets the current activity state of the cache (on or off).
-     * 
-     */
-    public function testIsActive()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Inserts/updates cache entry data.
-     * 
-     */
-    public function testSave()
-    {
-        $this->todo('stub');
-    }
-    
-    /**
-     * 
-     * Test -- Makes the cache active (true) or inactive (false).
-     * 
-     */
-    public function testSetActive()
-    {
-        $this->todo('stub');
+        
+        /**
+         * @todo remove requirement that deleteAll() actually work here
+         */
+        // remove all previous entries
+        $this->_adapter->deleteAll();
     }
 }

@@ -14,6 +14,7 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
      * 
      */
     protected $_Test_Solar_Cache_Adapter = array(
+        'life' => 7, // 7-second life by default
     );
     
     protected $_extension;
@@ -147,7 +148,7 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
      */
     public function testDeleteAll()
     {
-        $list = array(1, 2, 'five');
+        $list = array(1, 2, 'five', 'foo/bar/baz');
         $data = 'Wile E. Coyote';
         
         foreach ($list as $id) {
@@ -175,7 +176,10 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
      */
     public function testEntry()
     {
-        $this->todo('stub');
+        $id = 'wile-e-coyote';
+        $actual = $this->_adapter->entry($id);
+        $expect = $id;
+        $this->assertSame($actual, $expect);
     }
     
     /**
@@ -243,7 +247,18 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
      */
     public function testIncrement()
     {
-        $this->todo('stub');
+        $id = 'foo';
+        
+        // make sure the value doesn't exist yet
+        $actual = $this->_adapter->fetch($id);
+        $this->assertFalse($actual);
+        
+        // increment it a few times, check return values
+        for ($i = 1; $i <= 5; $i ++) {
+            $this->diag("increment $i");
+            $actual = $this->_adapter->increment($id);
+            $this->assertSame($i, $actual);
+        }
     }
     
     /**
@@ -306,6 +321,15 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
      */
     public function testSetActive()
     {
-        $this->todo('stub');
+        // should be active by default
+        $this->assertTrue($this->_adapter->isActive());
+        
+        // turn it off
+        $this->_adapter->setActive(false);
+        $this->assertFalse($this->_adapter->isActive());
+        
+        // turn it back on
+        $this->_adapter->setActive(true);
+        $this->assertTrue($this->_adapter->isActive());
     }
 }

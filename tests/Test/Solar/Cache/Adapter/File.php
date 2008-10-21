@@ -37,4 +37,12 @@ class Test_Solar_Cache_Adapter_File extends Test_Solar_Cache_Adapter {
         // remove all previous entries
         $this->_adapter->deleteAll();
     }
+    
+    public function testEntry()
+    {
+        $id = 'wile-e-coyote';
+        $actual = $this->_adapter->entry($id);
+        $expect = $this->_config['path'] . md5($id);
+        $this->assertSame($actual, $expect);
+    }
 }

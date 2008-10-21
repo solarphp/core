@@ -22,4 +22,10 @@ class Test_Solar_Cache_Adapter_Memcache extends Test_Solar_Cache_Adapter {
     );
     
     protected $_extension = 'memcache';
+    
+    public function setup()
+    {
+        parent::setup();
+        $this->_adapter->deleteAll();
+    }
 }

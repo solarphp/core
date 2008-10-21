@@ -111,7 +111,13 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        if (! empty($this->_entry[$key]) && $this->_expires[$key] <= time()) {
+        $exists = array_key_exists($key, $this->_entry);
+        if (! $exists) {
+            return false;
+        }
+        
+        $expired = time() >= $this->_expires[$key];
+        if (! $expired) {
             // exists, and is within its lifetime
             return $this->_entry[$key];
         } else {

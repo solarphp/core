@@ -27,7 +27,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      * @var array
      * 
      */
-    protected $_entry = array();
+    protected $_entries = array();
     
     /**
      * 
@@ -67,7 +67,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        $this->_entry[$key] = $data;
+        $this->_entries[$key] = $data;
         $this->_expires[$key] = time() + $this->_life;
         return true;
     }
@@ -89,7 +89,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        if (empty($this->_entry[$key])) {
+        if (empty($this->_entries[$key])) {
             return $this->save($key, $data);
         } else {
             return false;
@@ -111,7 +111,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        $exists = array_key_exists($key, $this->_entry);
+        $exists = array_key_exists($key, $this->_entries);
         if (! $exists) {
             return false;
         }
@@ -119,10 +119,10 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
         $expired = time() >= $this->_expires[$key];
         if (! $expired) {
             // exists, and is within its lifetime
-            return $this->_entry[$key];
+            return $this->_entries[$key];
         } else {
             // clear the entry
-            unset($this->_entry[$key]);
+            unset($this->_entries[$key]);
             unset($this->_expires[$key]);
             return false;
         }
@@ -151,10 +151,10 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
         $this->add($key, 0, null, $this->_life);
         
         // increment it
-        $this->_entry[$key] += $amt;
+        $this->_entries[$key] += $amt;
         
         // done!
-        return $this->_entry[$key];
+        return $this->_entries[$key];
     }
     
     /**
@@ -172,7 +172,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        unset($this->_entry[$key]);
+        unset($this->_entries[$key]);
         unset($this->_expires[$key]);
     }
     
@@ -192,7 +192,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
-        $this->_entry = array();
+        $this->_entries = array();
         $this->_expires = array();
     }
     

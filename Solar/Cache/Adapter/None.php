@@ -29,6 +29,10 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      */
     public function save($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return true;
     }
     
@@ -45,6 +49,10 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      */
     public function add($key, $data)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return true;
     }
     
@@ -59,6 +67,10 @@ class Solar_Cache_Adapter_None extends Solar_Cache_Adapter
      */
     public function fetch($key)
     {
+        if (! $this->_active) {
+            return;
+        }
+        
         return false;
     }
     

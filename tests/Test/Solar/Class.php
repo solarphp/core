@@ -127,7 +127,41 @@ class Test_Solar_Class extends Solar_Test {
      */
     public function testDir()
     {
-        $this->todo('stub');
+        $actual = Solar_Class::dir(get_class($this));
+        $expect = dirname(__FILE__) . '/Class/';
+        
+        // to avoid include-vs-source difference, compare only the tails
+        $len = strlen(get_class($this)) * -1 - 1;
+        $actual = substr($actual, $len);
+        $expect = substr($expect, $len);
+        
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testDir_sub()
+    {
+        $actual = Solar_Class::dir(get_class($this), 'sub');
+        $expect = dirname(__FILE__) . '/Class/sub/';
+        
+        // to avoid include-vs-source difference, compare only the tails
+        $len = strlen(get_class($this)) * -1 - 1;
+        $actual = substr($actual, $len);
+        $expect = substr($expect, $len);
+        
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testDir_object()
+    {
+        $actual = Solar_Class::dir($this);
+        $expect = dirname(__FILE__) . '/Class/';
+        
+        // to avoid include-vs-source difference, compare only the tails
+        $len = strlen(get_class($this)) * -1 - 1;
+        $actual = substr($actual, $len);
+        $expect = substr($expect, $len);
+        
+        $this->assertSame($actual, $expect);
     }
     
     /**

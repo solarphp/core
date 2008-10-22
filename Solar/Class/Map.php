@@ -139,9 +139,12 @@ class Solar_Class_Map extends Solar_Base
             
         }
         
-        // now build the remaining class-to-file mappings.
-        $iter = new RecursiveDirectoryIterator($path);
-        $this->_fetch($iter);
+        // now build the subdirectory class-to-file mappings, if the subdir
+        // actually exists
+        if (is_dir($path)) {
+            $iter = new RecursiveDirectoryIterator($path);
+            $this->_fetch($iter);
+        }
         
         // sort by class name, and we're done.
         ksort($this->_map);

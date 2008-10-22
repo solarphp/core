@@ -143,7 +143,6 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
             }
             
             // load the class and get its API reference
-            Solar_Class::autoload($class);
             $apiref = Solar::factory('Solar_Docs_Apiref');
             $apiref->addClass($class);
             $api = $apiref->api[$class];
@@ -206,7 +205,7 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         // in the same dir
         $this->_target = $this->_options['target'];
         if (! $this->_target) {
-            $this->_target = getcwd();
+            $this->_target = Solar::$system . "/include";
         }
         
         // make sure it matches the OS.
@@ -316,6 +315,8 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         
         // look for methods and add them if needed
         foreach ($api['methods'] as $name => $info) {
+            
+            $this->_outln($name);
             
             // is this an ignored method?
             if (in_array($name, $ignore)) {

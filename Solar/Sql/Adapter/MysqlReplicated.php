@@ -376,6 +376,8 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * Prepares an SQL query as a PDOStatement object, using the slave PDO
      * connection for all SELECT queries outside a transation, and the master
      * PDO connection for all other queries (incl. in-transaction SELECTs).
+     * Note also that a GET-after-POST request will force all reads and writes
+     * to use the master.
      * 
      * @param string $stmt The text of the SQL statement, optionally with
      * named placeholders.

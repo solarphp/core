@@ -97,6 +97,15 @@ class Solar_Request extends Solar_Base
     
     /**
      * 
+     * Is this GET request after a POST/PUT redirect?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_gap;
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -105,6 +114,13 @@ class Solar_Request extends Solar_Base
     public function __construct($config = null)
     {
         parent::__construct($config);
+        
+        $session = Solar::factory('Solar_Session', array(
+            'class' => get_class($this),
+        ));
+        
+        $this->_is_gap = (bool) $session->getFlash('is_gap');
+        
         $this->reset();
     }
     
@@ -325,6 +341,18 @@ class Solar_Request extends Solar_Base
     public function isCli()
     {
         return PHP_SAPI == 'cli';
+    }
+    
+    /**
+     * 
+     * Is this a GET-after-POST request?
+     * 
+     * @return bool
+     * 
+     */
+    public function isGap()
+    {
+        return $this->_is_gap;
     }
     
     /**

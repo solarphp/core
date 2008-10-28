@@ -129,6 +129,15 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
     
     /**
      * 
+     * Is the current request a GET-after-POST/PUT?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_gap;
+    
+    /**
+     * 
      * Whether or not we're in a transaction.
      * 
      * When true, all SELECTs go to the master.
@@ -163,6 +172,10 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         foreach ($this->_config['slaves'] as $key => $val) {
             $this->_slaves[$key] = array_merge($base, $val);
         }
+        
+        // is this a GET-after-POST/PUT request?
+        $request = Solar::dependency('request');
+        $this->_is_gap = $request->isGap();
         
         // done, on to the main setup
         parent::_setup();
@@ -372,19 +385,24 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      */
     protected function _prepare($stmt)
     {
-        // is it a SELECT statement?
+        // clean up the statement a bit
         $stmt = ltrim($stmt);
-        $is_select = strtoupper(substr($stmt, 0, 6)) == 'SELECT';
+        
+        // use the slave on SELECT statements, but only when we're not in
+        // a transaction, and also not in a GET-after-POST request.
+        $use_slave = strtoupper(substr($stmt, 0, 6)) == 'SELECT'
+                  && ! $this->_in_transaction
+                  && ! $this->_is_gap;
         
         // prepare the statment
         try {
-            if ($is_select && ! $this->_in_transaction) {
-                // slave
+            if ($use_slave) {
+                // use a slave
                 $config = $this->_slaves[$this->_slave_key];
                 $this->connect();
                 $prep = $this->_pdo->prepare($stmt);
             } else {
-                // master
+                // use the master
                 $config = $this->_config;
                 $this->connectMaster();
                 $prep = $this->_pdo_master->prepare($stmt);

@@ -485,7 +485,7 @@ class Solar_Http_Response extends Solar_Base
         $this->content = null;
         
         // is this a GET-after-(POST|PUT) redirect?
-        $request = Solar::dependency('request');
+        $request = Solar_Registry::get('request');
         if ($request->isPost() || $request->isPut()) {
             
             // tell the next request object that it's a get-after-post

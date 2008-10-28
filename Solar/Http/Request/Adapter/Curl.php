@@ -162,8 +162,12 @@ class Solar_Http_Request_Adapter_Curl extends Solar_Http_Request_Adapter
         /**
          * content
          */
-        // only send content if we're POST
-        if ($this->_method == 'POST' && ! empty($content)) {
+        
+        // only send content if we're POST or PUT
+        $send_content = $this->_method == 'POST'
+                     || $this->_method == 'PUT';
+        
+        if ($send_content && ! empty($content)) {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
         }
         

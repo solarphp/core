@@ -174,7 +174,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         }
         
         // is this a GET-after-POST/PUT request?
-        $request = Solar::dependency('request');
+        $request = Solar_Registry::get('request');
         $this->_is_gap = $request->isGap();
         
         // done, on to the main setup

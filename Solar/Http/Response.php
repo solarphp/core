@@ -467,9 +467,6 @@ class Solar_Http_Response extends Solar_Base
         // kill off all output buffers
         while(@ob_end_clean());
         
-        // save the session
-        session_write_close();
-        
         // make sure there's actually an href
         $href = trim($href);
         if (! $href) {
@@ -478,11 +475,28 @@ class Solar_Http_Response extends Solar_Base
             ));
         }
         
+        // set the status code
+        $this->setStatusCode($code);
+        
         // set the redirect location 
         $this->setHeader('Location', $href);
         
         // clear the response body
         $this->content = null;
+        
+        // is this a GET-after-(POST|PUT) redirect?
+        $request = Solar::dependency('request');
+        if ($request->isPost() || $request->isPut()) {
+            
+            // tell the next request object that it's a get-after-post
+            $session = Solar::factory('Solar_Session', array(
+                'class' => get_class($request),
+            ));
+            $session->setFlash('is_gap', true);
+        }
+        
+        // save the session
+        session_write_close();
         
         // send the response directly -- done.
         $this->display();

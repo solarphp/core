@@ -57,15 +57,6 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     
     /**
      * 
-     * A public reference to the session store.
-     * 
-     * @var array
-     * 
-     */
-    public $list;
-    
-    /**
-     * 
      * Constructor to set up the storage adapter.
      * 
      * @param array $config User-provided configuration values.
@@ -88,9 +79,28 @@ abstract class Solar_Role_Adapter extends Solar_Base {
             'Solar_Session',
             array('class' => $this->_config['session_class'])
         );
+    }
+    
+    public function __get($key)
+    {
+        if ($key == 'list') {
+            return $this->_session->get('list', array());
+        }
         
-        // make sure we have a session value and reference to it.
-        $this->list =& $this->_session->store;
+        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+            'key' => $key,
+        ));
+    }
+    
+    public function __set($key, $val)
+    {
+        if ($key == 'list') {
+            return $this->_session->set('list', $val);
+        }
+        
+        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+            'key' => $key,
+        ));
     }
     
     /**

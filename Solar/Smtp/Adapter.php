@@ -189,6 +189,30 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     
     /**
      * 
+     * Expected timeouts for various activities.
+     * 
+     * @var array
+     * 
+     * @see _expect()
+     * 
+     */
+    protected $_time = array(
+        'conn' => 300, // connection success
+        'ehlo' => 300,
+        'tls'  => 180, // start tls
+        'helo' => 300,
+        'mail' => 300, // mail from
+        'rcpt' => 300, // rcpt to
+        'data' => 120,
+        'dot'  => 600, // dot ending a message
+        'rset' => 0,
+        'noop' => 300,
+        'vrfy' => 300,
+        'quit' => 300,
+    );
+    
+    /**
+     * 
      * Constructor.
      * 
      * @param array $config User-defined configuration values.
@@ -241,12 +265,12 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         if ($this->_config['client']) {
             $this->_client = $this->_config['client'];
         }
-
+        
         // set explicit flags
         if ($this->_config['flags']) {
             $this->_flags = $this->_config['flags'];
         }
-
+        
         // build the context property
         if (is_resource($this->_config['context'])) {
             // assume it's a context resource
@@ -402,7 +426,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         }
         
         // send HELO, timeout at 5 minutes
-        $this->_expect(220, 300);
+        $this->_expect(220, $this->_time['conn']);
         $this->_ehlo();
         
         // are we trying for a TLS connection?
@@ -410,7 +434,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
             
             // send STARTTLS, wait 3 minutes
             $this->_send('STARTTLS');
-            $this->_expect(220, 180);
+            $this->_expect(220, $this->_time['tls']);
             
             $result = stream_socket_enable_crypto($this->_conn, true,
                 STREAM_CRYPTO_METHOD_TLS_CLIENT);
@@ -441,11 +465,11 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         try {
             // modern, timeout 5 minutes
             $this->_send('EHLO ' . $this->_client);
-            $this->_expect(250, 300);
+            $this->_expect(250, $this->_time['ehlo']);
         } catch (Solar_Smtp_Exception $e) {
             // legacy, timeout 5 minutes
             $this->_send('HELO ' . $this->_client);
-            $this->_expect(250, 300);
+            $this->_expect(250, $this->_time['helo']);
         }
     }
     
@@ -469,7 +493,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         
         // issue MAIL FROM, 5 minute timeout
         $this->_send('MAIL FROM:<' . $addr . '>');
-        $this->_expect(250, 300);
+        $this->_expect(250, $this->_time['mail']);
         
         // clear out previous flags
         $this->_mail = true;
@@ -497,7 +521,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         
         // issue RCPT TO, 5 minute timeout
         $this->_send('RCPT TO:<' . $addr . '>');
-        $this->_expect(array(250, 251), 300);
+        $this->_expect(array(250, 251), $this->_time['rcpt']);
         
         // it worked
         $this->_rcpt = true;
@@ -530,7 +554,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         
         // issue DATA and wait up to 2 minutes
         $this->_send('DATA');
-        $this->_expect(354, 120); 
+        $this->_expect(354, $this->_time['data']); 
         
         // now send the message one line at a time
         $lines = explode($crlf, $data);
@@ -545,7 +569,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         // issue a single dot to indicate message ending.
         // timeout at 10 minutes.
         $this->_send('.');
-        $this->_expect(250, 600); 
+        $this->_expect(250, $this->_time['dot']); 
         
         // data has been sent successfully
         $this->_data = true;
@@ -561,7 +585,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     public function rset()
     {
         $this->_send('RSET');
-        $this->_expect(250);
+        $this->_expect(250, $this->_time['rset']);
         $this->_mail = false;
         $this->_rcpt = false;
         $this->_data = false;
@@ -578,7 +602,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     {
         // timeout at 5 minutes
         $this->_send('NOOP');
-        $this->_expect(250, 300);
+        $this->_expect(250, $this->_time['noop']);
     }
     
     /**
@@ -594,7 +618,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     {
         // timeout at 5 minutes
         $this->_send('VRFY ' . $addr);
-        $this->_expect(array(250, 251, 252), 300); 
+        $this->_expect(array(250, 251, 252), $this->_time['vrfy']); 
     }
     
     /**
@@ -610,7 +634,7 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
             // issue QUIT to end the session.
             // timeout at 5 minutes.
             $this->_send('QUIT');
-            $this->_expect(221, 300); 
+            $this->_expect(221, $this->_time['quit']); 
             
             // clear flags
             $this->_helo = false;

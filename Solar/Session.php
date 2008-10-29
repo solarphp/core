@@ -338,6 +338,57 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * Loads the session segment with store and flash values for the current
+     * class.
+     * 
+     * @return void
+     * 
+     */
+    public function load()
+    {
+        if ($this->isLoaded()) {
+            return;
+        }
+        
+        // can't be loaded if the session has started
+        if (! $this->isStarted()) {
+            // not possible for anything to be loaded, then
+            $this->_is_loaded = false;
+            $this->_store = array();
+            $this->_flash = array();
+            return;
+        }
+        
+        // set up the value store.
+        if (empty($_SESSION[$this->_class])) {
+            $_SESSION[$this->_class] = array();
+        }
+        $this->_store =& $_SESSION[$this->_class];
+        
+        // set up the flash store
+        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
+            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
+        }
+        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        
+        // done!
+        $this->_is_loaded = true;
+    }
+    
+    /**
+     * 
+     * Tells if the session segment is loaded or not.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoaded()
+    {
+        return $this->_is_loaded;
+    }
+    
+    /**
+     * 
      * Sets the class segment for $_SESSION; unloads existing store and flash
      * values.
      * 
@@ -590,56 +641,5 @@ class Solar_Session extends Solar_Base
         if (! headers_sent()) {
             session_regenerate_id(true);
         }
-    }
-    
-    /**
-     * 
-     * Loads the session segment with store and flash values for the current
-     * class.
-     * 
-     * @return void
-     * 
-     */
-    public function load()
-    {
-        if ($this->isLoaded()) {
-            return;
-        }
-        
-        // can't be loaded if the session has started
-        if (! $this->isStarted()) {
-            // not possible for anything to be loaded, then
-            $this->_is_loaded = false;
-            $this->_store = array();
-            $this->_flash = array();
-            return;
-        }
-        
-        // set up the value store.
-        if (empty($_SESSION[$this->_class])) {
-            $_SESSION[$this->_class] = array();
-        }
-        $this->_store =& $_SESSION[$this->_class];
-        
-        // set up the flash store
-        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
-            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
-        }
-        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
-        
-        // done!
-        $this->_is_loaded = true;
-    }
-    
-    /**
-     * 
-     * Tells if the session segment is loaded or not.
-     * 
-     * @return bool
-     * 
-     */
-    public function isLoaded()
-    {
-        return $this->_is_loaded;
     }
 }

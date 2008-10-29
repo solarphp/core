@@ -228,7 +228,10 @@ class Solar_Session extends Solar_Base
         
         // only set up the handler if it doesn't exist yet.
         if (! self::$handler) {
-            $this->_setHandler($this->_config['handler']);
+            self::$handler = Solar::dependency(
+                'Solar_Session_Handler',
+                $handler
+            );
         }
         
         // start a session if one does not exist, but not if we're at
@@ -247,37 +250,6 @@ class Solar_Session extends Solar_Base
         }
         
         $this->setClass($this->_class);
-    }
-    
-    /**
-     * 
-     * Sets the save-handler for **all** session objects.
-     * 
-     * Once a session is started, the handler cannot be changed.
-     * 
-     * @param dependency $handler A Solar_Sesssion_Handler dependency injection..
-     * 
-     * @return void
-     * 
-     */
-    protected function _setHandler($handler)
-    {
-        if (session_id() === '' && self::$handler) {
-            // if the handler is set and the session is already running,
-            // can't change it.
-            throw $this->_exception(
-                'ERR_HANDLER_ALREADY_SET',
-                array(
-                    'handler' => self::$handler,
-                )
-            );
-        }
-        
-        // session handler dependency
-        self::$handler = Solar::dependency(
-            'Solar_Session_Handler',
-            $handler
-        );
     }
     
     /**

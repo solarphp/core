@@ -4,7 +4,9 @@
  * Class for working with the $_SESSION array, including read-once
  * flashes.
  * 
- * On instantiation, starts a session if one has not yet been started.
+ * On instantiation, lazy-starts the session.  That is, if a session cookie
+ * already exists, it starts the session; otherwise, it waits until the 
+ * first attempt to write to the session before starting it.
  * 
  * Instantiate this once for each class that wants access to $_SESSION
  * values.  It automatically segments $_SESSION by class name, so be 
@@ -220,8 +222,17 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
-     * Constructor; starts the session if one does not exist, but not if
-     * we're at the command line.
+     * Is the $_SESSION loaded for the current class?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_is_loaded = false;
+    
+    /**
+     * 
+     * Constructor; lazy-starts the session (i.e., starts it only if one 
+     * exists already).
      * 
      * @param array $config User-defined configuration values.
      * 
@@ -243,9 +254,6 @@ class Solar_Session extends Solar_Base
             self::$_request = Solar_Registry::get('request');
         }
         
-        // start the session
-        $this->start();
-        
         // determine the storage segment; use trim() and strict-equals to 
         // allow for string zero segment names.
         $this->_class = trim($this->_config['class']);
@@ -253,7 +261,15 @@ class Solar_Session extends Solar_Base
             $this->_class = 'Solar';
         }
         
+        // set the class
         $this->setClass($this->_class);
+        
+        // lazy start: find the cookie name and look for the session cookie
+        $name = session_name();
+        if (self::$_request->cookie($name)) {
+            // a previous session exists, start it
+            $this->start();
+        }
     }
     
     /**
@@ -264,10 +280,12 @@ class Solar_Session extends Solar_Base
     public function &__get($key)
     {
         if ($key == 'store') {
+            $this->load();
             return $this->_store;
         }
         
         if ($key == 'flash') {
+            $this->load();
             return $this->_flash;
         }
         
@@ -286,14 +304,24 @@ class Solar_Session extends Solar_Base
      */
     public function start()
     {
-        // start a session if one does not exist, but not if we're at
-        // the command line. at the command line, you need to start it yourself.
-        if (! $this->isStarted() && PHP_SAPI != 'cli') {
-            if ($this->_config['P3P']) {
-                header('P3P: ' . $this->_config['P3P']);
-            }
-            session_start();
+        // don't start more than once.
+        if ($this->isStarted()) {
+            // be sure the segment is loaded, though
+            $this->load();
+            return;
         }
+        
+        // set the privacy headers
+        if ($this->_config['P3P']) {
+            $response = Solar_Registry::get('response');
+            $response->setHeader('P3P', $this->_config['P3P']);
+        }
+        
+        // start the session
+        session_start();
+        
+        // load the session segment
+        $this->load();
     }
     
     /**
@@ -310,7 +338,8 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
-     * Sets the class segment for $_SESSION.
+     * Sets the class segment for $_SESSION; unloads existing store and flash
+     * values.
      * 
      * @param string $class The class name to segment by.
      * 
@@ -319,19 +348,9 @@ class Solar_Session extends Solar_Base
      */
     public function setClass($class)
     {
+        $this->_is_loaded = false;
         $this->_class = $class;
-        
-        // set up the value store
-        if (empty($_SESSION[$this->_class])) {
-            $_SESSION[$this->_class] = array();
-        }
-        $this->_store =& $_SESSION[$this->_class];
-        
-        // set up the flash store
-        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
-            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
-        }
-        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        $this->load();
     }
     
     /**
@@ -360,6 +379,7 @@ class Solar_Session extends Solar_Base
      */
     public function set($key, $val)
     {
+        $this->start();
         $this->_store[$key] = $val;
     }
     
@@ -377,6 +397,8 @@ class Solar_Session extends Solar_Base
      */
     public function add($key, $val)
     {
+        $this->start();
+        
         if (! isset($this->_store[$key])) {
             $this->_store[$key] = array();
         }
@@ -403,9 +425,12 @@ class Solar_Session extends Solar_Base
      */
     public function get($key, $val = null)
     {
+        $this->load();
+        
         if (array_key_exists($key, $this->_store)) {
             $val = $this->_store[$key];
         }
+        
         return $val;
     }
     
@@ -418,6 +443,7 @@ class Solar_Session extends Solar_Base
      */
     public function reset()
     {
+        $this->start();
         $this->_store = array();
     }
     
@@ -434,6 +460,7 @@ class Solar_Session extends Solar_Base
      */
     public function hasFlash($key)
     {
+        $this->load();
         return array_key_exists($key, $this->_flash);
     }
     
@@ -451,6 +478,7 @@ class Solar_Session extends Solar_Base
      */
     public function setFlash($key, $val)
     {
+        $this->start();
         $this->_flash[$key] = $val;
     }
     
@@ -468,6 +496,8 @@ class Solar_Session extends Solar_Base
      */
     public function addFlash($key, $val)
     {
+        $this->start();
+        
         if (! isset($this->_flash[$key])) {
             $this->_flash[$key] = array();
         }
@@ -506,10 +536,13 @@ class Solar_Session extends Solar_Base
      */
     public function getFlash($key, $val = null)
     {
+        $this->load();
+        
         if (array_key_exists($key, $this->_flash)) {
             $val = $this->_flash[$key];
             unset($this->_flash[$key]);
         }
+        
         return $val;
     }
     
@@ -522,6 +555,7 @@ class Solar_Session extends Solar_Base
      */
     public function resetFlash()
     {
+        $this->start();
         $this->_flash = array();
     }
     
@@ -534,6 +568,7 @@ class Solar_Session extends Solar_Base
      */
     public function resetAll()
     {
+        $this->start();
         $this->reset();
         $this->resetFlash();
     }
@@ -551,8 +586,60 @@ class Solar_Session extends Solar_Base
      */
     public function regenerateId()
     {
+        $this->start();
         if (! headers_sent()) {
             session_regenerate_id(true);
         }
+    }
+    
+    /**
+     * 
+     * Loads the session segment with store and flash values for the current
+     * class.
+     * 
+     * @return void
+     * 
+     */
+    public function load()
+    {
+        if ($this->isLoaded()) {
+            return;
+        }
+        
+        // can't be loaded if the session has started
+        if (! $this->isStarted()) {
+            // not possible for anything to be loaded, then
+            $this->_is_loaded = false;
+            $this->_store = array();
+            $this->_flash = array();
+            return;
+        }
+        
+        // set up the value store.
+        if (empty($_SESSION[$this->_class])) {
+            $_SESSION[$this->_class] = array();
+        }
+        $this->_store =& $_SESSION[$this->_class];
+        
+        // set up the flash store
+        if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
+            $_SESSION['Solar_Session']['flash'][$this->_class] = array();
+        }
+        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        
+        // done!
+        $this->_is_loaded = true;
+    }
+    
+    /**
+     * 
+     * Tells if the session segment is loaded or not.
+     * 
+     * @return bool
+     * 
+     */
+    public function isLoaded()
+    {
+        return $this->_is_loaded;
     }
 }

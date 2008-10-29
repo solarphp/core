@@ -115,7 +115,7 @@ class Test_Solar_Config extends Solar_Test {
      */
     public function testGet()
     {
-        Solar_Config::$store['__TEST__'] = $this->_store;
+        Solar_Config::set('__TEST__', null, $this->_store);
         $expect = $this->_store;
         $actual = Solar_Config::get('__TEST__');
         $this->assertSame($actual, $expect);
@@ -123,7 +123,7 @@ class Test_Solar_Config extends Solar_Test {
     
     public function testGet_elem()
     {
-        Solar_Config::$store['__TEST__'] = $this->_store;
+        Solar_Config::set('__TEST__', null, $this->_store);
         $expect = $this->_store['foo'];
         $actual = Solar_Config::get('__TEST__', 'foo');
         $this->assertSame($actual, $expect);
@@ -131,7 +131,7 @@ class Test_Solar_Config extends Solar_Test {
     
     public function testGet_groupDefault()
     {
-        Solar_Config::$store['__TEST__'] = $this->_store;
+        Solar_Config::set('__TEST__', null, $this->_store);
         $expect = '*default*';
         $actual = Solar_Config::get('no-such-group', null, $expect);
         $this->assertSame($actual, $expect);
@@ -139,7 +139,7 @@ class Test_Solar_Config extends Solar_Test {
     
     public function testGet_elemDefault()
     {
-        Solar_Config::$store['__TEST__'] = $this->_store;
+        Solar_Config::set('__TEST__', null, $this->_store);
         $expect = '*default*';
         $actual = Solar_Config::get('__TEST__', 'no-such-elem', $expect);
         $this->assertSame($actual, $expect);
@@ -151,6 +151,46 @@ class Test_Solar_Config extends Solar_Test {
      * 
      */
     public function testLoad()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Gets the retained build config for a class.
+     * 
+     */
+    public function testGetBuild()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Sets the config values for a class and key.
+     * 
+     */
+    public function testSet()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Sets the build config to retain for a class.
+     * 
+     */
+    public function testSetBuild()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- 
+     * 
+     */
+    public function testNerfle()
     {
         $this->todo('stub');
     }

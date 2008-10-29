@@ -54,6 +54,15 @@ class Test_Solar_Debug_Var extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        
+        // var dumpers
+        $this->_text = Solar::factory('Solar_Debug_Var', array(
+            'output' => 'text',
+        ));
+        
+        $this->_html = Solar::factory('Solar_Debug_Var', array(
+            'output' => 'html',
+        ));
     }
     
     /**
@@ -100,6 +109,35 @@ class Test_Solar_Debug_Var extends Solar_Test {
      */
     public function testFetch()
     {
-        $this->todo('stub');
+        $var = 'foo < bar > baz " dib & zim ? gir';
+        $expect = "string(33) \"foo < bar > baz \" dib & zim ? gir\"\n";
+        $actual = $this->_text->fetch($var);
+        $this->assertSame($actual, $expect);
+    }
+    
+    public function testFetch_array()
+    {
+        $var = array(
+            'foo' => 'bar',
+            'baz' => 'dib',
+            'zim' => array(
+                'gir', 'irk'
+            )
+        );
+        
+        $expect = <<<EXPECT
+array(3) {
+  ["foo"] => string(3) "bar"
+  ["baz"] => string(3) "dib"
+  ["zim"] => array(2) {
+    [0] => string(3) "gir"
+    [1] => string(3) "irk"
+  }
+}
+
+EXPECT;
+
+        $actual = $this->_text->fetch($var);
+        $this->assertSame($actual, $expect);
     }
 }

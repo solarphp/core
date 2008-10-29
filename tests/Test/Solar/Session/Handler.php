@@ -90,7 +90,13 @@ class Test_Solar_Session_Handler extends Solar_Test {
      */
     public function test__call()
     {
-        $this->todo('stub');
+        $obj = new Solar_Session_Handler();
+        try {
+            $obj->noSuchMethod();
+            $this->fail('__call() should not work');
+        } catch (Exception $e) {
+            $this->assertTrue(true);
+        }
     }
     
     /**
@@ -100,6 +106,10 @@ class Test_Solar_Session_Handler extends Solar_Test {
      */
     public function testFactory()
     {
-        $this->todo('stub');
+        // Test_Solar_Foo => Solar_Foo_Adapter
+        $expect = substr(get_class($this), 5) . '_Adapter';
+        
+        $actual = Solar::factory('Solar_Session_Handler');
+        $this->assertInstance($actual, $expect);
     }
 }

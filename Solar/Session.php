@@ -220,13 +220,8 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
-     * Constructor.
-     * 
-     * Starts the session if one does not exist, but only if we're not at the
-     * command line.
-     * 
-     * Automatically sends a P3P header if one is defined (and it is, by 
-     * default).
+     * Constructor; starts the session if one does not exist, but not if
+     * we're at the command line.
      * 
      * @param array $config User-defined configuration values.
      * 
@@ -248,14 +243,8 @@ class Solar_Session extends Solar_Base
             self::$_request = Solar_Registry::get('request');
         }
         
-        // start a session if one does not exist, but not if we're at
-        // the command line. at the command line, you need to start it yourself.
-        if (session_id() === '' && PHP_SAPI != 'cli') {
-            if ($this->_config['P3P']) {
-                header('P3P: ' . $this->_config['P3P']);
-            }
-            session_start();
-        }
+        // start the session
+        $this->start();
         
         // set the storage segment
         $this->_class = trim($this->_config['class']);
@@ -284,6 +273,38 @@ class Solar_Session extends Solar_Base
         throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
             'key' => $key,
         ));
+    }
+    
+    /**
+     * 
+     * Starts the session; automatically sends a P3P header if one is defined
+     * (and it is, by default).
+     * 
+     * @return void
+     * 
+     */
+    public function start()
+    {
+        // start a session if one does not exist, but not if we're at
+        // the command line. at the command line, you need to start it yourself.
+        if (! $this->isStarted() && PHP_SAPI != 'cli') {
+            if ($this->_config['P3P']) {
+                header('P3P: ' . $this->_config['P3P']);
+            }
+            session_start();
+        }
+    }
+    
+    /**
+     * 
+     * Has a session been started yet?
+     * 
+     * @return bool
+     * 
+     */
+    public function isStarted()
+    {
+        return session_id() !== '';
     }
     
     /**

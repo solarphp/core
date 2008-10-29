@@ -148,6 +148,67 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public $allow = true;
     
+    /**
+     * 
+     * Magic "public" properties that are actually parts of the session
+     * segment.
+     * 
+     * The available magic properties are:
+     * 
+     * `status`
+     * : (string) The Unix time at which the authenticated handle was last 
+     *   valid.
+     * 
+     * `initial`
+     * : (int) The Unix time at which the handle was initially authenticated.
+     * 
+     * `active`
+     * : (int) The status code of the current user authentication. The string
+     *   codes are ...
+     *   
+     *     `ANON` (or empty)
+     *     : The user is anonymous/unauthenticated (no attempt to 
+     *       authenticate)
+     *     
+     *     `EXPIRED`
+     *     : The max time for authentication has expired
+     *     
+     *     `IDLED`
+     *     : The authenticated user has been idle for too long
+     *     
+     *     `VALID`
+     *     : The user is authenticated and has not timed out
+     *     
+     *     `WRONG`
+     *     : The user attempted authentication but failed
+     *   
+     * 
+     * `handle`
+     * : (string) The currently authenticated user handle.
+     * 
+     * `email`
+     * : (string) The email address of the currently authenticated user. May 
+     *   or may not be populated by the adapter.
+     * 
+     * `moniker`
+     * : (string) The "display name" or "full name" of the currently 
+     *   authenticated user.  May or may not be populated by the adapter.
+     * 
+     * `uri`
+     * : (string) The URI for the currently authenticated user. May or may not 
+     *   be populated by the adapter.
+     * 
+     * `uid`
+     * : (mixed) The user ID (usually numeric) for the currently authenticated 
+     *   user.  May or may not be populated by the adapter.
+     * 
+     * @var array
+     * 
+     * @see __get()
+     * 
+     * @see __set()
+     * 
+     */
     protected $_magic = array(
         'status',
         'initial',
@@ -207,6 +268,59 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             'Solar_Session',
             array('class' => $this->_config['session_class'])
         );
+    }
+    
+    /**
+     * 
+     * Magic get for pseudo-public properties.
+     * 
+     * @param string $key The name of the property to get.
+     * 
+     * @return mixed
+     * 
+     * @see $_magic
+     * 
+     */
+    public function __get($key)
+    {
+        if (! in_array($key, $this->_magic)) {
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+                'key' => $key,
+            ));
+        }
+        
+        $val = $this->_session->get($key);
+        
+        // special behavior for 'status'
+        if ($key == 'status' && ! $val) {
+            $val = Solar_Auth::ANON;
+        }
+        
+        return $val;
+    }
+    
+    /**
+     * 
+     * Magic set for pseudo-public properties.
+     * 
+     * @param string $key The name of the property to set.
+     * 
+     * @param mixed $val The value for the property.
+     * 
+     * @return void
+     * 
+     * @see $_magic
+     * 
+     */
+    public function __set($key, $val)
+    {
+        if (! in_array($key, $this->_magic)) {
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+                'key' => $key,
+            ));
+        }
+        
+        $this->_session->set($key, $val);
     }
     
     /**
@@ -517,34 +631,5 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     protected function _processLogout()
     {
         return Solar_Auth::ANON;
-    }
-    
-    public function __get($key)
-    {
-        if (! in_array($key, $this->_magic)) {
-            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-                'key' => $key,
-            ));
-        }
-        
-        $val = $this->_session->get($key);
-        
-        // special behavior for 'status'
-        if ($key == 'status' && ! $val) {
-            $val = Solar_Auth::ANON;
-        }
-        
-        return $val;
-    }
-    
-    public function __set($key, $val)
-    {
-        if (! in_array($key, $this->_magic)) {
-            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-                'key' => $key,
-            ));
-        }
-        
-        $this->_session->set($key, $val);
     }
 }

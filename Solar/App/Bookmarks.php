@@ -641,9 +641,12 @@ class Solar_App_Bookmarks extends Solar_App_Base
         );
         
         // assign remaining view vars
-        $total = $this->list->getPagerInfo();
-        $this->count         = $total['count'];
-        $this->pages         = $total['pages'];
+        if ($this->list) {
+            $total = $this->list->getPagerInfo();
+            $this->count = $total['count'];
+            $this->pages = $total['pages'];
+        }
+        
         $this->order         = $this->_query('order');
         $this->page          = $params['page'];
         $this->owner_handle  = $owner_handle; // requested owner_handle

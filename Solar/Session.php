@@ -187,7 +187,7 @@ class Solar_Session extends Solar_Base
      * @var array
      * 
      */
-    public $flash;
+    protected $_flash = array();
     
     /**
      * 
@@ -198,7 +198,7 @@ class Solar_Session extends Solar_Base
      * @var array
      * 
      */
-    public $store;
+    protected $_store = array();
     
     /**
      * 
@@ -254,6 +254,26 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * Magic get for store and flash as a temporary measure.
+     * 
+     */
+    public function &__get($key)
+    {
+        if ($key == 'store') {
+            return $this->_store;
+        }
+        
+        if ($key == 'flash') {
+            return $this->_flash;
+        }
+        
+        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+            'key' => $key,
+        ));
+    }
+    
+    /**
+     * 
      * Sets the class segment for $_SESSION.
      * 
      * @param string $class The class name to segment by.
@@ -269,13 +289,13 @@ class Solar_Session extends Solar_Base
         if (empty($_SESSION[$this->_class])) {
             $_SESSION[$this->_class] = array();
         }
-        $this->store =& $_SESSION[$this->_class];
+        $this->_store =& $_SESSION[$this->_class];
         
         // set up the flash store
         if (empty($_SESSION['Solar_Session']['flash'][$this->_class])) {
             $_SESSION['Solar_Session']['flash'][$this->_class] = array();
         }
-        $this->flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
+        $this->_flash =& $_SESSION['Solar_Session']['flash'][$this->_class];
     }
     
     /**
@@ -304,7 +324,7 @@ class Solar_Session extends Solar_Base
      */
     public function set($key, $val)
     {
-        $this->store[$key] = $val;
+        $this->_store[$key] = $val;
     }
     
     /**
@@ -321,15 +341,15 @@ class Solar_Session extends Solar_Base
      */
     public function add($key, $val)
     {
-        if (! isset($this->store[$key])) {
-            $this->store[$key] = array();
+        if (! isset($this->_store[$key])) {
+            $this->_store[$key] = array();
         }
         
-        if (! is_array($this->store[$key])) {
-            settype($this->store[$key], 'array');
+        if (! is_array($this->_store[$key])) {
+            settype($this->_store[$key], 'array');
         }
         
-        $this->store[$key][] = $val;
+        $this->_store[$key][] = $val;
     }
     
     /**
@@ -347,8 +367,8 @@ class Solar_Session extends Solar_Base
      */
     public function get($key, $val = null)
     {
-        if (array_key_exists($key, $this->store)) {
-            $val = $this->store[$key];
+        if (array_key_exists($key, $this->_store)) {
+            $val = $this->_store[$key];
         }
         return $val;
     }
@@ -362,7 +382,7 @@ class Solar_Session extends Solar_Base
      */
     public function reset()
     {
-        $this->store = array();
+        $this->_store = array();
     }
     
     /**
@@ -378,7 +398,7 @@ class Solar_Session extends Solar_Base
      */
     public function hasFlash($key)
     {
-        return array_key_exists($key, $this->flash);
+        return array_key_exists($key, $this->_flash);
     }
     
     /**
@@ -395,7 +415,7 @@ class Solar_Session extends Solar_Base
      */
     public function setFlash($key, $val)
     {
-        $this->flash[$key] = $val;
+        $this->_flash[$key] = $val;
     }
     
     /**
@@ -412,15 +432,15 @@ class Solar_Session extends Solar_Base
      */
     public function addFlash($key, $val)
     {
-        if (! isset($this->flash[$key])) {
-            $this->flash[$key] = array();
+        if (! isset($this->_flash[$key])) {
+            $this->_flash[$key] = array();
         }
         
-        if (! is_array($this->flash[$key])) {
-            settype($this->flash[$key], 'array');
+        if (! is_array($this->_flash[$key])) {
+            settype($this->_flash[$key], 'array');
         }
         
-        $this->flash[$key][] = $val;
+        $this->_flash[$key][] = $val;
     }
     
     /**
@@ -450,9 +470,9 @@ class Solar_Session extends Solar_Base
      */
     public function getFlash($key, $val = null)
     {
-        if (array_key_exists($key, $this->flash)) {
-            $val = $this->flash[$key];
-            unset($this->flash[$key]);
+        if (array_key_exists($key, $this->_flash)) {
+            $val = $this->_flash[$key];
+            unset($this->_flash[$key]);
         }
         return $val;
     }
@@ -466,7 +486,7 @@ class Solar_Session extends Solar_Base
      */
     public function resetFlash()
     {
-        $this->flash = array();
+        $this->_flash = array();
     }
     
     /**

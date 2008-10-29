@@ -148,118 +148,16 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public $allow = true;
     
-    /**
-     * 
-     * The Unix time at which the authenticated handle was last
-     * valid.
-     * 
-     * Convenience reference to $this->_session->store['active'].
-     * 
-     * @var int
-     * 
-     * @see valid()
-     * 
-     */
-    public $active;
-    
-    /**
-     * 
-     * The Unix time at which the handle was initially
-     * authenticated.
-     * 
-     * Convenience reference to $this->_session->store['initial'].
-     * 
-     * @var int
-     * 
-     */
-    public $initial;
-    
-    /**
-     * 
-     * The status code of the current user authentication. The string
-     * codes are ...
-     * 
-     * `ANON`
-     * : The user is anonymous/unauthenticated (no attempt to 
-     *   authenticate)
-     * 
-     * `EXPIRED`
-     * : The max time for authentication has expired
-     * 
-     * `IDLED`
-     * : The authenticated user has been idle for too long
-     * 
-     * `VALID`
-     * : The user is authenticated and has not timed out
-     * 
-     * `WRONG`
-     * : The user attempted authentication but failed
-     * 
-     * Convenience reference to $this->_session->store['status'].
-     * 
-     * @var string
-     * 
-     */
-    public $status;
-    
-    /**
-     * 
-     * The currently authenticated user handle.
-     * 
-     * Convenience reference to $this->_session->store['handle'].
-     * 
-     * @var string
-     * 
-     */
-    public $handle;
-    
-    /**
-     * 
-     * The email address of the currently authenticated user. 
-      * May or may not be populated by the adapter.
-     * 
-     * Convenience reference to $this->_session->store['email'].
-     * 
-     * @var string
-     * 
-     */
-    public $email;
-    
-    /**
-     * 
-     * The "display name" or "full name" of the currently
-     * authenticated user.  May or may not be populated by the adapter.
-     * 
-     * Convenience reference to $this->_session->store['moniker'].
-     * 
-     * @var string
-     * 
-     */
-    public $moniker;
-    
-    /**
-     * 
-     * The URI for the currently authenticated user.  May or
-     * may not be populated by the adapter.
-     * 
-     * Convenience reference to $this->_session->store['uri'].
-     * 
-     * @var string
-     * 
-     */
-    public $uri;
-    
-    /**
-     * 
-     * The numeric user ID for the currently authenticated user.  May or
-     * may not be populated by the adapter.
-     * 
-     * Convenience reference to $this->_session->store['uid'].
-     * 
-     * @var string
-     * 
-     */
-    public $uid;
+    protected $_magic = array(
+        'status',
+        'initial',
+        'active',
+        'handle',
+        'email',
+        'moniker',
+        'uri',
+        'uid',
+    );
     
     /**
      * 
@@ -302,21 +200,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         
         // set per config
         $this->allow = (bool) $this->_config['allow'];
-    }
-    
-    /**
-     * 
-     * Loads the class properties from the $_SESSION values, starting the
-     * session if needed.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadSession()
-    {
-        if ($this->_session) {
-            return;
-        }
         
         // create the session-access object.
         // starts the session if it has not been started already.
@@ -324,30 +207,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             'Solar_Session',
             array('class' => $this->_config['session_class'])
         );
-        
-        // initialize the session array as needed
-        if (empty($this->_session->store)) {
-            $this->_session->store = array(
-                'status'  => Solar_Auth::ANON,
-                'initial' => null,
-                'active'  => null,
-                'handle'  => null,
-                'email'   => null,
-                'moniker' => null,
-                'uri'     => null,
-                'uid'     => null,
-            );
-        }
-        
-        // add convenience references to the session store keys
-        $this->status  =& $this->_session->store['status'];
-        $this->initial =& $this->_session->store['initial'];
-        $this->active  =& $this->_session->store['active'];
-        $this->handle  =& $this->_session->store['handle'];
-        $this->email   =& $this->_session->store['email'];
-        $this->moniker =& $this->_session->store['moniker'];
-        $this->uri     =& $this->_session->store['uri'];
-        $this->uid     =& $this->_session->store['uid'];
     }
     
     /**
@@ -359,9 +218,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function start()
     {
-        // load the session
-        $this->_loadSession();
-        
         // update idle and expire times no matter what
         $this->updateIdleExpire();
         
@@ -390,6 +246,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             // logout always works ;-) so attempt to redirect
             $this->_redirect();
         }
+        
     }
     
     /**
@@ -471,7 +328,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function isValid()
     {
-        $this->_loadSession();
         return $this->status == Solar_Auth::VALID;
     }
     
@@ -495,9 +351,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function reset($status = Solar_Auth::ANON, $info = array())
     {
-        // load the session
-        $this->_loadSession();
-        
         // baseline user information
         $base = array(
            'handle'  => null,
@@ -556,7 +409,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function getFlash($key, $val = null)
     {
-        $this->_loadSession();
         return $this->_session->getFlash($key, $val);
     }
     
@@ -665,5 +517,34 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     protected function _processLogout()
     {
         return Solar_Auth::ANON;
+    }
+    
+    public function __get($key)
+    {
+        if (! in_array($key, $this->_magic)) {
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+                'key' => $key,
+            ));
+        }
+        
+        $val = $this->_session->get($key);
+        
+        // special behavior for 'status'
+        if ($key == 'status' && ! $val) {
+            $val = Solar_Auth::ANON;
+        }
+        
+        return $val;
+    }
+    
+    public function __set($key, $val)
+    {
+        if (! in_array($key, $this->_magic)) {
+            throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
+                'key' => $key,
+            ));
+        }
+        
+        $this->_session->set($key, $val);
     }
 }

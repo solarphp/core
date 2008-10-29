@@ -176,7 +176,7 @@ class Solar_Session extends Solar_Base
      * @var Solar_Session_Handler_Adapter
      * 
      */
-    static public $handler;
+    static protected $_handler;
     
     /**
      * 
@@ -227,10 +227,10 @@ class Solar_Session extends Solar_Base
         parent::__construct($config);
         
         // only set up the handler if it doesn't exist yet.
-        if (! self::$handler) {
-            self::$handler = Solar::dependency(
+        if (! self::$_handler) {
+            self::$_handler = Solar::dependency(
                 'Solar_Session_Handler',
-                $handler
+                $this->_config['handler']
             );
         }
         

@@ -246,9 +246,10 @@ class Solar_Session extends Solar_Base
         // start the session
         $this->start();
         
-        // set the storage segment
+        // determine the storage segment; use trim() and strict-equals to 
+        // allow for string zero segment names.
         $this->_class = trim($this->_config['class']);
-        if ($this->_class == '') {
+        if ($this->_class === '') {
             $this->_class = 'Solar';
         }
         

@@ -180,6 +180,15 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * The current request object.
+     * 
+     * @var Solar_Request
+     * 
+     */
+    static protected $_request;
+    
+    /**
+     * 
      * Array of read-once "flash" keys and values.
      * 
      * Convenience reference to $_SESSION['Solar_Session']['flash'][$this->_class].
@@ -232,6 +241,11 @@ class Solar_Session extends Solar_Base
                 'Solar_Session_Handler',
                 $this->_config['handler']
             );
+        }
+        
+        // only set up the request if it doesn't exist yet.
+        if (! self::$_request) {
+            self::$_request = Solar_Registry::get('request');
         }
         
         // start a session if one does not exist, but not if we're at

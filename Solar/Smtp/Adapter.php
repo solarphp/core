@@ -35,6 +35,8 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         'crlf'   => "\r\n",
         'secure' => null,
         'client' => '127.0.0.1',
+        'flags'  => null,
+        'context'=> null,
     );
     
     /**
@@ -124,6 +126,25 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
     
     /**
      * 
+     * The connection flags for this connection; default is 
+     * STREAM_CLIENT_CONNECT.
+     * 
+     * @var int
+     * 
+     */
+    protected $_flags = STREAM_CLIENT_CONNECT;
+
+    /**
+     * 
+     * The stream context for this connection, if any.
+     * 
+     * @var array
+     * 
+     */
+    protected $_context = array();
+    
+    /**
+     * 
      * Has a session been started (that is, has HELO/EHLO been issued)?
      * 
      * @var bool
@@ -175,9 +196,6 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
      */
     public function __construct($config = null)
     {
-        // set the default port to the one from php.ini
-        $this->_Solar_Smtp_Adapter['port'] = ini_get('smtp_port');
-        
         // do parent construction
         parent::__construct($config);
         
@@ -214,11 +232,33 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
         // set explicit port; overrides secure port
         if ($this->_config['port']) {
             $this->_port = $this->_config['port'];
+        } elseif (empty($this->_port)) {
+            // set the default port to the one from php.ini
+            $this->_port = ini_get('smtp_port');
         }
         
         // set explicit client
         if ($this->_config['client']) {
             $this->_client = $this->_config['client'];
+        }
+
+        // set explicit flags
+        if ($this->_config['flags']) {
+            $this->_flags = $this->_config['flags'];
+        }
+
+        // build the context property
+        if (is_resource($this->_config['context'])) {
+            // assume it's a context resource
+            $this->_context = $this->_config['context'];
+        } elseif (is_array($this->_config['context'])) {
+            // create from scratch
+            $this->_context = stream_context_create($this->_config['context']);
+        } else {
+            // not a resource, not an array, so ignore.
+            // have to use a resource of some sort, so create
+            // a blank context resource.
+            $this->_context = stream_context_create(array());
         }
     }
     
@@ -324,7 +364,9 @@ abstract class Solar_Smtp_Adapter extends Solar_Base {
             $server,
             $errnum,
             $errstr,
-            $this->_timeout
+            $this->_timeout,
+            $this->_flags,
+            $this->_context
         );
         
         // connected?

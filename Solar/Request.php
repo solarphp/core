@@ -102,7 +102,7 @@ class Solar_Request extends Solar_Base
      * @var bool
      * 
      */
-    protected $_is_gap;
+    protected $_is_gap = null;
     
     /**
      * 
@@ -114,13 +114,6 @@ class Solar_Request extends Solar_Base
     public function __construct($config = null)
     {
         parent::__construct($config);
-        
-        $session = Solar::factory('Solar_Session', array(
-            'class' => get_class($this),
-        ));
-        
-        $this->_is_gap = (bool) $session->getFlash('is_gap');
-        
         $this->reset();
     }
     
@@ -352,6 +345,13 @@ class Solar_Request extends Solar_Base
      */
     public function isGap()
     {
+        if ($this->_is_gap === null) {
+            $session = Solar::factory('Solar_Session', array(
+                'class' => get_class($this),
+            ));
+            $this->_is_gap = (bool) $session->getFlash('is_gap');
+        }
+        
         return $this->_is_gap;
     }
     

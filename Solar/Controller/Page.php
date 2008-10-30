@@ -782,7 +782,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _load($spec)
     {
         $this->_loadInfoQueryFormat($spec);
-        $this->_loadAction();
+        $this->_fixAction();
         $this->_fixFormat();
         $this->_fixLayout();
         $this->_fixInfo();
@@ -839,17 +839,8 @@ abstract class Solar_Controller_Page extends Solar_Base {
         if (strtolower($this->_format) == 'php') {
             $this->_format = null;
         }
-    }
-    
-    /**
-     * 
-     * Loads $_action from the existing $_info values.
-     * 
-     * @return void
-     * 
-     */
-    protected function _loadAction()
-    {
+        
+        // now find the action from the info.
         // do we have an initial info element as an action method?
         if (empty($this->_info[0])) {
             // use the default action
@@ -858,6 +849,21 @@ abstract class Solar_Controller_Page extends Solar_Base {
             // save it and remove from info
             $this->_action = array_shift($this->_info);
         }
+    }
+    
+    /**
+     * 
+     * Fixes the requested $_action value based on the various properties
+     * available.
+     * 
+     * By default, leaves the $_action value as-is; if the action does not
+     * map to a method, _notFound() will be triggered.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixAction()
+    {
     }
     
     /**

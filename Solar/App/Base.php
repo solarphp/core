@@ -231,6 +231,23 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
+     * If the action doesn't map to a method, place the action back on top of
+     * the info array and use the default action in its place.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixAction()
+    {
+        parent::_fixAction();
+        if (! $this->_getActionMethod($this->_action)) {
+            array_unshift($this->_info, $this->_action);
+            $this->_action = $this->_action_default;
+        }
+    }
+    
+    /**
+     * 
      * Shows the "error" page.
      * 
      * @param string $action The name of the not-found action.

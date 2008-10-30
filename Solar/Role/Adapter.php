@@ -13,8 +13,6 @@
  * 
  * @version $Id$
  * 
- * @todo rename to Unix, add Ini file handler as well
- * 
  */
 abstract class Solar_Role_Adapter extends Solar_Base {
     
@@ -22,29 +20,12 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
-     * Keys are ...
-     * 
-     * `refresh`
-     * : (bool) Whether or not to refresh (reload) roles every time load() is
-     *   called.  The default is to load into the session once, then not load
-     *   again even though load() gets called.
-     * 
      * @var array
      * 
      */
     protected $_Solar_Role_Adapter = array(
-        'refresh'       => false,
         'session_class' => 'Solar_Role_Adapter',
     );
-    
-    /**
-     * 
-     * Have we attempted to load the list of roles yet?
-     * 
-     * @var bool
-     * 
-     */
-    protected $_loaded = false;
     
     /**
      * 
@@ -81,28 +62,6 @@ abstract class Solar_Role_Adapter extends Solar_Base {
         );
     }
     
-    public function __get($key)
-    {
-        if ($key == 'list') {
-            return $this->_session->get('list', array());
-        }
-        
-        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-            'key' => $key,
-        ));
-    }
-    
-    public function __set($key, $val)
-    {
-        if ($key == 'list') {
-            return $this->_session->set('list', $val);
-        }
-        
-        throw $this->_exception('ERR_NO_SUCH_PROPERTY', array(
-            'key' => $key,
-        ));
-    }
-    
     /**
      * 
      * Provides magic "isRoleName()" to map to "is('role_name')".
@@ -137,41 +96,73 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      * @param string $handle The username to load roles for.
      * 
-     * @param bool $refresh Override the class-default for refreshing, and
-     * force (true) or don't force (false) reloading.  Default is null, which
-     * uses the class-default value.
+     * @return void
+     * 
+     */
+    public function load($handle)
+    {
+        // fetch the role list using the adapter-specific method
+        $result = $this->fetch($handle);
+        if ($result) {
+            $this->setList($result);
+        }
+    }
+    
+    /**
+     * 
+     * Gets the list of all loaded roles for the user.
+     * 
+     * @return array
+     * 
+     */
+    public function getList()
+    {
+        return $this->_session->get('list', array());
+    }
+    
+    /**
+     * 
+     * Sets the list, overriding what is there already.
+     * 
+     * @param array $list The list of roles to set.
      * 
      * @return void
      * 
      */
-    public function load($handle, $refresh = null)
+    public function setList($list)
     {
-        if (is_null($refresh)) {
-            $refresh = $this->_config['refresh'];
+        $this->_session->set('list', (array) $list);
+    }
+    
+    /**
+     * 
+     * Appends a list of roles to the existing list of roles.
+     * 
+     * @param array $list The list of roles to append.
+     * 
+     * @return void
+     * 
+     */
+    public function addList($list)
+    {
+        settype($list, 'array');
+        foreach ($list as $val) {
+            $this->_session->add('list', $val);
         }
-        
-        // have we loaded roles for the first time yet? if so, and if
-        // we're not forcing refreshes, the we don't need to do
-        // anything, just return the list as it is right now.
-        if ($this->_loaded && ! $refresh) {
-            return $this->list;
-        }
-        
-        // reset the roles list
-        $this->reset();
-        
-        // fetch the role list using the adapter-specific method
-        $result = $this->fetch($handle);
-        if ($result) {
-            // merge the results into the common list
-            $this->list = array_merge(
-                $this->list,
-                (array) $result
-            );
-        }
-        
-        // OK, we've loaded what we can.
-        $this->_loaded = true;
+    }
+    
+    /**
+     * 
+     * Appends a single role to the existing list of roles.
+     * 
+     * @param string $list The role to append.
+     * 
+     * @return void
+     * 
+     */
+    public function add($val)
+    {
+        $this->_session->add('list', (string) $val);
     }
     
     /**
@@ -183,8 +174,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function reset()
     {
-        $this->_loaded = false;
-        $this->list = array();
+        $this->setList(array());
     }
     
     /**
@@ -198,7 +188,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function is($role = null)
     {
-        return in_array($role, $this->list);
+        return in_array($role, $this->getList());
     }
     
     /**
@@ -215,8 +205,9 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     {
         // loop through all of the roles, returning 'true' the first
         // time we find a matching role.
+        $list = $this->getList();
         foreach ((array) $roles as $role) {
-            if (in_array($role, $this->list)) {
+            if (in_array($role, $list)) {
                 return true;
             }
         }
@@ -240,8 +231,9 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     {
         // loop through all of the roles, returning 'false' the first
         // time we find the user is not in one of the roles.
+        $list = $this->getList();
         foreach ((array) $roles as $role) {
-            if (! in_array($role, $this->list)) {
+            if (! in_array($role, $list)) {
                 return false;
             }
         }

@@ -72,7 +72,7 @@ abstract class Solar_Access_Adapter extends Solar_Base {
         
         if ($role_spec instanceof Solar_Role_Adapter) {
             $this->_role = $role_spec;
-            $roles = $this->_role->list;
+            $roles = $this->_role->getList();
         } else {
             $roles = $role_spec;
         }

@@ -14,7 +14,7 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
      * 
      */
     protected $_Test_Solar_Sql_Adapter_MysqlReplicated = array(
-        'host'    => 'localhost',
+        'host'    => '127.0.0.1',
         'user'    => '',
         'pass'    => '',
         'name'    => 'test',
@@ -33,15 +33,15 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         
         $result = $this->_adapter->query($stmt, $data);
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
+        $actual = $result->solar_conn['type'];
         $expect = 'master';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
         
         $result = $this->_adapter->fetchPdo("SELECT * FROM $this->_table_name WHERE id = 1");
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
-        $expect = 'slave zero';
+        $actual = $result->solar_conn['type'];
+        $expect = 'slave';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
     }
@@ -66,7 +66,7 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $stmt = "INSERT INTO {$this->_table_name} (id, name) VALUES (:id, :name)";
         $result = $this->_adapter->query($stmt, $data);
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
+        $actual = $result->solar_conn['type'];
         $expect = 'master';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
@@ -75,15 +75,15 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $stmt = "UPDATE {$this->_table_name} SET name = :name WHERE id = 1";
         $result = $this->_adapter->query($stmt, $data);
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
+        $actual = $result->solar_conn['type'];
         $expect = 'master';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
         
         $result = $this->_adapter->fetchPdo("SELECT * FROM $this->_table_name WHERE id = 1");
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
-        $expect = 'slave zero';
+        $actual = $result->solar_conn['type'];
+        $expect = 'slave';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
     }
@@ -97,7 +97,7 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $stmt = "DELETE FROM {$this->_table_name} WHERE id = 5";
         $result = $this->_adapter->query($stmt);
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
+        $actual = $result->solar_conn['type'];
         $expect = 'master';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
@@ -106,8 +106,8 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $stmt = "SELECT * FROM $this->_table_name ORDER BY id";
         $result = $this->_adapter->query($stmt);
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
-        $expect = 'slave zero';
+        $actual = $result->solar_conn['type'];
+        $expect = 'slave';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
     }
@@ -117,8 +117,8 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $this->_insertData();
         $result = $this->_adapter->query("SELECT COUNT(*) FROM $this->_table_name");
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
-        $expect = 'slave zero';
+        $actual = $result->solar_conn['type'];
+        $expect = 'slave';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);
     }
@@ -129,7 +129,7 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
         $this->_adapter->begin();
         $result = $this->_adapter->query("SELECT COUNT(*) FROM $this->_table_name");
         $this->assertInstance($result, 'PDOStatement');
-        $actual = $result->solar_conn['server'];
+        $actual = $result->solar_conn['type'];
         $expect = 'master';
         $this->assertSame($actual, $expect);
         $this->diag($result->solar_conn);

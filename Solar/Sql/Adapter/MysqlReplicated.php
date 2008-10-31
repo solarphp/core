@@ -292,9 +292,13 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         );
         
         // retain connection info
-        $this->_pdo->solar_conn = $this->_slaves[$key];
-        unset($this->_pdo->solar_conn['profiling']);
-        unset($this->_pdo->solar_conn['cache']);
+        $this->_pdo->solar_conn = array(
+            'dsn'  => $this->_dsn,
+            'user' => $this->_slaves[$key]['user'],
+            'pass' => $this->_slaves[$key]['pass'],
+            'type' => 'slave',
+            'key'  => $key,
+        );
         
         // post-connection tasks
         $this->_postConnect();
@@ -327,17 +331,19 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         
         // attempt the connection
         $this->_pdo_master = new PDO(
-            $this->_dsn,
+            $this->_dsn_master,
             $this->_config['user'],
             $this->_config['pass']
         );
         
         // retain connection info
-        $this->_pdo_master->solar_conn = $this->_config;
-        unset($this->_pdo_master->solar_conn['profiling']);
-        unset($this->_pdo_master->solar_conn['cache']);
-        unset($this->_pdo_master->solar_conn['request']);
-        unset($this->_pdo_master->solar_conn['slaves']);
+        $this->_pdo_master->solar_conn = array(
+            'dsn'  => $this->_dsn_master,
+            'user' => $this->_config['user'],
+            'pass' => $this->_config['pass'],
+            'type' => 'master',
+            'key'  => null,
+        );
         
         // post-connection tasks
         $this->_postConnectMaster();
@@ -425,14 +431,12 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
                 $this->connect();
                 $prep = $this->_pdo->prepare($stmt);
                 $prep->solar_conn = $this->_pdo->solar_conn;
-                $prep->solar_conn['server'] = 'slave ' . (string) $this->_slave_key;
             } else {
                 // use the master
                 $config = $this->_config;
                 $this->connectMaster();
                 $prep = $this->_pdo_master->prepare($stmt);
                 $prep->solar_conn = $this->_pdo_master->solar_conn;
-                $prep->solar_conn['server'] = 'master';
             }
         } catch (PDOException $e) {
             // note that we use $config as set in the try block above

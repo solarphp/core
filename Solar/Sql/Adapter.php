@@ -476,6 +476,11 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $this->_config['pass']
         );
         
+        // set the server info
+        $this->_pdo->solar_conn = $this->_config;
+        unset($this->_pdo->solar_conn['profiling']);
+        unset($this->_pdo->solar_conn['cache']);
+        
         // post-connection tasks
         $this->_postConnect();
         
@@ -647,7 +652,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         // retain the profile data?
-        $this->_addProfile($time, $prep->queryString, $data);
+        $this->_addProfile($time, $prep, $data);
         
         // done!
         return $prep;
@@ -668,6 +673,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // prepare the statment
         try {
             $prep = $this->_pdo->prepare($stmt);
+            $prep->solar_conn = $this->_pdo->solar_conn;
+            $prep->solar_conn['server'] = 'single';
         } catch (PDOException $e) {
             throw $this->_exception(
                 'ERR_PREPARE_FAILED',
@@ -676,6 +683,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                     'pdo_text'  => $e->getMessage(),
                     'host'      => $this->_config['host'],
                     'port'      => $this->_config['port'],
+                    'sock'      => $this->_config['sock'],
                     'user'      => $this->_config['user'],
                     'name'      => $this->_config['name'],
                     'stmt'      => $stmt,
@@ -749,26 +757,35 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * 
      * @param int $time The microtime when the profile element started.
      * 
-     * @param string $stmt The SQL statement being profiled.
+     * @param string|PDOStatement $spec The SQL statement being profiled.
      * 
      * @param array $data Any data bound into the statement.
      * 
      * @return void
      * 
      */
-    protected function _addProfile($time, $stmt, $data = null)
+    protected function _addProfile($time, $spec, $data = null)
     {
         if (! $this->_profiling) {
             return;
         }
         
+        if ($spec instanceof PDOStatement) {
+            $server = $spec->solar_conn['server'];
+            $stmt = $spec->queryString;
+        } else {
+            $server = null;
+            $stmt = $spec;
+        }
+        
         $timespan = microtime(true) - $time;
         $e = new Exception();
         $this->_profile[] = array(
-            $timespan,
-            $stmt,
-            $data,
-            $e->getTraceAsString(),
+            'time'      => $timespan,
+            'stmt'      => $stmt,
+            'data'      => $data,
+            'server'    => $server,
+            'trace'     => $e->getTraceAsString(),
         );
     }
     

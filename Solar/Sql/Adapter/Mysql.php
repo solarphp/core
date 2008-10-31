@@ -359,7 +359,7 @@ class Solar_Sql_Adapter_Mysql extends Solar_Sql_Adapter
         }
         
         // get the sequence number
-        return $this->_pdo->lastInsertID();
+        return $this->lastInsertID();
     }
     
     /**

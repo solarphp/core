@@ -362,13 +362,6 @@ class Solar_Test_Suite extends Solar_Base
             $tmp[] = "$count $type";
         }
         $this->_log(implode(', ', $tmp));
-        
-        $show = array('fail', 'todo', 'skip');
-        foreach ($show as $type) {
-            foreach ($this->_info[$type] as $name => $info) {
-                $this->_log(strtoupper($type) . " $info[0] $name ($info[1])");
-            }
-        }
     }
     
     /**
@@ -412,7 +405,7 @@ class Solar_Test_Suite extends Solar_Base
         switch ($exit) {
         case Solar_Test::EXIT_FAIL:
             $type = 'fail';
-            $text .= "not ok $num - $name $note";
+            $text .= "not ok $num - $name # FAIL $note";
             break;
         
         case Solar_Test::EXIT_TODO:
@@ -427,12 +420,12 @@ class Solar_Test_Suite extends Solar_Base
         
         case Solar_Test::EXIT_PASS:
             $type = 'pass';
-            $text .= "ok $num - $name $note";
+            $text .= "ok $num - $name";
             break;
         
         default:
             $type = 'fail';
-            $text .= "not ok $num - $name # exit code '$exit'";
+            $text .= "not ok $num - $name # FAIL exit code '$exit'";
             break;
         }
         

@@ -476,10 +476,14 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             $this->_config['pass']
         );
         
-        // set the server info
-        $this->_pdo->solar_conn = $this->_config;
-        unset($this->_pdo->solar_conn['profiling']);
-        unset($this->_pdo->solar_conn['cache']);
+        // retain connection info
+        $this->_pdo->solar_conn = array(
+            'dsn'  => $this->_dsn,
+            'user' => $this->_config['user'],
+            'pass' => $this->_config['pass'],
+            'type' => 'single',
+            'key'  => null,
+        );
         
         // post-connection tasks
         $this->_postConnect();
@@ -674,7 +678,6 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         try {
             $prep = $this->_pdo->prepare($stmt);
             $prep->solar_conn = $this->_pdo->solar_conn;
-            $prep->solar_conn['server'] = 'single';
         } catch (PDOException $e) {
             throw $this->_exception(
                 'ERR_PREPARE_FAILED',
@@ -771,10 +774,10 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         }
         
         if ($spec instanceof PDOStatement) {
-            $server = $spec->solar_conn['server'];
+            $conn = $spec->solar_conn;
             $stmt = $spec->queryString;
         } else {
-            $server = null;
+            $conn = null;
             $stmt = $spec;
         }
         
@@ -784,7 +787,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
             'time'      => $timespan,
             'stmt'      => $stmt,
             'data'      => $data,
-            'server'    => $server,
+            'conn'      => $conn,
             'trace'     => $e->getTraceAsString(),
         );
     }

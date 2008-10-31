@@ -27,6 +27,10 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      * Keys are ...
      * 
+     * `request`
+     * : (dependency) A Solar_Request dependecy.  Defaults to the 'request'
+     *   registry entry.
+     * 
      * `slaves`
      * : (array) An array of arrays, each representing the connection values
      *   for a different slave server.
@@ -82,6 +86,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      * 
      */
     protected $_Solar_Sql_Adapter_MysqlReplicated = array(
+        'request' => 'request',
         'slaves' => array(),
     );
     
@@ -174,7 +179,10 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
         }
         
         // is this a GET-after-POST/PUT request?
-        $request = Solar_Registry::get('request');
+        $request = Solar::dependency(
+            'Solar_Request',
+            $this->_config['request']
+        );
         $this->_is_gap = $request->isGap();
         
         // done, on to the main setup
@@ -237,10 +245,11 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
      */
     protected function _setDsn()
     {
-        // pick a random slave key
-        $this->_slave_key = array_rand(
-            array_keys($this->_slaves)
-        );
+        // pick a random slave key ... doing it this way lets us use string
+        // keys for slave configs.
+        $keys = array_keys($this->_slaves);
+        $rand = array_rand($keys);
+        $this->_slave_key = $keys[$rand];
         
         // get the slave info
         $slave = $this->_slaves[$this->_slave_key];
@@ -282,6 +291,11 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             $this->_slaves[$key]['pass']
         );
         
+        // retain connection info
+        $this->_pdo->solar_conn = $this->_slaves[$key];
+        unset($this->_pdo->solar_conn['profiling']);
+        unset($this->_pdo->solar_conn['cache']);
+        
         // post-connection tasks
         $this->_postConnect();
         
@@ -317,6 +331,13 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
             $this->_config['user'],
             $this->_config['pass']
         );
+        
+        // retain connection info
+        $this->_pdo_master->solar_conn = $this->_config;
+        unset($this->_pdo_master->solar_conn['profiling']);
+        unset($this->_pdo_master->solar_conn['cache']);
+        unset($this->_pdo_master->solar_conn['request']);
+        unset($this->_pdo_master->solar_conn['slaves']);
         
         // post-connection tasks
         $this->_postConnectMaster();
@@ -403,11 +424,15 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
                 $config = $this->_slaves[$this->_slave_key];
                 $this->connect();
                 $prep = $this->_pdo->prepare($stmt);
+                $prep->solar_conn = $this->_pdo->solar_conn;
+                $prep->solar_conn['server'] = 'slave ' . (string) $this->_slave_key;
             } else {
                 // use the master
                 $config = $this->_config;
                 $this->connectMaster();
                 $prep = $this->_pdo_master->prepare($stmt);
+                $prep->solar_conn = $this->_pdo_master->solar_conn;
+                $prep->solar_conn['server'] = 'master';
             }
         } catch (PDOException $e) {
             // note that we use $config as set in the try block above
@@ -418,6 +443,7 @@ class Solar_Sql_Adapter_MysqlReplicated extends Solar_Sql_Adapter_Mysql
                     'pdo_text'  => $e->getMessage(),
                     'host'      => $config['host'],
                     'port'      => $config['port'],
+                    'sock'      => $config['sock'],
                     'user'      => $config['user'],
                     'name'      => $config['name'],
                     'stmt'      => $stmt,

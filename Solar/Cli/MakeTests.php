@@ -253,7 +253,9 @@ class Solar_Cli_MakeTests extends Solar_Cli_Base
         // use the right code template
         if ($api['abstract']) {
             $code = $this->_tpl['classAbstract'];
-        } elseif (! empty($api['methods']['solarFactory'])) {
+        } elseif (! empty($api['methods']['solarFactory'])) { 
+            $code = $this->_tpl['classFactory'];
+        } elseif (in_array('Solar_Factory', $api['from'])) {
             $code = $this->_tpl['classFactory'];
         } else {
             $code = $this->_tpl['classConcrete'];

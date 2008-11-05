@@ -137,7 +137,28 @@ class Test_Solar_Sql_Adapter_MysqlReplicated extends Test_Solar_Sql_Adapter_Mysq
     
     public function testQuery_replicatedSelectGap()
     {
-        // should hit the master
-        $this->todo('need to inject request and session');
+        // insert data for later
+        $this->_insertData();
+        
+        // fake the request to look gapped;
+        // cf. Solar_Http_Response::redirect()
+        $session = Solar::factory('Solar_Session', array(
+            'class' => 'Solar_Request',
+        ));
+        $session->setFlash('is_gap', true);
+        
+        // create a new adapter with a new request object ... this request
+        // object will read the session vars anew, emulating isGap().
+        $config = $this->_config;
+        $config['request'] = Solar::factory('Solar_Request');
+        $adapter = Solar::factory($this->_adapter_class, $config);
+        
+        // should select from the master
+        $result = $adapter->query("SELECT COUNT(*) FROM $this->_table_name");
+        $this->assertInstance($result, 'PDOStatement');
+        $actual = $result->solar_conn['type'];
+        $expect = 'master';
+        $this->assertSame($actual, $expect);
+        $this->diag($result->solar_conn);
     }
 }

@@ -78,7 +78,36 @@ class Test_{:class} extends {:extends} {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('{:class}');
-        $this->assertInstance($obj, '{:class}_Adapter');
+        $obj = new {:class}();
+        $this->assertInstance($obj, '{:class}');
     }
+    
+    /**
+     * 
+     * Test -- Disallow all calls to methods besides factory() and the existing support methods.
+     * 
+     */
+    final public function test__call($method, $params)
+    {
+        $obj = new {:class}();
+        try {
+            $obj->noSuchMethod();
+            $this->fail('__call() should not work');
+        } catch (Exception $e) {
+            $this->assertTrue(true);
+        }
+    }
+    
+    /**
+     * 
+     * Test -- Factory method for returning adapter objects.
+     * 
+     */
+    public function testFactory()
+    {
+        $actual = Solar::factory('{:class}');
+        $expect = '{:class}_Adapter';
+        $this->assertInstance($actual, $expect);
+    }
+    
 }

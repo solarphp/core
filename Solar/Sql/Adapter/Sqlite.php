@@ -98,6 +98,17 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     
     /**
      * 
+     * The string used for Sqlite autoincrement data types.
+     * 
+     * This is different for versions 2 and 3 of SQLite.
+     * 
+     * @var string
+     * 
+     */
+    protected $_sqlite_autoinc = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    
+    /**
+     * 
      * Creates a PDO-style DSN.
      * 
      * For example, "mysql:host=127.0.0.1;dbname=test"
@@ -224,9 +235,10 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);
             
             // find autoincrement column in CREATE TABLE sql.
+            $autoinc_find = str_replace(' ', '\s+', $this->_sqlite_autoinc);
             $find = "\\b"           // word border
                   . "\"?$name\"?"   // '"colname"' (quotes optional),
-                  . "\s+INTEGER\s+PRIMARY\s+KEY\s+AUTOINCREMENT"
+                  . "\s+$autoinc_find"
                   . "\\b";          // word border
                   
             $autoinc = preg_match(
@@ -235,10 +247,10 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
                 $matches
             );
             
-            // literal default values come back with single-quotes
-            $default = is_string($val['dflt_value'])
-                     ? trim($val['dflt_value'], "'")
-                     : $val['dflt_value'];
+            $default = null;
+            if ($val['dflt_value'] && $val['dflt_value'] != 'NULL') {
+                $default = trim($val['dflt_value'], "'");
+            }
             
             $descr[$name] = array(
                 'name'    => $name,
@@ -421,7 +433,7 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
     {
         if ($autoinc) {
             // forces datatype, primary key, and autoincrement
-            $coldef = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+            $coldef = $this->_sqlite_autoinc;
         } elseif ($primary) {
             $coldef .= ' PRIMARY KEY';
         }

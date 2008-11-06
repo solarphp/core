@@ -27,6 +27,17 @@ class Solar_Sql_Adapter_Sqlite2 extends Solar_Sql_Adapter_Sqlite
     
     /**
      * 
+     * The string used for Sqlite autoincrement data types.
+     * 
+     * This is different for versions 2 and 3 of SQLite.
+     * 
+     * @var string
+     * 
+     */
+    protected $_sqlite_autoinc = 'INTEGER AUTOINCREMENT PRIMARY KEY';
+    
+    /**
+     * 
      * Drops a table from the database, if it exists.
      * 
      * @param string $table The table name.

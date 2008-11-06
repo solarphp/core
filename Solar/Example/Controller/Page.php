@@ -122,6 +122,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _setup()
     {
+        parent::_setup();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -134,6 +135,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _preRun()
     {
+        parent::_preRun();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -146,6 +148,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _preAction()
     {
+        parent::_preAction();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -158,6 +161,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _postAction()
     {
+        parent::_postAction();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -170,6 +174,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _postRun()
     {
+        parent::_postRun();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -182,6 +187,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _preRender()
     {
+        parent::_preRender();
         $this->hooks[__FUNCTION__] ++;
     }
     
@@ -194,6 +200,7 @@ class Solar_Example_Controller_Page extends Solar_Controller_Page
      */
     protected function _postRender()
     {
+        parent::_postRender();
         $this->hooks[__FUNCTION__] ++;
     }
 }

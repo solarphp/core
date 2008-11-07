@@ -306,11 +306,7 @@ class Test_Solar_Controller_Page extends Solar_Test {
     {
         $expect = 'testname';
         $this->_page->setController($expect);
-        
-        // the public property doesn't get populated until render time
-        $this->_page->fetch('foo');
-        $actual = $this->_page->controller;
-        $this->assertSame($actual, $expect);
+        $this->assertProperty($this->_page, '_controller', 'same', $expect);
     }
     
     /**

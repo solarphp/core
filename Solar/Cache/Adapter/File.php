@@ -28,6 +28,11 @@
  * 
  * @author Paul M. Jones <pmjones@solarphp.com>
  * 
+ * @author Clay Loveless <clay@killersoft.com> Streams awareness.
+ * 
+ * @author Jeff Moore <jeff@procata.com> Cache-corruption avoidance and speed
+ * enhancements.
+ * 
  * @license http://opensource.org/licenses/bsd-license.php BSD
  * 
  * @version $Id$
@@ -178,8 +183,9 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         
         // open the file for over-writing. not using file_put_contents 
         // becuase we may need to write a serial file too (and avoid race
-        // conditions while doing so). don't use include path.
-        $fp = fopen($file, 'wb', false, $this->_context);
+        // conditions while doing so). don't use include path. using ab+ is
+        // much, much faster than wb.
+        $fp = fopen($file, 'ab+', false, $this->_context);
         
         // was it opened?
         if (! $fp) {
@@ -190,9 +196,9 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         // set exclusive lock for writing.
         flock($fp, LOCK_EX);
         
-        // don't need the 3rd param (byte length) because Solar has
-        // already turned off magic_quotes_runtime.
-        // <http://php.net/fwrite>
+        // empty whatever might be there and the write
+        fseek($fp, 0);
+        ftruncate($fp, 0);
         fwrite($fp, $data);
         
         // add a .serial file? (do this while the file is locked to avoid
@@ -207,9 +213,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
             @unlink($file . '.serial', $this->_context);
         }
         
-        // unlock and close, then done.
-        flock($fp, LOCK_UN);
-        fclose($fp);
+        fclose($fp);  // releases the lock
         return true;
     }
     
@@ -289,13 +293,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
             // lock the file right away
             flock($fp, LOCK_SH);
             
-            // PHP caches file lengths; clear that out so we get
-            // an accurate file length.
-            clearstatcache();
-            
             // get the cache entry data.
-            $len = filesize($file);
-            $data = fread($fp, $len);
+            $data = stream_get_contents($fp);
             
             // check for serializing while file is locked
             // to avoid race conditions
@@ -303,9 +302,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
                 $data = unserialize($data);
             }
             
-            // unlock and close the file
-            flock($fp, LOCK_UN);
-            fclose($fp);
+            fclose($fp); // releases lock
         }
         
         // will be false if fopen() failed, otherwise is the file contents.

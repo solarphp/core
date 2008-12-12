@@ -102,7 +102,9 @@ class Solar_Http_Response extends Solar_Base
     public function __toString()
     {
         $this->_sendHeaders();
-        return $this->content;
+        
+        // cast to string to avoid fatal error when returning nulls
+        return (string) $this->content;
     }
     
     /**

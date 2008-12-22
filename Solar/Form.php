@@ -433,6 +433,9 @@ class Solar_Form extends Solar_Base
      * 
      * Adds one filter to an element.
      * 
+     * If the added filter is a "validateNotBlank" filter, automatically sets
+     * the "require" flag on the element to true.
+     * 
      * @param string $name The element name.
      * 
      * @param array|string $spec The filter specification; either a
@@ -454,8 +457,16 @@ class Solar_Form extends Solar_Base
             ));
         }
         
-        // add the filter
-        $this->elements[$name]['filters'][] = (array) $spec;
+        // force the filter spec to an array
+        $spec = (array) $spec;
+        
+        // add the filter spec to the element
+        $this->elements[$name]['filters'][] = $spec;
+        
+        // if it's a "not-blank" filter, set the require flag
+        if ($spec[0] == 'validateNotBlank') {
+            $this->elements[$name]['require'] = true;
+        }
     }
     
     /**

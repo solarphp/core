@@ -969,9 +969,9 @@ class Solar_Form extends Solar_Base
             
             // do not populate certain elements, as this will
             // reset their value inappropriately.
-            $skip = $name['type'] == 'submit' ||
-                    $name['type'] == 'button' ||
-                    $name['type'] == 'reset';
+            $skip = $elem['type'] == 'submit' ||
+                    $elem['type'] == 'button' ||
+                    $elem['type'] == 'reset';
                     
             if ($skip) {
                 return;

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Validates that a value is ___.
+ * Validates that a value is a legal IPv4 address.
  * 
  * @category Solar
  * 
@@ -17,7 +17,7 @@
 
 /**
  * 
- * Validates that a value is ___.
+ * Validates that a value is a legal IPv4 address.
  * 
  * @category Solar
  * 
@@ -41,10 +41,17 @@ class Solar_Filter_ValidateIpv4 extends Solar_Filter_Abstract
             return ! $this->_filter->getRequire();
         }
         
+        // does the value convert back and forth properly?
         $result = ip2long($value);
         if ($result == -1 || $result === false) {
+            // does not properly convert to a "long" result
+            return false;
+        } elseif (long2ip($result) !== $value) {
+            // the long result does not convert back to an identical original
+            // value
             return false;
         } else {
+            // looks valid
             return true;
         }
     }

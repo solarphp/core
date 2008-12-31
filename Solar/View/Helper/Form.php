@@ -180,6 +180,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     protected $_descr_class = 'descr';
     
     /**
+     * 
      * When rendering the raw description XHTML, do so within this structural
      * element; default is 'dd' for the value portion (as vs 'dl' for the
      * label portion).
@@ -188,6 +189,42 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      */
     protected $_descr_elem = 'dd';
+    
+    /**
+     * 
+     * When building the form, are we currently in an element list?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_in_elemlist = false;
+    
+    /**
+     * 
+     * When building the form, are we currently in a grouping?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_in_group = false;
+    
+    /**
+     * 
+     * When building the form, are we currently in a fieldset?
+     * 
+     * @var bool
+     * 
+     */
+    protected $_in_fieldset = false;
+    
+    /**
+     * 
+     * When building an element grouping, collect the element feedback here.
+     * 
+     * @var string
+     * 
+     */
+    protected $_group_feedback = null;
     
     /**
      * 
@@ -283,6 +320,32 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
+     * Sets multiple form-tag attributes.
+     * 
+     * @param Solar_Form|array $spec If a Solar_Form object, uses the $attribs
+     * property.  If an array, uses the keys as the attribute names and the 
+     * values as the attribute values.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function setAttribs($spec)
+    {
+        if ($spec instanceof Solar_Form) {
+            $attribs = (array) $spec->attribs;
+        } else {
+            $attribs = (array) $spec;
+        }
+        
+        foreach ($attribs as $key => $val) {
+            $this->setAttrib($key, $val);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * 
      * Adds to the form-level feedback message array.
      * 
      * @param string|array $spec The feedback message(s).
@@ -309,73 +372,59 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     {
         $info = array_merge($this->_default_info, $info);
         
-        if (empty($info['type'])) {
-            throw $this->_exception('ERR_NO_ELEMENT_TYPE', $info);
-        }
+        $this->_fixElementType($info);
+        $this->_fixElementName($info);
+        $this->_fixElementId($info);
+        $this->_fixElementClass($info);
         
-        if (empty($info['name'])) {
-            throw $this->_exception('ERR_NO_ELEMENT_NAME', $info);
-        }
-        
-        // auto-set ID?
-        if (empty($info['attribs']['id'])) {
-            // convert name[key][subkey] to name-key-subkey
-            $info['attribs']['id'] = str_replace(
-                    array('[', ']'),
-                    array('-', ''),
-                    $info['name']
-            );
-        }
-        
-        // is this id already in use?
-        $id = $info['attribs']['id'];
-        if (empty($this->_id_count[$id])) {
-            // not used yet, start tracking it
-            $this->_id_count[$id] = 1;
-        } else {
-            // already in use, increment the count.
-            // for example, 'this-id' becomes 'this-id-1',
-            // next one is 'this-id-2', etc.
-            $id .= "-" . $this->_id_count[$id] ++;
-            $info['attribs']['id'] = $id;
-        }
-        
-        // auto-set CSS classes for the element?
-        if (empty($info['attribs']['class'])) {
-            
-            // get a CSS class for the element type
-            if (! empty($this->_css_class[$info['type']])) {
-                $info['attribs']['class'] = $this->_css_class[$info['type']];
-            } else {
-                $info['attribs']['class'] = '';
-            }
-            
-            // also use the element ID for further overrides
-            $info['attribs']['class'] .= ' ' . $info['attribs']['id'];
-            
-            // passed validation?
-            if ($info['status'] === true) {
-                $info['attribs']['class'] .= ' ' . $this->_css_class['success'];
-            }
-            
-            // failed validation?
-            if ($info['status'] === false) {
-                $info['attribs']['class'] .= ' ' . $this->_css_class['failure'];
-            }
-            
-            // required?
-            if ($info['require']) {
-                $info['attribs']['class'] .= ' ' . $this->_css_class['require'];
-            }
-        }
-        
-        // place in the stack, or as hidden?
+        // place in the normal stack, or as hidden?
         if (strtolower($info['type']) == 'hidden') {
             // hidden elements are a special case
             $this->_hidden[] = $info;
         } else {
             // non-hidden element
             $this->_stack[] = array('element', $info);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * Adds multiple elements to the form.
+     * 
+     * @param Solar_Form|array $spec If a Solar_Form object, uses the
+     * $elements property as the element source.  If an array, it is treated
+     * as a sequential array of element information arrays.
+     * 
+     * @param array $list A white-list of element names to add from the $spec.
+     * If empty, all elements from the $spec are added.
+     * 
+     * @return Solar_View_Helper_Form
+     * 
+     */
+    public function addElements($spec, $list = null)
+    {
+        if ($spec instanceof Solar_Form) {
+            $elements = (array) $spec->elements;
+        } else {
+            $elements = (array) $spec;
+        }
+        
+        $list = (array) $list;
+        if ($list) {
+            // add only listed elements
+            foreach ($elements as $info) {
+                if (in_array($list, $info['name'])) {
+                    // it's on the list, add it
+                    $this->addElement($info);
+                }
+            }
+        } else {
+            // add all elements
+            foreach ($elements as $info) {
+                $this->addElement($info);
+            }
         }
         
         return $this;
@@ -596,211 +645,40 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      * 
      * @return string
      * 
-     * @todo Refactor this down into sub-methods.
+     * @see The entire set of _build*() methods.
      * 
      */
     public function fetch($with_form_tag = true)
     {
-        // stack of output elements
-        $form = array();
+        // stack of output pieces
+        $html = array();
         
         // the form tag itself?
         if ($with_form_tag) {
-            $form[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
+            $this->_buildBegin($html);
         }
         
-        // what status class should we use?
-        if ($this->_status === true) {
-            $class = $this->_css_class['success'];
-        } elseif ($this->_status === false) {
-            $class = $this->_css_class['failure'];
-        } else {
-            $class = null;
-        }
-        
-        // add form feedback with proper status class
-        $form[] = $this->listFeedback($this->_feedback, $class);
+        // form-level feedback
+        $this->_buildFeedback($html);
         
         // the hidden elements
         if ($this->_hidden) {
-            // wrap in a hidden fieldset for XHTML-Strict compliance
-            $form[] = '    <fieldset style="display: none;">';
-            foreach ($this->_hidden as $info) {
-                $form[] = '        ' . $this->_view->formHidden($info);
-            }
-            $form[] = '    </fieldset>';
-            $form[] = '    ';
+            $this->_buildHidden($html);
         }
         
-        // loop through the stack
-        $in_dl       = false;
-        $in_fieldset = false;
-        $in_group    = false;
-        
-        foreach ($this->_stack as $key => $val) {
-            
-            $type = $val[0];
-            $info = $val[1];
-            
-            if ($type == 'element') {
-                
-                // be sure we're in a <dl> block
-                if (! $in_dl) {
-                    $form[] = '        <dl>';
-                    $in_dl = true;
-                }
-                
-                // setup
-                $label    = $this->_view->getText($info['label']);
-                $id       = $this->_view->escape($info['attribs']['id']);
-                $method   = 'form' . ucfirst($info['type']);
-                try {
-                    // look for the requested element helper
-                    $helper = $this->_view->getHelper($method);
-                } catch (Solar_Class_Stack_Exception_ClassNotFound $e) {
-                    // use 'text' helper as a fallback
-                    $method = 'formText';
-                    $helper = $this->_view->getHelper($method);
-                }
-                
-                // SPECIAL CASE:
-                // checkboxes that are not in groups don't get an "extra" label.
-                if (strtolower($info['type']) == 'checkbox' && ! $in_group) {
-                    $info['label'] = null;
-                }
-                
-                // get the element output
-                $element = $helper->$method($info);
-                
-                // get the element description
-                $dt_descr = '';
-                $dd_descr = '';
-                
-                // only build a description if it's non-empty, and isn't a
-                // DESCR_* "empty" locale value.
-                if ($info['descr'] && substr($info['descr'], 0, 6) != 'DESCR_') {
-                    
-                    // build the base description.
-                    // open the tag ...
-                    $descr = "<" . $this->_view->escape($this->_descr_tag);
-                    
-                    // ... add a CSS class ...
-                    if ($this->_descr_class) {
-                        $descr .= ' class="'
-                               . $this->_view->escape($this->_descr_class)
-                               . '"';
-                    }
-                    
-                    // ... add the raw descr XHTML, and close the tag.
-                    $descr .= '>' . $info['descr']
-                           . '</' . $this->_view->escape($this->_descr_tag) . '>';
-                    
-                    
-                    // build both the <dt> and <dd> forms so we can use
-                    // them in the right place.
-                    if ($this->_descr_elem == 'dt') {
-                        // using <dt>
-                        $dt_descr = $descr;
-                    } else {
-                        // using <dd>
-                        $dd_descr = $descr;
-                    }
-                }
-                       
-                // add the element and its feedback;
-                // handle differently if we're in a group.
-                if ($in_group) {
-                    
-                    // append to the group feedback
-                    $feedback .= $this->listFeedback($info['invalid']);
-                    
-                    // add the element itself
-                    $form[] = "                $element";
-                    
-                } else {
-                    
-                    // is the element required?
-                    if ($info['require']) {
-                        $require = ' class="' . $this->_css_class['require'] . '"';
-                    } else {
-                        $require = '';
-                    }
-                    
-                    // get the feedback list
-                    $feedback = $this->listFeedback($info['invalid']);
-                    
-                    // add the form element with all parts in place
-                    $form[] = "            <dt$require><label$require for=\"$id\">$label</label>$dt_descr</dt>";
-                    $form[] = "            <dd$require>$element$feedback$dd_descr</dd>";
-                    $form[] = '';
-                    
-                }
-                
-            } elseif ($type == 'group') {
-            
-                // be sure we're in a <dl> block
-                if (! $in_dl) {
-                    $form[] = '        <dl>';
-                    $in_dl = true;
-                }
-                
-                $flag = $info[0];
-                $label = $info[1];
-                if ($flag) {
-                    $in_group = true;
-                    $form[] = "            <dt><label>$label</label></dt>";
-                    $form[] = "            <dd>";
-                    $feedback = '';
-                } else {
-                    $in_group = false;
-                    if ($feedback) {
-                        $form[] = "            $feedback";
-                    }
-                    $form[] = "            </dd>";
-                    $form[] = '';
-                }
-                
-            } elseif ($type == 'fieldset') {
-                
-                $flag = $info[0];
-                $legend = $this->_view->getText($info[1]);
-                if ($flag) {
-                    $form[] = "    <fieldset><legend>$legend</legend>";
-                    $form[] = "        <dl>";
-                    $in_fieldset = true;
-                    $in_dl = true;
-                } else {
-                    $form[] = "        </dl>";
-                    $form[] = "    </fieldset>";
-                    $form[] = '';
-                    $in_dl = false;
-                    $in_fieldset = false;
-                }
-            }
-        }
-        
-        if ($in_group) {
-            $form[] = '            </dd>';
-        }
-        
-        if ($in_dl) {
-            $form[] = '        </dl>';
-        }
-        
-        if ($in_fieldset) {
-            $form[] = '    </fieldset>';
-        }
+        // build the stack of non-hidden elements
+        $this->_buildStack($html);
         
         // add a closing form tag?
         if ($with_form_tag) {
-            $form[] = '</form>';
+            $this->_buildEnd($html);
         }
         
         // reset for the next pass
         $this->reset();
         
-        // done, return the output!
-        return implode("\n", $form);
+        // done, return the output pieces!
+        return implode("\n", $html);
     }
     
     /**
@@ -858,6 +736,11 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $this->_descr_elem = 'dd';
         }
         
+        // build-tracking properties
+        $this->_in_elemlist = false;
+        $this->_in_group    = false;
+        $this->_in_fieldset = false;
+        
         // everything else
         $this->_feedback = array();
         $this->_hidden = array();
@@ -866,5 +749,655 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $this->_id_count = array();
         
         return $this;
+    }
+    
+    /**
+     * 
+     * Fixes the element info 'type' value; by default, it just throws an
+     * exception when the 'type' is empty.
+     * 
+     * @param array &$info A reference to the element info array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixElementType(&$info)
+    {
+        if (empty($info['type'])) {
+            throw $this->_exception('ERR_NO_ELEMENT_TYPE', $info);
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the element info 'name' value; by default, it just throws an
+     * exception when the 'name' is empty on non-xhtml element types.
+     * 
+     * @param array &$info A reference to the element info array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixElementName(&$info)
+    {
+        if (empty($info['name']) && $info['type'] != 'xhtml') {
+            throw $this->_exception('ERR_NO_ELEMENT_NAME', $info);
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the element info 'id' value.
+     * 
+     * When no ID is present, auto-sets an ID from the element name.
+     * 
+     * Appends sequential integers to the ID as needed to deconflict matching
+     * ID values.
+     * 
+     * @param array &$info A reference to the element info array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixElementId(&$info)
+    {
+        // auto-set the ID?
+        if (empty($info['attribs']['id'])) {
+            // convert name[key][subkey] to name-key-subkey
+            $info['attribs']['id'] = str_replace(
+                    array('[', ']'),
+                    array('-', ''),
+                    $info['name']
+            );
+        }
+        
+        // convenience variable
+        $id = $info['attribs']['id'];
+        
+        // is this id already in use?
+        if (empty($this->_id_count[$id])) {
+            // not used yet, start tracking it
+            $this->_id_count[$id] = 1;
+        } else {
+            // already in use, increment the count.
+            // for example, 'this-id' becomes 'this-id-1',
+            // next one is 'this-id-2', etc.
+            $id .= "-" . $this->_id_count[$id] ++;
+            $info['attribs']['id'] = $id;
+        }
+    }
+    
+    /**
+     * 
+     * Fixes the element info 'class' value to add classes for the element
+     * type, ID, require, and validation status -- but only if the class is
+     * empty to begin with.
+     * 
+     * @param array &$info A reference to the element info array.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixElementClass(&$info)
+    {
+        // skip is classes are already set
+        if (! empty($info['attribs']['class'])) {
+            return;
+        }
+            
+        // add a CSS class for the element type
+        if (! empty($this->_css_class[$info['type']])) {
+            $info['attribs']['class'] = $this->_css_class[$info['type']];
+        } else {
+            $info['attribs']['class'] = '';
+        }
+        
+        // also use the element ID for further overrides
+        $info['attribs']['class'] .= ' ' . $info['attribs']['id'];
+        
+        // passed validation?
+        if ($info['status'] === true) {
+            $info['attribs']['class'] .= ' ' . $this->_css_class['success'];
+        }
+        
+        // failed validation?
+        if ($info['status'] === false) {
+            $info['attribs']['class'] .= ' ' . $this->_css_class['failure'];
+        }
+        
+        // required?
+        if ($info['require']) {
+            $info['attribs']['class'] .= ' ' . $this->_css_class['require'];
+        }
+    }
+    
+    /**
+     * 
+     * Returns text indented to a number of levels, accounting for whether
+     * or not we are in a fieldset.
+     * 
+     * @param int $num The number of levels to indent.
+     * 
+     * @param string $text The text to indent.
+     * 
+     * @return string The indented text.
+     * 
+     */
+    protected function _indent($num, $text = null)
+    {
+        if ($this->_in_fieldset) {
+            $num += 1;
+        }
+        
+        return str_pad('', $num * 4) . $text;
+    }
+    
+    /**
+     * 
+     * Builds the opening <form> tag for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildBegin(&$html)
+    {
+        $html[] = '<form' . $this->_view->attribs($this->_attribs) . '>';
+    }
+    
+    /**
+     * 
+     * Builds the closing </form> tag for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildEnd(&$html)
+    {
+        $html[] = '</form>';
+    }
+    
+    /**
+     * 
+     * Builds the form-level feedback tag for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildFeedback(&$html)
+    {
+        if (! $this->_feedback) {
+            return;
+        }
+        
+        // what status class should we use?
+        if ($this->_status === true) {
+            $class = $this->_css_class['success'];
+        } elseif ($this->_status === false) {
+            $class = $this->_css_class['failure'];
+        } else {
+            $class = null;
+        }
+        
+        // add form feedback with proper status class
+        $html[] = $this->listFeedback($this->_feedback, $class);
+    }
+    
+    /**
+     * 
+     * Builds the stack of hidden elements for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildHidden(&$html)
+    {
+        // wrap in a hidden fieldset for XHTML-Strict compliance
+        $html[] = '    <fieldset style="display: none;">';
+        foreach ($this->_hidden as $info) {
+            $html[] = '        ' . $this->_view->formHidden($info);
+        }
+        $html[] = '    </fieldset>';
+    }
+    
+    /**
+     * 
+     * Builds the stack of non-hidden elements for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildStack(&$html)
+    {
+        $this->_in_fieldset = false;
+        $this->_in_group    = false;
+        $this->_in_elemlist  = false;
+        
+        foreach ($this->_stack as $key => $val) {
+            $type = $val[0];
+            $info = $val[1];
+            if ($type == 'element') {
+                $this->_buildElement($html, $info);
+            } elseif ($type == 'group') {
+                $this->_buildGroup($html, $info);
+            } elseif ($type == 'fieldset') {
+                $this->_buildFieldset($html, $info);
+            }
+        }
+        
+        // close up any loose ends
+        $this->_buildGroupEnd($html);
+        $this->_buildElementListEnd($html);
+        $this->_buildFieldsetEnd($html);
+    }
+    
+    /**
+     * 
+     * Builds a single element label and value for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElement(&$html, $info)
+    {
+        $this->_buildElementListBegin($html);
+        $this->_buildElementLabel($html, $info);
+        $this->_buildElementValue($html, $info);
+    }
+    
+    /**
+     * 
+     * Modifies the element label information before building for output.
+     * 
+     * @param array &$info A reference to the element label information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementLabelInfo(&$info)
+    {
+        // checkboxes that are not in groups should not be ID'd to their label
+        if (strtolower($info['type']) == 'checkbox' && ! $this->_in_group) {
+            // don't unset or we get notices; null is good enough
+            $info['attribs']['id'] = null;
+        }
+    }
+    
+    /**
+     * 
+     * Builds the label portion of an element for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementLabel(&$html, $info)
+    {
+        if ($this->_in_group) {
+            // no labels while in an element group
+            return;
+        }
+        
+        // modify information **just for the label portion**
+        $this->_buildElementLabelInfo($info);
+        
+        // the label text
+        $label = $this->_view->getText($info['label']);
+        
+        // does the element have an ID?
+        $id = $this->_view->escape($info['attribs']['id']);
+        if ($id) {
+            $for = " for=\"$id\"";
+        } else {
+            $for = '';
+        }
+        
+        // is the element required?
+        if ($info['require']) {
+            $require = ' class="' . $this->_css_class['require'] . '"';
+        } else {
+            $require = '';
+        }
+            
+        // open the label
+        $html[] = $this->_indent(2, "<dt$require>");
+        $html[] = $this->_indent(3, "<label$require$for>$label</label>");
+        
+        // do descriptions go in the label?
+        if ($this->_descr_elem == 'dt') {
+            $this->_buildElementDescr($html, $info);
+        }
+        
+        // close the label
+        $html[] = $this->_indent(2, "</dt>");
+    }
+    
+    /**
+     * 
+     * Modifies the element value information before building for output.
+     * 
+     * @param array &$info A reference to the element value information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementValueInfo(&$info)
+    {
+        // checkboxes that are not in groups don't get an "extra" label
+        if (strtolower($info['type']) == 'checkbox' && ! $this->_in_group) {
+            $info['label'] = null;
+        }
+    }
+    
+    /**
+     * 
+     * Builds the value portion of an element for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementValue(&$html, $info)
+    {
+        // modify information **just for the value portion**
+        $this->_buildElementValueInfo($info);
+        
+        try {
+            // look for the requested element helper
+            $method = 'form' . ucfirst($info['type']);
+            $helper = $this->_view->getHelper($method);
+        } catch (Solar_Class_Stack_Exception_ClassNotFound $e) {
+            // use 'text' helper as a fallback
+            $method = 'formText';
+            $helper = $this->_view->getHelper($method);
+        }
+        
+        // get the element output
+        $element = $helper->$method($info);
+        
+        // get any invalid feedback
+        $feedback = $this->listFeedback($info['invalid']);
+        
+        // handle differently if we're in a group
+        if ($this->_in_group) {
+            // add the element itself
+            $html[] = $this->_indent(3, $element);
+            // append to the group feedback
+            $this->_group_feedback .= $feedback;
+            // done!
+            return;
+        }
+        
+        // is the element required?
+        if ($info['require']) {
+            $require = ' class="' . $this->_css_class['require'] . '"';
+        } else {
+            $require = '';
+        }
+        
+        // open the element value
+        $html[] = $this->_indent(2, "<dd$require>");
+        $html[] = $this->_indent(3, $element);
+        
+        // add feedback
+        if ($feedback) {
+            $html[] = $this->_indent(3, $feedback);
+        }
+        
+        // add description
+        if ($this->_descr_elem == 'dd') {
+            $this->_buildElementDescr($html, $info);
+        }
+        
+        // close the value
+        $html[] = $this->_indent(2, "</dd>");
+    }
+    
+    /**
+     * 
+     * Builds the element description for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementDescr(&$html, $info)
+    {
+        // only build a description if it's non-empty, and isn't a
+        // DESCR_* "empty" locale value.
+        if (! $info['descr'] || substr($info['descr'], 0, 6) == 'DESCR_') {
+            return;
+        }
+        
+        // open the tag ...
+        $descr = "<" . $this->_view->escape($this->_descr_tag);
+        
+        // ... add a CSS class ...
+        if ($this->_descr_class) {
+            $descr .= ' class="'
+                   . $this->_view->escape($this->_descr_class)
+                   . '"';
+        }
+        
+        // ... add the raw descr XHTML, and close the tag.
+        $descr .= '>' . $info['descr']
+               . '</' . $this->_view->escape($this->_descr_tag) . '>';
+        
+        $html[] = $this->_indent(3, $descr);
+    }
+    
+    /**
+     * 
+     * Builds the beginning of an element list for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementListBegin(&$html)
+    {
+        if ($this->_in_elemlist) {
+            // already in a list, don't begin again
+            return;
+        }
+        
+        $html[] = $this->_indent(1, '<dl>');
+        $this->_in_elemlist = true;
+    }
+    
+    /**
+     * 
+     * Builds the ending of an element list for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementListEnd(&$html)
+    {
+        if (! $this->_in_elemlist) {
+            // can't end a list if not in one
+            return;
+        }
+        
+        $html[] = $this->_indent(1, '</dl>');
+        $this->_in_elemlist = false;
+    }
+    
+    /**
+     * 
+     * Builds a group beginning/ending for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildGroup(&$html, $info)
+    {
+        $flag  = $info[0];
+        $label = $info[1];
+        if ($flag) {
+            $this->_buildGroupEnd($html);
+            $this->_buildGroupBegin($html, $label);
+        } else {
+            $this->_buildGroupEnd($html);
+        }
+    }
+    
+    /**
+     * 
+     * Builds an element group label for output and begins the grouping.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param string $label The group label.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildGroupBegin(&$html, $label)
+    {
+        if ($this->_in_group) {
+            // already in a group, don't start another one
+            return;
+        }
+        
+        $this->_buildElementListBegin($html);
+        $html[] = $this->_indent(2, "<dt>");
+        $html[] = $this->_indent(3, "<label>$label</label>");
+        $html[] = $this->_indent(2, "</dt>");
+        $html[] = $this->_indent(2, "<dd>");
+        $this->_group_feedback = null;
+        $this->_in_group = true;
+    }
+    
+    /**
+     * 
+     * Builds the end of an element group.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildGroupEnd(&$html)
+    {
+        if (! $this->_in_group) {
+            // not in a group so can't end it
+            return;
+        }
+        
+        if ($this->_group_feedback) {
+            $html[] = $this->_indent(3, $this->_group_feedback);
+            $this->_group_feedback = null;
+        }
+        
+        $html[] = $this->_indent(2, "</dd>");
+        $this->_in_group = false;
+    }
+    
+    /**
+     * 
+     * Builds a fieldset beginning/ending for output.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildFieldset(&$html, $info)
+    {
+        $flag   = $info[0];
+        $legend = $this->_view->getText($info[1]);
+        if ($flag) {
+            
+            // end any previous groups, lists, and sets
+            $this->_buildGroupEnd($html);
+            $this->_buildElementListEnd($html);
+            $this->_buildFieldsetEnd($html);
+            
+            // start a new set
+            $this->_buildFieldsetBegin($html, $legend);
+            
+        } else {
+            
+            // end previous groups, lists, and sets
+            $this->_buildGroupEnd($html);
+            $this->_buildElementListEnd($html);
+            $this->_buildFieldsetEnd($html);
+            
+        }
+    }
+    
+    /**
+     * 
+     * Builds the beginning of a fieldset and its legend.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param string $legend The legend for the fieldset.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildFieldsetBegin(&$html, $legend)
+    {
+        if ($this->_in_fieldset) {
+            // already in a fieldset, don't start another one
+            return;
+        }
+        
+        $html[] = $this->_indent(1, "<fieldset>");
+        $html[] = $this->_indent(2, "<legend>$legend</legend>");
+        $this->_in_fieldset = true;
+    }
+    
+    /**
+     * 
+     * Builds the end of a fieldset.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildFieldsetEnd(&$html)
+    {
+        if (! $this->_in_fieldset) {
+            // not in a fieldset, so can't end it
+            return;
+        }
+        
+        $this->_in_fieldset = false;
+        $html[] = $this->_indent(1, "</fieldset>");
     }
 }

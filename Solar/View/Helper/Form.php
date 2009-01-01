@@ -219,12 +219,12 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
-     * When building an element grouping, collect the element feedback here.
+     * When building a group of elements, collect the "invalid" messages here.
      * 
      * @var string
      * 
      */
-    protected $_group_feedback = null;
+    protected $_group_invalid = null;
     
     /**
      * 
@@ -653,7 +653,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // stack of output pieces
         $html = array();
         
-        // the form tag itself?
+        // the opening form tag?
         if ($with_form_tag) {
             $this->_buildBegin($html);
         }
@@ -666,10 +666,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $this->_buildHidden($html);
         }
         
-        // build the stack of non-hidden elements
+        // the stack of non-hidden elements
         $this->_buildStack($html);
         
-        // add a closing form tag?
+        // the closing form tag?
         if ($with_form_tag) {
             $this->_buildEnd($html);
         }
@@ -679,35 +679,6 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         
         // done, return the output pieces!
         return implode("\n", $html);
-    }
-    
-    /**
-     * 
-     * Returns a feedback array (form-level or element-level) as an unordered list.
-     * 
-     * @param array $spec An array of messages.
-     * 
-     * @param string $class The class to use for the <ul> tag.
-     * 
-     * @return Solar_View_Helper_Form
-     * 
-     */
-    public function listFeedback($spec, $class = null)
-    {
-        if (! empty($spec)) {
-            $list = array();
-            if ($class) {
-                $list[] = '<ul class="' . $this->_view->escape($class) . '">';
-            } else {
-                $list[] = '<ul>';
-            }
-            
-            foreach ((array) $spec as $text) {
-                $list[] = '    <li>'. $this->_view->escape($text) . '</li>';
-            }
-            $list[] = '</ul>';
-            return "\n" . implode("\n", $list) . "\n";
-        }
     }
     
     /**
@@ -931,7 +902,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     protected function _buildFeedback(&$html)
     {
-        if (! $this->_feedback) {
+        if (empty($this->_feedback)) {
             return;
         }
         
@@ -944,10 +915,21 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             $class = null;
         }
         
-        // add form feedback with proper status class
-        $html[] = $this->listFeedback($this->_feedback, $class);
+        if ($class) {
+            $open = '<ul class="' . $this->_view->escape($class) . '">';
+        } else {
+            $open = '<ul>';
+        }
+        
+        $html[] = $this->_indent(1, $open);
+        
+        foreach ((array) $this->_feedback as $item) {
+            $item = '<li>' . $this->_view->escape($item) . '</li>';
+            $html[] = $this->_indent(2, $item);
+        }
+        
+        $html[] = $this->_indent(1, "</ul>");
     }
-    
     /**
      * 
      * Builds the stack of hidden elements for output.
@@ -1134,16 +1116,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         // get the element output
         $element = $helper->$method($info);
         
-        // get any invalid feedback
-        $feedback = $this->listFeedback($info['invalid']);
-        
         // handle differently if we're in a group
         if ($this->_in_group) {
-            // add the element itself
             $html[] = $this->_indent(3, $element);
-            // append to the group feedback
-            $this->_group_feedback .= $feedback;
-            // done!
+            $this->_buildGroupInvalid($info);
             return;
         }
         
@@ -1158,10 +1134,8 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $html[] = $this->_indent(2, "<dd$require>");
         $html[] = $this->_indent(3, $element);
         
-        // add feedback
-        if ($feedback) {
-            $html[] = $this->_indent(3, $feedback);
-        }
+        // add invalid messages
+        $this->_buildElementInvalid($html, $info);
         
         // add description
         if ($this->_descr_elem == 'dd') {
@@ -1170,6 +1144,33 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         
         // close the value
         $html[] = $this->_indent(2, "</dd>");
+    }
+    
+    /**
+     * 
+     * Builds the list of "invalid" messages for a single element.
+     * 
+     * @param array &$html A reference to the array of HTML lines for output.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildElementInvalid(&$html, $info)
+    {
+        if (empty($info['invalid'])) {
+            return;
+        }
+        
+        $html[] = $this->_indent(3, '<ul>');
+        
+        foreach ((array) $info['invalid'] as $item) {
+            $item = '<li>' . $this->_view->escape($item) . '</li>';
+            $html[] = $this->_indent(4, $item);
+        }
+        
+        $html[] = $this->_indent(3, "</ul>");
     }
     
     /**
@@ -1294,7 +1295,7 @@ class Solar_View_Helper_Form extends Solar_View_Helper
         $html[] = $this->_indent(3, "<label>$label</label>");
         $html[] = $this->_indent(2, "</dt>");
         $html[] = $this->_indent(2, "<dd>");
-        $this->_group_feedback = null;
+        $this->_group_invalid = null;
         $this->_in_group = true;
     }
     
@@ -1314,13 +1315,29 @@ class Solar_View_Helper_Form extends Solar_View_Helper
             return;
         }
         
-        if ($this->_group_feedback) {
-            $html[] = $this->_indent(3, $this->_group_feedback);
-            $this->_group_feedback = null;
+        if ($this->_group_invalid) {
+            $html[] = $this->_indent(3, $this->_group_invalid);
+            $this->_group_invalid = null;
         }
         
         $html[] = $this->_indent(2, "</dd>");
         $this->_in_group = false;
+    }
+    
+    /**
+     * 
+     * Builds the list of "invalid" messages while in an element group.
+     * 
+     * @param array $info The array of element information.
+     * 
+     * @return void
+     * 
+     */
+    protected function _buildGroupInvalid($info)
+    {
+        $html = array();
+        $this->_buildElementInvalid($html, $info);
+        $this->_group_invalid .= implode("\n", $html);
     }
     
     /**

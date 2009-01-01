@@ -272,6 +272,20 @@ class Solar_View_Helper_Form extends Solar_View_Helper
     
     /**
      * 
+     * Magic __toString() to print out the form automatically.
+     * 
+     * Note that this calls fetch() and will reset the form afterwards.
+     * 
+     * @return string The form output.
+     * 
+     */
+    public function __toString()
+    {
+        return $this->fetch();
+    }
+    
+    /**
+     * 
      * Main method interface to Solar_View.
      * 
      * @param Solar_Form|array $spec If a Solar_Form object, does a
@@ -370,8 +384,10 @@ class Solar_View_Helper_Form extends Solar_View_Helper
      */
     public function addElement($info)
     {
+        // make sure we have all the info keys we need
         $info = array_merge($this->_default_info, $info);
         
+        // fix up certain pieces
         $this->_fixElementType($info);
         $this->_fixElementName($info);
         $this->_fixElementId($info);

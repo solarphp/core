@@ -22,8 +22,16 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * 
      * Config keys are ...
      * 
+     * `active`
+     * : (bool) Whether or not the cache should be active at instantiation.
+     * 
      * `life`
      * : (int) The lifetime of each cache entry in seconds.
+     * 
+     * `prefix`
+     * : (string) A prefix to place in front of every cache entry key; e.g.,
+     *   use this to deconflict between identical cache keys in caches shared
+     *   among different domains or environments.
      * 
      * @var array
      * 
@@ -31,6 +39,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     protected $_Solar_Cache_Adapter = array(
         'active' => true,
         'life'   => 0,
+        'prefix' => null,
     );
     
     /**
@@ -68,6 +77,9 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
         
         // keep the cache lifetime value
         $this->_life = (int) $this->_config['life'];
+        
+        // keep the cache entry prefix
+        $this->_prefix = (string) $this->_config['prefix'];
     }
     
     /**
@@ -246,6 +258,86 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
     
     /**
      * 
+     * Fetches data if it exists; if not, uses a callback to create the data
+     * and saves it to the cache.
+     * 
+     * {{code: php
+     *     // create a request object
+     *     $request = Solar_Registry::get('request');
+     *     
+     *     // create an entry ID named for the current URI
+     *     $id = $request->server('REQUEST_URI');
+     *     
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // fetch that ID from the cache, but use a static method callback
+     *     // Solar_Example::createData($id) to create the data for saving 
+     *     // if it does not exist.
+     *     $callback = array('Solar_Example', 'createData');
+     *     $args = array($id);
+     *     $data = $cache->fetchOrSave($id, $callback, $args);
+     * }}
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param callback $callback A PHP callback to use if the data needs to
+     * be created for saving.
+     * 
+     * @param array $args Arguments to the callback, if any.
+     * 
+     * @return mixed The fetched or created data.
+     * 
+     * @see save()
+     * 
+     */
+    public function fetchOrSave($key, $callback, $args = array())
+    {
+        $this->_fetchOrInsert('save', $key, $callback, $args);
+    }
+    
+    /**
+     * 
+     * Fetches data if it exists; if not, uses a callback to create the data
+     * and adds it to the cache in a race-condition-safe way.
+     * 
+     * {{code: php
+     *     // create a request object
+     *     $request = Solar_Registry::get('request');
+     *     
+     *     // create an entry ID named for the current URI
+     *     $id = $request->server('REQUEST_URI');
+     *     
+     *     // create a cache object
+     *     $cache = Solar::factory('Solar_Cache');
+     *     
+     *     // fetch that ID from the cache, but use a static method callback
+     *     // Solar_Example::createData($id) to create the data for adding 
+     *     // if it does not exist.
+     *     $callback = array('Solar_Example', 'createData');
+     *     $args = array($id);
+     *     $data = $cache->fetchOrAdd($id, $callback, $args);
+     * }}
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param callback $callback A PHP callback to use if the data needs to
+     * be created for adding.
+     * 
+     * @param array $args Arguments to the callback, if any.
+     * 
+     * @return mixed The fetched or created data.
+     * 
+     * @see add()
+     * 
+     */
+    public function fetchOrAdd($key, $callback, $args = array())
+    {
+        $this->_fetchOrInsert('add', $key, $callback, $args);
+    }
+    
+    /**
+     * 
      * Increments a cache entry value by the specified amount.  If the entry
      * does not exist, creates it at zero, then increments it.
      * 
@@ -303,7 +395,7 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * Returns the adapter-specific name for the entry key.
      * 
      * Cache adapters do not always use the identifier you specify for
-     * cache entries.  For example, the [Solar_Cache_File:HomePage file adapter]
+     * cache entries.  For example, the [Solar_Cache_Adapter_File:HomePage file adapter]
      * names the cache entries based on an MD5 hash of the entry ID. 
      * This method tells you what the adapter is using as the name for
      * the cache entry.
@@ -327,6 +419,58 @@ abstract class Solar_Cache_Adapter extends Solar_Base {
      * @return mixed The adapter-specific name for the entry key.
      * 
      */
-    abstract public function entry($key);
-} 
-
+    public function entry($key)
+    {
+        return $this->_prefix . $key;
+    }
+    
+    /**
+     * 
+     * Support method for [[fetchOrSave()]] and [[fetchOrAdd()]].
+     * 
+     * @param string $method The method to use for inserting created data,
+     * typically 'add' or 'save'.
+     * 
+     * @param string $key The entry ID.
+     * 
+     * @param callback $callback A PHP callback to use if the data needs to
+     * be created for insert.
+     * 
+     * @param array $args Arguments to the callback, if any.
+     * 
+     * @return mixed The fetched or created data.
+     * 
+     * @see fetchOrSave()
+     * 
+     * @see fetchOrAdd()
+     * 
+     */
+    protected function _fetchOrInsert($method, $key, $callback, $args = null)
+    {
+        // only attempt a fetch if the cache is active
+        if ($this->active) {
+            // try to fetch the data
+            $data = $this->fetch($key);
+            if ($data !== false) {
+                // found it!
+                return $data;
+            }
+        }
+        
+        // cache not active, or fetch failed. create the data and insert it.
+        $data   = call_user_func_array($callback, (array) $args);
+        $result = $this->$method($key, $data);
+        if ($result) {
+            // done!
+            return $data;
+        }
+        
+        // failed
+        $type = strtoupper("ERR_CANNOT_$method");
+        throw $this->_exception($type, array(
+            'key'      => $key,
+            'callback' => $callback,
+            'params'   => $params,
+        ));
+    }
+}

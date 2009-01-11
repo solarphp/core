@@ -58,7 +58,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      * 
      * `mode`
      * : (int) If the cache path does not exist, when it is created, use
-     *   this octal permission mode.  Default is `0750` (user read/write/exec,
+     *   this octal permission mode.  Default is `0740` (user read/write/exec,
      *   group read, others excluded).
      * 
      * `context`
@@ -119,8 +119,8 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
         // basic construction
         parent::__construct($config);
         
-        // path to storage
-        $this->_path = Solar_Dir::fix($this->_config['path']);
+        // path to storage; include the prefix as part of the path
+        $this->_path = Solar_Dir::fix($this->_config['path'] . '/' . $this->_prefix);
         
         // whether or not to hash
         $this->_hash = $this->_config['hash'];

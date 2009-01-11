@@ -33,7 +33,8 @@
  * @version $Id$
  * 
  */
-abstract class Solar_Base {
+abstract class Solar_Base
+{
     
     /**
      * 

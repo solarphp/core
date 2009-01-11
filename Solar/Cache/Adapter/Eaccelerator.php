@@ -181,18 +181,4 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
         
         eaccelerator_clean();
     }
-    
-    /**
-     * 
-     * Returns the name for the entry key.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @return string The cache entry name.
-     * 
-     */
-    public function entry($key)
-    {
-        return $key;
-    }
 }

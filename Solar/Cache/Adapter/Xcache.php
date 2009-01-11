@@ -1,14 +1,14 @@
 <?php
 /**
  * 
- * XCache cache controller.
+ * Xcache cache controller.
  * 
- * XCache is a fast, stable PHP opcode cacher tested and supported on
+ * Xcache is a fast, stable PHP opcode cacher tested and supported on
  * all of the latest PHP cvs branches.
  * 
- * The XCache extension is not bundled with PHP; you will need to
+ * The Xcache extension is not bundled with PHP; you will need to
  * install it on your server before you can use it. More info on the
- * [XCache homepage](http://trac.lighttpd.net/xcache/wiki/).
+ * [Xcache homepage](http://trac.lighttpd.net/xcache/wiki/).
  * 
  * @category Solar
  * 
@@ -63,7 +63,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
      */
     public function __construct($config = null)
     {
-        // make sure we have apc available
+        // make sure we have xcache available
         if (! (extension_loaded('xcache') && ini_get('xcache.cacher'))) {
             throw $this->_exception(
                 'ERR_EXTENSION_NOT_LOADED',
@@ -205,7 +205,7 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
         $oldpass = null;
         
         // we need to work with actual PHP superglobal $_SERVER here,
-        // instead of a Solar_Request::$server value, because the APC
+        // instead of a Solar_Request::$server value, because the Xcache
         // extension doesn't know about Solar_Request.
         if (isset($_SERVER['PHP_AUTH_USER'])) {
             $olduser = $_SERVER['PHP_AUTH_USER'];
@@ -241,19 +241,5 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
         }
         
         return true;
-    }
-    
-    /**
-     * 
-     * Returns the name for the entry key.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @return string The cache entry name.
-     * 
-     */
-    public function entry($key)
-    {
-        return $key;
     }
 }

@@ -177,18 +177,4 @@ class Solar_Cache_Adapter_Apc extends Solar_Cache_Adapter
         
         apc_clear_cache('user');
     }
-    
-    /**
-     * 
-     * Returns the name for the entry key.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @return string The cache entry name.
-     * 
-     */
-    public function entry($key)
-    {
-        return $key;
-    }
 }

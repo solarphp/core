@@ -195,18 +195,4 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
         $this->_entries = array();
         $this->_expires = array();
     }
-    
-    /**
-     * 
-     * Returns the name for the entry key.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @return string The cache entry name.
-     * 
-     */
-    public function entry($key)
-    {
-        return $key;
-    }
 }

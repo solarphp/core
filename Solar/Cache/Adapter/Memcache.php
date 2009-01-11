@@ -303,20 +303,6 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
     
     /**
      * 
-     * Returns the name for the entry key.
-     * 
-     * @param string $key The entry ID.
-     * 
-     * @return string The cache entry name.
-     * 
-     */
-    public function entry($key)
-    {
-        return $key;
-    }
-    
-    /**
-     * 
      * Adds servers to a memcache connection pool from configuration.
      * 
      * @return void

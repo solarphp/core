@@ -244,14 +244,28 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     public function loadRelated($name, $data)
     {
         $related = $this->_model->getRelated($name);
-        if ($related->type == 'has_many') {
+        if ($related->type != 'has_many') {
+            // 'belongs_to' or 'has_one', no need for a loop
+            $id = array_shift($data);
+            $this->_related[$name][$id] = $data;
+            return;
+        }
+        
+        // many records, needs a loop.  however, we only need to keep
+        // related keys if the related fetch was an 'assoc'.
+        if ($related->fetch == 'assoc') {
+            // keep assoc keys
             foreach ($data as $key => $val) {
                 $id = array_shift($val);
                 $this->_related[$name][$id][$key] = $val;
             }
         } else {
-            $id = array_shift($data);
-            $this->_related[$name][$id] = $data;
+            // renumber related keys from zero, so that it "looks right"
+            // when you inspect the array
+            foreach ($data as $val) {
+                $id = array_shift($val);
+                $this->_related[$name][$id][] = $val;
+            }
         }
     }
     

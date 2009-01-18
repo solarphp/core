@@ -1395,33 +1395,93 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Quotes a value and places into a piece of text at a placeholder.
-     * 
-     * The placeholder is a question-mark; all placeholders will be replaced
-     * with the quoted value.   For example ...
+     * Quotes a value and places into a piece of text at a placeholder; the
+     * placeholder is a question-mark.
      * 
      * {{code: php
-     *     $sql = Solar::factory('Solar_Sql');
-     *     
-     *     $text = "WHERE date < ?";
-     *     $date = "2005-01-02";
-     *     $safe = $sql->quoteInto($text, $date);
-     *     
-     *     // $safe == "WHERE date < '2005-01-02'"
+     *      $sql = Solar::factory('Solar_Sql');
+     *      
+     *      // replace one placeholder
+     *      $text = "WHERE date >= ?";
+     *      $data = "2005-01-01";
+     *      $safe = $sql->quoteInto($text, $data);
+     *      // => "WHERE date >= '2005-01-02'"
+     *      
+     *      // replace multiple placeholders
+     *      $text = "WHERE date BETWEEN ? AND ?";
+     *      $data = array("2005-01-01", "2005-01-31");
+     *      $safe = $sql->quoteInto($text, $data);
+     *      // => "WHERE date BETWEEN '2005-01-01' AND '2005-01-31'"
+     * 
+     *      // single placeholder with array value
+     *      $text = "WHERE foo IN (?)";
+     *      $data = array('a', 'b', 'c');
+     *      $safe = $sql->quoteInto($text, $data);
+     *      // => "WHERE foo IN ('a', 'b', 'c')"
+     *      
+     *      // multiple placeholders and array values
+     *      $text = "WHERE date >= ? AND foo IN (?)";
+     *      $data = array('2005-01-01, array('a', 'b', 'c'));
+     *      $safe = $sql->quoteInto($text, $data);
+     *      // => "WHERE date >= '2005-01-01' AND foo IN ('a', 'b', 'c')"
      * }}
      * 
-     * @param string $txt The text with a placeholder.
+     * @param string $text The text with placeholder(s).
      * 
-     * @param mixed $val The value to quote.
+     * @param mixed $data The data value(s) to quote.
      * 
      * @return mixed An SQL-safe quoted value (or string of separated values)
      * placed into the orignal text.
      * 
+     * @see quote()
+     * 
      */
-    public function quoteInto($txt, $val)
+    public function quoteInto($text, $data)
     {
-        $val = $this->quote($val);
-        return str_replace('?', $val, $txt);
+        // how many question marks are there?
+        $count = substr_count($text, '?');
+        if (! $count) {
+            // no replacements needed
+            return $text;
+        }
+        
+        // only one replacement?
+        if ($count == 1) {
+            $data = $this->quote($data);
+            $text = str_replace('?', $data, $text);
+            return $text;
+        }
+        
+        // more than one replacement; force values to be an array, then make 
+        // sure we have enough values to replace all the placeholders.
+        settype($data, 'array');
+        if (count($data) < $count) {
+            // more placeholders than values
+            throw $this->_exception('ERR_NOT_ENOUGH_VALUES', array(
+                'text'  => $text,
+                'data'  => $data,
+            ));
+        }
+        
+        // replace each placeholder with a quoted value
+        $offset = 0;
+        foreach ($data as $val) {
+            // find the next placeholder
+            $pos = strpos($text, '?', $offset);
+            if ($pos === false) {
+                // no more placeholders, exit the data loop
+                break;
+            }
+            
+            // replace this question mark with a quoted value
+            $val  = $this->quote($val);
+            $text = substr_replace($text, $val, $pos, 1);
+            
+            // update the offset to move us past the quoted value
+            $offset = $pos + strlen($val);
+        }
+        
+        return $text;
     }
     
     /**
@@ -1547,7 +1607,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
     
     /**
      * 
-     * Quotes an identifier name (table, index, etc). Ignores empty values.
+     * Quotes an identifier name (table, index, etc); ignores empty values and
+     * values of '*'.
      * 
      * @param string $name The identifier name to quote.
      * 

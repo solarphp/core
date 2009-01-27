@@ -127,6 +127,10 @@ class Solar_Uri extends Solar_Base
      * 
      * Keys are ...
      * 
+     * `host`
+     * : (string) A host to use as default.  Generally needed only
+     *   for specific URI subclasses, for example Solar_Uri_Public.
+     * 
      * `path`
      * : (string) A path prefix.  Generally needed only
      *   for specific URI subclasses, for example Solar_Uri_Action.
@@ -139,7 +143,8 @@ class Solar_Uri extends Solar_Base
      * 
      */
     protected $_Solar_Uri = array(
-        'path' => '',
+        'host' => null,
+        'path' => null,
         'uri'  => null,
     );
     
@@ -480,6 +485,12 @@ class Solar_Uri extends Solar_Base
         if ($forced && ! $this->_request->server('HTTP_HOST')) {
             $this->scheme = null;
             $this->host   = null;
+        }
+        
+        // finally, if we don't have a host, and there's a default,
+        // use it
+        if (! $this->host) {
+            $this->host = $this->_config['host'];
         }
     }
     

@@ -322,6 +322,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      */
     protected $_format_type = array(
+        null        => 'text/html',
         'atom'      => 'application/atom+xml',
         'css'       => 'text/css',
         'htm'       => 'text/html',
@@ -888,16 +889,28 @@ abstract class Solar_Controller_Page extends Solar_Base {
         $action_format = $this->_getActionFormat($this->_action);
         
         // does the action support the requested format?
-        if (!  in_array($this->_format, $action_format)) {
-            // action does not support the format.
-            // add the format extension to the last param.
-            // that's because it might be an actual file name.
-            $val = end($this->_info);
-            $key = key($this->_info);
-            $this->_info[$key] = $val . '.' . $this->_format;
-            // use the default format
-            $this->_format = $this->_format_default;
+        if (in_array($this->_format, $action_format)) {
+            // it does, so we're done
+            return;
         }
+        
+        // action does not support the format.
+        // add the format extension back to the last param.
+        // that's because it might be an actual file name.
+        $val = end($this->_info);
+        
+        // what's the key on the last param?
+        $key = key($this->_info);
+        if ($key === null) {
+            // array was empty; force to zero
+            $key = 0;
+        }
+        
+        // add the info back
+        $this->_info[$key] = $val . '.' . $this->_format;
+        
+        // use the default format
+        $this->_format = $this->_format_default;
     }
     
     /**

@@ -217,8 +217,9 @@ class {:class} extends {:extends} {
             if ($this->item->save()) {
                 // save a flash value for the next page
                 $this->_session->setFlash('success_added', true);
-                // redirect to editing.
-                return $this->_redirectNoCache("/{$this->_controller}/edit/{$this->item->id}");
+                // redirect to editing using the primary-key value
+                $id = $this->item->getPrimaryVal();
+                return $this->_redirectNoCache("/{$this->_controller}/edit/$id");
             }
         }
         

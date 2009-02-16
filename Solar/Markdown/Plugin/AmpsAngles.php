@@ -72,7 +72,7 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    public function _processAmp($matches)
+    protected function _processAmp($matches)
     {
         return $this->_toHtmlToken('&amp;');
     }
@@ -86,7 +86,7 @@ class Solar_Markdown_Plugin_AmpsAngles extends Solar_Markdown_Plugin
      * @return string The replacement text.
      * 
      */
-    public function _processLt($matches)
+    protected function _processLt($matches)
     {
         return $this->_toHtmlToken('&lt;');
     }

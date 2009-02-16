@@ -185,8 +185,13 @@ class Solar_Sql_Adapter_Pgsql extends Solar_Sql_Adapter
         // where the description will be stored
         $descr = array();
         
-        // loop through the result rows; each describes a column.
+        // get the column descriptions
         $cols = $this->fetchAll($cmd, array('table' => $table));
+        if (! $cols) {
+            throw $this->_exception('ERR_QUERY_FAILED');
+        }
+        
+        // loop through the result rows; each describes a column.
         foreach ($cols as $val) {
             $name = $val['name'];
             list($type, $size, $scope) = $this->_getTypeSizeScope($val['type']);

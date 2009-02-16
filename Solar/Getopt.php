@@ -190,7 +190,8 @@ class Solar_Getopt extends Solar_Base
         if (strlen($name) == 1) {
             $info['short'] = $name;
         } else {
-            $info['long'] = $name;
+            // convert underscores to dashes for the *cli*
+            $info['long'] = str_replace('_', '-', $name);
         }
         
         // normalize the "param" setting
@@ -202,6 +203,9 @@ class Solar_Getopt extends Solar_Base
         } else {
             $info['param'] = null;
         }
+        
+        // convert dashes to underscores for the *key*
+        $name = str_replace('-', '_', $name);
         
         // forcibly cast each of the keys in the options array
         $this->options[$name] = array(

@@ -111,21 +111,49 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
+        // does it exist?
         $exists = array_key_exists($key, $this->_entries);
         if (! $exists) {
             return false;
         }
         
-        $expired = time() >= $this->_expires[$key];
-        if (! $expired) {
-            // exists, and is within its lifetime
-            return $this->_entries[$key];
-        } else {
+        // has it expired?
+        if ($this->_isExpired($key)) {
             // clear the entry
             unset($this->_entries[$key]);
             unset($this->_expires[$key]);
             return false;
         }
+        
+        // return the value
+        return $this->_entries[$key];
+    }
+    
+    /**
+     * 
+     * Checks if a file has expired (is past its lifetime) or not.
+     * 
+     * If lifetime is empty (zero), then the file never expires.
+     * 
+     * @param string $key The entry key.
+     * 
+     * @return bool
+     * 
+     */
+    protected function _isExpired($key)
+    {
+        // is life set as "forever?"
+        if (! $this->_life) {
+            return false;
+        }
+        
+        // is it past its expiration date?
+        if (time() >= $this->_expires[$key]) {
+            return true;
+        }
+        
+        // not expired yet
+        return false;
     }
     
     /**

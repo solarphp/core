@@ -33,10 +33,9 @@ class Solar_Example_Model_Metas extends Solar_Sql_Model
         $this->_table_name = Solar_File::load($dir . 'table_name.php');
         $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
         
-        $this->_belongsTo('node', array(
-            'foreign_class' => 'nodes',
-            'foreign_key'   => 'node_id',
-        ));
+        $this->_model_name = 'metas';
+        
+        $this->_belongsTo('node');
         
         $this->_index = array(
             'node_id',

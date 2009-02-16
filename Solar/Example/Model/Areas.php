@@ -33,15 +33,11 @@ class Solar_Example_Model_Areas extends Solar_Sql_Model
         $this->_table_name = Solar_File::load($dir . 'table_name.php');
         $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
         
-        $this->_hasMany('nodes', array(
-            'foreign_class' => 'nodes',
-            'foreign_key'   => 'area_id',
-        ));
+        $this->_model_name = 'areas';
         
-        $this->_belongsTo('user', array(
-            'foreign_class' => 'users',
-            'foreign_key'   => 'user_id',
-        ));
+        $this->_hasMany('nodes');
+        
+        $this->_belongsTo('user');
         
         $this->_index = array(
             'created',

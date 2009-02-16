@@ -33,13 +33,11 @@ class Solar_Example_Model_Taggings extends Solar_Sql_Model
         $this->_table_name = Solar_File::load($dir . 'table_name.php');
         $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
         
-        $this->_belongsTo('node', array(
-            'foreign_class' => 'nodes',
-        ));
+        $this->_model_name = 'taggings';
         
-        $this->_belongsTo('tag', array(
-            'foreign_class' => 'tags',
-        ));
+        $this->_belongsTo('node');
+        
+        $this->_belongsTo('tag');
         
         $this->_index = array(
             'node_id',

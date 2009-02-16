@@ -181,19 +181,26 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // disallow if status is 'deleted'
         $this->_checkDeleted();
         
-        // set to dirty only if not 'new'
-        if ($this->_status != 'new') {
-            $this->setStatus('dirty');
-        }
+        // keep track if this is a "new" record
+        $is_new = $this->getStatus() == 'new';
         
         // if an accessor method exists, use it
         if (! empty($this->_access_methods['set'][$key])) {
-            // use accessor method
+            // use accessor method. will mark the record and its parents
+            // as dirty.
             $method = $this->_access_methods['set'][$key];
             $this->$method($val);
         } else {
-            // no accessor method; use parent method
+            // no accessor method; use parent method. will mark the record
+            // and its parents as dirty.
             parent::__set($key, $val);
+        }
+        
+        // setting values will mark the record as 'dirty' -- but 'new' is a
+        // special case that we have to allow for.
+        if ($is_new) {
+            // reset self back to new.
+            $this->_status = 'new';
         }
     }
     
@@ -318,7 +325,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             }
         }
         
-        // restructure belongs_to/has_one eager-loaded data
+        // restructure to-one eager-loaded data
         foreach ($load as $key => $val) {
             // if the key has double-underscores anywhere besides the very
             // first characters, it's from a single eager-load record.
@@ -334,30 +341,29 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $list = array_keys($this->_model->related);
         foreach ($list as $name) {
             
-            // get the relationship object
-            $related = $this->_model->getRelated($name);
-            
-            // get the related model
-            $model = $related->getModel();
-            
-            // is this a "to-one" association with data already in place?
-            $type = $related->type;
-            if (($type == 'has_one' || $type == 'belongs_to') && ! empty($load[$name])) {
-                
-                // create a record object from the related model
-                $this->_data[$name] = $model->newRecord($load[$name]);
-                
-            } elseif ($type == 'has_many' && ! empty($load[$name])) {
-                
-                $this->_data[$name] = $model->newCollection($load[$name]);
-                
-            } elseif (! array_key_exists($name, $this->_data)) {
-                // set a placeholder for lazy-loading in __get()
-                $this->_data[$name] = null;
-            }
+            // first, set a placeholder for lazy-loading in __get()
+            $this->_data[$name] = null;
             
             // by default get all related records
             $this->_related_page[$name] = 0;
+            
+            // is there a key in the load for this related data?
+            if (! array_key_exists($name, $load)) {
+                // no key, which means no eager loading of related data.
+                continue;
+            }
+            
+            // populate eager-loaded data, even if it's empty.
+            // get the relationship object
+            $related = $this->_model->getRelated($name);
+            
+            // get the related model and build the related record/collection
+            $model = $related->getModel();
+            if ($related->isOne()) {
+                $this->_data[$name] = $model->newRecord($load[$name]);
+            } elseif ($related->isMany()) {
+                $this->_data[$name] = $model->newCollection($load[$name]);
+            }
             
             // remove from the load data
             unset($load[$name]);
@@ -507,7 +513,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 
                 // do not fetch related just for array conversion, this leads
                 // to some deep (perhaps infinite?) recursion
-                if ($related->type == 'has_many') {
+                if ($related->isMany()) {
                     $val = array();
                 } else {
                     $val = null;
@@ -519,8 +525,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 $val = $this->$key;
                 
                 // get the sub-value if any
-                if ($val instanceof Solar_Sql_Model_Record ||
-                    $val instanceof Solar_Sql_Model_Collection) {
+                if ($val instanceof Solar_Struct) {
                     $val = $val->toArray();
                 }
             }

@@ -35,7 +35,16 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @var array
      * 
      */
-    protected $_related = array();
+    protected $_data_related = array();
+    
+    /**
+     * 
+     * Which relteds have ahd data eager-loaded for them?
+     * 
+     * @var array
+     * 
+     */
+    protected $_load_related = array();
     
     /**
      * 
@@ -103,9 +112,17 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             // get the main data to load to the record.
             $load = $this->_data[$key];
             
+            // set placeholders for all related data. we do this so the
+            // record actually has a key for the related data, even if it's
+            // empty, to do eager loading on empty (but fetched) records.
+            foreach ($this->_load_related as $name) {
+                $load[$name] = null;
+            }
+            
             // add related data to load data
             $primary = $load[$this->_model->primary_col];
-            foreach ($this->_related as $name => $data) {
+            foreach ($this->_data_related as $name => $data) {
+                // load any related data that actually exists
                 if (! empty($data[$primary])) {
                     // add the data 
                     $load[$name] = $data[$primary];
@@ -243,11 +260,17 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     public function loadRelated($name, $data)
     {
+        // track that related data was loaded, *even if it's empty for a
+        // particular record in the collection*
+        $this->_load_related[] = $name;
+        
+        // get the related object
         $related = $this->_model->getRelated($name);
-        if ($related->type != 'has_many') {
-            // 'belongs_to' or 'has_one', no need for a loop
+        
+        // if a to-one, no need for a loop
+        if ($related->isOne()) {
             $id = array_shift($data);
-            $this->_related[$name][$id] = $data;
+            $this->_data_related[$name][$id] = $data;
             return;
         }
         
@@ -257,14 +280,14 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             // keep assoc keys
             foreach ($data as $key => $val) {
                 $id = array_shift($val);
-                $this->_related[$name][$id][$key] = $val;
+                $this->_data_related[$name][$id][$key] = $val;
             }
         } else {
             // renumber related keys from zero, so that it "looks right"
             // when you inspect the array
             foreach ($data as $val) {
                 $id = array_shift($val);
-                $this->_related[$name][$id][] = $val;
+                $this->_data_related[$name][$id][] = $val;
             }
         }
     }
@@ -318,7 +341,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    public function _preSave()
+    protected function _preSave()
     {
     }
     
@@ -329,7 +352,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    public function _postSave()
+    protected function _postSave()
     {
     }
     
@@ -359,7 +382,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    public function _preDelete()
+    protected function _preDelete()
     {
     }
     

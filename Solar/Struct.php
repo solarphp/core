@@ -77,6 +77,24 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
+     * The struct is clean (no values have changed).
+     * 
+     * @const
+     * 
+     */
+    const STATUS_CLEAN = 'clean';
+    
+    /**
+     * 
+     * The struct is dirty (at least one value has changed).
+     * 
+     * @const
+     * 
+     */
+    const STATUS_DIRTY = 'dirty';
+    
+    /**
+     * 
      * User-defined configuration values.
      * 
      * Keys are ...
@@ -108,6 +126,24 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * 
      */
     protected $_iterator_valid = false;
+    
+    /**
+     * 
+     * The hierarchical parent of this struct, if any.
+     * 
+     * @var Solar_Struct
+     * 
+     */
+    protected $_parent;
+    
+    /**
+     * 
+     * The status of the struct (clean/dirty).
+     * 
+     * @var string
+     * 
+     */
+    protected $_status = self::STATUS_CLEAN;
     
     /**
      * 
@@ -157,7 +193,8 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
     
     /**
      * 
-     * Sets a key value.
+     * Sets a key value and marks the struct as "dirty"; also marks all parent
+     * structs as "dirty" too.
      * 
      * @param string $key The requested data key.
      * 
@@ -168,7 +205,16 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __set($key, $val)
     {
+        // set the value and mark as dirty
         $this->_data[$key] = $val;
+        $this->setStatus(self::STATUS_DIRTY);
+        
+        // mark parent structs as dirty, too
+        $child = $this;
+        while ($parent = $child->getParent()) {
+            $parent->setStatus(self::STATUS_DIRTY);
+            $child = $parent;
+        }
     }
     
     /**
@@ -179,8 +225,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      * say the key is set, even if the key value is null or otherwise empty.
      * 
      * @param string $key The requested data key.
-     * 
-     * @param mixed $val The value to set the data to.
      * 
      * @return void
      * 
@@ -201,20 +245,139 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __unset($key)
     {
+        // nullify and unset the vavlue, then mark as dirty
         $this->_data[$key] = null;
         unset($this->_data[$key]);
+        $this->setStatus(self::STATUS_DIRTY);
+        
+        // mark parent structs as dirty, too
+        $child = $this;
+        while ($parent = $child->getParent()) {
+            $parent->setStatus(self::STATUS_DIRTY);
+            $child = $parent;
+        }
     }
     
     /**
      * 
-     * Returns a copy of the object data as an array.
+     * Returns a string representation of the object.
+     * 
+     * @return string
+     * 
+     * @see toString()
+     * 
+     */
+    public function __toString()
+    {
+        return serialize($this->_data);
+    }
+    
+    /**
+     * 
+     * Returns a string representation of the struct.
+     * 
+     * @return string
+     * 
+     */
+    public function toString()
+    {
+        return $this->__toString();
+    }
+    
+    /**
+     * 
+     * Returns a copy of the struct as an array, recursively descending to
+     * convert child structs into arrays as well.
      * 
      * @return array
      * 
      */
     public function toArray()
     {
-        return $this->_data;
+        $data = array();
+        foreach ($this->_data as $key => $val) {
+            $data[$key] = $this->_toArray($val);
+        }
+        return $data;
+    }
+    
+    /**
+     * 
+     * Support method for toArray().
+     * 
+     * @param mixed $value The value to convert to an array.
+     * 
+     * @return mixed
+     * 
+     */
+    protected function _toArray($value)
+    {
+        if (is_array($value)) {
+            // recursively process array values
+            $result = array();
+            foreach ($value as $key => $val) {
+                $result[$key] = $this->_toArray($val);
+            }
+        } elseif ($value instanceof Solar_Struct) {
+            // get Solar_Struct array
+            $result = $value->toArray();
+        } else {
+            // non-array non-struct
+            $result = $value;
+        }
+        return $result;
+    }
+    
+    /**
+     * 
+     * Sets the status (clean/dirty/etc) on the struct.
+     * 
+     * @param string $status The status value.
+     * 
+     * @return void
+     * 
+     */
+    public function setStatus($status)
+    {
+        $this->_status = $status;
+    }
+    
+    /**
+     * 
+     * Returns the status (clean/dirty/etc) of the struct.
+     * 
+     * @return string The status value.
+     * 
+     */
+    public function getStatus()
+    {
+        return $this->_status;
+    }
+    
+    /**
+     * 
+     * Sets the hierarchical parent struct.
+     * 
+     * @param Solar_Struct $parent The hierarchical parent of this struct.
+     * 
+     * @return void
+     * 
+     */
+    public function setParent(Solar_Struct $parent)
+    {
+        $this->_parent = $parent;
+    }
+    
+    /**
+     * 
+     * Returns the hierarchical parent struct, if any.
+     * 
+     * @return Solar_Struct The hierarchical parent of this struct.
+     * 
+     */
+    public function getParent()
+    {
+        return $this->_parent;
     }
     
     /**
@@ -246,6 +409,45 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
             $this->_iterator_valid = true;
         } else {
             $this->_iterator_valid = false;
+        }
+    }
+    
+    /**
+     * 
+     * Frees memory used by this struct, especially references to parent
+     * structs down the line.
+     * 
+     * @return void
+     * 
+     */
+    public function free()
+    {
+        if ($this->_parent) {
+            unset($this->_parent);
+        }
+        $this->_free($this->_data);
+    }
+    
+    /**
+     * 
+     * Recursively descends and calls free() on child structs.
+     * 
+     * @param mixed $value The value to free.
+     * 
+     * @return void
+     * 
+     */
+    protected function _free($value)
+    {
+        if (is_array($value)) {
+            // recursively process array values
+            foreach ($value as $key => $val) {
+                $this->_free($val);
+            }
+        } elseif ($value instanceof Solar_Struct) {
+            // recursively free child Solar_Struct objects
+            Solar::dump(get_class($value), "freeing");
+            $value->free();
         }
     }
     

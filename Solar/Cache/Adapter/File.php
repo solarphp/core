@@ -322,7 +322,7 @@ class Solar_Cache_Adapter_File extends Solar_Cache_Adapter
      */
     protected function _isExpired($file)
     {
-        if ($this->_config['life']) {
+        if ($this->_life) {
             $expire_time = filemtime($file) + $this->_config['life'];
             if (time() > $expire_time) {
                 return true;

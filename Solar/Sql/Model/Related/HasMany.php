@@ -180,14 +180,7 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
     protected function _fixForeignKey(&$opts)
     {
         if (empty($opts['through'])) {
-            // has-many, not through anything
-            $prefix = $this->_inflect->toSingular(
-                $this->_native_model->table_name
-            );
-        
-            $column = $this->_native_model->primary_col;
-        
-            $opts['foreign_key'] = "{$prefix}_{$column}";
+            $opts['foreign_key'] = $this->_native_model->foreign_col;
         } else {
             // has-many through
             $opts['foreign_key'] = $this->_foreign_model->primary_col;
@@ -355,7 +348,7 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related
             return parent::_modSelect($select, $spec);
         }
         
-        // more-complex 'has_many through' relationship.
+        // more-complex 'through' relationship.
         // join through the mapping table.
         $join_table = "{$this->through_table} AS {$this->through_alias}";
         $join_where = "{$this->foreign_alias}.{$this->foreign_col} = "

@@ -167,7 +167,11 @@ class Solar_Sql_Adapter_Oracle extends Solar_Sql_Adapter
         
         $data = array('table_name' => $table_name);
         
+        // get the column descriptions
         $cols = $this->fetchAll($stmt, $data);
+        if (! $cols) {
+            throw $this->_exception('ERR_QUERY_FAILED');
+        }
 
         // loop through the result rows; each describes a column.
         foreach ($cols as $val) {

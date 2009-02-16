@@ -544,7 +544,7 @@ class Solar_Sql_Select extends Solar_Base
      * @return void
      * 
      */
-    public function _multiWhere($cond, $val, $op)
+    protected function _multiWhere($cond, $val, $op)
     {
         if (strtoupper(substr($cond, 0, 3)) == 'OR ') {
             // explicit OR
@@ -731,7 +731,7 @@ class Solar_Sql_Select extends Solar_Base
      * @return void
      * 
      */
-    public function _multiHaving($cond, $val, $op)
+    protected function _multiHaving($cond, $val, $op)
     {
         if (strtoupper(substr($cond, 0, 3)) == 'OR ') {
             // explicit OR

@@ -214,6 +214,29 @@ abstract class Test_Solar_Cache_Adapter extends Solar_Test {
     
     /**
      * 
+     * Test -- gets cache entry data when the life is zero (i.e., forever).
+     * 
+     */
+    public function testFetch_lifeZero()
+    {
+        // set up a "live forever" adapter
+        $config = $this->_config;
+        $config['life'] = 0;
+        $this->_adapter = Solar::factory($this->_adapter_class, $this->_config);
+        
+        // run the standard fetch test
+        $this->testFetch();
+        
+        // sleep for a bit and try to fetch again
+        // $id and $data are from testFetch())
+        sleep(3);
+        $id = 'coyote';
+        $data = 'Wile E. Coyote';
+        $this->assertSame($this->_adapter->fetch($id), $data);
+    }
+    
+    /**
+     * 
      * Test -- Gets the cache lifetime in seconds.
      * 
      */

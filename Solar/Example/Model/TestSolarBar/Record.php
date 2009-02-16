@@ -24,6 +24,6 @@
  * @package Solar_Example
  * 
  */
-class Solar_Example_Model_TestSolarFoo_Bar_Record extends Solar_Example_Model_TestSolarFoo_Record
+class Solar_Example_Model_TestSolarBar_Record extends Solar_Example_Model_TestSolarFoo_Record
 {
 }

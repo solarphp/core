@@ -225,9 +225,12 @@ class Solar_Sql_Adapter_Sqlite extends Solar_Sql_Adapter
             array('table' => $table)
         );
         
-        // get the table column info
+        // get the column descriptions
         $table = $this->quoteName($table);
         $cols = $this->fetchAll("PRAGMA TABLE_INFO($table)");
+        if (! $cols) {
+            throw $this->_exception('ERR_QUERY_FAILED');
+        }
         
         // loop through the result rows; each describes a column.
         foreach ($cols as $val) {

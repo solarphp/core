@@ -20,4 +20,11 @@ return array(
         'descr' => 'Show all diagnostic output.',
         'filters' => array('validateBool', 'sanitizeBool')
     ),
+    'test_config' => array(
+        'long' => 'test-config',
+        'param' => null,
+        'value' => false,
+        'descr' => 'Use this config file for the test cases themselves.',
+        'filters' => array('validateString', 'sanitizeString')
+    ),
 );

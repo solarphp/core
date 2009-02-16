@@ -84,9 +84,23 @@ class Solar_Cli_RunTests extends Solar_Cli_Base
         // run just the one test?
         $only = (bool) $this->_options['only'];
         
+        // look for a test-config file?
+        $test_config = null;
+        if ($this->_options['test_config']) {
+            // find the real path to the test_config file
+            $test_config = realpath($this->_options['test_config']);
+            if ($test_config === false) {
+                throw $this->_exception('ERR_TEST_CONFIG_REALPATH', array(
+                    'test_config' => $this->_options['test_config'],
+                    'realpath'    => $test_config,
+                ));
+            }
+        }
+        
         // set up a test suite object 
         $suite = Solar::factory('Solar_Test_Suite', array(
-            'verbose'   => $this->_options['verbose'],
+            'verbose'       => $this->_options['verbose'],
+            'test_config'   => $test_config,
         ));
         
         // run the suite

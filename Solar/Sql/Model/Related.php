@@ -412,7 +412,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
                 $this->_fixForeignKey($opts);
             }
             
-            // retaing the foreign key
+            // retain the foreign key
             $this->foreign_key = $opts['foreign_key'];
             
             // now set the related column based on the foreign_key value
@@ -447,6 +447,30 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         unset($clone->_foreign_model);
         unset($clone->_inflect);
         return parent::dump($clone, $label);
+    }
+    
+    /**
+     * 
+     * Is this related to one record?
+     * 
+     * @return bool
+     * 
+     */
+    public function isOne()
+    {
+        return $this->_fetch_object == 'record';
+    }
+    
+    /**
+     * 
+     * Is this related to many records?
+     * 
+     * @return bool
+     * 
+     */
+    public function isMany()
+    {
+        return $this->_fetch_object == 'collection';
     }
     
     /**
@@ -605,8 +629,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      * @return array An array of data from the fetch.
      * 
-     * @todo CACHE THIS!!!  In fact, need to move it entirely out to the
-     * "related" class.
+     * @todo CACHE THIS
      * 
      */
     public function fetchArray($spec, $page = null, $bind = null)
@@ -637,7 +660,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     protected function _modSelect($select, $spec)
     {
-        // simple belongs_to, has_one, or has_many.
+        // simple relation
         if ($spec instanceof Solar_Sql_Model_Record) {
             // restrict to the related native column value in the foreign table
             $select->where(
@@ -685,7 +708,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     /**
      * 
      * Support method for modSelectEager().  This implementation works for
-     * belongs_to and has_one (with columns) and has_many (without columns).
+     * to-one (with columns) and to-many (without columns).
      * The "has_many through" relation needs its own implementation.
      * 
      * @param Solar_Sql_Select $select The SELECT to be modified.

@@ -282,14 +282,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_serialize_cols = array();
     
+    protected $_xmlstruct_cols = array();
+    
+    protected $_xmlstruct_class = 'Solar_Struct_Xml';
+    
     /**
      * 
-     * The column name for the primary key; default is 'id'.
+     * The column name for the primary key.
      * 
      * @var string
      * 
      */
-    protected $_primary_col = 'id';
+    protected $_primary_col = null;
     
     /**
      * 
@@ -793,7 +797,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // add has-many eager data to the collection
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
-            if ($related->type == 'has_many') {
+            if ($related->isMany()) {
                 // should we send along $params instead for easier caching?
                 $result = $related->fetchArray($select);
                 $coll->loadRelated($name, $result);
@@ -880,7 +884,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         // add has-many eager data to the collection
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
-            if ($related->type == 'has_many') {
+            if ($related->isMany()) {
                 $result = $related->fetchArray($select);
                 $coll->loadRelated($name, $result);
             }
@@ -1043,16 +1047,16 @@ abstract class Solar_Sql_Model extends Solar_Base
             return null;
         }
         
-        // get the main record, which sets the belongs_to/has_one data
-        $record = $this->newRecord($result);
-        
-        // get related data from each eager has_many relationship
+        // get related data from each eager to-many relationship
         foreach ((array) $params['eager'] as $name) {
             $related = $this->getRelated($name);
-            if ($related->type == 'has_many') {
-                $record->$name = $related->fetchObject($record);
+            if ($related->isMany()) {
+                $result[$name] = $related->fetchArray($select);
             }
         }
+        
+        // get the main record, which sets the to-one data
+        $record = $this->newRecord($result);
         
         // done
         return $record;
@@ -1258,7 +1262,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * element 1 is the Solar_Sql_Select object used to fetch the data.  Note
      * that if the 
      */
-    public function _fetchResultSelect($type, &$params)
+    protected function _fetchResultSelect($type, &$params)
     {
         $params = $this->fixSelectParams($params);
         $select = $this->newSelect($params);
@@ -1324,6 +1328,11 @@ abstract class Solar_Sql_Model extends Solar_Base
         $names = array_keys($this->_related);
         foreach ($names as $name) {
             $data[$name] = null;
+        }
+        
+        // add Solar_Xml_Struct objects
+        foreach ($this->_xmlstruct_cols as $key) {
+            $data[$key] = Solar::factory($this->_xmlstruct_class);
         }
         
         // done, return the proper record object
@@ -1636,24 +1645,27 @@ abstract class Solar_Sql_Model extends Solar_Base
         if ($inherit) {
             // try to find a model class based on inheritance, going up the
             // stack as needed. this checks for Current_Model_Type,
-            // Parent_Model_Type, Grandparent_Model_Type, etc.  blow up if we
-            // can't find it.
+            // Parent_Model_Type, Grandparent_Model_Type, etc.
+            // 
+            // blow up if we can't find it, since this is explicitly noted
+            // as the inheritance class.
             $model_class = $this->_stack->load($inherit);
             
             // if different from the current class, reset the model object.
             if ($model_class != $this->_class) {
                 // use the inherited model class, it's different from the
                 // current model
-                $model = Solar::factory($model_class, array($this->_config));
+                $model = Solar::factory($model_class, $this->_config);
             }
             
             // now we need the inherited record class.  suppress exceptions.
-            // note that $record_class could still end up false, as we might not find
-            // a related class in the hierarchy.
+            // note that $record_class could still end up false, as we might
+            // not find a related class in the hierarchy.
             $record_class = $this->_stack->load($inherit . '_Record', false);
         }
         
-        // even if inheritance failed, look for a model-specific record class
+        // even if record inheritance failed, look for a model-specific record
+        // class
         if (! $record_class) {
             $record_class = $this->_stack->load('Record', false);
         }
@@ -1969,7 +1981,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Serializes data values in-place based on $this->_serialize_cols.
+     * Serializes data values in-place based on $this->_serialize_cols and
+     * $this->_xmlstruct_cols.
      * 
      * Does not attempt to serialize null values.
      * 
@@ -1991,11 +2004,27 @@ abstract class Solar_Sql_Model extends Solar_Base
                 }
             }
         }
+        
+        foreach ($this->_xmlstruct_cols as $key) {
+            // don't work on empty cols
+            if (empty($data[$key])) {
+                continue;
+            }
+            
+            // convert to string representations, and nullify non-structs
+            if ($data[$key] instanceof Solar_Struct_Xml) {
+                $struct = $data[$key];
+                $data[$key] = $struct->toString();
+            } else {
+                $data[$key] = null;
+            }
+        }
     }
     
     /**
      * 
-     * Un-serializes data values in-place based on $this->_serialize_cols.
+     * Un-serializes data values in-place based on $this->_serialize_cols and
+     * $this->_xmlstruct_cols.
      * 
      * Does not attempt to un-serialize null values.
      * 
@@ -2017,6 +2046,14 @@ abstract class Solar_Sql_Model extends Solar_Base
                     // unserializing failed
                     $data[$key] = null;
                 }
+            }
+        }
+        
+        foreach ($this->_xmlstruct_cols as $key) {
+            if (! empty($data[$key]) && is_string($data[$key])) {
+                $struct = Solar::factory($this->_xmlstruct_class);
+                $struct->load($data[$key]);
+                $data[$key] = $struct;
             }
         }
     }
@@ -2059,7 +2096,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _hasOne($name, $opts = null)
     {
-        $this->_addRelated($name, 'HasOne', $opts);
+        settype($opts, 'array');
+        if (empty($opts['class'])) {
+            $opts['class'] = 'Solar_Sql_Model_Related_HasOne';
+        }
+        $this->_addRelated($name, $opts);
     }
     
     /**
@@ -2076,7 +2117,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _belongsTo($name, $opts = null)
     {
-        $this->_addRelated($name, 'BelongsTo', $opts);
+        settype($opts, 'array');
+        if (empty($opts['class'])) {
+            $opts['class'] = 'Solar_Sql_Model_Related_BelongsTo';
+        }
+        $this->_addRelated($name, $opts);
     }
     
     /**
@@ -2096,7 +2141,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _hasMany($name, $opts = null)
     {
-        $this->_addRelated($name, 'HasMany', $opts);
+        settype($opts, 'array');
+        if (empty($opts['class'])) {
+            $opts['class'] = 'Solar_Sql_Model_Related_HasMany';
+        }
+        $this->_addRelated($name, $opts);
     }
     
     /**
@@ -2106,16 +2155,14 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param string $name The relationship name, which will double as a
      * property when records are fetched from the model.
      * 
-     * @param string $type The relationship type.
-     * 
      * @param array $opts Additional options for the relationship.
      * 
      * @return void
      * 
      */
-    protected function _addRelated($name, $type, $opts)
+    protected function _addRelated($name, $opts)
     {
-        // is the relation name already a column name?
+        // is the related name already a column name?
         if (array_key_exists($name, $this->_table_cols)) {
             throw $this->_exception(
                 'ERR_RELATED_NAME_CONFLICT',
@@ -2126,7 +2173,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             );
         }
         
-        // is the relation name already in use?
+        // is the related name already in use?
         if (array_key_exists($name, $this->_related)) {
             throw $this->_exception(
                 'ERR_RELATED_NAME_EXISTS',
@@ -2138,9 +2185,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // keep it!
-        $opts['name']  = $name;
-        $opts['class'] = "Solar_Sql_Model_Related_$type";
-        $this->_related[$name] = (array) $opts;
+        $opts['name'] = $name;
+        $this->_related[$name] = $opts;
     }
     
     /**
@@ -2187,23 +2233,22 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_stack = Solar::factory('Solar_Class_Stack');
         
         // get the class parents and work from this class upwards
-        $parents = array_reverse(Solar_Class::parents($this->_class, true));
-        array_pop($parents); // Solar_Base
-        array_pop($parents); // Solar_Sql_Model
-        $parents = array_reverse($parents);
+        $parents = Solar_Class::parents($this->_class, true);
+        array_shift($parents); // Solar_Base
+        array_shift($parents); // Solar_Sql_Model
         
-        // any time we change vendors, add NewVendor_Model in between.
-        // this helps with single-table-inheritance between vendors,
-        // provided they use the Vendor_Model convention.
-        $old_vendor = false;
+        // any time we change _Model prefixes, add New_Prefix_Model between.
+        // this helps with single-table-inheritance between prefixes,
+        // provided they use the *_Model naming convention.
+        $old = false;
         foreach ($parents as $class) {
-            $tmp = explode('_', $class);
-            $new_vendor = $tmp[0];
-            if ($old_vendor && $new_vendor != $old_vendor) {
-                $this->_stack->add("{$new_vendor}_Model");
+            $pos = strpos($class, '_Model');
+            $new = substr($class, 0, $pos);
+            if ($new != $old) {
+                $this->_stack->add("{$new}_Model");
             }
             $this->_stack->add($class);
-            $old_vendor = $new_vendor;
+            $old = $new;
         }
     }
     
@@ -2338,34 +2383,43 @@ abstract class Solar_Sql_Model extends Solar_Base
      * Fixes table column definitions into $_table_cols, and post-sets
      * inheritance values.
      * 
-     * @param StdClass $model The model property catalog.
-     * 
      * @return void
      * 
      */
     protected function _fixTableCols()
     {
-        // is a table with the same name already at the database?
-        $list = $this->_sql->fetchTableList();
-        
-        // if not found, attempt to create it
-        if (! in_array($this->_table_name, $list)) {
-            $this->_createTableAndIndexes($this);
+        try {
+            // get the column descriptions
+            $cols = $this->_sql->fetchTableCols($this->_table_name);
+        } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
+            // does the table exist in the database?
+            $list = $this->_sql->fetchTableList();
+            if (! in_array($this->_table_name, $list)) {
+                // no, try to create it ...
+                $this->_createTableAndIndexes();
+                // ... and get the column descriptions
+                $cols = $this->_sql->fetchTableCols($this->_table_name);
+            } else {
+                // found the table, must have been something else wrong
+                throw $e;
+            }
         }
         
         // reset the columns to be **as they are at the database**
-        $this->_table_cols = $this->_sql->fetchTableCols($this->_table_name);
+        $this->_table_cols = $cols;
         
         // @todo add a "sync" check to see if column data in the class
         // matches column data in the database, and throw an exception
         // if they don't match pretty closely.
         
-        // set the primary column based on the first primary key;
-        // ignores later primary keys
-        foreach ($this->_table_cols as $key => $val) {
-            if ($val['primary']) {
-                $this->_primary_col = $key;
-                break;
+        // set the primary col if we don't already have one
+        if (! $this->_primary_col) {
+            // use the first primary key; ignore later primary keys
+            foreach ($this->_table_cols as $key => $val) {
+                if ($val['primary']) {
+                    $this->_primary_col = $key;
+                    break;
+                }
             }
         }
     }
@@ -2458,6 +2512,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // simply force to array
         settype($this->_serialize_cols, 'array');
+        settype($this->_xmlstruct_cols, 'array');
         
         // the "sequence" columns.  make sure they point to a sequence name.
         // e.g., string 'col' becomes 'col' => 'col'.

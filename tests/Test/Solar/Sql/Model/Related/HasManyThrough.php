@@ -1,102 +1,233 @@
 <?php
-class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRelated {
+/**
+ * 
+ * Concrete class test.
+ * 
+ */
+class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_Related {
     
     /**
      * 
-     * Depends on the Solar_Example_Model_Nodes having added $this->_hasOne().
+     * Configuration values.
+     * 
+     * @var array
      * 
      */
-    public function testAddRelated()
+    protected $_Test_Solar_Sql_Model_Related_HasManyThrough = array(
+    );
+    
+    // -----------------------------------------------------------------
+    // 
+    // Support methods.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Constructor.
+     * 
+     * @param array $config User-defined configuration parameters.
+     * 
+     */
+    public function __construct($config = null)
+    {
+        parent::__construct($config);
+    }
+    
+    /**
+     * 
+     * Destructor; runs after all methods are complete.
+     * 
+     * @param array $config User-defined configuration parameters.
+     * 
+     */
+    public function __destruct()
+    {
+        parent::__destruct();
+    }
+    
+    /**
+     * 
+     * Setup; runs before each test method.
+     * 
+     */
+    public function setup()
+    {
+        parent::setup();
+        $this->_class = 'Solar_Sql_Model_Related_HasMany';
+    }
+    
+    /**
+     * 
+     * Setup; runs after each test method.
+     * 
+     */
+    public function teardown()
+    {
+        parent::teardown();
+    }
+    
+    // -----------------------------------------------------------------
+    // 
+    // Test methods.
+    // 
+    // -----------------------------------------------------------------
+    
+    /**
+     * 
+     * Test -- Constructor.
+     * 
+     */
+    public function test__construct()
+    {
+        $obj = Solar::factory('Solar_Sql_Model_Related_HasMany');
+        $this->assertInstance($obj, 'Solar_Sql_Model_Related_HasMany');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches foreign data as an array.
+     * 
+     */
+    public function testFetchArray()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Fetches foreign data as a record or collection object.
+     * 
+     */
+    public function testFetchObject()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns the related (foreign) model instance.
+     * 
+     */
+    public function testGetModel()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Loads this relationship object with user-defined characteristics (options), and corrects them as needed.
+     * 
+     */
+    public function testLoad()
     {
         $nodes = $this->_newModel('nodes');
+        $taggings = $this->_newModel('taggings');
+        $tags = $this->_newModel('tags');
         
-        // make sure that nodes has-many taggings
-        $expect = array (
-            'name' => 'taggings',
-            'type' => 'has_many',
-            'foreign_class' => 'Solar_Example_Model_Taggings',
-            'foreign_table' => 'test_solar_taggings',
-            'foreign_alias' => 'taggings',
-            'foreign_col' => 'node_id',
-            'foreign_inherit_col' => NULL,
-            'foreign_inherit_val' => NULL,
-            'foreign_primary_col' => 'id',
-            'native_class' => 'Solar_Example_Model_Nodes',
-            'native_table' => 'test_solar_nodes',
-            'native_alias' => 'nodes',
-            'native_col' => 'id',
-            'through' => NULL,
-            'through_table' => NULL,
-            'through_alias' => NULL,
-            'through_native_col' => NULL,
-            'through_foreign_col' => NULL,
-            'distinct' => false,
-            'where' => NULL,
-            'group' => NULL,
-            'having' => NULL,
-            'order' => array(
-                0 => 'taggings.id',
-            ),
-            'paging' => 10,
-            'cols' => array(
-                0 => 'id',
-                1 => 'node_id',
-                2 => 'tag_id',
-            ),
-            'fetch' => 'all',
-        );
-        
-        $actual = $nodes->getRelated('taggings')->toArray();
-        $this->assertSame($actual, $expect);
-        
-        // make sure that nodes has-many tags through taggings
-        $expect = array (
-            'name' => 'tags',
-            'type' => 'has_many',
-            'foreign_class' => 'Solar_Example_Model_Tags',
-            'foreign_table' => 'test_solar_tags',
-            'foreign_alias' => 'tags',
-            'foreign_col' => 'id',
-            'foreign_inherit_col' => NULL,
-            'foreign_inherit_val' => NULL,
-            'foreign_primary_col' => 'id',
-            'native_class' => 'Solar_Example_Model_Nodes',
-            'native_table' => 'test_solar_nodes',
-            'native_alias' => 'nodes',
-            'native_col' => 'id',
+        $related = $this->_newRelated($nodes, array(
+            'name'    => 'tags',
             'through' => 'taggings',
-            'through_table' => 'test_solar_taggings',
-            'through_alias' => 'taggings',
-            'through_native_col' => 'node_id',
-            'through_foreign_col' => 'tag_id',
-            'distinct' => false,
-            'where' => NULL,
-            'group' => NULL,
-            'having' => NULL,
-            'order' => array(
-                0 => 'tags.id',
-            ),
-            'paging' => 10,
-            'cols' => array(
+        ));
+        
+        $actual = $related->toArray();
+        
+        // make sure that areas has-many nodes entry
+        $expect = array (
+            'cols'                  => array (
                 0 => 'id',
                 1 => 'name',
                 2 => 'summ',
             ),
-            'fetch' => 'all',
+            'distinct'               => false,
+            'fetch'                  => 'all',
+            'foreign_alias'          => 'tags',
+            'foreign_class'          => 'Solar_Example_Model_Tags',
+            'foreign_col'            => 'id',
+            'foreign_inherit_col'    => null,
+            'foreign_inherit_val'    => null,
+            'foreign_key'            => 'id',
+            'foreign_primary_col'    => 'id',
+            'foreign_table'          => 'test_solar_tags',
+            'group'                  => null,
+            'having'                 => null,
+            'name'                   => 'tags',
+            'native_alias'           => 'nodes',
+            'native_class'           => 'Solar_Example_Model_Nodes',
+            'native_col'             => 'id',
+            'native_table'           => 'test_solar_nodes',
+            'order'                  => array('tags.id'),
+            'paging'                 => 10,
+            'through'                => 'taggings',
+            'through_alias'          => 'taggings',
+            'through_foreign_col'    => 'tag_id',
+            'through_key'            => null,
+            'through_native_col'     => 'node_id',
+            'through_table'          => 'test_solar_taggings',
+            'type'                   => 'has_many',
+            'where'                  => null,
         );
         
-        $actual = $nodes->getRelated('tags')->toArray();
         $this->assertSame($actual, $expect);
         
         // recover memory
+        $tags->free();
+        $taggings->free();
         $nodes->free();
-        unset($nodes);
     }
     
-    public function testLazyFetchOne()
+    /**
+     * 
+     * Test -- Modifies the SELECT from a native model countPages() call to join with the foreign model (especially on eager fetches).
+     * 
+     */
+    public function testModSelectCountPages()
     {
-        $this->_populateAll();
-        
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- When the native model is doing a select and an eager-join is requested for this relation, this method modifies the select to add the eager join.
+     * 
+     */
+    public function testModSelectEager()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Creates a new selection object for fetching records from this relation.
+     * 
+     */
+    public function testNewSelect()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Sets the native (origin) model instance.
+     * 
+     */
+    public function testSetNativeModel()
+    {
+        $this->todo('stub');
+    }
+    
+    /**
+     * 
+     * Test -- Returns the relation characteristics as an array.
+     * 
+     */
+    public function testToArray()
+    {
+        $this->todo('stub');
+    }
+    
+    public function test_lazyFetchOne()
+    {
         // fetch one node, then see how many sql calls so far
         $nodes = $this->_newModel('nodes');
         $params = array(
@@ -152,10 +283,8 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         unset($nodes);
     }
     
-    public function testLazyFetchAll()
+    public function test_lazyFetchAll()
     {
-        $this->_populateAll();
-        
         // fetch all nodes, then see how many sql calls so far
         $nodes = $this->_newModel('nodes');
         $node_coll = $nodes->fetchAll();
@@ -216,16 +345,14 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         unset($nodes);
     }
     
-    public function testEagerFetchOne()
+    public function test_eagerFetchOne()
     {
-        $this->_populateAll();
-        
         // fetch one node with an eager tags
         // then see how many sql calls so far
         $nodes = $this->_newModel('nodes');
         $params = array(
             'where' => array(
-                'id = ?' => rand(1, 10),
+                'nodes.id = ?' => rand(1, 10),
             ),
             'eager' => 'tags',
         );
@@ -248,10 +375,8 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         unset($nodes);
     }
     
-    public function testEagerFetchAll()
+    public function test_eagerFetchAll()
     {
-        $this->_populateAll();
-        
         // fetch all nodes with eager tags
         // then see how many sql calls so far
         $nodes = $this->_newModel('nodes');
@@ -276,10 +401,8 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         unset($nodes);
     }
     
-    public function testEagerFetchOne_noneRelated()
+    public function test_eagerFetchOne_noneRelated()
     {
-        $this->_populateAll();
-        
         // remove taggings on one of the nodes
         $node_id = rand(1,10);
         $taggings = $this->_newModel('taggings');
@@ -292,7 +415,7 @@ class Test_Solar_Sql_ModelRelated_HasManyThrough extends Test_Solar_Sql_ModelRel
         $nodes = $this->_newModel('nodes');
         $params = array(
             'where' => array(
-                'id = ?' => $node_id,
+                'nodes.id = ?' => $node_id,
             ),
             'eager' => 'tags',
         );

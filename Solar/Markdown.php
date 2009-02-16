@@ -689,7 +689,7 @@ class Solar_Markdown extends Solar_Base
      * @return string The encoded text.
      * 
      */
-    public function _encode($text, $in_tag = false)
+    protected function _encode($text, $in_tag = false)
     {
         if ($in_tag) {
             // inside a tag

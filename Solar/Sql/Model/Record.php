@@ -691,7 +691,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             } else {
                 $this->_update();
             }
-        
+            
             // post-save routine
             $this->_postSave();
         }
@@ -914,8 +914,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function refresh($status = null)
     {
-        $primary = $this->_model->primary_col;
-        $id = $this->$primary;
+        $id = $this->getPrimaryVal();
         if (! $id) {
             throw $this->_exception("ERR_CANNOT_REFRESH_BLANK_ID");
         }
@@ -1250,6 +1249,13 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // col needs to exist in the initial array
         if (! array_key_exists($col, $this->_initial)) {
             return null;
+        }
+        
+        // track changes on structs
+        $dirty = $this->_data[$col] instanceof Solar_Struct
+              && $this->_data[$col]->getStatus() == self::STATUS_DIRTY;
+        if ($dirty) {
+            return true;
         }
         
         // track changes to or from null

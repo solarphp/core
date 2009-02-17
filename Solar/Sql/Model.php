@@ -1768,19 +1768,22 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         /**
-         * Record filtering
+         * Record filtering and serializing
          */
         if ($spec instanceof Solar_Sql_Model_Record) {
-            // apply record filters and convert to array
+            // apply record filters
             $spec->filter();
+            // serialize and convert to array
+            $this->serializeCols($spec);
             $data = $spec->toArray();
         } else {
-            // already an array
+            // already an array, just serialize
+            $this->serializeCols($spec);
             $data = $spec;
         }
         
         /**
-         * Final prep, then insert
+         * Final prep and insert
          */
         // remove non-existent table columns from the data
         foreach ($data as $key => $val) {
@@ -1798,14 +1801,14 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // do the insert
-        $this->serializeCols($data);
         $this->_sql->insert($this->_table_name, $data);
-        $this->unserializeCols($data);
         
         /**
          * Post-insert
          */
-        // no exception thrown, so it must have worked.
+        
+        // unserialize data
+        $this->unserializeCols($data);
         
         // if there was an autoincrement column, set its value in the data.
         foreach ($this->_table_cols as $key => $val) {
@@ -1891,6 +1894,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             // apply record filters
             $spec->filter();
             
+            // serialize
+            $this->serializeCols($spec);
+            
             // convert to array
             $data = $spec->toArray();
             
@@ -1913,6 +1919,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             
         } else {
             // already an array
+            $this->serializeCols($spec);
             $data = $spec;
         }
         
@@ -1930,8 +1937,9 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // perform the update
-        $this->serializeCols($data);
         $this->_sql->update($this->_table_name, $data, $where);
+        
+        // unserialize after the update
         $this->unserializeCols($data);
         
         // clear the cache for this model and related models
@@ -1943,7 +1951,7 @@ abstract class Solar_Sql_Model extends Solar_Base
             $spec->setStatus('updated');
         }
         
-        // unserialize cols and return the data as updated. note that if this
+        // return the data as updated. note that if this
         // was a record, only the changed columns will be returned here.
         return $data;
     }

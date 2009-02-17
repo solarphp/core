@@ -235,6 +235,7 @@ class Solar_Struct_Xml extends Solar_Struct
             $struct = clone($this);
             $struct->_data = $result;
             $struct->_root = $parent;
+            $struct->setParent($this);
             return $struct;
         }
     }

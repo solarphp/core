@@ -370,9 +370,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         }
         
         // set placeholders for calculate cols
-        foreach ((array) $this->_model->calculate_cols as $col) {
-            if (! array_key_exists($col, $this->_data)) {
-                $this->_data[$col] = null;
+        $list = array_keys($this->_model->calculate_cols);
+        foreach ($list as $name) {
+            if (! array_key_exists($name, $this->_data)) {
+                $this->_data[$name] = null;
             }
         }
         
@@ -410,7 +411,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $vars = array_merge(
             array_keys($this->_model->table_cols),
             array_keys($this->_model->related),
-            (array) $this->_model->calculate_cols
+            array_keys($this->_model->calculate_cols)
         );
         
         // look for access methods on each one
@@ -487,7 +488,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
     /**
      * 
      * Converts the properties of this model Record or Collection to an array,
-     * including related models stored in properties.
+     * including related models stored in properties and calculated columns.
      * 
      * @return array
      * 
@@ -496,16 +497,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $data = array();
         
-        $keys = array_merge(
-            array_keys($this->_data),
-            $this->_model->calculate_cols
-        );
-        
+        $keys = array_keys($this->_data);
         foreach ($keys as $key) {
             
             // is the key a related record/collection, but not fetched yet?
-            $empty_related = ! empty($this->_model->related[$key]) &&
-                             empty($this->_data[$key]);
+            $empty_related = ! empty($this->_model->related[$key])
+                          && empty($this->_data[$key]);
             
             if ($empty_related) {
                 
@@ -1355,7 +1352,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         if (empty($cols)) {
             $cols = array_merge(
                 $this->_model->fetch_cols,
-                $this->_model->calculate_cols
+                array_keys($this->_model->calculate_cols)
             );
         }
         

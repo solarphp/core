@@ -540,6 +540,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixModelName();
         $this->_fixOrder();
         $this->_fixPropertyCols();
+        $this->_fixCalculateCols();
         $this->_fixFilters(); // including filter class
         $this->_fixCache(); // including cache class
         
@@ -2472,7 +2473,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes a column array to have a base set of keys.
+     * Fixes column info arrays to have a base set of keys.
      * 
      * @param array $cols The column descriptions to fix.
      * 
@@ -2493,7 +2494,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         );
         
         foreach ($cols as $name => $info) {
-            $cols['name'] = $name;
+            $info['name'] = $name;
             $cols[$name] = array_merge($base, $info);
         }
         
@@ -2647,7 +2648,36 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Loads the baseline data filters for each column.
+     * Fix $_calculate_cols to make it look like $_table_cols.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixCalculateCols()
+    {
+        // first, make sure they're keyed properly
+        $cols = array();
+        foreach ($this->_calculate_cols as $key => $val) {
+            if (is_int($key)) {
+                // old: is just a column name. key on the name, and set a
+                // basic array value.
+                $cols[$val] = array('name' => $val);
+            } else {
+                // new: is an array of column info.
+                $cols[$key] = (array) $val;
+            }
+        }
+        
+        // fix them up
+        $cols = $this->_fixCols($cols);
+        
+        // done!
+        $this->_calculate_cols = $cols;
+    }
+    
+    /**
+     * 
+     * Fixes the $_filters array and $_filter_class property.
      * 
      * @return void
      * 
@@ -2676,6 +2706,13 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
+        // add final fallback filters on all columns
+        $this->_fixFilterCols($this->_table_cols);
+        $this->_fixFilterCols($this->_calculate_cols);
+    }
+    
+    protected function _fixFilterCols($cols)
+    {
         // low and high range values for integer filters
         $range = array(
             'smallint' => array(pow(-2, 15), pow(+2, 15) - 1),
@@ -2684,7 +2721,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         );
         
         // add final fallback filters based on data type
-        foreach ($this->_table_cols as $col => $info) {
+        foreach ($cols as $col => $info) {
             
             $type = $info['type'];
             switch ($type) {
@@ -2695,13 +2732,17 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             case 'char':
             case 'varchar':
-                // only add filters if not serializing
-                if (! in_array($col, $this->_serialize_cols)) {
+                // only add filters if not serializing or structing
+                $skip = in_array($col, $this->_serialize_cols)
+                     || in_array($col, $this->_xmlstruct_cols);
+                      
+                if (! $skip) {
                     $this->_filters[$col][] = array('validateString');
                     $this->_filters[$col][] = array('validateMaxLength',
                         $info['size']);
                     $this->_filters[$col][] = array('sanitizeString');
                 }
+                
                 break;
             
             case 'smallint':

@@ -42,18 +42,24 @@ class Solar_Form_Load_Model extends Solar_Base
             $array_name = $model->model_name;
         }
         
-        // table columns in the model
-        $cols = $model->table_cols;
+        // all table and calculate column descriptions in the model
+        $cols = array_merge(
+            $model->table_cols,
+            $model->calculate_cols
+        );
         
         // special condition: if looking for '*' columns,
         // set the list to all the model columns.
         if ($list == '*') {
             if ($model->fetch_cols) {
-                // use the fetch columns
-                $list = $model->fetch_cols;
+                // use the fetch and calculate cols
+                $list = array_merge(
+                    $model->fetch_cols,
+                    array_keys($model->calculate_cols)
+                );
             } else {
                 // use all columns
-                $list = array_keys($model->table_cols);
+                $list = array_keys($cols);
             }
             
             // flip around so we can unset easier

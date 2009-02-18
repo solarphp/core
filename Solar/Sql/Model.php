@@ -2711,6 +2711,16 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixFilterCols($this->_calculate_cols);
     }
     
+    /**
+     * 
+     * Adds filters for a given set of columns.
+     * 
+     * @param array $cols A set of column descriptions, typically from
+     * $_table_cols or $_calculate_cols.
+     * 
+     * @return void
+     * 
+     */
     protected function _fixFilterCols($cols)
     {
         // low and high range values for integer filters
@@ -2720,27 +2730,27 @@ abstract class Solar_Sql_Model extends Solar_Base
             'bigint'   => array(pow(-2, 63), pow(+2, 63) - 1)
         );
         
-        // add final fallback filters based on data type
-        foreach ($cols as $col => $info) {
+        // add filters based on data type
+        foreach ($cols as $name => $info) {
             
             $type = $info['type'];
             switch ($type) {
             case 'bool':
-                $this->_filters[$col][] = array('validateBool');
-                $this->_filters[$col][] = array('sanitizeBool');
+                $this->_filters[$name][] = array('validateBool');
+                $this->_filters[$name][] = array('sanitizeBool');
                 break;
             
             case 'char':
             case 'varchar':
                 // only add filters if not serializing or structing
-                $skip = in_array($col, $this->_serialize_cols)
-                     || in_array($col, $this->_xmlstruct_cols);
+                $skip = in_array($name, $this->_serialize_cols)
+                     || in_array($name, $this->_xmlstruct_cols);
                       
                 if (! $skip) {
-                    $this->_filters[$col][] = array('validateString');
-                    $this->_filters[$col][] = array('validateMaxLength',
+                    $this->_filters[$name][] = array('validateString');
+                    $this->_filters[$name][] = array('validateMaxLength',
                         $info['size']);
-                    $this->_filters[$col][] = array('sanitizeString');
+                    $this->_filters[$name][] = array('sanitizeString');
                 }
                 
                 break;
@@ -2748,22 +2758,22 @@ abstract class Solar_Sql_Model extends Solar_Base
             case 'smallint':
             case 'int':
             case 'bigint':
-                $this->_filters[$col][] = array('validateInt');
-                $this->_filters[$col][] = array('validateRange',
+                $this->_filters[$name][] = array('validateInt');
+                $this->_filters[$name][] = array('validateRange',
                     $range[$type][0], $range[$type][1]);
-                $this->_filters[$col][] = array('sanitizeInt');
+                $this->_filters[$name][] = array('sanitizeInt');
                 break;
             
             case 'numeric':
-                $this->_filters[$col][] = array('validateNumeric');
-                $this->_filters[$col][] = array('validateSizeScope',
+                $this->_filters[$name][] = array('validateNumeric');
+                $this->_filters[$name][] = array('validateSizeScope',
                     $info['size'], $info['scope']);
-                $this->_filters[$col][] = array('sanitizeNumeric');
+                $this->_filters[$name][] = array('sanitizeNumeric');
                 break;
             
             case 'float':
-                $this->_filters[$col][] = array('validateFloat');
-                $this->_filters[$col][] = array('sanitizeFloat');
+                $this->_filters[$name][] = array('validateFloat');
+                $this->_filters[$name][] = array('sanitizeFloat');
                 break;
             
             case 'clob':
@@ -2771,18 +2781,18 @@ abstract class Solar_Sql_Model extends Solar_Base
                 break;
             
             case 'date':
-                $this->_filters[$col][] = array('validateIsoDate');
-                $this->_filters[$col][] = array('sanitizeIsoDate');
+                $this->_filters[$name][] = array('validateIsoDate');
+                $this->_filters[$name][] = array('sanitizeIsoDate');
                 break;
             
             case 'time':
-                $this->_filters[$col][] = array('validateIsoTime');
-                $this->_filters[$col][] = array('sanitizeIsoTime');
+                $this->_filters[$name][] = array('validateIsoTime');
+                $this->_filters[$name][] = array('sanitizeIsoTime');
                 break;
             
             case 'timestamp':
-                $this->_filters[$col][] = array('validateIsoTimestamp');
-                $this->_filters[$col][] = array('sanitizeIsoTimestamp');
+                $this->_filters[$name][] = array('validateIsoTimestamp');
+                $this->_filters[$name][] = array('sanitizeIsoTimestamp');
                 break;
             }
         }

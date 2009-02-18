@@ -31,6 +31,11 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (dependency) A Solar_Cache dependency for the Solar_Sql_Model_Cache
      *   object.
      * 
+     * `table_scan`
+     * : (bool) Connect to the database and scan the table for its column
+     *   descriptions, creating the table and indexes if not already present.
+     *   Default true.
+     * 
      * `auto_cache`
      * : (bool) Automatically maintain the data cache.  Default false.
      * 
@@ -42,6 +47,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         'cache' => array(
             'adapter' => 'Solar_Cache_Adapter_Var',
         ),
+        'table_scan' => true,
         'auto_cache' => false,
     );
     
@@ -282,8 +288,31 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected $_serialize_cols = array();
     
+    /**
+     * 
+     * A list of column names storing XML strings to convert back and forth to
+     * Solar_Struct_Xml objects.
+     * 
+     * @var array
+     * 
+     * @see $_xmlstruct_class
+     * 
+     * @see Solar_Struct_Xml
+     * 
+     */
     protected $_xmlstruct_cols = array();
     
+    /**
+     * 
+     * The class to use for $_xmlstruct_cols conversion objects.
+     * 
+     * @var string
+     * 
+     * @var array
+     * 
+     * @see $_xmlstruct_cols
+     * 
+     */
     protected $_xmlstruct_class = 'Solar_Struct_Xml';
     
     /**
@@ -507,6 +536,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         $this->_fixTableName();
         $this->_fixIndex();
         $this->_fixTableCols(); // also creates table if needed
+        $this->_fixPrimaryCol();
         $this->_fixModelName();
         $this->_fixOrder();
         $this->_fixPropertyCols();
@@ -2388,46 +2418,107 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Fixes table column definitions into $_table_cols, and post-sets
-     * inheritance values.
+     * Fixes table column definitions in $_table_cols.
      * 
      * @return void
      * 
      */
     protected function _fixTableCols()
     {
-        try {
-            // get the column descriptions
-            $cols = $this->_sql->fetchTableCols($this->_table_name);
-        } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
-            // does the table exist in the database?
-            $list = $this->_sql->fetchTableList();
-            if (! in_array($this->_table_name, $list)) {
-                // no, try to create it ...
-                $this->_createTableAndIndexes();
-                // ... and get the column descriptions
+        // should we scan the table cols at the database?
+        if (! $this->_config['table_scan']) {
+        
+            // table scans turned off. assume that $_table_cols is mostly 
+            // correct and force population of the minimum key set.
+            $cols = $this->_fixCols($this->_table_cols);
+            
+        } else {
+            
+            // scan the database table for column descriptions
+            try {
+                
+                // get the column descriptions from the database
                 $cols = $this->_sql->fetchTableCols($this->_table_name);
-            } else {
-                // found the table, must have been something else wrong
-                throw $e;
+                
+            } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
+                
+                // does the table exist in the database?
+                $list = $this->_sql->fetchTableList();
+                if (! in_array($this->_table_name, $list)) {
+                    
+                    // no, try to create it ...
+                    $this->_createTableAndIndexes();
+                    
+                    // ... and get the column descriptions
+                    $cols = $this->_sql->fetchTableCols($this->_table_name);
+                    
+                } else {
+                    
+                    // found the table, must have been something else wrong
+                    throw $e;
+                    
+                }
             }
+            
+            // @todo add a "sync" check to see if column data in the class
+            // matches column data in the database, and throw an exception
+            // if they don't match pretty closely.
+            
         }
         
-        // reset the columns to be **as they are at the database**
+        // reset to the fixed columns
         $this->_table_cols = $cols;
+    }
+    
+    /**
+     * 
+     * Fixes a column array to have a base set of keys.
+     * 
+     * @param array $cols The column descriptions to fix.
+     * 
+     * @return array The fixed column descriptions.
+     * 
+     */
+    protected function _fixCols($cols)
+    {
+        $base = array(
+            'name'    => null,
+            'type'    => null,
+            'size'    => null,
+            'scope'   => null,
+            'default' => null,
+            'require' => false,
+            'primary' => false,
+            'autoinc' => false,
+        );
         
-        // @todo add a "sync" check to see if column data in the class
-        // matches column data in the database, and throw an exception
-        // if they don't match pretty closely.
+        foreach ($cols as $name => $info) {
+            $cols['name'] = $name;
+            $cols[$name] = array_merge($base, $info);
+        }
         
-        // set the primary col if we don't already have one
-        if (! $this->_primary_col) {
-            // use the first primary key; ignore later primary keys
-            foreach ($this->_table_cols as $key => $val) {
-                if ($val['primary']) {
-                    $this->_primary_col = $key;
-                    break;
-                }
+        return $cols;
+    }
+    
+    /**
+     * 
+     * Sets $_primary_col if not already set.
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixPrimaryCol()
+    {
+        if ($this->_primary_col) {
+            return;
+        }
+        
+        // use the first primary key; ignore later primary keys
+        foreach ($this->_table_cols as $key => $val) {
+            if ($val['primary']) {
+                // found one!
+                $this->_primary_col = $key;
+                return;
             }
         }
     }

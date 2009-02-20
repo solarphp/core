@@ -1332,13 +1332,31 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function fetchNew($spec = null)
     {
+        $data   = $this->_fetchNewData($spec);
+        $record = $this->newRecord($data);
+        $record->setStatus('new');
+        return $record;
+    }
+    
+    /**
+     * 
+     * Support method to generate the data for a new, blank record.
+     * 
+     * @param array $spec An array of user-specified data to place into the
+     * new record, if any.
+     * 
+     * @return array An array of data for loading into a a new, blank record.
+     * 
+     */
+    protected function _fetchNewData($spec = null)
+    {
         // the user-specifed data
         settype($spec, 'array');
         
         // the array of data for the record
         $data = array();
         
-        // loop through each specified column and collect default data
+        // loop through each table column and collect default data
         foreach ($this->_table_cols as $key => $val) {
             if (array_key_exists($key, $spec)) {
                 // user-specified
@@ -1349,16 +1367,15 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // if we have inheritance, set that too
-        if ($this->_inherit_model) {
-            $key = $this->_inherit_col;
-            $data[$key] = $this->_inherit_model;
-        }
-        
-        // set placeholders for relateds.
-        $names = array_keys($this->_related);
-        foreach ($names as $name) {
-            $data[$name] = null;
+        // loop through each calculate column and collect default data
+        foreach ($this->_calculate_cols as $key => $val) {
+            if (array_key_exists($key, $spec)) {
+                // user-specified
+                $data[$key] = $spec[$key];
+            } else {
+                // default value
+                $data[$key] = $val['default'];
+            }
         }
         
         // add Solar_Xml_Struct objects
@@ -1366,10 +1383,20 @@ abstract class Solar_Sql_Model extends Solar_Base
             $data[$key] = Solar::factory($this->_xmlstruct_class);
         }
         
-        // done, return the proper record object
-        $record = $this->newRecord($data);
-        $record->setStatus('new');
-        return $record;
+        // set placeholders for relateds
+        $names = array_keys($this->_related);
+        foreach ($names as $name) {
+            $data[$name] = null;
+        }
+        
+        // if we have inheritance, set that too
+        if ($this->_inherit_model) {
+            $key = $this->_inherit_col;
+            $data[$key] = $this->_inherit_model;
+        }
+        
+        // done
+        return $data;
     }
     
     /**

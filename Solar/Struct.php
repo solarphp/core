@@ -446,7 +446,6 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
             }
         } elseif ($value instanceof Solar_Struct) {
             // recursively free child Solar_Struct objects
-            Solar::dump(get_class($value), "freeing");
             $value->free();
         }
     }

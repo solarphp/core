@@ -31,9 +31,7 @@ if (! $class) {
 
 // method prefix?
 $method = $_SERVER['argv'][3];
-if ($method) {
-    $method = 'test' . ucfirst($method);
-} else {
+if (! $method) {
     $method = null;
 }
 
@@ -75,7 +73,7 @@ foreach ($test_classes as $test_class) {
     }
     
     // is it an "only" class?
-    if ($only && $test_class != "Test_$class") {
+    if ($only && $test_class != $class) {
         continue;
     }
     
@@ -120,7 +118,7 @@ foreach ($test_classes as $test_class) {
 }
 
 // dump the serialized data
-echo serialize($data);
+echo serialize($data) . PHP_EOL;
 
 // exit code 104 is "EXIT_PASS"
 exit(104);

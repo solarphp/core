@@ -172,7 +172,7 @@ class Solar_Test_Suite extends Solar_Base
         
         // find the tests using a separate php process
         $php = $this->_newPhp();
-        $php->addArgv($this->_dir . '/Test/')
+        $php->addArgv($this->_dir . '/')
             ->addArgv($class)
             ->addArgv($method)
             ->addArgv((int) $only)

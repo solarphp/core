@@ -98,10 +98,10 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
         }
         
         // get the target API die (if any)
-        $this->_class_dir = Solar_Dir::fix($this->_options['class-dir']);
+        $this->_class_dir = Solar_Dir::fix($this->_options['class_dir']);
         
         // get the target package dir (if any)
-        $this->_package_dir = Solar_Dir::fix($this->_options['package-dir']);
+        $this->_package_dir = Solar_Dir::fix($this->_options['package_dir']);
         
         // start parsing
         $this->_outln("Parsing source files from '{$this->_source}' ... ");

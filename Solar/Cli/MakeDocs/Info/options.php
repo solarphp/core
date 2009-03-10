@@ -1,18 +1,15 @@
 <?php
 return array(
     'source' => array(
-        'long'    => 'source',
         'descr'   => 'The source directory, typically the PEAR directory.',
         'param'   => 'optional',
     ),
-    'class-dir' => array(
-        'long'    => 'class-dir',
+    'class_dir' => array(
         'descr'   => 'Write class API docs to this directory.',
         'param'   => 'required', 
         'require' => true,
     ),
-    'package-dir' => array(
-        'long'    => 'package-dir',
+    'package_dir' => array(
         'descr'   => 'Write package docs to this directory.',
         'param'   => 'required', 
         'require' => true,

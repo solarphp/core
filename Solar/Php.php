@@ -64,10 +64,8 @@ class Solar_Php extends Solar_Base
      * 
      * @var string
      * 
-     * @todo switch this based on BSD/Linux/Mac/Solaris.
-     * 
      */
-    protected $_php = '/usr/local/bin/php';
+    protected $_php = 'php';
     
     /**
      * 

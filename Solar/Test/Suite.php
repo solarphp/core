@@ -94,6 +94,13 @@ class Solar_Test_Suite extends Solar_Base
      */
     protected $_var;
     
+    /**
+     * 
+     * When in 'verbose' mode, all diagnostic output will be displayed.
+     * 
+     * @var bool
+     * 
+     */
     protected $_verbose = false;
     
     /**
@@ -126,11 +133,27 @@ class Solar_Test_Suite extends Solar_Base
         );
     }
     
+    /**
+     * 
+     * Turns 'verbose' mode on and off.
+     * 
+     * @param bool $flag True for verbose, false for not.
+     * 
+     * @return void
+     * 
+     */
     public function setVerbose($flag)
     {
         $this->_verbose = (bool) $flag;
     }
     
+    /**
+     * 
+     * Creates a new Solar_Php instance with some default settings.
+     * 
+     * @return Solar_Php
+     * 
+     */
     protected function _newPhp()
     {
         $php = Solar::factory('Solar_Php');
@@ -147,12 +170,16 @@ class Solar_Test_Suite extends Solar_Base
     
     /**
      * 
-     * Finds tests, loads them into the plan.
+     * Finds tests and loads them into the plan.
      * 
      * @param string $dir The Test directory, typically "include".
      * 
-     * @return void $class Start with this test class suffix.  E.g., if $class
-     * is "Foo", then the tests will start with "Test_Foo".
+     * @param string $class Start with this test class; e.g, "Test_Foo".
+     * 
+     * @param string $method Load only this test method; e.g, "testBar".
+     * 
+     * @param bool $only Load only the named class, or class and method, 
+     * instead of descending into sub-tests.
      * 
      */
     public function loadTests($class = null, $method = null, $only = null)
@@ -220,13 +247,14 @@ class Solar_Test_Suite extends Solar_Base
      * `fail`
      * : (array) Log of tests that failed.
      * 
-     * @param string $class Prepare tests for this class series.  If empty, 
-     * will run all Test_* classes.
+     * @param string $class Run only this test class series. If empty, will
+     * run all test classes.
      * 
-     * @param string $method When empty, recurse into subdirectories and run 
-     * sub-test classes and methods.  When non-empty, run **only** this test 
-     * method in the named test class; do not include the "test" prefix. 
-     * Default null; ignored when $class is empty.
+     * @param string $method Run only this test method in the test class
+     * series.  If empty, will run all test methods.
+     * 
+     * @param bool $only Run only the name class, or named class and method, 
+     * instead of descending into sub-tests.
      * 
      * @return array A statistics array.
      * 
@@ -273,6 +301,17 @@ class Solar_Test_Suite extends Solar_Base
         return $this->_info;
     }
     
+    /**
+     * 
+     * Test the construction of the test class to see if it works.
+     * 
+     * @param Solar_Php $php The PHP execution object.
+     * 
+     * @param string $class The test class for contstruction.
+     * 
+     * @return int The exit code from construction.
+     * 
+     */
     protected function _testConstruct($php, $class)
     {
         $file = Solar_Class::dir($this) . 'pre-test.php';
@@ -290,6 +329,19 @@ class Solar_Test_Suite extends Solar_Base
         return $exit;
     }
     
+    /**
+     * 
+     * Run a single test method from the test class.
+     * 
+     * @param Solar_Php $php The PHP execution object.
+     * 
+     * @param string $class The test class.
+     * 
+     * @param string $method The test method.
+     * 
+     * @return void
+     * 
+     */
     protected function _testMethod($php, $class, $method)
     {
         $file = Solar_Class::dir($this) . 'run-test.php';

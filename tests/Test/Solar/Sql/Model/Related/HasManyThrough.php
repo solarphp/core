@@ -54,7 +54,6 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     public function setup()
     {
         parent::setup();
-        $this->_class = 'Solar_Sql_Model_Related_HasMany';
     }
     
     /**
@@ -72,17 +71,6 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     // Test methods.
     // 
     // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Test -- Constructor.
-     * 
-     */
-    public function test__construct()
-    {
-        $obj = Solar::factory('Solar_Sql_Model_Related_HasMany');
-        $this->assertInstance($obj, 'Solar_Sql_Model_Related_HasMany');
-    }
     
     /**
      * 
@@ -121,9 +109,9 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
      */
     public function testLoad()
     {
-        $nodes = $this->_newModel('nodes');
-        $taggings = $this->_newModel('taggings');
-        $tags = $this->_newModel('tags');
+        $nodes = $this->_catalog->getModel('nodes');
+        $taggings = $this->_catalog->getModel('taggings');
+        $tags = $this->_catalog->getModel('tags');
         
         $related = $this->_newRelated($nodes, array(
             'name'    => 'tags',
@@ -139,41 +127,28 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
                 1 => 'name',
                 2 => 'summ',
             ),
-            'distinct'               => false,
-            'fetch'                  => 'all',
             'foreign_alias'          => 'tags',
             'foreign_class'          => 'Solar_Example_Model_Tags',
             'foreign_col'            => 'id',
-            'foreign_inherit_col'    => null,
-            'foreign_inherit_val'    => null,
             'foreign_key'            => 'id',
             'foreign_primary_col'    => 'id',
             'foreign_table'          => 'test_solar_tags',
-            'group'                  => null,
-            'having'                 => null,
             'name'                   => 'tags',
             'native_alias'           => 'nodes',
             'native_class'           => 'Solar_Example_Model_Nodes',
             'native_col'             => 'id',
-            'native_table'           => 'test_solar_nodes',
             'order'                  => array('tags.id'),
-            'paging'                 => 10,
             'through'                => 'taggings',
             'through_alias'          => 'taggings',
             'through_foreign_col'    => 'tag_id',
             'through_key'            => null,
             'through_native_col'     => 'node_id',
             'through_table'          => 'test_solar_taggings',
-            'type'                   => 'has_many',
+            'type'                   => 'has_many_through',
             'where'                  => null,
         );
         
         $this->assertSame($actual, $expect);
-        
-        // recover memory
-        $tags->free();
-        $taggings->free();
-        $nodes->free();
     }
     
     /**
@@ -229,7 +204,7 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
     public function test_lazyFetchOne()
     {
         // fetch one node, then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array(
             'where' => array(
                 'id = ?' => rand(1, 10),
@@ -277,16 +252,12 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
         $count3 = count($this->_sql->getProfile());
         $this->assertEquals($count3, $count2);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_lazyFetchAll()
     {
         // fetch all nodes, then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $node_coll = $nodes->fetchAll();
         $count_before = count($this->_sql->getProfile());
         
@@ -339,17 +310,13 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_eagerFetchOne()
     {
         // fetch one node with an eager tags
         // then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array(
             'where' => array(
                 'nodes.id = ?' => rand(1, 10),
@@ -369,17 +336,13 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // should have been no extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_eagerFetchAll()
     {
         // fetch all nodes with eager tags
         // then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array('eager' => 'tags');
         $node_coll = $nodes->fetchAll($params);
         $count_before = count($this->_sql->getProfile());
@@ -395,24 +358,20 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         // should have been no extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_eagerFetchOne_noneRelated()
     {
         // remove taggings on one of the nodes
         $node_id = rand(1,10);
-        $taggings = $this->_newModel('taggings');
+        $taggings = $this->_catalog->getModel('taggings');
         $table = $taggings->table_name;
         $cmd = "DELETE FROM $table WHERE node_id = $node_id";
         $this->_sql->query($cmd);
         
         // fetch one node with an eager tags
         // then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array(
             'where' => array(
                 'nodes.id = ?' => $node_id,
@@ -425,19 +384,11 @@ class Test_Solar_Sql_Model_Related_HasManyThrough extends Test_Solar_Sql_Model_R
         
         // get the tags, make sure there aren't any.
         $tags = $node->tags;
-        $this->assertInstance($tags, 'Solar_Example_Model_Tags_Collection');
+        $this->assertTrue(is_array($tags));
         $this->assertTrue(count($tags) == 0);
         
         // should have been no extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $taggings->free();
-        unset($taggings);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
 }

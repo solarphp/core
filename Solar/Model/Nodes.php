@@ -178,20 +178,16 @@ class Solar_Model_Nodes extends Solar_Model
         $tag_list = $this->_fixTagList($tag_list);
         if ($tag_list) {
             
-            // make sure the params are right before we manipulate them
-            $params = $this->fixSelectParams($params);
-            
-            // use this so we can inherit different model names
-            $native_primary = "{$this->_model_name}.{$this->_primary_col}";
-            
             // eager-join to tags
-            $params['eager'][] = 'tags';
-            
-            // find tags in this list
-            $params['where']['tags.name IN (?)'] = $tag_list;
+            $params['eager']['tags'] = array(
+                'where' => array(
+                    'tags.name IN (?)' => $tag_list,
+                ),
+            );
             
             // group by the model primary key so that multiple tag matches
             // only return one row
+            $native_primary = $this->getPrimary();
             $params['group'][] = $native_primary;
             
             // make sure that all tags match

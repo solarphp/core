@@ -141,6 +141,29 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
+     * Return a list of the unique primary keys contained in this collection.
+     * Will not cause records to be created for as of yet unaccessed rows.
+     *
+     * @param string $primary primary column to collect.
+     *
+     * @return array
+     * 
+     */
+    public function uniqueKeys($primary = null)
+    {
+        $keys = array();
+        if (empty($primary)) {
+            $primary = $this->_model->primary_col;
+        }
+        foreach ($this->_data as $row) {
+            $keys[] = $row[$primary];
+        }
+        $keys = array_unique($keys);
+        return $keys;
+    }
+    
+    /**
+     * 
      * Injects the model from which the data originates.
      * 
      * Also loads accessor method lists for column and related properties.

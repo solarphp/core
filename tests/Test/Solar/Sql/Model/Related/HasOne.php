@@ -53,7 +53,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
      */
     public function testLoad()
     {
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         
         $related = $this->_newRelated($nodes, array(
             'name' => 'meta',
@@ -71,31 +71,17 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
                 4 => 'last_comment_at',
                 5 => 'comment_count',
             ),
-            'distinct'              => false,
-            'fetch'                 => 'one',
             'foreign_alias'         => 'meta',
             'foreign_class'         => 'Solar_Example_Model_Metas',
             'foreign_col'           => 'node_id',
-            'foreign_inherit_col'   => NULL,
-            'foreign_inherit_val'   => NULL,
             'foreign_key'           => 'node_id',
             'foreign_primary_col'   => 'id',
             'foreign_table'         => 'test_solar_metas',
-            'group'                 => NULL,
-            'having'                => NULL,
             'name'                  => 'meta',
             'native_alias'          => 'nodes',
             'native_class'          => 'Solar_Example_Model_Nodes',
             'native_col'            => 'id',
-            'native_table'          => 'test_solar_nodes',
             'order'                 => array('meta.id'),
-            'paging'                => 10,
-            'through'               => NULL,
-            'through_alias'         => NULL,
-            'through_foreign_col'   => NULL,
-            'through_key'           => NULL,
-            'through_native_col'    => NULL,
-            'through_table'         => NULL,
             'type'                  => 'has_one',
             'where'                 => NULL,
         );
@@ -157,7 +143,7 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
     public function test_lazyFetchOne()
     {
         // fetch one node, then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array(
             'where' => array(
                 'id = ?' => rand(1, 10),
@@ -182,16 +168,12 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         $this->assertEquals($meta->node_id, $node->id);
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_lazyFetchAll()
     {
         // fetch all nodes, then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $collection = $nodes->fetchAll();
         $count_before = count($this->_sql->getProfile());
         
@@ -215,17 +197,13 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_eagerFetchOne()
     {
         // fetch one node with an eager meta
         // then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array(
             'where' => array(
                 'nodes.id = ?' => rand(1, 10),
@@ -243,17 +221,13 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // **should not** have been an extra SQL call
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     public function test_eagerFetchAll()
     {
         // fetch all nodes with eager meta
         // then see how many sql calls so far
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $params = array('eager' => 'meta');
         $collection = $nodes->fetchAll($params);
         $count_before = count($this->_sql->getProfile());
@@ -268,9 +242,5 @@ class Test_Solar_Sql_Model_Related_HasOne extends Test_Solar_Sql_Model_Related {
         // **should not** have been extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
 }

@@ -80,7 +80,7 @@ class Test_Solar_Session_Handler extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Session_Handler');
-        $this->assertInstance($obj, 'Solar_Session_Handler');
+        $this->assertInstance($obj, 'Solar_Session_Handler_Adapter');
     }
     
     /**

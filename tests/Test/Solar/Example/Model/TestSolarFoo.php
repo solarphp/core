@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Example_Model_TestSolarFoo extends Solar_Test {
+class Test_Solar_Example_Model_TestSolarFoo extends Test_Solar_Example_Model {
     
     /**
      * 

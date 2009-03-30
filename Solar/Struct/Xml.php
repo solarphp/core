@@ -153,7 +153,12 @@ class Solar_Struct_Xml extends Solar_Struct
     protected function _loadSimpleXmlElement(SimpleXMLELement $elem)
     {
         $this->_root = $elem->getName();
-        $this->_data = $this->_convert($elem, $this->_root, true);
+        $result = $this->_convert($elem, $this->_root, true);
+        if (is_array($result)) {
+            $this->_data = $result;
+        } else {
+            $this->_data = array();
+        }
     }
     
     /**

@@ -177,24 +177,6 @@ class Solar_App_Bookmarks extends Solar_App_Base
     
     /**
      * 
-     * Bookmarks model.
-     * 
-     * @var Solar_Model_Bookmarks
-     * 
-     */
-    protected $_bookmarks;
-    
-    /**
-     * 
-     * Tags model.
-     * 
-     * @var Solar_Model_Tags
-     * 
-     */
-    protected $_tags;
-    
-    /**
-     * 
      * Extended setup.
      * 
      * Checks to make sure a bookmarks area exists, gets a user object
@@ -208,13 +190,14 @@ class Solar_App_Bookmarks extends Solar_App_Base
     {
         parent::_setup();
         
-        // make sure the area exists, and keep it
-        $areas = Solar::factory('Solar_Model_Areas');
+        // get an area object
         $name = $this->_config['area_name'];
-        $this->area = $areas->fetchOneByName($name);
+        $this->area = $this->_model->areas->fetchOneByName($name);
+        
+        // could we find the area?
         if (! $this->area) {
             // area didn't exist, create it.
-            $this->area = $areas->fetchNew();
+            $this->area = $this->_model->areas->fetchNew();
             $this->area->name = $name;
             $result = $this->area->save();
             if (! $result) {
@@ -224,12 +207,6 @@ class Solar_App_Bookmarks extends Solar_App_Base
 
         // get a user object for privileges
         $this->user = Solar_Registry::get('user');
-        
-        // keep a bookmarks model
-        $this->_bookmarks = Solar::factory('Solar_Model_Bookmarks');
-        
-        // keep a tags model
-        $this->_tags = Solar::factory('Solar_Model_Tags');
     }
     
     /**
@@ -314,7 +291,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         $cols = array('uri', 'subj', 'summ', 'tags_as_string', 'pos');
         
         // get a blank bookmark, then populate with submitted data
-        $item = $this->_bookmarks->fetchNew();
+        $item = $this->_model->bookmarks->fetchNew();
         $data = $this->_request->post('bookmarks', array());
         $item->load($data, $cols);
         
@@ -362,7 +339,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         }
         
         // fetch the bookmark
-        $item = $this->_bookmarks->fetch($id);
+        $item = $this->_model->bookmarks->fetch($id);
         
         // does it exist?
         if (! $item) {
@@ -375,7 +352,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         }
         
         // must be the item owner to edit it
-        $item = $this->_bookmarks->fetchOneById($id, array(
+        $item = $this->_model->bookmarks->fetchOneById($id, array(
             'eager' => array('tags'),
         ));
         
@@ -482,7 +459,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         
         // we need to see if the user already has the same URI in
         // his bookmarks so that we don't add it twice.
-        $existing = $this->_bookmarks->fetchOneByOwnerHandleAndUri(
+        $existing = $this->_model->bookmarks->fetchOneByOwnerHandleAndUri(
             $this->user->auth->handle,
             $uri
         );
@@ -498,7 +475,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         $cols = array('uri', 'subj', 'summ', 'tags_as_string', 'pos');
         
         // get a blank bookmark, then populate with submitted data
-        $item = $this->_bookmarks->fetchNew();
+        $item = $this->_model->bookmarks->fetchNew();
         
         // populate first with query values
         $item->uri = $uri;
@@ -550,7 +527,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         );
         
         // get the list of bookmarks
-        $this->list = $this->_bookmarks->fetchAllByTags($tag_list, $params);
+        $this->list = $this->_model->bookmarks->fetchAllByTags($tag_list, $params);
         
         // flash forward the backlink in case we go to edit, but only if this
         // is a regular-format request
@@ -562,7 +539,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         }
         
         // assign the list of tags in use
-        $this->tags_in_use = $this->_tags->fetchAllWithCount(array(
+        $this->tags_in_use = $this->_model->tags->fetchAllWithCount(array(
             'order' => 'tags.name'
         ));
         
@@ -621,9 +598,9 @@ class Solar_App_Bookmarks extends Solar_App_Base
         
         // tags or no-tags?
         if ($tag_list) {
-            $this->list = $this->_bookmarks->fetchAllByTags($tag_list, $params);
+            $this->list = $this->_model->bookmarks->fetchAllByTags($tag_list, $params);
         } else {
-            $this->list = $this->_bookmarks->fetchAll($params);
+            $this->list = $this->_model->bookmarks->fetchAll($params);
         }
         
         // flash forward the backlink in case we go to edit, but only if this
@@ -633,7 +610,7 @@ class Solar_App_Bookmarks extends Solar_App_Base
         }
         
         // assign the list of tags in use
-        $this->tags_in_use = $this->_tags->fetchAllByOwnerHandle(
+        $this->tags_in_use = $this->_model->tags->fetchAllByOwnerHandle(
             $owner_handle,
             array(
                 'order' => 'tags.name'

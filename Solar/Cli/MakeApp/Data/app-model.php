@@ -16,7 +16,7 @@ class {:class} extends {:extends} {
     
     /**
      * 
-     * A list of records.
+     * A collection of records.
      * 
      * @var {:model_class}_Collection
      * 
@@ -54,27 +54,32 @@ class {:class} extends {:extends} {
     
     /**
      * 
-     * An instance of the model class.
+     * An instance of the model catalog.
      * 
-     * @var {:model_class}
+     * @var Solar_Sql_Model_Catalog
      * 
      */
-    protected $_{:model_var};
+    protected $_model;
     
     /**
      * 
-     * Pre-run logic to load a model instance.
+     * Setup logic to register and retain a model catalog.
      * 
      * @return void
      * 
      */
-    protected function _preRun()
+    protected function _setup()
     {
         // parent logic
-        parent::_preRun();
+        parent::_setup();
         
-        // load a model instance
-        $this->_{:model_var} = Solar::factory('{:model_class}');
+        // register the model catalog
+        if (! Solar_Registry::exists('model_catalog')) {
+            Solar_Registry::set('model_catalog', 'Solar_Sql_Model_Catalog');
+        }
+        
+        // retain the model catalog
+        $this->_model = Solar_Registry::get('model_catalog');
     }
     
     /**
@@ -87,7 +92,7 @@ class {:class} extends {:extends} {
     public function actionBrowse()
     {
         // get the collection
-        $this->list = $this->_{:model_var}->fetchAll(array(
+        $this->list = $this->_model->{:model_name}->fetchAll(array(
             'page'        => $this->_query('page', 1),
             'paging'      => $this->_query('paging', 10),
             'count_pages' => true,
@@ -111,7 +116,7 @@ class {:class} extends {:extends} {
         }
                 
         // get the record
-        $this->item = $this->_{:model_var}->fetch($id);
+        $this->item = $this->_model->{:model_name}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {
@@ -148,7 +153,7 @@ class {:class} extends {:extends} {
         }
         
         // get the record
-        $this->item = $this->_{:model_var}->fetch($id);
+        $this->item = $this->_model->{:model_name}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {
@@ -159,7 +164,7 @@ class {:class} extends {:extends} {
         if ($this->_isProcess('save')) {
             
             // what array name should we look for in the POST data?
-            $name = $this->_{:model_var}->model_name;
+            $name = $this->_model->{:model_name}->model_name;
             
             // get the POST data using the array name
             $data = $this->_request->post($name, array());
@@ -198,13 +203,13 @@ class {:class} extends {:extends} {
         }
         
         // get a new record
-        $this->item = $this->_{:model_var}->fetchNew();
+        $this->item = $this->_model->{:model_name}->fetchNew();
         
         // process: save
         if ($this->_isProcess('save')) {
             
             // what array name should we look for in the POST data?
-            $name = $this->_{:model_var}->model_name;
+            $name = $this->_model->{:model_name}->model_name;
             
             // get the POST data using the array name
             $data = $this->_request->post($name, array());
@@ -244,7 +249,7 @@ class {:class} extends {:extends} {
         }
         
         // get the record
-        $this->item = $this->_{:model_var}->fetch($id);
+        $this->item = $this->_model->{:model_name}->fetch($id);
         
         // does the record exist?
         if (! $this->item) {

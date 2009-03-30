@@ -16,7 +16,19 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     protected $_Test_Solar_Sql_Model_Record = array(
     );
     
-    protected $_sql;
+    protected $_sql_config = array(
+        'adapter' => 'Solar_Sql_Adapter_Sqlite',
+    );
+    
+    protected $_sql = null;
+    
+    protected $_catalog_config = array(
+        'classes' => array(
+            'Solar_Example_Model',
+        ),
+    );
+    
+    protected $_catalog = null;
     
     // -----------------------------------------------------------------
     // 
@@ -56,8 +68,23 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     public function setup()
     {
         parent::setup();
-        $this->_sql = Solar::factory('Solar_Sql');
+        
+        // set up an SQL connection
+        $this->_sql = Solar::factory(
+            'Solar_Sql',
+            $this->_sql_config
+        );
         $this->_sql->setProfiling(true);
+        
+        // set up a model catalog
+        $this->_catalog = Solar::factory(
+            'Solar_Sql_Model_Catalog',
+            $this->_catalog_config
+        );
+        
+        // register the connection and catalog
+        Solar_Registry::set('sql', $this->_sql);
+        Solar_Registry::set('model_catalog', $this->_catalog);
         
         // populate everything
         $this->_populateAll();
@@ -73,13 +100,6 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         parent::teardown();
     }
     
-    protected function _newModel($name)
-    {
-        $class = "Solar_Example_Model_" . ucfirst($name);
-        $model = Solar::factory($class, array('sql' => $this->_sql));
-        return $model;
-    }
-    
     protected function _populateAll()
     {
         $this->_populateUsers();
@@ -92,22 +112,18 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     
     protected function _populateUsers()
     {
-        $users = $this->_newModel('users');
+        $users = $this->_catalog->getModel('users');
         $handles = array('zim', 'dib', 'gir');
         foreach ($handles as $key => $val) {
             $user = $users->fetchNew();
             $user->handle = $val;
             $user->save();
         }
-        
-        // recover memory
-        $users->free();
-        unset($users);
     }
     
     protected function _populateAreas()
     {
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $names = array('Irk', 'Earth');
         foreach ($names as $key => $val) {
             $area = $areas->fetchNew();
@@ -115,10 +131,6 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
             $area->name = $val;
             $area->save();
         }   
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
     
     protected function _populateNodes()
@@ -126,7 +138,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         // create some nodes, some for area 1 and some for 2,
         // and some for user 1 and some for user 2.
         // five nodes for each area.
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         for ($i = 1; $i <= 10; $i++) {
             $node = $nodes->fetchNew();
             $node->subj = "Subject Line $i: " . substr(md5($i), 0, 5);
@@ -135,31 +147,19 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
             $node->user_id = ($i + 1) % 2 + 1; // sometimes 2, sometimes 1
             $node->save();
         }
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
     }
     
     protected function _populateMetas()
     {
         // one meta for each node
-        $nodes = $this->_newModel('nodes');
-        $metas = $this->_newModel('metas');
+        $nodes = $this->_catalog->getModel('nodes');
+        $metas = $this->_catalog->getModel('metas');
         $collection = $nodes->fetchAll();
         foreach ($collection as $node) {
             $meta = $metas->fetchNew();
             $meta->node_id = $node->id;
             $meta->save();
         }
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
-        
-        // recover memory
-        $metas->free();
-        unset($metas);
     }
     
     protected function _populateTags()
@@ -168,23 +168,19 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $list = array('foo', 'bar', 'baz', 'zab', 'rab', 'oof');
         
         // save them
-        $tags = $this->_newModel('tags');
+        $tags = $this->_catalog->getModel('tags');
         foreach ($list as $name) {
             $tag = $tags->fetchNew();
             $tag->name = $name;
             $tag->save();
         }
-        
-        // recover memory
-        $tags->free();
-        unset($tags);
     }
     
     protected function _populateTaggings()
     {
-        $tags = $this->_newModel('tags');
-        $nodes = $this->_newModel('nodes');
-        $taggings = $this->_newModel('taggings');
+        $tags = $this->_catalog->getModel('tags');
+        $nodes = $this->_catalog->getModel('nodes');
+        $taggings = $this->_catalog->getModel('taggings');
         
         $tag_coll = $tags->fetchAll();
         $tag_last = count($tag_coll) - 1;
@@ -221,18 +217,6 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
                 $tagging->save();
             }
         }
-        
-        // recover memory
-        $tags->free();
-        unset($tags);
-        
-        // recover memory
-        $nodes->free();
-        unset($nodes);
-        
-        // recover memory
-        $taggings->free();
-        unset($taggings);
     }
     
     // -----------------------------------------------------------------
@@ -275,7 +259,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->diag("before: $before");
         
         // get areas and nodes
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $list = $areas->fetchAll(array(
             'eager' => 'nodes',
         ));
@@ -304,7 +288,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->diag("before: $before");
         
         // get nodes and tags
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $list = $nodes->fetchAll(array(
             'eager' => 'tags',
         ));
@@ -333,7 +317,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
     public function test__get_related_eagerHasMany_empty()
     {
         // get rid of all the nodes
-        $nodes = $this->_newModel('nodes');
+        $nodes = $this->_catalog->getModel('nodes');
         $nodes->delete('id > 0');
         
         // the "before" count includes creating the tables, inserting
@@ -342,7 +326,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->diag("before: $before");
         
         // get areas and nodes
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $list = $areas->fetchAll(array(
             'eager' => 'nodes',
         ));
@@ -352,6 +336,7 @@ class Test_Solar_Sql_Model_Record extends Solar_Test {
         $this->diag("expect: $expect");
         
         foreach ($list as $k => $area) {
+            $this->diag($area->nodes);
             foreach ($area->nodes as $node) {
                 $this->diag("{$node->id}: {$node->subj}");
                 $this->assertTrue($node->subj != '');

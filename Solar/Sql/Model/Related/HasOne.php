@@ -15,33 +15,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related
+class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related_ToOne
 {
-    /**
-     * 
-     * When the native model is doing a select and an eager-join is requested
-     * for this relation, this method modifies the select to add the eager
-     * join.
-     * 
-     * Automatically adds the foreign columns to the select.
-     * 
-     * @param Solar_Sql_Select $select The SELECT to be modified.
-     * 
-     * @return void The SELECT is modified in place.
-     * 
-     */
-    public function modSelectEager($select)
-    {
-        // build column names as "name__col" so that we can extract the
-        // the related data later.
-        $cols = array();
-        foreach ($this->cols as $col) {
-            $cols[] = "$col AS {$this->name}__$col";
-        }
-        
-        $this->_modSelectEager($select, $cols);
-    }
-    
     /**
      * 
      * Sets the relationship type.
@@ -71,28 +46,10 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related
     
     /**
      * 
-     * Fixes the related column names in the user-defined options **in place**.
-     * 
-     * The foreign key is stored in the **foreign** model.
-     * 
-     * @param array $opts The user-defined relationship options.
-     * 
-     * @return void
-     * 
-     */
-    protected function _fixRelatedCol(&$opts)
-    {
-        $opts['foreign_col'] = $opts['foreign_key'];
-    }
-    
-    /**
-     * 
      * A support method for _fixRelated() to handle has-one relationships.
      * 
      * @param array &$opts The relationship options; these are modified in-
      * place.
-     * 
-     * @param StdClass $foreign The catalog entry for the foreign model.
      * 
      * @return void
      * 
@@ -113,13 +70,6 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related
             $this->native_col = $this->_native_model->primary_col;
         } else {
             $this->native_col = $opts['native_col'];
-        }
-        
-        // the fetch type
-        if (empty($opts['fetch'])) {
-            $this->fetch = 'one';
-        } else {
-            $this->fetch = $opts['fetch'];
         }
     }
 }

@@ -504,6 +504,39 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $this->_fetchTableCols();
     }
     
+    public function testFetchTableCols_cached()
+    {
+        $table = 'test_solar_sql_describe';
+        
+        // clear out previous tables
+        try {
+            $this->_adapter->dropTable($table);
+        } catch (Exception $e) {
+            // assume the table didn't exist
+        }
+        
+        // create the "describe table" table and make sure it's there
+        $this->_adapter->query($this->_describe_table_sql);
+        $this->assertTrue(in_array(
+            $this->_table_name,
+            $this->_adapter->fetchTableList()
+        ));
+        
+        // get the table column descriptions
+        $this->_adapter->setProfiling(true);
+        $cols = $this->_adapter->fetchTableCols($table);
+        $this->assertFalse(empty($cols));
+        
+        $count_before = count($this->_adapter->getProfile());
+        
+        $cols = $this->_adapter->fetchTableCols($table);
+        $this->assertFalse(empty($cols));
+        
+        $count_after = count($this->_adapter->getProfile());
+        
+        $this->assertEquals($count_after, $count_before);
+    }
+    
     protected function _fetchTableCols($colname = null)
     {
         $table = 'test_solar_sql_describe';
@@ -765,6 +798,24 @@ abstract class Test_Solar_Sql_Adapter extends Solar_Test {
         $list = $this->_adapter->fetchTableList();
         $actual = in_array($this->_table_name, $list);
         $this->assertTrue($actual);
+    }
+    
+    public function testFetchTableList_cached()
+    {
+        $this->_adapter->setProfiling(true);
+        $list = $this->_adapter->fetchTableList();
+        $actual = in_array($this->_table_name, $list);
+        $this->assertTrue($actual);
+        
+        $count_before = count($this->_adapter->getProfile());
+        
+        $list = $this->_adapter->fetchTableList();
+        $actual = in_array($this->_table_name, $list);
+        $this->assertTrue($actual);
+        
+        $count_after = count($this->_adapter->getProfile());
+        
+        $this->assertEquals($count_after, $count_before);
     }
     
     /**

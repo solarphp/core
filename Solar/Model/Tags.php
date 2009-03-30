@@ -89,8 +89,10 @@ class Solar_Model_Tags extends Solar_Model
         // group on primary key for counts
         $params['group'][] = $native_primary;
         
-        // eager-join to nodes for the count of nodes
-        $params['eager'][] = 'nodes';
+        // eager-join to nodes for the count of nodes.
+        // force the join even though we're not fetching nodes, so  that
+        // the counts come back.
+        $params['eager']['nodes']['require_related'] = true;
         
         // done with params
         return $this->fetchAll($params);

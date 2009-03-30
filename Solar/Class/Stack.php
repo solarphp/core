@@ -45,17 +45,20 @@ class Solar_Class_Stack extends Solar_Base
      * Adds one or more classes to the stack.
      * 
      * {{code: php
+     *     
+     *     // add by array
      *     $stack = Solar::factory('Solar_Class_Stack');
      *     $stack->add(array('Base1', 'Base2', 'Base3'));
      *     // $stack->get() reveals that the class search order will be
      *     // 'Base1_', 'Base2_', 'Base3_'.
      *     
+     *     // add by string
      *     $stack = Solar::factory('Solar_Class_Stack');
      *     $stack->add('Base1, Base2, Base3');
-     *     // $stack->get() reveals that the directory search order will be
-     *     // 'Base1_', 'Base2_', 'Base3_', because this is the way the
-     *     // filesystem expects a path definition to work.
+     *     // $stack->get() reveals that the class search order will be
+     *     // 'Base1_', 'Base2_', 'Base3_'.
      *     
+     *     // add incrementally -- N.B. THIS IS A SPECIAL CASE
      *     $stack = Solar::factory('Solar_Class_Stack');
      *     $stack->add('Base1');
      *     $stack->add('Base2');

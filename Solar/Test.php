@@ -637,7 +637,7 @@ class Solar_Test extends Solar_Base
      * 
      * Prints diagnostic output.
      * 
-     * @param mixed $spec The diagnostic outpyt. If a string, prints line-by-
+     * @param mixed $spec The diagnostic output. If a string, prints line-by-
      * line; otherwise, prints a var_export() of the value line-by-line.
      * 
      * @param string $label The label for the diagnostic output, if any.
@@ -653,19 +653,17 @@ class Solar_Test extends Solar_Base
         }
         
         // print the diagnostic output
-        if ($spec) {
-            if ($spec instanceof Exception) {
-                $text = $spec->__toString();
-                $this->diag($text);
-            } elseif (is_string($spec)) {
-                $lines = explode(PHP_EOL, $spec);
-                foreach ($lines as $line) {
-                    echo "# " . $line . PHP_EOL;
-                }
-            } else {
-                $dump = var_export($spec, true);
-                $this->diag($dump);
+        if ($spec instanceof Exception) {
+            $text = $spec->__toString();
+            $this->diag($text);
+        } elseif (is_string($spec)) {
+            $lines = explode(PHP_EOL, $spec);
+            foreach ($lines as $line) {
+                echo "# " . $line . PHP_EOL;
             }
+        } else {
+            $dump = var_export($spec, true);
+            $this->diag($dump);
         }
     }
     

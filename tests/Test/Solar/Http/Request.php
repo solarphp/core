@@ -80,7 +80,7 @@ class Test_Solar_Http_Request extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Http_Request');
-        $this->assertInstance($obj, 'Solar_Http_Request');
+        $this->assertInstance($obj, 'Solar_Http_Request_Adapter');
     }
     
     /**

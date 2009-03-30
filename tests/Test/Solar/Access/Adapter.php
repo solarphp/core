@@ -182,22 +182,31 @@ abstract class Test_Solar_Access_Adapter extends Solar_Test {
     {
         // load with literal handle and roles
         $this->_access->load('gir', array('bar'));
+        $this->diag($this->_access->list);
         
         // simply test there's correct amount of acl rows
-        $this->assertTrue(count($this->_access->list) == 5);
-        
+        $actual = count($this->_access->list);
+        $expect = 5;
+        $this->assertEquals($actual, $expect);
+    }
+    
+    
+    public function testLoad_object()
+    {
         $auth = Solar::factory('Solar_Auth');
         $auth->handle = 'gir';
         
         $role = Solar::factory('Solar_Role');
-        $role->list = array('bar');
+        $role->setList(array('bar'));
         
         // load with auth and role object
         $this->_access->load($auth, $role);
+        $this->diag($this->_access->list);
         
         // simply test there's correct amount of acl rows
-        $this->assertTrue(count($this->_access->list) == 5);
-        
+        $actual = count($this->_access->list);
+        $expect = 5;
+        $this->assertEquals($actual, $expect);
     }
     
     /**

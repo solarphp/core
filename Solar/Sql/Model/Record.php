@@ -16,6 +16,22 @@
  */
 class Solar_Sql_Model_Record extends Solar_Struct
 {
+    const STATUS_DELETED    = 'deleted';
+    const STATUS_INSERTED   = 'inserted';
+    const STATUS_INVALID    = 'invalid';
+    const STATUS_NEW        = 'new';
+    const STATUS_ROLLBACK   = 'rollback';
+    const STATUS_UPDATED    = 'updated';
+    
+    /**
+     * 
+     * A list of all accessor methods for all record classes.
+     * 
+     * @var array
+     * 
+     */
+    static protected $_access_methods_list = array();
+    
     /**
      * 
      * The "parent" model for this record.
@@ -67,7 +83,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * @var bool
      * 
      */
-    protected $_status = 'clean';
+    protected $_status = self::STATUS_CLEAN;
     
     /**
      * 
@@ -79,17 +95,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      */
     protected $_invalid = array();
-    
-    /**
-     * 
-     * Tracks which relationship pages are loaded.
-     * 
-     * Keys on the relationship name.
-     * 
-     * @var array
-     * 
-     */
-    protected $_related_page = array();
     
     /**
      * 
@@ -135,28 +140,17 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function __get($key)
     {
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
-        // do we need to load relationship data?
-        $load_related = empty($this->_data[$key]) &&
-                        ! empty($this->_model->related[$key]);
-        
-        if ($load_related) {
+        $found = array_key_exists($key, $this->_data);
+        if (! $found && ! empty($this->_model->related[$key])) {
             // the key was for a relation that has no data yet.
-            // load the data.  don't return at this point, look
-            // for accessor methods later.
-            $related = $this->_model->getRelated($key);
-            $this->_data[$key] = $related->fetchObject(
-                $this,
-                $this->_related_page[$key]
-            );
+            // lazy-load the data.
+            $this->_data[$key] = $this->fetchRelated($key);
         }
         
         // if an accessor method exists, use it
-        if (! empty($this->_access_methods['get'][$key])) {
+        if (! empty($this->_access_methods[$key]['get'])) {
             // use accessor method
-            $method = $this->_access_methods['get'][$key];
+            $method = $this->_access_methods[$key]['get'];
             return $this->$method();
         } else {
             // no accessor method; use parent method.
@@ -178,17 +172,14 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function __set($key, $val)
     {
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
         // keep track if this is a "new" record
-        $is_new = $this->getStatus() == 'new';
+        $is_new = $this->getStatus() == self::STATUS_NEW;
         
         // if an accessor method exists, use it
-        if (! empty($this->_access_methods['set'][$key])) {
+        if (! empty($this->_access_methods[$key]['set'])) {
             // use accessor method. will mark the record and its parents
             // as dirty.
-            $method = $this->_access_methods['set'][$key];
+            $method = $this->_access_methods[$key]['set'];
             $this->$method($val);
         } else {
             // no accessor method; use parent method. will mark the record
@@ -200,7 +191,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // special case that we have to allow for.
         if ($is_new) {
             // reset self back to new.
-            $this->_status = 'new';
+            $this->_status = self::STATUS_NEW;
         }
     }
     
@@ -215,13 +206,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function __unset($key)
     {
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
         // if an accessor method exists, use it
-        if (! empty($this->_access_methods['unset'][$key])) {
+        if (! empty($this->_access_methods[$key]['unset'])) {
             // use accessor method
-            $method = $this->_access_methods['unset'][$key];
+            $method = $this->_access_methods[$key]['unset'];
             $this->$method();
         } else {
             // no accessor method; use parent method
@@ -240,13 +228,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function __isset($key)
     {
-        // disallow if status is 'deleted'
-        $this->_checkDeleted();
-        
         // if an accessor method exists, use it
-        if (! empty($this->_access_methods['isset'][$key])) {
+        if (! empty($this->_access_methods[$key]['isset'])) {
             // use accessor method
-            $method = $this->_access_methods['isset'][$key];
+            $method = $this->_access_methods[$key]['isset'];
             $result = $this->$method();
         } else {
             // no accessor method; use parent method
@@ -317,70 +302,111 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // unserialize any serialize_cols in the load
         $this->_model->unserializeCols($load);
         
-        // set actual table columns, removing from the load as we go
-        foreach ($this->_model->table_cols as $col => $info) {
-            if (array_key_exists($col, $load)) {
-                $this->__set($col, $load[$col]);
-                unset($load[$col]);
+        // Wholesale dump values into our data array bypassing __set
+        $this->_data = array_merge($this->_data, $load);
+
+        // reset values that require a set access method
+        foreach ($this->_access_methods as $field => $methods) {
+            if (isset($methods['set']) && array_key_exists($field, $load)) {
+                $this->__set($field, $load[$field]);
             }
         }
         
-        // restructure to-one eager-loaded data
-        foreach ($load as $key => $val) {
-            // if the key has double-underscores anywhere besides the very
-            // first characters, it's from a single eager-load record.
-            if (strpos($key, '__')) {
-                list($rel_name, $rel_key) = explode('__', $key);
-                $load[$rel_name][$rel_key] = $val;
-                unset($load[$key]);
-            }
+        // fix relateds, and we're done
+        $this->_fixRelatedData();
+    }
+    
+    /**
+     * 
+     * Sets the access method lists for this instance.
+     * 
+     * @return void
+     * 
+     */
+    protected function _setAccessMethods()
+    {
+        $class = get_class($this);
+        if (! array_key_exists($class, self::$_access_methods_list)) {
+            $this->_loadAccessMethodsList($class);
         }
-        
-        // set related data as records and collections, removing from the load
-        // as we go.
-        $list = array_keys($this->_model->related);
-        foreach ($list as $name) {
+        $this->_access_methods = self::$_access_methods_list[$class];
+    }
+    
+    /**
+     * 
+     * Loads the access method list for a given class.
+     * 
+     * @param string $class The class to load methods for.
+     * 
+     * @return void
+     * 
+     * @see $_access_methods_list
+     * 
+     */
+    protected function _loadAccessMethodsList($class)
+    {
+        $list = array();
+        $methods = get_class_methods($this);
+        foreach ($methods as $method) {
             
-            // first, set a placeholder for lazy-loading in __get()
-            $this->_data[$name] = null;
-            
-            // by default get all related records
-            $this->_related_page[$name] = 0;
-            
-            // is there a key in the load for this related data?
-            if (! array_key_exists($name, $load)) {
-                // no key, which means no eager loading of related data.
+            // if not a "__" method, or if a native magic method, skip it
+            $skip = strncmp($method, '__', 2) !== 0
+                 || $method == '__set'
+                 || $method == '__get'
+                 || $method == '__isset'
+                 || $method == '__unset';
+                 
+            if ($skip) {
                 continue;
             }
             
-            // populate eager-loaded data, even if it's empty.
-            // get the relationship object
-            $related = $this->_model->getRelated($name);
-            
-            // get the related model and build the related record/collection
-            $model = $related->getModel();
-            if ($related->isOne()) {
-                $this->_data[$name] = $model->newRecord($load[$name]);
-            } elseif ($related->isMany()) {
-                $this->_data[$name] = $model->newCollection($load[$name]);
+            // get
+            if (strncmp($method, '__get', 5) == 0) {
+                $col = strtolower(preg_replace(
+                    '/([a-z])([A-Z])/',
+                    '$1_$2',
+                    substr($method, 5)
+                ));
+                $list[$col]['get'] = $method;
+                continue;
             }
             
-            // remove from the load data
-            unset($load[$name]);
-        }
-        
-        // set placeholders for calculate cols
-        $list = array_keys($this->_model->calculate_cols);
-        foreach ($list as $name) {
-            if (! array_key_exists($name, $this->_data)) {
-                $this->_data[$name] = null;
+            // set
+            if (strncmp($method, '__set', 5) == 0) {
+                $col = strtolower(preg_replace(
+                    '/([a-z])([A-Z])/',
+                    '$1_$2',
+                    substr($method, 5)
+                ));
+                $list[$col]['set'] = $method;
+                continue;
+            }
+            
+            // isset
+            if (strncmp($method, '__isset', 7) == 0) {
+                $col = strtolower(preg_replace(
+                    '/([a-z])([A-Z])/',
+                    '$1_$2',
+                    substr($method, 7)
+                ));
+                $list[$col]['isset'] = $method;
+                continue;
+            }
+            
+            // unset
+            if (strncmp($method, '__unset', 7) == 0) {
+                $col = strtolower(preg_replace(
+                    '/([a-z])([A-Z])/',
+                    '$1_$2',
+                    substr($method, 7)
+                ));
+                $list[$col]['unset'] = $method;
+                continue;
             }
         }
         
-        // set all remaining values in the load
-        foreach ($load as $key => $val) {
-            $this->__set($key, $val);
-        }
+        // retain the list of methods
+        self::$_access_methods_list[$class] = $list;
     }
     
     // -----------------------------------------------------------------
@@ -388,58 +414,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
     // Model
     //
     // -----------------------------------------------------------------
-    
-    /**
-     * 
-     * Injects the model from which the data originates.
-     * 
-     * Also loads accessor method lists for column and related properties.
-     * 
-     * These let users override how the column properties are accessed
-     * through the magic __get, __set, etc. methods.
-     * 
-     * @param Solar_Sql_Model $model The origin model object.
-     * 
-     * @return void
-     * 
-     */
-    public function setModel(Solar_Sql_Model $model)
-    {
-        $this->_model = $model;
-        
-        // get a list of table-column and related-data properties names
-        $vars = array_merge(
-            array_keys($this->_model->table_cols),
-            array_keys($this->_model->related),
-            array_keys($this->_model->calculate_cols)
-        );
-        
-        // look for access methods on each one
-        foreach ($vars as $var) {
-            $name = str_replace('_', ' ', $var);
-            $name = str_replace(' ', '', ucwords($name));
-            $list = array(
-                "get"   => "__get$name",
-                "set"   => "__set$name",
-                "isset" => "__isset$name",
-                "unset" => "__unset$name",
-            );
-            foreach ($list as $type => $method) {
-                if (method_exists($this, $method)) {
-                    $this->_access_methods[$type][$var] = $method;
-                }
-            }
-            
-            // put placeholders for each variable; these will be reset by
-            // the load() and/or __set() methods.  need to have this here
-            // because load() uses __set(), and primary keys will be ignored
-            // in that case, leaving the data key unset.  at the same time,
-            // we don't want to override values that are already present.
-            if (! isset($this->_data[$var])) {
-                $this->_data[$var] = null;
-            }
-        }
-    }
     
     /**
      * 
@@ -497,34 +471,21 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $data = array();
         
-        $keys = array_keys($this->_data);
+        // snag a full list of available values
+        // unloaded related values are not included            
+        $keys = array_merge(
+            array_keys($this->_data), 
+            array_keys($this->_model->calculate_cols)
+        );
+
         foreach ($keys as $key) {
             
-            // is the key a related record/collection, but not fetched yet?
-            $empty_related = ! empty($this->_model->related[$key])
-                          && empty($this->_data[$key]);
+            // not an empty-related. get the existing value.
+            $val = $this->$key;
             
-            if ($empty_related) {
-                
-                $related = $this->_model->getRelated($key);
-                
-                // do not fetch related just for array conversion, this leads
-                // to some deep (perhaps infinite?) recursion
-                if ($related->isMany()) {
-                    $val = array();
-                } else {
-                    $val = null;
-                }
-                
-            } else {
-                
-                // not an empty-related. get the existing value.
-                $val = $this->$key;
-                
-                // get the sub-value if any
-                if ($val instanceof Solar_Struct) {
-                    $val = $val->toArray();
-                }
+            // get the sub-value if any
+            if ($val instanceof Solar_Struct) {
+                $val = $val->toArray();
             }
             
             // keep the sub-value
@@ -583,7 +544,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // load data at save-time?
         if ($data) {
             $this->load($data);
-            $this->setStatus('dirty');
+            $this->setStatus(self::STATUS_DIRTY);
         }
         
         try {
@@ -632,7 +593,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 
                 // note that we're not invalid, exactly, but that we
                 // rolled back.
-                $this->_status = 'rollback';
+                $this->_status = self::STATUS_ROLLBACK;
                 return false;
             }
             
@@ -656,7 +617,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             
             // set as invalid and force the record status afterwards
             $this->setInvalid('*', $text);
-            $this->_status = 'rollback';
+            $this->_status = self::STATUS_ROLLBACK;
             
             // done
             return false;
@@ -676,7 +637,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
     protected function _save()
     {
         // only save if we're not clean
-        if ($this->_status != 'clean') {
+        if ($this->_status != self::STATUS_CLEAN) {
         
             // pre-save routine
             $this->_preSave();
@@ -924,7 +885,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         if ($status) {
             $this->setStatus($status);
         } else {
-            $this->setStatus('clean');
+            $this->setStatus(self::STATUS_CLEAN);
         }
     }
     
@@ -1079,7 +1040,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
                 }
             }
             
-            $this->setStatus('invalid');
+            $this->setStatus(self::STATUS_INVALID);
             $this->_invalid = $invalid;
             throw $this->_exception('ERR_INVALID', array($this->_invalid));
         }
@@ -1126,7 +1087,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function setInvalid($key, $message)
     {
-        $this->setStatus('invalid');
+        $this->setStatus(self::STATUS_INVALID);
         $this->_invalid[$key][] = $message;
     }
     
@@ -1144,7 +1105,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function setInvalids($list)
     {
-        $this->setStatus('invalid');
+        $this->setStatus(self::STATUS_INVALID);
         foreach ($list as $key => $messages) {
             foreach ((array) $messages as $message) {
                 $this->_invalid[$key][] = $message;
@@ -1179,18 +1140,31 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Forces the status of this record.
+     * Sets the status of this record.
      * 
-     * @param string $status The new status: 'clean', 'deleted', 'dirty',
-     * 'inserted', 'invalid', 'new', or 'updated'.
+     * @param string $status The new status.
      * 
      * @return void
      * 
      */
     public function setStatus($status)
     {
+        $dirty_new = $status == self::STATUS_DIRTY
+                  && $this->_status == self::STATUS_NEW;
+                  
+        if ($dirty_new) {
+            // new records cannot be dirty
+            return;
+        }
+        
+        // set the new status
         $this->_status = $status;
-        if ($this->_status != 'dirty' && $this->_status != 'invalid') {
+        
+        // should we reset initial data?
+        $reset = $this->_status != self::STATUS_DIRTY
+              && $this->_status != self::STATUS_INVALID;
+              
+        if ($reset) {
             
             // reset the initial data for table columns
             foreach (array_keys($this->_model->table_cols) as $col) {
@@ -1200,19 +1174,6 @@ class Solar_Sql_Model_Record extends Solar_Struct
             // can't be invalid, either
             $this->_invalid = array();
         }
-    }
-    
-    /**
-     * 
-     * Returns the status of this record.
-     * 
-     * @return string $status Current status: 'clean', 'deleted', 'dirty',
-     * 'inserted', 'invalid', 'new' or 'updated'.
-     * 
-     */
-    public function getStatus()
-    {
-        return $this->_status;
     }
     
     /**
@@ -1323,7 +1284,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     protected function _checkDeleted()
     {
-        if ($this->_status == 'deleted') {
+        if ($this->_status == self::STATUS_DELETED) {
             throw $this->_exception('ERR_DELETED');
         }
     }
@@ -1367,12 +1328,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // set the form status
         switch ($this->_status) {
-        case 'invalid':
-        case 'rollback':
+        case self::STATUS_INVALID:
+        case self::STATUS_ROLLBACK:
             $form->setStatus(false);
             break;
-        case 'inserted':
-        case 'updated':
+        case self::STATUS_INSERTED:
+        case self::STATUS_UPDATED:
             $form->setStatus(true);
             break;
         }
@@ -1415,4 +1376,114 @@ class Solar_Sql_Model_Record extends Solar_Struct
         array_shift($args); // the first param is $col
         $this->_filters[$col][] = $args;
     }
+
+    /**
+     * 
+     * Fetch related objects
+     * This differs from a simple traversal in that parameters
+     * can further restrict or transform the results.
+     * 
+     * @param string $key The property name.
+     * 
+     * @param array $params An array of SELECT parameters.
+     * 
+     * @return mixed The property value.
+     * 
+     */
+    public function fetchRelated($name, $params = array())
+    {
+        $related = $this->_model->getRelated($name);
+        return $related->fetch($this, $params);
+    }
+    
+    /**
+     * 
+     * Initialize the record object.  This is effectively a "first load"
+     * method.
+     * 
+     * @param Solar_Sql_Model $model The origin model object.
+     * 
+     * @return void
+     * 
+     */
+    public function init(Solar_Sql_Model $model, $spec, $status = null)
+    {
+        // default status
+        if (! $status) {
+            $status = self::STATUS_CLEAN;
+        }
+        
+        // inject the model
+        $this->_model = $model;
+        
+        // sets access methods
+        $this->_setAccessMethods();
+        
+        // force spec to array
+        if ($spec instanceof Solar_Struct) {
+            // we can do this because $spec is of the same class
+            $load = $spec->_data;
+        } elseif (is_array($spec)) {
+            $load = $spec;
+        } else {
+            $load = array();
+        }
+        
+        // unserialize any serialize_cols in the load
+        $this->_model->unserializeCols($load);
+        
+        // Wholesale dump values into our data array bypassing __set
+        $this->_data = $load;
+        
+        // Record the inital values but only for columns that have physical backing
+        $this->_initial = array_intersect_key($load, $model->table_cols);
+        
+        // reset values that require an access method
+        foreach ($this->_access_methods as $col => $methods) {
+            if (isset($methods['set']) && array_key_exists($col, $load)) {
+                $this->$col = $load[$col];
+            }
+            if (isset($methods['get']) && array_key_exists($col, $this->_initial)) {
+                $this->_initial[$col] = $this->$col;
+            }
+        }
+        
+        
+        // fix up related data elements
+        $this->_fixRelatedData();
+
+        // can't be invalid
+        $this->_invalid = array();
+
+        // set status directly, bypassing setStatus() logic
+        $this->_status = $status;
+        
+        // done!
+    }
+    
+    /**
+     * 
+     * Make sure our related data values are the right value and type.
+     * 
+     * Make sure our related objects are the right type or will be loaded when
+     * necessary
+     * 
+     * @return void
+     * 
+     */
+    protected function _fixRelatedData()
+    {
+        foreach ($this->_model->related as $name => $obj) {
+            
+            // convert related values to correct object type
+            $convert = array_key_exists($name, $this->_data)
+                    && ! is_object($this->_data[$name]);
+            
+            if ($convert) {
+                $related = $this->_model->getRelated($name);
+                $this->_data[$name] = $related->newObject($this->_data[$name]);
+            }
+        }
+    }
+    
 }

@@ -15,33 +15,8 @@
  * @version $Id$
  * 
  */
-class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related
+class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related_ToOne
 {
-    /**
-     * 
-     * When the native model is doing a select and an eager-join is requested
-     * for this relation, this method modifies the select to add the eager
-     * join.
-     * 
-     * Automatically adds the foreign columns to the select.
-     * 
-     * @param Solar_Sql_Select $select The SELECT to be modified.
-     * 
-     * @return void The SELECT is modified in place.
-     * 
-     */
-    public function modSelectEager($select)
-    {
-        // build column names as "name__col" so that we can extract the
-        // the related data later.
-        $cols = array();
-        foreach ($this->cols as $col) {
-            $cols[] = "$col AS {$this->name}__$col";
-        }
-        
-        $this->_modSelectEager($select, $cols);
-    }
-    
     /**
      * 
      * Sets the relationship type.
@@ -92,8 +67,6 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related
      * @param array &$opts The relationship options; these are modified in-
      * place.
      * 
-     * @param StdClass $foreign The catalog entry for the foreign model.
-     * 
      * @return void
      * 
      */
@@ -113,13 +86,6 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related
             $this->native_col = $this->_foreign_model->foreign_col;
         } else {
             $this->native_col = $opts['native_col'];
-        }
-        
-        // the fetch type
-        if (empty($opts['fetch'])) {
-            $this->fetch = 'one';
-        } else {
-            $this->fetch = $opts['fetch'];
         }
     }
 }

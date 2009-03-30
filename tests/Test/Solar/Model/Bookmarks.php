@@ -4,7 +4,7 @@
  * Concrete class test.
  * 
  */
-class Test_Solar_Model_Bookmarks extends Solar_Test {
+class Test_Solar_Model_Bookmarks extends Test_Solar_Model {
     
     /**
      * 

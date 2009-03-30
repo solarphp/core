@@ -53,7 +53,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
      */
     public function testLoad()
     {
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         
         $related = $this->_newRelated($areas, array(
             'name' => 'nodes',
@@ -74,40 +74,22 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
                 7 => 'subj',
                 8 => 'body',
             ),
-            'distinct'               => false,
-            'fetch'                  => 'all',
             'foreign_alias'          => 'nodes',
             'foreign_class'          => 'Solar_Example_Model_Nodes',
             'foreign_col'            => 'area_id',
-            'foreign_inherit_col'    => null,
-            'foreign_inherit_val'    => null,
             'foreign_key'            => 'area_id',
             'foreign_primary_col'    => 'id',
             'foreign_table'          => 'test_solar_nodes',
-            'group'                  => null,
-            'having'                 => null,
             'name'                   => 'nodes',
             'native_alias'           => 'areas',
             'native_class'           => 'Solar_Example_Model_Areas',
             'native_col'             => 'id',
-            'native_table'           => 'test_solar_areas',
             'order'                  => array('nodes.id'),
-            'paging'                 => 10,
-            'through'                => null,
-            'through_alias'          => null,
-            'through_foreign_col'    => null,
-            'through_key'            => null,
-            'through_native_col'     => null,
-            'through_table'          => null,
             'type'                   => 'has_many',
             'where'                  => null,
         );
         
         $this->assertSame($actual, $expect);
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
     
     /**
@@ -163,7 +145,7 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
     public function test_lazyFetchOne()
     {
         // fetch one area, then see how many sql calls so far
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $params = array(
             'where' => array(
                 'id = ?' => rand(1, 2),
@@ -189,16 +171,12 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         $this->assertInstance($nodes, 'Solar_Example_Model_Nodes_Collection');
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
     
     public function test_lazyFetchAll()
     {
         // fetch all areas, then see how many sql calls so far
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $collection = $areas->fetchAll();
         $count_before = count($this->_sql->getProfile());
         
@@ -225,17 +203,13 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         
         $count_final = count($this->_sql->getProfile());
         $this->assertEquals($count_final, $count_after);
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
     
     public function test_eagerFetchOne()
     {
         // fetch one area with an eager nodes
         // then see how many sql calls so far
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $params = array(
             'where' => array(
                 'areas.id = ?' => rand(1, 2),
@@ -256,17 +230,13 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         // **should not** have been an extra SQL call
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
     
     public function test_eagerFetchAll()
     {
         // fetch all areas with eager nodes
         // then see how many sql calls so far
-        $areas = $this->_newModel('areas');
+        $areas = $this->_catalog->getModel('areas');
         $params = array('eager' => 'nodes');
         $collection = $areas->fetchAll($params);
         $count_before = count($this->_sql->getProfile());
@@ -284,9 +254,5 @@ class Test_Solar_Sql_Model_Related_HasMany extends Test_Solar_Sql_Model_Related 
         // **should not** have been extra SQL calls
         $count_after = count($this->_sql->getProfile());
         $this->assertEquals($count_after, $count_before);
-        
-        // recover memory
-        $areas->free();
-        unset($areas);
     }
 }

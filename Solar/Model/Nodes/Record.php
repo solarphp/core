@@ -26,7 +26,7 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record
     public function __getTagsAsString()
     {
         // if exactly null, populate for the first time.
-        if ($this->_data['tags_as_string'] === null) {
+        if (empty($this->_data['tags_as_string'])) {
             $text = '';
             // $this->tags forces the __get() call to the related object,
             // then only proceeds if there are tags there.
@@ -56,6 +56,11 @@ class Solar_Model_Nodes_Record extends Solar_Model_Record
         $this->_data['tags_as_string'] = trim($val);
         $new = explode(' ', $this->_data['tags_as_string']);
         $new = array_unique($new);
+        
+        if (! $this->tags) {
+            $related = $this->_model->getRelated('tags');
+            $this->tags = $related->getModel()->newCollection();
+        }
         
         // build a new tag collection
         $model = $this->tags->getModel();

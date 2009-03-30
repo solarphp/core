@@ -64,7 +64,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     
     /**
      * 
-     * The name of the model class we're using, if any.
+     * The model class we're using, if any.
      * 
      * @var string
      * 
@@ -73,12 +73,12 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
     
     /**
      * 
-     * The name of the property to create for the model instance.
+     * The model name for the model class.
      * 
      * @var string
      * 
      */
-    protected $_model_var = null;
+    protected $_model_name = null;
     
     /**
      * 
@@ -279,7 +279,7 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
             '{:class}'          => $this->_class,
             '{:extends}'        => $this->_extends,
             '{:model_class}'    => $this->_model_class,
-            '{:model_var}'      => $this->_model_var,
+            '{:model_name}'     => $this->_model_name,
         );
         
         return str_replace(
@@ -374,14 +374,16 @@ class Solar_Cli_MakeApp extends Solar_Cli_Base
             // find a var name based on the class name
             $pos = strpos($model, 'Model_');
             if ($pos === false) {
-                $this->_model_var = strtolower($model);
+                $this->_model_name = strtolower($model);
             } else {
-                $this->_model_var = strtolower(substr($model, $pos+6));
+                $inflect = Solar_Registry::get('inflect');
+                $name = substr($model, $pos + 6);
+                $this->_model_name = strtolower($inflect->camelToUnder($name));
             }
             
         } else {
             $this->_model_class = null;
-            $this->_model_var   = null;
+            $this->_model_name  = null;
         }
     }
 }

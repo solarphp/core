@@ -4,7 +4,7 @@
  * Abstract class test.
  * 
  */
-class Test_Solar_Model extends Solar_Test {
+abstract class Test_Solar_Model extends Solar_Test {
     
     /**
      * 
@@ -31,7 +31,6 @@ class Test_Solar_Model extends Solar_Test {
      */
     public function __construct($config = null)
     {
-        $this->skip('abstract class');
         parent::__construct($config);
     }
     
@@ -55,6 +54,7 @@ class Test_Solar_Model extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        Solar_Registry::set('sql', 'Solar_Sql');
     }
     
     /**

@@ -79,8 +79,7 @@ class Test_Solar_Registry extends Solar_Test {
      */
     public function test__construct()
     {
-        $obj = Solar::factory('Solar_Registry');
-        $this->assertInstance($obj, 'Solar_Registry');
+        $this->skip("construction disallowed, static only");
     }
     
     /**

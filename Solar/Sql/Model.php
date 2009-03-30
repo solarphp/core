@@ -31,6 +31,9 @@ abstract class Solar_Sql_Model extends Solar_Base
      * : (dependency) A Solar_Cache dependency for the Solar_Sql_Model_Cache
      *   object.
      * 
+     * `catalog`
+     * : (dependency) A Solar_Sql_Model_Catalog to find other models with.
+     * 
      * `table_scan`
      * : (bool) Connect to the database and scan the table for its column
      *   descriptions, creating the table and indexes if not already present.
@@ -43,6 +46,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_Solar_Sql_Model = array(
+        'catalog' => 'model_catalog',
         'sql'   => 'sql',
         'cache' => array(
             'adapter' => 'Solar_Cache_Adapter_Var',
@@ -50,6 +54,15 @@ abstract class Solar_Sql_Model extends Solar_Base
         'table_scan' => true,
         'auto_cache' => false,
     );
+    
+    /**
+     * 
+     * A Solar_Sql_Model_Catalog dependency object.
+     * 
+     * @var Solar_Sql_Model_Catalog
+     * 
+     */
+    protected $_catalog = null;
     
     /**
      * 
@@ -116,6 +129,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_record_class = 'Solar_Sql_Model_Record';
+
+    /**
+     * 
+     * A blank instance of the Record class for this model.
+     * 
+     * We keep this so we don't keep looking for a record class once we know
+     * what the proper class is.  Not used when inheritance is in effect.
+     * 
+     * @var Solar_Sql_Model_Record
+     * 
+     */
+    protected $_record_prototype;
     
     /**
      * 
@@ -130,12 +155,24 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
+     * A blank instance of the Collection class for this model.
+     * 
+     * We keep this so we don't keep looking for a collection class once we
+     * know what the proper class is.
+     * 
+     * @var Solar_Sql_Model_Record
+     * 
+     */
+    protected $_collection_prototype;
+    
+    /**
+     * 
      * The class to use for building SELECT statements.
      * 
      * @var string
      * 
      */
-    protected $_select_class = 'Solar_Sql_Select';
+    protected $_select_class = 'Solar_Sql_Model_Select';
     
     /**
      * 
@@ -525,6 +562,12 @@ abstract class Solar_Sql_Model extends Solar_Base
         // our class name so that we don't call get_class() all the time
         $this->_class = get_class($this);
         
+        // get the catalog injection
+        $this->_catalog = Solar::dependency(
+            'Solar_Sql_Model_Catalog',
+            $this->_config['catalog']
+        );
+        
         // connect to the database
         $this->_sql = Solar::dependency('Solar_Sql', $this->_config['sql']);
         
@@ -633,6 +676,18 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function setPaging($paging)
     {
         $this->_paging = (int) $paging;
+    }
+    
+    /**
+     * 
+     * Returns the fully-qualified primary key name.
+     * 
+     * @return string
+     * 
+     */
+    public function getPrimary()
+    {
+        return "{$this->_model_name}.{$this->_primary_col}";
     }
     
     // -----------------------------------------------------------------
@@ -825,16 +880,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         // create a collection from the result
         $coll = $this->newCollection($result);
         
-        // add has-many eager data to the collection
-        foreach ((array) $params['eager'] as $name) {
-            $related = $this->getRelated($name);
-            if ($related->isMany()) {
-                // should we send along $params instead for easier caching?
-                $result = $related->fetchArray($select);
-                $coll->loadRelated($name, $result);
-            }
-        }
-        
         // add pager-info to the collection
         if ($params['count_pages']) {
             $this->_setCollectionPagerInfo($coll, $params);
@@ -911,15 +956,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // create a collection from the result
         $coll = $this->newCollection($result);
-        
-        // add has-many eager data to the collection
-        foreach ((array) $params['eager'] as $name) {
-            $related = $this->getRelated($name);
-            if ($related->isMany()) {
-                $result = $related->fetchArray($select);
-                $coll->loadRelated($name, $result);
-            }
-        }
         
         // add pager-info to the collection
         if ($params['count_pages']) {
@@ -1076,14 +1112,6 @@ abstract class Solar_Sql_Model extends Solar_Base
         list($result, $select) = $this->_fetchResultSelect('one', $params);
         if (! $result) {
             return null;
-        }
-        
-        // get related data from each eager to-many relationship
-        foreach ((array) $params['eager'] as $name) {
-            $related = $this->getRelated($name);
-            if ($related->isMany()) {
-                $result[$name] = $related->fetchArray($select);
-            }
         }
         
         // get the main record, which sets the to-one data
@@ -1286,7 +1314,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @param string $type The type of fetch to perform: 'all', 'one', etc.
      * 
      * @param array &$params A reference to the params for the select; these
-     * will be passed through fixSelectParams(), so the calling code doesn't
+     * will be passed through _fixSelectParams(), so the calling code doesn't
      * have to do it twice.
      * 
      * @return array An array of two elements; element 0 is the result data,
@@ -1295,7 +1323,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     protected function _fetchResultSelect($type, &$params)
     {
-        $params = $this->fixSelectParams($params);
+        $params = $this->_fixSelectParams($params);
         $select = $this->newSelect($params);
         
         // fetch from cache?
@@ -1383,10 +1411,11 @@ abstract class Solar_Sql_Model extends Solar_Base
             $data[$key] = Solar::factory($this->_xmlstruct_class);
         }
         
-        // set placeholders for relateds
+        // set placeholders for relateds to prevent lazy loading
         $names = array_keys($this->_related);
         foreach ($names as $name) {
-            $data[$name] = null;
+            $related = $this->getRelated($name);
+            $data[$name] = $related->fetchEmpty();
         }
         
         // if we have inheritance, set that too
@@ -1413,7 +1442,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function countPages($params = null)
     {
         // fix up the parameters
-        $params = $this->fixSelectParams($params);
+        $params = $this->_fixSelectParams($params);
         
         // add a fake param called 'count' to make this different from the
         // orginating query (for cache deconfliction).
@@ -1429,19 +1458,8 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // remove the 'eager' param for now, so we don't get the column-
-        // based eager joins.
-        $eager = (array) $params['eager'];
-        $params['eager'] = array();
-        
         // get the base select
         $select = $this->newSelect($params);
-        
-        // add count-based eager joins
-        foreach ($eager as $name) {
-            $related = $this->getRelated($name);
-            $related->modSelectCountPages($select);
-        }
         
         // count on the primary column
         $col = "{$this->_model_name}.{$this->_primary_col}";
@@ -1517,20 +1535,18 @@ abstract class Solar_Sql_Model extends Solar_Base
      * @return array A normalized set of clause params.
      * 
      */
-    public function fixSelectParams($params)
+    public function _fixSelectParams($params)
     {
         settype($params, 'array');
         
-        // if we have eager values, make sure they're unique
-        if (! empty($params['eager'])) {
-            $params['eager'] = array_unique((array) $params['eager']);
-        }
-        
-        // even after uniqing, the eager values might still be empty
+        // fix up the eager values
         if (empty($params['eager'])) {
-            $params['eager'] = null;
+            $params['eager'] = array();
+        } else {
+            $params['eager'] = $this->_fixSelectParamsEager($params['eager']);
         }
         
+        // fix up distinct
         if (empty($params['distinct'])) {
             $params['distinct'] = null;
         }
@@ -1596,6 +1612,11 @@ abstract class Solar_Sql_Model extends Solar_Base
         // force to boolean
         $params['cache'] = (bool) $params['cache'];
         
+        // table alias?
+        if (empty($params['table_alias'])) {
+            $params['table_alias'] = $this->_model_name;
+        }
+        
         // explicit cache key?
         if (empty($params['cache_key'])) {
             $params['cache_key'] = false;
@@ -1603,6 +1624,97 @@ abstract class Solar_Sql_Model extends Solar_Base
         
         // done
         return $params;
+    }
+    
+    protected function _fixSelectParamsEager($eager)
+    {
+        $fixed = array();
+        
+        settype($eager, 'array');
+        foreach ($eager as $key => $val) {
+            
+            // look for a eager name by itself, or an eager name with
+            // eager options
+            if (is_int($key)) {
+                $name = $val;
+                $opts = array(
+                    'require_related' => null,
+                );
+            } else {
+                $name = $key;
+                $opts = $val;
+                
+                // a 'where' clause implies a 'require_related'
+                if (! empty($opts['where'])) {
+                    $opts['require_related'] = true;
+                }
+                
+                // always need a default 'require_related'
+                if (! array_key_exists('require_related', $opts)) {
+                    $opts['require_related'] = null;
+                }
+            }
+            
+            // retain the fixed version
+            $fixed[$name] = $opts;
+        }
+        
+        // apply further modifications
+        $fixed = $this->modEagerOptions($fixed);
+        
+        // done
+        return $fixed;
+    }
+    
+    /**
+     * 
+     * Modifies eager options for selecting from this model.
+     * 
+     * This allows a standard join strategy to be implemented, or allows
+     * additional required eagers to be chained.
+     * 
+     * @param array $options The eager options.
+     * 
+     * @return array The modified options.
+     * 
+     */
+    public function modEagerOptions($options)
+    {
+        return $options;
+    }
+    
+    /**
+     * 
+     * Returns a WHERE clause array of conditions to use when fetching
+     * from this model; e.g., single-table inheritance.
+     * 
+     * @param array $where The WHERE array being modified.
+     * 
+     * @param string $alias The current name of the table for this model
+     * in the query being constructed; defaults to the model name.
+     *
+     * @return array The modified WHERE array.
+     *
+     */   
+    public function getWhereMods($alias = null)
+    {
+        // default to the model name for the alias
+        if (! $alias) {
+            $alias = $this->_model_name;
+        }
+        
+        // the array of where clauses
+        $where = array();
+        
+        // is inheritance on?
+        if ($this->_inherit_model) {
+            $key = "{$alias}.{$this->_inherit_col} = ?";
+            $val = $this->_inherit_model;
+            $where = array($key => $val);
+        }
+        
+        // done!
+        return $where;
     }
     
     /**
@@ -1617,35 +1729,32 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newSelect($params = null)
     {
-        $params = $this->fixSelectParams($params);
+        $params = $this->_fixSelectParams($params);
         
         // get the select object
         $select = Solar::factory(
             $this->_select_class,
             array('sql' => $this->_sql)
         );
+        $select->setModel($this);
+        
+        $table_alias = $params['table_alias'];
+        $select->setTableAlias($table_alias);
         
         // add the explicitly asked-for columns before the eager-join cols.
         // this is to make sure the fetchPairs() method works right, because
         // adding the eager columns first will mess that up.
         $select->from(
-            "{$this->_table_name} AS {$this->_model_name}",
+            "{$this->_table_name} AS {$table_alias}",
             $params['cols']
         );
-        
-        // modify the select to add eager joins
-        foreach ((array) $params['eager'] as $name) {
-            $related = $this->getRelated($name);
-            $related->modSelectEager($select);
+
+        // load our eager options into our Select
+        foreach ($params['eager'] as $name => $dependent_options) {
+            $select->eager($name, $dependent_options);
         }
-        
-        // inheritance for native model
-        if ($this->_inherit_model) {
-            $select->where(
-                "{$this->_model_name}.{$this->_inherit_col} = ?",
-                $this->_inherit_model
-            );
-        }
+
+        $select->multiWhere($this->getWhereMods($table_alias));
         
         // all the other pieces
         $select->distinct($params['distinct'])
@@ -1676,7 +1785,7 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Returns the appropriate record object for an inheritance model.
+     * Returns the appropriate record object, honoring inheritance.
      * 
      * @param array $data The data to load into the record.
      * 
@@ -1685,11 +1794,8 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newRecord($data)
     {
-        // the model object to use -- might get overridden by inheritance
-        $model = $this;
-        
-        // the record class we'll use
-        $record_class = null;
+        // the record to return, eventually
+        $record = null;
         
         // look for an inheritance in relation to $data
         $inherit = null;
@@ -1707,40 +1813,50 @@ abstract class Solar_Sql_Model extends Solar_Base
             // 
             // blow up if we can't find it, since this is explicitly noted
             // as the inheritance class.
-            $model_class = $this->_stack->load($inherit);
+            $inherit_class = $this->_catalog->getClass($inherit);
             
             // if different from the current class, reset the model object.
-            if ($model_class != $this->_class) {
+            if ($inherit_class != $this->_class) {
                 // use the inherited model class, it's different from the
-                // current model
-                $model = Solar::factory($model_class, $this->_config);
+                // current model. if it's not different, fall through, leaving
+                // $record == null.  that will invoke the logic below.
+                $model = $this->_catalog->getModelByClass($inherit_class);
+                $record = $model->newRecord($data);
             }
-            
-            // now we need the inherited record class.  suppress exceptions.
-            // note that $record_class could still end up false, as we might
-            // not find a related class in the hierarchy.
-            $record_class = $this->_stack->load($inherit . '_Record', false);
         }
         
-        // even if record inheritance failed, look for a model-specific record
-        // class
-        if (! $record_class) {
-            $record_class = $this->_stack->load('Record', false);
+        // do we have a record yet?
+        if (! $record) {
+            // no, because an inheritance model was not specified, or was of 
+            // the same class as this class.
+            $record = $this->_newRecord();
+            $record->init($this, $data);
         }
         
-        // final fallback: the default record class
-        if (! $record_class) {
-            $record_class = $this->_record_class;
-        }
-        
-        // factory the appropriate record class, set the model for it, then
-        // load and return it.
-        $record = Solar::factory($record_class);
-        $record->setModel($model);
-        $record->load($data);
-        $record->setStatus('clean');
         return $record;
     }
+    
+    /**
+     * 
+     * Returns a new record object for this model only.
+     * 
+     * @return Solar_Sql_Model_Record A record object.
+     * 
+     */
+    protected function _newRecord()
+    {
+        if (empty($this->_record_prototype)) {
+            // find the record class
+            $record_class = $this->_stack->load('Record', false);
+            if (! $record_class) {
+                // use the default record class
+                $record_class = $this->_record_class;
+            }
+            $this->_record_prototype = Solar::factory($record_class);
+        }
+        $record = clone $this->_record_prototype;
+        return $record;
+    }    
     
     /**
      * 
@@ -1753,18 +1869,31 @@ abstract class Solar_Sql_Model extends Solar_Base
      */
     public function newCollection($data = null)
     {
-        // the collection class we'll use
-        $class = $this->_stack->load('Collection', false);
-        
-        // final fallback
-        if (! $class) {
-            $class = $this->_collection_class;
-        }
-        
-        // factory the collection class, load it, and return it.
-        $collection = Solar::factory($class);
+        $collection = $this->_newCollection();
         $collection->setModel($this);
         $collection->load($data);
+        return $collection;
+    }
+    
+    /**
+     * 
+     * Returns a new collection object for this model only.
+     * 
+     * @return Solar_Sql_Model_Collection A collection object.
+     * 
+     */
+    protected function _newCollection()
+    {
+        if (empty($this->_collection_prototype)) {
+            // find the collection class
+            $collection_class = $this->_stack->load('Collection', false);
+            if (! $collection_class) {
+                // use the default collection class
+                $collection_class = $this->_collection_class;
+            }
+            $this->_collection_prototype = Solar::factory($collection_class);
+        }
+        $collection = clone $this->_collection_prototype;
         return $collection;
     }
     
@@ -2116,10 +2245,18 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         foreach ($this->_xmlstruct_cols as $key) {
-            if (! empty($data[$key]) && is_string($data[$key])) {
+            if (empty($data[$key])) {
+                // create a new struct if there is no serialized data
+                // in the column to begin with
                 $struct = Solar::factory($this->_xmlstruct_class);
-                $struct->load($data[$key]);
+                $struct->load(array($key => array()));
                 $data[$key] = $struct;
+            } else {
+                if (is_string($data[$key])) {
+                    $struct = Solar::factory($this->_xmlstruct_class);
+                    $struct->load($data[$key]);
+                    $data[$key] = $struct;
+                }
             }
         }
     }
@@ -2208,9 +2345,47 @@ abstract class Solar_Sql_Model extends Solar_Base
     protected function _hasMany($name, $opts = null)
     {
         settype($opts, 'array');
+        
+        // maintain backwards-compat for has-many with 'through' option
+        if (! empty($opts['through'])) {
+            return $this->_hasManyThrough($name, $opts['through'], $opts);
+        }
+        
         if (empty($opts['class'])) {
             $opts['class'] = 'Solar_Sql_Model_Related_HasMany';
         }
+        
+        $this->_addRelated($name, $opts);
+    }
+    
+    /**
+     * 
+     * Adds a named has-many through relationship.
+     * 
+     * Note that you can get "has-and-belongs-to-many" using "has-many"
+     * with a "through" option ("has-many-through").
+     * 
+     * @param string $name The relationship name, which will double as a
+     * property when records are fetched from the model.
+     * 
+     * @param string $through The relationship name that acts as the "through"
+     * model (i.e., the mapping model).
+     * 
+     * @param array $opts Additional options for the relationship.
+     * 
+     * @return void
+     * 
+     */
+    protected function _hasManyThrough($name, $through, $opts = null)
+    {
+        settype($opts, 'array');
+        
+        if (empty($opts['class'])) {
+            $opts['class'] = 'Solar_Sql_Model_Related_HasManyThrough';
+        }
+        
+        $opts['through'] = $through;
+        
         $this->_addRelated($name, $opts);
     }
     

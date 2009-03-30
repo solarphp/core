@@ -80,7 +80,7 @@ class Test_Solar_Access extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Access');
-        $this->assertInstance($obj, 'Solar_Access');
+        $this->assertInstance($obj, 'Solar_Access_Adapter');
     }
     
     /**

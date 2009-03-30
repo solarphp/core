@@ -80,7 +80,7 @@ class Test_Solar_Role extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Role');
-        $this->assertInstance($obj, 'Solar_Role');
+        $this->assertInstance($obj, 'Solar_Role_Adapter');
     }
     
     /**

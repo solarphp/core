@@ -80,7 +80,7 @@ class Test_Solar_Mail_Transport extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Mail_Transport');
-        $this->assertInstance($obj, 'Solar_Mail_Transport');
+        $this->assertInstance($obj, 'Solar_Mail_Transport_Adapter');
     }
     
     /**

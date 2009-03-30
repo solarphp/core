@@ -131,6 +131,15 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
     
     /**
      * 
+     * The model catalog.
+     * 
+     * @var Solar_Model_Bookmarks
+     * 
+     */
+    protected $_model;
+    
+    /**
+     * 
      * Sets up the Solar_App environment.
      * 
      * Registers 'sql', 'user', and 'content' objects, and sets the
@@ -146,6 +155,14 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
             Solar_Registry::set('sql', Solar::factory('Solar_Sql'));
         }
         
+        // register a model catalog if not already
+        if (! Solar_Registry::exists('model_catalog')) {
+            Solar_Registry::set(
+                'model_catalog',
+                Solar::factory('Solar_Sql_Model_Catalog')
+            );
+        }
+        
         // register a Solar_User object if not already.
         // this will trigger the authentication process.
         if (! Solar_Registry::exists('user')) {
@@ -154,6 +171,9 @@ abstract class Solar_App_Base extends Solar_Controller_Page {
         
         // set the layout title
         $this->layout_head['title'] = get_class($this);
+        
+        // retain the model catalog
+        $this->_model = Solar_Registry::get('model_catalog');
     }
     
     /**

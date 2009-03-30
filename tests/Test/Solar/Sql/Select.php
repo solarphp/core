@@ -54,6 +54,7 @@ class Test_Solar_Sql_Select extends Solar_Test {
     public function setup()
     {
         parent::setup();
+        Solar_Registry::set('sql', 'Solar_Sql');
     }
     
     /**

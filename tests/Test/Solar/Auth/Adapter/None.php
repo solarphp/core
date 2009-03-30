@@ -24,11 +24,32 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         parent::setup();
     }
     
+    public function testIsValid()
+    {
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
+    }
+    
     public function testProcessLogin()
     {
         $this->_fakePostLogin_valid();
         $this->assertTrue($this->_auth->isLoginRequest());
         $this->assertFalse($this->_auth->processLogin());
+    }
+    
+    public function testProcessLogout()
+    {
+        $this->_fakePostLogin_valid();
+        $this->assertTrue($this->_auth->isLoginRequest());
+        $this->assertFalse($this->_auth->processLogin());
+        $this->assertFalse($this->_auth->isValid());
+        
+        $this->_fakePostLogout();
+        $this->assertTrue($this->_auth->isLogoutRequest());
+        
+        $this->_auth->processLogout();
+        $this->assertFalse($this->_auth->isValid());
     }
     
     public function test_handle()
@@ -62,4 +83,23 @@ class Test_Solar_Auth_Adapter_None extends Test_Solar_Auth_Adapter {
         $this->assertFalse($this->_auth->processLogin());
         $this->assertNull($this->_auth->email);
     }
+    
+    public function testStart()
+    {
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
+    }
+    
+    public function testStart_logout()
+    {
+        $this->_fakePostLogin_valid();
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
+        
+        $this->_fakePostLogout();
+        $this->_auth->start();
+        $this->assertFalse($this->_auth->isValid());
+    }
+    
 }

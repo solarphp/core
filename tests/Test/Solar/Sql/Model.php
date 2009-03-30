@@ -22,6 +22,14 @@ class Test_Solar_Sql_Model extends Solar_Test {
     
     protected $_sql = null;
     
+    protected $_catalog_config = array(
+        'classes' => array(
+            'Solar_Example_Model',
+        ),
+    );
+    
+    protected $_catalog = null;
+    
     
     // -----------------------------------------------------------------
     // 
@@ -61,8 +69,23 @@ class Test_Solar_Sql_Model extends Solar_Test {
     public function setup()
     {
         parent::setup();
-        $this->_sql = Solar::factory('Solar_Sql', $this->_sql_config);
+        
+        // set up an SQL connection
+        $this->_sql = Solar::factory(
+            'Solar_Sql',
+            $this->_sql_config
+        );
         $this->_sql->setProfiling(true);
+        
+        // set up a model catalog
+        $this->_catalog = Solar::factory(
+            'Solar_Sql_Model_Catalog',
+            $this->_catalog_config
+        );
+        
+        // register the connection and catalog
+        Solar_Registry::set('sql', $this->_sql);
+        Solar_Registry::set('model_catalog', $this->_catalog);
     }
     
     /**
@@ -77,30 +100,17 @@ class Test_Solar_Sql_Model extends Solar_Test {
     
     /**
      * 
-     * Convenience method to get model objects with SQL dependency injection.
+     * Populate the table for special columns.
      * 
      */
-    protected function _newModel($name)
-    {
-        $class = "Solar_Example_Model_$name";
-        $model = Solar::factory($class, array('sql' => $this->_sql));
-        return $model;
-    }
-    
     protected function _populateSpecialColsTable()
     {
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         for ($i = 1; $i <= 10; $i++) {
             $record = $model->fetchNew();
             $record->name = chr($i+96); //ascii 'a', 'b', etc
             $record->save();
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     // -----------------------------------------------------------------
@@ -116,19 +126,31 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function test__construct()
     {
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $this->assertInstance($model, 'Solar_Sql_Model');
         $this->assertInstance($model, 'Solar_Example_Model_TestSolarSpecialCols');
         
         // did it create the table automatically?
         $list = $this->_sql->fetchTableList();
         $this->assertTrue(in_array('test_solar_special_cols', $list));
+    }
+    
+    
+    public function test__construct_repeated()
+    {
+        $model_a = $this->_catalog->newModel('TestSolarSpecialCols');
+        $this->assertInstance($model_a, 'Solar_Sql_Model');
+        $this->assertInstance($model_a, 'Solar_Example_Model_TestSolarSpecialCols');
         
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
+        $count_before = count($this->_sql->getProfile());
+        
+        $model_b = $this->_catalog->newModel('TestSolarSpecialCols');
+        $this->assertInstance($model_b, 'Solar_Sql_Model');
+        $this->assertInstance($model_b, 'Solar_Example_Model_TestSolarSpecialCols');
+        $this->assertNotSame($model_a, $model_b);
+        
+        $count_after = count($this->_sql->getProfile());
+        $this->assertEquals($count_after, $count_before);
     }
     
     /**
@@ -143,7 +165,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
          * to work with
          */
         $this->_populateSpecialColsTable();
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         for ($i = 0; $i < 5; $i++) {
             // id's are 11-15, all named 'z' with seq_foo of 88
             $record = $model->fetchNew();
@@ -259,12 +281,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
             $this->assertEquals($record->name, 'z');
             $this->assertEquals($record->seq_foo, 88);
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -274,7 +290,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function test__get()
     {
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         
         // reads from protected $_primary_col; should be no exception
         $actual = $model->primary_col;
@@ -288,12 +304,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         } catch (Solar_Exception $e) {
             // do nothing, this is the expected case :-)
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -314,7 +324,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
     public function testCountPages()
     {
         $this->_populateSpecialColsTable();
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $model->setPaging(3);
         $actual = $model->countPages();
         $expect = array('count' => 10, 'pages' => 4);
@@ -327,12 +337,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $actual = $model->countPages(array('where' => $where));
         $expect = array('count' => 5, 'pages' => 2);
         $this->assertEquals($actual, $expect);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -343,7 +347,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
     public function testDelete()
     {
         $this->_populateSpecialColsTable();
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         
         $record = $model->fetch(7);
         $this->assertEquals($record->id, 7);
@@ -360,12 +364,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // should not be able to retrieve the record
         $record = $model->fetch(7);
         $this->assertNull($record);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -379,7 +377,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by number to get a Record
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $record = $model->fetch(3);
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
         $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
@@ -395,12 +393,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
             // make sure they're the right ones ;-)
             $this->assertEquals($record->name, chr($record->id + 96));
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -414,7 +406,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by some WHERE clause
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $collection = $model->fetchAll(array('where' => 'id > 5'));
         
         // tests
@@ -425,12 +417,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
             // make sure they're the right ones ;-)
             $this->assertEquals($record->name, chr($record->id + 96));
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -454,7 +440,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by some WHERE clause
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $collection = $model->fetchAssoc(array(
             'where' => 'id > 5',
             'order' => 'name',
@@ -473,12 +459,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $actual = array_keys($array);
         $expect = array('f', 'g', 'h', 'i', 'j');
         $this->assertSame($actual, $expect);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -492,7 +472,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by some WHERE clause
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $actual = $model->fetchCol(array(
             'where' => 'id > 5',
             'order' => 'name',
@@ -503,12 +483,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         
         $expect = array('f', 'g', 'h', 'i', 'j');
         $this->assertSame($actual, $expect);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -518,7 +492,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testFetchNew()
     {
-        $model = $this->_newModel('TestSolarSqlDescribe');
+        $model = $this->_catalog->getModel('TestSolarSqlDescribe');
         $record = $model->fetchNew();
         
         // these are the default values on the test_solar_sql_describe table
@@ -527,12 +501,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertEquals($record->test_default_integer, 7);
         $this->assertEquals($record->test_default_numeric, 1234.567);
         $this->assertNull($record->test_default_ignore);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -546,7 +514,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by number to get a Record
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $record = $model->fetchOne(array(
             'where' => array('name = ?' => 'c'),
         ));
@@ -554,12 +522,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
         $this->assertInstance($record, 'Solar_Example_Model_TestSolarSpecialCols_Record');
         $this->assertEquals($record->name, 'c'); // make sure it's the right one ;-)
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -573,7 +535,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // fetch by some WHERE clause
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $actual = $model->fetchPairs(array(
             'where' => 'id > 5',
             'order' => 'name',
@@ -591,12 +553,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
             'j' => '10',
         );
         $this->assertEquals($actual, $expect);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -636,19 +592,13 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testGetPaging()
     {
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         
         $expect = 50;
         $model->setPaging($expect);
         
         $actual = $model->getPaging();
         $this->assertEquals($actual, $expect);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -668,7 +618,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testInsert()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->fetchNew();
         
         $email = 'nobody@example.com';
@@ -688,12 +638,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertEquals($record->email, $email);
         $this->assertEquals($record->uri, $uri);
         $this->assertEquals($record->name, $name);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -704,7 +648,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testInsert_invalid()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should fail
         $record = $model->fetchNew();
@@ -725,12 +669,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // insert should pass
         $record->email = 'nobody@example.com';
         $model->insert($record);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -741,7 +679,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testInsert_invalidAtDatabase()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should succeed
         $record = $model->fetchNew();
@@ -758,12 +696,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Sql_Adapter_Exception_QueryFailed');
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -774,7 +706,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testInsert_inherit()
     {
-        $model = $this->_newModel('TestSolarBar');
+        $model = $this->_catalog->getModel('TestSolarBar');
         
         // it should self-set its inheritance value
         $record = $model->fetchNew();
@@ -784,12 +716,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $record->inherit = null;
         $model->insert($record);
         $this->assertEquals($record->inherit, 'TestSolarBar');
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -801,25 +727,19 @@ class Test_Solar_Sql_Model extends Solar_Test {
     {
         $data = array();
         
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         $collection = $model->newCollection($data);
         $this->assertInstance($collection, 'Solar_Example_Model_TestSolarFoo_Collection');
         
         // the Foo_Bar model doesn't have its own collection, should fall back to foo
-        $model = $this->_newModel('TestSolarBar');
+        $model = $this->_catalog->getModel('TestSolarBar');
         $collection = $model->newCollection($data);
         $this->assertInstance($collection, 'Solar_Example_Model_TestSolarFoo_Collection');
         
         // the Dib mode has no collection and is not inherited, should fall back to Solar_Sql
-        $model = $this->_newModel('TestSolarDib');
+        $model = $this->_catalog->getModel('TestSolarDib');
         $collection = $model->newCollection($data);
         $this->assertInstance($collection, 'Solar_Sql_Model_Collection');
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -840,7 +760,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         );
         
         // non-inherited
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->newRecord($data);
         $this->assertInstance($record, 'Solar_Example_Model_TestSolarFoo_Record');
     }
@@ -857,15 +777,9 @@ class Test_Solar_Sql_Model extends Solar_Test {
           'uri'     => null,
         );
         
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         $record = $model->newRecord($data);
         $this->assertInstance($record, 'Solar_Example_Model_TestSolarBar_Record');
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     public function testNewRecord_inheritNoSuchClass()
@@ -880,19 +794,13 @@ class Test_Solar_Sql_Model extends Solar_Test {
           'uri'     => null,
         );
         
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         try {
             $record = $model->newRecord($data);
             $this->fail('Should have thrown exception when inherit not available');
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Class_Stack_Exception_ClassNotFound');
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
         
     public function testNewRecord_defaultClass()
@@ -907,15 +815,9 @@ class Test_Solar_Sql_Model extends Solar_Test {
         );
         
         // the Dib model has no record of its own, should use Solar_Sql_Model_Record
-        $model = $this->_newModel('TestSolarDib');
+        $model = $this->_catalog->getModel('TestSolarDib');
         $record = $model->newRecord($data);
         $this->assertInstance($record, 'Solar_Sql_Model_Record');
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -948,7 +850,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->_populateSpecialColsTable();
         
         // set it
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         $expect = 3;
         $model->setPaging($expect);
         
@@ -982,12 +884,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $collection = $model->fetchAll(array('order' => 'id', 'page' => 4));
         $this->assertEquals(count($collection), 1);
         $this->assertEquals($collection[0]->id, 10);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -1007,7 +903,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testUpdate()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         
         /**
          * insert a valid record
@@ -1051,12 +947,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertEquals($record->email, $email);
         $this->assertEquals($record->uri, $uri);
         $this->assertEquals($record->name, $name);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     /**
      * 
@@ -1066,7 +956,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testUpdate_invalid()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should pass
         $record = $model->fetchNew();
@@ -1091,12 +981,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         // update should pass
         $record->email = 'another@example.com';
         $model->update($record, null);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -1107,7 +991,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testUpdate_invalidAtDatabase()
     {
-        $model = $this->_newModel('TestSolarFoo');
+        $model = $this->_catalog->getModel('TestSolarFoo');
         
         // insert should succeed
         $record = $model->fetchNew();
@@ -1128,12 +1012,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         } catch (Exception $e) {
             $this->assertInstance($e, 'Solar_Sql_Adapter_Exception_QueryFailed');
         }
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -1144,7 +1022,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function testUpdate_inherit()
     {
-        $model = $this->_newModel('TestSolarBar');
+        $model = $this->_catalog->getModel('TestSolarBar');
         
         // it should self-set its inheritance value
         $record = $model->fetchNew();
@@ -1163,12 +1041,6 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertEquals($record->inherit, 'TestSolarBar');
         $record = $model->fetch(1);
         $this->assertEquals($record->inherit, 'TestSolarBar');
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
     
     /**
@@ -1178,7 +1050,7 @@ class Test_Solar_Sql_Model extends Solar_Test {
      */
     public function test_specialColumns()
     {
-        $model = $this->_newModel('TestSolarSpecialCols');
+        $model = $this->_catalog->getModel('TestSolarSpecialCols');
         
         /**
          * Correct population of new columns
@@ -1244,12 +1116,5 @@ class Test_Solar_Sql_Model extends Solar_Test {
         $this->assertEquals($record->id, 2);
         $this->assertEquals($record->seq_foo, 2);
         $this->assertEquals($record->seq_bar, 3);
-        
-        /**
-         * recover memory
-         */
-        $model->free();
-        unset($model);
     }
-
 }

@@ -80,7 +80,7 @@ class Test_Solar_Smtp extends Solar_Test {
     public function test__construct()
     {
         $obj = Solar::factory('Solar_Smtp');
-        $this->assertInstance($obj, 'Solar_Smtp');
+        $this->assertInstance($obj, 'Solar_Smtp_Adapter');
     }
     
     /**

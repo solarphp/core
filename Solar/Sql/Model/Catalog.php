@@ -187,6 +187,33 @@ class Solar_Sql_Model_Catalog extends Solar_Base
     
     /**
      * 
+     * Loads a model from the stack into the catalog by name, returning a 
+     * true/false success indicator (instead of throwing an exception when
+     * the class cannot be found).
+     * 
+     * @param string $name The model name to load from the stack into the
+     * catalog.
+     * 
+     * @return bool True on success, false on failure.
+     * 
+     */
+    public function loadModel($name)
+    {
+        try {
+            $class = $this->getClass($name);
+        } catch (Solar_Class_Stack_Exception_ClassNotFound $e) {
+            return false;
+        }
+        
+        // retain the model internally
+        $this->getModelByClass($class);
+        
+        // success
+        return true;
+    }
+    
+    /**
+     * 
      * Returns a new model instance (not stored).
      * 
      * @param string $name The model name.

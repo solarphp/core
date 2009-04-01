@@ -30,24 +30,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
-     * Data for related objects.
-     * 
-     * @var array
-     * 
-     */
-    protected $_data_related = array();
-    
-    /**
-     * 
-     * Which relteds have ahd data eager-loaded for them?
-     * 
-     * @var array
-     * 
-     */
-    protected $_load_related = array();
-    
-    /**
-     * 
      * The pager information for this collection.
      * 
      * Keys are ...
@@ -111,25 +93,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             // convert the data array to an object.
             // get the main data to load to the record.
             $load = $this->_data[$key];
-            
-            // set placeholders for all related data. we do this so the
-            // record actually has a key for the related data, even if it's
-            // empty, to do eager loading on empty (but fetched) records.
-            foreach ($this->_load_related as $name) {
-                $load[$name] = null;
-            }
-            
-            // add related data to load data
-            $primary = $load[$this->_model->primary_col];
-            foreach ($this->_data_related as $name => $data) {
-                // load any related data that actually exists
-                if (! empty($data[$primary])) {
-                    // add the data 
-                    $load[$name] = $data[$primary];
-                    // save some memory
-                    unset($data[$primary]);
-                }
-            }
             
             // done
             $this->_data[$key] = $this->_model->newRecord($load);
@@ -260,58 +223,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             $this->_data = $spec;
         } else {
             $this->_data = array();
-        }
-    }
-    
-    /**
-     * 
-     * Loads *related* data for the collection.
-     * 
-     * Applies particularly to has-many eager loading.
-     * 
-     * This keeps hold of the related data, which will be loaded into the
-     * record by offsetGet().
-     * 
-     * @param string $name The relationship name.
-     * 
-     * @param array $data The related data.
-     * 
-     * @return void
-     * 
-     * @see offsetGet()
-     * 
-     */
-    public function loadRelated($name, $data)
-    {
-        // track that related data was loaded, *even if it's empty for a
-        // particular record in the collection*
-        $this->_load_related[] = $name;
-        
-        // get the related object
-        $related = $this->_model->getRelated($name);
-        
-        // if a to-one, no need for a loop
-        if ($related->isOne()) {
-            $id = array_shift($data);
-            $this->_data_related[$name][$id] = $data;
-            return;
-        }
-        
-        // many records, needs a loop.  however, we only need to keep
-        // related keys if the related fetch was an 'assoc'.
-        if ($related->fetch == 'assoc') {
-            // keep assoc keys
-            foreach ($data as $key => $val) {
-                $id = array_shift($val);
-                $this->_data_related[$name][$id][$key] = $val;
-            }
-        } else {
-            // renumber related keys from zero, so that it "looks right"
-            // when you inspect the array
-            foreach ($data as $val) {
-                $id = array_shift($val);
-                $this->_data_related[$name][$id][] = $val;
-            }
         }
     }
     

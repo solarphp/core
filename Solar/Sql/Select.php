@@ -1330,7 +1330,7 @@ class Solar_Sql_Select extends Solar_Base
                     // always doing it.
                     // 
                     //  make sure there's no parens, or we get a bad col name
-                    $pos = strpos($col, ' AS ');
+                    $pos = stripos($col, ' AS ');
                     if ($pos === false && ! $parens) {
                         $tmp .= " AS " . $this->_sql->quoteName($col);
                     }

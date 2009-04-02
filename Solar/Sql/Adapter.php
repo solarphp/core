@@ -1638,8 +1638,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         // no extraneous spaces
         $spec = trim($spec);
         
-        // `original` AS `alias`
-        $pos = strrpos($spec, ' AS ');
+        // `original` AS `alias` ... note the 'rr' in strripos
+        $pos = strripos($spec, ' AS ');
         if ($pos) {
             // recurse to allow for "table.col"
             $orig  = $this->quoteName(substr($spec, 0, $pos));
@@ -1760,7 +1760,8 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
                 // sql language.
                 // look for an AS alias if this is the last element.
                 if ($key == $last) {
-                    $pos = strrpos($val, ' AS ');
+                    // note the 'rr' in strripos
+                    $pos = strripos($val, ' AS ');
                     if ($pos) {
                         // quote the alias name directly
                         $alias = $this->_quoteName(substr($val, $pos + 4));

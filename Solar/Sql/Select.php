@@ -107,7 +107,47 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
-     * The component parts of a select statement.
+     * An array of parts for compound queries.
+     * 
+     * @var array
+     * 
+     */
+    protected $_compound = array();
+    
+    /**
+     * 
+     * The compound phrase ('UNION', 'UNION ALL', etc) to use on the next
+     * compound query.
+     * 
+     * @var array
+     * 
+     */
+    protected $_compound_type = null;
+    
+    /**
+     * 
+     * The order to apply to the compound query (if any) as a whole.
+     * 
+     * @var array
+     * 
+     */
+    protected $_compound_order = array();
+    
+    /**
+     * 
+     * The limit to apply to the compound query (if any) as a whole.
+     * 
+     * @var array
+     * 
+     */
+    protected $_compound_limit = array(
+        'count' => 0,
+        'offset' => 0,
+    );
+    
+    /**
+     * 
+     * The component parts of the current select statement.
      * 
      * @var array
      * 
@@ -846,32 +886,18 @@ class Solar_Sql_Select extends Solar_Base
     public function clear($part = null)
     {
         if (empty($part)) {
-            // clear all parts
-            $this->_parts = array(
-                'distinct' => false,
-                'cols'     => array(),
-                'from'     => array(),
-                'join'     => array(),
-                'where'    => array(),
-                'group'    => array(),
-                'having'   => array(),
-                'order'    => array(),
-                'limit'    => array(
-                    'count'  => 0,
-                    'offset' => 0
-                ),
-            );
-            
-            // clear all table/join sources
-            $this->_sources = array();
-            
-            // done
+            $this->_clearParts();
+            $this->_clearCompound();
             return $this;
         }
         
         $part = strtolower($part);
         switch ($part) {
-            
+        
+        case 'compound':
+            $this->_clearCompound();
+            break;
+        
         case 'distinct':
             $this->_parts['distinct'] = false;
             break;
@@ -914,10 +940,65 @@ class Solar_Sql_Select extends Solar_Base
         case 'order':
             $this->_parts[$part] = array();
             break;
+        
+        default:
+            throw $this->_exception('ERR_UNKNOWN_PART', array(
+                'part' => $part,
+            ));
+            break;
         }
         
         // done
         return $this;
+    }
+    
+    /**
+     * 
+     * Clears only the current select properties and row sources, not 
+     * compound elements.
+     * 
+     * @return void
+     * 
+     */
+    protected function _clearParts()
+    {
+        // clear all parts
+        $this->_parts = array(
+            'distinct' => false,
+            'cols'     => array(),
+            'from'     => array(),
+            'join'     => array(),
+            'where'    => array(),
+            'group'    => array(),
+            'having'   => array(),
+            'order'    => array(),
+            'limit'    => array(
+                'count'  => 0,
+                'offset' => 0
+            ),
+        );
+        
+        // clear all table/join sources
+        $this->_sources = array();
+    }
+    
+    /**
+     * 
+     * Clears only the compound elements, not the current select properties 
+     * and row sources.
+     * 
+     * @return void
+     * 
+     */
+    protected function _clearCompound()
+    {
+        $this->_compound = array();
+        $this->_compound_type = null;
+        $this->_compound_order = array();
+        $this->_compound_limit = array(
+            'count'  => 0,
+            'offset' => 0,
+        );
     }
     
     /**
@@ -976,6 +1057,145 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
+     * Takes the current select properties and prepares them for UNION with
+     * the next set of select properties.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function union()
+    {
+        $this->_addCompound('UNION');
+        return $this;
+    }
+    
+    /**
+     * 
+     * Takes the current select properties and prepares them for UNION ALL
+     * with the next set of select properties.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function unionAll()
+    {
+        $this->_addCompound('UNION ALL');
+        return $this;
+    }
+    
+    /**
+     * 
+     * Support method for adding compound ('UNION', 'UNION ALL') queries based
+     * on the current object properties.
+     * 
+     * @param string $type The compound phrase.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    protected function _addCompound($type)
+    {
+        // build the current parts with the *previous* compound type
+        $this->_compound[] = array(
+            'type' => $this->_compound_type,
+            'spec' => $this->_build($this->_parts, $this->_sources),
+        );
+        
+        // retain the type for the *next* compound
+        $this->_compound_type = strtoupper($type);
+        
+        // clear parts for the next compound
+        $this->_clearParts();
+    }
+    
+    /**
+     * 
+     * Adds a *compound* row order to the query; used only in UNION (etc)
+     * queries.
+     * 
+     * @param string|array $spec The column(s) and direction to order by.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function compoundOrder($spec)
+    {
+        if (empty($spec)) {
+            return $this;
+        }
+        
+        if (is_string($spec)) {
+            $spec = explode(',', $spec);
+        } else {
+            settype($spec, 'array');
+        }
+        
+        $spec = $this->_sql->quoteNamesIn($spec);
+        
+        // force 'ASC' or 'DESC' on each order spec, default is ASC.
+        foreach ($spec as $key => $val) {
+            $asc  = (strtoupper(substr($val, -4)) == ' ASC');
+            $desc = (strtoupper(substr($val, -5)) == ' DESC');
+            if (! $asc && ! $desc) {
+                $spec[$key] .= ' ASC';
+            }
+        }
+        
+        // merge them into the current order set
+        $this->_compound_order = array_merge($this->_compound_order, $spec);
+        
+        // done
+        return $this;
+    }
+    
+    /**
+     * 
+     * Sets a *compound* limit count and offset to the query; used only in UNION (etc)
+     * queries.
+     * 
+     * @param int $count The number of rows to return.
+     * 
+     * @param int $offset Start returning after this many rows.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function compoundLimit($count = null, $offset = null)
+    {
+        $this->_compound_limit['count']  = (int) $count;
+        $this->_compound_limit['offset'] = (int) $offset;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Sets the *compound* limit and count by page number; used only in UNION (etc)
+     * queries.
+     * 
+     * @param int $page Limit results to this page number.
+     * 
+     * @return Solar_Sql_Select
+     * 
+     */
+    public function compoundLimitPage($page = null)
+    {
+        // reset the count and offset
+        $this->_compound_limit['count']  = 0;
+        $this->_compound_limit['offset'] = 0;
+        
+        // determine the count and offset from the page number
+        $page = (int) $page;
+        if ($page > 0) {
+            $this->_compound_limit['count']  = $this->_paging;
+            $this->_compound_limit['offset'] = $this->_paging * ($page - 1);
+        }
+        
+        // done
+        return $this;
+    }
+    
+    /**
+     * 
      * Fetch the results based on the current query properties.
      * 
      * @param string $type The type of fetch to perform (all, one, col,
@@ -995,10 +1215,50 @@ class Solar_Sql_Select extends Solar_Base
             ));
         }
         
+        // is this a compound select?
+        if ($this->_compound) {
+            
+            // build the parts for a compound select
+            $parts = array(
+                'compound' => $this->_compound,
+                'order'    => $this->_compound_order,
+                'limit'    => $this->_compound_limit,
+            );
+            
+            // add the current parts as the last compound
+            $parts['compound'][] = array(
+                'type' => $this->_compound_type,
+                'spec' => $this->_build($this->_parts, $this->_sources),
+            );
+            
+        } else {
+            
+            // build the parts for a single select
+            $parts = $this->_build($this->_parts, $this->_sources);
+            
+        }
+        
+        // return the fetch result
+        return $this->_sql->$fetch($parts, $this->_bind);
+    }
+    
+    /**
+     * 
+     * Support method for building corrected parts from sources.
+     * 
+     * @param array $parts An array of SELECT parts.
+     * 
+     * @param array $sources An array of sources for the SELECT.
+     * 
+     * @return array An array of corrected SELECT parts.
+     * 
+     */
+    protected function _build($parts, $sources)
+    {
         // build from scratch using the table and row sources.
-        $this->_parts['cols'] = array();
-        $this->_parts['from'] = array();
-        $this->_parts['join'] = array();
+        $parts['cols'] = array();
+        $parts['from'] = array();
+        $parts['join'] = array();
         
         // get a count of how many sources there are. if there's only 1, we
         // won't use column-name prefixes below. this will help soothe SQLite
@@ -1007,10 +1267,10 @@ class Solar_Sql_Select extends Solar_Base
         // e.g., `JOIN (SELECT alias.col FROM tbl AS alias) ...`  won't work
         // right, SQLite needs `JOIN (SELECT col AS col FROM tbl AS alias)`.
         // 
-        $count_sources = count($this->_sources);
+        $count_sources = count($sources);
         
         // build from sources.
-        foreach ($this->_sources as $source) {
+        foreach ($sources as $source) {
             
             // build the from and join parts.  note that we don't
             // build from 'cols' sources, since they are just named
@@ -1018,6 +1278,7 @@ class Solar_Sql_Select extends Solar_Base
             if ($source['type'] != 'cols') {
                 $method = "_build" . ucfirst($source['type']);
                 $this->$method(
+                    $parts,
                     $source['name'],
                     $source['orig'],
                     $source['join'],
@@ -1076,12 +1337,12 @@ class Solar_Sql_Select extends Solar_Base
                 }
                 
                 // add to the parts
-                $this->_parts['cols'][] = $tmp;
+                $parts['cols'][] = $tmp;
             }
         }
         
-        // return the fetch result
-        return $this->_sql->$fetch($this->_parts, $this->_bind);
+        // done!
+        return $parts;
     }
     
     /**
@@ -1574,7 +1835,9 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
-     * Builds $this->_parts['from'] using a 'from' source.
+     * Builds a part element **in place** using a 'from' source.
+     * 
+     * @param array &$parts The SELECT parts to build with.
      * 
      * @param string $name The table alias.
      * 
@@ -1583,12 +1846,12 @@ class Solar_Sql_Select extends Solar_Base
      * @return void
      * 
      */
-    protected function _buildFrom($name, $orig)
+    protected function _buildFrom(&$parts, $name, $orig)
     {
         if ($name == $orig) {
-            $this->_parts['from'][] = $this->_sql->quoteName($name);
+            $parts['from'][] = $this->_sql->quoteName($name);
         } else {
-            $this->_parts['from'][] = $this->_sql->quoteName($orig)
+            $parts['from'][] = $this->_sql->quoteName($orig)
                                     . ' '
                                     . $this->_sql->quoteName($name);
         }
@@ -1596,7 +1859,9 @@ class Solar_Sql_Select extends Solar_Base
     
     /**
      * 
-     * Builds $this->_parts['join'] using a 'join' source.
+     * Builds a part element **in place** using a 'join' source.
+     * 
+     * @param array &$parts The SELECT parts to build with.
      * 
      * @param string $name The table alias.
      * 
@@ -1609,7 +1874,7 @@ class Solar_Sql_Select extends Solar_Base
      * @return void
      * 
      */
-    protected function _buildJoin($name, $orig, $join, $cond)
+    protected function _buildJoin(&$parts, $name, $orig, $join, $cond)
     {
         $tmp = array(
             'type' => $join,
@@ -1629,12 +1894,14 @@ class Solar_Sql_Select extends Solar_Base
                          . $this->_sql->quoteName($name);
         }
         
-        $this->_parts['join'][] = $tmp;
+        $parts['join'][] = $tmp;
     }
     
     /**
      * 
-     * Builds $this->_parts['from'] using a 'select' source.
+     * Builds a part element **in place** using a 'select' source.
+     * 
+     * @param array &$parts The SELECT parts to build with.
      * 
      * @param string $name The subselect alias.
      * 
@@ -1643,8 +1910,8 @@ class Solar_Sql_Select extends Solar_Base
      * @return void
      * 
      */
-    protected function _buildSelect($name, $orig)
+    protected function _buildSelect(&$parts, $name, $orig)
     {
-        $this->_parts['from'][] = "($orig) " . $this->_sql->quoteName($name);
+        $parts['from'][] = "($orig) " . $this->_sql->quoteName($name);
     }
 }

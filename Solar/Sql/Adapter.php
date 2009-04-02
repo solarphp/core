@@ -1219,15 +1219,24 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      */
     protected function _select($parts)
     {
-        $stmt = $this->_sqlSelect($parts);
+        // buid the statment
+        if (empty($parts['compound'])) {
+            $stmt = $this->_selectSingle($parts);
+        } else {
+            $stmt = $this->_selectCompound($parts);
+        }
+        
+        // modify per adapter
         $this->_modSelect($stmt, $parts);
+        
+        // done!
         return $stmt;
     }
     
     /**
      * 
-     * Builds the base SELECT command string from its component parts, without
-     * the LIMIT portions; those are left to the individual adapters.
+     * Builds a single SELECT command string from its component parts, 
+     * without the LIMIT portions; those are left to the individual adapters.
      * 
      * @param array $parts The parts of the SELECT statement, generally
      * from a Solar_Sql_Select object.
@@ -1235,7 +1244,7 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
      * @return string A SELECT command string.
      * 
      */
-    protected function _sqlSelect($parts)
+    protected function _selectSingle($parts)
     {
         $default = array(
             'distinct' => null,
@@ -1303,6 +1312,63 @@ abstract class Solar_Sql_Adapter extends Solar_Base {
         
         // ordered by these columns
         if ($parts['order']) {
+            $stmt .= "ORDER BY\n    ";
+            $stmt .= implode(",\n    ", $parts['order']) . "\n";
+        }
+        
+        // done!
+        return $stmt;
+    }
+    
+    /**
+     * 
+     * Builds a compound SELECT command string from its component parts,
+     * without the LIMIT portions; those are left to the individual adapters.
+     * 
+     * @param array $parts The parts of the SELECT statement, generally
+     * from a Solar_Sql_Select object.
+     * 
+     * @return string A SELECT command string.
+     * 
+     */
+    protected function _selectCompound($parts)
+    {
+        // the select statement to build up
+        $stmt = '';
+        
+        // default parts of each 'compound' element
+        $default = array(
+            'type' => null, // 'UNION', 'UNION ALL', etc.
+            'spec' => null, // array or string for the SELECT statement
+        );
+        
+        // combine the compound elements
+        foreach ((array) $parts['compound'] as $compound) {
+            
+            // make sure we have the default elements
+            $compound = array_merge($default, $compound);
+            
+            // is it an array of select parts?
+            if (is_array($compound['spec'])) {
+                // yes, build a select string from them
+                $select = $this->_select($compound['spec']);
+            } else {
+                // no, assume it's already a select string
+                $select = $compound['spec'];
+            }
+            
+            // do we need to add the compound type?
+            // note that the first compound type will be ignored.
+            if ($stmt) {
+                $stmt .= strtoupper($compound['type']) . "\n";
+            }
+            
+            // now add the select itself
+            $stmt .= "(" . $select . ")\n";
+        }
+        
+        // add any overall order
+        if (! empty($parts['order'])) {
             $stmt .= "ORDER BY\n    ";
             $stmt .= implode(",\n    ", $parts['order']) . "\n";
         }

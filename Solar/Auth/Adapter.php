@@ -569,10 +569,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->_err = null;
         $this->reset();
         
-        // load the user-provided handle and password from the request source.
-        $method        = strtolower($this->_config['source']);
-        $this->_handle = $this->_request->$method($this->_config['source_handle']);
-        $this->_passwd = $this->_request->$method($this->_config['source_passwd']);
+        // load the user-provided handle and password
+        $this->_loadCredentials();
         
         // adapter-specific login processing
         $result = $this->_processLogin();
@@ -591,6 +589,23 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             $this->reset(Solar_Auth::WRONG);
             return false;
         }
+    }
+    
+    /**
+     * 
+     * Loads the user credentials (handle and passwd) from the request source.
+     * 
+     * @return void
+     * 
+     */
+    protected function _loadCredentials()
+    {
+        // where do the handle and passwd come from?
+        $method = strtolower($this->_config['source']);
+        
+        // retrieve the handle and passwd
+        $this->_handle = $this->_request->$method($this->_config['source_handle']);
+        $this->_passwd = $this->_request->$method($this->_config['source_passwd']);
     }
     
     /**

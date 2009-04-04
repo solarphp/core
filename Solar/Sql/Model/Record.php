@@ -642,9 +642,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
             // pre-save routine
             $this->_preSave();
             
-            // insert or update based on primary key value
-            $primary = $this->_model->primary_col;
-            if (empty($this->$primary)) {
+            // insert or update based on current status
+            if ($this->_status == self::STATUS_NEW) {
                 $this->_insert();
             } else {
                 $this->_update();

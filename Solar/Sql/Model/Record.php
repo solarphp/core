@@ -731,7 +731,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         try {
             $this->_preUpdate();
-            $where = null;
+            $primary = $this->getPrimaryCol();
+            $where = array(
+                "$primary = ?" => $this->getPrimaryVal()
+            );
             $this->_model->update($this, $where);
             $this->_postUpdate();
         } catch (Solar_Sql_Adapter_Exception_QueryFailed $e) {
@@ -831,7 +834,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $this->_checkDeleted();
         $this->_preDelete();
-        $this->_model->delete($this);
+        $primary = $this->getPrimaryCol();
+        $where = array(
+            "$primary = ?" => $this->getPrimaryVal(),
+        );
+        $this->_model->delete($where);
         $this->_postDelete();
     }
     

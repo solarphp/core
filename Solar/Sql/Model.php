@@ -57,6 +57,17 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
+     * The number of rows affected by the last INSERT, UPDATE, or DELETE.
+     * 
+     * @var int
+     * 
+     * @see getAffectedRows()
+     * 
+     */
+    protected $_affected_rows;
+    
+    /**
+     * 
      * A Solar_Sql_Model_Catalog dependency object.
      * 
      * @var Solar_Sql_Model_Catalog
@@ -381,8 +392,8 @@ abstract class Solar_Sql_Model extends Solar_Base
     
     /**
      * 
-     * Other models that relate to this model should use this as the foreign-key
-     * column name.
+     * Other models that relate to this model should use this as the 
+     * foreign-key column name.
      * 
      * @var string
      * 
@@ -688,6 +699,19 @@ abstract class Solar_Sql_Model extends Solar_Base
     public function getPrimary()
     {
         return "{$this->_model_name}.{$this->_primary_col}";
+    }
+    
+    /**
+     * 
+     * Returns the number of rows affected by the last INSERT, UPDATE, or
+     * DELETE.
+     * 
+     * @return int
+     * 
+     */
+    public function getAffectedRows()
+    {
+        return $this->_affected_rows;
     }
     
     // -----------------------------------------------------------------
@@ -1921,6 +1945,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
         }
         
+        // reset affected rows
+        $this->_affected_rows;
+        
         /**
          * Force or auto-set special columns
          */
@@ -1987,8 +2014,11 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // do the insert
-        $this->_sql->insert($this->_table_name, $data);
+        // perform the insert and track affected rows
+        $this->_affected_rows = $this->_sql->insert(
+            $this->_table_name,
+            $data
+        );
         
         /**
          * Post-insert
@@ -2043,6 +2073,9 @@ abstract class Solar_Sql_Model extends Solar_Base
             throw $this->_exception('ERR_NOT_ARRAY_OR_RECORD');
         }
         
+        // reset affected rows
+        $this->_affected_rows = null;
+        
         /**
          * Force or auto-set special columns
          */
@@ -2071,11 +2104,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         /**
-         * Record filtering and WHERE clause
+         * Record filtering and data serializing
          */
-        
-        // what's the primary key?
-        $primary = $this->_primary_col;
         if ($spec instanceof Solar_Sql_Model_Record) {
             
             // apply record filters
@@ -2086,9 +2116,6 @@ abstract class Solar_Sql_Model extends Solar_Base
             
             // convert to array
             $data = $spec->toArray();
-            
-            // force the WHERE clause
-            $where = array("$primary = ?" => $data[$primary]);
             
             // retain only changed columns
             foreach ($data as $key => $val) {
@@ -2111,7 +2138,7 @@ abstract class Solar_Sql_Model extends Solar_Base
         }
         
         // don't update the primary key
-        unset($data[$primary]);
+        unset($data[$this->_primary_col]);
         
         /**
          * Final prep, then update
@@ -2123,8 +2150,12 @@ abstract class Solar_Sql_Model extends Solar_Base
             }
         }
         
-        // perform the update
-        $this->_sql->update($this->_table_name, $data, $where);
+        // perform the update and track affected rows
+        $this->_affected_rows = $this->_sql->update(
+            $this->_table_name,
+            $data,
+            $where
+        );
         
         // unserialize after the update
         $this->unserializeCols($data);
@@ -2147,31 +2178,23 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      * Deletes rows from the model table and deletes cache entries.
      * 
-     * @param string|array|Solar_Sql_Model_Record $spec The WHERE clause to
-     * identify which rows to delete, or a record to delete.
+     * @param string|array $where The WHERE clause to identify which rows to delete.
      * 
      * @return void
      * 
      * @see Solar_Sql_Model_Cache::deleteAll()
      * 
      */
-    public function delete($spec)
+    public function delete($where)
     {
-        if ($spec instanceof Solar_Sql_Model_Record) {
-            $primary = $this->_primary_col;
-            $where = array("$primary = ?" => $spec->$primary);
-        } else {
-            $where = $spec;
-        }
-        
-        // perform the deletion
-        $result = $this->_sql->delete($this->_table_name, $where);
+        // perform the deletion and track affected rows
+        $this->_affected_rows = $this->_sql->delete(
+            $this->_table_name,
+            $where
+        );
         
         // clear the cache for this model and related models
         $this->_cache->deleteAll();
-        
-        // done
-        return $result;
     }
     
     /**

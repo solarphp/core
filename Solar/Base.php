@@ -86,10 +86,14 @@ abstract class Solar_Base
      */
     public function __construct($config = null)
     {
+        // build configuration
         $this->_config = array_merge(
             $this->_buildConfig(get_class($this)),
             (array) $config
         );
+        
+        // post-configuration tasks
+        $this->_postConfig();
     }
     
     /**
@@ -255,6 +259,17 @@ abstract class Solar_Base
         }
         
         return $config;
+    }
+    
+    /**
+     * 
+     * A hook that activates after _buildConfig() in the constructor.
+     * 
+     * @return void
+     * 
+     */
+    public function _postConfig()
+    {
     }
     
     /**

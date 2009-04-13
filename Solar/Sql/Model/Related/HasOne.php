@@ -72,4 +72,16 @@ class Solar_Sql_Model_Related_HasOne extends Solar_Sql_Model_Related_ToOne
             $this->native_col = $opts['native_col'];
         }
     }
+    
+    public function save($native)
+    {
+        $foreign = $native->{$this->name};
+        if (! $foreign) {
+            return;
+        }
+        
+        // set the foreign_col to the native value
+        $foreign->{$this->foreign_col} = $native->{$this->native_col};
+        $foreign->save();
+    }
 }

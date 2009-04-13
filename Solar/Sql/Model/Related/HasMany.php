@@ -28,4 +28,19 @@ class Solar_Sql_Model_Related_HasMany extends Solar_Sql_Model_Related_ToMany
     {
         $this->type = 'has_many';
     }
+    
+    public function save($native)
+    {
+        $foreign = $native->{$this->name};
+        if (! $foreign) {
+            return;
+        }
+        
+        // set the foreign_col on each foreign record to the native value
+        foreach ($foreign as $record) {
+            $record->{$this->foreign_col} = $native->{$this->native_col};
+        }
+        
+        $foreign->save();
+    }
 }

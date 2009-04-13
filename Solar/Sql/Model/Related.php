@@ -566,7 +566,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     protected function _modSelectRelatedToCollection($select, $spec, $parent_col = NULL)
     {
         // Restrict to the set of IDs in the driving collection
-        $keys = $spec->uniqueKeys($this->native_col);
+        $keys = $spec->getPrimaryVals($this->native_col);
         $num_keys = count($keys);
         if ($num_keys == 0) {
             // We are too far down to stop the SELECT from being issued, but
@@ -806,4 +806,11 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract protected function _setRelated($opts);
+    
+    function preSave($native)
+    {
+        // at least for now, only belongs-to needs this
+    }
+    
+    abstract public function save($native);
 }

@@ -104,7 +104,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
-     * Return a list of the unique primary keys contained in this collection.
+     * Returns a list of the unique primary keys contained in this collection.
      * Will not cause records to be created for as of yet unaccessed rows.
      *
      * @param string $primary primary column to collect.
@@ -112,17 +112,26 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return array
      * 
      */
-    public function uniqueKeys($primary = null)
+    public function getPrimaryVals($key = null)
     {
-        $keys = array();
-        if (empty($primary)) {
-            $primary = $this->_model->primary_col;
+        $list = array();
+        if (empty($key)) {
+            $key = $this->_model->primary_col;
         }
         foreach ($this->_data as $row) {
-            $keys[] = $row[$primary];
+            $list[] = $row[$key];
         }
-        $keys = array_unique($keys);
-        return $keys;
+        $list = array_unique($list);
+        return $list;
+    }
+    
+    public function getColVals($col)
+    {
+        $list = array();
+        foreach ($this as $record) {
+            $list[] = $record->$col;
+        }
+        return $list;
     }
     
     /**
@@ -258,8 +267,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         
         // save, instantiating each record
         foreach ($this as $record) {
-            $status = $record->getStatus();
-            if ($status != 'deleted') {
+            if (! $record->isDeleted()) {
                 $record->save();
             }
         }
@@ -297,16 +305,14 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    public function delete()
+    public function deleteAll()
     {
-        $this->_preDelete();
-        foreach ($this as $record) {
-            $status = $record->getStatus();
-            if ($status != 'deleted') {
-                $record->delete();
-            }
+        $this->_preDeleteAll();
+        $list = $this->getPrimaryVals();
+        foreach ($list as $key) {
+            $this->deleteOne($key);
         }
-        $this->_postDelete();
+        $this->_postDeleteAll();
     }
     
     /**
@@ -316,7 +322,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    protected function _preDelete()
+    protected function _preDeleteAll()
     {
     }
     
@@ -327,8 +333,29 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return void
      * 
      */
-    protected function _postDelete()
+    protected function _postDeleteAll()
     {
+    }
+    
+    public function appendNew($spec = null)
+    {
+        // create a new record from the spec and append it
+        $record = $this->_model->fetchNew($spec);
+        $this->_data[] = $record;
+        return $record;
+    }
+    
+    public function deleteOne($key)
+    {
+        if ($this->__isset($key)) {
+            $record = $this->__get($key);
+            if (! $record->isDeleted()) {
+                $record->delete();
+            }
+            $record->free();
+            unset($record);
+            unset($this->_data[$key]);
+        }
     }
     
     // -----------------------------------------------------------------

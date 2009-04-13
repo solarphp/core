@@ -88,4 +88,28 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related_ToOne
             $this->native_col = $opts['native_col'];
         }
     }
+    
+    // in a belongs-to, the foreign value is stored in the native column.
+    // in "has"es, the native value is stored in the foreign column.
+    public function preSave($native)
+    {
+        // see if we have the foreign record that the native record belongs to
+        $foreign = $native->{$this->name};
+        if (! $foreign) {
+            // we need the record the native belongs to, to connect the two
+            throw $this->_exception('ERR_RELATED_DOES_NOT_EXIST');
+        } else {
+            // the foreign record exists, connect with the native
+            $native->{$this->native_col} = $foreign->{$this->foreign_col};
+        }
+    }
+    
+    // pre-save has already connected the records
+    public function save($native)
+    {
+        $foreign = $native->{$this->name};
+        if ($foreign) {
+            $foreign->save();
+        }
+    }
 }

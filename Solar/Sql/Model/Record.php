@@ -642,6 +642,15 @@ class Solar_Sql_Model_Record extends Solar_Struct
             // pre-save routine
             $this->_preSave();
             
+            // perform pre-save for any relateds that need to modify the 
+            // native record, but only if instantiated
+            $list = array_keys($this->_model->related);
+            foreach ($list as $name) {
+                if (! empty($this->_data[$name])) {
+                    $this->_model->getRelated($name)->preSave($this);
+                }
+            }
+            
             // insert or update based on current status
             if ($this->_status == self::STATUS_NEW) {
                 $this->_insert();
@@ -781,20 +790,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
     {
         $this->_preSaveRelated();
         
-        // now save each related, but only if instantiated
-        foreach ($this->_model->related as $name => $info) {
-        
-            // use $this->_data[$name] **instead of** $this->$name,
-            // to avoid lazy-loading the related record (which in turn
-            // causes infinite recursion)
-            if (empty($this->_data[$name])) {
-                continue;
-            }
-        
-            if ($this->_data[$name] instanceof Solar_Sql_Model_Record ||
-                $this->_data[$name] instanceof Solar_Sql_Model_Collection) {
-                // is a record or collection, save them
-                $this->_data[$name]->save();
+        // save each related, but only if instantiated
+        $list = array_keys($this->_model->related);
+        foreach ($list as $name) {
+            if (! empty($this->_data[$name])) {
+                $this->_model->getRelated($name)->save($this);
             }
         }
         
@@ -1454,17 +1454,19 @@ class Solar_Sql_Model_Record extends Solar_Struct
             }
         }
         
-        
         // fix up related data elements
         $this->_fixRelatedData();
 
         // can't be invalid
         $this->_invalid = array();
 
-        // set status directly, bypassing setStatus() logic
+        // set status directly, bypassing setStatus() logic, and done!
         $this->_status = $status;
-        
-        // done!
+    }
+    
+    public function isDeleted()
+    {
+        return $this->getStatus() == self::STATUS_DELETED;
     }
     
     /**

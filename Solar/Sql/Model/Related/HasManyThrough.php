@@ -115,7 +115,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         $this->_modSelectAddThrough($select, $parent_col);
         
         // Restrict to the set of IDs in the driving collection
-        $keys = $spec->uniqueKeys($this->native_col);
+        $keys = $spec->getPrimaryVals($this->native_col);
         $num_keys = count($keys);
         if ($num_keys == 0) {
             // We are too far down to stop the SELECT from being issued, but
@@ -363,4 +363,71 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         }
     }
     
+    // the problem here is to make sure the "through" collection has an entry
+    // for each foreign record, with the right ID on it.
+    public function save($native)
+    {
+        // get the foreign collection to work with
+        $foreign = $native->{$this->name};
+        
+        // get the through collection to work with
+        $through = $native->{$this->through};
+        
+        // if no foreign, and no through, we're done
+        if (! $foreign && ! $through) {
+            return;
+        }
+        
+        // if no foreign records, kill off all through records
+        if (! $foreign) {
+            $through->deleteAll();
+            return;
+        }
+        
+        // save the foreign records as they are, which creates the necessary
+        // primary key values the through mapping will need
+        $foreign->save();
+        
+        // we need a through mapping
+        if (! $through) {
+            // get the model for the collection ...
+            $model = $this->_native_model
+                          ->getRelated($this->through)
+                          ->getModel();
+            // ... and make the collection.
+            $through = $model->newCollection();
+            $native->{$this->through} = $through;
+        }
+        
+        // the list of existing foreign values
+        $foreign_list = $foreign->getColVals($this->foreign_col);
+        
+        // the list of existing through values
+        $through_list = $through->getColVals($this->through_foreign_col);
+        
+        // find mappings that *do* exist but shouldn't, and delete them
+        foreach ($through_list as $through_val) {
+            if (! in_array($through_val, $foreign_list)) {
+                $through->deleteOne($through_val);
+            }
+        }
+        
+        // make sure all existing "through" have the right native IDs on the
+        foreach ($through as $record) {
+            $record->{$this->through_native_col} = $native->{$this->native_col};
+        }
+        
+        // find mappings that *don't* exist, and add them
+        foreach ($foreign_list as $foreign_val) {
+            if (! in_array($foreign_val, $through_list)) {
+                $through->appendNew(array(
+                    $this->through_native_col  => $native->{$this->native_col},
+                    $this->through_foreign_col => $foreign_val,
+                ));
+            }
+        }
+        
+        // done with the mappings, save them
+        $through->save();
+    }
 }

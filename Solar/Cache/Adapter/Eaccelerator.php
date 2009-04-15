@@ -67,6 +67,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // save to eaccelerator
         return eaccelerator_put($key, $data, $this->_life);
     }
     
@@ -87,10 +91,15 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // if already there, don't add again
         if (eaccelerator_get($key) !== null) {
             return false;
         }
         
+        // save to eaccelerator
         return eaccelerator_put($key, $data, $this->_life);
     }
     
@@ -109,6 +118,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // get from eaccelerator
         return eaccelerator_get($key);
     }
     
@@ -130,6 +143,9 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
         if (! $this->_active) {
             return;
         }
+        
+        // modify the key to add the prefix
+        $key = $this->entry($key);
         
         // make sure we have a key to increment
         $this->add($key, 0, null, $this->_life);
@@ -163,6 +179,10 @@ class Solar_Cache_Adapter_Eaccelerator extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // remove from eaccelerator
         eaccelerator_rm($key);
     }
     

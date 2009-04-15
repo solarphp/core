@@ -92,6 +92,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // save in xcache
         return xcache_set($key, $data, $this->_life);
     }
     
@@ -112,10 +116,15 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // don't save if already there
         if (xcache_isset($key)) {
             return false;
         }
         
+        // add to xcache
         return xcache_set($key, $data, $this->_life);
     }
     
@@ -134,6 +143,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // get from xcache
         return xcache_get($key);
     }
     
@@ -155,6 +168,9 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
         if (! $this->_active) {
             return;
         }
+        
+        // modify the key to add the prefix
+        $key = $this->entry($key);
         
         // make sure we have a key to increment
         $this->add($key, 0, null, $this->_life);
@@ -181,6 +197,10 @@ class Solar_Cache_Adapter_Xcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // remove from xcache
         return xcache_unset($key);
     }
     

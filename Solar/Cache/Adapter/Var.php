@@ -40,18 +40,6 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
     
     /**
      * 
-     * Constructor.
-     * 
-     * @param array $config User-provided configuration values.
-     * 
-     */
-    public function __construct($config = null)
-    {
-        parent::__construct($config);
-    }
-    
-    /**
-     * 
      * Sets cache entry data.
      * 
      * @param string $key The entry ID.
@@ -67,6 +55,10 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // save entry and expiry
         $this->_entries[$key] = $data;
         $this->_expires[$key] = time() + $this->_life;
         return true;
@@ -89,6 +81,10 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // save entry, but only if it doesn't already exist
         if (empty($this->_entries[$key])) {
             return $this->save($key, $data);
         } else {
@@ -110,6 +106,9 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
         if (! $this->_active) {
             return;
         }
+        
+        // modify the key to add the prefix
+        $key = $this->entry($key);
         
         // does it exist?
         $exists = array_key_exists($key, $this->_entries);
@@ -135,7 +134,7 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
      * 
      * If lifetime is empty (zero), then the file never expires.
      * 
-     * @param string $key The entry key.
+     * @param string $key The entry key with prefix already added.
      * 
      * @return bool
      * 
@@ -175,6 +174,9 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
         // make sure we have a key to increment
         $this->add($key, 0, null, $this->_life);
         
@@ -200,6 +202,10 @@ class Solar_Cache_Adapter_Var extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // remove entry and expiry
         unset($this->_entries[$key]);
         unset($this->_expires[$key]);
     }

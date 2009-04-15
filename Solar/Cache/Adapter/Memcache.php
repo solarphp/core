@@ -197,6 +197,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // store in memcache
         return $this->memcache->set($key, $data, null, $this->_life);
     }
     
@@ -217,6 +221,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // add to memcache
         return $this->memcache->add($key, $data, null, $this->_life);
     }
     
@@ -235,6 +243,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // get from memcache
         return $this->memcache->get($key);
     }
     
@@ -256,6 +268,9 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
         if (! $this->_active) {
             return;
         }
+        
+        // modify the key to add the prefix
+        $key = $this->entry($key);
         
         // make sure we have a key to increment
         $this->add($key, 0, null, $this->_life);
@@ -282,6 +297,10 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
             return;
         }
         
+        // modify the key to add the prefix
+        $key = $this->entry($key);
+        
+        // remove from memcache
         $this->memcache->delete($key);
     }
     
@@ -354,7 +373,5 @@ class Solar_Cache_Adapter_Memcache extends Solar_Cache_Adapter
                 $this->_config['pool']
             );
         }
-        
     }
-
 }

@@ -418,6 +418,23 @@ class Solar_Session extends Solar_Base
     
     /**
      * 
+     * Whether or not the session currently has a particular data key stored.
+     * Does not return or remove the value of the key.
+     * 
+     * @param string $key The data key.
+     * 
+     * @return bool True if the session has this data key in it, false if
+     * not.
+     * 
+     */
+    public function has($key)
+    {
+        $this->load();
+        return array_key_exists($key, $this->_store);
+    }
+    
+    /**
+     * 
      * Sets a normal value by key.
      * 
      * @param string $key The data key.
@@ -483,6 +500,21 @@ class Solar_Session extends Solar_Base
         }
         
         return $val;
+    }
+    
+    /**
+     * 
+     * Deletes a key from the store, removing it entirely.
+     * 
+     * @param string $key The data key.
+     * 
+     * @return void
+     * 
+     */
+    public function delete($key)
+    {
+        $this->start();
+        unset($this->_store[$key]);
     }
     
     /**
@@ -595,6 +627,21 @@ class Solar_Session extends Solar_Base
         }
         
         return $val;
+    }
+    
+    /**
+     * 
+     * Deletes a flash key, removing it entirely.
+     * 
+     * @param string $key The flash key.
+     * 
+     * @return void
+     * 
+     */
+    public function deleteFlash($key)
+    {
+        $this->start();
+        unset($this->_flash[$key]);
     }
     
     /**

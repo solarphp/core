@@ -987,6 +987,49 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // pre-filter hook
         $this->_preFilter();
         
+        // get the a new filter object
+        $filter = $this->_newFilter();
+        
+        // apply filters
+        $valid = $filter->applyChain($this);
+        
+        // retain invalids
+        $invalid = $filter->getChainInvalid();
+        
+        // reclaim memory
+        $filter->free();
+        unset($filter);
+        
+        // was it valid?
+        if (! $valid) {
+            
+            // use custom validation messages per column when available
+            foreach ($invalid as $key => $old) {
+                $locale_key = "INVALID_" . strtoupper($key);
+                $new = $this->_model->locale($locale_key);
+                if ($new != $locale_key) {
+                    $invalid[$key] = $new;
+                }
+            }
+            
+            $this->setStatus(self::STATUS_INVALID);
+            $this->_invalid = $invalid;
+            throw $this->_exception('ERR_INVALID', array($this->_invalid));
+        }
+        
+        // post-logic, and done
+        $this->_postFilter();
+    }
+    
+    /**
+     * 
+     * Creates a new filter object for the filter() method.
+     * 
+     * @return Solar_Filter
+     * 
+     */
+    protected function _newFilter()
+    {
         // create a filter object based on the model's filter class
         $filter = Solar::factory($this->_model->filter_class);
         
@@ -1024,35 +1067,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // tell the filter to use the model for locale strings
         $filter->setChainLocaleObject($this->_model);
         
-        // apply filters
-        $valid = $filter->applyChain($this);
-        
-        // retain invalids
-        $invalid = $filter->getChainInvalid();
-        
-        // reclaim memory
-        $filter->free();
-        unset($filter);
-        
-        // was it valid?
-        if (! $valid) {
-            
-            // use custom validation messages per column when available
-            foreach ($invalid as $key => $old) {
-                $locale_key = "INVALID_" . strtoupper($key);
-                $new = $this->_model->locale($locale_key);
-                if ($new != $locale_key) {
-                    $invalid[$key] = $new;
-                }
-            }
-            
-            $this->setStatus(self::STATUS_INVALID);
-            $this->_invalid = $invalid;
-            throw $this->_exception('ERR_INVALID', array($this->_invalid));
-        }
-        
-        // post-logic, and done
-        $this->_postFilter();
+        // done!
+        return $filter;
     }
     
     /**

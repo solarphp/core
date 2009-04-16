@@ -161,6 +161,9 @@ class Solar_Filter extends Solar_Base
         $this->_stack = Solar::factory('Solar_Class_Stack');
         $this->setFilterClass();
         
+        // set default chain locale object
+        $this->setChainLocaleObject($this);
+        
         // extended setup
         $this->_setup();
     }
@@ -332,17 +335,28 @@ class Solar_Filter extends Solar_Base
      * Sets the object used for getting locale() translations during
      * [[applyChain()]].
      * 
-     * @param Solar_Base $obj Any Solar_Base object with a locale() method.
-     * When empty, uses $this for locale().
+     * @param Solar_Base|null|false $spec Any Solar object with a locale() 
+     * method. When null, uses $this for locale(); when false, does not 
+     * localize.
      * 
      * @return void
      * 
      * @see applyChain()
      * 
      */
-    public function setChainLocaleObject($obj)
+    public function setChainLocaleObject($spec)
     {
-        $this->_chain_locale_object = $obj;
+        if ($spec === null) {
+            $this->_chain_locale_object = $this;
+        } elseif ($spec === false) {
+            $this->_chain_locale_object = false;
+        } elseif ($spec instanceof Solar_Base) {
+            $this->_chain_locale_object = $spec;
+        } else {
+            throw $this->_exception('ERR_CHAIN_LOCALE_OBJECT', array(
+                'spec' => $spec,
+            ));
+        }
     }
     
     /**
@@ -533,11 +547,6 @@ class Solar_Filter extends Solar_Base
         // reset the list of invalid keys
         $this->_chain_invalid = array();
         
-        // if we don't have a locale object, use self
-        if (! $this->_chain_locale_object) {
-            $this->_chain_locale_object = $this;
-        }
-        
         // see if we actually have all the required data keys
         foreach ((array) $this->_chain_require as $key => $flag) {
             
@@ -644,19 +653,22 @@ class Solar_Filter extends Solar_Base
      */
     protected function _chainLocale($key)
     {
-        // the translated message
-        $msg = null;
+        // the translated message; default to the translation key.
+        $msg = $key;
         
-        // if we have an alternative locale object, get a message from it
+        // if we have a locale object, get a message from it
         if ($this->_chain_locale_object) {
+            
+            // try to translate
             $msg = $this->_chain_locale_object->locale($key);
-        }
-        
-        // if the message is still exactly null (meaning there was no locale
-        // object), or if the key had no translation, fall back to the
-        // translations from $this.
-        if ($msg === null || $msg == $key) {
-            $msg = $this->locale($key);
+            
+            // if the key failed to translate, fall back to the
+            // translations from $this, but only if $this wasn't
+            // the source to begin with.
+            $failed = $msg === null || $msg == $key;
+            if ($failed && $this != $this->_chain_locale_object) {
+                $msg = $this->locale($key);
+            }
         }
         
         // done

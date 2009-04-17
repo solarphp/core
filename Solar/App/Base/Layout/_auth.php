@@ -47,7 +47,7 @@
             ?>
         <?php endif; ?>
         <p><?php
-            $status = Solar_Registry::get('user')->auth->getFlash('status_text');
+            $status = Solar_Registry::get('user')->auth->getStatusText();
             echo nl2br(wordwrap($this->escape($status), 20));
         ?></p>
     </div>

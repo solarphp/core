@@ -63,11 +63,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (string) The source_process element value indicating a logout request;
      *   default is the 'PROCESS_LOGOUT' locale key value.
      * 
-     * `session_class`
-     * : (string) The class name to use as the session storage segment name.
-     *   Default is 'Solar_Auth_Adapter' regardless of the actual class name
-     *   (this lets multiple adapters share the same credential information).
-     * 
      * @var array
      * 
      */
@@ -75,6 +70,10 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'expire'         => 14400,
         'idle'           => 1800,
         'allow'          => true,
+        'cache' => array(
+            'adapter' => 'Solar_Cache_Adapter_Session',
+            'prefix'  => 'Solar_Auth_Adapter',
+        ),
         'source'         => 'post',
         'source_handle'  => 'handle',
         'source_passwd'  => 'passwd',
@@ -82,7 +81,6 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'source_process' => 'process',
         'process_login'  => null,
         'process_logout' => null,
-        'session_class'  => 'Solar_Auth_Adapter',
     );
     
     /**
@@ -96,12 +94,12 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Class-specific session object.
+     * A cache object to retain the current user information.
      * 
-     * @var Solar_Session
+     * @var Solar_Cache_Adapter
      * 
      */
-    protected $_session;
+    protected $_cache;
     
     /**
      * 
@@ -150,8 +148,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Magic "public" properties that are actually parts of the session
-     * segment.
+     * Magic "public" properties that are actually stored in the cache.
      * 
      * The available magic properties are:
      * 
@@ -249,24 +246,16 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             $this->_config['source'] = 'post';
         }
         
-        // make sure we have a session class name; this determines how the
-        // session store is segmented.  when you have multiple adapters that
-        // need to use the same store, this is useful.
-        if (! $this->_config['session_class']) {
-            $this->_config['session_class'] = 'Solar_Auth_Adapter';
-        }
-        
         // get the current request environment
         $this->_request = Solar_Registry::get('request');
         
         // set per config
         $this->allow = (bool) $this->_config['allow'];
         
-        // create the session-access object.
-        // starts the session if it has not been started already.
-        $this->_session = Solar::factory(
-            'Solar_Session',
-            array('class' => $this->_config['session_class'])
+        // cache dependency injection
+        $this->_cache = Solar::dependency(
+            'Solar_Cache',
+            $this->_config['cache']
         );
     }
     
@@ -289,7 +278,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             ));
         }
         
-        $val = $this->_session->get($key);
+        $val = $this->_cache->fetch($key);
         
         // special behavior for 'status'
         if ($key == 'status' && ! $val) {
@@ -320,12 +309,12 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             ));
         }
         
-        $this->_session->set($key, $val);
+        $this->_cache->save($key, $val);
     }
     
     /**
      * 
-     * Starts a session with authentication.
+     * Starts authentication.
      * 
      * @return void
      * 
@@ -406,7 +395,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         // is the current user already authenticated?
         if ($this->isValid()) {
             
-            // Check if session authentication has expired
+            // Check if authentication has expired
             $tmp = $this->initial + $this->_config['expire'];
             if ($this->_config['expire'] > 0 && $tmp < time()) {
                 // past the expiration time
@@ -415,7 +404,7 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
                 return false;
             }
     
-            // Check if session has been idle for too long
+            // Check if user has been idle for too long
             $tmp = $this->active + $this->_config['idle'];
             if ($this->_config['idle'] > 0 && $tmp < time()) {
                 // past the idle time
@@ -447,12 +436,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
     
     /**
      * 
-     * Resets any authentication data in the session.
-     * 
-     * Note that this will start a session if one is not already in progress.
+     * Resets any authentication data in the cache.
      * 
      * Typically used for idling, expiration, and logout.  Calls
-     * [[php::session_regenerate_id() | ]] to clear previous session.
+     * [[php::session_regenerate_id() | ]] to clear previous session, if any
+     * exists.
      * 
      * @param string $status A Solar_Auth status string; default is Solar_Auth::ANON.
      * 
@@ -498,32 +486,29 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         $this->uri     = $info['uri'];
         $this->uid     = $info['uid'];
         
-        // reset the session id and delete previous session file
-        $this->_session->regenerateId();
+        // reset the session id and delete previous session, but only
+        // if a session is actually in place
+        if (session_id() !== '' && ! headers_sent()) {
+            session_regenerate_id();
+        }
         
-        // flash forward any messages
-        $this->_session->setFlash('status_text', $this->locale($this->status));
+        // cache any messages
+        $this->_cache->save('status_text', $this->locale($this->status));
     }
     
     /**
      * 
-     * Retrieves a "read-once" session value for Solar_Auth.
+     * Retrieve the status text from the cache and then deletes it, making it
+     * act like a read-once session flash value.
      * 
-     * Starts a session if one is not already going.
-     * 
-     * Typical key here is "status_text".
-     * 
-     * @param string $key The specific type of information.
-     * 
-     * @param mixed $val If the key does not exist, return
-     * this value.  Default null.
-     * 
-     * @return mixed The "read-once" value.
+     * @return string The status text.
      * 
      */
-    public function getFlash($key, $val = null)
+    public function getStatusText()
     {
-        return $this->_session->getFlash($key, $val);
+        $val = $this->_cache->fetch('status_text');
+        $this->_cache->delete('status_text');
+        return $val;
     }
     
     /**

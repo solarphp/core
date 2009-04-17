@@ -20,21 +20,31 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      * 
      * User-defined configuration values.
      * 
+     * Keys are ...
+     * 
+     * `cache`
+     * : (dependency) A Solar_Cache dependency injection. Default is to create
+     *   a Solar_Cache_Adapter_Session object internal to this instance to 
+     *   retain the role list.
+     * 
      * @var array
      * 
      */
     protected $_Solar_Role_Adapter = array(
-        'session_class' => 'Solar_Role_Adapter',
+        'cache' => array(
+            'adapter' => 'Solar_Cache_Adapter_Session',
+            'prefix'  => 'Solar_Role_Adapter',
+        ),
     );
     
     /**
      * 
-     * A class-segmented session-variable reference.
+     * A cache object to retain the current user roles.
      * 
-     * @var Solar_Session
+     * @var Solar_Cache_Adapter
      * 
      */
-    protected $_session;
+    protected $_cache;
     
     /**
      * 
@@ -48,17 +58,10 @@ abstract class Solar_Role_Adapter extends Solar_Base {
         // basic config option settings
         parent::__construct($config);
         
-        // make sure we have a session class name; this determines how the
-        // session store is segmented.  when you have multiple adapters that
-        // need to use the same store, this is useful.
-        if (! $this->_config['session_class']) {
-            $this->_config['session_class'] = 'Solar_Role_Adapter';
-        }
-        
-        // get a session segment
-        $this->_session = Solar::factory(
-            'Solar_Session',
-            array('class' => $this->_config['session_class'])
+        // cache dependency injection
+        $this->_cache = Solar::dependency(
+            'Solar_Cache',
+            $this->_config['cache']
         );
     }
     
@@ -117,7 +120,7 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function getList()
     {
-        return $this->_session->get('list', array());
+        return $this->_cache->fetch('list', array());
     }
     
     /**
@@ -131,7 +134,11 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function setList($list)
     {
-        $this->_session->set('list', (array) $list);
+        // don't change the list if it's the same. this helps with the
+        // default session cache, to keep from starting a session.
+        if ($this->getList() !== $list) {
+            $this->_cache->save('list', (array) $list);
+        }
     }
     
     /**
@@ -146,9 +153,11 @@ abstract class Solar_Role_Adapter extends Solar_Base {
     public function addList($list)
     {
         settype($list, 'array');
+        $data = $this->_cache->fetch('list', array());
         foreach ($list as $val) {
-            $this->_session->add('list', $val);
+            $data[] = (string) $val;
         }
+        $this->_cache->save('list', $data);
     }
     
     /**
@@ -162,7 +171,9 @@ abstract class Solar_Role_Adapter extends Solar_Base {
      */
     public function add($val)
     {
-        $this->_session->add('list', (string) $val);
+        $data = $this->_cache->fetch('list', array());
+        $data[] = $val;
+        $this->_cache->save('list', $data);
     }
     
     /**

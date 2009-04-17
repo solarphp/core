@@ -34,6 +34,11 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (bool) Whether or not to allow automatic login/logout at start()
      *   time. Default true.
      * 
+     * `cache`
+     * : (dependency) A Solar_Cache dependency to store user data. Default is
+     *   to create a Solar_Cache_Adapter_Session object internal to this 
+     *   instance.
+     * 
      * `source`
      * : (string) The source for auth credentials, 'get' (via the
      *   for GET request vars) or 'post' (via the POST request vars).
@@ -63,6 +68,14 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      * : (string) The source_process element value indicating a logout request;
      *   default is the 'PROCESS_LOGOUT' locale key value.
      * 
+     * `login_callback`
+     * : (callback) A callback to execute after successful login, but before
+     *   the source postLogin() method is called.
+     * 
+     * `logout_callback`
+     * : (callback) A callback to execute after successful logout, but before
+     *   the source postLogout() method is called.
+     * 
      * @var array
      * 
      */
@@ -81,6 +94,8 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         'source_process' => 'process',
         'process_login'  => null,
         'process_logout' => null,
+        'login_callback'  => null,
+        'logout_callback' => null,
     );
     
     /**
@@ -329,27 +344,15 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
             return;
         }
         
-        // auto-login
+        // auto-login?
         if (! $this->isValid() && $this->isLoginRequest()) {
-            // process login attempt
-            $this->processLogin();
-            // did it work?
-            if ($this->isValid()) {
-                // attempt to redirect.
-                $this->_redirect();
-            }
-            // done, do not try to process a logout after this ;-)
-            return;
+            return $this->processLogin();
         }
         
-        // auto-logout
+        // auto-logout?
         if ($this->isValid() && $this->isLogoutRequest()) {
-            // process logout attempts
-            $this->processLogout();
-            // logout always works ;-) so attempt to redirect
-            $this->_redirect();
+            return $this->processLogout();
         }
-        
     }
     
     /**
@@ -564,16 +567,30 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
         if (is_array($result)) {
             // successful login, treat result as user info
             $this->reset(Solar_Auth::VALID, $result);
-            return true;
         } elseif (is_string($result)) {
             // failed login, treat result as error code
             $this->reset($result);
-            return false;
         } else {
             // failed login, generic error code
             $this->reset(Solar_Auth::WRONG);
-            return false;
         }
+        
+        // callback?
+        if ($this->_config['login_callback']) {
+            call_user_func(
+                $this->_config['login_callback'],
+                $this
+            );
+        }
+        
+        // did it work?
+        if ($this->isValid()) {
+            // attempt to redirect.
+            $this->_redirect();
+        }
+        
+        // done!
+        return $this->status == Solar_Auth::VALID;
     }
     
     /**
@@ -617,8 +634,22 @@ abstract class Solar_Auth_Adapter extends Solar_Base {
      */
     public function processLogout()
     {
+        // process logout
         $code = $this->_processLogout();
+        
+        // change status
         $this->reset($code);
+        
+        // callback?
+        if ($this->_config['login_callback']) {
+            call_user_func(
+                $this->_config['login_callback'],
+                $this
+            );
+        }
+        
+        // logout always works, so see if a redirect is needed
+        $this->_redirect();
     }
     
     /**

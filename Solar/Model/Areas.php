@@ -1,64 +1,31 @@
 <?php
 /**
  * 
- * A model of content "areas" (logical groups or buckets of nodes).
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
+ * Model class.
  * 
  */
-class Solar_Model_Areas extends Solar_Model
-{
+class Solar_Model_Areas extends Solar_Model {
+    
     /**
      * 
-     * Model setup.
+     * Model-specific setup.
      * 
      * @return void
      * 
      */
     protected function _setup()
     {
+        $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)
+             . DIRECTORY_SEPARATOR
+             . 'Setup'
+             . DIRECTORY_SEPARATOR;
+        
+        $this->_table_name = Solar_File::load($dir . 'table_name.php');
+        $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
+        
         /**
-         * Table name, columns, and indexes.
+         * Indexes.
          */
-        $this->_table_name = 'areas';
-        
-        $this->_table_cols = array(
-            'id' => array(
-                'type'    => 'int',
-                'require' => true,
-                'primary' => true,
-                'autoinc' => true,
-            ),
-            'created' => 'timestamp',
-            'updated' => 'timestamp',
-            'name' => array(
-                'type'    => 'varchar',
-                'size'    => 127,
-                'require' => true,
-            ),
-            'owner_handle' => array(
-                'type'    => 'varchar',
-                'size'    => 32,
-            ),
-            'subj' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'summ' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'prefs' => 'clob',
-        );
-        
         $this->_index = array(
             'created',
             'updated',
@@ -78,6 +45,5 @@ class Solar_Model_Areas extends Solar_Model
             // use a non-standard foreign key
             'foreign_key'   => 'parent_id',
         ));
-        
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Represents a collection of generic model records.
+ * Represents a generic collection of model records.
  * 
  * @category Solar
  * 

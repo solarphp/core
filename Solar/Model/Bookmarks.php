@@ -1,24 +1,14 @@
 <?php
 /**
  * 
- * A model of nodes used as bookmarks.
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
+ * Inherited model class.
  * 
  */
-class Solar_Model_Bookmarks extends Solar_Model_Nodes
-{
+class Solar_Model_Bookmarks extends Solar_Model_Nodes {
+    
     /**
      * 
-     * Model setup.
+     * Model-specific setup.
      * 
      * @return void
      * 

@@ -1,111 +1,31 @@
 <?php
 /**
  * 
- * A model of content "nodes" (individual pieces of content).
- * 
- * @category Solar
- * 
- * @package Solar_Model
- * 
- * @author Paul M. Jones <pmjones@solarphp.com>
- * 
- * @license http://opensource.org/licenses/bsd-license.php BSD
- * 
- * @version $Id$
+ * Model class.
  * 
  */
-class Solar_Model_Nodes extends Solar_Model
-{
+class Solar_Model_Nodes extends Solar_Model {
+    
     /**
      * 
-     * Model setup.
+     * Model-specific setup.
      * 
      * @return void
      * 
      */
     protected function _setup()
     {
+        $dir = str_replace('_', DIRECTORY_SEPARATOR, __CLASS__)
+             . DIRECTORY_SEPARATOR
+             . 'Setup'
+             . DIRECTORY_SEPARATOR;
+        
+        $this->_table_name = Solar_File::load($dir . 'table_name.php');
+        $this->_table_cols = Solar_File::load($dir . 'table_cols.php');
+        
         /**
-         * Table name, columns, and indexes.
+         * Indexes.
          */
-        
-        $this->_table_name = 'nodes';
-        
-        $this->_table_cols = array(
-            'id' => array(
-                'type'    => 'int',
-                'require' => true,
-                'primary' => true,
-                'autoinc' => true,
-            ),
-            'created' => 'timestamp',
-            'updated' => 'timestamp',
-            'area_id' => array(
-                'type'    => 'int',
-                'require' => true,
-            ),
-            'inherit' => array(
-                'type'    => 'varchar',
-                'size'    => 32,
-            ),
-            'name' => array(
-                'type'    => 'varchar',
-                'size'    => 127,
-            ),
-            'parent_id' => 'int',
-            'owner_handle' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'editor_handle' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'editor_ipaddr' => array(
-                'type'    => 'varchar',
-                'size'    => 15,
-            ),
-            'assign_handle' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'locale' => array(
-                'type'    => 'varchar',
-                'size'    => 5,
-            ),
-            'rating' => 'int',
-            'publish' => 'timestamp',
-            'email' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'uri' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'moniker' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'pos' => 'int',
-            'status' => array(
-                'type'    => 'varchar',
-                'size'    => 32,
-            ),
-            'mime' => array(
-                'type'    => 'varchar',
-                'size'    => 64,
-                'default' => 'text/plain',
-            ),
-            'subj' => array(
-                'type'    => 'varchar',
-                'size'    => 255,
-            ),
-            'summ' => 'clob',
-            'body' => 'clob',
-            'prefs' => 'clob',
-        );
-        
         $this->_index = array(
             'created',
             'updated',

@@ -492,7 +492,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
 
     /**
      * 
-     * Fetch a null object appropriate for this association
+     * Fetch an empty value appropriate for this association.
      * 
      * @return null|array
      * 

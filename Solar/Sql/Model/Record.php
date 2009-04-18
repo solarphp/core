@@ -1503,11 +1503,22 @@ class Solar_Sql_Model_Record extends Solar_Struct
             $convert = array_key_exists($name, $this->_data)
                     && ! is_object($this->_data[$name]);
             
-            if ($convert) {
-                $related = $this->_model->getRelated($name);
-                $this->_data[$name] = $related->newObject($this->_data[$name]);
+            if (! $convert) {
+                continue;
+            }
+            
+            if (empty($this->_data[$name])) {
+                $this->_data[$name] = $obj->fetchEmpty();
+            } else {
+                $this->_data[$name] = $this->newRelated($name, $this->_data[$name]);
             }
         }
     }
     
+    public function newRelated($name, $data = null)
+    {
+        $new = $this->_model->getRelated($name)->newObject($data);
+        $new->setParent($this);
+        return $new;
+    }
 }

@@ -205,7 +205,12 @@ class Solar_Struct extends Solar_Base implements ArrayAccess, Countable, Iterato
      */
     public function __set($key, $val)
     {
-        // set the value and mark as dirty
+        // set self as parent to new value
+        if ($val instanceof Solar_Struct) {
+            $val->setParent($this);
+        }
+        
+        // set the value and mark self as dirty
         $this->_data[$key] = $val;
         $this->setStatus(self::STATUS_DIRTY);
         

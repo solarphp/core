@@ -341,6 +341,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     {
         // create a new record from the spec and append it
         $record = $this->_model->fetchNew($spec);
+        $record->setParent($this);
         $this->_data[] = $record;
         return $record;
     }
@@ -374,9 +375,6 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @param string $val The value to set it to.
      * 
      * @return void
-     * 
-     * @todo If $key is null, that is [] ("append") notation.  Only let it
-     * work for collections?
      * 
      */
     public function offsetSet($key, $val)

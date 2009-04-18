@@ -390,12 +390,8 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         
         // we need a through mapping
         if (! $through) {
-            // get the model for the collection ...
-            $model = $this->_native_model
-                          ->getRelated($this->through)
-                          ->getModel();
-            // ... and make the collection.
-            $through = $model->newCollection();
+            // make a new collection
+            $through = $native->newRelated($this->through);
             $native->{$this->through} = $through;
         }
         
@@ -406,9 +402,9 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         $through_list = $through->getColVals($this->through_foreign_col);
         
         // find mappings that *do* exist but shouldn't, and delete them
-        foreach ($through_list as $through_val) {
+        foreach ($through_list as $through_key => $through_val) {
             if (! in_array($through_val, $foreign_list)) {
-                $through->deleteOne($through_val);
+                $through->deleteOne($through_key);
             }
         }
         

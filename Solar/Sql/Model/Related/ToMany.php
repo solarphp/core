@@ -40,15 +40,11 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
      * 
      * @param array $data The foreign data.
      * 
-     * @return Solar_Sql_Model_Record A foreign record object.
+     * @return Solar_Sql_Model_Collection A foreign collection object.
      * 
      */
     public function newObject($data)
     {
-        if (empty($data)) {
-            return $this->fetchEmpty();
-        }
-        
         return $this->_foreign_model->newCollection($data);
     }
     
@@ -85,12 +81,16 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         
         // modify the select per-relationship.
         $this->_modSelectRelatedToRecord($select, $record);
-
-        $data = $select->fetch('all');
-
+        
         // we should respect the count_pages parameter here
-
-        return $this->newObject($data);
+        
+        // fetch data and return
+        $data = $select->fetch('all');
+        if (empty($data)) {
+            return $this->fetchEmpty();
+        } else {
+            return $this->newObject($data);
+        }
     }
 
     /**

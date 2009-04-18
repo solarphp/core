@@ -45,10 +45,6 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
      */
     public function newObject($data)
     {
-        if (empty($data)) {
-            return $this->fetchEmpty();
-        }
-        
         return $this->_foreign_model->newRecord($data);
     }
     
@@ -85,11 +81,15 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         // modify the select per-relationship.
         $this->_modSelectRelatedToRecord($select, $record);
         
-        $result = $select->fetch('one');
-        
-        return $this->newObject($result);
+        // fetch data and return
+        $data = $select->fetch('one');
+        if (empty($data)) {
+            return $this->fetchEmpty();
+        } else {
+            return $this->newObject($data);
+        }
     }
-
+    
     /**
      * Convert a result array into an indexed result based on a 
      * primary key

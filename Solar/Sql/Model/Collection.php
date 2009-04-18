@@ -104,33 +104,57 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
-     * Returns a list of the unique primary keys contained in this collection.
-     * Will not cause records to be created for as of yet unaccessed rows.
-     *
-     * @param string $primary primary column to collect.
+     * Returns an array of the unique primary keys contained in this 
+     * collection. Will not cause records to be created for as of yet 
+     * unaccessed rows.
+     * 
+     * @param string $key The primary column to look for; when null, uses
+     * the model primary key.
      *
      * @return array
      * 
      */
     public function getPrimaryVals($key = null)
     {
-        $list = array();
+        // what key to look for?
         if (empty($key)) {
             $key = $this->_model->primary_col;
         }
+        
+        // get all key values
+        $list = array();
         foreach ($this->_data as $row) {
             $list[] = $row[$key];
         }
-        $list = array_unique($list);
-        return $list;
+        
+        // make sure values are unique, and done
+        return array_unique($list);
     }
     
+    /**
+     * 
+     * Returns an array of all values for a single column in the collection.
+     *
+     * @param string $col The column name to retrieve values for.
+     *
+     * @return array An array of key-value pairs where the key is the
+     * collection element key, and the value is the column value for that
+     * element.
+     * 
+     */
     public function getColVals($col)
     {
+        // the list of values
         $list = array();
-        foreach ($this as $record) {
-            $list[] = $record->$col;
+        
+        // iterate over $_data, not $this, so we don't screw up any external
+        // iterations.
+        foreach ($this->_data as $key => $val) {
+            $record = $this->__get($key);
+            $list[$key] = $record->$col;
         }
+        
+        // done
         return $list;
     }
     

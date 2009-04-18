@@ -41,11 +41,11 @@ class Solar_Example_Model_Nodes extends Solar_Sql_Model
         
         $this->_hasOne('meta');
         
+        $this->_hasMany('comments');
+        
         $this->_hasMany('taggings');
         
-        $this->_hasMany('tags', array(
-            'through' => 'taggings',
-        ));
+        $this->_hasManyThrough('tags', 'taggings');
         
         $this->_index = array(
             'created',

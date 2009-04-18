@@ -85,6 +85,19 @@ class Solar_Filter extends Solar_Base
     
     /**
      * 
+     * Tells the filter chain which data keys to filter.
+     * 
+     * If the whitelist is empty, filter all data keys.
+     * 
+     * @var array
+     * 
+     * @see setRequire()
+     * 
+     */
+    protected $_chain_whitelist = array();
+    
+    /**
+     * 
      * The data array to be filtered by the chain.
      * 
      * @var array
@@ -380,6 +393,27 @@ class Solar_Filter extends Solar_Base
     
     /**
      * 
+     * Sets the whitelist of data keys for the filter chain.
+     * 
+     * @param array $keys The data keys to filter; if empty, will filter all
+     * data keys.
+     * 
+     * @return void
+     * 
+     * @see applyChain()
+     * 
+     */
+    public function setChainWhitelist($keys)
+    {
+        if (empty($keys)) {
+            $this->_chain_whitelist = array();
+        } else {
+            $this->_chain_whitelist = (array) $keys;
+        }
+    }
+    
+    /**
+     * 
      * Adds one filter-chain method for a data key.
      * 
      * @param string $key The data key.
@@ -550,8 +584,15 @@ class Solar_Filter extends Solar_Base
         // see if we actually have all the required data keys
         foreach ((array) $this->_chain_require as $key => $flag) {
             
+            // is the key required?
             if (! $flag) {
                 // not required
+                continue;
+            }
+            
+            // if we have a whitelist, is the key in it?
+            if (! $this->_isWhitelisted($key)) {
+                // not in the whitelist, skip the key
                 continue;
             }
             
@@ -572,21 +613,47 @@ class Solar_Filter extends Solar_Base
         
         // loop through each element to be filtered
         foreach ($keys as $key) {
+            
             // if it's already invalid (from "require" above)
             // then skip it.  this avoids multiple validation
             // messages on missing elements.
             if (! empty($this->_chain_invalid[$key])) {
                 continue;
-            } else {
-                // run the filters for the data element
-                $this->_applyChain($key);
             }
+            
+            // if we have a whitelist, is the key in it?
+            if (! $this->_isWhitelisted($key)) {
+                // not in the whitelist, skip the key
+                continue;
+            }
+            
+            // run the filters for the data element
+            $this->_applyChain($key);
         }
         
         // return the validation status; if not empty, at least one of the
         // data elements was not valid.
         $result = empty($this->_chain_invalid);
         return $result;
+    }
+    
+    /**
+     * 
+     * Tells if a particular data key is in the chain whitelist; when the
+     * whitelist is empty, all keys are allowed.
+     * 
+     * @param string $key The data key to check against the whitelist.
+     * 
+     * @return bool
+     * 
+     */
+    protected function _isWhitelisted($key)
+    {
+        if (! $this->_chain_whitelist) {
+            return true;
+        } else {
+            return in_array($key, $this->_chain_whitelist);
+        }
     }
     
     /**

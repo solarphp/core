@@ -15,7 +15,7 @@ class Solar_Model_Tags_Collection extends Solar_Model_Collection {
      */
     public function getNames()
     {
-        // use a clone so we don't screw up other iterators
+        // use a clone so we don't screw up external iterations.
         $clone = clone($this);
         
         // build the list
@@ -49,11 +49,13 @@ class Solar_Model_Tags_Collection extends Solar_Model_Collection {
             ));
         }
         
-        // remove tags not in the new list
-        foreach ($this as $key => $tag) {
+        // remove tags not in the new list. use a clone so as not to 
+        // screw up external iterations.
+        $clone = clone($this);
+        foreach ($clone as $key => $tag) {
             if (! in_array($tag->name, $list)) {
-                // note that we don't delete,
-                // we only remove from the collection
+                // we don't delete from the $clone,
+                // we remove from $this collection
                 unset($this[$key]);
             }
         }

@@ -567,6 +567,11 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
     {
         // Restrict to the set of IDs in the driving collection
         $keys = $spec->getPrimaryVals($this->native_col);
+        
+        // be nice and only use unique values
+        $keys = array_unique($keys);
+        
+        // how many are there?
         $num_keys = count($keys);
         if ($num_keys == 0) {
             // We are too far down to stop the SELECT from being issued, but

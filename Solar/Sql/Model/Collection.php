@@ -465,7 +465,8 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * Given a record object, looks up its offset value in the collection.
      * 
      * For this to work, the record primary key must exist in the collection,
-     * **and** the record looked up in the collection must be identical.
+     * **and** the record looked up in the collection must have the same
+     * primary key and be of the same class.
      * 
      * Note that the returned offset may be zero, indicating the first element
      * in the collection.  As such, you should check the return for boolean 
@@ -475,7 +476,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * collection.
      * 
      * @return mixed The record offset (which may be zero), or boolean false
-     * if the identical same record was not found in the collection.
+     * if the same record was not found in the collection.
      * 
      */
     public function getRecordOffset($record)
@@ -495,8 +496,9 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         $offset = $map[$val];
         $lookup = $this->__get($offset);
         
-        // are the two records identical?
-        if ($lookup === $record) {
+        // the primary keys are already known to be the same. if the classes
+        // match as well, consider them to be "the same".
+        if (get_class($lookup) === get_class($record)) {
             return $offset;
         } else {
             return false;

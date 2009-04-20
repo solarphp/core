@@ -493,7 +493,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         
         // look up the record inside the collection
         $offset = $map[$val];
-        $lookup = $this->_get($offset);
+        $lookup = $this->__get($offset);
         
         // are the two records identical?
         if ($lookup === $record) {

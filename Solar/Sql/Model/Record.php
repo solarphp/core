@@ -979,16 +979,26 @@ class Solar_Sql_Model_Record extends Solar_Struct
      * 
      * Filter the data.
      * 
+     * @param Solar_Filter $filter Use this filter instead of the default one.
+     * When empty (the default), uses the default filter for the record.
+     * 
      * @return void
      * 
      */
-    public function filter()
+    public function filter($filter = null)
     {
         // pre-filter hook
         $this->_preFilter();
         
-        // get the a new filter object
-        $filter = $this->newFilter();
+        // filter object
+        if ($filter) {
+            // do not free external filter
+            $free = false;
+        } else {
+            // use default filter, free when done
+            $filter = $this->newFilter();
+            $free   = true;
+        }
         
         // apply filters
         $valid = $filter->applyChain($this);
@@ -996,8 +1006,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
         // retain invalids
         $invalid = $filter->getChainInvalid();
         
+        // free the filter?
+        if ($free) {
+            $filter->free();
+        }
+        
         // reclaim memory
-        $filter->free();
         unset($filter);
         
         // was it valid?

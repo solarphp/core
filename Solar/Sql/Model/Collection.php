@@ -114,21 +114,21 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      * @return array
      * 
      */
-    public function getPrimaryVals($key = null)
+    public function getPrimaryVals($col = null)
     {
         // what key to look for?
-        if (empty($key)) {
-            $key = $this->_model->primary_col;
+        if (empty($col)) {
+            $col = $this->_model->primary_col;
         }
         
         // get all key values
         $list = array();
-        foreach ($this->_data as $row) {
-            $list[] = $row[$key];
+        foreach ($this->_data as $key => $val) {
+            $list[$key] = $val[$col];
         }
         
-        // make sure values are unique, and done
-        return array_unique($list);
+        // done!
+        return $list;
     }
     
     /**
@@ -332,8 +332,7 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     public function deleteAll()
     {
         $this->_preDeleteAll();
-        $list = $this->getPrimaryVals();
-        foreach ($list as $key) {
+        foreach ($this->_data as $key => $val) {
             $this->deleteOne($key);
         }
         $this->_postDeleteAll();
@@ -361,6 +360,15 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     {
     }
     
+    /**
+     * 
+     * Fetches a new record and appends it to the collection.
+     * 
+     * @param array $spec An array of data for the new record.
+     * 
+     * @return Solar_Sql_Model_Record The newly-appended record.
+     * 
+     */
     public function appendNew($spec = null)
     {
         // create a new record from the spec and append it
@@ -370,8 +378,33 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         return $record;
     }
     
-    public function deleteOne($key)
+    /**
+     * 
+     * Deletes a record from the database and removes it from the collection.
+     * 
+     * @param mixed $spec If a Solar_Sql_Model_Record, looks up the record in
+     * the collection and deletes it.  Otherwise, is treated as an offset 
+     * value (**not** a record primary key value) and that record is deleted.
+     * 
+     * @return void
+     * 
+     * @see getRecordOffset()
+     * 
+     */
+    public function deleteOne($spec)
     {
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            $key = $this->getRecordOffset($spec);
+            if ($key === false) {
+                throw $this->_exception(
+                    'ERR_NOT_IN_COLLECTION',
+                    $spec->toArray()
+                );
+            }
+        } else {
+            $key = $spec;
+        }
+        
         if ($this->__isset($key)) {
             $record = $this->__get($key);
             if (! $record->isDeleted()) {
@@ -380,6 +413,93 @@ class Solar_Sql_Model_Collection extends Solar_Struct
             $record->free();
             unset($record);
             unset($this->_data[$key]);
+        }
+    }
+    
+    /**
+     * 
+     * Removes all records from the collection but **does not** delete them
+     * from the database.
+     * 
+     * @return void
+     * 
+     */
+    public function removeAll()
+    {
+        $this->_data = array();
+    }
+    
+    /**
+     * 
+     * Removes one record from the collection but **does not** delete it from
+     * the database.
+     * 
+     * @param mixed $spec If a Solar_Sql_Model_Record, looks up the record in
+     * the collection and deletes it.  Otherwise, is treated as an offset 
+     * value (**not** a record primary key value) and that record is removed.
+     * 
+     * @return void
+     * 
+     * @see getRecordOffset()
+     * 
+     */
+    public function removeOne($spec)
+    {
+        if ($spec instanceof Solar_Sql_Model_Record) {
+            $key = $this->getRecordOffset($spec);
+            if ($key === false) {
+                throw $this->_exception(
+                    'ERR_NOT_IN_COLLECTION',
+                    $spec->toArray()
+                );
+            }
+        } else {
+            $key = $spec;
+        }
+        
+        unset($this->_data[$key]);
+    }
+    
+    /**
+     * 
+     * Given a record object, looks up its offset value in the collection.
+     * 
+     * For this to work, the record primary key must exist in the collection,
+     * **and** the record looked up in the collection must be identical.
+     * 
+     * Note that the returned offset may be zero, indicating the first element
+     * in the collection.  As such, you should check the return for boolean 
+     * false to indicate failure.
+     * 
+     * @param Solar_Sql_Model_Record $record The record to find in the
+     * collection.
+     * 
+     * @return mixed The record offset (which may be zero), or boolean false
+     * if the identical same record was not found in the collection.
+     * 
+     */
+    public function getRecordOffset($record)
+    {
+        // the primary value of the record
+        $val = $record->getPrimaryVal();
+        
+        // mapping of primary-key values to element keys
+        $map = array_flip($this->getPrimaryVals());
+        
+        // does that record primary value exist in the collection?
+        if (empty($map[$val])) {
+            return false;
+        }
+        
+        // look up the record inside the collection
+        $offset = $map[$val];
+        $lookup = $this->_get($offset);
+        
+        // are the two records identical?
+        if ($lookup === $record) {
+            return $offset;
+        } else {
+            return false;
         }
     }
     

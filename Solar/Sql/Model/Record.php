@@ -988,7 +988,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         $this->_preFilter();
         
         // get the a new filter object
-        $filter = $this->_newFilter();
+        $filter = $this->newFilter();
         
         // apply filters
         $valid = $filter->applyChain($this);
@@ -1023,12 +1023,12 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Creates a new filter object for the filter() method.
+     * Returns a new filter object with the filters from the record model.
      * 
      * @return Solar_Filter
      * 
      */
-    protected function _newFilter()
+    public function newFilter()
     {
         // create a filter object based on the model's filter class
         $filter = Solar::factory($this->_model->filter_class);

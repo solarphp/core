@@ -484,20 +484,23 @@ class Solar_Sql_Model_Collection extends Solar_Struct
         // the primary value of the record
         $val = $record->getPrimaryVal();
         
-        // mapping of primary-key values to element keys
+        // mapping of primary-key values to offset values
         $map = array_flip($this->getPrimaryVals());
         
-        // does that record primary value exist in the collection?
-        if (empty($map[$val])) {
+        // does the record primary value exist in the collection?
+        // use array_key_exists() instead of empty() so we can honor zeroes.
+        if (! array_key_exists($val, $map)) {
             return false;
         }
         
-        // look up the record inside the collection
+        // retain the offset value
         $offset = $map[$val];
+        
+        // look up the record inside the collection
         $lookup = $this->__get($offset);
         
-        // the primary keys are already known to be the same. if the classes
-        // match as well, consider them to be "the same".
+        // the primary keys are already known to be the same from above.
+        // if the classes match as well, consider records to be "the same".
         if (get_class($lookup) === get_class($record)) {
             return $offset;
         } else {

@@ -25,12 +25,15 @@ class Solar_Sql_Model_Filter_ValidateConfirm extends Solar_Filter_Abstract
      * Useful for checking that the user entered the same password twice, or
      * the same email twice, etc.
      * 
+     * If the $confirm_key does not exist in the data, the validation will 
+     * *pass*.  (Compare this to validateCompare, where the same condition
+     * means the validation will fail.)
+     * 
      * @param mixed $value The value to validate.
      * 
      * @param string $confirm_key Check against the value of this element in
-     * $this->_data.  If $this->_data[$confirm_key] does not exist, the
-     * validation will *pass*.  When empty, defaults to the current data
-     * col being processed, with suffix '_confirm'.
+     * $this->_data. When empty, defaults to the current data col being 
+     * processed, with suffix '_confirm'.
      * 
      * @return bool True if the values are the same or if the $confirm_key
      * is not in the data being processed. False if the values are not the

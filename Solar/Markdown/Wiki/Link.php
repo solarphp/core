@@ -415,7 +415,8 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin
             $text = $page;
         }
         
-        $href = sprintf($this->_interwiki[$site], $page . $frag);
+        // allow indiviual access to url page and url fragment
+        $href = sprintf($this->_interwiki[$site], $page . $frag, $page, $frag);            
         $html = '<a href="' . $this->_escape($href) . '">'
               . $this->_escape($text . $atch)
               . '</a>';
@@ -504,7 +505,7 @@ class Solar_Markdown_Wiki_Link extends Solar_Markdown_Plugin
         
         // build the opening <a href="" portion of the tag.
         $html = '<a href="'
-              . $this->_escape(sprintf($attribs['href'], $norm . $frag))
+              . $this->_escape(sprintf($attribs['href'], $norm . $frag, $norm, $frag))
               . '"';
               
         // add attributes and close the opening tag

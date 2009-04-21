@@ -56,7 +56,7 @@ class Solar_Model_Tags_Collection extends Solar_Model_Collection {
             if (! in_array($tag->name, $list)) {
                 // we don't delete from the $clone,
                 // we remove from $this collection
-                unset($this[$key]);
+                $this->removeOne($key);
             }
         }
         

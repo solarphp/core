@@ -25,11 +25,23 @@ class Solar_Sql_Model_Filter_ValidateUnique extends Solar_Filter_Abstract
      * This will exclude any record having the same primary-key value as the
      * current record.
      * 
+     * N.b.: If you are attempting to validate the primary column as unique,
+     * you *have* to pass an additional $where condition on another unique
+     * column. This is so the record being validated can recognize "itself"
+     * in the database.  For example ...
+     * 
      * {{code: php
-     *     $where = array(
-     *         'id != :id', // or 'id IS NOT NULL' if the ID is null
-     *     );
+     *     // validate 'foo' as unique when 'foo' is the primary column.
+     *     // we need to make sure the record recognizes itself by some
+     *     // other unique column value, 'bar'.  this is from inside a
+     *     // Solar_Sql_Model::_setup() method.
+     *     $where = array("bar != :bar AND bar IS NOT NULL")
+     *     $this->_addFilter('foo', 'validateUnique', $where);
      * }}
+     * 
+     * ... but really, you should be using an artificial key (e.g. integer id
+     * autoincremented) as your primary, not a natural key.  It makes this
+     * *so* much easier.
      * 
      * @param mixed $value The value to validate.
      * 
@@ -47,20 +59,26 @@ class Solar_Sql_Model_Filter_ValidateUnique extends Solar_Filter_Abstract
         // get the record (data) model
         $model = $this->_filter->getData()->getModel();
         
+        // the column we're validating as unique. what we do is select the
+        // current value from the database, and if it's there, that means
+        // the current value is not unique.  we'll add exclusion conditions
+        // below.
+        $col = $this->_filter->getDataKey();
+        $where[] = "$col = :$col";
+        
         // what is the primary-key column for the record model?
         $primary = $model->primary_col;
         
-        // exclude the current record by its primary key value
-        if ($this->_filter->getData($primary) === null) {
-            $where[] = "$primary IS NOT NULL";
-        } else {
-            $where[] = "$primary != :$primary";
+        // only add a primary key exclusion if the column being validated
+        // is not itself the primary key.
+        if ($col != $primary) {
+            // exclude the current record by its primary key value.
+            if ($this->_filter->getData($primary) === null) {
+                $where[] = "$primary IS NOT NULL";
+            } else {
+                $where[] = "$primary != :$primary";
+            }
         }
-        
-        // base condition to check for uniqueness on the current column.
-        // added conditions already exist in the "where"
-        $key = $this->_filter->getDataKey();
-        $where[] = "$key = :$key";
         
         // see if we can fetch a row, with only the primary-key column to
         // reduce resource usage.

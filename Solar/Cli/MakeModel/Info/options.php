@@ -19,7 +19,7 @@ return array(
     ),
     'connect' => array(
         'long'    => 'connect',
-        'descr'   => 'Connect to the database and fetch cols for the model setup.',
+        'descr'   => 'Connect to the database and fetch cols for the model setup (true/false).',
         'param'   => 'required',
         'value'   => true,
         'filters' => array('validateBool', 'sanitizeBool'),

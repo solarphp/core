@@ -1566,9 +1566,8 @@ abstract class Solar_Sql_Model extends Solar_Base
         // fix up the eager values
         if (empty($params['eager'])) {
             $params['eager'] = array();
-        } else {
-            $params['eager'] = $this->_fixSelectParamsEager($params['eager']);
         }
+        $params['eager'] = $this->_fixSelectParamsEager($params['eager']);
         
         // fix up distinct
         if (empty($params['distinct'])) {

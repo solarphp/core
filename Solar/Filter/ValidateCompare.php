@@ -33,13 +33,13 @@ class Solar_Filter_ValidateCompare extends Solar_Filter_Abstract
      * Validates that this value is the same as some other value in the
      * data filter chain.
      * 
-     * Useful for checking that the user entered the same password twice, or
-     * the same email twice, etc.
-     * 
      * Be sure to use this only as part of a filter chain, as it will attempt
      * to look up the other value in the filter data.
      * 
-     * E.g., `validateCompare('email_confirm', 'email')`.
+     * E.g., `$this->_addFilter('captcha_user', 'validateCompare', 'captcha_real')`.
+     * 
+     * If the comparison value does not exist in $this->_data, the validation
+     * will *fail*.
      * 
      * @param mixed $value The value to validate.
      * 

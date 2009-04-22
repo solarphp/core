@@ -104,14 +104,18 @@ abstract class Solar_Controller_Page extends Solar_Base {
      * 
      * If an action is not listed, it will not respond to alternative formats.
      * 
+     * Using a '*' as the action key means "all actions allow this format".
+     * 
      * For example ...
      * 
      * {{code: php
      *     $_action_format = array(
      *         // multiple formats
-     *         'browse' => array('xml', 'rss', 'atom')
+     *         'browse' => array('rss', 'atom')
      *         // shorthand for just one format
-     *         'read'   => 'xml',
+     *         'read'   => 'atom',
+     *         // shorthand for all actions
+     *         '*'      => 'xml'
      *     );
      * }}
      * 

@@ -792,16 +792,37 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     protected function _saveRelated()
     {
+        // pre-hook
         $this->_preSaveRelated();
         
-        // save each related, but only if instantiated
+        // keep track if any of the relateds were invalid
+        $is_invalid = false;
+        
+        // save each related
         $list = array_keys($this->_model->related);
         foreach ($list as $name) {
+            
+            // only save if instantiated
             if (! empty($this->_data[$name])) {
-                $this->_model->getRelated($name)->save($this);
+                
+                // get the relationship object and save the related
+                $related = $this->_model->getRelated($name);
+                $related->save($this);
+                
+                // only retain invalidity; don't retain validity, because
+                // later valids might overwrite earlier invalids.
+                if ($related->isInvalid($this)) {
+                    $is_invalid = true;
+                }
             }
         }
         
+        // was any related invalid?
+        if ($is_invalid) {
+            $this->setStatus(self::STATUS_INVALID);
+        }
+        
+        // post-hook
         $this->_postSaveRelated();
     }
     

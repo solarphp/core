@@ -70,6 +70,18 @@ class Solar_Sql_Model_Collection extends Solar_Struct
     
     /**
      * 
+     * When calling save(), these are the data keys that were invalid and thus
+     * not fully saved.
+     * 
+     * @var mixed
+     * 
+     * @see save()
+     * 
+     */
+    protected $_invalid_offsets = array();
+    
+    /**
+     * 
      * Returns a record from the collection based on its key value.  Converts
      * the stored data array to a record of the correct class on-the-fly.
      * 
@@ -286,18 +298,31 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     public function save()
     {
+        // reset the "invalid record offset"
+        $this->_invalid_offsets = array();
+        
         // pre-logic
         $this->_preSave();
         
         // save, instantiating each record
-        foreach ($this as $record) {
+        foreach ($this as $offset => $record) {
             if (! $record->isDeleted()) {
-                $record->save();
+                $result = $record->save();
+                if (! $result) {
+                    $this->_invalid_offsets[] = $offset;
+                }
             }
         }
         
         // post-logic
         $this->_postSave();
+        
+        // done!
+        if ($this->_invalid_offsets) {
+            return false;
+        } else {
+            return true;
+        }
     }
     
     /**
@@ -320,6 +345,57 @@ class Solar_Sql_Model_Collection extends Solar_Struct
      */
     protected function _postSave()
     {
+    }
+    
+    /**
+     * 
+     * Are there any invalid records in the collection?
+     * 
+     * @return bool
+     * 
+     */
+    public function isInvalid()
+    {
+        if ($this->_invalid_offsets) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * 
+     * Returns an array of invalidation messages from each invalid record, 
+     * keyed on the record offset within the collection.
+     * 
+     * @return array
+     * 
+     */
+    public function getInvalid()
+    {
+        $invalid = array();
+        $list = $this->getInvalidRecords();
+        foreach ($list as $offset => $record) {
+            $list[$offset] = $record->getInvalid();
+        }
+        return $list;
+    }
+    
+    /**
+     * 
+     * Returns an array of the invalid record objects within the collection,
+     * keyed on the record offset within the collection.
+     * 
+     * @return array
+     * 
+     */
+    public function getInvalidRecords()
+    {
+        $list = array();
+        foreach ($this->_invalid_offsets as $key) {
+            $list[$key] = $this->__get($key);
+        }
+        return $list;
     }
     
     /**

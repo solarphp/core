@@ -812,10 +812,49 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      */
     abstract protected function _setRelated($opts);
     
+    /**
+     * 
+     * Pre-save hook for saving related records or collections from a native
+     * record.
+     * 
+     * @param Solar_Sql_Model_Record $native The native record to save from.
+     * 
+     * @return void
+     * 
+     */
     function preSave($native)
     {
         // at least for now, only belongs-to needs this
     }
     
+    /**
+     * 
+     * Saves a related record or collection from a native record.
+     * 
+     * @param Solar_Sql_Model_Record $native The native record to save from.
+     * 
+     * @return void
+     * 
+     */
     abstract public function save($native);
+    
+    /**
+     * 
+     * Is the related record or collection valid?
+     * 
+     * @param Solar_Sql_Model_Record $native The native record to check from.
+     * 
+     * @return bool
+     * 
+     */
+    public function isInvalid($native)
+    {
+        $foreign = $native->{$this->name};
+        if ($foreign) {
+            return $foreign->isInvalid();
+        } else {
+            // if it's not there, it can't be invalid
+            return false;
+        }
+    }
 }

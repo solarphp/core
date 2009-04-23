@@ -431,4 +431,35 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // done with the mappings, save them
         $through->save();
     }
+    
+    /**
+     * 
+     * Are the related "foreign" and "through" collections valid?
+     * 
+     * @return bool
+     * 
+     */
+    public function isInvalid($native)
+    {
+        $foreign = $native->{$this->name};
+        $through = $native->{$this->through};
+        
+        // no foreign and no through means they can't be invalid
+        if (! $foreign && ! $through) {
+            return false;
+        }
+        
+        // is foreign invalid?
+        if ($foreign && $foreign->isInvalid()) {
+            return true;
+        }
+        
+        // is through invalid?
+        if ($through && $through->isInvalid()) {
+            return true;
+        }
+        
+        // both foreign and through are valid
+        return false;
+    }
 }

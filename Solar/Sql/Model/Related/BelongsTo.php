@@ -97,7 +97,9 @@ class Solar_Sql_Model_Related_BelongsTo extends Solar_Sql_Model_Related_ToOne
         $foreign = $native->{$this->name};
         if (! $foreign) {
             // we need the record the native belongs to, to connect the two
-            throw $this->_exception('ERR_RELATED_DOES_NOT_EXIST');
+            throw $this->_exception('ERR_RELATED_DOES_NOT_EXIST', array(
+                'name' => $native->{$this->name},
+            ));
         } else {
             // the foreign record exists, connect with the native
             $native->{$this->native_col} = $foreign->{$this->foreign_col};

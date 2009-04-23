@@ -550,7 +550,11 @@ class Solar_Sql_Model_Record extends Solar_Struct
         try {
             $this->_save();
             $this->_saveRelated();
-            return true;
+            if ($this->isInvalid()) {
+                return false;
+            } else {
+                return true;
+            }
         } catch (Solar_Sql_Model_Record_Exception_Invalid $e) {
             $this->_save_exception = $e;
             return false;
@@ -1151,7 +1155,8 @@ class Solar_Sql_Model_Record extends Solar_Struct
     
     /**
      * 
-     * Returns the validation failure message for one or more properties.
+     * Returns the validation failure message for one or more properties,
+     * including the messages on related records and collections.
      * 
      * @param string $key Return the message for this property; if empty,
      * returns messages for all invalid properties.
@@ -1161,11 +1166,45 @@ class Solar_Sql_Model_Record extends Solar_Struct
      */
     public function getInvalid($key = null)
     {
+        $invalid = $this->_getInvalid();
         if ($key) {
-            return $this->_invalid[$key];
+            return $invalid[$key];
         } else {
-            return $this->_invalid;
+            return $invalid;
         }
+    }
+    
+    /**
+     * 
+     * Support method to collect all validation failure messages for all
+     * properties and relateds.
+     * 
+     * @return array
+     * 
+     */
+    protected function _getInvalid()
+    {
+        $list = array();
+        foreach ($this->_data as $key => $val) {
+            
+            // record or collection object?
+            $is_object = $val instanceof Solar_Sql_Model_Record
+                      || $val instanceof Solar_Sql_Model_Collection;
+            
+            if ($is_object && $val->isInvalid()) {
+                $list[$key] = $val->getInvalid();
+                continue;
+            }
+            
+            // normal value
+            if (! empty($this->_invalid[$key])) {
+                $list[$key] = $this->_invalid[$key];
+                continue;
+            }
+        }
+        
+        // done!
+        return $list;
     }
     
     // -----------------------------------------------------------------
@@ -1273,6 +1312,18 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // use strict inequality
         return $this->_initial[$col] !== $this->$col;
+    }
+    
+    /**
+     * 
+     * Is the record invalid?
+     * 
+     * @return bool
+     * 
+     */
+    public function isInvalid()
+    {
+        return $this->_status == self::STATUS_INVALID;
     }
     
     /**

@@ -97,7 +97,7 @@ class Solar_Cli_MakeDocs extends Solar_Cli_Base
             $this->_source = Solar_Dir::name(__FILE__, 2);
         }
         
-        // get the target API die (if any)
+        // get the target API dir (if any)
         $this->_class_dir = Solar_Dir::fix($this->_options['class_dir']);
         
         // get the target package dir (if any)

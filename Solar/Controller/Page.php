@@ -672,9 +672,7 @@ abstract class Solar_Controller_Page extends Solar_Base {
     protected function _addViewHelpers()
     {
         // who is the vendor of this controller?
-        $class = get_class($this);
-        $pos = strpos($class, '_');
-        $vendor = substr($class, 0, $pos);
+        $vendor = Solar_Class::vendor($this);
         
         // if vendor is not Solar, add {Vendor}_View_Helper
         if ($vendor != 'Solar') {

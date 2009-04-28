@@ -261,8 +261,7 @@ class Solar_Sql_Model_Catalog extends Solar_Base
             array_shift($parents); // Solar_Base
             $old_vendor = false;
             foreach ($parents as $class) {
-                $pos = strpos($class, '_');
-                $new_vendor = substr($class, 0, $pos);
+                $new_vendor = Solar_Class::vendor($class);
                 if ($new_vendor != $old_vendor) {
                     $classes[] = "{$new_vendor}_Model";
                 }

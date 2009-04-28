@@ -163,4 +163,33 @@ class Solar_Class
             return Solar_Dir::fix($dir . DIRECTORY_SEPARATOR. $sub);
         }
     }
+    
+    /**
+     * 
+     * Find the vendor name of a given class or object; this is effectively
+     * the part of the class name that comes before the first underscore.
+     * 
+     * @param mixed $spec An object, or a class name.
+     * 
+     * @return string The vendor name of the class or object.
+     * 
+     */
+    public static function vendor($spec)
+    {
+        if (is_object($spec)) {
+            $class = get_class($spec);
+        } else {
+            $class = $spec;
+        }
+        
+        // find the first underscore
+        $pos = strpos($class, '_');
+        if ($pos !== false) {
+            // return the part up to the first underscore
+            return substr($class, 0, $pos);
+        } else {
+            // no underscores, must be an arch-class
+            return $class;
+        }
+    }
 }

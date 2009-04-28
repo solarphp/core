@@ -274,19 +274,26 @@ class Solar_Test_Suite extends Solar_Base
         
         // set up the PHP environment
         $php = $this->_newPhp();
-        $php->setSolarConfig($this->_config['test_config']);
         
         // the time before running the tests
         $time = time();
         
         // run the test cases
         foreach ($this->_tests as $class => $methods) {
+            
+            // set the config for this test case. we do this on each class
+            // because there may be multiple vendors involved.
+            $config = $this->_fetchTestCaseConfig($class);
+            $this->_log("# $class config: $config");
+            $php->setSolarConfig($config);
+            
             // try constructing the test case once
             $exit = $this->_testConstruct($php, $class);
             if ($exit != Solar_Test::EXIT_PASS) {
                 // construction failed, skip to the next test case
                 continue;
             }
+            
             // run each test method
             foreach ($methods as $method) {
                 $this->_testMethod($php, $class, $method);
@@ -299,6 +306,58 @@ class Solar_Test_Suite extends Solar_Base
         // report, then return the run information
         $this->_report();
         return $this->_info;
+    }
+    
+    /**
+     * 
+     * Finds the config file for a test case.
+     * 
+     * The order of precedence is:
+     * 
+     * 1. Use the value of --test-config when not empty.
+     * 
+     * 2. Look for `$system/config/test/Vendor.config.php` and use that if it
+     *    exists.
+     * 
+     * 3. Look for `source/vendor/tests/config.php` and use that if it exists.
+     * 
+     * 4. No config for the test case.
+     * 
+     * @param string $class The test case class to find configs for.
+     * 
+     * @return string The config file location for the test case.
+     * 
+     */
+    protected function _fetchTestCaseConfig($class)
+    {
+        // explicit test-config
+        if ($this->_config['test_config']) {
+            return $this->_config['test_config'];
+        }
+        
+        // convenience var
+        $system = Solar::$system;
+        
+        // strip the 'Test_' prefix, then get the vendor name
+        $vendor = Solar_Class::vendor(substr($class, 5));
+        
+        // look for a config/test/Vendor.config.php file
+        $path = "$system/config/test/$vendor.config.php";
+        $file = Solar_File::exists($path);
+        if ($file) {
+            return $file;
+        }
+        
+        // look for a source/vendor/tests/config.php file
+        $dash = Solar_Registry::get('inflect')->camelToDashes($vendor);
+        $path = "$system/source/$dash/tests/config.php";
+        $file = Solar_File::exists($path);
+        if ($file) {
+            return $file;
+        }
+        
+        // no test config
+        return null;
     }
     
     /**

@@ -181,16 +181,12 @@ class Solar_Locale extends Solar_Base
         // find all parents of the class, including the class itself
         $parents = array_reverse(Solar_Class::parents($class, true));
         
-        // add the vendor namespace to the stack for vendor-wide strings,
-        // and add Solar as the final fallback.
-        $pos = strpos($class, '_');
-        if ($pos !== false) {
-            $vendor = substr($class, 0, $pos);
-            $parents[] = $vendor;
-            if ($vendor != 'Solar') {
-                $parents[] = 'Solar';
-            }
-        } else {
+        // add the vendor namespace to the stack for vendor-wide strings
+        $vendor = Solar_Class::vendor($class);
+        $parents[] = $vendor;
+        
+        // add Solar as the final fallback.
+        if ($vendor != 'Solar') {
             $parents[] = 'Solar';
         }
         

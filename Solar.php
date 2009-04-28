@@ -511,10 +511,7 @@ class Solar
         // add the vendor namespace, (for example, 'Solar') to the stack as a
         // final fallback, even though it's not strictly part of the
         // hierarchy, for generic vendor-wide exceptions.
-        $pos = strpos($class, '_');
-        if ($pos !== false) {
-            $stack[] = substr($class, 0, $pos);
-        }
+        $stack[] = Solar_Class::vendor($class);
         
         // track through class stack and look for specific exceptions
         foreach ($stack as $class) {

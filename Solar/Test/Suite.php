@@ -319,7 +319,8 @@ class Solar_Test_Suite extends Solar_Base
      * 2. Look for `$system/config/test/Vendor.config.php` and use that if it
      *    exists.
      * 
-     * 3. Look for `source/vendor/tests/config.php` and use that if it exists.
+     * 3. Look for `$system/source/vendor/tests/config.php` and use that if it
+     *    exists.
      * 
      * 4. No config for the test case.
      * 

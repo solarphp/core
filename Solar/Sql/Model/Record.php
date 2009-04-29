@@ -304,7 +304,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // Wholesale dump values into our data array bypassing __set
         $this->_data = array_merge($this->_data, $load);
-
+        
         // reset values that require a set access method
         foreach ($this->_access_methods as $field => $methods) {
             if (isset($methods['set']) && array_key_exists($field, $load)) {
@@ -477,7 +477,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
             array_keys($this->_data), 
             array_keys($this->_model->calculate_cols)
         );
-
+        
         foreach ($keys as $key) {
             
             // not an empty-related. get the existing value.
@@ -1484,7 +1484,7 @@ class Solar_Sql_Model_Record extends Solar_Struct
         array_shift($args); // the first param is $col
         $this->_filters[$col][] = $args;
     }
-
+    
     /**
      * 
      * Fetch related objects
@@ -1558,10 +1558,10 @@ class Solar_Sql_Model_Record extends Solar_Struct
         
         // fix up related data elements
         $this->_fixRelatedData();
-
+        
         // can't be invalid
         $this->_invalid = array();
-
+        
         // set status directly, bypassing setStatus() logic, and done!
         $this->_status = $status;
     }

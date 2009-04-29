@@ -9,7 +9,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
      * 
      */
     protected $_join_strategy = 'server';
-
+    
     /**
      * 
      * Is this related to one record?
@@ -52,7 +52,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
     {
         return array();
     }
-
+    
     /**
      * 
      * Fetches foreign data as a record or collection object.
@@ -72,7 +72,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
                 'spec' => $record
             ));
         }
-
+        
         // inject parameters from our options
         $params = $this->_mergeSelectParams($params);
         
@@ -92,7 +92,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             return $this->newObject($data);
         }
     }
-
+    
     /**
      * Convert a result array into an indexed result based on a 
      * primary key
@@ -114,7 +114,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         }
         return $index;
     }
-
+    
     /**
      * 
      * Join related objects into a parent record or collection 
@@ -139,10 +139,10 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         
         $options = $this->_fixEagerOptions($options);
         $params = array('eager' => $options['eager']);
-
+        
         // inject parameters from our options
         $params = $this->_mergeSelectParams($params);
-
+        
         // get a select object for the related rows
         $dependent_select = $this->_foreign_model->newSelect($params);
         
@@ -155,14 +155,14 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             $collection = $this->newObject($target);
             $this->_modSelectRelatedToCollection($dependent_select, $collection, $parent_col);
         }
-
+        
         $result = $dependent_select->fetch('all');
-
+        
         $index = $this->_indexResult($result, $parent_col);
-
+        
         return $this->_joinResults($target, $index, $this->native_col);
     }
-
+    
     /**
      * 
      * Join related objects into a parent record or collection 
@@ -181,9 +181,9 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         if (empty($target)) {
             return $target;
         }
-
+        
         $options = $this->_fixEagerOptions($options);
-
+        
         $params = array('eager' => $options['eager']);
         
         // inject parameters from our related options
@@ -192,14 +192,14 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         // get a select object for the related rows
         $dependent_select = $this->_foreign_model->newSelect($params);
         $this->_modSelectRelatedToRecord($dependent_select, $target);
-
+        
         $result = $dependent_select->fetch('all');
-
+        
         $target[$this->name] = $result;
     
         return $target;
     }
-
+    
     /**
      * 
      * When the native model is doing a select and an eager-join is requested
@@ -224,7 +224,7 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
             // for client side joins, we do not modify the select
             return;
         }
-
+        
         $join_cond = array_merge(
             (array) $this->where, 
             $this->_foreign_model->getWhereMods($this->foreign_alias));
@@ -232,15 +232,15 @@ abstract class Solar_Sql_Model_Related_ToMany extends Solar_Sql_Model_Related
         // primary-key join condition on foreign table
         $join_cond[] = "{$parent_alias}.{$this->native_col} = "
                      . "{$this->foreign_alias}.{$this->foreign_col}";
-
+                     
         $select->innerJoin(
             "{$this->foreign_table} AS {$this->foreign_alias}",
             $join_cond
             );
-
+            
         // added where conditions for the join
         $select->multiWhere($options['where']);
-
+        
         // make the rows distinct, so we only get one row regardless of
         // the number of related rows (since we're not selecting cols).
         $select->distinct(true);

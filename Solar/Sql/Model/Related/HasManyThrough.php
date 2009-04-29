@@ -63,7 +63,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * 
      */
     public $through_foreign_col;
-
+    
     /**
      * 
      * The virtual element `through_key` automatically 
@@ -73,7 +73,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
      * 
      */
     public $through_key;
-
+    
 
     /**
      * 
@@ -90,14 +90,14 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     protected function _modSelectRelatedToRecord($select, $spec)
     {
         $this->_modSelectAddThrough($select);
-
+        
         // restrict to the related native column value in the "through" table
         $select->where(
             "{$this->through_alias}.{$this->through_native_col} = ?",
             $spec[$this->native_col] // this is where we set the filtering clause
         );
     }
-
+    
     /**
      * 
      * Modifies the base select statement for the relationship type.
@@ -138,7 +138,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             );
         }
     }
-
+    
     /**
      * 
      * Modifies the base select statement for the relationship type.
@@ -154,11 +154,11 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
     protected function _modSelectRelatedToSelect($select, $spec, $parent_alias, $parent_col = NULL)
     {
         $this->_modSelectAddThrough($select, $parent_col);
-
+        
         // $spec is a Select object. restrict to a sub-select of IDs from
         // the native table.
         $clone = clone $spec;
-
+        
         // We don't care about eager fetching in this result set
         $clone->clearOptionalEager();
         
@@ -203,20 +203,20 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
             // for client side joins, we do not modify the select
             return;
         }
-
+        
         // join through the mapping table.
         $join_table = "{$this->through_table} AS {$this->through_alias}";
         $join_where = "{$parent_alias}.{$this->native_col} = "
                     . "{$this->through_alias}.{$this->through_native_col}";
-
+                    
         $select->innerJoin($join_table, $join_where);
-
+        
         $join_table = "{$this->foreign_table} AS {$this->foreign_alias}";
         $join_where = "{$this->through_alias}.{$this->through_foreign_col} = "
                     . "{$this->foreign_alias}.{$this->foreign_col}";
-
+                    
         $select->innerJoin($join_table, $join_where);
-
+        
         // added where conditions for the join
         $select->multiWhere($options['where']);
         $select->multiWhere($this->where);
@@ -224,7 +224,7 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         // make the rows distinct, so we only get one row regardless of
         // the number of related rows (since we're not selecting cols).
         $select->distinct(true);
-
+        
         // don't chain because we're not fetching
     }
     
@@ -243,14 +243,14 @@ class Solar_Sql_Model_Related_HasManyThrough extends Solar_Sql_Model_Related_ToM
         $join_table = "{$this->through_table} AS {$this->through_alias}";
         $join_where = "{$this->foreign_alias}.{$this->foreign_col} = "
                     . "{$this->through_alias}.{$this->through_foreign_col}";
-
+                    
         // Add a column so that we know what parent we are joining to
         if ($parent_col) {
             $join_col = "{$this->through_native_col} AS {$parent_col}";
         } else {
             $join_col = NULL;
         }
-
+        
         $select->leftJoin($join_table, $join_where, $join_col);
     }
     

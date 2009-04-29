@@ -140,7 +140,7 @@ abstract class Solar_Sql_Model extends Solar_Base
      * 
      */
     protected $_record_class = 'Solar_Sql_Model_Record';
-
+    
     /**
      * 
      * A blank instance of the Record class for this model.
@@ -1771,12 +1771,12 @@ abstract class Solar_Sql_Model extends Solar_Base
             "{$this->_table_name} AS {$table_alias}",
             $params['cols']
         );
-
+        
         // load our eager options into our Select
         foreach ($params['eager'] as $name => $dependent_options) {
             $select->eager($name, $dependent_options);
         }
-
+        
         $select->multiWhere($this->getWhereMods($table_alias));
         
         // all the other pieces

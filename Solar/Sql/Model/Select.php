@@ -25,7 +25,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
      * 
      */
     protected $_model;
-
+    
     /**
      * 
      * Which relationships should we eagerly fetch?
@@ -34,7 +34,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
      * 
      */
     protected $_eager = array();
-
+    
     /**
      * 
      * Have we merged our required related clauses yet?
@@ -43,7 +43,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
      * 
      */
     protected $_modified_for_required_related = FALSE;
-
+    
     /**
      * 
      * The alias of the table driving this select
@@ -52,7 +52,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
      * 
      */
     protected $_table_alias;
-
+    
     /**
      * 
      * Injects the model which drives this select statement.
@@ -66,7 +66,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         $this->_model = $model;
     }
-
+    
     /**
      * 
      * Sets the table_alias driving this select.  You can probably figure this
@@ -81,7 +81,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         $this->_table_alias = $table_alias;
     }
-
+    
     /**
      * 
      * Injects the model which drives this select statement.
@@ -96,7 +96,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     public function eager($related, $options = array())
     {
         if (!empty($options['where'])) {
-
+        
             // force require_related to be true if there is a where clause
             $options['require_related'] = true;
             
@@ -114,7 +114,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
         }
         $this->_eager[$related] = $options;
     }
-
+    
     /**
      * 
      * Removes any optional eager clauses to simplify the query
@@ -130,7 +130,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
             }
         }
     }
-
+    
     /**
      * 
      * Fetch the results based on the current query properties.
@@ -145,7 +145,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         return parent::fetch($type);
     }
-
+    
     /**
      * Force the query to be modified by any specified related requirements
      */
@@ -155,7 +155,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
             return;
         }
         $this->_modified_for_required_related = TRUE;
-
+        
         foreach ($this->_eager as $name => $dependent_options) {
             if (!empty($dependent_options['require_related'])) {
                 $related = $this->_model->getRelated($name);
@@ -163,7 +163,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
             }
         }
     }
-
+    
     /**
      * 
      * Fetch the results based on the current query properties.
@@ -178,14 +178,14 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         // Required relations must be added to return proper results
         $this->_modifyForRequiredRelated();
-
+        
         $eager = array();
         foreach ($this->_eager as $name => $dependent_options) {
             if (empty($dependent_options['require_related'])) {
                 $eager[$name] = $dependent_options;
             }
         }
-
+        
         if (empty($eager)) {
             $result = parent::fetch($type);
         } else {
@@ -199,12 +199,12 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
             }
             $result = $select->fetchWithoutRelated($type);
         }
-
+        
         // no post processing for some fetch types
         if ($type == 'sql' || $type == 'value' || $type == 'col' || $type == 'pairs') {
             return $result;
         }
-
+        
         // Now we post process the result set based on our eager choices
         foreach ($this->_eager as $name => $dependent_options) {
             $related = $this->_model->getRelated($name);
@@ -216,7 +216,7 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
         }
         return $result;
     }
-
+    
     /**
      * 
      * Get the count of rows and number of pages for the current query.
@@ -231,10 +231,10 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
     {
         $this->_modifyForRequiredRelated();
         $this->clearOptionalEager();
-
+        
         return parent::countPages($col);
     }
-
+    
     /**
      * 
      * Support method for adding JOIN clauses.
@@ -274,5 +274,5 @@ class Solar_Sql_Model_Select extends Solar_Sql_Select
         }
         return parent::_join($type, $spec, $cond, $cols);
     }
-
+    
 }

@@ -140,7 +140,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     public $order;
-
+    
     /**
      * 
      * Indicates whether to prefer WHERE ... IN (...) style queries
@@ -150,7 +150,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     protected $_fromselect_threshold;
-
+    
     /**
      * 
      * Indicates the general strategy to use for joins 'client' or 'server'
@@ -189,7 +189,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     protected $_foreign_model;
-
+    
     /**
      * 
      * The registered Solar_Inflect object.
@@ -198,7 +198,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     protected $_inflect;
-
+    
     /**
      * 
      * Constructor.
@@ -324,7 +324,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         unset($clone->_inflect);
         return parent::dump($clone, $label);
     }
-
+    
     /**
      * 
      * Is this related to one record?
@@ -342,7 +342,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function isMany();
-
+    
     /**
      * Merge dependent data into a target array based on an index
      * by primary column
@@ -369,7 +369,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         }
         return $target;
     }
-
+    
     /**
      * 
      * Normalize a set of eager options
@@ -397,13 +397,13 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $eager = array();
         }
         $options['eager'] = $this->_foreign_model->modEagerOptions($eager);
-
+        
         if (isset($options['fromselect_threshold'])) {
             $options['fromselect_threshold'] = (int) $options['fromselect_threshold'];
         } else {
             $options['fromselect_threshold'] = $this->_fromselect_threshold;
         }
-
+        
         if (empty($options['join_strategy'])) {
             $options['join_strategy'] = $this->_join_strategy;
         }
@@ -411,17 +411,17 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         if (empty($options['require_related'])) {
             $options['require_related'] = false;
         }
-
+        
         if (!empty($options['where'])) {
             $options['where'] = (array) $options['where'];
             $options['require_related'] = true;
         } else {
             $options['where'] = array();
         }
-
+        
         return $options;
     }
-
+    
     /**
      * 
      * Normalize a set of eager options when we are going to modify a select statement
@@ -436,16 +436,16 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         if (empty($options['column_prefix'])) {
             $options['column_prefix'] = $this->name;
         }
-
+        
         // make sure any of our dependents know which column prefix to use
         foreach ($options['eager'] as $name => $dependent_options) {
             $options['eager'][$name]['column_prefix'] = 
                 $options['column_prefix'] . '__' . $name;
         }
-
+        
         return $options;
     }
-
+    
     /**
      * 
      * Merge select parameters with options from this association.
@@ -460,11 +460,11 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         if (empty($params['table_alias'])) {
             $params['table_alias'] = $this->foreign_alias;
         }
-
+        
         if (empty($params['order'])) {
             $params['order'] = $this->order;
         }
-
+        
         // merge where conditions
         if (!empty($params['where'])) {
             $params['where'] = array_merge((array) $params['where'], (array) $this->where);
@@ -472,12 +472,12 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         if (empty($params['where'])) {
             $params['where'] = null;
         }
-
+        
         $params['cols'] = $this->cols;
             
         return $params;
     }
-
+    
     /**
      * 
      * packages foreign data as a record or collection object.
@@ -489,7 +489,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function newObject($data);
-
+    
     /**
      * 
      * Fetch an empty value appropriate for this association.
@@ -498,7 +498,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function fetchEmpty();
-
+    
     /**
      * 
      * Fetches foreign data as a record or collection object.
@@ -513,7 +513,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
      * 
      */
     abstract public function fetch($spec, $params = array());
-
+    
     /**
      * 
      * Join related objects into a parent record or collection 
@@ -548,9 +548,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             "{$this->foreign_alias}.{$this->foreign_col} = ?",
             $spec[$this->native_col]
         );
-
+        
     }
-
+    
     /**
      * 
      * Modifies the base select statement for the relationship type.
@@ -588,13 +588,13 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
                 array_unique($keys)
             );
         }
-
+        
         // Add a column so that we know what parent we are joining to
         if ($parent_col) {
             $select->cols("{$this->foreign_alias}.{$this->foreign_col} AS {$parent_col}");
         }
     }
-
+    
     /**
      * 
      * Modifies the base select statement for the relationship type.
@@ -628,7 +628,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         
         // Condition to join on        
         $cond = "{$this->foreign_alias}.{$this->foreign_col} = {$parent_alias}.{$this->native_col}";
-
+        
         // Add a column so that we know what parent we are joining to
         if ($parent_col) {
             $col = "{$this->native_col} AS {$parent_col}";
@@ -642,7 +642,7 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
             $col
         );
     }
-
+    
     /**
      * 
      * When the native model is doing a select and an eager-join is requested
@@ -777,9 +777,9 @@ abstract class Solar_Sql_Model_Related extends Solar_Base {
         } else {
             $this->_fromselect_threshold = (int) $opts['fromselect_threshold'];
         }
-
+        
     }
-
+    
     /**
      * 
      * Sets the relationship type.

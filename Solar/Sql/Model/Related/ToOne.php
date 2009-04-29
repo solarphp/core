@@ -74,7 +74,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         
         // inject parameters from our options
         $params = $this->_mergeSelectParams($params);
-
+        
         // get a select object for the related rows
         $select = $this->_foreign_model->newSelect($params);
         
@@ -109,7 +109,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         }
         return $index;
     }
-
+    
     /**
      * Extract dependent to-one records from a single row
      */
@@ -117,7 +117,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
     {
         $prefix = $this->name . '__';
         $prefix_len = strlen($prefix);
-
+        
         // Don't bother if our dependent record is not represented
         $test_key = $prefix . $this->foreign_primary_col;
         if (empty($target[$test_key])) {
@@ -129,7 +129,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
             }
             return array();
         }
-
+        
         // Extract a record
         $result = array();
         foreach ($target as $key => $val) {
@@ -138,10 +138,10 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
                 unset($target[$key]);
             }
         }
-
+        
         return $result;
     }
-
+    
     /**
      * Extract dependent to-one records from an array of rows
      */
@@ -181,10 +181,10 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
                 }
             }
         }
-
+        
         return $result;
     }
-
+    
     /**
      * 
      * Join related objects into a parent record or collection 
@@ -205,9 +205,9 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         }
         $options = $this->_fixEagerOptions($options);
         $count = count($target);
-
+        
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
-
+        
             if ($count == 1) {
                 $result = array();
                 $onlyone = reset($target);
@@ -215,14 +215,14 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
             } else {
                 $result = $this->_extractDependentAll($target);
             }
-
+            
             // Chain eager
             foreach ($options['eager'] as $name => $dependent_options) {
                 $related = $this->_foreign_model->getRelated($name);
                 $result = $related->joinAll($result, $select, $dependent_options);
             }
         } else if ($options['join_strategy'] == 'client') {
-
+        
             $params = array('eager' => $options['eager']);
             
             // inject parameters from our options
@@ -244,12 +244,12 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         } else {
             throw $this->_exception('ERR_UNRECOGNIZED_STRATEGY');
         }
-
+        
         $index = $this->_indexResult($result, $this->foreign_col);
-
+        
         return $this->_joinResults($target, $index, $this->native_col);
     }
-
+    
     /**
      * 
      * Join related objects into a parent record or collection 
@@ -269,13 +269,14 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         if (empty($target)) {
             return $target;
         }
-
+        
         $options = $this->_fixEagerOptions($options);
-
+        
         if ($options['join_strategy'] == 'server' || $options['require_related']) {
         
             $result = $this->_extractDependentOne($target);
-
+        
+            
             foreach ($options['eager'] as $name => $dependent_options) {
                 $related = $this->_foreign_model->getRelated($name);
                 $result = $related->joinOne($result, $select, $dependent_options);
@@ -290,7 +291,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
             
             // get a select object for the related rows
             $dependent_select = $this->_foreign_model->newSelect($params);
-
+            
             $this->_modSelectRelatedToRecord($dependent_select, $target);
     
             $result = $dependent_select->fetch('one');
@@ -300,10 +301,11 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         }
         
         $target[$this->name] = $result;
-
+        
+        
         return $target;
     }
-
+    
     /**
      * 
      * When the native model is doing a select and an eager-join is requested
@@ -329,14 +331,14 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         
         $options = $this->_fixColumnPrefixOption($options);
         $column_prefix = $options['column_prefix'];
-
+        
         // build column names as "name__col" so that we can extract the
         // the related data later.
         $cols = array();
         foreach ($this->cols as $col) {
             $cols[] = "$col AS {$column_prefix}__$col";
         }
-
+        
         $join_cond = array_merge(
             (array) $this->where, 
             $this->_foreign_model->getWhereMods($this->foreign_alias));
@@ -359,7 +361,7 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
                 $cols
             );
         }
-
+        
         // Chain modSelectEager
         foreach ($options['eager'] as $name => $dependent_options) {
             $related = $this->_foreign_model->getRelated($name);
@@ -367,7 +369,8 @@ abstract class Solar_Sql_Model_Related_ToOne extends Solar_Sql_Model_Related
         }
         
     }
-
+        
+    
     /**
      * 
      * Sets the base name for the foreign class; assumes the related name is
